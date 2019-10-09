@@ -588,11 +588,10 @@ class ProductTemplate(models.Model):
     outgoing_qty = fields.Float(
         'Outgoing', compute='_compute_quantities', search='_search_outgoing_qty',
         compute_sudo=False, digits='Product Unit of Measure')
-    # The goal of these fields is not to be able to search a location_id/warehouse_id but
-    # to properly make these fields "dummy": only used to put some keys in context from
-    # the search view in order to influence computed field
-    location_id = fields.Many2one('stock.location', 'Location', store=False, search=lambda operator, operand, vals: [])
-    warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', store=False, search=lambda operator, operand, vals: [])
+    # The goal of these fields is to be able to put some keys in context from search view in order
+    # to influence computed field.
+    location_id = fields.Many2one('stock.location', 'Location', store=False)
+    warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', store=False)
     route_ids = fields.Many2many(
         'stock.location.route', 'stock_route_product', 'product_id', 'route_id', 'Routes',
         domain=[('product_selectable', '=', True)],
@@ -788,7 +787,7 @@ class ProductTemplate(models.Model):
         return action
 
     def action_product_tmpl_forecast_report(self):
-        action = self.env.ref('stock.report_stock_quantity_action').read()[0]
+        action = self.env.ref('stock.report_stock_quantity_action_product').read()[0]
         action['domain'] = [
             ('product_id', 'in', self.product_variant_ids.ids),
             ('warehouse_id', '!=', False),

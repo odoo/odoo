@@ -4,7 +4,7 @@
     'name': "Sale Coupon",
     'summary': "Use discount coupons in sales orders",
     'description': """Integrate coupon mechanism in sales orders.""",
-    'category': 'Sales',
+    'category': 'Sales/Sales',
     'version': '1.0',
     'depends': ['sale_management'],
     'data': [

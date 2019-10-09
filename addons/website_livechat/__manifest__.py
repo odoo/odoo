@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Website Live Chat',
-    'category': 'Technical Settings',
+    'category': 'Hidden',
     'summary': 'Chat with your website visitors',
     'version': '1.0',
     'description': """

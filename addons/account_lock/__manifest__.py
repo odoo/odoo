@@ -3,7 +3,7 @@
 {
     'name' : 'Irreversible Lock Date',
     'version' : '1.0',
-    'category': 'Accounting',
+    'category': 'Accounting/Accounting',
     'description': """
     Make the lock date irreversible:
 

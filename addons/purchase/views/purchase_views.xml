@@ -377,7 +377,8 @@
                         domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
-                    <filter string="Exception Activities" name="activities_exception"
+                    <separator/>
+                    <filter string="Warnings" name="activities_exception"
                         domain="[('activity_exception_decoration', '!=', False)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Vendor" name="vendor" domain="[]" context="{'group_by': 'partner_id'}"/>
@@ -412,7 +413,8 @@
                         domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
-                    <filter string="Exception Activities" name="activities_exception"
+                    <separator/>
+                    <filter string="Warnings" name="activities_exception"
                         domain="[('activity_exception_decoration', '!=', False)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Vendor" name="vendor" domain="[]" context="{'group_by': 'partner_id'}"/>
@@ -467,14 +469,16 @@
             <field name="name">purchase.order.tree</field>
             <field name="model">purchase.order</field>
             <field name="arch" type="xml">
-                <tree decoration-bf="message_unread==True" decoration-muted="state=='cancel'" decoration-info="state in ('wait','confirmed')" string="Purchase Order">
+                <tree string="Purchase Order" multi_edit="1" decoration-bf="message_unread==True"
+                      decoration-muted="state=='cancel'" decoration-info="state in ('wait','confirmed')">
                     <field name="message_unread" invisible="1"/>
                     <field name="partner_ref" optional="hide"/>
-                    <field name="name" string="Reference"/>
+                    <field name="name" string="Reference" readonly="1"/>
                     <field name="date_order" invisible="not context.get('quotation_only', False)" optional="show"/>
                     <field name="date_approve" invisible="context.get('quotation_only', False)" optional="show"/>
-                    <field name="partner_id"/>
-                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="show"/>
+                    <field name="partner_id" readonly="1"/>
+                    <field name="company_id" readonly="1" options="{'no_create': True}"
+                        groups="base.group_multi_company" optional="show"/>
                     <field name="date_planned" invisible="context.get('quotation_only', False)" optional="show"/>
                     <field name="user_id" optional="show"/>
                     <field name="origin" optional="show"/>
@@ -495,7 +499,7 @@
                 <tree decoration-bf="message_unread==True" decoration-muted="state=='cancel'" decoration-info="state in ('wait','confirmed')" string="Purchase Order">
                     <field name="message_unread" invisible="1"/>
                     <field name="partner_ref" optional="hide"/>
-                    <field name="name" string="Reference"/>
+                    <field name="name" string="Reference" readonly="1"/>
                     <field name="date_order" invisible="not context.get('quotation_only', False)" optional="show"/>
                     <field name="date_approve" invisible="context.get('quotation_only', False)" optional="show"/>
                     <field name="partner_id"/>

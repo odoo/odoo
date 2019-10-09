@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo import fields
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
 from odoo.tests.common import Form
 from odoo.tests import tagged
@@ -9,6 +10,7 @@ class TestReconciliationMatchingRules(AccountingTestCase):
     def _create_invoice_line(self, amount, partner, type):
         ''' Create an invoice on the fly.'''
         invoice_form = Form(self.env['account.move'].with_context(default_type=type))
+        invoice_form.invoice_date = fields.Date.from_string('2019-09-01')
         invoice_form.partner_id = partner
         with invoice_form.invoice_line_ids.new() as invoice_line_form:
             invoice_line_form.name = 'xxxx'

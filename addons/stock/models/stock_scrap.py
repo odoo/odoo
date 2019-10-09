@@ -55,8 +55,9 @@ class StockScrap(models.Model):
     scrap_qty = fields.Float('Quantity', default=1.0, required=True, states={'done': [('readonly', True)]})
     state = fields.Selection([
         ('draft', 'Draft'),
-        ('done', 'Done')], string='Status', default="draft", tracking=True)
-    date_done = fields.Datetime('Date')
+        ('done', 'Done')],
+        string='Status', default="draft", readonly=True, tracking=True)
+    date_done = fields.Datetime('Date', readonly=True)
 
     @api.onchange('picking_id')
     def _onchange_picking_id(self):

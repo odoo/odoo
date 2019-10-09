@@ -105,7 +105,7 @@ class Team(models.Model):
     #TODO JEM : refactor this stuff with xml action, proper customization,
     @api.model
     def action_your_pipeline(self):
-        action = self.env.ref('crm.crm_lead_opportunities_tree_view').read()[0]
+        action = self.env.ref('crm.crm_lead_action_pipeline').read()[0]
         user_team_id = self.env.user.sale_team_id.id
         if not user_team_id:
             user_team_id = self.search([], limit=1).id

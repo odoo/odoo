@@ -1029,6 +1029,12 @@ var ActionButtonWidget = PosBaseWidget.extend({
 var ProductScreenWidget = ScreenWidget.extend({
     template:'ProductScreenWidget',
 
+    init: function() {
+        this._super.apply(this, arguments);
+        this.timeout = null;
+        this.buffered_key_events = [];
+    },
+
     start: function(){ 
 
         var self = this;
@@ -1098,11 +1104,40 @@ var ProductScreenWidget = ScreenWidget.extend({
         $(document).off('keydown.productscreen', this._onKeypadKeyDown);
     },
 
+    /**
+     * Buffers the key typed and distinguishes between actual keystrokes and
+     * scanner inputs.
+     *
+     * @private
+     * @param {event} ev - The keyboard event.
+    */
     _onKeypadKeyDown: function (ev) {
         //prevent input and textarea keydown event
         if(!_.contains(["INPUT", "TEXTAREA"], $(ev.target).prop('tagName'))) {
-            if ((ev.key >= "0" && ev.key <= "9") || ev.key === "."){
-                this.numpad.state.appendNewChar(ev.key)
+            clearTimeout(this.timeout);
+            this.buffered_key_events.push(ev);
+            this.timeout = setTimeout(_.bind(this._handleBufferedKeys, this), BarcodeEvents.max_time_between_keys_in_ms);
+        }
+    },
+
+    /**
+     * Processes the buffer of keys filled by _onKeypadKeyDown and
+     * distinguishes between the actual keystrokes and scanner inputs.
+     *
+     * @private
+    */
+    _handleBufferedKeys: function () {
+        // If more than 2 keys are recorded in the buffer, chances are high that the input comes
+        // from a barcode scanner. In this case, we don't do anything.
+        if (this.buffered_key_events.length > 2) {
+            this.buffered_key_events = [];
+            return;
+        }
+
+        for (var i = 0; i < this.buffered_key_events.length; ++i) {
+            var ev = this.buffered_key_events[i];
+            if ((ev.key >= "0" && ev.key <= "9") || ev.key === ".") {
+               this.numpad.state.appendNewChar(ev.key);
             }
             else {
                 switch (ev.key){
@@ -1124,6 +1159,7 @@ var ProductScreenWidget = ScreenWidget.extend({
                 }
             }
         }
+        this.buffered_key_events = [];
     },
 });
 gui.define_screen({name:'products', widget: ProductScreenWidget});
@@ -2338,34 +2374,60 @@ var PaymentScreenWidget = ScreenWidget.extend({
 
             invoiced.catch(this._handleFailedPushForInvoice.bind(this, order, false));
 
-            invoiced.then(function (value) {
+            invoiced.then(function (server_ids) {
                 self.invoicing = false;
-                self.send_receipt_to_customer(value || false);
-                self.gui.show_screen('receipt');
+                var post_push_promise = [];
+                post_push_promise = self.post_push_order_resolve(order, server_ids);
+                post_push_promise.then(function () {
+                        self.gui.show_screen('receipt');
+                }).catch(function (error) {
+                    self.gui.show_screen('receipt');
+                    if (error) {
+                        self.gui.show_popup('error',{
+                            'title': "Error: no internet connection",
+                            'body':  error,
+                        });
+                    }
+                });
             });
         } else {
-            if (order.is_to_email()){
-                var ordered = this.pos.push_order(order);
-                ordered.then(function() {
-                    self.send_receipt_to_customer(false);
-                    self.gui.show_screen('receipt');
-                });
-                ordered.catch(function(value) {
-                    order.set_to_email(false);
-                    self.gui.show_screen('receipt');
-                    self.gui.show_popup('error',{
-                        'title': "Error: no internet connection",
-                        'body':  "There is no internet connection, impossible to send the email.",
-                    });
-                });
+            var ordered = this.pos.push_order(order);
+            if (order.wait_for_push_order()){
+                var server_ids = [];
+                ordered.then(function (ids) {
+                  server_ids = ids;
+                }).finally(function() {
+                    var post_push_promise = [];
+                    post_push_promise = self.post_push_order_resolve(order, server_ids);
+                    post_push_promise.then(function () {
+                            self.gui.show_screen('receipt');
+                        }).catch(function (error) {
+                          self.gui.show_screen('receipt');
+                          if (error) {
+                              self.gui.show_popup('error',{
+                                  'title': "Error: no internet connection",
+                                  'body':  error,
+                              });
+                          }
+                        });
+                  });
             }
             else {
-              this.pos.push_order(order);
               self.gui.show_screen('receipt');
             }
 
         }
 
+    },
+    post_push_order_resolve: function(order, server_ids){
+      var self = this;
+      if (order.is_to_email()) {
+          var email_promise = self.send_receipt_to_customer(server_ids);
+          return email_promise;
+      }
+      else {
+        return Promise.resolve();
+      }
     },
 
     // Check if the order is paid, then sends it to the backend,
@@ -2376,29 +2438,34 @@ var PaymentScreenWidget = ScreenWidget.extend({
         }
     },
 
-    send_receipt_to_customer: function(invoice_server_id) {
+    send_receipt_to_customer: function(order_server_ids) {
         var order = this.pos.get_order();
-        if(order.is_to_email()){
-            var data = {
-                widget: this,
-                pos: order.pos,
-                order: order,
-                receipt: order.export_for_printing(),
-                orderlines: order.get_orderlines(),
-                paymentlines: order.get_paymentlines(),
-            }
+        var data = {
+            widget: this,
+            pos: order.pos,
+            order: order,
+            receipt: order.export_for_printing(),
+            orderlines: order.get_orderlines(),
+            paymentlines: order.get_paymentlines(),
+        };
 
-            var receipt = QWeb.render('OrderReceipt', data);
-            var printer = new Printer();
+        var receipt = QWeb.render('OrderReceipt', data);
+        var printer = new Printer();
 
+        return new Promise(function (resolve, reject) {
             printer.htmlToImg(receipt).then(function(ticket) {
                 rpc.query({
                     model: 'pos.order',
                     method: 'action_receipt_to_customer',
-                    args: [order.get_name(), order.get_client(), ticket, invoice_server_id],
+                    args: [order.get_name(), order.get_client(), ticket, order_server_ids],
+                }).then(function() {
+                  resolve();
+                }).catch(function () {
+                  order.set_to_email(false);
+                  reject("There is no internet connection, impossible to send the email.");
                 });
             });
-        }
+        });
     },
 });
 gui.define_screen({name:'payment', widget: PaymentScreenWidget});

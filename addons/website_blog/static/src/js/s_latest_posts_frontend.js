@@ -91,7 +91,7 @@ publicWidget.registry.js_get_posts = publicWidget.Widget.extend({
         _.each($posts, function (post, i) {
             var $post = $(post);
             var $progress = $post.find('.s_latest_posts_loader');
-            var bgUrl = $post.find('.o_blog_cover_image').css('background-image').replace('url(','').replace(')','').replace(/\"/gi, "") || 'none';
+            var bgUrl = $post.find('.o_record_cover_image').css('background-image').replace('url(','').replace(')','').replace(/\"/gi, "") || 'none';
 
             // Append $post to the snippet, regardless by the loading state.
             $post.appendTo(self.$target);
@@ -110,7 +110,7 @@ publicWidget.registry.js_get_posts = publicWidget.Widget.extend({
             // If the image is not loaded in 10 sec, remove loader and provide a fallback bg-color to the container.
             // Hopefully one day the image will load, covering the bg-color...
             var timer = setTimeout(function () {
-                $post.find('.o_blog_cover_image').addClass('bg-200');
+                $post.find('.o_record_cover_image').addClass('bg-200');
                 $progress.remove();
             }, 10000);
 

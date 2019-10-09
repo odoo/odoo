@@ -5,21 +5,22 @@
 # Translators:
 # taksun <taksun@o2.pl>, 2019
 # Dariusz Żbikowski <darek@krokus.com.pl>, 2019
-# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2019
 # Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2019
 # Tomasz Leppich <t.leppich@gmail.com>, 2019
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2019
-# Paweł Wodyński <pw@myodoo.pl>, 2019
 # Maksym <ms@myodoo.pl>, 2019
+# Natalia Gros <nag@odoo.com>, 2019
 # Martin Trigaux, 2019
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2019
+# Paweł Wodyński <pw@myodoo.pl>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:18+0000\n"
+"POT-Creation-Date: 2019-09-27 09:11+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"Last-Translator: Paweł Wodyński <pw@myodoo.pl>, 2019\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,6 +57,10 @@ msgid ""
 "specific.\" role=\"img\" aria-label=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Wartości tutaj wyświetlone są"
+" typowe dla danej firmy.\" role=\"img\" aria-label=\"Wartości tutaj "
+"wyświetlone są typowe dla danej firmy.\" "
+"groups=\"base.group_multi_company\"/>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
@@ -126,6 +131,13 @@ msgid "After-Sale"
 msgstr "Po sprzedaży"
 
 #. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
+#, python-format
+msgid "All planned operations included"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__so_route_ids
 msgid "Apply specific routes"
 msgstr ""
@@ -141,6 +153,13 @@ msgstr "Jak najszybciej to możliwe"
 #, python-format
 msgid "Availability"
 msgstr "Dostępność"
+
+#. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
+#, python-format
+msgid "Available"
+msgstr "Dostępny"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
@@ -379,8 +398,8 @@ msgstr "Przenieś oczekiwane terminy dostawy o"
 #. openerp-web
 #: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
 #, python-format
-msgid "On Hand - Reserved"
-msgstr ""
+msgid "On"
+msgstr "Włączone"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
@@ -540,13 +559,6 @@ msgid "Sold in the last 365 days"
 msgstr ""
 
 #. module: sale_stock
-#. openerp-web
-#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
-#, python-format
-msgid "Stock Available"
-msgstr ""
-
-#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
 msgid "Stock Move"
 msgstr "Przesunięcie"
@@ -556,13 +568,6 @@ msgstr "Przesunięcie"
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order_line__qty_delivered_method__stock_move
 msgid "Stock Moves"
 msgstr "Przesunięcia"
-
-#. module: sale_stock
-#. openerp-web
-#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
-#, python-format
-msgid "Stock On Hand"
-msgstr "Zapas w magazynie"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rule
@@ -615,8 +620,8 @@ msgstr "Pobrania"
 #. openerp-web
 #: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
 #, python-format
-msgid "View Detailed Forecast"
-msgstr ""
+msgid "View Forecast"
+msgstr "Wyświetl prognozę"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__virtual_available_at_date

@@ -71,7 +71,6 @@ class TestValuationReconciliation(ValuationReconciliationTestCase):
         picking = self.env['stock.picking'].search([('purchase_id','=',purchase_order.id)])
         self.check_reconciliation(invoice, picking)
         # cancel the invoice
-        invoice.journal_id.write({'update_posted': 1})
         invoice.button_cancel()
 
     def test_invoice_shipment(self):

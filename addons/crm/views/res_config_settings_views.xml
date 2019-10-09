@@ -66,7 +66,7 @@
                                 <div class="mt16">
                                     Consider leads created as of the
                                     <field name="predictive_lead_scoring_start_date_str" invisible="1"/>
-                                    <field name="predictive_lead_scoring_start_date"/>
+                                    <field name="predictive_lead_scoring_start_date" required="1"/>
                                 </div>
                             </div>
                         </div>
@@ -94,6 +94,12 @@
                                 <label string="Lead Enrichment" for="module_crm_iap_lead_enrich"/>
                                 <div class="text-muted">
                                     Enrich your leads automatically with company data based on their email address
+                                </div>
+                                <div id="crm_iap_lead_enrich">
+                                    <div class="mt8" attrs="{'invisible': [('module_crm_iap_lead_enrich','=',False)]}">
+                                        <field name="lead_enrich_auto" class="o_light_label" widget="radio" required="True"/>
+                                    </div>
+                                    <widget name="iap_buy_more_credits" service_name="reveal"/>
                                 </div>
                             </div>
                         </div>

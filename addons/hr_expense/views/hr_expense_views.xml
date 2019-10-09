@@ -98,7 +98,7 @@
                             <field name="employee_id" groups="hr_expense.group_hr_expense_team_approver"/>
                             <field name="sheet_id" invisible="1"/>
                             <field name="currency_id" groups="base.group_multi_currency"/>
-                            <field name="analytic_account_id" groups="analytic.group_analytic_accounting" attrs="{'readonly': [('is_editable', '=', False)]}"/>
+                            <field name="analytic_account_id" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" groups="analytic.group_analytic_accounting" attrs="{'readonly': [('is_editable', '=', False)]}"/>
                             <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags" attrs="{'readonly': [('is_editable', '=', False)]}"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group><group>
@@ -149,6 +149,7 @@
                     <field name="date"/>
                     <field name="state"/>
                     <field name="activity_state"/>
+                    <field name="currency_id"/>
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                     <templates>
                         <t t-name="kanban-box">
@@ -156,7 +157,7 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <strong class="o_kanban_record_title"><span><t t-esc="record.name.value"/></span></strong>
-                                        <strong class="o_kanban_record_subtitle float-right"><span class="text-right"><t t-esc="record.total_amount.value"/></span></strong>
+                                        <strong class="o_kanban_record_subtitle float-right"><span class="text-right"><field name="total_amount" widget="monetary"/></span></strong>
                                     </div>
                                 </div>
                                 <div class="row mt8">
@@ -227,8 +228,6 @@
                         domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
-                    <filter string="Exception Activities" name="activities_exception"
-                        domain="[('activity_exception_decoration', '!=', False)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Employee" name="employee" domain="[]" context="{'group_by': 'employee_id'}"/>
                         <filter string="Product" name="product" domain="[]" context="{'group_by': 'product_id'}"/>
@@ -506,7 +505,7 @@
                                 <field name="date"/>
                                 <field name="name"/>
                                 <field name="state" invisible="1"/>
-                                <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                                <field name="analytic_account_id" domain="['|', ('company_id', '=', parent.company_id), ('company_id', '=', False)]" groups="analytic.group_analytic_accounting"/>
                                 <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
                                 <field name="message_unread" invisible="1"/>
                                 <field name="attachment_number" string=" "/>
@@ -560,13 +559,14 @@
                     <field name="total_amount"/>
                     <field name="accounting_date"/>
                     <field name="state"/>
+                    <field name="currency_id"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_card oe_kanban_global_click">
                                 <div class="row">
                                     <div class="col-12">
                                         <strong class="o_kanban_record_title"><span><t t-esc="record.name.value"/></span></strong>
-                                        <strong class="o_kanban_record_subtitle float-right"><span class="text-right"><t t-esc="record.total_amount.value"/></span></strong>
+                                        <strong class="o_kanban_record_subtitle float-right"><span class="text-right"><field name="total_amount" widget="monetary"/></span></strong>
                                     </div>
                                 </div>
                                 <div class="row mt8">
@@ -640,8 +640,6 @@
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                             domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                             ]"/>
-                    <filter string="Exception Activities" name="activities_exception"
-                        domain="[('activity_exception_decoration', '!=', False)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Employee" name="employee" domain="[]" context="{'group_by': 'employee_id'}"/>
                         <filter string="Department" name="department" domain="[]" context="{'group_by': 'department_id'}"/>

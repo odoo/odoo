@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-13 11:26+0000\n"
+"POT-Creation-Date: 2019-09-30 09:40+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
 "Last-Translator: Dung Nguyen Thi <dungnt@trobz.com>, 2019\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
@@ -832,11 +832,6 @@ msgstr "Dịch chuyển đã được gán"
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__message_attachment_count
 msgid "Attachment Count"
 msgstr "Số lượng tập tin đính kèm"
-
-#. module: stock
-#: model:ir.ui.menu,name:stock.menu_variants_action
-msgid "Attribute Values"
-msgstr "Giá trị thuộc tính"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_attribute_action
@@ -1806,6 +1801,11 @@ msgid ""
 msgstr ""
 "Thời gian giao hàng, tính theo ngày. Đây là số ngày hứa với khách hàng, "
 "khoảng thời gian xác nhận đơn hàng đến ngày giao "
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Demand"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__route_ids
@@ -6800,11 +6800,6 @@ msgid "Variant Count"
 msgstr "Số lượng biến thể"
 
 #. module: stock
-#: model:ir.ui.menu,name:stock.menu_variant_in_config_stock
-msgid "Variants"
-msgstr "Biến thể"
-
-#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Vendor"
 msgstr "Nhà cung cấp"
@@ -6899,6 +6894,11 @@ msgstr "Cấu hình kho hàng"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__warehouse_count
 msgid "Warehouse Count"
 msgstr "Số lượng kho"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_location_route__warehouse_domain_ids
+msgid "Warehouse Domain"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_warehouse_config
@@ -7454,6 +7454,14 @@ msgstr ""
 #, python-format
 msgid "You may only return one picking at a time."
 msgstr "Bạn chỉ có thể trả lại một phiếu điều chuyển trong cùng thời điểm"
+
+#. module: stock
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You need to activate storage locations to be able to do internal operation "
+"types."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0

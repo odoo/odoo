@@ -4,6 +4,7 @@ odoo.define('web_editor.wysiwyg.iframe', function (require) {
 var Wysiwyg = require('web_editor.wysiwyg');
 var ajax = require('web.ajax');
 var core = require('web.core');
+var config = require('web.config');
 
 var qweb = core.qweb;
 var promiseCommon;
@@ -87,6 +88,7 @@ Wysiwyg.include({
                 }
                 delete window.top[self._onUpdateIframeId];
                 var $iframeTarget = self.$iframe.contents().find('#iframe_target');
+                $iframeTarget.attr("isMobile", config.device.isMobile);
                 $iframeTarget.find('.o_editable').html(self.$target.val());
                 self.options.toolbarHandler = $('#web_editor-top-edit', self.$iframe[0].contentWindow.document);
                 $(qweb.render('web_editor.FieldTextHtml.fullscreen'))

@@ -60,7 +60,7 @@
                                 <field name="location_id" options="{'no_create': True, 'no_open': True}" groups="stock.group_stock_multi_locations" force_save="1"/>
                                 <field name="scrap_location_id" options="{'no_create': True, 'no_open': True}" groups="stock.group_stock_multi_locations" force_save="1"/>
                                 <field name="origin"/>
-                                <field name="date_done" readonly="1" attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                                <field name="date_done" attrs="{'invisible': [('state', '=', 'draft')]}"/>
                                 <field name="picking_id" attrs="{'invisible': [('picking_id', '=', False)]}"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                             </group>
@@ -117,16 +117,16 @@
             <field name="name">stock.scrap.tree</field>
             <field name="model">stock.scrap</field>
             <field name="arch" type="xml">
-                <tree decoration-danger="state == 'draft'">
+                <tree multi_edit="1" decoration-danger="state == 'draft'">
                     <field name="name"/>
                     <field name="date_done"/>
-                    <field name="product_id"/>
+                    <field name="product_id" readonly="1"/>
                     <field name="scrap_qty"/>
                     <field name="product_uom_id" groups="uom.group_uom"/>
                     <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
                     <field name="scrap_location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
                     <field name="state"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="company_id" readonly="1" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>

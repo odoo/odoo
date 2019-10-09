@@ -118,40 +118,22 @@
         <field name='l10n_ar_afip_responsibility_type_id' ref="l10n_ar.res_IVA_LIB"/>
     </record>
 
-<!-- Default Partners -->
-
-        <!-- Main Partner -->
-    <record id="base.main_partner" model="res.partner">
-        <field name='l10n_latam_identification_type_id' ref="l10n_ar.it_cuit"/>
-        <field name='vat'>30111111118</field>
-    </record>
-
-        <!-- Wood Corner - Supplier -->
-    <record id="base.res_partner_1" model="res.partner">
+    <!-- Foreign Partner -->
+    <record id="res_partner_foreign" model="res.partner">
+        <field name="name">Foreign Inc</field>
+        <field eval="[(6, 0, [ref('base.res_partner_category_14'), ref('base.res_partner_category_12')])]" name="category_id"/>
+        <field name="is_company">1</field>
+        <field name="street">7841 Red Road</field>
+        <field name="city">San Francisco</field>
+        <field name="state_id" ref='base.state_us_5'/>
+        <field name="zip">95380</field>
+        <field name="country_id" ref="base.us"/>
+        <field name="email">foreing@example.com</field>
+        <field name="phone">(123)-456-7890</field>
+        <field name="website">http://www.foreign-inc.com</field>
         <field name='l10n_latam_identification_type_id' ref="l10n_ar.it_cuit"/>
         <field name='vat'>30222222229</field>
         <field name='l10n_ar_afip_responsibility_type_id' ref="l10n_ar.res_IVARI"/>
-    </record>
-
-        <!-- Deco Addict - Customer -->
-    <record id="base.res_partner_2" model="res.partner">
-        <field name='l10n_latam_identification_type_id' ref="l10n_ar.it_cuit"/>
-        <field name='vat'>30111111126</field>
-        <field name='l10n_ar_afip_responsibility_type_id' ref="l10n_ar.res_IVARI"/>
-    </record>
-
-        <!-- Azure Interior - Supplier/Customer -->
-    <record id="base.res_partner_12" model="res.partner">
-        <field name='l10n_latam_identification_type_id' ref="l10n_ar.it_cuit"/>
-        <field name='vat'>30888888884</field>
-        <field name='l10n_ar_afip_responsibility_type_id' ref="l10n_ar.res_IVARI"/>
-    </record>
-
-        <!-- Ready Mat - cliente exterior -->
-    <record id="base.res_partner_4" model="res.partner">
-        <field name='l10n_latam_identification_type_id' ref="l10n_latam_base.it_fid"/>
-        <field name='vat'>12345678</field>
-        <field name='l10n_ar_afip_responsibility_type_id' ref="l10n_ar.res_EXT"/>
     </record>
 
 </odoo>

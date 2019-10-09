@@ -72,7 +72,6 @@ class PosSession(models.Model):
         help="Total of all paid sales orders")
     cash_register_balance_end = fields.Monetary(
         compute='_compute_cash_balance',
-        digits=0,
         string="Theoretical Closing Balance",
         help="Sum of opening balance and transactions.",
         readonly=True)
@@ -309,7 +308,6 @@ class PosSession(models.Model):
             'journal_id': journal.id,
             'date': fields.Date.context_today(self),
             'ref': self.name,
-            'name': journal.sequence_id.next_by_id()
         })
         self.write({'move_id': account_move.id})
 

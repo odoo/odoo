@@ -7,8 +7,8 @@
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
                 <button name="%(link_tracker_action_campaign)d"
-                    type="action" class="oe_stat_button order-12">
-                    <field name="clicks_ratio" widget="percentpie" string="Clicks"/>
+                    type="action" class="oe_stat_button order-12" icon="fa-mouse-pointer">
+                    <field name="click_count" widget="statinfo" string="Clicks"/>
                 </button>
             </xpath>
         </field>
@@ -19,9 +19,13 @@
         <field name="model">utm.campaign</field>
         <field name="inherit_id" ref="utm.utm_campaign_view_kanban"/>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='stage_id']" position="after">
+                <field name="click_count"/>
+            </xpath>
             <xpath expr="//div[@id='utm_statistics']" position="inside">
-                <div class="d-flex justify-content-between align-items-center w-100 order-1 mb-1">
-                    <strong>Clicks</strong> <span><field name="clicks_ratio"/> %</span>
+                <div class="mr-3" title="Clicks">
+                    <i class="fa fa-mouse-pointer text-muted"></i>
+                    <small class="font-weight-bold" t-esc="record.click_count.raw_value" />
                 </div>
             </xpath>
         </field>

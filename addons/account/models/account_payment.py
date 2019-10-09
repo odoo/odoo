@@ -441,16 +441,7 @@ class account_payment(models.Model):
                 payment.write({'state': 'posted'})
 
     def cancel(self):
-        for rec in self:
-            for move in rec.move_line_ids.mapped('move_id'):
-                if rec.reconciled_invoice_ids:
-                    move.line_ids.remove_move_reconcile()
-                if move.state != 'draft':
-                    move.button_cancel()
-                move.unlink()
-            rec.write({
-                'state': 'cancelled',
-            })
+        self.write({'state': 'cancelled'})
 
     def unlink(self):
         if any(bool(rec.move_line_ids) for rec in self):
@@ -703,7 +694,10 @@ class account_payment(models.Model):
         return True
 
     def action_draft(self):
-        return self.write({'state': 'draft'})
+        moves = self.mapped('move_line_ids.move_id')
+        moves.filtered(lambda move: move.state == 'posted').button_draft()
+        moves.with_context(force_delete=True).unlink()
+        self.write({'state': 'draft'})
 
     def _get_invoice_payment_amount(self, inv):
         """

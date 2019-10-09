@@ -158,7 +158,7 @@ class Web_Editor(http.Controller):
     def add_data(self, name, data, quality=0, width=0, height=0, res_id=False, res_model='ir.ui.view', filters=False, **kwargs):
         try:
             data = tools.image_process(data, size=(width, height), quality=quality, verify_resolution=True)
-        except OSError:
+        except UserError:
             pass  # not an image
         attachment = self._attachment_create(name=name, data=data, res_id=res_id, res_model=res_model, filters=filters)
         return attachment._get_media_info()
@@ -179,7 +179,7 @@ class Web_Editor(http.Controller):
             data['name'] = name
         try:
             data['datas'] = tools.image_process(attachment.datas, size=(width, height), quality=quality)
-        except OSError:
+        except UserError:
             pass  # not an image
         attachment.write(data)
         return attachment._get_media_info()

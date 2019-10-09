@@ -80,25 +80,17 @@ class SaleOrder(models.Model):
         if values.get('order_line') and self.state == 'sale':
             for order in self:
                 to_log = {}
-                order_lines_to_run = self.env['sale.order.line']
                 for order_line in order.order_line:
-                    if order_line not in pre_order_line_qty:
-                        order_lines_to_run |= order_line
-                    elif float_compare(order_line.product_uom_qty, pre_order_line_qty[order_line], order_line.product_uom.rounding) < 0:
-                        to_log[order_line] = (order_line.product_uom_qty, pre_order_line_qty[order_line])
-                    elif float_compare(order_line.product_uom_qty, pre_order_line_qty[order_line], order_line.product_uom.rounding) > 0:
-                        order_lines_to_run |= order_line
+                    if float_compare(order_line.product_uom_qty, pre_order_line_qty.get(order_line, 0.0), order_line.product_uom.rounding) < 0:
+                        to_log[order_line] = (order_line.product_uom_qty, pre_order_line_qty.get(order_line, 0.0))
                 if to_log:
                     documents = self.env['stock.picking']._log_activity_get_documents(to_log, 'move_ids', 'UP')
                     order._log_decrease_ordered_quantity(documents)
-                if order_lines_to_run:
-                    order_lines_to_run._action_launch_stock_rule(pre_order_line_qty)
         return res
 
     def _action_confirm(self):
-        for order in self:
-            order.order_line._action_launch_stock_rule()
-        super(SaleOrder, self)._action_confirm()
+        self.order_line._action_launch_stock_rule()
+        return super(SaleOrder, self)._action_confirm()
 
     @api.depends('picking_ids')
     def _compute_picking_ids(self):
@@ -137,7 +129,11 @@ class SaleOrder(models.Model):
         if len(pickings) > 1:
             action['domain'] = [('id', 'in', pickings.ids)]
         elif pickings:
-            action['views'] = [(self.env.ref('stock.view_picking_form').id, 'form')]
+            form_view = [(self.env.ref('stock.view_picking_form').id, 'form')]
+            if 'views' in action:
+                action['views'] = form_view + [(state,view) for state,view in action['views'] if view != 'form']
+            else:
+                action['views'] = form_view
             action['res_id'] = pickings.id
         # Prepare the context.
         picking_id = pickings.filtered(lambda l: l.picking_type_id.code == 'outgoing')
@@ -207,7 +203,7 @@ class SaleOrderLine(models.Model):
     scheduled_date = fields.Datetime(compute='_compute_qty_at_date')
     free_qty_today = fields.Float(compute='_compute_qty_at_date')
     qty_available_today = fields.Float(compute='_compute_qty_at_date')
-    warehouse_id = fields.Many2one(related='order_id.warehouse_id')
+    warehouse_id = fields.Many2one('stock.warehouse', compute='_compute_qty_at_date')
     qty_to_deliver = fields.Float(compute='_compute_qty_to_deliver')
     is_mto = fields.Boolean(compute='_compute_is_mto')
     display_qty_widget = fields.Boolean(compute='_compute_qty_to_deliver')
@@ -236,13 +232,13 @@ class SaleOrderLine(models.Model):
         for line in self:
             if not line.display_qty_widget:
                 continue
-            warehouse = line.order_id.warehouse_id
+            line.warehouse_id = line.order_id.warehouse_id
             if line.order_id.commitment_date:
                 date = line.order_id.commitment_date
             else:
                 confirm_date = line.order_id.date_order if line.order_id.state in ['sale', 'done'] else datetime.now()
                 date = confirm_date + timedelta(days=line.customer_lead or 0.0)
-            grouped_lines[(warehouse.id, date)] |= line
+            grouped_lines[(line.warehouse_id.id, date)] |= line
 
         treated = self.browse()
         for (warehouse, scheduled_date), lines in grouped_lines.items():
@@ -268,6 +264,7 @@ class SaleOrderLine(models.Model):
         remaining.scheduled_date = False
         remaining.free_qty_today = False
         remaining.qty_available_today = False
+        remaining.warehouse_id = False
 
     @api.depends('product_id', 'route_id', 'order_id.warehouse_id', 'product_id.route_ids')
     def _compute_is_mto(self):
@@ -331,6 +328,18 @@ class SaleOrderLine(models.Model):
         lines = super(SaleOrderLine, self).create(vals_list)
         lines.filtered(lambda line: line.state == 'sale')._action_launch_stock_rule()
         return lines
+
+    def write(self, values):
+        lines = self.env['sale.order.line']
+        if 'product_uom_qty' in values:
+            precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            lines = self.filtered(
+                lambda r: r.state == 'sale' and not r.is_expense and float_compare(r.product_uom_qty, values['product_uom_qty'], precision_digits=precision) == -1)
+        previous_product_uom_qty = {line.id: line.product_uom_qty for line in lines}
+        res = super(SaleOrderLine, self).write(values)
+        if lines:
+            lines._action_launch_stock_rule(previous_product_uom_qty)
+        return res
 
     @api.depends('order_id.state')
     def _compute_invoice_status(self):

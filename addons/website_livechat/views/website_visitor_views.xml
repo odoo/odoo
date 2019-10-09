@@ -31,7 +31,7 @@
             <field name="page_ids" position="after">
                 <field name="livechat_operator_id"/>
             </field>
-            <xpath expr="//div[@id='w_visitor_kanban_actions']" position="before">
+            <xpath expr="//div[hasclass('w_visitor_kanban_actions')]" position="before">
                 <div t-if="record.livechat_operator_id.raw_value">
                     <span class="fa fa-comments mr-2"/>Speaking With <span class="font-weight-bold"><field name="livechat_operator_name"/></span>
                 </div>
@@ -39,12 +39,28 @@
                     <br attrs="{'invisible': ['|', ('livechat_operator_id', '!=', False), ('is_connected', '=', False)]}"/>
                 </t>
             </xpath>
-            <xpath expr="//div[@id='w_visitor_kanban_actions']" position="inside">
-                    <button name="action_send_chat_request" type="object"
-                            class="btn btn-primary"
-                            attrs="{'invisible': ['|', ('livechat_operator_id', '!=', False), ('is_connected', '=', False)]}">
-                            <i class="fa fa-comments"/> Chat
-                    </button>
+            <xpath expr="//div[hasclass('w_visitor_kanban_actions_ungrouped')]" position="before">
+                <div class="col" >
+                    <b>
+                        <field name="livechat_operator_name" t-if="record.livechat_operator_id.raw_value"/>
+                        <span t-else="">-</span>
+                    </b>
+                    <div>Speaking With</div>
+                </div>
+            </xpath>
+            <xpath expr="//div[hasclass('w_visitor_kanban_actions')]" position="inside">
+                <button name="action_send_chat_request" type="object"
+                        class="btn btn-secondary"
+                        attrs="{'invisible': ['|', ('livechat_operator_id', '!=', False), ('is_connected', '=', False)]}">
+                        Chat
+                </button>
+            </xpath>
+            <xpath expr="//div[hasclass('w_visitor_kanban_actions_ungrouped')]" position="inside">
+                <button name="action_send_chat_request" type="object"
+                        class="btn btn-secondary border"
+                        attrs="{'invisible': ['|', ('livechat_operator_id', '!=', False), ('is_connected', '=', False)]}">
+                        Chat
+                </button>
             </xpath>
         </field>
     </record>

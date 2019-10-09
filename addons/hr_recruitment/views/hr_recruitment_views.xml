@@ -88,12 +88,6 @@
                          help="Schedule interview with this applicant">
                         <field name="meeting_count" widget="statinfo" string="Meetings"/>
                     </button>
-                    <button name="toggle_active" type="object"
-                            class="oe_stat_button" icon="fa-archive"
-                            attrs="{'invisible': [('active', '=', True)]}">
-                        <field name="active" widget="boolean_button"
-                            options='{"terminology": "archive"}'/>
-                    </button>
                 </div>
                 <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                 <field name="kanban_state" widget="kanban_state_selection"/>
@@ -109,10 +103,6 @@
                             <label for="partner_name" class="oe_edit_only"/>
                             <field name="partner_name"/>
                         </div>
-                        <div>
-                            <label for="categ_ids" class="oe_edit_only"/>
-                            <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
-                        </div>
                     </h2>
                 </div>
                 <group>
@@ -125,6 +115,7 @@
                         <field name="type_id" placeholder="Degree"/>
                     </group>
                     <group>
+                        <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                         <field name="user_id"/>
                         <field name="priority" widget="priority"/>
                         <field name="medium_id" groups="base.group_no_one" />
@@ -216,8 +207,6 @@
                     domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                 <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                     domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
-                <filter string="Exception Activities" name="activities_exception"
-                    domain="[('activity_exception_decoration', '!=', False)]"/>
                 <separator/>
                 <group expand="0" string="Group By">
                     <filter string="Responsible" name="responsible" domain="[]"  context="{'group_by': 'user_id'}"/>

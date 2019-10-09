@@ -493,6 +493,11 @@ class SavepointCase(SingleTransactionCase):
         super(SavepointCase, self).setUp()
         self._savepoint_id = next(savepoint_seq)
         self.cr.execute('SAVEPOINT test_%d' % self._savepoint_id)
+        # restore environments after the test to avoid invoking flush() with an
+        # invalid environment (inexistent user id) from another test
+        envs = self.env.all.envs
+        self.addCleanup(envs.update, list(envs))
+        self.addCleanup(envs.clear)
 
     def tearDown(self):
         self.cr.execute('ROLLBACK TO SAVEPOINT test_%d' % self._savepoint_id)
@@ -1532,8 +1537,9 @@ class Form(object):
         values = {}
         fields = self._view['fields']
         for f in fields:
+            descr = fields[f]
             v = self._values[f]
-            if self._get_modifier(f, 'required') and not fields[f]['type'] == 'boolean':
+            if self._get_modifier(f, 'required') and not (descr['type'] == 'boolean' or self._get_modifier(f, 'invisible')):
                 assert v is not False, "{} is a required field".format(f)
 
             # skip unmodified fields
@@ -1545,8 +1551,8 @@ class Form(object):
                 if not node.get('force_save'):
                     continue
 
-            if fields[f]['type'] == 'one2many':
-                view = fields[f]['views']['edition']
+            if descr['type'] == 'one2many':
+                view = descr['views']['edition']
                 modifiers = view['modifiers']
                 oldvals = v
                 v = []
@@ -1560,7 +1566,21 @@ class Form(object):
                 for (c, rid, vs) in oldvals:
                     if c in (0, 1):
                         items = list(getattr(vs, 'changed_items', vs.items)())
-                        # FIXME: should be more extensive processing of o2m defaults
+                        fields_ = view['fields']
+                        missing = fields_.keys() - vs.keys()
+                        if missing:
+                            Model = self._env[descr['relation']]
+                            if c == 0:
+                                vs.update(dict.fromkeys(missing, False))
+                                vs.update(
+                                    (k, _cleanup_from_default(fields_[k], v))
+                                    for k, v in Model.default_get(list(missing)).items()
+                                )
+                            else:
+                                vs.update(record_to_values(
+                                    {k: v for k, v in fields_.items() if k not in vs},
+                                    Model.browse(rid)
+                                ))
                         vs.setdefault('id', False)
                         vs['•parent•'] = self._values
                         vs = {
@@ -1744,7 +1764,7 @@ class O2MForm(Form):
         values._changed.update(self._changed)
 
         for f in self._view['fields']:
-            if self._get_modifier(f, 'required'):
+            if self._get_modifier(f, 'required') and not (self._get_modifier(f, 'column_invisible') or self._get_modifier(f, 'invisible')):
                 assert self._values[f] is not False, "{} is a required field".format(f)
 
         return values
@@ -1965,6 +1985,23 @@ def record_to_values(fields, record):
             v = odoo.fields.Date.to_string(v)
         r[f] = v
     return r
+
+def _cleanup_from_default(type_, value):
+    if not value:
+        if type_ == 'many2many':
+            return [(6, False, [])]
+        elif type_ == 'one2many':
+            return []
+        elif type_ in ('integer', 'float'):
+            return 0
+        return value
+
+    if type_ == 'one2many':
+        return [c for c in value if c[0] != 6]
+    elif type_ == 'datetime' and isinstance(value, datetime):
+        return odoo.fields.Datetime.to_string(value)
+    elif type_ == 'date' and isinstance(value, date):
+        return odoo.fields.Date.to_string(value)
 
 def _get_node(view, f, *arg):
     """ Find etree node for the field ``f`` in the view's arch

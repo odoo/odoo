@@ -45,8 +45,28 @@
         <field name="inherit_id" ref="website.website_visitor_view_search"/>
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='type_visitor']" position="replace">
-                <filter string="Visitors" name="type_visitor" domain="[('user_partner_id', '=', False), ('lead_ids', '=', False)]"/>
-                <filter string="Leads" name="type_lead" domain="[('user_partner_id', '=', False), ('lead_ids', '!=', False)]"/>
+                <filter string="Visitors" name="type_visitor" domain="[('partner_id', '=', False), ('lead_ids', '=', False)]"/>
+                <filter string="Leads" name="type_lead" domain="[('partner_id', '=', False), ('lead_ids', '!=', False)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="website_visitor_view_kanban" model="ir.ui.view">
+        <field name="name">website.visitor.view.kanban.inherit.website.crm</field>
+        <field name="model">website.visitor</field>
+        <field name="inherit_id" ref="website.website_visitor_view_kanban"/>
+        <field name="arch" type="xml">
+            <field name="page_ids" position="after">
+                <field name="lead_count"/>
+            </field>
+            <xpath expr="//div[@id='o_page_count']" position="after">
+                <div>Leads/Opportunities<span class="float-right font-weight-bold"><field name="lead_count"/></span></div>
+            </xpath>
+            <xpath expr="//div[hasclass('w_visitor_kanban_actions_ungrouped')]" position="before">
+                <div class="col">
+                    <b><field name="lead_count"/></b>
+                    <div>Leads/Opportunities</div>
+                </div>
             </xpath>
         </field>
     </record>

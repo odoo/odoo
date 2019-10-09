@@ -36,16 +36,11 @@ class Forum(models.Model):
         help='Questions mode: only one answer allowed\n Discussions mode: multiple answers allowed')
     active = fields.Boolean(default=True)
     faq = fields.Html('Guidelines', default=_get_default_faq, translate=html_translate, sanitize=False)
-    description = fields.Text(
-        'Description',
-        translate=True,
-        default=lambda s: _('This community is for professionals and enthusiasts of our products and services. '
-                            'Share and discuss the best content and new marketing ideas, '
-                            'build your professional profile and become a better marketer together.'))
+    description = fields.Text('Description', translate=True)
     welcome_message = fields.Html(
         'Welcome Message',
         translate=True,
-        default="""<section class="bg-info shadow">
+        default="""<section>
                         <div class="container py-5">
                             <div class="row">
                                 <div class="col-lg-12">
@@ -56,7 +51,7 @@ class Forum(models.Model):
                                     </p>
                                 </div>
                                 <div class="col text-center mt-3">
-                                    <a href="#" class="js_close_intro btn btn-outline-light">Hide Intro</a>
+                                    <a href="#" class="js_close_intro btn btn-outline-light mr-2">Hide Intro</a>
                                     <a class="btn btn-light forum_register_url" href="/web/login">Register</a>
                                 </div>
                             </div>
@@ -820,7 +815,7 @@ class Post(models.Model):
         return groups
 
     @api.returns('mail.message', lambda value: value.id)
-    def message_post(self, message_type='notification', **kwargs):
+    def message_post(self, *, message_type='notification', **kwargs):
         if self.ids and message_type == 'comment':  # user comments have a restriction on karma
             # add followers of comments on the parent post
             if self.parent_id:

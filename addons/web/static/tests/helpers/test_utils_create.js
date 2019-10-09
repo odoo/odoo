@@ -288,6 +288,7 @@ function createControlPanel(params) {
     }
 
     var viewOptions = _.defaults({}, params.viewOptions, {
+        context: params.context,
         modelName: params.model,
         searchMenuTypes: params.searchMenuTypes,
         viewInfo: params.viewInfo,

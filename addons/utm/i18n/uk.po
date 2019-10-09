@@ -3,16 +3,16 @@
 # 	* utm
 # 
 # Translators:
-# Martin Trigaux, 2019
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
+# Martin Trigaux, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:18+0000\n"
+"POT-Creation-Date: 2019-09-23 11:33+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,7 +33,7 @@ msgstr "Додати новий тег"
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_campaign__is_website
 msgid "Allows us to filter relevant Campaign"
-msgstr ""
+msgstr "Дозволяє нам фільтрувати відповідну кампанію"
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_search
@@ -58,7 +58,7 @@ msgstr ""
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.action_view_utm_tag
-#: model_terms:ir.ui.view,arch_db:utm.utm_tag_view_form
+#: model_terms:ir.ui.view,arch_db:utm.utm_tag_view_tree
 msgid "Campaign Tags"
 msgstr "Теги кампанії"
 
@@ -107,11 +107,6 @@ msgstr "Створив"
 #: model:ir.model.fields,field_description:utm.field_utm_tag__create_date
 msgid "Created on"
 msgstr "Створено на"
-
-#. module: utm
-#: model:utm.stage,name:utm.default_utm_stage
-msgid "Default"
-msgstr "За замовчуванням"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_campaign_action
@@ -191,7 +186,7 @@ msgstr "ID"
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__is_website
 msgid "Is Website"
-msgstr ""
+msgstr "Веб-сайт"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign____last_update
@@ -259,6 +254,11 @@ msgstr "Середовища"
 #: model:ir.model.fields,field_description:utm.field_utm_tag__name
 msgid "Name"
 msgstr "Ім'я"
+
+#. module: utm
+#: model:utm.stage,name:utm.default_utm_stage
+msgid "New"
+msgstr "Новий"
 
 #. module: utm
 #: model:utm.source,name:utm.utm_source_newsletter
@@ -393,7 +393,7 @@ msgstr "Кампанія UTM"
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_tree
 #: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
 msgid "UTM Campaigns"
-msgstr ""
+msgstr "Кампанії UTM"
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_medium

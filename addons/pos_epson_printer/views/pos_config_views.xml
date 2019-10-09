@@ -20,9 +20,6 @@
                     The Epson receipt printer will be used instead of the receipt printer connected to the IoT Box.
                 </div>
             </xpath>
-            <xpath expr="//div[hasclass('pos_reprint_receipt')]" position="attributes">
-                <attribute name="attrs">{'invisible': [('iface_print_via_proxy','=',False), ('epson_printer_ip', 'in', [False, ''])]}</attribute>
-            </xpath>
         </field>
     </record>
 </odoo>

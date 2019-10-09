@@ -7,10 +7,12 @@ from odoo import api, fields, models
 class UtmCampaign(models.Model):
     _inherit = 'utm.campaign'
 
-    mailing_ids = fields.One2many(
+    mailing_mail_ids = fields.One2many(
         'mailing.mailing', 'campaign_id',
+        domain=[('mailing_type', '=', 'mail')],
         string='Mass Mailings')
-    mailing_clicks_ratio = fields.Integer(default=0, compute="_compute_mailing_clicks_ratio", string="Number of clicks")
+    mailing_mail_count = fields.Integer('Number of Mass Mailing', compute="_compute_mailing_mail_count")
+    mailing_clicks_ratio = fields.Integer(compute="_compute_mailing_clicks_ratio", string="Number of clicks")
     mailing_items = fields.Integer(compute="_compute_mailing_items", string='Mailings')
     mailing_clicked = fields.Integer(compute="_compute_mailing_items", string='Mailings Clicked')
     # stat fields
@@ -28,26 +30,21 @@ class UtmCampaign(models.Model):
     replied_ratio = fields.Integer(compute="_compute_statistics", string='Replied Ratio')
     bounced_ratio = fields.Integer(compute="_compute_statistics", string='Bounced Ratio')
 
-    @api.depends('mailing_items', 'mailing_clicked')
-    def _compute_items_total(self):
+    @api.depends('mailing_mail_ids')
+    def _compute_mailing_mail_count(self):
         for campaign in self:
-            campaign.items_total += campaign.mailing_items
-            campaign.clicked_total += campaign.mailing_clicked
+            campaign.mailing_mail_count = len(campaign.mailing_mail_ids)
 
     def _compute_mailing_items(self):
-        super(UtmCampaign, self)._compute_clicks_ratio()
-        mapped_data = {}
-
-        if self.ids:
-            query = """SELECT trace.campaign_id AS campaign_id, COUNT(DISTINCT(trace.id)) AS items_total, COUNT(DISTINCT(click.mailing_trace_id)) AS clicked_total
-                        FROM mailing_trace AS trace
-                        LEFT OUTER JOIN link_tracker_click as click ON click.mailing_trace_id = trace.id
-                        WHERE trace.campaign_id IN %s
-                        GROUP BY trace.campaign_id """
-            params = [tuple(self.ids)]
-            self.env.cr.execute(query, params)
-            clicked_data = self.env.cr.dictfetchall()
-            mapped_data = {datum['campaign_id']: {'clicked_total': datum['clicked_total'], 'items_total': datum['items_total']} for datum in clicked_data}
+        query = """SELECT trace.campaign_id AS campaign_id, COUNT(DISTINCT(trace.id)) AS items_total, COUNT(DISTINCT(click.mailing_trace_id)) AS clicked_total
+                    FROM mailing_trace AS trace
+                    LEFT OUTER JOIN link_tracker_click as click ON click.mailing_trace_id = trace.id
+                    WHERE trace.campaign_id IN %s
+                    GROUP BY trace.campaign_id """
+        params = [tuple(self.ids)]
+        self.env.cr.execute(query, params)
+        clicked_data = self.env.cr.dictfetchall()
+        mapped_data = {datum['campaign_id']: {'clicked_total': datum['clicked_total'], 'items_total': datum['items_total']} for datum in clicked_data}
 
         for campaign in self:
             campaign_items_values = mapped_data.get(campaign.id, {})

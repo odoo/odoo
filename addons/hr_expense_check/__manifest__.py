@@ -2,7 +2,7 @@
 {
     'name': "Check Printing in Expenses",
     'summary': """Print amount in words on checks issued for expenses""",
-    'category': 'Accounting',
+    'category': 'Accounting/Expenses',
     'description': """
         Print amount in words on checks issued for expenses
     """,

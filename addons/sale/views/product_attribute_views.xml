@@ -8,7 +8,7 @@
         <field name="inherit_id" ref="product.attribute_tree_view"></field>
         <field name="arch" type="xml">
             <field name="name" position="after">
-                <field name="type"/>
+                <field name="display_type"/>
             </field>
         </field>
     </record>
@@ -32,11 +32,12 @@
         <field name="priority" eval="8"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='create_variant']" position="before">
-                <field name="type" widget="radio"/>
+                <field name="display_type" widget="radio"/>
             </xpath>
             <xpath expr="//field[@name='value_ids']/tree/field[@name='name']" position="after">
-                <field name="is_custom" groups="product.group_product_variant" />
-                <field name="html_color"/>
+                <field name="display_type" invisible="1"/>
+                <field name="is_custom" groups="product.group_product_variant"/>
+                <field name="html_color" attrs="{'column_invisible': [('parent.display_type', '!=', 'color')]}" widget="color"/>
             </xpath>
         </field>
     </record>
@@ -47,7 +48,8 @@
         <field name="inherit_id" ref="product.product_template_attribute_value_view_tree"/>
         <field name="arch" type="xml">
             <field name="name" position="after">
-                <field name="html_color"/>
+                <field name="display_type"/>
+                <field name="html_color" attrs="{'invisible': [('display_type', '!=', 'color')]}" widget="color"/>
             </field>
         </field>
     </record>
@@ -58,19 +60,8 @@
         <field name="inherit_id" ref="product.product_template_attribute_value_view_form"/>
         <field name="arch" type="xml">
             <field name="name" position="after">
-                <field name="html_color" readonly="True" />
-            </field>
-        </field>
-    </record>
-
-    <record id="variants_tree_view" model="ir.ui.view">
-        <field name="name">variants.template.tree</field>
-        <field name="model">product.attribute.value</field>
-        <field name="inherit_id" ref="product.variants_tree_view"/>
-        <field name="arch" type="xml">
-            <field name="name" position="after">
-                <field name="is_custom" groups="product.group_product_variant" />
-                <field name="html_color"/>
+                <field name="display_type" invisible="1"/>
+                <field name="html_color" attrs="{'invisible': [('display_type', '!=', 'color')]}"/>
             </field>
         </field>
     </record>

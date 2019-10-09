@@ -22,6 +22,7 @@
                     <field name="partner_id" operator="child_of"/>
                     <field name="stage_id"/>
                     <field name="project_id"/>
+                    <field name="parent_id" groups="project.group_subtask_project"/>
                     <filter string="My Tasks" name="my_tasks" domain="[('user_id', '=', uid)]"/>
                     <filter string="Followed Tasks" name="my_followed_tasks" domain="[('message_is_follower', '=', True)]" />
                     <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
@@ -39,8 +40,6 @@
                         domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
-                    <filter string="Exception Activities" name="activities_exception"
-                        domain="[('activity_exception_decoration', '!=', False)]"/>
                     <separator/>
                     <filter string="Rated tasks" name="rating_task" domain="[('rating_last_value', '!=', 0.0)]" groups="project.group_project_rating"/>
                     <group expand="0" string="Group By">
@@ -131,7 +130,7 @@
                                     <field name="partner_id" string="Customer"/>
                                 </group>
                                 <group>
-                                    <field name="analytic_account_id" context="{'default_partner_id': partner_id}" groups="analytic.group_analytic_accounting"/>
+                                    <field name="analytic_account_id" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" context="{'default_partner_id': partner_id}" groups="analytic.group_analytic_accounting"/>
                                     <field name="privacy_visibility" widget="radio"/>
 
                                     <field name="subtask_project_id" groups="project.group_subtask_project"/>
@@ -449,8 +448,7 @@
                     <div class="oe_button_box" name="button_box">
                         <button class="oe_stat_button" icon="fa-tasks" type="object" name="action_open_parent_task" string="Parent Task" attrs="{'invisible' : [('parent_id', '=', False)]}" groups="project.group_subtask_project"/>
                         <button name="action_subtask" type="object" class="oe_stat_button" icon="fa-tasks"
-                            attrs="{'invisible' : [('parent_id', '!=', False)]}"
-                            context="{'project_id': subtask_project_id, 'name': name, 'partner_id': partner_id}" groups="project.group_subtask_project">
+                            attrs="{'invisible' : ['|', ('parent_id', '!=', False), ('id', '=', False)]}" context="{'default_user_id': user_id, 'default_parent_id': id, 'default_project_id': subtask_project_id}" groups="project.group_subtask_project">
                             <field string="Sub-tasks" name="subtask_count" widget="statinfo"/>
                         </button>
                         <button name="%(rating_rating_action_task)d" type="action" attrs="{'invisible': [('rating_count', '=', 0)]}" class="oe_stat_button" icon="fa-smile-o" groups="project.group_project_rating">
@@ -490,7 +488,7 @@
                             <group>
                                 <group>
                                     <field name="sequence" groups="base.group_no_one"/>
-                                    <field name="partner_id" attrs="{'readonly': [('parent_id', '!=', False)]}"/>
+                                    <field name="partner_id"/>
                                     <field name="email_from" invisible="1"/>
                                     <field name="email_cc" groups="base.group_no_one"/>
                                     <field name="parent_id" attrs="{'invisible' : [('subtask_count', '>', 0)]}" groups="project.group_subtask_project"/>
@@ -542,6 +540,7 @@
                     <group>
                         <field name="name" string = "Task Title"/>
                         <field name="user_id" options="{'no_open': True,'no_create': True}"/>
+                        <field name="parent_id" invisible="1"/>
                     </group>
                 </form>
             </field>
@@ -623,8 +622,12 @@
                                         <t t-set="date_format" t-value="'MM/DD/YY'" />
                                         <t t-set="date" t-value=""/>
                                         <!-- color of the span -->
-                                        <t t-if="record.date_deadline.raw_value and moment(record.date_deadline.raw_value.toISOString()).startOf('day') lt moment().startOf('day')" t-set="deadline_class">oe_kanban_text_red</t>
-                                        <t t-elif="record.date_deadline.raw_value and moment(record.date_deadline.raw_value.toISOString()).startOf('day') lt moment().endOf('day')" t-set="deadline_class">text-warning font-weight-bold</t>
+                                        <t t-if="record.date_deadline.raw_value and moment(record.date_deadline.raw_value.toISOString()).startOf('day') lt moment().startOf('day')">
+                                            <t t-set="deadline_class" t-value="'oe_kanban_text_red'" />
+                                        </t>
+                                        <t t-elif="record.date_deadline.raw_value and moment(record.date_deadline.raw_value.toISOString()).startOf('day') lt moment().endOf('day')">
+                                            <t t-set="deadline_class" t-value="'text-warning font-weight-bold'" />
+                                        </t>
                                         <!-- Date value -->
                                         <t t-if="record.date_deadline.raw_value" t-set="date" t-value="moment(record.date_deadline.raw_value.toISOString()).format(date_format)" />
                                         <span name="date" t-attf-class="#{deadline_class || ''}"><t t-esc="date" /></span>

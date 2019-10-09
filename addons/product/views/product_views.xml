@@ -47,7 +47,7 @@
                                 <group name="group_standard_price">
                                     <label for="list_price"/>
                                     <div name="pricing">
-                                      <field name="list_price" string="Sales Price" class="oe_inline" widget='monetary'
+                                      <field name="list_price" class="oe_inline" widget='monetary'
                                         options="{'currency_field': 'currency_id', 'field_digits': True}"/>
                                       <button name="open_pricelist_rules" icon="fa-arrow-right" type="object"
                                         groups="product.group_product_pricelist" class="oe_inline">
@@ -85,7 +85,7 @@
                                 <group name="email_template_and_project" invisible="1"/>
                             </group>
                             <group string="Sales Description" name="description">
-                                <field name="description_sale" nolabel="1" placeholder="This note will show up on sales orders &amp; invoices."/>
+                                <field name="description_sale" nolabel="1" placeholder="This note is added to sales orders and invoices."/>
                             </group>
                         </page>
                         <page string="Purchase" name="purchase" attrs="{'invisible': [('purchase_ok','=',False)]}" invisible="1">
@@ -140,7 +140,6 @@
                 <filter string="Can be Sold" name="filter_to_sell" domain="[('sale_ok','=',True)]"/>
                 <filter string="Can be Purchased" name="filter_to_purchase" domain="[('purchase_ok', '=', True)]"/>
                 <separator/>
-                <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 <field string="Attributes" name="attribute_line_ids" groups="product.group_product_variant"/>
                 <field name="pricelist_id" context="{'pricelist': self}" filter_domain="[]" groups="product.group_product_pricelist"/>
                 <filter invisible="1" string="Late Activities" name="activities_overdue"
@@ -151,8 +150,11 @@
                 <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                     domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                     ]"/>
-                <filter string="Exception Activities" name="activities_exception"
+                <separator/>
+                <filter string="Warnings" name="activities_exception"
                         domain="[('activity_exception_decoration', '!=', False)]"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 <group expand="1" string="Group By">
                     <filter string="Product Type" name="type" context="{'group_by':'type'}"/>
                     <filter string="Product Category" name="categ_id" context="{'group_by':'categ_id'}"/>
@@ -296,19 +298,19 @@
             <field name="model">product.product</field>
             <field eval="7" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Product Variants">
-                    <field name="default_code" optional="show"/>
-                    <field name="barcode" optional="hide"/>
-                    <field name="name"/>
-                    <field name="product_template_attribute_value_ids" widget="many2many_tags" groups="product.group_product_variant"/>
-                    <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                <tree string="Product Variants" multi_edit="1">
+                    <field name="default_code" optional="show" readonly="1"/>
+                    <field name="barcode" optional="hide" readonly="1"/>
+                    <field name="name" readonly="1"/>
+                    <field name="product_template_attribute_value_ids" widget="many2many_tags" groups="product.group_product_variant" readonly="1"/>
+                    <field name="company_id" groups="base.group_multi_company" optional="hide" readonly="1"/>
                     <field name="lst_price" optional="show" string="Sales Price"/>
-                    <field name="standard_price" optional="show"/>
+                    <field name="standard_price" optional="show" readonly="1"/>
                     <field name="categ_id" optional="hide"/>
-                    <field name="type" optional="hide"/>
+                    <field name="type" optional="hide" readonly="1"/>
                     <field name="price" invisible="not context.get('pricelist',False)"/>
-                    <field name="uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" optional="show"/>
-                    <field name="product_tmpl_id" invisible="1"/>
+                    <field name="uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" optional="show" readonly="1"/>
+                    <field name="product_tmpl_id" invisible="1" readonly="1"/>
                     <field name="active" invisible="1"/>
                 </tree>
             </field>
@@ -653,15 +655,18 @@
             <field name="name">product.supplierinfo.tree.view</field>
             <field name="model">product.supplierinfo</field>
             <field name="arch" type="xml">
-                <tree string="Vendor Information">
-                    <field name="sequence" widget="handle"/>
-                    <field name="name"/>
-                    <field name="product_id" invisible="context.get('product_template_invisible_variant', False)" groups="product.group_product_variant" optional="hide"/>
-                    <field name="product_tmpl_id" string="Product" invisible="context.get('visible_product_tmpl_id', True)"/>
+                <tree string="Vendor Information" multi_edit="1">
+                    <field name="sequence" widget="handle" readonly="1"/>
+                    <field name="name" readonly="1"/>
+                    <field name="product_id" readonly="1" optional="hide"
+                        invisible="context.get('product_template_invisible_variant', False)"
+                        groups="product.group_product_variant"/>
+                    <field name="product_tmpl_id" string="Product" readonly="1"
+                        invisible="context.get('visible_product_tmpl_id', True)"/>
                     <field name="currency_id" groups="base.group_multi_currency"/>
                     <field name="date_start" optional="hide"/>
                     <field name="date_end" optional="hide"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="company_id" readonly="1" groups="base.group_multi_company"/>
                     <field name="min_qty"/>
                     <field name="product_uom" groups="uom.group_uom"/>
                     <field name="price" string="Price"/>

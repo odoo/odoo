@@ -3,6 +3,7 @@ odoo.define('web_editor.summernote', function (require) {
 
 var core = require('web.core');
 require('summernote/summernote'); // wait that summernote is loaded
+var weDefaultOptions = require('web_editor.wysiwyg.default_options');
 
 var _t = core._t;
 
@@ -1044,7 +1045,7 @@ options.keyMap.mac['ESCAPE'] = 'cancel';
 options.keyMap.mac['UP'] = 'up';
 options.keyMap.mac['DOWN'] = 'down';
 
-options.styleTags = ['p', 'pre', 'small', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote'];
+options.styleTags = weDefaultOptions.styleTags;
 
 $.summernote.pluginEvents.insertTable = function (event, editor, layoutInfo, sDim) {
   var $editable = layoutInfo.editable();
@@ -2083,7 +2084,7 @@ eventHandler.modules.editor.currentStyle = function (target) {
     return styleInfo;
 };
 
-options.fontSizes = [_t('Default'), 8, 9, 10, 11, 12, 14, 18, 24, 36, 48, 62];
+options.fontSizes = weDefaultOptions.fontSizes;
 $.summernote.pluginEvents.applyFont = function (event, editor, layoutInfo, color, bgcolor, size) {
     var r = range.create();
     if (!r) return;
@@ -2237,7 +2238,7 @@ $.summernote.pluginEvents.applyFont = function (event, editor, layoutInfo, color
     // select nodes to clean (to remove empty font and merge same nodes)
     nodes = [];
     dom.walkPoint(startPoint, endPoint, function (point) {
-      nodes.push(point.node);
+      nodes.push(point.node.childNodes[point.offset] || point.node);
     });
     nodes = list.unique(nodes);
 
@@ -2256,10 +2257,8 @@ $.summernote.pluginEvents.applyFont = function (event, editor, layoutInfo, color
      for (i=0; i<nodes.length; i++) {
       node = nodes[i];
 
-      if ((dom.isText(node) || dom.isBR(node)) && !dom.isVisibleText(node)) {
+      if (dom.isText(node) && !node.nodeValue) {
         remove(node);
-        nodes.splice(i,1);
-        i--;
         continue;
       }
 
@@ -2276,18 +2275,14 @@ $.summernote.pluginEvents.applyFont = function (event, editor, layoutInfo, color
 
       if (!className && !style) {
         remove(node, node.parentNode);
-        nodes.splice(i,1);
-        i--;
         continue;
       }
 
-      if (i>0 && (font = dom.ancestor(nodes[i-1], dom.isFont))) {
+      if (font = dom.ancestor(node.previousSibling, dom.isFont)) {
         className2 = font.getAttribute('class');
         style2 = font.getAttribute('style');
         if (node !== font && className === className2 && style === style2) {
           remove(node, font);
-          nodes.splice(i,1);
-          i--;
           continue;
         }
       }
@@ -2492,7 +2487,7 @@ function mouseDownChecklist (e) {
             $lis.addClass('o_checked');
         } while ($lis.length);
     }
-};
+}
 
 var fn_attach = eventHandler.attach;
 eventHandler.attach = function (oLayoutInfo, options) {

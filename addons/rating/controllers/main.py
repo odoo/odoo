@@ -6,6 +6,7 @@ import werkzeug
 from odoo import http
 from odoo.http import request
 from odoo.tools.translate import _
+from odoo.tools.misc import get_lang
 
 
 class Rating(http.Controller):
@@ -22,7 +23,7 @@ class Rating(http.Controller):
             10: _("satisfied")
         }
         rating.write({'rating': rate, 'consumed': True})
-        lang = rating.partner_id.lang or 'en_US'
+        lang = rating.partner_id.lang or get_lang(request.env).code
         return request.env['ir.ui.view'].with_context(lang=lang).render_template('rating.rating_external_page_submit', {
             'rating': rating, 'token': token,
             'rate_name': rate_names[rate], 'rate': rate
@@ -35,7 +36,7 @@ class Rating(http.Controller):
             return request.not_found()
         record_sudo = request.env[rating.res_model].sudo().browse(rating.res_id)
         record_sudo.rating_apply(rate, token=token, feedback=kwargs.get('feedback'))
-        lang = rating.partner_id.lang or 'en_US'
+        lang = rating.partner_id.lang or get_lang(request.env).code
         return request.env['ir.ui.view'].with_context(lang=lang).render_template('rating.rating_external_page_view', {
             'web_base_url': request.env['ir.config_parameter'].sudo().get_param('web.base.url'),
             'rating': rating,

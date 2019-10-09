@@ -511,6 +511,42 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('float field in list view no widget', async function (assert) {
+        assert.expect(5);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="qux" digits="[5,3]"/>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 2,
+        });
+
+        assert.doesNotHaveClass(form.$('.o_field_widget'), 'o_field_empty',
+            'Float field should be considered set for value 0.');
+        assert.strictEqual(form.$('.o_field_widget').first().text(), '0.000',
+            'The value should be displayed properly.');
+
+        await testUtils.form.clickEdit(form);
+        assert.strictEqual(form.$('input[name=qux]').val(), '0.000',
+            'The value should be rendered with correct precision.');
+
+        await testUtils.fields.editInput(form.$('input[name=qux]'), '108.2458938598598');
+        assert.strictEqual(form.$('input[name=qux]').val(), '108.2458938598598',
+            'The value should not be formated yet.');
+
+        await testUtils.fields.editInput(form.$('input[name=qux]'), '18.8958938598598');
+        await testUtils.form.clickSave(form);
+        assert.strictEqual(form.$('.o_field_widget').first().text(), '18.896',
+            'The new value should be rounded properly.');
+
+        form.destroy();
+    });
+
     QUnit.test('float field in form view', async function (assert) {
         assert.expect(5);
 
@@ -1073,7 +1109,7 @@ QUnit.module('basic_fields', {
     });
 
     QUnit.test('char field translatable', async function (assert) {
-        assert.expect(4);
+        assert.expect(12);
 
         this.data.partner.fields.foo.translate = true;
 
@@ -1092,6 +1128,9 @@ QUnit.module('basic_fields', {
                     '</sheet>' +
                 '</form>',
             res_id: 1,
+            session: {
+                user_context: {lang: 'en_US'},
+            },
             mockRPC: function (route, args) {
                 if (route === "/web/dataset/call_button" && args.method === 'translate_fields') {
                     assert.deepEqual(args.args, ["partner",1,"foo"], 'should call "call_button" route');
@@ -1101,7 +1140,18 @@ QUnit.module('basic_fields', {
                     });
                 }
                 if (route === "/web/dataset/call_kw/res.lang/get_installed") {
-                    return Promise.resolve([["en_US"], ["fr_BE"]]);
+                    return Promise.resolve([["en_US", "English"], ["fr_BE", "French (Belgium)"]]);
+                }
+                if (args.method === "search_read" && args.model == "ir.translation") {
+                    return Promise.resolve([
+                        {lang: 'en_US', src: 'yop', value: 'yop', id: 42},
+                        {lang: 'fr_BE', src: 'yop', value: 'valeur français', id: 43}
+                    ]);
+                }
+                if (args.method === "write" && args.model == "ir.translation") {
+                    assert.deepEqual(args.args[1], {value: "english value"},
+                        "the new translation value should be written");
+                    return Promise.resolve();
                 }
                 return this._super.apply(this, arguments);
             },
@@ -1114,6 +1164,117 @@ QUnit.module('basic_fields', {
         await testUtils.nextTick();
 
         assert.containsOnce($(document), '.modal', 'a translate modal should be visible');
+        assert.containsN($('.modal .o_translation_dialog'), '.translation', 2,
+            'two rows should be visible');
+
+        var $enField = $('.modal .o_translation_dialog .translation:first() input');
+        assert.strictEqual($enField.val(), 'yop',
+            'English translation should be filled');
+        assert.strictEqual($('.modal .o_translation_dialog .translation:last() input').val(), 'valeur français',
+            'French translation should be filled');
+
+        await testUtils.fields.editInput($enField, "english value");
+        await testUtils.dom.click($('.modal button.btn-primary'));  // save
+        await testUtils.nextTick();
+
+        var $foo = form.$('input[type="text"].o_field_char');
+        assert.strictEqual($foo.val(), "english value",
+            "the new translation was not transfered to modified record");
+
+        await testUtils.fields.editInput($foo, "new english value");
+
+        await testUtils.dom.click($button);
+        await testUtils.nextTick();
+
+        assert.strictEqual($('.modal .o_translation_dialog .translation:first() input').val(), 'new english value',
+            'Modified value should be used instead of translation');
+        assert.strictEqual($('.modal .o_translation_dialog .translation:last() input').val(), 'valeur français',
+            'French translation should be filled');
+
+        form.destroy();
+
+        _t.database.multi_lang = multiLang;
+    });
+
+    QUnit.test('html field translatable', async function (assert) {
+        assert.expect(6);
+
+        this.data.partner.fields.foo.translate = true;
+
+        var multiLang = _t.database.multi_lang;
+        _t.database.multi_lang = true;
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="foo"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            session: {
+                user_context: {lang: 'en_US'},
+            },
+            mockRPC: function (route, args) {
+                if (route === "/web/dataset/call_button" && args.method === 'translate_fields') {
+                    assert.deepEqual(args.args, ["partner",1,"foo"], 'should call "call_button" route');
+                    return Promise.resolve({
+                        domain: [],
+                        context: {
+                            search_default_name: 'partner,foo',
+                            translation_type: 'char',
+                            translation_show_src: true,
+                        },
+                    });
+                }
+                if (route === "/web/dataset/call_kw/res.lang/get_installed") {
+                    return Promise.resolve([["en_US", "English"], ["fr_BE", "French (Belgium)"]]);
+                }
+                if (args.method === "search_read" && args.model == "ir.translation") {
+                    return Promise.resolve([
+                        {lang: 'en_US', src: 'first paragraph', value: 'first paragraph', id: 42},
+                        {lang: 'en_US', src: 'second paragraph', value: 'second paragraph', id: 43},
+                        {lang: 'fr_BE', src: 'first paragraph', value: 'premier paragraphe', id: 44},
+                        {lang: 'fr_BE', src: 'second paragraph', value: 'deuxième paragraphe', id: 45},
+                    ]);
+                }
+                if (args.method === "write" && args.model == "ir.translation") {
+                    assert.deepEqual(args.args[1], {value: "first paragraph modified"},
+                        "Wrong update on translation");
+                    return Promise.resolve();
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        await testUtils.form.clickEdit(form);
+        var $foo = form.$('input[type="text"].o_field_char');
+
+        // this will not affect the translate_fields effect until the record is
+        // saved but is set for consistency of the test
+        await testUtils.fields.editInput($foo, "<p>first paragraph</p><p>second paragraph</p>");
+
+        var $button = form.$('input[type="text"].o_field_char + .o_field_translate');
+        await testUtils.dom.click($button);
+        await testUtils.nextTick();
+
+        assert.containsOnce($(document), '.modal', 'a translate modal should be visible');
+        assert.containsN($('.modal .o_translation_dialog'), '.translation', 4,
+            'four rows should be visible');
+
+        var $enField = $('.modal .o_translation_dialog .translation:first() input');
+        assert.strictEqual($enField.val(), 'first paragraph',
+            'first part of english translation should be filled');
+
+        await testUtils.fields.editInput($enField, "first paragraph modified");
+        await testUtils.dom.click($('.modal button.btn-primary'));  // save
+        await testUtils.nextTick();
+
+        assert.strictEqual($foo.val(), "<p>first paragraph</p><p>second paragraph</p>",
+            "the new partial translation should not be transfered");
 
         form.destroy();
 
@@ -2636,7 +2797,7 @@ QUnit.module('basic_fields', {
     QUnit.module('FieldDateRange');
 
     QUnit.test('Datetime field', async function (assert) {
-        assert.expect(19);
+        assert.expect(20);
 
         this.data.partner.fields.datetime_end = {string: 'Datetime End', type: 'datetime'};
         this.data.partner.records[0].datetime_end = '2017-03-13 00:00:00';
@@ -2685,6 +2846,8 @@ QUnit.module('basic_fields', {
             "active end date hour should be '5' in date range picker");
         assert.strictEqual($('.daterangepicker:first .drp-calendar.right .minuteselect').val(), '30',
             "active end date minute should be '30' in date range picker");
+        assert.containsN($('.daterangepicker:first .drp-calendar.left .minuteselect'), 'option', 12,
+            "minute selection should contain 12 options (1 for each 5 minutes)");
 
         // Close picker
         await testUtils.dom.click($('.daterangepicker:first .cancelBtn'));
@@ -3548,7 +3711,7 @@ QUnit.module('basic_fields', {
             View: ListView,
             model: 'partner',
             data: this.data,
-            arch: '<tree editable="bottom">' +
+            arch: '<tree multi_edit="1">' +
                     '<field name="datetime"/>' +
                   '</tree>',
             translateParameters: { // Avoid issues due to localization formats
@@ -6440,7 +6603,7 @@ QUnit.module('basic_fields', {
     });
 
     QUnit.test('Field Color: default widget state', async function (assert) {
-        assert.expect(3);
+        assert.expect(4);
 
         var form = await createView({
             View: FormView,
@@ -6464,6 +6627,46 @@ QUnit.module('basic_fields', {
             "Opacity input should not be present");
 
         await testUtils.dom.click($('.modal .btn:contains("Discard")'));
+
+        assert.strictEqual(document.activeElement, form.$('.o_field_color')[0],
+            "Focus should go back to the color field");
+
+        form.destroy();
+    });
+
+    QUnit.test('Field Color: behaviour in different views', async function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records[0].p = [4, 2];
+        this.data.partner.records[1].hex_color = '#ff0080';
+
+        const form = await createView({
+            arch: '<form>' +
+                    '<field name="hex_color" widget="color"/>' +
+                    '<field name="p">' +
+                        '<tree editable="top">' +
+                            '<field name="display_name"/>' +
+                            '<field name="hex_color" widget="color"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            data: this.data,
+            model: 'partner',
+            res_id: 1,
+            View: FormView,
+        });
+
+        await testUtils.dom.click(form.$('.o_field_color:first()'));
+        assert.containsNone($(document.body), '.modal',
+            "Color field in readonly shouldn't be editable");
+
+        const rowInitialHeight = form.$('.o_data_row:first()').height();
+
+        await testUtils.form.clickEdit(form);
+        await testUtils.dom.click(form.$('.o_data_row:first() .o_data_cell:first()'));
+
+        assert.strictEqual(rowInitialHeight, form.$('.o_data_row:first()').height(),
+            "Color field shouldn't change the color height when edited");
 
         form.destroy();
     });

@@ -94,6 +94,9 @@ var viewUtils = require('web.viewUtils');
 
 var _t = core._t;
 
+// field types that can be aggregated in grouped views
+const AGGREGATABLE_TYPES = ['float', 'integer', 'monetary'];
+
 var x2ManyCommands = {
     // (0, virtualID, {values})
     CREATE: 0,
@@ -3353,7 +3356,15 @@ var BasicModel = AbstractModel.extend({
         var viewType = view ? view.type : fieldInfo.viewType;
 
         var toFetch = {};
-        _.each(list.data, function (dataPoint) {
+
+        // flattens the list.data ids in a grouped case
+        let dataPointIds = list.data;
+        for (let i = 0; i < list.groupedBy.length; i++) {
+            dataPointIds = dataPointIds.reduce((acc, groupId) =>
+                acc.concat(this.localData[groupId].data), []);
+        }
+
+        dataPointIds.forEach(function (dataPoint) {
             var record = self.localData[dataPoint];
             if (typeof record.data[fieldName] === 'string'){
                 // in this case, the value is a local ID, which means that the
@@ -4451,8 +4462,9 @@ var BasicModel = AbstractModel.extend({
                 _.each(groups, function (group) {
                     var aggregateValues = {};
                     _.each(group, function (value, key) {
-                        if (_.contains(fields, key) && key !== groupByField) {
-                            aggregateValues[key] = value;
+                        if (_.contains(fields, key) && key !== groupByField &&
+                            AGGREGATABLE_TYPES.includes(list.fields[key].type)) {
+                                aggregateValues[key] = value;
                         }
                     });
                     // When a view is grouped, we need to display the name of each group in

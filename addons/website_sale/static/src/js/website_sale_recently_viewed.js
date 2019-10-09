@@ -14,6 +14,7 @@ publicWidget.registry.productsRecentlyViewedSnippet = publicWidget.Widget.extend
     xmlDependencies: ['/website_sale/static/src/xml/website_sale_recently_viewed.xml'],
     events: {
         'click .js_add_cart': '_onAddToCart',
+        'click .js_remove': '_onRemove',
     },
 
     /**
@@ -118,6 +119,24 @@ publicWidget.registry.productsRecentlyViewedSnippet = publicWidget.Widget.extend
             self._dp.add(self._fetch()).then(self._render.bind(self));
         });
     },
+
+    /**
+     * Remove product from recently viewed products.
+     * @private
+     * @param {Event} ev
+     */
+    _onRemove: function (ev) {
+        var self = this;
+        var $card = $(ev.currentTarget).closest('.card');
+        this._rpc({
+            route: "/shop/products/recently_viewed_delete",
+            params: {
+                product_id: $card.find('input[data-product-id]').data('product-id'),
+            },
+        }).then(function (data) {
+            self._render(data);
+        });
+    },
 });
 
 publicWidget.registry.productsRecentlyViewedUpdate = publicWidget.Widget.extend({
@@ -162,8 +181,8 @@ publicWidget.registry.productsRecentlyViewedUpdate = publicWidget.Widget.extend(
                 product_id: productId,
             }
         }).then(function (res) {
-            if (res && res.visitor_id) {
-                utils.set_cookie('visitor_id', res.visitor_id);
+            if (res && res.visitor_uuid) {
+                utils.set_cookie('visitor_uuid', res.visitor_uuid);
             }
             utils.set_cookie(cookieName, productId, 30 * 60);
         });

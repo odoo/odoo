@@ -34,11 +34,11 @@ var DataExport = Dialog.extend({
      * @param {Object} record
      * @param {string[]} defaultExportFields
      */
-    init: function (parent, record, defaultExportFields) {
+    init: function (parent, record, defaultExportFields, groupedBy, activeDomain, idsToExport) {
         var options = {
             title: _t("Export Data"),
             buttons: [
-                {text: _t("Export"), click: this._exportData, classes: 'btn-primary'},
+                {text: _t("Export"), click: this._onExportData, classes: 'btn-primary'},
                 {text: _t("Close"), close: true},
             ],
         };
@@ -46,9 +46,13 @@ var DataExport = Dialog.extend({
         this.records = {};
         this.record = record;
         this.defaultExportFields = defaultExportFields;
+        this.groupby = groupedBy;
         this.exports = new data.DataSetSearch(this, 'ir.exports', this.record.getContext());
         this.rowIndex = 0;
         this.rowIndexLevel = 0;
+        this.isCompatibleMode = false;
+        this.domain = activeDomain || this.record.domain;
+        this.idsToExport = activeDomain ? false: idsToExport;
     },
     /**
      * @override
@@ -71,16 +75,6 @@ var DataExport = Dialog.extend({
                 var record = self.records[field];
                 self._addField(record.id, record.string);
             });
-        }));
-
-        proms.push(this.getParent().getActiveDomain().then(function (domain) {
-            if (domain === undefined) {
-                self.idsToExport = self.getParent().getSelectedIds();
-                self.domain = self.record.domain;
-            } else {
-                self.idsToExport = false;
-                self.domain = domain;
-            }
         }));
 
         proms.push(this._showExportsList());
@@ -117,6 +111,17 @@ var DataExport = Dialog.extend({
         }
     },
 
+    /**
+     * Export all data with default values (fields, domain)
+     */
+    export() {
+        let exportedFields = this.defaultExportFields.map(field => ({
+            name: field,
+            label: this.record.fields[field].string,
+        }));
+        this._exportData(exportedFields, 'xlsx', false);
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -146,13 +151,7 @@ var DataExport = Dialog.extend({
      *
      * @private
      */
-    _exportData: function () {
-        var exportedFields = this.$('.o_export_field').map(function () {
-            return {
-                name: $(this).data('field_id'),
-                label: this.textContent
-            };
-        }).get();
+    _exportData(exportedFields, exportFormat, idsToExport) {
 
         if (_.isEmpty(exportedFields)) {
             Dialog.alert(this, _t("Please select fields to export..."));
@@ -162,8 +161,6 @@ var DataExport = Dialog.extend({
             exportedFields.unshift({ name: 'id', label: _t('External ID') });
         }
 
-        var exportFormat = this.$exportFormatInputs.filter(':checked').val();
-
         framework.blockUI();
         this.getSession().get_file({
             url: '/web/export/' + exportFormat,
@@ -171,8 +168,9 @@ var DataExport = Dialog.extend({
                 data: JSON.stringify({
                     model: this.record.model,
                     fields: exportedFields,
-                    ids: this.idsToExport,
+                    ids: idsToExport,
                     domain: this.domain,
+                    groupby: this.groupby,
                     context: pyUtils.eval('contexts', [this.record.getContext()]),
                     import_compat: this.isCompatibleMode,
                 })
@@ -544,6 +542,20 @@ var DataExport = Dialog.extend({
                     .each(processChildren);
             }
         }
+    },
+    /**
+     * Submit the user data and export the file
+     *
+     * @private
+     */
+    _onExportData() {
+        let exportedFields = this.$('.o_export_field').map((i, field) => ({
+                name: $(field).data('field_id'),
+                label: field.textContent,
+            }
+        )).get();
+        let exportFormat = this.$exportFormatInputs.filter(':checked').val();
+        this._exportData(exportedFields, exportFormat, this.idsToExport);
     },
     /**
      * Add a field to export field list on double click

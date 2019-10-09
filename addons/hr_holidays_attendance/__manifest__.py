@@ -2,7 +2,7 @@
 {
     'name': "HR Attendance Holidays",
     'summary': """""",
-    'category': 'HR',
+    'category': 'Human Resources',
     'description': """
 Hides the attendance presence button when an employee is on leave.
     """,

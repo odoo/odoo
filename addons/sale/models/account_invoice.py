@@ -12,7 +12,9 @@ class AccountMove(models.Model):
     def _get_invoice_default_sale_team(self):
         return self.env['crm.team']._get_default_team_id()
 
-    team_id = fields.Many2one('crm.team', string='Sales Team', default=_get_invoice_default_sale_team, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    team_id = fields.Many2one(
+        'crm.team', string='Sales Team', default=_get_invoice_default_sale_team,
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     partner_shipping_id = fields.Many2one(
         'res.partner',
         string='Delivery Address',
@@ -43,11 +45,11 @@ class AccountMove(models.Model):
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
         # OVERRIDE
-        res = super(AccountMove, self)._onchange_partner_id()
-
         # Recompute 'partner_shipping_id' based on 'partner_id'.
         addr = self.partner_id.address_get(['delivery'])
         self.partner_shipping_id = addr and addr.get('delivery')
+
+        res = super(AccountMove, self)._onchange_partner_id()
 
         # Recompute 'narration' based on 'company.invoice_terms'.
         if self.type == 'out_invoice':

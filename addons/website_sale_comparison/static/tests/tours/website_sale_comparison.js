@@ -62,7 +62,7 @@ odoo.define('website_sale_comparison.tour_comparison', function (require) {
     {
         content: "check the comparelist is now open and contains 3rd product with correct variant",
         extra_trigger: '.comparator-popover',
-        trigger: '.o_product_row:contains("Customizable Desk (Steel, White)")',
+        trigger: '.o_product_row:contains("Customizable Desk (CONFIG) (Steel, White)")',
         run: function () {},
     },
     {
@@ -81,7 +81,7 @@ odoo.define('website_sale_comparison.tour_comparison', function (require) {
     {
         content: "comparelist contains 4th product with correct variant",
         extra_trigger: '.o_product_circle:contains(4)',
-        trigger: '.o_product_row:contains("Customizable Desk (Steel, Black)")',
+        trigger: '.o_product_row:contains("Customizable Desk (CONFIG) (Steel, Black)")',
         run: function () {},
     },
     {
@@ -110,17 +110,17 @@ odoo.define('website_sale_comparison.tour_comparison', function (require) {
     // test on compare page
     {
         content: "check 1st product contains correct variant",
-        trigger: '.o_product_comparison_table:contains("Conference Chair (Steel)")',
+        trigger: '.o_product_comparison_table:contains("Conference Chair (CONFIG) (Steel)")',
         run: function () {},
     },
     {
         content: "check 2nd product contains correct variant",
-        trigger: '.o_product_comparison_table:contains("Customizable Desk (Steel, White)")',
+        trigger: '.o_product_comparison_table:contains("Customizable Desk (CONFIG) (Steel, White)")',
         run: function () {},
     },
     {
         content: "check 3rd product is correctly added",
-        trigger: '.o_product_comparison_table:contains("Customizable Desk (Steel, Black)")',
+        trigger: '.o_product_comparison_table:contains("Customizable Desk (CONFIG) (Steel, Black)")',
         run: function () {},
     },
     {
@@ -129,12 +129,12 @@ odoo.define('website_sale_comparison.tour_comparison', function (require) {
         run: function () {},
     },
     {
-        content: "remove Customizable Desk (Steel, Black) from compare table",
+        content: "remove Customizable Desk (CONFIG) (Steel, Black) from compare table",
         trigger: '#o_comparelist_table .o_comparelist_remove:eq(2)',
     },
     {
         content: "check customizable table with black variant is removed",
-        trigger: '#o_comparelist_table:not(:contains("Customizable Desk (Steel, Black)"))',
+        trigger: '#o_comparelist_table:not(:contains("Customizable Desk (CONFIG) (Steel, Black)"))',
         run: function () {},
     },
     {
@@ -174,7 +174,7 @@ odoo.define('website_sale_comparison.tour_comparison', function (require) {
                 method: 'create',
                 args: [{
                     'name': 'color',
-                    'type': 'color',
+                    'display_type': 'color',
                     'create_variant': 'dynamic',
                 }],
             }).then(function (attributeId) {

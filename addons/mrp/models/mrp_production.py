@@ -56,6 +56,7 @@ class MrpProduction(models.Model):
         'Reference', copy=False, readonly=True, default=lambda x: _('New'))
     origin = fields.Char(
         'Source', copy=False,
+        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         help="Reference of the document that generated this production order request.")
 
     product_id = fields.Many2one(
@@ -191,6 +192,7 @@ class MrpProduction(models.Model):
         help='Technical field to check when we can post')
     user_id = fields.Many2one(
         'res.users', 'Responsible', default=lambda self: self.env.user,
+        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         domain=lambda self: [('groups_id', 'in', self.env.ref('mrp.group_mrp_user').id)])
     company_id = fields.Many2one(
         'res.company', 'Company', default=lambda self: self.env.company,
@@ -258,7 +260,11 @@ class MrpProduction(models.Model):
         if len(pickings) > 1:
             action['domain'] = [('id', 'in', pickings.ids)]
         elif pickings:
-            action['views'] = [(self.env.ref('stock.view_picking_form').id, 'form')]
+            form_view = [(self.env.ref('stock.view_picking_form').id, 'form')]
+            if 'views' in action:
+                action['views'] = form_view + [(state,view) for state,view in action['views'] if view != 'form']
+            else:
+                action['views'] = form_view
             action['res_id'] = pickings.id
         action['context'] = dict(self._context, default_origin=self.name, create=False)
         return action
@@ -422,6 +428,7 @@ class MrpProduction(models.Model):
         self.product_qty = self.bom_id.product_qty
         self.product_uom_id = self.bom_id.product_uom_id.id
         self.move_raw_ids = [(2, move.id) for move in self.move_raw_ids.filtered(lambda m: m.bom_line_id)]
+        self.picking_type_id = self.bom_id.picking_type_id or self.picking_type_id
 
     @api.onchange('date_planned_start')
     def _onchange_date_planned_start(self):
@@ -608,12 +615,13 @@ class MrpProduction(models.Model):
         move = self.move_raw_ids.filtered(lambda x: x.bom_line_id.id == bom_line.id and x.state not in ('done', 'cancel'))
         if move:
             old_qty = move[0].product_uom_qty
+            remaining_qty = move[0].raw_material_production_id.product_qty - move[0].raw_material_production_id.qty_produced
             if quantity > 0:
                 move[0]._decrease_reserved_quanity(quantity)
                 move[0].with_context(do_not_unreserve=True).write({'product_uom_qty': quantity})
                 move[0]._recompute_state()
                 move[0]._action_assign()
-                move[0].unit_factor = quantity / move[0].raw_material_production_id.product_qty
+                move[0].unit_factor = remaining_qty and quantity / remaining_qty or 1.0
                 return move[0], old_qty, quantity
             else:
                 if move[0].quantity_done > 0:
@@ -790,7 +798,6 @@ class MrpProduction(models.Model):
             quantity = 1.0
 
         for operation in bom.routing_id.operation_ids:
-            # create workorder
             workorder = workorders.create({
                 'name': operation.name,
                 'production_id': self.id,
@@ -806,12 +813,19 @@ class MrpProduction(models.Model):
                 workorders[-1]._start_nextworkorder()
             workorders += workorder
 
-            # assign moves; last operation receive all unassigned moves (which case ?)
-            moves_raw = self.move_raw_ids.filtered(lambda move: move.operation_id == operation)
+            moves_raw = self.move_raw_ids.filtered(lambda move: move.operation_id == operation and move.bom_line_id.bom_id.routing_id == bom.routing_id)
             moves_finished = self.move_finished_ids.filtered(lambda move: move.operation_id == operation)
+
+            # - Raw moves from a BoM where a routing was set but no operation was precised should
+            #   be consumed at the last workorder of the linked routing.
+            # - Raw moves from a BoM where no rounting was set should be consumed at the last
+            #   workorder of the main routing.
             if len(workorders) == len(bom.routing_id.operation_ids):
-                moves_raw |= self.move_raw_ids.filtered(lambda move: not move.operation_id)
+                moves_raw |= self.move_raw_ids.filtered(lambda move: not move.operation_id and move.bom_line_id.bom_id.routing_id == bom.routing_id)
+                moves_raw |= self.move_raw_ids.filtered(lambda move: not move.workorder_id and not move.bom_line_id.bom_id.routing_id)
+
                 moves_finished |= self.move_finished_ids.filtered(lambda move: move.product_id != self.product_id and not move.operation_id)
+
             moves_raw.mapped('move_line_ids').write({'workorder_id': workorder.id})
             (moves_finished | moves_raw).write({'workorder_id': workorder.id})
 
@@ -925,8 +939,7 @@ class MrpProduction(models.Model):
             'state': 'done',
             'product_uom_qty': 0.0,
         })
-        self.write({'date_finished': fields.Datetime.now()})
-        return True
+        return self.write({'date_finished': fields.Datetime.now()})
 
     def do_unreserve(self):
         for production in self:

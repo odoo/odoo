@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "social_media",
+    'name': "Social Media",
 
     'summary': "Social media connectors for company settings.",
 
@@ -9,7 +9,7 @@ The purpose of this technical module is to provide a front for
 social media configuration for any other module that might need it.
     """,
     'author': "Odoo S.A.",
-    'category': 'Uncategorized',
+    'category': 'Hidden',
     'version': '0.1',
     'depends': ['base'],
 

@@ -3,6 +3,7 @@
 
 from datetime import datetime, timedelta
 from odoo.tests import Form
+from odoo.tests.common import SavepointCase
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.exceptions import ValidationError, UserError
 
@@ -1068,3 +1069,312 @@ class TestWorkOrderProcess(TestMrpCommon):
         mo.button_plan()
         self.assertAlmostEqual(mo.date_planned_start, planned_date, delta=timedelta(seconds=10))
         self.assertAlmostEqual(mo.date_planned_start, mo.workorder_ids.date_planned_start, delta=timedelta(seconds=10))
+
+    def test_kit_planning(self):
+        """ Bom made of component 1 and component 2 which is a kit made of
+        component 1 too. Check the workorder lines are well created after reservation
+        Main bom :
+            - comp1 (qty=1)
+            - kit (qty=1)
+                - comp1 (qty=4)
+                - comp2 (qty=1)
+        should give :
+            - wo line 1 (comp1, qty=1)
+            - wo line 2 (comp1, qty=4)
+            - wo line 3 (comp2, qty=1) """
+        # Kit bom
+        self.env['mrp.bom'].create({
+            'product_id': self.product_4.id,
+            'product_tmpl_id': self.product_4.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {'product_id': self.product_2.id, 'product_qty': 1}),
+                (0, 0, {'product_id': self.product_1.id, 'product_qty': 4})
+            ]})
+
+        # Main bom
+        main_bom = self.env['mrp.bom'].create({
+            'product_id': self.product_5.id,
+            'product_tmpl_id': self.product_5.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'routing_id': self.routing_1.id,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': self.product_1.id, 'product_qty': 1}),
+                (0, 0, {'product_id': self.product_4.id, 'product_qty': 1})
+            ]})
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.product_5
+        mo_form.bom_id = main_bom
+        mo_form.product_qty = 1
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo.action_assign()
+        mo.button_plan()
+
+        self.assertEqual(len(mo.workorder_ids), 1)
+        self.assertEqual(len(mo.workorder_ids.raw_workorder_line_ids), 3)
+        line1 = mo.workorder_ids.raw_workorder_line_ids[0]
+        line2 = mo.workorder_ids.raw_workorder_line_ids[1]
+        line3 = mo.workorder_ids.raw_workorder_line_ids[2]
+        self.assertEqual(line1.product_id, self.product_1)
+        self.assertEqual(line1.qty_done, 1)
+        self.assertEqual(line2.product_id, self.product_2)
+        self.assertEqual(line2.qty_done, 1)
+        self.assertEqual(line3.product_id, self.product_1)
+        self.assertEqual(line3.qty_done, 4)
+
+
+class TestRoutingAndKits(SavepointCase):
+    @classmethod
+    def setUpClass(cls):
+        """
+        kit1 (consu)
+        compkit1
+        finished1
+        compfinished1
+
+        Finished1 (Bom1)
+            - compfinished1
+            - kit1
+        Kit1 (BomKit1)
+            - compkit1
+
+        Rounting1 (finished1)
+            - operation 1
+            - operation 2
+        Rounting2 (kit1)
+            - operation 1
+        """
+        super(TestRoutingAndKits, cls).setUpClass()
+        cls.uom_unit = cls.env['uom.uom'].search([
+            ('category_id', '=', cls.env.ref('uom.product_uom_categ_unit').id),
+            ('uom_type', '=', 'reference')
+        ], limit=1)
+        cls.kit1 = cls.env['product.product'].create({
+            'name': 'kit1',
+            'type': 'consu',
+        })
+        cls.compkit1 = cls.env['product.product'].create({
+            'name': 'compkit1',
+            'type': 'product',
+        })
+        cls.finished1 = cls.env['product.product'].create({
+            'name': 'finished1',
+            'type': 'product',
+        })
+        cls.compfinished1 = cls.env['product.product'].create({
+            'name': 'compfinished',
+            'type': 'product',
+        })
+        cls.workcenter_finished1 = cls.env['mrp.workcenter'].create({
+            'name': 'workcenter1',
+        })
+        cls.workcenter_kit1 = cls.env['mrp.workcenter'].create({
+            'name': 'workcenter2',
+        })
+        cls.routing_finished1 = cls.env['mrp.routing'].create({
+            'name': 'routing for finished1',
+        })
+        cls.operation_finished1 = cls.env['mrp.routing.workcenter'].create({
+            'sequence': 1,
+            'name': 'finished operation 1',
+            'workcenter_id': cls.workcenter_finished1.id,
+            'routing_id': cls.routing_finished1.id,
+        })
+        cls.operation_finished2 = cls.env['mrp.routing.workcenter'].create({
+            'sequence': 1,
+            'name': 'finished operation 2',
+            'workcenter_id': cls.workcenter_finished1.id,
+            'routing_id': cls.routing_finished1.id,
+        })
+        cls.routing_kit1 = cls.env['mrp.routing'].create({
+            'name': 'routing for kit1',
+        })
+        cls.operation_kit1 = cls.env['mrp.routing.workcenter'].create({
+            'name': 'Kit operation',
+            'workcenter_id': cls.workcenter_kit1.id,
+            'routing_id': cls.routing_kit1.id,
+        })
+        cls.bom_finished1 = cls.env['mrp.bom'].create({
+            'product_id': cls.finished1.id,
+            'product_tmpl_id': cls.finished1.product_tmpl_id.id,
+            'product_uom_id': cls.uom_unit.id,
+            'product_qty': 1,
+            'type': 'normal',
+            'routing_id': cls.routing_finished1.id,
+            'bom_line_ids': [
+                (0, 0, {'product_id': cls.compfinished1.id, 'product_qty': 1}),
+                (0, 0, {'product_id': cls.kit1.id, 'product_qty': 1}),
+            ]})
+        cls.bom_kit1 = cls.env['mrp.bom'].create({
+            'product_id': cls.kit1.id,
+            'product_tmpl_id': cls.kit1.product_tmpl_id.id,
+            'product_uom_id': cls.uom_unit.id,
+            'product_qty': 1,
+            'type': 'phantom',
+            'routing_id': cls.routing_kit1.id,
+            'bom_line_ids': [
+                (0, 0, {'product_id': cls.compkit1.id, 'product_qty': 1}),
+            ]})
+
+    def test_1(self):
+        """Operations are set on `self.bom_kit1` but none on `self.bom_finished1`."""
+        self.bom_kit1.bom_line_ids.operation_id = self.operation_kit1
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.finished1
+        mo_form.bom_id = self.bom_finished1
+        mo_form.product_qty = 1.0
+        mo = mo_form.save()
+
+        mo.action_confirm()
+        mo.button_plan()
+
+        self.assertEqual(len(mo.workorder_ids), 3)
+        self.assertEqual(len(mo.workorder_ids[0].raw_workorder_line_ids), 0)
+        self.assertEqual(mo.workorder_ids[1].raw_workorder_line_ids.product_id, self.compfinished1)
+        self.assertEqual(mo.workorder_ids[2].raw_workorder_line_ids.product_id, self.compkit1)
+
+    def test_2(self):
+        """Operations are not set on `self.bom_kit1` and `self.bom_finished1`."""
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.finished1
+        mo_form.bom_id = self.bom_finished1
+        mo_form.product_qty = 1.0
+        mo = mo_form.save()
+
+        mo.action_confirm()
+        mo.button_plan()
+
+        self.assertEqual(len(mo.workorder_ids), 3)
+        self.assertEqual(len(mo.workorder_ids[0].raw_workorder_line_ids), 0)
+        self.assertEqual(mo.workorder_ids[1].raw_workorder_line_ids.product_id, self.compfinished1)
+        self.assertEqual(mo.workorder_ids[2].raw_workorder_line_ids.product_id, self.compkit1)
+
+    def test_3(self):
+        """Operations are set both `self.bom_kit1` and `self.bom_finished1`."""
+        self.bom_kit1.bom_line_ids.operation_id = self.operation_kit1
+        self.bom_finished1.bom_line_ids[0].operation_id = self.operation_finished1
+        self.bom_finished1.bom_line_ids[1].operation_id = self.operation_finished2
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.finished1
+        mo_form.bom_id = self.bom_finished1
+        mo_form.product_qty = 1.0
+        mo = mo_form.save()
+
+        mo.action_confirm()
+        mo.button_plan()
+
+        self.assertEqual(len(mo.workorder_ids), 3)
+        self.assertEqual(mo.workorder_ids[0].raw_workorder_line_ids.product_id, self.compfinished1)
+        self.assertFalse(mo.workorder_ids[1].raw_workorder_line_ids.product_id.id)
+        self.assertEqual(mo.workorder_ids[2].raw_workorder_line_ids.product_id, self.compkit1)
+
+    def test_4(self):
+        """Operations are set on `self.kit1`, none are set on `self.bom_finished1` and a kit
+        without routing was added to `self.bom_finished1`. We expect the component of the kit
+        without routing to be consumed at the last workorder of the main BoM.
+        """
+        kit2 = self.env['product.product'].create({
+            'name': 'kit2',
+            'type': 'consu',
+        })
+        compkit2 = self.env['product.product'].create({
+            'name': 'compkit2',
+            'type': 'product',
+        })
+        bom_kit2 = self.env['mrp.bom'].create({
+            'product_id': kit2.id,
+            'product_tmpl_id': kit2.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1,
+            'type': 'phantom',
+            'bom_line_ids': [(0, 0, {'product_id': compkit2.id, 'product_qty': 1})]
+        })
+        self.bom_finished1.write({'bom_line_ids': [(0, 0, {'product_id': kit2.id, 'product_qty': 1})]})
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.finished1
+        mo_form.bom_id = self.bom_finished1
+        mo_form.product_qty = 1.0
+        mo = mo_form.save()
+
+        mo.action_confirm()
+        mo.button_plan()
+
+        self.assertEqual(len(mo.workorder_ids), 3)
+
+        self.assertEqual(len(mo.workorder_ids[0].raw_workorder_line_ids), 0)
+        self.assertEqual(set(mo.workorder_ids[1].raw_workorder_line_ids.product_id.ids), set([self.compfinished1.id, compkit2.id]))
+        self.assertEqual(mo.workorder_ids[2].raw_workorder_line_ids.product_id, self.compkit1)
+
+    def test_5(self):
+        # Main bom: set the normal component to the first of the two operations of the routing.
+        bomline_compfinished = self.bom_finished1.bom_line_ids.filtered(lambda bl: bl.product_id == self.compfinished1)
+        bomline_compfinished.operation_id = self.operation_finished1
+
+        # Main bom: the kit do not have an operation set but there's one on its bom
+        bomline_kit1 = self.bom_finished1.bom_line_ids - bomline_compfinished
+        self.assertFalse(bomline_kit1.operation_id.id)
+        self.bom_kit1.bom_line_ids.operation_id = self.bom_kit1.routing_id.operation_ids
+
+        # Main bom: add a kit without routing
+        kit2 = self.env['product.product'].create({
+            'name': 'kit2',
+            'type': 'consu',
+        })
+        compkit2 = self.env['product.product'].create({
+            'name': 'compkit2',
+            'type': 'product',
+        })
+        bom_kit2 = self.env['mrp.bom'].create({
+            'product_id': kit2.id,
+            'product_tmpl_id': kit2.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1,
+            'type': 'phantom',
+            'bom_line_ids': [(0, 0, {'product_id': compkit2.id, 'product_qty': 1})]
+        })
+        self.bom_finished1.write({'bom_line_ids': [(0, 0, {'product_id': kit2.id, 'product_qty': 1})]})
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.finished1
+        mo_form.bom_id = self.bom_finished1
+        mo_form.product_qty = 1.0
+        mo = mo_form.save()
+
+        mo.action_confirm()
+        mo.button_plan()
+
+        self.assertEqual(len(mo.workorder_ids), 3)
+        self.assertEqual(mo.workorder_ids[0].raw_workorder_line_ids.product_id, self.compfinished1)
+        self.assertEqual(mo.workorder_ids[1].raw_workorder_line_ids.product_id, compkit2)
+        self.assertEqual(mo.workorder_ids[2].raw_workorder_line_ids.product_id, self.compkit1)
+
+    def test_6(self):
+        """ Use the same routing on `self.bom_fnished1` and `self.kit1`. The workorders should not
+        be duplicated.
+        """
+        self.bom_finished1.bom_line_ids[0].operation_id = self.operation_finished1
+        self.bom_finished1.bom_line_ids[1].operation_id = self.operation_finished2
+        self.bom_kit1.routing_id = self.routing_finished1
+        self.bom_kit1.bom_line_ids.operation_id = self.operation_finished1
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.finished1
+        mo_form.bom_id = self.bom_finished1
+        mo_form.product_qty = 1.0
+        mo = mo_form.save()
+
+        mo.action_confirm()
+        mo.button_plan()
+
+        self.assertEqual(len(mo.workorder_ids), 2)
+        self.assertEqual(set(mo.workorder_ids[0].raw_workorder_line_ids.product_id.ids), set([self.compfinished1.id, self.compkit1.id]))
+        self.assertFalse(mo.workorder_ids[1].raw_workorder_line_ids.product_id.id)

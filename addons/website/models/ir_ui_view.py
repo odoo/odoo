@@ -312,9 +312,13 @@ class View(models.Model):
                     new_context = dict(self._context, inherit_branding=True)
                 elif request.env.user.has_group('website.group_website_publisher'):
                     new_context = dict(self._context, inherit_branding_auto=True)
-            # Fallback incase main_object dont't inherit 'website.seo.metadata'
-            if values and 'main_object' in values and not hasattr(values['main_object'], 'get_website_meta'):
-                values['main_object'].get_website_meta = lambda: {}
+            if values and 'main_object' in values:
+                func = getattr(values['main_object'], 'get_backend_menu_id', False)
+                values['backend_menu_id'] = func and func() or self.env.ref('website.menu_website_configuration').id
+
+                # Fallback incase main_object dont't inherit 'website.seo.metadata'
+                if not hasattr(values['main_object'], 'get_website_meta'):
+                    values['main_object'].get_website_meta = lambda: {}
 
         if self._context != new_context:
             self = self.with_context(new_context)
@@ -333,14 +337,11 @@ class View(models.Model):
             translatable = editable and self._context.get('lang') != request.env['ir.http']._get_default_lang().code
             editable = not translatable and editable
 
-            if 'main_object' not in qcontext:
-                qcontext['main_object'] = self
-
             cur = Website.get_current_website()
             if self.env.user.has_group('website.group_website_publisher') and self.env.user.has_group('website.group_multi_website'):
-                qcontext['multi_website_websites_current'] = {'website_id': cur.id, 'name': cur.name, 'domain': cur.domain}
+                qcontext['multi_website_websites_current'] = {'website_id': cur.id, 'name': cur.name, 'domain': cur._get_http_domain()}
                 qcontext['multi_website_websites'] = [
-                    {'website_id': website.id, 'name': website.name, 'domain': website.domain}
+                    {'website_id': website.id, 'name': website.name, 'domain': website._get_http_domain()}
                     for website in Website.search([]) if website != cur
                 ]
 
@@ -353,6 +354,7 @@ class View(models.Model):
 
             qcontext.update(dict(
                 self._context.copy(),
+                main_object=self,
                 website=request.website,
                 url_for=url_for,
                 res_company=request.website.company_id.sudo(),

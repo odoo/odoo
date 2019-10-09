@@ -74,6 +74,7 @@ publicWidget.registry.twitter = publicWidget.Widget.extend({
                         text: text,
                         href: url,
                         target: '_blank',
+                        rel: 'noreferrer noopener',
                     });
                     return c.prop('outerHTML');
                 }

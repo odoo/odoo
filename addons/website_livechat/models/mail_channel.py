@@ -34,13 +34,13 @@ class MailChannel(models.Model):
             visitor = channel.livechat_visitor_id
             if visitor:
                 channel_infos_dict[channel.id]['visitor'] = {
-                    'name': visitor.name,
+                    'name': visitor.display_name,
                     'country_code': visitor.country_id.code.lower() if visitor.country_id else False,
                     'is_connected': visitor.is_connected,
                     'history': self._get_visitor_history(visitor),
                     'website': visitor.website_id.name,
                     'lang': visitor.lang_id.name,
-                    'partner_id': visitor.user_partner_id.id,
+                    'partner_id': visitor.partner_id.id,
                 }
         return list(channel_infos_dict.values())
 
@@ -50,13 +50,8 @@ class MailChannel(models.Model):
         :param visitor: website.visitor of the channel
         :return: arrow separated string containing navigation history information
         """
-        history = []
-        for page in visitor.website_track_ids:
-            if page.page_id:
-                history += page.page_id.name + ' (' + page.visit_datetime.strftime('%H:%M') + ')'
-            if len(history) == 3:
-                break
-        return ' → '.join(history)
+        recent_history = self.env['website.track'].search([('page_id', '!=', False), ('visitor_id', '=', visitor.id)], limit=3)
+        return ' → '.join(visit.page_id.name + ' (' + visit.visit_datetime.strftime('%H:%M') + ')' for visit in reversed(recent_history))
 
     def close_livechat_request_session(self, type='leave', **kwargs):
         """ Set deactivate the livechat channel and notify (the operator) the reason of closing the session."""
@@ -67,7 +62,7 @@ class MailChannel(models.Model):
             if not self.channel_message_ids:
                 return
             # Notify that the visitor has left the conversation
-            name = _('The visitor') if not self.livechat_visitor_id else self.livechat_visitor_id.name
+            name = _('The visitor') if not self.livechat_visitor_id else self.livechat_visitor_id.display_name
             if type == 'cancel':
                 message = _('has started a conversation with %s. The chat request has been canceled.') % kwargs.get('speaking_with', 'an operator')
             else:
@@ -84,8 +79,5 @@ class MailChannel(models.Model):
         message_author_id = message.author_id
         visitor = self.livechat_visitor_id
         if len(self) == 1 and visitor and message_author_id != self.livechat_operator_id:
-            self.env['website.visitor.lastconnection'].create({
-                'visitor_id': visitor.id,
-                'connection_datetime': fields.datetime.now()
-            })
+            visitor._update_visitor_last_visit()
         return message

@@ -726,8 +726,13 @@ var FieldMany2One = AbstractField.extend({
                     readonly: !self.can_write,
                     on_saved: function (record, changed) {
                         if (changed) {
-                            self._setValue(self.value.data, {forceChange: true}).then(function() {
-                                self.trigger_up('reload', {db_id: self.value.id});
+                            const _setValue = self._setValue.bind(self, self.value.data, {
+                                forceChange: true,
+                            });
+                            self.trigger_up('reload', {
+                                db_id: self.value.id,
+                                onSuccess: _setValue,
+                                onFailure: _setValue,
                             });
                         }
                     },
@@ -817,7 +822,9 @@ var FieldMany2One = AbstractField.extend({
 });
 
 var Many2oneBarcode = FieldMany2One.extend({
-    description: "",
+    // We don't require this widget to be displayed in studio sidebar in
+    // non-debug mode hence just extended it from its original widget, so that
+    // description comes from parent and hasOwnProperty based condition fails
 });
 
 var ListFieldMany2One = FieldMany2One.extend({
@@ -826,6 +833,8 @@ var ListFieldMany2One = FieldMany2One.extend({
     }),
 
     /**
+     * Should never be allowed to be opened while in readonly mode in a list
+     *
      * @override
      */
     init: function () {
@@ -1600,7 +1609,9 @@ var FieldX2Many = AbstractField.extend({
     _onActiveNextWidget: function (e) {
         e.stopPropagation();
         this.renderer.unselectRow();
-        this.trigger_up('navigation_move',{direction:'next'});
+        this.trigger_up('navigation_move', {
+            direction: e.data.direction || 'next',
+        });
     },
 });
 

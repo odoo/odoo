@@ -64,7 +64,7 @@
 
         <!-- ==== Invoice Demo 6 - Draft Vendor Bill for OCR ==== -->
 
-        <record id="demo_invoice_extract" model="account.move" context="{'type': 'in_invoice'}">
+        <record id="demo_invoice_extract" model="account.move" context="{'default_type': 'in_invoice'}">
             <field name="type">in_invoice</field>
             <field name="invoice_user_id" ref="base.user_demo"/>
         </record>

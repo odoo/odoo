@@ -63,7 +63,7 @@ class LunchController(http.Controller):
         return {'message': request.env['ir.qweb'].render('lunch.lunch_payment_dialog', {})}
 
     @http.route('/lunch/user_location_set', type='json', auth='user')
-    def set_user_location(self, location_id, user_id=None):
+    def set_user_location(self, location_id=None, user_id=None):
         self._check_user_impersonification(user_id)
         user = request.env['res.users'].browse(user_id) if user_id else request.env.user
 

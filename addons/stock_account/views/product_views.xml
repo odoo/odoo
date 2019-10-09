@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+        <record id="product_template_tree_view" model="ir.ui.view">
+            <field name="name">product.template.tree.inherit.stock.account</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_tree_view"/>
+            <field name="arch" type="xml">
+                <field name="standard_price" position="attributes">
+                    <attribute name="readonly">1</attribute>
+                </field>
+            </field>
+        </record>
 
         <record id="view_category_property_form" model="ir.ui.view">
             <field name="name">product.category.stock.property.form.inherit</field>
@@ -67,7 +77,7 @@
                             class="oe_inline"/>
                     </field>
                     <xpath expr="//button[@name='%(action_view_change_standard_price)d']" position="attributes">
-                        <attribute name="attrs">{'invisible': ['|', ('cost_method', '=', 'fifo'), ('product_variant_count', '=', 1)]}</attribute>
+                        <attribute name="attrs">{'invisible': [('cost_method', '=', 'fifo')]}</attribute>
                     </xpath>
                 </data>
             </field>
@@ -82,18 +92,16 @@
                     <field name="standard_price" position="replace">
                         <field name="valuation" invisible="1" readonly="1"/>
                         <field name="cost_method" invisible="1" readonly="1"/>
-                        <div class="o_td_label" name="update_cost_price">
-                            <label for="standard_price"/>
-                            <button string="Update Cost" type="action"
-                                name="%(action_view_change_standard_price)d"
-                                attrs="{'invisible':[('cost_method', '=', 'fifo')]}"
-                                class="oe_link oe_inline"/>
-                        </div>
-                        <div class="o_row">
+                        <label for="standard_price"/>
+                        <div class="o_row" name="update_cost_price">
                             <field name="standard_price"
                                 attrs="{'readonly':[('cost_method', '!=', 'fifo')]}"
                                 widget='monetary' options="{'currency_field': 'cost_currency_id', 'field_digits': True}"
                                 class="oe_inline"/>
+                            <button string="Update Cost" type="action"
+                                name="%(action_view_change_standard_price)d"
+                                attrs="{'invisible':[('cost_method', '=', 'fifo')]}"
+                                class="oe_link oe_inline"/>
                         </div>
                     </field>
                 </data>

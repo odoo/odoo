@@ -5,7 +5,7 @@
     'name': 'Indian - Stock Report(GST)',
     'version': '1.0',
     'description': """GST Stock Report""",
-    'category': 'Accounting',
+    'category': 'Accounting/Accounting',
     'depends': [
         'l10n_in',
         'stock',

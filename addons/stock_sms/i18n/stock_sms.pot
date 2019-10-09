@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 08:17+0000\n"
+"POT-Creation-Date: 2019-10-07 07:13+0000\n"
+"PO-Revision-Date: 2019-10-07 07:13+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,22 +18,15 @@ msgstr ""
 #. module: stock_sms
 #: model:sms.template,body:stock_sms.sms_template_data_stock_delivery
 msgid ""
-"${object.company_id.name}: We are glad to inform you that your order has been shipped.\n"
-"            %if object.carrier_tracking_ref:\n"
-"                Your tracking reference is ${object.carrier_tracking_ref}.\n"
-"            %endif"
-msgstr ""
-
-#. module: stock_sms
-#: model:mail.template,body_html:stock_sms.mail_template_no_more_credit_sms
-msgid ""
-"<p>Dear ${object.name},</p>\n"
-"                <br/>\n"
-"                <p>There are no more credits on your IAP SMS account.<br/>\n"
-"                You can charge your IAP SMS account from the Settings of the Inventory app or from the General Settings.<br/></p>\n"
-"                <br/>\n"
-"                <p>Best regards,</p>\n"
-"                <p>Odoo S.A.</p>\n"
+"\n"
+"                %if object.origin:\n"
+"                    ${object.company_id.name}: We are glad to inform you that your order n° ${object.origin} has been shipped.\n"
+"                %else:\n"
+"                    ${object.company_id.name}: We are glad to inform you that your order has been shipped.\n"
+"                %endif\n"
+"                %if object.carrier_tracking_ref:\n"
+"                    Your tracking reference is ${object.carrier_tracking_ref}.\n"
+"                %endif\n"
 "            "
 msgstr ""
 
@@ -98,18 +91,8 @@ msgid "Has Received Warning Stock Sms"
 msgstr ""
 
 #. module: stock_sms
-#: model:mail.template,subject:stock_sms.mail_template_no_more_credit_sms
-msgid "IAP SMS Confirmation Notification"
-msgstr ""
-
-#. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__id
 msgid "ID"
-msgstr ""
-
-#. module: stock_sms
-#: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__iap_account
-msgid "Iap Account"
 msgstr ""
 
 #. module: stock_sms
@@ -128,18 +111,8 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: stock_sms
-#: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
-msgid "Odoo Privacy Policy"
-msgstr ""
-
-#. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__picking_id
 msgid "Picking"
-msgstr ""
-
-#. module: stock_sms
-#: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
-msgid "Privacy Policy"
 msgstr ""
 
 #. module: stock_sms
@@ -180,21 +153,6 @@ msgstr ""
 #. module: stock_sms
 #: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
 msgid ""
-"When confirming the sending of the SMS Text Message, you will be granted free trial credits.<br/>\n"
-"                By buying a pack and using the IAP service, you accept the"
-msgstr ""
-
-#. module: stock_sms
-#: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
-msgid ""
 "You are about to confirm this Delivery Order by SMS Text Message.<br/>\n"
-"                This feature can easily be disabled from the Settings of Inventory or by clicking on \"Disable SMS\".<br/>\n"
-"                <br/>"
-msgstr ""
-
-#. module: stock_sms
-#: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
-msgid ""
-"of the service provider\n"
-"                and the"
+"                This feature can easily be disabled from the Settings of Inventory or by clicking on \"Disable SMS\".<br/>"
 msgstr ""

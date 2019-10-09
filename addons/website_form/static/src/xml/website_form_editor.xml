@@ -1,31 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <!-- Generic Modal Layout -->
-    <t t-name="website_form.modal">
-        <div role="dialog" class="modal fade">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <header class="modal-header">
-                        <h4 class="modal-title"><t t-esc="modal_title"/></h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span>&amp;times;</span>
-                        </button>
-                    </header>
-                    <main class="modal-body">
-                        <form role="form">
-                            <t t-raw="modal_body"/>
-                        </form>
-                    </main>
-                    <footer class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" id="modal-save">Save</button>
-                    </footer>
-                </div>
-            </div>
-        </div>
-    </t>
-
     <!-- Generic Field Layout -->
     <t t-name="website_form.field">
         <div t-att-class="'row form-group form-field' + (field.custom ? ' o_website_form_custom' : '') + (field.required ? ' o_website_form_required' : '')">

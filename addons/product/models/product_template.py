@@ -4,7 +4,7 @@
 import itertools
 import logging
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools, _, SUPERUSER_ID
 from odoo.exceptions import ValidationError, RedirectWarning, UserError
 
 _logger = logging.getLogger(__name__)
@@ -38,6 +38,12 @@ class ProductTemplate(models.Model):
     def _get_default_volume_uom(self):
         return self._get_volume_uom_name_from_ir_config_parameter()
 
+    def _read_group_categ_id(self, categories, domain, order):
+        category_ids = self.env.context.get('default_categ_id')
+        if not category_ids:
+            category_ids = categories._search([], order=order, access_rights_uid=SUPERUSER_ID)
+        return categories.browse(category_ids)
+
     name = fields.Char('Name', index=True, required=True, translate=True)
     sequence = fields.Integer('Sequence', default=1, help='Gives the sequence order when displaying a product list')
     description = fields.Text(
@@ -57,7 +63,7 @@ class ProductTemplate(models.Model):
     rental = fields.Boolean('Can be Rent')
     categ_id = fields.Many2one(
         'product.category', 'Product Category',
-        change_default=True, default=_get_default_category_id,
+        change_default=True, default=_get_default_category_id, group_expand='_read_group_categ_id',
         required=True, help="Select category for the current product")
 
     currency_id = fields.Many2one(
@@ -72,7 +78,7 @@ class ProductTemplate(models.Model):
         digits='Product Price')
     # list_price: catalog price, user defined
     list_price = fields.Float(
-        'Sale Price', default=1.0,
+        'Sales Price', default=1.0,
         digits='Product Price',
         help="Price at which the product is sold to customers.")
     # lst_price: catalog price for template, but including extra for variants
@@ -170,6 +176,7 @@ class ProductTemplate(models.Model):
         for p in self:
             p.product_variant_id = p.product_variant_ids[:1].id
 
+    @api.depends('company_id')
     def _compute_currency_id(self):
         main_company = self.env['res.company']._get_main_company()
         for template in self:
@@ -406,7 +413,7 @@ class ProductTemplate(models.Model):
 
     def name_get(self):
         # Prefetch the fields used by the `name_get`, so `browse` doesn't fetch other fields
-        self.read(['name', 'default_code'])
+        self.browse(self.ids).read(['name', 'default_code'])
         return [(template.id, '%s%s' % (template.default_code and '[%s] ' % template.default_code or '', template.name))
                 for template in self]
 

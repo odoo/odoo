@@ -4,17 +4,18 @@
         <field name="name">product.template.product.tree</field>
         <field name="model">product.template</field>
         <field name="arch" type="xml">
-            <tree string="Product">
-                <field name="sequence" widget="handle"/>
+            <tree string="Product" multi_edit="1">
+                <field name="sequence" widget="handle" readonly="1"/>
                 <field name="default_code" optional="show"/>
                 <field name="barcode" optional="hide"/>
                 <field name="name"/>
-                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                <field name="company_id" options="{'no_create_edit': True}"
+                    groups="base.group_multi_company" optional="hide"/>
                 <field name="list_price" string="Sales Price" optional="show"/>
-                <field name="standard_price" optional="show"/>
+                <field name="standard_price" optional="show" readonly="1"/>
                 <field name="categ_id" optional="hide"/>
-                <field name="type" optional="hide"/>
-                <field name="uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" optional="show"/>
+                <field name="type" optional="hide" readonly="1"/>
+                <field name="uom_id" readonly="1" optional="show" groups="uom.group_uom"/>
                 <field name="active" invisible="1"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
             </tree>
@@ -69,7 +70,6 @@
         <field name="arch" type="xml">
             <kanban>
                 <field name="id"/>
-                <field name="lst_price"/>
                 <field name="product_variant_count"/>
                 <field name="currency_id"/>
                 <field name="activity_state"/>

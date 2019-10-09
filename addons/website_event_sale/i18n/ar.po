@@ -3,19 +3,20 @@
 # 	* website_event_sale
 # 
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2019
 # Akram Alfusayal <akram_ma@hotmail.com>, 2019
 # Martin Trigaux, 2019
 # Mohammed Ibrahim <m.ibrahim@mussder.com>, 2019
 # Ghaith Gammar <g.gammar@saharaifs.net>, 2019
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# hoxhe Aits <hoxhe0@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"POT-Creation-Date: 2019-09-30 09:42+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Ghaith Gammar <g.gammar@saharaifs.net>, 2019\n"
+"Last-Translator: hoxhe Aits <hoxhe0@gmail.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,17 +26,12 @@ msgstr ""
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "<span>Free</span>"
+msgid "<i class=\"fa fa-ban mr-2\"/>Sold Out"
 msgstr ""
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "<span>Unlimited</span>"
-msgstr "<span>غير محدود</span>"
-
-#. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "<span>left</span>"
+msgid "<i class=\"fa fa-check mr-2\"/>Registered"
 msgstr ""
 
 #. module: website_event_sale
@@ -60,6 +56,11 @@ msgid "Event Tickets"
 msgstr "تذاكر الفعالية"
 
 #. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
+msgid "Free"
+msgstr "مجاني"
+
+#. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_complete_inherit_website_event_sale
 msgid "N/A"
 msgstr "غير محدد"
@@ -78,6 +79,11 @@ msgstr ""
 #: model:ir.model,name:website_event_sale.model_product_product
 msgid "Product"
 msgstr "المنتج"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
+msgid "Register"
+msgstr "تسجيل"
 
 #. module: website_event_sale
 #: code:addons/website_event_sale/controllers/main.py:0
@@ -99,6 +105,11 @@ msgstr "أمر البيع"
 #: model:ir.model,name:website_event_sale.model_sale_order_line
 msgid "Sales Order Line"
 msgstr "بند أمر المبيعات"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
+msgid "Sales end on"
+msgstr ""
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.index
@@ -129,6 +140,13 @@ msgstr "البطاقه لا تتطابق مع هذا المنتج ."
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_complete_inherit_website_event_sale
 msgid "Ticket"
 msgstr "التذكرة"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
+msgid ""
+"Tickets\n"
+"                    <span class=\"close\">×</span>"
+msgstr ""
 
 #. module: website_event_sale
 #: code:addons/website_event_sale/models/product_pricelist.py:0

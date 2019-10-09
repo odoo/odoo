@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-13 11:27+0000\n"
+"POT-Creation-Date: 2019-09-23 13:49+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
 "Last-Translator: Cécile Collart <cco@odoo.com>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
@@ -93,6 +93,24 @@ msgstr "%s : %.2f jours"
 #, python-format
 msgid "%s : %.2f hours"
 msgstr "%s : %.2f heures"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "%s are only valid between %s and %s"
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "%s are only valid starting from %s"
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "%s are only valid until %s"
+msgstr ""
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -1477,8 +1495,12 @@ msgid "Hour to"
 msgstr "Heure à"
 
 #. module: hr_holidays
+#. openerp-web
+#: code:addons/hr_holidays/static/src/xml/time_off_calendar.xml:0
+#: code:addons/hr_holidays/static/src/xml/time_off_calendar.xml:0
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__unit_per_interval__hours
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__request_unit__hour
+#, python-format
 msgid "Hours"
 msgstr "Heures"
 
@@ -1811,7 +1833,7 @@ msgstr "Mes congés"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Need Second Approval"
-msgstr ""
+msgstr "Deuxième approbation nécessaire"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__current_leave_state__draft
@@ -1996,7 +2018,7 @@ msgstr "En ligne"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "Only a Leave Manager can approve/refuse its own requests."
-msgstr ""
+msgstr "Seul un Manager Congé peut approuver/refuser ses propres demandes."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -2019,6 +2041,14 @@ msgstr "Seul un Manager Congé peut réinitialiser les congés des autres."
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
+msgid ""
+"Only a Time off Manager can apply the second approval on allocation "
+"requests."
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#, python-format
 msgid "Only a time off Manager can approve its own requests."
 msgstr "Seul un Manager RH peut approuver ses propres demandes."
 
@@ -2027,6 +2057,7 @@ msgstr "Seul un Manager RH peut approuver ses propres demandes."
 #, python-format
 msgid "Only a time off Manager can reset other people allocation."
 msgstr ""
+"Seul un Manager Congé peut réinitialiser les congés d'autres personnes."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -2035,14 +2066,8 @@ msgid ""
 "Only a time off Officer/Responsible or Manager can approve or refuse time "
 "off requests."
 msgstr ""
-
-#. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-#, python-format
-msgid ""
-"Only an time off Manager can apply the second approval on allocation "
-"requests."
-msgstr ""
+"Seul un Fonctionnaire ou un Manager autorisé peut approuver ou refuser les "
+"demandes de congés."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -2408,6 +2433,10 @@ msgid ""
 "The status is 'Refused', when an allocation request is refused by manager.\n"
 "The status is 'Approved', when an allocation request is approved by manager."
 msgstr ""
+"Le statut est défini sur 'À Soumettre' lorsqu'une demande d'allocation est créée.\n"
+"Le statut est «À Approuver» lorsqu'une demande d'allocation est confirmée par l'utilisateur.\n"
+"Le statut est \"Refusé\" lorsqu'une demande d'allocation est refusée par le responsable.\n"
+"Le statut est «Approuvé» lorsqu'une demande d'allocation est approuvée par le responsable."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -2426,6 +2455,15 @@ msgstr ""
 msgid ""
 "This area is automatically filled by the user who validate the allocation"
 msgstr ""
+"Cette zone est automatiquement renseignée par l'utilisateur qui valide "
+"l'allocation"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__second_approver_id
+msgid ""
+"This area is automatically filled by the user who validate the allocation "
+"with second level (If allocation type need second validation)"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__first_approver_id
@@ -2436,21 +2474,11 @@ msgstr ""
 "congé"
 
 #. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__second_approver_id
-msgid ""
-"This area is automaticly filled by the user who validate the allocation with"
-" second level (If allocation type need second validation)"
-msgstr ""
-
-#. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__second_approver_id
 msgid ""
-"This area is automaticly filled by the user who validate the time off with "
-"second level (If time off type need second validation)"
+"This area is automatically filled by the user who validate the time off with"
+" second level (If time off type need second validation)"
 msgstr ""
-"Cet espace est rempli automatiquement par l'utilisateur qui valide les "
-"congés au deuxième niveau (si les congés ont besoin d'une deuxième "
-"validation)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__color_name
@@ -2516,8 +2544,10 @@ msgid "Time Off Allocation"
 msgstr "Allocation de congés"
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/report/hr_leave_report.py:0
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_available_holidays_report
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_action_department
+#, python-format
 msgid "Time Off Analysis"
 msgstr "Analyse des congés"
 
@@ -2636,7 +2666,7 @@ msgid "Time off Already Taken"
 msgstr "Congés déjà pris"
 
 #. module: hr_holidays
-#: model:ir.actions.act_window,name:hr_holidays.act_hr_employee_holiday_request
+#: model:ir.actions.server,name:hr_holidays.act_hr_employee_holiday_request
 msgid "Time off Analysis"
 msgstr "Analyse des congés"
 
@@ -2979,24 +3009,6 @@ msgstr ""
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
-msgid "You can take %s from %s"
-msgstr "Vous pouvez prendre %s de %s"
-
-#. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:0
-#, python-format
-msgid "You can take %s only between %s and %s"
-msgstr "Vous pouvez prendre %s seulement entre %s et %s"
-
-#. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:0
-#, python-format
-msgid "You can take %s until %s"
-msgstr "Vous pouvez prendre %s jusqu'au %s"
-
-#. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:0
-#, python-format
 msgid "You cannot delete a time off which is in %s state"
 msgstr "Vous ne pouvez pas supprimer des congés qui sont dans l'état %s."
 
@@ -3043,6 +3055,8 @@ msgid ""
 "You must have manager rights to modify/validate a time off that already "
 "begun"
 msgstr ""
+"Vous devez disposer des droits d'un manager pour modifier / valider un congé"
+" déjà commencé."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0

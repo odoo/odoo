@@ -19,27 +19,28 @@
             <form string="Product Attribute">
             <field name="is_used_on_products" invisible="1"/>
             <sheet>
-                <group name="main_fields">
+                <group name="main_fields" class="o_label_nowrap">
                     <label for="name" string="Attribute Name"/>
                     <field name="name" nolabel="1"/>
                     <field name="create_variant" widget="radio" attrs="{'readonly': [('is_used_on_products', '=', True)]}"/>
                 </group>
-                <group name="values_ids">
-                    <label for="value_ids" string="Attribute Values"/>
-                    <field name="value_ids" widget="one2many" nolabel="1">
-                        <tree string="Values" editable="bottom">
-                            <field name="sequence" widget="handle"/>
-                            <field name="name"/>
-                        </tree>
-                    </field>
-                </group>
-                <group name="product_tmpl_ids" attrs="{'invisible': [('is_used_on_products', '=', False)]}">
-                    <field name="product_tmpl_ids">
-                        <tree>
-                            <field name="name"/>
-                        </tree>
-                    </field>
-                </group>
+                <notebook>
+                    <page string="Attribute Values">
+                        <field name="value_ids" widget="one2many" nolabel="1">
+                            <tree string="Values" editable="bottom">
+                                <field name="sequence" widget="handle"/>
+                                <field name="name"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page string="Related Products" attrs="{'invisible': [('is_used_on_products', '=', False)]}">
+                        <field name="product_tmpl_ids">
+                            <tree>
+                                <field name="name"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
             </sheet>
             </form>
         </field>
@@ -50,26 +51,6 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">product.attribute</field>
         <field name="view_mode">tree,form</field>
-    </record>
-
-    <record id="variants_tree_view" model="ir.ui.view">
-        <field name="name">product.attribute.value.tree</field>
-        <field name="model">product.attribute.value</field>
-        <field name="arch" type="xml">
-            <tree string="Variant Values" editable="bottom">
-                <field name="is_used_on_products" invisible="1"/>
-                <field name="sequence" widget="handle"/>
-                <field name="attribute_id" attrs="{'readonly': [('is_used_on_products', '=', True)]}"/>
-                <field name="name"/>
-            </tree>
-        </field>
-    </record>
-
-    <record id="variants_action" model="ir.actions.act_window">
-        <field name="name">Attribute Values</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">product.attribute.value</field>
-        <field name="view_mode">tree</field>
     </record>
 
     <record id="product_template_attribute_line_form" model="ir.ui.view">
@@ -123,7 +104,7 @@
                         <field name="exclude_for" widget="one2many" mode="tree">
                             <tree editable="bottom">
                                 <field name="product_tmpl_id" />
-                                <field name="value_ids" widget="many2many_tags" options="{'no_create': true}" />
+                                <field name="value_ids" widget="many2many_tags" options="{'no_create': True}" />
                             </tree>
                         </field>
                     </group>

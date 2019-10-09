@@ -18,6 +18,23 @@ body.editor_enable.editor_has_snippets {
     }
 }
 
+// Mobile fix for mass mailing
+@include media-breakpoint-down(md) {
+    body.editor_enable.editor_has_snippets {
+        padding-left: inherit !important;
+
+        #web_editor-top-edit {
+            position: initial !important;
+            height: initial !important;
+            top: initial !important;
+            left: initial !important;
+
+            .note-popover .popover {
+                left: 0 !important;
+            }
+        }
+    }
+}
 // SNIPPET PANEL
 #oe_snippets {
     @include o-w-preserve-btn;

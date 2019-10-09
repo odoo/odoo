@@ -138,7 +138,7 @@ class Message(models.Model):
 
     @api.constrains('author', 'discussion')
     def _check_author(self):
-        for message in self:
+        for message in self.with_context(active_test=False):
             if message.discussion and message.author not in message.discussion.participants:
                 raise ValidationError(_("Author must be among the discussion participants."))
 
@@ -250,6 +250,7 @@ class MultiLine(models.Model):
 class MultiLine2(models.Model):
     _name = 'test_new_api.multi.line2'
     _inherit = 'test_new_api.multi.line'
+    _description = 'Test New API Multi Line 2'
 
 
 class MultiTag(models.Model):
@@ -594,6 +595,14 @@ class RequiredM2O(models.Model):
     bar = fields.Many2one('res.country', required=True)
 
 
+class RequiredM2OTransient(models.TransientModel):
+    _name = 'test_new_api.req_m2o_transient'
+    _description = 'Transient Model with Required Many2one'
+
+    foo = fields.Many2one('res.currency', required=True, ondelete='restrict')
+    bar = fields.Many2one('res.country', required=True)
+
+
 class Attachment(models.Model):
     _name = 'test_new_api.attachment'
     _description = 'Attachment'
@@ -707,3 +716,13 @@ class Mixin(models.AbstractModel):
 class ExtendedDisplay(models.Model):
     _name = 'test_new_api.display'
     _inherit = ['test_new_api.mixin', 'test_new_api.display']
+
+
+class ModelActiveField(models.Model):
+    _name = 'test_new_api.model_active_field'
+    _description = 'A model with active field'
+
+    active = fields.Boolean(default=True)
+    parent_id = fields.Many2one('test_new_api.model_active_field')
+    children_ids = fields.One2many('test_new_api.model_active_field', 'parent_id')
+    parent_active = fields.Boolean(string='Active Parent', related='parent_id.active', store=True)

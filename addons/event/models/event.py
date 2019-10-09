@@ -157,6 +157,7 @@ class EventEvent(models.Model):
         tracking=True, states={'done': [('readonly', True)]})
     date_begin_located = fields.Char(string='Start Date Located', compute='_compute_date_begin_tz')
     date_end_located = fields.Char(string='End Date Located', compute='_compute_date_end_tz')
+    is_one_day = fields.Boolean(compute='_compute_field_is_one_day')
 
     state = fields.Selection([
         ('draft', 'Unconfirmed'), ('cancel', 'Cancelled'),
@@ -234,6 +235,14 @@ class EventEvent(models.Model):
             else:
                 event.date_end_located = False
 
+    @api.depends('date_begin', 'date_end', 'date_tz')
+    def _compute_field_is_one_day(self):
+        for event in self:
+            # Need to localize because it could begin late and finish early in
+            # another timezone
+            event = event.with_context(tz=event.date_tz)
+            event.is_one_day = (event.date_begin.date() == event.date_end.date())
+
     @api.onchange('is_online')
     def _onchange_is_online(self):
         if self.is_online:
@@ -259,11 +268,11 @@ class EventEvent(models.Model):
             self.is_online = self.event_type_id.is_online
 
             if self.event_type_id.event_type_mail_ids:
-                self.event_mail_ids = [(5, 0, 0)] + [{
+                self.event_mail_ids = [(5, 0, 0)] + [(0, 0, {
                     'template_id': line.template_id,
                     'interval_nbr': line.interval_nbr,
                     'interval_unit': line.interval_unit,
-                    'interval_type': line.interval_type}
+                    'interval_type': line.interval_type})
                     for line in self.event_type_id.event_type_mail_ids]
 
     @api.constrains('seats_min', 'seats_max', 'seats_availability')

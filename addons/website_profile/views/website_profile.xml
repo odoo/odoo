@@ -17,9 +17,6 @@
                     <!-- Desktop Mode -->
                     <nav aria-label="breadcrumb" class="col d-none d-md-flex">
                         <ol class="breadcrumb bg-transparent mb-0 pl-0 py-0">
-                            <li class="breadcrumb-item">
-                                <a t-att-href="home_url or '/'">Home</a>
-                            </li>
                             <li t-attf-class="breadcrumb-item #{'active' if not view_user else ''}">
                                 <a href="/profile/users">Users</a>
                             </li>
@@ -44,7 +41,7 @@
                     </div>
 
                     <!-- Mobile Mode -->
-                    <div class="col d-md-none py-1">
+                    <div class="col d-md-none py-1 o_wprofile_user_profile_sub_nav_mobile_col">
                         <div class="btn-group w-100 position-relative" role="group" aria-label="Mobile sub-nav">
                             <div class="btn-group w-100 ml-2">
                                 <a class="btn bg-black-25 text-white dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Nav</a>

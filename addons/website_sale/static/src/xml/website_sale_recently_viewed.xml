@@ -11,9 +11,10 @@
                                 <div t-attf-class="o_carousel_product_card_wrap col-md-#{12 / productFrame}">
                                     <div class="o_carousel_product_card card h-100">
                                         <input type="hidden" name="product-id" t-att-data-product-id="product.id"/>
-                                        <a t-att-href="product.website_url">
+                                        <a class="o_carousel_product_img_link" t-att-href="product.website_url">
                                             <img class="o_carousel_product_card_img_top card-img-top" t-attf-src="/web/image/product.product/#{product.id}#{productFrame == 1 ? '/image_256' : '/image_512'}" t-att-alt="product.display_name"/>
                                         </a>
+                                        <i class="fa fa-trash o_carousel_product_remove js_remove"></i>
                                         <div class="o_carousel_product_card_body card-body border-top">
                                             <a t-att-href="product.website_url" class="text-decoration-none">
                                                 <h6 class="card-title mb-0 text-truncate" t-raw="product.display_name"/>

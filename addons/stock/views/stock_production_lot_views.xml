@@ -50,10 +50,10 @@
         <field name="name">stock.production.lot.tree</field>
         <field name="model">stock.production.lot</field>
         <field name="arch" type="xml">
-            <tree string="Lots/Serial Numbers">
+            <tree string="Lots/Serial Numbers" multi_edit="1">
                 <field name="name"/>
                 <field name="ref" optional="show"/>
-                <field name="product_id"/>
+                <field name="product_id" readonly="1"/>
                 <field name="create_date" optional="show"/>
                 <field name="company_id" groups="base.group_multi_company"/>
             </tree>

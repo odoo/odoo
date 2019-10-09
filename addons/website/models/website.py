@@ -72,9 +72,6 @@ class Website(models.Model):
     def _default_social_youtube(self):
         return self.env.ref('base.main_company').social_youtube
 
-    def _default_social_googleplus(self):
-        return self.env.ref('base.main_company').social_googleplus
-
     def _default_social_instagram(self):
         return self.env.ref('base.main_company').social_instagram
 
@@ -92,7 +89,6 @@ class Website(models.Model):
     social_github = fields.Char('GitHub Account', default=_default_social_github)
     social_linkedin = fields.Char('LinkedIn Account', default=_default_social_linkedin)
     social_youtube = fields.Char('Youtube Account', default=_default_social_youtube)
-    social_googleplus = fields.Char('Google+ Account', default=_default_social_googleplus)
     social_instagram = fields.Char('Instagram Account', default=_default_social_instagram)
     social_default_image = fields.Binary(string="Default Social Share Image", help="If set, replaces the company logo as the default social share image.")
 
@@ -715,6 +711,7 @@ class Website(models.Model):
             converters = rule._converters or {}
             if query_string and not converters and (query_string not in rule.build([{}], append_unknown=False)[1]):
                 continue
+
             values = [{}]
             # converters with a domain are processed after the other ones
             convitems = sorted(

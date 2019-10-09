@@ -58,8 +58,10 @@ Phone.include({
             var $composerButton = $('<a>', {
                 title: _t('Send SMS Text Message'),
                 href: '',
-                class: 'btn-sm btn-link mb4 fa fa-comment o_field_phone_sms',
+                class: 'ml-3 d-inline-flex align-items-center o_field_phone_sms',
+                html: $('<small>', {class: 'font-weight-bold ml-1', html: 'SMS'}),
             });
+            $composerButton.prepend($('<i>', {class: 'fa fa-mobile'}));
             $composerButton.on('click', this._onClickSMS.bind(this));
             this.$el = $('<div/>').append(this.$el).append($composerButton);
         }

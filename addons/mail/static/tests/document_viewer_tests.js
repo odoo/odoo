@@ -25,7 +25,7 @@ var createViewer = function (params) {
         if (route === 'https://www.youtube.com/embed/FYqW0Gdwbzk') {
             return Promise.resolve();
         }
-        if (route === '/web/content/4?model%3Dir.attachment') {
+        if (route === '/web/content/4?model=ir.attachment') {
             return Promise.resolve();
         }
         if (route === '/web/image/6?unique=1&signature=999&model=ir.attachment') {
@@ -134,7 +134,7 @@ QUnit.module('DocumentViewer', {
 
         assert.strictEqual(viewer.$(".o_image_caption:contains('text.html')").length, 1,
             "the viewer be on the right attachment");
-        assert.containsOnce(viewer, 'iframe[data-src="/web/content/4?model%3Dir.attachment"]',
+        assert.containsOnce(viewer, 'iframe[data-src="/web/content/4?model=ir.attachment"]',
             "there should be an iframe with the right src");
 
         viewer.destroy();

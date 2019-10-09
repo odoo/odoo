@@ -55,7 +55,7 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
             var product_desk_pad = posmodel.db.search_product_in_category(0, 'Desk Pad')[0];
             var product_letter_tray = posmodel.db.search_product_in_category(0, 'Letter Tray')[0];
             var product_whiteboard = posmodel.db.search_product_in_category(0, 'Whiteboard')[0];
-            var product_miscellaneous = posmodel.db.search_product_in_category(0, 'Miscellaneous')[0];
+            var product_miscellaneous = posmodel.db.search_product_in_category(0, 'Discount')[0];
 
             compare_backend_frontend(product_letter_tray, 'Public Pricelist', 0, undefined)()
                 .then(compare_backend_frontend(product_letter_tray, 'Public Pricelist', 1, undefined))
@@ -107,7 +107,7 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
         trigger: ".selection-item:contains('Fixed')",
     }, {
         content: "prices should be updated in the product screen",
-        trigger: ".product:contains('Miscellaneous'):contains('$ 1.00')",
+        trigger: ".product:contains('Discount'):contains('$ 1.00')",
         run: function () {}, // it's a check
     }, {
         content: "open customer list",
@@ -130,7 +130,7 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
         trigger: ".button.cancel:visible",
     }, {
         content: "prices should be updated in the product screen",
-        trigger: ".product:contains('Miscellaneous'):contains('$ 18.00')",
+        trigger: ".product:contains('Discount'):contains('$ 0.00')",
         run: function () {}, // it's a check
     }, {
         content: "open customer list",
@@ -196,16 +196,16 @@ shelf have not (their price was manually overridden)",
         trigger: ".selection-item:contains('min_quantity ordering')",
     }, {
         content: "order 1 miscellaneous product",
-        trigger: ".product:contains('Miscellaneous')",
+        trigger: ".product:contains('Discount')",
     }, {
         content: "order 1 miscellaneous product",
-        trigger: ".product:contains('Miscellaneous')",
+        trigger: ".product:contains('Discount')",
     }, {
         content: "order 1 miscellaneous product",
-        trigger: ".product:contains('Miscellaneous')",
+        trigger: ".product:contains('Discount')",
     }, {
         content: "verify there is one line with 3 miscellaneous products",
-        trigger: ".orderline:contains('Miscellaneous') em:contains('3.000')",
+        trigger: ".orderline:contains('Discount') em:contains('3.000')",
         run: function () {}, // it's a check
     }, {
         content: "close the Point of Sale frontend",

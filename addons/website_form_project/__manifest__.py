@@ -3,7 +3,7 @@
 
 {
     'name': 'Online Task Submission',
-    'category': 'Website',
+    'category': 'Website/Website',
     'summary': 'Add a task suggestion form to your website',
     'version': '1.0',
     'description': """

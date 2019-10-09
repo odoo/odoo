@@ -12,6 +12,13 @@ _logger = logging.getLogger(__name__)
 class Mailing(models.Model):
     _inherit = 'mailing.mailing'
 
+    @api.model
+    def default_get(self, fields):
+        res = super(Mailing, self).default_get(fields)
+        if fields is not None and 'keep_archives' in fields and res.get('mailing_type') == 'sms':
+            res['keep_archives'] = True
+        return res
+
     # mailing options
     mailing_type = fields.Selection(selection_add=[('sms', 'SMS')])
     # sms options
@@ -19,9 +26,11 @@ class Mailing(models.Model):
     sms_template_id = fields.Many2one('sms.template', string='SMS Template', ondelete='set null')
     sms_has_insufficient_credit = fields.Boolean(
         'Insufficient IAP credits', compute='_compute_sms_has_insufficient_credit',
-        help='UX Field to propose to buy IAP credits') 
+        help='UX Field to propose to buy IAP credits')
+    sms_force_send = fields.Boolean(
+        'Send Directly', help='Use at your own risks.')
     # opt_out_link
-    sms_allow_unsubscribe = fields.Boolean('Include opt-out link', default=True)
+    sms_allow_unsubscribe = fields.Boolean('Include opt-out link', default=False)
 
     @api.onchange('mailing_type')
     def _onchange_mailing_type(self):
@@ -63,7 +72,30 @@ class Mailing(models.Model):
     # --------------------------------------------------
 
     def action_put_in_queue_sms(self):
-        return self.action_put_in_queue()
+        res = self.action_put_in_queue()
+        if self.sms_force_send:
+            self.action_send_mail()
+        return res
+
+    def action_send_now_sms(self):
+        if not self.sms_force_send:
+            self.write({'sms_force_send': True})
+        return self.action_send_mail()
+
+    def action_retry_failed(self):
+        mass_sms = self.filtered(lambda m: m.mailing_type == 'sms')
+        if mass_sms:
+            mass_sms.action_retry_failed_sms()
+        return super(Mailing, self - mass_sms).action_retry_failed()
+
+    def action_retry_failed_sms(self):
+        failed_sms = self.env['sms.sms'].sudo().search([
+            ('mailing_id', 'in', self.ids),
+            ('state', '=', 'error')
+        ])
+        failed_sms.mapped('mailing_trace_ids').unlink()
+        failed_sms.unlink()
+        self.write({'state': 'in_queue'})
 
     def action_test(self):
         if self.mailing_type == 'sms':
@@ -166,6 +198,7 @@ class Mailing(models.Model):
             'composition_mode': 'mass',
             'mailing_id': self.id,
             'mass_keep_log': self.keep_archives,
+            'mass_force_send': self.sms_force_send,
             'mass_sms_allow_unsubscribe': self.sms_allow_unsubscribe,
         }
 
@@ -180,14 +213,9 @@ class Mailing(models.Model):
             if not res_ids:
                 res_ids = mailing._get_remaining_recipients()
             if not res_ids:
-                raise UserError(_('There is no recipients selected.'))
+                raise UserError(_('There are no recipients selected.'))
 
-            composer = self.env['sms.composer'].create(mailing._send_sms_get_composer_values(res_ids))
-            # extra_context = self._get_mass_mailing_context()
-
-            # auto-commit except in testing mode
-            # auto_commit = not getattr(threading.currentThread(), 'testing', False)
-            # composer.send_mail(auto_commit=auto_commit)
+            composer = self.env['sms.composer'].with_context(active_id=False).create(mailing._send_sms_get_composer_values(res_ids))
             composer._action_send_sms()
             mailing.write({'state': 'done', 'sent_date': fields.Datetime.now()})
         return True

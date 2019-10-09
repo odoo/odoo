@@ -56,7 +56,7 @@ from .tools import frozendict, lazy_classproperty, lazy_property, ormcache, \
                    groupby
 from .tools.config import config
 from .tools.func import frame_codeinfo
-from .tools.misc import CountingStream, clean_context, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
+from .tools.misc import CountingStream, clean_context, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT, get_lang
 from .tools.safe_eval import safe_eval
 from .tools.translate import _
 from .tools import date_utils
@@ -560,7 +560,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         for base in reversed(cls.__bases__):
             if not getattr(base, 'pool', None):
                 # the following attributes are not taken from model classes
-                if not base._inherit and not base._description:
+                parents = [base._inherit] if base._inherit and isinstance(base._inherit, str) else (base._inherit or [])
+                if cls._name not in parents and not base._description:
                     _logger.warning("The model %s has no _description", cls._name)
                 cls._description = base._description or cls._description
                 cls._table = base._table or cls._table
@@ -1990,7 +1991,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 if ftype == 'many2one':
                     value = value[0]
                 elif ftype in ('date', 'datetime'):
-                    locale = self._context.get('lang') or 'en_US'
+                    locale = get_lang(self.env).code
                     fmt = DEFAULT_SERVER_DATETIME_FORMAT if ftype == 'datetime' else DEFAULT_SERVER_DATE_FORMAT
                     tzinfo = None
                     range_start = value
@@ -3075,7 +3076,12 @@ Fields:
             # The first part of the check verifies that all records linked via relation fields are compatible
             # with the company of the origin document, i.e. `self.account_id.company_id == self.company_id`
             for name in regular_fields:
-                if not (record[name].company_id <= company):
+                # Special case with `res.users` since an user can belong to multiple companies.
+                if record[name]._name == 'res.users' and record[name].company_ids:
+                    if not (company <= record[name].company_ids):
+                        inconsistent_fields.add(name)
+                        inconsistent_recs |= record
+                elif not (record[name].company_id <= company):
                     inconsistent_fields.add(name)
                     inconsistent_recs |= record
             # The second part of the check (for property / company-dependent fields) verifies that the records
@@ -3087,7 +3093,12 @@ Fields:
             else:
                 company = self.env.company
             for name in property_fields:
-                if not (record[name].company_id <= company):
+                # Special case with `res.users` since an user can belong to multiple companies.
+                if record[name]._name == 'res.users' and record[name].company_ids:
+                    if not (company <= record[name].company_ids):
+                        inconsistent_fields.add(name)
+                        inconsistent_recs |= record
+                elif not (record[name].company_id <= company):
                     inconsistent_fields.add(name)
                     inconsistent_recs |= record
 
@@ -3344,16 +3355,13 @@ Record ids: %(records)s
               (from the database). Can not be used in :meth:`~.create`.
           ``(3, id, _)``
               removes the record of id ``id`` from the set, but does not
-              delete it. Can not be used on
-              :class:`~odoo.fields.One2many`. Can not be used in
+              delete it. Can not be used in
               :meth:`~.create`.
           ``(4, id, _)``
-              adds an existing record of id ``id`` to the set. Can not be
-              used on :class:`~odoo.fields.One2many`.
+              adds an existing record of id ``id`` to the set.
           ``(5, _, _)``
               removes all records from the set, equivalent to using the
-              command ``3`` on every record explicitly. Can not be used on
-              :class:`~odoo.fields.One2many`. Can not be used in
+              command ``3`` on every record explicitly. Can not be used in
               :meth:`~.create`.
           ``(6, _, ids)``
               replaces all existing records in the set by the ``ids`` list,
@@ -3385,14 +3393,32 @@ Record ids: %(records)s
         for fname in vals:
             field = self._fields[fname]
             if field.inverse:
+                if field.type in ('one2many', 'many2many'):
+                    # The written value is a list of commands that must applied
+                    # on the field's current value. Because the field is
+                    # protected while being written, the field's current value
+                    # will not be computed and default to an empty recordset. So
+                    # make sure the field's value is in cache before writing, in
+                    # order to avoid an inconsistent update.
+                    self[fname]
                 determine_inverses[field.inverse].append(field)
                 # DLE P150: `test_cancel_propagation`, `test_manufacturing_3_steps`, `test_manufacturing_flow`
                 # TODO: check whether still necessary
                 records_to_inverse[field] = self.filtered('id')
             if field.relational or self._field_inverses[field]:
                 relational_names.append(fname)
-            if field.compute and not field.readonly:
-                protected.update(self._field_computed.get(field, [field]))
+            if field.inverse or (field.compute and not field.readonly):
+                if field.store or field.type not in ('one2many', 'many2many'):
+                    # Protect the field from being recomputed while being
+                    # inversed. In the case of non-stored x2many fields, the
+                    # field's value may contain unexpeced new records (created
+                    # by command 0). Those new records are necessary for
+                    # inversing the field, but should no longer appear if the
+                    # field is recomputed afterwards. Not protecting the field
+                    # will automatically invalidate the field from the cache,
+                    # forcing its value to be recomputed once dependencies are
+                    # up-to-date.
+                    protected.update(self._field_computed.get(field, [field]))
             if fname == 'company_id' or (field.relational and field.check_company):
                 check_company = True
 
@@ -3726,6 +3752,8 @@ Record ids: %(records)s
             for field in self._fields.values():
                 if field.type in ('one2many', 'many2many'):
                     self.env.cache.set(record, field, ())
+                elif field.related and not field.column_type:
+                    self.env.cache.set(record, field, field.convert_to_cache(None, record))
                 # DLE P123: `test_adv_activity`, `test_message_assignation_inbox`, `test_message_log`, `test_create_mail_simple`, ...
                 # Set `mail.message.parent_id` to False in cache so it doesn't do the useless SELECT when computing the modified of `child_ids`
                 # in other words, if `parent_id` is not set, no other message `child_ids` are impacted.
@@ -3853,7 +3881,7 @@ Record ids: %(records)s
         if prefix:
             parent_ids = {int(label) for label in prefix.split('/')[:-1]}
             if not parent_ids.isdisjoint(self._ids):
-                raise UserError(_("Recursivity Detected."))
+                raise UserError(_("Recursion Detected."))
 
         # update parent_path of all records and their descendants
         query = """
@@ -4434,7 +4462,7 @@ Record ids: %(records)s
 
         """
         self.ensure_one()
-        vals = self.copy_data(default)[0]
+        vals = self.with_context(active_test=False).copy_data(default)[0]
         # To avoid to create a translation in the lang of the user, copy_translation will do it
         new = self.with_context(lang=None).create(vals)
         self.with_context(from_copy_translation=True).copy_translations(new, excluded=default or ())
@@ -5504,7 +5532,7 @@ Record ids: %(records)s
                 if node:
                     trigger_tree_merge(tree, node)
         if tree:
-            self.sudo()._modified_triggers(tree, create)
+            self.sudo().with_context(active_test=False)._modified_triggers(tree, create)
 
     def _modified_triggers(self, tree, create=False):
         """ Process a tree of field triggers on ``self``. """

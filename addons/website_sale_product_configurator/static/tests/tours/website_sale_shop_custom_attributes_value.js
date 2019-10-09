@@ -26,14 +26,14 @@ tour.tours.shop_custom_attribute_value.steps.splice(addCartStepIndex + 1, 0, {
     trigger: 'span.oe_price span:contains(600)',
     run: function (){}, // check
 }, {
-    trigger: '.oe_optional_products_modal .js_product:eq(1) div:contains("Conference Chair (Steel)")',
+    trigger: '.oe_optional_products_modal .js_product:eq(1) div:contains("Conference Chair (CONFIG) (Steel)")',
     run: function () {
         optionVariantImage = $('.oe_optional_products_modal .js_product:eq(1) img.variant_image').attr('src');
     }
 }, {
     trigger: '.oe_optional_products_modal .js_product:eq(1) input[data-value_name="Aluminium"]',
 }, {
-    trigger: '.oe_optional_products_modal .js_product:eq(1) div:contains("Conference Chair (Aluminium)")',
+    trigger: '.oe_optional_products_modal .js_product:eq(1) div:contains("Conference Chair (CONFIG) (Aluminium)")',
     run: function () {
         var newVariantImage = $('.oe_optional_products_modal .js_product:eq(1) img.variant_image').attr('src');
         if (newVariantImage !== optionVariantImage) {

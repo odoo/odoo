@@ -33,7 +33,7 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
         var nexInfo = $el.find('#o_wblog_next_post_info').data();
 
         $el.css('height', $(window).height())
-           .find('.o_blog_cover_container').addClass(nexInfo.size + ' ' + nexInfo.text).end()
+           .find('.o_record_cover_container').addClass(nexInfo.size + ' ' + nexInfo.text).end()
            .find('.o_wblog_toggle').toggleClass('d-none');
 
         // Use _.defer to calculate the 'offset()'' only after that size classes
@@ -75,8 +75,6 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
                 url = 'https://www.facebook.com/sharer/sharer.php?u=' + articleURL;
             } else if ($element.hasClass('o_linkedin_complete')) {
                 url = 'https://www.linkedin.com/shareArticle?mini=true&url=' + articleURL + '&title=' + blogTitleComplete;
-            } else {
-                url = 'https://plus.google.com/share?url=' + articleURL;
             }
         } else {
             var blogPost = $element.parents('[name="blog_post"]');
@@ -89,8 +87,6 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
                 url = 'https://www.facebook.com/sharer/sharer.php?u=' + articleURL;
             } else if ($element.hasClass('o_linkedin')) {
                 url = 'https://www.linkedin.com/shareArticle?mini=true&url=' + articleURL + '&title=' + blogPostTitle;
-            } else if ($element.hasClass('o_google')) {
-                url = 'https://plus.google.com/share?url=' + articleURL;
             }
         }
         window.open(url, '', 'menubar=no, width=500, height=400');

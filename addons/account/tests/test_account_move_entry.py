@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.invoice_test_common import InvoiceTestCommon
-from odoo.tests import tagged
+from odoo.tests import tagged, new_test_user
 from odoo import fields
 from odoo.exceptions import ValidationError, UserError
 
@@ -48,18 +48,88 @@ class TestAccountMove(InvoiceTestCommon):
         })
 
     def test_misc_fiscalyear_lock_date_1(self):
-        with self.assertRaises((ValidationError, UserError)):
-            self.test_move.company_id.fiscalyear_lock_date = fields.Date.from_string('2017-01-01')
+        self.test_move.post()
 
-        self.cr.execute('''UPDATE res_company SET fiscalyear_lock_date = '2017-01-01' WHERE id = %s''', self.test_move.company_id.ids)
+        # Set the lock date after the journal entry date.
+        self.test_move.company_id.fiscalyear_lock_date = fields.Date.from_string('2017-01-01')
 
-        with self.assertRaises((ValidationError, UserError)):
-            self.test_move.post()
+        # lines[0] = 'counterpart line'
+        # lines[1] = 'tax line'
+        # lines[2] = 'revenue line 1'
+        # lines[3] = 'revenue line 2'
+        lines = self.test_move.line_ids.sorted('debit')
 
-        with self.assertRaises(UserError):
-            self.env['account.move'].create(self.test_move.copy_data())
+        # Try to edit a line not affecting the taxes.
+        with self.assertRaises(UserError), self.cr.savepoint():
+            self.test_move.write({
+                'line_ids': [
+                    (1, lines[0].id, {'credit': lines[0].credit + 100.0}),
+                    (1, lines[2].id, {'debit': lines[2].debit + 100.0}),
+                ],
+            })
+
+        # Try to edit the account of a line.
+        with self.assertRaises(UserError), self.cr.savepoint():
+            self.test_move.line_ids[0].write({'account_id': self.test_move.line_ids[0].account_id.copy().id})
+
+        # Try to edit a line.
+        with self.assertRaises(UserError), self.cr.savepoint():
+            self.test_move.write({
+                'line_ids': [
+                    (1, lines[0].id, {'credit': lines[0].credit + 100.0}),
+                    (1, lines[3].id, {'debit': lines[3].debit + 100.0}),
+                ],
+            })
+
+        # Try to add a new tax on a line.
+        with self.assertRaises(UserError), self.cr.savepoint():
+            self.test_move.write({
+                'line_ids': [
+                    (1, lines[2].id, {'tax_ids': [(6, 0, self.company_data['default_tax_purchase'].ids)]}),
+                ],
+            })
+
+        # Try to create a new line.
+        with self.assertRaises(UserError), self.cr.savepoint():
+            self.test_move.write({
+                'line_ids': [
+                    (1, lines[0].id, {'credit': lines[0].credit + 100.0}),
+                    (0, None, {
+                        'name': 'revenue line 1',
+                        'account_id': self.company_data['default_account_revenue'].id,
+                        'debit': 100.0,
+                        'credit': 0.0,
+                    }),
+                ],
+            })
+
+        # You can't remove the journal entry from a locked period.
+        with self.assertRaises(UserError), self.cr.savepoint():
+            self.test_move.date = fields.Date.from_string('2018-01-01')
+
+        with self.assertRaises(UserError), self.cr.savepoint():
+            self.test_move.unlink()
+
+        with self.assertRaises(UserError), self.cr.savepoint():
+            self.test_move.button_draft()
+
+        copy_move = self.test_move.copy()
+
+        # Try to add a new journal entry prior to the lock date.
+        with self.assertRaises(UserError), self.cr.savepoint():
+            copy_move.post()
+
+        # You can change the date as the journal entry is not posted.
+        copy_move.date = fields.Date.from_string('2018-01-01')
+        copy_move.post()
+
+        # You can't change the date to one being in a locked period.
+        with self.assertRaises(UserError), self.cr.savepoint():
+            copy_move.date = fields.Date.from_string('2017-01-01')
 
     def test_misc_tax_lock_date_1(self):
+        self.test_move.post()
+
         # Set the tax lock date after the journal entry date.
         self.test_move.company_id.tax_lock_date = fields.Date.from_string('2017-01-01')
 
@@ -69,40 +139,153 @@ class TestAccountMove(InvoiceTestCommon):
         # lines[3] = 'revenue line 2'
         lines = self.test_move.line_ids.sorted('debit')
 
+        # Try to edit a line not affecting the taxes.
+        self.test_move.write({
+            'line_ids': [
+                (1, lines[0].id, {'credit': lines[0].credit + 100.0}),
+                (1, lines[2].id, {'debit': lines[2].debit + 100.0}),
+            ],
+        })
 
-        self.test_move.flush()
-        self.cr.execute('SAVEPOINT test_misc_tax_lock_date_1')
+        # Try to edit the account of a line.
+        self.test_move.line_ids[0].write({'account_id': self.test_move.line_ids[0].account_id.copy().id})
 
-        # Writing something affecting a tax is not allowed.
-        with self.assertRaises(UserError):
+        # Try to edit a line having some taxes.
+        with self.assertRaises(UserError), self.cr.savepoint():
             self.test_move.write({
                 'line_ids': [
-                    (1, lines[0].id, {'credit': 2750.0}),
-                    (1, lines[3].id, {'debit': 2100.0}),
+                    (1, lines[0].id, {'credit': lines[0].credit + 100.0}),
+                    (1, lines[3].id, {'debit': lines[3].debit + 100.0}),
                 ],
             })
 
-        with self.assertRaises(UserError):
+        # Try to add a new tax on a line.
+        with self.assertRaises(UserError), self.cr.savepoint():
             self.test_move.write({
                 'line_ids': [
-                    (1, lines[3].id, {'tax_ids': [(6, 0, self.company_data['default_tax_purchase'].ids)]}),
+                    (1, lines[2].id, {'tax_ids': [(6, 0, self.company_data['default_tax_purchase'].ids)]}),
                 ],
             })
 
-        with self.assertRaises(UserError):
+        # Try to edit a tax line.
+        with self.assertRaises(UserError), self.cr.savepoint():
             self.test_move.write({
                 'line_ids': [
-                    (1, lines[0].id, {'credit': 1900.0}),
-                    (1, lines[1].id, {'debit': 300.0}),
+                    (1, lines[0].id, {'credit': lines[0].credit + 100.0}),
+                    (1, lines[1].id, {'debit': lines[1].debit + 100.0}),
                 ],
             })
 
-        with self.assertRaises(UserError):
+        # Try to create a line not affecting the taxes.
+        self.test_move.write({
+            'line_ids': [
+                (1, lines[0].id, {'credit': lines[0].credit + 100.0}),
+                (0, None, {
+                    'name': 'revenue line 1',
+                    'account_id': self.company_data['default_account_revenue'].id,
+                    'debit': 100.0,
+                    'credit': 0.0,
+                }),
+            ],
+        })
+
+        # Try to create a line affecting the taxes.
+        with self.assertRaises(UserError), self.cr.savepoint():
+            self.test_move.write({
+                'line_ids': [
+                    (1, lines[0].id, {'credit': lines[0].credit + 100.0}),
+                    (0, None, {
+                        'name': 'revenue line 2',
+                        'account_id': self.company_data['default_account_revenue'].id,
+                        'debit': 1000.0,
+                        'credit': 0.0,
+                        'tax_ids': [(6, 0, self.company_data['default_tax_sale'].ids)],
+                    }),
+                ],
+            })
+
+        # You can't remove the journal entry from a locked period.
+        with self.assertRaises(UserError), self.cr.savepoint():
+            self.test_move.date = fields.Date.from_string('2018-01-01')
+
+        with self.assertRaises(UserError), self.cr.savepoint():
             self.test_move.unlink()
 
-        self.test_move.flush()
-        self.test_move.invalidate_cache()
-        self.cr.execute('ROLLBACK TO SAVEPOINT test_misc_tax_lock_date_1')
+        with self.assertRaises(UserError), self.cr.savepoint():
+            self.test_move.button_draft()
+
+        copy_move = self.test_move.copy()
+
+        # /!\ The date is changed automatically to the next available one during the post.
+        copy_move.post()
+
+        # You can't change the date to one being in a locked period.
+        with self.assertRaises(UserError), self.cr.savepoint():
+            copy_move.date = fields.Date.from_string('2017-01-01')
+
+    def test_misc_draft_reconciled_entries_1(self):
+        draft_moves = self.env['account.move'].create([
+            {
+                'type': 'entry',
+                'line_ids': [
+                    (0, None, {
+                        'name': 'move 1 receivable line',
+                        'account_id': self.company_data['default_account_receivable'].id,
+                        'debit': 1000.0,
+                        'credit': 0.0,
+                    }),
+                    (0, None, {
+                        'name': 'move 1 counterpart line',
+                        'account_id': self.company_data['default_account_expense'].id,
+                        'debit': 0.0,
+                        'credit': 1000.0,
+                    }),
+                ]
+            },
+            {
+                'type': 'entry',
+                'line_ids': [
+                    (0, None, {
+                        'name': 'move 2 receivable line',
+                        'account_id': self.company_data['default_account_receivable'].id,
+                        'debit': 0.0,
+                        'credit': 2000.0,
+                    }),
+                    (0, None, {
+                        'name': 'move 2 counterpart line',
+                        'account_id': self.company_data['default_account_expense'].id,
+                        'debit': 2000.0,
+                        'credit': 0.0,
+                    }),
+                ]
+            },
+        ])
+
+        # lines[0] = 'move 2 receivable line'
+        # lines[1] = 'move 1 counterpart line'
+        # lines[2] = 'move 1 receivable line'
+        # lines[3] = 'move 2 counterpart line'
+        lines = draft_moves.mapped('line_ids').sorted('balance')
+
+        (lines[0] + lines[2]).reconcile()
+
+        draft_moves.flush()
+        self.cr.execute('SAVEPOINT test_misc_draft_reconciled_entries_1')
+
+        with self.assertRaises(UserError):
+            draft_moves[0].write({
+                'line_ids': [
+                    (1, lines[1].id, {'credit': lines[1].credit + 100.0}),
+                    (1, lines[2].id, {'debit': lines[2].debit + 100.0}),
+                ]
+            })
+
+        with self.assertRaises(UserError):
+            draft_moves.unlink()
+
+        draft_moves.flush()
+        draft_moves.invalidate_cache()
+        self.cr.execute('ROLLBACK TO SAVEPOINT test_misc_draft_reconciled_entries_1')
 
     def test_misc_unique_sequence_number(self):
         ''' Ensure two journal entries can't share the same name when using the same sequence. '''
@@ -116,3 +299,25 @@ class TestAccountMove(InvoiceTestCommon):
         test_move2 = self.test_move.copy()
         with self.assertRaises(ValidationError):
             test_move2.post()
+
+    def test_add_followers_on_post(self):
+        # Add some existing partners, some from another company
+        company = self.env['res.company'].create({'name': 'Oopo'})
+        existing_partners = self.env['res.partner'].create([{
+            'name': 'Jean',
+            'company_id': company.id,
+        },{
+            'name': 'Paulus',
+        }])
+        self.test_move.message_subscribe(existing_partners.ids)
+
+        user = new_test_user(self.env, login='jag', groups='account.group_account_invoice')
+
+        move = self.test_move.with_user(user)
+        partner = self.env['res.partner'].create({'name': 'Belouga'})
+        commercial_partner = self.env['res.partner'].create({'name': 'Rorqual'})
+        move.partner_id = partner
+        move.commercial_partner_id = commercial_partner
+
+        move.post()
+        self.assertEqual(move.message_partner_ids, self.env.user.partner_id | existing_partners | partner | commercial_partner)

@@ -2,3 +2,44 @@
 .js_follow[data-follow='off'] .js_unfollow_btn {
     display: none;
 }
+
+.js_follow_icons_container {
+    .js_follow_btn, .js_unfollow_btn {
+        animation: js_follow_fade 1s ease forwards;
+        opacity: 0;
+
+        small {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        @include hover-focus () {
+            small {
+                transition-duration: 1s;
+                opacity: 1;
+            }
+        };
+    }
+
+    .fa:before {
+        content: "\f0f3";
+        color: $text-muted;
+    }
+
+    .js_follow_btn:hover .fa:before {
+        color: $body-color;
+    }
+
+    .js_unfollow_btn .fa:before {
+        color: theme-color('primary');
+    }
+
+    .js_unfollow_btn:hover .fa:before {
+        content: "\f1f6";
+        color: theme-color('danger');
+    }
+}
+
+@keyframes js_follow_fade {
+    to { opacity: 1; }
+}

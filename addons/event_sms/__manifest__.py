@@ -4,13 +4,15 @@
 {
     'name': 'SMS on Events',
     'version': '1.0',
-    'category': 'Marketing',
+    'category': 'Marketing/Events',
     'description': """Schedule SMS in event management""",
     'depends': ['event', 'sms'],
     'data': [
         'data/sms_data.xml',
         'views/event_views.xml',
         'views/event_mail_views.xml',
+        'security/ir.model.access.csv',
+        'security/sms_security.xml',
     ],
     'demo': [
     ],

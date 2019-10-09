@@ -35,6 +35,16 @@ var QtyAtDateWidget = Widget.extend({
             self._setPopOver();
         });
     },
+
+    updateState: function (state) {
+        this.$el.popover('dispose');
+        var candidate = state.data[this.getParent().currentRow];
+        if (candidate) {
+            this.data = candidate.data;
+            this.renderElement();
+            this._setPopOver();
+        }
+    },
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -58,7 +68,7 @@ var QtyAtDateWidget = Widget.extend({
         var $forecastButton = $content.find('.action_open_forecast');
         $forecastButton.on('click', function(ev) {
             ev.stopPropagation();
-            data_manager.load_action('stock.report_stock_quantity_action').then(function (action) {
+            data_manager.load_action('stock.report_stock_quantity_action_product').then(function (action) {
                 // Change action context to choose a specific date and product(s)
                 // As grid_anchor is set to now() by default in the data, we need
                 // to load the action first, change the context then launch it via do_action

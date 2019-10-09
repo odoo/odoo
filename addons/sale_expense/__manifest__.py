@@ -4,7 +4,7 @@
 {
     'name': 'Sales Expense',
     'version': '1.0',
-    'category': 'Sales',
+    'category': 'Sales/Sales',
     'summary': 'Quotation, Sales Orders, Delivery & Invoicing Control',
     'description': """
 Reinvoice Employee Expense

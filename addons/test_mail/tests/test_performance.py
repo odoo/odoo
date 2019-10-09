@@ -198,7 +198,7 @@ class TestAdvMailPerformance(BaseMailPerformance):
     def test_message_assignation_email(self):
         self.user_test.write({'notification_type': 'email'})
         record = self.env['mail.test.track'].create({'name': 'Test'})
-        with self.assertQueryCount(__system__=39, emp=40):
+        with self.assertQueryCount(__system__=40, emp=41):
             record.write({
                 'user_id': self.user_test.id,
             })
@@ -251,7 +251,7 @@ class TestAdvMailPerformance(BaseMailPerformance):
     def test_message_post_one_email_notification(self):
         record = self.env['mail.test.simple'].create({'name': 'Test'})
 
-        with self.assertQueryCount(__system__=32, emp=33):
+        with self.assertQueryCount(__system__=33, emp=34):
             record.message_post(
                 body='<p>Test Post Performances with an email ping</p>',
                 partner_ids=self.customer.ids,
@@ -360,7 +360,7 @@ class TestHeavyMailPerformance(BaseMailPerformance):
             'recipient_ids': [(4, pid) for pid in self.partners.ids],
         })
         mail_ids = mail.ids
-        with self.assertQueryCount(__system__=7, emp=7):
+        with self.assertQueryCount(__system__=8, emp=9):
             self.env['mail.mail'].browse(mail_ids).send()
 
         self.assertEqual(mail.body_html, '<p>Test</p>')
@@ -373,7 +373,7 @@ class TestHeavyMailPerformance(BaseMailPerformance):
         self.umbrella.message_subscribe(self.user_portal.partner_id.ids)
         record = self.umbrella.with_user(self.env.user)
 
-        with self.assertQueryCount(__system__=71, emp=72):
+        with self.assertQueryCount(__system__=73, emp=74):
             record.message_post(
                 body='<p>Test Post Performances</p>',
                 message_type='comment',
@@ -390,7 +390,7 @@ class TestHeavyMailPerformance(BaseMailPerformance):
         record = self.umbrella.with_user(self.env.user)
         template_id = self.env.ref('test_mail.mail_test_tpl').id
 
-        with self.assertQueryCount(__system__=81, emp=82):
+        with self.assertQueryCount(__system__=84, emp=85):
             record.message_post_with_template(template_id, message_type='comment', composition_mode='comment')
 
         self.assertEqual(record.message_ids[0].body, '<p>Adding stuff on %s</p>' % record.name)
@@ -410,9 +410,10 @@ class TestHeavyMailPerformance(BaseMailPerformance):
             'customer_id': False,
             'user_id': self.user_portal.id,
         })
+        rec1 = rec.with_context(active_test=False)      # to see inactive records
 
-        self.assertEqual(rec.message_partner_ids, self.env.user.partner_id | self.user_portal.partner_id)
-        self.assertEqual(rec.message_channel_ids, self.env['mail.channel'])
+        self.assertEqual(rec1.message_partner_ids, self.env.user.partner_id | self.user_portal.partner_id)
+        self.assertEqual(rec1.message_channel_ids, self.env['mail.channel'])
 
         # subscribe new followers with forced given subtypes
         with self.assertQueryCount(__system__=8, emp=8):
@@ -422,8 +423,8 @@ class TestHeavyMailPerformance(BaseMailPerformance):
                 subtype_ids=subtype_ids
             )
 
-        self.assertEqual(rec.message_partner_ids, self.env.user.partner_id | self.user_portal.partner_id | self.partners[:4])
-        self.assertEqual(rec.message_channel_ids, self.channel)
+        self.assertEqual(rec1.message_partner_ids, self.env.user.partner_id | self.user_portal.partner_id | self.partners[:4])
+        self.assertEqual(rec1.message_channel_ids, self.channel)
 
         # subscribe existing and new followers with force=False, meaning only some new followers will be added
         with self.assertQueryCount(__system__=6, emp=6):
@@ -433,8 +434,8 @@ class TestHeavyMailPerformance(BaseMailPerformance):
                 subtype_ids=None
             )
 
-        self.assertEqual(rec.message_partner_ids, self.env.user.partner_id | self.user_portal.partner_id | self.partners[:6])
-        self.assertEqual(rec.message_channel_ids, self.channel)
+        self.assertEqual(rec1.message_partner_ids, self.env.user.partner_id | self.user_portal.partner_id | self.partners[:6])
+        self.assertEqual(rec1.message_channel_ids, self.channel)
 
         # subscribe existing and new followers with force=True, meaning all will have the same subtypes
         with self.assertQueryCount(__system__=7, emp=7):
@@ -444,8 +445,8 @@ class TestHeavyMailPerformance(BaseMailPerformance):
                 subtype_ids=subtype_ids
             )
 
-        self.assertEqual(rec.message_partner_ids, self.env.user.partner_id | self.user_portal.partner_id | self.partners)
-        self.assertEqual(rec.message_channel_ids, self.channel)
+        self.assertEqual(rec1.message_partner_ids, self.env.user.partner_id | self.user_portal.partner_id | self.partners)
+        self.assertEqual(rec1.message_channel_ids, self.channel)
 
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('__system__', 'emp')
@@ -458,17 +459,18 @@ class TestHeavyMailPerformance(BaseMailPerformance):
             'customer_id': self.customer.id,
             'user_id': self.env.uid,
         })
-        self.assertEqual(rec.message_partner_ids, self.partners | self.env.user.partner_id)
+        rec1 = rec.with_context(active_test=False)      # to see inactive records
+        self.assertEqual(rec1.message_partner_ids, self.partners | self.env.user.partner_id)
         with self.assertQueryCount(__system__=39, emp=40):
             rec.write({'user_id': self.user_portal.id})
-        self.assertEqual(rec.message_partner_ids, self.partners | self.env.user.partner_id | self.user_portal.partner_id)
+        self.assertEqual(rec1.message_partner_ids, self.partners | self.env.user.partner_id | self.user_portal.partner_id)
         # write tracking message
-        self.assertEqual(rec.message_ids[0].subtype_id, self.env.ref('mail.mt_note'))
-        self.assertEqual(rec.message_ids[0].notified_partner_ids, self.env['res.partner'])
+        self.assertEqual(rec1.message_ids[0].subtype_id, self.env.ref('mail.mt_note'))
+        self.assertEqual(rec1.message_ids[0].notified_partner_ids, self.env['res.partner'])
         # creation message
-        self.assertEqual(rec.message_ids[1].subtype_id, self.env.ref('test_mail.st_mail_test_full_umbrella_upd'))
-        self.assertEqual(rec.message_ids[1].notified_partner_ids, self.partners)
-        self.assertEqual(len(rec.message_ids), 2)
+        self.assertEqual(rec1.message_ids[1].subtype_id, self.env.ref('test_mail.st_mail_test_full_umbrella_upd'))
+        self.assertEqual(rec1.message_ids[1].notified_partner_ids, self.partners)
+        self.assertEqual(len(rec1.message_ids), 2)
 
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('__system__', 'emp')
@@ -479,7 +481,7 @@ class TestHeavyMailPerformance(BaseMailPerformance):
         customer_id = self.customer.id
         user_id = self.user_portal.id
 
-        with self.assertQueryCount(__system__=121, emp=122):
+        with self.assertQueryCount(__system__=123, emp=124):
             rec = self.env['mail.test.full'].create({
                 'name': 'Test',
                 'umbrella_id': umbrella_id,
@@ -487,11 +489,12 @@ class TestHeavyMailPerformance(BaseMailPerformance):
                 'user_id': user_id,
             })
 
-        self.assertEqual(rec.message_partner_ids, self.partners | self.env.user.partner_id | self.user_portal.partner_id)
+        rec1 = rec.with_context(active_test=False)      # to see inactive records
+        self.assertEqual(rec1.message_partner_ids, self.partners | self.env.user.partner_id | self.user_portal.partner_id)
         # creation message
-        self.assertEqual(rec.message_ids[0].subtype_id, self.env.ref('test_mail.st_mail_test_full_umbrella_upd'))
-        self.assertEqual(rec.message_ids[0].notified_partner_ids, self.partners | self.user_portal.partner_id)
-        self.assertEqual(len(rec.message_ids), 1)
+        self.assertEqual(rec1.message_ids[0].subtype_id, self.env.ref('test_mail.st_mail_test_full_umbrella_upd'))
+        self.assertEqual(rec1.message_ids[0].notified_partner_ids, self.partners | self.user_portal.partner_id)
+        self.assertEqual(len(rec1.message_ids), 1)
 
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('__system__', 'emp')
@@ -504,22 +507,23 @@ class TestHeavyMailPerformance(BaseMailPerformance):
             'customer_id': False,
             'user_id': self.user_portal.id,
         })
-        self.assertEqual(rec.message_partner_ids, self.user_portal.partner_id | self.env.user.partner_id)
-        self.assertEqual(len(rec.message_ids), 1)
-        with self.assertQueryCount(__system__=84, emp=85):
+        rec1 = rec.with_context(active_test=False)      # to see inactive records
+        self.assertEqual(rec1.message_partner_ids, self.user_portal.partner_id | self.env.user.partner_id)
+        self.assertEqual(len(rec1.message_ids), 1)
+        with self.assertQueryCount(__system__=86, emp=87):
             rec.write({
                 'name': 'Test2',
                 'umbrella_id': self.umbrella.id,
                 })
 
-        self.assertEqual(rec.message_partner_ids, self.partners | self.env.user.partner_id | self.user_portal.partner_id)
+        self.assertEqual(rec1.message_partner_ids, self.partners | self.env.user.partner_id | self.user_portal.partner_id)
         # write tracking message
-        self.assertEqual(rec.message_ids[0].subtype_id, self.env.ref('test_mail.st_mail_test_full_umbrella_upd'))
-        self.assertEqual(rec.message_ids[0].notified_partner_ids, self.partners | self.user_portal.partner_id)
+        self.assertEqual(rec1.message_ids[0].subtype_id, self.env.ref('test_mail.st_mail_test_full_umbrella_upd'))
+        self.assertEqual(rec1.message_ids[0].notified_partner_ids, self.partners | self.user_portal.partner_id)
         # creation message
-        self.assertEqual(rec.message_ids[1].subtype_id, self.env.ref('mail.mt_note'))
-        self.assertEqual(rec.message_ids[1].notified_partner_ids, self.env['res.partner'])
-        self.assertEqual(len(rec.message_ids), 2)
+        self.assertEqual(rec1.message_ids[1].subtype_id, self.env.ref('mail.mt_note'))
+        self.assertEqual(rec1.message_ids[1].notified_partner_ids, self.env['res.partner'])
+        self.assertEqual(len(rec1.message_ids), 2)
 
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('__system__', 'emp')
@@ -540,23 +544,24 @@ class TestHeavyMailPerformance(BaseMailPerformance):
             'customer_id': False,
             'user_id': self.user_portal.id,
         })
-        self.assertEqual(rec.message_partner_ids, self.user_portal.partner_id | self.env.user.partner_id)
+        rec1 = rec.with_context(active_test=False)      # to see inactive records
+        self.assertEqual(rec1.message_partner_ids, self.user_portal.partner_id | self.env.user.partner_id)
 
-        with self.assertQueryCount(__system__=92, emp=93):
+        with self.assertQueryCount(__system__=94, emp=95):
             rec.write({
                 'name': 'Test2',
                 'umbrella_id': umbrella_id,
                 'customer_id': customer_id,
                 })
 
-        self.assertEqual(rec.message_partner_ids, self.partners | self.env.user.partner_id | self.user_portal.partner_id)
+        self.assertEqual(rec1.message_partner_ids, self.partners | self.env.user.partner_id | self.user_portal.partner_id)
         # write tracking message
-        self.assertEqual(rec.message_ids[0].subtype_id, self.env.ref('test_mail.st_mail_test_full_umbrella_upd'))
-        self.assertEqual(rec.message_ids[0].notified_partner_ids, self.partners | self.user_portal.partner_id)
+        self.assertEqual(rec1.message_ids[0].subtype_id, self.env.ref('test_mail.st_mail_test_full_umbrella_upd'))
+        self.assertEqual(rec1.message_ids[0].notified_partner_ids, self.partners | self.user_portal.partner_id)
         # creation message
-        self.assertEqual(rec.message_ids[1].subtype_id, self.env.ref('test_mail.st_mail_test_full_umbrella_upd'))
-        self.assertEqual(rec.message_ids[1].notified_partner_ids, self.user_portal.partner_id)
-        self.assertEqual(len(rec.message_ids), 2)
+        self.assertEqual(rec1.message_ids[1].subtype_id, self.env.ref('test_mail.st_mail_test_full_umbrella_upd'))
+        self.assertEqual(rec1.message_ids[1].notified_partner_ids, self.user_portal.partner_id)
+        self.assertEqual(len(rec1.message_ids), 2)
 
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('__system__', 'emp')
@@ -572,9 +577,10 @@ class TestHeavyMailPerformance(BaseMailPerformance):
             'user_id': self.user_portal.id,
             'mail_template': self.env.ref('test_mail.mail_test_full_tracking_tpl').id,
         })
-        self.assertEqual(rec.message_partner_ids, self.partners | self.env.user.partner_id | self.user_portal.partner_id)
+        rec1 = rec.with_context(active_test=False)      # to see inactive records
+        self.assertEqual(rec1.message_partner_ids, self.partners | self.env.user.partner_id | self.user_portal.partner_id)
 
-        with self.assertQueryCount(__system__=33, emp=35):
+        with self.assertQueryCount(__system__=34, emp=37):
             rec.write({
                 'name': 'Test2',
                 'customer_id': customer_id,
@@ -582,15 +588,15 @@ class TestHeavyMailPerformance(BaseMailPerformance):
             })
 
         # write template message (sent to customer, mass mailing kept for history)
-        self.assertEqual(rec.message_ids[0].subtype_id, self.env['mail.message.subtype'])
-        self.assertEqual(rec.message_ids[0].subject, 'Test Template')
+        self.assertEqual(rec1.message_ids[0].subtype_id, self.env['mail.message.subtype'])
+        self.assertEqual(rec1.message_ids[0].subject, 'Test Template')
         # write tracking message
-        self.assertEqual(rec.message_ids[1].subtype_id, self.env.ref('mail.mt_note'))
-        self.assertEqual(rec.message_ids[1].notified_partner_ids, self.env['res.partner'])
+        self.assertEqual(rec1.message_ids[1].subtype_id, self.env.ref('mail.mt_note'))
+        self.assertEqual(rec1.message_ids[1].notified_partner_ids, self.env['res.partner'])
         # creation message
-        self.assertEqual(rec.message_ids[2].subtype_id, self.env.ref('test_mail.st_mail_test_full_umbrella_upd'))
-        self.assertEqual(rec.message_ids[2].notified_partner_ids, self.partners | self.user_portal.partner_id)
-        self.assertEqual(len(rec.message_ids), 3)
+        self.assertEqual(rec1.message_ids[2].subtype_id, self.env.ref('test_mail.st_mail_test_full_umbrella_upd'))
+        self.assertEqual(rec1.message_ids[2].notified_partner_ids, self.partners | self.user_portal.partner_id)
+        self.assertEqual(len(rec1.message_ids), 3)
 
 
 @tagged('mail_performance')

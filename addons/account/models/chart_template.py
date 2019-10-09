@@ -232,9 +232,12 @@ class AccountChartTemplate(models.Model):
         })
 
         # Set default PoS receivable account in company
-        if acc_template_ref.get(self.default_pos_receivable_account_id.id):
+        default_pos_receivable = self.default_pos_receivable_account_id.id
+        if not default_pos_receivable and self.parent_id:
+            default_pos_receivable = self.parent_id.default_pos_receivable_account_id.id
+        if acc_template_ref.get(default_pos_receivable):
             company.write({
-                'account_default_pos_receivable_account_id': acc_template_ref[self.default_pos_receivable_account_id.id]
+                'account_default_pos_receivable_account_id': acc_template_ref[default_pos_receivable]
             })
 
         # Set the transfer account on the company
@@ -250,11 +253,6 @@ class AccountChartTemplate(models.Model):
         company.account_sale_tax_id = self.env['account.tax'].search([('type_tax_use', 'in', ('sale', 'all')), ('company_id', '=', company.id)], limit=1).id
         company.account_purchase_tax_id = self.env['account.tax'].search([('type_tax_use', 'in', ('purchase', 'all')), ('company_id', '=', company.id)], limit=1).id
 
-        # set default taxes to income/expense accounts
-        if company.account_sale_tax_id:
-            self.env['account.account'].browse(acc_template_ref.values()).filtered(lambda x: x.user_type_id.internal_group == 'income' and x != company.income_currency_exchange_account_id).tax_ids = company.account_sale_tax_id
-        if company.account_purchase_tax_id:
-            self.env['account.account'].browse(acc_template_ref.values()).filtered(lambda x: x.user_type_id.internal_group == 'expense' and x != company.expense_currency_exchange_account_id).tax_ids = company.account_purchase_tax_id
         return {}
 
     @api.model

@@ -292,22 +292,19 @@
 </template>
 
 <template id="s_share" name="Share">
-    <div t-attf-class="s_share #{_classes or ''}">
+    <div t-attf-class="s_share #{_classes}">
         <h4 t-if="not _no_title" class="s_share_title">Share</h4>
-        <a href="https://www.facebook.com/sharer/sharer.php?u={url}" class="s_share_facebook" target="_blank">
-            <i class="fa fa-1x fa-facebook rounded shadow-sm"/>
+        <a href="https://www.facebook.com/sharer/sharer.php?u={url}" t-attf-class="s_share_facebook #{_link_classes}" target="_blank">
+            <i t-attf-class="fa fa-1x fa-facebook #{not _link_classes and 'rounded shadow-sm'}"/>
         </a>
-        <a href="https://twitter.com/intent/tweet?text={title}&amp;url={url}" class="s_share_twitter" target="_blank">
-            <i class="fa fa-1x fa-twitter rounded shadow-sm"/>
+        <a href="https://twitter.com/intent/tweet?text={title}&amp;url={url}" t-attf-class="s_share_twitter #{_link_classes}" target="_blank">
+            <i t-attf-class="fa fa-1x fa-twitter #{not _link_classes and 'rounded shadow-sm'}"/>
         </a>
-        <a href="http://www.linkedin.com/shareArticle?mini=true&amp;url={url}&amp;title={title}&amp;" class="s_share_linkedin" target="_blank">
-            <i class="fa fa-1x fa-linkedin rounded shadow-sm"/>
+        <a href="http://www.linkedin.com/shareArticle?mini=true&amp;url={url}&amp;title={title}&amp;" t-attf-class="s_share_linkedin #{_link_classes}" target="_blank">
+            <i t-attf-class="fa fa-1x fa-linkedin #{not _link_classes and 'rounded shadow-sm'}"/>
         </a>
-        <a href="https://plus.google.com/share?url={url}" class="s_share_google" target="_blank">
-            <i class="fa fa-1x fa-google-plus rounded shadow-sm"/>
-        </a>
-        <a href="mailto:?body={url}&amp;subject={title}" class="s_share_email">
-            <i class="fa fa-1x fa-envelope rounded shadow-sm"/>
+        <a href="mailto:?body={url}&amp;subject={title}" t-attf-class="s_share_email #{_link_classes}">
+            <i t-attf-class="fa fa-1x fa-envelope #{not _link_classes and 'rounded shadow-sm'}"/>
         </a>
     </div>
 </template>
@@ -1466,5 +1463,66 @@
     <div data-selector=".o_mega_menu .nav-link"
          data-drop-in=".o_mega_menu nav"
          data-drop-near=".o_mega_menu .nav-link"/>
+
+    <div data-js="CoverProperties" data-selector=".o_record_cover_container" data-no-check="true">
+        <we-button data-change="true" data-no-preview="true">Change Cover</we-button>
+        <we-button data-clear="true" data-no-preview="true">Remove Cover</we-button>
+        <we-collapse-area>
+            <we-toggler>Size</we-toggler>
+            <we-collapse>
+                <we-button data-cover-opt="size" data-select-class="o_record_has_cover cover_full">
+                    Full Screen
+                </we-button>
+                <we-button data-cover-opt="size" class="o_record_cover_opt_size_default" data-select-class="o_record_has_cover cover_mid">
+                    Half Screen
+                </we-button>
+                <we-button data-cover-opt="size" data-select-class="o_record_has_cover cover_auto">
+                    Fit text
+                </we-button>
+            </we-collapse>
+        </we-collapse-area>
+        <we-collapse-area>
+            <we-toggler>Filter Intensity</we-toggler>
+            <we-collapse>
+                <we-button data-cover-opt="filters" data-filter-value="0.0">None</we-button>
+                <we-button data-cover-opt="filters" data-filter-value="0.2">Low</we-button>
+                <we-button data-cover-opt="filters" data-filter-value="0.4">Medium</we-button>
+                <we-button data-cover-opt="filters" data-filter-value="0.6">High</we-button>
+            </we-collapse>
+        </we-collapse-area>
+        <we-collapse-area>
+            <we-toggler>Filter Color</we-toggler>
+            <we-collapse>
+                <we-button data-cover-opt="filters" data-filter-color="oe_black">Black</we-button>
+                <we-button data-cover-opt="filters" data-filter-color="oe_none">White</we-button>
+                <we-button data-cover-opt="filters" data-filter-color="bg-primary">Primary</we-button>
+                <we-button data-cover-opt="filters" data-filter-color="bg-secondary">Secondary</we-button>
+                <we-button data-cover-opt="filters" data-filter-color="oe_blue">Blue</we-button>
+                <we-button data-cover-opt="filters" data-filter-color="oe_yellow">Yellow</we-button>
+                <we-button data-cover-opt="filters" data-filter-color="oe_red">Red</we-button>
+                <we-button data-cover-opt="filters" data-filter-color="oe_purple">Purple</we-button>
+                <we-button data-cover-opt="filters" data-filter-color="oe_green">Green</we-button>
+            </we-collapse>
+        </we-collapse-area>
+        <we-collapse-area>
+            <we-toggler>Text Size</we-toggler>
+            <we-collapse>
+                <we-button data-cover-opt="text_size" data-select-class="o_record_cover_font_hero">Hero</we-button>
+                <we-button data-cover-opt="text_size" data-select-class="o_record_cover_font_huge">Huge</we-button>
+                <we-button data-cover-opt="text_size" data-select-class="o_record_cover_font_big">Big</we-button>
+                <we-button data-cover-opt="text_size" data-select-class="">Regular</we-button>
+                <we-button data-cover-opt="text_size" data-select-class="o_record_cover_font_small">Small</we-button>
+                <we-button data-cover-opt="text_size" data-select-class="o_record_cover_font_tiny">Tiny</we-button>
+            </we-collapse>
+        </we-collapse-area>
+        <we-collapse-area>
+            <we-toggler>Text Alignment</we-toggler>
+            <we-collapse>
+                <we-button data-cover-opt="text_align" data-select-class="">Left</we-button>
+                <we-button data-cover-opt="text_align" data-select-class="text-center">Centered</we-button>
+                <we-button data-cover-opt="text_align" data-select-class="text-right">Right</we-button>
+            </we-collapse>
+        </we-collapse-area>
+    </div>
 </template>
 </odoo>

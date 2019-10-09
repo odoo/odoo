@@ -11,7 +11,7 @@ A tax defined as python code consists of two snippets of python code which are e
 
 "Python Code" defines the amount of the tax.
         """,
-    'category': 'Accounting',
+    'category': 'Accounting/Accounting',
     'version': '1.0',
     'depends': ['account'],
     'data': [

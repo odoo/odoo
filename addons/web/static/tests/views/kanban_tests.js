@@ -2799,6 +2799,42 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('completely prevent drag and drop if records_draggable set to false', async function (assert) {
+        assert.expect(6);
+
+        var envIDs = [1, 3, 2, 4]; // the ids that should be in the environment during this test
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test" records_draggable="false">' +
+                        '<field name="bar"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                        '<div><field name="foo"/></div>' +
+                    '</t></templates></kanban>',
+            groupBy: ['product_id'],
+        });
+
+        // testing initial state
+        assert.containsN(kanban, '.o_kanban_group:nth-child(1) .o_kanban_record', 2);
+        assert.containsN(kanban, '.o_kanban_group:nth-child(2) .o_kanban_record', 2);
+        assert.deepEqual(kanban.exportState().resIds, envIDs);
+
+        // attempt to drag&drop a record in another column
+        var $record = kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record:first');
+        var $group = kanban.$('.o_kanban_group:nth-child(2)');
+        await testUtils.dom.dragAndDrop($record, $group, {withTrailingClick: true});
+
+        // should not drag&drop record
+        assert.containsN(kanban, '.o_kanban_group:nth-child(1) .o_kanban_record', 2,
+            "First column should still contain 2 records");
+        assert.containsN(kanban, '.o_kanban_group:nth-child(2) .o_kanban_record', 2,
+            "Second column should still contain 2 records");
+        assert.deepEqual(kanban.exportState().resIds, envIDs, "Records should not have moved");
+
+        kanban.destroy();
+    });
+
     QUnit.test('kanban view with default_group_by', async function (assert) {
         assert.expect(7);
         this.data.partner.records.product_id = 1;

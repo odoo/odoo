@@ -32,26 +32,38 @@ odoo.define('account.tax_group', function (require) {
             var self = this;
             // Search for the first tax line with the same tax group and modify its value
             var line_id = self.record.data.line_ids.data.find(elem => elem.data.tax_group_id && elem.data.tax_group_id.data.id === taxGroupId);
+
             var debitAmount = 0;
             var creditAmount = 0;
-            if (line_id.data.debit > 0) {
-                debitAmount = line_id.data.debit - deltaAmount;
+            var amount_currency = 0;
+            if (line_id.data.currency_id) { // If multi currency enable
+                if (this.record.data.type === "in_invoice") {
+                    amount_currency = line_id.data.amount_currency - deltaAmount;
+                } else {
+                    amount_currency = line_id.data.amount_currency + deltaAmount;
+                }
             } else {
-                creditAmount = -line_id.data.credit - deltaAmount; 
-            }
-            // If debitAmount is negative, the value is added to the credit.
-            if (debitAmount < 0) {
-                creditAmount = Math.abs(debitAmount);
-                debitAmount = 0;
-            } else if (creditAmount > 0) {
-                debitAmount = Math.abs(creditAmount);
-                creditAmount = 0;
+                var balance = line_id.data.price_subtotal;
+                balance -= deltaAmount;
+                if (this.record.data.type === "in_invoice") { // For vendor bill
+                    if (balance > 0) {
+                        debitAmount = balance;
+                    } else if (balance < 0) {
+                        creditAmount = -balance;
+                    }
+                } else { // For refund
+                    if (balance > 0) {
+                        creditAmount = balance;
+                    } else if (balance < 0) {
+                        debitAmount = -balance;
+                    }
+                }
             }
             // Trigger ORM
             self.trigger_up('field_changed', {
                 dataPointID: self.record.id,
-                changes: { line_ids: { operation: "UPDATE", id: line_id.id, data: { debit: debitAmount, credit: creditAmount } } }, // account.move change
-                initialEvent: { dataPointID: line_id.id, changes: { debit: debitAmount, credit: creditAmount }, }, // account.move.line change
+                changes: { line_ids: { operation: "UPDATE", id: line_id.id, data: { amount_currency: amount_currency, debit: debitAmount, credit: creditAmount } } }, // account.move change
+                initialEvent: { dataPointID: line_id.id, changes: { amount_currency: amount_currency, debit: debitAmount, credit: creditAmount }, }, // account.move.line change
             });
         },
 
@@ -111,7 +123,7 @@ odoo.define('account.tax_group', function (require) {
                 return;
             }
             var oldValue = $input.data('originalValue');
-            if (newValue === oldValue) {
+            if (newValue === oldValue || newValue === 0) {
                 return this._render();
             }
             var taxGroupId = $input.parents('.oe_tax_group_editable').data('taxGroupId');

@@ -354,7 +354,7 @@ class Channel(models.Model):
         return moderation_status, email
 
     @api.returns('mail.message', lambda value: value.id)
-    def message_post(self, message_type='notification', **kwargs):
+    def message_post(self, *, message_type='notification', **kwargs):
         moderation_status, email = self._extract_moderation_values(message_type, **kwargs)
         if moderation_status == 'rejected':
             return self.env['mail.message']

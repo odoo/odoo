@@ -112,8 +112,8 @@ class Project(models.Model):
         }
 
     @api.model
-    def _map_tasks_default_valeus(self, task):
-        defaults = super(Project, self)._map_tasks_default_valeus(task)
+    def _map_tasks_default_valeus(self, task, project):
+        defaults = super(Project, self)._map_tasks_default_valeus(task, project)
         defaults['sale_line_id'] = False
         return defaults
 
@@ -143,7 +143,7 @@ class ProjectTask(models.Model):
                 sale_line_id = project.sale_line_id.id
         return sale_line_id
 
-    sale_line_id = fields.Many2one('sale.order.line', 'Sales Order Item', default=_default_sale_line_id, domain="[('is_service', '=', True), ('order_partner_id', '=', partner_id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done']), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+    sale_line_id = fields.Many2one('sale.order.line', 'Sales Order Item', default=_default_sale_line_id, domain="[('is_service', '=', True), ('order_partner_id', '=', partner_id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done'])]",
         help="Sales order item to which the task is linked. If an employee timesheets on a this task, "
         "and if this employee is not in the 'Employee/Sales Order Item Mapping' of the project, the "
         "timesheet entry will be linked to this sales order item.", copy=False)
@@ -183,10 +183,15 @@ class ProjectTask(models.Model):
     @api.onchange('project_id')
     def _onchange_project(self):
         result = super(ProjectTask, self)._onchange_project()
-        if self.project_id.sale_line_id:
-            self.sale_line_id = self.project_id.sale_line_id
-        if not self.parent_id and not self.partner_id:
-            self.partner_id = self.sale_line_id.order_partner_id
+        if self.project_id:
+            if self.project_id.billable_type == 'employee_rate':
+                if not self.partner_id:
+                    self.partner_id = self.project_id.sale_order_id.partner_id
+            elif self.project_id.billable_type == 'task_rate':
+                if not self.sale_line_id:
+                    self.sale_line_id = self.project_id.sale_line_id
+                if not self.partner_id:
+                    self.partner_id = self.sale_line_id.order_partner_id
         # set domain on SO: on non billable project, all SOL of customer, otherwise the one from the SO
         result = result or {}
         domain = [('is_service', '=', True), ('is_expense', '=', False), ('order_partner_id', 'child_of', self.partner_id.commercial_partner_id.id), ('state', 'in', ['sale', 'done'])]
@@ -204,6 +209,13 @@ class ProjectTask(models.Model):
         if self.partner_id:
             result.setdefault('domain', {})['sale_line_id'] = [('is_service', '=', True), ('is_expense', '=', False), ('order_partner_id', 'child_of', self.partner_id.commercial_partner_id.id), ('state', 'in', ['sale', 'done'])]
         return result
+
+    @api.onchange('parent_id')
+    def _onchange_parent_id(self):
+        super(ProjectTask, self)._onchange_parent_id()
+        # check sale_line_id and customer are coherent
+        if self.sale_line_id and self.partner_id != self.sale_line_id.order_partner_id:
+            self.sale_line_id = False
 
     @api.constrains('sale_line_id')
     def _check_sale_line_type(self):
@@ -229,18 +241,9 @@ class ProjectTask(models.Model):
     # ---------------------------------------------------
 
     @api.model
-    def _subtask_implied_fields(self):
-        result = super(ProjectTask, self)._subtask_implied_fields()
+    def _subtask_default_fields(self):
+        result = super(ProjectTask, self)._subtask_default_fields()
         return result + ['sale_line_id']
-
-    def _subtask_write_values(self, values):
-        result = super(ProjectTask, self)._subtask_write_values(values)
-        # changing the partner on a task will reset the sale line of its subtasks
-        if 'partner_id' in result:
-            result['sale_line_id'] = False
-        elif 'sale_line_id' in result:
-            result.pop('sale_line_id')
-        return result
 
     # ---------------------------------------------------
     # Actions

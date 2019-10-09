@@ -4,6 +4,7 @@
     'name': 'Maintenance - HR',
     'version': '1.0',
     'sequence': 125,
+    'category': 'Human Resources',
     'description': """
         Bridge between HR and Maintenance.""",
     'depends': ['hr', 'maintenance'],

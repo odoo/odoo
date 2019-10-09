@@ -6,7 +6,7 @@ from odoo import models, api, _, fields
 from odoo.osv import expression
 from odoo.release import version
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF, safe_eval
-from odoo.tools.misc import formatLang, format_date as odoo_format_date
+from odoo.tools.misc import formatLang, format_date as odoo_format_date, get_lang
 import random
 
 import ast
@@ -55,7 +55,7 @@ class account_journal(models.Model):
                     'res_id': activity.get('res_id'),
                     'res_model': activity.get('res_model'),
                     'status': activity.get('status'),
-                    'name': (activity.get('summary') or activity.get('act_type_name')) + '(' + format_date(activity.get('date'), 'MMM', locale=self._context.get('lang') or 'en_US') + ')',
+                    'name': (activity.get('summary') or activity.get('act_type_name')),
                     'activity_category': activity.get('activity_category'),
                     'date': odoo_format_date(self.env, activity.get('date_deadline'))
                 })
@@ -90,7 +90,7 @@ class account_journal(models.Model):
         data = []
         today = datetime.today()
         last_month = today + timedelta(days=-30)
-        locale = self._context.get('lang') or 'en_US'
+        locale = get_lang(self.env).code
 
         #starting point of the graph is the last statement
         last_stmt = BankStatement.search([('journal_id', '=', self.id), ('date', '<=', today.strftime(DF))], order='date desc, id desc', limit=1)
@@ -139,7 +139,7 @@ class account_journal(models.Model):
         data = []
         today = fields.Datetime.now(self)
         data.append({'label': _('Due'), 'value':0.0, 'type': 'past'})
-        day_of_week = int(format_datetime(today, 'e', locale=self._context.get('lang') or 'en_US'))
+        day_of_week = int(format_datetime(today, 'e', locale=get_lang(self.env).code))
         first_day_of_week = today + timedelta(days=-day_of_week+1)
         for i in range(-1,4):
             if i==0:
@@ -150,9 +150,9 @@ class account_journal(models.Model):
                 start_week = first_day_of_week + timedelta(days=i*7)
                 end_week = start_week + timedelta(days=6)
                 if start_week.month == end_week.month:
-                    label = str(start_week.day) + '-' +str(end_week.day)+ ' ' + format_date(end_week, 'MMM', locale=self._context.get('lang') or 'en_US')
+                    label = str(start_week.day) + '-' + str(end_week.day) + ' ' + format_date(end_week, 'MMM', locale=get_lang(self.env).code)
                 else:
-                    label = format_date(start_week, 'd MMM', locale=self._context.get('lang') or 'en_US')+'-'+format_date(end_week, 'd MMM', locale=self._context.get('lang') or 'en_US')
+                    label = format_date(start_week, 'd MMM', locale=get_lang(self.env).code) + '-' + format_date(end_week, 'd MMM', locale=get_lang(self.env).code)
             data.append({'label':label,'value':0.0, 'type': 'past' if i<0 else 'future'})
 
         # Build SQL query to find amount aggregated by week
@@ -277,6 +277,11 @@ class account_journal(models.Model):
             (number_waiting, sum_waiting) = self._count_results_and_sum_amounts(query_results_to_pay, currency, curr_cache=curr_cache)
             (number_draft, sum_draft) = self._count_results_and_sum_amounts(query_results_drafts, currency, curr_cache=curr_cache)
             (number_late, sum_late) = self._count_results_and_sum_amounts(late_query_results, currency, curr_cache=curr_cache)
+            read = self.env['account.move'].read_group([('journal_id', '=', self.id), ('to_check', '=', True)], ['amount_total'], 'journal_id', lazy=False)
+            if read:
+                number_to_check = read[0]['__count']
+                to_check_balance = read[0]['amount_total']
+        elif self.type == 'general':
             read = self.env['account.move'].read_group([('journal_id', '=', self.id), ('to_check', '=', True)], ['amount_total'], 'journal_id', lazy=False)
             if read:
                 number_to_check = read[0]['__count']
@@ -489,10 +494,12 @@ class account_journal(models.Model):
             'search_default_journal_id': self.id,
         })
 
+        domain_type_field = action['res_model'] == 'account.move.line' and 'move_id.type' or 'type' # The model can be either account.move or account.move.line
+
         if self.type == 'sale':
-            action['domain'] = [('type', 'in', ('out_invoice', 'out_refund', 'out_receipt'))]
+            action['domain'] = [(domain_type_field, 'in', ('out_invoice', 'out_refund', 'out_receipt'))]
         elif self.type == 'purchase':
-            action['domain'] = [('type', 'in', ('in_invoice', 'in_refund', 'in_receipt'))]
+            action['domain'] = [(domain_type_field, 'in', ('in_invoice', 'in_refund', 'in_receipt'))]
 
         return action
 

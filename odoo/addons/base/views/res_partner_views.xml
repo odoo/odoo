@@ -52,6 +52,7 @@
                     <field name="city" optional="hide"/>
                     <field name="state_id" optional="hide"/>
                     <field name="country_id" optional="hide"/>
+                    <field name="vat" optional="hide"/>
                     <field name="user_id" invisible="1"/>
                     <field name="is_company" invisible="1"/>
                     <field name="parent_id" invisible="1"/>
@@ -234,14 +235,14 @@
                     <group>
                         <group>
                             <field name="type" groups="base.group_no_one"/>
-                            <span class="o_form_label" name="address_name">
+                            <label for="" name="address_name">
                                 <b attrs="{'invisible': [('type', '!=', 'contact')]}">Company Address</b>
                                 <b attrs="{'invisible': [('type', '!=', 'invoice')]}">Invoice Address</b>
                                 <b attrs="{'invisible': [('type', '!=', 'delivery')]}">Delivery Address</b>
                                 <b attrs="{'invisible': [('type', '!=', 'other')]}">Other Address</b>
                                 <b attrs="{'invisible': [('type', '!=', 'private')]}">Private Address</b>
                                 <b attrs="{'invisible': [('type', '!=', False)]}">Address</b>
-                            </span>
+                            </label>
                             <div class="o_address_format">
                                 <field name="street" placeholder="Street..." class="o_address_street"
                                     attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
@@ -257,7 +258,7 @@
                                     attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                             </div>
                             <field name="vat" placeholder="e.g. BE0477472701" attrs="{'readonly': [('parent_id','!=',False)]}"/>
-                           </group>
+                        </group>
                         <group>
                             <field name="function" placeholder="e.g. Sales Director"
                                 attrs="{'invisible': [('is_company','=', True)]}"/>
@@ -383,7 +384,6 @@
                                             </group>
                                         </group>
                                         <field name="lang" invisible="True"/>
-                                        <field name="image_1920" invisible="True"/>
                                         <field name="user_id" invisible="True"/>
                                     </sheet>
                                 </form>

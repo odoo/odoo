@@ -34,13 +34,13 @@
             &.o_list_number {
                 text-align: right;
             }
-            &.o_list_char,
-            &.o_list_text,
-            &.o_list_many2one {
-                white-space: pre-wrap;
-            }
             &.o_list_text {
                 word-break: break-word;
+                white-space: pre-wrap;
+            }
+            &.o_list_char.o_color_cell .o_field_color {
+                width: 17px;
+                height: 17px;
             }
         }
 
@@ -52,6 +52,9 @@
             border-top: 2px solid #cacaca;
             border-bottom: 1px solid #cacaca;
 
+            > tr > td {
+                @include o-text-overflow(table-cell);
+            }
             .o_list_number {
                 text-align: right;
             }
@@ -177,100 +180,102 @@
             display: table-cell!important;
         }
 
-        //--------------------------------------------------------------------------
-        // Edition
-        //--------------------------------------------------------------------------
+        &.o_resizing tr > :not(.o_column_resizing) {
+            opacity: 0.5;
+        }
 
-        &.o_editable_list {
-            &.o_resizing tr > :not(.o_column_resizing) {
-                opacity: 0.5;
-            }
+        &.o_empty_list {
+            table-layout: fixed;
+        }
 
-            &.o_empty_list {
-                table-layout: fixed;
-            }
+        th {
+            position: relative;
+        }
 
-            th {
-                position: relative;
-            }
+        span.o_resize {
+            bottom: 0;
+            cursor: col-resize;
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 10px;
+            z-index: 1; // must be over the sort caret (::after pseudo-element)
+        }
 
-            span.o_resize {
-                bottom: 0;
-                cursor: col-resize;
-                position: absolute;
-                right: 0;
-                top: 0;
-                width: 10px;
-                z-index: 1; // must be over the sort caret (::after pseudo-element)
-            }
+        .o_list_record_remove_header {
+            width: 32px;
+        }
 
-            .o_list_record_remove_header {
-                width: 32px;
-            }
-        &>tbody>tr>td.o_list_char,
-            &>tbody>tr>td.o_list_many2one {
-                white-space: nowrap;
-            }
-            // checkboxes in editable lists should be clickable and activate the row
-            .o_data_row:not(.o_selected_row) .o_data_cell {
+        // checkboxes in editable lists should be clickable and activate the row
+        .o_data_row:not(.o_selected_row) .o_data_cell {
             &.o_toggle_button_cell:not(.o_readonly_modifier) button, // registry: toggle_button
             &.o_boolean_favorite_cell:not(.o_readonly_modifier) .o_favorite, // registry: boolean_favorite
-                .custom-checkbox:not(.o_readonly_modifier) {
-                    pointer-events: none;
+            .custom-checkbox:not(.o_readonly_modifier) {
+                pointer-events: none;
+            }
+        }
+
+        .o_data_row:not(.o_selected_row) {
+            .o_list_many2one,
+            .o_list_char,
+            .o_list_number {
+                white-space: nowrap;
+                .o_field_widget:not(.o_row_handle) {
+                    display: inline;
                 }
             }
+        }
 
-            .o_data_row.o_selected_row > .o_data_cell:not(.o_readonly_modifier):not(.o_invisible_modifier) {
-                position: relative; // for o_field_translate
-                background-color: white;
-                .o_input {
-                    border: none;
+        .o_data_row.o_selected_row > .o_data_cell:not(.o_readonly_modifier):not(.o_invisible_modifier) {
+            position: relative; // for o_field_translate
+            background-color: white;
+            .o_input {
+                border: none;
+                padding: 0;
+            }
+            > .o_field_text {
+                vertical-align: top;
+            }
+            > .o_field_widget {
+                width: 100%;
+                > .o_external_button {
                     padding: 0;
+                    border: none;
+                    background-color: inherit;
+                    margin-left: 5px;
+                    font-size: 12px;
                 }
-                > .o_field_text {
+            }
+            > .o_field_monetary input {
+                width: 0; // override width: 100px and let flex makes this input grow
+                margin: 0 4px;
+            }
+            > .o_field_many2manytags > .o_field_many2one {
+                // reduce basis to prevent many2one input from going to the next line to often
+                flex-basis: 40px;
+            }
+            .o_input_dropdown, .o_datepicker {
+                > .o_input {
+                    padding-right: 15px; // to prevent caret overlapping
+                }
+                > .o_dropdown_button, .o_datepicker_button {
+                    margin-right: 5px;
+                    @include o-position-absolute(0, 0);
+                }
+            }
+            > input.o_field_translate, textarea.o_field_translate {
+                padding-right: 25px;
+                + span.o_field_translate {
+                    margin-left: -35px;
+                    padding: 0px 1px;
+                    text-align: right;
+                    width: 35px;
                     vertical-align: top;
+                    font-size: 12px;
                 }
-                > .o_field_widget {
-                    width: 100%;
-                    > .o_external_button {
-                        padding: 0;
-                        border: none;
-                        background-color: inherit;
-                        margin-left: 5px;
-                        font-size: 12px;
-                    }
-                }
-                > .o_field_monetary input {
-                    width: 0; // override width: 100px and let flex makes this input grow
-                    margin: 0 4px;
-                }
-                > .o_field_many2manytags > .o_field_many2one {
-                    // reduce basis to prevent many2one input from going to the next line to often
-                    flex-basis: 40px;
-                }
-                .o_input_dropdown, .o_datepicker {
-                    > .o_input {
-                        padding-right: 15px; // to prevent caret overlapping
-                    }
-                    > .o_dropdown_button, .o_datepicker_button {
-                        margin-right: 5px;
-                        @include o-position-absolute(0, 0);
-                    }
-                }
-                > input.o_field_translate, textarea.o_field_translate {
-                    padding-right: 25px;
-                    + span.o_field_translate {
-                        margin-left: -35px;
-                        padding: 0px 1px;
-                        text-align: right;
-                        width: 35px;
-                        vertical-align: top;
-                        font-size: 12px;
-                    }
-                }
-                > .o_row_handle {
-                    visibility: hidden; // hide sequence when editing
-                }
+            }
+            > .o_row_handle {
+                visibility: hidden; // hide sequence when editing
             }
         }
 
@@ -312,6 +317,11 @@
             }
         }
     }
+}
+
+.o_view_controller > .o_content > .o_list_view > .table-responsive {
+    // in main list views, let .o_content scroll
+    overflow: visible;
 }
 
 // Buttons in ControlPanel

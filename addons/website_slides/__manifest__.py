@@ -5,7 +5,7 @@
     'sequence': 145,
     'summary': 'Manage and publish an eLearning platform',
     'website': 'https://www.odoo.com/page/slides',
-    'category': 'Website',
+    'category': 'Website/Website',
     'description': """
 Create Online Courses
 =====================

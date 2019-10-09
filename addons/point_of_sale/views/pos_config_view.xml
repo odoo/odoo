@@ -288,7 +288,7 @@
                                     <div class="mt16">
                                         <field name="iface_tax_included" class="o_light_label" widget="radio"/>
                                     </div>
-                                    <a attrs="{'invisible': [('iface_tax_included', '!=', 'total')]}" href="https://www.odoo.com/documentation/user/12.0/accounting/others/taxes/tax_included.html"  target="_blank" class="oe-link"><i class="fa fa-fw fa-arrow-right"/>How to manage tax-included prices</a>
+                                    <a attrs="{'invisible': [('iface_tax_included', '!=', 'total')]}" href="https://www.odoo.com/documentation/user/13.0/accounting/others/taxes/tax_included.html"  target="_blank" class="oe-link"><i class="fa fa-fw fa-arrow-right"/>How to manage tax-included prices</a>
                                 </div>
                             </div>
                         </div>
@@ -445,7 +445,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-6 o_setting_box pos_reprint_receipt" attrs="{'invisible': [('iface_print_via_proxy','=',False)]}">
+                        <div class="col-12 col-lg-6 o_setting_box pos_reprint_receipt">
                             <div class="o_setting_left_pane">
                                 <field name='module_pos_reprint'/>
                             </div>
@@ -584,9 +584,6 @@
     <menuitem id="pos_menu_products_attribute_action"
         action="product.attribute_action"
         parent="point_of_sale.pos_menu_products_configuration"  groups="product.group_product_variant" sequence="2"/>
-    <menuitem id="pos_menu_products_variants_action"
-        action="product.variants_action"
-        parent="point_of_sale.pos_menu_products_configuration" groups="product.group_product_variant" sequence="3"/>
 
     <menuitem id="menu_pos_dashboard" action="action_pos_config_kanban" parent="menu_point_root" name="Dashboard" sequence="1"/>
 </odoo>

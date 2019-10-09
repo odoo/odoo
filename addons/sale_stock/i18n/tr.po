@@ -5,22 +5,23 @@
 # Translators:
 # Ediz Duman <neps1192@gmail.com>, 2019
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2019
-# Martin Trigaux, 2019
-# Murat Kaplan <muratk@projetgrup.com>, 2019
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2019
 # Hüseyin Cem Aras <hcemaras@gmail.com>, 2019
 # Umur Akın <umura@projetgrup.com>, 2019
 # Buket Şeker <buket_skr@hotmail.com>, 2019
 # Ugur Yilmaz <ugurlu2001@hotmail.com>, 2019
 # Levent Karakaş <levent@mektup.at>, 2019
+# Martin Trigaux, 2019
+# Murat Kaplan <muratk@projetgrup.com>, 2019
+# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:18+0000\n"
+"POT-Creation-Date: 2019-09-27 09:11+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Levent Karakaş <levent@mektup.at>, 2019\n"
+"Last-Translator: Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2019\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -135,6 +136,13 @@ msgid "After-Sale"
 msgstr "Satış Sonrası"
 
 #. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
+#, python-format
+msgid "All planned operations included"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__so_route_ids
 msgid "Apply specific routes"
 msgstr ""
@@ -150,6 +158,13 @@ msgstr "Mümkün olduğunca kısa sürede"
 #, python-format
 msgid "Availability"
 msgstr "Başlayabileceği Tarih"
+
+#. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
+#, python-format
+msgid "Available"
+msgstr "Uygun"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
@@ -392,8 +407,8 @@ msgstr "Beklenen teslim tarihlerini ileriye taşıyın : "
 #. openerp-web
 #: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
 #, python-format
-msgid "On Hand - Reserved"
-msgstr ""
+msgid "On"
+msgstr "Açık"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
@@ -550,13 +565,6 @@ msgid "Sold in the last 365 days"
 msgstr ""
 
 #. module: sale_stock
-#. openerp-web
-#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
-#, python-format
-msgid "Stock Available"
-msgstr ""
-
-#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
 msgid "Stock Move"
 msgstr "Stok Hareketi"
@@ -566,13 +574,6 @@ msgstr "Stok Hareketi"
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order_line__qty_delivered_method__stock_move
 msgid "Stock Moves"
 msgstr "Stok Hareketleri"
-
-#. module: sale_stock
-#. openerp-web
-#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
-#, python-format
-msgid "Stock On Hand"
-msgstr "Eldeki Stok Miktarı"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rule
@@ -625,8 +626,8 @@ msgstr "Transferler"
 #. openerp-web
 #: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
 #, python-format
-msgid "View Detailed Forecast"
-msgstr ""
+msgid "View Forecast"
+msgstr "Öngörüleni Gör"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__virtual_available_at_date

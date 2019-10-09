@@ -66,7 +66,7 @@ tour.STEPS.SHOW_APPS_MENU_ITEM,
     trigger: '.o_sale_product_configurator_add:not(.disabled)'
 }, {
     content: "check we are on the add modal",
-    trigger: '.td-product_name:contains("Customizable Desk (Steel, White)")',
+    trigger: '.td-product_name:contains("Customizable Desk (CONFIG) (Steel, White)")',
     extra_trigger: '.oe_optional_products_modal',
     run: 'click'
 }, {

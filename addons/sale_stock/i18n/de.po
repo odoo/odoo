@@ -3,7 +3,6 @@
 # 	* sale_stock
 # 
 # Translators:
-# e2f <projects@e2f.com>, 2019
 # Wolfgang Taferner, 2019
 # Thorsten Vocks <thorsten.vocks@openbig.org>, 2019
 # Andreas Stauder <andreas.stauder@brain-tec.ch>, 2019
@@ -17,15 +16,17 @@
 # Johannes Croe <jcr@odoo.com>, 2019
 # Leon Grill <leg@odoo.com>, 2019
 # Chris Egal <sodaswed@web.de>, 2019
+# e2f <projects@e2f.com>, 2019
 # Martin Trigaux, 2019
+# Henry Mineehen <info@mineehen.de>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:18+0000\n"
+"POT-Creation-Date: 2019-09-27 09:11+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"Last-Translator: Henry Mineehen <info@mineehen.de>, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -145,6 +146,13 @@ msgid "After-Sale"
 msgstr "Kundendienst"
 
 #. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
+#, python-format
+msgid "All planned operations included"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__so_route_ids
 msgid "Apply specific routes"
 msgstr ""
@@ -160,6 +168,13 @@ msgstr "Sobald wie möglich"
 #, python-format
 msgid "Availability"
 msgstr "Frühester Beginn"
+
+#. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
+#, python-format
+msgid "Available"
+msgstr "Verfügbar"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
@@ -403,8 +418,8 @@ msgstr "Geschätztes Lieferdatum verschieben um"
 #. openerp-web
 #: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
 #, python-format
-msgid "On Hand - Reserved"
-msgstr ""
+msgid "On"
+msgstr "An"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
@@ -563,13 +578,6 @@ msgid "Sold in the last 365 days"
 msgstr "Verkauft in den letzten 365 Tagen"
 
 #. module: sale_stock
-#. openerp-web
-#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
-#, python-format
-msgid "Stock Available"
-msgstr ""
-
-#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
 msgid "Stock Move"
 msgstr "Lagerbuchung"
@@ -579,13 +587,6 @@ msgstr "Lagerbuchung"
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order_line__qty_delivered_method__stock_move
 msgid "Stock Moves"
 msgstr "Lagerbuchungen"
-
-#. module: sale_stock
-#. openerp-web
-#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
-#, python-format
-msgid "Stock On Hand"
-msgstr " Auf Lager"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rule
@@ -639,8 +640,8 @@ msgstr "Bewegungen"
 #. openerp-web
 #: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
 #, python-format
-msgid "View Detailed Forecast"
-msgstr ""
+msgid "View Forecast"
+msgstr "Prognose anzeigen"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__virtual_available_at_date

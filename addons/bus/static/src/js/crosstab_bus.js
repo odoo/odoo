@@ -228,7 +228,7 @@ var CrossTabBus = Longpolling.extend({
             this._callLocalStorage('setItem', 'lastPresence', this._lastPresenceTime);
         }
 
-        this._heartbeatTimeout = setTimeout(this._heartbeat, hbPeriod);
+        this._heartbeatTimeout = setTimeout(this._heartbeat.bind(this), hbPeriod);
     },
     /**
      * Check with the local storage if the current tab is the master tab.

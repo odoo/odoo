@@ -11,7 +11,6 @@ var _t = core._t;
 
 
 var MassMailingFieldHtml = FieldHtml.extend({
-    description: "",
     xmlDependencies: (FieldHtml.prototype.xmlDependencies || []).concat(["/mass_mailing/static/src/xml/mass_mailing.xml"]),
     jsLibs: [
        '/mass_mailing/static/src/js/mass_mailing_snippets.js',
@@ -136,6 +135,13 @@ var MassMailingFieldHtml = FieldHtml.extend({
         if (!this.value) {
             this.value = this.recordData[this.nodeOptions['inline-field']];
         }
+        return this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    _renderReadonly: function () {
+        this.value = this.recordData[this.nodeOptions['inline-field']];
         return this._super.apply(this, arguments);
     },
 

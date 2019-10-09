@@ -22,7 +22,7 @@ _logger = logging.getLogger(__name__)
 
 # Used to agglomerate the attendances in order to find the hour_from and hour_to
 # See _onchange_request_parameters
-DummyAttendance = namedtuple('DummyAttendance', 'hour_from, hour_to, dayofweek, day_period')
+DummyAttendance = namedtuple('DummyAttendance', 'hour_from, hour_to, dayofweek, day_period, week_type')
 
 class HolidaysRequest(models.Model):
     """ Leave Requests Access specifications
@@ -114,7 +114,7 @@ class HolidaysRequest(models.Model):
         "\nThe status is 'Refused', when time off request is refused by manager." +
         "\nThe status is 'Approved', when time off request is approved by manager.")
     payslip_status = fields.Boolean('Reported in last payslips', help='Green this button when the time off has been taken into account in the payslip.', copy=False)
-    report_note = fields.Text('HR Comments', copy=False)
+    report_note = fields.Text('HR Comments', copy=False, groups="hr_holidays.group_hr_holidays_manager")
     user_id = fields.Many2one('res.users', string='User', related='employee_id.user_id', related_sudo=True, compute_sudo=True, store=True, default=lambda self: self.env.uid, readonly=True)
     manager_id = fields.Many2one('hr.employee')
     # leave type configuration
@@ -284,29 +284,29 @@ class HolidaysRequest(models.Model):
 
         resource_calendar_id = self.employee_id.resource_calendar_id or self.env.company.resource_calendar_id
         domain = [('calendar_id', '=', resource_calendar_id.id), ('display_type', '=', False)]
-        attendances = self.env['resource.calendar.attendance'].read_group(domain, ['ids:array_agg(id)', 'hour_from:min(hour_from)', 'hour_to:max(hour_to)', 'dayofweek', 'day_period'], ['dayofweek', 'day_period'], lazy=False)
+        attendances = self.env['resource.calendar.attendance'].read_group(domain, ['ids:array_agg(id)', 'hour_from:min(hour_from)', 'hour_to:max(hour_to)', 'week_type', 'dayofweek', 'day_period'], ['week_type', 'dayofweek', 'day_period'], lazy=False)
 
         # Must be sorted by dayofweek ASC and day_period DESC
-        attendances = sorted([DummyAttendance(group['hour_from'], group['hour_to'], group['dayofweek'], group['day_period']) for group in attendances], key=lambda att: (att.dayofweek, att.day_period != 'morning'))
+        attendances = sorted([DummyAttendance(group['hour_from'], group['hour_to'], group['dayofweek'], group['day_period'], group['week_type']) for group in attendances], key=lambda att: (att.dayofweek, att.day_period != 'morning'))
 
-        default_value = DummyAttendance(0, 0, 0, 'morning')
+        default_value = DummyAttendance(0, 0, 0, 'morning', False)
 
         if resource_calendar_id.two_weeks_calendar:
             # find week type of start_date
             start_week_type = int(math.floor((self.request_date_from.toordinal() - 1) / 7) % 2)
-            attendance_actual_week = attendances.filtered(lambda att: att.week_type is False or int(att.week_type) == start_week_type)
-            attendance_actual_next_week = attendances.filtered(lambda att: att.week_type is False or int(att.week_type) != start_week_type)
+            attendance_actual_week = [att for att in attendances if att.week_type is False or int(att.week_type) == start_week_type]
+            attendance_actual_next_week = [att for att in attendances if att.week_type is False or int(att.week_type) != start_week_type]
             # First, add days of actual week coming after date_from
-            attendance_filtred = list(attendance_actual_week.filtered(lambda att: int(att.dayofweek) >= self.request_date_from.weekday()))
+            attendance_filtred = [att for att in attendance_actual_week if int(att.dayofweek) >= self.request_date_from.weekday()]
             # Second, add days of the other type of week
             attendance_filtred += list(attendance_actual_next_week)
             # Third, add days of actual week (to consider days that we have remove first because they coming before date_from)
             attendance_filtred += list(attendance_actual_week)
 
             end_week_type = int(math.floor((self.request_date_to.toordinal() - 1) / 7) % 2)
-            attendance_actual_week = attendances.filtered(lambda att: att.week_type is False or int(att.week_type) == end_week_type)
-            attendance_actual_next_week = attendances.filtered(lambda att: att.week_type is False or int(att.week_type) != end_week_type)
-            attendance_filtred_reversed = list(reversed(attendance_actual_week.filtered(lambda att: int(att.dayofweek) <= self.request_date_to.weekday())))
+            attendance_actual_week = [att for att in attendances if att.week_type is False or int(att.week_type) == end_week_type]
+            attendance_actual_next_week = [att for att in attendances if att.week_type is False or int(att.week_type) != end_week_type]
+            attendance_filtred_reversed = list(reversed([att for att in attendance_actual_week if int(att.dayofweek) <= self.request_date_to.weekday()]))
             attendance_filtred_reversed += list(reversed(attendance_actual_next_week))
             attendance_filtred_reversed += list(reversed(attendance_actual_week))
 
@@ -395,7 +395,7 @@ class HolidaysRequest(models.Model):
     @api.onchange('employee_id')
     def _onchange_employee_id(self):
         self._sync_employee_details()
-        if self.employee_id.user_id != self.env.user:
+        if self.employee_id.user_id != self.env.user and self._origin.employee_id != self.employee_id:
             self.holiday_status_id = False
 
     @api.onchange('date_from', 'date_to', 'employee_id')
@@ -558,14 +558,15 @@ class HolidaysRequest(models.Model):
                         _('%s are only valid until %s') % (
                             leave.holiday_status_id.display_name, leave.holiday_status_id.validity_stop))
 
-    def _check_double_validation_rules(self, employee, state):
+    def _check_double_validation_rules(self, employees, state):
         if self.user_has_groups('hr_holidays.group_hr_holidays_manager'):
             return
 
         is_leave_user = self.user_has_groups('hr_holidays.group_hr_holidays_user')
         if state == 'validate1':
-            if employee.leave_manager_id != self.env.user and not is_leave_user:
-                raise AccessError(_('You cannot first approve a leave for %s, because you are not his leave manager' % (employee.name,)))
+            employees = employees.filtered(lambda employee: employee.leave_manager_id != self.env.user)
+            if employees and not is_leave_user:
+                raise AccessError(_('You cannot first approve a leave for %s, because you are not his leave manager' % (employees[0].name,)))
         elif state == 'validate' and not is_leave_user:
             # Is probably handled via ir.rule
             raise AccessError(_('You don\'t have the rights to apply second approval on a leave request'))
@@ -646,7 +647,11 @@ class HolidaysRequest(models.Model):
             if values.get('state'):
                 self._check_approval_update(values['state'])
                 if any(holiday.validation_type == 'both' for holiday in self):
-                    self._check_double_validation_rules(self.env['hr.employee'].browse(values.get('employee_id', self.employee_id.id)), values['state'])
+                    if values.get('employee_id'):
+                        employees = self.env['hr.employee'].browse(values.get('employee_id'))
+                    else:
+                        employees = self.mapped('employee_id')
+                    self._check_double_validation_rules(employees, values['state'])
             if 'date_from' in values:
                 values['request_date_from'] = values['date_from']
             if 'date_to' in values:
@@ -761,17 +766,16 @@ class HolidaysRequest(models.Model):
         return values
 
     def action_draft(self):
-        for holiday in self:
-            if holiday.state not in ['confirm', 'refuse']:
-                raise UserError(_('Time off request state must be "Refused" or "To Approve" in order to be reset to draft.'))
-            holiday.write({
-                'state': 'draft',
-                'first_approver_id': False,
-                'second_approver_id': False,
-            })
-            linked_requests = holiday.mapped('linked_request_ids')
-            for linked_request in linked_requests:
-                linked_request.action_draft()
+        if any(holiday.state not in ['confirm', 'refuse'] for holiday in self):
+            raise UserError(_('Time off request state must be "Refused" or "To Approve" in order to be reset to draft.'))
+        self.write({
+            'state': 'draft',
+            'first_approver_id': False,
+            'second_approver_id': False,
+        })
+        linked_requests = self.mapped('linked_request_ids')
+        if linked_requests:
+            linked_requests.action_draft()
             linked_requests.unlink()
         self.activity_update()
         return True
@@ -844,21 +848,21 @@ class HolidaysRequest(models.Model):
 
     def action_refuse(self):
         current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+        if any(holiday.state not in ['confirm', 'validate', 'validate1'] for holiday in self):
+            raise UserError(_('Time off request must be confirmed or validated in order to refuse it.'))
+
+        validated_holidays = self.filtered(lambda hol: hol.state == 'validate1')
+        validated_holidays.write({'state': 'refuse', 'first_approver_id': current_employee.id})
+        (self - validated_holidays).write({'state': 'refuse', 'second_approver_id': current_employee.id})
+        # Delete the meeting
+        self.mapped('meeting_id').unlink()
+        # If a category that created several holidays, cancel all related
+        linked_requests = self.mapped('linked_request_ids')
+        if linked_requests:
+            linked_requests.action_refuse()
+
+        # Post a second message, more verbose than the tracking message
         for holiday in self:
-            if holiday.state not in ['confirm', 'validate', 'validate1']:
-                raise UserError(_('Time off request must be confirmed or validated in order to refuse it.'))
-
-            if holiday.state == 'validate1':
-                holiday.write({'state': 'refuse', 'first_approver_id': current_employee.id})
-            else:
-                holiday.write({'state': 'refuse', 'second_approver_id': current_employee.id})
-            # Delete the meeting
-            if holiday.meeting_id:
-                holiday.meeting_id.unlink()
-            # If a category that created several holidays, cancel all related
-            holiday.linked_request_ids.action_refuse()
-
-            # Post a second message, more verbose than the tracking message
             if holiday.employee_id.user_id:
                 holiday.message_post(
                     body=_('Your %s planned on %s has been refused') % (holiday.holiday_status_id.display_name, holiday.date_from),

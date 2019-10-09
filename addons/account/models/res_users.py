@@ -12,8 +12,12 @@ class Users(models.Model):
     def _check_one_user_type(self):
         super(Users, self)._check_one_user_type()
 
-        g1 = self.env.ref('account.group_show_line_subtotals_tax_included')
-        g2 = self.env.ref('account.group_show_line_subtotals_tax_excluded')
+        g1 = self.env.ref('account.group_show_line_subtotals_tax_included', False)
+        g2 = self.env.ref('account.group_show_line_subtotals_tax_excluded', False)
+
+        if not g1 or not g2:
+            # A user cannot be in a non-existant group
+            return
 
         if self._has_multiple_groups([g1.id, g2.id]):
             raise ValidationError(_("A user cannot have both Tax B2B and Tax B2C.\n"

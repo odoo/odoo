@@ -114,6 +114,7 @@ var dom = {
             borderTopWidth: 0,
             borderBottomWidth: 0,
             padding: 0,
+            overflow: 'hidden',
         });
         $fixedTextarea.data("auto_resize", true);
 

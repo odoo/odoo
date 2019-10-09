@@ -5,6 +5,7 @@ from odoo.tools import float_compare, float_is_zero
 from odoo.exceptions import UserError
 
 import re
+from math import copysign
 
 
 class AccountReconcileModel(models.Model):
@@ -151,10 +152,6 @@ class AccountReconcileModel(models.Model):
         for model in self:
             model.number_entries = mapped_data.get(model.id, 0)
 
-    @api.onchange('name')
-    def onchange_name(self):
-        self.label = self.name
-
     @api.onchange('tax_ids')
     def _onchange_tax_ids(self):
         # Multiple taxes with force_tax_included results in wrong computation, so we
@@ -249,7 +246,7 @@ class AccountReconcileModel(models.Model):
         elif self.amount_type == "regex":
             match = re.search(self.amount_from_label_regex, st_line.name)
             if match:
-                line_balance = float(re.sub(r'\D' + self.decimal_separator, '', match.group(1)).replace(self.decimal_separator, '.')) * (1 if balance > 0.0 else -1)
+                line_balance = copysign(float(re.sub(r'\D' + self.decimal_separator, '', match.group(1)).replace(self.decimal_separator, '.')) * (1 if balance > 0.0 else -1), balance)
             else:
                 line_balance = 0
         else:
@@ -265,6 +262,7 @@ class AccountReconcileModel(models.Model):
             'analytic_tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
             'debit': line_balance > 0 and line_balance or 0,
             'credit': line_balance < 0 and -line_balance or 0,
+            'reconcile_model_id': self.id,
         }
         new_aml_dicts.append(writeoff_line)
 
@@ -285,7 +283,7 @@ class AccountReconcileModel(models.Model):
             elif self.second_amount_type == "regex":
                 match = re.search(self.second_amount_from_label_regex, st_line.name)
                 if match:
-                    line_balance = float(re.sub(r'\D' + self.decimal_separator, '', match.group(1)).replace(self.decimal_separator, '.'))
+                    line_balance = copysign(float(re.sub(r'\D' + self.decimal_separator, '', match.group(1)).replace(self.decimal_separator, '.')), remaining_balance)
                 else:
                     line_balance = 0
             else:
@@ -298,6 +296,7 @@ class AccountReconcileModel(models.Model):
                 'analytic_tag_ids': [(6, 0, self.second_analytic_tag_ids.ids)],
                 'debit': line_balance > 0 and line_balance or 0,
                 'credit': line_balance < 0 and -line_balance or 0,
+                'reconcile_model_id': self.id,
             }
             new_aml_dicts.append(second_writeoff_line)
 
@@ -399,15 +398,15 @@ class AccountReconcileModel(models.Model):
                 params += [rule.match_amount_min, rule.match_amount_max]
 
         # Filter on label, note and transaction_type
-        for field in ['label', 'note', 'transaction_type']:
+        for field, column in [('label', 'name'), ('note', 'note'), ('transaction_type', 'transaction_type')]:
             if rule['match_' + field] == 'contains':
-                query += ' AND st_line.name ILIKE %s'
+                query += ' AND st_line.{} ILIKE %s'.format(column)
                 params += ['%%%s%%' % rule['match_' + field + '_param']]
             elif rule['match_' + field] == 'not_contains':
-                query += ' AND st_line.name NOT ILIKE %s'
+                query += ' AND st_line.{} NOT ILIKE %s'.format(column)
                 params += ['%%%s%%' % rule['match_' + field + '_param']]
             elif rule['match_' + field] == 'match_regex':
-                query += ' AND st_line.name ~* %s'
+                query += ' AND st_line.{} ~* %s'.format(column)
                 params += [rule['match_' + field + '_param']]
 
         # Filter on partners.

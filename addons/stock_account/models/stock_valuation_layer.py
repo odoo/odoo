@@ -13,8 +13,11 @@ class StockValuationLayer(models.Model):
 
     _rec_name = 'product_id'
 
+    active = fields.Boolean(related='product_id.active')
     company_id = fields.Many2one('res.company', 'Company', readonly=True, required=True)
     product_id = fields.Many2one('product.product', 'Product', readonly=True, required=True, check_company=True)
+    categ_id = fields.Many2one('product.category', related='product_id.categ_id')
+    product_tmpl_id = fields.Many2one('product.template', related='product_id.product_tmpl_id')
     quantity = fields.Float('Quantity', digits=0, help='Quantity', readonly=True)
     uom_id = fields.Many2one(related='product_id.uom_id', readonly=True, required=True)
     currency_id = fields.Many2one('res.currency', 'Currency', related='company_id.currency_id', readonly=True, required=True)

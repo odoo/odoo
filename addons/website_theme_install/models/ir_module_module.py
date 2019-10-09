@@ -189,7 +189,6 @@ class IrModuleModule(models.Model):
                                 ON CONFLICT DO NOTHING""",
                              (dst_field, new_rec.id, src_field, old_rec.id))
 
-
     def _theme_load(self, website):
         """
             For every type of model in ``self._theme_model_names``, and for every theme in ``self``:
@@ -203,9 +202,6 @@ class IrModuleModule(models.Model):
             for model_name in self._theme_model_names:
                 module._update_records(model_name, website)
 
-            # reload registry to check if 'theme.utils'._<theme_name>_post_copy exists
-            self.env.reset()
-            self = self.env()[self._name].browse(self.id)
             self.env['theme.utils']._post_copy(module, website)
 
     def _theme_unload(self, website):
@@ -361,17 +357,10 @@ class IrModuleModule(models.Model):
 
         self._theme_upgrade_upstream()
 
-        next_action = False
         if self.state != 'installed':
-            next_action = self.button_immediate_install()
+            self.button_immediate_install()
 
-        # Alter next action for redirect
-        if not next_action:
-            next_action = website.button_go_website()
-        if next_action.get('tag') == 'reload' and not next_action.get('params', {}).get('menu_id'):
-            next_action = self.env.ref('website.action_website').read()[0]
-
-        return next_action
+        return website.button_go_website()
 
     def button_remove_theme(self):
         """Remove the current theme of the current website."""

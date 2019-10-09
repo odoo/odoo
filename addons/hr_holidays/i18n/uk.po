@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-13 11:27+0000\n"
+"POT-Creation-Date: 2019-09-23 13:49+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
@@ -89,6 +89,24 @@ msgstr "%s : %.2f днів"
 #, python-format
 msgid "%s : %.2f hours"
 msgstr "%s : %.2f годин"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "%s are only valid between %s and %s"
+msgstr "%s дійсні лише між %s та %s"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "%s are only valid starting from %s"
+msgstr "%s дійсні лише починаючи з %s"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "%s are only valid until %s"
+msgstr "%s дійсні лише до %s"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -492,7 +510,7 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "<span class=\"o_stat_text\">Group Days Allocated</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Розподілені дні групи</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -1475,8 +1493,12 @@ msgid "Hour to"
 msgstr "Година до"
 
 #. module: hr_holidays
+#. openerp-web
+#: code:addons/hr_holidays/static/src/xml/time_off_calendar.xml:0
+#: code:addons/hr_holidays/static/src/xml/time_off_calendar.xml:0
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__unit_per_interval__hours
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__request_unit__hour
+#, python-format
 msgid "Hours"
 msgstr "Години"
 
@@ -1809,7 +1831,7 @@ msgstr "Моя відпустка"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Need Second Approval"
-msgstr ""
+msgstr "Необхідне друге підтвердження"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__current_leave_state__draft
@@ -1994,7 +2016,7 @@ msgstr "Онлайн"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "Only a Leave Manager can approve/refuse its own requests."
-msgstr ""
+msgstr "лише менеджер відпусток може затверджувати/відхиляти власні запити."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -2017,6 +2039,16 @@ msgstr "Лише менеджер відпусток може скинути в�
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
+msgid ""
+"Only a Time off Manager can apply the second approval on allocation "
+"requests."
+msgstr ""
+"Лише менеджер відпусток може застосовувати друге затвердження на запитах на "
+"розподіл."
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#, python-format
 msgid "Only a time off Manager can approve its own requests."
 msgstr "Лише менеджер відпусток може затверджувати власні запити."
 
@@ -2024,7 +2056,7 @@ msgstr "Лише менеджер відпусток може затверджу
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid "Only a time off Manager can reset other people allocation."
-msgstr ""
+msgstr "Лише менеджер з відпусток може відхиляти розподіл інших людей."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -2033,14 +2065,8 @@ msgid ""
 "Only a time off Officer/Responsible or Manager can approve or refuse time "
 "off requests."
 msgstr ""
-
-#. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-#, python-format
-msgid ""
-"Only an time off Manager can apply the second approval on allocation "
-"requests."
-msgstr ""
+"Лише відповідальний за відпустки чи менеджер може затвердити чи відхилити "
+"запити на відпустки."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -2404,6 +2430,10 @@ msgid ""
 "The status is 'Refused', when an allocation request is refused by manager.\n"
 "The status is 'Approved', when an allocation request is approved by manager."
 msgstr ""
+"Статус встановлюється на 'Розглянути', коли створюється запит на розподіл.\n"
+"Статус встановлюється на 'Затвердити', коли запит на розподіл підтверджено користувачем.\n"
+"Статус встановлюється на 'Відхилено', коли запит на розподіл відхилено менеджером.\n"
+"Статус 'Затверджено', коли запит на розподіл затверджено менеджером."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -2424,6 +2454,16 @@ msgstr ""
 msgid ""
 "This area is automatically filled by the user who validate the allocation"
 msgstr ""
+"Ця область заповнюється автоматично користувачем, який підтверджує розподіл"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__second_approver_id
+msgid ""
+"This area is automatically filled by the user who validate the allocation "
+"with second level (If allocation type need second validation)"
+msgstr ""
+"Ця область автоматично заповнюється користувачем, який підтверджує розподіл "
+"з другим рівнем (Якщо тип розподілу вимагає другого підтвердження)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__first_approver_id
@@ -2433,20 +2473,13 @@ msgstr ""
 "Ця область автоматично заповнюється користувачем, який перевіряє відпустку"
 
 #. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__second_approver_id
-msgid ""
-"This area is automaticly filled by the user who validate the allocation with"
-" second level (If allocation type need second validation)"
-msgstr ""
-
-#. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__second_approver_id
 msgid ""
-"This area is automaticly filled by the user who validate the time off with "
-"second level (If time off type need second validation)"
+"This area is automatically filled by the user who validate the time off with"
+" second level (If time off type need second validation)"
 msgstr ""
-"Ця область автоматично заповнюється користувачем, який перевіряє відпустку з"
-" другим рівнем (Якщо відпустка потребує другої перевірки)"
+"Ця область автоматично заповнюється користувачем, який підтверджує відпустку"
+" з другим рівнем (Якщо тип відпустки вимагає другого підтвердження)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__color_name
@@ -2512,8 +2545,10 @@ msgid "Time Off Allocation"
 msgstr "Розподіл на відпустку"
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/report/hr_leave_report.py:0
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_available_holidays_report
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_action_department
+#, python-format
 msgid "Time Off Analysis"
 msgstr "Аналіз відпустки"
 
@@ -2634,7 +2669,7 @@ msgid "Time off Already Taken"
 msgstr "Відпустка вже використана"
 
 #. module: hr_holidays
-#: model:ir.actions.act_window,name:hr_holidays.act_hr_employee_holiday_request
+#: model:ir.actions.server,name:hr_holidays.act_hr_employee_holiday_request
 msgid "Time off Analysis"
 msgstr "Аналіз відпусток"
 
@@ -2974,24 +3009,6 @@ msgstr ""
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
-msgid "You can take %s from %s"
-msgstr "Ви можете взяти %s з %s"
-
-#. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:0
-#, python-format
-msgid "You can take %s only between %s and %s"
-msgstr "Ви можете взяти %s тільки між %s та %s"
-
-#. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:0
-#, python-format
-msgid "You can take %s until %s"
-msgstr "Ви можете взяти %s до %s"
-
-#. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:0
-#, python-format
 msgid "You cannot delete a time off which is in %s state"
 msgstr "Ви не можете видалити відпустку, яка є на етапі %s"
 
@@ -3044,6 +3061,8 @@ msgid ""
 "You must have manager rights to modify/validate a time off that already "
 "begun"
 msgstr ""
+"Вам потрібні права менеджера для зміни/підтвердження відпустки, яка вже "
+"почалася"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0

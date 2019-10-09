@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"POT-Creation-Date: 2019-09-30 09:42+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
 "Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
@@ -24,18 +24,13 @@ msgstr ""
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "<span>Free</span>"
-msgstr "<span>Nemokama</span>"
+msgid "<i class=\"fa fa-ban mr-2\"/>Sold Out"
+msgstr ""
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "<span>Unlimited</span>"
-msgstr "<span>Neribota</span>"
-
-#. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "<span>left</span>"
-msgstr "<span>kairė</span>"
+msgid "<i class=\"fa fa-check mr-2\"/>Registered"
+msgstr ""
 
 #. module: website_event_sale
 #: code:addons/website_event_sale/models/product_pricelist.py:0
@@ -59,6 +54,11 @@ msgid "Event Tickets"
 msgstr "Renginio bilietai"
 
 #. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
+msgid "Free"
+msgstr "Laisvas"
+
+#. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_complete_inherit_website_event_sale
 msgid "N/A"
 msgstr "nėra"
@@ -77,6 +77,11 @@ msgstr ""
 #: model:ir.model,name:website_event_sale.model_product_product
 msgid "Product"
 msgstr "Produktas"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
+msgid "Register"
+msgstr "Registruotis"
 
 #. module: website_event_sale
 #: code:addons/website_event_sale/controllers/main.py:0
@@ -98,6 +103,11 @@ msgstr "Pardavimo užsakymas"
 #: model:ir.model,name:website_event_sale.model_sale_order_line
 msgid "Sales Order Line"
 msgstr "Pardavimo užsakymo eilutė"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
+msgid "Sales end on"
+msgstr ""
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.index
@@ -130,6 +140,13 @@ msgstr "Bilietas nesutampa su produktu."
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_complete_inherit_website_event_sale
 msgid "Ticket"
 msgstr "Bilietas"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
+msgid ""
+"Tickets\n"
+"                    <span class=\"close\">×</span>"
+msgstr ""
 
 #. module: website_event_sale
 #: code:addons/website_event_sale/models/product_pricelist.py:0

@@ -18,6 +18,7 @@ class CrmTeam(models.Model):
     _inherit = ['mail.thread']
     _description = "Sales Team"
     _order = "sequence"
+    _check_company_auto = True
 
     @api.model
     @api.returns('self', lambda value: value.id if value else False)
@@ -43,12 +44,15 @@ class CrmTeam(models.Model):
     sequence = fields.Integer('Sequence', default=10)
     active = fields.Boolean(default=True, help="If the active field is set to false, it will allow you to hide the Sales Team without removing it.")
     company_id = fields.Many2one('res.company', string='Company',
-                                 default=lambda self: self.env.company)
+                                 default=lambda self: self.env.company, index=True)
     currency_id = fields.Many2one(
         "res.currency", related='company_id.currency_id',
         string="Currency", readonly=True)
-    user_id = fields.Many2one('res.users', string='Team Leader')
-    member_ids = fields.One2many('res.users', 'sale_team_id', string='Channel Members', domain= lambda self: [('groups_id', 'in', self.env.ref('base.group_user').id)], help="Add members to automatically assign their documents to this sales team. You can only be member of one team.")
+    user_id = fields.Many2one('res.users', string='Team Leader', check_company=True)
+    member_ids = fields.One2many(
+        'res.users', 'sale_team_id', string='Channel Members', check_company=True,
+        domain=lambda self: [('groups_id', 'in', self.env.ref('base.group_user').id)],
+        help="Add members to automatically assign their documents to this sales team. You can only be member of one team.")
     favorite_user_ids = fields.Many2many(
         'res.users', 'team_favorite_user_rel', 'team_id', 'user_id',
         string='Favorite Members',
