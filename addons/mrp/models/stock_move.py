@@ -227,6 +227,7 @@ class StockMove(models.Model):
             if self.created_production_id and self.created_production_id.state not in ('done', 'cancel'):
                 return [(self.created_production_id, self.created_production_id.user_id, visited)]
             else:
+<<<<<<< HEAD
                 return super(StockMove, self)._get_upstream_documents_and_responsibles(visited)
 
     def _should_be_assigned(self):
@@ -272,3 +273,50 @@ class StockMove(models.Model):
             return min(qty_ratios) // 1
         else:
             return 0.0
+=======
+                new_qty_reserved = ml.product_uom_qty - new_quantity_done
+                default = {'product_uom_qty': new_quantity_done,
+                           'qty_done': new_quantity_done,
+                           'lot_produced_id': final_lot.id}
+                ml.copy(default=default)
+                ml.with_context(bypass_reservation_update=True).write({'product_uom_qty': new_qty_reserved, 'qty_done': 0})
+
+        if float_compare(qty_to_add, 0, precision_rounding=self.product_uom.rounding) > 0:
+            # Search for a sub-location where the product is available. This might not be perfectly
+            # correct if the quantity available is spread in several sub-locations, but at least
+            # we should be closer to the reality. Anyway, no reservation is made, so it is still
+            # possible to change it afterwards.
+            quants = self.env['stock.quant']._gather(self.product_id, self.location_id, lot_id=lot, strict=False)
+            available_quantity = self.product_id.uom_id._compute_quantity(
+                self.env['stock.quant']._get_available_quantity(
+                    self.product_id, self.location_id, lot_id=lot, strict=False
+                ), self.product_uom
+            )
+            location_id = False
+            if float_compare(qty_to_add, available_quantity, precision_rounding=self.product_uom.rounding) < 1:
+                location_id = quants.filtered(lambda r: r.quantity > 0)[-1:].location_id
+
+            vals = {
+                'move_id': self.id,
+                'product_id': self.product_id.id,
+                'location_id': location_id.id if location_id else self.location_id.id,
+                'location_dest_id': self.location_dest_id.id,
+                'product_uom_qty': 0,
+                'product_uom_id': self.product_uom.id,
+                'qty_done': qty_to_add,
+                'lot_produced_id': final_lot.id,
+            }
+            if lot:
+                vals.update({'lot_id': lot.id})
+            self.env['stock.move.line'].create(vals)
+
+
+class PushedFlow(models.Model):
+    _inherit = "stock.location.path"
+
+    def _prepare_move_copy_values(self, move_to_copy, new_date):
+        new_move_vals = super(PushedFlow, self)._prepare_move_copy_values(move_to_copy, new_date)
+        new_move_vals['production_id'] = False
+
+        return new_move_vals
+>>>>>>> 18aa042e653... temp
