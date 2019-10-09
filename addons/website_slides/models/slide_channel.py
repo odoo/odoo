@@ -100,7 +100,8 @@ class Channel(models.Model):
     # slides: promote, statistics
     slide_ids = fields.One2many('slide.slide', 'channel_id', string="Slides")
     slide_last_update = fields.Date('Last Update', compute='_compute_slide_last_update', store=True)
-    slide_partner_ids = fields.One2many('slide.slide.partner', 'channel_id', string="Slide User Data", groups='website.group_website_publisher')
+    slide_partner_ids = fields.One2many('slide.slide.partner', 'channel_id', string="Slide User Data", groups='website.group_website_publisher',
+                                        copy=False)
     promote_strategy = fields.Selection([
         ('latest', 'Latest Published'),
         ('most_voted', 'Most Voted'),
@@ -145,7 +146,7 @@ class Channel(models.Model):
         help='Applied directly as ACLs. Allow to hide channels and their content for non members.')
     partner_ids = fields.Many2many(
         'res.partner', 'slide_channel_partner', 'channel_id', 'partner_id',
-        string='Members', help="All members of the channel.", context={'active_test': False})
+        string='Members', help="All members of the channel.", context={'active_test': False}, copy=False)
     members_count = fields.Integer('Attendees count', compute='_compute_members_count')
     is_member = fields.Boolean(string='Is Member', compute='_compute_is_member')
     channel_partner_ids = fields.One2many('slide.channel.partner', 'channel_id', string='Members Information', groups='website.group_website_publisher')
