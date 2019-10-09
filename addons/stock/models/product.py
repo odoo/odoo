@@ -293,7 +293,8 @@ class Product(models.Model):
 
     def _get_domain_locations_new(self, location_ids, company_id=False, compute_child=True):
         operator = compute_child and 'child_of' or 'in'
-        domain = company_id and ['&', ('company_id', '=', company_id)] or []
+        company_id = company_id or self.env.company.id
+        domain = ['&', ('company_id', '=', company_id)]
         locations = self.env['stock.location'].browse(location_ids)
         # TDE FIXME: should move the support of child_of + auto_join directly in expression
         hierarchical_locations = locations if operator == 'child_of' else locations.browse()
@@ -856,4 +857,3 @@ class UoM(models.Model):
         else:
             computed_qty = self._compute_quantity(qty, procurement_uom, rounding_method='HALF-UP')
         return (computed_qty, procurement_uom)
-
