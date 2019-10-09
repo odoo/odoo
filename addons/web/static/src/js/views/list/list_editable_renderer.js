@@ -1218,11 +1218,11 @@ ListRenderer.include({
             return Promise.resolve();
         }
         var wrap = options.wrap === undefined ? true : options.wrap;
+        var recordID = this._getRecordID(rowIndex);
 
         // Select the row then activate the widget in the correct cell
         var self = this;
         return this._selectRow(rowIndex).then(function () {
-            var recordID = self._getRecordID(rowIndex);
             var record = self._getRecord(recordID);
             if (fieldIndex >= (self.allFieldWidgets[record.id] || []).length) {
                 return Promise.reject();
