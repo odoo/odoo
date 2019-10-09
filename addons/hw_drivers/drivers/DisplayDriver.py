@@ -92,7 +92,7 @@ class DisplayDriver(Driver):
                 urls = json.loads(response.data.decode('utf8'))
                 return self.update_url(urls[self.device_identifier])
             except json.decoder.JSONDecodeError:
-                return self.update_url(response.data.decode('utf8'))
+                return self.update_url(response.get(data.decode('utf8'), False))
             except Exception:
                 pass
         return self.update_url()
