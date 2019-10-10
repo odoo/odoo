@@ -23,16 +23,9 @@ class TestMassMailingShortener(common.TransactionCase):
         def _get_title_from_url(u):
             return "Hello"
 
-        def _compute_favicon():
-            # 1px to avoid real request
-            return 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8DwHwAFBQIAX8jx0gAAAABJRU5ErkJggg=='
-
-        patcher = patch('odoo.addons.link_tracker.models.link_tracker.LinkTracker._compute_favicon', wraps=_compute_favicon)
-        patcher2 = patch('odoo.addons.link_tracker.models.link_tracker.LinkTracker._get_title_from_url', wraps=_get_title_from_url)
+        patcher = patch('odoo.addons.link_tracker.models.link_tracker.LinkTracker._get_title_from_url', wraps=_get_title_from_url)
         patcher.start()
-        patcher2.start()
         self.addCleanup(patcher.stop)
-        self.addCleanup(patcher2.stop)
 
     def test_00_test_mass_mailing_shortener(self):
         mailing_list_A = self.env['mailing.list'].create({

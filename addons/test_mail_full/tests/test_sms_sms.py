@@ -18,20 +18,13 @@ class LinkTrackerMock(common.BaseCase):
     def setUp(self):
         super(LinkTrackerMock, self).setUp()
 
-        def _compute_favicon():
-            # 1px to avoid real request
-            return 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8DwHwAFBQIAX8jx0gAAAABJRU5ErkJggg=='
-
         def _get_title_from_url(u):
             return "Test_TITLE"
 
         self.env['ir.config_parameter'].sudo().set_param('web.base.url', 'https://test.odoo.com')
 
-        link_tracker_favicon_patch = patch('odoo.addons.link_tracker.models.link_tracker.LinkTracker._compute_favicon', wraps=_compute_favicon)
         link_tracker_title_patch = patch('odoo.addons.link_tracker.models.link_tracker.LinkTracker._get_title_from_url', wraps=_get_title_from_url)
-        link_tracker_favicon_patch.start()
         link_tracker_title_patch.start()
-        self.addCleanup(link_tracker_favicon_patch.stop)
         self.addCleanup(link_tracker_title_patch.stop)
 
         self.utm_c = self.env.ref('utm.utm_campaign_fall_drive')
