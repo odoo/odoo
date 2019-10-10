@@ -252,18 +252,20 @@ class WebsiteVisitor(models.Model):
 
     def _update_visitor_last_visit(self):
         """ We need to do this part here to avoid concurrent updates error. """
-        with registry(self.env.cr.dbname).cursor() as cr:
-            date_now = datetime.now()
-            query = "UPDATE website_visitor SET "
-            if self.last_connection_datetime < (date_now - timedelta(hours=8)):
-                query += "visit_count = visit_count + 1,"
-            query += """
-                active = True,
-                last_connection_datetime = %s
-                WHERE id = %s
-            """
-            try:
-                cr.execute(query, (date_now, self.id), log_exceptions=False)
-                cr.commit()
-            except Exception:
-                cr.rollback()
+        try:
+            with self.env.cr.savepoint():
+                query_lock = "SELECT * FROM website_visitor where id = %s FOR UPDATE NOWAIT"
+                self.env.cr.execute(query_lock, (self.id,), log_exceptions=False)
+
+                date_now = datetime.now()
+                query = "UPDATE website_visitor SET "
+                if self.last_connection_datetime < (date_now - timedelta(hours=8)):
+                    query += "visit_count = visit_count + 1,"
+                query += """
+                    active = True,
+                    last_connection_datetime = %s
+                    WHERE id = %s
+                """
+                self.env.cr.execute(query, (date_now, self.id), log_exceptions=False)
+        except Exception:
+            pass
