@@ -139,7 +139,7 @@ class Blackbox(Thread):
                 etx = ser.read(1)
                 bcc = ser.read(1)
 
-                if stx == chr(0x02) and etx == chr(0x03) and bcc and self._lrc(response) == ord(bcc):
+                if stx == chr(0x02).encode() and etx == chr(0x03).encode() and bcc and self._lrc(response.decode()) == ord(bcc):
                     got_response = True
                     ser.write(chr(0x06).encode())
                 else:
