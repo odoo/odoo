@@ -5,29 +5,6 @@ var models = require('point_of_sale.models');
 var rpc = require('web.rpc');
 
 models.load_models([{
-    model:  'res.users',
-    fields: ['name','groups_id'],
-    domain: function(self){ return [['company_ids', 'in', self.config.company_id[0]],'|', ['groups_id','=', self.config.group_pos_manager_id[0]],['groups_id','=', self.config.group_pos_user_id[0]]]; },
-    loaded: function(self,users){
-        // we attribute a role to the user, 'cashier' or 'manager', depending
-        // on the group the user belongs.
-        users.forEach(function(user) {
-            user.role = 'cashier';
-            user.groups_id.some(function(group_id) {
-                if (group_id === self.config.group_pos_manager_id[0]) {
-                    user.role = 'manager';
-                    return true;
-                }
-            });
-            // replace the current user with its updated version
-            if (user.id === self.user.id) {
-                self.user = user;
-                self.employee = self.user;
-            }
-        });
-        self.users = users;
-    },
-},{
     model:  'hr.employee',
     fields: ['name', 'id', 'user_id'],
     domain: function(self){ return [['company_id', '=', self.config.company_id[0]]]; },
