@@ -171,7 +171,7 @@ class WebsiteBlog(http.Controller):
         response = request.render("website_blog.blog_post_short", values)
         return response
 
-    @http.route(['/blog/<model("blog.blog"):blog>/feed'], type='http', auth="public")
+    @http.route(['/blog/<model("blog.blog"):blog>/feed'], type='http', auth="public", website=True)
     def blog_feed(self, blog, limit='15'):
         v = {}
         v['blog'] = blog
