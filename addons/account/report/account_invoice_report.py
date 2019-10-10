@@ -19,7 +19,7 @@ class AccountInvoiceReport(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
     partner_id = fields.Many2one('res.partner', string='Partner', readonly=True)
     commercial_partner_id = fields.Many2one('res.partner', string='Partner Company', help="Commercial Entity")
-    country_id = fields.Many2one('res.country', string="Partner Company's Country")
+    country_id = fields.Many2one('res.country', string="Country")
     invoice_user_id = fields.Many2one('res.users', string='Salesperson', readonly=True)
     type = fields.Selection([
         ('out_invoice', 'Customer Invoice'),
