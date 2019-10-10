@@ -3,7 +3,10 @@
 
 import unittest
 
-from unittest.mock import patch
+try:
+    from unittest.mock import patch
+except ImportError:
+    from mock import patch
 
 from odoo.tools import html_sanitize, append_content_to_html, config, plaintext2html, email_split, misc
 from odoo.tests.common import SavepointCase
