@@ -60,7 +60,7 @@ class AccountMove(models.Model):
         remaining.l10n_latam_sequence_id = False
 
     def _compute_l10n_latam_amount_and_taxes(self):
-        recs_invoice = self.filtered(lambda x: x.is_invoice(include_receipts=True))
+        recs_invoice = self.filtered(lambda x: x.is_invoice())
         for invoice in recs_invoice:
             tax_lines = invoice.line_ids.filtered('tax_line_id')
             included_taxes = invoice.l10n_latam_document_type_id and \
