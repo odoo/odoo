@@ -1777,6 +1777,9 @@ order.
       option is useful to inform the web client that the default field name is
       not the name of the current field, but the name of another field.
 
+    - accepted_file_extensions: the file extension the user can pick from the file input dialog box (default value is 'image/*')
+      (cf: ``accept`` attribute on <input type="file"/>)
+
     .. code-block:: xml
 
         <field name="image" widget='image' options='{"preview_image":"image_128"}'/>
@@ -1785,6 +1788,11 @@ order.
     Generic widget to allow saving/downloading a binary file.
 
     - Supported field types: *binary*
+
+    Options:
+
+    - accepted_file_extensions: the file extension the user can pick from the file input dialog box
+      (cf: ``accept`` attribute on <input type="file"/>)
 
     Attribute:
 
@@ -2116,6 +2124,10 @@ Relational fields
     Note that this widget is specific to the model 'ir.attachment'.
 
     - Supported field types: *many2many*
+
+    Options:
+    - accepted_file_extensions: the file extension the user can pick from the file input dialog box
+      (cf: ``accept`` attribute on <input type="file"/>)
 
 - many2many_tags (FieldMany2ManyTags)
     Display many2many as a list of tags.

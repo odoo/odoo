@@ -1634,6 +1634,7 @@ var AbstractFieldBinary = AbstractField.extend({
         this.fields = record.fields;
         this.useFileAPI = !!window.FileReader;
         this.max_upload_size = 64 * 1024 * 1024; // 64Mo
+        this.accepted_file_extensions = (this.nodeOptions && this.nodeOptions.accepted_file_extensions) || this.accepted_file_extensions || '*';
         if (!this.useFileAPI) {
             var self = this;
             this.fileupload_id = _.uniqueId('o_fileupload');
@@ -1765,6 +1766,7 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
         'i': 'png',
         'P': 'svg+xml',
     },
+    accepted_file_extensions: 'image/*',
     /**
      * Returns the image URL from a model.
      *
@@ -1976,6 +1978,7 @@ var FieldPdfViewer = FieldBinaryFile.extend({
     description: _lt("PDF Viewer"),
     supportedFieldTypes: ['binary'],
     template: 'FieldPdfViewer',
+    accepted_file_extensions: 'application/pdf',
     /**
      * @override
      */
