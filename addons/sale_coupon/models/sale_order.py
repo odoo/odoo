@@ -8,12 +8,12 @@ from odoo.tools.misc import formatLang
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    applied_coupon_ids = fields.One2many('sale.coupon', 'sales_order_id', string="Applied Coupons", copy=False)
-    generated_coupon_ids = fields.One2many('sale.coupon', 'order_id', string="Offered Coupons", copy=False)
+    applied_coupon_ids = fields.One2many('coupon.coupon', 'sales_order_id', string="Applied Coupons", copy=False)
+    generated_coupon_ids = fields.One2many('coupon.coupon', 'order_id', string="Offered Coupons", copy=False)
     reward_amount = fields.Float(compute='_compute_reward_total')
-    no_code_promo_program_ids = fields.Many2many('sale.coupon.program', string="Applied Immediate Promo Programs",
+    no_code_promo_program_ids = fields.Many2many('coupon.program', string="Applied Immediate Promo Programs",
         domain="[('promo_code_usage', '=', 'no_code_needed'), '|', ('company_id', '=', False), ('company_id', '=', company_id)]", copy=False)
-    code_promo_program_id = fields.Many2one('sale.coupon.program', string="Applied Promo Program",
+    code_promo_program_id = fields.Many2one('coupon.program', string="Applied Promo Program",
         domain="[('promo_code_usage', '=', 'code_needed'), '|', ('company_id', '=', False), ('company_id', '=', company_id)]", copy=False)
     promo_code = fields.Char(related='code_promo_program_id.promo_code', help="Applied program code", readonly=False)
 
@@ -105,7 +105,7 @@ class SaleOrder(models.Model):
     def _get_paid_order_lines(self):
         """ Returns the sale order lines that are not reward lines.
             It will also return reward lines being free product lines. """
-        free_reward_product = self.env['sale.coupon.program'].search([('reward_type', '=', 'product')]).mapped('discount_line_product_id')
+        free_reward_product = self.env['coupon.program'].search([('reward_type', '=', 'product')]).mapped('discount_line_product_id')
         return self.order_line.filtered(lambda x: not x.is_reward_line or x.product_id in free_reward_product)
 
     def _get_reward_values_discount_fixed_amount(self, program):
@@ -156,7 +156,7 @@ class SaleOrder(models.Model):
         elif program.discount_apply_on in ['specific_products', 'on_order']:
             if program.discount_apply_on == 'specific_products':
                 # We should not exclude reward line that offer this product since we need to offer only the discount on the real paid product (regular product - free product)
-                free_product_lines = self.env['sale.coupon.program'].search([('reward_type', '=', 'product'), ('reward_product_id', 'in', program.discount_specific_product_ids.ids)]).mapped('discount_line_product_id')
+                free_product_lines = self.env['coupon.program'].search([('reward_type', '=', 'product'), ('reward_product_id', 'in', program.discount_specific_product_ids.ids)]).mapped('discount_line_product_id')
                 lines = lines.filtered(lambda x: x.product_id in (program.discount_specific_product_ids | free_product_lines))
 
             for line in lines:
@@ -214,7 +214,7 @@ class SaleOrder(models.Model):
 
     def _create_reward_coupon(self, program):
         # if there is already a coupon that was set as expired, reactivate that one instead of creating a new one
-        coupon = self.env['sale.coupon'].search([
+        coupon = self.env['coupon.coupon'].search([
             ('program_id', '=', program.id),
             ('state', '=', 'expired'),
             ('partner_id', '=', self.partner_id.id),
@@ -224,7 +224,7 @@ class SaleOrder(models.Model):
         if coupon:
             coupon.write({'state': 'reserved'})
         else:
-            coupon = self.env['sale.coupon'].create({
+            coupon = self.env['coupon.coupon'].create({
                 'program_id': program.id,
                 'state': 'reserved',
                 'partner_id': self.partner_id.id,
@@ -235,12 +235,12 @@ class SaleOrder(models.Model):
         return coupon
 
     def _send_reward_coupon_mail(self):
-        template = self.env.ref('sale_coupon.mail_template_sale_coupon', raise_if_not_found=False)
+        template = self.env.ref('coupon.mail_template_sale_coupon', raise_if_not_found=False)
         if template:
             for coupon in self.generated_coupon_ids:
                 self.message_post_with_template(
                     template.id, composition_mode='comment',
-                    model='sale.coupon', res_id=coupon.id,
+                    model='coupon.coupon', res_id=coupon.id,
                     email_layout_xmlid='mail.mail_notification_light',
                 )
 
@@ -250,7 +250,7 @@ class SaleOrder(models.Model):
         param: order - The sale order for which method will get applicable programs.
         """
         self.ensure_one()
-        programs = self.env['sale.coupon.program'].search([
+        programs = self.env['coupon.program'].search([
         ])._filter_programs_from_common_rules(self)
         if self.promo_code:
             programs._filter_promo_programs_with_code(self)
@@ -258,7 +258,7 @@ class SaleOrder(models.Model):
 
     def _get_applicable_no_code_promo_program(self):
         self.ensure_one()
-        programs = self.env['sale.coupon.program'].search([
+        programs = self.env['coupon.program'].search([
             ('promo_code_usage', '=', 'no_code_needed'),
         ])._filter_programs_from_common_rules(self)
         return programs
@@ -402,7 +402,7 @@ class SaleOrderLine(models.Model):
             line.order_id.applied_coupon_ids -= coupons_to_reactivate
             # Remove the program from the order if the deleted line is the reward line of the program
             # And delete the other lines from this program (It's the case when discount is split per different taxes)
-            related_program = self.env['sale.coupon.program'].search([('discount_line_product_id', '=', line.product_id.id)])
+            related_program = self.env['coupon.program'].search([('discount_line_product_id', '=', line.product_id.id)])
             if related_program:
                 line.order_id.no_code_promo_program_ids -= related_program
                 line.order_id.code_promo_program_id -= related_program
@@ -422,7 +422,7 @@ class SaleOrderLine(models.Model):
             taxes = line.tax_id.filtered(lambda r: not line.company_id or r.company_id == line.company_id)
             line.tax_id = fpos.map_tax(taxes, line.product_id, line.order_id.partner_shipping_id)
 
-    # Invalidation of `sale.coupon.program.order_count`
+    # Invalidation of `coupon.program.order_count`
     # `test_program_rules_validity_dates_and_uses`,
     # Overriding modified is quite hardcore as you need to know how works the cache and the invalidation system,
     # but at least the below works and should be efficient.
@@ -432,7 +432,7 @@ class SaleOrderLine(models.Model):
     def modified(self, fnames, create=False):
         super(SaleOrderLine, self).modified(fnames, create)
         if 'product_id' in fnames:
-            Program = self.env['sale.coupon.program'].sudo()
+            Program = self.env['coupon.program'].sudo()
             field_order_count = Program._fields['order_count']
             programs = self.env.cache.get_records(Program, field_order_count)
             if programs:
