@@ -10,8 +10,8 @@
                 <field name="reason" class="oe_inline" placeholder="Reason..."/>
             </h1>
             <group>
-                <field name="country_id" invisible="1"/>
-                <field name="tax_report_line_id" widget="selection" domain="[('tag_name', '!=', None), ('country_id', '=', country_id)]"/>
+                <field name="report_id" invisible="1"/>
+                <field name="tax_report_line_id" widget="selection" domain="[('tag_name', '!=', None), ('report_id', '=', report_id)]"/>
             </group>
             <group>
                 <group>
