@@ -177,16 +177,9 @@
                                     <i class="fa fa-ban" style="color: red;" role="img" title="This email is blacklisted for mass mailing"
                                         aria-label="Blacklisted" attrs="{'invisible': ['|', ('partner_is_blacklisted', '=', False), ('partner_address_email', '=', False)]}" groups="base.group_user"/>
                                     <field name="partner_address_email"
-                                        attrs="{'invisible': [('partner_address_email', '==', False)]}" widget="email" string="Email"/>
+                                        attrs="{'invisible': [('partner_address_email', '=', False)]}" widget="email" string="Email"/>
                                 </div>
-                                <field string="Phone"
-                                    name="partner_address_phone"
-                                    widget="phone" options="{'enable_sms': True}"
-                                    readonly="1"
-                                    attrs="{'invisible': [('partner_address_phone', '==', False)]}"/>
-                                <field name="phone"
-                                    widget="phone" options="{'enable_sms': True}"
-                                    attrs="{'invisible':  [('partner_address_phone', '!=', False)]}"/>
+                                <field name="phone" widget="phone" options="{'enable_sms': True}"/>
                             </group>
                             <group attrs="{'invisible': [('type', '=', 'opportunity')]}">
                                 <label for="contact_name"/>
