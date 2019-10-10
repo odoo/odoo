@@ -214,6 +214,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         return loaded.then(function () {
             return self.load_js(file_list);
         }).then(function () {
+            self._configureLocale();
             self.on_modules_loaded();
             self.trigger('module_loaded');
        });
@@ -356,6 +357,23 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         var self = this;
         return this.rpc('/web/session/get_session_info').then(function (result) {
             self.currencies = result.currencies;
+        });
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Sets first day of week in current locale according to the user language.
+     *
+     * @private
+     */
+    _configureLocale: function () {
+        moment.updateLocale(moment.locale(), {
+            week: {
+                dow: (_t.database.parameters.week_start || 0) % 7,
+            },
         });
     },
 
