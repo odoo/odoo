@@ -130,8 +130,8 @@ class Slide(models.Model):
     slide_ids = fields.One2many('slide.slide', "category_id", string="Slides")
     # subscribers
     partner_ids = fields.Many2many('res.partner', 'slide_slide_partner', 'slide_id', 'partner_id',
-                                   string='Subscribers', groups='website.group_website_publisher')
-    slide_partner_ids = fields.One2many('slide.slide.partner', 'slide_id', string='Subscribers information', groups='website.group_website_publisher')
+                                   string='Subscribers', groups='website.group_website_publisher', copy=False)
+    slide_partner_ids = fields.One2many('slide.slide.partner', 'slide_id', string='Subscribers information', groups='website.group_website_publisher', copy=False)
     user_membership_id = fields.Many2one(
         'slide.slide.partner', string="Subscriber information", compute='_compute_user_membership_id', compute_sudo=False,
         help="Subscriber information for the current logged in user")
