@@ -852,6 +852,8 @@ class Picking(models.Model):
             operations = pick.move_line_ids.filtered(lambda o: o.qty_done > 0 and not o.result_package_id)
             operation_ids = self.env['stock.move.line']
             if operations:
+                if len(operations.mapped('location_dest_id')) > 1:
+                    raise UserError(_('You are trying to put products going to different locations into the same package.'))
                 package = self.env['stock.quant.package'].create({})
                 for operation in operations:
                     if float_compare(operation.qty_done, operation.product_uom_qty, precision_rounding=operation.product_uom_id.rounding) >= 0:
