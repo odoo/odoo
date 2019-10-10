@@ -1024,8 +1024,16 @@ class expression(object):
                     # rewrite condition in terms of ids2
                     subop = 'not inselect' if operator in NEGATIVE_TERM_OPERATORS else 'inselect'
                     subquery = 'SELECT "%s" FROM "%s" WHERE "%s" IN %%s' % (rel_id1, rel_table, rel_id2)
+                    check_null = False in ids2
                     ids2 = tuple(it for it in ids2 if it) or (None,)
-                    push(create_substitution_leaf(leaf, ('id', subop, (subquery, [ids2])), internal=True))
+
+                    if check_null:
+                        ids2b = select_distinct_from_where_not_null(cr, rel_id2, rel_table)
+                        ids2b = tuple(it for it in ids2b if it) or (None,)
+                        subquery += ' OR "%s" NOT IN %%s' % rel_id2
+                        push(create_substitution_leaf(leaf, ('id', subop, (subquery, [ids2, ids2b])), internal=True))
+                    else:
+                        push(create_substitution_leaf(leaf, ('id', subop, (subquery, [ids2])), internal=True))
 
                 else:
                     # determine ids1 = records with relations

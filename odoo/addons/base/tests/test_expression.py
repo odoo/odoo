@@ -42,6 +42,10 @@ class TestExpression(TransactionCase):
         with_a_or_with_b = partners.search(['|', ('category_id', 'in', [cat_a.id]), ('category_id', 'in', [cat_b.id])])
         self.assertEqual(a + b + ab, with_a_or_with_b, "Search for category_id contains cat_a or contains cat_b failed.")
 
+        # Partners with categories.
+        with_cat = partners.search([('category_id', 'not in', [False])])
+        self.assertTrue(with_a_or_with_b <= with_cat, "Search for with any category failed.")
+
         # If we change the OR in AND...
         with_a_and_b = partners.search([('category_id', 'in', [cat_a.id]), ('category_id', 'in', [cat_b.id])])
         self.assertEqual(ab, with_a_and_b, "Search for category_id contains cat_a and cat_b failed.")
@@ -50,6 +54,10 @@ class TestExpression(TransactionCase):
         without_a_or_b = partners.search([('category_id', 'not in', [cat_a.id, cat_b.id])])
         self.assertFalse(without_a_or_b & (a + b + ab), "Search for category_id doesn't contain cat_a or cat_b failed (1).")
         self.assertTrue(c in without_a_or_b, "Search for category_id doesn't contain cat_a or cat_b failed (2).")
+
+        # Partners without categories.
+        without_cat = partners.search([('category_id', 'in', [False])])
+        self.assertTrue(without_cat <= without_a_or_b, "Search for without any categories failed.")
 
         # Show that `doesn't contain list` is really `doesn't contain element and doesn't contain element`.
         without_a_and_without_b = partners.search([('category_id', 'not in', [cat_a.id]), ('category_id', 'not in', [cat_b.id])])
