@@ -525,7 +525,11 @@
                                         options='{"no_open": True}'
                                         optional="show"
                                     />
-                                    <field name="customer_lead" optional="hide"/>
+                                    <field
+                                        name="customer_lead"
+                                        optional="hide"
+                                        attrs="{'readonly': [('parent.state', 'not in', ['draft', 'sent'])]}"
+                                    />
                                     <field
                                         name="price_unit"
                                         attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"
