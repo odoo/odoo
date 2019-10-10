@@ -295,20 +295,23 @@ exports.PosModel = Backbone.Model.extend({
     },{
         model:  'res.users',
         fields: ['name','company_id', 'id', 'groups_id'],
-        ids:    function(self){ return [session.uid]; },
+        domain: function(self){ return [['company_ids', 'in', self.config.company_id[0]],'|', ['groups_id','=', self.config.group_pos_manager_id[0]],['groups_id','=', self.config.group_pos_user_id[0]]]; },
         loaded: function(self,users){
-          var role = 'cashier';
-          users[0].groups_id.some(function(group_id) {
-              if (group_id === self.config.group_pos_manager_id[0]) {
-                  role = 'manager';
-                  return true;
-              }
+            users.forEach(function(user) {
+                user.role = 'cashier';
+                user.groups_id.some(function(group_id) {
+                    if (group_id === self.config.group_pos_manager_id[0]) {
+                        user.role = 'manager';
+                        return true;
+                    }
+                });
+                if (user.id === session.uid) {
+                    self.user = user;
+                    self.employee = user;
+                    self.employee.user_id = [user.id, user.name];
+                }
             });
-            self.user = users[0];
-            self.user.role = role;
-            self.employee.name = self.user.name;
-            self.employee.role = role;
-            self.employee.user_id = [self.user.id, self.user.name];
+            self.users = users;
             self.employees = [self.employee];
             self.set_cashier(self.employee);
         },
