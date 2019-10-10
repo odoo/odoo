@@ -8,6 +8,7 @@
             <xpath expr="//field[@name='description']" position="after">
                 <field name="picking_ids" invisible="1"/>
                 <field name="produce_id" invisible="1"/>
+                <field name="workorder_id" invisible="1"/>
             </xpath>
             <xpath expr="//button[@name='process']" position="attributes">
                 <attribute name="attrs">{'invisible': [('picking_ids', '=', [])]}</attribute>
@@ -30,6 +31,12 @@
                     type="object"
                     attrs="{'invisible': [('produce_id', '=', False)]}"
                     class="btn-secondary"/>
+                <!-- From a Workorder -->
+                <button name="confirm_workorder"
+                    string="Confirm"
+                    type="object"
+                    attrs="{'invisible': [('workorder_id', '=', False)]}"
+                    class="btn-primary"/>
             </xpath>
         </field>
     </record>
