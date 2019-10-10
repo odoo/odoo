@@ -2095,6 +2095,22 @@ QUnit.module('basic_fields', {
         session.get_file = oldGetFile;
     });
 
+    QUnit.test('binary fields: option accepted_file_extensions', async function (assert) {
+        assert.expect(1);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `<form string="Partners">
+                      <field name="document" widget="binary" options="{'accepted_file_extensions': '.dat,.bin'}"/>
+                   </form>`
+        });
+        assert.strictEqual(form.$('input.o_input_file').attr('accept'), '.dat,.bin',
+            "the input should have the correct ``accept`` attribute");
+        form.destroy();
+    });
+
     QUnit.test('binary fields that are readonly in create mode do not download', async function (assert) {
         assert.expect(2);
 
@@ -2411,6 +2427,34 @@ QUnit.module('basic_fields', {
             "the image should correctly set its attributes");
         assert.strictEqual(form.$('div[name="document"] > img').css('max-width'), "90px",
             "the image should correctly set its attributes");
+        form.destroy();
+    });
+
+    QUnit.test('image: option accepted_file_extensions', async function (assert) {
+        assert.expect(2);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `<form string="Partners">
+                      <field name="document" widget="image" options="{'accepted_file_extensions': '.png,.jpeg'}"/>
+                   </form>`
+        });
+        assert.strictEqual(form.$('input.o_input_file').attr('accept'), '.png,.jpeg',
+            "the input should have the correct ``accept`` attribute");
+        form.destroy();
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `<form string="Partners">
+                      <field name="document" widget="image"/>
+                   </form>`
+        });
+        assert.strictEqual(form.$('input.o_input_file').attr('accept'), 'image/*',
+            'the default value for the attribute "accept" on the "image" widget must be "image/*"');
         form.destroy();
     });
 
