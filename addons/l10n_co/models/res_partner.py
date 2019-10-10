@@ -6,7 +6,7 @@ from odoo import api, fields, models
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    l10n_co_document_type = fields.Selection([('rut', 'RUT'),
+    l10n_co_document_type = fields.Selection([('rut', 'NIT'),
                                               ('id_document', 'Cédula'),
                                               ('id_card', 'Tarjeta de Identidad'),
                                               ('passport', 'Pasaporte'),
