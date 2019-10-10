@@ -1776,12 +1776,18 @@ class AccountInvoice(models.Model):
             currency = invoice.currency_id or invoice.company_id.currency_id
             fmt = partial(formatLang, invoice.with_context(lang=invoice.partner_id.lang).env, currency_obj=currency)
             res = {}
+
+            ## There are as many tax line as there are repartition lines
+            done_taxes = set()
             for line in invoice.tax_line_ids:
                 tax = line.tax_id
                 group_key = (tax.tax_group_id, tax.amount_type, tax.amount)
                 res.setdefault(group_key, {'base': 0.0, 'amount': 0.0})
                 res[group_key]['amount'] += line.amount_total
-                res[group_key]['base'] += line.base
+                if tax.id not in done_taxes:
+                    # The base should be added ONCE
+                    res[group_key]['base'] += line.base
+                    done_taxes.add(tax.id)
             res = sorted(res.items(), key=lambda l: l[0][0].sequence)
             invoice.amount_by_group = [(
                 r[0][0].name, r[1]['amount'], r[1]['base'],
