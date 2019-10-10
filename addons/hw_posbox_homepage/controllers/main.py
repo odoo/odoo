@@ -82,7 +82,7 @@ class IoTboxHomepage(web.Home):
         for device in iot_devices:
             iot_device.append({
                 'name': iot_devices[device].device_name + ' : ' + str(iot_devices[device].data['value']),
-                'type': iot_devices[device].device_type,
+                'type': iot_devices[device].device_type.replace('_', ' '),
                 'message': iot_devices[device].device_identifier + iot_devices[device].get_message()
             })
 
