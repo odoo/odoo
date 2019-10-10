@@ -640,6 +640,9 @@ action = model.setting_init_bank_account_action()
                     <button name="%(action_cash_box_out)d" string="Take Money In/Out" type="action" class="oe_highlight" attrs="{'invisible': [('journal_type','!=','cash')]}"/>
                     <field name="state" widget="statusbar" statusbar_visible="open,confirm"/>
                 </header>
+                <div class="alert alert-warning" role="alert" attrs="{'invisible': ['|', ('previous_statement_id', '=', False), ('is_valid_balance_start', '=', True)]}">
+                    The starting balance <b>doesn't match</b> with the ending balance of the previous bank statement.
+                </div>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button class="oe_stat_button" name="button_journal_entries"
@@ -654,6 +657,8 @@ action = model.setting_init_bank_account_action()
                     </div>
                     <group>
                         <group>
+                            <field name="previous_statement_id" invisible="1"/>
+                            <field name="is_valid_balance_start" invisible="1"/>
                             <field name="journal_type" invisible="1"/>
                             <field name="cashbox_start_id" invisible="1"/>
                             <field name="cashbox_end_id" invisible="1"/>
