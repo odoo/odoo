@@ -380,7 +380,11 @@ class IrHttp(models.AbstractModel):
                 filename = "%s-%s-%s" % (record._name, record.id, field)
 
         if not mimetype:
-            mimetype = guess_mimetype(base64.b64decode(content), default=default_mimetype)
+            try:
+                decoded_content = base64.b64decode(content)
+            except base64.binascii.Error:  # if we could not decode it, no need to pass it down: it would crash elsewhere...
+                return (404, [], None)
+            mimetype = guess_mimetype(decoded_content, default=default_mimetype)
 
         # extension
         _, existing_extension = os.path.splitext(filename)

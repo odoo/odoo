@@ -79,7 +79,7 @@ class LunchProductReport(models.Model):
         self._cr.execute("""
             CREATE or REPLACE view %s AS (
                 SELECT
-                    row_number() over (ORDER BY user_id,product.id) AS id,
+                    row_number() over (ORDER BY users.id,product.id) AS id,
                     product.id AS product_id,
                     product.name,
                     product.category_id,

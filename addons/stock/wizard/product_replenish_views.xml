@@ -15,7 +15,8 @@
                     <field name="product_has_variants" invisible="1"/>
                     <field name="product_id"
                         domain="[('product_tmpl_id', '=', product_tmpl_id)]"
-                        attrs="{'readonly': [('product_has_variants', '=', False)]}"/>
+                        attrs="{'readonly': [('product_has_variants', '=', False)]}"
+                        options="{'no_create_edit':1}"/>
                     <field name="product_uom_category_id" invisible="1"/>
                     <label for="quantity"/>
                     <div class="o_row">
@@ -49,7 +50,9 @@
         <field name="name">Replenish</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">product.replenish</field>
-        <field name="binding_model_id" ref="product.model_product_product"/>
+        <!-- binding_model_id evaluated to False
+        to remove it in existing db's as it was bug-prone -->
+        <field name="binding_model_id" eval="False"/>
         <field name="view_mode">form</field>
         <field name="view_id" ref="view_product_replenish"/>
         <field name="target">new</field>

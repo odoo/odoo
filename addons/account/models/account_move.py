@@ -2376,7 +2376,7 @@ class AccountMoveLine(models.Model):
     name = fields.Char(string='Label')
     quantity = fields.Float(string='Quantity',
         default=1.0, digits='Product Unit of Measure',
-        help="The optional quantity expressed by this line, eg: number of product sold."
+        help="The optional quantity expressed by this line, eg: number of product sold. "
              "The quantity is not a legal requirement but is very useful for some reports.")
     price_unit = fields.Float(string='Unit Price', digits='Product Price')
     discount = fields.Float(string='Discount (%)', digits='Discount', default=0.0)
@@ -3049,6 +3049,7 @@ class AccountMoveLine(models.Model):
 
         for vals in vals_list:
             move = self.env['account.move'].browse(vals['move_id'])
+            vals.setdefault('company_currency_id', move.company_id.currency_id.id) # important to bypass the ORM limitation where monetary fields are not rounded; more info in the commit message
 
             if move.is_invoice(include_receipts=True):
                 currency = self.env['res.currency'].browse(vals.get('currency_id'))

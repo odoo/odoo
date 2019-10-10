@@ -247,20 +247,7 @@ class AccountMove(models.Model):
                 move._create_invoice_from_xml(attachment)
 
     def _create_invoice_from_pdf(self, attachment):
-        def _get_attachment_filename(attachment):
-            # Handle both _Attachment namedtuple in mail.thread or ir.attachment.
-            return hasattr(attachment, 'fname') and getattr(attachment, 'fname') or attachment.name
-
-        def _get_attachment_content(attachment):
-            # Handle both _Attachment namedtuple in mail.thread or ir.attachment.
-            return hasattr(attachment, 'content') and getattr(attachment, 'content') or base64.b64decode(attachment.datas)
-        filename = _get_attachment_filename(attachment)
-
-        # Check if the attachment is a pdf.
-        if not filename.endswith('.pdf'):
-            return
-
-        content = _get_attachment_content(attachment)
+        content = base64.b64decode(attachment.datas)
 
         with io.BytesIO(content) as buffer:
             try:
@@ -329,4 +316,5 @@ class AccountMove(models.Model):
             raise UserError(_('No decoder was found for the xml file: {}. The file is badly formatted, not supported or the decoder is not installed').format(attachment.name))
 
     def _remove_ocr_option(self):
-        self.write({'extract_state': 'done'})
+        if 'extract_state' in self:
+            self.write({'extract_state': 'done'})
