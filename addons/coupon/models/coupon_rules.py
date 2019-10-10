@@ -5,9 +5,9 @@ from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
 
-class SaleCouponRule(models.Model):
-    _name = 'sale.coupon.rule'
-    _description = "Sales Coupon Rule"
+class CouponRule(models.Model):
+    _name = 'coupon.rule'
+    _description = "Coupon Rule"
 
     rule_date_from = fields.Datetime(string="Start Date", help="Coupon program start date")
     rule_date_to = fields.Datetime(string="End Date", help="Coupon program end date")

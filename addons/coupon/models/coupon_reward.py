@@ -5,9 +5,9 @@ from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
 
-class SaleCouponReward(models.Model):
-    _name = 'sale.coupon.reward'
-    _description = "Sales Coupon Reward"
+class CouponReward(models.Model):
+    _name = 'coupon.reward'
+    _description = "Coupon Reward"
     _rec_name = 'reward_description'
 
     # VFE FIXME multi company
@@ -78,7 +78,7 @@ class SaleCouponReward(models.Model):
                     elif reward.discount_apply_on == 'cheapest_product':
                         reward_string = _("%s%% discount on cheapest product" % (reward_percentage))
                 elif reward.discount_type == 'fixed_amount':
-                    program = self.env['sale.coupon.program'].search([('reward_id', '=', reward.id)])
+                    program = self.env['coupon.program'].search([('reward_id', '=', reward.id)])
                     reward_string = _("%s %s discount on total amount" % (str(reward.discount_fixed_amount), program.currency_id.name))
             result.append((reward.id, reward_string))
         return result
