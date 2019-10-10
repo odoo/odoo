@@ -429,3 +429,19 @@ img.o_we_custom_image.mx-auto {
         }
     }
 }
+
+// User modal in edit mode
+.editor_enable, .note-editable {
+    .modal:not(.o_technical_modal) {
+        top: 40px;
+        right: 0;
+        bottom: 0;
+        left: $o-we-sidebar-width;
+        width: auto;
+        height: auto;
+
+        .modal-dialog {
+            padding: 0.5rem 0; // To use more editor space if necessary
+        }
+    }
+}
