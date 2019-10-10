@@ -71,8 +71,8 @@
             <header>
                 <button string="Create Employee" name="create_employee_from_applicant" type="object"
                         class="oe_highlight" attrs="{'invisible': ['|',('emp_id', '!=', False),('active', '=', False)]}" confirm="Are you sure?"/>
-                <button string="Refuse" name="archive_applicant" type="object" attrs="{'invisible': [('active', '=', False)]}"/>
-                <button string="Restore" name="reset_applicant" type="object" attrs="{'invisible': [('active', '=', True)]}"/>
+                <button string="Refuse" name="toggle_active" type="object" attrs="{'invisible': [('active', '=', False)]}"/>
+                <button string="Restore" name="toggle_active" type="object" attrs="{'invisible': [('active', '=', True)]}"/>
                 <field name="stage_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" attrs="{'invisible': [('active', '=', False),('emp_id', '=', False)]}"/>
             </header>
             <sheet>
@@ -108,6 +108,7 @@
                 <group>
                     <group>
                         <field name="partner_id" invisible="1" />
+                        <field name="refuse_reason_id" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="email_from" widget="email"/>
                         <field name="email_cc" groups="base.group_no_one"/>
                         <field name="partner_phone" widget="phone"/>
@@ -189,6 +190,7 @@
                 <field name="user_id"/>
                 <field name="stage_id" domain="[]"/>
                 <field name="categ_ids"/>
+                <field name="refuse_reason_id"/>
                 <field name="attachment_ids" filter_domain="[('attachment_ids.index_content', 'ilike', self)]" string="Attachments"/>
                 <filter string="My Applications" name="my_applications" domain="[('user_id', '=', uid)]"/>
                 <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
@@ -213,6 +215,7 @@
                     <filter string="Job" name="job" domain="[]" context="{'group_by': 'job_id'}"/>
                     <filter string="Degree" name="degree" domain="[]" context="{'group_by': 'type_id'}"/>
                     <filter string="Stage" name="stage" domain="[]" context="{'group_by': 'stage_id'}"/>
+                    <filter string="Refuse Reason" name="refuse_reason_id" domain="[]" context="{'group_by': 'refuse_reason_id'}"/>
                     <filter string="Creation Date" name="creation_date" context="{'group_by': 'create_date'}"/>
                     <filter string="Last Stage Update" name="last_stage_update" context="{'group_by': 'date_last_stage_update'}"/>
                 </group>
@@ -501,6 +504,46 @@
             </field>
         </record>
 
+     <!--
+        hr.applicant.refuse.reason views
+    -->
+    <record id="hr_applicant_refuse_reason_view_form" model="ir.ui.view">
+        <field name="name">Applicant refuse reason form</field>
+        <field name="model">hr.applicant.refuse.reason</field>
+        <field name="arch" type="xml">
+            <form string="Refuse Reason">
+                <sheet>
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <div class="oe_title">
+                        <div class="oe_edit_only">
+                            <label for="name"/>
+                        </div>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                        <field name="active" invisible="1"/>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_applicant_refuse_reason_view_tree" model="ir.ui.view">
+        <field name="name">Applicant refuse reason tree</field>
+        <field name="model">hr.applicant.refuse.reason</field>
+        <field name="arch" type="xml">
+            <tree string="Refuse Reason" editable="bottom">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_applicant_refuse_reason_action" model="ir.actions.act_window">
+        <field name="name">Refuse Reasons</field>
+        <field name="res_model">hr.applicant.refuse.reason</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
     ######################## JOB OPPORTUNITIES (menu) ###########################
     <record model="ir.actions.act_window" id="crm_case_categ0_act_job">
         <field name="name">Applications</field>
@@ -570,6 +613,13 @@
 
     <!-- ALL JOBS REQUESTS -->
     <menuitem parent="menu_hr_recruitment_configuration" id="menu_hr_job_position_config" action="action_hr_job_config" sequence="10"/>
+
+    <menuitem
+        id="menu_hr_applicant_refuse_reason"
+        action="hr_applicant_refuse_reason_action"
+        parent="menu_hr_recruitment_configuration"
+        sequence="10"/>
+
     <menuitem
         name="Applications"
         parent="menu_hr_recruitment_root"
@@ -933,6 +983,7 @@ action = act
     </record>
     <menuitem name="Reporting" id="report_hr_recruitment" parent="menu_hr_recruitment_root"
     sequence="99"/>
+
     <menuitem name="Recruitment Analysis" id="hr_applicant_report_menu" parent="report_hr_recruitment"
     sequence="50" action="hr_applicant_action_analysis"/>
     <record id="action_hr_recruitment_report_filtered_department" model="ir.actions.act_window">
