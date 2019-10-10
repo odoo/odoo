@@ -20,9 +20,19 @@ class ReportStockForecat(models.Model):
     @api.model_cr
     def init(self):
         tools.drop_view_if_exists(self._cr, 'report_stock_forecast')
+<<<<<<< HEAD
         query = """
         CREATE or REPLACE VIEW report_stock_forecast AS (SELECT
             %s
+=======
+        self._cr.execute("""CREATE or REPLACE VIEW report_stock_forecast AS (SELECT
+        MIN(id) as id,
+        product_id as product_id,
+        to_char(date, 'YYYY-MM-DD') as date,
+        sum(product_qty) AS quantity,
+        sum(sum(product_qty)) OVER (PARTITION BY product_id ORDER BY date) AS cumulative_quantity,
+        company_id
+>>>>>>> 8c4b536c639... temp
         FROM
             (SELECT
                 MIN(id) as id,
