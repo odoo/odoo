@@ -22,9 +22,7 @@ class AccountFiscalPosition(models.Model):
             ]
             if self.env.context.get('force_company'):
                 domain.append(('company_id', '=', self.env.context.get('force_company')))
-            fp = self.search(domain, limit=1).id
-            if fp:
-                return fp
+            return self.search(domain, limit=1).id
         return super().get_fiscal_position(partner_id, delivery_id=delivery_id)
 
     @api.onchange('l10n_ar_afip_responsibility_type_ids', 'country_group_id', 'country_id', 'zip_from', 'zip_to')
