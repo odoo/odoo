@@ -51,7 +51,13 @@
                                         <td />
                                         <td t-if="show_task"/>
                                         <td class="text-right"><strong>Total</strong></td>
+<<<<<<< HEAD
                                         <td class="text-right"><strong t-esc="sum(docs.mapped('unit_amount'))" t-options="{'widget': 'duration', 'digital': True, 'unit': 'hour', 'round': 'minute'}"/></td>
+=======
+                                        <t t-set="total_value" t-value="sum(docs.mapped('unit_amount'))" />
+                                        <t t-set="sign" t-value="'-' if total_value &lt; 0 else ''"/>
+                                        <td class="text-right"><strong t-esc="sign + '%02d:%02.0f' % tuple(int(round(x)) for x in divmod(abs(total_value)*60,60))"/></td>
+>>>>>>> 686b909de8b... temp
                                     </tr>
                                 </tbody>
                             </table>
