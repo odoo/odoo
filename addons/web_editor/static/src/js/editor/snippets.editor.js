@@ -309,7 +309,14 @@ var SnippetEditor = Widget.extend({
                 self.$el,
                 val.data
             );
-            self.styles[optionName || _.uniqueId('option')] = option;
+            var key = optionName || _.uniqueId('option');
+            if (self.styles[key]) {
+                // If two snippet options use the same option name (and so use
+                // the same JS option), store the subsequent ones with a unique
+                // ID (TODO improve)
+                key = _.uniqueId(key);
+            }
+            self.styles[key] = option;
             option.__order = i++;
             return option.attachTo($el);
         });
@@ -492,26 +499,33 @@ var SnippetEditor = Widget.extend({
      * @param {OdooEvent} ev
      */
     _onOptionUpdate: function (ev) {
+        var self = this;
         // If multiple option names are given, we suppose it should not be
         // propagated to parent editor
         if (ev.data.optionNames) {
             ev.stopPropagation();
-            var self = this;
             _.each(ev.data.optionNames, function (name) {
-                var option = self.styles[name];
-                if (option) {
-                    option.notify(ev.data.name, ev.data.data);
-                }
+                notifyForEachMatchedOption(name);
             });
         }
         // If one option name is given, we suppose it should be handle by the
         // first parent editor which can do it
         if (ev.data.optionName) {
-            var option = this.styles[ev.data.optionName];
-            if (option) {
+            if (notifyForEachMatchedOption(ev.data.optionName)) {
                 ev.stopPropagation();
-                option.notify(ev.data.name, ev.data.data);
             }
+        }
+
+        function notifyForEachMatchedOption(name) {
+            var regex = new RegExp('^' + name + '\\d+$');
+            var hasOption = false;
+            for (var key in self.styles) {
+                if (key === name || regex.test(key)) {
+                    self.styles[key].notify(ev.data.name, ev.data.data);
+                    hasOption = true;
+                }
+            }
+            return hasOption;
         }
     },
     /**
