@@ -291,15 +291,19 @@ class TestStockValuationWithCOA(AccountingTestCase):
         self.supplier_location = self.env.ref('stock.stock_location_suppliers')
         self.stock_location = self.env.ref('stock.stock_location_stock')
         self.partner_id = self.env.ref('base.res_partner_1')
-        self.product1 = self.env.ref('product.product_product_8')
 
-        cat = self.env['product.category'].create({
+        self.cat = self.env['product.category'].create({
             'name': 'cat',
         })
         self.product1 = self.env['product.product'].create({
             'name': 'product1',
             'type': 'product',
-            'categ_id': cat.id,
+            'categ_id': self.cat.id,
+        })
+        self.product1_copy = self.env['product.product'].create({
+            'name': 'product1',
+            'type': 'product',
+            'categ_id': self.cat.id,
         })
 
         Account = self.env['account.account']
@@ -618,14 +622,15 @@ class TestStockValuationWithCOA(AccountingTestCase):
         # SetUp product Standard
         # should have bought at 60 USD
         # actually invoiced at 70 EUR > 35 USD
-        product_categ_standard = self.product1.product_tmpl_id.categ_id.copy({
+        product_categ_standard = self.cat.copy({
             'property_cost_method': 'standard',
             'property_stock_account_input_categ_id': self.stock_input_account.id,
             'property_stock_account_output_categ_id': self.stock_output_account.id,
             'property_stock_valuation_account_id': self.stock_valuation_account.id,
             'property_stock_journal': self.stock_journal.id,
         })
-        product_standard = self.product1.copy({
+        product_standard = self.product1_copy
+        product_standard.write({
             'categ_id': product_categ_standard.id,
             'name': 'Standard Val',
             'standard_price': 60,
@@ -783,7 +788,8 @@ class TestStockValuationWithCOA(AccountingTestCase):
         date_delivery = '2019-01-08'
         date_invoice = '2019-01-16'
 
-        product_avg = self.product1.copy({
+        product_avg = self.product1_copy
+        product_avg.write({
             'purchase_method': 'purchase',
             'name': 'AVG',
             'standard_price': 60,
@@ -945,7 +951,8 @@ class TestStockValuationWithCOA(AccountingTestCase):
 
         self.product1.categ_id.property_valuation = 'real_time'
         self.product1.categ_id.property_cost_method = 'average'
-        product_avg = self.product1.copy({
+        product_avg = self.product1_copy
+        product_avg.write({
             'purchase_method': 'purchase',
             'name': 'AVG',
             'standard_price': 0,
