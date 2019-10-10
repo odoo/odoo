@@ -301,7 +301,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                     }).guardedCatch(function (error) {
                         self.displayError(
                             _t('Server Error'),
-                            _t("We are not able to redirect you to the payment form. ") +
+                            _t("We are not able to redirect you to the payment form.") + " " +
                                 self._parseError(error)
                         );
                     });
@@ -309,7 +309,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                 else {
                     // we append the form to the body and send it.
                     this.displayError(
-                        _t("Cannot set-up the payment"),
+                        _t("Cannot setup the payment"),
                         _t("We're unable to process your payment.")
                     );
                 }
