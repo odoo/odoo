@@ -2718,6 +2718,46 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('date field: toggle datepicker far in the future', function (assert) {
+        assert.expect(3);
+
+        this.data.partner.records = [{
+            id: 1,
+            date: "9999-12-30",
+            foo: "yop",
+        }]
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form><field name="foo"/><field name="date"/></form>',
+            translateParameters: {  // Avoid issues due to localization formats
+                date_format: '%m/%d/%Y',
+            },
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        assert.strictEqual($('.bootstrap-datetimepicker-widget:visible').length, 0,
+            "datepicker should be closed initially");
+
+        testUtils.openDatepicker(form.$('.o_datepicker'));
+
+        assert.strictEqual($('.bootstrap-datetimepicker-widget:visible').length, 1,
+            "datepicker should be opened");
+
+        // focus another field
+        form.$('.o_field_widget[name=foo]').click().focus();
+
+        assert.strictEqual($('.bootstrap-datetimepicker-widget:visible').length, 0,
+            "datepicker should close itself when the user clicks outside");
+
+        form.destroy();
+    });
+
     QUnit.test('date field is empty if no date is set', function (assert) {
         assert.expect(2);
 
