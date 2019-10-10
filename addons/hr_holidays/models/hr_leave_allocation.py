@@ -327,7 +327,7 @@ class HolidaysAllocation(models.Model):
                  _("Allocation of %s : %.2f %s to %s") %
                  (allocation.holiday_status_id.name,
                   allocation.number_of_hours_display if allocation.type_request_unit == 'hour' else allocation.number_of_days,
-                  'hours' if allocation.type_request_unit == 'hour' else 'days',
+                  _('hours') if allocation.type_request_unit == 'hour' else _('days'),
                   target))
             )
         return res
