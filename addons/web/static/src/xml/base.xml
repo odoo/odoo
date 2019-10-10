@@ -872,7 +872,6 @@
 
                 <span class="o_form_binary_progress">Uploading...</span>
                 <t t-call="HiddenInputFile">
-                    <t t-set="image_only" t-value="true"/>
                     <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
                 </t>
             </div>
@@ -924,8 +923,8 @@
               method="post" enctype="multipart/form-data" t-att-action="fileupload_action || '/web/binary/upload'">
             <input type="hidden" name="csrf_token" t-att-value="csrf_token"/>
             <input type="hidden" name="callback" t-att-value="fileupload_id"/>
-            <input t-if="widget.image_only" type="file" class="o_input_file" name="ufile" accept="image/*"/>
-            <input t-if="!widget.image_only" type="file" class="o_input_file" name="ufile" t-att="{'multiple': multi_upload ? 'multiple' : null}"/>
+            <input type="file" class="o_input_file" name="ufile"
+                t-att="{'multiple': multi_upload ? 'multiple' : null, 'accept': widget.accepted_file_extensions || '*'}"/>
             <t t-raw="0"/>
         </form>
         <iframe t-att-id="fileupload_id" t-att-name="fileupload_id" style="display: none"/>
@@ -985,19 +984,11 @@
             <button class="btn btn-secondary fa fa-trash-o o_clear_file_button" title="Clear" aria-label="Clear" type="button"></button>
         </div>
         <iframe class="o_pdfview_iframe o_field_pdfviewer"/>
-        <t t-call="HiddenInputPDFFile">
+        <t t-call="HiddenInputFile">
             <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
             <t t-set="fileupload_style" t-translation="off">overflow-x: hidden</t>
         </t>
     </div>
-</t>
-
-<t t-name="HiddenInputPDFFile" t-extend="HiddenInputFile">
-    <!-- remove the inputs and put a new one for pdf only -->
-    <t t-jquery="input[type='file']" t-operation="replace"/>
-    <t t-jquery="form" t-operation="append">
-        <input type="file" class="o_input_file" name="ufile" accept="application/pdf"/>
-    </t>
 </t>
 
 <div t-name="FieldBinaryFileUploader" t-attf-class="oe_fileupload #{widget.attrs.class ? widget.attrs.class :''}" aria-atomic="true">

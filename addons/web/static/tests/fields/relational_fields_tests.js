@@ -2317,7 +2317,7 @@ QUnit.module('relational_fields', {
     QUnit.module('FieldMany2ManyBinaryMultiFiles');
 
     QUnit.test('widget many2many_binary', async function (assert) {
-        assert.expect(15);
+        assert.expect(16);
         this.data['ir.attachment'] = {
             fields: {
                 name: {string:"Name", type: "char"},
@@ -2341,7 +2341,7 @@ QUnit.module('relational_fields', {
             model: 'turtle',
             data: this.data,
             arch:'<form string="Turtles">' +
-                    '<group><field name="picture_ids" widget="many2many_binary"/></group>' +
+                    '<group><field name="picture_ids" widget="many2many_binary" options="{\'accepted_file_extensions\': \'image/*\'}"/></group>' +
                 '</form>',
             archs: {
                 'ir.attachment,false,list': '<tree string="Pictures"><field name="name"/></tree>',
@@ -2373,6 +2373,9 @@ QUnit.module('relational_fields', {
             "the button should be correctly named");
         assert.containsOnce(form, 'div.o_field_widget.oe_fileupload .o_hidden_input_file form',
             "there should be a hidden form to upload attachments");
+
+        assert.strictEqual(form.$('input.o_input_file').attr('accept'), 'image/*',
+            "there should be an attribute \"accept\" on the input")
 
         // TODO: add an attachment
         // no idea how to test this

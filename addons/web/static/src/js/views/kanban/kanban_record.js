@@ -395,7 +395,7 @@ var KanbanRecord = Widget.extend({
             fields: ['id', 'name'],
         }).then(function (attachmentIds) {
             self.imageUploadID = _.uniqueId('o_cover_image_upload');
-            self.image_only = true;  // prevent uploading of other file types
+            self.accepted_file_extensions = 'image/*';  // prevent uploading of other file types
             var coverId = self.record[fieldName] && self.record[fieldName].raw_value;
             var $content = $(QWeb.render('KanbanView.SetCoverModal', {
                 coverId: coverId,
