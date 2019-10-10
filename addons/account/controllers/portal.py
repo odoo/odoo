@@ -139,7 +139,8 @@ class PortalAccount(CustomerPortal):
         error, error_message = super(PortalAccount, self).details_form_validate(data)
         # prevent VAT/name change if invoices exist
         partner = request.env['res.users'].browse(request.uid).partner_id
-        invoices = request.env['account.invoice'].sudo().search_count([('partner_id', '=', partner.id), ('state', 'not in', ['draft', 'cancel'])])
+        invoices = request.env['account.invoice'].sudo().search_count(
+            [('commercial_partner_id', '=', partner.commercial_partner_id.id), ('state', 'not in', ['draft', 'cancel'])])
         if invoices:
             if 'vat' in data and (data['vat'] or False) != (partner.vat or False):
                 error['vat'] = 'error'
