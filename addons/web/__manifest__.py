@@ -23,6 +23,8 @@ This module provides the core of the Odoo Web Client.
     'qweb': [
         "static/src/xml/base.xml",
         "static/src/xml/chart.xml",
+        "static/src/xml/file_upload_progress_bar.xml",
+        "static/src/xml/file_upload_progress_card.xml",
         "static/src/xml/kanban.xml",
         "static/src/xml/menu.xml",
         "static/src/xml/notification.xml",

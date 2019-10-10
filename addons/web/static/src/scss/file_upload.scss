@@ -1,0 +1,58 @@
+.o_content {
+
+    .o_kanban_progress_card {
+
+        position: relative;
+        padding: 0;
+        min-height: 80px;
+        cursor: pointer;
+
+        .o_kanban_record_bottom {
+            color: $gray-900;
+        }
+        .o_kanban_image_wrapper {
+            opacity: 0.7;
+        }
+    }
+
+    .o_list_progress_card {
+        height: 25px;
+        border: 1px solid #dfdfdf;
+        position: relative;
+        vertical-align: middle;
+        padding: 0;
+
+        .o_file_upload_upload_title {
+            color: $headings-color;
+            font-size: 13px;
+            font-weight: 500;
+        }
+    }
+
+    .o_file_upload_progress_bar {
+        @include o-position-absolute($top: 0px, $left: 0px);
+        height: 100%;
+        width: 100%;
+        .o_file_upload_progress_bar_value {
+            transition: width 0.1s;
+            border-right: 1px solid darken($o-brand-primary, 7.5%);
+            height: 100%;
+            width: 100%;
+            background-color: $o-brand-primary;
+            opacity: 0.5;
+        }
+        .o_upload_cross {
+            @include o-position-absolute(0, 0);
+            padding: 4px;
+            color: #963535;
+            cursor: pointer;
+            font-size: 16px;
+            &:active {
+                opacity: 0.7;
+            }
+        }
+        &:not(:hover) .o_upload_cross {
+            display: none;
+        }
+    }
+}
