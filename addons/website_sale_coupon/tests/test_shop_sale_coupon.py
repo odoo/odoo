@@ -60,7 +60,7 @@ class TestUi(TestSaleProductAttributeValueCommon, HttpCase):
             'taxes_id': False,
         })
 
-        self.env['sale.coupon.program'].create({
+        self.env['coupon.program'].create({
             'name': "Buy 3 Small Cabinets, get one for free",
             'promo_code_usage': 'no_code_needed',
             'discount_apply_on': 'on_order',
@@ -72,7 +72,7 @@ class TestUi(TestSaleProductAttributeValueCommon, HttpCase):
             'discount_line_product_id': free_large_cabinet.id
         })
 
-        self.env['sale.coupon.program'].create({
+        self.env['coupon.program'].create({
             'name': "Code for 10% on orders",
             'promo_code_usage': 'code_needed',
             'promo_code': 'testcode',
@@ -92,7 +92,7 @@ class TestWebsiteSaleCoupon(TransactionCase):
 
     def setUp(self):
         super(TestWebsiteSaleCoupon, self).setUp()
-        program = self.env['sale.coupon.program'].create({
+        program = self.env['coupon.program'].create({
             'name': '10% TEST Discount',
             'promo_code_usage': 'code_needed',
             'discount_apply_on': 'on_order',
@@ -101,7 +101,7 @@ class TestWebsiteSaleCoupon(TransactionCase):
             'program_type': 'coupon_program',
         })
 
-        self.env['sale.coupon.generate'].with_context(active_id=program.id).create({}).generate_coupon()
+        self.env['coupon.generate.wizard'].with_context(active_id=program.id).create({}).generate_coupon()
         self.coupon = program.coupon_ids[0]
 
         self.steve = self.env['res.partner'].create({

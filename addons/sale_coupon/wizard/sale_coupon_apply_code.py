@@ -24,7 +24,7 @@ class SaleCouponApplyCode(models.TransientModel):
 
     def apply_coupon(self, order, coupon_code):
         error_status = {}
-        program = self.env['sale.coupon.program'].search([('promo_code', '=', coupon_code)])
+        program = self.env['coupon.program'].search([('promo_code', '=', coupon_code)])
         if program:
             error_status = program._check_promo_code(order, coupon_code)
             if not error_status:
@@ -42,7 +42,7 @@ class SaleCouponApplyCode(models.TransientModel):
                     order._create_reward_line(program)
                     order.code_promo_program_id = program
         else:
-            coupon = self.env['sale.coupon'].search([('code', '=', coupon_code)], limit=1)
+            coupon = self.env['coupon.coupon'].search([('code', '=', coupon_code)], limit=1)
             if coupon:
                 error_status = coupon._check_coupon_code(order)
                 if not error_status:

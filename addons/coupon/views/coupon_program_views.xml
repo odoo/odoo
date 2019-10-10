@@ -2,17 +2,13 @@
 <odoo>
 
     <!-- Common form view between the coupon programs and the promotion programs -->
-    <record id="sale_coupon_program_view_form_common" model="ir.ui.view">
-        <field name="name">sale.coupon.program.common.form</field>
-        <field name="model">sale.coupon.program</field>
+    <record id="coupon_program_view_form_common" model="ir.ui.view">
+        <field name="name">coupon.program.common.form</field>
+        <field name="model">coupon.program</field>
         <field name="arch" type="xml">
             <form string="Coupon Program">
                 <sheet>
-                    <div class="oe_button_box" name="button_box">
-                        <button class="oe_stat_button" type="object" icon="fa-usd" name="action_view_sales_orders">
-                            <field name="order_count" string="Sales" widget="statinfo"/>
-                        </button>
-                    </div>
+                    <div class="oe_button_box" name="button_box" />
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div name="title" class="oe_left">
                     </div>
@@ -73,22 +69,23 @@
     </record>
 
     <!-- Coupon Program -->
-    <record id="sale_coupon_program_view_form" model="ir.ui.view">
-        <field name="name">sale.coupon.program.form</field>
-        <field name="model">sale.coupon.program</field>
-        <field name="inherit_id" ref="sale_coupon_program_view_form_common"/>
+
+    <record id="coupon_program_view_coupon_program_form" model="ir.ui.view">
+        <field name="name">coupon.program.form</field>
+        <field name="model">coupon.program</field>
+        <field name="inherit_id" ref="coupon_program_view_form_common"/>
         <field name="mode">primary</field>
         <field name="arch" type="xml">
             <xpath expr="//sheet" position="before">
                 <header>
-                    <button type="action" name="%(sale_coupon.sale_coupon_generate_action)d"
+                    <button type="action" name="%(coupon.coupon_generate_action)d"
                             string="Generate Coupon" attrs="{'invisible': [('active', '=', False)]}"/>
-                    <button type="action" name="%(sale_coupon.sale_coupon_generate_action)d"
+                    <button type="action" name="%(coupon.coupon_generate_action)d"
                             string="Generate Coupon" attrs="{'invisible': [('active', '=', True)]}" class="oe_highlight"/>
                 </header>
             </xpath>
-            <xpath expr="//field[@name='order_count']/.." position="before">
-                <button class="oe_stat_button" type="action" icon="fa-ticket" name="%(sale_coupon.sale_coupon_action)d">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" type="action" icon="fa-ticket" name="%(coupon.coupon_action)d">
                     <field name="coupon_count" string="Coupons" widget="statinfo"/>
                 </button>
             </xpath>
@@ -106,9 +103,9 @@
         </field>
     </record>
 
-    <record id="sale_coupon_program_view_tree" model="ir.ui.view">
-        <field name="name">sale.coupon.program.tree</field>
-        <field name="model">sale.coupon.program</field>
+    <record id="coupon_program_view_tree" model="ir.ui.view">
+        <field name="name">coupon.program.tree</field>
+        <field name="model">coupon.program</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="sequence" widget="handle"/>
@@ -119,9 +116,9 @@
         </field>
     </record>
 
-    <record id="sale_coupon_program_view_search" model="ir.ui.view">
-        <field name="name">sale.coupon.program.search</field>
-        <field name="model">sale.coupon.program</field>
+    <record id="coupon_program_view_search" model="ir.ui.view">
+        <field name="name">coupon.program.search</field>
+        <field name="model">coupon.program</field>
         <field name="arch" type="xml">
             <search>
                 <field name="name"/>
@@ -133,9 +130,9 @@
         </field>
     </record>
 
-    <record id="view_sale_coupon_program_kanban" model="ir.ui.view">
-        <field name="name">sale.coupon.program.kanban</field>
-        <field name="model">sale.coupon.program</field>
+    <record id="view_coupon_program_kanban" model="ir.ui.view">
+        <field name="name">coupon.program.kanban</field>
+        <field name="model">coupon.program</field>
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile">
                <field name="name" />
@@ -148,12 +145,10 @@
                             </div>
                             <hr class="mt4 mb4"/>
                             <div class="row">
-                                <div class="col-4 text-center"><strong>Coupons</strong></div>
-                                <div class="col-4 text-center"><strong>Sales</strong></div>
-                                <div class="col-4 text-center"><strong>Active</strong></div>
-                                <div class="col-4 text-center"><field name="coupon_count"/></div>
-                                <div class="col-4 text-center"><field name="order_count"/></div>
-                                <div class="col-4 text-center">
+                                <div class="col-4 text-center coupon-count-label"><strong>Coupons</strong></div>
+                                <div class="col-4 text-center active-label"><strong>Active</strong></div>
+                                <div class="col-4 text-center coupon-count-value"><field name="coupon_count"/></div>
+                                <div class="col-4 text-center active-value">
                                     <field name="active" widget="boolean"/>
                                 </div>
                             </div>
@@ -164,15 +159,15 @@
         </field>
     </record>
 
-    <record id="sale_coupon_program_action_coupon_program" model="ir.actions.act_window">
+    <record id="coupon_program_action_coupon_program" model="ir.actions.act_window">
         <field name="name">Coupon Programs</field>
-        <field name="res_model">sale.coupon.program</field>
+        <field name="res_model">coupon.program</field>
         <field name="view_mode">tree,kanban,form</field>
-        <field name="search_view_id" ref="sale_coupon_program_view_search"/>
+        <field name="search_view_id" ref="coupon_program_view_search"/>
         <field name="view_ids" eval="[
             (5, 0, 0),
             (0, 0, {'view_mode': 'tree'}),
-            (0, 0, {'view_mode': 'form', 'view_id': ref('sale_coupon_program_view_form')})]"/>
+            (0, 0, {'view_mode': 'form', 'view_id': ref('coupon_program_view_coupon_program_form')})]"/>
         <field name="domain">[('program_type','=', 'coupon_program')]</field>
         <field name="context">{
             'default_program_type': 'coupon_program',
@@ -188,23 +183,20 @@
         </field>
     </record>
 
-    <menuitem id="menu_coupon_type_config" action="sale_coupon_program_action_coupon_program" parent="sale.product_menu_catalog" name="Coupon Programs" groups="sales_team.group_sale_manager" sequence="5"/>
-
-
     <!-- Promotion Program -->
 
-    <record id="sale_coupon_program_view_promo_program_form" model="ir.ui.view">
-        <field name="name">sale.coupon.promotion.program.form</field>
-        <field name="model">sale.coupon.program</field>
-        <field name="inherit_id" ref="sale_coupon_program_view_form_common"/>
+    <record id="coupon_program_view_promo_program_form" model="ir.ui.view">
+        <field name="name">coupon.promotion.program.form</field>
+        <field name="model">coupon.program</field>
+        <field name="inherit_id" ref="coupon_program_view_form_common"/>
         <field name="mode">primary</field>
         <field name="arch" type="xml">
             <xpath expr="//div[@name='title']" position="inside">
                 <label class="oe_edit_only" for="name" string="Promotion Program Name"/>
                 <h1><field name="name" class="oe_title" placeholder="Promotion Program Name..." height="20px"/></h1>
             </xpath>
-            <xpath expr="//field[@name='order_count']/.." position="before">
-                <button class="oe_stat_button" type="action" icon="fa-ticket" name="%(sale_coupon.sale_coupon_action)d" attrs="{'invisible': [('promo_applicability', '=', 'on_current_order')]}">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" type="action" icon="fa-ticket" name="%(coupon.coupon_action)d" attrs="{'invisible': [('promo_applicability', '=', 'on_current_order')]}">
                     <field name="coupon_count" string="Coupons" widget="statinfo"/>
                 </button>
             </xpath>
@@ -236,9 +228,9 @@
         </field>
     </record>
 
-    <record id="sale_coupon_program_view_promo_program_tree" model="ir.ui.view">
-        <field name="name">sale.coupon.promotion.program.tree</field>
-        <field name="model">sale.coupon.program</field>
+    <record id="coupon_program_view_promo_program_tree" model="ir.ui.view">
+        <field name="name">coupon.promotion.program.tree</field>
+        <field name="model">coupon.program</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="sequence" widget="handle"/>
@@ -249,9 +241,9 @@
         </field>
     </record>
 
-    <record id="sale_coupon_program_view_promo_program_search" model="ir.ui.view">
-        <field name="name">sale.coupon.promotion.program.search</field>
-        <field name="model">sale.coupon.program</field>
+    <record id="coupon_program_view_promo_program_search" model="ir.ui.view">
+        <field name="name">coupon.promotion.program.search</field>
+        <field name="model">coupon.program</field>
         <field name="arch" type="xml">
             <search>
                 <field name="name"/>
@@ -261,15 +253,15 @@
         </field>
     </record>
 
-    <record id="sale_coupon_program_action_promo_program" model="ir.actions.act_window">
+    <record id="coupon_program_action_promo_program" model="ir.actions.act_window">
         <field name="name">Promotion Programs</field>
-        <field name="res_model">sale.coupon.program</field>
+        <field name="res_model">coupon.program</field>
         <field name="view_mode">tree,kanban,form</field>
         <field name="view_ids" eval="[
             (5, 0, 0),
             (0, 0, {'view_mode': 'tree'}),
-            (0, 0, {'view_mode': 'form', 'view_id': ref('sale_coupon_program_view_promo_program_form')})]"/>
-        <field name="search_view_id" ref="sale_coupon_program_view_promo_program_search"/>
+            (0, 0, {'view_mode': 'form', 'view_id': ref('coupon_program_view_promo_program_form')})]"/>
+        <field name="search_view_id" ref="coupon_program_view_promo_program_search"/>
         <field name="domain">[('program_type', '=', 'promotion_program')]</field>
         <field name="context">{
             'default_program_type': 'promotion_program',
@@ -286,7 +278,4 @@
              </p>
         </field>
     </record>
-
-    <menuitem action="sale_coupon_program_action_promo_program" id="menu_promotion_type_config" parent="sale.product_menu_catalog" name="Promotion Programs" groups="sales_team.group_sale_manager" sequence="4"/>
-
 </odoo>
