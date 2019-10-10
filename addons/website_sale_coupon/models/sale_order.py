@@ -83,7 +83,7 @@ class SaleOrder(models.Model):
         ICP = self.env['ir.config_parameter']
         validity = ICP.get_param('website_sale_coupon.abandonned_coupon_validity', 4)
         validity = fields.Datetime.to_string(fields.datetime.now() - timedelta(days=int(validity)))
-        coupon_to_reset = self.env['sale.coupon'].search([
+        coupon_to_reset = self.env['coupon.coupon'].search([
             ('state', '=', 'used'),
             ('sales_order_id.state', '=', 'draft'),
             ('sales_order_id.write_date', '<', validity),
