@@ -26,7 +26,6 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         HolidayStatusManagerGroup.create({
             'name': 'WithMeetingType',
             'allocation_type': 'no',
-            'categ_id': self.env['calendar.event.type'].with_user(self.user_hrmanager_id).create({'name': 'NotLimitedMeetingType'}).id
         })
         self.holidays_status_hr = HolidayStatusManagerGroup.create({
             'name': 'NotLimitedHR',
@@ -100,7 +99,6 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         HolidayStatusManagerGroup.create({
             'name': 'WithMeetingType',
             'allocation_type': 'no',
-            'categ_id': self.env['calendar.event.type'].with_user(self.user_hrmanager_id).create({'name': 'NotLimitedMeetingType'}).id,
             'validity_start': False,
         })
 
