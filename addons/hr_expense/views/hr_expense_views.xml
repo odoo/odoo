@@ -24,19 +24,19 @@
         </record>
 
         <record id="view_expenses_tree" model="ir.ui.view">
-            <field name="name">hr.expense.tree</field>
+            <field name="name">hr.expense.tree.multiedit</field>
             <field name="model">hr.expense</field>
             <field name="arch" type="xml">
-                <tree string="Expenses" decoration-bf="message_unread == True" class="o_expense_tree" js_class="hr_expense_tree" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'">
+                <tree string="Expenses" decoration-bf="message_unread == True" class="o_expense_tree" js_class="hr_expense_tree" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" multi_edit="1">
                     <field name="currency_id" invisible="True"/>
                     <field name="attachment_number" invisible="True"/>
                     <field name="date"/>
                     <field name="name"/>
                     <field name="employee_id"/>
-                    <field name="sheet_id" invisible="not context.get('show_report', False)"/>
-                    <field name="payment_mode"/>
+                    <field name="sheet_id" invisible="not context.get('show_report', False)" readonly="1"/>
+                    <field name="payment_mode" readonly="1"/>
                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                     <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
                     <field name="total_amount" sum="Total Amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                     <button name="action_get_attachment_view" string="View Attached Documents" type="object" icon="fa-paperclip" attrs="{'invisible': [('attachment_number', '=', 0)]}"/>
