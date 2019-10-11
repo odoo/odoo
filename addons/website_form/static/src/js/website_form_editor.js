@@ -530,8 +530,8 @@ odoo.define('website_form_editor', function (require) {
         disable_button: function (button_name, message) {
             // TODO refactor in master
             var className = 'oe_snippet_' + button_name;
-            this.$overlay.on('click', '.' + className, this.prevent_button);
-            var $button = this.$overlay.find('.' + className);
+            this.$overlay.add(this.$overlay.data('$optionsSection')).on('click', '.' + className, this.prevent_button);
+            var $button = this.$overlay.add(this.$overlay.data('$optionsSection')).find('.' + className);
             $button.attr('title', message).tooltip({delay: 0});
             $button.removeClass(className); // Disable the functionnality
         },
