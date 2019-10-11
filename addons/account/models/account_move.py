@@ -1924,10 +1924,11 @@ class AccountMove(models.Model):
         reverse_type_map = {
             'entry': 'entry',
             'out_invoice': 'out_refund',
+            'out_refund': 'entry',
             'in_invoice': 'in_refund',
-            'in_refund': 'in_invoice',
-            'out_receipt': 'in_receipt',
-            'in_receipt': 'out_receipt',
+            'in_refund': 'entry',
+            'out_receipt': 'entry',
+            'in_receipt': 'entry',
         }
 
         move_vals_list = []
