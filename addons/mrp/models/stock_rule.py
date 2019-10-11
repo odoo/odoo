@@ -44,7 +44,7 @@ class StockRule(models.Model):
 
         for company_id, productions_values in productions_values_by_company.items():
             # create the MO as SUPERUSER because the current user may not have the rights to do it (mto product launched by a sale for example)
-            productions = self.env['mrp.production'].sudo().with_context(force_company=company_id).create(productions_values)
+            productions = self.env['mrp.production'].sudo().with_company(company_id).create(productions_values)
             self.env['stock.move'].sudo().create(productions._get_moves_raw_values())
             productions.action_confirm()
 
@@ -69,9 +69,8 @@ class StockRule(models.Model):
     def _get_matching_bom(self, product_id, company_id, values):
         if values.get('bom_id', False):
             return values['bom_id']
-        return self.env['mrp.bom'].with_context(
-            company_id=company_id.id, force_company=company_id.id
-        )._bom_find(product=product_id, picking_type=self.picking_type_id, bom_type='normal')  # TDE FIXME: context bullshit
+        return self.env['mrp.bom']._bom_find(
+            product=product_id, picking_type=self.picking_type_id, bom_type='normal', company_id=company_id.id)
 
     def _prepare_mo_vals(self, product_id, product_qty, product_uom, location_id, name, origin, company_id, values, bom):
         return {

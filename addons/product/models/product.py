@@ -579,8 +579,7 @@ class ProductProduct(models.Model):
 
         res = self.env['product.supplierinfo']
         sellers = self._prepare_sellers(params)
-        if self.env.context.get('force_company'):
-            sellers = sellers.filtered(lambda s: not s.company_id or s.company_id.id == self.env.context['force_company'])
+        sellers = sellers.filtered(lambda s: not s.company_id or s.company_id.id == self.env.company.id)
         for seller in sellers:
             # Set quantity in UoM of seller
             quantity_uom_seller = quantity
@@ -601,7 +600,7 @@ class ProductProduct(models.Model):
                 res |= seller
         return res.sorted('price')[:1]
 
-    def price_compute(self, price_type, uom=False, currency=False, company=False):
+    def price_compute(self, price_type, uom=False, currency=False, company=None):
         # TDE FIXME: delegate to template or not ? fields are reencoded here ...
         # compatibility about context keys used a bit everywhere in the code
         if not uom and self._context.get('uom'):
@@ -614,7 +613,7 @@ class ProductProduct(models.Model):
             # standard_price field can only be seen by users in base.group_user
             # Thus, in order to compute the sale price from the cost for users not in this group
             # We fetch the standard price as the superuser
-            products = self.with_context(force_company=company and company.id or self._context.get('force_company', self.env.company.id)).sudo()
+            products = self.with_company(company or self.env.company).sudo()
 
         prices = dict.fromkeys(self.ids, 0.0)
         for product in products:

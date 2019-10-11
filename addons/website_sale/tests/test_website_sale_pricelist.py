@@ -433,8 +433,8 @@ class TestWebsitePriceListMultiCompany(TransactionCaseWithUserDemo):
         self.demo_user.partner_id.property_product_pricelist = self.c2_pl
 
         # Ensure everything was done correctly
-        self.assertEqual(self.demo_user.partner_id.with_context(force_company=self.company1.id).property_product_pricelist, self.c1_pl)
-        self.assertEqual(self.demo_user.partner_id.with_context(force_company=self.company2.id).property_product_pricelist, self.c2_pl)
+        self.assertEqual(self.demo_user.partner_id.with_company(self.company1.id).property_product_pricelist, self.c1_pl)
+        self.assertEqual(self.demo_user.partner_id.with_company(self.company2.id).property_product_pricelist, self.c2_pl)
         irp1 = self.env['ir.property'].search([
             ('name', '=', 'property_product_pricelist'),
             ('company_id', '=', self.company1.id),
@@ -471,7 +471,7 @@ class TestWebsitePriceListMultiCompany(TransactionCaseWithUserDemo):
         # First check: It should return ir.property,4 as company_id is
         # website.company_id and not env.user.company_id
         company_id = self.website.company_id.id
-        partner = self.demo_user.partner_id.with_context(force_company=company_id)
+        partner = self.demo_user.partner_id.with_company(company_id)
         demo_pl = partner.property_product_pricelist
         self.assertEqual(demo_pl, self.c2_pl)
 

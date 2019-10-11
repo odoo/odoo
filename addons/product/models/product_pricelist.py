@@ -331,7 +331,7 @@ class Pricelist(models.Model):
         # as we will do a search() later (real case for website public user).
         Partner = self.env['res.partner'].with_context(active_test=False)
 
-        Property = self.env['ir.property'].with_context(force_company=company_id or self.env.company.id)
+        Property = self.env['ir.property'].with_company(company_id)
         Pricelist = self.env['product.pricelist']
         pl_domain = self._get_partner_pricelist_multi_search_domain_hook()
 
