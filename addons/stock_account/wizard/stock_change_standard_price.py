@@ -22,12 +22,13 @@ class StockChangeStandardPrice(models.TransientModel):
     def default_get(self, fields):
         res = super(StockChangeStandardPrice, self).default_get(fields)
 
-        product_or_template = self.env[self._context['active_model']].browse(self._context['active_id'])
-        if 'new_price' in fields and 'new_price' not in res:
-            res['new_price'] = product_or_template.standard_price
-        if 'counterpart_account_id' in fields and 'counterpart_account_id' not in res:
-            res['counterpart_account_id'] = product_or_template.property_account_expense_id.id or product_or_template.categ_id.property_account_expense_categ_id.id
-        res['counterpart_account_id_required'] = bool(product_or_template.valuation == 'real_time')
+        if 'active_model' in self._context:
+            product_or_template = self.env[self._context['active_model']].browse(self._context['active_id'])
+            if 'new_price' in fields and 'new_price' not in res:
+                res['new_price'] = product_or_template.standard_price
+            if 'counterpart_account_id' in fields and 'counterpart_account_id' not in res:
+                res['counterpart_account_id'] = product_or_template.property_account_expense_id.id or product_or_template.categ_id.property_account_expense_categ_id.id
+            res['counterpart_account_id_required'] = bool(product_or_template.valuation == 'real_time')
         return res
 
     def change_price(self):
