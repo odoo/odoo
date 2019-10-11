@@ -26,7 +26,7 @@ class SMSTemplatePreview(models.TransientModel):
             result['res_id'] = self.env[sms_template.model].search([], limit=1)
         return result
 
-    sms_template_id = fields.Many2one('sms.template')
+    sms_template_id = fields.Many2one('sms.template') # NOTE This should probably be required
 
     lang = fields.Selection(_selection_languages, string='Template Preview Language')
     model_id = fields.Many2one('ir.model', related="sms_template_id.model_id")
@@ -38,6 +38,8 @@ class SMSTemplatePreview(models.TransientModel):
         for preview in self:
             if preview.model_id:
                 preview.resource_ref = '%s,%s' % (preview.model_id.model, preview.res_id or 0)
+            else:
+                preview.resource_ref = False
 
     def _inverse_resource_ref(self):
         for preview in self:
@@ -49,5 +51,6 @@ class SMSTemplatePreview(models.TransientModel):
         # Update res_id and body depending of the resource_ref
         if self.resource_ref:
             self.res_id = self.resource_ref.id
-        template = self.sms_template_id.with_context(lang=self.lang)
-        self.body = template._render_template(template.body, template.model, self.res_id)
+        if self.sms_template_id:
+            template = self.sms_template_id.with_context(lang=self.lang)
+            self.body = template._render_template(template.body, template.model, self.res_id or 0)
