@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import TransactionCase
+from odoo.exceptions import UserError
 from odoo.tools import float_round
 
 
@@ -299,3 +300,45 @@ class TestPacking(TransactionCase):
         picking.action_done()
         # if we managed to get there, there was not any exception
         # complaining that 355.4 is not 355.40000000000003. Good job!
+
+    def test_move_picking_with_package_2(self):
+        """ Generate two move lines going to different location in the same
+        package.
+        """
+        shelf1 = self.env['stock.location'].create({
+            'location_id': self.stock_location.id,
+            'name': 'Shelf 1',
+        })
+        shelf2 = self.env['stock.location'].create({
+            'location_id': self.stock_location.id,
+            'name': 'Shelf 2',
+        })
+        package = self.env['stock.quant.package'].create({})
+
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.stock_location.id,
+            'state': 'draft',
+        })
+        self.env['stock.move.line'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': shelf1.id,
+            'product_id': self.productA.id,
+            'product_uom_id': self.productA.uom_id.id,
+            'qty_done': 5.0,
+            'picking_id': picking.id,
+            'result_package_id': package.id,
+        })
+        self.env['stock.move.line'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': shelf2.id,
+            'product_id': self.productA.id,
+            'product_uom_id': self.productA.uom_id.id,
+            'qty_done': 5.0,
+            'picking_id': picking.id,
+            'result_package_id': package.id,
+        })
+        picking.action_confirm()
+        with self.assertRaises(UserError):
+            picking.action_done()
