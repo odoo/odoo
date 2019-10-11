@@ -1600,13 +1600,6 @@ var CopyClipboard = {
     /**
      * @override
      */
-    _render: function () {
-        this._super.apply(this, arguments);
-        this.$el.addClass('o_field_copy');
-    },
-    /**
-     * @override
-     */
     _renderReadonly: function () {
         this._super.apply(this, arguments);
         if (this.value) {
@@ -1619,11 +1612,13 @@ var CopyClipboard = {
 var TextCopyClipboard = FieldText.extend(CopyClipboard, {
     description: _lt("Copy to Clipboard"),
     clipboardTemplate: 'CopyClipboardText',
+    className: "o_field_copy",
 });
 
 var CharCopyClipboard = FieldChar.extend(CopyClipboard, {
     description: _lt("Copy to Clipboard"),
     clipboardTemplate: 'CopyClipboardChar',
+    className: 'o_field_copy o_text_overflow',
 });
 
 var AbstractFieldBinary = AbstractField.extend({
