@@ -66,7 +66,7 @@
         <field name="name">Leaves: multi company global rule</field>
         <field name="model_id" ref="model_hr_leave"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">['|', ('holiday_status_id.company_id', '=', False), ('holiday_status_id.company_id', 'in', [user.company_id.id])]</field>
+        <field name="domain_force">['|', '|', ('holiday_status_id.company_id', '=', False), ('holiday_status_id.company_id', 'in', [user.company_id.id]), ('holiday_status_id.company_id', 'child_of',[user.company_id.id])]</field>
     </record>
 
     <record id="hr_leave_allocation_rule_employee" model="ir.rule">
