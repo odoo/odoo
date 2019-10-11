@@ -64,6 +64,16 @@ class View(models.Model):
                 super(View, view).write(vals)
                 continue
 
+            # Ensure the cache of the pages stay consistent when doing COW.
+            # This is necessary when writing view fields from a page record
+            # because the generic page will put the given values on its cache
+            # but in reality the values were only meant to go on the specific
+            # page. Invalidate all fields and not only those in vals because
+            # other fields could have been changed implicitly too.
+            pages = view.page_ids
+            pages.flush(records=pages)
+            pages.invalidate_cache(ids=pages.ids)
+
             # If already a specific view for this generic view, write on it
             website_specific_view = view.search([
                 ('key', '=', view.key),
