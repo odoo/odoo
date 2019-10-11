@@ -51,6 +51,7 @@ from decorator import decorate, decorator
 from werkzeug.local import Local, release_local
 
 import odoo
+from .tools.translate import _
 from odoo.tools import frozendict, classproperty, lazy_property, StackMap
 from odoo.exceptions import CacheMiss
 
@@ -541,35 +542,73 @@ class Environment(Mapping):
 
     @lazy_property
     def company(self):
-        """ return the company in which the user is logged in (as an instance) """
-        company_ids = self.context.get('allowed_company_ids', False)
+        """Return the current company (as an instance).
+
+        If not specified in the context ('allowed_company_ids'),
+            fallback on current user main company.
+
+        :raise AccessError: invalid or unauthorized 'allowed_company_ids' context key content.
+        :return: current company (default=`self.user.company_id`)
+        :rtype: res.company
+
+        .. warning::
+
+            No sanity checks applied in sudo mode !
+            When in sudo mode, a user can access any company,
+            even if not in his allowed companies.
+
+            This allows to trigger inter-company modifications,
+            even if the current user doesn't have access to
+            the targeted company.
+        """
+        company_ids = self.context.get('allowed_company_ids', [])
         if company_ids:
-            company_id = int(company_ids[0])
-            if company_id in self.user.company_ids.ids:
-                return self['res.company'].browse(company_id)
+            if not self.su:
+                user_company_ids = self.user.company_ids.ids
+                if any(cid not in user_company_ids for cid in company_ids):
+                    raise AccessError(_("Access to unauthorized or invalid companies."))
+            return self['res.company'].browse(company_ids[0])
         return self.user.company_id
 
     @lazy_property
     def companies(self):
-        """ return a recordset of the enabled companies by the user """
-        try:  # In case the user tries to bidouille the url (eg: cids=1,foo,bar)
-            allowed_company_ids = self.context.get('allowed_company_ids')
-            # Prevent the user to enable companies for which he doesn't have any access
-            users_company_ids = self.user.company_ids.ids
-            allowed_company_ids = [company_id for company_id in allowed_company_ids if company_id in users_company_ids]
-        except Exception:
-            # By setting the default companies to all user companies instead of the main one
-            # we save a lot of potential trouble in all "out of context" calls, such as
-            # /mail/redirect or /web/image, etc. And it is not unsafe because the user does
-            # have access to these other companies. The risk of exposing foreign records
-            # (wrt to the context) is low because all normal RPCs will have a proper
-            # allowed_company_ids.
-            # Examples:
-            #   - when printing a report for several records from several companies
-            #   - when accessing to a record from the notification email template
-            #   - when loading an binary image on a template
-            allowed_company_ids = self.user.company_ids.ids
-        return self['res.company'].browse(allowed_company_ids)
+        """Return a recordset of the enabled companies by the user.
+
+        If not specified in the context('allowed_company_ids'),
+            fallback on current user companies.
+
+        :raise AccessError: invalid or unauthorized 'allowed_company_ids' context key content.
+        :return: current companies (default=`self.user.company_ids`)
+        :rtype: res.company
+
+        .. warning::
+
+            No sanity checks applied in sudo mode !
+            When in sudo mode, a user can access any company,
+            even if not in his allowed companies.
+
+            This allows to trigger inter-company modifications,
+            even if the current user doesn't have access to
+            the targeted company.
+        """
+        company_ids = self.context.get('allowed_company_ids', [])
+        if company_ids:
+            if not self.su:
+                user_company_ids = self.user.company_ids.ids
+                if any(cid not in user_company_ids for cid in company_ids):
+                    raise AccessError(_("Access to unauthorized or invalid companies."))
+            return self['res.company'].browse(company_ids)
+        # By setting the default companies to all user companies instead of the main one
+        # we save a lot of potential trouble in all "out of context" calls, such as
+        # /mail/redirect or /web/image, etc. And it is not unsafe because the user does
+        # have access to these other companies. The risk of exposing foreign records
+        # (wrt to the context) is low because all normal RPCs will have a proper
+        # allowed_company_ids.
+        # Examples:
+        #   - when printing a report for several records from several companies
+        #   - when accessing to a record from the notification email template
+        #   - when loading an binary image on a template
+        return self.user.company_ids
 
     @property
     def lang(self):
