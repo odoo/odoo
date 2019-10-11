@@ -2001,3 +2001,15 @@ class TestRequiredMany2oneTransient(common.TransactionCase):
 
         with self.assertRaises(ValueError):
             field._setup_regular_base(Model)
+
+
+@common.tagged('m2oref')
+class TestMany2oneReference(common.TransactionCase):
+
+    def test_delete_m2o_reference_records(self):
+        m = self.env['test_new_api.model_many2one_reference']
+        self.env.cr.execute("SELECT max(id) FROM test_new_api_model_many2one_reference")
+        ids = self.env.cr.fetchone()
+        # fake record to emulate the unlink of a non-existant record
+        foo = m.browse(1 if not ids[0] else (ids[0] + 1))
+        self.assertTrue(foo.unlink())

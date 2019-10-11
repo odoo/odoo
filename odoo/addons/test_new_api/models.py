@@ -726,3 +726,24 @@ class ModelActiveField(models.Model):
     parent_id = fields.Many2one('test_new_api.model_active_field')
     children_ids = fields.One2many('test_new_api.model_active_field', 'parent_id')
     parent_active = fields.Boolean(string='Active Parent', related='parent_id.active', store=True)
+
+
+class ModelMany2oneReference(models.Model):
+    _name = 'test_new_api.model_many2one_reference'
+    _description = 'dummy m2oref model'
+
+    res_model = fields.Char('Resource Model')
+    res_id = fields.Many2oneReference('Resource ID', model_field='res_model')
+
+
+class InverseM2oRef(models.Model):
+    _name = 'test_new_api.inverse_m2o_ref'
+    _description = 'dummy m2oref inverse model'
+
+    model_ids = fields.One2many('test_new_api.model_many2one_reference', 'res_id', string="Models")
+    model_ids_count = fields.Integer("Count", compute='_compute_model_ids_count')
+
+    @api.depends('model_ids')
+    def _compute_model_ids_count(self):
+        for rec in self:
+            rec.model_ids_count = len(rec.model_ids)

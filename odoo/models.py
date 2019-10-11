@@ -5571,8 +5571,11 @@ Record ids: %(records)s
                         if invf.type == 'many2one_reference':
                             rec_ids = set()
                             for rec in self:
-                                if rec[invf.model_field] == key.model_name:
-                                    rec_ids.add(rec[invf.name])
+                                try:
+                                    if rec[invf.model_field] == key.model_name:
+                                        rec_ids.add(rec[invf.name])
+                                except MissingError:
+                                    continue
                             records = model.browse(rec_ids)
                         else:
                             try:
