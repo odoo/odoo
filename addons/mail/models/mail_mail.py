@@ -330,7 +330,7 @@ class MailMail(models.Model):
                     ('notification_status', 'not in', ('sent', 'canceled'))
                 ])
                 if notifs:
-                    notif_msg = _('Error without exception. Probably due do concurrent access update of notification records. Please see with an administrator.')
+                    notif_msg = _('Error without exception. Probably due to concurrent access update of notification records. Please see with an administrator.')
                     notifs.sudo().write({
                         'notification_status': 'exception',
                         'failure_type': 'UNKNOWN',
