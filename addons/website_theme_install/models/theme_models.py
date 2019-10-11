@@ -14,6 +14,8 @@ class ThemeView(models.Model):
     _description = 'Theme UI View'
 
     def compute_arch_fs(self):
+        if 'install_filename' not in self._context:
+            return ''
         path_info = get_resource_from_path(self._context['install_filename'])
         if path_info:
             return '/'.join(path_info[0:2])
