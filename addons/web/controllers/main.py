@@ -617,7 +617,7 @@ class GroupsTreeNode:
 
     def __init__(self, model, fields, groupby, groupby_type, root=None):
         self._model = model
-        self._fields = fields
+        self._export_field_names = fields  # exported field names (e.g. 'journal_id', 'account_id/name', ...)
         self._groupby = groupby
         self._groupby_type = groupby_type
 
@@ -656,7 +656,7 @@ class GroupsTreeNode:
     def _get_aggregated_field_names(self):
         """ Return field names of exported field having a group operator """
         aggregated_field_names = []
-        for field_name in self._fields:
+        for field_name in self._export_field_names:
             if '/' in field_name:
                 # Currently no support of aggregated value for nested record fields
                 # e.g. line_ids/analytic_line_ids/amount
@@ -674,7 +674,7 @@ class GroupsTreeNode:
 
         # Transpose the data matrix to group all values of each field in one iterable
         field_values = zip(*self.data)
-        for field_name in self._fields:
+        for field_name in self._export_field_names:
             field_data = self.data and next(field_values) or []
 
             if field_name in self._get_aggregated_field_names():
@@ -692,7 +692,7 @@ class GroupsTreeNode:
         :return: the child node
         """
         if key not in self.children:
-            self.children[key] = GroupsTreeNode(self._model, self._fields, self._groupby, self._groupby_type)
+            self.children[key] = GroupsTreeNode(self._model, self._export_field_names, self._groupby, self._groupby_type)
         return self.children[key]
 
     def insert_leaf(self, group):
@@ -716,7 +716,7 @@ class GroupsTreeNode:
             # Update count value and aggregated value.
             node.count += count
 
-        node.data = records.export_data(self._fields).get('datas',[])
+        node.data = records.export_data(self._export_field_names).get('datas',[])
 
 
 class ExportXlsxWriter:
