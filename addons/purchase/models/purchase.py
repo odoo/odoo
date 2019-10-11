@@ -538,7 +538,7 @@ class PurchaseOrderLine(models.Model):
     @api.depends('product_id')
     def _compute_qty_received_method(self):
         for line in self:
-            if line.product_id.type in ['consu', 'service']:
+            if line.product_id and line.product_id.type in ['consu', 'service']:
                 line.qty_received_method = 'manual'
             else:
                 line.qty_received_method = False
@@ -697,7 +697,7 @@ class PurchaseOrderLine(models.Model):
     @api.depends('product_uom', 'product_qty', 'product_id.uom_id')
     def _compute_product_uom_qty(self):
         for line in self:
-            if line.product_id.uom_id != line.product_uom:
+            if line.product_id and line.product_id.uom_id != line.product_uom:
                 line.product_uom_qty = line.product_uom._compute_quantity(line.product_qty, line.product_id.uom_id)
             else:
                 line.product_uom_qty = line.product_qty

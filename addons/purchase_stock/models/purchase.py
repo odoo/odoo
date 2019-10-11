@@ -242,7 +242,7 @@ class PurchaseOrderLine(models.Model):
 
     def _compute_qty_received_method(self):
         super(PurchaseOrderLine, self)._compute_qty_received_method()
-        for line in self:
+        for line in self.filtered(lambda l: not l.display_type):
             if line.product_id.type in ['consu', 'product']:
                 line.qty_received_method = 'stock_moves'
 
@@ -275,7 +275,7 @@ class PurchaseOrderLine(models.Model):
         return line
 
     def write(self, values):
-        for line in self:
+        for line in self.filtered(lambda l: not l.display_type):
             if values.get('date_planned') and line.propagate_date:
                 new_date = fields.Datetime.to_datetime(values['date_planned'])
                 delta_days = (new_date - line.date_planned).total_seconds() / 86400
@@ -297,7 +297,7 @@ class PurchaseOrderLine(models.Model):
 
     def _create_or_update_picking(self):
         for line in self:
-            if line.product_id.type in ('product', 'consu'):
+            if line.product_id and line.product_id.type in ('product', 'consu'):
                 # Prevent decreasing below received quantity
                 if float_compare(line.product_qty, line.qty_received, line.product_uom.rounding) < 0:
                     raise UserError(_('You cannot decrease the ordered quantity below the received quantity.\n'
@@ -394,7 +394,7 @@ class PurchaseOrderLine(models.Model):
 
     def _create_stock_moves(self, picking):
         values = []
-        for line in self:
+        for line in self.filtered(lambda l: not l.display_type):
             for val in line._prepare_stock_moves(picking):
                 values.append(val)
         return self.env['stock.move'].create(values)
