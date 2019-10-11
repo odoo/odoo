@@ -1173,5 +1173,4 @@ class AccountReconcileModelTemplate(models.Model):
     second_amount_from_label_regex = fields.Char(string="Second Amount from Label (regex)", default=r"([\d\.,]+)")
     force_second_tax_included = fields.Boolean(string='Second Tax Included in Price',
         help='Force the second tax to be managed as a price included tax.')
-    number_entries = fields.Integer(string='Number of entries related to this model', compute='_compute_number_entries')
     second_tax_ids = fields.Many2many('account.tax.template', relation='account_reconcile_model_tmpl_account_tax_bis_rel', string='Second Taxes', ondelete='restrict')
