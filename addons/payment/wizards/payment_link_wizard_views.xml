@@ -6,14 +6,16 @@
         <field name="arch" type="xml">
             <form string="Generate Payment Link">
                 <group>
-                    <field name="res_id" invisible="1"/>
-                    <field name="res_model" invisible="1"/>
-                    <field name="partner_id" invisible="1"/>
-                    <field name="amount_max" invisible="1"/>
-                    <field name="description"/>
-                    <field name="amount"/>
-                    <field name="currency_id" invisible="1"/>
-                    <field name="access_token" invisible="1"/>
+                    <group>
+                        <field name="res_id" invisible="1"/>
+                        <field name="res_model" invisible="1"/>
+                        <field name="partner_id" invisible="1"/>
+                        <field name="amount_max" invisible="1"/>
+                        <field name="description"/>
+                        <field name="amount"/>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="access_token" invisible="1"/>
+                    </group>
                 </group>
                 <group>
                     <field name="link" readonly="1" widget="CopyClipboardChar"/>
