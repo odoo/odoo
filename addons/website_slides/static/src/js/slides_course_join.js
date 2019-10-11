@@ -98,7 +98,6 @@ publicWidget.registry.websiteSlidesCourseJoin = publicWidget.Widget.extend({
      * @param {Object} parent
      */
     start: function () {
-        debugger;
         var self = this;
         var proms = [this._super.apply(this, arguments)];
         $('.o_wslides_js_course_join').each(function () {

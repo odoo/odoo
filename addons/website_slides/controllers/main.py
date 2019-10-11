@@ -146,6 +146,16 @@ class WebsiteSlides(WebsiteProfile):
             'sequence': channel.slide_ids[-1]['sequence'] + 1 if channel.slide_ids else 1,
         }
 
+    def _slide_remove_saved_answers(self,channel_id):
+        if 'slide_answer_quiz' not in request.session:
+            return
+        slide_ids = request.env['slide.slide'].search([('channel_id', '=', channel_id),('slide_type','=','quiz')])
+        session_slide_answer_quiz = json.loads(request.session['slide_answer_quiz'])
+        for slide_id in slide_ids.ids:
+             session_slide_answer_quiz.pop(str(slide_id),None)
+        request.session['slide_answer_quiz'] = json.dumps(session_slide_answer_quiz)
+        return True
+
     # CHANNEL UTILITIES
     # --------------------------------------------------
 
@@ -515,6 +525,7 @@ class WebsiteSlides(WebsiteProfile):
 
     @http.route(['/slides/channel/leave'], type='json', auth='user', website=True)
     def slide_channel_leave(self, channel_id):
+        self._slide_remove_saved_answers(channel_id)
         request.env['slide.channel'].browse(channel_id)._remove_membership(request.env.user.partner_id.ids)
         return True
 
@@ -748,6 +759,7 @@ class WebsiteSlides(WebsiteProfile):
                 'motivational': request.env.user.next_rank_id.description_motivational,
                 'progress': 100 * ((request.env.user.karma - lower_bound) / (upper_bound - lower_bound))
             }
+        self._slide_remove_saved_answers(slide.channel_id.id)
         return {
             'goodAnswers': user_good_answers.ids,
             'badAnswers': user_bad_answers.ids,
@@ -760,7 +772,7 @@ class WebsiteSlides(WebsiteProfile):
         }
     
     @http.route(['/slides/slide/quiz/save_slide_answsers'], type='json', auth='public', website=True)
-    def slide_save_slide_answsers(self, slide_values):
+    def slide_save_answsers(self, slide_values):
         if 'slide_answer_quiz' not in request.session:
             request.session['slide_answer_quiz'] = json.dumps({})
         session_slide_answer_quiz = json.loads(request.session['slide_answer_quiz'])

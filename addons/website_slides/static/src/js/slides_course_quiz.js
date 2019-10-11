@@ -81,19 +81,16 @@ odoo.define('website_slides.quiz', function (require) {
                 var courseJoinWidget = new CourseJoinWidget(self, self.channel.channelId,true);
                 return courseJoinWidget;
             }).then(function(courseJoinWidget){
-                if ($(".o_wslides_course_join_widget")[0]){
-                    courseJoinWidget.appendTo(self.$('.o_wslides_course_join_widget'))
-                    if(self.readonly && !self.publicUser && self.slide.answerIds){
-                        if(courseJoinWidget){
+                if(self.readonly && !self.publicUser){
+                    if ($(".o_wslides_course_join_widget")[0]){
+                        courseJoinWidget.appendTo(self.$('.o_wslides_course_join_widget'))
+                        if(courseJoinWidget && self.slide.answerIds){
                             courseJoinWidget.joinCours(self.channel.channelId)
                         }
                     }
-                    if(!self.readonly && !self.publicUser && self.slide.answerIds){
-                        self._onSubmitQuiz();
-                    }
-                } else {
-                    console.log("TODO: Case payable course")
-                    console.log(self.slide.answerIds)
+                }
+                if(!self.readonly && !self.publicUser && self.slide.answerIds){
+                    self._onSubmitQuiz();
                 }
                 self.slide.answerIds = false;
             });
@@ -241,9 +238,7 @@ odoo.define('website_slides.quiz', function (require) {
             if (values.length === self.quiz.questions.length){
                 self._alertHide();
                 if (this.publicUser){
-                    console.log("hhre")
                     values = {'slide_id': this.slide.id, 'slide_answers':values}
-                    console.log(values)
                     return this._rpc({
                         route:'/slides/slide/quiz/save_slide_answsers',
                         params: {
@@ -251,7 +246,6 @@ odoo.define('website_slides.quiz', function (require) {
                         }
                     }).then(function (){
                         var url = self._createLoginRedirectUrl()
-                        console.log(url)
                         window.location.href = url;
                     });
                 }

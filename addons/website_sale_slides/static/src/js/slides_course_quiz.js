@@ -24,23 +24,44 @@ Quiz.include({
     events: _.extend({}, Quiz.prototype.events || {}, {
         'click .o_wslides_js_join_course_sale': '_onClickJoinSale',
     }),
-
+    custom_events: _.extend({}, Quiz.prototype.events || {}, {
+        'buy_cours': '_onClickJoinSale',
+    }),
+    /**
+     * @private
+     */
     _onClickJoinSale: function(){
         var self = this;
         var values = this._getAnswers()
-            if (values.length === this.quiz.questions.length){
-                this._alertHide();
-                values = {'slide_id': this.slide.id, 'slide_answers':values}
-                return this._rpc({
-                    route:'/slides/slide/quiz/save_slide_answsers',
-                    params: {
-                        'slide_values': values,
+        if (values.length === this.quiz.questions.length){
+            this._alertHide();
+            values = {'slide_id': this.slide.id, 'slide_answers':values}
+            return this._rpc({
+                route:'/slides/slide/quiz/save_slide_answsers',
+                params: {
+                    'slide_values': values,
+                }
+            }).then( function (){
+                if (self.readonly){
+                    var url = self._createLoginRedirectUrl()
+                }
+                else{
+                    var url =_.str.sprintf('/shop/cart/update?product_id=%s&amp;express=1',(self.channel.productId));
                     }
-                })
+                window.location=url
+            })
 
-            } else {
-                this._alertShow();
-            }
-    }
+        } else {
+            this._alertShow();
+        }
+    },
+    /**
+     * @private
+     * @param
+     */
+    _createLoginRedirectUrl: function(){
+        var redirectURL= _.str.sprintf('/shop/cart/update?product_id=%s&amp;express=1',(this.channel.productId));
+        return _.str.sprintf('/web/login?redirect=%s', encodeURIComponent(redirectURL));
+    },
 });
 });
