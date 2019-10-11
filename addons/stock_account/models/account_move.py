@@ -156,6 +156,17 @@ class AccountMove(models.Model):
         """
         return self.env['stock.move']
 
+    def _get_related_stock_moves(self, product, qualified_stock_moves):
+        """ Overridden in purchase_stock and sale_stock to get the stock.move records
+        out of the `qualified_stock_moves` base on `product` and `self`.
+
+        :param account.move self: (invoice) a criterion for searching
+        :param product.product product: a criterion for searching
+        :param stock.move qualified_stock_moves: the stock moves to search
+        :return stock.move: stock moves related to the product and invoice
+        """
+        return self.env['stock.move']
+
     def _stock_account_anglo_saxon_reconcile_valuation(self, product=False):
         """ Reconciles the entries made in the interim accounts in anglosaxon accounting,
         reconciling stock valuation move lines with the invoice's.
@@ -188,7 +199,7 @@ class AccountMove(models.Model):
                     lambda line: line.product_id == product and line.account_id == product_interim_account and not line.reconciled)
 
                 # Search for anglo-saxon lines linked to the product in the stock moves.
-                product_stock_moves = stock_moves.filtered(lambda stock_move: stock_move.product_id == product)
+                product_stock_moves = move._get_related_stock_moves(product, stock_moves)
                 product_account_moves += product_stock_moves.mapped('account_move_ids.line_ids')\
                     .filtered(lambda line: line.account_id == product_interim_account and not line.reconciled)
 

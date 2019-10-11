@@ -172,3 +172,7 @@ class AccountMove(models.Model):
         for invoice in self.filtered(lambda x: x.type == 'in_refund'):
             rslt += invoice.mapped('invoice_line_ids.purchase_line_id.move_ids').filtered(lambda x: x.state == 'done' and x.location_dest_id.usage == 'supplier')
         return rslt
+
+    def _get_related_stock_moves(self, product, qualified_stock_moves):
+        res = super(AccountMove, self)._get_related_stock_moves(product, qualified_stock_moves)
+        return qualified_stock_moves & (res | self.invoice_line_ids.filtered(lambda line: line.product_id == product).purchase_line_id.move_ids)

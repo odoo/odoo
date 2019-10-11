@@ -20,6 +20,10 @@ class AccountMove(models.Model):
             rslt += invoice.mapped('reversed_entry_id.invoice_line_ids.sale_line_ids.order_id.picking_ids.move_lines').filtered(lambda x: x.state == 'done' and x.location_id.usage == 'customer')
         return rslt
 
+    def _get_related_stock_moves(self, product, qualified_stock_moves):
+        res = super(AccountMove, self)._get_related_stock_moves(product, qualified_stock_moves)
+        return qualified_stock_moves & (res | self.invoice_line_ids.filtered(lambda line: line.product_id == product).sale_line_ids.move_ids)
+
     def _get_invoiced_lot_values(self):
         """ Get and prepare data to show a table of invoiced lot on the invoice's report. """
         self.ensure_one()
