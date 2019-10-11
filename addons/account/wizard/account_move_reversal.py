@@ -57,11 +57,15 @@ class AccountMoveReversal(models.TransientModel):
                 'invoice_date': move.is_invoice(include_receipts=True) and (self.date or move.date) or False,
                 'journal_id': self.journal_id and self.journal_id.id or move.journal_id.id,
                 'invoice_payment_term_id': None,
+                'auto_post': True if self.date > fields.Date.today() else False,
             })
 
         # Handle reverse method.
         if self.refund_method == 'cancel':
-            new_moves = moves._reverse_moves(default_values_list, cancel=True)
+            if any([vals.get('auto_post', False) for vals in default_values_list]):
+                new_moves = moves._reverse_moves(default_values_list)
+            else:
+                new_moves = moves._reverse_moves(default_values_list, cancel=True)
         elif self.refund_method == 'modify':
             moves._reverse_moves(default_values_list, cancel=True)
             moves_vals_list = []
