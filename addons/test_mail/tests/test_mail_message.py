@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import base64
 
-from odoo.addons.test_mail.tests import common
-from odoo.addons.test_mail.tests.common import mail_new_test_user
+from odoo.addons.mail.tests.common import mail_new_test_user
+from odoo.addons.test_mail.tests.common import TestMailCommon
 from odoo.exceptions import AccessError, except_orm
 from odoo.tools import mute_logger, formataddr
 from odoo.tests import tagged
 
 
-class TestMessageValues(common.BaseFunctionalTest, common.MockEmails):
+class TestMessageValues(TestMailCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -152,7 +153,7 @@ class TestMessageValues(common.BaseFunctionalTest, common.MockEmails):
         self.assertEqual(msg.body, body)
 
 
-class TestMessageAccess(common.BaseFunctionalTest, common.MockEmails):
+class TestMessageAccess(TestMailCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -316,6 +317,8 @@ class TestMessageAccess(common.BaseFunctionalTest, common.MockEmails):
         self.env['mail.message'].with_user(self.user_employee).create({'body': 'Test'})
 
     def test_mail_message_access_create_reply(self):
+        # TDE FIXME: should it really work ? not sure - catchall makes crash (aka, post will crash also)
+        self.env['ir.config_parameter'].set_param('mail.catchall.domain', False)
         self.message.write({'partner_ids': [(4, self.user_employee.partner_id.id)]})
         self.env['mail.message'].with_user(self.user_employee).create({'model': 'mail.channel', 'res_id': self.group_private.id, 'body': 'Test', 'parent_id': self.message.id})
 
@@ -408,69 +411,106 @@ class TestMessageAccess(common.BaseFunctionalTest, common.MockEmails):
 
 
 @tagged('moderation')
-class TestMessageModeration(common.Moderation):
+class TestMessageModeration(TestMailCommon):
 
     @classmethod
     def setUpClass(cls):
         super(TestMessageModeration, cls).setUpClass()
 
-        cls.msg_admin_pending_c1 = cls._create_new_message(cls, cls.channel_1.id, status='pending_moderation', author=cls.partner_admin)
-        cls.msg_admin_pending_c1_2 = cls._create_new_message(cls, cls.channel_1.id, status='pending_moderation', author=cls.partner_admin)
-        cls.msg_emp2_pending_c1 = cls._create_new_message(cls, cls.channel_1.id, status='pending_moderation', author=cls.partner_employee_2)
+        cls.channel_1 = cls.env['mail.channel'].create({
+            'name': 'Moderation_1',
+            'email_send': True,
+            'moderation': True
+        })
+        cls.user_employee.write({'moderation_channel_ids': [(6, 0, [cls.channel_1.id])]})
+        cls.user_portal = cls._create_portal_user()
+
+        # A pending moderation message needs to have field channel_ids empty. Moderators
+        # need to be able to notify a pending moderation message (in a channel they moderate).
+        cls.msg_c1_admin1 = cls._add_messages(cls.channel_1, 'Body11', author=cls.partner_admin, moderation_status='pending_moderation')
+        cls.msg_c1_admin2 = cls._add_messages(cls.channel_1, 'Body12', author=cls.partner_admin, moderation_status='pending_moderation')
+        cls.msg_c1_portal = cls._add_messages(cls.channel_1, 'Body21', author=cls.partner_portal, moderation_status='pending_moderation')
 
     @mute_logger('odoo.models.unlink')
     def test_moderate_accept(self):
-        self._clear_bus()
-        # A pending moderation message needs to have field channel_ids empty. Moderators
-        # need to be able to notify a pending moderation message (in a channel they moderate).
-        self.assertFalse(self.msg_admin_pending_c1.channel_ids)
-        self.msg_admin_pending_c1.with_user(self.user_employee)._moderate('accept')
-        self.assertEqual(self.msg_admin_pending_c1.channel_ids, self.channel_1)
-        self.assertEqual(self.msg_admin_pending_c1.moderation_status, 'accepted')
-        self.assertEqual(self.msg_admin_pending_c1_2.moderation_status, 'pending_moderation')
-        self.assertBusNotification([(self.cr.dbname, 'mail.channel', self.channel_1.id)])
+        self._reset_bus()
+        self.assertFalse(self.msg_c1_admin1.channel_ids | self.msg_c1_admin2.channel_ids | self.msg_c1_portal.channel_ids)
+
+        self.msg_c1_admin1.with_user(self.user_employee)._moderate('accept')
+        self.assertEqual(self.msg_c1_admin1.channel_ids, self.channel_1)
+        self.assertEqual(self.msg_c1_admin1.moderation_status, 'accepted')
+        self.assertEqual(self.msg_c1_admin2.moderation_status, 'pending_moderation')
+        self.assertBusNotifications([(self.cr.dbname, 'mail.channel', self.channel_1.id)])
 
     @mute_logger('odoo.models.unlink')
     def test_moderate_allow(self):
-        self._clear_bus()
-        # A pending moderation message needs to have field channel_ids empty. Moderators
-        # need to be able to notify a pending moderation message (in a channel they moderate).
-        self.assertFalse(self.msg_admin_pending_c1.channel_ids)
-        self.assertFalse(self.msg_admin_pending_c1_2.channel_ids)
-        self.msg_admin_pending_c1.with_user(self.user_employee)._moderate('allow')
-        self.assertEqual(self.msg_admin_pending_c1.channel_ids, self.channel_1)
-        self.assertEqual(self.msg_admin_pending_c1_2.channel_ids, self.channel_1)
-        self.assertEqual(self.msg_admin_pending_c1.moderation_status, 'accepted')
-        self.assertEqual(self.msg_admin_pending_c1_2.moderation_status, 'accepted')
-        self.assertBusNotification([
+        self._reset_bus()
+
+        self.msg_c1_admin1.with_user(self.user_employee)._moderate('allow')
+        self.assertEqual(self.msg_c1_admin1.channel_ids, self.channel_1)
+        self.assertEqual(self.msg_c1_admin2.channel_ids, self.channel_1)
+        self.assertEqual(self.msg_c1_admin1.moderation_status, 'accepted')
+        self.assertEqual(self.msg_c1_admin2.moderation_status, 'accepted')
+        self.assertBusNotifications([
             (self.cr.dbname, 'mail.channel', self.channel_1.id),
             (self.cr.dbname, 'mail.channel', self.channel_1.id)])
 
     @mute_logger('odoo.models.unlink')
     def test_moderate_reject(self):
-        self._init_mock_build_email()
-        (self.msg_admin_pending_c1 | self.msg_emp2_pending_c1).with_user(self.user_employee)._moderate_send_reject_email('Title', 'Message to author')
-        self.env['mail.mail'].process_email_queue()
-        self.assertEmails(self.partner_employee, self.partner_employee_2 | self.partner_admin, subject='Title', body_content='Message to author')
+        with self.mock_mail_gateway():
+            (self.msg_c1_admin1 | self.msg_c1_portal).with_user(self.user_employee)._moderate_send_reject_email('Title', 'Message to author')
+            self.assertEqual(len(self._new_mails), 2)
+        for mail in self._new_mails:
+            self.assertEqual(mail.author_id, self.partner_employee)
+            self.assertEqual(mail.subject, 'Title')
+            self.assertEqual(mail.state, 'outgoing')
+        self.assertEqual(
+            set(self._new_mails.mapped('email_to')),
+            set([self.msg_c1_admin1.email_from, self.msg_c1_portal.email_from])
+        )
+        self.assertEqual(
+            set(self._new_mails.mapped('body_html')),
+            set(['<div>Message to author</div>\n%s\n' % self.msg_c1_admin1.body, '<div>Message to author</div>\n%s\n' % self.msg_c1_portal.body])
+        )  # TDE note: \n are added by append content to html, because why not
 
+    @mute_logger('odoo.models.unlink')
     def test_moderate_discard(self):
-        self._clear_bus()
-        id1, id2 = self.msg_admin_pending_c1.id, self.msg_emp2_pending_c1.id  # save ids because unlink will discard them
-        (self.msg_admin_pending_c1 | self.msg_emp2_pending_c1).with_user(self.user_employee)._moderate_discard()
+        self._reset_bus()
+        id1, id2, id3 = self.msg_c1_admin1.id, self.msg_c1_admin2.id, self.msg_c1_portal.id  # save ids because unlink will discard them
+        (self.msg_c1_admin1 | self.msg_c1_admin2 | self.msg_c1_portal).with_user(self.user_employee)._moderate_discard()
 
-        self.assertBusNotification(
+        self.assertBusNotifications(
             [(self.cr.dbname, 'res.partner', self.partner_admin.id),
-             (self.cr.dbname, 'res.partner', self.partner_employee_2.id),
-             (self.cr.dbname, 'res.partner', self.partner_employee.id)],
-            [{'type': 'deletion', 'message_ids': [id1]},  # admin: one message deleted because discarded
-             {'type': 'deletion', 'message_ids': [id2]},  # employee_2: one message delete because discarded
-             {'type': 'deletion', 'message_ids': [id1, id2]}]  # employee: two messages deleted because moderation done
+             (self.cr.dbname, 'res.partner', self.partner_employee.id),
+             (self.cr.dbname, 'res.partner', self.partner_portal.id)],
+            [{'type': 'deletion', 'message_ids': [id1, id2]},  # author of 2 messages
+             {'type': 'deletion', 'message_ids': [id1, id2, id3]},  # moderator
+             {'type': 'deletion', 'message_ids': [id3]}]  # author of 1 message
         )
 
     @mute_logger('odoo.models.unlink')
     def test_notify_moderators(self):
         # create pending messages in another channel to have two notification to push
-        msg_emp_pending_c2 = self._create_new_message(self.channel_2.id, status='pending_moderation', author=self.partner_employee)
+        channel_2 = self.env['mail.channel'].create({
+            'name': 'Moderation_1',
+            'email_send': True,
+            'moderation': True
+        })
+        self.user_admin.write({'moderation_channel_ids': [(6, 0, [channel_2.id])]})
+        self.msg_c2_portal = self._add_messages(channel_2, 'Body31', author=self.partner_portal, moderation_status='pending_moderation')
 
-        self.env['mail.message']._notify_moderators()
-        self.assertEmails(False, self.partner_employee | self.partner_employee_2, subject='Message are pending moderation', email_from=self.env.company.catchall or self.env.company.email)
+        # one notification for each moderator: employee (channel1), admin (channel2)
+        with self.assertPostNotifications([{
+            'content': 'Hello %s' % self.partner_employee.name,
+            'message_type': 'user_notification', 'subtype': 'mail.mt_note',
+            'notif': [{
+                'partner': self.partner_employee,
+                'type': 'inbox'}]
+        }, {
+            'content': 'Hello %s' % self.partner_admin.name,
+            'message_type': 'user_notification', 'subtype': 'mail.mt_note',
+            'notif': [{
+                'partner': self.partner_admin,
+                'type': 'inbox'}]
+        }]):
+            self.env['mail.message']._notify_moderators()
