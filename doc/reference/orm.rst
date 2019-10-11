@@ -593,6 +593,8 @@ Altering the environment
 
 .. automethod:: Model.with_user
 
+.. automethod:: Model.with_company
+
 .. automethod:: Model.with_env
 
 .. automethod:: Model.sudo

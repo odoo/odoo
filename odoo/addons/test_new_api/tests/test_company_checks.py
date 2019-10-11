@@ -22,6 +22,16 @@ class TestCompanyCheck(common.TransactionCase):
             'name': 'M2',
             'company_id': self.company_b.id,
         })
+        self.company_c = self.env['res.company'].create({
+            'name': 'Company C'
+        })
+
+        self.test_user = self.env['res.users'].create({
+            'name': 'Test',
+            'login': 'test',
+            'company_id': self.company_a.id,
+            'company_ids': (self.company_a | self.company_c).ids,
+        })
 
     def test_company_check_0(self):
         """ Check the option _check_company_auto is well set on records"""
@@ -75,18 +85,7 @@ class TestCompanyCheck(common.TransactionCase):
     def test_company_environment(self):
         """ Check the company context on the environment is verified. """
 
-        self.company_c = self.env['res.company'].create({
-            'name': 'Company C'
-        })
-
-        user = self.env['res.users'].create({
-            'name': 'Test',
-            'login': 'test',
-            'company_id': self.company_a.id,
-            'company_ids': (self.company_a | self.company_c).ids,
-        })
-
-        user = user.with_user(user).with_context(allowed_company_ids=[])
+        user = self.test_user.with_user(self.test_user).with_context(allowed_company_ids=[])
 
         # When accessing company/companies, check raises error if unauthorized/unexisting company.
         with self.assertRaises(AccessError):
@@ -120,3 +119,57 @@ class TestCompanyCheck(common.TransactionCase):
         # Fallbacks when no allowed_company_ids context key
         self.assertEqual(user.env.company, user.company_id)
         self.assertEqual(user.env.companies, user.company_ids)
+
+    def test_with_company(self):
+        """ Check that with_company() works as expected """
+
+        user = self.test_user.with_user(self.test_user).with_context(allowed_company_ids=[])
+        self.assertEqual(user.env.companies, user.company_ids)
+
+        self.assertEqual(user.with_company(user.env.company).env.company, user.env.company)
+        self.assertEqual(
+            user.with_company(self.company_a).env.company,
+            user.with_company(self.company_a.id).env.company
+        )
+
+        # Falsy values shouldn't change current environment, record, or context.
+        for falsy in [False, None, 0, '', self.env['res.company'], []]:
+            no_change = user.with_company(falsy)
+            self.assertEqual(no_change, user)
+            self.assertEqual(no_change.env.context, user.env.context)
+            self.assertEqual(no_change.env, user.env)
+
+        comp_a_user = user.with_company(user.company_id)
+        comp_a_user2 = user.with_context(allowed_company_ids=user.company_id.ids)
+
+        # Using with_company(c) or with_context(allowed_company_ids=[c])
+        # should return the same context
+        # and the same environment (reused if no changes)
+        self.assertEqual(comp_a_user.env, comp_a_user2.env)
+        self.assertEqual(comp_a_user.env.context, comp_a_user2.env.context)
+
+        # When there were no company in the context, using with_company
+        # restricts both env.company and env.companies.
+        self.assertEqual(comp_a_user.env.company, user.company_id)
+        self.assertEqual(comp_a_user.env.companies, user.company_id)
+
+        # Reordering allowed_company_ids ctxt key
+        # Ensure with_company reorders the context key content
+        # and by consequent changes env.company
+        comp_c_a_user = comp_a_user.with_company(self.company_c)
+        self.assertEqual(comp_c_a_user.env.company, self.company_c)
+        self.assertEqual(comp_c_a_user.env.companies, self.company_c + self.company_a)
+        self.assertEqual(comp_c_a_user.env.companies[0], self.company_c)
+        self.assertEqual(comp_c_a_user.env.companies[1], self.company_a)
+        self.assertEqual(
+            comp_c_a_user.env.context['allowed_company_ids'],
+            [self.company_c.id, self.company_a.id],
+        )
+
+        comp_a_c_user = comp_c_a_user.with_company(self.company_a)
+        self.assertEqual(comp_a_c_user.env.companies[0], self.company_a)
+        self.assertEqual(comp_a_c_user.env.companies[1], self.company_c)
+        self.assertEqual(
+            comp_a_c_user.env.context['allowed_company_ids'],
+            [self.company_a.id, self.company_c.id],
+        )
