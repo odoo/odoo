@@ -733,6 +733,8 @@ class payment_register(models.TransientModel):
     def default_get(self, fields):
         rec = super(payment_register, self).default_get(fields)
         active_ids = self._context.get('active_ids')
+        if not active_ids:
+            return rec
         invoices = self.env['account.move'].browse(active_ids)
 
         # Check all invoices are open
