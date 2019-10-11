@@ -3,6 +3,7 @@ odoo.define('website.utils', function (require) {
 
 var ajax = require('web.ajax');
 var core = require('web.core');
+var weContext = require('web_editor.context');
 
 var qweb = core.qweb;
 
@@ -136,8 +137,14 @@ function prompt(options, _qweb) {
     return def;
 }
 
+function websiteDomain() {
+    var websiteID = weContext.get()['website_id'];
+    return ['|', ['website_id', '=', false], ['website_id', '=', websiteID]];
+}
+
 return {
     autocompleteWithPages: autocompleteWithPages,
     prompt: prompt,
+    websiteDomain: websiteDomain,
 };
 });
