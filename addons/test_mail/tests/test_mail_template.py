@@ -3,11 +3,11 @@
 
 import base64
 
-from odoo.addons.test_mail.tests.common import BaseFunctionalTest, MockEmails, TestRecipients
+from odoo.addons.test_mail.tests.common import TestMailCommon, TestRecipients
 from odoo.tools import mute_logger
 
 
-class TestMailTemplate(BaseFunctionalTest, MockEmails, TestRecipients):
+class TestMailTemplate(TestMailCommon, TestRecipients):
 
     @classmethod
     def setUpClass(cls):
