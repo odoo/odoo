@@ -96,7 +96,13 @@ var Chatter = Widget.extend({
         // start and append the widgets
         var fieldDefs = _.invoke(this.fields, 'appendTo', $('<div>'));
         var def = this._dp.add(Promise.all(fieldDefs));
-        this._render(def).then(this._updateMentionSuggestions.bind(this));
+        this._render(def)
+            .then(this._updateMentionSuggestions.bind(this))
+            .then(() => {
+                if (this.openAttachments) {
+                    this._openAttachmentBox();
+                }
+            });
 
         return this._super.apply(this, arguments);
     },
@@ -382,9 +388,6 @@ var Chatter = Widget.extend({
             // disable widgets in create mode, otherwise enable
             self._isCreateMode ? self._disableChatter() : self._enableChatter();
             $spinner.remove();
-            if (self.openAttachments) {
-                self._onClickAttachmentButton();
-            }
         };
 
         return def.then(function () {
