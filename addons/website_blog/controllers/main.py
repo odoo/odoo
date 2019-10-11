@@ -12,6 +12,7 @@ from odoo import http, fields
 from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.http import request
+from odoo.osv import expression
 from odoo.tools import html2plaintext
 
 
@@ -314,5 +315,6 @@ class WebsiteBlog(http.Controller):
 
     @http.route(['/blog/render_latest_posts'], type='json', auth='public', website=True)
     def render_latest_posts(self, template, domain, limit=None, order='published_date desc'):
+        domain = expression.AND([domain, request.website.website_domain()])
         posts = request.env['blog.post'].search(domain, limit=limit, order=order)
         return request.website.viewref(template).render({'posts': posts})
