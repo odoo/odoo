@@ -18,14 +18,14 @@
             Timesheet line Views
         -->
         <record id="hr_timesheet_line_tree" model="ir.ui.view">
-            <field name="name">account.analytic.line.tree.hr_timesheet</field>
+            <field name="name">timesheet.tree.multiedit</field>
             <field name="model">account.analytic.line</field>
             <field name="arch" type="xml">
-                <tree editable="top" string="Timesheet Activities">
+                <tree editable="top" string="Timesheet Activities" multi_edit="1">
                     <field name="date"/>
                     <field name="name"/>
-                    <field name="project_id" required="1" context="{'form_view_ref': 'project.project_project_view_form_simplified',}"/>
-                    <field name="task_id" context="{'default_project_id': project_id}" domain="[('project_id', '=', project_id)]"/>
+                    <field name="project_id" required="1" context="{'form_view_ref': 'project.project_project_view_form_simplified',}" readonly="1"/>
+                    <field name="task_id" context="{'default_project_id': project_id}" domain="[('project_id', '=', project_id)]" readonly="1"/>
                     <field name="unit_amount" widget="timesheet_uom" sum="Total"/>
                     <field name="company_id" invisible="1"/>
                 </tree>
@@ -33,7 +33,7 @@
         </record>
 
         <record id="timesheet_view_tree_user" model="ir.ui.view">
-            <field name="name">account.analytic.line.view.tree.with.user</field>
+            <field name="name">timesheet.view.tree.multiedit.with.user</field>
             <field name="model">account.analytic.line</field>
             <field name="inherit_id" ref="hr_timesheet_line_tree"/>
             <field name="mode">primary</field>
