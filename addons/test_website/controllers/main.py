@@ -12,7 +12,7 @@ from odoo.exceptions import UserError, ValidationError, AccessError, MissingErro
 
 class WebsiteTest(Home):
 
-    @http.route('/test_view', type='http', auth='public', website=True)
+    @http.route('/test_view', type='http', auth='public', website=True, sitemap=False)
     def test_view(self, **kwargs):
         return request.render('test_website.test_view')
 
