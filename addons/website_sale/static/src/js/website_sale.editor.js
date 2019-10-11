@@ -56,6 +56,7 @@ var core = require('web.core');
 var Dialog = require('web.Dialog');
 var options = require('web_editor.snippets.options');
 var publicWidget = require('web.public.widget');
+var ColorpickerDialog = require('web.ColorpickerDialog');
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -183,11 +184,17 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
 });
 
 options.registry.WebsiteSaleProductsItem = options.Class.extend({
+    xmlDependencies: ['/website_sale/static/src/xml/website_sale.editor.xml'],
     events: _.extend({}, options.Class.prototype.events || {}, {
         'mouseenter .o_wsale_soptions_menu_sizes table': '_onTableMouseEnter',
         'mouseleave .o_wsale_soptions_menu_sizes table': '_onTableMouseLeave',
         'mouseover .o_wsale_soptions_menu_sizes td': '_onTableItemMouseEnter',
         'click .o_wsale_soptions_menu_sizes td': '_onTableItemClick',
+        'click .o_wsale_soptions_add_edit_ribbon': '_onAddNewOrEditRibbonClick',
+        'click .o_wsale_soptions_remove_ribbon': '_onRemoveRibbonClick',
+        'click .o_wsale_soptions_change_color_ribbon': '_onChangeColorRibbonClick',
+        'click .o_wsale_soptions_validate_ribbon': '_onValidateRibbonClick',
+        'click .o_wsale_soptions_cancel_ribbon': '_onCancelRibbonClick',
     }),
 
     /**
@@ -198,22 +205,11 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
 
         this.ppr = this.$target.closest('[data-ppr]').data('ppr');
         this.productTemplateID = parseInt(this.$target.find('[data-oe-model="product.template"]').data('oe-id'));
+        this.DEFAULT_RIBBON_COLOR = '#ff0505';
 
         var defs = [this._super.apply(this, arguments)];
 
-        defs.push(this._rpc({
-            model: 'product.style',
-            method: 'search_read',
-        }).then(function (data) {
-            var $ul = self.$el.find('[name="style"]');
-            for (var k in data) {
-                $ul.append(
-                    $('<we-button data-style="' + data[k]['id'] + '" data-toggle-class="' + data[k]['html_class'] + '"/>')
-                        .append(data[k]['name'])
-                );
-            }
-            self._setActive();
-        }));
+        defs.push(this._loadData());
 
         return $.when.apply($, defs);
     },
@@ -224,6 +220,7 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
         var listLayoutEnabled = this.$target.closest('#products_grid').hasClass('o_wsale_layout_list');
         this.$el.find('.o_wsale_soptions_menu_sizes').closest('we-collapse-area')
             .toggleClass('d-none', listLayoutEnabled);
+        this._loadData();
     },
 
     //--------------------------------------------------------------------------
@@ -234,12 +231,21 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
      * @see this.selectClass for params
      */
     style: function (previewMode, value, $opt) {
-        this._rpc({
+        var self = this;
+        self.$target.find('a.ribbon').removeClass('d-none');
+        self.$el.find('we-button').removeClass('active');
+        self._rpc({
             route: '/shop/change_styles',
             params: {
-                'id': this.productTemplateID,
+                'id': self.productTemplateID,
                 'style_id': value,
             },
+        }).then(function () {
+            self._adaptRibbons({
+                $target: self.$target,
+                ribbonColor: $opt.data('color'),
+                ribbonName: $opt.text(),
+            });
         });
     },
     /**
@@ -274,6 +280,61 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
         $size.find('tr td:nth-child(n + ' + parseInt(this.ppr + 1) + ')').hide();
 
         return this._super.apply(this, arguments);
+    },
+    /**
+     * @private
+     */
+    _loadData: function () {
+        var self = this;
+        self.$el.find('.o_input_add_edit_ribbon').remove();
+        self.$el.find('we-button').remove();
+        return this._rpc({
+            model: 'product.style',
+            method: 'search_read',
+        }).then(function (data) {
+            var $ul = self.$el.find('[name="style"]');
+            $ul.append(
+                '<div class="input-group mb-3 mt-3 o_input_add_edit_ribbon d-none">\
+                    <input type="text" class="form-control o_ribbon_name" placeholder="Ribbon name">\
+                        <div class="input-group-append">\
+                            <button class="btn btn-info o_wsale_soptions_change_color_ribbon" type="button"><i class="fa fa-paint-brush"></i></button>\
+                            <button class="btn btn-primary o_wsale_soptions_validate_ribbon" data-color="' + self.DEFAULT_RIBBON_COLOR + '" data-edit="false" type="button"><i class="fa fa-check"></i></button>\
+                            <button class="btn btn-danger o_wsale_soptions_cancel_ribbon" type="button"><i class="fa fa-remove"></i></button>\
+                        </div>\
+                </div>'
+            );
+            for (var k in data) {
+                $ul.append(
+                    $('<we-button data-style="' + data[k]['id'] + '" data-toggle-class="' + data[k]['html_class'] + '" data-color="' + data[k]['color'] + '"/>')
+                        .append(data[k]['name'])
+                        .append('<a class="text-primary o_wsale_soptions_add_edit_ribbon ml-2" data-edit="true"><i class="fa fa-edit"/></a>')
+                        .append('<a class="text-danger o_wsale_soptions_remove_ribbon ml-2"><i class="fa fa-remove"/></a>')
+                );
+            }
+            self._setActive();
+        });
+    },
+    /**
+     * @param {Object} data
+     */
+    _adaptRibbons: function (data) {
+        var $target = data.$target;
+        var $a = $target.find('a.ribbon');
+        $target.find('.ribbon-wrapper').css({'display': 'block'}).removeClass('d-none');
+        $a.text(data.ribbonName);
+        if (data.ribbonColor) {
+            $a.css({'background-color': data.ribbonColor});
+        }
+        publicWidget.registry.WebsiteSale.prototype.resizeRibbons($target.find('div.ribbon-wrapper'));
+    },
+    /**
+     * @param {boolean} visible
+     */
+    _restoreInputRibbon: function (visible) {
+        $('.o_input_add_edit_ribbon').toggleClass('d-none', !visible).find('.o_wsale_soptions_validate_ribbon')
+            .attr({'data-edit': false, 'data-color': this.DEFAULT_RIBBON_COLOR})
+            .removeAttr('data-edit-style data-toggle-class data-text');
+        $('.o_ribbon_name').val('');
     },
 
     //--------------------------------------------------------------------------
@@ -330,6 +391,127 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
                 y: y,
             },
         }).then(reload);
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onAddNewOrEditRibbonClick: function (ev) {
+        ev.stopPropagation();
+        var $currentTarget = $(ev.currentTarget);
+        var $weButton = $currentTarget.closest('we-button');
+        var isEditing = $currentTarget.data('edit');
+        this.CURRENT_COLOR = $weButton.data('color');
+        this._restoreInputRibbon(true);
+        this.$el.find('we-button').removeClass('d-none');
+        $('.o_input_add_edit_ribbon').removeClass('d-none');
+        if (isEditing) {
+            $weButton.addClass('d-none');
+            $('.o_wsale_soptions_validate_ribbon').attr({
+                'data-edit-style': $weButton.data('style'),
+                'data-toggle-class': $weButton.data('toggle-class'),
+                'data-color': this.CURRENT_COLOR,
+                'data-edit': isEditing,
+                'data-text': $weButton.text(),
+            });
+            $('.o_ribbon_name').val($weButton.text()).focus();
+        }
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onRemoveRibbonClick: function (ev) {
+        new Dialog(this, {
+            title: _t('Remove This Ribbon'),
+            $content: $(qweb.render('website_sale.dialog.removeRibbon')),
+            buttons: [
+                {
+                    text: _t('Remove'),
+                    classes: 'btn-danger',
+                    click: function () {
+                        var $weButton = $(ev.target).closest('we-button');
+                        $weButton.remove();
+                        return this._rpc({
+                            model: 'product.style',
+                            method: 'unlink',
+                            args: [$weButton.data('style')],
+                        }).then(function () {
+                            $('a.ribbon:contains(' + $weButton.text() + ')').addClass('d-none');
+                        });
+                    },
+                    close: true,
+                },
+                {
+                    text: _t('Discard'),
+                    close: true,
+                },
+            ],
+        }).open();
+    },
+    /**
+     * @param {Event} ev
+     */
+    _onChangeColorRibbonClick: function (ev) {
+        ev.stopPropagation();
+        var colorpicker = new ColorpickerDialog(this, {
+            defaultColor: this.CURRENT_COLOR,
+        });
+        colorpicker.on('colorpicker:saved', this, function (ev) {
+            $('.o_wsale_soptions_validate_ribbon').attr({'data-color': ev.data.cssColor});
+        });
+        colorpicker.open();
+    },
+    /**
+     * @param {Event} ev
+     */
+    _onValidateRibbonClick: function (ev) {
+        var self = this;
+        var $validateBtn = $('.o_wsale_soptions_validate_ribbon');
+        var ribbonName = $('.o_ribbon_name').val();
+        var ribbonColor = $validateBtn.data('color');
+        var isEditing = $validateBtn.data('edit');
+        if (ribbonName.length) {
+            return this._rpc({
+                route: '/shop/add_or_edit_style',
+                params: {
+                    'name': ribbonName,
+                    'color': _.isUndefined(ribbonColor) ? self.DEFAULT_RIBBON_COLOR : ribbonColor,
+                    'id': $validateBtn.data('edit-style'),
+                    'edit': isEditing,
+                },
+            }).then(function (newRibbonId) {
+                if (isEditing) {
+                    $('a.ribbon:contains(' + $validateBtn.data('text') + ')')
+                        .removeClass('d-none')
+                        .css({'background-color': ribbonColor})
+                        .text(ribbonName);
+                } else {
+                    self.$target.find('a.ribbon').removeClass('d-none');
+                    self._rpc({
+                        route: '/shop/change_styles',
+                        params: {
+                            'id': self.productTemplateID,
+                            'style_id': newRibbonId,
+                        },
+                    }).then(function () {
+                        self._adaptRibbons({
+                            $target: self.$target,
+                            ribbonColor: ribbonColor,
+                            ribbonName: ribbonName,
+                        });
+                    });
+                }
+                self._loadData().then(function () {
+                    self.$el.find('we-button').removeClass('active');
+                    self.$el.find('we-button[data-style="' + newRibbonId + '"]').addClass('active');
+                });
+            });
+        }
+    },
+    _onCancelRibbonClick: function () {
+        this._restoreInputRibbon(false);
+        this._loadData();
     },
 });
 

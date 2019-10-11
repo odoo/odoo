@@ -79,6 +79,15 @@
             data-selector="#products_grid .oe_product"
             data-no-check="true">
             <we-collapse-area>
+                <we-toggler>Promote</we-toggler>
+                <we-collapse data-no-preview="true">
+                    <we-button data-change-sequence="top">Push to top</we-button>
+                    <we-button data-change-sequence="up">Push up</we-button>
+                    <we-button data-change-sequence="down">Push down</we-button>
+                    <we-button data-change-sequence="bottom">Push to bottom</we-button>
+                </we-collapse>
+            </we-collapse-area>
+            <we-collapse-area>
                 <we-toggler>Size</we-toggler>
                 <we-collapse class="o_wsale_soptions_menu_sizes">
                     <table>
@@ -98,17 +107,8 @@
                 </we-collapse>
             </we-collapse-area>
             <we-collapse-area>
-                <we-toggler>Styles</we-toggler>
+                <we-toggler>Ribbon <a href="#" class="o_wsale_soptions_add_edit_ribbon ml-2" data-edit="false"><i class="fa fa-plus-square"/></a></we-toggler>
                 <we-collapse data-no-preview="true" name="style"/>
-            </we-collapse-area>
-            <we-collapse-area>
-                <we-toggler>Promote</we-toggler>
-                <we-collapse data-no-preview="true">
-                    <we-button data-change-sequence="top">Push to top</we-button>
-                    <we-button data-change-sequence="up">Push up</we-button>
-                    <we-button data-change-sequence="down">Push down</we-button>
-                    <we-button data-change-sequence="bottom">Push to bottom</we-button>
-                </we-collapse>
             </we-collapse-area>
         </div>
 

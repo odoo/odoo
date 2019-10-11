@@ -15,6 +15,7 @@ class ProductStyle(models.Model):
 
     name = fields.Char(string='Style Name', required=True)
     html_class = fields.Char(string='HTML Classes')
+    color = fields.Char(string='Color')
 
 
 class ProductPricelist(models.Model):
@@ -185,7 +186,7 @@ class ProductTemplate(models.Model):
                                              'reviews the cart before payment (cross-sell strategy).')
     website_size_x = fields.Integer('Size X', default=1)
     website_size_y = fields.Integer('Size Y', default=1)
-    website_style_ids = fields.Many2many('product.style', string='Styles')
+    website_style_id = fields.Many2one('product.style', string='Style')
     website_sequence = fields.Integer('Website Sequence', help="Determine the display order in the Website E-commerce",
                                       default=lambda self: self._default_website_sequence())
     public_categ_ids = fields.Many2many('product.public.category', relation='product_public_category_product_template_rel', string='Website Product Category',

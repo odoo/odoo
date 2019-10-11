@@ -71,7 +71,7 @@ class TableCompute(object):
                     self.table[(pos // ppr) + y2][(pos % ppr) + x2] = False
             self.table[pos // ppr][pos % ppr] = {
                 'product': p, 'x': x, 'y': y,
-                'class': " ".join(x.html_class for x in p.website_style_ids if x.html_class)
+                'class': " ".join(x.html_class for x in p.website_style_id if x.html_class)
             }
             if index <= ppg:
                 maxy = max(maxy, y + (pos // ppr))
@@ -1054,6 +1054,25 @@ class WebsiteSale(http.Controller):
         })
         return "%s?enable_editor=1" % product.product_tmpl_id.website_url
 
+    @http.route(['/shop/add_or_edit_style'], type='json', auth='user', methods=['POST'], website=True)
+    def add_or_edit_style(self, name, color, id=None, edit=False):
+        product_style = request.env['product.style']
+        html_class = 'oe_ribbon_' + name.replace(' ', '_')
+        if edit:
+            product_style.browse(id).write({
+                'name': name,
+                'html_class': html_class,
+                'color': color
+            })
+            return id
+        else:
+            new_ribbon = product_style.create({
+                'name': name,
+                'html_class': html_class,
+                'color': color
+            })
+            return new_ribbon.id
+
     @http.route(['/shop/change_styles'], type='json', auth='user')
     def change_styles(self, id, style_id):
         product = request.env['product.template'].browse(id)
@@ -1061,18 +1080,14 @@ class WebsiteSale(http.Controller):
         remove = []
         active = False
         style_id = int(style_id)
-        for style in product.website_style_ids:
-            if style.id == style_id:
-                remove.append(style.id)
-                active = True
-                break
+        if product.website_style_id.id == style_id:
+            product.write({'website_style_id': False})
+            active = True
 
         style = request.env['product.style'].browse(style_id)
 
-        if remove:
-            product.write({'website_style_ids': [(3, rid) for rid in remove]})
         if not active:
-            product.write({'website_style_ids': [(4, style.id)]})
+            product.write({'website_style_id': style.id})
 
         return not active
 

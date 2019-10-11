@@ -149,7 +149,7 @@
             <div class="card-body p-1 oe_product_image">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                 <div class="ribbon-wrapper">
-                    <a href="#" role="button" class="ribbon btn btn-danger">Sale</a>
+                    <a href="#" role="button" class="ribbon btn" t-attf-style="background-color:#{product.website_style_id.color};"><t t-esc="product.website_style_id.name"/></a>
                 </div>
                 <a t-att-href="product_href" class="d-block h-100" itemprop="url">
                     <span t-field="product.image_1920"

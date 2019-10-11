@@ -157,6 +157,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
      */
     init: function () {
         this._super.apply(this, arguments);
+        this.resizeRibbons();
 
         this._changeCartQuantity = _.debounce(this._changeCartQuantity.bind(this), 500);
         this._changeCountry = _.debounce(this._changeCountry.bind(this), 500);
@@ -214,6 +215,44 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
             return combination;
         }
         return VariantMixin.getSelectedVariantValues.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @public
+     * @param $el {Element}
+     */
+    resizeRibbons: function ($el) {
+        var self = this;
+        if ($el) {
+            self.$ribbonWrapper = $($el);
+            _resizeRibbon();
+        } else {
+            _.each($('div.ribbon-wrapper:visible'), function ($ribbonWrapper) {
+                self.$ribbonWrapper = $($ribbonWrapper);
+                _resizeRibbon();
+            });
+        }
+
+        function _resizeRibbon() {
+            var $ribbon = self.$ribbonWrapper.find('a.ribbon');
+            var ribbonLength = $ribbon.text().length;
+            if (ribbonLength >= 10) {
+                var size = '145px';
+                self.$ribbonWrapper.css({
+                    'width': size,
+                    'height': size,
+                });
+                $ribbon.css({
+                    'top': '25px',
+                    'width': size,
+                    'font-size': '85%',
+                });
+            }
+        }
     },
 
     //--------------------------------------------------------------------------
