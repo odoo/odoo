@@ -6408,6 +6408,8 @@ class BaseModel(metaclass=MetaModel):
                                 data = ['']
                         else:
                             data = data and data.ids or [False]
+                            if isinstance(v, BaseModel) and comparator in ('in', 'not in'):
+                                value = [v.id]
                     elif field.type in ('date', 'datetime'):
                         data = [Datetime.to_datetime(d) for d in data]
 

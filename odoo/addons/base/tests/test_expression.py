@@ -317,17 +317,23 @@ class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
         self.assertEqual(one, res_3)
         res_4 = self._search(Partner, ['!', ('id', 'in', others.ids)])
         self.assertEqual(one, res_4)
-        # res_5 = Partner.search([('id', 'in', one)]) # TODO make it permitted, just like for child_of
-        # self.assertEqual(one, res_5)
+        res_5 = self._search(Partner, [('id', 'in', one)])
+        self.assertEqual(one, res_5)
         res_6 = self._search(Partner, [('id', 'in', [one.id])])
         self.assertEqual(one, res_6)
         res_7 = self._search(Partner, [('name', '=', one.name)])
         self.assertEqual(one, res_7)
         res_8 = self._search(Partner, [('name', 'in', [one.name])])
-        # res_9 = Partner.search([('name', 'in', one.name)]) # TODO
+        self.assertEqual(one, res_8)
+        res_9 = self._search(Partner, [('name', 'in', one.name)])
+        self.assertEqual(one, res_9)
 
     def test_15_m2o(self):
         Partner = self.env['res.partner']
+
+        # testing equality with False
+        partners = Partner._search([('parent_id', '=', False)])
+        self.assertTrue(partners)
 
         # testing equality with name
         partners = self._search(Partner, [('parent_id', '=', 'Pepper Street')])
@@ -339,6 +345,10 @@ class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
 
         # testing the in operator with a list of names
         partners = self._search(Partner, [('parent_id', 'in', ['Pepper Street', 'Inner Works'])])
+        self.assertTrue(partners)
+
+        # testing the in operator with a list that includes False
+        partners = Partner._search([('parent_id', 'in', [False])])
         self.assertTrue(partners)
 
         # check if many2one works with empty search list

@@ -121,7 +121,7 @@ import warnings
 from datetime import date, datetime, time
 
 import odoo.modules
-from odoo.models import check_property_field_value_name, READ_GROUP_NUMBER_GRANULARITY
+from odoo.models import check_property_field_value_name, READ_GROUP_NUMBER_GRANULARITY, BaseModel
 from odoo.tools import Query, SQL, get_lang
 from odoo.tools.sql import pattern_to_translated_trigram_pattern, value_to_translated_trigram_pattern
 
@@ -1009,6 +1009,9 @@ class expression(object):
                 for dom_leaf in dom:
                     push(dom_leaf, model, alias)
 
+            elif left == 'id' and operator not in HIERARCHY_FUNCS and isinstance(right, BaseModel):
+                push((left, operator, [right.id]), model, alias)
+
             elif field.type == 'properties':
                 if len(path) != 2 or "." in path[1]:
                     raise ValueError(f"Wrong path {path}")
@@ -1416,6 +1419,12 @@ class expression(object):
                         indexed_value = self._unaccent(SQL("jsonb_path_query_array(%s, '$.*')::text", sql_column))
                         _sql_operator = SQL('LIKE') if operator == '=' else sql_operator
                         push_result(SQL("%s %s %s", indexed_value, _sql_operator, self._unaccent(SQL("%s", _right))))
+
+                elif operator in ('in', 'not in') and isinstance(right, str):
+                    dict_op = {'in': 'like', 'not in': 'not like'}
+                    operator = dict_op[operator]
+                    push((left, operator, '%%%s%%' % right), model, alias)
+
                 else:
                     push_result(model._condition_to_sql(alias, left, operator, right, self.query))
 
