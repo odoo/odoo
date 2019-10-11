@@ -214,7 +214,7 @@
             <field name="model">product.product</field>
             <field name="mode">primary</field>
             <field name="arch" type="xml">
-                <form string="Variant Information">
+                <form string="Variant Information" duplicate="false">
                     <sheet>
                         <div class="oe_button_box" name="button_box"/>
                         <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
@@ -298,7 +298,7 @@
             <field name="model">product.product</field>
             <field eval="7" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Product Variants" multi_edit="1">
+                <tree string="Product Variants" multi_edit="1" duplicate="false">
                     <field name="default_code" optional="show" readonly="1"/>
                     <field name="barcode" optional="hide" readonly="1"/>
                     <field name="name" readonly="1"/>
@@ -325,6 +325,7 @@
             <field name="arch" type="xml">
                 <form position="attributes">
                     <attribute name="string">Product Variant</attribute>
+                    <attribute name="duplicate">false</attribute>
                 </form>
                 <field name="type" position="after">
                     <field name="default_code"/>
