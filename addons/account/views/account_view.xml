@@ -50,12 +50,17 @@
             <field name="name">account.account.list</field>
             <field name="model">account.account</field>
             <field name="arch" type="xml">
-                <tree string="Chart of accounts">
+                <tree editable="top" create="1" delete="1" multi_edit="1" string="Chart of accounts">
                     <field name="code"/>
                     <field name="name"/>
                     <field name="user_type_id"/>
+                    <field name="reconcile" widget="boolean_toggle"/>
+                    <field name="tax_ids" optional="hide" widget="many2many_tags"/>
+                    <field name="tag_ids" optional="hide" widget="many2many_tags"/>
+                    <field name="allowed_journal_ids" optional="hide" widget="many2many_tags"/>
                     <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                    <button name="action_read_account" type="object" icon="fa-expand" title="Open" aria-label="Open" class="float-right"/>
                 </tree>
             </field>
         </record>
@@ -104,6 +109,7 @@
                     <filter string="Expenses" name="expensesacc" domain="[('internal_group','=', 'expense')]"/>
                     <separator/>
                     <filter string="Account with Entries" name="used" domain="[('used', '=', True)]"/>
+                    <filter string="Active Account" name="activeacc" domain="[('deprecated', '=', False)]"/>
                     <separator/>
                     <field name="user_type_id"/>
                     <group expand="0" string="Group By">
@@ -134,6 +140,7 @@
                 to disclose a certain amount of information.
               </p>
             </field>
+            <field name="context">{'search_default_activeacc': True}</field>
         </record>
 
         <menuitem action="action_account_form" id="menu_action_account_form" parent="account.account_account_menu" groups="account.group_account_user" sequence="1"/>
