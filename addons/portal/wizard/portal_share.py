@@ -10,10 +10,11 @@ class PortalShare(models.TransientModel):
     @api.model
     def default_get(self, fields):
         result = super(PortalShare, self).default_get(fields)
-        result['res_model'] = self._context.get('active_model')
-        result['res_id'] = self._context.get('active_id')
-        record = self.env[result['res_model']].browse(result['res_id'])
-        result['share_link'] = record.get_base_url() + record._get_share_url(redirect=True)
+        result['res_model'] = self._context.get('active_model', False)
+        result['res_id'] = self._context.get('active_id', False)
+        if result['res_model'] and result['res_id']:
+            record = self.env[result['res_model']].browse(result['res_id'])
+            result['share_link'] = record.get_base_url() + record._get_share_url(redirect=True)
         return result
 
     res_model = fields.Char('Related Document Model', required=True)
@@ -26,18 +27,22 @@ class PortalShare(models.TransientModel):
     @api.depends('res_model', 'res_id')
     def _compute_share_link(self):
         for rec in self:
-            res_model = self.env[rec.res_model]
-            if isinstance(res_model, self.pool['portal.mixin']):
-                record = res_model.browse(rec.res_id)
-                rec.share_link = record.get_base_url() + record._get_share_url(redirect=True)
+            rec.share_link = False
+            if rec.res_model:
+                res_model = self.env[rec.res_model]
+                if isinstance(res_model, self.pool['portal.mixin']) and rec.res_id:
+                    record = res_model.browse(rec.res_id)
+                    rec.share_link = record.get_base_url() + record._get_share_url(redirect=True)
 
     @api.depends('res_model', 'res_id')
     def _compute_access_warning(self):
         for rec in self:
-            res_model = self.env[rec.res_model]
-            if isinstance(res_model, self.pool['portal.mixin']):
-                record = res_model.browse(rec.res_id)
-                rec.access_warning = record.access_warning
+            rec.access_warning = False
+            if rec.res_model:
+                res_model = self.env[rec.res_model]
+                if isinstance(res_model, self.pool['portal.mixin']) and rec.res_id:
+                    record = res_model.browse(rec.res_id)
+                    rec.access_warning = record.access_warning
 
     def action_send_mail(self):
         active_record = self.env[self.res_model].browse(self.res_id)
