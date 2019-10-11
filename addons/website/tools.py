@@ -100,6 +100,9 @@ class MockRequest(object):
             'httprequest': {
                 'path': '/hello/',
                 'app': app,
+                'environ': {
+                    'REMOTE_ADDR': '127.0.0.1',
+                },
                 'cookies': kw.get('cookies', {}),
             },
             'lang': lang,
