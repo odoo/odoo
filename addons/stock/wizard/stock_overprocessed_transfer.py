@@ -15,8 +15,10 @@ class StockOverProcessedTransfer(models.TransientModel):
 
     def _compute_overprocessed_product_name(self):
         for wizard in self:
-            moves = wizard.picking_id._get_overprocessed_stock_moves()
-            wizard.overprocessed_product_name = moves[0].product_id.display_name
+            wizard.overprocessed_product_name = False
+            if wizard.picking_id:
+                moves = wizard.picking_id._get_overprocessed_stock_moves()
+                wizard.overprocessed_product_name = moves[0].product_id.display_name
 
     def action_confirm(self):
         self.ensure_one()
