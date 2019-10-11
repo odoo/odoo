@@ -587,9 +587,9 @@ class SaleOrder(models.Model):
                 'There is no invoiceable line. If a product has a Delivered quantities invoicing policy, please make sure that a quantity has been delivered.'))
 
         # 2) Manage 'grouped' parameter: group by (partner_id, currency_id).
-        if grouped:
+        if not grouped:
             new_invoice_vals_list = []
-            for invoices in groupby(invoice_vals_list, key=lambda x: (x.partner_id.id, x.currency_id.id)):
+            for grouping_keys, invoices in groupby(invoice_vals_list, key=lambda x: (x.get('partner_id'), x.get('currency_id'))):
                 origins = set()
                 payment_refs = set()
                 refs = set()
