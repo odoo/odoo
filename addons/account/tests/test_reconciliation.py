@@ -1626,7 +1626,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
 
         reverse_date = fields.Date.today() + timedelta(days=+7)
         revertWidget = self.env['account.move.reversal'].create({
-            'move_id': purchase_move.id,
+            'move_ids': [(6, 0, [purchase_move.id])],
             'date': reverse_date,
             'reason': ['cancel'],
         })
