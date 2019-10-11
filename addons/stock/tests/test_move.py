@@ -4052,6 +4052,7 @@ class StockMove(SavepointCase):
 
     def test_qty_available_1(self):
         """Check the product's `available_qty` computed field with products in the inter-wh location."""
+        # put 10 units in stock
         move1 = self.env['stock.move'].create({
             'name': 'test_transit_1',
             'location_id': self.supplier_location.id,
@@ -4068,6 +4069,7 @@ class StockMove(SavepointCase):
 
         self.assertEqual(self.product.qty_available, 10.0)
 
+        # put 5 units in the inter wh transit
         move2 = self.env['stock.move'].create({
             'name': 'test_transit_1',
             'location_id': self.stock_location.id,
@@ -4082,9 +4084,10 @@ class StockMove(SavepointCase):
         move2._action_done()
 
         self.assertEqual(self.product.qty_available, 5.0)
-        self.assertEqual(self.product.with_context(quantity_available_locations_domain=('internal', 'transit',)).qty_available, 10.0)
+        self.assertEqual(self.product.with_context(quantity_available_locations_domain=('internal', 'transit',)).qty_available, 5.0)
+        self.assertEqual(self.product.with_context(quantity_available_locations_without_warehouse=True, quantity_available_locations_domain=('internal', 'transit',)).qty_available, 10.0)
 
-        # move something to intercompany transit and see it is not seen by qty_available
+        # put 2 units in inter company transit
         move3 = self.env['stock.move'].create({
             'name': 'test_transit_1',
             'location_id': self.stock_location.id,
@@ -4099,9 +4102,10 @@ class StockMove(SavepointCase):
         move3._action_done()
 
         self.assertEqual(self.product.qty_available, 3.0)
-        self.assertEqual(self.product.with_context(quantity_available_locations_domain=('internal', 'transit',)).qty_available, 8.0)
+        self.assertEqual(self.product.with_context(quantity_available_locations_domain=('internal', 'transit',)).qty_available, 3.0)
+        self.assertEqual(self.product.with_context(quantity_available_locations_without_warehouse=True, quantity_available_locations_domain=('internal', 'transit',)).qty_available, 8.0)
 
-        # move something to a location below physical but not below a warehouse's view location and check it is seen by qty_available
+        # put 2 units to a location below physical but not below a warehouse's view location and check it is seen by qty_available
         below_physical = self.env['stock.location'].create({
             'name': 'below physical',
             'usage': 'internal',
@@ -4120,8 +4124,9 @@ class StockMove(SavepointCase):
         move4.move_line_ids.qty_done = 2
         move4._action_done()
 
-        self.assertEqual(self.product.qty_available, 3.0)
-        self.assertEqual(self.product.with_context(quantity_available_locations_domain=('internal', 'transit',)).qty_available, 8.0)
+        self.assertEqual(self.product.qty_available, 1.0)
+        self.assertEqual(self.product.with_context(quantity_available_locations_domain=('internal', 'transit',)).qty_available, 1.0)
+        self.assertEqual(self.product.with_context(quantity_available_locations_without_warehouse=True, quantity_available_locations_domain=('internal', 'transit',)).qty_available, 8.0)
         self.assertEqual(len(self.gather_relevant(self.product, below_physical)), 1.0)
 
     def test_edit_initial_demand_1(self):
