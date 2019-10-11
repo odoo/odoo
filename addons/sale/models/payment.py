@@ -94,11 +94,10 @@ class PaymentTransaction(models.Model):
             default_template = self.env['ir.config_parameter'].sudo().get_param('sale.default_email_template')
             if default_template:
                 for trans in self.filtered(lambda t: t.sale_order_ids):
-                    ctx_company = {'company_id': trans.acquirer_id.company_id.id,
-                                   'force_company': trans.acquirer_id.company_id.id,
-                                   'mark_invoice_as_sent': True,
-                                   }
-                    trans = trans.with_context(ctx_company)
+                    trans = trans.with_company(trans.acquirer_id.company_id).with_context(
+                        mark_invoice_as_sent=True,
+                        company_id=trans.acquirer_id.company_id.id,
+                    )
                     for invoice in trans.invoice_ids:
                         invoice.message_post_with_template(int(default_template), email_layout_xmlid="mail.mail_notification_paynow")
         return res
@@ -106,9 +105,8 @@ class PaymentTransaction(models.Model):
     def _invoice_sale_orders(self):
         if self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice'):
             for trans in self.filtered(lambda t: t.sale_order_ids):
-                ctx_company = {'company_id': trans.acquirer_id.company_id.id,
-                               'force_company': trans.acquirer_id.company_id.id}
-                trans = trans.with_context(**ctx_company)
+                trans = trans.with_company(trans.acquirer_id.company_id)\
+                    .with_context(company_id=trans.acquirer_id.company_id.id)
                 trans.sale_order_ids._force_lines_to_invoice_policy_order()
                 invoices = trans.sale_order_ids._create_invoices()
                 trans.invoice_ids = [(6, 0, invoices.ids)]

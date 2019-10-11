@@ -322,12 +322,12 @@ class HrExpense(models.Model):
         if self.account_id:
             account = self.account_id
         elif self.product_id:
-            account = self.product_id.product_tmpl_id.with_context(force_company=self.company_id.id)._get_product_accounts()['expense']
+            account = self.product_id.product_tmpl_id.with_company(self.company_id)._get_product_accounts()['expense']
             if not account:
                 raise UserError(
                     _("No Expense account found for the product %s (or for its category), please configure one.") % (self.product_id.name))
         else:
-            account = self.env['ir.property'].with_context(force_company=self.company_id.id).get('property_account_expense_categ_id', 'product.category')
+            account = self.env['ir.property'].with_company(self.company_id).get('property_account_expense_categ_id', 'product.category')
             if not account:
                 raise UserError(_('Please configure Default Expense account for Product expense: `property_account_expense_categ_id`.'))
         return account
@@ -342,7 +342,7 @@ class HrExpense(models.Model):
         else:
             if not self.employee_id.address_home_id:
                 raise UserError(_("No Home Address found for the employee %s, please configure one.") % (self.employee_id.name))
-            partner = self.employee_id.address_home_id.with_context(force_company=self.company_id.id)
+            partner = self.employee_id.address_home_id.with_company(self.company_id)
             account_dest = partner.property_account_payable_id.id or partner.parent_id.property_account_payable_id.id
         return account_dest
 

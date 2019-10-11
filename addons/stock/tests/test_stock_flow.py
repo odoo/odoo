@@ -1851,9 +1851,9 @@ class TestStockFlow(TestStockCommon):
     def test_transit_multi_companies_ultimate(self):
         """ Ensure that inter company rules set the correct company on picking
         and their moves. This test validate a picking with make_to_order moves.
-        Moves are created in batch with a force_company. This test should create
-        moves for company_2 and company_3 at the same time. Ensure they are not
-        create in the same batch.
+        Moves are created in batch with a company-focused environment. This test
+        should create moves for company_2 and company_3 at the same time.
+        Ensure they are not create in the same batch.
         """
         grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
         grp_multi_routes = self.env.ref('stock.group_adv_location')

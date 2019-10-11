@@ -472,7 +472,7 @@ class InventoryLine(models.Model):
         }
 
     def _get_virtual_location(self):
-        return self.product_id.with_context(force_company=self.company_id.id).property_stock_inventory
+        return self.product_id.with_company(self.company_id).property_stock_inventory
 
     def _generate_moves(self):
         vals_list = []

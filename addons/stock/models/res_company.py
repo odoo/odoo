@@ -40,7 +40,7 @@ class Company(models.Model):
 
             company.write({'internal_transit_location_id': location.id})
 
-            company.partner_id.with_context(force_company=company.id).write({
+            company.partner_id.with_company(company).write({
                 'property_stock_customer': location.id,
                 'property_stock_supplier': location.id,
             })

@@ -21,7 +21,7 @@ class StockRule(models.Model):
             else:
                 other_procurements.append((procurement, rule))
         for company_id, requisitions_values in requisitions_values_by_company.items():
-            self.env['purchase.requisition'].sudo().with_context(force_company=company_id).create(requisitions_values)
+            self.env['purchase.requisition'].sudo().with_company(company_id).create(requisitions_values)
         return super(StockRule, self)._run_buy(other_procurements)
 
     def _prepare_purchase_order(self, company_id, origins, values):

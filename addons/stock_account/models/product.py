@@ -97,10 +97,10 @@ class ProductProduct(models.Model):
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'product_id')
 
     @api.depends('stock_valuation_layer_ids')
-    @api.depends_context('to_date', 'force_company')
+    @api.depends_context('to_date', 'company')
     def _compute_value_svl(self):
         """Compute `value_svl` and `quantity_svl`."""
-        company_id = self.env.context.get('force_company', self.env.company.id)
+        company_id = self.env.company.id
         domain = [
             ('product_id', 'in', self.ids),
             ('company_id', '=', company_id),
@@ -242,7 +242,7 @@ class ProductProduct(models.Model):
         account_moves.post()
 
         # Actually update the standard price.
-        self.with_context(force_company=company_id.id).sudo().write({'standard_price': new_price})
+        self.with_company(company_id).sudo().write({'standard_price': new_price})
 
     def _run_fifo(self, quantity, company):
         self.ensure_one()
@@ -279,7 +279,7 @@ class ProductProduct(models.Model):
 
         # Update the standard price with the price of the last used candidate, if any.
         if new_standard_price and self.cost_method == 'fifo':
-            self.sudo().with_context(force_company=company.id).standard_price = new_standard_price
+            self.sudo().with_company(company.id).standard_price = new_standard_price
 
         # If there's still quantity to value but we're out of candidates, we fall in the
         # negative stock use case. We chose to value the out move at the price of the
@@ -724,4 +724,3 @@ class ProductCategory(models.Model):
             account_moves = self.env['account.move'].create(move_vals_list)
             account_moves.post()
         return res
-

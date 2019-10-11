@@ -192,7 +192,7 @@ class User(models.Model):
         return super(User, self).action_get()
 
     @api.depends('employee_ids')
-    @api.depends_context('force_company')
+    @api.depends_context('company')
     def _compute_company_employee(self):
         for user in self:
             user.employee_id = self.env['hr.employee'].search([('id', 'in', user.employee_ids.ids), ('company_id', '=', self.env.company.id)], limit=1)

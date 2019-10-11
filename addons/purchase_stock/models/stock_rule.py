@@ -76,7 +76,7 @@ class StockRule(models.Model):
                 vals = rules[0]._prepare_purchase_order(company_id, origins, [p.values for p in procurements])
                 # The company_id is the same for all procurements since
                 # _make_po_get_domain add the company in the domain.
-                po = self.env['purchase.order'].with_context(force_company=company_id.id).sudo().create(vals)
+                po = self.env['purchase.order'].with_company(company_id).sudo().create(vals)
             else:
                 # If a purchase order is found, adapt its `origin` field.
                 if po.origin:
@@ -177,7 +177,7 @@ class StockRule(models.Model):
     def _update_purchase_order_line(self, product_id, product_qty, product_uom, company_id, values, line):
         partner = values['supplier'].name
         procurement_uom_po_qty = product_uom._compute_quantity(product_qty, product_id.uom_po_id)
-        seller = product_id.with_context(force_company=company_id.id)._select_seller(
+        seller = product_id.with_company(company_id)._select_seller(
             partner_id=partner,
             quantity=line.product_qty + procurement_uom_po_qty,
             date=line.order_id.date_order and line.order_id.date_order.date(),
@@ -204,7 +204,7 @@ class StockRule(models.Model):
         procurement_uom_po_qty = product_uom._compute_quantity(product_qty, product_id.uom_po_id)
         # _select_seller is used if the supplier have different price depending
         # the quantities ordered.
-        seller = product_id.with_context(force_company=company_id.id)._select_seller(
+        seller = product_id.with_company(company_id)._select_seller(
             partner_id=partner,
             quantity=procurement_uom_po_qty,
             date=po.date_order and po.date_order.date(),
@@ -266,7 +266,7 @@ class StockRule(models.Model):
         partner = values['supplier'].name
         purchase_date = schedule_date - relativedelta(days=int(values['supplier'].delay))
 
-        fpos = self.env['account.fiscal.position'].with_context(force_company=company_id.id).get_fiscal_position(partner.id)
+        fpos = self.env['account.fiscal.position'].with_company(company_id).get_fiscal_position(partner.id)
 
         gpo = self.group_propagation_option
         group = (gpo == 'fixed' and self.group_id.id) or \
@@ -277,10 +277,10 @@ class StockRule(models.Model):
             'user_id': False,
             'picking_type_id': self.picking_type_id.id,
             'company_id': company_id.id,
-            'currency_id': partner.with_context(force_company=company_id.id).property_purchase_currency_id.id or company_id.currency_id.id,
+            'currency_id': partner.with_company(company_id).property_purchase_currency_id.id or company_id.currency_id.id,
             'dest_address_id': values.get('partner_id', False),
             'origin': ', '.join(origins),
-            'payment_term_id': partner.with_context(force_company=company_id.id).property_supplier_payment_term_id.id,
+            'payment_term_id': partner.with_company(company_id).property_supplier_payment_term_id.id,
             'date_order': purchase_date,
             'fiscal_position_id': fpos,
             'group_id': group

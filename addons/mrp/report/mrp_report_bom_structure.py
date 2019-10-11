@@ -115,7 +115,7 @@ class ReportBomStructure(models.AbstractModel):
             'currency': company.currency_id,
             'product': product,
             'code': bom and bom.display_name or '',
-            'price': product.uom_id._compute_price(product.with_context(force_company=company.id).standard_price, bom.product_uom_id) * bom_quantity,
+            'price': product.uom_id._compute_price(product.with_company(company).standard_price, bom.product_uom_id) * bom_quantity,
             'total': sum([op['total'] for op in operations]),
             'level': level or 0,
             'operations': operations,
@@ -136,7 +136,7 @@ class ReportBomStructure(models.AbstractModel):
             if line._skip_bom_line(product):
                 continue
             company = bom.company_id or self.env.company
-            price = line.product_id.uom_id._compute_price(line.product_id.with_context(force_company=company.id).standard_price, line.product_uom_id) * line_quantity
+            price = line.product_id.uom_id._compute_price(line.product_id.with_company(company).standard_price, line.product_uom_id) * line_quantity
             if line.child_bom_id:
                 factor = line.product_uom_id._compute_quantity(line_quantity, line.child_bom_id.product_uom_id) / line.child_bom_id.product_qty
                 sub_total = self._get_price(line.child_bom_id, factor, line.product_id)
