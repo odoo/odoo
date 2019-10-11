@@ -219,7 +219,7 @@ class AccountBankStatement(models.Model):
 
     _name = "account.bank.statement"
     _description = "Bank Statement"
-    _order = "date desc, id desc"
+    _order = "date desc, name desc, id desc"
     _inherit = ['mail.thread']
 
     name = fields.Char(string='Reference', states={'open': [('readonly', False)]}, copy=False, readonly=True)

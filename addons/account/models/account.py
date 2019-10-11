@@ -397,10 +397,10 @@ class AccountAccount(models.Model):
         self._cr.execute("""
             SELECT aml.id
             FROM account_move_line aml
-            WHERE aml.account_id in (%s)
+            WHERE aml.account_id in %s
             AND EXISTS (SELECT 1 FROM account_account_account_journal_rel WHERE account_account_id = aml.account_id)
             AND NOT EXISTS (SELECT 1 FROM account_account_account_journal_rel WHERE account_account_id = aml.account_id AND account_journal_id = aml.journal_id)
-        """, tuple(self.ids))
+        """, [tuple(self.ids)])
         ids = self._cr.fetchall()
         if ids:
             raise ValidationError(_('Some journal items already exist with this account but in other journals than the allowed ones.'))
