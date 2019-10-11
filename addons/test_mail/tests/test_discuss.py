@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.test_mail.tests.common import BaseFunctionalTest, TestRecipients, MockEmails
+from odoo.addons.test_mail.tests.common import TestMailCommon, TestRecipients
 from odoo.tools import mute_logger
 
 
-class TestChatterTweaks(BaseFunctionalTest, TestRecipients):
+class TestChatterTweaks(TestMailCommon, TestRecipients):
 
     @classmethod
     def setUpClass(cls):
@@ -90,7 +90,7 @@ class TestChatterTweaks(BaseFunctionalTest, TestRecipients):
         self.assertTrue(record.name)
 
 
-class TestDiscuss(BaseFunctionalTest, TestRecipients, MockEmails):
+class TestDiscuss(TestMailCommon, TestRecipients):
 
     @classmethod
     def setUpClass(cls):
@@ -98,11 +98,13 @@ class TestDiscuss(BaseFunctionalTest, TestRecipients, MockEmails):
         cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({'name': 'Test', 'email_from': 'ignasse@example.com'})
 
     def test_set_message_done_user(self):
-        with self.assertNotifications(partner_employee=(0, '', '')):
+        with self.assertSinglePostNotifications([{'partner': self.partner_employee, 'type': 'inbox'}], message_info={'content': 'Test'}):
             message = self.test_record.message_post(
                 body='Test', message_type='comment', subtype='mail.mt_comment',
                 partner_ids=[self.user_employee.partner_id.id])
-            message.with_user(self.user_employee).set_message_done()
+        message.with_user(self.user_employee).set_message_done()
+        self.assertMailNotifications(message, [{'notif': [{'partner': self.partner_employee, 'type': 'inbox', 'is_read': True}]}])
+        # TDE TODO: it seems bus notifications could be checked
 
     def test_set_star(self):
         msg = self.test_record.with_user(self.user_admin).message_post(body='My Body', subject='1')

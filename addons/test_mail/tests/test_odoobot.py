@@ -3,13 +3,13 @@
 
 from unittest.mock import patch
 
-from odoo.addons.test_mail.tests.common import BaseFunctionalTest, MockEmails, TestRecipients
-from odoo.tools import mute_logger
+from odoo.addons.test_mail.tests.common import TestMailCommon, TestRecipients
 from odoo.tests import tagged
+from odoo.tools import mute_logger
 
 
 @tagged("odoobot")
-class TestOdoobot(BaseFunctionalTest, MockEmails, TestRecipients):
+class TestOdoobot(TestMailCommon, TestRecipients):
 
     @classmethod
     def setUpClass(cls):
