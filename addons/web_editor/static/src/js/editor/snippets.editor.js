@@ -1592,7 +1592,9 @@ var SnippetsMenu = Widget.extend({
      * @param {*} ev
      */
     _onCollapseTogglerClick: function (ev) {
-        this.$('we-collapse-area > we-toggler').not(ev.currentTarget).removeClass('active');
+        var $hierarchyTogglers = $(ev.currentTarget).parents('we-collapse-area').children('we-toggler');
+        this.$('we-collapse-area > we-toggler').not($hierarchyTogglers).removeClass('active');
+        $hierarchyTogglers.not(ev.currentTarget).addClass('active');
         ev.currentTarget.classList.toggle('active');
     },
     /**
