@@ -355,3 +355,21 @@ class TestSaleOrder(TestCommonSaleNoChart):
         res = self.env['account.reconciliation.widget'].get_bank_statement_line_data([st_line3.id])
         line = res.get('lines', [{}])[0]
         self.assertEqual(line.get('sale_order_ids', []), [so.id])
+
+    def test_group_invoice(self):
+        """ Test that invoicing multiple sales order for the same customer works. """
+        # Create 3 SOs for the same partner, one of which that uses another currency
+        eur_pricelist = self.env['product.pricelist'].create({'name': 'EUR', 'currency_id': self.env.ref('base.EUR').id})
+        so1 = self.sale_order.with_context(mail_notrack=True).copy()
+        so1.pricelist_id = eur_pricelist
+        so2 = so1.copy()
+        usd_pricelist = self.env['product.pricelist'].create({'name': 'USD', 'currency_id': self.env.ref('base.USD').id})
+        so3 = so1.copy()
+        so1.pricelist_id = usd_pricelist
+        orders = so1 | so2 | so3
+        orders.action_confirm()
+        # Create the invoicing wizard and invoice all of them at once
+        wiz = self.env['sale.advance.payment.inv'].with_context(active_ids=orders.ids, open_invoices=True).create({})
+        res = wiz.create_invoices()
+        # Check that exactly 2 invoices are generated
+        self.assertEqual(len(res['domain'][0][2]),2, "Grouping invoicing 3 orders for the same partner with 2 currencies should create exactly 2 invoices")
