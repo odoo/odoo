@@ -24,7 +24,7 @@ class GoogleMap(http.Controller):
     directives ``width`` and ``height``.
     '''
 
-    @http.route(['/google_map'], type='http', auth="public", website=True)
+    @http.route(['/google_map'], type='http', auth="public", website=True, sitemap=False)
     def google_map(self, *arg, **post):
         clean_ids = []
         for partner_id in post.get('partner_ids', "").split(","):

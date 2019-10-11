@@ -7,7 +7,7 @@ from odoo.http import request
 
 class WebsiteLivechat(http.Controller):
 
-    @http.route('/livechat/', type='http', auth="public", website=True)
+    @http.route('/livechat', type='http', auth="public", website=True)
     def channel_list(self, **kw):
         # display the list of the channel
         channels = request.env['im_livechat.channel'].search([('website_published', '=', True)])

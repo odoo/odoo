@@ -441,7 +441,7 @@ class Survey(http.Controller):
     # COMPLETED SURVEY ROUTES
     # ------------------------------------------------------------
 
-    @http.route('/survey/print/<string:survey_token>', type='http', auth='public', website=True)
+    @http.route('/survey/print/<string:survey_token>', type='http', auth='public', website=True, sitemap=False)
     def survey_print(self, survey_token, review=False, answer_token=None, **post):
         '''Display an survey in printable view; if <answer_token> is set, it will
         grab the answers of the user_input_id that has <answer_token>.'''
