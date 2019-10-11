@@ -158,7 +158,8 @@ class AccountMove(models.Model):
     amount_residual_signed = fields.Monetary(string='Amount Due Signed', store=True,
         compute='_compute_amount', currency_field='company_currency_id')
     amount_by_group = fields.Binary(string="Tax amount by group",
-        compute='_compute_invoice_taxes_by_group')
+        compute='_compute_invoice_taxes_by_group',
+        help='Edit Tax amounts if you encounter rouding issues.')
 
     # ==== Cash basis feature fields ====
     tax_cash_basis_rec_id = fields.Many2one(
@@ -236,7 +237,6 @@ class AccountMove(models.Model):
         help="Auto-complete from a past bill.")
     invoice_source_email = fields.Char(string='Source Email', tracking=True)
     invoice_partner_display_name = fields.Char(compute='_compute_invoice_partner_display_info', store=True)
-    invoice_partner_icon = fields.Char(compute='_compute_invoice_partner_display_info', store=False, compute_sudo=True)
 
     # ==== Cash rounding fields ====
     invoice_cash_rounding_id = fields.Many2one('account.cash.rounding', string='Cash Rounding Method',
@@ -1088,13 +1088,9 @@ class AccountMove(models.Model):
             vendor_display_name = move.partner_id.name
             if not vendor_display_name:
                 if move.invoice_source_email:
-                    vendor_display_name = _('From: ') + move.invoice_source_email
-                    move.invoice_partner_icon = '@'
+                    vendor_display_name = _('@From: ') + move.invoice_source_email
                 else:
-                    vendor_display_name = _('Created by: %s') % (move.sudo().create_uid.name or self.env.user.name)
-                    move.invoice_partner_icon = '#'
-            else:
-                move.invoice_partner_icon = False
+                    vendor_display_name = _('#Created by: %s') % (move.sudo().create_uid.name or self.env.user.name)
             move.invoice_partner_display_name = vendor_display_name
 
     @api.depends('state', 'journal_id', 'invoice_date')

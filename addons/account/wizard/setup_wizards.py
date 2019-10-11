@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import date
+from datetime import date, timedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
@@ -47,9 +47,12 @@ class FinancialYearOpeningWizard(models.TransientModel):
         # one value at a time... so it is likely to fail.
         for wiz in self:
             wiz.company_id.write({
-                'account_opening_date': vals.get('opening_date') or wiz.company_id.account_opening_date,
                 'fiscalyear_last_day': vals.get('fiscalyear_last_day') or wiz.company_id.fiscalyear_last_day,
                 'fiscalyear_last_month': vals.get('fiscalyear_last_month') or wiz.company_id.fiscalyear_last_month,
+                'account_opening_date': vals.get('opening_date'),
+            })
+            wiz.company_id.account_opening_move_id.write({
+                'date': fields.Date.from_string(vals.get('opening_date')) - timedelta(days=1),
             })
         vals.pop('opening_date', None)
         vals.pop('fiscalyear_last_day', None)
