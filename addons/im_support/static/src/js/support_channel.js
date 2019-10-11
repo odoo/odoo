@@ -213,37 +213,41 @@ var SupportChannel = SearchableThread.extend({
      * @override
      * @private
      */
-    _fetchMessages: function (channel, options) {
+    _fetchMessages: function (pDomain, loadMore) {
         var self = this;
-        var domain = options && options.domain || [];
-        var cache = this._getCache(channel, domain);
-        if (options && options.loadMore) {
-            var minMessageID = cache.messages[0].id;
+        var domain = [];
+        var cache = this._getCache(pDomain);
+        if (pDomain) {
+            domain = domain.concat(pDomain || []);
+        }
+        if (loadMore) {
+            // ignore the welcome message (ID==-1)
+            var msgs = cache.messages.filter(function(m) {return m.getID() !== -1});
+            var minMessageID = msgs[0].getID();
             domain = [['id', '<', minMessageID]].concat(domain);
         }
-
         return supportSession.rpc('/odoo_im_support/fetch_messages', {
                 domain: domain,
                 channel_uuid: session.support_token,
                 limit: self._FETCH_LIMIT,
-            }).then(function (msgs) {
-                if (!cache.all_history_loaded) {
-                    cache.all_history_loaded =  msgs.length < self._FETCH_LIMIT;
-                }
-                cache.loaded = true;
-
-                _.each(msgs, function (msg) {
-                    _.extend(msg, {channel_ids: [self.getID()]});
-                    self.call('mail_service', 'addMessage', msg, {
-                        channel_id: self.getID(),
-                        silent: true,
-                        domain: domain,
-                    });
+        }).then(function (messages) {
+            if (!cache.allHistoryLoaded) {
+                cache.allHistoryLoaded = messages.length < self._FETCH_LIMIT;
+            }
+            cache.loaded = true;
+            _.each(messages, function (message) {
+                message.channel_ids = [self.getID()];
+                message.channel_id = self.getID();
+                self.call('mail_service', 'addMessage', message, {
+                    silent: true,
+                    domain: pDomain,
                 });
-                var channelCache = self._getCache(channel, domain);
-                return channelCache.messages;
             });
+            cache = self._getCache(pDomain || []);
+            return cache.messages;
+        });
     },
+
     /**
      * Posts the message on the Support server.
      *
