@@ -5064,9 +5064,23 @@ Record ids: %(records)s
 
             The returned recordset has the same prefetch object as ``self``.
         """
-        if args and 'allowed_company_ids' not in args[0] and 'allowed_company_ids' in self._context:
-            args[0]['allowed_company_ids'] = self._context.get('allowed_company_ids') 
+        if (args and 'force_company' in args[0]) or 'force_company' in kwargs:
+            _logger.warning(
+                "Context key 'force_company' is no longer supported. "
+                "Use with_company(company) instead.",
+                stack_info=True,
+            )
+        if (args and 'company' in args[0]) or 'company' in kwargs:
+            _logger.warning(
+                "Context key 'company' is not recommended, because "
+                "of its special meaning in @depends_context.",
+                stack_info=True,
+            )
         context = dict(args[0] if args else self._context, **kwargs)
+        if 'allowed_company_ids' not in context and 'allowed_company_ids' in self._context:
+            # Force 'allowed_company_ids' to be kept when context is overridden
+            # without 'allowed_company_ids'
+            context['allowed_company_ids'] = self._context['allowed_company_ids']
         return self.with_env(self.env(context=context))
 
     def with_prefetch(self, prefetch_ids=None):
