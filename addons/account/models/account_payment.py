@@ -121,7 +121,7 @@ class account_payment(models.Model):
             'payment_type': 'inbound' if amount > 0 else 'outbound',
             'partner_id': invoices[0].commercial_partner_id.id,
             'partner_type': MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type],
-            'communication': invoices[0].ref or invoices[0].name,
+            'communication': invoices[0].invoice_payment_ref or invoices[0].name,
             'invoice_ids': [(6, 0, invoices.ids)],
         })
         return rec
