@@ -83,19 +83,21 @@ class DisplayDriver(Driver):
             subprocess.Popen(['firefox', self.url], env=firefox_env)
 
     def load_url(self):
+        url = None
         if helpers.get_odoo_server_url():
             # disable certifiacte verification
             urllib3.disable_warnings()
             http = urllib3.PoolManager(cert_reqs='CERT_NONE')
             try:
                 response = http.request('GET', "%s/iot/box/%s/screen_url" % (helpers.get_odoo_server_url(), helpers.get_mac_address()))
-                urls = json.loads(response.data.decode('utf8'))
-                return self.update_url(urls[self.device_identifier])
+                if response.status == 200:
+                    data = json.loads(response.data.decode('utf8'))
+                    url = data[self.device_identifier]
             except json.decoder.JSONDecodeError:
-                return self.update_url(response.get(data.decode('utf8'), False))
+                url = response.data.decode('utf8')
             except Exception:
                 pass
-        return self.update_url()
+        return self.update_url(url)
 
     def call_xdotools(self, keystroke):
         os.environ['DISPLAY'] = ":0.0"
