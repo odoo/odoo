@@ -578,7 +578,7 @@ class PosSession(models.Model):
         """
         def get_income_account(order_line):
             product = order_line.product_id
-            income_account = product.with_context(force_company=order_line.company_id.id).property_account_income_id or product.categ_id.with_context(force_company=order_line.company_id.id).property_account_income_categ_id
+            income_account = product.with_company(order_line.company_id).property_account_income_id or product.categ_id.with_company(order_line.company_id).property_account_income_categ_id
             if not income_account:
                 raise UserError(_('Please define income account for this product: "%s" (id:%d).')
                                 % (product.name, product.id))

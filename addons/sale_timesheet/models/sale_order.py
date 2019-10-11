@@ -83,9 +83,8 @@ class SaleOrder(models.Model):
     def _action_confirm(self):
         """ On SO confirmation, some lines should generate a task or a project. """
         result = super(SaleOrder, self)._action_confirm()
-        self.mapped('order_line').sudo().with_context(
-            force_company=self.company_id.id,
-        )._timesheet_service_generation()
+        self.mapped('order_line').sudo() \
+            .with_company(self.company_id)._timesheet_service_generation()
         return result
 
     def action_view_task(self):
@@ -332,7 +331,7 @@ class SaleOrderLine(models.Model):
         # search the global project of current SO lines, in which create their task
         map_sol_project = {}
         if so_line_task_global_project:
-            map_sol_project = {sol.id: sol.product_id.with_context(force_company=sol.company_id.id).project_id for sol in so_line_task_global_project}
+            map_sol_project = {sol.id: sol.product_id.with_company(sol.company_id).project_id for sol in so_line_task_global_project}
 
         def _can_create_project(sol):
             if not sol.project_id:

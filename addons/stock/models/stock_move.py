@@ -667,7 +667,7 @@ class StockMove(models.Model):
             domain = [('location_src_id', '=', move.location_dest_id.id), ('action', 'in', ('push', 'pull_push'))]
             # first priority goes to the preferred routes defined on the move itself (e.g. coming from a SO line)
             warehouse_id = move.warehouse_id or move.picking_id.picking_type_id.warehouse_id
-            if not self.env.context.get('force_company', False) and move.location_dest_id.company_id == self.env.user.company_id:
+            if move.location_dest_id.company_id == self.env.company:
                 rules = self.env['procurement.group']._search_rule(move.route_ids, move.product_id, warehouse_id, domain)
             else:
                 rules = self.sudo().env['procurement.group']._search_rule(move.route_ids, move.product_id, warehouse_id, domain)

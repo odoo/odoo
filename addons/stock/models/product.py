@@ -94,7 +94,7 @@ class Product(models.Model):
     @api.depends('stock_move_ids.product_qty', 'stock_move_ids.state')
     @api.depends_context(
         'lot_id', 'owner_id', 'package_id', 'from_date', 'to_date',
-        'company_owned', 'force_company',
+        'company_owned',
     )
     def _compute_quantities(self):
         products = self.filtered(lambda p: p.type != 'service')
@@ -226,7 +226,7 @@ class Product(models.Model):
         '''
         Parses the context and returns a list of location_ids based on it.
         It will return all stock locations when no parameters are given
-        Possible parameters are shop, warehouse, location, force_company, compute_child
+        Possible parameters are shop, warehouse, location, compute_child
         '''
         Warehouse = self.env['stock.warehouse']
 
@@ -251,7 +251,7 @@ class Product(models.Model):
                              ('location_dest_id.company_id', '=', company_id),
                  ]
             )
-        def _search_ids(model, values, force_company_id):
+        def _search_ids(model, values):
             ids = set()
             domain = []
             for item in values:
@@ -260,8 +260,6 @@ class Product(models.Model):
                 else:
                     domain = expression.OR([[('name', 'ilike', item)], domain])
             if domain:
-                if force_company_id:
-                    domain = expression.AND([[('company_id', '=', force_company_id)], domain])
                 ids |= set(self.env[model].search(domain).ids)
             return ids
 
@@ -274,22 +272,21 @@ class Product(models.Model):
         warehouse = self.env.context.get('warehouse')
         if warehouse and not isinstance(warehouse, list):
             warehouse = [warehouse]
-        force_company = self.env.context.get('force_company', False)
         # filter by location and/or warehouse
         if warehouse:
-            w_ids = set(Warehouse.browse(_search_ids('stock.warehouse', warehouse, force_company)).mapped('view_location_id').ids)
+            w_ids = set(Warehouse.browse(_search_ids('stock.warehouse', warehouse)).mapped('view_location_id').ids)
             if location:
-                l_ids = _search_ids('stock.location', location, force_company)
+                l_ids = _search_ids('stock.location', location)
                 location_ids = w_ids & l_ids
             else:
                 location_ids = w_ids
         else:
             if location:
-                location_ids = _search_ids('stock.location', location, force_company)
+                location_ids = _search_ids('stock.location', location)
             else:
                 location_ids = set(Warehouse.search([]).mapped('view_location_id').ids)
 
-        return self._get_domain_locations_new(location_ids, company_id=self.env.context.get('force_company', False), compute_child=self.env.context.get('compute_child', True))
+        return self._get_domain_locations_new(location_ids, compute_child=self.env.context.get('compute_child', True))
 
     def _get_domain_locations_new(self, location_ids, company_id=False, compute_child=True):
         operator = compute_child and 'child_of' or 'in'
@@ -619,7 +616,7 @@ class ProductTemplate(models.Model):
         'product_variant_ids.stock_move_ids.product_qty',
         'product_variant_ids.stock_move_ids.state',
     )
-    @api.depends_context('company_owned', 'force_company')
+    @api.depends_context('company_owned', 'company')
     def _compute_quantities(self):
         res = self._compute_quantities_dict()
         for template in self:

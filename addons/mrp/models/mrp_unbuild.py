@@ -229,7 +229,7 @@ class MrpUnbuild(models.Model):
 
     def _generate_move_from_bom_line(self, product, product_uom, quantity, bom_line_id=False, byproduct_id=False):
         location_id = bom_line_id and product.property_stock_production or self.location_id
-        location_dest_id = bom_line_id and self.location_dest_id or product.with_context(force_company=self.company_id.id).property_stock_production
+        location_dest_id = bom_line_id and self.location_dest_id or product.with_company(self.company_id).property_stock_production
         warehouse = location_dest_id.get_warehouse()
         return self.env['stock.move'].create({
             'name': self.name,

@@ -100,10 +100,7 @@ class ProductProduct(models.Model):
             elif invoice_state == 'draft_open_paid':
                 states = ('posted', 'draft')
                 invoice_payment_states = ('not_paid', 'paid')
-            if "force_company" in self.env.context:
-                company_id = self.env.context['force_company']
-            else:
-                company_id = self.env.company.id
+            company_id = self.env.company.id
 
             #Cost price is calculated afterwards as it is a property
             self.env['account.move.line'].flush(['price_unit', 'quantity', 'balance', 'product_id', 'display_type'])
@@ -141,8 +138,6 @@ class ProductProduct(models.Model):
             res[val.id]['turnover'] = result[2] and -result[2] or 0.0
             res[val.id]['sale_expected'] = result[3] and result[3] or 0.0
             res[val.id]['sales_gap'] = res[val.id]['sale_expected'] - res[val.id]['turnover']
-            ctx = self.env.context.copy()
-            ctx['force_company'] = company_id
             invoice_types = ('in_invoice', 'out_refund')
             self.env.cr.execute(sqlstr, (val.id, states, invoice_payment_states, invoice_types, date_from, date_to, company_id))
             result = self.env.cr.fetchall()[0]

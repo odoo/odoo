@@ -104,13 +104,12 @@ class PosOrder(models.Model):
     def _process_order(self, order, draft, existing_order):
         """Create or update an pos.order from a given dictionary.
 
-        :param pos_order: dictionary representing the order.
-        :type pos_order: dict.
-        :param draft: Indicate that the pos_order is not validated yet.
-        :type draft: bool.
+        :param dict order: dictionary representing the order.
+        :param bool draft: Indicate that the pos_order is not validated yet.
         :param existing_order: order to be updated or False.
         :type existing_order: pos.order.
-        :returns number pos_order id
+        :returns: id of created/updated pos.order
+        :rtype: int
         """
         order = order['data']
         pos_session = self.env['pos.session'].browse(order['pos_session_id'])
@@ -126,6 +125,8 @@ class PosOrder(models.Model):
             order['user_id'] = pos_order.user_id.id
             pos_order.write(self._order_fields(order))
 
+        pos_order = pos_order.with_company(pos_order.company_id)
+        self = self.with_company(pos_order.company_id)
         self._process_payment_lines(order, pos_order, pos_session, draft)
 
         if not draft:
@@ -140,7 +141,8 @@ class PosOrder(models.Model):
         pos_order._create_order_picking()
         if pos_order.to_invoice and pos_order.state == 'paid':
             pos_order.action_pos_order_invoice()
-            pos_order.account_move.sudo().with_context(force_company=self.env.user.company_id.id).post()
+            pos_order.account_move.sudo().post()
+
         return pos_order.id
 
 
@@ -389,7 +391,8 @@ class PosOrder(models.Model):
                 'invoice_line_ids': [(0, None, order._prepare_invoice_line(line)) for line in order.lines],
             }
             new_move = moves.sudo()\
-                            .with_context(default_type=move_vals['type'], force_company=order.company_id.id)\
+                            .with_company(order.company_id)\
+                            .with_context(default_type=move_vals['type'])\
                             .create(move_vals)
             message = _("This invoice has been created from the point of sale session: <a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>") % (order.id, order.name)
             new_move.message_post(body=message)
