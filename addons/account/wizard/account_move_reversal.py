@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
 from odoo.tools.translate import _
+from odoo.exceptions import UserError
 
 
 class AccountMoveReversal(models.TransientModel):
@@ -10,9 +11,8 @@ class AccountMoveReversal(models.TransientModel):
     _name = 'account.move.reversal'
     _description = 'Account Move Reversal'
 
-    move_id = fields.Many2one('account.move', string='Journal Entry',
-        domain=[('state', '=', 'posted'), ('type', 'not in', ('out_refund', 'in_refund'))])
-    new_move_ids = fields.Many2many('account.move')
+    move_ids = fields.Many2many('account.move', 'account_move_reversal_move', 'reversal_id', 'move_id', domain=[('state', '=', 'posted')])
+    new_move_ids = fields.Many2many('account.move', 'account_move_reversal_new_move', 'reversal_id', 'new_move_id')
     date = fields.Date(string='Reversal date', default=fields.Date.context_today, required=True)
     reason = fields.Char(string='Reason')
     refund_method = fields.Selection(selection=[
@@ -32,22 +32,23 @@ class AccountMoveReversal(models.TransientModel):
     def default_get(self, fields):
         res = super(AccountMoveReversal, self).default_get(fields)
         move_ids = self.env['account.move'].browse(self.env.context['active_ids']) if self.env.context.get('active_model') == 'account.move' else self.env['account.move']
+        if any(move.state != "posted" for move in move_ids):
+            raise UserError(_('You can only reverse posted moves.'))
+        res['move_ids'] = [(6, 0, move_ids.ids)]
         res['refund_method'] = (len(move_ids) > 1 or move_ids.type == 'entry') and 'cancel' or 'refund'
-        res['residual'] = len(move_ids) == 1 and move_ids.amount_residual or 0
-        res['currency_id'] = len(move_ids.currency_id) == 1 and move_ids.currency_id.id or False
-        res['move_type'] = len(move_ids) == 1 and move_ids.type or False
         return res
 
-    @api.depends('move_id')
+    @api.depends('move_ids')
     def _compute_from_moves(self):
-        move_ids = self.env['account.move'].browse(self.env.context['active_ids']) if self.env.context.get('active_model') == 'account.move' else self.move_id
         for record in self:
+            move_ids = record.move_ids
             record.residual = len(move_ids) == 1 and move_ids.amount_residual or 0
             record.currency_id = len(move_ids.currency_id) == 1 and move_ids.currency_id or False
-            record.move_type = len(move_ids) == 1 and move_ids.type or False
+            record.move_type = move_ids.type if len(move_ids) == 1 else (any(move.type in ('in_invoice', 'out_invoice') for move in move_ids) and 'some_invoice' or False)
 
     def reverse_moves(self):
-        moves = self.env['account.move'].browse(self.env.context['active_ids']) if self.env.context.get('active_model') == 'account.move' else self.move_id
+        self.ensure_one()
+        moves = self.move_ids
 
         # Create default values.
         default_values_list = []
