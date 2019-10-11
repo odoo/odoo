@@ -137,7 +137,7 @@ class BaseDocumentLayout(models.TransientModel):
         logo += b'===' if type(logo) == bytes else '==='
         try:
             # Catches exceptions caused by logo not being an image
-            image = tools.base64_to_image(logo)
+            image = tools.image_fix_orientation(tools.base64_to_image(logo))
         except Exception:
             return False, False
 
