@@ -186,6 +186,30 @@ class TestVariants(common.TestProductCommon):
             })]
         })
 
+    def test_variants_copy(self):
+        template = self.env['product.template'].create({
+            'name': 'Test Copy',
+            'attribute_line_ids': [(0, 0, {
+                'attribute_id': self.size_attr.id,
+                'value_ids': [(4, self.size_attr_value_s.id), (4, self.size_attr_value_m.id)],
+            })]
+        })
+        self.assertEqual(len(template.product_variant_ids), 2)
+        self.assertEqual(template.name, 'Test Copy')
+
+        # test copy of template
+        template_copy = template.copy()
+        self.assertEqual(template.name, 'Test Copy')
+        self.assertEqual(template_copy.name, 'Test Copy (copy)')
+        self.assertEqual(len(template_copy.product_variant_ids), 2)
+
+        # test copy of variant (actually just copying template)
+        variant_copy = template_copy.product_variant_ids[0].copy()
+        self.assertEqual(template.name, 'Test Copy')
+        self.assertEqual(template_copy.name, 'Test Copy (copy)')
+        self.assertEqual(variant_copy.name, 'Test Copy (copy) (copy)')
+        self.assertEqual(len(variant_copy.product_variant_ids), 2)
+
 
 class TestVariantsNoCreate(common.TestProductCommon):
 
