@@ -38,6 +38,7 @@ class FleetVehicleCost(models.Model):
     def _get_odometer(self):
         self.odometer = 0.0
         for record in self:
+            record.odometer = False
             if record.odometer_id:
                 record.odometer = record.odometer_id.value
 
