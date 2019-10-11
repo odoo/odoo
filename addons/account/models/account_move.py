@@ -316,7 +316,7 @@ class AccountMove(models.Model):
 
         # Find the new fiscal position.
         delivery_partner_id = self._get_invoice_delivery_partner_id()
-        new_fiscal_position_id = self.env['account.fiscal.position'].get_fiscal_position(
+        new_fiscal_position_id = self.env['account.fiscal.position'].with_context(force_company=self.company_id.id).get_fiscal_position(
             self.partner_id.id, delivery_id=delivery_partner_id)
         self.fiscal_position_id = self.env['account.fiscal.position'].browse(new_fiscal_position_id)
         self._recompute_dynamic_lines()
