@@ -35,7 +35,7 @@ class WebsiteSaleWishlist(WebsiteSale):
 
         return wish_id
 
-    @http.route(['/shop/wishlist'], type='http', auth="public", website=True)
+    @http.route(['/shop/wishlist'], type='http', auth="public", website=True, sitemap=False)
     def get_wishlist(self, count=False, **kw):
         values = request.env['product.wishlist'].with_context(display_default_code=False).current()
         if count:

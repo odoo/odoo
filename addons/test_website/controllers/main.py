@@ -8,6 +8,6 @@ from odoo.addons.portal.controllers.web import Home
 
 class WebsiteTest(Home):
 
-    @http.route('/test_view', type='http', auth="public", website=True)
+    @http.route('/test_view', type='http', auth="public", website=True, sitemap=False)
     def test_view(self, **kw):
         return request.render('test_website.test_view')
