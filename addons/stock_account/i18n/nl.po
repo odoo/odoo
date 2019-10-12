@@ -3,18 +3,18 @@
 # 	* stock_account
 # 
 # Translators:
-# Martin Trigaux, 2019
 # Cas Vissers <casvissers@brahoo.nl>, 2019
 # dpms <pieter.van.de.wygaert@telenet.be>, 2019
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2019
+# Martin Trigaux, 2019
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"POT-Creation-Date: 2019-10-07 07:12+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -66,6 +66,11 @@ msgstr "Administratieve boekingen"
 #: model_terms:ir.ui.view,arch_db:stock_account.view_location_form_inherit
 msgid "Accounting Information"
 msgstr "Boekhoudinformatie"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__active
+msgid "Active"
+msgstr "Actief"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
@@ -126,11 +131,6 @@ msgstr ""
 "Kan geen voorraadtoename rekening vinden voor het product %s. Deze moet "
 "ingesteld worden op de productcategorie, of op de locatie, vóór het "
 "verwerken van deze bewerking."
-
-#. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
-msgid "Category"
-msgstr "Categorie"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -287,6 +287,14 @@ msgstr ""
 "Indien de kostprijs wordt verlaagd, zal voorraadverschillen rekening worden gecrediteerd en voorraadtoename rekening zal worden gedebiteerd."
 
 #. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__active
+msgid ""
+"If unchecked, it will allow you to hide the product without removing it."
+msgstr ""
+"Indien niet aangevinkt, heeft u de mogelijkheid om dit product te verbergen,"
+" zonder deze te verwijderen."
+
+#. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory
 msgid "Inventory"
 msgstr "Voorraad"
@@ -362,7 +370,7 @@ msgstr "Gelinkt aan"
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__manual_periodic
 msgid "Manual"
-msgstr "Manueel"
+msgstr "Handmatig"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_valuation
@@ -398,12 +406,12 @@ msgstr "Prijs"
 #: model:ir.model,name:stock_account.model_product_product
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__product_id
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_search
-#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Product"
 msgstr "Product"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__categ_id
 msgid "Product Category"
 msgstr "Productcategorie"
 
@@ -414,6 +422,7 @@ msgstr "Productmutaties (voorraadmutatieregels)"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_template
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__product_tmpl_id
 msgid "Product Template"
 msgstr "Productsjabloon"
 
@@ -453,6 +462,11 @@ msgstr "Retour boeken"
 #: model:ir.model,name:stock_account.model_stock_return_picking_line
 msgid "Return Picking Line"
 msgstr "Retour pickingregel"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__categ_id
+msgid "Select category for the current product"
+msgstr "Selecteer een categorie voor het huidige product"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__standard
@@ -615,7 +629,6 @@ msgid "Unit of Measure"
 msgstr "Maateenheid"
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.product_product_normal_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
 #: model_terms:ir.ui.view,arch_db:stock_account.view_template_property_form
 msgid "Update Cost"

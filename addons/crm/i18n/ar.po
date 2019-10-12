@@ -12,25 +12,25 @@
 # Osoul <baruni@osoul.ly>, 2019
 # Mohammed Albasha <m.albasha.ma@gmail.com>, 2019
 # Mohammed Ibrahim <m.ibrahim@mussder.com>, 2019
-# Ghaith Gammar <g.gammar@saharaifs.net>, 2019
 # Osama Ahmaro <osamaahmaro@gmail.com>, 2019
 # Mahmood Al Halwachi <mahmood.alhalwachi@gmail.com>, 2019
 # Zuhair Hammadi <zuhair12@gmail.com>, 2019
 # Mostafa Hanafy <mostafa.s.hanafy@gmail.com>, 2019
-# Mustafa Rawi <mustafa@cubexco.com>, 2019
 # amrnegm <amrnegm.01@gmail.com>, 2019
-# Martin Trigaux, 2019
 # amal ahmed <amalalhashemy88@hotmail.com>, 2019
-# Shaima Safar <shaima.safar@open-inside.com>, 2019
 # Nisrine Tagri <nta@odoo.com>, 2019
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# Martin Trigaux, 2019
+# Ghaith Gammar <g.gammar@saharaifs.net>, 2019
+# Shaima Safar <shaima.safar@open-inside.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-30 09:40+0000\n"
+"POT-Creation-Date: 2019-10-07 07:11+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Nisrine Tagri <nta@odoo.com>, 2019\n"
+"Last-Translator: Shaima Safar <shaima.safar@open-inside.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -201,16 +201,6 @@ msgstr ""
 "<p><b>أرسل رسائل</b> لعميلك المحتمل وتلقى الردود تلقائيًا مرفقةً بهذه "
 "الفرصة.</p><p class=\"mb0\"> استخدم علامة <i>'@'</i> لذكر الأشخاص، الأمر "
 "يشبه إرسال عدة نسخ من رسائل البريد الإلكتروني.</p>"
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_kanban
-msgid "<small>Leads:</small>"
-msgstr ""
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_kanban
-msgid "<small>Opportunities:</small>"
-msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -416,6 +406,11 @@ msgid "Calendar Event"
 msgstr ""
 
 #. module: crm
+#: model:mail.activity.type,name:crm.mail_activity_demo_call_demo
+msgid "Call for Demo"
+msgstr "طلب نسخة تجريبية"
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__campaign_id
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -577,6 +572,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Consider leads created as of the"
 msgstr ""
+
+#. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor7
+msgid "Consulting"
+msgstr "استشارة"
 
 #. module: crm
 #: model:ir.model,name:crm.model_res_partner
@@ -852,6 +852,11 @@ msgid "Description"
 msgstr "الوصف"
 
 #. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor5
+msgid "Design"
+msgstr "تصميم"
+
+#. module: crm
 #: model:ir.model,name:crm.model_digest_digest
 msgid "Digest"
 msgstr "الملخص"
@@ -1053,6 +1058,11 @@ msgid "Follow-up"
 msgstr "متابعة"
 
 #. module: crm
+#: model:mail.activity.type,name:crm.mail_activity_demo_followup_quote
+msgid "Follow-up Quote"
+msgstr "متابعة عرض السعر"
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_follower_ids
 msgid "Followers"
 msgstr "المتابعون"
@@ -1220,6 +1230,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__phone_state__incorrect
 msgid "Incorrect"
 msgstr ""
+
+#. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor4
+msgid "Information"
+msgstr "معلومات"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -1423,6 +1438,7 @@ msgstr "ترشيح/فرصة"
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 #: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_form
+#: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_kanban
 msgid "Leads"
 msgstr "الترشيحات"
 
@@ -1558,6 +1574,11 @@ msgstr "منخفض"
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_main_attachment_id
 msgid "Main Attachment"
 msgstr "المرفق الرئيسي"
+
+#. module: crm
+#: model:mail.activity.type,name:crm.mail_activity_demo_make_quote
+msgid "Make Quote"
+msgstr "إنشاء عرض سعر"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__generate_lead_from_alias
@@ -1854,6 +1875,7 @@ msgstr "سبب خسارة الفرصة"
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_graph
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 #: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_form
+#: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_kanban
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
 #: model_terms:ir.ui.view,arch_db:crm.view_partners_form_crm1
 msgid "Opportunities"
@@ -1962,6 +1984,11 @@ msgstr ""
 #: model:mail.message.subtype,description:crm.mt_lead_won
 msgid "Opportunity won"
 msgstr "تم الفوز بالفرصة"
+
+#. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor8
+msgid "Other"
+msgstr "غير ذلك"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_team_overdue_opportunity
@@ -2080,6 +2107,11 @@ msgstr "الأولوية"
 #: model:ir.model.fields,field_description:crm.field_crm_lead__probability
 msgid "Probability"
 msgstr "الاحتمال"
+
+#. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor1
+msgid "Product"
+msgstr "المنتج"
 
 #. module: crm
 #: model:crm.stage,name:crm.stage_lead3
@@ -2230,6 +2262,11 @@ msgid "Sequence"
 msgstr "المسلسل"
 
 #. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor3
+msgid "Services"
+msgstr "الخدمات"
+
+#. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_stage_action
 msgid "Set a new stage in your opportunity pipeline"
 msgstr "تعيين مرحلة جديدة في دورة مبيعات فرصتك"
@@ -2262,6 +2299,11 @@ msgstr "إظهار المرشحين فقط"
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Show only opportunity"
 msgstr "إظهار الفرص فقط"
+
+#. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor2
+msgid "Software"
+msgstr "البرنامج"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lost_reason_action
@@ -2537,6 +2579,11 @@ msgstr "غالي للغاية"
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Tracking"
 msgstr "التتبع"
+
+#. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor6
+msgid "Training"
+msgstr "التدريب"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0

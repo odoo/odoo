@@ -3,7 +3,6 @@
 # 	* stock_account
 # 
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2019
 # Akram Alfusayal <akram_ma@hotmail.com>, 2019
 # amrnegm <amrnegm.01@gmail.com>, 2019
 # Martin Trigaux, 2019
@@ -15,14 +14,16 @@
 # Osama Ahmaro <osamaahmaro@gmail.com>, 2019
 # Ali Alrehawi <alrehawi@hotmail.com>, 2019
 # Shaima Safar <shaima.safar@open-inside.com>, 2019
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# Zuhair Hammadi <zuhair12@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"POT-Creation-Date: 2019-10-07 07:12+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Shaima Safar <shaima.safar@open-inside.com>, 2019\n"
+"Last-Translator: Zuhair Hammadi <zuhair12@gmail.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -72,6 +73,11 @@ msgstr "القيود المحاسبية"
 #: model_terms:ir.ui.view,arch_db:stock_account.view_location_form_inherit
 msgid "Accounting Information"
 msgstr "معلومات محاسبية"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__active
+msgid "Active"
+msgstr "نشط"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
@@ -129,11 +135,6 @@ msgid ""
 msgstr ""
 "لم نستطع إيجاد حساب مخزون منصرف للمنتج %s. يجب تعريف حساب في فئة المنتج، أو "
 "في الموقع، قبل القيام بهذه العملية."
-
-#. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
-msgid "Category"
-msgstr "فئة"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -289,6 +290,12 @@ msgstr ""
 "إذا انخفض سعر التكلفة، سيتم انشاء حساب متنوع للمخزون، وسيتم خصم حساب المدخلات للمخزون."
 
 #. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__active
+msgid ""
+"If unchecked, it will allow you to hide the product without removing it."
+msgstr "عند إلغاء اختياره، يمكنك إخفاء المنتج دون حذفه."
+
+#. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory
 msgid "Inventory"
 msgstr "الجرد"
@@ -401,12 +408,12 @@ msgstr "السعر"
 #: model:ir.model,name:stock_account.model_product_product
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__product_id
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_search
-#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Product"
 msgstr "المنتج"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__categ_id
 msgid "Product Category"
 msgstr "فئة المنتج"
 
@@ -417,6 +424,7 @@ msgstr "تحركات المنتج (بنود حركة المخزون)"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_template
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__product_tmpl_id
 msgid "Product Template"
 msgstr "قالب المنتج"
 
@@ -456,6 +464,11 @@ msgstr "استلام الشحنة المعادة"
 #: model:ir.model,name:stock_account.model_stock_return_picking_line
 msgid "Return Picking Line"
 msgstr "بند استلام الشحنة المعادة"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__categ_id
+msgid "Select category for the current product"
+msgstr "اختار فئة المنتج الحالي"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__standard
@@ -612,7 +625,6 @@ msgid "Unit of Measure"
 msgstr "وحدة القياس"
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.product_product_normal_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
 #: model_terms:ir.ui.view,arch_db:stock_account.view_template_property_form
 msgid "Update Cost"

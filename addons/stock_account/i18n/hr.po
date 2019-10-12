@@ -3,8 +3,6 @@
 # 	* stock_account
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Bole <bole@dajmi5.com>, 2019
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2019
 # Đurđica Žarković <durdica.zarkovic@storm.hr>, 2019
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2019
@@ -12,14 +10,16 @@
 # Marko Carević <marko.carevic@live.com>, 2019
 # Mario Jureša <mario.juresa@uvid.hr>, 2019
 # Tina Milas, 2019
+# Martin Trigaux, 2019
+# Bole <bole@dajmi5.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"POT-Creation-Date: 2019-10-07 07:12+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Tina Milas, 2019\n"
+"Last-Translator: Bole <bole@dajmi5.com>, 2019\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -71,6 +71,11 @@ msgid "Accounting Information"
 msgstr "Računovodstvo"
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__active
+msgid "Active"
+msgstr "Aktivan"
+
+#. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid ""
 "Add additional cost (transport, customs, ...) in the value of the product."
@@ -120,11 +125,6 @@ msgid ""
 "on the product category, or on the location, before processing this "
 "operation."
 msgstr ""
-
-#. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
-msgid "Category"
-msgstr "Kategorija"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -274,6 +274,12 @@ msgstr ""
 "If cost price is decreased, stock variation account will be creadited and stock input account will be debited."
 
 #. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__active
+msgid ""
+"If unchecked, it will allow you to hide the product without removing it."
+msgstr "Ako je označeno omogućava sakrivanje proizvoda bez brisanja."
+
+#. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory
 msgid "Inventory"
 msgstr "Skladište"
@@ -383,12 +389,12 @@ msgstr "Cijena"
 #: model:ir.model,name:stock_account.model_product_product
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__product_id
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_search
-#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Product"
 msgstr "Proizvod"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__categ_id
 msgid "Product Category"
 msgstr "Kategorija proizvoda"
 
@@ -399,6 +405,7 @@ msgstr ""
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_template
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__product_tmpl_id
 msgid "Product Template"
 msgstr "Predložak proizvoda"
 
@@ -438,6 +445,11 @@ msgstr "Povrat robe"
 #: model:ir.model,name:stock_account.model_stock_return_picking_line
 msgid "Return Picking Line"
 msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__categ_id
+msgid "Select category for the current product"
+msgstr "Odabir kategorije za trenutni artikl"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__standard
@@ -585,7 +597,6 @@ msgid "Unit of Measure"
 msgstr "Jedinica mjere"
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.product_product_normal_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
 #: model_terms:ir.ui.view,arch_db:stock_account.view_template_property_form
 msgid "Update Cost"

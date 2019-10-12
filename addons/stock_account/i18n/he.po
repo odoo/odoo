@@ -5,19 +5,20 @@
 # Translators:
 # Martin Trigaux, 2019
 # ExcaliberX <excaliberx@gmail.com>, 2019
-# Yihya Hugirat <hugirat@gmail.com>, 2019
 # שהאב חוסיין <shhab89@gmail.com>, 2019
 # hed shefetr <hed@laylinetech.com>, 2019
 # דודי מלכה <Dudimalka6@gmail.com>, 2019
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2019
+# Leandro Noijovich <eliel.sorcerer@gmail.com>, 2019
+# Yihya Hugirat <hugirat@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"POT-Creation-Date: 2019-10-07 07:12+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2019\n"
+"Last-Translator: Yihya Hugirat <hugirat@gmail.com>, 2019\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -67,6 +68,11 @@ msgstr "רשומות חשבונאיות"
 #: model_terms:ir.ui.view,arch_db:stock_account.view_location_form_inherit
 msgid "Accounting Information"
 msgstr "מידע חשבונאי"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__active
+msgid "Active"
+msgstr "פעיל"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
@@ -124,11 +130,6 @@ msgid ""
 msgstr ""
 "לא ניתן למצוא חשבון פלט מלאי עבור המוצר %s. עליך להגדיר אחד בקטגוריה של "
 "המוצר,או במיקום, לפני עיבוד פעולה זו."
-
-#. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
-msgid "Category"
-msgstr "קטגוריה"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -284,6 +285,12 @@ msgstr ""
 "אם מחיר העלות ירד, מלאי וריאציה החשבון יהיה מזוכה וחשבון קלט המלאי יחויבו..."
 
 #. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__active
+msgid ""
+"If unchecked, it will allow you to hide the product without removing it."
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory
 msgid "Inventory"
 msgstr "מלאי"
@@ -395,12 +402,12 @@ msgstr "מחיר"
 #: model:ir.model,name:stock_account.model_product_product
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__product_id
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_search
-#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Product"
 msgstr "מוצר"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__categ_id
 msgid "Product Category"
 msgstr "קטגורית מוצר"
 
@@ -411,6 +418,7 @@ msgstr "תנועות המוצר (תנועת קו האחסון)"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_template
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__product_tmpl_id
 msgid "Product Template"
 msgstr "תבנית למוצר "
 
@@ -450,6 +458,11 @@ msgstr "החזר איסוף"
 #: model:ir.model,name:stock_account.model_stock_return_picking_line
 msgid "Return Picking Line"
 msgstr "החזר בחירת קו"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__categ_id
+msgid "Select category for the current product"
+msgstr "בחר קטגוריה למוצר הנוכחי"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__standard
@@ -600,7 +613,6 @@ msgid "Unit of Measure"
 msgstr "יחידת מידה"
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.product_product_normal_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
 #: model_terms:ir.ui.view,arch_db:stock_account.view_template_property_form
 msgid "Update Cost"

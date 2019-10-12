@@ -3,18 +3,18 @@
 # 	* event
 # 
 # Translators:
-# Eric Geens <ericgeens@yahoo.com>, 2019
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2019
 # Charles Vervaecke <cvk@odoo.com>, 2019
 # Martin Trigaux, 2019
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
+# Eric Geens <ericgeens@yahoo.com>, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-30 09:41+0000\n"
+"POT-Creation-Date: 2019-10-07 07:12+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
 "Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -56,6 +56,50 @@ msgstr ""
 "                                        Tot</b>"
 
 #. module: event
+#: model_terms:event.event,description:event.event_0
+msgid ""
+"<b>Business Room</b> - To discuss implementation methodologies, best sales "
+"practices, etc."
+msgstr ""
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid ""
+"<b>Technical Rooms</b> - One dedicated to advanced Odoo developers, one for "
+"new developers."
+msgstr ""
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid ""
+"<b>The Design Fair is preceded by 2 days of Training Sessions for "
+"experts!</b><br> We propose 3 different training sessions, 2 days each."
+msgstr ""
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid ""
+"<b>The plenary sessions in the morning will be shorter</b> and we will give "
+"more time for thematical meetings, conferences, workshops and tutorial "
+"sessions in the afternoon."
+msgstr ""
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid ""
+"<b>The whole event is open to all public!</b> <br>We ask a participation fee"
+" of 49.50€ for the costs for the 3 days (coffee breaks, catering, drinks and"
+" a surprising concert and beer party).<br> For those who don't want to "
+"contribute, there is a free ticket, therefore, catering and access to "
+"evening events aren't included."
+msgstr ""
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "<b>Workshop Room</b> - Mainly for developers."
+msgstr ""
+
+#. module: event
 #: model:mail.template,body_html:event.event_registration_mail_template_badge
 msgid ""
 "<div>\n"
@@ -92,11 +136,20 @@ msgstr ""
 "title=\"Bevestig registratie\"/>"
 
 #. module: event
+#: model_terms:event.event,description:event.event_0
+msgid ""
+"<i class=\"fa fa-info-circle mr-2\"></i>This event and all the conferences "
+"are in <b>English</b>!"
+msgstr ""
+
+#. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid ""
 "<i class=\"fa fa-level-down\" role=\"img\" aria-label=\"Attended button\" "
 "title=\"Attended the Event\"/>"
 msgstr ""
+"<i class=\"fa fa-level-down\" role=\"img\" aria-label=\"Aanwezig op "
+"evenement\" title=\"Aanwezig op evenement\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -104,6 +157,8 @@ msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
 "title=\"Arrow\"/>"
 msgstr ""
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Pijl icoon\" "
+"title=\"Pijl\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -111,6 +166,8 @@ msgid ""
 "<i class=\"fa fa-times\" role=\"img\" aria-label=\"Cancel button\" "
 "title=\"Cancel Registration\"/>"
 msgstr ""
+"<i class=\"fa fa-times\" role=\"img\" aria-label=\"Annuleer knop\" "
+"title=\"Annuleer registratie\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_report_template_badge
@@ -128,6 +185,13 @@ msgstr ""
 "<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" class=\"oe_read_only\">\n"
 "                                        tot\n"
 "                                    </span>"
+
+#. module: event
+#: model_terms:event.event,description:event.event_2
+msgid ""
+"<span class=\"badge badge-secondary o_wevent_badge float-"
+"right\">SPEAKER</span>"
+msgstr ""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -182,14 +246,14 @@ msgid ""
 "                    <div>\n"
 "                        Hello ${object.name or ''},<br/>\n"
 "                        We are happy to confirm your registration to the event\n"
-"                        % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                        % if 'website_published' in object.event_id and object.event_id.website_published:\n"
 "                            <a href=\"${object.event_id.website_url}\" style=\"color:#875A7B;text-decoration:none;\">${object.event_id.name}</a>\n"
 "                        % else:\n"
 "                            <strong>${object.event_id.name}</strong>\n"
 "                        % endif\n"
 "                        for attendee ${object.name}.\n"
 "                    </div>\n"
-"                    % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                    % if 'website_published' in object.event_id and object.event_id.website_published:\n"
 "                    <div style=\"margin: 16px 0px 16px 0px;\">\n"
 "                        <a href=\"${object.event_id.website_url}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;\">View Event</a><br/>\n"
 "                    </div>\n"
@@ -372,14 +436,14 @@ msgid ""
 "                    <div>\n"
 "                        Hello ${object.name},<br/>\n"
 "                        We are excited to remind you that the event\n"
-"                        % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                        % if 'website_published' in object.event_id and object.event_id.website_published:\n"
 "                            <a href=\"${object.event_id.website_url}\" style=\"color:#875A7B;text-decoration:none;\">${object.event_id.name}</a>\n"
 "                        % else:\n"
 "                            <strong>${object.event_id.name}</strong>\n"
 "                        % endif\n"
 "                        is starting <strong>${object.get_date_range_str()}</strong>.\n"
 "                    </div>\n"
-"                    % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                    % if 'website_published' in object.event_id and object.event_id.website_published:\n"
 "                    <div style=\"margin: 16px 0px 16px 0px;\">\n"
 "                        <a href=\"${object.event_id.website_url}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;\">View Event</a><br/>\n"
 "                    </div>\n"
@@ -594,6 +658,11 @@ msgid "After the event"
 msgstr "Na het evenement"
 
 #. module: event
+#: model:event.event,name:event.event_6
+msgid "An unpublished event"
+msgstr ""
+
+#. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Archived"
 msgstr "Gearchiveerd"
@@ -606,6 +675,15 @@ msgid ""
 msgstr ""
 "Bent u zeker dat u het evenement wilt annuleren? Alle gekoppelde deelnemers "
 "worden ook geannuleerd."
+
+#. module: event
+#: model_terms:event.event,description:event.event_2
+msgid ""
+"At just 13 years old, John DOE was already starting to develop his first "
+"business applications for customers. After mastering civil engineering, he "
+"founded TinyERP. This was the first phase of OpenERP which would later "
+"became Odoo, the most installed open-source business software worldwide."
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_attachment_count
@@ -711,6 +789,18 @@ msgid "Before the event"
 msgstr "Voor het evenement"
 
 #. module: event
+#: model:event.event,subtitle:event.event_5
+msgid ""
+"Bring your outdoor field hockey season to the next level by taking the field"
+" at this 9th annual Field Hockey tournament."
+msgstr ""
+
+#. module: event
+#: model:event.event,name:event.event_4
+msgid "Business workshops"
+msgstr ""
+
+#. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_confirm
 msgid "Cancel"
 msgstr "Annuleren"
@@ -739,12 +829,20 @@ msgid "Category"
 msgstr "Categorie"
 
 #. module: event
+#: model_terms:event.event,description:event.event_2
+msgid ""
+"Chamber Works reserves the right to cancel, re-name or re-locate the event "
+"or change the dates on which it is held."
+msgstr ""
+
+#. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Communication"
 msgstr "Communicatie"
 
 #. module: event
+#: model_terms:event.event,description:event.event_2
 #: model:ir.model.fields,field_description:event.field_event_event__company_id
 #: model:ir.model.fields,field_description:event.field_event_registration__company_id
 msgid "Company"
@@ -755,6 +853,23 @@ msgstr "Bedrijf"
 #, python-format
 msgid "Compose Email"
 msgstr "E-mail opstellen"
+
+#. module: event
+#: model:event.type,name:event.event_type_2
+msgid "Conference"
+msgstr "Conferentie"
+
+#. module: event
+#: model_terms:event.event,description:event.event_2
+#: model:event.event,name:event.event_2
+msgid "Conference for Architects"
+msgstr "Conferentie van architecten"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "Conferences, workshops and trainings will be organized in 6 rooms:"
+msgstr ""
+"Conferenties, workshops en trainingen worden georganiseerd in 6 ruimtes:"
 
 #. module: event
 #: model:ir.model,name:event.model_res_config_settings
@@ -872,6 +987,16 @@ msgid "Description"
 msgstr "Omschrijving"
 
 #. module: event
+#: model:event.event,name:event.event_0
+msgid "Design Fair Los Angeles"
+msgstr "Ontwerpevenement Los Angeles"
+
+#. module: event
+#: model:event.event,subtitle:event.event_4
+msgid "Discover how to grow a sustainable business with our experts."
+msgstr ""
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_confirm__display_name
 #: model:ir.model.fields,field_description:event.field_event_event__display_name
 #: model:ir.model.fields,field_description:event.field_event_mail__display_name
@@ -898,6 +1023,15 @@ msgid "Dropdown menu"
 msgstr "Dropdown menu"
 
 #. module: event
+#: model_terms:event.event,description:event.event_2
+msgid ""
+"During this conference, our team will give a detailed overview of our "
+"business applications. You’ll know all the benefits of using it."
+msgstr ""
+"Tijdens deze conferentie zal ons team u een gedetailleerd overzicht van onze"
+" bedrijfsapplicaties geven. U zal alle voordelen weten om ze te gebruiken."
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__email
 msgid "Email"
 msgstr "E-mail"
@@ -917,6 +1051,11 @@ msgstr "Einddatum"
 #: model:ir.model.fields,field_description:event.field_event_event__date_end_located
 msgid "End Date Located"
 msgstr "Einddatum locatie"
+
+#. module: event
+#: model:event.event,subtitle:event.event_2
+msgid "Enhance your architectural business and improve professional skills."
+msgstr ""
 
 #. module: event
 #: model:ir.model,name:event.model_event_event
@@ -1102,10 +1241,24 @@ msgid "Events in New state"
 msgstr "Evenementen in een 'Nieuw' status"
 
 #. module: event
+#: model_terms:event.event,description:event.event_0
+msgid ""
+"Every year we invite our community, partners and end-users to come and meet "
+"us! It's the ideal event to get together and present new features, roadmap "
+"of future versions, achievements of the software, workshops, training "
+"sessions, etc...."
+msgstr ""
+
+#. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Exception Activities"
 msgstr "Uitzondering activiteiten"
+
+#. module: event
+#: model:event.type,name:event.event_type_1
+msgid "Exhibition"
+msgstr "Tentoonstelling"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
@@ -1116,6 +1269,11 @@ msgstr "Verwacht"
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "Expected attendees"
 msgstr "Verwachte deelnemers"
+
+#. module: event
+#: model:event.event,subtitle:event.event_3
+msgid "Experience live music, local food and beverages."
+msgstr ""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -1141,6 +1299,12 @@ msgid "Followers (Partners)"
 msgstr "Volgers (Relaties)"
 
 #. module: event
+#: model_terms:event.event,description:event.event_0
+#: model_terms:event.event,description:event.event_2
+msgid "For any additional information, please contact us at"
+msgstr "Voor meer informatie kan u ons contacteren op"
+
+#. module: event
 #: model:ir.model.fields,help:event.field_event_event__seats_max
 msgid ""
 "For each event you can define a maximum registration of seats(number of "
@@ -1163,16 +1327,43 @@ msgstr ""
 "negeren)"
 
 #. module: event
+#: model_terms:event.event,description:event.event_2
+msgid "Functional flow of the main applications;"
+msgstr "Functionele flow van de hoofdapplicaties;"
+
+#. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Future Activities"
 msgstr "Toekomstige activiteiten"
 
 #. module: event
+#: model:event.event,subtitle:event.event_0
+msgid "Get Inspired • Stay Connected • Have Fun"
+msgstr ""
+
+#. module: event
+#: model:event.event,name:event.event_1
+msgid "Great Reno Ballon Race"
+msgstr ""
+
+#. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Group By"
 msgstr "Groepeer op"
+
+#. module: event
+#: model_terms:event.event,description:event.event_2
+msgid "Having attended this conference, participants should be able to:"
+msgstr ""
+"Na het deelnemen aan deze conferentie zouden deelnemers in staat moeten zijn"
+" om het volgende te kunnen:"
+
+#. module: event
+#: model:event.event,name:event.event_5
+msgid "Hockey Tournament"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__hours
@@ -1233,6 +1424,16 @@ msgstr ""
 "evenement wordt geannuleerd zal de status ingesteld worden op 'Cancelled'."
 
 #. module: event
+#: model_terms:event.event,description:event.event_0
+msgid ""
+"If you wish to make a presentation, please send your topic proposal as soon "
+"as possible for approval to Mr. Famke Jenssens at ngh (a) yourcompany (dot) "
+"com. The presentations should be, for example, a presentation of a community"
+" module, a case study, methodology feedback, technical, etc. Each "
+"presentation must be in English."
+msgstr ""
+
+#. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__now
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_unit__now
 msgid "Immediately"
@@ -1243,6 +1444,11 @@ msgstr "Direct"
 #: model:ir.model.fields,field_description:event.field_event_type_mail__interval_nbr
 msgid "Interval"
 msgstr "Interval"
+
+#. module: event
+#: model_terms:event.event,description:event.event_2
+msgid "Introduction, CRM, Sales Management"
+msgstr "Introductie, CRM, Verkoopbeheer"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_is_follower
@@ -1268,6 +1474,16 @@ msgid "It will select this default minimum value when you choose this event"
 msgstr ""
 "Het zal de deze standaard minimale waarde selecteren als u dit evenement "
 "kiest"
+
+#. module: event
+#: model_terms:event.event,description:event.event_2
+msgid "John DOE"
+msgstr "John DOE"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "Join us for this 3-day Event"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__color
@@ -1322,6 +1538,11 @@ msgstr "Beperkt"
 #: model:ir.model.fields,field_description:event.field_event_type__has_seats_limitation
 msgid "Limited Seats"
 msgstr "Beperkt aantal plaatsen"
+
+#. module: event
+#: model:event.event,name:event.event_3
+msgid "Live Music Festival"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__address_id
@@ -1526,6 +1747,11 @@ msgid "Number of unread messages"
 msgstr "Aantal ongelezen berichten"
 
 #. module: event
+#: model_terms:event.event,description:event.event_2
+msgid "Objectives"
+msgstr "Doelstellingen"
+
+#. module: event
 #: model:event.type,name:event.event_type_data_online
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Online"
@@ -1566,6 +1792,13 @@ msgstr ""
 "Online evenementen hebben geen specifieke locatie en worden online gegeven."
 
 #. module: event
+#: model_terms:event.event,description:event.event_0
+msgid ""
+"OpenElec Applications reserves the right to cancel, re-name or re-locate the"
+" event or change the dates on which it is held."
+msgstr ""
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__organizer_id
 msgid "Organizer"
 msgstr "Organisator"
@@ -1589,6 +1822,28 @@ msgstr "Telefoon"
 #: model:event.type,name:event.event_type_data_physical
 msgid "Physical Event"
 msgstr "Fysiek evenement"
+
+#. module: event
+#: model_terms:event.event,description:event.event_2
+msgid "Point of Sale (POS), Introduction to report customization."
+msgstr ""
+"Point of Sale (POS of kassa), introductie in het aanpassen van rapporten."
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+#: model_terms:event.event,description:event.event_2
+msgid "Program"
+msgstr "Program"
+
+#. module: event
+#: model_terms:event.event,description:event.event_2
+msgid "Project management, Human resources, Contract management."
+msgstr "Projectbeheer, Human Resources en Contractbeheer."
+
+#. module: event
+#: model_terms:event.event,description:event.event_2
+msgid "Purchase, Sales &amp; Purchase management, Financial accounting."
+msgstr "Inkoop, Verkoop &amp; Inkoopbeheer en Boekhouding."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_registration__origin
@@ -1717,6 +1972,11 @@ msgid "Sell tickets with sales orders"
 msgstr "Verkoop tickets met verkooporders"
 
 #. module: event
+#: model:event.type,name:event.event_type_0
+msgid "Seminar"
+msgstr "Seminarie"
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__notification_type
 #: model:ir.model.fields,field_description:event.field_event_type_mail__notification_type
 msgid "Send"
@@ -1754,6 +2014,11 @@ msgid "Settings"
 msgstr "Instellingen"
 
 #. module: event
+#: model:event.type,name:event.event_type_3
+msgid "Show"
+msgstr "Toon"
+
+#. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Show all records which has next action date is before today"
@@ -1763,6 +2028,11 @@ msgstr "Toon alle records welke een actiedatum voor vandaag hebben"
 #: model:ir.model.fields,field_description:event.field_event_registration__origin
 msgid "Source Document"
 msgstr "Brondocument"
+
+#. module: event
+#: model:event.type,name:event.event_type_5
+msgid "Sport"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_begin
@@ -1798,6 +2068,13 @@ msgstr ""
 "Gepland: Toekomstige activiteiten."
 
 #. module: event
+#: model:event.event,subtitle:event.event_1
+msgid ""
+"The Great Reno Balloon Race is the world's largest free hot-air ballooning "
+"event."
+msgstr ""
+
+#. module: event
 #: code:addons/event/models/event.py:0
 #, python-format
 msgid "The closing date cannot be earlier than the beginning date."
@@ -1812,6 +2089,14 @@ msgid ""
 msgstr ""
 "Er zijn al deelnemers welke het evenement willen bezoeken. Zet het evenement"
 " op concept als u het evenement wilt annuleren."
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid ""
+"This event is also an opportunity to showcase our partners' case studies, "
+"methodology or developments. Be there and see directly from the source the "
+"features of the version 12!"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__template_id
@@ -1849,6 +2134,11 @@ msgid "Tracks and Agenda"
 msgstr "Lezingen en agenda"
 
 #. module: event
+#: model:event.type,name:event.event_type_4
+msgid "Training"
+msgstr "Training"
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_mail__interval_type
 msgid "Trigger"
 msgstr "Activeer"
@@ -1882,6 +2172,11 @@ msgstr "Onbevestigd"
 #: model:ir.model.fields,field_description:event.field_event_event__seats_unconfirmed
 msgid "Unconfirmed Seat Reservations"
 msgstr "Onbevestigde gereserveerde plaatsen"
+
+#. module: event
+#: model_terms:event.event,description:event.event_2
+msgid "Understand the various modules;"
+msgstr "De verschillende modules begrijpen;"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_unit
@@ -1945,6 +2240,11 @@ msgid "WARNING: Event Scheduler Error for event: %s"
 msgstr "WAARSCHUWING: Evenement plannerfout voor evenement: %s"
 
 #. module: event
+#: model_terms:event.event,description:event.event_2
+msgid "Warehouse management, Manufacturing (MRP) &amp; Sales, Import/Export."
+msgstr "Vorraadbeheer, Productie (MRP) &amp; Verkoop, Import/Export."
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__website_message_ids
 #: model:ir.model.fields,field_description:event.field_event_registration__website_message_ids
 msgid "Website Messages"
@@ -1961,6 +2261,11 @@ msgstr "Website communicatie geschiedenis"
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_unit__weeks
 msgid "Weeks"
 msgstr "Weken"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "What's new?"
+msgstr ""
 
 #. module: event
 #: code:addons/event/models/event.py:0
@@ -1992,6 +2297,16 @@ msgstr "Uw inschrijving voor ${object.event_id.name}"
 #: model:mail.template,report_name:event.event_registration_mail_template_badge
 msgid "badge_of_${(object.event_id.name or '').replace('/','_')}"
 msgstr "badge_of_${(object.event_id.name or '').replace('/','_')}"
+
+#. module: event
+#: model_terms:event.event,description:event.event_2
+msgid "events@odoo.com"
+msgstr "events@odoo.com"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "events@yourcompany.com"
+msgstr "events@yourcompany.com"
 
 #. module: event
 #: code:addons/event/models/event.py:0

@@ -7,7 +7,6 @@
 # 4e7311735ad180fde514b5b19202d965, 2019
 # DE T2 <e2f48d4s5vd1s2@outlook.com>, 2019
 # Ralf Hilgenstock <rh@dialoge.info>, 2019
-# Martin Trigaux, 2019
 # Felix Schubert <felix.schubert@go-erp.com>, 2019
 # b4d8887ced18b222d41dc1101b082e15, 2019
 # Renzo Meister, 2019
@@ -15,13 +14,16 @@
 # e2f FFE <e2f_de_FFE@outlook.com>, 2019
 # Johannes Croe <jcr@odoo.com>, 2019
 # Leon Grill <leg@odoo.com>, 2019
+# Martin Trigaux, 2019
+# Wolfgang Taferner, 2019
+# Thorsten Vocks <thorsten.vocks@openbig.org>, 2019
 # Chris Egal <sodaswed@web.de>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-23 13:49+0000\n"
+"POT-Creation-Date: 2019-10-07 07:13+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
 "Last-Translator: Chris Egal <sodaswed@web.de>, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
@@ -355,6 +357,12 @@ msgid "Customer"
 msgstr "Kunde"
 
 #. module: sale_timesheet
+#: model:product.product,name:sale_timesheet.product_service_order_timesheet
+#: model:product.template,name:sale_timesheet.product_service_order_timesheet_product_template
+msgid "Customer Care (Prepaid Hours)"
+msgstr ""
+
+#. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__partner_id
 msgid "Customer of the sales order"
 msgstr ""
@@ -379,6 +387,14 @@ msgid "Don't create task"
 msgstr "Aufgabe nicht erstellen"
 
 #. module: sale_timesheet
+#: model:project.task,legend_done:sale_timesheet.project_task_2
+#: model:project.task.type,legend_done:sale_timesheet.project_from_sale_order_1_done
+#: model:project.task.type,legend_done:sale_timesheet.project_stage_fixed
+#: model:project.task.type,name:sale_timesheet.project_from_sale_order_1_done
+msgid "Done"
+msgstr "Erledigt"
+
+#. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__employee_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__employee_id
 msgid "Employee"
@@ -395,6 +411,11 @@ msgid ""
 "Employee/Sale Order Item Mapping:\n"
 " Defines to which sales order item an employee's timesheet entry will be linked.By extension, it defines the rate at which an employee's time on the project is billed."
 msgstr ""
+
+#. module: sale_timesheet
+#: model:project.task.type,name:sale_timesheet.project_stage_fixed
+msgid "Fixed"
+msgstr "Fest"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.product_template_view_search_sale_timesheet
@@ -418,6 +439,12 @@ msgstr "Gruppieren nach"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+#: model:product.product,uom_name:sale_timesheet.product_service_deliver_timesheet_1
+#: model:product.product,uom_name:sale_timesheet.product_service_deliver_timesheet_2
+#: model:product.product,uom_name:sale_timesheet.product_service_order_timesheet
+#: model:product.template,uom_name:sale_timesheet.product_service_deliver_timesheet_1_product_template
+#: model:product.template,uom_name:sale_timesheet.product_service_deliver_timesheet_2_product_template
+#: model:product.template,uom_name:sale_timesheet.product_service_order_timesheet_product_template
 msgid "Hours"
 msgstr "Stunden"
 
@@ -434,6 +461,20 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__id
 msgid "ID"
 msgstr "ID"
+
+#. module: sale_timesheet
+#: model:project.task,legend_normal:sale_timesheet.project_task_1
+#: model:project.task,legend_normal:sale_timesheet.project_task_2
+#: model:project.task,legend_normal:sale_timesheet.project_task_3
+#: model:project.task,legend_normal:sale_timesheet.project_task_4
+#: model:project.task,legend_normal:sale_timesheet.project_task_internal
+#: model:project.task.type,legend_normal:sale_timesheet.project_from_sale_order_1_done
+#: model:project.task.type,legend_normal:sale_timesheet.project_from_sale_order_1_in_progress
+#: model:project.task.type,legend_normal:sale_timesheet.project_from_sale_order_1_to_do
+#: model:project.task.type,legend_normal:sale_timesheet.project_stage_fixed
+#: model:project.task.type,name:sale_timesheet.project_from_sale_order_1_in_progress
+msgid "In Progress"
+msgstr "In Arbeit"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -510,6 +551,18 @@ msgid "Journal Item"
 msgstr "Buchungszeile"
 
 #. module: sale_timesheet
+#: model:product.product,name:sale_timesheet.product_service_deliver_timesheet_2
+#: model:product.template,name:sale_timesheet.product_service_deliver_timesheet_2_product_template
+msgid "Junior Architect (Invoice on Timesheets)"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:product.product,name:sale_timesheet.product_service_deliver_manual
+#: model:product.template,name:sale_timesheet.product_service_deliver_manual_product_template
+msgid "Kitchen Assembly (Milestones)"
+msgstr ""
+
+#. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice____last_update
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order____last_update
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line____last_update
@@ -578,6 +631,18 @@ msgid "Name"
 msgstr "Name"
 
 #. module: sale_timesheet
+#: model:project.task.type,legend_blocked:sale_timesheet.project_stage_fixed
+msgid "Need functional or technical help"
+msgstr "Erfordert Anwendersupport oder technische Hilfe"
+
+#. module: sale_timesheet
+#: model:project.task,legend_blocked:sale_timesheet.project_task_1
+#: model:project.task,legend_blocked:sale_timesheet.project_task_3
+#: model:project.task.type,legend_blocked:sale_timesheet.project_from_sale_order_1_in_progress
+msgid "Need help"
+msgstr ""
+
+#. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__billable_type__no
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_task__billable_type__no
 msgid "No Billable"
@@ -613,6 +678,23 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Non billable tasks"
 msgstr ""
+
+#. module: sale_timesheet
+#: model:project.task,legend_blocked:sale_timesheet.project_task_2
+#: model:project.task.type,legend_blocked:sale_timesheet.project_from_sale_order_1_done
+msgid "Not done yet"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:project.task,legend_blocked:sale_timesheet.project_task_4
+#: model:project.task.type,legend_blocked:sale_timesheet.project_from_sale_order_1_to_do
+msgid "Not ready"
+msgstr "Nicht bereit"
+
+#. module: sale_timesheet
+#: model:project.task,legend_blocked:sale_timesheet.project_task_internal
+msgid "Not validated"
+msgstr "Noch nicht bestätigt"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_move__timesheet_count
@@ -779,6 +861,17 @@ msgid "Re-invoiced costs"
 msgstr ""
 
 #. module: sale_timesheet
+#: model:project.task,legend_done:sale_timesheet.project_task_internal
+msgid "Ready for Next Stage"
+msgstr "Bereit für nächste Stufe"
+
+#. module: sale_timesheet
+#: model:project.task,legend_done:sale_timesheet.project_task_4
+#: model:project.task.type,legend_done:sale_timesheet.project_from_sale_order_1_to_do
+msgid "Ready to be started"
+msgstr ""
+
+#. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project_overview.py:0
 #, python-format
 msgid "Remaining"
@@ -908,6 +1001,12 @@ msgid "Sell services and invoice time spent"
 msgstr "Dienste verkaufen und Zeitaufwand abrechnen"
 
 #. module: sale_timesheet
+#: model:product.product,name:sale_timesheet.product_service_deliver_timesheet_1
+#: model:product.template,name:sale_timesheet.product_service_deliver_timesheet_1_product_template
+msgid "Senior Architect (Invoice on Timesheets)"
+msgstr ""
+
+#. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__product_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__product_id
 msgid "Service"
@@ -1034,8 +1133,8 @@ msgstr ""
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
-msgid "There is no timesheet for now."
-msgstr "Momentan kein Stundenzettel vorhanden."
+msgid "There are no timesheets for now."
+msgstr ""
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -1166,6 +1265,11 @@ msgid "Timesheets on tasks"
 msgstr "Stundenzettel für Aufgaben"
 
 #. module: sale_timesheet
+#: model:project.task.type,name:sale_timesheet.project_from_sale_order_1_to_do
+msgid "To Do"
+msgstr "Zu erledigen"
+
+#. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "To invoice"
 msgstr "Zu Berechnen"
@@ -1208,6 +1312,12 @@ msgid "Unit price of the sales order item."
 msgstr ""
 
 #. module: sale_timesheet
+#: model:product.product,uom_name:sale_timesheet.product_service_deliver_manual
+#: model:product.template,uom_name:sale_timesheet.product_service_deliver_manual_product_template
+msgid "Units"
+msgstr "Einheiten"
+
+#. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__amount_untaxed_invoiced
 msgid "Untaxed Amount Invoiced"
 msgstr "Unbesteuerter Rechnungsbetrag"
@@ -1239,6 +1349,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__wizard_id
 msgid "Wizard"
 msgstr "Assistent"
+
+#. module: sale_timesheet
+#: model:project.task,legend_done:sale_timesheet.project_task_1
+#: model:project.task,legend_done:sale_timesheet.project_task_3
+#: model:project.task.type,legend_done:sale_timesheet.project_from_sale_order_1_in_progress
+msgid "Work done"
+msgstr ""
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/account.py:0

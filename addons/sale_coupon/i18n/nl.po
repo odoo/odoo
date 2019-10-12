@@ -5,16 +5,16 @@
 # Translators:
 # Cas Vissers <casvissers@brahoo.nl>, 2019
 # Martin Trigaux, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"POT-Creation-Date: 2019-10-07 07:13+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,6 +56,17 @@ msgstr "%s %% korting op totale bedrag"
 #: model_terms:ir.ui.view,arch_db:sale_coupon.report_coupon
 msgid "*Valid for following products:"
 msgstr ""
+
+#. module: sale_coupon
+#: model:sale.coupon.program,name:sale_coupon.10_percent_coupon
+msgid "10% Discount"
+msgstr "10% korting"
+
+#. module: sale_coupon
+#: model:product.product,name:sale_coupon.product_product_10_percent_discount
+#: model:product.template,name:sale_coupon.product_product_10_percent_discount_product_template
+msgid "10.0% discount on total amount"
+msgstr "10.0% koring op totaalbedrag"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_form
@@ -362,6 +373,11 @@ msgstr ""
 "U kunt promotiecodes delen of de promoties automatisch toestaan als aan een aantal voorwaarden is voldaan."
 
 #. module: sale_coupon
+#: model:sale.coupon.program,name:sale_coupon.3_cabinets_plus_1_free
+msgid "Buy 3 large cabinets, get one for free"
+msgstr "Koop 3 grote kasten, krijg er 1 gratis"
+
+#. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.report_coupon
 msgid "CODE:"
 msgstr ""
@@ -389,6 +405,11 @@ msgstr "Gesloten programma's"
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_apply_code__coupon_code
 msgid "Code"
 msgstr "Code"
+
+#. module: sale_coupon
+#: model:sale.coupon.program,name:sale_coupon.10_percent_auto_applied
+msgid "Code for 10% on orders"
+msgstr "Code voor 10% op orders"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_program__company_id
@@ -429,7 +450,7 @@ msgstr "Coupon code"
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_program__coupon_count
 msgid "Coupon Count"
-msgstr "Kortingsbon teller"
+msgstr "Aantal kortingsbonnen"
 
 #. module: sale_coupon
 #: model:ir.model.fields.selection,name:sale_coupon.selection__sale_coupon_program__program_type__coupon_program
@@ -452,7 +473,7 @@ msgstr "Kortingsbonnenprogramma's"
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_program__rule_id
 msgid "Coupon Rule"
-msgstr "Kortingsbon regel"
+msgstr "Kortingsbonregel"
 
 #. module: sale_coupon
 #: model:ir.model.fields,help:sale_coupon.field_sale_coupon_program__rule_date_to
@@ -655,6 +676,12 @@ msgid "Free Product - %s"
 msgstr "Gratis product - %s"
 
 #. module: sale_coupon
+#: model:product.product,name:sale_coupon.product_product_free_large_cabinet
+#: model:product.template,name:sale_coupon.product_product_free_large_cabinet_product_template
+msgid "Free Product - Large Cabinet"
+msgstr "Gratis product - grote kast"
+
+#. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_generate_view_form
 msgid "Generate"
 msgstr "Genereren"
@@ -672,7 +699,7 @@ msgstr "Genereer kortingsbonnen"
 #. module: sale_coupon
 #: model:ir.model,name:sale_coupon.model_sale_coupon_generate
 msgid "Generate Sales Coupon"
-msgstr ""
+msgstr "Genereer kortingsbon"
 
 #. module: sale_coupon
 #: model_terms:ir.actions.act_window,help:sale_coupon.sale_coupon_program_action_coupon_program
@@ -906,7 +933,7 @@ msgstr "Geopende programma's"
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_program__order_count
 msgid "Order Count"
-msgstr "Order teller"
+msgstr "Aantal orders"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon__order_id
@@ -1028,7 +1055,7 @@ msgstr "Promotiecodes zijn niet cumuleerbaar."
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_order_view_form
 msgid "Promotions"
-msgstr ""
+msgstr "Promoties"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_program__reward_product_quantity
@@ -1197,7 +1224,7 @@ msgstr "Startdatum"
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon__state
 msgid "State"
-msgstr "Provincie / Staat"
+msgstr "Status"
 
 #. module: sale_coupon
 #: model:ir.model.fields.selection,name:sale_coupon.selection__sale_coupon_rule__rule_minimum_amount_tax_inclusion__tax_excluded
@@ -1312,6 +1339,14 @@ msgid "Unit of Measure"
 msgstr "Maateenheid"
 
 #. module: sale_coupon
+#: model:product.product,uom_name:sale_coupon.product_product_10_percent_discount
+#: model:product.product,uom_name:sale_coupon.product_product_free_large_cabinet
+#: model:product.template,uom_name:sale_coupon.product_product_10_percent_discount_product_template
+#: model:product.template,uom_name:sale_coupon.product_product_free_large_cabinet_product_template
+msgid "Units"
+msgstr "Stuks"
+
+#. module: sale_coupon
 #: model:ir.model.fields.selection,name:sale_coupon.selection__sale_coupon_program__promo_code_usage__code_needed
 msgid "Use a code"
 msgstr "Gebruik een code"
@@ -1319,7 +1354,7 @@ msgstr "Gebruik een code"
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.report_coupon
 msgid "Use this promo code before"
-msgstr "Gebruik deze promo code voor"
+msgstr "Gebruik deze promocode voor"
 
 #. module: sale_coupon
 #: model:ir.model.fields.selection,name:sale_coupon.selection__sale_coupon__state__new

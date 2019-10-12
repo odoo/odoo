@@ -5,28 +5,31 @@
 # Translators:
 # Jeanphy <hzh0292@qq.com>, 2019
 # e2f <projects@e2f.com>, 2019
-# Martin Trigaux, 2019
 # mrshelly <mrshelly@hotmail.com>, 2019
-# Jeffery CHEN <jeffery9@gmail.com>, 2019
 # niulin lnc. <admin@niulin.net>, 2019
 # liAnGjiA <liangjia@qq.com>, 2019
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2019
 # bf2549c5415a9287249cba2b8a5823c7, 2019
 # guohuadeng <guohuadeng@hotmail.com>, 2019
 # diaojiaolou <124412206@qq.com>, 2019
-# keecome <7017511@qq.com>, 2019
 # ChinaMaker <liuct@chinamaker.net>, 2019
 # Felix Yuen <fyu@odoo.com>, 2019
-# snow wang <147156565@qq.com>, 2019
 # inspur qiuguodong <qiuguodong@inspur.com>, 2019
+# Martin Trigaux, 2019
+# Jeffery CHEN <jeffery9@gmail.com>, 2019
+# v2exerer <9010446@qq.com>, 2019
+# Gary Wei <Gary.wei@elico-corp.com>, 2019
+# snow wang <147156565@qq.com>, 2019
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2019
+# keecome <7017511@qq.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-23 13:49+0000\n"
+"POT-Creation-Date: 2019-10-07 07:13+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2019\n"
+"Last-Translator: keecome <7017511@qq.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -241,7 +244,7 @@ msgstr "按计费费率"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_invoice_view_form
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_sale_order_view_form
 msgid "Cancel"
-msgstr "取消日期"
+msgstr "取消"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -359,6 +362,12 @@ msgid "Customer"
 msgstr "客户"
 
 #. module: sale_timesheet
+#: model:product.product,name:sale_timesheet.product_service_order_timesheet
+#: model:product.template,name:sale_timesheet.product_service_order_timesheet_product_template
+msgid "Customer Care (Prepaid Hours)"
+msgstr "客户服务（预付时间）"
+
+#. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__partner_id
 msgid "Customer of the sales order"
 msgstr "销售订单的客户"
@@ -383,6 +392,14 @@ msgid "Don't create task"
 msgstr "不要创建任务"
 
 #. module: sale_timesheet
+#: model:project.task,legend_done:sale_timesheet.project_task_2
+#: model:project.task.type,legend_done:sale_timesheet.project_from_sale_order_1_done
+#: model:project.task.type,legend_done:sale_timesheet.project_stage_fixed
+#: model:project.task.type,name:sale_timesheet.project_from_sale_order_1_done
+msgid "Done"
+msgstr "完成"
+
+#. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__employee_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__employee_id
 msgid "Employee"
@@ -399,6 +416,11 @@ msgid ""
 "Employee/Sale Order Item Mapping:\n"
 " Defines to which sales order item an employee's timesheet entry will be linked.By extension, it defines the rate at which an employee's time on the project is billed."
 msgstr ""
+
+#. module: sale_timesheet
+#: model:project.task.type,name:sale_timesheet.project_stage_fixed
+msgid "Fixed"
+msgstr "固定"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.product_template_view_search_sale_timesheet
@@ -422,6 +444,12 @@ msgstr "分组"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+#: model:product.product,uom_name:sale_timesheet.product_service_deliver_timesheet_1
+#: model:product.product,uom_name:sale_timesheet.product_service_deliver_timesheet_2
+#: model:product.product,uom_name:sale_timesheet.product_service_order_timesheet
+#: model:product.template,uom_name:sale_timesheet.product_service_deliver_timesheet_1_product_template
+#: model:product.template,uom_name:sale_timesheet.product_service_deliver_timesheet_2_product_template
+#: model:product.template,uom_name:sale_timesheet.product_service_order_timesheet_product_template
 msgid "Hours"
 msgstr "小时"
 
@@ -438,6 +466,20 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__id
 msgid "ID"
 msgstr "ID"
+
+#. module: sale_timesheet
+#: model:project.task,legend_normal:sale_timesheet.project_task_1
+#: model:project.task,legend_normal:sale_timesheet.project_task_2
+#: model:project.task,legend_normal:sale_timesheet.project_task_3
+#: model:project.task,legend_normal:sale_timesheet.project_task_4
+#: model:project.task,legend_normal:sale_timesheet.project_task_internal
+#: model:project.task.type,legend_normal:sale_timesheet.project_from_sale_order_1_done
+#: model:project.task.type,legend_normal:sale_timesheet.project_from_sale_order_1_in_progress
+#: model:project.task.type,legend_normal:sale_timesheet.project_from_sale_order_1_to_do
+#: model:project.task.type,legend_normal:sale_timesheet.project_stage_fixed
+#: model:project.task.type,name:sale_timesheet.project_from_sale_order_1_in_progress
+msgid "In Progress"
+msgstr "进行中"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -514,6 +556,18 @@ msgid "Journal Item"
 msgstr "日记账项"
 
 #. module: sale_timesheet
+#: model:product.product,name:sale_timesheet.product_service_deliver_timesheet_2
+#: model:product.template,name:sale_timesheet.product_service_deliver_timesheet_2_product_template
+msgid "Junior Architect (Invoice on Timesheets)"
+msgstr "初级架构师（工时表发票）"
+
+#. module: sale_timesheet
+#: model:product.product,name:sale_timesheet.product_service_deliver_manual
+#: model:product.template,name:sale_timesheet.product_service_deliver_manual_product_template
+msgid "Kitchen Assembly (Milestones)"
+msgstr "厨房组装(里程碑)"
+
+#. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice____last_update
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order____last_update
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line____last_update
@@ -582,6 +636,18 @@ msgid "Name"
 msgstr "名称"
 
 #. module: sale_timesheet
+#: model:project.task.type,legend_blocked:sale_timesheet.project_stage_fixed
+msgid "Need functional or technical help"
+msgstr "需要功能或者技术帮助"
+
+#. module: sale_timesheet
+#: model:project.task,legend_blocked:sale_timesheet.project_task_1
+#: model:project.task,legend_blocked:sale_timesheet.project_task_3
+#: model:project.task.type,legend_blocked:sale_timesheet.project_from_sale_order_1_in_progress
+msgid "Need help"
+msgstr ""
+
+#. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__billable_type__no
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_task__billable_type__no
 msgid "No Billable"
@@ -617,6 +683,23 @@ msgstr "非计费任务"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Non billable tasks"
 msgstr ""
+
+#. module: sale_timesheet
+#: model:project.task,legend_blocked:sale_timesheet.project_task_2
+#: model:project.task.type,legend_blocked:sale_timesheet.project_from_sale_order_1_done
+msgid "Not done yet"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:project.task,legend_blocked:sale_timesheet.project_task_4
+#: model:project.task.type,legend_blocked:sale_timesheet.project_from_sale_order_1_to_do
+msgid "Not ready"
+msgstr "未就绪"
+
+#. module: sale_timesheet
+#: model:project.task,legend_blocked:sale_timesheet.project_task_internal
+msgid "Not validated"
+msgstr "没有验证的"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_move__timesheet_count
@@ -783,6 +866,17 @@ msgid "Re-invoiced costs"
 msgstr "重新开票成本"
 
 #. module: sale_timesheet
+#: model:project.task,legend_done:sale_timesheet.project_task_internal
+msgid "Ready for Next Stage"
+msgstr "下一阶段就绪"
+
+#. module: sale_timesheet
+#: model:project.task,legend_done:sale_timesheet.project_task_4
+#: model:project.task.type,legend_done:sale_timesheet.project_from_sale_order_1_to_do
+msgid "Ready to be started"
+msgstr ""
+
+#. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project_overview.py:0
 #, python-format
 msgid "Remaining"
@@ -901,6 +995,12 @@ msgstr "在销售当前产品时，选择一个不可计费项目作为新创建
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
 msgid "Sell services and invoice time spent"
 msgstr "销售服务，并针对所用时间开发票"
+
+#. module: sale_timesheet
+#: model:product.product,name:sale_timesheet.product_service_deliver_timesheet_1
+#: model:product.template,name:sale_timesheet.product_service_deliver_timesheet_1_product_template
+msgid "Senior Architect (Invoice on Timesheets)"
+msgstr "高级架构师（工时表发票）"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__product_id
@@ -1029,7 +1129,7 @@ msgstr "选定的销售订单应包含发票的内容。"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
-msgid "There is no timesheet for now."
+msgid "There are no timesheets for now."
 msgstr "目前没有工时表。"
 
 #. module: sale_timesheet
@@ -1161,6 +1261,11 @@ msgid "Timesheets on tasks"
 msgstr "任务上的工时表"
 
 #. module: sale_timesheet
+#: model:project.task.type,name:sale_timesheet.project_from_sale_order_1_to_do
+msgid "To Do"
+msgstr "待办"
+
+#. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "To invoice"
 msgstr "开发票"
@@ -1203,6 +1308,12 @@ msgid "Unit price of the sales order item."
 msgstr "销售订单项的单价"
 
 #. module: sale_timesheet
+#: model:product.product,uom_name:sale_timesheet.product_service_deliver_manual
+#: model:product.template,uom_name:sale_timesheet.product_service_deliver_manual_product_template
+msgid "Units"
+msgstr "单位"
+
+#. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__amount_untaxed_invoiced
 msgid "Untaxed Amount Invoiced"
 msgstr "不含税已开票金额"
@@ -1234,6 +1345,13 @@ msgstr "根据已经完成的销售时间和小时数仍然可以提供什么。
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__wizard_id
 msgid "Wizard"
 msgstr "向导"
+
+#. module: sale_timesheet
+#: model:project.task,legend_done:sale_timesheet.project_task_1
+#: model:project.task,legend_done:sale_timesheet.project_task_3
+#: model:project.task.type,legend_done:sale_timesheet.project_from_sale_order_1_in_progress
+msgid "Work done"
+msgstr ""
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/account.py:0

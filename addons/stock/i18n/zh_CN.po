@@ -24,8 +24,6 @@
 # 张宏奎 <zhanghongkui@inspur.com>, 2019
 # v2exerer <9010446@qq.com>, 2019
 # Gary Wei <Gary.wei@elico-corp.com>, 2019
-# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2019
-# Ted Wang <feiyuwang2012@gmail.com>, 2019
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2019
 # 老窦 北京 <2662059195@qq.com>, 2019
 # bf2549c5415a9287249cba2b8a5823c7, 2019
@@ -34,20 +32,22 @@
 # roye w <159820@qq.com>, 2019
 # inspur qiuguodong <qiuguodong@inspur.com>, 2019
 # Jeanphy <hzh0292@qq.com>, 2019
-# Sage <263737@qq.com>, 2019
+# r <263737@qq.com>, 2019
 # liAnGjiA <liangjia@qq.com>, 2019
 # Martin Trigaux, 2019
-# Jeffery CHEN <jeffery9@gmail.com>, 2019
 # ChinaMaker <liuct@chinamaker.net>, 2019
 # Manga Tsang <mts@odoo.com>, 2019
+# Jeffery CHEN <jeffery9@gmail.com>, 2019
+# snow wang <147156565@qq.com>, 2019
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-30 09:40+0000\n"
+"POT-Creation-Date: 2019-10-07 07:11+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Manga Tsang <mts@odoo.com>, 2019\n"
+"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -827,11 +827,6 @@ msgid "As soon as possible"
 msgstr "尽快"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_picking_responsible_form
-msgid "Assign"
-msgstr "分配"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__owner_id
 msgid "Assign Owner"
 msgstr "指定所有者"
@@ -848,13 +843,6 @@ msgstr "指派责任"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
 msgid "Assign Serial Numbers"
 msgstr "分配序列号"
-
-#. module: stock
-#: model:ir.actions.act_window,name:stock.stock_assign_responsible_action
-#: model:ir.actions.server,name:stock.action_assign_a_responsible
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_picking_responsible_form
-msgid "Assign a Responsible"
-msgstr "指定负责人员"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -1014,6 +1002,12 @@ msgid ""
 msgstr "通过取消勾选有效字段，你能隐藏一个位置而不是删除它。"
 
 #. module: stock
+#: model:product.product,name:stock.product_cable_management_box
+#: model:product.template,name:stock.product_cable_management_box_product_template
+msgid "Cable Management Box"
+msgstr "理线盒"
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_calendar
 msgid "Calendar View"
 msgstr "日历视图"
@@ -1038,12 +1032,11 @@ msgstr "找不到通用路线 %s."
 #: model_terms:ir.ui.view,arch_db:stock.view_overprocessed_transfer
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_procurement_compute_wizard
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_picking_responsible_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quantity_history
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rules_report
 msgid "Cancel"
-msgstr "取消日期"
+msgstr "取消"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
@@ -1778,6 +1771,7 @@ msgstr "送货地址"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
+#: model:stock.picking.type,name:stock.chi_picking_type_out
 #: model:stock.picking.type,name:stock.picking_type_out
 #, python-format
 msgid "Delivery Orders"
@@ -4791,6 +4785,7 @@ msgstr "收货路线"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
+#: model:stock.picking.type,name:stock.chi_picking_type_in
 #: model:stock.picking.type,name:stock.picking_type_in
 #, python-format
 msgid "Receipts"
@@ -6206,22 +6201,22 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
-msgid "This note will show up on delivery orders."
-msgstr "此备注将在出库单上显示。"
+msgid "This note is added to delivery orders."
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid ""
-"This note will show up on internal transfer orders (e.g. where to pick the "
+"This note is added to internal transfer orders (e.g. where to pick the "
 "product in the warehouse)."
-msgstr "此备注将显示在内部调拨订单上（例如：产品在仓库中的拣货位置）。"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid ""
-"This note will show up on receipt orders (e.g. where to store the product in"
-" the warehouse)."
-msgstr "此备注将显示在收货单上（例如：产品存储在仓库中的位置）。"
+"This note is added to receipt orders (e.g. where to store the product in the"
+" warehouse)."
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
@@ -6517,6 +6512,12 @@ msgstr "单价"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_kanban
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree
 msgid "Unit of Measure"
+msgstr "单位"
+
+#. module: stock
+#: model:product.product,uom_name:stock.product_cable_management_box
+#: model:product.template,uom_name:stock.product_cable_management_box_product_template
+msgid "Units"
 msgstr "单位"
 
 #. module: stock

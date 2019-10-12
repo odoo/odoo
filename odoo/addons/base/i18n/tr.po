@@ -6618,6 +6618,12 @@ msgid ""
 "                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Private Address</b>\n"
 "                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Address</b>"
 msgstr ""
+"<b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">Şirket Adresi</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">Fatura Adresi</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">Teslim Adresi</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">Diğer Adresi</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Özel Adresi</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Adres</b>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_short_form
@@ -7606,12 +7612,12 @@ msgstr "İşlemler"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_tree
 msgid "Activate Language and Update Translations"
-msgstr ""
+msgstr "Dili Etkinleştir ve Çevirileri Güncelle"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "Activate and Translate"
-msgstr ""
+msgstr "Etkinleştir ve Çevir"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__active
@@ -8415,7 +8421,7 @@ msgstr "Sabit Kıymet Yönetimi"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__report_ids
 msgid "Associated reports"
-msgstr "İlişkili çıktılar"
+msgstr "İlişkili Çıktılar"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_association
@@ -8714,7 +8720,7 @@ msgstr "Banka Hesapları"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "Bank Address"
-msgstr ""
+msgstr "Banka Adresi"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_bank__bic
@@ -11464,7 +11470,7 @@ msgstr "Studio'daki Website Elemanlarını Göster"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__header_line
 msgid "Display a header line"
-msgstr "Bir başlık satırı görüntüleme"
+msgstr "Bir Başlık Satırı Göster"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -11904,7 +11910,7 @@ msgstr "E-posta Pazarlama"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__signature
 msgid "Email Signature"
-msgstr ""
+msgstr "E-posta İmzası"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__employee
@@ -13130,7 +13136,7 @@ msgstr "Genel Ayarlar"
 #: model:ir.ui.menu,name:base.menu_wizard_update_translations
 #: model_terms:ir.ui.view,arch_db:base.wizard_update_translations
 msgid "Generate Missing Terms"
-msgstr "Eksik Şartları Oluşturun"
+msgstr "Eksik Terimleri Oluştur"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm
@@ -13576,7 +13582,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__header_spacing
 msgid "Header spacing"
-msgstr "Başlık boşluğu"
+msgstr "Başlık Boşluğu"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_Q
@@ -14247,28 +14253,28 @@ msgstr "Görsel"
 #: model:ir.model.fields,field_description:base.field_res_partner__image_1024
 #: model:ir.model.fields,field_description:base.field_res_users__image_1024
 msgid "Image 1024"
-msgstr ""
+msgstr "Görsel 1024"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_image_mixin__image_128
 #: model:ir.model.fields,field_description:base.field_res_partner__image_128
 #: model:ir.model.fields,field_description:base.field_res_users__image_128
 msgid "Image 128"
-msgstr ""
+msgstr "Görsel 128"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_image_mixin__image_256
 #: model:ir.model.fields,field_description:base.field_res_partner__image_256
 #: model:ir.model.fields,field_description:base.field_res_users__image_256
 msgid "Image 256"
-msgstr ""
+msgstr "Görsel 256"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_image_mixin__image_512
 #: model:ir.model.fields,field_description:base.field_res_partner__image_512
 #: model:ir.model.fields,field_description:base.field_res_users__image_512
 msgid "Image 512"
-msgstr ""
+msgstr "Görsel 512"
 
 #. module: base
 #: model:ir.model,name:base.model_image_mixin
@@ -14471,7 +14477,7 @@ msgstr "Şahıs"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_partner_filter
 msgid "Individuals"
-msgstr ""
+msgstr "Şahıs"
 
 #. module: base
 #: model:res.country,name:base.id
@@ -14675,7 +14681,7 @@ msgstr "İç Kaynak"
 #. module: base
 #: model:res.groups,name:base.group_user
 msgid "Internal User"
-msgstr ""
+msgstr "İç Kullanıcılar"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_search
@@ -14872,7 +14878,7 @@ msgstr "Fatura Adresi"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.layout_preview
 msgid "Invoice Date:"
-msgstr ""
+msgstr "Fatura Tarihi:"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.layout_preview
@@ -15478,7 +15484,7 @@ msgstr "Son Versiyon"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__login_date
 msgid "Latest authentication"
-msgstr ""
+msgstr "Son Kimliği Doğrulanan"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__font__lato
@@ -15545,7 +15551,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
 msgid "Learn More"
-msgstr ""
+msgstr "Daha Fazla Bilgi"
 
 #. module: base
 #: model:res.country,name:base.lb
@@ -16400,12 +16406,12 @@ msgstr "Kontakları Birleştir"
 #. module: base
 #: model:ir.model,name:base.model_base_partner_merge_line
 msgid "Merge Partner Line"
-msgstr ""
+msgstr "İş Ortağı Birleştirme Satırı"
 
 #. module: base
 #: model:ir.model,name:base.model_base_partner_merge_automatic_wizard
 msgid "Merge Partner Wizard"
-msgstr ""
+msgstr "İş Ortağı Birleştirme Sihirbazı"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
@@ -16777,7 +16783,7 @@ msgstr "Modül Kategori"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
 msgid "Module Info"
-msgstr ""
+msgstr "Modül Bilgisi"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__shortdesc
@@ -16897,7 +16903,7 @@ msgstr "Montserrat"
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "More languages"
-msgstr ""
+msgstr "Daha Fazla Dil"
 
 #. module: base
 #: model:res.country,name:base.ma
@@ -18982,7 +18988,7 @@ msgstr "Diğer"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__type__other
 msgid "Other Address"
-msgstr ""
+msgstr "Diğer Adresi"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_extra
@@ -19153,24 +19159,24 @@ msgstr ""
 #. module: base
 #: model:ir.actions.act_window,name:base.paper_format_action
 msgid "Paper Format General Configuration"
-msgstr "Kağıt Biçimi Genel Yapılandırma"
+msgstr "Sayfa Biçimi Genel Yapılandırma"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_document_layout__paperformat_id
 #: model:ir.model.fields,field_description:base.field_res_company__paperformat_id
 msgid "Paper format"
-msgstr "Kağıt Biçimi"
+msgstr "Sayfa Biçimi"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.paperformat_view_form
 #: model_terms:ir.ui.view,arch_db:base.paperformat_view_tree
 msgid "Paper format configuration"
-msgstr "Kağıt biçimi yapılandırması"
+msgstr "Sayfa biçimi yapılandırması"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__format
 msgid "Paper size"
-msgstr "Sayfa ebat"
+msgstr "Sayfa Boyutu"
 
 #. module: base
 #: model:res.country,name:base.pg
@@ -19421,7 +19427,7 @@ msgstr "Ödeme Takip Yönetimi"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.layout_preview
 msgid "Payment Terms:"
-msgstr ""
+msgstr "Ödeme Koşulları:"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_payment
@@ -20182,7 +20188,7 @@ msgstr "Etkinliklerle ilgili Sorular"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_quotation_builder
 msgid "Quotation Builder"
-msgstr ""
+msgstr "Teklif Oluşturucu"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_expense
@@ -20405,7 +20411,7 @@ msgstr "Kayıt kuralları"
 #: code:addons/models.py:0 code:addons/models.py:0
 #, python-format
 msgid "Records:"
-msgstr ""
+msgstr "Kayıtlar:"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_recruitment
@@ -21043,7 +21049,7 @@ msgstr "Satış"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Sales & Purchase"
-msgstr ""
+msgstr "Satış & Satınalma"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_expense
@@ -22443,7 +22449,7 @@ msgstr "Hedef Pencere"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet
 msgid "Task Logs"
-msgstr ""
+msgstr "Görev Günlükleri"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__vat

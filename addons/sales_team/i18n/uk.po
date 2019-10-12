@@ -3,16 +3,16 @@
 # 	* sales_team
 # 
 # Translators:
-# Martin Trigaux, 2019
 # Bohdan Lisnenko, 2019
 # ТАрас <tratatuta@i.ua>, 2019
+# Martin Trigaux, 2019
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:18+0000\n"
+"POT-Creation-Date: 2019-10-07 07:13+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
@@ -70,6 +70,11 @@ msgstr ""
 #: model:res.groups,name:sales_team.group_sale_manager
 msgid "Administrator"
 msgstr "Адміністратор"
+
+#. module: sales_team
+#: model:crm.team,name:sales_team.crm_team_1
+msgid "America"
+msgstr "Америка"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
@@ -159,6 +164,11 @@ msgstr "Визначіть нову команду продажу"
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__display_name
 msgid "Display Name"
 msgstr "Назва для відображення"
+
+#. module: sales_team
+#: model:crm.team,name:sales_team.team_sales_department
+msgid "Europe"
+msgstr "Європа"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__favorite_user_ids
@@ -303,11 +313,6 @@ msgid "Point of Sale"
 msgstr "Точка продажу"
 
 #. module: sales_team
-#: model:crm.team,name:sales_team.team_sales_department
-msgid "Sales"
-msgstr "Продажі"
-
-#. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__name
 #: model:ir.model.fields,field_description:sales_team.field_res_partner__team_id
@@ -320,7 +325,7 @@ msgstr "Команда продажу"
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Sales Team name..."
-msgstr ""
+msgstr "Назва команди продажу..."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_res_users__sale_team_id
@@ -328,8 +333,8 @@ msgid ""
 "Sales Team the user is member of. Used to compute the members of a Sales "
 "Team through the inverse one2many"
 msgstr ""
-"Команда з продажу, в якій є користувач. Використовується для обчислення "
-"членів команди з продажу через зворот one2many"
+"Команда продажу, в якій є користувач. Використовується для обчислення членів"
+" команди з продажу через зворот one2many"
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_salesteams_act
@@ -340,7 +345,7 @@ msgstr "Команди продажу"
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
 msgid "Salesteams Search"
-msgstr "Пошук команди"
+msgstr "Пошук команд продажу"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__sequence
@@ -383,7 +388,7 @@ msgstr "Колір каналу"
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
 msgid "Undefined graph model for Sales Team: %s"
-msgstr "Невизначена модель графи для команди продажів: %s"
+msgstr "Невизначена графічна модель для команди продажів: %s"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_unread
@@ -430,16 +435,6 @@ msgstr "Користувачі"
 #: model:crm.team,name:sales_team.salesteam_website_sales
 msgid "Website"
 msgstr "Веб-сайт"
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team__website_message_ids
-msgid "Website Messages"
-msgstr "Повідомлення з веб-сайту"
-
-#. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team__website_message_ids
-msgid "Website communication history"
-msgstr "Історія бесіди на сайті"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.ebay_sales_team

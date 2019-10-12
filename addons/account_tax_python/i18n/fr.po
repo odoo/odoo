@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2019
+# Herve GUERIN <herve.guerin@auguria.fr>, 2019
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-26 08:16+0000\n"
 "PO-Revision-Date: 2019-08-26 09:08+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"Last-Translator: Herve GUERIN <herve.guerin@auguria.fr>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,6 +34,15 @@ msgid ""
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
+"\n"
+"  - Groupe de taxes : La taxe est un ensemble de sous-impôts.\n"
+"  - Fixe : Le montant de la taxe reste le même quel que soit le prix.\n"
+"  - Pourcentage sur le prix hors taxes : Le montant de la taxe est un pourcentage direct du prix hors taxes, exemples avec une taxe à 10% :\n"
+"      100 * 10 % = 110 (base de prix = 100 HT)\n"
+"      110 / (1 + 10%) = 100 (base de prix = 110 TTC)\n"
+"  - Pourcentage sur le prix TTC (toutes taxes comprises) : Le lien entre le pourcentage et le montant de la taxe est plus complexe, exemples avec une taxe à 10% :\n"
+"      180 / (1 - 10%) = 200 (base de prix = 180 HT)\n"
+"      200 * (1 - 10%) = 180 (base de prix = 200 TTC)"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_applicable

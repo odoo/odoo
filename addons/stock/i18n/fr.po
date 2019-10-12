@@ -13,6 +13,7 @@
 # Pierrick Brun <brun.pierrick@protonmail.com>, 2019
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2019
 # Xavier Symons <xsy@openerp.com>, 2019
+# f5f0a0dac17dde787a1d812a6989680e, 2019
 # Quentin THEURET <odoo@kerpeo.com>, 2019
 # 31c77b784710e4a287a92d851a40e039, 2019
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2019
@@ -21,7 +22,6 @@
 # Clo <clo@odoo.com>, 2019
 # Jérôme Tanché <jerome.tanche@ouest-dsi.fr>, 2019
 # Xavier Brochard <xavier@alternatif.org>, 2019
-# Rémi CAZENAVE <remi@le-filament.com>, 2019
 # Nathan Grognet <ngr@odoo.com>, 2019
 # a270031086f2a0d3514bc0cb507b48f6, 2019
 # Mohamed BENKIRANE <benkirane.med.ali@gmail.com>, 2019
@@ -34,8 +34,6 @@
 # Miguel Vidali <mvidali129@gmail.com>, 2019
 # Melanie Bernard <mbe@odoo.com>, 2019
 # Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2019
-# f5f0a0dac17dde787a1d812a6989680e, 2019
-# Eloïse Stilmant <est@odoo.com>, 2019
 # Laura Piraux <lap@odoo.com>, 2019
 # Nathan Noël <nathan070@me.com>, 2019
 # Thomas Dobbelsteyn <tdo@odoo.com>, 2019
@@ -46,14 +44,16 @@
 # Bertrand LATOUR <divoir@gmail.com>, 2019
 # Cécile Collart <cco@odoo.com>, 2019
 # Oriane Malburny <oma@odoo.com>, 2019
+# Eloïse Stilmant <est@odoo.com>, 2019
+# Rémi CAZENAVE <remi@le-filament.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-30 09:40+0000\n"
+"POT-Creation-Date: 2019-10-07 07:11+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Oriane Malburny <oma@odoo.com>, 2019\n"
+"Last-Translator: Rémi CAZENAVE <remi@le-filament.com>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -839,11 +839,6 @@ msgid "As soon as possible"
 msgstr "Aussi vite que possible"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_picking_responsible_form
-msgid "Assign"
-msgstr "Affecter"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__owner_id
 msgid "Assign Owner"
 msgstr "Attribuer un propriétaire"
@@ -860,13 +855,6 @@ msgstr "Attribuer responsable"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
 msgid "Assign Serial Numbers"
 msgstr "Attribuer numéro de série"
-
-#. module: stock
-#: model:ir.actions.act_window,name:stock.stock_assign_responsible_action
-#: model:ir.actions.server,name:stock.action_assign_a_responsible
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_picking_responsible_form
-msgid "Assign a Responsible"
-msgstr "Attribuer un responsable"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -1035,6 +1023,12 @@ msgstr ""
 " le supprimer."
 
 #. module: stock
+#: model:product.product,name:stock.product_cable_management_box
+#: model:product.template,name:stock.product_cable_management_box_product_template
+msgid "Cable Management Box"
+msgstr "Boîtier pour Cables"
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_calendar
 msgid "Calendar View"
 msgstr "Vue calendrier"
@@ -1059,7 +1053,6 @@ msgstr "Impossible de trouver une route générique %s."
 #: model_terms:ir.ui.view,arch_db:stock.view_overprocessed_transfer
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_procurement_compute_wizard
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_picking_responsible_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quantity_history
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rules_report
@@ -1823,6 +1816,7 @@ msgstr "Adresse de livraison"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
+#: model:stock.picking.type,name:stock.chi_picking_type_out
 #: model:stock.picking.type,name:stock.picking_type_out
 #, python-format
 msgid "Delivery Orders"
@@ -4927,6 +4921,7 @@ msgstr "Route de réception"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
+#: model:stock.picking.type,name:stock.chi_picking_type_in
 #: model:stock.picking.type,name:stock.picking_type_in
 #, python-format
 msgid "Receipts"
@@ -6460,26 +6455,22 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
-msgid "This note will show up on delivery orders."
-msgstr "Cette note apparaîtra sur les bons de livraison."
+msgid "This note is added to delivery orders."
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid ""
-"This note will show up on internal transfer orders (e.g. where to pick the "
+"This note is added to internal transfer orders (e.g. where to pick the "
 "product in the warehouse)."
 msgstr ""
-"Cette note apparaîtra sur les ordres de transferts internes (par exemple où "
-"prendre l'article dans l'entrepôt)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid ""
-"This note will show up on receipt orders (e.g. where to store the product in"
-" the warehouse)."
+"This note is added to receipt orders (e.g. where to store the product in the"
+" warehouse)."
 msgstr ""
-"Cette note apparaîtra sur les ordres de réception (par exemple où stocker "
-"l'article dans l'entrepôt)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
@@ -6792,6 +6783,12 @@ msgstr "Prix unitaire"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree
 msgid "Unit of Measure"
 msgstr "Unité de mesure"
+
+#. module: stock
+#: model:product.product,uom_name:stock.product_cable_management_box
+#: model:product.template,uom_name:stock.product_cable_management_box_product_template
+msgid "Units"
+msgstr "Unités"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form

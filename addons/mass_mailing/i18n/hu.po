@@ -6,18 +6,18 @@
 # Kisrobert <kisrobi@gmail.com>, 2019
 # Daniel Gerstenbrand <daniel.gerstenbrand@gmail.com>, 2019
 # Tibor Kőnig <konig.tibor@evitalit.hu>, 2019
-# Martin Trigaux, 2019
 # krnkris, 2019
 # gezza <geza.nagy@oregional.hu>, 2019
 # Ákos Nagy <akos.nagy@oregional.hu>, 2019
+# Martin Trigaux, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-01 12:11+0000\n"
+"POT-Creation-Date: 2019-10-07 07:13+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2019\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1510,6 +1510,17 @@ msgid "New Mailing List Name"
 msgstr ""
 
 #. module: mass_mailing
+#: model:utm.campaign,name:mass_mailing.mass_mail_campaign_1
+msgid "Newsletter"
+msgstr "Hírlevél"
+
+#. module: mass_mailing
+#: model:mailing.mailing,name:mass_mailing.mass_mail_1
+#: model:utm.source,name:mass_mailing.mass_mail_1_utm_source
+msgid "Newsletter 1"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "Következő tevékenység határideje"
@@ -1607,6 +1618,11 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount2
 msgid "OFF YOUR NEXT ORDER!"
+msgstr ""
+
+#. module: mass_mailing
+#: model:mailing.mailing,subject:mass_mailing.mass_mail_1
+msgid "October Newsletter"
 msgstr ""
 
 #. module: mass_mailing
@@ -2094,6 +2110,11 @@ msgid "Thank you! Your feedback has been sent successfully!"
 msgstr ""
 
 #. module: mass_mailing
+#: model_terms:mailing.list,toast_content:mass_mailing.mass_mail_list_2
+msgid "Thanks for subscribing!"
+msgstr ""
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_paragraph
 msgid "That way, Odoo evolves much faster than any other solution."
 msgstr ""
@@ -2142,7 +2163,7 @@ msgstr ""
 #. module: mass_mailing
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
-msgid "There is no recipients selected."
+msgid "There are no recipients selected."
 msgstr ""
 
 #. module: mass_mailing

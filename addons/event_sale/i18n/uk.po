@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"POT-Creation-Date: 2019-10-07 07:12+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
@@ -189,7 +189,6 @@ msgstr "Квиток на події"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_product_template_form
-#: model:product.category,name:event_sale.product_category_events
 msgid "Events"
 msgstr "Події"
 
@@ -198,6 +197,11 @@ msgstr "Події"
 #, python-format
 msgid "Free"
 msgstr "Безкоштовно"
+
+#. module: event_sale
+#: model:event.event.ticket,name:event_sale.event_4_ticket_1
+msgid "General Admission"
+msgstr "Загальний вступ"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__id
@@ -443,6 +447,12 @@ msgid "Source Sales Order"
 msgstr "Джерело замовлення на продаж"
 
 #. module: event_sale
+#: model:event.event.ticket,name:event_sale.event_0_ticket_1
+#: model:event.event.ticket,name:event_sale.event_2_ticket_1
+msgid "Standard"
+msgstr "Стандарт"
+
+#. module: event_sale
 #: code:addons/event_sale/models/event.py:0
 #, python-format
 msgid "The registration must be paid"
@@ -524,6 +534,12 @@ msgstr "Одиниці"
 #: model:ir.model.fields.selection,name:event_sale.selection__event_event_ticket__seats_availability__unlimited
 msgid "Unlimited"
 msgstr "Необмежено"
+
+#. module: event_sale
+#: model:event.event.ticket,name:event_sale.event_0_ticket_2
+#: model:event.event.ticket,name:event_sale.event_2_ticket_2
+msgid "VIP"
+msgstr "VIP"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form

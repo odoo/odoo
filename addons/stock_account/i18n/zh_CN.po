@@ -3,13 +3,10 @@
 # 	* stock_account
 # 
 # Translators:
-# Jeanphy <hzh0292@qq.com>, 2019
-# Martin Trigaux, 2019
 # Maie <m@maie.name>, 2019
 # Jeffery CHEN <jeffery9@gmail.com>, 2019
 # liAnGjiA <liangjia@qq.com>, 2019
 # 苏州远鼎 <tiexinliu@126.com>, 2019
-# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2019
 # bf2549c5415a9287249cba2b8a5823c7, 2019
 # guohuadeng <guohuadeng@hotmail.com>, 2019
 # keecome <7017511@qq.com>, 2019
@@ -18,14 +15,17 @@
 # inspur qiuguodong <qiuguodong@inspur.com>, 2019
 # John An <johnxan@163.com>, 2019
 # Felix Yuen <fyu@odoo.com>, 2019
+# Martin Trigaux, 2019
+# Jeanphy <hzh0292@qq.com>, 2019
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"POT-Creation-Date: 2019-10-07 07:12+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Felix Yuen <fyu@odoo.com>, 2019\n"
+"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -77,6 +77,11 @@ msgid "Accounting Information"
 msgstr "会计信息"
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__active
+msgid "Active"
+msgstr "有效"
+
+#. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid ""
 "Add additional cost (transport, customs, ...) in the value of the product."
@@ -108,7 +113,7 @@ msgstr "平均成本(AVCO)"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_change_standard_price
 msgid "Cancel"
-msgstr "取消日期"
+msgstr "取消"
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
@@ -126,11 +131,6 @@ msgid ""
 "on the product category, or on the location, before processing this "
 "operation."
 msgstr "找不到产品%s的库存出库库科目。 在处理此操作之前，您必须在产品类别或产品上进行定义。"
-
-#. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
-msgid "Category"
-msgstr "类别"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -280,6 +280,12 @@ msgstr ""
 "如果成本价减少，库存计价科目为贷方，而进货科目为借方。"
 
 #. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__active
+msgid ""
+"If unchecked, it will allow you to hide the product without removing it."
+msgstr "如果不选中，允许你隐藏这个产品而无需删除。"
+
+#. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory
 msgid "Inventory"
 msgstr "库存"
@@ -391,12 +397,12 @@ msgstr "价格"
 #: model:ir.model,name:stock_account.model_product_product
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__product_id
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_search
-#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Product"
 msgstr "产品"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__categ_id
 msgid "Product Category"
 msgstr "产品类别"
 
@@ -407,6 +413,7 @@ msgstr "产品移动(移库明细)"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_template
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__product_tmpl_id
 msgid "Product Template"
 msgstr "产品模板"
 
@@ -446,6 +453,11 @@ msgstr "退回拣货"
 #: model:ir.model,name:stock_account.model_stock_return_picking_line
 msgid "Return Picking Line"
 msgstr "退料明细行"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__categ_id
+msgid "Select category for the current product"
+msgstr "为当前产品选择一个类别"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__standard
@@ -596,7 +608,6 @@ msgid "Unit of Measure"
 msgstr "单位"
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.product_product_normal_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
 #: model_terms:ir.ui.view,arch_db:stock_account.view_template_property_form
 msgid "Update Cost"

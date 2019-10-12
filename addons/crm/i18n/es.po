@@ -6,25 +6,26 @@
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2019
 # Cristóbal Martí Oliver <info@moblesmarti.com>, 2019
 # Rick Hunter <rick_hunter_ec@yahoo.com>, 2019
-# Sergio Hevia <sah@talleresbernesga.com>, 2019
 # José Vicente <txusev@gmail.com>, 2019
-# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2019
 # Nicolás Broggi <rnbroggi@gmail.com>, 2019
-# Martin Trigaux, 2019
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2019
 # nle_odoo, 2019
 # Cristopher Cravioto <ccr@odoo.com>, 2019
 # Mariana Santos Romo <msn@odoo.com>, 2019
 # Jesse Garza <jga@odoo.com>, 2019
 # Jon Perez <jop@odoo.com>, 2019
+# Martin Trigaux, 2019
+# Sergio Hevia <sah@talleresbernesga.com>, 2019
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2019
+# RGB Consulting <odoo@rgbconsulting.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-30 09:40+0000\n"
+"POT-Creation-Date: 2019-10-07 07:11+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Jon Perez <jop@odoo.com>, 2019\n"
+"Last-Translator: RGB Consulting <odoo@rgbconsulting.com>, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -199,16 +200,6 @@ msgstr ""
 " se adjuntaran directamente a esta oportunidad.</p><p class=\"mb0\">Escriba "
 "<i>'@'</i> para mencionar gente - es como CC en los correos electronicos "
 "</p>"
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_kanban
-msgid "<small>Leads:</small>"
-msgstr ""
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_kanban
-msgid "<small>Opportunities:</small>"
-msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -415,6 +406,11 @@ msgid "Calendar Event"
 msgstr "Calendario de eventos"
 
 #. module: crm
+#: model:mail.activity.type,name:crm.mail_activity_demo_call_demo
+msgid "Call for Demo"
+msgstr "Llamada para demostración"
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__campaign_id
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -588,6 +584,11 @@ msgstr "Configurar nombre de dominio"
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Consider leads created as of the"
 msgstr "Considere las iniciativas creadas a partir de la"
+
+#. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor7
+msgid "Consulting"
+msgstr "Consultoría"
 
 #. module: crm
 #: model:ir.model,name:crm.model_res_partner
@@ -869,6 +870,11 @@ msgid "Description"
 msgstr "Descripción"
 
 #. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor5
+msgid "Design"
+msgstr "Diseño"
+
+#. module: crm
 #: model:ir.model,name:crm.model_digest_digest
 msgid "Digest"
 msgstr "Resumen"
@@ -1080,6 +1086,11 @@ msgid "Follow-up"
 msgstr "Seguimiento"
 
 #. module: crm
+#: model:mail.activity.type,name:crm.mail_activity_demo_followup_quote
+msgid "Follow-up Quote"
+msgstr "Seguimiento de presupuesto"
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_follower_ids
 msgid "Followers"
 msgstr "Seguidores"
@@ -1251,6 +1262,11 @@ msgstr "Correos electrónicos entrantes"
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__phone_state__incorrect
 msgid "Incorrect"
 msgstr "Incorrecto"
+
+#. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor4
+msgid "Information"
+msgstr "Información"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -1454,6 +1470,7 @@ msgstr "Iniciativa/Oportunidad"
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 #: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_form
+#: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_kanban
 msgid "Leads"
 msgstr "Iniciativas"
 
@@ -1590,6 +1607,11 @@ msgstr "Baja"
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_main_attachment_id
 msgid "Main Attachment"
 msgstr "Adjuntos principales"
+
+#. module: crm
+#: model:mail.activity.type,name:crm.mail_activity_demo_make_quote
+msgid "Make Quote"
+msgstr "Ofertar"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__generate_lead_from_alias
@@ -1887,6 +1909,7 @@ msgstr "Motivo de pérdida de la oportunidad"
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_graph
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 #: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_form
+#: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_kanban
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
 #: model_terms:ir.ui.view,arch_db:crm.view_partners_form_crm1
 msgid "Opportunities"
@@ -1997,6 +2020,11 @@ msgstr "Oportunidad recuperada"
 #: model:mail.message.subtype,description:crm.mt_lead_won
 msgid "Opportunity won"
 msgstr "Oportunidad ganada"
+
+#. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor8
+msgid "Other"
+msgstr "Otro"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_team_overdue_opportunity
@@ -2123,6 +2151,11 @@ msgstr "Prioridad"
 #: model:ir.model.fields,field_description:crm.field_crm_lead__probability
 msgid "Probability"
 msgstr "Probabilidad"
+
+#. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor1
+msgid "Product"
+msgstr "Producto"
 
 #. module: crm
 #: model:crm.stage,name:crm.stage_lead3
@@ -2273,6 +2306,11 @@ msgid "Sequence"
 msgstr "Secuencia"
 
 #. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor3
+msgid "Services"
+msgstr "Servicios"
+
+#. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_stage_action
 msgid "Set a new stage in your opportunity pipeline"
 msgstr "Establecer una nueva fase en su flujo de oportunidades"
@@ -2307,6 +2345,11 @@ msgstr "Mostrar solo iniciativas"
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Show only opportunity"
 msgstr "Mostrar únicamente oportunidades"
+
+#. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor2
+msgid "Software"
+msgstr "Software"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lost_reason_action
@@ -2594,6 +2637,11 @@ msgstr "También costoso"
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Tracking"
 msgstr "Seguimiento"
+
+#. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor6
+msgid "Training"
+msgstr "Formación"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
