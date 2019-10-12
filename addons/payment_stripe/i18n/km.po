@@ -35,6 +35,9 @@ msgid ""
 "product. As defined in your Stripe profile. See: "
 "https://stripe.com/docs/checkout"
 msgstr ""
+"URL ដែលទាក់ទងឬដាច់ខាតចង្អុលទៅរូបភាពការ៉េនៃម៉ាកឬផលិតផលរបស់អ្នក។ "
+"ដូចដែលបានកំណត់ក្នុងប្រវត្តិរូបរបស់អ្នក។ មើល៖ "
+"https://stripe.com/docs/checkout"
 
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0
@@ -69,7 +72,7 @@ msgstr "ឈ្មោះ​អ្នក​កាន់​ប័ណ្ណ "
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_image_url
 msgid "Checkout Image URL"
-msgstr ""
+msgstr "ពិនិត្យរូបភាព URL "
 
 #. module: payment_stripe
 #. openerp-web
@@ -146,6 +149,8 @@ msgid ""
 "Perhaps the problem can be solved by double-checking your credit card "
 "details, or contacting your bank?"
 msgstr ""
+"ប្រហែលជាបញ្ហាអាចត្រូវបានដោះស្រាយដោយការត្រួតពិនិត្យព័ត៌មានលំអិតកាតឥណទានរបស់អ្នកម្តងទៀតឬទាក់ទងធនាគាររបស់អ្នក?"
+" "
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__provider
@@ -165,36 +170,37 @@ msgstr "ឆ្នូត"
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_publishable_key
 msgid "Stripe Publishable Key"
-msgstr ""
+msgstr "កូដបោះពុម្ពឆ្នូត"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_secret_key
 msgid "Stripe Secret Key"
-msgstr ""
+msgstr "កូដគន្លឹះសម្ងាត់ "
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:172
 #, python-format
 msgid "Stripe gave us the following info about the problem: '%s'"
-msgstr ""
+msgstr "កូដក៏បានផ្តល់ឱ្យយើងនូវព័ត៌មានដូចខាងក្រោមអំពីបញ្ហានេះ':%s'"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:184
 #, python-format
 msgid "Stripe: %s orders found for reference %s"
-msgstr ""
+msgstr "ឆ្នូត៖ %sការបញ្ជាទិញត្រូវបានរកឃើញសម្រាប់ជាឯកសារយោង%s"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:180
 #, python-format
 msgid "Stripe: no order found for reference %s"
-msgstr ""
+msgstr "ឆ្នូត៖ មិនមានរកឃើញការបញ្ជាទិញទេ%s "
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:260
 #, python-format
 msgid "Stripe: no payment token was provided or the token creation failed."
 msgstr ""
+"ឆ្នូត៖គ្មានការបង់ប្រាក់ដែលយក គឺបានផ្តល់ឲ្យ ឫការយកការបង្កើតត្រូវបានបរាជ័យ"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:170
