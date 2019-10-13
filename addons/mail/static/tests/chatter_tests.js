@@ -528,55 +528,38 @@ QUnit.test('attachmentBox drag and drop files [REQUIRE NON-INCOGNITO WINDOW]', a
     });
 
     testUtils.mock.patch(AttachmentBox, {
-        _callUploadAttachment: function (controllerUrl, formData) {
+        async _callUploadAttachment(controllerUrl, formData) {
             assert.strictEqual(controllerUrl, "/web/binary/upload_attachment",
                 "upload url should match to /web/binary/upload_attachment");
-            assert.strictEqual(formData.get("ufile").name, "text.txt",
+            const files = formData.getAll('ufile');
+            assert.strictEqual(files[1].name, "text.txt",
                 "uploading file name should be 'text.txt'");
-            this.trigger_up('reload_attachment_box');
-            return Promise.resolve();
+            assert.step('_callUploadAttachment');
         }
     });
 
-    var form = await createView({
+    const form = await createView({
         View: FormView,
         model: 'partner',
         data: this.data,
         services: this.services,
-        arch: '<form string="Partners">' +
-                '<sheet>' +
-                    '<field name="foo"/>' +
-                '</sheet>' +
-                '<div class="oe_chatter">' +
-                    '<field name="message_ids" widget="mail_thread"/>' +
-                '</div>' +
-            '</form>',
+        arch: `<form string="Partners">
+                <sheet>
+                    <field name="foo"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>`,
         res_id: 7,
-        mockRPC: function (route, args) {
-            var result = this._super.apply(this, arguments);
-            if (args.method === "search_read" && args.model === "ir.attachment") {
-                return result.then(function (records) {
-                    return Promise.resolve(records.concat([{
-                        id: 3,
-                        type: 'binary',
-                        mimetype: "text/plain",
-                        name: "text.txt",
-                        res_id: 7,
-                        res_model: 'partner'
-                    }]));
-                });
-            }
-            return result;
-        }
     });
 
     var $button = form.$('.o_chatter_button_attachment');
     assert.strictEqual($button.length, 1, "should have one attachment button");
-    await testUtils.dom.click($button);
 
+    await testUtils.dom.click($button);
     assert.containsOnce(form, '.o_attachments_file_drop_zone',
         "should have a dropzone to drag-and-drop files");
-
     var $dropZoneContainer = form.$('.o_attachments_file_drop_zone');
     assert.isNotVisible($dropZoneContainer, "dropzone should not be visible");
 
@@ -591,7 +574,6 @@ QUnit.test('attachmentBox drag and drop files [REQUIRE NON-INCOGNITO WINDOW]', a
         content: 'hello, world',
         contentType: 'text/plain',
     });
-
     await testUtils.file.dragoverFile(form.$('.o_chatter'), file);
     await testUtils.nextTick();
     assert.containsOnce(form, '.o_mail_chatter_attachments',
@@ -600,16 +582,11 @@ QUnit.test('attachmentBox drag and drop files [REQUIRE NON-INCOGNITO WINDOW]', a
     $dropZoneContainer = form.$('.o_attachments_file_drop_zone');
     await testUtils.file.dragoverFile($dropZoneContainer, file);
     assert.isVisible($dropZoneContainer, "dropzone should be visible");
-    await testUtils.file.dropFile($dropZoneContainer, file);
 
+    await testUtils.file.dropFile($dropZoneContainer, file);
+    assert.verifySteps(['_callUploadAttachment']);
     assert.containsOnce(form, '.o_attachments_previews',
         "should display some attachments on the attachments box");
-    assert.containsN(form, '.o_attachment', 3,
-        "should display three attachments on the attachments box");
-
-    var filename = form.$('.o_attachment').last().find(".caption").first().text().trim();
-    assert.strictEqual(filename, 'text.txt',
-        "should display the correct filename");
     assert.isNotVisible($dropZoneContainer, "dropzone should not be visible");
 
     form.destroy();

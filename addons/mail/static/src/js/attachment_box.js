@@ -1,7 +1,6 @@
 odoo.define('mail.AttachmentBox', function (require) {
 "use strict";
 
-var ajax = require('web.ajax');
 var core = require('web.core');
 var Widget = require('web.Widget');
 
@@ -18,8 +17,8 @@ var AttachmentBox = Widget.extend({
         "click .o_attachment_delete_cross": "_onDeleteAttachment",
         "click .o_upload_attachments_button": "_onUploadAttachments",
         "change .o_chatter_attachment_form .o_form_binary_form": "_onAddAttachment",
-        'dragover .o_attachments_file_drop_zone': '_onFileDragover',
-        'drop .o_attachments_file_drop_zone': '_onFileDrop',
+        'dragover .o_attachments_file_drop_zone': '_onDragoverFileDropZone',
+        'drop .o_attachments_file_drop_zone': '_onDropFile',
     },
     /**
      * @override
@@ -78,20 +77,16 @@ var AttachmentBox = Widget.extend({
      *
      * @param {string} controllerUrl
      * @param {FormData} formData
+     * @private
      */
-    _callUploadAttachment: function (controllerUrl, formData) {
-        return $.ajax({
-            url: controllerUrl,
-            type: "POST",
-            enctype: 'multipart/form-data',
-            processData: false,
-            contentType: false,
-            data: formData,
-            success: (result) => {
-                var $el = $(result);
-                $.globalEval($el.contents().text());
-            }
+    async _callUploadAttachment(controllerUrl, formData) {
+        const response = await window.fetch(controllerUrl, {
+            method: 'POST',
+            body: formData,
         });
+        const result = await response.text();
+        const $el = $(result);
+        $.globalEval($el.contents().text());
     },
     /**
      * Making sure that dragging content is external files.
@@ -118,16 +113,18 @@ var AttachmentBox = Widget.extend({
      * @param {Array<File>} params.files
      */
     _processAttachmentChange: function (files) {
-        var self = this;
         var $form = this.$('form.o_form_binary_form');
         var formData = new FormData();
-        $form.find("input").each((index, input) => {
-            if (input.name != "ufile") {
-                formData.append(input.name, input.value);
+        var inputList = [...$form.find("input")];
+        for (let i = 0; i < inputList.length; i++) {
+            if (inputList[i] !== "ufile") {
+                formData.append(inputList[i].name, inputList[i].value);
             }
-        });
-        _.each(files, (file) => formData.append("ufile", file, file.name));
-        self._callUploadAttachment($form.attr("action"), formData);
+        }
+        for (const file of files) {
+            formData.append("ufile", file, file.name);
+        }
+        this._callUploadAttachment($form.attr("action"), formData);
     },
 
     //--------------------------------------------------------------------------
@@ -202,7 +199,7 @@ var AttachmentBox = Widget.extend({
      * @private
      * @param {MouseEvent} ev
      */
-    _onFileDragover: function (ev) {
+    _onDragoverFileDropZone: function (ev) {
         ev.originalEvent.dataTransfer.dropEffect = "copy";
     },
     /**
@@ -211,7 +208,7 @@ var AttachmentBox = Widget.extend({
      * @private
      * @param {MouseEvent} ev
      */
-    _onFileDrop: function (ev) {
+    _onDropFile: function (ev) {
         ev.preventDefault();
         $(".o_attachments_file_drop_zone").addClass("d-none");
         if (this._isDragSourceExternalFile(ev.originalEvent.dataTransfer)) {

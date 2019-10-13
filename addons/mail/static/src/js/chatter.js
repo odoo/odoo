@@ -106,6 +106,16 @@ var Chatter = Widget.extend({
         $body.on("drop", this._onBodyFileDrop.bind(this));
         return this._super.apply(this, arguments);
     },
+    /**
+     * @override
+     */
+    destroy() {
+        var $body = $('body');
+        $body.on('dragleave');
+        $body.on("dragover");
+        $body.on("drop");
+        return this._super(...arguments);
+    },
 
     //--------------------------------------------------------------------------
     // Public
