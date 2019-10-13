@@ -104,7 +104,7 @@ msgstr "ថ្ងៃនៃសប្តាហ៍"
 #: model:ir.model.fields,field_description:resource.field_res_company__resource_calendar_id
 #: model:ir.model.fields,field_description:resource.field_res_users__resource_calendar_id
 msgid "Default Working Hours"
-msgstr ""
+msgstr "ម៉ោងធ្វើការលំនាំដើម"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_res_users__resource_calendar_id
@@ -260,7 +260,7 @@ msgstr "កាលបរិច្ឆេទចាកចេញ។"
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_form
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
 msgid "Leave Detail"
-msgstr ""
+msgstr "ទុកឱ្យលម្អិត"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__leave_ids
@@ -357,12 +357,12 @@ msgstr "ប្រភេទធនធាន។"
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar
 msgid "Resource Working Time"
-msgstr ""
+msgstr "ពេលវេលាធ្វើការធនធាន"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__calendar_id
 msgid "Resource's Calendar"
-msgstr ""
+msgstr "ប្រតិទិនធនធាន"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_resource_tree
@@ -377,7 +377,7 @@ msgstr "ធនធាន"
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_resources_leaves
 msgid "Resources Leaves"
-msgstr ""
+msgstr "ធនធានស្លឹក"
 
 #. module: resource
 #: model_terms:ir.actions.act_window,help:resource.action_resource_resource_tree
@@ -387,6 +387,9 @@ msgid ""
 "in a specific project phase. You can also set their efficiency level and "
 "workload based on their weekly working hours."
 msgstr ""
+"ធនធានអនុញ្ញាតឱ្យអ្នកបង្កើតនិងគ្រប់គ្រងធនធានដែលគួរតែចូលរួមក្នុងដំណាក់កាលគម្រោងជាក់លាក់។"
+" "
+"អ្នកក៏អាចកំណត់កម្រិតប្រសិទ្ធភាពនិងបន្ទុកការងាររបស់ពួកគេដោយផ្អែកលើម៉ោងធ្វើការប្រចាំសប្តាហ៍របស់ពួកគេ។"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -406,7 +409,7 @@ msgstr "ស្វែងរកស្លឹករយៈពេលធ្វើកា
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
 msgid "Search Working Time"
-msgstr ""
+msgstr "ស្វែងរកពេលវេលាធ្វើការ"
 
 #. module: resource
 #: code:addons/resource/models/res_company.py:22
@@ -425,16 +428,18 @@ msgid ""
 "Start and End time of working.\n"
 "A specific value of 24:00 is interpreted as 23:59:59.999999."
 msgstr ""
+"ពេលវេលាចាប់ផ្តើមនិងបញ្ចប់នៃការងារ។\n"
+"តម្លៃជាក់លាក់នៃម៉ោង 24:00ត្រូវបានបកស្រាយថាៈ 23:59:59.999999។"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__date_from
 msgid "Starting Date"
-msgstr ""
+msgstr "ពេលវេលាដែលកំពុងចាប់ផ្តើម"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Starting Date of Leave"
-msgstr ""
+msgstr "កាលបរិច្ឆេទចាប់ផ្តើមនៃការឈប់សម្រាក"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -444,7 +449,7 @@ msgstr "ថ្ងៃអាទិត្យ"
 #. module: resource
 #: model:ir.model,name:resource.model_resource_test
 msgid "Test Resource Model"
-msgstr ""
+msgstr "គំរូធនធានសាកល្បង"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:464
@@ -477,6 +482,10 @@ msgid ""
 "the efficiency factor is 200%, however the expected duration will be 30 "
 "minutes."
 msgstr ""
+"វាលនេះត្រូវបានប្រើដើម្បីគណនារយៈពេលរំពឹងទុកនៃការបញ្ជាទិញនៅឯមជ្ឈមណ្ឌលការងារនេះ។"
+" ឧទាហរណ៍ប្រសិនបើការបញ្ជាទិញការងារត្រូវចំណាយពេលមួយម៉ោងហើយកត្តាប្រសិទ្ធភាពគឺ "
+"100% នោះរយៈពេលរំពឹងទុកនឹងមានរយៈពេលមួយម៉ោង។ ប្រសិនបើកត្តាប្រសិទ្ធភាពគឺ 200% "
+"ទោះជាយ៉ាងណាក៏ដោយរយៈពេលដែលរំពឹងទុកនឹងមាន 30 នាទី។"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -498,12 +507,12 @@ msgstr "ព្រឹកថ្ងៃព្រហស្បតិ៍"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__time_type
 msgid "Time Type"
-msgstr ""
+msgstr "ប្រភេទពេលវេលា"
 
 #. module: resource
 #: sql_constraint:resource.resource:0
 msgid "Time efficiency must be strictly positive"
-msgstr ""
+msgstr "Time efficiency must be strictly positive"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__tz
@@ -577,17 +586,17 @@ msgstr "ព៌តមានការងារ។"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Work Resources"
-msgstr ""
+msgstr "ធនធានការងារ"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__hour_from
 msgid "Work from"
-msgstr ""
+msgstr "មកពីការងារ"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__hour_to
 msgid "Work to"
-msgstr ""
+msgstr "ការងារទៅលើ"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_res_company__resource_calendar_ids

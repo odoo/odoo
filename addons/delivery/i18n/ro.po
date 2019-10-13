@@ -60,6 +60,29 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Bună ${object.partner_id.name},<br/><br/>\n"
+"        Ne bucurăm să vă informăm că comanda dvs. a fost expediată.\n"
+"        %if object.carrier_tracking_ref:\n"
+"            Referința dvs. pentru urmărire este\n"
+"            <strong>\n"
+"            %if object.carrier_tracking_url:\n"
+"                <a href=\"${object.carrier_tracking_url}\" target=\"_blank\">${object.carrier_tracking_ref}</a>.\n"
+"            %else:\n"
+"                ${object.carrier_tracking_ref}.\n"
+"            %endif\n"
+"            </strong>\n"
+"        %endif\n"
+"        <br/><br/>\n"
+"        Vă rugăm să găsiți comanda de livrare atașată pentru mai multe detalii.<br/><br/>\n"
+"        Mulțumesc,<br/>\n"
+"        % if user and user.signature:\n"
+"          ${user.signature | safe}\n"
+"        % endif\n"
+"    </p>\n"
+"</div>\n"
+"        "
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
@@ -435,6 +458,9 @@ msgid ""
 "The shipping is free because the order amount exceeds %.2f.\n"
 "(The actual shipping cost is: %.2f)"
 msgstr ""
+"Info:\n"
+"Transportul este gratuit, deoarece suma comenzii depășește %.2f.\n"
+"(Costul real de transport este:%.2f)"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -715,6 +741,8 @@ msgid ""
 "Shipment sent to carrier %s for shipping with tracking number %s<br/>Cost: "
 "%.2f %s"
 msgstr ""
+"Livrare trimisă către transportatorul %s pentru expediere cu AWB%s<br/> "
+"Cost:%.2f%s"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_price

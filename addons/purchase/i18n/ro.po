@@ -70,6 +70,25 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Dragă ${object.partner_id.name}\n"
+"        % if object.partner_id.parent_id:\n"
+"            (${object.partner_id.parent_id.name})\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        Aici este în atașament comanda  <strong>${object.name}</strong>\n"
+"        % if object.partner_ref:\n"
+"            cu referința: ${object.partner_ref}\n"
+"        % endif\n"
+"        în valoare de <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"        de la ${object.company_id.name}.\n"
+"        <br/><br/>\n"
+"        Dacă aveți întrebări, nu ezitați să ne contactați.\n"
+"        <br/><br/>\n"
+"        Toate cele bune,\n"
+"    </p>\n"
+"</div>"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase
@@ -723,7 +742,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Get warnings in orders for products or vendors"
-msgstr ""
+msgstr "Avertismente în comenzi pentru produse sau furnizori"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__weight

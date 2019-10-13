@@ -109,6 +109,30 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        % set doc_name = 'quotation' if object.state in ('draft', 'sent') else 'order'\n"
+"        Dragă ${object.partner_id.name}\n"
+"        % if object.partner_id.parent_id:\n"
+"            (${object.partner_id.parent_id.name})\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        Aici este \n"
+"        % if ctx.get('proforma')\n"
+"            în atașament factura proformă\n"
+"        % else\n"
+"            ${doc_name} <strong>${object.name}</strong>\n"
+"        % endif\n"
+"        % if object.origin:\n"
+"            (cu referința: ${object.origin} )\n"
+"        % endif\n"
+"        în valoare de  <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong>\n"
+"        de la ${object.company_id.name}.\n"
+"        <br/><br/>\n"
+"        Nu ezitați să ne contactați dacă aveți întrebări.\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -822,37 +846,37 @@ msgstr "Companie"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with DHL"
-msgstr ""
+msgstr "Calculați costurile de transport și expediați cu DHL"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Easypost"
-msgstr ""
+msgstr "Calculați costurile de transport și expediați cu Easypost"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with FedEx"
-msgstr ""
+msgstr "Calculați costurile de transport și expediați cu FedEx"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with UPS"
-msgstr ""
+msgstr "Calculați costurile de transport și expediați cu UPS"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with USPS"
-msgstr ""
+msgstr "Calculați costurile de transport și expediați cu USPS"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with bpost"
-msgstr ""
+msgstr "Calculați costurile de transport și expediați cu bpost"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs on orders"
-msgstr ""
+msgstr "Calculați costurile de transport la comenzi"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_config_settings
@@ -1209,7 +1233,7 @@ msgstr "Detalii"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_website_sale_digital
 msgid "Digital Content"
-msgstr ""
+msgstr "Conținut digital"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__discount
@@ -1421,7 +1445,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Grant discounts on sales order lines"
-msgstr ""
+msgstr "Acordă reduceri la liniile de comandă de vânzare"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__weight
@@ -1967,7 +1991,7 @@ msgstr "Prețuri multiple de vânzare pe produs"
 #: selection:res.config.settings,multi_sales_price_method:0
 #: selection:res.config.settings,sale_pricelist_setting:0
 msgid "Multiple prices per product (e.g. customer segments, currencies)"
-msgstr ""
+msgstr "Prețuri multiple pe produs (de ex. Segmente de clienți, valute)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -2552,7 +2576,7 @@ msgstr ""
 #. module: sale
 #: selection:res.config.settings,multi_sales_price_method:0
 msgid "Prices computed from formulas (discounts, margins, roundings)"
-msgstr ""
+msgstr "Prețuri calculate din formule (reduceri, marje, rotunjiri)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2606,7 +2630,7 @@ msgstr "Valoare atribut produs"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Product Catalog"
-msgstr ""
+msgstr "Catalog produse"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__categ_id
@@ -3250,7 +3274,7 @@ msgstr "Stabilește un prag de facturare:"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Set multiple prices per product, automated discounts, etc."
-msgstr ""
+msgstr "Stabiliți mai multe prețuri pe produs, reduceri automate etc."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
@@ -3260,7 +3284,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Set specific billing and shipping addresses"
-msgstr ""
+msgstr "Stabiliți adrese speifice de facturare și expediere"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3286,7 +3310,7 @@ msgstr "Livrare"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery
 msgid "Shipping Costs"
-msgstr ""
+msgstr "Costuri de livrare"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3302,7 +3326,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Show margins on orders"
-msgstr ""
+msgstr "Afișați marjele la comenzi"
 
 #. module: sale
 #: selection:product.pricelist,discount_policy:0

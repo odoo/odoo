@@ -32,6 +32,7 @@ msgstr "គោលបំណង${(object.name or '').replace('/','_')}"
 #: model:mail.template,subject:repair.mail_template_repair_quotation
 msgid "${object.partner_id.name} Repair Orders (Ref ${object.name or 'n/a' })"
 msgstr ""
+"${object.partner_id.name} Repair Orders (Ref ${object.name or 'n/a' })"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -53,6 +54,12 @@ msgid ""
 "* The 'Done' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
+"* ស្ថានភាព 'សេចក្តីព្រាង' ត្រូវបានប្រើនៅពេលអ្នកប្រើប្រាស់កំពុងអ៊ិនកូដការជួសជុលថ្មីនិងមិនមានការបញ្ជាក់។\n"
+"* ស្ថានភាព 'បានបញ្ជាក់' ត្រូវបានប្រើនៅពេលអ្នកប្រើប្រាស់បញ្ជាក់ពីលំដាប់ជួសជុល។\n"
+"* ស្ថានភាព“ ត្រៀមជួសជុល” ត្រូវបានប្រើដើម្បីចាប់ផ្តើមជួសជុលអ្នកប្រើប្រាស់អាចចាប់ផ្តើមជួសជុលបានលុះត្រាតែមានការបញ្ជាក់ពីការជួសជុល។\n"
+"* ស្ថានភាព 'នឹងត្រូវបានគេប្រើ' ត្រូវបានប្រើដើម្បីបង្កើតវិក័យប័ត្រមុនរឺក្រោយពេលជួសជុលរួចរាល់។\n"
+"* ស្ថានភាព 'រួចរាល់' ត្រូវបានកំណត់នៅពេលជួសជុលរួចរាល់។\n"
+"* ស្ថានភាព 'បានបោះបង់ចោល' ត្រូវបានប្រើនៅពេលអ្នកប្រើលុបចោលការបញ្ជាទិញជួសជុល។"
 
 #. module: repair
 #: model:mail.template,body_html:repair.mail_template_repair_quotation
@@ -76,6 +83,24 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px;font-size: 13px;\">\n"
+"        សួស្តី${object.partner_id.name},<br/>\n"
+"        ទីនេះគឺជាការរៀបចំបញ្ជាទិញ ${doc_name} <strong>${object.name}</strong>\n"
+"        % if object.origin:\n"
+"            (with reference: ${object.origin} )\n"
+"        % endif\n"
+"        % if object.invoice_method != 'none':\n"
+"            amounting in <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}.</strong><br/>\n"
+"        % else:\n"
+"            .<br/>\n"
+"        % endif\n"
+"        អ្នកអាចឆ្លើយអ៊ីមែលនេះប្រសិនបើអ្នកមានសំណួរ។\n"
+"        <br/><br/>\n"
+"      អរគុណ,\n"
+"    </p>\n"
+"</div>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -88,11 +113,14 @@ msgid ""
 "<span class=\"o_form_label\">This operation will cancel the Repair process, "
 "but will not cancel it's Invoice. Do you want to continue?</span>"
 msgstr ""
+"<span "
+"class=\"o_form_label\">ប្រតិបត្តិការនេះនឹងលុបចោលដំណើរការជួសជុលប៉ុន្តែនឹងមិនលុបចោលវិក្កយបត្រឡើយ។"
+" តើអ្នកចង់បន្តទេ?</span>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Lot/Serial Number:</strong>"
-msgstr ""
+msgstr "<strong>លេខ / លេខស៊េរី:</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -117,12 +145,12 @@ msgstr "<strong>ផលិតផលសំរាប់ជួសជុល៖</stron
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Shipping address :</strong>"
-msgstr ""
+msgstr "<strong>អាសយដ្ឋានដឹកជញ្ជូន :</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Total Without Taxes</strong>"
-msgstr ""
+msgstr "<strong>សរុបបើគ្មានពន្ធ</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -157,12 +185,12 @@ msgstr "បន្ថែម"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Add internal notes..."
-msgstr ""
+msgstr "បន្ថែមកំណត់ត្រាខាងក្នុង ..."
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Add quotation notes..."
-msgstr ""
+msgstr "បន្ថែមកំណត់ត្រាសម្រង់ ..."
 
 #. module: repair
 #: selection:repair.order,invoice_method:0
@@ -195,7 +223,7 @@ msgstr "បោះបង់ការជួសជុល"
 #: model:ir.actions.act_window,name:repair.action_cancel_repair
 #: model_terms:ir.ui.view,arch_db:repair.view_cancel_repair
 msgid "Cancel Repair Order"
-msgstr ""
+msgstr "បោះបង់ការបញ្ជាទិញជួសជុល"
 
 #. module: repair
 #: selection:repair.line,state:0 selection:repair.order,state:0
@@ -206,7 +234,7 @@ msgstr "បានលុបចោល"
 #: code:addons/repair/models/repair.py:244
 #, python-format
 msgid "Cannot cancel completed repairs."
-msgstr ""
+msgstr "មិនអាចលុបចោលការជួសជុលដែលបានបញ្ចប់ទេ។"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__partner_id
@@ -214,6 +242,8 @@ msgid ""
 "Choose partner for whom the order will be invoiced and delivered. You can "
 "find a partner by its Name, TIN, Email or Internal Reference."
 msgstr ""
+"ជ្រើសរើសដៃគូដែលអ្នកបញ្ជាទិញនឹងត្រូវបានចេញវិក្កយបត្រនិងប្រគល់ជូន។ "
+"អ្នកអាចស្វែងរកដៃគូដោយឈ្មោះធីអិនអ៊ីមែលឬឯកសារយោងផ្ទៃក្នុង។"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__company_id
@@ -240,6 +270,8 @@ msgid ""
 "Couldn't find a pricelist line matching this product and quantity.\n"
 "You have to change either the product, the quantity or the pricelist."
 msgstr ""
+"មិនអាចរកឃើញខ្សែព្រីស៊ីលីកដែលត្រូវគ្នានឹងផលិតផលនិងបរិមាណនេះទេ។\n"
+"អ្នកត្រូវតែផ្លាស់ប្តូរទាំងផលិតផលបរិមាណរឺព្រីនធ័រ។"
 
 #. module: repair
 #: model:ir.actions.act_window,name:repair.act_repair_invoice
@@ -251,12 +283,12 @@ msgstr "បង្កើតវិក្ក័យបត្រ"
 #. module: repair
 #: model:ir.model,name:repair.model_repair_order_make_invoice
 msgid "Create Mass Invoice (repair)"
-msgstr ""
+msgstr "បង្កើតវិក្កយបត្រម៉ាស់ (ជួសជុល)"
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
 msgid "Create a new reparation order"
-msgstr ""
+msgstr "បង្កើតលំដាប់សំណងថ្មី"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
@@ -296,7 +328,7 @@ msgstr "អាសយដ្ឋានលំនាំដើម"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__address_id
 msgid "Delivery Address"
-msgstr ""
+msgstr "អាស័យ​ដ្ឋាន​សំរាប់​ការ​ដឹកជញ្ជូន"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__name
@@ -308,7 +340,7 @@ msgstr "ការពិពណ៌​នា​"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_line__location_dest_id
 msgid "Dest. Location"
-msgstr ""
+msgstr "វាសនា។ ទីតាំង។"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_cancel__display_name
@@ -323,7 +355,7 @@ msgstr "ឈ្មោះសំរាប់បង្ហាញ"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
 msgid "Do you really want to create the invoice(s)?"
-msgstr ""
+msgstr "តើអ្នកពិតជាចង់បង្កើតវិក្កយបត្រមែនទេ(s)?"
 
 #. module: repair
 #: selection:repair.line,state:0
@@ -338,7 +370,7 @@ msgstr "ព្រៀង"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "End Repair"
-msgstr ""
+msgstr "ជួសជុលបញ្ចប់"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__tracking
@@ -353,7 +385,7 @@ msgstr "ព័ត៌មានបន្ថែម"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Fees"
-msgstr ""
+msgstr "ថ្លៃឈ្នួល។"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_follower_ids
@@ -383,7 +415,7 @@ msgstr "ជា​ក្រុម​តាម"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order_make_invoice__group
 msgid "Group by partner invoice address"
-msgstr ""
+msgstr "ដាក់ជាក្រុមតាមអាសយដ្ឋានវិក័យប័ត្រដៃគូ"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -422,6 +454,9 @@ msgid ""
 "                add or replace and record the time you spent on the different\n"
 "                operations."
 msgstr ""
+"នៅក្នុងលំដាប់ជួសជុលអ្នកអាចរៀបរាប់លម្អិតអំពីសមាសធាតុដែលអ្នកដកចេញ។\n"
+"                បន្ថែមឬជំនួសនិងកត់ត្រាពេលវេលាដែលអ្នកបានចំណាយលើភាពខុសគ្នា។\n"
+"                ប្រតិបត្ដិការ។"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:210
@@ -437,7 +472,7 @@ msgstr "កំណត់ចំណាំខាងក្នុង"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_line__move_id
 msgid "Inventory Move"
-msgstr ""
+msgstr "ផ្លាស់ទីសារពើភ័ណ្ឌ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__invoice_id
@@ -448,7 +483,7 @@ msgstr "វិកិយប័ត្រ"
 #. module: repair
 #: selection:repair.order,state:0
 msgid "Invoice Exception"
-msgstr ""
+msgstr "ការលើកលែងវិក្កយបត្រ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__invoice_line_id
@@ -459,23 +494,23 @@ msgstr "ជួរវិក័យប័ត្រ"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__invoice_method
 msgid "Invoice Method"
-msgstr ""
+msgstr "វិធីសាស្ត្រវិក្កយបត្រ"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Invoice address:"
-msgstr ""
+msgstr "អាសយដ្ឋានវិក្កយបត្រ:"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Invoice and shipping address:"
-msgstr ""
+msgstr "វិក័យប័ត្រនិងអាសយដ្ឋានដឹកជញ្ជូន:"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:385
 #, python-format
 msgid "Invoice created"
-msgstr ""
+msgstr "វិក្កយបត្របានបង្កើត"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__invoiced
@@ -488,7 +523,7 @@ msgstr "បានចេញវិក្កយបត្រ"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__partner_invoice_id
 msgid "Invoicing Address"
-msgstr ""
+msgstr "អាសយដ្ឋានវិក្កយបត្រ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_is_follower
@@ -565,7 +600,7 @@ msgstr "ផ្លាស់ទី "
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__move_id
 msgid "Move created by the repair order"
-msgstr ""
+msgstr "ផ្លាស់ទីបង្កើតដោយបទបញ្ជាជួសជុល"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
@@ -590,40 +625,40 @@ msgstr "ប្រភេទសកម្មភាពបន្ទាប់"
 #. module: repair
 #: selection:repair.order,invoice_method:0
 msgid "No Invoice"
-msgstr ""
+msgstr "គ្មានវិក្កយបត្រ"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:308
 #, python-format
 msgid "No account defined for partner \"%s\"."
-msgstr ""
+msgstr "មិនមានគណនីត្រូវបានកំណត់សម្រាប់ដៃគូ \"%s\"."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:334
 #: code:addons/repair/models/repair.py:362
 #, python-format
 msgid "No account defined for product \"%s\"."
-msgstr ""
+msgstr "គ្មានគណនីដែលបានកំណត់សម្រាប់ផលិតផលទេ \"%s\"."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:598
 #: code:addons/repair/models/repair.py:658
 #, python-format
 msgid "No pricelist found."
-msgstr ""
+msgstr "រកមិនឃើញព្រីស៊ីលីក"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:355
 #, python-format
 msgid "No product defined on fees."
-msgstr ""
+msgstr "មិនមានផលិតផលកំណត់លើថ្លៃសេវា"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:605
 #: code:addons/repair/models/repair.py:665
 #, python-format
 msgid "No valid pricelist line found."
-msgstr ""
+msgstr "រកមិនឃើញខ្សែព្រីតូលីកត្រឹមត្រូវ"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -659,7 +694,7 @@ msgstr "ចំនួនសារមិនទាន់អាន"
 #: code:addons/repair/models/repair.py:232
 #, python-format
 msgid "Only draft repairs can be confirmed."
-msgstr ""
+msgstr "មានតែការជួសជុលសេចក្តីព្រាងទេដែលអាចបញ្ជាក់បាន"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__fees_lines
@@ -681,7 +716,7 @@ msgstr "ដៃគូ"
 #: model:ir.model.fields,field_description:repair.field_repair_order__operations
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Parts"
-msgstr ""
+msgstr "ផ្នែក"
 
 #. module: repair
 #: selection:repair.order,activity_state:0
@@ -701,12 +736,12 @@ msgstr "តារាង​តំលៃ "
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__pricelist_id
 msgid "Pricelist of the selected partner."
-msgstr ""
+msgstr "Pricelist របស់ដៃគូដែលបានជ្រើសរើស"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Print Quotation"
-msgstr ""
+msgstr "បោះពុម្ពសម្រង់"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__product_id
@@ -731,12 +766,12 @@ msgstr "ផ្នែកផលិតផលនៃវិធានការ។"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__product_id
 msgid "Product to Repair"
-msgstr ""
+msgstr "ផលិតផលដើម្បីជួសជុល"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__lot_id
 msgid "Products repaired are all belonging to this lot"
-msgstr ""
+msgstr "ផលិតផលដែលបានជួសជុលទាំងអស់សុទ្ធតែជាកម្មសិទ្ធិរបស់ដីឡូតិ៍នេះ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__quant_ids
@@ -759,12 +794,12 @@ msgstr "សម្រង់"
 #. module: repair
 #: model:ir.actions.report,name:repair.action_report_repair_order
 msgid "Quotation / Order"
-msgstr ""
+msgstr "សម្រង់ / លំដាប់"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__quotation_notes
 msgid "Quotation Notes"
-msgstr ""
+msgstr "កំណត់សំគាល់សម្រង់"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
@@ -774,12 +809,12 @@ msgstr "ដំណាក់តម្លៃ"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Ready To Repair"
-msgstr ""
+msgstr "រួចរាល់ដើម្បីជួសជុល"
 
 #. module: repair
 #: selection:repair.order,state:0
 msgid "Ready to Repair"
-msgstr ""
+msgstr "រួចរាល់ដើម្បីជួសជុល"
 
 #. module: repair
 #: selection:repair.line,type:0
@@ -790,85 +825,85 @@ msgstr "ដកចេញ"
 #: model:ir.model.fields,field_description:repair.field_stock_move__repair_id
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__repair_id
 msgid "Repair"
-msgstr ""
+msgstr "ជួសជុល"
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_fee
 msgid "Repair Fees"
-msgstr ""
+msgstr "ថ្លៃជួសជុល"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Repair Line"
-msgstr ""
+msgstr "ខ្សែជួសជុល"
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_line
 msgid "Repair Line (parts)"
-msgstr ""
+msgstr "ខ្សែជួសជុល (ផ្នែក)"
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_order
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Repair Order"
-msgstr ""
+msgstr "ជួសជុលសណ្តាប់ធ្នាប់"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Repair Order #:"
-msgstr ""
+msgstr "ជួសជុលសណ្តាប់ធ្នាប់ #:"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__repair_id
 #: model:ir.model.fields,field_description:repair.field_repair_line__repair_id
 msgid "Repair Order Reference"
-msgstr ""
+msgstr "ជួសជុលឯកសារយោងតាមលំដាប់"
 
 #. module: repair
 #: model:ir.actions.act_window,name:repair.action_repair_order_tree
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Repair Orders"
-msgstr ""
+msgstr "ជួសជុលការបញ្ជាទិញ"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Repair Quotation #:"
-msgstr ""
+msgstr "ជួសជុលសម្រង់ #:"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__name
 msgid "Repair Reference"
-msgstr ""
+msgstr "ជួសជុលឯកសារយោង"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:196
 #, python-format
 msgid "Repair must be canceled in order to reset it to draft."
-msgstr ""
+msgstr "ការជួសជុលត្រូវតែលុបចោលដើម្បីកំណត់វាឡើងវិញ។"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:404
 #, python-format
 msgid "Repair must be confirmed before starting reparation."
-msgstr ""
+msgstr "ការជួសជុលត្រូវតែបញ្ជាក់មុនពេលចាប់ផ្តើមសំណង។"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:432
 #, python-format
 msgid "Repair must be repaired in order to make the product moves."
-msgstr ""
+msgstr "ការជួសជុលត្រូវតែជួសជុលដើម្បីធ្វើឱ្យផលិតផលមានចលនា។"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:415
 #, python-format
 msgid "Repair must be under repair in order to end reparation."
-msgstr ""
+msgstr "ការជួសជុលត្រូវតែស្ថិតនៅក្រោមការជួសជុលដើម្បីបញ្ចប់សំណង។"
 
 #. module: repair
 #: code:addons/repair/wizard/repair_cancel.py:20
 #, python-format
 msgid "Repair order is not invoiced."
-msgstr ""
+msgstr "ការជួសជុលសណ្តាប់ធ្នាប់មិនមានវិក័យប័ត្រទេ។"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__repaired
@@ -885,7 +920,7 @@ msgstr "ជួសជុល"
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_tree
 msgid "Repairs order"
-msgstr ""
+msgstr "ជួសជុលសណ្តាប់ធ្នាប់"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_user_id
@@ -895,7 +930,7 @@ msgstr "អ្នកទទួលខុសត្រូវ"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Search Repair Orders"
-msgstr ""
+msgstr "ស្វែងរកការបញ្ជាទិញជួសជុល"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__invoice_method
@@ -904,17 +939,20 @@ msgid ""
 "invoice before or after the repair is done respectively. 'No invoice' means "
 "you don't want to generate invoice for this repair order."
 msgstr ""
+"ការជ្រើសរើសយក“ មុនពេលជួសជុល” ឬ“ បន្ទាប់ពីជួសជុល” "
+"នឹងអនុញ្ញាតឱ្យអ្នកបង្កើតវិក្កយបត្រមុនឬក្រោយពេលជួសជុលរួចរាល់។ "
+"'គ្មានវិក័យប័ត្រ' មានន័យថាអ្នកមិនចង់បង្កើតវិក័យប័ត្រសំរាប់ការជួសជុលនេះទេ។"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Send Quotation"
-msgstr ""
+msgstr "ផ្ញើសម្រង់"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:545
 #, python-format
 msgid "Serial number is required for operation line with product '%s'"
-msgstr ""
+msgstr "លេខស៊េរីត្រូវបានទាមទារសម្រាប់ខ្សែប្រតិបត្តិការជាមួយផលិតផល '%s'"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -929,12 +967,12 @@ msgstr "បង្ហាញកំណត់ត្រាទាំងអស់ដែ
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_line__location_id
 msgid "Source Location"
-msgstr ""
+msgstr "ទីតាំងប្រភព"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Start Repair"
-msgstr ""
+msgstr "ចាប់ផ្តើមជួសជុល"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_line__state
@@ -983,7 +1021,7 @@ msgstr "ពន្ឋ"
 #. module: repair
 #: sql_constraint:repair.order:0
 msgid "The name of the Repair Order must be unique!"
-msgstr ""
+msgstr "ឈ្មោះនៃការជួសជុលត្រូវមានតែមួយគត់!"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:172
@@ -991,13 +1029,13 @@ msgstr ""
 msgid ""
 "The product unit of measure you chose has a different category than the "
 "product unit of measure."
-msgstr ""
+msgstr "ឯកតាផលិតផលនៃរង្វាស់ដែលអ្នកបានជ្រើសរើសមានប្រភេទខុសពីឯកតារង្វាស់ផលិតផល។"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:246
 #, python-format
 msgid "The repair order is already invoiced."
-msgstr ""
+msgstr "ការបញ្ជាទិញជួសជុលត្រូវបានចេញវិក្កយបត្ររួចហើយ។"
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
@@ -1006,6 +1044,9 @@ msgid ""
 "                order to know if whether the repair should be invoiced to the\n"
 "                customer or not."
 msgstr ""
+"ការបញ្ជាទិញជួសជុលប្រើកាលបរិច្ឆេទនៃការធានាលើលេខសៀរៀល។                 "
+"បញ្ជាទិញដើម្បីដឹងថាតើការជួសជុលគួរតែត្រូវបានភ្ជាប់មកជាមួយឬអត់។"
+"                 អតិថិជនឬអត់។"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_line__state
@@ -1013,16 +1054,18 @@ msgid ""
 "The status of a repair line is set automatically to the one of the linked "
 "repair order."
 msgstr ""
+"ការបញ្ជាទិញជួសជុលប្រើកាលបរិច្ឆេទនៃការធានាលើលេខសៀរៀល។ "
+"បញ្ជាទិញដើម្បីដឹងថាតើការជួសជុលគួរតែត្រូវបានភ្ជាប់មកជាមួយឬអត់។ អតិថិជនឬអត់។"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__location_id
 msgid "This is the location where the product to repair is located."
-msgstr ""
+msgstr "នេះគឺជាទីតាំងដែលផលិតផលត្រូវជួសជុលមានទីតាំង។"
 
 #. module: repair
 #: selection:repair.order,state:0
 msgid "To be Invoiced"
-msgstr ""
+msgstr "ដើម្បីត្រូវបានអញ្ជើញ"
 
 #. module: repair
 #: selection:repair.order,activity_state:0
@@ -1042,7 +1085,7 @@ msgstr "សរុប​"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Total amount"
-msgstr ""
+msgstr "ចំនួន​សរុប"
 
 #. module: repair
 #: model:ir.model,name:repair.model_stock_traceability_report
@@ -1062,7 +1105,7 @@ msgstr "ប្រភេទ"
 #. module: repair
 #: selection:repair.order,state:0
 msgid "Under Repair"
-msgstr ""
+msgstr "កំពុងជួសជុល"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__price_unit
@@ -1094,12 +1137,12 @@ msgstr "ចំនួនទឹកប្រាក់ដែលមិនបានក
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Untaxed amount"
-msgstr ""
+msgstr "ចំនួនទឹកប្រាក់គ្មានកំណត់"
 
 #. module: repair
 #: model:ir.model,name:repair.model_stock_warn_insufficient_qty_repair
 msgid "Warn Insufficient Repair Quantity"
-msgstr ""
+msgstr "បរិមាណជួសជុលមិនគ្រប់គ្រាន់។"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:172
@@ -1111,7 +1154,7 @@ msgstr "ព្រមាន"
 #: model:ir.model.fields,field_description:repair.field_repair_order__guarantee_limit
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Warranty Expiration"
-msgstr ""
+msgstr "ការផុតកំណត់ការធានា"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__website_message_ids
@@ -1136,9 +1179,11 @@ msgid ""
 "You have to select a pricelist in the Repair form !\n"
 " Please set one before choosing a product."
 msgstr ""
+"អ្នកត្រូវជ្រើសរើសព្រីនធ័រនៅក្នុងទម្រង់ជួសជុល!  \n"
+"សូមកំណត់មួយមុនពេលជ្រើសរើសផលិតផល។"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:296
 #, python-format
 msgid "You have to select an invoice address in the repair form."
-msgstr ""
+msgstr "អ្នកត្រូវជ្រើសរើសអាសយដ្ឋានវិក័យប័ត្រនៅក្នុងទំរង់ជួសជុល។"
