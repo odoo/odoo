@@ -36,6 +36,7 @@ class FleetVehicleCost(models.Model):
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
 
     def _get_odometer(self):
+        self.odometer = 0.0
         for record in self:
             if record.odometer_id:
                 record.odometer = record.odometer_id.value
