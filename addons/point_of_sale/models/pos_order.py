@@ -694,7 +694,7 @@ class PosOrder(models.Model):
             Invoice += new_invoice
 
             for line in order.lines:
-                self.with_context(local_context)._action_create_invoice_line(line, new_invoice.id)
+                order.with_context(local_context)._action_create_invoice_line(line, new_invoice.id)
 
             new_invoice.with_context(local_context).sudo().compute_taxes()
             order.sudo().write({'state': 'invoiced'})
