@@ -88,6 +88,10 @@ QUnit.module('Chatter', {
                     message_follower_ids: [],
                     message_ids: [],
                     activity_ids: [],
+                },
+                {
+                    id: 7,
+                    display_name: "attachment_test",
                 }]
             },
             'mail.activity': {
@@ -449,10 +453,6 @@ QUnit.test('Activity Done by uploading a file', async function (assert) {
 
 QUnit.test('attachmentBox basic rendering', async function (assert) {
     assert.expect(19);
-    this.data.partner.records.push({
-        id: 7,
-        display_name: "attachment_test",
-    });
 
     var form = await createView({
         View: FormView,
@@ -520,23 +520,8 @@ QUnit.test('attachmentBox basic rendering', async function (assert) {
     form.destroy();
 });
 
-QUnit.test('attachmentBox drag and drop files [REQUIRE NON-INCOGNITO WINDOW]', async function (assert) {
-    assert.expect(12);
-    this.data.partner.records.push({
-        id: 7,
-        display_name: "attachment_test",
-    });
-
-    testUtils.mock.patch(AttachmentBox, {
-        async _callUploadAttachment(controllerUrl, formData) {
-            assert.strictEqual(controllerUrl, "/web/binary/upload_attachment",
-                "upload url should match to /web/binary/upload_attachment");
-            const files = formData.getAll('ufile');
-            assert.strictEqual(files[1].name, "text.txt",
-                "uploading file name should be 'text.txt'");
-            assert.step('_callUploadAttachment');
-        }
-    });
+QUnit.test('attachmentBox dropzone available when hovering file [REQUIRE NON-INCOGNITO WINDOW]', async function (assert) {
+    assert.expect(7);
 
     const form = await createView({
         View: FormView,
@@ -558,6 +543,8 @@ QUnit.test('attachmentBox drag and drop files [REQUIRE NON-INCOGNITO WINDOW]', a
     assert.strictEqual($button.length, 1, "should have one attachment button");
 
     await testUtils.dom.click($button);
+    assert.containsOnce(form, '.o_attachments_previews',
+        "should display some attachments on the attachments box");
     assert.containsOnce(form, '.o_attachments_file_drop_zone',
         "should have a dropzone to drag-and-drop files");
     var $dropZoneContainer = form.$('.o_attachments_file_drop_zone');
@@ -577,17 +564,100 @@ QUnit.test('attachmentBox drag and drop files [REQUIRE NON-INCOGNITO WINDOW]', a
     await testUtils.file.dragoverFile(form.$('.o_chatter'), file);
     await testUtils.nextTick();
     assert.containsOnce(form, '.o_mail_chatter_attachments',
-        "should not have chatter attachment box");
+        "should have chatter attachment box");
 
     $dropZoneContainer = form.$('.o_attachments_file_drop_zone');
     await testUtils.file.dragoverFile($dropZoneContainer, file);
     assert.isVisible($dropZoneContainer, "dropzone should be visible");
 
+    form.destroy();
+});
+
+QUnit.test('attachmentBox dropzone not available after dropping file [REQUIRE NON-INCOGNITO WINDOW]', async function (assert) {
+    assert.expect(4);
+
+    testUtils.mock.patch(AttachmentBox, {
+        async _callUploadAttachment(controllerUrl, formData) {
+            assert.step('_callUploadAttachment');
+        }
+    });
+
+    const form = await createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: `<form string="Partners">
+            <sheet>
+                <field name="foo"/>
+            </sheet>
+            <div class="oe_chatter">
+                <field name="message_ids" widget="mail_thread"/>
+            </div>
+        </form>`,
+        res_id: 7,
+    });
+
+    const file = await testUtils.file.createFile({
+        name: 'text.txt',
+        content: 'hello, world',
+        contentType: 'text/plain',
+    });
+    await testUtils.file.dragoverFile(form.$('.o_chatter'), file);
+    await testUtils.nextTick();
+    const $dropZoneContainer = form.$('.o_attachments_file_drop_zone');
+    await testUtils.file.dragoverFile($dropZoneContainer, file);
+    assert.isVisible($dropZoneContainer, "dropzone should be visible");
+
     await testUtils.file.dropFile($dropZoneContainer, file);
     assert.verifySteps(['_callUploadAttachment']);
-    assert.containsOnce(form, '.o_attachments_previews',
-        "should display some attachments on the attachments box");
-    assert.isNotVisible($dropZoneContainer, "dropzone should not be visible");
+    assert.isNotVisible($dropZoneContainer, "dropzone should not be visible after drop file");
+
+    form.destroy();
+});
+
+QUnit.test('attachmentBox drag and drop uploads file [REQUIRE NON-INCOGNITO WINDOW]', async function (assert) {
+    assert.expect(4);
+
+    testUtils.mock.patch(AttachmentBox, {
+        async _callUploadAttachment(controllerUrl, formData) {
+            assert.strictEqual(controllerUrl, "/web/binary/upload_attachment",
+                "upload url should match to /web/binary/upload_attachment");
+            const files = formData.getAll('ufile');
+            assert.strictEqual(files[1].name, "text.txt",
+                "uploading file name should be 'text.txt'");
+            assert.step('_callUploadAttachment');
+        }
+    });
+
+    const form = await createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: `<form string="Partners">
+        <sheet>
+            <field name="foo"/>
+        </sheet>
+        <div class="oe_chatter">
+            <field name="message_ids" widget="mail_thread"/>
+        </div>
+    </form>`,
+        res_id: 7,
+    });
+
+    var file = await testUtils.file.createFile({
+        name: 'text.txt',
+        content: 'hello, world',
+        contentType: 'text/plain',
+    });
+    await testUtils.file.dragoverFile(form.$('.o_chatter'), file);
+    await testUtils.nextTick();
+    const $dropZoneContainer = form.$('.o_attachments_file_drop_zone');
+    await testUtils.file.dragoverFile($dropZoneContainer, file);
+
+    await testUtils.file.dropFile($dropZoneContainer, file);
+    assert.verifySteps(['_callUploadAttachment']);
 
     form.destroy();
 });
