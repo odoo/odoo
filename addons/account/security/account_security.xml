@@ -66,6 +66,14 @@
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
+    <record id="group_sale_receipts" model="res.groups">
+        <field name="name">Sale Receipt</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+    <record id="group_purchase_receipts" model="res.groups">
+        <field name="name">Purchase Receipt</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
 
     <record id="account_analytic_line_rule_billing_user" model="ir.rule">
         <field name="name">account.analytic.line.billing.user</field>

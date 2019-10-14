@@ -43,6 +43,10 @@ class ResConfigSettings(models.TransientModel):
         "Show line subtotals with taxes (B2C)",
         implied_group='account.group_show_line_subtotals_tax_included',
         group='base.group_portal,base.group_user,base.group_public')
+    group_show_sale_receipts = fields.Boolean(string='Sale Receipt',
+        implied_group='account.group_sale_receipts')
+    group_show_purchase_receipts = fields.Boolean(string='Purchase Receipt',
+        implied_group='account.group_purchase_receipts')
     show_line_subtotals_tax_selection = fields.Selection([
         ('tax_excluded', 'Tax-Excluded'),
         ('tax_included', 'Tax-Included')], string="Line Subtotals Tax Display",
