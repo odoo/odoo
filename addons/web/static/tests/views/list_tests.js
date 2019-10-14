@@ -2226,6 +2226,26 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test("button in a list view with a default relative width", async function (assert) {
+        assert.expect(1);
+
+        const list = await createView({
+            arch: `
+            <tree>
+                <field name="foo"/>
+                <button name="the_button" icon="fa-heart" width="0.1"/>
+            </tree>`,
+            data: this.data,
+            model: 'foo',
+            View: ListView,
+        });
+
+        assert.strictEqual(list.el.querySelector('.o_data_cell button').style.width, "",
+            "width attribute should not change the CSS style");
+
+        list.destroy();
+    });
+
     QUnit.test('column widths are kept when editing multiple records', async function (assert) {
         assert.expect(4);
 

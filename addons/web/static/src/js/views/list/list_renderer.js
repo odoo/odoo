@@ -457,7 +457,9 @@ var ListRenderer = BasicRenderer.extend({
      */
     _renderButton: function (record, node) {
         var self = this;
-        var $button = viewUtils.renderButtonFromNode(node, {
+        var nodeWithoutWidth = Object.assign({}, node);
+        delete nodeWithoutWidth.attrs.width;
+        var $button = viewUtils.renderButtonFromNode(nodeWithoutWidth, {
             extraClass: node.attrs.icon ? 'o_icon_button' : undefined,
             textAsTitle: !!node.attrs.icon,
         });
