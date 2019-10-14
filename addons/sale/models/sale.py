@@ -778,6 +778,55 @@ class SaleOrderLine(models.Model):
             else:
                 line.product_updatable = True
 
+<<<<<<< HEAD
+=======
+    @api.depends('product_id.invoice_policy', 'order_id.state')
+    def _compute_qty_delivered_updateable(self):
+        for line in self:
+            line.qty_delivered_updateable = (line.order_id.state == 'sale') and (line.product_id.service_type == 'manual') and (line.product_id.expense_policy == 'no')
+
+    @api.depends('state',
+                 'price_reduce_taxinc',
+                 'qty_delivered',
+                 'invoice_lines',
+                 'invoice_lines.price_total',
+                 'invoice_lines.invoice_id',
+                 'invoice_lines.invoice_id.state',
+                 'invoice_lines.invoice_id.refund_invoice_ids',
+                 'invoice_lines.invoice_id.refund_invoice_ids.state',
+                 'invoice_lines.invoice_id.refund_invoice_ids.amount_total')
+    def _compute_invoice_amount(self):
+        refund_lines_product = self.env['account.invoice.line']
+        for line in self:
+            # Invoice lines referenced by this line
+            invoice_lines = line.invoice_lines.filtered(lambda l: l.invoice_id.state in ('open', 'paid') and l.invoice_id.type == 'out_invoice')
+            refund_lines = line.invoice_lines.filtered(lambda l: l.invoice_id.state in ('open', 'paid') and l.invoice_id.type == 'out_refund')
+            # Refund invoices linked to invoice_lines
+            refund_invoices = invoice_lines.mapped('invoice_id.refund_invoice_ids').filtered(lambda inv: inv.state in ('open', 'paid'))
+            refund_invoice_lines = (refund_invoices.mapped('invoice_line_ids') + refund_lines - refund_lines_product).filtered(lambda l: l.product_id == line.product_id)
+            if refund_invoice_lines:
+                refund_lines_product |= refund_invoice_lines
+            # If the currency of the invoice differs from the sale order, we need to convert the values
+            if line.invoice_lines and line.invoice_lines[0].currency_id \
+                    and line.invoice_lines[0].currency_id != line.currency_id:
+                invoiced_amount_total = sum([inv_line.currency_id.with_context({'date': inv_line.invoice_id.date}).compute(inv_line.price_total, line.currency_id)
+                                             for inv_line in invoice_lines])
+                refund_amount_total = sum([inv_line.currency_id.with_context({'date': inv_line.invoice_id.date}).compute(inv_line.price_total, line.currency_id)
+                                           for inv_line in refund_invoice_lines])
+            else:
+                invoiced_amount_total = sum(invoice_lines.mapped('price_total'))
+                refund_amount_total = sum(refund_invoice_lines.mapped('price_total'))
+            # Total of remaining amount to invoice on the sale ordered (and draft invoice included) to support upsell (when
+            # delivered quantity is higher than ordered one). Draft invoice are ignored on purpose, the 'to invoice' should
+            # come only from the SO lines.
+            total_sale_line = line.price_total
+            if line.product_id.invoice_policy == 'delivery':
+                total_sale_line = line.price_reduce_taxinc * line.qty_delivered
+
+            line.amt_invoiced = invoiced_amount_total - refund_amount_total
+            line.amt_to_invoice = (total_sale_line - invoiced_amount_total) if line.state in ['sale', 'done'] else 0.0
+
+>>>>>>> f8ad83bf0ef... temp
     @api.depends('qty_invoiced', 'qty_delivered', 'product_uom_qty', 'order_id.state')
     def _get_to_invoice_qty(self):
         """
