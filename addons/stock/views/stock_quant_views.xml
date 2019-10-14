@@ -74,7 +74,7 @@
         <field name="model">stock.quant</field>
         <field eval="10" name="priority"/>
         <field name="arch" type="xml">
-            <tree decoration-danger="inventory_quantity &lt; 0" editable="top"
+            <tree decoration-danger="inventory_quantity &lt; 0" editable="bottom"
                   create="1" edit="1" js_class="singleton_list">
                 <field name="id" invisible="1"/>
                 <field name="tracking" invisible="1"/>
