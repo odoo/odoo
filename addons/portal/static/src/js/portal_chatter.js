@@ -20,7 +20,8 @@ var PortalChatter = publicWidget.Widget.extend({
     template: 'portal.Chatter',
     xmlDependencies: ['/portal/static/src/xml/portal_chatter.xml'],
     events: {
-        "click .o_portal_chatter_pager_btn": '_onClickPager',
+        'click .o_portal_chatter_pager_btn': '_onClickPager',
+        'click .o_portal_chatter_js_is_internal': 'async _onClickUpdateIsInternal',
     },
 
     /**
@@ -45,6 +46,7 @@ var PortalChatter = publicWidget.Widget.extend({
             'pager_scope': 5,
             'pager_start': 1,
             'is_user_public': true,
+            'is_user_employee': false,
             'is_user_publisher': false,
             'hash': false,
             'pid': false,
@@ -253,6 +255,35 @@ var PortalChatter = publicWidget.Widget.extend({
         ev.preventDefault();
         var page = $(ev.currentTarget).data('page');
         this._changeCurrentPage(page);
+    },
+
+    /**
+     * Toggle is_internal state of message. Update both node data and
+     * classes to ensure DOM is updated accordingly to RPC call result.
+     * @private
+     * @returns {Promise}
+     */
+    _onClickUpdateIsInternal: function (ev) {
+        ev.preventDefault();
+
+        var $elem = $(ev.currentTarget);
+        return this._rpc({
+            route: '/mail/update_is_internal',
+            params: {
+                message_id: $elem.data('message-id'),
+                is_internal: ! $elem.data('is-internal'),
+            },
+        }).then(function (result) {
+            $elem.data('is-internal', result);
+            if (result === true) {
+                $elem.addClass('o_portal_message_internal_on');
+                $elem.removeClass('o_portal_message_internal_off');
+            }
+            else {
+                $elem.addClass('o_portal_message_internal_off');
+                $elem.removeClass('o_portal_message_internal_on');
+            }
+        });
     },
 });
 

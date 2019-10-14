@@ -134,7 +134,8 @@ class RatingMixin(models.AbstractModel):
                 'partner_id': partner.id,
                 'rated_partner_id': rated_partner.id,
                 'res_model_id': record_model_id,
-                'res_id': self.id
+                'res_id': self.id,
+                'is_internal': False,
             })
         else:
             rating = ratings[0]
