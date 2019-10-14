@@ -1228,7 +1228,7 @@
     </div>
 </t>
 
-<input t-name="SearchView.InputView" type="text" class="o_searchview_input" accesskey="Q" placeholder="Search..." role="searchbox" aria-haspopup="true"/>
+<input t-name="SearchView.InputView" type="search" class="o_searchview_input" accesskey="Q" placeholder="Search..." role="searchbox" aria-haspopup="true"/>
 <div t-name="SearchView.FacetView" tabindex="0" class="o_searchview_facet" role="img" aria-label="search">
     <span t-if="widget.model.has('icon')" t-att-class="'fa ' + widget.model.get('icon') + ' o_searchview_facet_label'"/>
     <span t-if="!widget.model.has('icon')" class="o_searchview_facet_label">

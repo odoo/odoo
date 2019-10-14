@@ -2,6 +2,7 @@ odoo.define('web.AutoComplete', function (require) {
 "use strict";
 
 var Widget = require('web.Widget');
+var config = require('web.config');
 
 return Widget.extend({
     template: "SearchView.autocomplete",
@@ -49,6 +50,11 @@ return Widget.extend({
                 if (self.search_string.length) {
                     self.select_item(ev);
                 }
+                return;
+            }
+        });
+        this.$input.on('input', function (ev) {
+            if (self._isInputComposing && !config.device.isMobile) {
                 return;
             }
             var search_string = self.get_search_string();
