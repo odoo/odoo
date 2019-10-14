@@ -36,7 +36,7 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
 
         # Test the valid code on a wrong sales order
         wrong_partner_order = self.env['sale.order'].create({
-            'partner_id': self.env.ref('base.res_partner_1').id,
+            'partner_id': self.steve.id,
         })
         with self.assertRaises(UserError):
             self.env['sale.coupon.apply.code'].with_context(active_id=wrong_partner_order.id).create({

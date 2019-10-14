@@ -11,19 +11,24 @@ class TestProductPricelist(TransactionCase):
     def setUp(self):
         super(TestProductPricelist, self).setUp()
         self.ProductPricelist = self.env['product.pricelist']
-        self.res_partner_4 = self.env.ref('base.res_partner_4')
-        self.computer_SC234 = self.env.ref("product.product_product_3")
-        self.ipad_retina_display = self.env.ref('product.product_product_4')
-        self.custom_computer_kit = self.env.ref("product.product_product_5")
-        self.ipad_mini = self.env.ref("product.product_product_6")
-        self.apple_in_ear_headphones = self.env.ref("product.product_product_7")
-        self.laptop_E5023 = self.env.ref('product.product_delivery_01')
-        self.laptop_S3450 = self.env.ref("product.product_product_25")
-        self.category_5_id = self.ref('product.product_category_5')
         self.uom_unit_id = self.ref('uom.product_uom_unit')
+        self.category_5_id = self.env['product.category'].create({'name': 'Physical'}).id
+        self.res_partner_4 = self.env['res.partner'].create({'name': 'Partner Test'})
+        self.computer_SC234 = self.env['product.product'].create({'name': 'Computer SC234', 'type': 'consu', 'list_price': 450.0, 'standard_price': 300.0})
+        self.ipad_retina_display = self.env['product.product'].create({'name': 'iPad Retina Display', 'type': 'consu', 'list_price': 750.0, 'standard_price': 500.0, 'uom_id': self.uom_unit_id, 'categ_id': self.category_5_id})
+        self.custom_computer_kit = self.env['product.product'].create({'name': 'Computer Kit', 'type': 'consu', 'list_price': 147.0, 'standard_price': 600.0})
+        self.ipad_mini = self.env['product.product'].create({
+            'name': 'iPad Mini',
+            'type': 'consu',
+            'list_price': 320.0,
+            'standard_price': 800.0,
+            'seller_ids': [(0, 0, {'name': self.res_partner_4.id, 'price': 790.0, 'min_qty': 1}),
+                           (0, 0, {'name': self.res_partner_4.id, 'price': 785.0, 'min_qty': 3})]
+        })
+        self.apple_in_ear_headphones = self.env['product.product'].create({'name': 'Apple In-Ear Headphones', 'type': 'consu', 'list_price': 79.0, 'standard_price': 70.0})
+        self.laptop_E5023 = self.env['product.product'].create({'name': 'Laptop', 'type': 'consu', 'list_price': 70.0, 'standard_price': 55.0})
+        self.laptop_S3450 = self.env['product.product'].create({'name': 'IT component', 'type': 'consu', 'list_price': 2950.0, 'standard_price': 2870.0, 'categ_id': self.category_5_id})
         self.list0 = self.ref('product.list0')
-
-        self.ipad_retina_display.write({'uom_id': self.uom_unit_id, 'categ_id': self.category_5_id})
         self.customer_pricelist = self.ProductPricelist.create({
             'name': 'Customer Pricelist',
             'item_ids': [(0, 0, {

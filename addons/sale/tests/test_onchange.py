@@ -23,6 +23,7 @@ class TestOnchangeProductId(TransactionCase):
         self.product_uom_model = self.env['uom.uom']
         self.supplierinfo_model = self.env["product.supplierinfo"]
         self.pricelist_model = self.env['product.pricelist']
+        self.product_product_16 = self.env['product.product'].create({'name': 'Computer case'})
 
     def test_onchange_product_id(self):
 
@@ -67,7 +68,7 @@ class TestOnchangeProductId(TransactionCase):
 
     def test_pricelist_application(self):
         """ Test different prices are correctly applied based on dates """
-        support_product = self.env.ref('product.product_product_2')
+        support_product = self.env['product.product'].create({'name': 'Support Product'})
         support_product.list_price = 100
         partner = self.res_partner_model.create(dict(name="George"))
 
@@ -115,7 +116,7 @@ class TestOnchangeProductId(TransactionCase):
 
     def test_pricelist_uom_discount(self):
         """ Test prices and discounts are correctly applied based on date and uom"""
-        computer_case = self.env.ref('product.product_product_16')
+        computer_case = self.product_product_16
         computer_case.list_price = 100
         partner = self.res_partner_model.create(dict(name="George"))
         categ_unit_id = self.ref('uom.product_uom_categ_unit')
@@ -167,7 +168,7 @@ class TestOnchangeProductId(TransactionCase):
 
     def test_pricelist_based_on_other(self):
         """ Test price and discount are correctly applied with a pricelist based on an other one"""
-        computer_case = self.env.ref('product.product_product_16')
+        computer_case = self.product_product_16
         computer_case.list_price = 100
         partner = self.res_partner_model.create(dict(name="George"))
         goup_discount_id = self.ref('product.group_discount_per_so_line')
@@ -217,7 +218,7 @@ class TestOnchangeProductId(TransactionCase):
 
     def test_pricelist_with_other_currency(self):
         """ Test prices are correctly applied with a pricelist with an other currency"""
-        computer_case = self.env.ref('product.product_product_16')
+        computer_case = self.product_product_16
         computer_case.list_price = 100
         partner = self.res_partner_model.create(dict(name="George"))
         categ_unit_id = self.ref('uom.product_uom_categ_unit')

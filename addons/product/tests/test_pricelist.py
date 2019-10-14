@@ -1,20 +1,17 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import TransactionCase
+from odoo.addons.product.tests.common import TestProductCommon
 
 
-class TestPricelist(TransactionCase):
+class TestPricelist(TestProductCommon):
 
     def setUp(self):
         super(TestPricelist, self).setUp()
 
-        self.datacard = self.env.ref('product.product_delivery_02')
-        self.usb_adapter = self.env.ref('product.product_delivery_01')
+        self.datacard = self.product_0
+        self.usb_adapter = self.product_1
         self.uom_ton = self.env.ref('uom.product_uom_ton')
-        self.uom_unit_id = self.ref('uom.product_uom_unit')
-        self.uom_dozen_id = self.ref('uom.product_uom_dozen')
-        self.uom_kgm_id = self.ref('uom.product_uom_kgm')
 
         self.public_pricelist = self.env.ref('product.list0')
         self.sale_pricelist_id = self.env['product.pricelist'].create({
@@ -52,8 +49,8 @@ class TestPricelist(TransactionCase):
 
         # Make sure that changing the unit of measure does not break the unit
         # price (after converting)
-        unit_context = dict(context, pricelist=self.sale_pricelist_id.id, uom=self.uom_unit_id)
-        dozen_context = dict(context, pricelist=self.sale_pricelist_id.id, uom=self.uom_dozen_id)
+        unit_context = dict(context, pricelist=self.sale_pricelist_id.id, uom=self.uom_unit.id)
+        dozen_context = dict(context, pricelist=self.sale_pricelist_id.id, uom=self.uom_dozen.id)
 
         usb_adapter_unit = self.usb_adapter.with_context(unit_context)
         usb_adapter_dozen = self.usb_adapter.with_context(dozen_context)
@@ -67,7 +64,7 @@ class TestPricelist(TransactionCase):
         # Verify that the pricelist rules are correctly using the product's default UoM
         # as reference, and return a result according to the target UoM (as specific in the context)
 
-        kg, tonne = self.uom_kgm_id, self.uom_ton.id
+        kg, tonne = self.uom_weight.id, self.uom_ton.id
         tonne_price = 100
 
         # make sure 'tonne' resolves down to 1 'kg'.
