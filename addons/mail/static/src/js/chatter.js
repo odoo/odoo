@@ -545,7 +545,7 @@ var Chatter = Widget.extend({
             || ev.originalEvent.clientX >= window.innerWidth
             || ev.originalEvent.clientY >= window.innerHeight
         ) {
-            this.$(".o_attachments_file_drop_zone").addClass("d-none");
+            this.$(".o_file_drop_zone_container").addClass("d-none");
             this._dragOverAttachmentOpening = false;
         }
     },
@@ -562,7 +562,7 @@ var Chatter = Widget.extend({
             this._dragOverAttachmentOpening = true;
             this._toggleAttachmentBox();
         }
-        this.$(".o_attachments_file_drop_zone").removeClass("d-none");
+        this.$(".o_file_drop_zone_container").removeClass("d-none");
     },
     /**
      * Called when file is dropped, will remove dropzone area once file is dropped
@@ -573,7 +573,7 @@ var Chatter = Widget.extend({
     _onBodyFileDrop(ev) {
         ev.preventDefault();
         ev.stopPropagation();
-        this.$(".o_attachments_file_drop_zone").addClass("d-none");
+        this.$(".o_file_drop_zone_container").addClass("d-none");
         this._dragOverAttachmentOpening = false;
     },
     /**

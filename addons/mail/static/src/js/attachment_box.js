@@ -17,8 +17,8 @@ var AttachmentBox = Widget.extend({
         "click .o_attachment_delete_cross": "_onDeleteAttachment",
         "click .o_upload_attachments_button": "_onUploadAttachments",
         "change .o_chatter_attachment_form .o_form_binary_form": "_onAddAttachment",
-        'dragover .o_attachments_file_drop_zone': '_onDragoverFileDropZone',
-        'drop .o_attachments_file_drop_zone': '_onDropFile',
+        'dragover .o_file_drop_zone_container': '_onDragoverFileDropZone',
+        'drop .o_file_drop_zone_container': '_onDropFile',
     },
     /**
      * @override
@@ -210,7 +210,7 @@ var AttachmentBox = Widget.extend({
      */
     _onDropFile(ev) {
         ev.preventDefault();
-        $(".o_attachments_file_drop_zone").addClass("d-none");
+        $(".o_file_drop_zone_container").addClass("d-none");
         if (this._isDragSourceExternalFile(ev.originalEvent.dataTransfer)) {
             const files = ev.originalEvent.dataTransfer.files;
             this._processAttachmentChange(files);

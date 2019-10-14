@@ -544,9 +544,9 @@ QUnit.test('attachmentBox dropzone available when hovering file [REQUIRE NON-INC
     await testUtils.dom.click($button);
     assert.containsOnce(form, '.o_attachments_previews',
         "should display some attachments on the attachments box");
-    assert.containsOnce(form, '.o_attachments_file_drop_zone',
+    assert.containsOnce(form, '.o_file_drop_zone_container',
         "should have a dropzone to drag-and-drop files");
-    var $dropZoneContainer = form.$('.o_attachments_file_drop_zone');
+    var $dropZoneContainer = form.$('.o_file_drop_zone_container');
     assert.isNotVisible($dropZoneContainer, "dropzone should not be visible");
 
     // hide AttachmentBox and test dragging file will automatically open it
@@ -564,7 +564,7 @@ QUnit.test('attachmentBox dropzone available when hovering file [REQUIRE NON-INC
     assert.containsOnce(form, '.o_mail_chatter_attachments',
         "should have chatter attachment box");
 
-    $dropZoneContainer = form.$('.o_attachments_file_drop_zone');
+    $dropZoneContainer = form.$('.o_file_drop_zone_container');
     testUtils.file.dragoverFile($dropZoneContainer, file);
     assert.isVisible($dropZoneContainer, "dropzone should be visible");
 
@@ -607,7 +607,7 @@ QUnit.test('attachmentBox dropzone not available after dropping file [REQUIRE NO
     });
     testUtils.file.dragoverFile(form.$('.o_chatter'), file);
     await testUtils.nextTick();
-    const $dropZoneContainer = form.$('.o_attachments_file_drop_zone');
+    const $dropZoneContainer = form.$('.o_file_drop_zone_container');
     testUtils.file.dragoverFile($dropZoneContainer, file);
     assert.isVisible($dropZoneContainer, "dropzone should be visible");
 
@@ -660,7 +660,7 @@ QUnit.test('attachmentBox drag and drop uploads file [REQUIRE NON-INCOGNITO WIND
     });
     testUtils.file.dragoverFile(form.$('.o_chatter'), file);
     await testUtils.nextTick();
-    const $dropZoneContainer = form.$('.o_attachments_file_drop_zone');
+    const $dropZoneContainer = form.$('.o_file_drop_zone_container');
     testUtils.file.dragoverFile($dropZoneContainer, file);
 
     await testUtils.file.dropFile($dropZoneContainer, file);
