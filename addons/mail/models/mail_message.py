@@ -12,7 +12,6 @@ from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.osv import expression
-from odoo.tools import groupby
 
 _logger = logging.getLogger(__name__)
 _image_dataurl = re.compile(r'(data:image/[a-z]+?);base64,([a-z0-9+/\n]{3,}=*)\n*([\'"])(?: data-filename="([^"]*)")?', re.I)
@@ -43,6 +42,9 @@ class Message(models.Model):
     subject = fields.Char('Subject')
     date = fields.Datetime('Date', default=fields.Datetime.now)
     body = fields.Html('Contents', default='', sanitize_style=True)
+    description = fields.Char(
+        'Short description', compute="_compute_description",
+        help='Message description: either the subject, or the beginning of the body')
     attachment_ids = fields.Many2many(
         'ir.attachment', 'message_attachment_rel',
         'message_id', 'attachment_id',
@@ -124,7 +126,7 @@ class Message(models.Model):
         ('rejected', 'Rejected')], string="Moderation Status", index=True)
     moderator_id = fields.Many2one('res.users', string="Moderated By", index=True)
     need_moderation = fields.Boolean('Need moderation', compute='_compute_need_moderation', search='_search_need_moderation')
-    #keep notification layout informations to be able to generate mail again
+    # keep notification layout informations to be able to generate mail again
     email_layout_xmlid = fields.Char('Layout', copy=False)  # xml id of layout
     add_sign = fields.Boolean(default=True)
     # `test_adv_activity`, `test_adv_activity_full`, `test_message_assignation_inbox`,...
@@ -136,6 +138,14 @@ class Message(models.Model):
     # Besides for new messages, and messages never sending emails, there was no mail, and it was searching for nothing.
     mail_ids = fields.One2many('mail.mail', 'mail_message_id', string='Mails', groups="base.group_system")
     canned_response_ids = fields.One2many('mail.shortcode', 'message_ids', string="Canned Responses", store=False)
+
+    def _compute_description(self):
+        for message in self:
+            if message.subject:
+                message.description = message.subject
+            else:
+                plaintext_ct = '' if not message.body else tools.html2plaintext(message.body)
+                message.description = plaintext_ct[:30] + '%s' % (' [...]' if len(plaintext_ct) >= 30 else '')
 
     def _get_needaction(self):
         """ Need action on a mail.message = notified on my channel """
@@ -1200,7 +1210,7 @@ class Message(models.Model):
                 else:
                     messages |= message
 
-        for author, author_messages in groupby(messages, itemgetter('author_id')):
+        for author, author_messages in tools.groupby(messages, itemgetter('author_id')):
             self.env['bus.bus'].sendone(
                 (self._cr.dbname, 'res.partner', author.id),
                 {'type': 'mail_failure', 'elements': self.env['mail.message'].concat(*author_messages)._format_mail_failures()}

@@ -3,7 +3,6 @@
 
 from odoo import api, fields, models, _
 from odoo.osv import expression
-from odoo.tools import html2plaintext
 from odoo.exceptions import AccessError
 
 
@@ -23,21 +22,12 @@ class MailMessage(models.Model):
 
         return defaults
 
-    description = fields.Char(compute="_compute_description", help='Message description: either the subject, or the beginning of the body')
     website_published = fields.Boolean(string='Published', help="Visible on the website as a comment", copy=False)
 
     @api.model
     def _non_employee_message_domain(self):
         domain = super(MailMessage, self)._non_employee_message_domain()
         return expression.AND([domain, [('website_published', '=', True)]])
-
-    def _compute_description(self):
-        for message in self:
-            if message.subject:
-                message.description = message.subject
-            else:
-                plaintext_ct = '' if not message.body else html2plaintext(message.body)
-                message.description = plaintext_ct[:30] + '%s' % (' [...]' if len(plaintext_ct) >= 30 else '')
 
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
