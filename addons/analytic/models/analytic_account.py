@@ -82,7 +82,10 @@ class AccountAnalyticAccount(models.Model):
     def _compute_debit_credit_balance(self):
         Curr = self.env['res.currency']
         analytic_line_obj = self.env['account.analytic.line']
-        domain = [('account_id', 'in', self.ids)]
+        domain = [
+            ('account_id', 'in', self.ids)
+            ('company_id', 'in', [False] + self.env.companies.ids)
+        ]
         if self._context.get('from_date', False):
             domain.append(('date', '>=', self._context['from_date']))
         if self._context.get('to_date', False):
@@ -90,8 +93,6 @@ class AccountAnalyticAccount(models.Model):
         if self._context.get('tag_ids'):
             tag_domain = expression.OR([[('tag_ids', 'in', [tag])] for tag in self._context['tag_ids']])
             domain = expression.AND([domain, tag_domain])
-        if self._context.get('company_ids'):
-            domain.append(('company_id', 'in', self._context['company_ids']))
 
         user_currency = self.env.company.currency_id
         credit_groups = analytic_line_obj.read_group(
