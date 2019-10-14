@@ -1056,7 +1056,7 @@ class MailThread(models.AbstractModel):
                 parent_message = self.env['mail.message'].sudo().browse(message_dict['parent_id'])
             partner_ids = []
             if not subtype_id:
-                if message_dict.pop('internal', False):
+                if message_dict.get('is_internal'):
                     subtype_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note')
                     if parent_message and parent_message.author_id:
                         partner_ids = [parent_message.author_id.id]
@@ -1367,7 +1367,7 @@ class MailThread(models.AbstractModel):
               'references': references,
               'in_reply_to': in-reply-to,
               'parent_id': parent mail.message based on in_reply_to or references,
-              'internal': answer to an internal message (note),
+              'is_internal': answer to an internal message (note),
               'date': date,
               'attachments': [('file1', 'bytes'),
                               ('file2', 'bytes')}
@@ -1441,14 +1441,14 @@ class MailThread(models.AbstractModel):
             parent_ids = self.env['mail.message'].search([('message_id', '=', msg_dict['in_reply_to'])], limit=1)
             if parent_ids:
                 msg_dict['parent_id'] = parent_ids.id
-                msg_dict['internal'] = parent_ids.subtype_id and parent_ids.subtype_id.internal or False
+                msg_dict['is_internal'] = parent_ids.subtype_id and parent_ids.subtype_id.internal or False
 
         if msg_dict['references'] and 'parent_id' not in msg_dict:
             references_msg_id_list = tools.mail_header_msgid_re.findall(msg_dict['references'])
             parent_ids = self.env['mail.message'].search([('message_id', 'in', [x.strip() for x in references_msg_id_list])], limit=1)
             if parent_ids:
                 msg_dict['parent_id'] = parent_ids.id
-                msg_dict['internal'] = parent_ids.subtype_id and parent_ids.subtype_id.internal or False
+                msg_dict['is_internal'] = parent_ids.subtype_id and parent_ids.subtype_id.internal or False
 
         msg_dict.update(self._message_parse_extract_payload(message, save_original=save_original))
         msg_dict.update(self._message_parse_extract_bounce(message, msg_dict))
@@ -1996,6 +1996,7 @@ class MailThread(models.AbstractModel):
             'email_from': email_from,
             'partner_ids': partner_ids,
             'subtype_id': self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note'),
+            'is_internal': True,
             'record_name': False,
             'reply_to': MailThread._notify_get_reply_to(default=email_from, records=None)[False],
             'message_id': tools.generate_tracking_message_id('message-notify'),
@@ -2024,6 +2025,7 @@ class MailThread(models.AbstractModel):
             'model': kwargs.get('model', self._name),
             'res_id': self.ids[0] if self.ids else False,
             'subtype_id': self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note'),
+            'is_internal': True,
             'record_name': False,
             'reply_to': self.env['mail.thread']._notify_get_reply_to(default=email_from, records=None)[False],
             'message_id': tools.generate_tracking_message_id('message-notify'),  # why? this is all but a notify
@@ -2046,6 +2048,7 @@ class MailThread(models.AbstractModel):
             'message_type': message_type,
             'model': self._name,
             'subtype_id': self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note'),
+            'is_internal': True,
             'record_name': False,
             'reply_to': self.env['mail.thread']._notify_get_reply_to(default=email_from, records=None)[False],
             'message_id': tools.generate_tracking_message_id('message-notify'),  # why? this is all but a notify

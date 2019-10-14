@@ -433,7 +433,7 @@ class WebsiteSlides(WebsiteProfile):
                 ('res_id', '=', channel.id),
                 ('author_id', '=', request.env.user.partner_id.id),
                 ('message_type', '=', 'comment'),
-                ('website_published', '=', True)
+                ('is_internal', '=', False)
             ], order='write_date DESC', limit=1)
             if last_message:
                 last_message_values = last_message.read(['body', 'rating_value', 'attachment_ids'])[0]

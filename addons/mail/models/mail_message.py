@@ -73,6 +73,7 @@ class Message(models.Model):
     mail_activity_type_id = fields.Many2one(
         'mail.activity.type', 'Mail Activity Type',
         index=True, ondelete='set null')
+    is_internal = fields.Boolean('Employee Only', help='Hide to public / portal users, independently from subtype configuration.')
     # origin
     email_from = fields.Char('From', help="Email address of the sender. This field is set when no matching partner is found and replaces the author_id field in the chatter.")
     author_id = fields.Many2one(
@@ -234,9 +235,9 @@ class Message(models.Model):
             return super(Message, self)._search(
                 args, offset=offset, limit=limit, order=order,
                 count=count, access_rights_uid=access_rights_uid)
-        # Non-employee see only messages with a subtype (aka, no internal logs)
+        # Non-employee see only messages with a subtype and not internal
         if not self.env['res.users'].has_group('base.group_user'):
-            args = ['&', '&', ('subtype_id', '!=', False), ('subtype_id.internal', '=', False)] + list(args)
+            args = expression.AND([self._get_search_domain_share(), args])
         # Perform a super with count as False, to have the ids, not a counter
         ids = super(Message, self)._search(
             args, offset=offset, limit=limit, order=order,
@@ -359,7 +360,9 @@ class Message(models.Model):
                                 FROM "%s" AS message
                                 LEFT JOIN "mail_message_subtype" as subtype
                                 ON message.subtype_id = subtype.id
-                                WHERE message.message_type = %%s AND (message.subtype_id IS NULL OR subtype.internal IS TRUE) AND message.id = ANY (%%s)''' % (self._table), ('comment', self.ids,))
+                                WHERE message.message_type = %%s AND
+                                    (message.is_internal IS TRUE OR message.subtype_id IS NULL OR subtype.internal IS TRUE) AND
+                                    message.id = ANY (%%s)''' % (self._table), ('comment', self.ids,))
             if self._cr.fetchall():
                 raise AccessError(
                     _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % (self._description, operation)
@@ -1279,3 +1282,6 @@ class Message(models.Model):
                     'message_needaction',
                     'message_needaction_counter',
                 ], ids=[res_id])
+
+    def _get_search_domain_share(self):
+        return ['&', '&', ('is_internal', '=', False), ('subtype_id', '!=', False), ('subtype_id.internal', '=', False)]

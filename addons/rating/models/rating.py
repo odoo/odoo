@@ -53,6 +53,7 @@ class Rating(models.Model):
         'mail.message', string="Linked message",
         index=True, ondelete='cascade',
         help="Associated message when posting a review. Mainly used in website addons.")
+    is_internal = fields.Boolean('Employee Only', readonly=False, related='message_id.is_internal', store=True)
     access_token = fields.Char('Security Token', default=_default_access_token, help="Access token to set the rating of the value")
     consumed = fields.Boolean(string="Filled Rating", help="Enabled if the rating has been filled.")
 

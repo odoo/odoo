@@ -372,7 +372,7 @@ class ProductTemplate(models.Model):
     def _rating_domain(self):
         """ Only take the published rating into account to compute avg and count """
         domain = super(ProductTemplate, self)._rating_domain()
-        return expression.AND([domain, [('website_published', '=', True)]])
+        return expression.AND([domain, [('is_internal', '=', False)]])
 
     def _get_images(self):
         """Return a list of records implementing `image.mixin` to
