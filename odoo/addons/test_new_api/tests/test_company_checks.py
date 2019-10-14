@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, AccessError
 from odoo.tests import common
 
 
@@ -72,3 +72,51 @@ class TestCompanyCheck(common.TransactionCase):
             'company_id': self.company_b.id,
         })
 
+    def test_company_environment(self):
+        """ Check the company context on the environment is verified. """
+
+        self.company_c = self.env['res.company'].create({
+            'name': 'Company C'
+        })
+
+        user = self.env['res.users'].create({
+            'name': 'Test',
+            'login': 'test',
+            'company_id': self.company_a.id,
+            'company_ids': (self.company_a | self.company_c).ids,
+        })
+
+        user = user.with_user(user).with_context(allowed_company_ids=[])
+
+        # When accessing company/companies, check raises error if unauthorized/unexisting company.
+        with self.assertRaises(AccessError):
+            user.with_context(allowed_company_ids=[self.company_a.id, self.company_b.id, self.company_c.id]).env.companies
+
+        with self.assertRaises(AccessError):
+            user.with_context(allowed_company_ids=[self.company_b.id]).env.company
+
+        with self.assertRaises(AccessError):
+            # crap in company context is not allowed.
+            user.with_context(allowed_company_ids=['company_qsdf', 'company564654']).env.companies
+
+        # In sudo mode, context check is bypassed.
+        companies = (self.company_a | self.company_b)
+        self.assertEqual(
+            user.sudo().with_context(allowed_company_ids=companies.ids).env.companies,
+            companies
+        )
+
+        self.assertEqual(
+            user.sudo().with_context(
+                allowed_company_ids=[self.company_b.id, 'abc']).env.company,
+            self.company_b
+        )
+        """
+        wrong_env = user.sudo().with_context(
+            allowed_company_ids=[self.company_a.id, self.company_b.id, 'abc'])
+        wrong_env.env.companies.mapped('name')
+        # Wrong SQL query due to wrong company id.
+        """
+        # Fallbacks when no allowed_company_ids context key
+        self.assertEqual(user.env.company, user.company_id)
+        self.assertEqual(user.env.companies, user.company_ids)
