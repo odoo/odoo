@@ -4643,7 +4643,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('oe_read_only className is handled in list views', async function (assert) {
-        assert.expect(5);
+        assert.expect(7);
 
         var form = await createView({
             View: FormView,
@@ -4669,6 +4669,12 @@ QUnit.module('Views', {
             'display_name cell should be visible in readonly mode');
 
         await testUtils.form.clickEdit(form);
+
+        assert.strictEqual(form.el.querySelector('th[data-name="foo"]').style.width, '100%',
+            'As the only visible char field, "foo" should take 100% of the remaining space');
+        assert.strictEqual(form.el.querySelector('th.oe_read_only').style.width, '0px',
+            '"oe_read_only" in edit mode should have a 0px width');
+
         assert.hasClass(form.$('.o_form_view'), 'o_form_editable',
             'form should be in edit mode');
         assert.isNotVisible(form.$('.o_field_one2many .o_list_view thead th[data-name="display_name"]'),
