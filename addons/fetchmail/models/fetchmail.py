@@ -153,7 +153,6 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
         for server in self:
             _logger.info('start checking for new emails on %s server %s', server.server_type, server.name)
             additionnal_context['default_fetchmail_server_id'] = server.id
-            additionnal_context['server_type'] = server.server_type
             count, failed = 0, 0
             imap_server = None
             pop_server = None
