@@ -18,16 +18,14 @@ class RestaurantFloor(models.Model):
     sequence = fields.Integer('Sequence', help='Used to sort Floors', default=1)
 
     def unlink(self):
-        confs = self.env['pos.session'].search([
-            ('state', '!=', 'closed'),
-            ('config_id.is_table_management', '=', True)
-        ]).mapped('config_id')
-        if confs:
+        confs = self.mapped('pos_config_id').filtered(lambda c: c.is_table_management == True)
+        opened_session = self.env['pos.session'].search([('config_id', 'in', confs.ids), ('state', '!=', 'closed')])
+        if opened_session:
             error_msg = _("You cannot remove a floor that is used in a PoS session, close the session(s) first: \n")
             for floor in self:
-                for config in confs:
-                    if floor in config.floor_ids:
-                        error_msg += _("Floor: %s - PoS Config: %s \n") % (floor.name, config.name)
+                for session in opened_session:
+                    if floor in session.config_id.floor_ids:
+                        error_msg += _("Floor: %s - PoS Config: %s \n") % (floor.name, session.config_id.name)
             if confs:
                 raise UserError(error_msg)
         return super(RestaurantFloor, self).unlink()
