@@ -5133,9 +5133,15 @@ Record ids: %(records)s
                         else:
                             data = data and data.ids or [False]
                     else:
-                        data = [
-                            (isinstance(x, datetime.date) and x.strftime('%Y-%m-%d %H:%M:%S')) or
-                            x for x in data]
+                        true_data = next((d for d in data if d), None)
+                        if isinstance(true_data, datetime.date):
+                            # convert all date and datetime values to datetime
+                            normalize = Datetime.to_datetime
+                            if isinstance(value, (list, tuple)):
+                                value = [normalize(v) for v in value]
+                            else:
+                                value = normalize(value)
+                            data = [normalize(d) for d in data]
                     if comparator in ('in', 'not in'):
                         if not (isinstance(value, list) or isinstance(value, tuple)):
                             value = [value]
@@ -6100,4 +6106,4 @@ def lazy_name_get(self):
 
 # keep those imports here to avoid dependency cycle errors
 from .osv import expression
-from .fields import Field
+from .fields import Field, Datetime
