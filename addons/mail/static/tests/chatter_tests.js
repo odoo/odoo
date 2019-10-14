@@ -2,7 +2,6 @@ odoo.define('mail.chatter_tests', function (require) {
 "use strict";
 
 var mailTestUtils = require('mail.testUtils');
-var AttachmentBox = require('mail.AttachmentBox');
 var core = require('web.core');
 var FormView = require('web.FormView');
 var KanbanView = require('web.KanbanView');
@@ -539,8 +538,8 @@ QUnit.test('attachmentBox dropzone available when hovering file [REQUIRE NON-INC
         res_id: 7,
     });
 
-    var $button = form.$('.o_chatter_button_attachment');
-    assert.strictEqual($button.length, 1, "should have one attachment button");
+    const $button = form.$('.o_chatter_button_attachment');
+    assert.containsOnce(form, '.o_chatter_button_attachment', "should have one attachment button");
 
     await testUtils.dom.click($button);
     assert.containsOnce(form, '.o_attachments_previews',
@@ -552,22 +551,21 @@ QUnit.test('attachmentBox dropzone available when hovering file [REQUIRE NON-INC
 
     // hide AttachmentBox and test dragging file will automatically open it
     await testUtils.dom.click($button);
-    await testUtils.nextTick();
     assert.containsNone(form, '.o_mail_chatter_attachments',
         "should not have chatter attachment box");
 
-    var file = await testUtils.file.createFile({
+    const file = await testUtils.file.createFile({
         name: 'text.txt',
         content: 'hello, world',
         contentType: 'text/plain',
     });
-    await testUtils.file.dragoverFile(form.$('.o_chatter'), file);
+    testUtils.file.dragoverFile(form.$('.o_chatter'), file);
     await testUtils.nextTick();
     assert.containsOnce(form, '.o_mail_chatter_attachments',
         "should have chatter attachment box");
 
     $dropZoneContainer = form.$('.o_attachments_file_drop_zone');
-    await testUtils.file.dragoverFile($dropZoneContainer, file);
+    testUtils.file.dragoverFile($dropZoneContainer, file);
     assert.isVisible($dropZoneContainer, "dropzone should be visible");
 
     form.destroy();
@@ -576,11 +574,15 @@ QUnit.test('attachmentBox dropzone available when hovering file [REQUIRE NON-INC
 QUnit.test('attachmentBox dropzone not available after dropping file [REQUIRE NON-INCOGNITO WINDOW]', async function (assert) {
     assert.expect(4);
 
-    testUtils.mock.patch(AttachmentBox, {
-        async _callUploadAttachment(controllerUrl, formData) {
-            assert.step('_callUploadAttachment');
-        }
-    });
+    window.originalWindowFetch = window.fetch;
+    window.fetch = function (url, params) {
+        assert.step('fetch');
+        return {
+            text() {
+                return 'text.txt';
+            }
+        };
+    };
 
     const form = await createView({
         View: FormView,
@@ -603,32 +605,37 @@ QUnit.test('attachmentBox dropzone not available after dropping file [REQUIRE NO
         content: 'hello, world',
         contentType: 'text/plain',
     });
-    await testUtils.file.dragoverFile(form.$('.o_chatter'), file);
+    testUtils.file.dragoverFile(form.$('.o_chatter'), file);
     await testUtils.nextTick();
     const $dropZoneContainer = form.$('.o_attachments_file_drop_zone');
-    await testUtils.file.dragoverFile($dropZoneContainer, file);
+    testUtils.file.dragoverFile($dropZoneContainer, file);
     assert.isVisible($dropZoneContainer, "dropzone should be visible");
 
     await testUtils.file.dropFile($dropZoneContainer, file);
-    assert.verifySteps(['_callUploadAttachment']);
+    assert.verifySteps(['fetch']);
     assert.isNotVisible($dropZoneContainer, "dropzone should not be visible after drop file");
 
     form.destroy();
+    window.fetch = window.originalWindowFetch;
 });
 
 QUnit.test('attachmentBox drag and drop uploads file [REQUIRE NON-INCOGNITO WINDOW]', async function (assert) {
     assert.expect(4);
 
-    testUtils.mock.patch(AttachmentBox, {
-        async _callUploadAttachment(controllerUrl, formData) {
-            assert.strictEqual(controllerUrl, "/web/binary/upload_attachment",
-                "upload url should match to /web/binary/upload_attachment");
-            const files = formData.getAll('ufile');
-            assert.strictEqual(files[1].name, "text.txt",
-                "uploading file name should be 'text.txt'");
-            assert.step('_callUploadAttachment');
-        }
-    });
+    window.originalWindowFetch = window.fetch;
+    window.fetch = function (url, params) {
+        assert.strictEqual(url, "/web/binary/upload_attachment",
+            "upload url should match to /web/binary/upload_attachment");
+        const files = params.body.getAll('ufile');
+        assert.strictEqual(files[0].name, "text.txt",
+            "uploading file name should be 'text.txt'");
+        assert.step('fetch');
+        return {
+            text() {
+                return 'text.txt';
+            }
+        };
+    };
 
     const form = await createView({
         View: FormView,
@@ -646,20 +653,21 @@ QUnit.test('attachmentBox drag and drop uploads file [REQUIRE NON-INCOGNITO WIND
         res_id: 7,
     });
 
-    var file = await testUtils.file.createFile({
+    const file = await testUtils.file.createFile({
         name: 'text.txt',
         content: 'hello, world',
         contentType: 'text/plain',
     });
-    await testUtils.file.dragoverFile(form.$('.o_chatter'), file);
+    testUtils.file.dragoverFile(form.$('.o_chatter'), file);
     await testUtils.nextTick();
     const $dropZoneContainer = form.$('.o_attachments_file_drop_zone');
-    await testUtils.file.dragoverFile($dropZoneContainer, file);
+    testUtils.file.dragoverFile($dropZoneContainer, file);
 
     await testUtils.file.dropFile($dropZoneContainer, file);
-    assert.verifySteps(['_callUploadAttachment']);
+    assert.verifySteps(['fetch']);
 
     form.destroy();
+    window.fetch = window.originalWindowFetch;
 });
 
 QUnit.test('chatter in create mode', async function (assert) {

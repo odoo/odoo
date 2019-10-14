@@ -100,20 +100,21 @@ var Chatter = Widget.extend({
 
         // Drag-Drop files
         // Allowing body to detect dragenter and dragleave for display
-        var $body = $('body');
-        $body.on('dragleave', this._onBodyFileDragLeave.bind(this));
-        $body.on("dragover", this._onBodyFileDragover.bind(this));
-        $body.on("drop", this._onBodyFileDrop.bind(this));
+        const $body = $('body');
+        this._dropZoneNS = _.uniqueId('o_dz_'); // For event namespace used when multiple chat window is open
+        $body.on('dragleave.' + this._dropZoneNS, this._onBodyFileDragLeave.bind(this));
+        $body.on("dragover." + this._dropZoneNS, this._onBodyFileDragover.bind(this));
+        $body.on("drop." + this._dropZoneNS, this._onBodyFileDrop.bind(this));
         return this._super.apply(this, arguments);
     },
     /**
      * @override
      */
     destroy() {
-        var $body = $('body');
-        $body.on('dragleave');
-        $body.on("dragover");
-        $body.on("drop");
+        const $body = $('body');
+        $body.off('dragleave.' + this._dropZoneNS);
+        $body.off("dragover." + this._dropZoneNS);
+        $body.off("drop." + this._dropZoneNS);
         return this._super(...arguments);
     },
 
@@ -460,6 +461,26 @@ var Chatter = Widget.extend({
         this.recordName = record.data.display_name;
     },
     /**
+     * toggles attachment box, if attachment box is opened then close it
+     * or if attachment box is cloed then open it
+     *
+     * @private
+     */
+    _toggleAttachmentBox() {
+        if (this._disableAttachmentBox) {
+            return;
+        }
+        if (this._isAttachmentBoxOpen) {
+            this._closeAttachments();
+        } else {
+            var def;
+            if (!this._areAttachmentsLoaded) {
+                def = this._fetchAttachments();
+            }
+            Promise.resolve(def).then(this._openAttachmentBox.bind(this));
+        }
+    },
+    /**
      * @private
      */
      _updateAttachmentCounter: function () {
@@ -510,27 +531,12 @@ var Chatter = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * When file is dragged over body then check if attachment box is not opened
-     * then open it and show dropzone area
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onBodyFileDragover: function (ev) {
-        ev.preventDefault();
-        if (!this._isAttachmentBoxOpen && !this._dragOverAttachmentOpening) {
-            this._dragOverAttachmentOpening = true;
-            this._onClickAttachmentButton();
-        }
-        this.$(".o_attachments_file_drop_zone").removeClass("d-none");
-    },
-    /**
      * When dragging leaves body then remove dropzone area
      *
      * @private
      * @param {MouseEvent} ev
      */
-    _onBodyFileDragLeave: function (ev) {
+    _onBodyFileDragLeave(ev) {
         // On every dragenter chain created with parent child element
         // That's why dragleave is fired every time when a child elemnt is hovered
         // so here we hide dropzone based on mouse position
@@ -544,12 +550,27 @@ var Chatter = Widget.extend({
         }
     },
     /**
+     * When file is dragged over body then check if attachment box is not opened
+     * then open it and show dropzone area
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onBodyFileDragover(ev) {
+        ev.preventDefault();
+        if (!this._isAttachmentBoxOpen && !this._dragOverAttachmentOpening) {
+            this._dragOverAttachmentOpening = true;
+            this._toggleAttachmentBox();
+        }
+        this.$(".o_attachments_file_drop_zone").removeClass("d-none");
+    },
+    /**
      * Called when file is dropped, will remove dropzone area once file is dropped
      *
      * @private
      * @param {MouseEvent} ev
      */
-    _onBodyFileDrop: function (ev) {
+    _onBodyFileDrop(ev) {
         ev.preventDefault();
         ev.stopPropagation();
         this.$(".o_attachments_file_drop_zone").addClass("d-none");
@@ -587,18 +608,7 @@ var Chatter = Widget.extend({
      * @private
      */
     _onClickAttachmentButton: function () {
-        if(this._disableAttachmentBox) {
-            return;
-        }
-        if (this._isAttachmentBoxOpen) {
-            this._closeAttachments();
-        } else {
-            var def;
-            if (!this._areAttachmentsLoaded) {
-                def = this._fetchAttachments();
-            }
-            Promise.resolve(def).then(this._openAttachmentBox.bind(this));
-        }
+        this._toggleAttachmentBox();
     },
     /**
      * Discard changes on the record.

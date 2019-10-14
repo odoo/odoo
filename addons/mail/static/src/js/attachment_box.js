@@ -75,9 +75,9 @@ var AttachmentBox = Widget.extend({
      * Calls controller to upload file, separate method is created
      * to use it in tests to patch it.
      *
+     * @private
      * @param {string} controllerUrl
      * @param {FormData} formData
-     * @private
      */
     async _callUploadAttachment(controllerUrl, formData) {
         const response = await window.fetch(controllerUrl, {
@@ -96,13 +96,13 @@ var AttachmentBox = Widget.extend({
      * @param {DataTransfer} dataTransfer
      * @returns {boolean}
      */
-    _isDragSourceExternalFile: function (dataTransfer) {
-        var DragDataType = dataTransfer.types;
+    _isDragSourceExternalFile(dataTransfer) {
+        const DragDataType = dataTransfer.types;
         if (DragDataType.constructor === DOMStringList) {
             return DragDataType.contains('Files');
         }
         if (DragDataType.constructor === Array) {
-            return DragDataType.indexOf('Files') !== -1;
+            return DragDataType.includes('Files');
         }
         return false;
     },
@@ -112,13 +112,13 @@ var AttachmentBox = Widget.extend({
      * @private
      * @param {Array<File>} params.files
      */
-    _processAttachmentChange: function (files) {
-        var $form = this.$('form.o_form_binary_form');
-        var formData = new FormData();
-        var inputList = [...$form.find("input")];
-        for (let i = 0; i < inputList.length; i++) {
-            if (inputList[i] !== "ufile") {
-                formData.append(inputList[i].name, inputList[i].value);
+    _processAttachmentChange(files) {
+        const $form = this.$('form.o_form_binary_form');
+        const formData = new FormData();
+        const inputList = [...$form.find("input")];
+        for (const input of inputList) {
+            if (input.name !== "ufile") {
+                formData.append(input.name, input.value);
             }
         }
         for (const file of files) {
@@ -199,7 +199,7 @@ var AttachmentBox = Widget.extend({
      * @private
      * @param {MouseEvent} ev
      */
-    _onDragoverFileDropZone: function (ev) {
+    _onDragoverFileDropZone(ev) {
         ev.originalEvent.dataTransfer.dropEffect = "copy";
     },
     /**
@@ -208,11 +208,11 @@ var AttachmentBox = Widget.extend({
      * @private
      * @param {MouseEvent} ev
      */
-    _onDropFile: function (ev) {
+    _onDropFile(ev) {
         ev.preventDefault();
         $(".o_attachments_file_drop_zone").addClass("d-none");
         if (this._isDragSourceExternalFile(ev.originalEvent.dataTransfer)) {
-            var files = ev.originalEvent.dataTransfer.files;
+            const files = ev.originalEvent.dataTransfer.files;
             this._processAttachmentChange(files);
         }
     },
