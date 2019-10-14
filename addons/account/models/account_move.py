@@ -3797,9 +3797,10 @@ class AccountMoveLine(models.Model):
 
         if context.get('company_id'):
             domain += [('company_id', '=', context['company_id'])]
-
-        if 'company_ids' in context:
-            domain += [('company_id', 'in', context['company_ids'])]
+        elif context.get('allowed_company_ids'):
+            domain += [('company_id', 'in', self.env.companies.ids)]
+        else:
+            domain += [('company_id', '=', self.env.company.id)]
 
         if context.get('reconcile_date'):
             domain += ['|', ('reconciled', '=', False), '|', ('matched_debit_ids.max_date', '>', context['reconcile_date']), ('matched_credit_ids.max_date', '>', context['reconcile_date'])]
