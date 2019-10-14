@@ -315,4 +315,4 @@ class WebsiteBlog(http.Controller):
     @http.route(['/blog/render_latest_posts'], type='json', auth='public', website=True)
     def render_latest_posts(self, template, domain, limit=None, order='published_date desc'):
         posts = request.env['blog.post'].search(domain, limit=limit, order=order)
-        return request.env.ref(template).render({'posts': posts})
+        return request.website.viewref(template).render({'posts': posts})
