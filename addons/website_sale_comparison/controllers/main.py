@@ -8,7 +8,7 @@ from collections import OrderedDict
 
 class WebsiteSaleProductComparison(WebsiteSale):
 
-    @http.route('/shop/compare/', type='http', auth="public", website=True)
+    @http.route('/shop/compare/', type='http', auth="public", website=True, sitemap=False)
     def product_compare(self, **post):
         values = {}
         product_ids = [int(i) for i in post.get('products', '').split(',') if i.isdigit()]
