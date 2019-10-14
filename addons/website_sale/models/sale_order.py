@@ -89,12 +89,7 @@ class SaleOrder(models.Model):
         else:
             domain += [('product_custom_attribute_value_ids', '=', False)]
 
-        lines = self.env['sale.order.line'].sudo().search(domain)
-
-        if line_id:
-            return lines
-
-        return self.env['sale.order.line']
+        return self.env['sale.order.line'].sudo().search(domain)
 
     def _website_product_id_change(self, order_id, product_id, qty=0):
         order = self.sudo().browse(order_id)
