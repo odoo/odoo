@@ -160,6 +160,10 @@ var ThemeCustomizeDialog = Dialog.extend({
         this.PX_BY_REM = parseFloat($(document.documentElement).css('font-size'));
 
         this.$modal.addClass('o_theme_customize_modal');
+        this.$modal.find('.modal-footer').append($('<a/>', {
+            href: '/web#action=website.theme_install_kanban_action',
+            text: _t("Choose another theme..."),
+        }));
 
         this.style = window.getComputedStyle(document.documentElement);
         this.nbFonts = parseInt(this.style.getPropertyValue('--number-of-fonts'));

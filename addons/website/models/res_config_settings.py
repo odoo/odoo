@@ -158,3 +158,8 @@ class ResConfigSettings(models.TransientModel):
             'target': 'new',
             'res_id': False,
         }
+
+    def install_theme_on_current_website(self):
+        self.website_id._force()
+        action = self.env.ref('website.theme_install_kanban_action')
+        return action.read()[0]
