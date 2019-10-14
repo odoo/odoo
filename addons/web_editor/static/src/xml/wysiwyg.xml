@@ -299,7 +299,11 @@
 
     <t t-name="wysiwyg.widgets.image.existing.attachment">
         <li class="o_existing_attachment_cell position-relative m-2" t-att-data-id="attachment.id">
-            <i t-if="!attachment.url" class="fa fa-cog o_existing_attachment_optimize p-2" title="Optimize" role="img" aria-label="Optimize"/>
+            <t t-if="attachment.type !== 'url'">
+                <i class="fa fa-cog o_existing_attachment_optimize p-2" title="Optimize" role="img" aria-label="Optimize"/>
+                <t t-set="image_size" t-value="attachment.image_height + ' X ' + attachment.image_width"></t>
+                <span class="o_existing_attachment_size p-2" t-esc="image_size" t-att-title="image_size"/>
+            </t>
             <t t-call="wysiwyg.widgets.file.existing.remove"/>
             <div t-attf-class="d-flex align-items-center h-100">
                 <img class="img img-fluid o_we_attachment_highlight" t-att-src="attachment.image_src + '?width=256&amp;height=192'" t-att-alt="attachment.name" t-att-title="attachment.name"/>

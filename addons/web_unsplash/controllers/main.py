@@ -4,6 +4,7 @@ import base64
 import logging
 import mimetypes
 import requests
+import uuid
 import werkzeug.utils
 
 from odoo import http, tools, _
@@ -103,7 +104,7 @@ class Web_Unsplash(http.Controller):
             query += mimetypes.guess_extension(mimetype) or ''
 
             # /unsplash/5gR788gfd/lion
-            url_frags = ['unsplash', key, query]
+            url_frags = ['unsplash', key, uuid.uuid4().hex, query]
 
             attachment = Attachments.create({
                 'name': '_'.join(url_frags),

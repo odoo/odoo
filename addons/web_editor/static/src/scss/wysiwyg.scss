@@ -224,7 +224,7 @@ body .modal {
                 cursor: pointer;
                 list-style: none;
 
-                .o_existing_attachment_optimize, .o_existing_attachment_remove {
+                .o_existing_attachment_optimize, .o_existing_attachment_remove, .o_existing_attachment_size {
                     background-color: scale-color($card-border-color, $alpha: -50%);
                     text-shadow: 0 0 1px white;
                     opacity: 0;
@@ -233,6 +233,11 @@ body .modal {
                     &:hover {
                         background-color: $card-border-color;
                     }
+                }
+
+                .o_existing_attachment_size {
+                    @include o-position-absolute($bottom: 0, $left: 0);
+                    border-radius: 0 0 2px 0;
                 }
 
                 .o_existing_attachment_optimize {
@@ -249,7 +254,7 @@ body .modal {
                 }
 
                 &:hover {
-                    .o_existing_attachment_optimize, .o_existing_attachment_remove {
+                    .o_existing_attachment_optimize, .o_existing_attachment_remove, .o_existing_attachment_size {
                         opacity: 1;
                     }
                     &.o_we_attachment_highlight, .o_we_attachment_highlight {

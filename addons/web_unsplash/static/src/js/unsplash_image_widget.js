@@ -91,10 +91,19 @@ widgetsMedia.ImageWidget.include({
                 res_id: self.options.res_id,
                 query: self._unsplash.query,
             }
-        }).then(function (images) {
-            self.attachments = images;
-            self.selectedAttachments = images;
-            return _super.apply(self, args);
+        }).then(function (attachments) {
+            var prom;
+            if (attachments.length === 1) {
+                prom = self._openImageOptimizeDialog(attachments[0]);
+            }
+            return Promise.resolve(prom).then(function (attachment) {
+                if (attachment) {
+                    attachments = [attachment];
+                }
+                self.attachments = attachments;
+                self.selectedAttachments = attachments;
+                return _super.apply(self, args);
+            });
         });
     },
     /**
