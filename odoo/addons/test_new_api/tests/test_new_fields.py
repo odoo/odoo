@@ -577,8 +577,40 @@ class TestFields(common.TransactionCase):
         with self.assertRaises(ValueError):
             record.date = '12-5-1'
 
+        # check filtered_domain
+        self.assertTrue(record.filtered_domain([('date', '<', '2012-05-02')]))
+        self.assertTrue(record.filtered_domain([('date', '<', date(2012, 5, 2))]))
+        self.assertTrue(record.filtered_domain([('date', '<', datetime(2012, 5, 2, 12, 0, 0))]))
+
+    def test_21_datetime(self):
+        """ test datetime fields """
         for i in range(0, 10):
             self.assertEqual(fields.Datetime.now().microsecond, 0)
+
+        record = self.env['test_new_api.mixed'].create({})
+
+        # assign falsy value
+        record.moment = None
+        self.assertFalse(record.moment)
+
+        # assign string
+        record.moment = '2012-05-01'
+        self.assertEqual(record.moment, datetime(2012, 5, 1))
+        record.moment = '2012-05-01 06:00:00'
+        self.assertEqual(record.moment, datetime(2012, 5, 1, 6))
+        with self.assertRaises(ValueError):
+            record.moment = '12-5-1'
+
+        # assign date or datetime
+        record.moment = date(2012, 5, 1)
+        self.assertEqual(record.moment, datetime(2012, 5, 1))
+        record.moment = datetime(2012, 5, 1, 6)
+        self.assertEqual(record.moment, datetime(2012, 5, 1, 6))
+
+        # check filtered_domain
+        self.assertTrue(record.filtered_domain([('moment', '<', '2012-05-02')]))
+        self.assertTrue(record.filtered_domain([('moment', '<', date(2012, 5, 2))]))
+        self.assertTrue(record.filtered_domain([('moment', '<', datetime(2012, 5, 1, 12, 0, 0))]))
 
     def test_21_date_datetime_helpers(self):
         """ test date/datetime fields helpers """
