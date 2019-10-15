@@ -100,20 +100,6 @@ class Event(models.Model):
             event.website_menu = bool(event.menu_id)
 
     @api.multi
-    def google_map_img(self, zoom=8, width=298, height=298):
-        self.ensure_one()
-        if self.address_id:
-            return self.sudo().address_id.google_map_img(zoom=zoom, width=width, height=height)
-        return None
-
-    @api.multi
-    def google_map_link(self, zoom=8):
-        self.ensure_one()
-        if self.address_id:
-            return self.sudo().address_id.google_map_link(zoom=zoom)
-        return None
-
-    @api.multi
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'website_published' in init_values and self.website_published:

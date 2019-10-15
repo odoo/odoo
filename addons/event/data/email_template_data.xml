@@ -169,8 +169,12 @@
     </table>
     % if object.event_id.address_id:
     <div style="width:598px;margin:0px auto;border-left:1px solid #dddddd;border-right:1px solid #dddddd;border-bottom:1px solid #dddddd;">
-        <a href="https://maps.google.com/maps?q=${location}" target="new">
-            <img src="http://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=598x200&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}" style="vertical-align:bottom;" />
+        <a href="${object.event_id.google_map_link()}" target="new" style="text-decoration:none;color:#875A7B;">
+            % if object.event_id.google_map_img():
+                <img src="${object.event_id.google_map_img(width=598, height=200)}" alt="Google Maps" style="vertical-align:bottom;"/>
+            % else:
+                <img src="/web_editor/font_to_img/61505/rgb(81,81,102)/34" style="max-width:inherit;text-decoration:none;color:#875A7B;"> Google Maps </img>
+            % endif
         </a>
     </div>
     % endif
@@ -336,8 +340,12 @@
     </table>
     % if object.event_id.address_id:
     <div style="width:598px;margin:0px auto;border-left:1px solid #dddddd;border-right:1px solid #dddddd;border-bottom:1px solid #dddddd;">
-        <a href="https://maps.google.com/maps?q=${location}" target="new">
-            <img src="http://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=598x200&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}" style="vertical-align:bottom;" />
+        <a href="${object.event_id.google_map_link()}" target="new" style="text-decoration:none;color:#875A7B;">
+           % if object.event_id.google_map_img():
+                <img src="${object.event_id.google_map_img(width=598, height=200)}" alt="Google Maps" style="vertical-align:bottom;"/>
+            % else:
+                <img src="/web_editor/font_to_img/61505/rgb(81,81,102)/34" style="max-width:inherit;"> Google Maps
+            % endif
         </a>
     </div>
     % endif

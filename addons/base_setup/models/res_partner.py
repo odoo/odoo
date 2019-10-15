@@ -26,7 +26,7 @@ class Partner(models.Model):
             'sensor': 'false',
             'key': google_maps_api_key,
         }
-        return urlplus('//maps.googleapis.com/maps/api/staticmap', params)
+        return urlplus('https://maps.googleapis.com/maps/api/staticmap', params)
 
     @api.multi
     def google_map_link(self, zoom=10):

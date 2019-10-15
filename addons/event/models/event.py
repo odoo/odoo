@@ -325,6 +325,19 @@ class EventEvent(models.Model):
     def _is_event_registrable(self):
         return True
 
+    @api.multi
+    def google_map_img(self, zoom=8, width=298, height=298):
+        self.ensure_one()
+        if self.address_id:
+            return self.sudo().address_id.google_map_img(zoom=zoom, width=width, height=height)
+        return None
+
+    @api.multi
+    def google_map_link(self, zoom=8):
+        self.ensure_one()
+        if self.address_id:
+            return self.sudo().address_id.google_map_link(zoom=zoom)
+        return None
 
 class EventRegistration(models.Model):
     _name = 'event.registration'
