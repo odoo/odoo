@@ -1005,7 +1005,7 @@ var FieldX2Many = AbstractField.extend({
     init: function (parent, name, record, options) {
         this._super.apply(this, arguments);
         this.nodeOptions = _.defaults(this.nodeOptions, {
-            create_text: _t('Add'),
+            create_text: this.record.fieldsInfo[this.viewType][this.name].title || _t('Add'),
         });
         this.operations = [];
         this.isReadonly = this.mode === 'readonly';
