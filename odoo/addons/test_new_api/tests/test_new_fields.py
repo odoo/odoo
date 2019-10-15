@@ -100,10 +100,12 @@ class TestFields(common.TransactionCase):
         # by default function fields are not stored and readonly
         field = self.env['test_new_api.message']._fields['size']
         self.assertFalse(field.store)
+        self.assertFalse(field.compute_sudo)
         self.assertTrue(field.readonly)
 
         field = self.env['test_new_api.message']._fields['name']
         self.assertTrue(field.store)
+        self.assertTrue(field.compute_sudo)
         self.assertTrue(field.readonly)
 
     def test_10_computed_custom(self):
