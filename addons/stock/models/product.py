@@ -94,7 +94,7 @@ class Product(models.Model):
     @api.depends('stock_move_ids.product_qty', 'stock_move_ids.state')
     @api.depends_context(
         'lot_id', 'owner_id', 'package_id', 'from_date', 'to_date',
-        'company_owned', 'force_company', 'quantity_available_locations_domain',
+        'company_owned', 'force_company', 'quantity_available_locations_transit',
         'quantity_available_locations_without_warehouse',
     )
     def _compute_quantities(self):
@@ -314,9 +314,9 @@ class Product(models.Model):
             loc_domain = loc_domain + [('location_id', operator, other_locations.ids)]
             dest_loc_domain = dest_loc_domain and ['|'] + dest_loc_domain or dest_loc_domain
             dest_loc_domain = dest_loc_domain + [('location_dest_id', operator, other_locations.ids)]
-        usage = self._context.get('quantity_available_locations_domain')
+        usage = self._context.get('quantity_available_locations_transit')
         if usage:
-            stock_loc_domain = expression.AND([domain + loc_domain, [('location_id.usage', 'in', usage)]])
+            stock_loc_domain = expression.AND([domain + loc_domain, [('location_id.usage', 'in', ['internal', 'transit'])]])
         else:
             stock_loc_domain = domain + loc_domain
 
@@ -327,9 +327,9 @@ class Product(models.Model):
             warehouses = self.env['stock.warehouse'].search([])
             for warehouse in warehouses:
                 no_wh_domain = expression.AND([no_wh_domain, ['!', ('location_id', 'child_of', warehouse.view_location_id.id)]])
-            usage = self._context.get('quantity_available_locations_domain')
+            usage = self._context.get('quantity_available_locations_transit')
             if usage:
-                no_wh_domain = expression.AND([no_wh_domain, [('location_id.usage', 'in', usage)]])
+                no_wh_domain = expression.AND([no_wh_domain, [('location_id.usage', 'in', ['internal', 'transit'])]])
             else:
                 no_wh_domain = expression.AND([no_wh_domain, [('location_id.usage', '=', 'internal')]])
 

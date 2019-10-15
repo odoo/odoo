@@ -4084,8 +4084,8 @@ class StockMove(SavepointCase):
         move2._action_done()
 
         self.assertEqual(self.product.qty_available, 5.0)
-        self.assertEqual(self.product.with_context(quantity_available_locations_domain=('internal', 'transit',)).qty_available, 5.0)
-        self.assertEqual(self.product.with_context(quantity_available_locations_without_warehouse=True, quantity_available_locations_domain=('internal', 'transit',)).qty_available, 10.0)
+        self.assertEqual(self.product.with_context(quantity_available_locations_transit=True).qty_available, 5.0)
+        self.assertEqual(self.product.with_context(quantity_available_locations_without_warehouse=True, quantity_available_locations_transit=True).qty_available, 10.0)
 
         # put 2 units in inter company transit
         move3 = self.env['stock.move'].create({
@@ -4102,8 +4102,8 @@ class StockMove(SavepointCase):
         move3._action_done()
 
         self.assertEqual(self.product.qty_available, 3.0)
-        self.assertEqual(self.product.with_context(quantity_available_locations_domain=('internal', 'transit',)).qty_available, 3.0)
-        self.assertEqual(self.product.with_context(quantity_available_locations_without_warehouse=True, quantity_available_locations_domain=('internal', 'transit',)).qty_available, 8.0)
+        self.assertEqual(self.product.with_context(quantity_available_locations_transit=True).qty_available, 3.0)
+        self.assertEqual(self.product.with_context(quantity_available_locations_without_warehouse=True, quantity_available_locations_transit=True).qty_available, 8.0)
 
         # put 2 units to a location below physical but not below a warehouse's view location and check it is seen by qty_available
         below_physical = self.env['stock.location'].create({
@@ -4125,8 +4125,8 @@ class StockMove(SavepointCase):
         move4._action_done()
 
         self.assertEqual(self.product.qty_available, 1.0)
-        self.assertEqual(self.product.with_context(quantity_available_locations_domain=('internal', 'transit',)).qty_available, 1.0)
-        self.assertEqual(self.product.with_context(quantity_available_locations_without_warehouse=True, quantity_available_locations_domain=('internal', 'transit',)).qty_available, 8.0)
+        self.assertEqual(self.product.with_context(quantity_available_locations_transit=True).qty_available, 1.0)
+        self.assertEqual(self.product.with_context(quantity_available_locations_without_warehouse=True, quantity_available_locations_transit=True).qty_available, 8.0)
         self.assertEqual(len(self.gather_relevant(self.product, below_physical)), 1.0)
 
     def test_edit_initial_demand_1(self):
