@@ -38,10 +38,9 @@ class Product(models.Model):
 
     def _compute_attachment_count(self):
         for product in self:
-            product.attachment_count = self.env['ir.attachment'].search_count([
-                '|',
-                ('res_model', '=', 'product.template'), ('res_id', '=', product.product_tmpl_id.id), ('product_downloadable', '=', True),
-                ('res_model', '=', 'product.product'), ('res_id', '=', product.id), ('product_downloadable', '=', True)])
+            product.attachment_count = self.env['ir.attachment'].search_count([('product_downloadable', '=', True), '|',
+                '&', ('res_model', '=', 'product.template'), ('res_id', '=', self.product_tmpl_id.id),
+                '&', ('res_model', '=', self._name), ('res_id', '=', self.id)])
 
     def action_open_attachments(self):
         self.ensure_one()
