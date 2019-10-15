@@ -99,5 +99,10 @@
                 </button>
             </field>
         </record>
+
+
+        <record id="sale.product_template_action" model="ir.actions.act_window">
+            <field name="context">{"search_default_filter_to_sell":1, "sale_multi_pricelist_product_template": 1, 'quantity_available_locations_domain': ('internal',), 'quantity_available_locations_without_warehouse': True}</field>
+        </record>
     </data>
 </odoo>
