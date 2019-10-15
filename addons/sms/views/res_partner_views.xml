@@ -23,6 +23,18 @@
                     <field name="mobile" widget="phone" options="{'enable_sms': True}"/>
                 </div>
             </xpath>
+            <xpath expr="//field[@name='child_ids']/form//field[@name='mobile']"  position="attributes">
+                <attribute name="options">{'enable_sms': True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='child_ids']/form//field[@name='phone']"  position="attributes">
+                <attribute name="options">{'enable_sms': True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='child_ids']/kanban/templates//field[@name='mobile']" position="attributes">
+                <attribute name="options">{'enable_sms': True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='child_ids']/kanban/templates//field[@name='phone']" position="attributes">
+                <attribute name="options">{'enable_sms': True}</attribute>
+            </xpath>
         </field>
     </record>
 
