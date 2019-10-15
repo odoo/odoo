@@ -1447,11 +1447,11 @@ class AccountInvoice(models.Model):
     @api.multi
     def _track_subtype(self, init_values):
         self.ensure_one()
-        if 'state' in init_values and self.state == 'paid' and self.type in ('out_invoice', 'out_refund'):
+        if 'state' in init_values and self.state == 'paid':
             return 'account.mt_invoice_paid'
-        elif 'state' in init_values and self.state == 'open' and self.type in ('out_invoice', 'out_refund'):
+        elif 'state' in init_values and self.state == 'open':
             return 'account.mt_invoice_validated'
-        elif 'state' in init_values and self.state == 'draft' and self.type in ('out_invoice', 'out_refund'):
+        elif 'state' in init_values and self.state == 'draft':
             return 'account.mt_invoice_created'
         return super(AccountInvoice, self)._track_subtype(init_values)
 
