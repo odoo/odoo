@@ -517,6 +517,15 @@ class ComputeOnchange(models.Model):
                 record.baz = record.foo
 
 
+class ModelBinary(models.Model):
+    _name = 'test_new_api.model_binary'
+    _description = 'Test Image field'
+
+    binary = fields.Binary()
+    binary_related_store = fields.Binary("Binary Related Store", related='binary', store=True, readonly=False)
+    binary_related_no_store = fields.Binary("Binary Related No Store", related='binary', store=False, readonly=False)
+
+
 class ModelImage(models.Model):
     _name = 'test_new_api.model_image'
     _description = 'Test Image field'

@@ -3,15 +3,13 @@
 
 """ High-level objects for fields. """
 
-from collections import OrderedDict, defaultdict
+from collections import defaultdict
 from datetime import date, datetime, time
-from dateutil.relativedelta import relativedelta
-from functools import partial
 from operator import attrgetter
 import itertools
 import logging
 import base64
-
+import binascii
 import pytz
 
 try:
@@ -28,6 +26,7 @@ from .tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from .tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 from .tools.translate import html_translate, _
 from .tools.mimetypes import guess_mimetype
+from odoo.exceptions import CacheMiss
 
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
 DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
@@ -1903,6 +1902,32 @@ class Binary(Field):
         if isinstance(value, _BINARY):
             return bytes(value)
         return False if value is None else value
+
+    def compute_value(self, records):
+        bin_size_name = 'bin_size_' + self.name
+        if records.env.context.get('bin_size') or records.env.context.get(bin_size_name):
+            # always compute without bin_size
+            records_no_bin_size = records.with_context(**{'bin_size': False, bin_size_name: False})
+            super().compute_value(records_no_bin_size)
+            # manually update the bin_size cache
+            cache = records.env.cache
+            for record_no_bin_size, record in zip(records_no_bin_size, records):
+                try:
+                    value = cache.get(record_no_bin_size, self)
+                    try:
+                        value = base64.b64decode(value)
+                    except (TypeError, binascii.Error):
+                        pass
+                    try:
+                        value = human_size(len(value))
+                    except (TypeError):
+                        pass
+                    cache_value = self.convert_to_cache(value, record)
+                    cache.set(record, self, cache_value)
+                except CacheMiss:
+                    pass
+        else:
+            super().compute_value(records)
 
     def read(self, records):
         # values are stored in attachments, retrieve them
