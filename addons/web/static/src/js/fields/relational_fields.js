@@ -2440,6 +2440,10 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
      */
     _onOpenColorPicker: function (ev) {
         ev.preventDefault();
+        if (this.nodeOptions.no_edit_color) {
+            ev.stopPropagation();
+            return;
+        }
         var tagID = $(ev.currentTarget).parent().data('id');
         var tagColor = $(ev.currentTarget).parent().data('color');
         var tag = _.findWhere(this.value.data, { res_id: tagID });
