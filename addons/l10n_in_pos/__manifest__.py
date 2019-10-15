@@ -11,9 +11,13 @@
         'point_of_sale'
     ],
     'data': [
+        'views/point_of_sale.xml',
     ],
     'demo': [
         'data/product_demo.xml',
+    ],
+    'qweb': [
+        'static/src/xml/pos_receipt.xml',
     ],
     'auto_install': True,
 }
