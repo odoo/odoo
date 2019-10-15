@@ -13,6 +13,7 @@ from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import common
 from odoo.tools import mute_logger, float_repr
 from odoo.tools.date_utils import add, subtract, start_of, end_of
+from odoo.tools.image import image_data_uri
 
 
 class TestFields(common.TransactionCase):
@@ -1502,6 +1503,10 @@ class TestFields(common.TransactionCase):
         self.assertEqual(record_bin_size.image, b'31.54 Kb')
         self.assertEqual(record_bin_size.image_512, b'1.02 Kb')
         self.assertEqual(record_bin_size.image_256, b'424.00 bytes')
+
+        # ensure image_data_uri works (value must be bytes and not string)
+        self.assertEqual(record.image_256[:8], b'iVBORw0K')
+        self.assertEqual(image_data_uri(record.image_256)[:30], 'data:image/png;base64,iVBORw0K')
 
     def test_95_binary_bin_size(self):
         binary_value = base64.b64encode(b'content')
