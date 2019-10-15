@@ -1545,6 +1545,28 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('fieldmany2many tags with no_edit_color option', async function (assert) {
+        assert.expect(1);
+
+        this.data.partner.records[0].timmy = [12];
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="timmy" widget="many2many_tags" options="{\'color_field\': \'color\', \'no_edit_color\': 1}"/>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        // Click to try to open colorpicker
+        await testUtils.dom.click(form.$('.badge:first() .dropdown-toggle'));
+        assert.containsNone(document.body, '.o_colorpicker');
+
+        form.destroy();
+    });
+
     QUnit.test('fieldmany2many tags in editable list', async function (assert) {
         assert.expect(7);
 

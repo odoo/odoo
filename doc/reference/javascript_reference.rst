@@ -2131,6 +2131,12 @@ Relational fields
 
         <field name="category_id" widget="many2many_tags" options="{'color_field': 'color'}"/>
 
+    - no_edit_color: set to True to remove the possibility to change the color of the tags (default: False).
+
+    .. code-block:: xml
+
+        <field name="category_id" widget="many2many_tags" options="{'color_field': 'color', 'no_edit_color': True}"/>
+
 - form.many2many_tags (FormFieldMany2ManyTags)
     Specialization of many2many_tags widget for form views. It has some extra
     code to allow editing the color of a tag.
