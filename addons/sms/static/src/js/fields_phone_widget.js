@@ -27,6 +27,7 @@ Phone.include({
      */
     _onClickSMS: function (ev) {
         ev.preventDefault();
+        ev.stopPropagation();
 
         var context = session.user_context;
         context = _.extend({}, context, {
@@ -56,10 +57,9 @@ Phone.include({
      * @private
      */
     _renderReadonly: function () {
+        this._super.apply(this, arguments);
         if (this.nodeOptions.enable_sms) {
             this.$el.html(QWeb.render('field_phone_widget_readonly', {'widget': this}));
-        } else {
-            this._super.apply(this, arguments);
         }
     },
 });
