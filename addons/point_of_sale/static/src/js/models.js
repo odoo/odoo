@@ -2434,7 +2434,7 @@ exports.Order = Backbone.Model.extend({
             tax_details: this.get_tax_details(),
             change: this.get_change(),
             name : this.get_name(),
-            client: client ? client.name : null ,
+            client: client ? client : null ,
             invoice_id: null,   //TODO
             cashier: cashier ? cashier.name : null,
             precision: {
