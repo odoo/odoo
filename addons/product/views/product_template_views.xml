@@ -25,6 +25,14 @@
         <field name="priority" eval="8" />
         <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="arch" type="xml">
+            <xpath expr="//form/sheet" position="before">
+                <header>
+                    <button string="Configure Variants" type="action"
+                        name="%(product_attribute_value_action)d"
+                        attrs="{'invisible': [('attribute_line_ids', '&lt;=', 0)]}"
+                        groups="product.group_product_variant"/>
+                </header>
+            </xpath>
             <xpath expr="//form" position="attributes">
                 <attribute name="name">Product Template</attribute>
             </xpath>

@@ -184,17 +184,19 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <data>
-                    <header position="inside">
-                        <button string="Update Qty On Hand"
-                            type="object"
-                            name="action_update_quantity_on_hand"
-                            attrs="{'invisible': [('type', '!=', 'product')]}"/>
-                        <button string="Replenish" type="action"
-                            name="%(action_product_replenish)d"
-                            context="{'default_product_id': id}"
-                            groups="stock.group_stock_user"
-                            attrs="{'invisible': [('type', '!=', 'product')]}"/>
-                    </header>
+                    <xpath expr="//form/sheet" position="before">
+                        <header>
+                            <button string="Update Quantity" type="object"
+                                groups="stock.group_stock_manager"
+                                name="action_update_quantity_on_hand"
+                                attrs="{'invisible': [('type', '!=', 'product')]}"/>
+                            <button string="Replenish" type="action"
+                                name="%(action_product_replenish)d"
+                                context="{'default_product_id': id}"
+                                groups="stock.group_stock_user"
+                                attrs="{'invisible': [('type', '!=', 'product')]}"/>
+                        </header>
+                    </xpath>
                     <button name="toggle_active" position="before">
                         <button class="oe_stat_button"
                                name="action_open_quants"
