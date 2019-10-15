@@ -1508,6 +1508,12 @@ class TestFields(common.TransactionCase):
         self.assertEqual(record.image_256[:8], b'iVBORw0K')
         self.assertEqual(image_data_uri(record.image_256)[:30], 'data:image/png;base64,iVBORw0K')
 
+        # ensure invalid image raises
+        with self.assertRaises(UserError):
+            record.write({
+                'image': 'invalid image',
+            })
+
     def test_95_binary_bin_size(self):
         binary_value = base64.b64encode(b'content')
         binary_size = b'7.00 bytes'
