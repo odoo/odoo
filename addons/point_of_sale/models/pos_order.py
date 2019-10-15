@@ -382,9 +382,21 @@ class PosOrder(models.Model):
                             .with_context(default_type=move_vals['type'], force_company=order.company_id.id)\
                             .create(move_vals)
             message = _("This invoice has been created from the point of sale session: <a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>") % (order.id, order.name)
+<<<<<<< HEAD
             new_move.message_post(body=message)
             order.write({'account_move': new_move.id, 'state': 'invoiced'})
             moves += new_move
+=======
+            new_invoice.message_post(body=message)
+            order.write({'invoice_id': new_invoice.id, 'state': 'invoiced'})
+            Invoice += new_invoice
+
+            for line in order.lines:
+                order.with_context(local_context)._action_create_invoice_line(line, new_invoice.id)
+
+            new_invoice.with_context(local_context).sudo().compute_taxes()
+            order.sudo().write({'state': 'invoiced'})
+>>>>>>> 16b0ea2d350... temp
 
         if not moves:
             return {}
