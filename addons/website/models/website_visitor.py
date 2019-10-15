@@ -117,11 +117,8 @@ class WebsiteVisitor(models.Model):
 
     @api.depends('last_connection_datetime')
     def _compute_time_statistics(self):
-        results = self.env['website.visitor'].search_read([('id', 'in', self.ids)], ['id', 'last_connection_datetime'])
-        mapped_data = {result['id']: result['last_connection_datetime'] for result in results}
-
         for visitor in self:
-            last_connection_date = mapped_data[visitor.id]
+            last_connection_date = visitor.last_connection_datetime
             visitor.time_since_last_action = _format_time_ago(self.env, (datetime.now() - last_connection_date))
             visitor.is_connected = (datetime.now() - last_connection_date) < timedelta(minutes=5)
 
