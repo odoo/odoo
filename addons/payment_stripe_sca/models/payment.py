@@ -237,7 +237,7 @@ class PaymentTransactionStripeSCA(models.Model):
     def _stripe_form_get_tx_from_data(self, data):
         """ Given a data dict coming from stripe, verify it and find the related
         transaction record. """
-        reference = data.get("reference")
+        reference = data.get('metadata', data).get("reference")
         if not reference:
             stripe_error = data.get("error", {}).get("message", "")
             _logger.error(
@@ -306,8 +306,8 @@ class PaymentTransactionStripeSCA(models.Model):
             self._set_transaction_pending()
             return True
         else:
-            error = tree.get("failure_message")
-            _logger.warn(error)
+            error = tree.get("failure_message") or tree['error']['message']
+            _logger.warning(error)
             vals.update({"state_message": error})
             self.write(vals)
             self._set_transaction_cancel()
