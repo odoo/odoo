@@ -4008,7 +4008,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             (ids if isinstance(i, pycompat.integer_types) else new_ids).append(i)
         if not ids:
             return self
-        query = """SELECT id FROM "%s" WHERE id IN %%s""" % self._table
+        query = """SELECT id FROM "%s" WHERE id IN %%s ORDER BY id""" % self._table
         self._cr.execute(query, [tuple(ids)])
         ids = [r[0] for r in self._cr.fetchall()]
         existing = self.browse(ids + new_ids)
