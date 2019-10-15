@@ -443,10 +443,11 @@ class PosConfig(models.Model):
         return result
 
     def unlink(self):
-        for pos_config in self.filtered(lambda pos_config: pos_config.sequence_id or pos_config.sequence_line_id):
-            pos_config.sequence_id.unlink()
-            pos_config.sequence_line_id.unlink()
-        return super(PosConfig, self).unlink()
+        # Delete the pos.config records first then delete the sequences linked to them
+        sequences_to_delete = self.sequence_id | self.sequence_line_id
+        res = super(PosConfig, self).unlink()
+        sequences_to_delete.unlink()
+        return res
 
     def _set_fiscal_position(self):
         for config in self:
