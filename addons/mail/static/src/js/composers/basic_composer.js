@@ -4,6 +4,7 @@ odoo.define('mail.composer.Basic', function (require) {
 var emojis = require('mail.emojis');
 var MentionManager = require('mail.composer.MentionManager');
 var DocumentViewer = require('mail.DocumentViewer');
+var DragAndDropMixin = require('mail.DragAndDropMixin');
 var utils = require('web.utils');
 
 var config = require('web.config');
@@ -16,9 +17,9 @@ var Widget = require('web.Widget');
 var QWeb = core.qweb;
 var _t = core._t;
 
-var BasicComposer = Widget.extend({
+var BasicComposer = Widget.extend(DragAndDropMixin, {
     template: "mail.Composer",
-    events: {
+    events: _.extend({}, DragAndDropMixin.events, {
         'change input.o_input_file': '_onAttachmentChange',
         'click .o_attachment_delete': '_onAttachmentDelete',
         'click .o_attachment_download': '_onAttachmentDownload',
@@ -28,13 +29,11 @@ var BasicComposer = Widget.extend({
         'focusout .o_composer_button_emoji': '_onEmojiButtonFocusout',
         'mousedown .o_mail_emoji_container .o_mail_emoji': '_onEmojiImageClick',
         'focus .o_mail_emoji_container .o_mail_emoji': '_onEmojiImageFocus',
-        'dragover .o_file_drop_zone_container': '_onFileDragover',
-        'drop .o_file_drop_zone_container': '_onFileDrop',
         'input .o_input': '_onInput',
         'keydown .o_composer_input textarea': '_onKeydown',
         'keyup .o_composer_input': '_onKeyup',
         'click .o_composer_button_send': '_sendMessage',
-    },
+    }),
     // RPCs done to fetch the mention suggestions are throttled with the
     // following value
     MENTION_THROTTLE: 200,
@@ -277,24 +276,6 @@ var BasicComposer = Widget.extend({
      */
     _hideEmojis: function () {
         this._$emojisContainer.remove();
-    },
-    /**
-     * Making sure that dragging content is external files.
-     * Ignoring other content draging like text.
-     *
-     * @private
-     * @param {DataTransfer} dataTransfer
-     * @returns {boolean}
-     */
-    _isDragSourceExternalFile: function (dataTransfer) {
-        var DragDataType = dataTransfer.types;
-        if (DragDataType.constructor === DOMStringList) {
-            return DragDataType.contains('Files');
-        }
-        if (DragDataType.constructor === Array) {
-            return DragDataType.indexOf('Files') !== -1;
-        }
-        return false;
     },
     /**
      * @private
@@ -729,32 +710,6 @@ var BasicComposer = Widget.extend({
      */
     _onEmojiImageFocus: function () {
         clearTimeout(this._hideEmojisTimeout);
-    },
-    /**
-     * Setting drop Effect to copy so when mouse pointer on dropzone
-     * cursor icon changed to copy ('+')
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onFileDragover: function (ev) {
-        ev.originalEvent.dataTransfer.dropEffect = "copy";
-    },
-    /**
-     * Called when user drop selected files on drop area
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onFileDrop: function (ev) {
-        ev.preventDefault();
-        // FIX: In case multiple chat windows are opened, and file droped in one of them
-        // at that time, other chat windows are still displaing drop areas so here hide them all with $ selector
-        $(".o_file_drop_zone_container").addClass("d-none");
-        if (this._isDragSourceExternalFile(ev.originalEvent.dataTransfer)) {
-            var files = ev.originalEvent.dataTransfer.files;
-            this._processAttachmentChange({ files: files });
-        }
     },
     /**
      * Called when the input in the composer changes

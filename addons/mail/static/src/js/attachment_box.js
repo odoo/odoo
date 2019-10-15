@@ -5,21 +5,20 @@ var core = require('web.core');
 var Widget = require('web.Widget');
 
 var DocumentViewer = require('mail.DocumentViewer');
+var DragAndDropMixin = require('mail.DragAndDropMixin');
 
 var QWeb = core.qweb;
 var _t = core._t;
 
-var AttachmentBox = Widget.extend({
+var AttachmentBox = Widget.extend(DragAndDropMixin, {
     template: 'mail.chatter.AttachmentBox',
-    events: {
+    events: _.extend({}, DragAndDropMixin.events, {
         "click .o_attachment_download": "_onAttachmentDownload",
         "click .o_attachment_view": "_onAttachmentView",
         "click .o_attachment_delete_cross": "_onDeleteAttachment",
         "click .o_upload_attachments_button": "_onUploadAttachments",
         "change .o_chatter_attachment_form .o_form_binary_form": "_onAddAttachment",
-        'dragover .o_file_drop_zone_container': '_onDragoverFileDropZone',
-        'drop .o_file_drop_zone_container': '_onDropFile',
-    },
+    }),
     /**
      * @override
      * @param {string} record.model
@@ -89,30 +88,12 @@ var AttachmentBox = Widget.extend({
         $.globalEval($el.contents().text());
     },
     /**
-     * Making sure that dragging content is external files.
-     * Ignoring other content draging like text.
-     *
-     * @private
-     * @param {DataTransfer} dataTransfer
-     * @returns {boolean}
-     */
-    _isDragSourceExternalFile(dataTransfer) {
-        const DragDataType = dataTransfer.types;
-        if (DragDataType.constructor === DOMStringList) {
-            return DragDataType.contains('Files');
-        }
-        if (DragDataType.constructor === Array) {
-            return DragDataType.includes('Files');
-        }
-        return false;
-    },
-    /**
      * Upload attachment with drag & drop feature.
      *
      * @private
      * @param {Array<File>} params.files
      */
-    _processAttachmentChange(files) {
+    _processAttachmentChange(params) {
         const $form = this.$('form.o_form_binary_form');
         const formData = new FormData();
         const inputList = [...$form.find("input")];
@@ -121,7 +102,7 @@ var AttachmentBox = Widget.extend({
                 formData.append(input.name, input.value);
             }
         }
-        for (const file of files) {
+        for (const file of params.files) {
             formData.append("ufile", file, file.name);
         }
         this._callUploadAttachment($form.attr("action"), formData);
@@ -191,30 +172,6 @@ var AttachmentBox = Widget.extend({
      */
     _onUploaded: function() {
         this.trigger_up('reload_attachment_box');
-    },
-    /**
-     * Setting drop Effect to copy so when mouse pointer on dropzone
-     * cursor icon changed to copy ('+')
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onDragoverFileDropZone(ev) {
-        ev.originalEvent.dataTransfer.dropEffect = "copy";
-    },
-    /**
-     * Called when user drop selected files on drop area
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onDropFile(ev) {
-        ev.preventDefault();
-        $(".o_file_drop_zone_container").addClass("d-none");
-        if (this._isDragSourceExternalFile(ev.originalEvent.dataTransfer)) {
-            const files = ev.originalEvent.dataTransfer.files;
-            this._processAttachmentChange(files);
-        }
     },
 });
 
