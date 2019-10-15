@@ -589,6 +589,7 @@ var demoData = require('account.reconciliation_tests.data');
 
 var testUtils = require('web.test_utils');
 var testUtilsDom = require('web.test_utils_dom');
+var testUtilsMock = require('web.test_utils_mock');
 
 QUnit.module('account', {
     beforeEach: function () {
@@ -1325,6 +1326,36 @@ QUnit.module('account', {
         assert.strictEqual(widget.$('.accounting_view tbody').text().replace(/[\n\r\s$,]+/g, ' ').replace(/[\u200B]/g, ''),
             " 101120 New Double Banque 1145.63 101130 New Double Frais 29.37 ",
             "should have a sum of reconciliation proposition amounts equal to the line amount");
+
+        clientAction.destroy();
+    });
+
+    QUnit.test('Reconciliation fetch correct reconciliation models', async function (assert) {
+        assert.expect(1);
+
+        testUtilsMock.patch(this.params.options.context, {
+            active_model: 'account.journal', // On account dashboard, click "Reconcile" on a journal
+            active_ids: [1,2], // Active journals
+            company_ids: [3,4], // Active companies
+        });
+
+        var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
+
+        testUtils.addMockEnvironment(clientAction, {
+            data: this.params.data,
+            mockRPC: async function (route, args) {
+                if (args.model === 'account.reconcile.model' && args.method === 'search_read') {
+                    assert.deepEqual(
+                        args.kwargs.domain,
+                        [['company_id', 'in', [3,4]], ['match_journal_ids', 'in', [false, 1, 2]]],
+                        'The domain to get reconcile models should contain the right fields and values'
+                    );
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+        clientAction.appendTo($('#qunit-fixture'));
+        testUtilsMock.unpatch(this.params.options.context);
 
         clientAction.destroy();
     });
