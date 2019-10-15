@@ -179,7 +179,7 @@ class PurchaseOrder(models.Model):
         for line in new_po.order_line:
             if new_po.date_planned:
                 line.date_planned = new_po.date_planned
-            else:
+            elif line.product_id:
                 seller = line.product_id._select_seller(
                     partner_id=line.partner_id, quantity=line.product_qty,
                     date=line.order_id.date_order and line.order_id.date_order.date(), uom_id=line.product_uom)
