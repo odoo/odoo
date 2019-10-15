@@ -3,9 +3,12 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare
+<<<<<<< HEAD
 
 from itertools import groupby
 
+=======
+>>>>>>> 5841ce6c2eb... temp
 
 MAP_INVOICE_TYPE_PARTNER_TYPE = {
     'out_invoice': 'customer',

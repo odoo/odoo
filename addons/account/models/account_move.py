@@ -1114,6 +1114,14 @@ class AccountMoveLine(models.Model):
         return matched_percentage_per_move
 
     @api.model
+<<<<<<< HEAD
+=======
+    def compute_amount_fields(self, amount, src_currency, company_currency, invoice_currency=False):
+        """ Method kept for compatibility reason """
+        return self._compute_amount_fields(amount, src_currency, company_currency)
+
+    @api.model
+>>>>>>> 5841ce6c2eb... temp
     def _compute_amount_fields(self, amount, src_currency, company_currency):
         """ Helper function to compute value for fields debit/credit/amount_currency based on an amount and the currencies given in parameter"""
         amount_currency = False
@@ -1509,7 +1517,12 @@ class AccountPartialReconcile(models.Model):
         total_amount_currency = 0
         #make sure that all partial reconciliations share the same secondary currency otherwise it's not
         #possible to compute the exchange difference entry and it has to be done manually.
+<<<<<<< HEAD
         currency = self[0].debit_move_id.currency_id or self[0].credit_move_id.currency_id or None
+=======
+        self.ensure_one()
+        currency = self.debit_move_id.currency_id or self.credit_move_id.currency_id or None
+>>>>>>> 5841ce6c2eb... temp
         more_than_1_currency = False
         maxdate = '0000-00-00'
 
@@ -1557,7 +1570,11 @@ class AccountPartialReconcile(models.Model):
                 exchange_move = self.env['account.move'].create(
                     self.env['account.full.reconcile']._prepare_exchange_diff_move(move_date=maxdate, company=aml_to_balance[0].company_id))
                 #eventually create a journal entry to book the difference due to foreign currency's exchange rate that fluctuates
+<<<<<<< HEAD
                 rate_diff_amls, rate_diff_partial_rec = self.create_exchange_rate_entry(aml_to_balance, total_debit - total_credit, total_amount_currency, aml_to_balance[0].currency_id, exchange_move)
+=======
+                rate_diff_amls, rate_diff_partial_rec = self.create_exchange_rate_entry(aml_to_balance, total_debit - total_credit, total_amount_currency, currency or aml_to_balance[0].currency_id, exchange_move)
+>>>>>>> 5841ce6c2eb... temp
                 aml_ids += rate_diff_amls.ids
                 partial_rec_ids += rate_diff_partial_rec.ids
                 exchange_move.post()
