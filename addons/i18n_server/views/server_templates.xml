@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <template id="translation_not_found" t-name="Language Not Found">
+        <t t-call="http_routing.404">
+            <strong>Language pack for language <t t-esc="lang"/> and version <t t-esc="version"/> is not found.</strong>
+        </t>
+    </template>
+</data>
+</odoo>

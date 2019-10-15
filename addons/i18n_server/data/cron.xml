@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="ir_cron_generate_i18n_pack" model="ir.cron">
+        <field name="name">Generate i18n.packs for all active languages</field>
+        <field name="model_id" ref="model_i18n_pack"/>
+        <field name="state">code</field>
+        <field name="code">model._generate_all_packs()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+    </record>
+
+</odoo>

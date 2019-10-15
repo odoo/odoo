@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Language Pack Views -->
+    <record id="i18n_pack_view_form" model="ir.ui.view">
+        <field name="name">i18n.pack.form</field>
+        <field name="model">i18n.pack</field>
+        <field name="arch" type="xml">
+            <form string="Language Pack">
+                <sheet>
+                    <group>
+                        <group name="main">
+                            <field name="version"/>
+                            <field name="lang_code"/>
+                        </group>
+                        <group name="content">
+                            <field name="content" filename="fname"/>
+                            <field name="fname" invisible="1"/>
+                        </group>
+                        <field name="description" nolabel="1" placeholder="Description"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="i18n_pack_view_tree" model="ir.ui.view">
+        <field name="name">i18n.pack.tree</field>
+        <field name="model">i18n.pack</field>
+        <field name="arch" type="xml">
+            <tree string="Langauge Packs">
+                <field name="version"/>
+                <field name="lang_code"/>
+            </tree>
+        </field>
+    </record>
+    <!-- Actions -->
+    <record id="i18n_pack_action" model="ir.actions.act_window">
+        <field name="name">Language Packs</field>
+        <field name="res_model">i18n.pack</field>
+        <field name='view_mode'>tree,form</field>
+    </record>
+
+    <!-- Menus -->
+    <menuitem
+        id="i18n_pack_menu"
+        name="Language Packs"
+        action="i18n_pack_action"
+        parent="base.menu_translation_export"/>
+
+</odoo>
