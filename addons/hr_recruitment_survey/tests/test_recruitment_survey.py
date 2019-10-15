@@ -12,7 +12,11 @@ class TestRecruitmentSurvey(common.SingleTransactionCase):
 
         # Create some sample data to avoid demo data
         cls.department_admins = cls.env['hr.department'].create({'name': 'Admins'})
-        cls.survey_sysadmin = cls.env['survey.survey'].create({'title': 'Questions for Sysadmin job offer'})
+        cls.survey_sysadmin = cls.env['survey.survey'].create(
+            {
+                'title': 'Questions for Sysadmin job offer',
+                'stage_id': cls.env['survey.stage'].search([('closed', '=', False)]).id,
+            })
 
         cls.job_sysadmin = cls.env['hr.applicant'].create({
             'name': 'Technical worker',
