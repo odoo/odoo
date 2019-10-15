@@ -153,8 +153,9 @@ class Field(MetaField('DummyField', (object,), {})):
         :param store: whether the field is stored in database (boolean, by
             default ``False`` on computed fields)
 
-        :param compute_sudo: whether the field should be recomputed as superuser
-            to bypass access rights (boolean, by default ``True``)
+        :param compute_sudo: whether the field should be computed in superuser
+            mode to bypass access rights (boolean, defaults to ``True`` for
+            stored fields and ``False`` for non-stored fields)
 
         The methods given for ``compute``, ``inverse`` and ``search`` are model
         methods. Their signature is shown in the following example::
@@ -295,7 +296,7 @@ class Field(MetaField('DummyField', (object,), {})):
         'depends_context': None,        # collection of context key dependencies
         'recursive': False,             # whether self depends on itself
         'compute': None,                # compute(recs) computes field on recs
-        'compute_sudo': True,           # whether field should be recomputed as superuser
+        'compute_sudo': False,          # whether field should be recomputed as superuser
         'inverse': None,                # inverse(recs) inverses field on recs
         'search': None,                 # search(recs, operator, value) searches on self
         'related': None,                # sequence of field names, for related fields
@@ -415,18 +416,24 @@ class Field(MetaField('DummyField', (object,), {})):
 
         # initialize ``self`` with ``attrs``
         if attrs.get('compute'):
-            # by default, computed fields are not stored, not copied and readonly
-            attrs['store'] = attrs.get('store', False)
+            # by default, computed fields are not stored, computed in superuser
+            # mode if stored, not copied and readonly
+            attrs['store'] = store = attrs.get('store', False)
+            attrs['compute_sudo'] = attrs.get('compute_sudo', store)
             attrs['copy'] = attrs.get('copy', False)
             attrs['readonly'] = attrs.get('readonly', not attrs.get('inverse'))
         if attrs.get('related'):
-            # by default, related fields are not stored and not copied
-            attrs['store'] = attrs.get('store', False)
+            # by default, related fields are not stored, computed in superuser
+            # mode, not copied and readonly
+            attrs['store'] = store = attrs.get('store', False)
+            attrs['compute_sudo'] = attrs.get('compute_sudo', attrs.get('related_sudo', True))
             attrs['copy'] = attrs.get('copy', False)
             attrs['readonly'] = attrs.get('readonly', True)
         if attrs.get('company_dependent'):
-            # by default, company-dependent fields are not stored and not copied
+            # by default, company-dependent fields are not stored, not computed
+            # in superuser mode and not copied
             attrs['store'] = False
+            attrs['compute_sudo'] = attrs.get('compute_sudo', False)
             attrs['copy'] = attrs.get('copy', False)
             attrs['default'] = attrs.get('default', self._default_company_dependent)
             attrs['compute'] = self._compute_company_dependent
@@ -439,8 +446,6 @@ class Field(MetaField('DummyField', (object,), {})):
             attrs['depends_context'] = attrs.get('depends_context', ()) + ('lang',)
         if 'depends' in attrs:
             attrs['depends'] = tuple(attrs['depends'])
-        if 'related_sudo' in attrs:
-            attrs['compute_sudo'] = attrs['related_sudo']
 
         return attrs
 

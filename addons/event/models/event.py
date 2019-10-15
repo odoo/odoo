@@ -141,7 +141,7 @@ class EventEvent(models.Model):
         store=True, readonly=True, compute='_compute_seats')
     seats_expected = fields.Integer(
         string='Number of Expected Attendees',
-        readonly=True, compute='_compute_seats')
+        compute_sudo=True, readonly=True, compute='_compute_seats')
 
     # Registration fields
     registration_ids = fields.One2many(

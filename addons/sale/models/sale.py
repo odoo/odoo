@@ -52,8 +52,19 @@ class SaleOrder(models.Model):
                 'amount_total': amount_untaxed + amount_tax,
             })
 
-    @api.depends('state', 'order_line.invoice_status', 'order_line.invoice_lines')
+    @api.depends('order_line.invoice_lines')
     def _get_invoiced(self):
+        # The invoice_ids are obtained thanks to the invoice lines of the SO
+        # lines, and we also search for possible refunds created directly from
+        # existing invoices. This is necessary since such a refund is not
+        # directly linked to the SO.
+        for order in self:
+            invoices = order.order_line.invoice_lines.move_id.filtered(lambda r: r.type in ('out_invoice', 'out_refund'))
+            order.invoice_ids = invoices
+            order.invoice_count = len(invoices)
+
+    @api.depends('state', 'order_line.invoice_status')
+    def _get_invoice_status(self):
         """
         Compute the invoice status of a SO. Possible statuses:
         - no: if the SO is not in status 'sale' or 'done', we consider that there is nothing to
@@ -61,36 +72,22 @@ class SaleOrder(models.Model):
         - to invoice: if any SO line is 'to invoice', the whole SO is 'to invoice'
         - invoiced: if all SO lines are invoiced, the SO is invoiced.
         - upselling: if all SO lines are invoiced or upselling, the status is upselling.
-
-        The invoice_ids are obtained thanks to the invoice lines of the SO lines, and we also search
-        for possible refunds created directly from existing invoices. This is necessary since such a
-        refund is not directly linked to the SO.
         """
         # Ignore the status of the deposit product
         deposit_product_id = self.env['sale.advance.payment.inv']._default_product_id()
         line_invoice_status_all = [(d['order_id'][0], d['invoice_status']) for d in self.env['sale.order.line'].read_group([('order_id', 'in', self.ids), ('product_id', '!=', deposit_product_id.id)], ['order_id', 'invoice_status'], ['order_id', 'invoice_status'], lazy=False)]
         for order in self:
-            invoice_ids = order.order_line.mapped('invoice_lines.move_id').filtered(lambda r: r.type in ['out_invoice', 'out_refund'])
-
-
             line_invoice_status = [d[1] for d in line_invoice_status_all if d[0] == order.id]
-
             if order.state not in ('sale', 'done'):
-                invoice_status = 'no'
+                order.invoice_status = 'no'
             elif any(invoice_status == 'to invoice' for invoice_status in line_invoice_status):
-                invoice_status = 'to invoice'
+                order.invoice_status = 'to invoice'
             elif line_invoice_status and all(invoice_status == 'invoiced' for invoice_status in line_invoice_status):
-                invoice_status = 'invoiced'
-            elif line_invoice_status and all(invoice_status in ['invoiced', 'upselling'] for invoice_status in line_invoice_status):
-                invoice_status = 'upselling'
+                order.invoice_status = 'invoiced'
+            elif line_invoice_status and all(invoice_status in ('invoiced', 'upselling') for invoice_status in line_invoice_status):
+                order.invoice_status = 'upselling'
             else:
-                invoice_status = 'no'
-
-            order.update({
-                'invoice_count': len(set(invoice_ids.ids)),
-                'invoice_ids': invoice_ids.ids,
-                'invoice_status': invoice_status
-            })
+                order.invoice_status = 'no'
 
     @api.model
     def get_empty_list_help(self, help):
@@ -184,7 +181,7 @@ class SaleOrder(models.Model):
         ('invoiced', 'Fully Invoiced'),
         ('to invoice', 'To Invoice'),
         ('no', 'Nothing to Invoice')
-        ], string='Invoice Status', compute='_get_invoiced', store=True, readonly=True)
+        ], string='Invoice Status', compute='_get_invoice_status', store=True, readonly=True)
 
     note = fields.Text('Terms and conditions', default=_default_note)
 
