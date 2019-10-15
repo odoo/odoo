@@ -2022,6 +2022,7 @@ class Image(Binary):
     _slots = {
         'max_width': 0,
         'max_height': 0,
+        'verify_resolution': True,
     }
 
     def create(self, record_values):
@@ -2042,13 +2043,19 @@ class Image(Binary):
         records.env.cache.update(records, self, [cache_value] * len(records))
 
     def _image_process(self, value):
-        if value and (self.max_width or self.max_height):
-            value = image_process(value, size=(self.max_width, self.max_height))
-        return value
+        return image_process(value,
+            size=(self.max_width, self.max_height),
+            verify_resolution=self.verify_resolution,
+        )
 
     def _process_related(self, value):
         """Override to resize the related value before saving it on self."""
-        return self._image_process(super()._process_related(value))
+        try:
+            return self._image_process(super()._process_related(value))
+        except UserError:
+            # Avoid the following `write` to fail if the related image was saved
+            # invalid, which can happen for pre-existing databases.
+            return False
 
 
 class Selection(Field):
