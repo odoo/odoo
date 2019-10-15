@@ -44,20 +44,19 @@ class WebsiteSaleDigital(CustomerPortal):
             products = order.order_line.mapped('product_id')
 
         purchased_products_attachments = {}
-        for product in products:
-            # Search for product attachments
-            Attachment = request.env['ir.attachment']
+        # apply sudo, when the token exists in qcontext
+        # because the portal user has no rights to access 'ir.attachment'
+        Attachment = request.env['ir.attachment'].sudo() if response.qcontext.get('token') else request.env['ir.attachment']
+        # Ignore products with no attachments
+        for product in products.filtered(lambda pro: pro.attachment_count):
             product_id = product.id
             template = product.product_tmpl_id
+            # Search for product digital attachments
             att = Attachment.search_read(
                 domain=['|', '&', ('res_model', '=', product._name), ('res_id', '=', product_id), '&', ('res_model', '=', template._name), ('res_id', '=', template.id), ('product_downloadable', '=', True)],
                 fields=['name', 'write_date'],
                 order='write_date desc',
             )
-
-            # Ignore products with no attachments
-            if not att:
-                continue
 
             purchased_products_attachments[product_id] = att
 
