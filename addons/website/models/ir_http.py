@@ -253,7 +253,8 @@ class Http(models.AbstractModel):
         parent = super(Http, cls)._serve_fallback(exception)
         if parent:  # attachment
             return parent
-
+        if not request.is_frontend:
+            return False
         website_page = cls._serve_page()
         if website_page:
             return website_page
