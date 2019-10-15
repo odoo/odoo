@@ -183,7 +183,7 @@
                     <field name="product_qty"/>
                      <field name="product_uom_id" options="{'no_open':True,'no_create':True}"/>
                     <field name="date_planned_start"/>
-                    <field name="state"/>
+                    <field name="state" readonly="1"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_card oe_kanban_global_click">
