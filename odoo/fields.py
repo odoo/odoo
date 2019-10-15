@@ -1895,7 +1895,9 @@ class Binary(Field):
             # If the client requests only the size of the field, we return that
             # instead of the content. Presumably a separate request will be done
             # to read the actual content, if necessary.
-            return human_size(value)
+            value = human_size(value)
+            # human_size can return False (-> None) or a string (-> encoded)
+            return value.encode() if value else None
         return None if value is False else value
 
     def convert_to_record(self, value, record):
@@ -2029,13 +2031,15 @@ class Image(Binary):
             # does not resize the same way as its related field
             new_value = self._image_process(value)
             new_record_values.append((record, new_value))
-            record.env.cache.update(record, self, [value if self.related else new_value] * len(record))
+            cache_value = self.convert_to_cache(value if self.related else new_value, record)
+            record.env.cache.update(record, self, [cache_value] * len(record))
         super(Image, self).create(new_record_values)
 
     def write(self, records, value):
         new_value = self._image_process(value)
         super(Image, self).write(records, new_value)
-        records.env.cache.update(records, self, [value if self.related else new_value] * len(records))
+        cache_value = self.convert_to_cache(value if self.related else new_value, records)
+        records.env.cache.update(records, self, [cache_value] * len(records))
 
     def _image_process(self, value):
         if value and (self.max_width or self.max_height):
