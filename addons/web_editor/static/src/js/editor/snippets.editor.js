@@ -287,7 +287,7 @@ var SnippetEditor = Widget.extend({
             var editor = $el.data('editor');
             var styles = _.values(editor.styles);
             $el.toggleClass('d-none', styles.length === 0);
-            _.sortBy(styles, '__order').reverse().forEach(style => {
+            _.sortBy(styles, '__order').forEach(style => {
                 if (focus) {
                     style.$el.appendTo($el);
                     style.onFocus();
