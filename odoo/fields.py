@@ -1340,7 +1340,7 @@ class Monetary(Field):
     def convert_to_cache(self, value, record, validate=True):
         # cache format: float
         value = float(value or 0.0)
-        if validate and record[self.currency_field]:
+        if validate and record.sudo()[self.currency_field]:
             # FIXME @rco-odoo: currency may not be already initialized if it is
             # a function or related field!
             value = record[self.currency_field].round(value)
