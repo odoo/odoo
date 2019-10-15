@@ -129,7 +129,20 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
                     loc.text = ''
                     loc.append(copy.deepcopy(node))
                 if node.getparent() is None:
-                    source = copy.deepcopy(spec[0])
+                    spec_content = None
+                    comment = None
+                    for content in spec:
+                        if content.tag is not etree.Comment:
+                            spec_content = content
+                            break
+                        else:
+                            comment = content
+                    source = copy.deepcopy(spec_content)
+                    if comment is not None:
+                        text = source.text
+                        source.text = None
+                        comment.tail = text
+                        source.insert(0, comment)
                 else:
                     replaced_node_tag = None
                     for child in spec:
