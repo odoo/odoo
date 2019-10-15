@@ -35,6 +35,11 @@ EMPTY_DICT = frozendict()
 RENAMED_ATTRS = [('select', 'index'), ('digits_compute', 'digits')]
 DEPRECATED_ATTRS = [("oldname", "use an upgrade script instead.")]
 
+IR_MODELS = (
+    'ir.model', 'ir.model.data', 'ir.model.fields', 'ir.model.fields.selection',
+    'ir.model.relation', 'ir.model.constraint', 'ir.module.module',
+)
+
 _logger = logging.getLogger(__name__)
 _schema = logging.getLogger(__name__[:-7] + '.schema')
 
@@ -2291,6 +2296,12 @@ class Many2one(_Relational):
                 "The m2o field %s of model %s is required but declares its ondelete policy "
                 "as being 'set null'. Only 'restrict' and 'cascade' make sense."
                 % (self.name, model._name)
+            )
+        if self.ondelete == 'restrict' and self.comodel_name in IR_MODELS:
+            raise ValueError(
+                f"Field {self.name} of model {model._name} is defined as ondelete='restrict' "
+                f"while having {self.comodel_name} as comodel, the 'restrict' mode is not "
+                f"supported for this type of field as comodel."
             )
 
     def update_db(self, model, columns):
