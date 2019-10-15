@@ -116,7 +116,7 @@ var Apps = AbstractAction.extend({
                     qs.debug = odoo.debug;
                 }
                 var u = $.param.querystring(client.origin + "/apps/embed/client", qs);
-                var css = {width: '100%', height: '750px'};
+                var css = {width: '100%', height: '750px', position: 'fixed'};
                 self.$ifr = $('<iframe>').attr('src', u);
 
                 self.uniq = _.uniqueId('apps');
