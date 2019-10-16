@@ -95,7 +95,7 @@ _ref_vat = {
     'mx': 'ABC123456T1B',
     'nl': 'NL123456782B90',
     'no': 'NO123456785',
-    'pe': 'PER10254824220 or PED10254824220',
+    'pe': '10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY',
     'pl': 'PL1234567883',
     'pt': 'PT123456789',
     'ro': 'RO1234567897',
@@ -325,38 +325,14 @@ class ResPartner(models.Model):
 
     # Peruvian VAT validation, contributed by Vauxoo
     def check_vat_pe(self, vat):
-
-        vat_type, vat = vat and len(vat) >= 2 and (vat[0], vat[1:]) or (False, False)
-
-        if vat_type and vat_type.upper() == 'D':
-            # DNI
-            return True
-        elif vat_type and vat_type.upper() == 'R':
-            # verify RUC
-            factor = '5432765432'
-            sum = 0
-            dig_check = False
-            if len(vat) != 11:
-                return False
-            try:
-                int(vat)
-            except ValueError:
-                return False
-
-            for f in range(0, 10):
-                sum += int(factor[f]) * int(vat[f])
-
-            subtraction = 11 - (sum % 11)
-            if subtraction == 10:
-                dig_check = 0
-            elif subtraction == 11:
-                dig_check = 1
-            else:
-                dig_check = subtraction
-
-            return int(vat[10]) == dig_check
-        else:
+        if len(vat) != 11 or not vat.isdigit():
             return False
+        dig_check = 11 - (sum([int('5432765432'[f]) * int(vat[f]) for f in range(0, 10)]) % 11)
+        if dig_check == 10:
+            dig_check = 0
+        elif dig_check == 11:
+            dig_check = 1
+        return int(vat[10]) == dig_check
 
     # VAT validation in Turkey, contributed by # Levent Karakas @ Eska Yazilim A.S.
     def check_vat_tr(self, vat):
