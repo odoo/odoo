@@ -133,6 +133,7 @@ class EventTicket(models.Model):
                         WHERE event_ticket_id IN %s AND state IN ('draft', 'open', 'done')
                         GROUP BY event_ticket_id, state
                     """
+            self.env['event.registration'].flush(['event_id', 'event_ticket_id', 'state'])
             self.env.cr.execute(query, (tuple(self.ids),))
             for event_ticket_id, state, num in self.env.cr.fetchall():
                 ticket = self.browse(event_ticket_id)
