@@ -316,7 +316,7 @@ msgid ""
 "                                <span attrs=\"{'invisible': ['|', '|', ('type', '!=', 'in_receipt'), ('state', '!=', 'draft'), ('name', '!=', '/')]}\">Draft Purchase Receipt</span>"
 msgstr ""
 "<span attrs=\"{'invisible': ['|', '|', ('type', '!=', 'out_invoice'), ('state', '!=', 'draft'), ('name', '!=', '/')]}\">Hoá đơn Dự thảo</span>\n"
-"                                <span attrs=\"{'invisible': ['|', '|', ('type', '!=', 'out_refund'), ('state', '!=', 'draft'), ('name', '!=', '/')]}\">Hoá đơn hoàn tiền Dự thảo</span>\n"
+"                                <span attrs=\"{'invisible': ['|', '|', ('type', '!=', 'out_refund'), ('state', '!=', 'draft'), ('name', '!=', '/')]}\">Hoá đơn điều chỉnh giảm Dự thảo</span>\n"
 "                                <span attrs=\"{'invisible': ['|', '|', ('type', '!=', 'in_invoice'), ('state', '!=', 'draft'), ('name', '!=', '/')]}\">Hoá đơn NCC Dự thảo</span>\n"
 "                                <span attrs=\"{'invisible': ['|', '|', ('type', '!=', 'in_refund'), ('state', '!=', 'draft'), ('name', '!=', '/')]}\">Hoàn tiền Dự thảo</span>\n"
 "                                <span attrs=\"{'invisible': ['|', '|', ('type', '!=', 'out_receipt'), ('state', '!=', 'draft'), ('name', '!=', '/')]}\">Biên lai Bán Dự thảo</span>\n"
@@ -1029,7 +1029,7 @@ msgstr "Tên chủ tài khoản"
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_send
 msgid "Account Invoice Send"
-msgstr "Tài khoản gửi hóa đơn"
+msgstr "Tài khoản gửi hoá đơn"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__journal_id
@@ -1517,7 +1517,7 @@ msgstr "Thêm ghi chú"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Add a payment QR code to your invoices"
-msgstr "Thêm mã QR thanh toán cho hóa đơn của bạn"
+msgstr "Thêm mã QR thanh toán cho hoá đơn của bạn"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__strategy__add_invoice_line
@@ -1543,7 +1543,7 @@ msgid ""
 " with their mobile banking application. EPC QR codes are used by many "
 "European banks to process SEPA payments."
 msgstr ""
-"Thêm mã QR EPC vào hóa đơn để khách hàng có thể thanh toán ngay lập tức bằng"
+"Thêm mã QR EPC vào hoá đơn để khách hàng có thể thanh toán ngay lập tức bằng"
 " ứng dụng ngân hàng di động của họ. EPC mã QR được sử dụng bởi nhiều ngân "
 "hàng Châu Âu để xử lý SEPA thanh toán."
 
@@ -2044,7 +2044,7 @@ msgstr "Áp dụng tự động cho năm tài chính này."
 #: model:ir.model.fields,help:account.field_account_fiscal_position_template__country_group_id
 msgid "Apply only if delivery or invoicing country match the group."
 msgstr ""
-"Chỉ áp dụng khi quốc gia giao hàng hoặc lên hóa đơn khớp với dữ liệu trong "
+"Chỉ áp dụng khi quốc gia giao hàng hoặc lên hoá đơn khớp với dữ liệu trong "
 "nhóm."
 
 #. module: account
@@ -2152,7 +2152,7 @@ msgstr "Tự động hoàn thành"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move__invoice_vendor_bill_id
 msgid "Auto-complete from a past bill."
-msgstr "Tự động hoàn tất dựa trên hóa đơn cũ."
+msgstr "Tự động hoàn tất dựa trên hoá đơn cũ."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__auto_reconcile
@@ -2250,8 +2250,8 @@ msgid ""
 "account if this is a Customer Invoice or Vendor Credit Note, otherwise a "
 "Partner bank account number."
 msgstr ""
-"Số tài khoản ngân hàng mà hóa đơn sẽ được thanh toán. Tài khoản ngân hàng "
-"của Công ty nếu đây là hóa đơn khách hàng hoặc khoản nợ của Nhà cung cấp, "
+"Số tài khoản ngân hàng mà hoá đơn sẽ được thanh toán. Tài khoản ngân hàng "
+"của Công ty nếu đây là hoá đơn khách hàng hoặc khoản nợ của Nhà cung cấp, "
 "nếu không sẽ là số tài khoản ngân hàng của đối tác."
 
 #. module: account
@@ -2450,7 +2450,7 @@ msgid ""
 "Based on Invoice: the tax is due as soon as the invoice is validated.\n"
 "Based on Payment: the tax is due as soon as the payment of the invoice is received."
 msgstr ""
-"Dựa trên Hóa đơn: thuế phải hoàn thành ngay sau khi hóa đơn được xác nhận.\n"
+"Dựa trên Hoá đơn: thuế phải hoàn thành ngay sau khi hoá đơn được xác nhận.\n"
 "Căn cứ vào Thanh toán: thuế phải trả ngay khi việc thanh toán hoá đơn được nhận."
 
 #. module: account
@@ -2840,7 +2840,7 @@ msgid ""
 "Changing VAT number is not allowed once invoices have been issued for your "
 "account. Please contact us directly for this operation."
 msgstr ""
-"Không được phép thay đổi MST khi đã lập hóa đơn hành cho tài khoản của bạn. "
+"Không được phép thay đổi MST khi đã lập hoá đơn hành cho tài khoản của bạn. "
 "Vui lòng liên hệ trực tiếp với chúng tôi để thực hiện hoạt động này."
 
 #. module: account
@@ -2860,7 +2860,7 @@ msgid ""
 "Changing your name is not allowed once invoices have been issued for your "
 "account. Please contact us directly for this operation."
 msgstr ""
-"Không được phép thay đổi tên của bạn khi đã lập hóa đơn hành cho tài khoản "
+"Không được phép thay đổi tên của bạn khi đã lập hoá đơn hành cho tài khoản "
 "của bạn. Vui lòng liên hệ trực tiếp với chúng tôi để thực hiện hoạt động "
 "này."
 
@@ -2952,7 +2952,7 @@ msgid ""
 "Check this box if you don't want to share the same sequence for invoices and"
 " credit notes made from this journal"
 msgstr ""
-"Chọn ô này nếu bạn không muốn chia sẻ chung định dạng đánh mã của hóa đơn và"
+"Chọn ô này nếu bạn không muốn chia sẻ chung định dạng đánh mã của hoá đơn và"
 " hoá đơn hoàn trả được tạo trong sổ nhật kí này"
 
 #. module: account
@@ -3458,7 +3458,7 @@ msgstr "Bấm để tạo"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_invoice_type
 msgid "Create a customer invoice"
-msgstr "Tạo một hóa đơn bán hàng"
+msgstr "Tạo một hoá đơn bán hàng"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -3529,7 +3529,7 @@ msgstr "Tạo hóa nhà cung cấp"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_refund_type
 msgid "Create a vendor credit note"
-msgstr "Tạo hóa đơn hoàn trả nhà cung cấp"
+msgstr "Tạo hoá đơn hoàn trả nhà cung cấp"
 
 #. module: account
 #: model:ir.model,name:account.model_account_accrual_accounting_wizard
@@ -3559,7 +3559,7 @@ msgid ""
 "Create invoices, register payments and keep track of the discussions with "
 "your customers."
 msgstr ""
-"Tạo hóa đơn, ghi nhận thanh toán và tiếp tục theo dõi thảo luận với khách "
+"Tạo hoá đơn, ghi nhận thanh toán và tiếp tục theo dõi thảo luận với khách "
 "hàng của bạn."
 
 #. module: account
@@ -6051,7 +6051,7 @@ msgstr "Hoá đơn đã thanh toán hết"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
 msgid "Invoice send & Print"
-msgstr "Gửi hóa đơn & in"
+msgstr "Gửi hoá đơn & in"
 
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_validated
@@ -6124,7 +6124,7 @@ msgstr "Thống kê hoá đơn"
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "Invoices owed to you"
-msgstr "Hóa đơn mà bạn còn nợ"
+msgstr "Hoá đơn mà bạn còn nợ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -6139,7 +6139,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.report,name:account.account_invoices_without_payment
 msgid "Invoices without Payment"
-msgstr "Hóa đơn không có thanh toán"
+msgstr "Hoá đơn không có thanh toán"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_invoicing_menu
@@ -6987,7 +6987,7 @@ msgid ""
 "SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. Enable this option from the settings."
 msgstr ""
 "Thủ công:Trả qua tiền mặt hoặc bất kì phương thức nào khác bên ngoài hệ thống.\n"
-"Séc:Trả hóa đơn qua séc và in nó trực tiếp từ hệ thống.\n"
+"Séc:Trả hoá đơn qua séc và in nó trực tiếp từ hệ thống.\n"
 "SEPA Credit Transfer: Thanh toán qua SEPA Credit Transfer file bạn gửi cho ngân hàng của bạn. Kích hoạt casci này từ phần thiết lập."
 
 #. module: account
@@ -7040,7 +7040,7 @@ msgstr "Khớp Regex"
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__invoice_matching
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__rule_type__invoice_matching
 msgid "Match existing invoices/bills."
-msgstr "Khớp hóa đơn / biên nhận hiện có."
+msgstr "Khớp hoá đơn / biên nhận hiện có."
 
 #. module: account
 #. openerp-web
@@ -7168,7 +7168,7 @@ msgstr "Các Hoạt động khác"
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_accountable_required_fields
 msgid "Missing required account on accountable invoice line."
-msgstr "Thiếu tài khoản cần thiết trên dòng hóa đơn chịu trách nhiệm."
+msgstr "Thiếu tài khoản cần thiết trên dòng hoá đơn chịu trách nhiệm."
 
 #. module: account
 #. openerp-web
@@ -7440,8 +7440,8 @@ msgid ""
 "Note that the easiest way to create a credit note is to do it directly\n"
 "                from the customer invoice."
 msgstr ""
-"Lưu ý là cách dễ nhất để tạo hóa đơn giảm là thực hiện trực tiếp trên biểu mẫu\n"
-"                hóa đơn khách hàng, để hoàn trả một phần hoặc toàn bộ."
+"Lưu ý là cách dễ nhất để tạo hoá đơn giảm là thực hiện trực tiếp trên biểu mẫu\n"
+"                hoá đơn khách hàng, để hoàn trả một phần hoặc toàn bộ."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_refund_type
@@ -7449,8 +7449,8 @@ msgid ""
 "Note that the easiest way to create a vendor credit note it to do it "
 "directly from the vendor bill."
 msgstr ""
-"Lưu ý cách dễ nhất để tạo hóa đơn giảm từ nhà cung cấp là thực hiện việc đó "
-"trực tiếp trên hóa đơn nhà cung cấp."
+"Lưu ý cách dễ nhất để tạo hoá đơn giảm từ nhà cung cấp là thực hiện việc đó "
+"trực tiếp trên hoá đơn nhà cung cấp."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__note
@@ -7567,7 +7567,7 @@ msgid ""
 "                the related sale or puchase invoice(s)."
 msgstr ""
 "Odoo cho phép bạn đối soát dòng sao kê trực tiếp với các\n"
-"                hóa đơn mua hoặc bán liên quan."
+"                hoá đơn mua hoặc bán liên quan."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -7576,7 +7576,7 @@ msgid ""
 "                the related sale or puchase invoices."
 msgstr ""
 "Odoo cho phép bạn đối soát dòng sao kê trực tiếp với các\n"
-"                hóa đơn mua hoặc bán liên quan."
+"                hoá đơn mua hoặc bán liên quan."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.res_partner_action_customer
@@ -9303,13 +9303,13 @@ msgstr "Hoá đơn mẫu"
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Sample invoice line name"
-msgstr "Tên dòng hóa đơn mẫu"
+msgstr "Tên dòng hoá đơn mẫu"
 
 #. module: account
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Sample invoice line name 2"
-msgstr "Tên chi tiết hóa đơn mẫu 2"
+msgstr "Tên chi tiết hoá đơn mẫu 2"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sample_invoice_step
@@ -10786,7 +10786,7 @@ msgid ""
 "                                                                                                       don't want to reconcile all the past payments with bank statements."
 msgstr ""
 "Tính năng đối chiếu ngân hàng sẽ không chạy đối chiếu các khoản thanh toán trước ngày này.\n"
-"                                                                                                       Điều này có ích nếu bạn cài đặt kế toán sau khi đã sử dụng hóa đơn một thời gian và\n"
+"                                                                                                       Điều này có ích nếu bạn cài đặt kế toán sau khi đã sử dụng hoá đơn một thời gian và\n"
 "                                                                                                       không muốn đối chiếu tất cả các khoản thanh toán trong quá khứ với báo cáo ngân hàng."
 
 #. module: account
@@ -10797,7 +10797,7 @@ msgid ""
 "               don't want to reconcile all the past payments with bank statements."
 msgstr ""
 "Tính năng đối chiếu ngân hàng sẽ không chạy đối chiếu các khoản thanh toán trước ngày này.\n"
-"               Điều này có ích nếu bạn cài đặt kế toán sau khi đã sử dụng hóa đơn một thời gian và\n"
+"               Điều này có ích nếu bạn cài đặt kế toán sau khi đã sử dụng hoá đơn một thời gian và\n"
 "               không muốn đối chiếu tất cả các khoản thanh toán trong quá khứ với báo cáo ngân hàng."
 
 #. module: account
@@ -10922,9 +10922,9 @@ msgid ""
 "expense (Cost of Goods Sold account) is recognized at the customer invoice "
 "validation."
 msgstr ""
-"Chi phí được hạch toán khi hóa đơn của nhà cung cấp được xác thực, ngoại trừ"
+"Chi phí được hạch toán khi hoá đơn của nhà cung cấp được xác thực, ngoại trừ"
 " trong kế toán anglo-saxon với định giá hàng tồn kho vĩnh viễn trong trường "
-"hợp chi phí (Tài khoản giá vốn hàng bán) được ghi nhận khi xác thực hóa đơn "
+"hợp chi phí (Tài khoản giá vốn hàng bán) được ghi nhận khi xác thực hoá đơn "
 "của khách hàng."
 
 #. module: account
@@ -11031,7 +11031,7 @@ msgstr "Bút toán chứa phát sinh này."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__refund_sequence_number_next
 msgid "The next sequence number will be used for the next credit note."
-msgstr "Mã số tiếp theo sẽ được sử dụng cho hoá đơn hoàn tiền tiếp theo."
+msgstr "Mã số tiếp theo sẽ được sử dụng cho hoá đơn điều chỉnh giảm tiếp theo."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sequence_number_next
@@ -11088,7 +11088,7 @@ msgid ""
 "the invoices & payments matching was performed."
 msgstr ""
 "Đối tác có ít nhất 1 khoản công nợ chưa được đối soát kể từ lần gần nhất bạn"
-" thực  hiện việc khớp hóa đơn và các thanh toán từ các đối tác."
+" thực  hiện việc khớp hoá đơn và các thanh toán từ các đối tác."
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -11293,7 +11293,7 @@ msgstr "Quy tắc phá vỡ được sử dụng cho các hoạt động làm tr
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
 msgid "There are currently no invoices and payments for your account."
-msgstr "Hiện không có hóa đơn và thanh toán nào cho tài khoản của bạn."
+msgstr "Hiện không có hoá đơn và thanh toán nào cho tài khoản của bạn."
 
 #. module: account
 #: code:addons/account/models/company.py:0
@@ -11400,7 +11400,7 @@ msgstr "Tài khoản được sử dụng mặc định như là tài khoản ph
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_income_categ_id
 msgid "This account will be used when validating a customer invoice."
-msgstr "Tài khoản này sẽ được dùng khi xác nhận hóa đơn bán hàng."
+msgstr "Tài khoản này sẽ được dùng khi xác nhận hoá đơn bán hàng."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -11451,7 +11451,7 @@ msgid ""
 "This field contains the information related to the numbering of the credit "
 "note entries of this journal."
 msgstr ""
-"Trường này chưa thông tin liên quan tới số của hóa đơn giảm trong bút toán "
+"Trường này chưa thông tin liên quan tới số của hoá đơn giảm trong bút toán "
 "này."
 
 #. module: account
@@ -11597,7 +11597,7 @@ msgid ""
 "This payment term will be used instead of the default one for sales orders "
 "and customer invoices"
 msgstr ""
-"Điều khoản thanh toán này sẽ được dùng mặc định cho đơn hàng và hóa đơn bán "
+"Điều khoản thanh toán này sẽ được dùng mặc định cho đơn hàng và hoá đơn bán "
 "hàng"
 
 #. module: account
@@ -12714,8 +12714,8 @@ msgid ""
 "credit note or refund."
 msgstr ""
 "Bạn không thể xác nhận một hoá đơn với tổng giá trị âm. Bạn nên tạo "
-"một hoá đơn hoàn tiền thay vì thế. Sử dụng menu hành động để chuyển đổi "
-"thành một hoá đơn hoàn tiền."
+"một hoá đơn điều chỉnh giảm thay vì thế. Sử dụng menu hành động để chuyển đổi "
+"thành một hoá đơn điều chỉnh giảm."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
