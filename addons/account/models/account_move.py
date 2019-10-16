@@ -97,7 +97,7 @@ class AccountMove(models.Model):
     date = fields.Date(string='Date', required=True, index=True, readonly=True,
         states={'draft': [('readonly', False)]},
         default=fields.Date.context_today)
-    ref = fields.Char(string='Reference', copy=False)
+    ref = fields.Char(string='Reference', copy=False, tracking=True)
     narration = fields.Text(string='Internal Note')
     state = fields.Selection(selection=[
             ('draft', 'Draft'),
@@ -2396,11 +2396,12 @@ class AccountMoveLine(models.Model):
     country_id = fields.Many2one(comodel_name='res.country', related='move_id.company_id.country_id')
     account_id = fields.Many2one('account.account', string='Account',
         index=True, ondelete="cascade",
-        domain=[('deprecated', '=', False)])
+        domain=[('deprecated', '=', False)],
+        tracking=True)
     account_internal_type = fields.Selection(related='account_id.user_type_id.type', string="Internal Type", store=True, readonly=True)
     account_root_id = fields.Many2one(related='account_id.root_id', string="Account Root", store=True, readonly=True)
     sequence = fields.Integer(default=10)
-    name = fields.Char(string='Label')
+    name = fields.Char(string='Label', tracking=True)
     quantity = fields.Float(string='Quantity',
         default=1.0, digits='Product Unit of Measure',
         help="The optional quantity expressed by this line, eg: number of product sold. "
@@ -2422,7 +2423,7 @@ class AccountMoveLine(models.Model):
     reconciled = fields.Boolean(compute='_amount_residual', store=True)
     blocked = fields.Boolean(string='No Follow-up', default=False,
         help="You can check this box to mark this journal item as a litigation with the associated partner")
-    date_maturity = fields.Date(string='Due Date', index=True,
+    date_maturity = fields.Date(string='Due Date', index=True, tracking=True,
         help="This field is used for payable and receivable journal entries. You can put the limit date for the payment of this line.")
     currency_id = fields.Many2one('res.currency', string='Currency')
     partner_id = fields.Many2one('res.partner', string='Partner', ondelete='restrict')
@@ -2456,7 +2457,7 @@ class AccountMoveLine(models.Model):
         string="Originator Tax Repartition Line", ondelete='restrict', readonly=True,
         help="Tax repartition line that caused the creation of this move line, if any")
     tag_ids = fields.Many2many(string="Tags", comodel_name='account.account.tag', ondelete='restrict',
-        help="Tags assigned to this line by the tax creating it, if any. It determines its impact on financial reports.")
+        help="Tags assigned to this line by the tax creating it, if any. It determines its impact on financial reports.", tracking=True)
     tax_audit = fields.Char(string="Tax Audit String", compute="_compute_tax_audit", store=True,
         help="Computed field, listing the tax grids impacted by this line, and the amount it applies to each of them.")
 
@@ -3214,7 +3215,58 @@ class AccountMoveLine(models.Model):
                             or (account_type != 'payable' and account_to_write.user_type_id.type == 'payable'):
                         raise UserError(_("You can only set an account having the payable type on payment terms lines for vendor bill."))
 
+        # Get all tracked fields (without related fields because these fields must be manage on their own model)
+        tracking_fields = []
+        for value in vals:
+            field = self._fields[value]
+            if hasattr(field, 'related') and field.related:
+                continue # We don't want to track related field.
+            if hasattr(field, 'tracking') and field.tracking:
+                tracking_fields.append(value)
+        ref_fields = self.env['account.move.line'].fields_get(tracking_fields)
+
+        # Get initial values for each line
+        move_initial_values = {}
+        for line in self.filtered(lambda l: l.move_id.name != '/'): # Only lines with posted once move.
+            for field in tracking_fields:
+                # Group initial values by move_id
+                if line.move_id.id not in move_initial_values:
+                    move_initial_values[line.move_id.id] = {}
+                move_initial_values[line.move_id.id].update({field: line[field]})
+
         result = super(AccountMoveLine, self).write(vals)
+
+        # Create the dict for the message post
+        tracking_values = {} # Tracking values to write in the message post
+        for move_id, modified_lines in move_initial_values.items():
+            tmp_move = {move_id: []}
+            for line in self.filtered(lambda l: l.move_id.id == move_id):
+                tracked_field = self.env['mail.thread'].static_message_track(line, ref_fields, modified_lines) # Return a tuple like (changed field, ORM command)
+                tmp = {'line_id': line.id}
+                if len(tracked_field[1]) > 0:
+                    selected_field = tracked_field[1][0][2] # Get the last element of the tuple in the list of ORM command. (changed, [(0, 0, THIS)])
+                    tmp.update({
+                        **{'field_name': selected_field.get('field_desc')},
+                        **self._get_formated_values(selected_field)
+                    })
+                elif len(tracked_field[0]):
+                    field_name = line._fields[tracked_field[0].pop()].string # Get the field name
+                    tmp.update({
+                        'error': True,
+                        'field_error': field_name
+                    })
+                else:
+                    continue
+                tmp_move[move_id].append(tmp)
+            if len(tmp_move[move_id]) > 0:
+                tracking_values.update(tmp_move)
+
+        # Write in the chatter.
+        for move in self.mapped('move_id'):
+            fields = tracking_values.get(move.id, [])
+            if len(fields) > 0:
+                msg = self._get_tracking_field_string(tracking_values.get(move.id))
+                move.message_post(body=msg) # Write for each concerned move the message in the chatter
 
         for line in self:
             if not line.move_id.is_invoice(include_receipts=True):
@@ -3322,6 +3374,39 @@ class AccountMoveLine(models.Model):
             name += (line.name or line.product_id.display_name) and (' ' + (line.name or line.product_id.display_name)) or ''
             result.append((line.id, name))
         return result
+
+    # -------------------------------------------------------------------------
+    # TRACKING METHODS
+    # -------------------------------------------------------------------------
+
+    def _get_formated_values(self, tracked_field):
+        if tracked_field.get('field_type') in ('date', 'datetime'):
+            return {
+                'old_value': format_date(self.env, fields.Datetime.from_string(tracked_field.get('old_value_datetime'))),
+                'new_value': format_date(self.env, fields.Datetime.from_string(tracked_field.get('new_value_datetime'))),
+            }
+        elif tracked_field.get('field_type') in ('one2many', 'many2many', 'many2one'):
+            return {
+                'old_value': tracked_field.get('old_value_char', ''),
+                'new_value': tracked_field.get('new_value_char', '')
+            }
+        else:
+            return {
+                'old_value': [val for key, val in tracked_field.items() if 'old_value' in key][0], # Get the first element because we create a list like ['Elem']
+                'new_value': [val for key, val in tracked_field.items() if 'new_value' in key][0], # Get the first element because we create a list like ['Elem']
+            }
+
+    def _get_tracking_field_string(self, fields):
+        ARROW_RIGHT = '<span aria-label="Changed" class="fas fa-long-arrow-alt-right" role="img" title="Changed"></span>'
+        msg = '<ul>'
+        for field in fields:
+            redirect_link = '<a href=# data-oe-model=account.move.line data-oe-id=%d>#%d</a>' % (field['line_id'], field['line_id']) # Account move line link
+            if field.get('error', False):
+                msg += '<li>%s: A modication has been operated on the line %s.</li>' % (field['field_error'], redirect_link)
+            else:
+                msg += '<li>%s: %s %s %s (%s)</li>' % (field['field_name'], field['old_value'], ARROW_RIGHT, field['new_value'], redirect_link)
+        msg += '</ul>'
+        return _(msg)
 
     # -------------------------------------------------------------------------
     # RECONCILIATION

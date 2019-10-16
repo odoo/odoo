@@ -596,32 +596,45 @@ class MailThread(models.AbstractModel):
                 self.message_post_with_template(template.id, **post_kwargs)
         return True
 
-    def _message_track(self, tracked_fields, initial):
+    @api.model
+    def static_message_track(self, record, tracked_fields, initial):
         """ For a given record, fields to check (tuple column name, column info)
         and initial values, return a structure that is a tuple containing :
 
          - a set of updated column names
-         - a list of ORM (0, 0, values) commands to create 'mail.tracking.value' """
-        self.ensure_one()
+         - a list of ORM (0, 0, values) commands to create 'mail.tracking.value'
+
+        This static method is usefull when you don't want to inherit from mail.thread but
+        you want to use '_message_track()' method.
+        """
+        record.ensure_one()
         changes = set()  # contains onchange tracked fields that changed
         tracking_value_ids = []
 
         # generate tracked_values data structure: {'col_name': {col_info, new_value, old_value}}
         for col_name, col_info in tracked_fields.items():
             initial_value = initial[col_name]
-            new_value = self[col_name]
+            new_value = record[col_name]
 
             if new_value != initial_value and (new_value or initial_value):  # because browse null != False
-                tracking_sequence = getattr(self._fields[col_name], 'tracking',
-                                            getattr(self._fields[col_name], 'track_sequence', 100))  # backward compatibility with old parameter name
+                tracking_sequence = getattr(record._fields[col_name], 'tracking',
+                                            getattr(record._fields[col_name], 'track_sequence', 100))  # backward compatibility with old parameter name
                 if tracking_sequence is True:
                     tracking_sequence = 100
-                tracking = self.env['mail.tracking.value'].create_tracking_values(initial_value, new_value, col_name, col_info, tracking_sequence, self._name)
+                tracking = record.env['mail.tracking.value'].create_tracking_values(initial_value, new_value, col_name, col_info, tracking_sequence, record._name)
                 if tracking:
                     tracking_value_ids.append([0, 0, tracking])
                 changes.add(col_name)
 
         return changes, tracking_value_ids
+
+    def _message_track(self, tracked_fields, initial):
+        """ For a given record, fields to check (tuple column name, column info)
+        and initial values, return a structure that is a tuple containing :
+
+         - a set of updated column names
+         - a list of ORM (0, 0, values) commands to create 'mail.tracking.value' """
+        return self.static_message_track(self, tracked_fields, initial)
 
     def message_track(self, tracked_fields, initial_values):
         """ Track updated values. Comparing the initial and current values of
