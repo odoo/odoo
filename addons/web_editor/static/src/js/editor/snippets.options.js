@@ -672,10 +672,6 @@ registry.colorpicker = SnippetOption.extend({
             if (this.data.paletteExclude) {
                 excluded = this.data.paletteExclude.replace(/ /g, '').split(',');
             }
-            // Apply a custom title if specified
-            if (this.data.paletteTitle) {
-                $pt.find('.note-palette-title').text(this.data.paletteTitle);
-            }
 
             // Remove excluded palettes
             _.each(excluded, function (exc) {
