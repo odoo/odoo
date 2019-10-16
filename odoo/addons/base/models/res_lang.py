@@ -226,7 +226,7 @@ class Lang(models.Model):
         active_lang = [lang.code for lang in self.filtered(lambda l: l.active)]
         if active_lang:
             mods = self.env['ir.module.module'].search([('state', '=', 'installed')])
-            mods._update_translations(filter_lang=active_lang)
+            mods._update_translations(active_lang)
 
     @api.model_create_multi
     def create(self, vals_list):
