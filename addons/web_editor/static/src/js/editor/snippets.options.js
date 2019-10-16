@@ -35,11 +35,11 @@ var SnippetOption = Widget.extend({
      */
     init: function (parent, $target, $overlay, data, options) {
         this._super.apply(this, arguments);
-        this.options = options;
         this.$target = $target;
-        this.ownerDocument = this.$target[0].ownerDocument;
         this.$overlay = $overlay;
         this.data = data;
+        this.options = options;
+        this.ownerDocument = this.$target[0].ownerDocument;
         this.__methodNames = [];
     },
     /**
@@ -49,7 +49,7 @@ var SnippetOption = Widget.extend({
      * @override
      */
     start: function () {
-        this._setActive();
+        this._updateUI();
         return this._super.apply(this, arguments);
     },
     /**
@@ -133,7 +133,7 @@ var SnippetOption = Widget.extend({
      * @param {jQuery} $opt - the related DOMElement option
      */
     selectClass: function (previewMode, value, $opt) {
-        var $group = $opt && $opt.parents('we-collapse-area').last();
+        var $group = $opt && $opt.parents('we-collapse-area, we-select').last();
         if (!$group || !$group.length) {
             $group = this.$el;
         }
@@ -206,7 +206,7 @@ var SnippetOption = Widget.extend({
      */
     setTarget: function ($target) {
         this.$target = $target;
-        this._setActive();
+        this._updateUI();
         this.$target.trigger('snippet-option-change', [this]);
     },
 
@@ -242,7 +242,7 @@ var SnippetOption = Widget.extend({
      */
     _select: function (previewMode, $opt) {
         // Options can say they respond to strong choice
-        if (previewMode && ($opt.data('noPreview') || $opt.parent().data('noPreview'))) {
+        if (previewMode && ($opt.data('noPreview') || $opt.closest('[data-no-preview="true"]').length)) {
             return;
         }
         // If it is not preview mode, the user selected the option for good
@@ -278,7 +278,7 @@ var SnippetOption = Widget.extend({
         this.__methodNames = _.uniq(this.__methodNames);
 
         if (!previewMode) {
-            this._setActive();
+            this._updateUI();
         }
 
         this.$target.trigger('content_changed');
@@ -301,8 +301,8 @@ var SnippetOption = Widget.extend({
             .addClass('active');
 
         // Get submenus which are not inside submenus
-        var $submenus = this.$el.find('we-collapse-area')
-            .not('we-collapse-area we-collapse-area');
+        var $submenus = this.$el.find('we-collapse-area, we-select')
+            .not('we-collapse-area *, we-select *');
 
         // Add unique active class for each submenu active item
         _.each($submenus, function (submenu) {
@@ -312,7 +312,7 @@ var SnippetOption = Widget.extend({
 
         // Add unique active class for out-of-submenu active item
         var $externalElements = this.$el.find('[data-select-class]')
-            .not('we-collapse-area *, we-collapse-area');
+            .not('we-collapse-area *, we-select *');
         _processSelectClassElements($externalElements);
 
         function _processSelectClassElements($elements) {
@@ -330,6 +330,20 @@ var SnippetOption = Widget.extend({
                 .last()
                 .addClass('active');
         }
+    },
+    /**
+     * @private
+     */
+    _updateUI: function () {
+        this._setActive();
+
+        this.el.querySelectorAll('we-select').forEach(selectEl => {
+            const activeEl = selectEl.querySelector('we-button.active');
+            const valueEl = selectEl.querySelector('we-toggler');
+            if (valueEl) {
+                valueEl.textContent = activeEl ? activeEl.textContent : "/";
+            }
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -384,6 +398,112 @@ var SnippetOption = Widget.extend({
             return;
         }
         this._reset();
+    },
+
+    //--------------------------------------------------------------------------
+    // Static
+    //--------------------------------------------------------------------------
+
+    /**
+     * Build the correct DOM for an element according to the given options.
+     *
+     * @static
+     * @param {string} tagName
+     * @param {string} [title]
+     * @param {Object} [options]
+     * @param {string[]} [options.classes]
+     * @param {Object} [options.dataAttributes]
+     * @returns {HTMLElement}
+     */
+    buildElement: function (tagName, title, options) {
+        const el = document.createElement(tagName);
+
+        if (title) {
+            const titleEl = SnippetOption.prototype.buildTitleElement(title);
+            el.appendChild(titleEl);
+        }
+
+        if (options && options.classes) {
+            el.classList.add(...options.classes);
+        }
+        if (options && options.dataAttributes) {
+            for (const key in options.dataAttributes) {
+                el.dataset[key] = options.dataAttributes[key];
+            }
+        }
+
+        return el;
+    },
+    /**
+     * Build the correct DOM for a we-checkbox element.
+     *
+     * @static
+     * @param {string} [title]
+     * @param {Object} [options] - @see this.buildElement
+     * @returns {HTMLElement}
+     */
+    buildCheckboxElement: function (title, options) {
+        const buttonEl = SnippetOption.prototype.buildElement('we-button', title, options);
+        buttonEl.classList.add('o_we_checkbox_wrapper');
+
+        const checkboxEl = document.createElement('we-checkbox');
+        buttonEl.appendChild(checkboxEl);
+
+        return buttonEl;
+    },
+    /**
+     * Build the correct DOM for a we-row element.
+     *
+     * @static
+     * @param {string} [title]
+     * @param {Object} [options] - @see this.buildElement
+     * @param {HTMLElement[]} [options.childNodes]
+     * @returns {HTMLElement}
+     */
+    buildRowElement: function (title, options) {
+        const groupEl = SnippetOption.prototype.buildElement('we-row', title, options);
+
+        const rowEl = document.createElement('div');
+        groupEl.appendChild(rowEl);
+
+        if (options && options.childNodes) {
+            options.childNodes.forEach(node => rowEl.appendChild(node));
+        }
+
+        return groupEl;
+    },
+    /**
+     * Build the correct DOM for a we-select element.
+     *
+     * @static
+     * @param {string} [title]
+     * @param {Object} [options] - @see this.buildElement
+     * @param {HTMLElement[]} [options.childNodes]
+     * @returns {HTMLElement}
+     */
+    buildSelectElement: function (title, options) {
+        const selectEl = SnippetOption.prototype.buildElement('we-select', title, options);
+
+        const menuTogglerEl = document.createElement('we-toggler');
+        selectEl.appendChild(menuTogglerEl);
+
+        var menuEl = document.createElement('we-select-menu');
+        if (options && options.childNodes) {
+            options.childNodes.forEach(node => menuEl.appendChild(node));
+        }
+        selectEl.appendChild(menuEl);
+
+        return selectEl;
+    },
+    /**
+     * @static
+     * @param {string} title
+     * @returns {HTMLElement}
+     */
+    buildTitleElement: function (title) {
+        const titleEl = document.createElement('we-title');
+        titleEl.textContent = title;
+        return titleEl;
     },
 });
 
@@ -972,7 +1092,7 @@ registry.background = SnippetOption.extend({
         this.__customImageSrc = value;
         this.background(false, this.__customImageSrc);
         this.$target.toggleClass('oe_custom_bg', !!value);
-        this._setActive();
+        this._updateUI();
         this.$target.trigger('snippet-option-change', [this]);
     },
 

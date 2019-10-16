@@ -28,43 +28,38 @@
                 <attribute name="data-selector" add=".s_website_form" separator=","/>
             </xpath>
             <xpath expr="//div" position="after">
-              <!-- Form -->
-              <div data-js="website_form_editor" data-selector=".s_website_form">
-                  <we-button data-website_form_model_modal="" data-no-preview="true">Change Form Parameters</we-button>
-                  <we-button data-website_form_field_modal="" data-no-preview="true">Add an existing field</we-button>
-                  <we-collapse-area>
-                      <we-toggler>Add a custom field</we-toggler>
-                      <we-collapse data-no-preview="true">
-                          <we-button data-website_form_custom_field="char">Text</we-button>
-                          <we-button data-website_form_custom_field="text">Long Text</we-button>
-                          <we-button data-website_form_custom_field="email">Email</we-button>
-                          <we-button data-website_form_custom_field="integer">Number</we-button>
-                          <we-button data-website_form_custom_field="float">Decimal Number</we-button>
-                          <we-button data-website_form_custom_field="boolean">Checkbox</we-button>
-                          <we-button data-website_form_custom_field="selection">Radio Buttons</we-button>
-                          <we-button data-website_form_custom_field="many2one">Selection</we-button>
-                          <we-button data-website_form_custom_field="one2many">Multiple Checkboxes</we-button>
-                          <we-button data-website_form_custom_field="date">Date</we-button>
-                          <we-button data-website_form_custom_field="datetime">Date &amp; Time</we-button>
-                          <we-button data-website_form_custom_field="binary">File Upload</we-button>
-                      </we-collapse>
-                  </we-collapse-area>
-              </div>
+                <!-- Form -->
+                <div data-js="website_form_editor" data-selector=".s_website_form">
+                    <we-button data-website_form_model_modal="" data-no-preview="true">Change Form Parameters</we-button>
+                    <we-button data-website_form_field_modal="" data-no-preview="true">Add an existing field</we-button>
+                    <we-select string="Add a custom field" data-no-preview="true">
+                        <we-button data-website_form_custom_field="char">Text</we-button>
+                        <we-button data-website_form_custom_field="text">Long Text</we-button>
+                        <we-button data-website_form_custom_field="email">Email</we-button>
+                        <we-button data-website_form_custom_field="integer">Number</we-button>
+                        <we-button data-website_form_custom_field="float">Decimal Number</we-button>
+                        <we-button data-website_form_custom_field="boolean">Checkbox</we-button>
+                        <we-button data-website_form_custom_field="selection">Radio Buttons</we-button>
+                        <we-button data-website_form_custom_field="many2one">Selection</we-button>
+                        <we-button data-website_form_custom_field="one2many">Multiple Checkboxes</we-button>
+                        <we-button data-website_form_custom_field="date">Date</we-button>
+                        <we-button data-website_form_custom_field="datetime">Date &amp; Time</we-button>
+                        <we-button data-website_form_custom_field="binary">File Upload</we-button>
+                    </we-select>
+                </div>
 
               <!-- Field -->
               <div data-js='website_form_editor' data-selector=".form-field" data-drop-near=".form-field">
-                    <we-button data-toggle-class="o_website_form_field_hidden" data-no-preview="true">Hidden</we-button>
+                    <we-checkbox string="Hidden" data-no-preview="true"
+                                 data-toggle-class="o_website_form_field_hidden"/>
               </div>
 
               <!-- Add an option to display radio buttons / checkboxes horizontally or vertically -->
               <div data-js='website_form_editor_choice_field_display' data-selector=".o_website_form_flex">
-                  <we-collapse-area>
-                      <we-toggler>Display</we-toggler>
-                      <we-collapse data-no-preview="true">
-                          <we-button data-website_form_choice_field_display="horizontal">Horizontal</we-button>
-                          <we-button data-website_form_choice_field_display="vertical">Vertical</we-button>
-                      </we-collapse>
-                  </we-collapse-area>
+                    <we-select string="Display" data-no-preview="true">
+                        <we-button data-website_form_choice_field_display="horizontal">Horizontal</we-button>
+                        <we-button data-website_form_choice_field_display="vertical">Vertical</we-button>
+                    </we-select>
                </div>
 
               <!-- Add move, duplicate and remove controllers to checkboxes and radio buttons -->
@@ -75,7 +70,9 @@
 
               <!-- Required option for fields that are not required fields of the model -->
               <div data-js='website_form_editor_field' data-selector=".form-field:not(.o_website_form_required)">
-                    <we-button data-website_form_field_require="" data-toggle-class="o_website_form_required_custom" data-no-preview="true">Required</we-button>
+                  <we-checkbox string="Required" data-no-preview="true"
+                               data-website_form_field_require=""
+                               data-toggle-class="o_website_form_required_custom"/>
               </div>
 
               <!-- Remove the duplicate options of model fields -->
