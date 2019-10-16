@@ -475,7 +475,11 @@ class Product(models.Model):
         self.ensure_one()
         action = self.env.ref('stock.action_production_lot_form').read()[0]
         action['domain'] = [('product_id', '=', self.id)]
-        action['context'] = {'default_product_id': self.id, 'set_product_readonly': True}
+        action['context'] = {
+            'default_product_id': self.id,
+            'set_product_readonly': True,
+            'default_company_id': (self.company_id or self.env.company).id,
+        }
         return action
 
     # Be aware that the exact same function exists in product.template
@@ -779,7 +783,10 @@ class ProductTemplate(models.Model):
         self.ensure_one()
         action = self.env.ref('stock.action_production_lot_form').read()[0]
         action['domain'] = [('product_id.product_tmpl_id', '=', self.id)]
-        action['context'] = {'default_product_tmpl_id': self.id}
+        action['context'] = {
+            'default_product_tmpl_id': self.id,
+            'default_company_id': (self.company_id or self.env.company).id,
+        }
         if self.product_variant_count == 1:
             action['context'].update({
                 'default_product_id': self.product_variant_id.id,
@@ -856,4 +863,3 @@ class UoM(models.Model):
         else:
             computed_qty = self._compute_quantity(qty, procurement_uom, rounding_method='HALF-UP')
         return (computed_qty, procurement_uom)
-
