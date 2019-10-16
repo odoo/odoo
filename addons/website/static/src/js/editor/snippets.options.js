@@ -84,7 +84,7 @@ options.registry.background.include({
             delete target.dataset.bgVideoSrc;
         }
         this._refreshPublicWidgets();
-        this._setActive();
+        this._updateUI();
     },
     /**
      * Returns whether the current target has a background video or not.
@@ -426,7 +426,7 @@ options.registry.navTabs = options.Class.extend({
             $activeLink.parent().remove();
             $activePane.remove();
             self._findLinksAndPanes();
-            self._setActive(); // TODO forced to do this because we do not return deferred for options
+            self._updateUI(); // TODO forced to do this because we do not return deferred for options
         });
         $next.tab('show');
     },
@@ -469,7 +469,7 @@ options.registry.navTabs = options.Class.extend({
      * @private
      * @override
      */
-    _setActive: function () {
+    _updateUI: function () {
         this._super.apply(this, arguments);
         this.$el.filter('[data-remove-tab]').toggleClass('d-none', this.$tabPanes.length <= 2);
     },
@@ -1088,7 +1088,7 @@ options.registry.gallery = options.Class.extend({
             }
             self._reset();
             self.trigger_up('cover_update');
-            this._setActive();
+            this._updateUI();
         });
         dialog.open();
     },
@@ -1393,7 +1393,7 @@ options.registry.gallery = options.Class.extend({
         $intervalOptions.removeClass('active')
             .filter('[data-interval="' + activeInterval + '"]')
             .addClass('active');
-        $intervalOptions.closest('we-collapse-area')[0]
+        $intervalOptions.closest('we-select')[0]
             .classList.toggle('d-none', activeMode !== 'slideshow');
 
         var columns = this._getColumns();
@@ -1401,7 +1401,7 @@ options.registry.gallery = options.Class.extend({
         $columnOptions.removeClass('active')
             .filter('[data-columns="' + columns + '"]')
             .addClass('active');
-        $columnOptions.closest('we-collapse-area')[0]
+        $columnOptions.closest('we-select')[0]
             .classList.toggle('d-none', !(activeMode === 'grid' || activeMode === 'masonry'));
 
         this.el.querySelector('.o_w_image_spacing_option')
@@ -1714,7 +1714,7 @@ options.registry.CoverProperties = options.Class.extend({
                 var $opt = this.$el.find('.o_record_cover_opt_size_default[data-select-class]');
                 this.selectClass(previewMode, $opt.data('selectClass'), $opt);
             }
-            this._setActive();
+            this._updateUI();
         });
     },
     /**
@@ -1808,6 +1808,35 @@ options.registry.SectionStretch = options.Class.extend({
         }
 
         return this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * @see this.selectClass for parameters
+     */
+    toggleContainerFluid: function (previewMode, value, $opt) {
+        var isFluid = this.$el.find('[data-toggle-container-fluid]').hasClass('active');
+        this.$target.toggleClass('container', !isFluid)
+                    .toggleClass('container-fluid', isFluid);
+        if (previewMode !== 'reset') {
+            this.$target.toggleClass('container').toggleClass('container-fluid');
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _setActive: function () {
+        this._super.apply(this, arguments);
+        var isFluid = this.$target.hasClass('container-fluid');
+        this.$el.find('[data-toggle-container-fluid]').toggleClass('active', isFluid);
     },
 });
 });

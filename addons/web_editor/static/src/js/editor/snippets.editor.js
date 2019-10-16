@@ -322,6 +322,56 @@ var SnippetEditor = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Transforms option UI description into actual DOM.
+     *
+     * @private
+     * @param {jQuery} $el
+     */
+    _createOptionUI: function ($el) {
+        const $optionSection = $(core.qweb.render('web_editor.customize_block_option'));
+        $optionSection.append($el);
+        const uiEl = $optionSection[0];
+
+        // Build group first as their internal components will be built after
+        uiEl.querySelectorAll('we-row').forEach(el => {
+            const infos = this._extraInfoFromDescriptionElement(el);
+            const groupEl = options.Class.prototype.buildRowElement(infos.title, infos.options);
+            el.parentNode.insertBefore(groupEl, el);
+            el.parentNode.removeChild(el);
+        });
+
+        // Build standard components
+        uiEl.querySelectorAll('we-select').forEach(el => {
+            const infos = this._extraInfoFromDescriptionElement(el);
+            const selectEl = options.Class.prototype.buildSelectElement(infos.title, infos.options);
+            el.parentNode.insertBefore(selectEl, el);
+            el.parentNode.removeChild(el);
+        });
+        uiEl.querySelectorAll('we-checkbox').forEach(el => {
+            const infos = this._extraInfoFromDescriptionElement(el);
+            const checkboxEl = options.Class.prototype.buildCheckboxElement(infos.title, infos.options);
+            el.parentNode.insertBefore(checkboxEl, el);
+            el.parentNode.removeChild(el);
+        });
+
+        return $optionSection;
+    },
+    /**
+     * @private
+     * @param {HTMLElement} el
+     * @returns {Object}
+     */
+    _extraInfoFromDescriptionElement: function (el) {
+        return {
+            title: el.getAttribute('string'),
+            options: {
+                classes: el.classList,
+                dataAttributes: el.dataset,
+                childNodes: [...el.childNodes],
+            },
+        };
+    },
+    /**
      * DOMElements have a default name which appears in the overlay when they
      * are being edited. This method retrieves this name; it can be defined
      * directly in the DOM thanks to the `data-name` attribute.
@@ -391,7 +441,8 @@ var SnippetEditor = Widget.extend({
             }
 
             var optionName = val.option;
-            var $el = val.$el.children().clone(true).addClass('snippet-option-' + optionName);
+
+            var $ui = val.$el.children().clone(true);
             var option = new (options.registry[optionName] || options.Class)(
                 this,
                 val.base_target ? this.$target.find(val.base_target).eq(0) : this.$target,
@@ -408,9 +459,8 @@ var SnippetEditor = Widget.extend({
             }
             this.styles[key] = option;
             option.__order = i++;
-            var $optionSection = $(core.qweb.render('web_editor.customize_block_option'));
-            $optionSection.append($el);
-            return option.attachTo($optionSection);
+            const $option = this._createOptionUI($ui).addClass('snippet-option-' + optionName);
+            return option.attachTo($option);
         });
 
         this.isTargetMovable = (this.selectorSiblings.length > 0 || this.selectorChildren.length > 0);
@@ -664,7 +714,7 @@ var SnippetsMenu = Widget.extend({
     id: 'oe_snippets',
     cacheSnippetTemplate: {},
     events: {
-        'click we-collapse-area > we-toggler': '_onCollapseTogglerClick',
+        'click we-select, we-collapse-area > we-toggler': '_onOptionTogglerClick',
         'click .o_install_btn': '_onInstallBtnClick',
     },
     custom_events: {
@@ -1277,7 +1327,7 @@ var SnippetsMenu = Widget.extend({
                 '$el': $style,
                 'drop-near': $style.data('drop-near') && self._computeSelectorFunctions($style.data('drop-near'), '', false, noCheck, true),
                 'drop-in': $style.data('drop-in') && self._computeSelectorFunctions($style.data('drop-in'), '', false, noCheck),
-                'data': $style.data(),
+                'data': _.extend({string: $style.attr('string')}, $style.data()),
             };
             self.templateOptions.push(option);
             selectors.push(option.selector);
@@ -1664,11 +1714,17 @@ var SnippetsMenu = Widget.extend({
      * @private
      * @param {*} ev
      */
-    _onCollapseTogglerClick: function (ev) {
-        var $hierarchyTogglers = $(ev.currentTarget).parents('we-collapse-area').children('we-toggler');
-        this.$('we-collapse-area > we-toggler').not($hierarchyTogglers).removeClass('active');
-        $hierarchyTogglers.not(ev.currentTarget).addClass('active');
-        ev.currentTarget.classList.toggle('active');
+    _onOptionTogglerClick: function (ev) {
+        var togglerEl = ev.currentTarget;
+        if (togglerEl.tagName !== 'WE-TOGGLER') {
+            togglerEl = togglerEl.querySelector('we-toggler');
+        }
+
+        var togglerParentSelector = 'we-select, we-collapse-area';
+        var $hierarchyTogglers = $(togglerEl).parents(togglerParentSelector).children('we-toggler');
+        this.$(togglerParentSelector).children('we-toggler').not($hierarchyTogglers).removeClass('active');
+        $hierarchyTogglers.not(togglerEl).addClass('active');
+        togglerEl.classList.toggle('active');
     },
     /**
      * Called when the overlay dimensions/positions should be recomputed.

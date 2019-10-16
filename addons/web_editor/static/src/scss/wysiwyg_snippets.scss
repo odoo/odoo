@@ -51,6 +51,8 @@ body.editor_enable.editor_has_snippets {
     color: var(--o-we-snippets-color);
     box-shadow: 0px 10px 10px -10px black inset;
     font-family: Roboto, $font-family-sans-serif;
+    font-size: $o-we-font-size;
+    line-height: $o-we-line-height;
 
     transition: left 400ms $o-we-md-ease 0s;
 
@@ -173,17 +175,38 @@ body.editor_enable.editor_has_snippets {
     }
 
     > .o_we_customize_panel {
+        padding: 0 0.5rem;
 
         we-button, we-toggler {
             cursor: pointer;
-            @include o-text-overflow(inline-block);
-            padding: 0.25rem 0.5rem;
+            @include o-text-overflow(block);
+            padding: 0.1em 0.4em;
             margin: 0;
+            border: 1px solid var(--o-we-bg-color-dark);
+            border-radius: 0;
             background-color: var(--o-we-bg-color-dark);
             color: var(--o-we-color);
             line-height: 1.5;
-            font-weight: 500;
             white-space: nowrap;
+            text-align: left;
+
+            &.fa {
+                display: inline-block;
+                margin: 0 0 0 0.3em;
+                padding: 0;
+                border: none;
+                background-color: transparent;
+                color: var(--o-we-snippets-color);
+                text-align: center;
+
+                &.active {
+                    padding: 0;
+
+                    &::after {
+                        display: none;
+                    }
+                }
+            }
         }
 
         %we-icon-button {
@@ -230,22 +253,6 @@ body.editor_enable.editor_has_snippets {
                     > we-customizeblock-option {
                         display: inline-block; // Ideally -> display: contents;
                     }
-                    we-button {
-                        display: inline-block;
-                        margin: 0 0 0 0.3em;
-                        padding: 0;
-                        border: none;
-                        font-size: 0.9em;
-                        text-align: center;
-
-                        &.active {
-                            padding: 0;
-
-                            &::after {
-                                display: none;
-                            }
-                        }
-                    }
                 }
             }
         }
@@ -254,21 +261,47 @@ body.editor_enable.editor_has_snippets {
             position: relative;
             display: block;
 
-            > * {
+            > *, > div > * {
                 display: block;
                 margin-top: 0.25rem;
             }
 
-            we-button, we-toggler {
-                display: block;
-                text-align: left;
-                border-radius: 0;
-            }
             we-button {
                 &.active {
                     @include we-icon-button('\f00c', $o-we-color-success);
                 }
             }
+            .o_we_checkbox_wrapper.active {
+                padding-right: 0;
+
+                &::after {
+                    right: 0;
+                }
+            }
+            we-toggler {
+                @include we-icon-button('\f107');
+            }
+
+            we-row {
+                display: block;
+
+                > div {
+                    display: flex;
+                    align-items: center;
+
+                    > * {
+                        flex: 1 1 auto;
+
+                        + * {
+                            margin-left: 0.5em;
+                        }
+                    }
+                    > .fa {
+                        flex: 0 0 auto;
+                    }
+                }
+            }
+
             we-collapse {
                 position: relative;
                 display: block;
@@ -276,15 +309,63 @@ body.editor_enable.editor_has_snippets {
                 overflow: hidden;
                 transition: max-height 200ms ease 0s;
             }
-            we-toggler {
-                @include we-icon-button('\f104');
 
-                &.active {
-                    @include we-icon-button('\f107');
+            we-select {
+                position: relative;
+                display: flex;
+                flex-flow: row wrap;
+                align-items: center;
 
-                    + we-collapse {
-                        max-height: 500px;
+                we-toggler {
+                    flex: 0 0 100%;
+
+                    &.active {
+                        background-color: transparent;
+                        border-color: var(--o-we-color);
                     }
+                }
+                we-select-menu {
+                    @include o-position-absolute(100%, 0, auto, 0);
+                    display: none;
+                    z-index: $zindex-dropdown;
+                    border: 1px solid var(--o-we-color);
+                    border-top-style: none;
+                    background-color: var(--o-we-bg-color-dark);
+                }
+            }
+
+            we-toggler.active {
+
+                + we-collapse {
+                    max-height: 500px;
+                }
+                + we-select-menu {
+                    display: block;
+                }
+            }
+
+            .o_we_checkbox_wrapper {
+                display: flex;
+                align-items: center;
+                padding: 0;
+                border: none;
+                background-color: transparent;
+                color: inherit;
+
+                > we-title {
+                    flex: 1 1 auto;
+                    min-width: 0;
+                    @include o-text-overflow(block);
+                }
+                > we-checkbox {
+                    flex: 0 0 auto;
+                    display: block;
+                    width: 1em;
+                    height: 1em;
+                    margin-left: auto;
+                    border: 1px solid var(--o-we-bg-color-dark);
+                    border-radius: 0;
+                    background-color: var(--o-we-bg-color-dark);
                 }
             }
 
