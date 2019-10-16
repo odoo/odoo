@@ -1808,4 +1808,26 @@ options.registry.CoverProperties = options.Class.extend({
         this.$target[0].dataset.filterColor = activeFilterColor || '';
     },
 });
+
+/**
+ * Whether the section should be full-width (container-fluid) or use a classic container
+ */
+options.registry.SectionStretch = options.Class.extend({
+    /**
+     * Only shows this option if it changes the visual.
+     *
+     * @override
+     */
+    start: function () {
+        const $container = $('<div>', {class: 'container'}).insertAfter(this.$target);
+        const sizeDifference = this.$target.parent().width() / $container.outerWidth() - 1;
+        $container.remove();
+        // The cutoff for the option is 5% difference in width
+        if (sizeDifference < 0.05) {
+            this.$el.addClass('d-none');
+        }
+
+        return this._super.apply(this, arguments);
+    },
+});
 });
