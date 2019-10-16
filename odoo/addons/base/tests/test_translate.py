@@ -248,7 +248,7 @@ class TestTranslation(TransactionCase):
     def setUp(self):
         super(TestTranslation, self).setUp()
         lang = self.env['res.lang']._activate_lang('fr_FR')
-        self.env['ir.translation']._load_module_terms(['base'], ['fr_FR'])
+        self.env.ref('base.module_base')._update_translations(['fr_FR'])
         self.customers = self.env['res.partner.category'].create({'name': 'Customers'})
         self.env['ir.translation'].create({
             'type': 'model',
@@ -579,7 +579,7 @@ class TestXMLTranslation(TransactionCase):
         super(TestXMLTranslation, self).setUp()
         self.env['res.lang']._activate_lang('fr_FR')
         self.env['res.lang']._activate_lang('nl_NL')
-        self.env['ir.translation']._load_module_terms(['base'], ['fr_FR', 'nl_NL'])
+        self.env.ref('base.module_base')._update_translations(['fr_FR', 'nl_NL'])
 
     def create_view(self, archf, terms, **kwargs):
         view = self.env['ir.ui.view'].create({
