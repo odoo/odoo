@@ -166,9 +166,9 @@ class Lang(models.Model):
     def install_lang(self):
         """
 
-        This method is called from odoo/addons/base/base_data.xml to load
+        This method is called from odoo/addons/data/res_lang_data.xml to load
         some language and set it as the default for every partners. The
-        language is set via tools.config by the RPC 'create' method on the
+        language is set via tools.config by the '_initialize_db' method on the
         'db' object. This is a fragile solution and something else should be
         found.
 
