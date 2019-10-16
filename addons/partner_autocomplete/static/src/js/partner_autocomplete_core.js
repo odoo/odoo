@@ -100,6 +100,8 @@ var PartnerAutocompleteMixin = {
         return this._getBase64Image(url).then(function (base64Image) {
             // base64Image equals "data:" if image not available on given url
             return base64Image ? base64Image.replace(/^data:image[^;]*;base64,?/, '') : false;
+        }).catch(function () {
+            return false;
         });
     },
 
