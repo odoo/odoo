@@ -49,7 +49,7 @@ var SnippetOption = Widget.extend({
      * @override
      */
     start: function () {
-        this._setActive();
+        this._updateUI();
         return this._super.apply(this, arguments);
     },
     /**
@@ -124,7 +124,7 @@ var SnippetOption = Widget.extend({
      * @param {jQuery} $opt - the related DOMElement option
      */
     selectClass: function (previewMode, value, $opt) {
-        var $group = $opt && $opt.parents('we-collapse-area').last();
+        var $group = $opt && $opt.parents('we-collapse-area, we-select').last();
         if (!$group || !$group.length) {
             $group = this.$el;
         }
@@ -197,7 +197,7 @@ var SnippetOption = Widget.extend({
      */
     setTarget: function ($target) {
         this.$target = $target;
-        this._setActive();
+        this._updateUI();
         this.$target.trigger('snippet-option-change', [this]);
     },
 
@@ -233,7 +233,7 @@ var SnippetOption = Widget.extend({
      */
     _select: function (previewMode, $opt) {
         // Options can say they respond to strong choice
-        if (previewMode && ($opt.data('noPreview') || $opt.parent().data('noPreview'))) {
+        if (previewMode && ($opt.data('noPreview') || $opt.closest('[data-no-preview="true"]').length)) {
             return;
         }
         // If it is not preview mode, the user selected the option for good
@@ -269,7 +269,7 @@ var SnippetOption = Widget.extend({
         this.__methodNames = _.uniq(this.__methodNames);
 
         if (!previewMode) {
-            this._setActive();
+            this._updateUI();
         }
 
         this.$target.trigger('content_changed');
@@ -292,8 +292,8 @@ var SnippetOption = Widget.extend({
             .addClass('active');
 
         // Get submenus which are not inside submenus
-        var $submenus = this.$el.find('we-collapse-area')
-            .not('we-collapse-area we-collapse-area');
+        var $submenus = this.$el.find('we-collapse-area, we-select')
+            .not('we-collapse-area *, we-select *');
 
         // Add unique active class for each submenu active item
         _.each($submenus, function (submenu) {
@@ -303,7 +303,7 @@ var SnippetOption = Widget.extend({
 
         // Add unique active class for out-of-submenu active item
         var $externalElements = this.$el.find('[data-select-class]')
-            .not('we-collapse-area *, we-collapse-area');
+            .not('we-collapse-area *, we-select *');
         _processSelectClassElements($externalElements);
 
         function _processSelectClassElements($elements) {
@@ -321,6 +321,20 @@ var SnippetOption = Widget.extend({
                 .last()
                 .addClass('active');
         }
+    },
+    /**
+     * @private
+     */
+    _updateUI: function () {
+        this._setActive();
+
+        this.el.querySelectorAll('we-select').forEach(selectEl => {
+            const activeEl = selectEl.querySelector('we-button.active');
+            const valueEl = selectEl.querySelector('we-toggler');
+            if (valueEl) {
+                valueEl.textContent = activeEl ? activeEl.textContent : "/";
+            }
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -962,7 +976,7 @@ registry.background = SnippetOption.extend({
         this.__customImageSrc = value;
         this.background(false, this.__customImageSrc);
         this.$target.toggleClass('oe_custom_bg', !!value);
-        this._setActive();
+        this._updateUI();
         this.$target.trigger('snippet-option-change', [this]);
     },
 

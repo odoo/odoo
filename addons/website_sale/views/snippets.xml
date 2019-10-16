@@ -60,19 +60,12 @@
         <div data-js="WebsiteSaleGridLayout"
             data-selector="#products_grid .o_wsale_products_grid_table_wrapper > table"
             data-no-check="true">
-            <we-button data-no-preview="true" data-choose-ppg="1">
-                <i class="fa fa-cart-plus"/> Choose number of products
-            </we-button>
-            <we-collapse-area class="o_wsale_ppr_submenu">
-                <we-toggler>
-                    <i class="fa fa-columns"/> Number of Columns
-                </we-toggler>
-                <we-collapse data-no-preview="true">
-                    <we-button data-set-ppr="2">2</we-button>
-                    <we-button data-set-ppr="3">3</we-button>
-                    <we-button data-set-ppr="4">4</we-button>
-                </we-collapse>
-            </we-collapse-area>
+            <we-button data-no-preview="true" data-choose-ppg="1">Choose number of products</we-button>
+            <we-select string="Number of Columns" class="o_wsale_ppr_submenu" data-no-preview="true">
+                <we-button data-set-ppr="2">2</we-button>
+                <we-button data-set-ppr="3">3</we-button>
+                <we-button data-set-ppr="4">4</we-button>
+            </we-select>
         </div>
 
         <div data-js="WebsiteSaleProductsItem"
@@ -97,10 +90,12 @@
                     </table>
                 </we-collapse>
             </we-collapse-area>
-            <we-collapse-area>
+
+            <we-collapse-area name="style">
                 <we-toggler>Styles</we-toggler>
-                <we-collapse data-no-preview="true" name="style"/>
+                <we-collapse data-no-preview="true"/>
             </we-collapse-area>
+
             <we-collapse-area>
                 <we-toggler>Promote</we-toggler>
                 <we-collapse data-no-preview="true">

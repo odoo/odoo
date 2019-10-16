@@ -312,6 +312,34 @@ var SnippetEditor = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Transforms option UI description into actual DOM.
+     *
+     * @private
+     * @param {jQuery} $el
+     */
+    _createOptionUI: function ($el) {
+        var $optionSection = $(core.qweb.render('web_editor.customize_block_option'));
+        $optionSection.append($el);
+
+        $optionSection[0].querySelectorAll('we-select').forEach(selectEl => {
+            var titleEl = document.createElement('we-title');
+            titleEl.textContent = selectEl.getAttribute('string');
+
+            var menuTogglerEl = document.createElement('we-toggler');
+
+            var menuEl = document.createElement('we-select-menu');
+            while (selectEl.firstChild) {
+                menuEl.appendChild(selectEl.firstChild);
+            }
+
+            selectEl.appendChild(titleEl);
+            selectEl.appendChild(menuTogglerEl);
+            selectEl.appendChild(menuEl);
+        });
+
+        return $optionSection;
+    },
+    /**
      * DOMElements have a default name which appears in the overlay when they
      * are being edited. This method retrieves this name; it can be defined
      * directly in the DOM thanks to the `data-name` attribute.
@@ -393,9 +421,7 @@ var SnippetEditor = Widget.extend({
             }
             this.styles[key] = option;
             option.__order = i++;
-            var $optionSection = $(core.qweb.render('web_editor.customize_block_option'));
-            $optionSection.append($el);
-            return option.attachTo($optionSection);
+            return option.attachTo(this._createOptionUI($el));
         });
 
         this.isTargetMovable = (this.selectorSiblings.length > 0 || this.selectorChildren.length > 0);
@@ -639,7 +665,7 @@ var SnippetsMenu = Widget.extend({
     id: 'oe_snippets',
     cacheSnippetTemplate: {},
     events: {
-        'click we-collapse-area > we-toggler': '_onCollapseTogglerClick',
+        'click we-select, we-collapse-area > we-toggler': '_onOptionTogglerClick',
     },
     custom_events: {
         'activate_insertion_zones': '_onActivateInsertionZones',
@@ -1617,11 +1643,17 @@ var SnippetsMenu = Widget.extend({
      * @private
      * @param {*} ev
      */
-    _onCollapseTogglerClick: function (ev) {
-        var $hierarchyTogglers = $(ev.currentTarget).parents('we-collapse-area').children('we-toggler');
-        this.$('we-collapse-area > we-toggler').not($hierarchyTogglers).removeClass('active');
-        $hierarchyTogglers.not(ev.currentTarget).addClass('active');
-        ev.currentTarget.classList.toggle('active');
+    _onOptionTogglerClick: function (ev) {
+        var togglerEl = ev.currentTarget;
+        if (togglerEl.tagName !== 'WE-TOGGLER') {
+            togglerEl = togglerEl.querySelector('we-toggler');
+        }
+
+        var togglerParentSelector = 'we-select, we-collapse-area';
+        var $hierarchyTogglers = $(togglerEl).parents(togglerParentSelector).children('we-toggler');
+        this.$(togglerParentSelector).children('we-toggler').not($hierarchyTogglers).removeClass('active');
+        $hierarchyTogglers.not(togglerEl).addClass('active');
+        togglerEl.classList.toggle('active');
     },
     /**
      * Called when the overlay dimensions/positions should be recomputed.

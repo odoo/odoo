@@ -84,7 +84,7 @@ options.registry.background.include({
             delete target.dataset.bgVideoSrc;
         }
         this._refreshPublicWidgets();
-        this._setActive();
+        this._updateUI();
     },
     /**
      * Returns whether the current target has a background video or not.
@@ -448,7 +448,7 @@ options.registry.navTabs = options.Class.extend({
             $activeLink.parent().remove();
             $activePane.remove();
             self._findLinksAndPanes();
-            self._setActive(); // TODO forced to do this because we do not return deferred for options
+            self._updateUI(); // TODO forced to do this because we do not return deferred for options
         });
         $next.tab('show');
     },
@@ -491,7 +491,7 @@ options.registry.navTabs = options.Class.extend({
      * @private
      * @override
      */
-    _setActive: function () {
+    _updateUI: function () {
         this._super.apply(this, arguments);
         this.$el.filter('[data-remove-tab]').toggleClass('d-none', this.$tabPanes.length <= 2);
     },
@@ -1110,7 +1110,7 @@ options.registry.gallery = options.Class.extend({
             }
             self._reset();
             self.trigger_up('cover_update');
-            this._setActive();
+            this._updateUI();
         });
         dialog.open();
     },
@@ -1730,7 +1730,7 @@ options.registry.CoverProperties = options.Class.extend({
                 var $opt = this.$el.find('.o_record_cover_opt_size_default[data-select-class]');
                 this.selectClass(previewMode, $opt.data('selectClass'), $opt);
             }
-            this._setActive();
+            this._updateUI();
         });
     },
     /**

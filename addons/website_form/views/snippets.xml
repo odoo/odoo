@@ -28,27 +28,24 @@
                 <attribute name="data-selector" add=".s_website_form" separator=","/>
             </xpath>
             <xpath expr="//div" position="after">
-              <!-- Form -->
-              <div data-js="website_form_editor" data-selector=".s_website_form">
-                  <we-button data-website_form_model_modal="" data-no-preview="true">Change Form Parameters</we-button>
-                  <we-button data-website_form_field_modal="" data-no-preview="true">Add an existing field</we-button>
-                  <we-collapse-area>
-                      <we-toggler>Add a custom field</we-toggler>
-                      <we-collapse data-no-preview="true">
-                          <we-button data-website_form_custom_field="char">Text</we-button>
-                          <we-button data-website_form_custom_field="text">Long Text</we-button>
-                          <we-button data-website_form_custom_field="integer">Number</we-button>
-                          <we-button data-website_form_custom_field="float">Decimal Number</we-button>
-                          <we-button data-website_form_custom_field="boolean">Checkbox</we-button>
-                          <we-button data-website_form_custom_field="selection">Radio Buttons</we-button>
-                          <we-button data-website_form_custom_field="many2one">Selection</we-button>
-                          <we-button data-website_form_custom_field="one2many">Multiple Checkboxes</we-button>
-                          <we-button data-website_form_custom_field="date">Date</we-button>
-                          <we-button data-website_form_custom_field="datetime">Date &amp; Time</we-button>
-                          <we-button data-website_form_custom_field="binary">File Upload</we-button>
-                      </we-collapse>
-                  </we-collapse-area>
-              </div>
+                <!-- Form -->
+                <div data-js="website_form_editor" data-selector=".s_website_form">
+                    <we-button data-website_form_model_modal="" data-no-preview="true">Change Form Parameters</we-button>
+                    <we-button data-website_form_field_modal="" data-no-preview="true">Add an existing field</we-button>
+                    <we-select string="Add a custom field" data-no-preview="true">
+                        <we-button data-website_form_custom_field="char">Text</we-button>
+                        <we-button data-website_form_custom_field="text">Long Text</we-button>
+                        <we-button data-website_form_custom_field="integer">Number</we-button>
+                        <we-button data-website_form_custom_field="float">Decimal Number</we-button>
+                        <we-button data-website_form_custom_field="boolean">Checkbox</we-button>
+                        <we-button data-website_form_custom_field="selection">Radio Buttons</we-button>
+                        <we-button data-website_form_custom_field="many2one">Selection</we-button>
+                        <we-button data-website_form_custom_field="one2many">Multiple Checkboxes</we-button>
+                        <we-button data-website_form_custom_field="date">Date</we-button>
+                        <we-button data-website_form_custom_field="datetime">Date &amp; Time</we-button>
+                        <we-button data-website_form_custom_field="binary">File Upload</we-button>
+                    </we-select>
+                </div>
 
               <!-- Field -->
               <div data-js='website_form_editor' data-selector=".form-field" data-drop-near=".form-field">

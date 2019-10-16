@@ -173,17 +173,21 @@ body.editor_enable.editor_has_snippets {
     }
 
     > .o_we_customize_panel {
+        padding: 0 0.5rem;
 
         we-button, we-toggler {
             cursor: pointer;
-            @include o-text-overflow(inline-block);
-            padding: 0.25rem 0.5rem;
+            @include o-text-overflow(block);
+            padding: 0.1rem 0.4rem;
             margin: 0;
+            border: 1px solid var(--o-we-bg-color-dark);
+            border-radius: 0;
             background-color: var(--o-we-bg-color-dark);
             color: var(--o-we-color);
             line-height: 1.5;
             font-weight: 500;
             white-space: nowrap;
+            text-align: left;
         }
 
         %we-icon-button {
@@ -217,7 +221,6 @@ body.editor_enable.editor_has_snippets {
                 display: flex;
                 align-items: center;
                 margin: 0.25rem 0;
-                padding: 0 0.5rem;
                 font-weight: bold;
                 color: inherit !important;
 
@@ -228,9 +231,11 @@ body.editor_enable.editor_has_snippets {
                     text-align: center;
 
                     > we-button {
+                        display: inline-block;
                         margin-left: 0.25rem;
                         width: 1.5rem;
                         padding: 0.125rem;
+                        text-align: center;
                     }
                 }
             }
@@ -245,16 +250,19 @@ body.editor_enable.editor_has_snippets {
                 margin-top: 0.25rem;
             }
 
-            we-button, we-toggler {
-                display: block;
-                text-align: left;
-                border-radius: 0;
-            }
             we-button {
                 &.active {
                     @include we-icon-button('\f00c', $o-we-color-success);
                 }
             }
+            we-toggler {
+                @include we-icon-button('\f104');
+
+                &.active {
+                    @include we-icon-button('\f107');
+                }
+            }
+
             we-collapse {
                 position: relative;
                 display: block;
@@ -262,15 +270,31 @@ body.editor_enable.editor_has_snippets {
                 overflow: hidden;
                 transition: max-height 200ms ease 0s;
             }
-            we-toggler {
-                @include we-icon-button('\f104');
 
-                &.active {
-                    @include we-icon-button('\f107');
+            we-select {
+                position: relative;
+                display: block;
 
-                    + we-collapse {
-                        max-height: 500px;
-                    }
+                we-toggler.active {
+                    background-color: transparent;
+                    border-color: var(--o-we-color);
+                }
+                we-select-menu {
+                    @include o-position-absolute(100%, 0, auto, 0);
+                    z-index: $zindex-dropdown;
+                    border: 1px solid var(--o-we-color);
+                    border-top-style: none;
+                    display: none;
+                }
+            }
+
+            we-toggler.active {
+
+                + we-collapse {
+                    max-height: 500px;
+                }
+                + we-select-menu {
+                    display: block;
                 }
             }
 

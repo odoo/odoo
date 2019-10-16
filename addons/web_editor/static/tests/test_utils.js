@@ -88,15 +88,12 @@ MockServer.include({
                         '       <we-button data-choose-image="true" data-no-preview="true"><i class="fa fa-picture-o"/> Background Image</we-button>' +
                         '    </div>' +
                         '    <div data-js="option_test" data-selector=".s_hr">' +
-                        '        <we-collapse-area>' +
-                        '            <we-toggler>Alignment</we-toggler>' +
-                        '            <we-collapse>' +
-                        '                <we-button data-select-class="align-items-start">Top</we-button>' +
-                        '                <we-button data-select-class="align-items-center">Middle</we-button>' +
-                        '                <we-button data-select-class="align-items-end">Bottom</we-button>' +
-                        '                <we-button data-select-class="align-items-stretch">Equal height</we-button>' +
-                        '            </we-collapse>' +
-                        '        </we-collapse-area>' +
+                        '        <we-select string="Alignment">' +
+                        '            <we-button data-select-class="align-items-start">Top</we-button>' +
+                        '            <we-button data-select-class="align-items-center">Middle</we-button>' +
+                        '            <we-button data-select-class="align-items-end">Bottom</we-button>' +
+                        '            <we-button data-select-class="align-items-stretch">Equal height</we-button>' +
+                        '        </we-select>' +
                         '    </div>' +
                         '</div>';
                 return Promise.resolve(template);
@@ -263,15 +260,12 @@ function wysiwygData(data) {
                         '       <we-button data-choose-image="true" data-no-preview="true"><i class="fa fa-picture-o"/> Background Image</we-button>' +
                         '    </div>' +
                         '    <div data-js="option_test" data-selector=".s_hr">' +
-                        '        <we-collapse-area>' +
-                        '            <we-toggler>Alignment</we-toggler>' +
-                        '            <we-collapse>' +
-                        '                <we-button data-select-class="align-items-start">Top</we-button>' +
-                        '                <we-button data-select-class="align-items-center">Middle</we-button>' +
-                        '                <we-button data-select-class="align-items-end">Bottom</we-button>' +
-                        '                <we-button data-select-class="align-items-stretch">Equal height</we-button>' +
-                        '            </we-collapse>' +
-                        '        </we-collapse-area>' +
+                        '        <we-select string="Alignment">' +
+                        '            <we-button data-select-class="align-items-start">Top</we-button>' +
+                        '            <we-button data-select-class="align-items-center">Middle</we-button>' +
+                        '            <we-button data-select-class="align-items-end">Bottom</we-button>' +
+                        '            <we-button data-select-class="align-items-stretch">Equal height</we-button>' +
+                        '        </we-select>' +
                         '    </div>' +
                         '</div>';
                 }
