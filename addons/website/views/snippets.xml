@@ -1217,6 +1217,18 @@
         </we-select>
     </div>
 
+    <!-- Move snippets around -->
+    <div data-js="SnippetMove"
+        data-selector="section">
+        <we-button data-move-snippet="prev" data-no-preview="true"><i class="fa fa-fw fa-angle-up"/></we-button>
+        <we-button data-move-snippet="next" data-no-preview="true"><i class="fa fa-fw fa-angle-down"/></we-button>
+    </div>
+    <div data-js="SnippetMove"
+        data-selector=".row:not(.s_nb_column_fixed)>*">
+        <we-button data-move-snippet="prev" data-no-preview="true"><i class="fa fa-fw fa-angle-left"/></we-button>
+        <we-button data-move-snippet="next" data-no-preview="true"><i class="fa fa-fw fa-angle-right"/></we-button>
+    </div>
+
     <!--  V-ALIGN -->
     <div id="row_valign_snippet_option" data-selector=".s_text_image, .s_image_text, .s_three_columns" data-target=".row">
         <we-select string="Alignment">
