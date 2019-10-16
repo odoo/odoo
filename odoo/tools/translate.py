@@ -1046,7 +1046,7 @@ def trans_load(cr, filename, lang, verbose=True, module_name=None, context=None)
         return None
 
 
-def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True, module_name=None, context=None):
+def trans_load_data(cr, fileobj, fileformat, lang, verbose=True, module_name=None, context=None):
     """Populates the ir_translation table."""
     if verbose:
         _logger.info('loading translation file for language %s', lang)
@@ -1056,9 +1056,9 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
     Translation = env['ir.translation']
 
     try:
-        if not Lang.search_count([('code', '=', lang)]):
-            # lets create the language with locale information
-            Lang.load_lang(lang=lang, lang_name=lang_name)
+        if not Lang._lang_get(lang):
+            _logger.error("Couldn't read translation for lang '%s', language not found", lang)
+            return None
 
         # now, the serious things: we read the language file
         fileobj.seek(0)

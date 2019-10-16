@@ -1412,7 +1412,7 @@ class TestFields(TransactionCaseWithUserDemo):
         email = self.env.ref('test_new_api.emailmessage_0_0')
         self.assertEqual(email.message, message)
 
-        self.env['res.lang'].load_lang('fr_FR')
+        self.env['res.lang']._activate_lang('fr_FR')
 
         def count(msg):
             # return the number of translations of msg.label

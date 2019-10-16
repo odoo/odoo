@@ -33,7 +33,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
         super(TestJavascriptAssetsBundle, self).setUp()
         self.jsbundle_xmlid = 'test_assetsbundle.bundle1'
         self.cssbundle_xmlid = 'test_assetsbundle.bundle2'
-        self.env['res.lang'].load_lang('ar_SY')
+        self.env['res.lang']._activate_lang('ar_SY')
 
 
     def _get_asset(self, xmlid, env=None):
