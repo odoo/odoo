@@ -895,6 +895,112 @@ QUnit.module('Search View', {
         unpatchDate();
     });
 
+    QUnit.test('Custom Filter datetime with equal operator', async function (assert) {
+        assert.expect(5);
+
+        this.data.partner.fields.date_time_field = {string: "DateTime", type: "datetime", store: true, searchable: true};
+
+        var searchReadCount = 0;
+        var actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            session: {
+                getTZOffset: function () {
+                    return -240;
+                },
+            },
+            mockRPC: async function (route, args) {
+                if (route === '/web/dataset/search_read') {
+                    if (searchReadCount === 1) {
+                        assert.deepEqual(args.domain,
+                            [['date_time_field', '=', '2017-02-22 15:00:00']], // In UTC
+                            'domain is correct'
+                        );
+                    }
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        // List view
+        await actionManager.doAction(2);
+
+        await testUtils.dom.click($('button:contains(Filters)'));
+        await testUtils.dom.click($('.o_dropdown_menu .o_add_custom_filter'));
+        assert.strictEqual($('.o_dropdown_menu select.o_searchview_extended_prop_field').val(), 'date_time_field',
+            'the date_time_field should be selected in the custom filter');
+
+        assert.strictEqual($('.o_dropdown_menu select.o_searchview_extended_prop_op').val(), 'between',
+            'The between operator is selected');
+
+        await testUtils.fields.editSelect($('.o_dropdown_menu select.o_searchview_extended_prop_op'), '=');
+
+        assert.strictEqual($('.o_dropdown_menu select.o_searchview_extended_prop_op').val(), '=',
+            'The equal operator is selected');
+
+        await testUtils.fields.editAndTrigger($('.o_searchview_extended_prop_value input:first'), '02/22/2017 11:00:00', ['change']); // in TZ
+
+        searchReadCount = 1;
+        await testUtils.dom.click($('.o_dropdown_menu .o_apply_filter'));
+
+        assert.strictEqual($('.o_dropdown_menu .dropdown-item.selected').text().trim(), 'DateTime is equal to "02/22/2017 11:00:00"',
+            'Label of Filter is correct');
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('Custom Filter datetime between operator', async function (assert) {
+        assert.expect(4);
+
+        this.data.partner.fields.date_time_field = {string: "DateTime", type: "datetime", store: true, searchable: true};
+
+        var searchReadCount = 0;
+        var actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            session: {
+                getTZOffset: function () {
+                    return -240;
+                },
+            },
+            mockRPC: async function (route, args) {
+                if (route === '/web/dataset/search_read') {
+                    if (searchReadCount === 1) {
+                        assert.deepEqual(args.domain,
+                            [
+                                '&', ['date_time_field', '>=', '2017-02-22 15:00:00'], ['date_time_field', '<=', '2017-02-22 21:00:00']  // In UTC
+                            ],
+                            'domain is correct'
+                        );
+                    }
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        // List view
+        await actionManager.doAction(2);
+
+        await testUtils.dom.click($('button:contains(Filters)'));
+        await testUtils.dom.click($('.o_dropdown_menu .o_add_custom_filter'));
+        assert.strictEqual($('.o_dropdown_menu select.o_searchview_extended_prop_field').val(), 'date_time_field',
+            'the date_time_field should be selected in the custom filter');
+
+        assert.strictEqual($('.o_dropdown_menu select.o_searchview_extended_prop_op').val(), 'between',
+            'The between operator is selected');
+
+        await testUtils.fields.editAndTrigger($('.o_searchview_extended_prop_value input:first'), '02/22/2017 11:00:00', ['change']); // in TZ
+        await testUtils.fields.editAndTrigger($('.o_searchview_extended_prop_value input:last'), '02/22/2017 17:00:00', ['change']); // in TZ
+
+        searchReadCount = 1;
+        await testUtils.dom.click($('.o_dropdown_menu .o_apply_filter'));
+
+        assert.strictEqual($('.o_dropdown_menu .dropdown-item.selected').text().trim(), 'DateTime is between "02/22/2017 11:00:00 and 02/22/2017 17:00:00"',
+            'Label of Filter is correct');
+
+        actionManager.destroy();
+    });
+
     QUnit.module('Favorites Menu');
 
     QUnit.test('dynamic filters are saved dynamic', async function (assert) {
