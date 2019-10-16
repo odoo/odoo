@@ -237,7 +237,8 @@ var DateTime = Field.extend({
     },
     toString: function () {
         var str = field_utils.format[this.attributes.type](this.get_value(), {type: this.attributes.type});
-        var date_1_value = this.datewidget_1 && this.get_value(1);
+        // the second datewidget might have been hidden because the operator has changed
+        var date_1_value = this.datewidget_1 && !this.datewidget_1.$el.hasClass('o_hidden') && this.get_value(1);
         if (date_1_value) {
             str += _lt(" and ") + field_utils.format[this.attributes.type](date_1_value, {type: this.attributes.type});
         }
