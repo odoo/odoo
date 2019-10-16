@@ -74,5 +74,4 @@ animation.registry.website_sale_payment = animation.Class.extend({
 
 });
 return animation.registry.website_sale_payment;
-
 });
