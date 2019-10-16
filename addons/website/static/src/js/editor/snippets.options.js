@@ -1839,4 +1839,37 @@ options.registry.SectionStretch = options.Class.extend({
         this.$el.find('[data-toggle-container-fluid]').toggleClass('active', isFluid);
     },
 });
+
+/**
+ * Allows snippets to be moved before the preceding element or after the following.
+ */
+options.registry.SnippetMove = options.Class.extend({
+
+    /**
+     * @override
+     */
+    isTopOption: function () {
+        return true;
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Moves the snippet around.
+     *
+     * @see this.selectClass for parameters
+     */
+    moveSnippet: function (previewMode, value, $opt) {
+        switch (value) {
+            case 'prev':
+                this.$target.prev().before(this.$target);
+                break;
+            case 'next':
+                this.$target.next().after(this.$target);
+                break;
+        }
+    },
+});
 });
