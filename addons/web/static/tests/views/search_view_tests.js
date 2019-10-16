@@ -686,7 +686,7 @@ QUnit.module('Search View', {
         actionManager.destroy();
     });
 
-    QUnit.test('Custom Filter datetime with equal operator', function (assert) {
+    QUnit.test('Custom Filter datetime with equal operator, operator has been changed', function (assert) {
         assert.expect(5);
 
         this.data.partner.fields.date_time_field = {string: "DateTime", type: "datetime", store: true, searchable: true};
@@ -723,6 +723,14 @@ QUnit.module('Search View', {
 
         assert.strictEqual($('.o_dropdown_menu select.o_searchview_extended_prop_op').val(), '=',
             'The equal operator is selected');
+
+        // Change operator, and back
+        $('.o_dropdown_menu select.o_searchview_extended_prop_op').val('between').trigger('change');
+
+        assert.strictEqual($('.o_dropdown_menu select.o_searchview_extended_prop_op').val(), 'between',
+            'The between operator is selected');
+
+        $('.o_dropdown_menu select.o_searchview_extended_prop_op').val('=').trigger('change');
 
         $('.o_searchview_extended_prop_value input').val('02/22/2017 11:00:00').trigger('change'); // in TZ
 
