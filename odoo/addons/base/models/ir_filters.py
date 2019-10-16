@@ -20,18 +20,13 @@ class IrFilters(models.Model):
     domain = fields.Text(default='[]', required=True)
     context = fields.Text(default='{}', required=True)
     sort = fields.Text(default='[]', required=True)
-    model_id = fields.Selection(selection='_list_all_models', string='Model', required=True)
+    model_id = fields.Many2one('ir.model', string='Model', required=True)
     is_default = fields.Boolean(string='Default Filter')
     action_id = fields.Many2one('ir.actions.actions', string='Action', ondelete='cascade',
                                 help="The menu action this filter applies to. "
                                      "When left empty the filter applies to all menus "
                                      "for this model.")
     active = fields.Boolean(default=True)
-
-    @api.model
-    def _list_all_models(self):
-        self._cr.execute("SELECT model, name FROM ir_model ORDER BY name")
-        return self._cr.fetchall()
 
     def copy(self, default=None):
         self.ensure_one()
