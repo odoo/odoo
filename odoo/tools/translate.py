@@ -1033,30 +1033,44 @@ def trans_generate(lang, modules, cr):
     return out
 
 
-def trans_load(cr, filename, lang, verbose=True, module_name=None, context=None):
+def trans_load(cr, filename, lang, verbose=True, module_name=None, create_empty_translation=False, overwrite=False):
     try:
         with file_open(filename, mode='rb') as fileobj:
             _logger.info("loading %s", filename)
             fileformat = os.path.splitext(filename)[-1][1:].lower()
-            result = trans_load_data(cr, fileobj, fileformat, lang, verbose=verbose, module_name=module_name, context=context)
-            return result
+            return trans_load_data(cr, fileobj, fileformat, lang,
+                                   verbose=verbose,
+                                   module_name=module_name,
+                                   create_empty_translation=create_empty_translation,
+                                   overwrite=overwrite)
     except IOError:
         if verbose:
             _logger.error("couldn't read translation file %s", filename)
         return None
 
 
-def trans_load_data(cr, fileobj, fileformat, lang, verbose=True, module_name=None, context=None):
-    """Populates the ir_translation table."""
+def trans_load_data(cr, fileobj, fileformat, lang,
+                    verbose=True, module_name=None, create_empty_translation=False, overwrite=False):
+    """Populates the ir_translation table.
+
+    :param fileobj: buffer open to a translation file
+    :param fileformat: format of the `fielobj` file, one of 'po' or 'csv'
+    :param lang: language code of the translations contained in `fileobj`
+                 language must be present and activated in the database
+    :param verbose: increase log output
+    :param module_name: name of the module to use for created translations  # TODO move to TranslationFileReader?
+    :param create_empty_translation: create an ir.translation record, even if no value
+                                     is provided in the translation entry
+    :param overwrite: if an ir.translation already exists for a term, replace it with
+                      the one in `fileobj`
+    """
     if verbose:
         _logger.info('loading translation file for language %s', lang)
 
-    env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, context or {})
-    Lang = env['res.lang']
-    Translation = env['ir.translation']
+    env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
 
     try:
-        if not Lang._lang_get(lang):
+        if not env['res.lang']._lang_get(lang):
             _logger.error("Couldn't read translation for lang '%s', language not found", lang)
             return None
 
@@ -1064,8 +1078,9 @@ def trans_load_data(cr, fileobj, fileformat, lang, verbose=True, module_name=Non
         fileobj.seek(0)
         reader = TranslationFileReader(fileobj, fileformat=fileformat)
 
-        # read the rest of the file
-        irt_cursor = Translation._get_import_cursor()
+        # read the rest of the file with a cursor-like object for fast inserting translations"
+        Translation = env['ir.translation']
+        irt_cursor = Translation._get_import_cursor(overwrite)
 
         def process_row(row):
             """Process a single PO (or POT) entry."""
@@ -1078,7 +1093,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, verbose=True, module_name=Non
             dic.update(row)
 
             # do not import empty values
-            if not env.context.get('create_empty_translation', False) and not dic['value']:
+            if not create_empty_translation and not dic['value']:
                 return
 
             if dic['type'] == 'code' and module_name:

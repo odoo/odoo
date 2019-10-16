@@ -111,14 +111,14 @@ def export_translation():
 
 def import_translation():
     config = odoo.tools.config
-    context = {'overwrite': config["overwrite_existing_translations"]}
+    overwrite = config["overwrite_existing_translations"]
     dbname = config['db_name']
 
     registry = odoo.modules.registry.Registry.new(dbname)
     with odoo.api.Environment.manage():
         with registry.cursor() as cr:
             odoo.tools.trans_load(
-                cr, config["translate_in"], config["language"], context=context,
+                cr, config["translate_in"], config["language"], overwrite=overwrite,
             )
 
 def main(args):
