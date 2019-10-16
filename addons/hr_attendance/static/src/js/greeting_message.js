@@ -4,6 +4,7 @@ odoo.define('hr_attendance.greeting_message', function (require) {
 var AbstractAction = require('web.AbstractAction');
 var core = require('web.core');
 var time = require('web.time');
+var field_utils = require('web.field_utils');
 
 var _t = core._t;
 
@@ -51,6 +52,10 @@ var GreetingMessage = AbstractAction.extend({
         this.format_time = time.getLangTimeFormat();
         this.attendance.check_in_time = this.attendance.check_in && this.attendance.check_in.format(this.format_time);
         this.attendance.check_out_time = this.attendance.check_out && this.attendance.check_out.format(this.format_time);
+
+        // extra hours amount displayed in the greeting message template.
+        this.total_extra_hours_float = action.total_extra_hours // Used for comparison in template
+        this.total_extra_hours = field_utils.format.float_time(this.total_extra_hours_float)
 
         if (action.hours_today) {
             var duration = moment.duration(action.hours_today, "hours");

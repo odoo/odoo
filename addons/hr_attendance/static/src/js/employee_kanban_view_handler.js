@@ -24,6 +24,7 @@ KanbanRecord.include({
                 employee_name: this.record.name.raw_value,
                 employee_state: this.record.attendance_state.raw_value,
                 employee_hours_today: this.record.hours_today.raw_value,
+                extra_hours: this.record.extra_hours.raw_value,
             };
             this.do_action(action);
         } else {

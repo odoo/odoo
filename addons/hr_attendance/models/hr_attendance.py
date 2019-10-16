@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import pytz
+from datetime import timedelta
 from odoo import models, fields, api, exceptions, _
 from odoo.tools import format_datetime
 
@@ -19,6 +20,12 @@ class HrAttendance(models.Model):
     check_in = fields.Datetime(string="Check In", default=fields.Datetime.now, required=True)
     check_out = fields.Datetime(string="Check Out")
     worked_hours = fields.Float(string='Worked Hours', compute='_compute_worked_hours', store=True, readonly=True)
+    extra_hours = fields.Float(string="Extra Hours", default=0,
+        help="""
+            This amount of extra hours is for the whole day.
+            It is computed with other attendances of the same day, compared to the calendar.
+            Thus all the attendances of a same day (check_in date) will have the same amount.
+        """)
 
     def name_get(self):
         result = []
@@ -98,6 +105,49 @@ class HrAttendance(models.Model):
                         'empl_name': attendance.employee_id.name,
                         'datetime': format_datetime(self.env, last_attendance_before_check_out.check_in, dt_format=False),
                     })
+
+    def _get_same_day_attendances(self):
+        """
+        This method retrieves all the attendances for a day (check_in day of self).
+        """
+        day_before = self.check_in.replace(hour=23, minute=59, second=59) + timedelta(days=-1)
+        day_before = pytz.utc.localize(day_before) if not day_before.tzinfo else day_before
+        day_after = self.check_in.replace(hour=0, minute=0, second=0) + timedelta(days=+1)
+        day_after = pytz.utc.localize(day_after) if not day_after.tzinfo else day_after
+        same_day_attendances = self.env['hr.attendance'].search([
+            ('employee_id', '=', self.employee_id.id),
+            ('check_in', '>', day_before), ('check_in', '<', day_after),
+            ('check_out', '!=', False)
+        ])
+        return same_day_attendances, day_before, day_after
+
+    def _get_day_planned_hours(self, day_before, day_after):
+        """
+        This methods computes the total of hours that are planned for a single day (between day_before & day_after)
+        which should be respectively 23:59:59 and 00:00:00.
+        """
+        day_planned_hours = 0
+        work_intervals = self.employee_id.resource_calendar_id._work_intervals(day_before, day_after, resource=self.employee_id.resource_id)
+        for dt_start, dt_end, meta in work_intervals:
+            day_planned_hours += (dt_end - dt_start).total_seconds() / 3600
+        return day_planned_hours
+
+    def write(self, vals):
+        super(HrAttendance, self).write(vals)
+        if any(check in vals for check in ['check_in', 'check_out']):
+            same_day_attendances, day_before, day_after = self._get_same_day_attendances()
+            day_planned_hours = self._get_day_planned_hours(day_before, day_after)
+            day_worked_hours = sum(attendance.worked_hours for attendance in same_day_attendances)
+            same_day_attendances.update({'extra_hours': day_worked_hours - day_planned_hours})
+
+    def unlink(self):
+        for attendance_to_delete in self:
+            same_day_attendances, day_before, day_after = attendance_to_delete._get_same_day_attendances()
+            same_day_attendances = same_day_attendances.filtered(lambda attendance: attendance.id != attendance_to_delete.id)
+            day_planned_hours = attendance_to_delete._get_day_planned_hours(day_before, day_after)
+            day_worked_hours = sum(attendance.worked_hours for attendance in same_day_attendances)
+            super(HrAttendance, attendance_to_delete).unlink()
+            same_day_attendances.update({'extra_hours': day_worked_hours - day_planned_hours})
 
     @api.returns('self', lambda value: value.id)
     def copy(self):
