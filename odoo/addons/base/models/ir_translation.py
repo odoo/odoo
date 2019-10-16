@@ -781,10 +781,6 @@ class IrTranslation(models.Model):
 
     def _load_module_terms(self, modules, langs):
         """ Load PO files of the given modules for the given languages. """
-        # make sure the given languages are active
-        res_lang = self.env['res.lang'].sudo()
-        for lang in langs:
-            res_lang.load_lang(lang)
         # load i18n files
         for module_name in modules:
             modpath = get_module_path(module_name)
