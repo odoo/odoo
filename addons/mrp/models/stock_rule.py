@@ -84,7 +84,7 @@ class StockRule(models.Model):
             'bom_id': bom.id,
             'date_deadline': fields.Datetime.to_string(self._get_date_planned(product_id, company_id, values)),
             'date_planned_finished': values['date_planned'],
-            'date_planned_start': values['date_planned'] - relativedelta(hours=1),
+            'date_planned_start': fields.Datetime.from_string(values['date_planned']) - relativedelta(hours=1),
             'procurement_group_id': False,
             'propagate_cancel': self.propagate_cancel,
             'propagate_date': self.propagate_date,
