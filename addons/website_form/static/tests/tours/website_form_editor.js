@@ -193,6 +193,10 @@ odoo.define('website_form_editor.tour', function(require) {
             trigger:  ".s_website_form[data-model_name]",
         },
         {
+            content:  "Open custom fields menu",
+            trigger:  "we-select:contains('Multiple Checkboxes')",
+        },
+        {
             content:  "Click on Multiple Checkboxes in menu Add a custom field",
             trigger:  "we-button:contains('Multiple Checkboxes')",
         },
@@ -245,6 +249,10 @@ odoo.define('website_form_editor.tour', function(require) {
             trigger:  "label:contains('Iphone') span",
         },
         {
+            content:  "Open display menu",
+            trigger:  "we-select:contains('Vertical')",
+        },
+        {
             content:  "Click on 'Vertical' in menu 'Display'",
             trigger:  "we-button:contains('Vertical')",
         },
@@ -264,6 +272,10 @@ odoo.define('website_form_editor.tour', function(require) {
         {
             content:  "Click on Form snippet",
             trigger:  ".s_website_form[data-model_name]",
+        },
+        {
+            content:  "Open custom fields menu",
+            trigger:  "we-select:contains('Radio Buttons')"
         },
         {
             content:  "Click on Radio Buttons in menu Add a custom field",
@@ -334,6 +346,10 @@ odoo.define('website_form_editor.tour', function(require) {
         {
             content:  "Click on Form snippet",
             trigger:  ".s_website_form[data-model_name]",
+        },
+        {
+            content:  "Open custom fields menu",
+            trigger:  "we-select:contains('Selection')"
         },
         {
             content:  "Click on Selection in menu Add a custom field",

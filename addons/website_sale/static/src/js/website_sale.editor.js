@@ -194,8 +194,6 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
      * @override
      */
     start: function () {
-        var self = this;
-
         this.ppr = this.$target.closest('[data-ppr]').data('ppr');
         this.productTemplateID = parseInt(this.$target.find('[data-oe-model="product.template"]').data('oe-id'));
 
@@ -204,15 +202,17 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
         defs.push(this._rpc({
             model: 'product.style',
             method: 'search_read',
-        }).then(function (data) {
-            var $ul = self.$el.find('[name="style"]');
+        }).then(data => {
+            var $menu = this.$el.find('[name="style"]');
             for (var k in data) {
-                $ul.append(
-                    $('<we-button data-style="' + data[k]['id'] + '" data-toggle-class="' + data[k]['html_class'] + '"/>')
-                        .append(data[k]['name'])
-                );
+                $menu.append(this.buildCheckboxElement(data[k]['name'], {
+                    dataAttributes: {
+                        'style': data[k]['id'],
+                        'toggleClass': data[k]['html_class'],
+                    },
+                }));
             }
-            self._setActive();
+            this._updateUI();
         }));
 
         return $.when.apply($, defs);
@@ -262,7 +262,9 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
     /**
      * @override
      */
-    _setActive: function () {
+    _updateUI: function () {
+        this._super.apply(this, arguments);
+
         var sizeX = parseInt(this.$target.attr('colspan') || 1);
         var sizeY = parseInt(this.$target.attr('rowspan') || 1);
 
@@ -272,8 +274,6 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
 
         // Adapt size array preview to fit ppr
         $size.find('tr td:nth-child(n + ' + parseInt(this.ppr + 1) + ')').hide();
-
-        return this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
