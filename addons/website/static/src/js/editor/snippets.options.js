@@ -1808,4 +1808,30 @@ options.registry.CoverProperties = options.Class.extend({
         this.$target[0].dataset.filterColor = activeFilterColor || '';
     },
 });
+
+/**
+ * Allows snippets to be moved before the preceding element or after the following.
+ */
+options.registry.SnippetMove = options.Class.extend({
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Moves the snippet around.
+     *
+     * @see this.selectClass for parameters
+     */
+    moveSnippet: function (previewMode, value, $opt) {
+        switch (value) {
+            case 'prev':
+                this.$target.prev().before(this.$target);
+                break;
+            case 'next':
+                this.$target.next().after(this.$target);
+                break;
+        }
+    },
+});
 });
