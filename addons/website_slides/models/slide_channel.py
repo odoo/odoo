@@ -87,8 +87,9 @@ class Channel(models.Model):
     # description
     name = fields.Char('Name', translate=True, required=True)
     active = fields.Boolean(default=True)
-    description = fields.Text('Short Description', translate=True)
-    description_html = fields.Html('Description', translate=tools.html_translate, sanitize_attributes=False)
+    description = fields.Text('Description', translate=True, help="The description that is displayed on top of the course page, just below the title")
+    description_short = fields.Text('Short Description', translate=True, help="The description that is displayed on the course card")
+    description_html = fields.Html('Detailed Description', translate=tools.html_translate, sanitize_attributes=False)
     channel_type = fields.Selection([
         ('documentation', 'Documentation'), ('training', 'Training')],
         string="Course type", default="documentation", required=True)
@@ -368,16 +369,24 @@ class Channel(models.Model):
             vals['channel_partner_ids'] = [(0, 0, {
                 'partner_id': self.env.user.partner_id.id
             })]
+        if vals.get('description') and not vals.get('description_short'):
+            vals['description_short'] = vals['description']
         channel = super(Channel, self.with_context(mail_create_nosubscribe=True)).create(vals)
 
         if channel.user_id:
             channel._action_add_members(channel.user_id.partner_id)
         if 'enroll_group_ids' in vals:
             channel._add_groups_members()
+
         return channel
 
     def write(self, vals):
+        # If description_short wasn't manually modified, there is an implicit link between this field and description.
+        if vals.get('description') and not vals.get('description_short') and self.description == self.description_short:
+            vals['description_short'] = vals.get('description')
+
         res = super(Channel, self).write(vals)
+
         if vals.get('user_id'):
             self._action_add_members(self.env['res.users'].sudo().browse(vals['user_id']).partner_id)
         if 'active' in vals:
@@ -385,6 +394,7 @@ class Channel(models.Model):
             self.with_context(active_test=False).mapped('slide_ids').write({'active': vals['active']})
         if 'enroll_group_ids' in vals:
             self._add_groups_members()
+
         return res
 
     @api.returns('mail.message', lambda value: value.id)

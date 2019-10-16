@@ -328,7 +328,7 @@
             <a class="card-title h5 mb-2 o_wslides_desc_truncate_2" t-attf-href="/slides/#{slug(channel)}" t-esc="channel.name"/>
             <span t-if="not channel.is_published" class="badge badge-danger p-1">Unpublished</span>
             <div class="card-text mt-1">
-                <div class="font-weight-light o_wslides_desc_truncate_3" t-field="channel.description"/>
+                <div class="font-weight-light o_wslides_desc_truncate_3" t-field="channel.description_short"/>
                 <div t-if="channel.tag_ids" class="mt-2 pt-1 o_wslides_desc_truncate_2">
                     <t t-foreach="channel.tag_ids" t-as="tag">
                         <a t-att-href="'/slides/all?channel_tag_id=%s' % tag.id" class="badge badge-light" t-esc="tag.name"/>
