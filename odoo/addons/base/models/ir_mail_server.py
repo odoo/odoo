@@ -316,9 +316,10 @@ class IrMailServer(models.Model):
            :rtype: email.message.Message (usually MIMEMultipart)
            :return: the new RFC2822 email message
         """
-        email_from = email_from or tools.config.get('email_from')
+        email_from = email_from or self._get_default_from_address()
         assert email_from, "You must either provide a sender address explicitly or configure "\
-                           "a global sender address in the server configuration or with the "\
+                           "using the combintion of `mail.catchall.domain` and `mail.default.from` "\
+                           "ICPs, in the server configuration file or with the "\
                            "--email-from startup parameter."
 
         # Note: we must force all strings to to 8-bit utf-8 when crafting message,
@@ -414,6 +415,26 @@ class IrMailServer(models.Model):
         domain = get_param('mail.catchall.domain')
         if postmaster and domain:
             return '%s@%s' % (postmaster, domain)
+
+    @api.model
+    def _get_default_from_address(self):
+        """Compute the default from address.
+
+        Used for the "header from" address when no other has been received.
+
+        :return str/None:
+            Combines config parameters ``mail.default.from`` and
+            ``mail.catchall.domain`` to generate a default sender address.
+
+            If some of those parameters is not defined, it will default to the
+            ``--email-from`` CLI/config parameter.
+        """
+        get_param = self.env['ir.config_parameter'].sudo().get_param
+        domain = get_param('mail.catchall.domain')
+        email_from = get_param("mail.default.from")
+        if email_from and domain:
+            return "%s@%s" % (email_from, domain)
+        return tools.config.get("email_from")
 
     @api.model
     def send_email(self, message, mail_server_id=None, smtp_server=None, smtp_port=None,

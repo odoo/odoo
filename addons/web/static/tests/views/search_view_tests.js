@@ -686,6 +686,121 @@ QUnit.module('Search View', {
         actionManager.destroy();
     });
 
+    QUnit.test('Custom Filter datetime with equal operator, operator has been changed', function (assert) {
+        assert.expect(5);
+
+        this.data.partner.fields.date_time_field = {string: "DateTime", type: "datetime", store: true, searchable: true};
+
+        var searchReadCount = 0;
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            session: {
+                getTZOffset: function () {
+                    return -240;
+                },
+            },
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/search_read') {
+                    if (searchReadCount === 1) {
+                        assert.deepEqual(args.domain,
+                            [['date_time_field', '=', '2017-02-22 15:00:00']], // In UTC
+                            'domain is correct'
+                        );
+                    }
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        // List view
+        actionManager.doAction(2);
+
+        testUtilsDom.click($('button:contains(Filters)'));
+        testUtilsDom.click($('.o_dropdown_menu .o_add_custom_filter'));
+        assert.strictEqual($('.o_dropdown_menu select.o_searchview_extended_prop_field').val(), 'date_time_field',
+            'the date_time_field should be selected in the custom filter');
+
+        assert.strictEqual($('.o_dropdown_menu select.o_searchview_extended_prop_op').val(), '=',
+            'The equal operator is selected');
+
+        // Change operator, and back
+        $('.o_dropdown_menu select.o_searchview_extended_prop_op').val('between').trigger('change');
+
+        assert.strictEqual($('.o_dropdown_menu select.o_searchview_extended_prop_op').val(), 'between',
+            'The between operator is selected');
+
+        $('.o_dropdown_menu select.o_searchview_extended_prop_op').val('=').trigger('change');
+
+        $('.o_searchview_extended_prop_value input').val('02/22/2017 11:00:00').trigger('change'); // in TZ
+
+        searchReadCount = 1;
+        testUtilsDom.click($('.o_dropdown_menu .o_apply_filter'))
+
+        assert.strictEqual($('.o_dropdown_menu .dropdown-item.selected').text().trim(), 'DateTime is equal to "02/22/2017 11:00:00"',
+            'Label of Filter is correct')
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('Custom Filter datetime between operator', function (assert) {
+        assert.expect(5);
+
+        this.data.partner.fields.date_time_field = {string: "DateTime", type: "datetime", store: true, searchable: true};
+
+        var searchReadCount = 0;
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            session: {
+                getTZOffset: function () {
+                    return -240;
+                },
+            },
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/search_read') {
+                    if (searchReadCount === 1) {
+                        assert.deepEqual(args.domain,
+                            [
+                                '&', ['date_time_field', '>=', '2017-02-22 15:00:00'], ['date_time_field', '<=', '2017-02-22 21:00:00']  // In UTC
+                            ],
+                            'domain is correct'
+                        );
+                    }
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        // List view
+        actionManager.doAction(2);
+
+        testUtilsDom.click($('button:contains(Filters)'));
+        testUtilsDom.click($('.o_dropdown_menu .o_add_custom_filter'));
+        assert.strictEqual($('.o_dropdown_menu select.o_searchview_extended_prop_field').val(), 'date_time_field',
+            'the date_time_field should be selected in the custom filter');
+
+        assert.strictEqual($('.o_dropdown_menu select.o_searchview_extended_prop_op').val(), '=',
+            'The equal operator is selected');
+
+        // Change operator
+        $('.o_dropdown_menu select.o_searchview_extended_prop_op').val('between').trigger('change');
+
+        assert.strictEqual($('.o_dropdown_menu select.o_searchview_extended_prop_op').val(), 'between',
+            'The between operator is selected');
+
+        $('.o_searchview_extended_prop_value input:first').val('02/22/2017 11:00:00').trigger('change'); // in TZ
+        $('.o_searchview_extended_prop_value input:last').val('02/22/2017 17:00:00').trigger('change'); // in TZ
+
+        searchReadCount = 1;
+        testUtilsDom.click($('.o_dropdown_menu .o_apply_filter'))
+
+        assert.strictEqual($('.o_dropdown_menu .dropdown-item.selected').text().trim(), 'DateTime is between "02/22/2017 11:00:00 and 02/22/2017 17:00:00"',
+            'Label of Filter is correct')
+
+        actionManager.destroy();
+    });
+
     QUnit.module('Favorites Menu');
 
     QUnit.test('dynamic filters are saved dynamic', function (assert) {
