@@ -80,7 +80,7 @@ MockServer.include({
                         '    <div data-js="sizing_y" data-selector=".s_hr, .test_option_all"></div>' +
                         '    <div data-js="colorpicker" data-selector=".test_option_all">' +
                         '       <we-collapse-area>' +
-                        '           <we-toggler><i class="fa fa-eyedropper"/> Background Color</we-toggler>' +
+                        '           <we-toggler>Background Color</we-toggler>' +
                         '           <we-collapse/>' +
                         '       </we-collapse-area>' +
                         '    </div>' +
@@ -89,7 +89,7 @@ MockServer.include({
                         '    </div>' +
                         '    <div data-js="option_test" data-selector=".s_hr">' +
                         '        <we-collapse-area>' +
-                        '            <we-toggler><i class="fa fa-arrows-v"/> Alignment</we-toggler>' +
+                        '            <we-toggler>Alignment</we-toggler>' +
                         '            <we-collapse>' +
                         '                <we-button data-select-class="align-items-start">Top</we-button>' +
                         '                <we-button data-select-class="align-items-center">Middle</we-button>' +
@@ -255,7 +255,7 @@ function wysiwygData(data) {
                         '    <div data-js="sizing_y" data-selector=".s_hr, .test_option_all"></div>' +
                         '    <div data-js="colorpicker" data-selector=".test_option_all">' +
                         '       <we-collapse-area>' +
-                        '           <we-toggler><i class="fa fa-eyedropper"/>Background Color</we-toggler>' +
+                        '           <we-toggler>Background Color</we-toggler>' +
                         '           <we-collapse/>' +
                         '       </we-collapse-area>' +
                         '    </div>' +
@@ -264,7 +264,7 @@ function wysiwygData(data) {
                         '    </div>' +
                         '    <div data-js="option_test" data-selector=".s_hr">' +
                         '        <we-collapse-area>' +
-                        '            <we-toggler><i class="fa fa-arrows-v"/> Alignment</we-toggler>' +
+                        '            <we-toggler>Alignment</we-toggler>' +
                         '            <we-collapse>' +
                         '                <we-button data-select-class="align-items-start">Top</we-button>' +
                         '                <we-button data-select-class="align-items-center">Middle</we-button>' +
