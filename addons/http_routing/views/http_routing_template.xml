@@ -100,22 +100,49 @@
         </t>
     </template>
 
-    <template id="404">
+    <template id="404" name="Page Not Found">
+        <!-- This template needs this odd `oe_structure_xyz` structure to be
+             fully editable (drag & dropable) by the editor. -->
         <t t-call="web.frontend_layout">
             <div id="wrap">
                 <t t-raw="0"/>
-                <div class="oe_structure oe_empty">
-                    <div class="container">
-                        <h1 class="mt-5">404: Page not found!</h1>
-                        <p>
-                            The page you were looking for could not be found; it is possible you have
-                            typed the address incorrectly, but it has most probably been removed due
-                            to the recent reorganisation.
-                        </p>
-                    </div>
-                </div>
+                <div class="oe_structure" id="oe_structure_404_1"/>
+                <div class="oe_structure" id="oe_structure_404_2"/>
+                <div class="oe_structure" id="oe_structure_404_3"/>
             </div>
         </t>
+    </template>
+
+    <template id="404_oe_structure_404_1" inherit_id="http_routing.404">
+        <xpath expr="//div[@id='oe_structure_404_1']" position="replace">
+            <div class="oe_structure oe_empty" id="oe_structure_404_1">
+                <section class="pt128">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-6 text-center text-md-right my-auto mb-sm-5">
+                                <img src="/http_routing/static/src/img/404.svg"/>
+                            </div>
+                            <div class="col-md-6 text-center text-md-left my-auto">
+                                <h1 class="sr-only">Error 404</h1>
+                                <h2 class="mb16">We couldn't find the page you're looking for!</h2>
+                                <p><b>Don't panic.</b> If you think it's our mistake, please send us a message on <a href="/contactus">this page</a>.</p>
+                            </div>
+                            <div class="col-md-12 pt40 pb24">
+                                <hr/>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="404_oe_structure_404_3" inherit_id="http_routing.404">
+        <xpath expr="//div[@id='oe_structure_404_3']" position="replace">
+            <div class="oe_structure oe_empty" id="oe_structure_404_3">
+                <section class="pt104"/>
+            </div>
+        </xpath>
     </template>
 
     <template id="500">
