@@ -487,7 +487,7 @@ class TestExpression(TransactionCase):
         default_currency = Currency.browse(1)
 
         # search the currency via its rates one2many (the one2many must point back at the currency)
-        currency_rate1 = self._search(CurrencyRate, [('name', 'not like', 'probably_unexisting_name')])
+        currency_rate1 = self._search(CurrencyRate, [('currency_id', 'not like', 'probably_unexisting_name')])
         currency_rate2 = self._search(CurrencyRate, [('id', 'not in', [non_currency_id])])
         self.assertEqual(currency_rate1, currency_rate2)
         currency_rate3 = self._search(CurrencyRate, [('id', 'not in', [])])
