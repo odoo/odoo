@@ -69,13 +69,15 @@ class MrpWorkorder(models.Model):
         compute='_compute_dates_planned',
         inverse='_set_dates_planned',
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
-        store=True)
+        store=True,
+        tracking=True)
     date_planned_finished = fields.Datetime(
         'Scheduled Date Finished',
         compute='_compute_dates_planned',
         inverse='_set_dates_planned',
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
-        store=True)
+        store=True,
+        tracking=True)
     date_start = fields.Datetime(
         'Effective Start Date',
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
@@ -541,14 +543,28 @@ class MrpWorkorder(models.Model):
             'user_id': self.env.user.id,  # FIXME sle: can be inconsistent with company_id
             'company_id': self.company_id.id,
         })
-        return self.write({'state': 'progress',
-                    'date_start': datetime.now(),
-        })
+        if self.state == 'progress':
+            return True
+        else:
+            start_date = datetime.now()
+            vals = {
+                'state': 'progress',
+                'date_start': start_date,
+                'date_planned_start': start_date,
+            }
+            if self.date_planned_finished < start_date:
+                vals['date_planned_finished'] = start_date
+            return self.write(vals)
 
     def button_finish(self):
         self.ensure_one()
         self.end_all()
-        return self.write({'state': 'done', 'date_finished': fields.Datetime.now()})
+        end_date = datetime.now()
+        return self.write({
+            'state': 'done',
+            'date_finished': end_date,
+            'date_planned_finished': end_date
+        })
 
     def end_previous(self, doall=False):
         """
@@ -595,14 +611,19 @@ class MrpWorkorder(models.Model):
         return True
 
     def action_cancel(self):
+        self.leave_id.unlink()
         return self.write({'state': 'cancel'})
 
     def button_done(self):
         if any([x.state in ('done', 'cancel') for x in self]):
             raise UserError(_('A Manufacturing Order is already done or cancelled.'))
         self.end_all()
-        return self.write({'state': 'done',
-                    'date_finished': datetime.now()})
+        end_date = datetime.now()
+        return self.write({
+            'state': 'done',
+            'date_finished': end_date,
+            'date_planned_finished': end_date,
+        })
 
     def button_scrap(self):
         self.ensure_one()
