@@ -53,7 +53,7 @@ from .exceptions import AccessError, MissingError, ValidationError, UserError
 from .osv.query import Query
 from .tools import frozendict, lazy_classproperty, lazy_property, ormcache, \
                    Collector, LastOrderedSet, OrderedSet, IterableGenerator, \
-                   groupby
+                   groupby, unique
 from .tools.config import config
 from .tools.func import frame_codeinfo
 from .tools.misc import CountingStream, clean_context, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT, get_lang
@@ -5054,6 +5054,12 @@ Record ids: %(records)s
             vals = func(self)
             return vals if isinstance(vals, BaseModel) else []
 
+    def _mapped_assign(self, values, data):
+        if values and isinstance(values[0], (tuple, list)):
+            return [self._mapped_assign(value, data) for value in values]
+        else:
+            return [data[value] if value else False for value in values]
+
     def mapped(self, func):
         """ Apply ``func`` on all records in ``self``, and return the result as a
             list or a recordset (if ``func`` return recordsets). In the latter
@@ -5067,10 +5073,40 @@ Record ids: %(records)s
         if isinstance(func, str):
             recs = self
             for name in func.split('.'):
-                recs = recs._mapped_func(operator.itemgetter(name))
+                field = recs._fields[name]
+                values = field.get(recs)
+                if field.relational:
+                    if field.type in ('one2many', 'many2many'):
+                        values = [i for v in values for i in v]
+                    recs = self.env[field.comodel_name].browse(unique(v for v in values if v))
+                else:
+                    recs = [field.convert_to_read(v, recs) for v in values]
             return recs
         else:
             return self._mapped_func(func)
+
+    def mapped_read(self, key):
+        if not key:
+            return self._ids                 # support for an empty path of fields
+        env = self.env
+        recs = self
+        values = None
+        for name in key.split('.'):
+            field = recs._fields[name]
+            data = field.get(recs)
+            if values:
+                data = dict(zip(recs._ids, data))
+                values = self._mapped_assign(values, data)
+            else:
+                values = data
+            if field.relational:
+                ids = [_id for _id in values if _id]
+                while ids and isinstance(ids[0], (tuple, list)):
+                    ids = [i for v in ids for i in v if i]
+                ids = unique(ids)
+                recs = env[field.comodel_name].browse(ids)
+
+        return [v if v is not None else False for v in values]
 
     def _mapped_cache(self, name_seq):
         """ Same as `~.mapped`, but ``name_seq`` is a dot-separated sequence of
@@ -5118,24 +5154,35 @@ Record ids: %(records)s
                 if key == 'id': key=''
                 if comparator in ('like', 'ilike', '=like', '=ilike', 'not ilike', 'not like'):
                     value_esc = value.replace('_', '?').replace('%', '*').replace('[', '?')
-                records = self.browse()
-                for rec in self:
-                    data = rec.mapped(key)
-                    if comparator in ('child_of', 'parent_of'):
-                        value = data.search([(data._parent_name, comparator, value)]).ids
-                        comparator = 'in'
-                    if isinstance(data, BaseModel):
-                        v = value
-                        if (isinstance(value, list) or isinstance(value, tuple)) and len(value):
-                            v = value[0]
-                        if isinstance(v, str):
-                            data = data.mapped('display_name')
-                        else:
-                            data = data and data.ids or [False]
+                env = self.env
+                model = self
+                field = None
+                multi = False
+                if key:
+                    for name in key.split('.'):
+                        field = model._fields[name]
+                        if field.relational:
+                            if field.type in ('one2many', 'many2many'):
+                                multi = True
+                            model = env.registry[field.comodel_name]
+                if comparator not in ('child_of', 'parent_of') and (not field or field.relational) and (isinstance(value, str) or (isinstance(value, (list, tuple)) and value and isinstance(value[0], str))):
+                    if key:
+                        key += '.display_name'
                     else:
-                        data = [
-                            (isinstance(x, datetime.date) and x.strftime('%Y-%m-%d %H:%M:%S')) or
-                            x for x in data]
+                        key = 'display_name'
+                data_records = self.mapped_read(key)
+                record_ids = OrderedSet()
+                for record_id, data in zip(self._ids, data_records):
+                    if multi:
+                        data = data or [False]
+                    else:
+                        data = [data]
+                    if comparator in ('child_of', 'parent_of'):
+                        model = env[field.comodel_name] if field else self
+                        value = model.browse(data).search([(model._parent_name, comparator, value)]).ids
+                        comparator = 'in'
+                    if field and field.type in ('date', 'datetime'):
+                        data = [d.strftime('%Y-%m-%d %H:%M:%S') if d else False for d in data]
                     if comparator in ('in', 'not in'):
                         if not (isinstance(value, list) or isinstance(value, tuple)):
                             value = [value]
@@ -5157,25 +5204,28 @@ Record ids: %(records)s
                     elif comparator == 'not in':
                         ok = all(map(lambda x: x not in data, value))
                     elif comparator == 'not ilike':
-                        ok = all(map(lambda x: value.lower() not in x.lower(), data))
+                        ok = all(map(lambda x: not x or value.lower() not in x.lower(), data))
                     elif comparator == 'ilike':
-                        data = [x.lower() for x in data]
+                        data = [x.lower() for x in data if x]
                         ok = bool(fnmatch.filter(data, '*'+(value_esc or '').lower()+'*'))
                     elif comparator == 'not like':
-                        ok = all(map(lambda x: value not in x, data))
+                        ok = all(map(lambda x: not x or value not in x, data))
                     elif comparator == 'like':
+                        data = [x for x in data if x]
                         ok = bool(fnmatch.filter(data, value and '*'+value_esc+'*'))
                     elif comparator == '=?':
                         ok = (value in data) or not value
                     elif comparator in ('=like'):
+                        data = [x for x in data if x]
                         ok = bool(fnmatch.filter(data, value_esc))
                     elif comparator in ('=ilike'):
-                        data = [x.lower() for x in data]
+                        data = [x.lower() for x in data if x]
                         ok = bool(fnmatch.filter(data, value and value_esc.lower()))
                     else:
                         raise ValueError
-                    if ok: records |= rec
-                result.append(records)
+                    if ok:
+                        record_ids.add(record_id)
+                result.append(self.browse(record_ids))
         while len(result)>1:
             result.append(result.pop() & result.pop())
         return result[0]
@@ -5472,7 +5522,7 @@ Record ids: %(records)s
             Return at most ``limit`` records.
         """
         recs = self.browse(self._prefetch_ids)
-        ids = [self.id]
+        ids = list(self._ids)
         for record_id in self.env.cache.get_missing_ids(recs - self, field):
             if not record_id:
                 # Do not prefetch `NewId`

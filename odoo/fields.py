@@ -1007,6 +1007,91 @@ class Field(MetaField('DummyField', (object,), {})):
 
         return records
 
+    def _fetch_records(self, records):
+        env = records.env
+        recs = records._in_cache_without(self)
+        try:
+            recs._fetch_field(self)
+        except AccessError:
+            records._fetch_field(self)
+        missing_ids = list(env.cache.get_missing_ids(records, self)) and records.exists() != records
+        if missing_ids:
+            raise MissingError("\n".join([
+                _("Record does not exist or has been deleted."),
+                _("(Records: %s, User: %s)") % (missing_ids, env.uid),
+            ]))
+
+    def get(self, records):
+
+        if self.name == 'id':
+            return records._ids
+
+        env = records.env
+
+        if self.compute:
+            to_compute_ids = env.all.tocompute.get(self, set())
+            if not to_compute_ids.isdisjoint(records._ids):
+                # self must be computed on record
+                to_compute_ids = to_compute_ids.intersection(records._ids).difference(env._protected.get(self, ()))
+                self.compute_value(records.browse(to_compute_ids))
+
+        try:
+            return env.cache.get_values_list(records, self)
+        except KeyError:
+            remaining_new_records = None
+            if not all(records._ids):
+                remaining_new_records = records.filtered(lambda r: not r.id)
+            real_records = any(records._ids)
+            if real_records and self.store:
+                self._fetch_records(records)
+
+            if self.compute:
+                if self.store:
+                    # If this is a stored compute, then the only possible remaining are new records
+                    recs = remaining_new_records
+                else:
+                    recs = records
+                if recs:
+                    recs = recs if self.recursive or remaining_new_records else recs._in_cache_without(self)
+                    protected_ids = set(recs._ids).intersection(env._protected.get(self, ()))
+                    not_protected_ids = set(recs._ids).difference(protected_ids)
+                    if protected_ids:
+                        values = [self.convert_to_cache(False, records, validate=False)] * len(protected_ids)
+                        env.cache.update(records.browse(protected_ids), self, values)
+                    if not_protected_ids:
+                        self.compute_value(records.browse(not_protected_ids))
+                    remaining_new_records = None
+
+            if remaining_new_records:
+                new_with_origin = remaining_new_records.filtered(lambda n: n._origin)
+                if new_with_origin:
+                    for record in new_with_origin:
+                        value = self.convert_to_cache(record._origin[self.name], record)
+                        env.cache.set(record, self, value)
+                    remaining_new_records -= new_with_origin
+
+            if remaining_new_records and self.type == 'many2one' and self.delegate:
+                # special case: parent records are new as well
+                parent = records.env[self.comodel_name].new()
+                values = [self.convert_to_cache(parent, records)] * len(remaining_new_records)
+                env.cache.update(remaining_new_records, self, values)
+                remaining_new_records = None
+
+            if remaining_new_records:
+                values = [self.convert_to_cache(False, records, validate=False)] * len(remaining_new_records)
+                env.cache.update(records, self, values)
+                for r in records:
+                    defaults = r.default_get([self.name])
+                    if self.name in defaults:
+                        # The null value above is necessary to convert x2many field values.
+                        # For instance, converting [(4, id)] accesses the field's current
+                        # value, then adds the given id. Without an initial value, the
+                        # conversion ends up here to determine the field's value, and this
+                        # generates an infinite recursion.
+                        value = self.convert_to_cache(defaults[self.name], r)
+                        env.cache.set(r, self, value)
+        return env.cache.get_values_list(records, self)
+
     ############################################################################
     #
     # Descriptor methods
@@ -1042,16 +1127,7 @@ class Field(MetaField('DummyField', (object,), {})):
         except KeyError:
             # real record
             if record.id and self.store:
-                recs = record._in_cache_without(self)
-                try:
-                    recs._fetch_field(self)
-                except AccessError:
-                    record._fetch_field(self)
-                if not env.cache.contains(record, self) and not record.exists():
-                    raise MissingError("\n".join([
-                        _("Record does not exist or has been deleted."),
-                        _("(Record: %s, User: %s)") % (record, env.uid),
-                    ]))
+                self._fetch_records(record)
                 value = env.cache.get(record, self)
 
             elif self.compute:
