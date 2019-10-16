@@ -394,6 +394,7 @@ return AbstractRenderer.extend({
                 event.title = $render.find('.o_field_type_char:first').text();
                 element.find('.fc-content').html($render.html());
                 element.addClass($render.attr('class'));
+                element.attr('style', element.attr('style') + "; " + $render.attr('style'));
                 var display_hour = '';
                 if (!event.allDay) {
                     var start = event.r_start || event.start;
