@@ -34,7 +34,7 @@ class BaseLanguageInstall(models.TransientModel):
         self.ensure_one()
         mods = self.env['ir.module.module'].search([('state', '=', 'installed')])
         self.env['res.lang']._activate_lang(self.lang)
-        mods.with_context(overwrite=self.overwrite)._update_translations(self.lang)
+        mods._update_translations(self.lang, self.overwrite)
         self.state = 'done'
         self.env.cr.execute('ANALYZE ir_translation')
 
