@@ -251,6 +251,8 @@ class configmanager(object):
                          help="specify the maximum number of physical connections to PostgreSQL")
         group.add_option("--db-template", dest="db_template", my_default="template0",
                          help="specify a custom database template to create a new database")
+        group.add_option("--db-meta", dest="_db_meta", my_default=False,
+                         help="specify a custom database to connect to for bus and maintenance operations")
         parser.add_option_group(group)
 
         group = optparse.OptionGroup(parser, "Internationalisation options",
@@ -440,7 +442,7 @@ class configmanager(object):
         # if defined do not take the configfile value even if the defined value is None
         keys = ['http_interface', 'http_port', 'longpolling_port', 'http_enable',
                 'db_name', 'db_user', 'db_password', 'db_host', 'db_sslmode',
-                'db_port', 'db_template', 'logfile', 'pidfile', 'smtp_port',
+                'db_port', 'db_template', '_db_meta', 'logfile', 'pidfile', 'smtp_port',
                 'email_from', 'smtp_server', 'smtp_user', 'smtp_password', 'from_filter',
                 'smtp_ssl_certificate_filename', 'smtp_ssl_private_key_filename',
                 'db_maxconn', 'import_partial', 'addons_path', 'upgrade_path',
@@ -543,6 +545,10 @@ class configmanager(object):
             m.strip() for m in self.options['server_wide_modules'].split(',') if m.strip()
         ]
         return opt
+
+    @property
+    def db_meta(self):
+        return  self.options['_db_meta'] or self.options['db_name'] or 'postgres'
 
     def _warn_deprecated_options(self):
         if self.options['osv_memory_age_limit']:

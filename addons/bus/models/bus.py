@@ -75,7 +75,7 @@ class ImBus(models.Model):
             # and the longpolling will return no notification.
             @self.env.cr.postcommit.add
             def notify():
-                with odoo.sql_db.db_connect('postgres').cursor() as cr:
+                with odoo.sql_db.db_connect(odoo.tools.config.db_meta).cursor() as cr:
                     cr.execute("notify imbus, %s", (json_dump(list(channels)),))
 
     @api.model
@@ -166,8 +166,8 @@ class ImDispatch(object):
 
     def loop(self):
         """ Dispatch postgres notifications to the relevant polling threads/greenlets """
-        _logger.info("Bus.loop listen imbus on db postgres")
-        with odoo.sql_db.db_connect('postgres').cursor() as cr:
+        _logger.info("Bus.loop listen imbus on db %s", odoo.tools.config.db_meta)
+        with odoo.sql_db.db_connect(odoo.tools.config.db_meta).cursor() as cr:
             conn = cr._cnx
             cr.execute("listen imbus")
             cr.commit()

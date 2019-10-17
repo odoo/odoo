@@ -95,7 +95,7 @@ def _initialize_db(id, db_name, demo, lang, user_password, login='admin', countr
         _logger.exception('CREATE DATABASE failed:')
 
 def _create_empty_database(name):
-    db = odoo.sql_db.db_connect('postgres')
+    db = odoo.sql_db.db_connect(odoo.tools.config.db_meta)
     with closing(db.cursor()) as cr:
         chosen_template = odoo.tools.config['db_template']
         cr.execute("SELECT datname FROM pg_database WHERE datname = %s",
@@ -135,7 +135,7 @@ def exp_create_database(db_name, demo, lang, user_password='admin', login='admin
 def exp_duplicate_database(db_original_name, db_name):
     _logger.info('Duplicate database `%s` to `%s`.', db_original_name, db_name)
     odoo.sql_db.close_db(db_original_name)
-    db = odoo.sql_db.db_connect('postgres')
+    db = odoo.sql_db.db_connect(odoo.tools.config.db_meta)
     with closing(db.cursor()) as cr:
         # database-altering operations cannot be executed inside a transaction
         cr._cnx.autocommit = True
@@ -177,10 +177,13 @@ def _drop_conn(cr, db_name):
 def exp_drop(db_name):
     if db_name not in list_dbs(True):
         return False
+    if db_name == odoo.tools.config.db_meta:
+        _logger.warning("Cannot drop database %r, it is the meta-database.", db_name)
+        return False
     odoo.modules.registry.Registry.delete(db_name)
     odoo.sql_db.close_db(db_name)
 
-    db = odoo.sql_db.db_connect('postgres')
+    db = odoo.sql_db.db_connect(odoo.tools.config.db_meta)
     with closing(db.cursor()) as cr:
         # database-altering operations cannot be executed inside a transaction
         cr._cnx.autocommit = True
@@ -326,7 +329,7 @@ def exp_rename(old_name, new_name):
     odoo.modules.registry.Registry.delete(old_name)
     odoo.sql_db.close_db(old_name)
 
-    db = odoo.sql_db.db_connect('postgres')
+    db = odoo.sql_db.db_connect(odoo.tools.config.db_meta)
     with closing(db.cursor()) as cr:
         # database-altering operations cannot be executed inside a transaction
         cr._cnx.autocommit = True

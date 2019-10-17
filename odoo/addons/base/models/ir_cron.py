@@ -11,6 +11,7 @@ from dateutil.relativedelta import relativedelta
 import odoo
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.tools import config
 
 _logger = logging.getLogger(__name__)
 
@@ -466,7 +467,7 @@ class ir_cron(models.Model):
         The ODOO_NOTIFY_CRON_CHANGES environment variable allows to force the notifydb on both
         ir_cron modification and on trigger creation (regardless of call_at)
         """
-        with odoo.sql_db.db_connect('postgres').cursor() as cr:
+        with odoo.sql_db.db_connect(config.db_meta).cursor() as cr:
             cr.execute('NOTIFY cron_trigger, %s', [self.env.cr.dbname])
         _logger.debug("cron workers notified")
 

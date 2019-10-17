@@ -427,7 +427,7 @@ class ThreadedServer(CommonServer):
         # same time. This is known as the thundering herd effect.
 
         from odoo.addons.base.models.ir_cron import ir_cron
-        conn = odoo.sql_db.db_connect('postgres')
+        conn = odoo.sql_db.db_connect(odoo.tools.config.db_meta)
         with conn.cursor() as cr:
             pg_conn = cr._cnx
             # LISTEN / NOTIFY doesn't work in recovery mode
@@ -1168,7 +1168,7 @@ class WorkerCron(Worker):
         if self.multi.socket:
             self.multi.socket.close()
 
-        dbconn = odoo.sql_db.db_connect('postgres')
+        dbconn = odoo.sql_db.db_connect(odoo.tools.config.db_meta)
         self.dbcursor = dbconn.cursor()
         # LISTEN / NOTIFY doesn't work in recovery mode
         self.dbcursor.execute("SELECT pg_is_in_recovery()")
