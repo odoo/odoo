@@ -210,6 +210,18 @@ class IapAccount(models.Model):
         return '%s?%s' % (endpoint + route, werkzeug.urls.url_encode(d))
 
     @api.model
+    def get_config_account_url(self):
+        account = self.env['iap.account'].get('partner_autocomplete')
+        action = self.env.ref('iap.iap_account_action')
+        menu = self.env.ref('iap.iap_account_menu')
+        no_one = self.user_has_groups('base.group_no_one')
+        if account:
+            url = "/web#id=%s&action=%s&model=iap.account&view_type=form&menu_id=%s" % (account.id, action.id, menu.id)
+        else:
+            url = "/web#action=%s&model=iap.account&view_type=form&menu_id=%s" % (action.id, menu.id)
+        return no_one and url
+
+    @api.model
     def get_credits(self, service_name):
         account = self.get(service_name, force_create=False)
         credit = 0
