@@ -12,10 +12,13 @@
                 </xpath>
                 <xpath expr="//button[@name='unlink_action']" position="replace">
                 </xpath>
+                <xpath expr="//page[@name='Security']" position='attributes'>
+                    <attribute name='invisible'>1</attribute>
+                </xpath>
                 <xpath expr="//group[@name='action_content']" position="inside">
                     <field name="active" invisible="1"/>
                     <field name="trigger"/>
-                    <field name="trigger_field_ids" domain="[('model_id', '=', model_id)]"
+                    <field name="trigger_field_ids" domain="[('model_id', '=', model_id)]" widget="many2many_tags"
                                     attrs="{'invisible': [('trigger', 'not in', ['on_write', 'on_create_or_write'])]}"/>
 
                     <field name="filter_pre_domain" widget="domain" options="{'model': 'model_name', 'in_dialog': True}" attrs="{'invisible': [('trigger', 'not in', ['on_write','on_create_or_write'])]}"/>
@@ -32,7 +35,7 @@
                         <field name="trg_date_range_type" attrs="{'required': [('trigger','=','on_time')]}"/>
                     </div>
                     <field name="trg_date_calendar_id"
-                        attrs="{'invisible': ['|', ('trg_date_id','=',False), ('trg_date_range_type', '!=', 'day')]}"/>
+                        attrs="{'invisible': ['|', ('trg_date_id','=',False), ('trg_date_range_type', '!=', 'hour')]}"/>
                 </xpath>
             </field>
         </record>

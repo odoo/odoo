@@ -43,7 +43,7 @@ class BaseAutomation(models.Model):
         ('on_unlink', 'On Deletion'),
         ('on_change', 'Based on Form Modification'),
         ('on_time', 'Based on Timed Condition')
-        ], string='Trigger Condition', required=True)
+        ], string='Trigger', required=True)
     trg_date_id = fields.Many2one('ir.model.fields', string='Trigger Date',
                                   help="""When should the condition be triggered.
                                   If present, will be checked by the scheduler. If empty, will be checked at creation and update.""",
@@ -53,7 +53,7 @@ class BaseAutomation(models.Model):
                                     You can put a negative number if you need a delay before the
                                     trigger date, like sending a reminder 15 minutes before a meeting.""")
     trg_date_range_type = fields.Selection([('minutes', 'Minutes'), ('hour', 'Hours'), ('day', 'Days'), ('month', 'Months')],
-                                           string='Delay type', default='day')
+                                           string='Delay type', default='hour')
     trg_date_calendar_id = fields.Many2one("resource.calendar", string='Use Calendar',
                                             help="When calculating a day-based timed condition, it is possible to use a calendar to compute the date based on working days.")
     filter_pre_domain = fields.Char(string='Before Update Domain',
@@ -61,7 +61,7 @@ class BaseAutomation(models.Model):
     filter_domain = fields.Char(string='Apply on', help="If present, this condition must be satisfied before executing the action rule.")
     last_run = fields.Datetime(readonly=True, copy=False)
     on_change_fields = fields.Char(string="On Change Fields Trigger", help="Comma-separated list of field names that triggers the onchange.")
-    trigger_field_ids = fields.Many2many('ir.model.fields', string='Watched fields',
+    trigger_field_ids = fields.Many2many('ir.model.fields', string='Trigger Fields',
                                         help="The action will be triggered if and only if one of these fields is updated."
                                              "If empty, all fields are watched.")
 

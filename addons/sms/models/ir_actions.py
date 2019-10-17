@@ -18,7 +18,7 @@ class ServerActions(models.Model):
         'sms.template', 'SMS Template', ondelete='set null',
         domain="[('model_id', '=', model_id)]",
     )
-    sms_mass_keep_log = fields.Boolean('Log a note', default=True)
+    sms_mass_keep_log = fields.Boolean('Log as Note', default=True)
 
     @api.constrains('state', 'model_id')
     def _check_sms_capability(self):

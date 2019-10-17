@@ -36,10 +36,13 @@
                 </xpath>
                 <xpath expr="//field[@name='link_field_id']" position="after">
                     <field name="partner_ids" widget="many2many_tags"
-                        attrs="{'invisible': [('state', '!=', 'followers')]}"/>
+                        attrs="{'invisible': [('state', '!=', 'followers')]}"
+                        options="{'no_create':True'}"/>
                     <field name="channel_ids" widget="many2many_tags"
-                        attrs="{'invisible': [('state', '!=', 'followers')]}"/>
+                        attrs="{'invisible': [('state', '!=', 'followers')]}"
+                        options="{'no_create':True'}"/>
                     <field name="template_id"
+                        context="{'default_model_id': model_id}"
                         attrs="{'invisible': [('state', '!=', 'email')],
                                 'required': [('state', '=', 'email')]}"/>
                 </xpath>
