@@ -36,6 +36,7 @@ class DisplayDriver(Driver):
         self.owner = False
         self.rendered_html = ''
         self.load_url()
+        self.call_xdotools('F11')
 
     @property
     def device_identifier(self):
@@ -103,7 +104,7 @@ class DisplayDriver(Driver):
         os.environ['DISPLAY'] = ":0.0"
         os.environ['XAUTHORITY'] = "/run/lightdm/pi/xauthority"
         try:
-            subprocess.call(['xdotool', 'key', keystroke])
+            subprocess.call(['xdotool', 'search', '--sync', '--onlyvisible', '--class', 'Firefox', 'windowactivate', 'key', keystroke])
             return "xdotool succeeded in stroking " + keystroke
         except:
             return "xdotool threw an error, maybe it is not installed on the IoTBox"
