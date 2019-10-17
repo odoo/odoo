@@ -1,6 +1,7 @@
 odoo.define('barcodes.BarcodeEvents', function(require) {
 "use strict";
 
+var config = require('web.config');
 var core = require('web.core');
 var mixins = require('web.mixins');
 var session = require('web.session');
@@ -46,14 +47,7 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
         $(_.bind(this.start, this, false));
 
         // Mobile device detection
-        var isMobile = navigator.userAgent.match(/Android/i) ||
-                       navigator.userAgent.match(/webOS/i) ||
-                       navigator.userAgent.match(/iPhone/i) ||
-                       navigator.userAgent.match(/iPad/i) ||
-                       navigator.userAgent.match(/iPod/i) ||
-                       navigator.userAgent.match(/BlackBerry/i) ||
-                       navigator.userAgent.match(/Windows Phone/i);
-        this.isChromeMobile = isMobile && navigator.userAgent.match(/Chrome/i);
+        this.isChromeMobile = config.device.isMobileDevice && navigator.userAgent.match(/Chrome/i);
 
         // Creates an input who will receive the barcode scanner value.
         this.$barcodeInput = $('<input/>', {

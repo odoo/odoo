@@ -35,6 +35,20 @@ var config = {
          */
         isMobile: null,
         /**
+         * Mobile device detection using userAgent.
+         * This flag doesn't depend on the size/resolution of the screen.
+         * It targets mobile devices which suggests that there is a virtual keyboard.
+         *
+         * @return {boolean}
+         */
+        isMobileDevice: navigator.userAgent.match(/Android/i) ||
+            navigator.userAgent.match(/webOS/i) ||
+            navigator.userAgent.match(/iPhone/i) ||
+            navigator.userAgent.match(/iPad/i) ||
+            navigator.userAgent.match(/iPod/i) ||
+            navigator.userAgent.match(/BlackBerry/i) ||
+            navigator.userAgent.match(/Windows Phone/i),
+        /**
          * Mapping between the numbers 0,1,2,3,4,5,6 and some descriptions
          */
         SIZES: { XS: 0, VSM: 1, SM: 2, MD: 3, LG: 4, XL: 5, XXL: 6 },
