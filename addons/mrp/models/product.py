@@ -3,7 +3,7 @@
 
 from datetime import timedelta
 from odoo import api, fields, models
-from odoo.tools.float_utils import float_round
+from odoo.tools.float_utils import float_round, float_is_zero
 
 
 class ProductTemplate(models.Model):
@@ -119,8 +119,10 @@ class ProductProduct(models.Model):
                 ratios_free_qty = []
                 for bom_line, bom_line_data in bom_sub_lines:
                     component = bom_line.product_id
-                    if component.type != 'product':
-                        # Consumable product have 0 qty_available so we exclude them
+                    if component.type != 'product' or float_is_zero(bom_line_data['qty'], precision_rounding=bom_line.product_uom_id.rounding):
+                        # As BoMs allow components with 0 qty, a.k.a. optionnal components, we simply skip those
+                        # to avoid a division by zero. The same logic is applied to non-storable products as those
+                        # products have 0 qty available.
                         continue
                     uom_qty_per_kit = bom_line_data['qty'] / bom_line_data['original_qty']
                     qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id)
