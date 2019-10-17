@@ -230,11 +230,15 @@ class AssetsBundle(object):
             ('url', '=like', url),
             '!', ('url', '=like', self.get_asset_url(unique=self.version))
         ]
+        attachments = ira.sudo().search(domain)
+        # avoid to invalidate cache if it's already empty (mainly useful for test)
 
-        # force bundle invalidation on other workers
-        self.env['ir.qweb'].clear_caches()
+        if attachments:
+            attachments.unlink()
+            # force bundle invalidation on other workers
+            self.env['ir.qweb'].clear_caches()
 
-        return ira.sudo().search(domain).unlink()
+        return True
 
     def get_attachments(self, type, ignore_version=False):
         """ Return the ir.attachment records for a given bundle. This method takes care of mitigating
