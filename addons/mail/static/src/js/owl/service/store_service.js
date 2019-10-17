@@ -1,5 +1,5 @@
 odoo.define('mail.service.Store', function (require) {
-"use strict";
+'use strict';
 
 const actions = require('mail.store.actions');
 const getters = require('mail.store.getters');

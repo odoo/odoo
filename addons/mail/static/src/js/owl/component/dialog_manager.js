@@ -1,5 +1,5 @@
 odoo.define('mail.component.DialogManager', function (require) {
-"use strict";
+'use strict';
 
 const Dialog = require('mail.component.Dialog');
 

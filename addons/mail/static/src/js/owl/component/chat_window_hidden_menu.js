@@ -1,5 +1,5 @@
 odoo.define('mail.component.ChatWindowHiddenMenu', function (require) {
-"use strict";
+'use strict';
 
 const ChatWindowHeader = require('mail.component.ChatWindowHeader');
 

@@ -1,5 +1,5 @@
 odoo.define('mail.widget.Discuss', function (require) {
-"use strict";
+'use strict';
 
 const DiscussOwl = require('mail.component.Discuss');
 const InvitePartnerDialog = require('mail.widget.DiscussInvitePartnerDialog');

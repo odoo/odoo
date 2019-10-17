@@ -1,5 +1,5 @@
 odoo.define('mail.component.PartnerImStatusIconTests', function (require) {
-"use strict";
+'use strict';
 
 const PartnerImStatusIcon = require('mail.component.PartnerImStatusIcon');
 const {

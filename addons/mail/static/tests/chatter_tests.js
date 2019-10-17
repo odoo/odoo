@@ -187,11 +187,11 @@ QUnit.module('Chatter', {
                 },
                 records:[
                     {id:1, type:'url', mimetype:'image/png', name:'filename.jpg',
-                        res_id: 7, res_model: 'partner'},
+                    res_id: 7, res_model: 'partner'},
                     {id:2, type:'binary', mimetype:"application/x-msdos-program",
-                        name:"file2.txt", res_id: 7, res_model: 'partner'},
+                    name:"file2.txt", res_id: 7, res_model: 'partner'},
                     {id:3, type:'binary', mimetype:"application/x-msdos-program",
-                        name:"file3.txt", res_id: 5, res_model: 'partner'},
+                    name:"file3.txt", res_id: 5, res_model: 'partner'},
                 ],
             },
         };
@@ -2193,8 +2193,8 @@ QUnit.test('form activity widget: edit next activity', async function (assert) {
             do_action: function (event) {
                 assert.deepEqual(event.data.action, {
                     context: {
-                        default_res_id: 2,
-                        default_res_model: "partner"
+                      default_res_id: 2,
+                      default_res_model: "partner"
                     },
                     name: "Schedule Activity",
                     res_id: 1,
@@ -2203,13 +2203,13 @@ QUnit.test('form activity widget: edit next activity', async function (assert) {
                     type: "ir.actions.act_window",
                     view_mode: "form",
                     views: [
-                        [
+                      [
                         false,
                         "form"
-                        ]
+                      ]
                     ]
-                    },
-                    "should do a do_action with correct parameters");
+                  },
+                  "should do a do_action with correct parameters");
                 self.data['mail.activity'].records[0].activity_type_id = 1;
                 event.data.options.on_close();
             },

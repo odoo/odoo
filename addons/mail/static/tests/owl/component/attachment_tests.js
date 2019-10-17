@@ -1,5 +1,5 @@
 odoo.define('mail.component.AttachmentTests', function (require) {
-"use strict";
+'use strict';
 
 const Attachment = require('mail.component.Attachment');
 const {

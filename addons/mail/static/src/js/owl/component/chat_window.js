@@ -1,5 +1,5 @@
 odoo.define('mail.component.ChatWindow', function (require) {
-"use strict";
+'use strict';
 
 const AutocompleteInput = require('mail.component.AutocompleteInput');
 const Header = require('mail.component.ChatWindowHeader');

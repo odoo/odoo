@@ -1,5 +1,5 @@
 odoo.define('mail.widget.DiscussInvitePartnerDialog', function (require) {
-"use strict";
+'use strict';
 
 const core = require('web.core');
 const Dialog = require('web.Dialog');

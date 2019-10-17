@@ -1,5 +1,5 @@
 odoo.define('mail.widget.MessagingMenu', function (require) {
-"use strict";
+'use strict';
 
 const MessagingMenuComponent = require('mail.component.MessagingMenu');
 const EnvMixin = require('mail.widget.EnvMixin');

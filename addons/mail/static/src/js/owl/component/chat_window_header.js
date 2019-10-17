@@ -1,5 +1,5 @@
 odoo.define('mail.component.ChatWindowHeader', function (require) {
-"use strict";
+'use strict';
 
 const Icon = require('mail.component.ThreadIcon');
 

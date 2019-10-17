@@ -1,5 +1,5 @@
 odoo.define('mail.store.ActionsTests', function (require) {
-"use strict";
+'use strict';
 
 const {
     afterEach: utilsAfterEach,

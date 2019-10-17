@@ -1,5 +1,5 @@
 odoo.define('mail.store.getters', function (require) {
-"use strict";
+'use strict';
 
 const emojis = require('mail.emojis');
 const mailUtils = require('mail.utils');

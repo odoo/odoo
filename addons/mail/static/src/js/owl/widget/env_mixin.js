@@ -1,5 +1,5 @@
 odoo.define('mail.widget.EnvMixin', function () {
-"use strict";
+'use strict';
 
 const EnvMixin = {
     /**

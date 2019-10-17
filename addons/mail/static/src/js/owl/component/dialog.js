@@ -1,5 +1,5 @@
 odoo.define('mail.component.Dialog', function (require) {
-"use strict";
+'use strict';
 
 class Dialog extends owl.Component {
     /**

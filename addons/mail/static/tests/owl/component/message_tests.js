@@ -1,5 +1,5 @@
 odoo.define('mail.component.MessageTests', function (require) {
-"use strict";
+'use strict';
 
 const Message = require('mail.component.Message');
 const {

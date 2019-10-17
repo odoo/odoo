@@ -1,5 +1,5 @@
 odoo.define('mail.service.ChatWindowService', function (require) {
-"use strict";
+'use strict';
 
 const ChatWindowManager = require('mail.component.ChatWindowManager');
 const EnvMixin = require('mail.widget.EnvMixin');

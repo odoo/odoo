@@ -1,5 +1,5 @@
 odoo.define('mail.owl.testUtils', function (require) {
-"use strict";
+'use strict';
 
 const BusService = require('bus.BusService');
 

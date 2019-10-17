@@ -1,5 +1,5 @@
 odoo.define('mail.component.MessagingMenuTests', function (require) {
-"use strict";
+'use strict';
 
 const {
     afterEach: utilsAfterEach,

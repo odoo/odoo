@@ -1,5 +1,5 @@
 odoo.define('mail.service.Env', function (require) {
-"use strict";
+'use strict';
 
 const AbstractService = require('web.AbstractService');
 const core = require('web.core');

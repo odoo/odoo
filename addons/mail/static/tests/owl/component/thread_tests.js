@@ -1,5 +1,5 @@
 odoo.define('mail.component.ThreadTests', function (require) {
-"use strict";
+'use strict';
 
 const Thread = require('mail.component.Thread');
 const {

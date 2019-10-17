@@ -1,5 +1,5 @@
 odoo.define('mail.component.MessagingMenu', function (require) {
-"use strict";
+'use strict';
 
 const AutocompleteInput = require('mail.component.AutocompleteInput');
 const MobileNavbar = require('mail.component.MobileMessagingNavbar');

@@ -1,5 +1,5 @@
 odoo.define('mail.component.ComposerTests', function (require) {
-"use strict";
+'use strict';
 
 const Composer = require('mail.component.Composer');
 const {

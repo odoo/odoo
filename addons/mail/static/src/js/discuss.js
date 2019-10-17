@@ -1638,7 +1638,6 @@ var Discuss = AbstractAction.extend({
 
 core.action_registry.add('mail.discuss', Discuss);
 
-
 return Discuss;
 
 });

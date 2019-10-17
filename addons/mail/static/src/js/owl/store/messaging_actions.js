@@ -1,5 +1,5 @@
 odoo.define('mail.store.actions', function (require) {
-"use strict";
+'use strict';
 
 const AttachmentViewer = require('mail.component.AttachmentViewer');
 const emojis = require('mail.emojis');
@@ -922,7 +922,7 @@ const actions = {
                 args: [thread.id],
                 kwargs: {
                     name: newName,
-                }
+                },
             });
         }
         thread.custom_channel_name = newName;

@@ -464,7 +464,7 @@ AttachmentViewer.props = {
 
 AttachmentViewer.template = 'mail.component.AttachmentViewer';
 
-owl.QWeb.registerComponent('AttachmeentViewer', AttachmentViewer);
+owl.QWeb.registerComponent('AttachmentViewer', AttachmentViewer);
 
 return AttachmentViewer;
 

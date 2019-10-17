@@ -1,5 +1,5 @@
 odoo.define('mail.store.state', function (require) {
-"use strict";
+'use strict';
 
 const config = require('web.config');
 
