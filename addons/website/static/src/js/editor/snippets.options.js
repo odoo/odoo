@@ -226,10 +226,7 @@ options.registry.company_data = options.Class.extend({
     },
 });
 
-/**
- * @todo should be refactored / reviewed
- */
-options.registry.carousel = options.Class.extend({
+options.registry.Carousel = options.Class.extend({
     /**
      * @override
      */
@@ -237,12 +234,16 @@ options.registry.carousel = options.Class.extend({
         this.$target.carousel('pause');
         this.$indicators = this.$target.find('.carousel-indicators');
         this.$controls = this.$target.find('.carousel-control-prev, .carousel-control-next, .carousel-indicators');
-        this.$items = this.$target.find('.carousel-item');
+
+        // Prevent enabling the carousel overlay when clicking on the carousel
+        // controls (indeed we want it to change the carousel slide then enable
+        // the slide overlay) + See "CarouselItem" option.
+        this.$controls.addClass('o_we_no_overlay');
 
         let _slideTimestamp;
         this.$target.on('slide.bs.carousel.carousel_option', () => {
             _slideTimestamp = window.performance.now();
-            setTimeout(() => this.trigger_up('activate_snippet', {$snippet: this.$target}));
+            setTimeout(() => this.trigger_up('hide_overlay'));
         });
         this.$target.on('slid.bs.carousel.carousel_option', () => {
             // slid.bs.carousel is most of the time fired too soon by bootstrap
@@ -250,7 +251,13 @@ options.registry.carousel = options.Class.extend({
             // here an extra 20% of the time before retargeting edition, which
             // should be enough...
             const _slideDuration = (window.performance.now() - _slideTimestamp);
-            setTimeout(() => this._retargetEdition(), 0.2 * _slideDuration);
+            setTimeout(() => {
+                this.trigger_up('activate_snippet', {
+                    $snippet: this.$target.find('.carousel-item.active'),
+                    ifInactiveOptions: true,
+                });
+                this.$target.trigger('active_slide_targeted');
+            }, 0.2 * _slideDuration);
         });
 
         return this._super.apply(this, arguments);
@@ -278,9 +285,70 @@ options.registry.carousel = options.Class.extend({
      * @override
      */
     cleanForSave: function () {
-        this._super.apply(this, arguments);
-        this.$items.removeClass('next prev left right active').first().addClass('active');
+        const $items = this.$target.find('.carousel-item');
+        $items.removeClass('next prev left right active').first().addClass('active');
         this.$indicators.find('li').removeClass('active').empty().first().addClass('active');
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Creates a unique ID for the carousel and reassign data-attributes that
+     * depend on it.
+     *
+     * @private
+     */
+    _assignUniqueID: function () {
+        const id = 'myCarousel' + Date.now();
+        this.$target.attr('id', id);
+        this.$target.find('[data-target]').attr('data-target', '#' + id);
+        this.$target.find('[data-slide]').attr('href', '#' + id);
+    },
+});
+
+options.registry.CarouselItem = options.Class.extend({
+    /**
+     * @override
+     */
+    start: function () {
+        this.$carousel = this.$target.closest('.carousel');
+        this.$indicators = this.$carousel.find('.carousel-indicators');
+        this.$controls = this.$carousel.find('.carousel-control-prev, .carousel-control-next, .carousel-indicators');
+
+        var leftPanelEl = this.$overlay.data('$optionsSection')[0];
+        var titleTextEl = leftPanelEl.querySelector('we-title > span');
+        this.counterEl = document.createElement('span');
+        titleTextEl.appendChild(this.counterEl);
+
+        leftPanelEl.querySelector('.oe_snippet_remove').classList.add('d-none'); // TODO improve the way to do that
+
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    destroy: function () {
+        this._super(...arguments);
+        this.$carousel.off('.carousel_item_option');
+    },
+    /**
+     * @override
+     */
+    isTopOption: function () {
+        return true;
+    },
+    /**
+     * Updates the slide counter.
+     *
+     * @override
+     */
+    onFocus: function () {
+        const $items = this.$carousel.find('.carousel-item');
+        const $activeSlide = $items.filter('.active');
+        const updatedText = ` (${$activeSlide.index() + 1}/${$items.length})`;
+        this.counterEl.textContent = updatedText;
     },
 
     //--------------------------------------------------------------------------
@@ -293,18 +361,18 @@ options.registry.carousel = options.Class.extend({
      * @see this.selectClass for parameters
      */
     addSlide: function (previewMode) {
+        const $items = this.$carousel.find('.carousel-item');
         this.$controls.removeClass('d-none');
         this.$indicators.append($('<li>', {
             'data-target': '#' + this.$target.attr('id'),
-            'data-slide-to': this.$items.length,
+            'data-slide-to': $items.length,
         }));
         // Need to remove editor data from the clone so it gets its own.
-        const $active = this.$items.filter('.active');
+        const $active = $items.filter('.active');
         $active.clone(false)
             .removeClass('active')
             .insertAfter($active);
-        this.$items = this.$target.find('.carousel-item');
-        this.$target.carousel('next');
+        this.$carousel.carousel('next');
     },
     /**
      * Removes the current slide.
@@ -312,48 +380,35 @@ options.registry.carousel = options.Class.extend({
      * @see this.selectClass for parameters.
      */
     removeSlide: function (previewMode) {
-        const newLength = this.$items.length - 1;
+        const $items = this.$carousel.find('.carousel-item');
+        const newLength = $items.length - 1;
         if (!this.removing && newLength > 0) {
-            const $toDelete = this.$items.filter('.active');
-            this.$target.one('slid.bs.carousel', (event) => {
+            const $toDelete = $items.filter('.active');
+            this.$carousel.one('active_slide_targeted.carousel_item_option', () => {
                 $toDelete.remove();
                 this.$indicators.find('li:last').remove();
-                this.$items = this.$target.find('.carousel-item');
                 this.$controls.toggleClass('d-none', newLength === 1);
-                this.$target.find('.carousel').trigger('content_changed');
+                this.$carousel.trigger('content_changed');
                 this.removing = false;
             });
             this.removing = true;
-            this.$target.carousel('prev');
+            this.$carousel.carousel('prev');
         }
     },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
     /**
-     * Activates current slide for edition and vertical padding. Padding on the
-     * carousel itself would mean the slides' backgrounds don't cover the padding.
+     * Goes to next slide or previous slide.
      *
-     * @private
+     * @see this.selectClass for parameters
      */
-    _retargetEdition: function () {
-        this.trigger_up('activate_snippet', {
-            $snippet: this.$items.filter('.active'),
-            ifInactiveOptions: true,
-        });
-    },
-    /**
-     * Creates a unique ID for the carousel and reassign data-attributes that depend on it.
-     *
-     * @private
-     */
-    _assignUniqueID: function () {
-        const id = 'myCarousel' + Date.now();
-        this.$target.attr('id', id);
-        this.$target.find('[data-target]').attr('data-target', '#' + id);
-        this.$target.find('[data-slide]').attr('href', '#' + id);
+    slide: function (previewMode, value) {
+        switch (value) {
+            case 'left':
+                this.$controls.filter('.carousel-control-prev')[0].click();
+                break;
+            case 'right':
+                this.$controls.filter('.carousel-control-next')[0].click();
+                break;
+        }
     },
 });
 

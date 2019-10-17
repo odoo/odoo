@@ -97,7 +97,7 @@ var SnippetEditor = Widget.extend({
             $customize.find('.oe_snippet_clone').addClass('d-none');
         }
 
-        if (!this.isTargetParentEditable || this.$target.is('.carousel-item')) { // TODO get rid of the carousel-item hack somehow
+        if (!this.isTargetParentEditable) {
             $customize.find('.oe_snippet_remove').addClass('d-none');
         }
 
@@ -735,6 +735,7 @@ var SnippetsMenu = Widget.extend({
         'snippet_removed': '_onSnippetRemoved',
         'reload_snippet_dropzones': '_disableUndroppableSnippets',
         'update_customize_elements': '_onUpdateCustomizeElements',
+        'hide_overlay': '_onHideOverlay',
     },
 
     /**
@@ -813,7 +814,7 @@ var SnippetsMenu = Widget.extend({
             if (!$target.closest('body > *').length) {
                 return;
             }
-            if ($target.closest('#web_editor-top-edit, #oe_snippets, #oe_manipulators, .o_technical_modal, .oe_drop_zone, .o_notification_manager').length) {
+            if ($target.closest('#web_editor-top-edit, #oe_snippets, #oe_manipulators, .o_technical_modal, .oe_drop_zone, .o_notification_manager, .o_we_no_overlay').length) {
                 return;
             }
             this._activateSnippet($target);
@@ -1771,6 +1772,14 @@ var SnippetsMenu = Widget.extend({
     _onGoToParent: function (ev) {
         ev.stopPropagation();
         this._activateSnippet(ev.data.$snippet.parent());
+    },
+    /**
+     * @private
+     */
+    _onHideOverlay: function () {
+        for (const editor of this.snippetEditors) {
+            editor.toggleOverlay(false);
+        }
     },
     /**
      * @private

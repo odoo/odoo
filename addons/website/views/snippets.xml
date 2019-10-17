@@ -1092,11 +1092,9 @@
     </div>
 
     <!-- Carousel | .s_carousel | .s_quotes_carousel -->
-    <div data-js="carousel"
+    <div data-js="Carousel"
         data-selector="section"
         data-target="> .carousel">
-        <we-button data-add-slide="true" data-no-preview="true">Add Slide</we-button>
-        <we-button data-remove-slide="true" data-no-preview="true">Remove Slide</we-button>
         <we-select string="Transition">
             <we-button data-select-class="slide">Slide</we-button>
             <we-button data-select-class="carousel-fade slide">Fade</we-button>
@@ -1111,6 +1109,14 @@
             <we-button data-select-class="s_carousel_default">Default</we-button>
         </we-select>
         <we-input string="Speed" data-set-data-attribute="interval" data-unit="s" data-save-unit="ms" data-step="0.1"/>
+    </div>
+
+    <div data-js="CarouselItem"
+         data-selector=".carousel-item">
+        <we-button data-slide="left" data-no-preview="true" class="fa fa-fw fa-angle-left"/>
+        <we-button data-slide="right" data-no-preview="true" class="fa fa-fw fa-angle-right"/>
+        <we-button data-add-slide="true" data-no-preview="true" class="fa fa-fw fa-plus"/>
+        <we-button data-remove-slide="true" data-no-preview="true" class="fa fa-fw fa-minus"/>
     </div>
 
     <div data-js="navTabs" data-selector="section .row > div" data-target=".nav-tabs">
