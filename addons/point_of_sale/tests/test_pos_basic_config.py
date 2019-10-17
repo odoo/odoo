@@ -100,11 +100,11 @@ class TestPoSBasicConfig(TestPoSCommon):
         # picking and stock moves should be in done state
         for order in self.pos_session.order_ids:
             self.assertEqual(
-                order.picking_id.state,
+                order.picking_ids[0].state,
                 'done',
                 'Picking should be in done state.'
             )
-            move_lines = order.picking_id.move_lines
+            move_lines = order.picking_ids[0].move_lines
             self.assertEqual(
                 move_lines.mapped('state'),
                 ['done'] * len(move_lines),
@@ -216,11 +216,11 @@ class TestPoSBasicConfig(TestPoSCommon):
         # no exception for invoiced orders
         for order in self.pos_session.order_ids:
             self.assertEqual(
-                order.picking_id.state,
+                order.picking_ids[0].state,
                 'done',
                 'Picking should be in done state.'
             )
-            move_lines = order.picking_id.move_lines
+            move_lines = order.picking_ids[0].move_lines
             self.assertEqual(
                 move_lines.mapped('state'),
                 ['done'] * len(move_lines),
@@ -376,11 +376,11 @@ class TestPoSBasicConfig(TestPoSCommon):
         # no exception of return orders
         for order in self.pos_session.order_ids:
             self.assertEqual(
-                order.picking_id.state,
+                order.picking_ids[0].state,
                 'done',
                 'Picking should be in done state.'
             )
-            move_lines = order.picking_id.move_lines
+            move_lines = order.picking_ids[0].move_lines
             self.assertEqual(
                 move_lines.mapped('state'),
                 ['done'] * len(move_lines),

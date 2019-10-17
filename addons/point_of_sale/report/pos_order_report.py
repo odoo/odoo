@@ -24,7 +24,6 @@ class PosOrderReport(models.Model):
     price_sub_total = fields.Float(string='Subtotal w/o discount', readonly=True)
     total_discount = fields.Float(string='Total Discount', readonly=True)
     average_price = fields.Float(string='Average Price', readonly=True, group_operator="avg")
-    location_id = fields.Many2one('stock.location', string='Location', readonly=True)
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
     nbr_lines = fields.Integer(string='Sale Line Count', readonly=True)
     product_qty = fields.Integer(string='Product Quantity', readonly=True)
@@ -53,7 +52,6 @@ class PosOrderReport(models.Model):
                 s.partner_id AS partner_id,
                 s.state AS state,
                 s.user_id AS user_id,
-                s.location_id AS location_id,
                 s.company_id AS company_id,
                 s.sale_journal AS journal_id,
                 l.product_id AS product_id,
@@ -80,7 +78,7 @@ class PosOrderReport(models.Model):
         return """
             GROUP BY
                 s.id, s.date_order, s.partner_id,s.state, pt.categ_id,
-                s.user_id, s.location_id, s.company_id, s.sale_journal,
+                s.user_id, s.company_id, s.sale_journal,
                 s.pricelist_id, s.account_move, s.create_date, s.session_id,
                 l.product_id,
                 pt.categ_id, pt.pos_categ_id,

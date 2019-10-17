@@ -14,7 +14,16 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,paid,done" />
                 </header>
                 <sheet>
+                <field name="failed_pickings" invisible="1"/>
                 <div class="oe_button_box" name="button_box">
+                    <button name="action_stock_picking"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-truck"
+                        attrs="{'invisible':[('picking_count', '=', 0)]}">
+                        <field name="picking_count" widget="statinfo" string="Pickings" attrs="{'invisible': [('failed_pickings', '!=', False)]}"/>
+                        <field name="picking_count" widget="statinfo" string="Pickings" class="text-danger" attrs="{'invisible': [('failed_pickings', '=', False)]}"/>
+                    </button>
                     <button name="action_view_invoice"
                         string="Invoice"
                         type="object"
@@ -90,10 +99,6 @@
                     </page>
                     <page name="extra" string="Extra Info">
                         <group >
-                            <group string="Inventory">
-                                <field name="location_id" widget="selection" groups="stock.group_stock_multi_locations"/>
-                                <field name="picking_id" readonly="1"/>
-                            </group>
                             <group
                                 string="Accounting"
                                 groups="account.group_account_manager"
