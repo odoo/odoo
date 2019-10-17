@@ -199,7 +199,7 @@ var MailManager =  AbstractService.extend({
      * Get partners as mentions from a chatter
      * Typically all employees as partner suggestions.
      *
-     * @returns {Array<Object[]>}
+     * @returns {Array<Array<Object[]>>}
      */
     getMentionPartnerSuggestions: function () {
         return this._mentionPartnerSuggestions;
@@ -1108,8 +1108,9 @@ var MailManager =  AbstractService.extend({
      * Sort previews
      *
      *      1. unread,
-     *      2. two-user thread,
-     *      3. date,
+     *      2. dated previews
+     *      3. two-user thread,
+     *      4. date,
      *
      * @private
      * @param {Object[]} previews
@@ -1118,13 +1119,10 @@ var MailManager =  AbstractService.extend({
     _sortPreviews: function (previews) {
         var res = previews.sort(function (p1, p2) {
             var unreadDiff = Math.min(1, p2.unreadCounter) - Math.min(1, p1.unreadCounter);
+            var datedDiff = !!p2.date - !!p1.date;
             var isTwoUserThreadDiff = p2.isTwoUserThread - p1.isTwoUserThread;
-            var dateDiff = (!!p2.date - !!p1.date) ||
-                              (
-                                p2.date &&
-                                p2.date.diff(p1.date)
-                              );
-            return  unreadDiff || isTwoUserThreadDiff || dateDiff;
+            var dateDiff = p2.date && p2.date.diff(p1.date);
+            return  unreadDiff || datedDiff || isTwoUserThreadDiff || dateDiff;
         });
         return res;
     },
@@ -1195,8 +1193,8 @@ var MailManager =  AbstractService.extend({
      *
      * @private
      * @param {Object} result data from server on mail/init_messaging rpc
-     * @param {Object[]} result.mention_partner_suggestions list of suggestions
-     *   with all the employees
+     * @param {Array<Object[]>} result.mention_partner_suggestions list of
+     *   suggestions.
      * @param {integer} result.menu_id the menu ID of discuss app
      */
     _updateInternalStateFromServer: function (result) {

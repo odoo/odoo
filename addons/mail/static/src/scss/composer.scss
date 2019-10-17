@@ -207,6 +207,8 @@
             .o_mail_emoji_container {
                 @include o-position-absolute(auto, 0, 100%, 0);
                 border-bottom-width: 1px;
+                max-height: calc(100vh - 100%);
+                overflow-y: auto;
             }
         }
         .o_composer_input {
@@ -228,6 +230,9 @@
         }
         .o_composer_button_send, .o_chatter_avatar {
             display: none !important;
+        }
+        .o_attachment {
+            width: 50%;
         }
     }
 }
@@ -331,6 +336,10 @@ $o-mail-attachment-margin: 5px;
     }
 
     &.o_attachment_uploading {
+        .o_attachment_wrap {
+            padding-right: 0px;
+        }
+
         .o_attachment_progress_bar {
             display: inline-block;
             margin: 0 0 0 8px;
@@ -403,6 +412,10 @@ $o-mail-attachment-margin: 5px;
                 width: 80%;
                 @include o-text-overflow(inline-block);
                 font-size: $font-size-sm;
+            }
+
+            .o_attachment_delete_cross {
+                color: white;
             }
 
             .o_attachment_download {

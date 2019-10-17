@@ -32,7 +32,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         this.tours = {};
         this.consumed_tours = consumed_tours || [];
         this.running_tour = local_storage.getItem(get_running_key());
-        this.running_step_delay = parseInt(local_storage.getItem(get_running_delay_key()), 10) || 10;
+        this.running_step_delay = parseInt(local_storage.getItem(get_running_delay_key()), 10) || 0;
         this.edition = (_.last(session.server_version_info) === 'e') ? 'enterprise' : 'community';
         this._log = [];
         console.log('Tour Manager is ready.  running_tour=' + this.running_tour);
@@ -171,17 +171,36 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
             if (this.running_tour && this.running_tour_timeout === undefined) {
                 this._set_running_tour_timeout(this.running_tour, this.active_tooltips[this.running_tour]);
             }
-            this._check_for_tooltip(this.active_tooltips[tour_name], tour_name);
+            var self = this;
+            setTimeout(function () {
+                self._check_for_tooltip(self.active_tooltips[tour_name], tour_name);
+            });
         } else {
-            _.each(this.active_tooltips, this._check_for_tooltip.bind(this));
+            for (var tourName in this.active_tooltips) {
+                var tip = this.active_tooltips[tourName];
+                var activated = this._check_for_tooltip(tip, tourName);
+                if (activated) {
+                    break;
+                }
+            }
         }
     },
+    /**
+     *  Check (and activate or update) a help tooltip for a tour.
+     *
+     * @param {Object} tip
+     * @param {string} tour_name
+     * @returns {boolean} true if a tip was found and activated/updated
+     */
     _check_for_tooltip: function (tip, tour_name) {
+        if (tip === undefined) {
+            return true;
+        }
 
-        if ($('.blockUI').length) {
+        if ($('body').hasClass('o_ui_blocked')) {
             this._deactivate_tip(tip);
             this._log.push("blockUI is preventing the tip to be consumed");
-            return;
+            return false;
         }
 
         var $trigger;
@@ -193,7 +212,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         var $visible_trigger = get_first_visible_element($trigger);
 
         var extra_trigger = true;
-        var $extra_trigger = undefined;
+        var $extra_trigger;
         if (tip.extra_trigger) {
             $extra_trigger = get_jquery_element_from_selector(tip.extra_trigger);
             extra_trigger = get_first_visible_element($extra_trigger).length;
@@ -236,6 +255,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
                 }
             }
         }
+        return !!triggered;
     },
     _activate_tip: function(tip, tour_name, $anchor) {
         var tour = this.tours[tour_name];
@@ -352,11 +372,23 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
     },
     _to_next_running_step: function (tip, tour_name) {
         if (this.running_tour !== tour_name) return;
+        var self = this;
         this._stop_running_tour_timeout();
+        if (this.running_step_delay) {
+            // warning: due to the delay, it may happen that the $anchor isn't
+            // in the DOM anymore when exec is called, either because:
+            // - it has been removed from the DOM meanwhile and the tip's
+            //   selector doesn't match anything anymore
+            // - it has been re-rendered and thus the selector still has a match
+            //   in the DOM, but executing the step with that $anchor won't work
+            _.delay(exec, this.running_step_delay);
+        } else {
+            exec();
+        }
 
-        var action_helper = new RunningTourActionHelper(tip.widget);
-        _.delay((function () {
-            do_before_unload(this._consume_tip.bind(this, tip, tour_name));
+        function exec() {
+            var action_helper = new RunningTourActionHelper(tip.widget);
+            do_before_unload(self._consume_tip.bind(self, tip, tour_name));
 
             if (typeof tip.run === "function") {
                 tip.run.call(tip.widget, action_helper);
@@ -366,7 +398,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
             } else {
                 action_helper.auto();
             }
-        }).bind(this), this.running_step_delay);
+        }
     },
 
     /**

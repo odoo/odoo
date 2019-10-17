@@ -163,18 +163,12 @@
 <template id="references_block" name="Partner References Block">
     <t t-if="any([p.website_published for p in partner.implemented_partner_ids])">
         <h3 id="references">References</h3>
-        <div t-foreach="partner.implemented_partner_ids" t-as="reference" class="media mt-3">
-          <t t-if="reference.website_published">
-            <a t-attf-href="/customers/#{slug(reference)}">
-                <span t-field="reference.image_medium" t-options='{"widget": "image", "class": "d-block mr-3"}'/>
-            </a>
+        <div t-foreach="partner.implemented_partner_ids" t-if="reference.website_published" t-as="reference" class="media mt-3">
+            <span t-field="reference.image_medium" t-options='{"widget": "image", "class": "d-block mr-3"}'/>
             <div class="media-body" style="min-height: 64px;">
-                <a t-attf-href="/customers/#{slug(reference)}">
-                    <span t-field="reference.self"/>
-                </a>
+                <span t-field="reference.self"/>
                 <div t-field='reference.website_short_description'/>
             </div>
-          </t>
         </div>
     </t>
 </template>
@@ -289,7 +283,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="col-form-label hdd4" for="description">Description</label>
-                                <textarea row="3" name="description" class="form-control description"></textarea>
+                                <textarea rows="3" name="description" class="form-control description"></textarea>
                             </div>
                         </main>
                         <footer class="modal-footer">
@@ -512,12 +506,12 @@
                         </div>
                         <div class="col-md text-md-right">
                             <div class="d-inline-block">
-                                <small class="mr-2"><b>Stage:</b></small>
-                                <div t-foreach="stages" t-as="stage" class="float-right">
+                                <small class="mr-2 mt-1 float-left"><b>Stage:</b></small>
+                                <div t-foreach="stages[::-1]" t-as="stage" class="float-left">
+                                    <i t-if="not stage_first" class="fa fa-chevron-right ml-2 mr-1 small" style="opacity: 0.5"/>
                                     <button type="button" t-att-data="stage.id" t-att-opp="opportunity.id" t-attf-class="btn btn-sm px-2 opp-stage-button #{'btn-secondary' if opportunity.stage_id.name != stage.name else 'btn-primary disabled'}">
                                         <span t-field="stage.name"/>
                                     </button>
-                                    <i t-if="not stage_first" class="fa fa-chevron-right ml-1 mr-2 small" style="opacity: 0.5"/>
                                 </div>
                             </div>
                         </div>
@@ -696,7 +690,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-form-label" for="activity_summary">Details Next Activity</label>
-                                                <textarea row="3" name="activity_summary" class="form-control activity_summary"><t t-esc="user_activity.summary"/></textarea>
+                                                <textarea rows="3" name="activity_summary" class="form-control activity_summary"><t t-esc="user_activity.summary"/></textarea>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-form-label" for="activity_date_deadline">Next Activity Date</label>

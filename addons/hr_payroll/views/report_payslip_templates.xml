@@ -58,9 +58,9 @@
                                 <td><span t-field="line.name"/></td>
                                 <td><span t-field="line.quantity"/></td>
                                 <td><span t-esc="line.amount"
-                                          t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                                          t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
                                 <td><span t-esc="line.total"
-                                          t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                                          t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
 
                             </tr>
                         </tbody>

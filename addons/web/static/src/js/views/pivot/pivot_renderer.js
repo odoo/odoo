@@ -6,6 +6,7 @@ var core = require('web.core');
 var field_utils = require('web.field_utils');
 
 var QWeb = core.qweb;
+var _t = core._t;
 
 var PivotRenderer = AbstractRenderer.extend({
     tagName: 'table',
@@ -116,6 +117,8 @@ var PivotRenderer = AbstractRenderer.extend({
     _renderHeaders: function ($thead, headers, nbrCols) {
         var self = this;
         var i, j, cell, $row, $cell;
+        var measure, dataType;
+        var id, measureCellIds = [];
 
         var groupbyLabels = _.map(this.state.colGroupBys, function (gb) {
             return self.state.fields[gb.split(':')[0]].string;
@@ -144,10 +147,13 @@ var PivotRenderer = AbstractRenderer.extend({
                     $cell.data('id', cell.id);
                 }
                 if (cell.measure) {
+                    measure = cell.measure;
+                    measureCellIds.push(cell.id);
                     $cell.addClass('o_pivot_measure_row text-muted')
-                        .text(this.state.fields[cell.measure].string);
-                    $cell.data('id', cell.id).data('measure', cell.measure);
-                    if (!this.compare && cell.id === this.state.sortedColumn.id && cell.measure === this.state.sortedColumn.measure) {
+                        .text(this.state.fields[measure].string);
+                    $cell.data('id', cell.id).data('measure', measure);
+                    if (cell.id === this.state.sortedColumn.id &&
+                        measure === this.state.sortedColumn.measure) {
                         $cell.addClass('o_pivot_measure_row_sorted_' + this.state.sortedColumn.order);
                         if (this.state.sortedColumn.order == 'asc') {
                             $cell.attr('aria-sorted', 'ascending');
@@ -166,13 +172,31 @@ var PivotRenderer = AbstractRenderer.extend({
             $thead.append($row);
         }
         if (this.compare) {
-            var colLabels = [this.timeRangeDescription, this.comparisonTimeRangeDescription, 'Variation'];
+            var colLabels = [this.timeRangeDescription, this.comparisonTimeRangeDescription, _t('Variation')];
+            var dataTypes = ['data', 'comparisonData', 'variation'];
             $row = $('<tr>');
             for (i = 0; i < 3 * nbrCols; i++) {
+                id = measureCellIds[~~(i / 3)];
+                measure = this.state.measures[(~~(i / 3)) % this.state.measures.length];
+                dataType = dataTypes[i % 3];
                 $cell = $('<th>')
+                    .addClass('o_pivot_measure_row text-muted')
+                    .data('data_type', dataType)
+                    .data('id', id)
+                    .data('measure', measure)
                     .text(colLabels[i % 3])
                     .attr('rowspan', 1)
                     .attr('colspan', 1);
+                if (dataType === this.state.sortedColumn.dataType &&
+                    id === this.state.sortedColumn.id &&
+                    measure === this.state.sortedColumn.measure) {
+                    $cell.addClass('o_pivot_measure_row_sorted_' + this.state.sortedColumn.order);
+                    if (this.state.sortedColumn.order === 'asc') {
+                        $cell.attr('aria-sorted', 'ascending');
+                    } else {
+                        $cell.attr('aria-sorted', 'descending');
+                    }
+                }
                 $row.append($cell);
             }
             $thead.append($row);

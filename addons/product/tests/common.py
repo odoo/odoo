@@ -73,6 +73,7 @@ class TestProductCommon(common.SavepointCase):
             'uom_po_id': cls.uom_unit.id,
             'attribute_line_ids': [(0, 0, {
                 'attribute_id': cls.prod_att_1.id,
+                'value_ids': [(6, 0, [cls.prod_attr1_v1.id, cls.prod_attr1_v2.id])]
             })]
         })
         cls.product_7 = Product.create({
@@ -101,3 +102,19 @@ class TestProductCommon(common.SavepointCase):
             'name': 'Stone',
             'uom_id': cls.uom_unit.id,
             'uom_po_id': cls.uom_unit.id})
+
+
+class TestAttributesCommon(common.SavepointCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestAttributesCommon, cls).setUpClass()
+
+        # create 10 attributes with 10 values each
+        cls.att_names = "ABCDEFGHIJ"
+        cls.attributes = cls.env['product.attribute'].create([{
+                'name': name,
+                'create_variant': 'no_variant',
+                'value_ids': [(0, 0, {'name': n}) for n in range(10)]
+            } for name in cls.att_names
+        ])

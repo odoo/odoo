@@ -10,5 +10,5 @@ class SaleProductConfigurator(models.TransientModel):
 
     product_template_id = fields.Many2one(
         'product.template', string="Product",
-        required=True, domain=[('sale_ok', '=', True), '|', ('attribute_line_ids', '!=', False), ('optional_product_ids', '!=', False)])
+        required=True, domain=[('sale_ok', '=', True), '|', ('attribute_line_ids.value_ids', '!=', False), ('optional_product_ids', '!=', False)])
     pricelist_id = fields.Many2one('product.pricelist', 'Pricelist', readonly=True)

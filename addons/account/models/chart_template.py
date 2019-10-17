@@ -5,6 +5,7 @@ from odoo import api, fields, models, _
 from odoo import SUPERUSER_ID
 from odoo.exceptions import UserError
 from odoo.tools import pycompat
+from odoo.http import request
 
 import logging
 
@@ -164,9 +165,16 @@ class AccountChartTemplate(models.Model):
         of accounts had been created for it yet.
         """
         self.ensure_one()
-        company = self.env.user.company_id
+        # do not use `request.env` here, it can cause deadlocks
+        if request and request.session.uid:
+            current_user = self.env['res.users'].browse(request.uid)
+            company = current_user.company_id
+        else:
+            # fallback to company of current user, most likely __system__
+            # (won't work well for multi-company)
+            company = self.env.user.company_id
         # If we don't have any chart of account on this company, install this chart of account
-        if not company.chart_template_id:
+        if not company.chart_template_id and not self.existing_accounting(company):
             self.load_for_current_company(15.0, 15.0)
 
     def load_for_current_company(self, sale_tax_rate, purchase_tax_rate):
@@ -178,7 +186,14 @@ class AccountChartTemplate(models.Model):
         rights.
         """
         self.ensure_one()
-        company = self.env.user.company_id
+        # do not use `request.env` here, it can cause deadlocks
+        if request and request.session.uid:
+            current_user = self.env['res.users'].browse(request.uid)
+            company = current_user.company_id
+        else:
+            # fallback to company of current user, most likely __system__
+            # (won't work well for multi-company)
+            company = self.env.user.company_id
         # Ensure everything is translated to the company's language, not the user's one.
         self = self.with_context(lang=company.partner_id.lang)
         if not self.env.user._is_admin():
@@ -198,7 +213,7 @@ class AccountChartTemplate(models.Model):
                 prop_values.extend(['account.journal,%s' % (journal_id,) for journal_id in existing_journals.ids])
             accounting_props = self.env['ir.property'].search([('value_reference', 'in', prop_values)])
             if accounting_props:
-                accounting_props.unlink()
+                accounting_props.sudo().unlink()
 
             # delete account, journal, tax, fiscal position and reconciliation model
             models_to_delete = ['account.reconcile.model', 'account.fiscal.position', 'account.tax', 'account.move', 'account.journal']
@@ -234,7 +249,7 @@ class AccountChartTemplate(models.Model):
         acc_template_ref, taxes_ref = self._install_template(company, code_digits=self.code_digits)
 
         # Set the transfer account on the company
-        company.transfer_account_id = self.env['account.account'].search([('code', '=like', self.transfer_account_code_prefix + '%')])[0]
+        company.transfer_account_id = self.env['account.account'].search([('code', '=like', self.transfer_account_code_prefix + '%')])[:1]
 
         # Create Bank journals
         self._create_bank_journals(company, acc_template_ref)
@@ -255,7 +270,7 @@ class AccountChartTemplate(models.Model):
         """
         model_to_check = ['account.move.line', 'account.invoice', 'account.payment', 'account.bank.statement']
         for model in model_to_check:
-            if len(self.env[model].search([('company_id', '=', company_id.id)])) > 0:
+            if self.env[model].sudo().search([('company_id', '=', company_id.id)], limit=1):
                 return True
         return False
 
@@ -314,9 +329,6 @@ class AccountChartTemplate(models.Model):
                 'currency_id': acc.get('currency_id', self.env['res.currency']).id,
                 'sequence': 10
             })
-
-        if company.country_id.code in self.get_countries_posting_at_bank_rec():
-            bank_journals.write({'post_at_bank_rec': True})
 
         return bank_journals
 
@@ -568,15 +580,23 @@ class AccountChartTemplate(models.Model):
 
     @api.multi
     def create_record_with_xmlid(self, company, template, model, vals):
-        # Create a record for the given model with the given vals and
-        # also create an entry in ir_model_data to have an xmlid for the newly created record
-        # xmlid is the concatenation of company_id and template_xml_id
-        ir_model_data = self.env['ir.model.data']
-        template_xmlid = ir_model_data.search([('model', '=', template._name), ('res_id', '=', template.id)])
-        xml_id = "%s.%s_%s" % (template_xmlid.module, company.id, template_xmlid.name)
-        data = dict(xml_id=xml_id, values=vals, noupdate=True)
-        record = self.env[model]._load_records([data])
-        return record.id
+        return self._create_records_with_xmlid(model, [(template, vals)], company).id
+
+    def _create_records_with_xmlid(self, model, template_vals, company):
+        """ Create records for the given model name with the given vals, and
+            create xml ids based on each record's template and company id.
+        """
+        if not template_vals:
+            return self.env[model]
+        template_model = template_vals[0][0]
+        template_ids = [template.id for template, vals in template_vals]
+        template_xmlids = template_model.browse(template_ids).get_external_id()
+        data_list = []
+        for template, vals in template_vals:
+            module, name = template_xmlids[template.id].split('.', 1)
+            xml_id = "%s.%s_%s" % (module, company.id, name)
+            data_list.append(dict(xml_id=xml_id, values=vals, noupdate=True))
+        return self.env[model]._load_records(data_list)
 
     @api.model
     def _load_records(self, data_list, update=False):
@@ -638,14 +658,17 @@ class AccountChartTemplate(models.Model):
         self.ensure_one()
         account_tmpl_obj = self.env['account.account.template']
         acc_template = account_tmpl_obj.search([('nocreate', '!=', True), ('chart_template_id', '=', self.id)], order='id')
+        template_vals = []
         for account_template in acc_template:
             code_main = account_template.code and len(account_template.code) or 0
             code_acc = account_template.code or ''
             if code_main > 0 and code_main <= code_digits:
                 code_acc = str(code_acc) + (str('0'*(code_digits-code_main)))
             vals = self._get_account_vals(company, account_template, code_acc, tax_template_ref)
-            new_account = self.create_record_with_xmlid(company, account_template, 'account.account', vals)
-            acc_template_ref[account_template.id] = new_account
+            template_vals.append((account_template, vals))
+        accounts = self._create_records_with_xmlid('account.account', template_vals, company)
+        for template, account in pycompat.izip(acc_template, accounts):
+            acc_template_ref[template.id] = account.id
         return acc_template_ref
 
     def _prepare_reconcile_model_vals(self, company, account_reconcile_model, acc_template_ref, tax_template_ref):
@@ -733,21 +756,33 @@ class AccountChartTemplate(models.Model):
         """
         self.ensure_one()
         positions = self.env['account.fiscal.position.template'].search([('chart_template_id', '=', self.id)])
+
+        # first create fiscal positions in batch
+        template_vals = []
         for position in positions:
             fp_vals = self._get_fp_vals(company, position)
-            new_fp = self.create_record_with_xmlid(company, position, 'account.fiscal.position', fp_vals)
+            template_vals.append((position, fp_vals))
+        fps = self._create_records_with_xmlid('account.fiscal.position', template_vals, company)
+
+        # then create fiscal position taxes and accounts
+        tax_template_vals = []
+        account_template_vals = []
+        for position, fp in pycompat.izip(positions, fps):
             for tax in position.tax_ids:
-                self.create_record_with_xmlid(company, tax, 'account.fiscal.position.tax', {
+                tax_template_vals.append((tax, {
                     'tax_src_id': tax_template_ref[tax.tax_src_id.id],
                     'tax_dest_id': tax.tax_dest_id and tax_template_ref[tax.tax_dest_id.id] or False,
-                    'position_id': new_fp
-                })
+                    'position_id': fp.id,
+                }))
             for acc in position.account_ids:
-                self.create_record_with_xmlid(company, acc, 'account.fiscal.position.account', {
+                account_template_vals.append((acc, {
                     'account_src_id': acc_template_ref[acc.account_src_id.id],
                     'account_dest_id': acc_template_ref[acc.account_dest_id.id],
-                    'position_id': new_fp
-                })
+                    'position_id': fp.id,
+                }))
+        self._create_records_with_xmlid('account.fiscal.position.tax', tax_template_vals, company)
+        self._create_records_with_xmlid('account.fiscal.position.account', account_template_vals, company)
+
         return True
 
 
@@ -852,21 +887,38 @@ class AccountTaxTemplate(models.Model):
                 'account_dict': dictionary containing a to-do list with all the accounts to assign on new taxes
             }
         """
+        ChartTemplate = self.env['account.chart.template']
         todo_dict = {}
         tax_template_to_tax = {}
-        for tax in self:
-            vals_tax = tax._get_tax_vals(company, tax_template_to_tax)
-            new_tax = self.env['account.chart.template'].create_record_with_xmlid(company, tax, 'account.tax', vals_tax)
-            tax_template_to_tax[tax.id] = new_tax
-            # Since the accounts have not been created yet, we have to wait before filling these fields
-            todo_dict[new_tax] = {
-                'account_id': tax.account_id.id,
-                'refund_account_id': tax.refund_account_id.id,
-                'cash_basis_account_id': tax.cash_basis_account_id.id,
-                'cash_basis_base_account_id': tax.cash_basis_base_account_id.id,
-            }
 
-        if any([tax.tax_exigibility == 'on_payment' for tax in self]):
+        templates_todo = list(self)
+        while templates_todo:
+            templates = templates_todo
+            templates_todo = []
+
+            # create taxes in batch
+            template_vals = []
+            for template in templates:
+                if all(child.id in tax_template_to_tax for child in template.children_tax_ids):
+                    vals = template._get_tax_vals(company, tax_template_to_tax)
+                    template_vals.append((template, vals))
+                else:
+                    # defer the creation of this tax to the next batch
+                    templates_todo.append(template)
+            taxes = ChartTemplate._create_records_with_xmlid('account.tax', template_vals, company)
+
+            # fill in tax_template_to_tax and todo_dict
+            for tax, (template, vals) in pycompat.izip(taxes, template_vals):
+                tax_template_to_tax[template.id] = tax.id
+                # Since the accounts have not been created yet, we have to wait before filling these fields
+                todo_dict[tax.id] = {
+                    'account_id': template.account_id.id,
+                    'refund_account_id': template.refund_account_id.id,
+                    'cash_basis_account_id': template.cash_basis_account_id.id,
+                    'cash_basis_base_account_id': template.cash_basis_base_account_id.id,
+                }
+
+        if any(template.tax_exigibility == 'on_payment' for template in self):
             # When a CoA is being installed automatically and if it is creating account tax(es) whose field `Use Cash Basis`(tax_exigibility) is set to True by default
             # (example of such CoA's are l10n_fr and l10n_mx) then in the `Accounting Settings` the option `Cash Basis` should be checked by default.
             company.tax_exigibility = True

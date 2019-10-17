@@ -455,6 +455,7 @@ eventHandler.modules.imageDialog.showImageDialog = function ($editable) {
         options: {
             lastFilters: ['background'],
             onUpload: $editable.data('callbacks').onUpload,
+            noVideos: $editable.data('oe-model') === "mail.compose.message",
         },
     });
     return new $.Deferred().reject();
@@ -962,7 +963,10 @@ eventHandler.attach = function (oLayoutInfo, options) {
 
             show_tooltip = true;
             setTimeout(function () {
-                if (!show_tooltip) return;
+                // Do not show tooltip on double-click and if there is already one
+                if (!show_tooltip || $target.attr('title') !== undefined) {
+                    return;
+                }
                 $target.tooltip({title: _t('Double-click to edit'), trigger: 'manuel', container: 'body'}).tooltip('show');
                 setTimeout(function () {
                     $target.tooltip('dispose');

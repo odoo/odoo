@@ -67,8 +67,23 @@ sAnimation.registry.newsletter_popup = sAnimation.Class.extend({
     selector: ".o_newsletter_popup",
     start: function () {
         var self = this;
+
+        // Compatibility: rebuilding a correct modal from user database
+        // content. Since the first version, the modal is saved in databases
+        // directly but has never used a correct structure. While it was working
+        // with BS3, it is not with BS4.
+        // TODO review the newsletter popup creation, save and loading.
+        var $modal = this.$('.modal');
+        if ($modal.is('.modal-dialog')) {
+            $modal.removeClass('modal-md modal-dialog');
+            var $modalContent = $modal.find('.modal-content');
+            $modalContent.wrapAll($('<div/>', {class: 'modal-dialog'}));
+        }
+
         var popupcontent = self.$target.find(".o_popup_content_dev").empty();
-        if (!self.$target.data('list-id')) return;
+        if (!self.$target.data('list-id')) {
+            return;
+        }
 
         this._rpc({
             route: '/website_mass_mailing/get_content',
@@ -122,11 +137,15 @@ sAnimation.registry.newsletter_popup = sAnimation.Class.extend({
     show_banner: function () {
         var self = this;
         if (!utils.get_cookie("newsletter-popup-"+ self.$target.data('list-id')) && self.$target) {
-           $('#o_newsletter_popup:first').modal('show').css({
+            $('#o_newsletter_popup:first').modal('show').css({
                 'margin-top': '70px',
                 'position': 'fixed'
-            });
-             document.cookie = "newsletter-popup-"+ self.$target.data('list-id') +"=" + true + ";path=/";
+            }).find('.o_popup_bounce_small span.popup_newsletter_input_conserve').each(function () {
+                if ($(this).prev('input').length === 0) {
+                    $(this).before($('<input>').attr($(this).getAttributes()).removeClass('d-none popup_newsletter_input_conserve'));
+                }
+            }).remove();
+            document.cookie = "newsletter-popup-"+ self.$target.data('list-id') +"=" + true + ";path=/";
         }
     }
 });

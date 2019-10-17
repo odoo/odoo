@@ -18,6 +18,7 @@ _logger = logging.getLogger(__name__)
 
 class PadCommon(models.AbstractModel):
     _name = 'pad.common'
+    _description = 'Pad Common'
 
     @api.model
     def pad_is_configured(self):

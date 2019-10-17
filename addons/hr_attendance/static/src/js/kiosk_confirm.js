@@ -9,9 +9,8 @@ var QWeb = core.qweb;
 var KioskConfirm = AbstractAction.extend({
     events: {
         "click .o_hr_attendance_back_button": function () { this.do_action(this.next_action, {clear_breadcrumbs: true}); },
-        "click .o_hr_attendance_sign_in_out_icon": function () {
+        "click .o_hr_attendance_sign_in_out_icon": _.debounce(function () {
             var self = this;
-            this.$('.o_hr_attendance_sign_in_out_icon').attr("disabled", "disabled");
             this._rpc({
                     model: 'hr.employee',
                     method: 'attendance_manual',
@@ -22,10 +21,9 @@ var KioskConfirm = AbstractAction.extend({
                         self.do_action(result.action);
                     } else if (result.warning) {
                         self.do_warn(result.warning);
-                        self.$('.o_hr_attendance_sign_in_out_icon').removeAttr("disabled");
                     }
                 });
-        },
+        }, 200, true),
         'click .o_hr_attendance_pin_pad_button_0': function() { this.$('.o_hr_attendance_PINbox').val(this.$('.o_hr_attendance_PINbox').val() + 0); },
         'click .o_hr_attendance_pin_pad_button_1': function() { this.$('.o_hr_attendance_PINbox').val(this.$('.o_hr_attendance_PINbox').val() + 1); },
         'click .o_hr_attendance_pin_pad_button_2': function() { this.$('.o_hr_attendance_PINbox').val(this.$('.o_hr_attendance_PINbox').val() + 2); },
@@ -37,7 +35,7 @@ var KioskConfirm = AbstractAction.extend({
         'click .o_hr_attendance_pin_pad_button_8': function() { this.$('.o_hr_attendance_PINbox').val(this.$('.o_hr_attendance_PINbox').val() + 8); },
         'click .o_hr_attendance_pin_pad_button_9': function() { this.$('.o_hr_attendance_PINbox').val(this.$('.o_hr_attendance_PINbox').val() + 9); },
         'click .o_hr_attendance_pin_pad_button_C': function() { this.$('.o_hr_attendance_PINbox').val(''); },
-        'click .o_hr_attendance_pin_pad_button_ok': function() {
+        'click .o_hr_attendance_pin_pad_button_ok': _.debounce(function() {
             var self = this;
             this.$('.o_hr_attendance_pin_pad_button_ok').attr("disabled", "disabled");
             this._rpc({
@@ -54,7 +52,7 @@ var KioskConfirm = AbstractAction.extend({
                         setTimeout( function() { self.$('.o_hr_attendance_pin_pad_button_ok').removeAttr("disabled"); }, 500);
                     }
                 });
-        },
+        }, 200, true),
     },
 
     init: function (parent, action) {

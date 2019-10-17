@@ -13,6 +13,7 @@ var FormRenderer = BasicRenderer.extend({
     className: "o_form_view",
     events: _.extend({}, BasicRenderer.prototype.events, {
         'click .o_notification_box .oe_field_translate': '_onTranslate',
+        'click .o_notification_box .close': '_onTranslateNotificationClose',
         'click .oe_title, .o_inner_group': '_onClick',
     }),
     custom_events: _.extend({}, BasicRenderer.prototype.custom_events, {
@@ -30,6 +31,7 @@ var FormRenderer = BasicRenderer.extend({
         this._super.apply(this, arguments);
         this.idsForLabels = {};
         this.lastActivatedFieldIndex = -1;
+        this.alertFields = {};
     },
     /**
      * @override
@@ -103,23 +105,32 @@ var FormRenderer = BasicRenderer.extend({
         });
         return fieldNames;
     },
+    /*
+     * Updates translation alert fields for the current state and display updated fields
+     *
+     *  @param {Object} alertFields
+     */
+    updateAlertFields: function (alertFields) {
+        this.alertFields[this.state.res_id] = _.extend(this.alertFields[this.state.res_id] || {}, alertFields);
+        this.displayTranslationAlert();
+    },
     /**
      * Show a warning message if the user modified a translated field.  For each
      * field, the notification provides a link to edit the field's translations.
-     *
-     * @param {Object[]} alertFields field list
      */
     displayTranslationAlert: function () {
         this.$('.o_notification_box').remove();
-        var $notification = $(qweb.render('notification-box', {type: 'info'}))
-            .append(qweb.render('translation-alert', {
-                fields: this.alertFields,
-                lang: _t.database.parameters.name
-            }));
-        if (this.$('.o_form_statusbar').length) {
-            this.$('.o_form_statusbar').after($notification);
-        } else {
-            this.$el.prepend($notification);
+        if (this.alertFields[this.state.res_id]) {
+            var $notification = $(qweb.render('notification-box', {type: 'info'}))
+                .append(qweb.render('translation-alert', {
+                    fields: this.alertFields[this.state.res_id],
+                    lang: _t.database.parameters.name
+                }));
+            if (this.$('.o_form_statusbar').length) {
+                this.$('.o_form_statusbar').after($notification);
+            } else {
+                this.$el.prepend($notification);
+            }
         }
     },
     /**
@@ -165,8 +176,11 @@ var FormRenderer = BasicRenderer.extend({
      * field.
      */
     focusLastActivatedWidget: function () {
-        this._activateNextFieldWidget(this.state, this.lastActivatedFieldIndex - 1,
-            { noAutomaticCreate: true });
+        if (this.lastActivatedFieldIndex !== -1) {
+            return this._activateNextFieldWidget(this.state, this.lastActivatedFieldIndex - 1,
+                { noAutomaticCreate: true });
+        }
+        return false;
     },
     /**
      * returns the active tab pages for each notebook
@@ -324,6 +338,7 @@ var FormRenderer = BasicRenderer.extend({
                 });
                 self.trigger_up('swipe_right');
             },
+            excludedElements: ".o_notebook .nav.nav-tabs",
         });
     },
     /**
@@ -372,7 +387,7 @@ var FormRenderer = BasicRenderer.extend({
         var visible_buttons = buttons_partition[1];
 
         // Get the unfolded buttons according to window size
-        var nb_buttons = [2, 2, 4, 6][config.device.size_class] || 7;
+        var nb_buttons = this._renderButtonBoxNbButtons();
         var unfolded_buttons = visible_buttons.slice(0, nb_buttons).concat(invisible_buttons);
 
         // Get the folded buttons
@@ -411,6 +426,13 @@ var FormRenderer = BasicRenderer.extend({
         this._handleAttributes($result, node);
         this._registerModifiers(node, this.state, $result);
         return $result;
+    },
+    /**
+    * @private
+    * @returns {integer}
+    */
+    _renderButtonBoxNbButtons: function () {
+        return [2, 2, 4, 6][config.device.size_class] || 7;
     },
     /**
      * @private
@@ -905,6 +927,9 @@ var FormRenderer = BasicRenderer.extend({
 
         return $.when.apply($, defs).then(function () {
             self._updateView($form.contents());
+            if (self.state.res_id in self.alertFields) {
+                self.displayTranslationAlert();
+            }
         }, function () {
             $form.remove();
         }).then(function(){
@@ -995,10 +1020,7 @@ var FormRenderer = BasicRenderer.extend({
      * @param {OdooEvent} ev
      */
     _onNavigationMove: function (ev) {
-        if (ev.data.direction !== "cancel") {
-            ev.stopPropagation();
-        }
-
+        ev.stopPropagation();
         var index;
         if (ev.data.direction === "next") {
             index = this.allFieldWidgets[this.state.id].indexOf(ev.data.target || ev.target);
@@ -1017,6 +1039,15 @@ var FormRenderer = BasicRenderer.extend({
     _onTranslate: function (event) {
         event.preventDefault();
         this.trigger_up('translate', {fieldName: event.target.name, id: this.state.id});
+    },
+    /**
+     * remove alert fields of record from alertFields object
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onTranslateNotificationClose: function(ev) {
+        delete this.alertFields[this.state.res_id];
     },
 });
 

@@ -28,7 +28,7 @@ class AccountRegisterPayments(models.TransientModel):
     def _onchange_amount(self):
         if hasattr(super(AccountRegisterPayments, self), '_onchange_amount'):
             super(AccountRegisterPayments, self)._onchange_amount()
-        self.check_amount_in_words = self.currency_id.amount_to_text(self.amount)
+        self.check_amount_in_words = self.currency_id.amount_to_text(self.amount) if self.currency_id else False
 
     def _prepare_payment_vals(self, invoices):
         res = super(AccountRegisterPayments, self)._prepare_payment_vals(invoices)
@@ -51,7 +51,7 @@ class AccountPayment(models.Model):
     @api.onchange('amount','currency_id')
     def _onchange_amount(self):
         res = super(AccountPayment, self)._onchange_amount()
-        self.check_amount_in_words = self.currency_id.amount_to_text(self.amount)
+        self.check_amount_in_words = self.currency_id.amount_to_text(self.amount) if self.currency_id else ''
         return res
 
     def _check_communication(self, payment_method_id, communication):
@@ -115,6 +115,11 @@ class AccountPayment(models.Model):
         """ This method is a hook for l10n_xx_check_printing modules to implement actual check printing capabilities """
         raise UserError(_("You have to choose a check layout. For this, go in Apps, search for 'Checks layout' and install one."))
 
+
+    def set_check_amount_in_words(self):
+        for payment in self:
+            payment.check_amount_in_words = payment.currency_id.amount_to_text(payment.amount) if payment.currency_id else ''
+
     #######################
     #CHECK PRINTING METHODS
     #######################
@@ -151,12 +156,12 @@ class AccountPayment(models.Model):
         """ The stub is the summary of paid invoices. It may spill on several pages, in which case only the check on
             first page is valid. This function returns a list of stub lines per page.
         """
-        if len(self.invoice_ids) == 0:
+        if len(self.reconciled_invoice_ids) == 0:
             return None
 
         multi_stub = self.company_id.account_check_printing_multi_stub
 
-        invoices = self.invoice_ids.sorted(key=lambda r: r.date_due)
+        invoices = self.reconciled_invoice_ids.sorted(key=lambda r: r.date_due)
         debits = invoices.filtered(lambda r: r.type == 'in_invoice')
         credits = invoices.filtered(lambda r: r.type == 'in_refund')
 

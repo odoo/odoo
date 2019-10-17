@@ -47,7 +47,8 @@
                             <field name="time_type" groups="base.group_no_one"/>
                         </group>
                         <group name="validation" string="Validation">
-                            <field name="validation_type" widget="radio"/>
+                            <field name="validation_type" widget="radio" invisible="1"/>
+                            <field name="double_validation"/>
                         </group>
                         <group name="visibility" string="Allocation">
                             <field name="allocation_type" widget="radio" force_save="1"/>
@@ -95,9 +96,10 @@
         <field name="arch" type="xml">
             <tree string="Leave Type">
                 <field name="sequence" widget="handle"/>
-                <field name="name"/>
+                <field name="display_name"/>
                 <field name="allocation_type"/>
-                <field name="validation_type"/>
+                <field name="validation_type" invisible="1"/>
+                <field name="double_validation"/>
                 <field name="validity_start"/>
                 <field name="validity_stop"/>
             </tree>

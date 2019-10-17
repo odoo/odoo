@@ -65,7 +65,7 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
             'active_model': 'sale.order',
             'active_ids': [cls.sale_order.id],
             'active_id': cls.sale_order.id,
-            'default_journal_id': cls.journal_sale
+            'default_journal_id': cls.journal_sale.id,
         }
 
     def test_downpayment(self):

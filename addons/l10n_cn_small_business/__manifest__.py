@@ -25,6 +25,8 @@
     'depends': ['l10n_cn'],
     'data': [
         'data/l10n_cn_small_business_chart_data.xml',
+        'data/account.account.template.csv',
+        'data/l10n_cn_small_business_chart_post_data.xml',
         'data/account_tax_template_data.xml',
         'data/account_chart_template_data.xml',
     ],

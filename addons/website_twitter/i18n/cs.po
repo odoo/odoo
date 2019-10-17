@@ -6,14 +6,15 @@
 # Martin Trigaux, 2018
 # Ondřej Skuhravý <ondra.sk@volny.cz>, 2018
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2018
-# trendspotter, 2018
+# trendspotter <j.podhorecky@volny.cz>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-09-21 13:18+0000\n"
-"Last-Translator: trendspotter, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:35+0000\n"
+"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,22 +41,22 @@ msgstr ""
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "<strong>Callback URL: </strong>Leave blank"
-msgstr ""
+msgstr "<strong>Callback URL: </strong>nechte prázdné"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "<strong>Description: </strong> Odoo Twitter Integration"
-msgstr ""
+msgstr "<strong>Popis: </strong> propojení Odoo a Twitteru"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "<strong>Name: </strong> Odoo Twitter Integration"
-msgstr ""
+msgstr "<strong>Název: </strong> propojení Odoo a Twitteru"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "<strong>Website: </strong>"
-msgstr ""
+msgstr "<strong>Webová strana: </strong>"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_api_key
@@ -67,7 +68,7 @@ msgstr "Klíč API"
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_api_secret
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "API secret"
-msgstr ""
+msgstr "API secret"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
@@ -75,6 +76,8 @@ msgid ""
 "Accept terms of use and click on the Create your Twitter application button "
 "at the bottom"
 msgstr ""
+"Přijměte podmínky použití a klikněte na tlačítko Vytvořit aplikaci Twitter "
+"ve spodní části"
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:16
@@ -83,6 +86,8 @@ msgid ""
 "Authentication credentials were missing or incorrect. Maybe screen name "
 "tweets are protected."
 msgstr ""
+"Ověřovací pověření chyběla nebo byla nesprávná. Možná jsou tweety chráněny "
+"před zobrazením."
 
 #. module: website_twitter
 #: model:ir.model,name:website_twitter.model_res_config_settings
@@ -95,6 +100,8 @@ msgid ""
 "Copy/Paste Consumer Key (API Key) and Consumer Secret (API Secret) keys "
 "below."
 msgstr ""
+"Zkopírujte a vložte Consumer Key (API Key) a Consumer Secret (API Secret) "
+"uvedené níže."
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
@@ -131,7 +138,7 @@ msgstr "Získat oblíbené položky z názvu této obrazovky"
 #: code:addons/website_twitter/models/res_config_settings.py:48
 #, python-format
 msgid "HTTP Error: Something is misconfigured"
-msgstr ""
+msgstr "Chyba HTTP: Něco je chybně nakonfigurováno"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
@@ -147,7 +154,7 @@ msgstr "ID"
 #: code:addons/website_twitter/models/res_config_settings.py:59
 #, python-format
 msgid "Internet connection refused"
-msgstr ""
+msgstr "Internetové připojení bylo odmítnuto"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet____last_update
@@ -169,7 +176,7 @@ msgstr "Naposled upraveno"
 #: code:addons/website_twitter/models/res_config_settings.py:62
 #, python-format
 msgid "Please double-check your Twitter API Key and Secret!"
-msgstr ""
+msgstr "Pečlivě si zkontrolujte Twitter API Key and Secret!"
 
 #. module: website_twitter
 #: code:addons/website_twitter/controllers/main.py:27
@@ -227,6 +234,7 @@ msgstr ""
 msgid ""
 "The Twitter servers are up, but overloaded with requests. Try again later."
 msgstr ""
+"Twitter servery běží, ale jsou přetížené požadavky. Zkuste to později znovu."
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:22
@@ -235,6 +243,8 @@ msgid ""
 "The Twitter servers are up, but the request could not be serviced due to "
 "some failure within our stack. Try again later."
 msgstr ""
+"Twitter servery fungují, ale požadavek nemohl být odbaven kvůli nějaké chybě"
+" v naší pracovní frontě. Zkuste to později znovu."
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:17
@@ -243,6 +253,8 @@ msgid ""
 "The request is understood, but it has been refused or access is not allowed."
 " Please check your Twitter API Key and Secret."
 msgstr ""
+"Požadavek je srozumitelný, ale byl odmítnut nebo není povolen přístup. "
+"Zkontrolujte prosím svůj Twitter API klíč a secret."
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:15
@@ -251,6 +263,8 @@ msgid ""
 "The request was invalid or cannot be otherwise served. Requests without "
 "authentication are considered invalid and will yield this response."
 msgstr ""
+"Žádost byla neplatná nebo ji nelze doručit jinak. Žádosti bez ověření se "
+"považují za neplatné a tato odpověď bude poskytnuta."
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:14
@@ -271,7 +285,7 @@ msgstr "Tweety"
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "Twitter API Credentials"
-msgstr ""
+msgstr "Twitter API přístupové údaje"
 
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_website__twitter_api_key
@@ -291,7 +305,7 @@ msgstr "Twitter API klíč"
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_res_config_settings__twitter_api_key
 msgid "Twitter API key you can get it from https://apps.twitter.com/"
-msgstr ""
+msgstr "Twitter API key můžete získat na https://apps.twitter.com/"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website__twitter_api_secret
@@ -301,7 +315,7 @@ msgstr "Twitter API secret"
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_res_config_settings__twitter_api_secret
 msgid "Twitter API secret you can get it from https://apps.twitter.com/"
-msgstr ""
+msgstr "Twitter API secret můžete získat na https://apps.twitter.com/"
 
 #. module: website_twitter
 #. openerp-web
@@ -335,12 +349,12 @@ msgstr ""
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_server_uri
 msgid "Twitter server uri"
-msgstr ""
+msgstr "Twitter server uri"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "Twitter tutorial"
-msgstr ""
+msgstr " Twitter tutorial"
 
 #. module: website_twitter
 #: code:addons/website_twitter/controllers/main.py:37
@@ -357,21 +371,21 @@ msgstr ""
 #: code:addons/website_twitter/static/src/xml/website.twitter.xml:6
 #, python-format
 msgid "Twitter's user"
-msgstr ""
+msgstr "uživatel Twitteru"
 
 #. module: website_twitter
 #: model:ir.actions.server,name:website_twitter.ir_cron_twitter_actions_ir_actions_server
 #: model:ir.cron,cron_name:website_twitter.ir_cron_twitter_actions
 #: model:ir.cron,name:website_twitter.ir_cron_twitter_actions
 msgid "Twitter: Fetch new favorites"
-msgstr ""
+msgstr "Twitter: Načíst nové oblíbené položky"
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:58
 #: code:addons/website_twitter/models/res_config_settings.py:59
 #, python-format
 msgid "We failed to reach a twitter server."
-msgstr ""
+msgstr "Nepodařilo se nám připojit na twitterový server."
 
 #. module: website_twitter
 #: model:ir.model,name:website_twitter.model_website
@@ -382,12 +396,7 @@ msgstr "Webová strana"
 #. module: website_twitter
 #: model:ir.model,name:website_twitter.model_website_twitter_tweet
 msgid "Website Twitter"
-msgstr ""
-
-#. module: website_twitter
-#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "api_key.png"
-msgstr ""
+msgstr "Webové stránky Twitter"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form

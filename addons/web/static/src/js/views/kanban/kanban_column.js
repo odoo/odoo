@@ -7,6 +7,7 @@ var Dialog = require('web.Dialog');
 var KanbanRecord = require('web.KanbanRecord');
 var RecordQuickCreate = require('web.kanban_record_quick_create');
 var view_dialogs = require('web.view_dialogs');
+var viewUtils = require('web.viewUtils');
 var Widget = require('web.Widget');
 var KanbanColumnProgressBar = require('web.KanbanColumnProgressBar');
 
@@ -113,13 +114,21 @@ var KanbanColumn = Widget.extend({
                 revert: 0,
                 delay: 0,
                 items: '> .o_kanban_record:not(.o_updating)',
-                helper: 'clone',
                 cursor: 'move',
                 over: function () {
                     self.$el.addClass('o_kanban_hover');
                 },
                 out: function () {
                     self.$el.removeClass('o_kanban_hover');
+                },
+                start: function (event, ui) {
+                    ui.item.addClass('o_currently_dragged');
+                },
+                stop: function (event, ui) {
+                    var item = ui.item;
+                    setTimeout(function () {
+                        item.removeClass('o_currently_dragged');
+                    });
                 },
                 update: function (event, ui) {
                     var record = ui.item.data('record');
@@ -172,6 +181,7 @@ var KanbanColumn = Widget.extend({
      * into a fragment, the focus has to be set manually once in the DOM.
      */
     on_attach_callback: function () {
+        _.invoke(this.records, 'on_attach_callback');
         if (this.quickCreateWidget) {
             this.quickCreateWidget.on_attach_callback();
         }
@@ -201,7 +211,7 @@ var KanbanColumn = Widget.extend({
         this.trigger_up('close_quick_create'); // close other quick create widgets
         this.trigger_up('start_quick_create');
         var context = this.data.getContext();
-        context['default_' + this.groupedBy] = this.id;
+        context['default_' + this.groupedBy] = viewUtils.getGroupValue(this.data, this.groupedBy);
         this.quickCreateWidget = new RecordQuickCreate(this, {
             context: context,
             formViewRef: this.quickCreateView,

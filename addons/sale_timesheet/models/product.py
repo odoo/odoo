@@ -80,8 +80,22 @@ class ProductTemplate(models.Model):
     @api.onchange('type')
     def _onchange_type(self):
         super(ProductTemplate, self)._onchange_type()
-        if self.type == 'service':
+        if self.type == 'service' and not self.invoice_policy:
             self.invoice_policy = 'order'
             self.service_type = 'timesheet'
-        elif self.type == 'consu' and self.service_policy == 'ordered_timesheet':
+        elif self.type == 'consu' and not self.invoice_policy and self.service_policy == 'ordered_timesheet':
             self.invoice_policy = 'order'
+
+
+class ProductProduct(models.Model):
+    _inherit = 'product.product'
+
+    @api.onchange('service_tracking')
+    def _onchange_service_tracking(self):
+        if self.service_tracking == 'no':
+            self.project_id = False
+            self.project_template_id = False
+        elif self.service_tracking == 'task_global_project':
+            self.project_template_id = False
+        elif self.service_tracking in ['task_new_project', 'project_only']:
+            self.project_id = False

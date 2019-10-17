@@ -77,7 +77,8 @@
                     <field name="qty_at_date"/>
                     <field name="uom_id" groups="uom.group_uom"/>
                     <field name="currency_id" invisible="1"/>
-                    <field name="stock_value" sum="Stock Valuation" widget="monetary"/>
+                    <field name="cost_currency_id" invisible="1"/>
+                    <field name="stock_value" sum="Stock Valuation" widget="monetary" options="{'currency_field': 'cost_currency_id'}"/>
                     <field name="cost_method" invisible="1"/>
                     <button name="action_valuation_at_date_details" type="object" icon="fa-info-circle" aria-label="Valuation" title="Valuation" attrs="{'invisible': [('cost_method', '!=', 'fifo')]}" />
                 </tree>
@@ -87,11 +88,19 @@
         <record id="view_inventory_valuation_search" model="ir.ui.view">
             <field name="name">product.product</field>
             <field name="model">product.product</field>
+            <field name="priority" eval="17"/>
             <field name="arch" type="xml">
                 <search string="Inventory Valuation">
+                    <field name="name" string="Product"/>
+                    <field name="categ_id" />
+                    <field name="product_tmpl_id" />
+                    <field name="attribute_value_ids" />
                     <filter string="Category" name="categ_id" context="{'group_by':'categ_id'}"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                    <separator/>
+                    <filter string="Periodic (manual)" name="manual_periodic" domain="[('valuation', '=', 'manual_periodic')]"/>
+                    <filter string="Perpetual (automated)" name="real_time" domain="[('valuation', '=', 'real_time')]"/>
                 </search>
             </field>
         </record>

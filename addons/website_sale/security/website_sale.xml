@@ -23,6 +23,7 @@
         <field name="perm_unlink" eval="False"/>
     </record>
 
+    <!-- TODO: remove in master -->
     <record id="payment_transaction_salesman_rule" model="ir.rule">
         <field name="name">Access every payment transaction</field>
         <field name="model_id" ref="payment.model_payment_transaction"/>
@@ -30,6 +31,7 @@
         <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
     </record>
 
+    <!-- TODO: remove in master -->
     <record id="payment_token_salesman_rule" model="ir.rule">
         <field name="name">Access every payment token</field>
         <field name="model_id" ref="payment.model_payment_token"/>
@@ -52,6 +54,31 @@
         <field name="implied_ids" eval="[(4, ref('sale.group_delivery_invoice_address'))]"/>
     </record>
 
-
+    <!--
+        Multi-company/Multi-website compliant:
+        We can't add a condition on domain_force without losing `product`
+        ir.rule domain_force. It is better to disabled them to be able to
+        reenable them on `website_sale` uninstall.
+        Don't override domain_force or we will need to hardcode the original
+        domain in `uninstall_hook` rather than just reenabling records.
+    -->
+    <record id="product.product_pricelist_comp_rule" model="ir.rule">
+        <field name="active" eval="False"/>
+    </record>
+    <record id="product.product_pricelist_item_comp_rule" model="ir.rule">
+        <field name="active" eval="False"/>
+    </record>
+    <record id="product_pricelist_comp_rule" model="ir.rule">
+        <field name="name">product pricelist company rule</field>
+        <field name="model_id" ref="product.model_product_pricelist"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id','in',(False,user.company_id.id,website.company_id.id))]</field>
+    </record>
+    <record id="product_pricelist_item_comp_rule" model="ir.rule">
+        <field name="name">product pricelist item company rule</field>
+        <field name="model_id" ref="product.model_product_pricelist_item"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id','in',(False,user.company_id.id,website.company_id.id))]</field>
+    </record>
 
 </odoo>

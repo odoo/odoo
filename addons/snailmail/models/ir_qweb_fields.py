@@ -8,6 +8,12 @@ class Contact(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, options):
-        snailmail_layout = options['template_options'].get('snailmail_layout')
-        value = value.with_context(snailmail_layout=snailmail_layout)
+        if self.env.context.get('snailmail_layout'):
+           value = value.with_context(snailmail_layout=self.env.context['snailmail_layout'])
         return super(Contact, self).value_to_html(value, options)
+
+    @api.model
+    def record_to_html(self, record, field_name, options):
+        if self.env.context.get('snailmail_layout'):
+           record = record.with_context(snailmail_layout=self.env.context['snailmail_layout'])
+        return super(Contact, self).record_to_html(record, field_name, options)

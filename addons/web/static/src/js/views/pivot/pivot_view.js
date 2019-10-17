@@ -69,6 +69,11 @@ var PivotView = AbstractView.extend({
                 widgets[name] = field.attrs.widget;
             }
 
+
+            if (field.attrs.invisible && py.eval(field.attrs.invisible)) {
+                delete measures[name];
+                return;
+            }
             // add active measures to the measure list.  This is very rarely
             // necessary, but it can be useful if one is working with a
             // functional field non stored, but in a model with an overrided
@@ -80,6 +85,11 @@ var PivotView = AbstractView.extend({
             if (field.attrs.type === 'measure' && !(field.attrs.name in measures)) {
                 measures[field.attrs.name] = self.fields[field.attrs.name];
             }
+
+            if (field.attrs.string) {
+              measures[name].string = field.attrs.string;
+            }
+
             if (field.attrs.type === 'measure' || 'operator' in field.attrs) {
                 activeMeasures.push(name);
                 measures[name] = self.fields[name];

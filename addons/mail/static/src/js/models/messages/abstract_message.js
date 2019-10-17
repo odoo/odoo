@@ -48,6 +48,9 @@ var AbstractMessage =  Class.extend({
         this._type = data.message_type || undefined;
 
         this._processAttachmentURL();
+        this._attachmentIDs.forEach(function (attachment) {
+            attachment.filename = attachment.filename || attachment.name || _t("unnamed");
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -334,6 +337,14 @@ var AbstractMessage =  Class.extend({
      */
     needsModeration: function () {
         return false;
+    },
+    /**
+     * @params {integer[]} attachmentIDs
+     */
+    removeAttachments: function (attachmentIDs) {
+        this._attachmentIDs = _.reject(this._attachmentIDs, function (attachment) {
+            return _.contains(attachmentIDs, attachment.id);
+        });
     },
     /**
      * State whether this message should redirect to the author

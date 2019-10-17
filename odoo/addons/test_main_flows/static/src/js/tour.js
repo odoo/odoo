@@ -211,7 +211,6 @@ tour.register('main_flow_tour', {
     position: 'bottom',
 }, {
     trigger: ".breadcrumb-item:first",
-    extra_trigger: ".o_form_readonly", // FIXME: this is required due to an issue in tour_manager (see [*])
     content: _t("Use the breadcrumbs to <b>go back to products</b>."),
     position: "bottom"
 }, {
@@ -551,7 +550,7 @@ tour.register('main_flow_tour', {
     content: _t('Select the generated manufacturing order'),
     position: 'bottom',
 }, {
-    trigger: ".o_statusbar_buttons > button:enabled:contains('Check availability')",
+    trigger: ".o_statusbar_buttons > button[name='action_assign']:enabled",
     content: _t("Check availability"),
     position: "bottom",
 }, {
@@ -671,7 +670,7 @@ tour.register('main_flow_tour', {
     position: 'bottom',
 }, {
     edition: "enterprise",
-    trigger: '.o_app[data-menu-xmlid="account.menu_finance"]',
+    trigger: '.o_app[data-menu-xmlid="account_accountant.menu_accounting"]',
     content: _t('Go to Accounting'),
     position: 'bottom',
 }, {
@@ -753,7 +752,6 @@ tour.register('main_flow_tour', {
 }, {
     edition: "enterprise",
     trigger: ".o_selected_row .o_field_widget[name=name]",
-    extra_trigger: ".o_selected_row .o_field_widget[name=partner_id] .o_external_button", // FIXME: this is required due to an issue in tour_manager (see [*])
     content: _t('Let\'s enter a name.'),
     position: "bottom",
     run: "text the_flow.statement.line",
@@ -779,16 +777,3 @@ tour.register('main_flow_tour', {
     position: "bottom",
 }]);
 });
-
-/*
- * [*] FIXME: issue in tour_manager:
- *     The JQuery element of a step is registered as soon as its trigger and
- *     extra_trigger elements are visible in the DOM, but it's action is delayed
- *     to handle the 'running_step_delay' option (0 by default, but even with 0,
- *     the action is executed after finishing the current execution block, which
- *     may produce a re-rendering of the part of the DOM containing the element).
- *     When this happens, the action is executed on an jquery element not present
- *     in the DOM anymore.
- *     To avoid this, we add an 'extra_trigger' to wait for the updated jquery
- *     element before activating the step (and thus registering the JQuery element).
- */

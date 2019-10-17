@@ -18,8 +18,14 @@ var CustomizeMenu = Widget.extend({
     /**
      * @override
      */
-    start: function () {
+    willStart: function () {
         this.viewName = $(document.documentElement).data('view-xmlid');
+        return this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    start: function () {
         if (!this.viewName) {
             _.defer(this.destroy.bind(this));
         }
@@ -27,6 +33,7 @@ var CustomizeMenu = Widget.extend({
         if (this.$el.is('.show')) {
             this._loadCustomizeOptions();
         }
+        return this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -113,6 +120,7 @@ var CustomizeMenu = Widget.extend({
 
 var AceEditorMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     actions: _.extend({}, websiteNavbarData.WebsiteNavbarActionWidget.prototype.actions || {}, {
+        close_all_widgets: '_hideEditor',
         edit: '_enterEditMode',
         ace: '_launchAce',
     }),
@@ -124,11 +132,10 @@ var AceEditorMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * @override
      */
     start: function () {
-        var def;
         if (window.location.hash.substr(0, WebsiteAceEditor.prototype.hash.length) === WebsiteAceEditor.prototype.hash) {
-            def = this._launchAce();
+            this._launchAce();
         }
-        return $.when(this._super.apply(this, arguments), def);
+        return this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -141,6 +148,12 @@ var AceEditorMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * @private
      */
     _enterEditMode: function () {
+        this._hideEditor();
+    },
+    /**
+     * @private
+     */
+    _hideEditor: function () {
         if (this.globalEditor) {
             this.globalEditor.do_hide();
         }
@@ -153,30 +166,37 @@ var AceEditorMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * @returns {Deferred}
      */
     _launchAce: function () {
-        if (this.globalEditor) {
-            this.globalEditor.do_show();
-            return $.when();
-        } else {
-            var currentHash = window.location.hash;
-            var indexOfView = currentHash.indexOf("?res=");
-            var initialResID = undefined;
-            if (indexOfView >= 0) {
-                initialResID = currentHash.substr(indexOfView + ("?res=".length));
-                var parsedResID = parseInt(initialResID, 10);
-                if (parsedResID) {
-                    initialResID = parsedResID;
+        var def = $.Deferred();
+        this.trigger_up('action_demand', {
+            actionName: 'close_all_widgets',
+            onSuccess: def.resolve.bind(def),
+        });
+        return def.then((function () {
+            if (this.globalEditor) {
+                this.globalEditor.do_show();
+                return $.when();
+            } else {
+                var currentHash = window.location.hash;
+                var indexOfView = currentHash.indexOf("?res=");
+                var initialResID = undefined;
+                if (indexOfView >= 0) {
+                    initialResID = currentHash.substr(indexOfView + ("?res=".length));
+                    var parsedResID = parseInt(initialResID, 10);
+                    if (parsedResID) {
+                        initialResID = parsedResID;
+                    }
                 }
-            }
 
-            this.globalEditor = new WebsiteAceEditor(this, $(document.documentElement).data('view-xmlid'), {
-                initialResID: initialResID,
-                defaultBundlesRestriction: [
-                    "web.assets_frontend",
-                    "website.assets_frontend",
-                ],
-            });
-            return this.globalEditor.appendTo(document.body);
-        }
+                this.globalEditor = new WebsiteAceEditor(this, $(document.documentElement).data('view-xmlid'), {
+                    initialResID: initialResID,
+                    defaultBundlesRestriction: [
+                        "web.assets_frontend",
+                        "website.assets_frontend",
+                    ],
+                });
+                return this.globalEditor.appendTo(document.body);
+            }
+        }).bind(this));
     },
 });
 

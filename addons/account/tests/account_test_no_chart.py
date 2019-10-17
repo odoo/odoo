@@ -46,6 +46,12 @@ class TestAccountNoChartCommon(SavepointCase):
             'property_account_receivable_id': cls.account_receivable.id,
         })
 
+        cls.sale_journal0 = cls.env['account.journal'].create({
+            'name': 'Sale Journal',
+            'type': 'sale',
+            'code': 'SJT0',
+        })
+
     @classmethod
     def setUpAdditionalAccounts(cls):
         """ Set up some addionnal accounts: expenses, revenue, ... """

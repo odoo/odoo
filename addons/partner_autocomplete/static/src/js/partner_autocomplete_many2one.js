@@ -58,6 +58,19 @@ var PartnerField = FieldMany2One.extend({
     },
 
     /**
+     * Returns the display_name from a string which contains it but was altered
+     * as a result of the show_vat option.
+     * Note that the split is done on a 'figuredash', not a standard dash.
+     *
+     * @private
+     * @param {string} value
+     * @returns {string} display_name without TaxID
+     */
+    _getDisplayNameWithoutVAT: function (value) {
+        return value.split(' ‒ ')[0];
+    },
+
+    /**
      * Modify autocomplete results rendering
      * Add logo in the autocomplete results if logo is provided
      *
@@ -65,6 +78,11 @@ var PartnerField = FieldMany2One.extend({
      */
     _modifyAutompleteRendering: function (){
         var api = this.$input.data('ui-autocomplete');
+        // FIXME: bugfix to prevent traceback in mobile apps due to override 
+        // of Many2one widget with native implementation.
+        if (!api) {
+            return;
+        }
         api._renderItem = function(ul, item){
             ul.addClass('o_partner_autocomplete_dropdown');
             var $a = $('<a/>')["html"](item.label);
@@ -86,6 +104,7 @@ var PartnerField = FieldMany2One.extend({
      * @private
      */
     _renderEdit: function (){
+        this.m2o_value = this._getDisplayNameWithoutVAT(this.m2o_value);
         this._super.apply(this, arguments);
         this._modifyAutompleteRendering();
     },

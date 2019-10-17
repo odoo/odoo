@@ -501,6 +501,47 @@ class TestQWebNS(TransactionCase):
         with self.assertRaises(QWebException, msg=error_msg):
             view1.render()
 
+    def test_render_t_call_propagates_t_lang(self):
+        current_lang = 'en_US'
+        other_lang = 'fr_FR'
+
+        self.env['res.lang'].load_lang(lang=other_lang)
+
+        self.env['res.lang'].search([('code', '=', other_lang)], limit=1).write({
+            'active': True,
+            'decimal_point': '*',
+            'thousands_sep': '/'
+        })
+
+        view1 = self.env['ir.ui.view'].create({
+            'name': "callee",
+            'type': 'qweb',
+            'arch': u"""
+                <t t-name="base.callee">
+                    <t t-esc="9000000.00" t-options="{'widget': 'float', 'precision': 2}" />
+                </t>
+            """
+        })
+        self.env['ir.model.data'].create({
+            'name': 'callee',
+            'model': 'ir.ui.view',
+            'module': 'base',
+            'res_id': view1.id,
+        })
+
+        view2 = self.env['ir.ui.view'].create({
+            'name': "calling",
+            'type': 'qweb',
+            'arch': u"""
+                <t t-name="base.calling">
+                    <t t-call="base.callee" t-lang="'%s'" />
+                </t>
+            """ % other_lang
+        })
+
+        rendered = view2.with_context(lang=current_lang).render().strip()
+        self.assertEqual(rendered, b'9/000/000*00')
+
 
 from copy import deepcopy
 class FileSystemLoader(object):
@@ -595,8 +636,6 @@ class TestPageSplit(TransactionCase):
             E.div({'style': 'page-break-after: always'}),
             E.table(E.tr({'data-pagebreak': 'before'}), E.tr())
         )
-        print(etree.tostring(rendered))
-        print(etree.tostring(ref))
         self.assertTreesEqual(rendered, ref)
 
     def test_split_after(self):

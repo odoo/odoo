@@ -3,29 +3,23 @@
 # * account_bank_statement_import
 # 
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2018
-# Sadig Adam <sadig41@gmail.com>, 2018
 # amrnegm <amrnegm.01@gmail.com>, 2018
 # Martin Trigaux, 2018
-# jahzar <jahzar@gmail.com>, 2018
-# Fahad Alqahtani <fahad@cloudland.sa>, 2018
-# Osoul <baruni@osoul.ly>, 2018
 # Mohammed Albasha <m.albasha.ma@gmail.com>, 2018
 # Ghaith Gammar <g.gammar@saharaifs.net>, 2018
-# Mohamed Hamdy <medo_boy1104@yahoo.com>, 2018
 # Osama Ahmaro <osamaahmaro@gmail.com>, 2018
-# Abd El-Rahman Ali <abdelrahman.ali.242@gmail.com>, 2018
 # Mahmood Al Halwachi <mahmood.alhalwachi@gmail.com>, 2018
 # Zuhair Hammadi <zuhair12@gmail.com>, 2018
 # Shaima Safar <shaima.safar@open-inside.com>, 2018
-# Islam Eldeeb <islameldeb@gmail.com>, 2018
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Islam Eldeeb <islameldeb@gmail.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:15+0000\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,29 +32,29 @@ msgstr ""
 #: code:addons/account_bank_statement_import/static/src/js/account_bank_statement_import.js:13
 #, python-format
 msgid " Import Template for Bank Statements"
-msgstr ""
+msgstr "قالب استيراد كشوفات الحسابات البنكية"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:236
 #, python-format
 msgid "%d transactions had already been imported and were ignored."
-msgstr "تم استيراد %d عملية وتم تجاهلها"
+msgstr "تم تجاهل %d معاملة سبق استيرادها بالفعل."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:236
 #, python-format
 msgid "1 transaction had already been imported and was ignored."
-msgstr "تم استيراد 1 عملية وتم تجاهلها"
+msgstr "تم تجاهل 1 معاملة سبق استيرادها بالفعل."
 
 #. module: account_bank_statement_import
 #: sql_constraint:account.bank.statement.line:0
 msgid "A bank account transactions can be imported only once !"
-msgstr "معاملات الحساب المصرفي يمكن إدخاله مرة واحدة فقط!"
+msgstr "يمكن استيراد معاملات الحساب البنكي مرة واحدة فقط!"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__company_partner_id
 msgid "Account Holder"
-msgstr "صاحب الحساب"
+msgstr "مالك الحساب"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__bank_acc_number
@@ -70,7 +64,7 @@ msgstr "رقم الحساب"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__type_control_ids
 msgid "Account Types Allowed"
-msgstr "انواع الحسابات المسموح بها "
+msgstr "أنواع الحسابات المسموح بها"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__account_control_ids
@@ -85,17 +79,17 @@ msgstr "نشط"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__alias_id
 msgid "Alias"
-msgstr "الكنية"
+msgstr "اللقب"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__alias_name
 msgid "Alias Name for Vendor Bills"
-msgstr ""
+msgstr "اللقب المستخدم لفواتير الموردين"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__alias_domain
 msgid "Alias domain"
-msgstr "لقب النطاق"
+msgstr "نطاق اللقب"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__update_posted
@@ -106,7 +100,7 @@ msgstr "السماح بإلغاء القيود"
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:238
 #, python-format
 msgid "Already imported items"
-msgstr "لقد تم ادخال المواد سابقا"
+msgstr "عناصر تم استيرادها بالفعل"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__at_least_one_inbound
@@ -133,32 +127,32 @@ msgstr "الحساب البنكي"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__bank_statements_source
 msgid "Bank Feeds"
-msgstr "تغذية البنك"
+msgstr "التغذية البنكية"
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 msgid "Bank Journal Name"
-msgstr "الدفتر اليومي باسم البنك"
+msgstr "اسم دفتر اليومية"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import__data_file
 msgid "Bank Statement File"
-msgstr "ملف كشف حساب البنك"
+msgstr "ملف كشف الحساب البنكي"
 
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr "بند كشف حساب المصرف"
+msgstr "بند كشف الحساب البنكي"
 
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_setup_bank_manual_config
 msgid "Bank setup manual config"
-msgstr ""
+msgstr "الضبط اليدوي لإعدادات البنك"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__belongs_to_company
 msgid "Belong to the user's current company"
-msgstr "يعود لمستخدمي الشركة الحالية"
+msgstr "ينتمي للمؤسسة الحالية للمستخدم"
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
@@ -173,8 +167,8 @@ msgid ""
 "Cannot find in which journal import this statement. Please manually select a"
 " journal."
 msgstr ""
-"لا يمكن العثور هذا الكشف الحساب ادخل في أي دفتر اليومية  . يرجى اختيار دفتر "
-"اليومية يدويا."
+"لم نتمكن من اكتشاف لأي دفتر يومية يتم استيراد كشف الحساب المحدد. نرجو منكم "
+"اختيار دفتر اليومية يدوياً."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__refund_sequence
@@ -182,8 +176,8 @@ msgid ""
 "Check this box if you don't want to share the same sequence for invoices and"
 " credit notes made from this journal"
 msgstr ""
-"حدد هذا المربع إذا كنت لا تريد مشاركه نفس التسلسل للفواتير والإشعارات "
-"الدائنة المصنوعة من دفتر اليومية هذا"
+"حدد هذا الاختيار إذا كنت ترغب في مسلسل منفصل لإشعارات الخصم والمردودات عن "
+"المسلسل الخاص بالفواتير الصادرة من دفتر اليومية هذا."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__update_posted
@@ -191,18 +185,18 @@ msgid ""
 "Check this box if you want to allow the cancellation the entries related to "
 "this journal or of the invoice related to this journal"
 msgstr ""
-"اختر هذا المربع إذا كنت ترغب في السماح بإلغاء البنود المتعلقة بهذه اليومية "
-"أو من الفاتورة ذات الصلة لهذه اليومية"
+"حدد هذا الاختيار إذا كنت ترغب في السماح بإلغاء القيود المسجلة في دفتر "
+"اليومية هذا أو الفواتير المقترنة به"
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "Choose a file to import..."
-msgstr "اختر ملف للتنزيل..."
+msgstr "اختر ملف لاستيراده..."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__color
 msgid "Color Index"
-msgstr "اللون"
+msgstr "معرف اللون"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__company_id
@@ -212,7 +206,7 @@ msgstr "المؤسسة"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__company_id
 msgid "Company related to this journal"
-msgstr "الشركات المرتبطة بهذه اليومية"
+msgstr "المؤسسة المقترنة بدفتر اليومية هذا"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:112
@@ -221,8 +215,8 @@ msgid ""
 "Could not make sense of the given file.\n"
 "Did you install the module to support this type of file ?"
 msgstr ""
-"لا يمكن أن يكون له معنى من الملف المعطى.\n"
-"هل تثبيت الموديول لدعم هذا النوع من الملفات؟"
+"لم يمكن فهم طبيعة الملف المحدد.\n"
+"هل قمت بتثبيت الموديول لدعم هذا النوع من الملفات؟"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import__create_uid
@@ -239,12 +233,12 @@ msgstr "أنشئ في"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__refund_sequence_id
 msgid "Credit Note Entry Sequence"
-msgstr "مسلسل قيود الإشعارات الدائنة"
+msgstr "مسلسل قيود إشعار الخصم"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__refund_sequence_number_next
 msgid "Credit Notes: Next Number"
-msgstr "الإشعارات الدائنة: الرقم التالي"
+msgstr "إشعارات الخصم: الرقم التالي"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__currency_id
@@ -254,12 +248,12 @@ msgstr "العملة"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__refund_sequence
 msgid "Dedicated Credit Note Sequence"
-msgstr "تسلسل الملاحظات الدائنة المخصصة"
+msgstr "مسلسل إشعارات الخصم المخصصة"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__default_credit_account_id
 msgid "Default Credit Account"
-msgstr "حساب الدائنون الإفتراضي"
+msgstr "الحساب الدائن الافتراضي"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__default_debit_account_id
@@ -269,21 +263,20 @@ msgstr "الحساب المدين الافتراضي"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__bank_statements_source
 msgid "Defines how the bank statements will be registered"
-msgstr ""
+msgstr "يحدد كيفية تسجيل كشوفات الحساب البنكية"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import__display_name
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__display_name
 msgid "Display Name"
-msgstr "اسم العرض"
+msgstr "الاسم المعروض"
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid ""
 "Download a bank statement from your bank and import it here. Supported "
 "formats:"
-msgstr ""
-"تحميل كشف حساب مصرفي من البنك الذي تتعامل معه وادخاله هنا. التصميم المدعوم:"
+msgstr "حمل كشف حساب من البنك الخاص بك وقم باستيراده هنا. ندعم الصيغ التالية:"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence_id
@@ -298,26 +291,24 @@ msgstr "اسم الملف"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__inbound_payment_method_ids
 msgid "For Incoming Payments"
-msgstr ""
+msgstr "للمدفوعات الواردة"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__outbound_payment_method_ids
 msgid "For Outgoing Payments"
-msgstr ""
+msgstr "للمدفوعات الصادرة"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import__data_file
 msgid ""
 "Get you bank statements in electronic format from your bank and select them "
 "here."
-msgstr ""
-"احصل على كشف الحساب المصرفي على شكل الكتروني من البنك الذي تتعامل معه واختر "
-"هنا."
+msgstr "احصل على كشوفات حسابك بصيغة إلكترونية واخترها من هنا."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__group_invoice_lines
 msgid "Group Invoice Lines"
-msgstr "بنود فاتورة المجموعة"
+msgstr "تجميع بنود الفاتورة"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import__id
@@ -331,8 +322,7 @@ msgid ""
 "If this box is checked, the system will try to group the accounting lines "
 "when generating them from invoices."
 msgstr ""
-"اذا تم تحديد هذه الخانة, سيحاول النظام بتجميع بنود المحاسبة عند انشائهم من "
-"الفواتير."
+"إذا تم تحديد هذا الاختيار، سيحاول النظام إنشاء قيد مركب لبنود الفواتير."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_journal.py:20
@@ -345,42 +335,42 @@ msgstr "استيراد"
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_import
 msgid "Import Bank Statement"
-msgstr "استيراد كشف الحساب"
+msgstr "استيراد كشف حساب بنكي"
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "Import Bank Statements"
-msgstr "كشف حساب البنك المستورد"
+msgstr "استيراد كشوفات الحسابات البنكية"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_line__unique_import_id
 msgid "Import ID"
-msgstr "ادخل الهوية الشخصية"
+msgstr "معرف الاستيراد"
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit
 msgid "Import Statement"
-msgstr "ادخل كشف الحساب"
+msgstr "استيراد كشف حساب"
 
 #. module: account_bank_statement_import
 #: model:ir.actions.act_window,name:account_bank_statement_import.install_more_import_formats_action
 msgid "Install Import Format"
-msgstr ""
+msgstr "تثبيت موديول صيغة الاستيراد"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__default_credit_account_id
 msgid "It acts as a default account for credit amount"
-msgstr "وهي تعمل كحساب افتراضي لمبلغ الدائن"
+msgstr "يتم استخدامه كحساب افتراضي للمبالغ الدائنة"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__default_debit_account_id
 msgid "It acts as a default account for debit amount"
-msgstr "وهي تمثل الحساب الافتراضي لمبلغ المدين"
+msgstr "يتم استخدامه كحساب افتراضي للمبالغ المدينة"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__alias_name
 msgid "It creates draft vendor bill by sending an email."
-msgstr ""
+msgstr "سيقوم بإنشاء مسودة فاتورة مورد عبر إرسالها بالبريد الإلكتروني."
 
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_journal
@@ -393,17 +383,17 @@ msgstr "دفتر اليومية"
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 #, python-format
 msgid "Journal Creation"
-msgstr "إنشاء الدفتر اليومية"
+msgstr "إنشاء دفتر يومية"
 
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_import_journal_creation
 msgid "Journal Creation on Bank Statement Import"
-msgstr ""
+msgstr "إنشاء دفتر يومية عند استيراد كشف الحساب البنكي"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__name
 msgid "Journal Name"
-msgstr "اسم اليومية"
+msgstr "اسم دفتر اليومية"
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
@@ -411,18 +401,18 @@ msgid ""
 "Just click OK to create the account/journal and finish the import. If this "
 "was a mistake, hit cancel to abort the import."
 msgstr ""
-"فقط اضغط موافق لإنشاء حساب / دفتر اليومية و أنهي الإدخال. إذا كان هذا خطأ، "
-"أضغط إلغاء لإيقاف  الادخال."
+"فقط انقر موافق لإنشاء الحساب/دفتر اليومية وإنهاء عملية الاستيراد. إذا حدث "
+"هذا عن طريق الخطأ، انقر إلغاء لإيقاف عملية الاستيراد."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__kanban_dashboard
 msgid "Kanban Dashboard"
-msgstr "لوحة تحكم Kanban"
+msgstr "لوحة معلومات كانبان"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__kanban_dashboard_graph
 msgid "Kanban Dashboard Graph"
-msgstr "الرسم البياني للوحة تحكم Kanban"
+msgstr "لوحة معلومات كانبان بيانية"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import____last_update
@@ -454,9 +444,9 @@ msgid ""
 "Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"
 "Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo,you are suggested to reconcile the transaction with the batch deposit. Enable this option from the settings."
 msgstr ""
-"دليل: يتقاضون رواتبهم عن طريق النقد ، والاختيار أو اي وسيله أخرى خارج odoo.\n"
-"الكترونيه: الحصول علي دفع تلقائيا من خلال مشتر الدفع عن طريق طلب المعاملة علي بطاقة المحفوظة من قبل العملاء عند شراء أو الاشتراك علي الإنترنت (الدفع الرمزية).\n"
-"إيداع دفعه: encase عده شيكات العملاء في ان واحد عن طريق توليد دفعه وديعة لتقديمها إلى البنك الخاص بك. عند ترميز البيان البنكي في odoo ، فانك تقترح التوفيق بين الحركة والوديعة الدفعي. تمكين هذا الخيار من الإعدادات."
+"يدويًا: تتلقى أموالك نقدًا أو بشيكات أو بأي طريقة أخرى خارج أودو.\n"
+"إلكترونيًا: تتلقى أموالك آلياً عبر مزود خدمة سداد إلكتروني من خلال طلب معاملة مالية على بطاقة تم حفظ بياناتها بواسطة العميل عند الشراء أو الاشتراك عبر الإنترنت (رمز سداد آلي).\n"
+"دفعات السداد: إنشاء حافظة لعدد من شيكات العملاء عبر إنشاء دفعة شيكات واردة وإرسالها للبنك. عند إدخالك لبيانات كشف الحساب البنكي في أودو، سيتم اقتراح تسوية المعاملات المالية تلك مع دفعة السداد. قم بتفعيل هذا الاختيار من الإعدادات."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__outbound_payment_method_ids
@@ -465,20 +455,20 @@ msgid ""
 "Check:Pay bill by check and print it from Odoo.\n"
 "SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. Enable this option from the settings."
 msgstr ""
-"دليل: دفع الفاتورة نقدا أو اي طريقه أخرى خارج odoo.\n"
-"الاختيار: دفع الفاتورة عن طريق الاختيار وطباعته من odoo.\n"
-"sepa تحويل الائتمان: فاتورة الدفع من sepa نقل الائتمان الملف الذي تقدمه إلى البنك الخاص بك. تمكين هذا الخيار من الإعدادات."
+"يدويًا: تتلقى أموالك نقدًا أو بشيكات أو بأي طريقة أخرى خارج أودو.\n"
+"شيك: تسدد قيمة فواتيرك بالشيكات وتطبعها من أودو. \n"
+"تحويلات SEPA البنكية: سدد الفاتورة من خلال ملف تحويلات SEPA تقوم بإرساله للبنك. قم بتفعيل هذا الاختيار من الإعدادات."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence_number_next
 msgid "Next Number"
-msgstr "العدد التالي"
+msgstr "الرقم التالي"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:142
 #, python-format
 msgid "No currency found matching '%s'."
-msgstr "لم يتم العثور على أي عملة  مطابقة'%s'."
+msgstr "لم يمكن العثور على أي عملة تطابق '%s'."
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
@@ -488,7 +478,7 @@ msgstr "موافق"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__post_at_bank_rec
 msgid "Post At Bank Reconciliation"
-msgstr ""
+msgstr "الترحيل عند التسوية البنكية"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__profit_account_id
@@ -503,25 +493,25 @@ msgid ""
 "Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
-"اختر \"بيع\" لدفتر اليومية لفواتير العملاء. \n"
-"اختر \"شراء\" لدفتر اليومية فواتير الموردين. \n"
-"اختر \"نقدى\" أو \"بنك\" لدفاتر اليومية المستخدمة في مدفوعات العميل أو المورد.\n"
-" اختر \"عام\" للعمليات المتنوعة لدفتر اليومية. "
+"اختر 'مبيعات' لدفاتر اليومية الخاصة بفواتير العملاء. \n"
+"اختر 'مشتريات' لدفاتر اليومية الخاصة بفواتير الموردين. \n"
+"اختر 'نقدي' أو 'بنك' لدفاتر اليومية الخاصة بمدفوعات العملاء والموردين.\n"
+" اختر 'عام' لدفاتر اليومية الخاصة بالنثريات والمتفرقات واليوميات العامة."
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "Select a bank statement file to import"
-msgstr "حدد ملف كشف حساب بنكي لادخال"
+msgstr "حدد ملف كشف حساب بنكي ليتم استيراده"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence
 msgid "Sequence"
-msgstr "التسلسل"
+msgstr "المسلسل"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__active
 msgid "Set active to false to hide the Journal without removing it."
-msgstr ""
+msgstr "قم بإزالة العلامة من الحقل نشط لإخفاء دفتر اليومية دون إزالته."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__code
@@ -531,7 +521,7 @@ msgstr "الكود المختصر"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__show_on_dashboard
 msgid "Show journal on dashboard"
-msgstr "اظهار دفتر اليومية في لوحة المعلومات"
+msgstr "عرض دفتر اليومية في لوحة المعلومات"
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
@@ -540,15 +530,15 @@ msgid ""
 "In order to proceed with the import, you need to create a bank journal for "
 "this account."
 msgstr ""
-"كشف الحساب الذي تقوم بإدخاله غير مسجل حاليا في الأودو. لمتابعة الإدخال تحتاج"
-" إلى إنشاء دفتر اليومية البنك لهذا الحساب."
+"الحساب الذي تقوم باستيراد كشف الحساب عليه غير مسجل بعد في أودو. لتتمكن من "
+"متابعة الاستيراد، ستحتاج إلى إنشاء يومية البنك أولاً لهذا الحساب."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:157
 #, python-format
 msgid ""
 "The account of this statement (%s) is not the same as the journal (%s)."
-msgstr "الحساب في الكشف  (%s)ليس مطابقا مع الدفتر اليومية(%s)."
+msgstr "الحساب في كشف الحساب البنكي (%s) مختلف عن حساب دفتر اليومية (%s)."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:167
@@ -557,26 +547,27 @@ msgid ""
 "The currency of the bank statement (%s) is not the same as the currency of "
 "the journal (%s)."
 msgstr ""
+"العملة في كشف الحساب البنكي (%s) مختلفة عن العملة في دفتر اليومية (%s)."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__currency_id
 msgid "The currency used to enter statement"
-msgstr "العملة المُستخدمة لإدخال كشف الحساب"
+msgstr "العملة المستخدمة في إدخال كشف الحساب البنكي"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__code
 msgid "The journal entries of this journal will be named using this prefix."
-msgstr "قيود اليومية لدفتر اليومية هذا سوف تُسمى باستخدام هذه البادئة. "
+msgstr "سيتم تسمية قيود اليومية لهذا الدفتر باستخدام هذه البادئة."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__refund_sequence_number_next
 msgid "The next sequence number will be used for the next credit note."
-msgstr ""
+msgstr "سوف يُستخدم الرقم المسلسل التالي في إشعار الخصم التالي."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence_number_next
 msgid "The next sequence number will be used for the next invoice."
-msgstr ""
+msgstr "سوف يُستخدم الرقم المسلسل التالي في الفاتورة التالية."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__refund_sequence_id
@@ -584,6 +575,8 @@ msgid ""
 "This field contains the information related to the numbering of the credit "
 "note entries of this journal."
 msgstr ""
+"يحتوى هذا الحقل على المعلومات الخاصة بترقيم إشعارات الخصم لدفتر اليومية "
+"المُختار."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence_id
@@ -591,19 +584,19 @@ msgid ""
 "This field contains the information related to the numbering of the journal "
 "entries of this journal."
 msgstr ""
-"هذا الحقل يحتوى على معلومات متصلة بترقيم قيود اليومية لدفتر اليومية هذا. "
+"يحتوى هذا الحقل على المعلومات المرتبطة بترقيم القيود في دفتر اليومية هذا."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:117
 #, python-format
 msgid "This file doesn't contain any statement."
-msgstr "هذا الملف لا يحتوي على أي كشف للحساب"
+msgstr "هذا الملف لا يحتوي على أي كشف حساب."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:125
 #, python-format
 msgid "This file doesn't contain any transaction."
-msgstr "هذا الملف لا يحتوي على أي عملية"
+msgstr "هذا الملف لا يحتوي على أي معاملة."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__type
@@ -613,7 +606,7 @@ msgstr "النوع"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence
 msgid "Used to order Journals in the dashboard view"
-msgstr "تستخدم لترتيب دفاتر اليومية في طريقة عرض لوحة المعلومات"
+msgstr "يُستخدم لترتيب دفاتر اليومية في واجهة لوحة المعلومات"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__loss_account_id
@@ -621,8 +614,8 @@ msgid ""
 "Used to register a loss when the ending balance of a cash register differs "
 "from what the system computes"
 msgstr ""
-"يستخدم لتسجيل خسارة عندما يكون رصيد الإغلاق لصندوق كاشير مختلف عما حسبه "
-"النظام."
+"يستخدم لتسجيل الخسائر عندما يكون رصيد الإقفال للنقدية مختلفاً عن ذلك الذي "
+"يحسبه النظام."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__profit_account_id
@@ -630,8 +623,8 @@ msgid ""
 "Used to register a profit when the ending balance of a cash register differs"
 " from what the system computes"
 msgstr ""
-"يستخدم لتسجيل ربح عندما يكون رصيد الإغلاق لصندوق كاشير مختلف عما حسبه "
-"النظام."
+"يستخدم لتسجيل الأرباح عندما يكون رصيد الإقفال للنقدية مختلفاً عن ذلك الذي "
+"يحسبه النظام."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__post_at_bank_rec
@@ -640,22 +633,24 @@ msgid ""
 "draft state, so that the related journal entries are only posted when "
 "performing bank reconciliation."
 msgstr ""
+"يحدد ما إذا كانت عمليات السداد باستخدام دفتر اليومية هذا يتم إنشاؤها في حالة"
+" مسودة، بحيث يتم ترحيل القيود فقط عند إجراء التسويات البنكية."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__show_on_dashboard
 msgid "Whether this journal should be displayed on the dashboard or not"
-msgstr "ما إذا كان ينبغي عرض دفتر اليومية هذا على لوحة المعلومات أو  لا"
+msgstr "يحدد ما إذا كان هذا الدفتر سيتم عرضه في لوحة المعلومات أم لا."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:228
 #, python-format
 msgid "You already have imported that file."
-msgstr ""
+msgstr "لقد قمت باستيراد هذا الملف بالفعل."
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "You can install more file formats by"
-msgstr ""
+msgstr "يمكنك تثبيت صيغ أخرى للملفات من خلال"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:47
@@ -664,17 +659,18 @@ msgid ""
 "You have to set a Default Debit Account and a Default Credit Account for the"
 " journal: %s"
 msgstr ""
-"يجب عليك تعيين حساب الخصم الافتراضي وحساب الائتمان الافتراضي لليومية: %s"
+"يجب عليك تعيين الحساب الدائن الافتراضي والحساب المدين الافتراضي في دفتر "
+"اليومية: %s"
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "_Import"
-msgstr "_استيراد"
+msgstr "استيراد"
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "installing the related modules"
-msgstr ""
+msgstr "تثبيت الموديولات المرتبطة"
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit

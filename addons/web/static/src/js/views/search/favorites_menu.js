@@ -19,6 +19,7 @@ return Widget.extend({
         },
         'click .o_save_search': function (ev) {
             ev.preventDefault();
+            ev.stopPropagation();
             this.toggle_save_menu();
         },
         'click .o_save_name button': 'save_favorite',
@@ -68,6 +69,7 @@ return Widget.extend({
     },
     toggle_save_menu: function (is_open) {
         this.$save_search
+            .attr('aria-expanded', !(_.isUndefined(is_open)) ? is_open : (this.$save_search.attr('aria-expanded') === 'false'))
             .toggleClass('o_closed_menu', !(_.isUndefined(is_open)) ? !is_open : undefined)
             .toggleClass('o_open_menu', is_open);
         this.$save_name.toggle(is_open);
@@ -102,9 +104,17 @@ return Widget.extend({
         var controllerContext;
         this.trigger_up('get_controller_context', {
             callback: function (ctx) {
-                controllerContext = ctx;
+                if (ctx && ctx.orderedBy) {
+                    var sort = _.map(ctx.orderedBy, function (obj) {
+                        var order = obj.asc ? 'ASC' : 'DESC';
+                        return obj.name + ' ' + order;
+                    });
+                    self.searchview.dataset.set_sort(sort);
+                }
+                controllerContext = _.omit(ctx, ['orderedBy']);
             },
         });
+
         var results = pyUtils.eval_domains_and_contexts({
                 domains: [],
                 contexts: [user_context].concat(search.contexts.concat(controllerContext || [])),
@@ -185,7 +195,22 @@ return Widget.extend({
             category: _t("Custom Filter"),
             icon: 'fa-star',
             field: {
-                get_context: function () { return filter.context; },
+                get_context: function () {
+                    var filterContext = filter.context;
+                    if (typeof filter.context === 'string') {
+                        filterContext = pyUtils.eval('context', filter.context);
+                    }
+                    var sortParsed = JSON.parse(filter.sort || "[]");
+                    var orderedBy = [];
+                    _.each(sortParsed, function (sort) {
+                        orderedBy.push({
+                            name: sort[0] === '-' ? sort.slice(1) : sort,
+                            asc: sort[0] === '-' ? false : true,
+                        });
+                    });
+
+                return _.defaults({}, filterContext, {orderedBy : orderedBy});
+                },
                 get_groupby: function () { return [filter.context]; },
                 // facet is not used
                 get_domain: function (facet, noEvaluation) {
@@ -230,7 +255,7 @@ return Widget.extend({
             var $filter = $('<div>', {class: 'position-relative'})
                 .addClass(filter.user_id ? 'o-searchview-custom-private'
                                          : 'o-searchview-custom-public')
-                .append($('<a>', {href: '#', class: 'dropdown-item'}).text(filter.name))
+                .append($('<a>', {role: 'menuitem', href: '#', class: 'dropdown-item'}).text(filter.name))
                 .append($('<span>', {
                     class: 'fa fa-trash-o o-remove-filter',
                     on: {

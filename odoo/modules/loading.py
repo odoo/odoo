@@ -103,6 +103,7 @@ def force_demo(cr):
     Forces the `demo` flag on all modules, and installs demo data for all installed modules.
     """
     graph = odoo.modules.graph.Graph()
+    cr.execute('UPDATE ir_module_module SET demo=True')
     cr.execute(
         "SELECT name FROM ir_module_module WHERE state IN ('installed', 'to upgrade', 'to remove')"
     )
@@ -112,7 +113,6 @@ def force_demo(cr):
     for package in graph:
         load_demo(cr, package, {}, 'init')
 
-    cr.execute('update ir_module_module set demo=%s', (True,))
     env = api.Environment(cr, SUPERUSER_ID, {})
     env['ir.module.module'].invalidate_cache(['demo'])
 
@@ -150,8 +150,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
     migrations = odoo.modules.migration.MigrationManager(cr, graph)
     module_count = len(graph)
     _logger.info('loading %d modules...', module_count)
-
-    registry.clear_caches()
 
     # register, instantiate and initialize models for each modules
     t0 = time.time()
@@ -277,9 +275,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             registry._init_modules.add(package.name)
 
     _logger.log(25, "%s modules loaded in %.2fs, %s queries", len(graph), time.time() - t0, odoo.sql_db.sql_counter - t0_sql)
-
-    registry.clear_caches()
-
 
     return loaded_modules, processed_modules
 

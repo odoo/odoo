@@ -9,7 +9,7 @@
                     <div class="row">
                         <!-- Front -->
                         <div class="col-6 text-center" style="padding-left:7mm; border-left:1px dashed black; height: 149mm; -webkit-transform:rotate(180deg); padding-top: 7mm">
-                            <div class="row">
+                            <div>
                                 <div class="col-12">
                                     <t t-if="o.event_id.event_logo">
                                         <div t-field="o.event_id.event_logo"/>
@@ -20,14 +20,14 @@
                                     <h5 t-field="o.event_id.name"/>
                                     <h5>( <i class="fa fa-clock-o" aria-label="Period" role="img" title="Period"></i> <span itemprop="startDate" t-field="o.event_id.with_context(tz=o.event_id.date_tz).date_begin" t-options='{"hide_seconds": True}'> </span> <i>to</i> <span itemprop="endDate" t-field="o.event_id.with_context(tz=o.event_id.date_tz).date_end" t-options='{"hide_seconds": True}'> </span> )</h5>
                                 </div>
-                                <div class="row">
+                                <div>
                                     <div class="col-12 text-center" id="o_event_name">
                                         <small>
                                             <h3 t-field="o.name"/>
                                         </small>
                                     </div>
                                 </div>
-                                <div class="row">
+                                <div>
                                     <div t-field="o.event_id.badge_front"></div>
                                 </div>
                             </div>

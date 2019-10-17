@@ -72,7 +72,7 @@
             <button class="btn btn-secondary js_date_range" data-date="month">Last Month</button>
             <button class="btn btn-secondary js_date_range" data-date="year">Last Year</button>
         </div>
-        <div class="btn-group pull-right" style="margin-right: 20px;">
+        <div class="btn-group d-none d-md-inline-block float-right" style="margin-right: 20px;">
             <t t-foreach="widget.websites" t-as="website">
                 <button t-attf-class="btn btn-secondary js_website #{website.selected ? 'active' : ''}"
                         t-att-data-website-id="website.id">

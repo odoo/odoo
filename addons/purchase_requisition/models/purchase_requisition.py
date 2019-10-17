@@ -44,9 +44,9 @@ class PurchaseRequisition(models.Model):
     _order = "id desc"
 
     def _get_picking_in(self):
-        pick_in = self.env.ref('stock.picking_type_in')
-        if not pick_in:
-            company = self.env['res.company']._company_default_get('purchase.requisition')
+        pick_in = self.env.ref('stock.picking_type_in', raise_if_not_found=False)
+        company = self.env['res.company']._company_default_get('purchase.requisition')
+        if not pick_in or pick_in.sudo().warehouse_id.company_id.id != company.id:
             pick_in = self.env['stock.picking.type'].search(
                 [('warehouse_id.company_id', '=', company.id), ('code', '=', 'incoming')],
                 limit=1,
@@ -214,7 +214,7 @@ class PurchaseRequisitionLine(models.Model):
                 ('product_id', '=', vals.get('product_id')),
                 ('name', '=', res.requisition_id.vendor_id.id),
             ])
-            if not [s.requisition_id for s in supplier_infos]:
+            if not any([s.purchase_requisition_id for s in supplier_infos]):
                 res.create_supplier_info()
             if vals['price_unit'] <= 0.0:
                 raise UserError(_('You cannot confirm the blanket order without price.'))
@@ -231,8 +231,8 @@ class PurchaseRequisitionLine(models.Model):
         return res
 
     def unlink(self):
-        if self.requisition_id.state not in ['draft', 'cancel', 'done']:
-            self.supplier_info_ids.unlink()
+        to_unlink = self.filtered(lambda r: r.requisition_id.state not in ['draft', 'cancel', 'done'])
+        to_unlink.mapped('supplier_info_ids').unlink()
         return super(PurchaseRequisitionLine, self).unlink()
 
     def create_supplier_info(self):
@@ -265,7 +265,7 @@ class PurchaseRequisitionLine(models.Model):
     @api.onchange('product_id')
     def _onchange_product_id(self):
         if self.product_id:
-            self.product_uom_id = self.product_id.uom_id
+            self.product_uom_id = self.product_id.uom_po_id
             self.product_qty = 1.0
         if not self.schedule_date:
             self.schedule_date = self.requisition_id.schedule_date
@@ -316,7 +316,7 @@ class PurchaseOrder(models.Model):
 
         self.partner_id = partner.id
         self.fiscal_position_id = fpos.id
-        self.payment_term_id = payment_term.id,
+        self.payment_term_id = payment_term.id
         self.company_id = requisition.company_id.id
         self.currency_id = requisition.currency_id.id
         if not self.origin or requisition.name not in self.origin.split(', '):
@@ -326,7 +326,7 @@ class PurchaseOrder(models.Model):
             else:
                 self.origin = requisition.name
         self.notes = requisition.description
-        self.date_order = requisition.date_end or fields.Datetime.now()
+        self.date_order = fields.Datetime.now()
         self.picking_type_id = requisition.picking_type_id.id
 
         if requisition.type_id.line_copy != 'copy':
@@ -369,8 +369,8 @@ class PurchaseOrder(models.Model):
         self.order_line = order_lines
 
     @api.multi
-    def button_confirm(self):
-        res = super(PurchaseOrder, self).button_confirm()
+    def button_approve(self, force=False):
+        res = super(PurchaseOrder, self).button_approve(force=force)
         for po in self:
             if not po.requisition_id:
                 continue
@@ -406,14 +406,13 @@ class PurchaseOrderLine(models.Model):
     def _onchange_quantity(self):
         res = super(PurchaseOrderLine, self)._onchange_quantity()
         if self.order_id.requisition_id:
-            for line in self.order_id.requisition_id.line_ids:
-                if line.product_id == self.product_id:
-                    if line.product_uom_id != self.product_uom:
-                        self.price_unit = line.product_uom_id._compute_price(
-                            line.price_unit, self.product_uom)
-                    else:
-                        self.price_unit = line.price_unit
-                    break
+            for line in self.order_id.requisition_id.line_ids.filtered(lambda l: l.product_id == self.product_id):
+                if line.product_uom_id != self.product_uom:
+                    self.price_unit = line.product_uom_id._compute_price(
+                        line.price_unit, self.product_uom)
+                else:
+                    self.price_unit = line.price_unit
+                break
         return res
 
 
@@ -421,10 +420,11 @@ class ProductProduct(models.Model):
     _inherit = 'product.product'
 
     def _prepare_sellers(self, params):
+        sellers = super(ProductProduct, self)._prepare_sellers(params)
         if params and params.get('order_id'):
-            return self.seller_ids.filtered(lambda s: not s.purchase_requisition_id or s.purchase_requisition_id == params['order_id'].requisition_id)
+            return sellers.filtered(lambda s: not s.purchase_requisition_id or s.purchase_requisition_id == params['order_id'].requisition_id)
         else:
-            return self.seller_ids
+            return sellers
 
 
 class ProductTemplate(models.Model):
@@ -489,6 +489,18 @@ class StockMove(models.Model):
 
     def _get_upstream_documents_and_responsibles(self, visited):
         if self.requisition_line_ids:
-            return [(requisition_line.requisition_id, requisition_line.requisition_id.user_id, visited) for requisition_line in self.requisition_line_ids if requisition_line.state not in ('done', 'cancel')]
+            return [(requisition_line.requisition_id, requisition_line.requisition_id.user_id, visited) for requisition_line in self.requisition_line_ids if requisition_line.requisition_id.state not in ('done', 'cancel')]
         else:
             return super(StockMove, self)._get_upstream_documents_and_responsibles(visited)
+
+
+class Orderpoint(models.Model):
+    _inherit = "stock.warehouse.orderpoint"
+
+    def _quantity_in_progress(self):
+        res = super(Orderpoint, self)._quantity_in_progress()
+        for op in self:
+            for pr in self.env['purchase.requisition'].search([('state','=','draft'),('origin','=',op.name)]):
+                for prline in pr.line_ids.filtered(lambda l: l.product_id.id == op.product_id.id):
+                    res[op.id] += prline.product_uom_id._compute_quantity(prline.product_qty, op.product_uom, round=False)
+        return res

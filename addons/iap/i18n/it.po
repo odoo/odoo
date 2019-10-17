@@ -3,16 +3,17 @@
 # * iap
 # 
 # Translators:
-# Sergio Zanchetta <primes2h@gmail.com>, 2018
 # Martin Trigaux, 2018
-# Paolo Valier, 2018
+# Léonie Bouchat <lbo@odoo.com>, 2019
+# Sergio Zanchetta <primes2h@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 10:05+0000\n"
-"PO-Revision-Date: 2018-10-02 10:05+0000\n"
-"Last-Translator: Paolo Valier, 2018\n"
+"POT-Creation-Date: 2019-08-08 13:34+0000\n"
+"PO-Revision-Date: 2018-08-24 09:19+0000\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,26 +24,26 @@ msgstr ""
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
 msgid "Account Information"
-msgstr ""
+msgstr "Informazioni account"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__account_token
 msgid "Account Token"
-msgstr ""
+msgstr "Token account"
 
 #. module: iap
 #. openerp-web
 #: code:addons/iap/static/src/js/crash_manager.js:23
 #, python-format
 msgid "Buy credits at Odoo"
-msgstr ""
+msgstr "Acquista crediti su Odoo"
 
 #. module: iap
 #. openerp-web
 #: code:addons/iap/static/src/xml/iap_templates.xml:41
 #, python-format
 msgid "Buy more credits"
-msgstr ""
+msgstr "Acquista altri crediti"
 
 #. module: iap
 #. openerp-web
@@ -56,7 +57,7 @@ msgstr "Annulla"
 #: code:addons/iap/static/src/xml/iap_templates.xml:28
 #, python-format
 msgid "Checking remaining credit ..."
-msgstr ""
+msgstr "Controllo del credito residuo..."
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__company_id
@@ -81,20 +82,20 @@ msgstr "Nome visualizzato"
 #. module: iap
 #: model:ir.ui.menu,name:iap.iap_root_menu
 msgid "IAP"
-msgstr ""
+msgstr "Acquisti integrati"
 
 #. module: iap
 #: model:ir.actions.act_window,name:iap.iap_account_action
 #: model:ir.model,name:iap.model_iap_account
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
 msgid "IAP Account"
-msgstr ""
+msgstr "Account acquisti integrati"
 
 #. module: iap
 #: model:ir.ui.menu,name:iap.iap_account_menu
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_tree
 msgid "IAP Accounts"
-msgstr ""
+msgstr "Account acquisti integrati"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__id
@@ -106,55 +107,55 @@ msgstr "ID"
 #: code:addons/iap/static/src/xml/iap_templates.xml:21
 #, python-format
 msgid "In-App Purchases"
-msgstr ""
+msgstr "Acquisti integrati"
 
 #. module: iap
 #. openerp-web
 #: code:addons/iap/static/src/js/crash_manager.js:51
 #, python-format
 msgid "Insufficient Balance"
-msgstr ""
+msgstr "Saldo insufficiente"
 
 #. module: iap
 #. openerp-web
 #: code:addons/iap/static/src/xml/iap_templates.xml:31
 #, python-format
 msgid "Insufficient credit"
-msgstr ""
+msgstr "Credito insufficiente"
 
 #. module: iap
 #. openerp-web
 #: code:addons/iap/static/src/xml/iap_templates.xml:14
 #, python-format
 msgid "Insufficient credit to perform this service."
-msgstr ""
+msgstr "Credito insufficiente per l'esecuzione di questo servizio."
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account____last_update
 msgid "Last Modified on"
-msgstr "Data di ultima modifica"
+msgstr "Ultima modifica il"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__write_uid
 msgid "Last Updated by"
-msgstr "Ultima modifica di"
+msgstr "Ultimo aggiornamento di"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__write_date
 msgid "Last Updated on"
-msgstr "Ultima modifica il"
+msgstr "Ultimo aggiornamento il"
 
 #. module: iap
 #. openerp-web
 #: code:addons/iap/static/src/xml/iap_templates.xml:34
 #, python-format
 msgid "Remaining :"
-msgstr ""
+msgstr "Residuo:"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__service_name
 msgid "Service Name"
-msgstr "Nome Servizio"
+msgstr "Nome servizio"
 
 #. module: iap
 #. openerp-web
@@ -168,11 +169,21 @@ msgstr ""
 #: code:addons/iap/static/src/xml/iap_templates.xml:37
 #, python-format
 msgid "Temporarily unavailable"
+msgstr "Temporaneamente non disponibile"
+
+#. module: iap
+#: code:addons/iap/models/iap.py:72
+#, python-format
+msgid ""
+"The url that this service requested returned an error. Please contact the "
+"author the app. The url it tried to contact was %s"
 msgstr ""
+"L'URL richiesto dal servizio ha restituito un errore, contattare l'autore "
+"dell'applicazione. URL richiesto dal servizio: %s"
 
 #. module: iap
 #. openerp-web
 #: code:addons/iap/static/src/xml/iap_templates.xml:34
 #, python-format
 msgid "credits"
-msgstr ""
+msgstr "crediti"

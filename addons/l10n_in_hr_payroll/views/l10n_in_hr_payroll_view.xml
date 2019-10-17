@@ -3,10 +3,10 @@
         <record id="hr_contract_form_in_inherit" model="ir.ui.view">
             <field name="name">hr.contract.form.in.inherit</field>
             <field name="model">hr.contract</field>
-            <field name="inherit_id" ref="hr_payroll.hr_contract_form_inherit"/>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
             <field name="arch" type="xml">
             <data>
-                 <xpath expr="//field[@name='struct_id']" position="after">
+                 <xpath expr="//group[@name='duration_group']" position="after">
                  <group col="2" colspan="2" name="right_column">
                     <separator colspan="2" string="Allowance"/>
                         <field name="driver_salay"/>

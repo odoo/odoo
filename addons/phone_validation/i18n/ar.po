@@ -3,17 +3,18 @@
 # * phone_validation
 # 
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2018
 # Osoul <baruni@osoul.ly>, 2018
 # Osama Ahmaro <osamaahmaro@gmail.com>, 2018
 # Abdulmajeed Alomar <majeeed87@gmail.com>, 2018
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-09-21 13:18+0000\n"
-"Last-Translator: Abdulmajeed Alomar <majeeed87@gmail.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:22+0000\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +25,7 @@ msgstr ""
 #. module: phone_validation
 #: selection:res.company,phone_international_format:0
 msgid "Add international prefix"
-msgstr ""
+msgstr "إضافة بادئة دولية"
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_res_company__phone_international_format
@@ -33,6 +34,9 @@ msgid ""
 "coming from the company's country are nationaly formatted. International "
 "numbers are always using international format."
 msgstr ""
+"قم دائمًا باستخدام التنسيق الدولي لتسجيل أرقام الهاتف. وإلا ستستخدم "
+"المكالمات الصادرة من دولة المؤسسة التنسيق المحلي. تستخدم الأرقام الدولية "
+"التنسيق الدولي دائمًا."
 
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_res_company
@@ -42,7 +46,7 @@ msgstr "المؤسسات"
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_phone_validation_mixin__display_name
 msgid "Display Name"
-msgstr "اسم العرض"
+msgstr "الاسم المعروض"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_phone_validation_mixin__id
@@ -53,13 +57,13 @@ msgstr "المعرف"
 #: code:addons/phone_validation/tools/phone_validation.py:23
 #, python-format
 msgid "Impossible number %s: probably invalid number of digits"
-msgstr ""
+msgstr "رقم مستحيل %s: ربما يكون عدد الأرقام غير صالح"
 
 #. module: phone_validation
 #: code:addons/phone_validation/tools/phone_validation.py:25
 #, python-format
 msgid "Invalid number %s: probably incorrect prefix"
-msgstr ""
+msgstr "رقم مستحيل %s: ربما تكون البادئة غير صحيحة"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_phone_validation_mixin____last_update
@@ -74,12 +78,12 @@ msgstr "أرقام محلية"
 #. module: phone_validation
 #: selection:res.company,phone_international_format:0
 msgid "No prefix"
-msgstr ""
+msgstr "لا توجد بادئة"
 
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_phone_validation_mixin
 msgid "Phone Validation Mixin"
-msgstr ""
+msgstr "Phone Validation Mixin"
 
 #. module: phone_validation
 #: code:addons/phone_validation/tools/phone_validation.py:44
@@ -88,6 +92,8 @@ msgid ""
 "Unable to format %s:\n"
 "%s"
 msgstr ""
+"تعذّر تنسيق %s:\n"
+"%s"
 
 #. module: phone_validation
 #: code:addons/phone_validation/tools/phone_validation.py:20
@@ -96,3 +102,5 @@ msgid ""
 "Unable to parse %s:\n"
 "%s"
 msgstr ""
+"تعذّر تحليل %s:\n"
+"%s"

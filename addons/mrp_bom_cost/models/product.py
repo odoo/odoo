@@ -11,11 +11,13 @@ class ProductTemplate(models.Model):
 
     def action_bom_cost(self):
         templates = self.filtered(lambda t: t.product_variant_count == 1 and t.bom_count > 0)
-        return templates.mapped('product_variant_id').action_bom_cost()
+        if templates:
+            return templates.mapped('product_variant_id').action_bom_cost()
 
     def button_bom_cost(self):
         templates = self.filtered(lambda t: t.product_variant_count == 1 and t.bom_count > 0)
-        return templates.mapped('product_variant_id').button_bom_cost()
+        if templates:
+            return templates.mapped('product_variant_id').button_bom_cost()
 
 
 class ProductProduct(models.Model):
@@ -50,15 +52,16 @@ class ProductProduct(models.Model):
 
     def _compute_bom_price(self, bom, boms_to_recompute=False):
         self.ensure_one()
+        if not bom:
+            return 0
         if not boms_to_recompute:
             boms_to_recompute = []
         total = 0
-        quant_quantity = bom.product_uom_id._compute_quantity(bom.product_qty, bom.product_tmpl_id.uom_id)
         for opt in bom.routing_id.operation_ids:
             duration_expected = (
                 opt.workcenter_id.time_start +
                 opt.workcenter_id.time_stop +
-                quant_quantity * opt.time_cycle)
+                opt.time_cycle)
             total += (duration_expected / 60) * opt.workcenter_id.costs_hour
         for line in bom.bom_line_ids:
             if line._skip_bom_line(self):

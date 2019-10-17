@@ -35,7 +35,7 @@
                                 </div>
                                 <div class="content-group">
                                     <div class="mt16">
-                                        <field name="timesheet_encode_uom_id" options="{'no_create': True}"/>
+                                        <field name="timesheet_encode_uom_id" options="{'no_create': True}" required="1"/>
                                     </div>
                                 </div>
                             </div>
@@ -105,5 +105,5 @@
     </record>
 
     <menuitem id="hr_timesheet_config_settings_menu_action" name="Settings" parent="hr_timesheet_menu_configuration"
-        action="hr_timesheet_config_settings_action" sequence="0"/>
+        action="hr_timesheet_config_settings_action" sequence="0" groups="base.group_system"/>
 </odoo>

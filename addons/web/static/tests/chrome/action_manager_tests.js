@@ -1143,6 +1143,30 @@ QUnit.module('ActionManager', {
         actionManager.destroy();
     });
 
+    QUnit.test('state.sa should load action from session', function (assert) {
+        assert.expect(1);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (route === '/web/session/get_session_action') {
+                    return $.when(1);
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        actionManager.loadState({
+            sa: 1,
+        });
+
+        assert.strictEqual(actionManager.$('.o_kanban_view').length, 1,
+            "should have rendered a kanban view");
+
+        actionManager.destroy();
+    });
+
     QUnit.module('Concurrency management');
 
     QUnit.test('drop previous actions if possible', function (assert) {
@@ -2156,6 +2180,62 @@ QUnit.module('ActionManager', {
         actionManager.destroy();
     });
 
+    QUnit.test('orderedBy in context is not propagated when executing another action', function (assert) {
+        assert.expect(6);
+
+        this.data.partner.fields.foo.sortable = true,
+
+        this.archs['partner,false,form'] = '<header>' +
+                                                '<button name="8" string="Execute action" type="action"/>' +
+                                            '</header>';
+
+        var searchReadCount = 0;
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/search_read') {
+                    if (searchReadCount === 1) {
+                        assert.strictEqual(args.model, 'partner');
+                        assert.notOk(args.sort);
+                    }
+                    if (searchReadCount === 2) {
+                        assert.strictEqual(args.model, 'partner');
+                        assert.strictEqual(args.sort, "foo ASC");
+                    }
+                    if (searchReadCount === 3) {
+                        assert.strictEqual(args.model, 'pony');
+                        assert.notOk(args.sort);
+                    }
+                    searchReadCount += 1;
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        actionManager.doAction(3);
+
+        // Simulate the activation of a filter
+        var searchData = {
+            domains: [[["foo", "=", "yop"]]],
+            contexts: [{
+                orderedBy: [],
+            }],
+        };
+        actionManager.trigger_up('search', searchData);
+
+        // Sort records
+        actionManager.$('.o_list_view th.o_column_sortable').click();
+
+        // get to the form view of the model, on the first record
+        actionManager.$('.o_data_cell:first').click();
+
+        // Change model by clicking on the button within the form
+        actionManager.$('.o_form_view button').click();
+
+        actionManager.destroy();
+    });
+
     QUnit.test('breadcrumbs are updated when switching between views', function (assert) {
         assert.expect(10);
 
@@ -2878,6 +2958,31 @@ QUnit.module('ActionManager', {
         actionManager.destroy();
     });
 
+    QUnit.test('form views are restored in readonly when coming back in breadcrumbs', function (assert) {
+        assert.expect(2);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+        actionManager.doAction(3);
+
+        // open a record in form view
+        actionManager.$('.o_list_view .o_data_row:first').click();
+        // switch to edit mode
+        $('.o_control_panel .o_form_button_edit').click();
+
+        assert.ok(actionManager.$('.o_form_view').hasClass('o_form_editable'));
+        // do some other action
+        actionManager.doAction(4);
+        // go back to form view
+        $('.o_control_panel .breadcrumb a').last().click();
+        assert.ok(actionManager.$('.o_form_view').hasClass('o_form_readonly'));
+
+        actionManager.destroy();
+    });
+
     QUnit.test('honor group_by specified in actions context', function (assert) {
         assert.expect(5);
 
@@ -2990,7 +3095,7 @@ QUnit.module('ActionManager', {
             intercepts: {
                 create_filter: function (event) {
                     var filter = event.data.filter;
-                    assert.deepEqual(filter.domain, "[('bar', '=', 1)]",
+                    assert.deepEqual(filter.domain, `[("bar", "=", 1)]`,
                         "should save the correct domain");
                     assert.deepEqual(filter.context, {shouldBeInFilterContext: true},
                         "should save the correct context");
@@ -3324,6 +3429,79 @@ QUnit.module('ActionManager', {
             '/web/dataset/search_read',
             'toggle_fullscreen',
         ]);
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('fullscreen on action change: back to a "current" action', function (assert) {
+        assert.expect(3);
+
+        this.actions[0].target = 'fullscreen';
+        this.archs['partner,false,form'] = '<form>' +
+                                            '<button name="1" type="action" class="oe_stat_button" />' +
+                                        '</form>';
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            intercepts: {
+                toggle_fullscreen: function (ev) {
+                    var fullscreen = ev.data.fullscreen;
+
+                    switch (toggleFullscreenCalls) {
+                        case 0:
+                            assert.strictEqual(fullscreen, false);
+                            break;
+                        case 1:
+                            assert.strictEqual(fullscreen, true);
+                            break;
+                        case 2:
+                            assert.strictEqual(fullscreen, false);
+                            break;
+                    }
+                },
+            },
+
+        });
+
+        var toggleFullscreenCalls = 0;
+        actionManager.doAction(6);
+
+        toggleFullscreenCalls = 1;
+        actionManager.$('button[name=1]').click();
+
+        toggleFullscreenCalls = 2;
+        $('.breadcrumb li a:first').click();
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('fullscreen on action change: all "fullscreen" actions', function (assert) {
+        assert.expect(3);
+
+        this.actions[5].target = 'fullscreen';
+        this.archs['partner,false,form'] = '<form>' +
+                                            '<button name="1" type="action" class="oe_stat_button" />' +
+                                        '</form>';
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            intercepts: {
+                toggle_fullscreen: function (ev) {
+                    var fullscreen = ev.data.fullscreen;
+                    assert.strictEqual(fullscreen, true);
+                },
+            },
+        });
+
+        actionManager.doAction(6);
+
+        actionManager.$('button[name=1]').click();
+
+        $('.breadcrumb li a:first').click();
 
         actionManager.destroy();
     });

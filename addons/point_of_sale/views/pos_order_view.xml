@@ -54,6 +54,7 @@
                                     <field name="price_subtotal_incl" invisible="1" widget="monetary" force_save="1"/>
                                     <field name="tax_ids_after_fiscal_position" widget="many2many_tags" string="Taxes"/>
                                     <field name="tax_ids" widget="many2many_tags" invisible="1"/>
+                                    <field name="pack_lot_ids" widget="many2many_tags" groups="stock.group_production_lot"/>
                                     <field name="notice"/>
                                 </group>
                             </form>
@@ -142,7 +143,7 @@
                                 </div>
                                 <div class="col-4">
                                     <span class="float-right text-right">
-                                        <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default',
+                                        <field name="state" widget="label_selection" options="{'classes': {'draft': 'default',
                                         'invoiced': 'success', 'cancel': 'danger'}}"/>
                                     </span>
                                 </div>

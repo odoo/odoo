@@ -97,7 +97,10 @@ if(!the_form.length) {
                         }
 
                         // checkboxes and radios
-                        the_form.find("input[name^=" + key + "][type!='text']").each(function(){
+                        the_form.find("input[name^='" + key + "_'][type='checkbox']").each(function(){
+                            $(this).val(value);
+                        });
+                        the_form.find("input[name=" + key + "][type!='text']").each(function(){
                             $(this).val(value);
                         });
                     });
@@ -134,7 +137,7 @@ if(!the_form.length) {
             var date_fields = $form.find('div.date > input.form-control');
             for (var i=0; i < date_fields.length; i++) {
                 var el = date_fields[i];
-                var moment_date = $(el).data('DateTimePicker').date();
+                var moment_date = el.value !== '' ? field_utils.parse.date(el.value) : '';
                 if (moment_date) {
                     moment_date.toJSON = function () {
                         return this.clone().locale('en').format('YYYY-MM-DD');
@@ -183,30 +186,33 @@ if(!the_form.length) {
     // frontend does not load moment locale at all.
     // so wait until DOM ready with locale then init datetimepicker
     ready_with_locale.then(function(){
-        $('.form-control.date').datetimepicker({
-            format : time.getLangDateFormat(),
-            minDate: moment({ y: 1900 }),
-            maxDate: moment().add(200, "y"),
-            calendarWeeks: true,
-            icons: {
-                time: 'fa fa-clock-o',
-                date: 'fa fa-calendar',
-                next: 'fa fa-chevron-right',
-                previous: 'fa fa-chevron-left',
-                up: 'fa fa-chevron-up',
-                down: 'fa fa-chevron-down',
-            },
-            locale : moment.locale(),
-            allowInputToggle: true,
-            keyBinds: null,
+         _.each($('.input-group.date'), function(date_field){
+            var minDate = $(date_field).data('mindate') || moment({ y: 1900 });
+            var maxDate = $(date_field).data('maxdate') || moment().add(200, "y");
+            $('#' + date_field.id).datetimepicker({
+                format : time.getLangDateFormat(),
+                minDate: minDate,
+                maxDate: maxDate,
+                calendarWeeks: true,
+                icons: {
+                    time: 'fa fa-clock-o',
+                    date: 'fa fa-calendar',
+                    next: 'fa fa-chevron-right',
+                    previous: 'fa fa-chevron-left',
+                    up: 'fa fa-chevron-up',
+                    down: 'fa fa-chevron-down',
+                },
+                locale : moment.locale(),
+                allowInputToggle: true,
+                keyBinds: null,
+            });
         });
+        // Launch prefilling
+        prefill();
+        if(quiz_correction_mode === true){
+            display_scores();
+        }
     });
-
-    // Launch prefilling
-    prefill();
-    if(quiz_correction_mode === true){
-        display_scores();
-    }
 
     console.debug("[survey] Custom JS for survey loaded!");
 

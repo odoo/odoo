@@ -7,52 +7,50 @@ var Widget = require('web.Widget');
 var DocumentViewer = require('mail.DocumentViewer');
 
 var QWeb = core.qweb;
+var _t = core._t;
 
 var AttachmentBox = Widget.extend({
     template: 'mail.chatter.AttachmentBox',
     events: {
         "click .o_attachment_download": "_onAttachmentDownload",
         "click .o_attachment_view": "_onAttachmentView",
+        "click .o_attachment_delete_cross": "_onDeleteAttachment",
+        "click .o_upload_attachments_button": "_onUploadAttachments",
+        "change .o_chatter_attachment_form .o_form_binary_form": "_onAddAttachment",
     },
     /**
      * @override
      * @param {string} record.model
      * @param {Number} record.res_id
+     * @param {Object[]} attachments
      */
-    init: function (parent, record) {
+    init: function (parent, record, attachments) {
         this._super.apply(this, arguments);
+        this.fileuploadId = _.uniqueId('oe_fileupload');
+        $(window).on(this.fileuploadId, this._onUploaded.bind(this));
         this.currentResID = record.res_id;
         this.currentResModel = record.model;
-        this.attachmentIDs = {};
+        this.attachmentIDs = attachments;
         this.imageList = {};
         this.otherList = {};
+
+        _.each(attachments, function (attachment) {
+            // required for compatibility with the chatter templates.
+            attachment.url = '/web/content/' + attachment.id + '?download=true';
+            attachment.filename = attachment.datas_fname || _t('unnamed');
+        });
+        var sortedAttachments = _.partition(attachments, function (att) {
+            return att.mimetype && att.mimetype.split('/')[0] === 'image';
+        });
+        this.imageList = sortedAttachments[0];
+        this.otherList = sortedAttachments[1];
     },
     /**
      * @override
      */
-    willStart: function () {
-        var self = this;
-        var domain = [
-            ['res_id', '=', this.currentResID],
-            ['res_model', '=', this.currentResModel],
-        ];
-        return $.when(this._super.apply(this, arguments), this._rpc({
-            model: 'ir.attachment',
-            method: 'search_read',
-            domain: domain,
-        }).then(function (result) {
-            self.attachmentIDs = result;
-            _.each(result, function (attachment) {
-                attachment.url = '/web/content/' + attachment.id + '?download=true';
-                // required for compatibility with the chatter templates.
-                attachment.filename = attachment.datas_fname || 'unnamed';
-            });
-            var sortedAttachments = _.partition(result, function (att) {
-                return att.mimetype && att.mimetype.split('/')[0] === 'image';
-            });
-            self.imageList = sortedAttachments[0];
-            self.otherList = sortedAttachments[1];
-        }));
+    destroy: function () {
+        $(window).off(this.fileuploadId);
+        this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -60,8 +58,8 @@ var AttachmentBox = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
-    * @param {Object} record
-    */
+     * @param {Object} record
+     */
     update: function (record) {
         this.currentResID = record.res_id;
         this.currentResModel = record.model;
@@ -71,6 +69,19 @@ var AttachmentBox = Widget.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * Method triggered when user click on 'add attachment' and select a file
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onAddAttachment: function (ev) {
+        var $input = $(ev.currentTarget).find('input.o_input_file');
+        if ($input.val() !== '') {
+            var $binaryForm = this.$('form.o_form_binary_form');
+            $binaryForm.submit();
+        }
+    },
     /**
      * @private
      * @param {MouseEvent} ev
@@ -91,6 +102,33 @@ var AttachmentBox = Widget.extend({
             var attachmentViewer = new DocumentViewer(this, this.attachmentIDs, activeAttachmentID);
             attachmentViewer.appendTo($('body'));
         }
+    },
+    /**
+     * Opens File Explorer dialog if all fields are valid and record is saved
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onUploadAttachments: function (ev) {
+        this.$('input.o_input_file').click();
+    },
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onDeleteAttachment: function (ev) {
+        ev.stopPropagation();
+        var $target = $(ev.currentTarget);
+        this.trigger_up('delete_attachment', {
+            attachmentId: $target.data('id'),
+            attachmentName: $target.data('name')
+        });
+    },
+    /**
+     * @private
+     */
+    _onUploaded: function() {
+        this.trigger_up('reload_attachment_box');
     },
 });
 

@@ -179,15 +179,16 @@ def _eval_xml(self, node, env):
     elif node.tag == "function":
         args = []
         a_eval = node.get('eval')
+        model_str = node.get('model')
         # FIXME: should probably be exclusive
         if a_eval:
-            self.idref['ref'] = self.id_get
-            args = safe_eval(a_eval, self.idref)
+            idref2 = _get_idref(self, env, model_str, self.idref)
+            args = safe_eval(a_eval, idref2)
         for n in node:
             return_val = _eval_xml(self, n, env)
             if return_val is not None:
                 args.append(return_val)
-        model = env[node.get('model')]
+        model = env[model_str]
         method = node.get('name')
         # this one still depends on the old API
         return odoo.api.call_kw(model, method, args, {})
@@ -602,6 +603,15 @@ form: module.record_id""" % (xml_id,)
                 return None
             # else create it normally
 
+        if xid and xid.partition('.')[0] != self.module:
+            # updating a record created by another module
+            record = self.env['ir.model.data']._load_xmlid(xid)
+            if not record:
+                if self.isnoupdate(data_node) and not self.nodeattr2bool(rec, 'forcecreate', True):
+                    # if it doesn't exist and we shouldn't create it, skip it
+                    return None
+                raise Exception("Cannot update missing record %r" % xid)
+
         res = {}
         for field in rec.findall('./field'):
             #TODO: most of this code is duplicated above (in _eval_xml)...
@@ -823,6 +833,8 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
     context = {
         'mode': mode,
         'module': module,
+        'install_module': module,
+        'install_filename': fname,
         'noupdate': noupdate,
     }
     env = odoo.api.Environment(cr, SUPERUSER_ID, context)

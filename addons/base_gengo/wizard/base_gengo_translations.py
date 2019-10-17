@@ -24,6 +24,7 @@ class BaseGengoTranslations(models.TransientModel):
     GROUPS = ['base.group_system']
 
     _name = 'base.gengo.translations'
+    _description = 'Base Gengo Translations'
 
     @api.model
     def default_get(self, fields):

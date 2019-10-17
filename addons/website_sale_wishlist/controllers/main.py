@@ -10,9 +10,9 @@ class WebsiteSaleWishlist(WebsiteSale):
     @http.route(['/shop/wishlist/add'], type='json', auth="public", website=True)
     def add_to_wishlist(self, product_id, price=False, **kw):
         if not price:
-            compute_currency, pricelist_context, pl = self._get_compute_currency_and_context()
+            pricelist_context, pl = self._get_pricelist_context()
             p = request.env['product.product'].with_context(pricelist_context, display_default_code=False).browse(product_id)
-            price = p.website_price
+            price = p._get_combination_info_variant()['price']
 
         Wishlist = request.env['product.wishlist']
         if request.website.is_public_user():
@@ -35,7 +35,7 @@ class WebsiteSaleWishlist(WebsiteSale):
 
         return wish_id
 
-    @http.route(['/shop/wishlist'], type='http', auth="public", website=True)
+    @http.route(['/shop/wishlist'], type='http', auth="public", website=True, sitemap=False)
     def get_wishlist(self, count=False, **kw):
         values = request.env['product.wishlist'].with_context(display_default_code=False).current()
         if count:
@@ -55,5 +55,5 @@ class WebsiteSaleWishlist(WebsiteSale):
                 request.session.modified = True
                 wish.sudo().unlink()
         else:
-            wish.active = False
+            wish.unlink()
         return True

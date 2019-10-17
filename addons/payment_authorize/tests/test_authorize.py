@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import hashlib
-import hmac
 import time
 from werkzeug import urls
 from lxml import objectify
@@ -28,15 +26,6 @@ class AuthorizeCommon(PaymentAcquirerCommon):
 
 @odoo.tests.tagged('post_install', '-at_install', '-standard', 'external')
 class AuthorizeForm(AuthorizeCommon):
-
-    def _authorize_generate_hashing(self, values):
-        data = '^'.join([
-            values['x_login'],
-            values['x_fp_sequence'],
-            values['x_fp_timestamp'],
-            values['x_amount'],
-        ]) + '^'
-        return hmac.new(values['x_trans_key'].encode('utf-8'), data.encode('utf-8'), hashlib.md5).hexdigest()
 
     def test_10_Authorize_form_render(self):
         self.assertEqual(self.authorize.environment, 'test', 'test without test environment')
@@ -82,7 +71,7 @@ class AuthorizeForm(AuthorizeCommon):
             'x_ship_to_state': None,
         }
 
-        form_values['x_fp_hash'] = self._authorize_generate_hashing(form_values)
+        form_values['x_fp_hash'] = self.env['payment.acquirer']._authorize_generate_hashing(form_values)
         # render the button
         res = self.authorize.render('SO004', 56.16, self.currency_usd.id, values=self.buyer_values)
         # check form result
@@ -109,7 +98,9 @@ class AuthorizeForm(AuthorizeCommon):
         # typical data posted by authorize after client has successfully paid
         authorize_post_data = {
             'return_url': u'/shop/payment/validate',
+            # x_MD5_Hash will be empty starting the 28th March 2019
             'x_MD5_Hash': u'7934485E1C105940BE854208D10FAB4F',
+            'x_SHA2_Hash': u'7D3AC844BE8CA3F649AB885A90D22CFE35B850338EC91D1A5ADD819A85FF948A3D777334A18CDE36821DC8F2B42A6E1950C1FF96B52B60F23201483A656195FB',
             'x_account_number': u'XXXX0027',
             'x_address': u'Huge Street 2/543',
             'x_amount': u'320.00',
@@ -188,7 +179,7 @@ class AuthorizeForm(AuthorizeCommon):
         self.assertEqual(tx.state, 'cancel', 'Authorize: erroneous validation did not put tx into error state')
 
 
-@odoo.tests.tagged('post_install', '-at_install', '-standard', 'external')
+@odoo.tests.tagged('post_install', '-at_install', '-standard')
 class AuthorizeForm(AuthorizeCommon):
     def test_30_authorize_s2s(self):
         # be sure not to do stupid thing

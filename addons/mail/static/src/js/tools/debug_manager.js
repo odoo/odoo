@@ -23,6 +23,10 @@ DebugManager.include({
             views: [[false, 'list'], [false, 'form']],
             type: 'ir.actions.act_window',
             domain: [['res_id', '=', selectedIDs[0]], ['model', '=', this._controller.modelName]],
+            context: {
+                default_res_model: this._controller.modelName,
+                default_res_id: selectedIDs[0],
+            },
         });
     },
 });

@@ -5,14 +5,15 @@
 # Translators:
 # Martin Trigaux, 2018
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2018
-# trendspotter, 2018
+# Jiří Podhorecký <j.podhorecky@volny.cz>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: trendspotter, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:18+0000\n"
+"Last-Translator: Jiří Podhorecký <j.podhorecky@volny.cz>, 2019\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,9 +37,21 @@ msgid "Display Name"
 msgstr "Zobrazovaný název"
 
 #. module: google_account
+#: code:addons/google_account/models/google_service.py:203
+#, python-format
+msgid "Error while requesting Google Services"
+msgstr ""
+
+#. module: google_account
+#: code:addons/google_account/models/google_service.py:199
+#, python-format
+msgid "Error while requesting Google Services: %s"
+msgstr ""
+
+#. module: google_account
 #: model:ir.model,name:google_account.model_google_service
 msgid "Google Service"
-msgstr ""
+msgstr "Služba Google"
 
 #. module: google_account
 #: model:ir.model.fields,field_description:google_account.field_google_service__id
@@ -97,13 +110,19 @@ msgstr ""
 "neplatný nebo již vypršel [%s]"
 
 #. module: google_account
-#: code:addons/google_account/models/google_service.py:193
+#: code:addons/google_account/models/google_service.py:204
 #, python-format
 msgid "Something went wrong with your request to google"
 msgstr "Něco se stalo s vaším požadavkem na Google"
 
 #. module: google_account
+#: code:addons/google_account/models/google_service.py:200
+#, python-format
+msgid "Something went wrong with your request to google: %s"
+msgstr ""
+
+#. module: google_account
 #: code:addons/google_account/models/google_service.py:131
 #, python-format
 msgid "The account for the Google service '%s' is not configured."
-msgstr ""
+msgstr "Účet Google služby '%s' není nakonfigurován."

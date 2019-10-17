@@ -925,7 +925,7 @@
                 <div t-if="question.post_type == 'question'" class="mt4">
                     <a t-attf-class="accept_answer fa fa-2x fa-check-circle no-decoration #{answer.is_correct and 'oe_answer_true' or 'oe_answer_false'} #{not answer.can_accept and 'karma_required' or ''}"
                         t-attf-data-karma="#{answer.karma_accept}"
-                        aria-label="Send answer" title="Send answer"
+                        aria-label="Send answer" title="Accept answer"
                         t-attf-data-href="/forum/#{slug(question.forum_id)}/post/#{slug(answer)}/toggle_correct"/>
                 </div>
             </t>
@@ -1272,8 +1272,8 @@
 <template id="edit_profile" name="Forum Edit Profile">
     <t t-call="website_forum.header">
         <h3>Edit Profile</h3>
-        <div class="row">
-            <form t-attf-action="/forum/#{slug(forum)}/user/#{slug(user)}/save" method="post" role="form" class="js_website_submit_form" enctype="multipart/form-data">
+        <div class=""><!-- Stable fixed: the row was misplaced -->
+            <form t-attf-action="/forum/#{slug(forum)}/user/#{slug(user)}/save" method="post" role="form" class="row js_website_submit_form" enctype="multipart/form-data">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                 <input type="file" class="d-none o_forum_file_upload" name="ufile" accept="image/*"/>
                 <div class="col-lg-2">

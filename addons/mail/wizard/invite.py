@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from lxml import etree
+from lxml.html import builder as html
+
 from odoo import _, api, fields, models
 
 
@@ -12,18 +15,27 @@ class Invite(models.TransientModel):
     @api.model
     def default_get(self, fields):
         result = super(Invite, self).default_get(fields)
+        if self._context.get('mail_invite_follower_channel_only'):
+            result['send_mail'] = False
+        if 'message' not in fields:
+            return result
+
         user_name = self.env.user.name_get()[0][1]
         model = result.get('res_model')
         res_id = result.get('res_id')
-        if self._context.get('mail_invite_follower_channel_only'):
-            result['send_mail'] = False
-        if 'message' in fields and model and res_id:
-            model_name = self.env['ir.model']._get(model).display_name
-            document_name = self.env[model].browse(res_id).name_get()[0][1]
-            message = _('<div><p>Hello,</p><p>%s invited you to follow %s document: %s.</p></div>') % (user_name, model_name, document_name)
-            result['message'] = message
-        elif 'message' in fields:
-            result['message'] = _('<div><p>Hello,</p><p>%s invited you to follow a new document.</p></div>') % user_name
+        if model and res_id:
+            document = self.env['ir.model']._get(model).display_name
+            title = self.env[model].browse(res_id).display_name
+            msg_fmt = _('%(user_name)s invited you to follow %(document)s document: %(title)s')
+        else:
+            msg_fmt = _('%(user_name)s invited you to follow a new document.')
+
+        text = msg_fmt % locals()
+        message = html.DIV(
+            html.P(_('Hello,')),
+            html.P(text)
+        )
+        result['message'] = etree.tostring(message)
         return result
 
     res_model = fields.Char('Related Document Model', required=True, index=True, help='Model of the followed resource')
@@ -60,11 +72,18 @@ class Invite(models.TransientModel):
                     'no_auto_thread': True,
                     'add_sign': True,
                 })
+                partners_data = []
+                recipient_data = self.env['mail.followers']._get_recipient_data(document, False, pids=new_partners.ids)
+                for pid, cid, active, pshare, ctype, notif, groups in recipient_data:
+                    pdata = {'id': pid, 'share': pshare, 'active': active, 'notif': 'email', 'groups': groups or []}
+                    if not pshare and notif:  # has an user and is not shared, is therefore user
+                        partners_data.append(dict(pdata, type='user'))
+                    elif pshare and notif:  # has an user and is shared, is therefore portal
+                        partners_data.append(dict(pdata, type='portal'))
+                    else:  # has no user, is therefore customer
+                        partners_data.append(dict(pdata, type='customer'))
                 self.env['res.partner'].with_context(auto_delete=True)._notify(
-                    message,
-                    [{'id': pid, 'share': True, 'notif': 'email', 'type': 'customer', 'groups': []} for pid in new_partners.ids],
-                    document,
-                    force_send=True,
-                    send_after_commit=False)
+                    message, partners_data, document,
+                    force_send=True, send_after_commit=False)
                 message.unlink()
         return {'type': 'ir.actions.act_window_close'}

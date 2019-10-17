@@ -32,31 +32,35 @@ var LongpollingBus = Bus.extend(ServicesMixin, {
     init: function (parent, params) {
         this._super.apply(this, arguments);
         this._id = _.uniqueId('bus');
+
+        // the _id is modified by crosstab_bus, so we can't use it to unbind the events in the destroy.
+        this._longPollingBusId = this._id;
         this._options = {};
         this._channels = [];
 
         // bus presence
         this._lastPresenceTime = new Date().getTime();
         this._lastPartnersPresenceCheck = this._lastPresenceTime;
-        $(window).on("focus." + this._id, this._onFocusChange.bind(this, {focus: true}));
-        $(window).on("blur." + this._id, this._onFocusChange.bind(this, {focus: false}));
-        $(window).on("unload." + this._id, this._onFocusChange.bind(this, {focus: false}));
+        $(window).on("focus." + this._longPollingBusId, this._onFocusChange.bind(this, {focus: true}));
+        $(window).on("blur." + this._longPollingBusId, this._onFocusChange.bind(this, {focus: false}));
+        $(window).on("unload." + this._longPollingBusId, this._onFocusChange.bind(this, {focus: false}));
 
-        $(window).on("click." + this._id, this._onPresence.bind(this));
-        $(window).on("keydown." + this._id, this._onPresence.bind(this));
-        $(window).on("keyup." + this._id, this._onPresence.bind(this));
+        $(window).on("click." + this._longPollingBusId, this._onPresence.bind(this));
+        $(window).on("keydown." + this._longPollingBusId, this._onPresence.bind(this));
+        $(window).on("keyup." + this._longPollingBusId, this._onPresence.bind(this));
     },
     /**
      * @override
      */
     destroy: function () {
         this.stopPolling();
-        $(window).off("focus." + this._id);
-        $(window).off("blur." + this._id);
-        $(window).off("unload." + this._id);
-        $(window).off("click." + this._id);
-        $(window).off("keydown." + this._id);
-        $(window).off("keyup." + this._id);
+        $(window).off("focus." + this._longPollingBusId);
+        $(window).off("blur." + this._longPollingBusId);
+        $(window).off("unload." + this._longPollingBusId);
+        $(window).off("click." + this._longPollingBusId);
+        $(window).off("keydown." + this._longPollingBusId);
+        $(window).off("keyup." + this._longPollingBusId);
+        this._super();
     },
     //--------------------------------------------------------------------------
     // Public
@@ -184,7 +188,7 @@ var LongpollingBus = Bus.extend(ServicesMixin, {
         }
         var data = {channels: this._channels, last: this._lastNotificationID, options: options};
         // The backend has a maximum cycle time of 50 seconds so give +10 seconds
-        this._pollRpc = this._rpc({route: this.POLL_ROUTE, params: data}, {shadow : true, timeout: 60000});
+        this._pollRpc = this._makePoll(data);
         this._pollRpc.then(function (result) {
             self._pollRpc = false;
             self._onPoll(result);
@@ -201,6 +205,15 @@ var LongpollingBus = Bus.extend(ServicesMixin, {
             }
         });
     },
+
+    /**
+     * @private
+     * @param data: object with poll parameters
+     */
+    _makePoll: function(data) {
+        return this._rpc({route: this.POLL_ROUTE, params: data}, {shadow : true, timeout: 60000});
+    },
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------

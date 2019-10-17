@@ -3,37 +3,39 @@
 # * website_gengo
 # 
 # Translators:
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
-# Arminas Grigonis <arminas@versada.lt>, 2017
+# Martin Trigaux, 2018
+# Arminas Grigonis <arminas@versada.lt>, 2018
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2018
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2018
+# Linas Versada <linaskrisiukenas@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
-"Last-Translator: Arminas Grigonis <arminas@versada.lt>, 2017\n"
+"POT-Creation-Date: 2019-03-29 10:10+0000\n"
+"PO-Revision-Date: 2018-08-24 09:34+0000\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: website_gengo
 #. openerp-web
 #: code:addons/website_gengo/static/src/xml/website.gengo.xml:144
 #, python-format
 msgid "- Enable if you using testing account"
-msgstr "- Įgalinti, jei naudojate testinę paskyrą"
+msgstr "- Įjunkite, jei naudojate testinę paskyrą"
 
 #. module: website_gengo
 #. openerp-web
 #: code:addons/website_gengo/static/src/xml/website.gengo.xml:138
 #, python-format
 msgid "- Jobs are Automatically Approved by Gengo."
-msgstr ""
+msgstr "- Darbai yra automatiškai patvirtinami Gengo."
 
 #. module: website_gengo
 #. openerp-web
@@ -47,7 +49,7 @@ msgstr "1. Eikite į savo"
 #: code:addons/website_gengo/static/src/xml/website.gengo.xml:119
 #, python-format
 msgid "2. Then paste generated keys in given form"
-msgstr ""
+msgstr "2. Tada įklijuokite sugeneruotus raktus į pateiktą formą"
 
 #. module: website_gengo
 #. openerp-web
@@ -61,7 +63,7 @@ msgstr "Jau išverstas turinys"
 #: code:addons/website_gengo/static/src/xml/website.gengo.xml:137
 #, python-format
 msgid "Auto Approve Translation"
-msgstr ""
+msgstr "Automatiškai patvirtinti vertimą"
 
 #. module: website_gengo
 #. openerp-web
@@ -71,52 +73,55 @@ msgid "Auto Translate"
 msgstr "Automatinis vertimas"
 
 #. module: website_gengo
-#. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:67
-#, python-format
-msgid "By Machine (Free)"
-msgstr ""
+#: model:ir.model,name:website_gengo.model_base_gengo_translations
+msgid "Base Gengo Translations"
+msgstr "Baziniai Gengo vertimai"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:48
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:76
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:43
+#, python-format
+msgid "By Machine (Free)"
+msgstr "Automatiškai (nemokama)"
+
+#. module: website_gengo
+#. openerp-web
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:52
 #, python-format
 msgid "Cancel"
 msgstr "Atšaukti"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:14
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:61
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:88
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:102
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:113
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:153
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:38
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:65
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:78
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:90
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:129
 #, python-format
 msgid "Close"
 msgstr "Uždaryti"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:23
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:12
 #, python-format
 msgid "Content to translate or you can post them to"
-msgstr ""
+msgstr "Turinys vertimui arba galite paskelbti juos"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/js/website_gengo.js:88
+#: code:addons/website_gengo/static/src/js/website_gengo.js:85
 #, python-format
 msgid "Could not Post translation"
-msgstr ""
+msgstr "Nepavyko paskelbti vertimo"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/js/website_gengo.js:195
+#: code:addons/website_gengo/static/src/js/website_gengo.js:192
 #, python-format
 msgid "Could not submit ! Try Again"
-msgstr ""
+msgstr "Nepavyko pateikti! Pabandykite dar kartą"
 
 #. module: website_gengo
 #. openerp-web
@@ -127,157 +132,119 @@ msgstr "Skaičiuoti žodžius"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:43
-#, python-format
-msgid "Do not show this dialog later."
-msgstr "Nerodyti šio dialogo vėliau."
-
-#. module: website_gengo
-#. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:24
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:13
 #, python-format
 msgid "Gengo"
 msgstr "Gengo"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:114
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:89
 #, python-format
 msgid "Gengo API is not configured"
-msgstr "Gengo API nekonfigūruotas"
+msgstr "Gengo API nesukonfigūruotas"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:94
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:70
 #, python-format
 msgid "Gengo Dashboard"
 msgstr "Gengo skydelis"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:94
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:70
 #, python-format
 msgid "Gengo Statistics"
 msgstr "Gengo statistika"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:118
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:94
 #, python-format
 msgid "Gengo account"
-msgstr "Gengo sąskaita"
+msgstr "Gengo paskyra"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:20
-#, python-format
-msgid "Here are the visuals used to help you translate efficiently:"
-msgstr ""
-
-#. module: website_gengo
-#. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:34
-#, python-format
-msgid ""
-"In this mode, you can translate texts or post texts to Gengo for translation.\n"
-"                            To change the structure of the page, you must edit the\n"
-"                            master page."
-msgstr ""
-
-#. module: website_gengo
-#. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:47
-#, python-format
-msgid "Ok"
-msgstr "Gerai"
-
-#. module: website_gengo
-#. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:132
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:108
 #, python-format
 msgid "Paste private key here"
-msgstr ""
+msgstr "Čia įklijuokite privatų raktą"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:125
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:101
 #, python-format
 msgid "Paste public key here"
-msgstr ""
+msgstr "Čia įklijuokite viešąjį raktą"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:75
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:51
 #, python-format
 msgid "Post"
 msgstr "Skelbti"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:130
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:106
 #, python-format
 msgid "Private key"
 msgstr "Privatus raktas"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:69
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:45
 #, python-format
 msgid "Pro - $"
-msgstr ""
+msgstr "Pro - $"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:123
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:99
 #, python-format
 msgid "Public key"
 msgstr "Viešas raktas"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:143
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:119
 #, python-format
 msgid "Sandbox"
-msgstr ""
+msgstr "Smėlio dėžė"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:62
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:37
 #, python-format
 msgid "Select Gengo Translation Service Level"
-msgstr ""
+msgstr "Pasirinkite Gengo vertimo paslaugų lygmenį"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:68
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:44
 #, python-format
 msgid "Standard - $"
 msgstr "Standartinis - $"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:117
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:93
 #, python-format
 msgid "Steps for configure Gengo"
 msgstr "Gengo konfigūravimo žingsniai"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:152
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:128
 #, python-format
 msgid "Submit"
 msgstr "Pateikti"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:15
-#, python-format
-msgid "Translate this page"
-msgstr "Išversti šį puslapį"
-
-#. module: website_gengo
-#. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:98
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:74
 #, python-format
 msgid "Translated words"
 msgstr "Išversti žodžiai"
@@ -287,28 +254,28 @@ msgstr "Išversti žodžiai"
 #: code:addons/website_gengo/static/src/xml/website.gengo.xml:6
 #, python-format
 msgid "Translation in Progress"
-msgstr "Vertimas vyksta"
+msgstr "Vertimas vykdomas"
 
 #. module: website_gengo
 #. openerp-web
 #: code:addons/website_gengo/static/src/xml/website.gengo.xml:26
 #, python-format
 msgid "Translation in process (Gengo)"
-msgstr "Verčiama (Gengo)"
+msgstr "Vyksta vertimas (Gengo)"
 
 #. module: website_gengo
 #. openerp-web
 #: code:addons/website_gengo/static/src/xml/website.gengo.xml:89
 #, python-format
 msgid "Translator statistics for this page"
-msgstr ""
+msgstr "Vertimo statistika šiam puslapiui"
 
 #. module: website_gengo
 #. openerp-web
 #: code:addons/website_gengo/static/src/xml/website.gengo.xml:70
 #, python-format
 msgid "Ultra - $"
-msgstr ""
+msgstr "Ultra - $"
 
 #. module: website_gengo
 #. openerp-web
@@ -319,47 +286,35 @@ msgstr "Palaukite"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:97
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:73
 #, python-format
 msgid "Words in progress"
-msgstr ""
+msgstr "Apdorojami žodžiai"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:96
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:72
 #, python-format
 msgid "Words posted for translate"
-msgstr ""
+msgstr "Žodžiai, paskelbti vertimui"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:19
-#, python-format
-msgid "You are about to enter the translation mode."
-msgstr ""
-
-#. module: website_gengo
-#. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:118
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:94
 #, python-format
 msgid "and generate API Keys."
 msgstr "ir generuoti API raktus."
 
 #. module: website_gengo
-#: model:ir.model,name:website_gengo.model_base_gengo_translations
-msgid "base.gengo.translations"
-msgstr "base.gengo.translations"
-
-#. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:24
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:13
 #, python-format
 msgid "for translation."
 msgstr "vertimui."
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:93
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:69
 #, python-format
 msgid "new words found on this page."
-msgstr "nauji žodžiai rasti šiame puslapyje."
+msgstr "šiame puslapyje rasta naujų žodžių."

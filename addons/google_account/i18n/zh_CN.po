@@ -4,15 +4,17 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
-# 珠海-杜哥 <liangjia@qq.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2018
 # niulin lnc. <admin@niulin.net>, 2018
+# inspur qiuguodong <qiuguodong@inspur.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: niulin lnc. <admin@niulin.net>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:18+0000\n"
+"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,6 +36,18 @@ msgstr "创建时间"
 #: model:ir.model.fields,field_description:google_account.field_google_service__display_name
 msgid "Display Name"
 msgstr "显示名称"
+
+#. module: google_account
+#: code:addons/google_account/models/google_service.py:203
+#, python-format
+msgid "Error while requesting Google Services"
+msgstr ""
+
+#. module: google_account
+#: code:addons/google_account/models/google_service.py:199
+#, python-format
+msgid "Error while requesting Google Services: %s"
+msgstr ""
 
 #. module: google_account
 #: model:ir.model,name:google_account.model_google_service
@@ -80,7 +94,7 @@ msgstr "令牌生成过程中出错了。请重新申请授权码。"
 msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
 "Code is invalid or already expired"
-msgstr "令牌生成过程中出错了。或许您的授权码无效或已过期。"
+msgstr "令牌生成过程中出错了。可能您的授权码无效或已过期。"
 
 #. module: google_account
 #: code:addons/google_account/models/google_service.py:150
@@ -88,16 +102,22 @@ msgstr "令牌生成过程中出错了。或许您的授权码无效或已过期
 msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
 "Code is invalid or already expired [%s]"
-msgstr "令牌生成过程中出错了。或许您的授权码无效已过期 [%s]"
+msgstr "令牌生成过程中出错了。可能您的授权码无效已过期 [%s]"
 
 #. module: google_account
-#: code:addons/google_account/models/google_service.py:193
+#: code:addons/google_account/models/google_service.py:204
 #, python-format
 msgid "Something went wrong with your request to google"
-msgstr "你对谷歌的访问出错了"
+msgstr "访问谷歌出错了"
+
+#. module: google_account
+#: code:addons/google_account/models/google_service.py:200
+#, python-format
+msgid "Something went wrong with your request to google: %s"
+msgstr ""
 
 #. module: google_account
 #: code:addons/google_account/models/google_service.py:131
 #, python-format
 msgid "The account for the Google service '%s' is not configured."
-msgstr "未配置 Google 服务 '%s' 的账户."
+msgstr "未配置 '%s'  Google 服务的账户."

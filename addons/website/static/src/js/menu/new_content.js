@@ -14,6 +14,7 @@ var enableFlag = 'enable_new_content';
 var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     xmlDependencies: ['/web_editor/static/src/xml/editor.xml'],
     actions: _.extend({}, websiteNavbarData.WebsiteNavbarActionWidget.prototype.actions || {}, {
+        close_all_widgets: '_handleCloseDemand',
         new_page: '_createNewPage',
     }),
     events: _.extend({}, websiteNavbarData.WebsiteNavbarActionWidget.prototype.events || {}, {
@@ -80,7 +81,7 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                 var $group = this.$dialog.find('div.form-group');
                 $group.removeClass('mb0');
 
-                var $add = $('<div/>', {'class': 'form-group mb0'})
+                var $add = $('<div/>', {'class': 'form-group mb0 row'})
                             .append($('<span/>', {'class': 'offset-md-3 col-md-9 text-left'})
                                     .append(qweb.render('web_editor.components.switch', {id: 'switch_addTo_menu', label: _t("Add to menu")})));
                 $add.find('input').prop('checked', true);
@@ -95,6 +96,12 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             document.location = url;
             return $.Deferred();
         });
+    },
+    /**
+     * @private
+     */
+    _handleCloseDemand: function () {
+        this._hideMenu();
     },
 
     //--------------------------------------------------------------------------
@@ -148,12 +155,20 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * Show the menu
      *
      * @private
+     * @returns Deferred
      */
     _showMenu: function () {
-        this.firstTab = true;
-        this.$newContentMenuChoices.removeClass('o_hidden');
-        $('body').addClass('o_new_content_open');
-        this.$('> a').focus();
+        var def = $.Deferred();
+        this.trigger_up('action_demand', {
+            actionName: 'close_all_widgets',
+            onSuccess: def.resolve.bind(def),
+        });
+        return def.then((function () {
+            this.firstTab = true;
+            this.$newContentMenuChoices.removeClass('o_hidden');
+            $('body').addClass('o_new_content_open');
+            this.$('> a').focus();
+        }).bind(this));
     },
 
     //--------------------------------------------------------------------------
@@ -258,7 +273,7 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                             $el.fadeTo(1000, 1);
                         });
                     }
-                    
+
                     self._install(moduleId).then(function () {
                         window.location.href = window.location.origin + window.location.pathname + '?' + enableFlag;
                     }, function () {

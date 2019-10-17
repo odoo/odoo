@@ -146,7 +146,7 @@
                                 </thead>
                                 <tbody>
                                     <tr t-foreach="o.package_level_ids.sorted(key=lambda p: p.package_id.name)" t-as="package">
-                                        <t t-set="package" t-value="package.with_context({'picking_id':o.id})" />
+                                        <t t-set="package" t-value="package.with_context(picking_id=o.id)" />
                                         <td><span t-field="package.package_id.name"/></td>
                                         <td><img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', package.package_id.name, 600, 100)" style="width:300px    ;height:50px" alt="Barcode"/></td>
                                         <td><span t-field="package.location_id"/></td>
@@ -155,7 +155,7 @@
                                 </tbody>
                             </table>
                             <t t-set="no_reserved_product" t-value="o.move_lines.filtered(lambda x: x.product_uom_qty != x.reserved_availability and x.move_line_ids and x.state!='done')"/>
-                            <p t-if="o.state in ['draft', 'waiting', 'confirmed'] or no_reserved_product" class="fa fa-exclamation-triangle">
+                            <p t-if="o.state in ['draft', 'waiting', 'confirmed'] or no_reserved_product"><i class="fa fa-exclamation-triangle" />
                                 All products could not be reserved. Click on the "Check Availability" button to try to reserve products
                             </p>
                             <p t-field="o.note"/>

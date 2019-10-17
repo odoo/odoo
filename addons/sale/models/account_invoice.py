@@ -46,9 +46,27 @@ class AccountInvoice(models.Model):
     def _onchange_delivery_address(self):
         addr = self.partner_id.address_get(['delivery'])
         self.partner_shipping_id = addr and addr.get('delivery')
-        if self.env.context.get('type', 'out_invoice') == 'out_invoice':
+        inv_type = self.type or self.env.context.get('type', 'out_invoice')
+        if inv_type == 'out_invoice':
             company = self.company_id or self.env.user.company_id
-            self.comment = company.with_context(lang=self.partner_id.lang).sale_note
+            self.comment = company.with_context(lang=self.partner_id.lang).sale_note or (self._origin.company_id == company and self.comment)
+
+    @api.multi
+    def action_invoice_open(self):
+        # OVERRIDE
+        # Auto-reconcile the invoice with payments coming from transactions.
+        # It's useful when you have a "paid" sale order (using a payment transaction) and you invoice it later.
+        res = super(AccountInvoice, self).action_invoice_open()
+
+        if not self:
+            return res
+
+        for invoice in self:
+            payments = invoice.mapped('transaction_ids.payment_id')
+            move_lines = payments.mapped('move_line_ids').filtered(lambda line: not line.reconciled and line.credit > 0.0)
+            for line in move_lines:
+                invoice.assign_outstanding_credit(line.id)
+        return res
 
     @api.multi
     def action_invoice_paid(self):

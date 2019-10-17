@@ -3,6 +3,8 @@
 
 import base64
 import io
+import os
+import mimetypes
 from werkzeug.utils import redirect
 
 from odoo import http
@@ -31,11 +33,15 @@ class WebsiteSaleDigital(CustomerPortal):
     ], type='http', auth='public', website=True)
     def portal_order_page(self, order_id=None, **post):
         response = super(WebsiteSaleDigital, self).portal_order_page(order_id=order_id, **post)
-        if not 'order' in response.qcontext:
+        if not 'sale_order' in response.qcontext:
             return response
-        order = response.qcontext['order']
+        order = response.qcontext['sale_order']
         invoiced_lines = request.env['account.invoice.line'].sudo().search([('invoice_id', 'in', order.invoice_ids.ids), ('invoice_id.state', '=', 'paid')])
         products = invoiced_lines.mapped('product_id') | order.order_line.filtered(lambda r: not r.price_subtotal).mapped('product_id')
+        if not order.amount_total:
+            # in that case, we should add all download links to the products
+            # since there is nothing to pay, so we shouldn't wait for an invoice
+            products = order.order_line.mapped('product_id')
 
         purchased_products_attachments = {}
         for product in products:
@@ -67,7 +73,7 @@ class WebsiteSaleDigital(CustomerPortal):
         # Check if this is a valid attachment id
         attachment = request.env['ir.attachment'].sudo().search_read(
             [('id', '=', int(attachment_id))],
-            ["name", "datas", "file_type", "res_model", "res_id", "type", "url"]
+            ["name", "datas", "datas_fname", "mimetype", "res_model", "res_id", "type", "url"]
         )
 
         if attachment:
@@ -101,6 +107,11 @@ class WebsiteSaleDigital(CustomerPortal):
                 return request.not_found()
         elif attachment["datas"]:
             data = io.BytesIO(base64.standard_b64decode(attachment["datas"]))
-            return http.send_file(data, filename=attachment['name'], as_attachment=True)
+            # we follow what is done in ir_http's binary_content for the extension management
+            extension = os.path.splitext(attachment["datas_fname"] or '')[1]
+            extension = extension if extension else mimetypes.guess_extension(attachment["mimetype"] or '')
+            filename = attachment['name']
+            filename = filename if os.path.splitext(filename)[1] else filename + extension
+            return http.send_file(data, filename=filename, as_attachment=True)
         else:
             return request.not_found()

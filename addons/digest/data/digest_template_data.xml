@@ -10,7 +10,8 @@
 <table style="width: 100%; border-spacing: 0; font-family: Helvetica,Arial,Verdana,sans-serif;">
     <tr>
         <td align="center" valign="top" style="border-collapse: collapse; padding: 0">
-            % set company, user = ctx['company'], ctx['user']
+            % set user = ctx.get('user', user)
+            % set company = user.company_id
             % set data = object.compute_kpis(company, user)
             % set tips = object.compute_tips(company, user)
             % set kpi_actions = object.compute_kpis_actions(company, user)
@@ -115,7 +116,7 @@
                 <table style="width: 100%; max-width: 600px; margin-top: 5px; border: 1px solid #e7e7e7;">
                     <tr>
                         <td style="border-collapse: collapse; background-color: #ffffff; line-height: 21px; padding: 0px 20px;"><br/>
-                            <div style="color: #3d466e; line-height: 23px;">${ctx['tip_description']|safe}</div>
+                            <div style="color: #3d466e; line-height: 23px;">${tips | safe}</div>
                         </td>
                     </tr>
                 </table>
@@ -123,7 +124,7 @@
             <table style="width: 100%; max-width: 600px; margin-top: 5px; border: 1px solid #e7e7e7;">
                 <tr>
                     <td style="border-collapse: collapse; background-color: #ffffff; line-height: 21px; padding: 0 20px 10px 20px; text-align: center;"><br/>
-                        <div style="color: #3d466e; font-size: 16px; font-weight: 600; line-height: 23px;">Run your bussiness from anywhere with Odoo Mobile.</div>
+                        <div style="color: #3d466e; font-size: 16px; font-weight: 600; line-height: 23px;">Run your business from anywhere with Odoo Mobile.</div>
                     </td>
                 </tr>
                 <tr>
@@ -136,7 +137,7 @@
             <table style="margin-top: 5px; border: 1px solid #e7e7e7; font-size: 15px; width: 100%; max-width: 600px;">
                 <tr>
                     <td style="border-collapse: collapse; margin: 0; padding: 10px 20px;">
-                        % if ctx['user'].has_group('base.group_system'): 
+                        % if user.has_group('base.group_system'):
                             <div style="margin-top: 20px;"> 
                                 Want to customize the email?
                                 <a href="/web#view_type=form&amp;model=digest.digest&amp;id=${object.id}" target="_blank" style="color: #875A7B;">Choose the metrics you care about</a>
@@ -145,7 +146,7 @@
                         % endif
                         <p style="font-size: 11px; margin-top: 10px;">
                             <strong>
-                                Send by
+                                Sent by
                                 <a href="https://www.odoo.com" style="text-decoration: none; color: #875A7B;">Odoo</a> - <a href="/web#view_type=form&amp;model=digest.digest&amp;id=${object.id}" target="_blank" style="color: #888888;">Unsubscribe</a>
                             </strong>
                         </p>

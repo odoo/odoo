@@ -109,7 +109,7 @@ var StatementModel = BasicModel.extend({
         this.valuenow = 0;
         this.valuemax = 0;
         this.alreadyDisplayed = [];
-        this.defaultDisplayQty = 10;
+        this.defaultDisplayQty = options && options.defaultDisplayQty || 10;
         this.limitMoveLines = options && options.limitMoveLines || 15;
     },
 
@@ -135,7 +135,7 @@ var StatementModel = BasicModel.extend({
 
         // Onchange the partner if not already set on the statement line.
         if(!line.st_line.partner_id && line.reconciliation_proposition
-            && line.reconciliation_proposition.length == 1 && prop.partner_id){
+            && line.reconciliation_proposition.length == 1 && prop.partner_id && line.type === undefined){
             return this.changePartner(handle, {'id': prop.partner_id, 'display_name': prop.partner_name}, true)
                 .then(function (result) {
                     return $.when(self._computeLine(line), self._performMoveLine(handle));
@@ -365,6 +365,7 @@ var StatementModel = BasicModel.extend({
                     var handle = _.uniqueId('rline');
                     self.lines[handle] = {
                         id: res.st_line.id,
+                        partner_id: res.st_line.partner_id,
                         handle: handle,
                         reconciled: false,
                         mode: 'inactive',
@@ -376,13 +377,14 @@ var StatementModel = BasicModel.extend({
                     };
                 });
             });
-        var def_reconcileModel = this._rpc({
-                model: 'account.reconcile.model',
-                method: 'search_read',
-            })
-            .then(function (reconcileModels) {
-                self.reconcileModels = reconcileModels;
-            });
+        var domainReconcile = [];
+        if (context && context.company_ids) {
+            domainReconcile.push(['company_id', 'in', context.company_ids]);
+        }
+        if (context && context.active_model === 'account.journal' && context.active_ids) {
+            domainReconcile.push(['match_journal_ids', 'in', [false].concat(context.active_ids)]);
+        }
+        var def_reconcileModel = this._loadReconciliationModel({domainReconcile: domainReconcile});
         var def_account = this._rpc({
                 model: 'account.account',
                 method: 'search_read',
@@ -391,20 +393,7 @@ var StatementModel = BasicModel.extend({
             .then(function (accounts) {
                 self.accounts = _.object(_.pluck(accounts, 'id'), _.pluck(accounts, 'code'));
             });
-        self.taxes = {};
-        var def_taxes = this._rpc({
-                model: 'account.tax',
-                method: 'search_read',
-                fields: ['price_include', 'amount_type'],
-            })
-            .then(function (taxes) {
-                _.each(taxes, function(tax){
-                    self.taxes[tax.id] = {
-                        price_include: tax.price_include,
-                        amount_type: tax.amount_type,
-                    }
-                })
-            });
+        var def_taxes = self._loadTaxes();
         return $.when(def_statement, def_reconcileModel, def_account, def_taxes).then(function () {
             _.each(self.lines, function (line) {
                 line.reconcileModels = self.reconcileModels;
@@ -413,6 +402,75 @@ var StatementModel = BasicModel.extend({
             ids = ids.splice(0, self.defaultDisplayQty);
             self.pagerIndex = ids.length;
             return self._formatLine(self.statement.lines);
+        });
+    },
+    _readAnalyticTags: function (params) {
+        var self = this;
+        this.analyticTags = {};
+        if (!params || !params.res_ids || !params.res_ids.length) {
+            return $.when();
+        }
+        var fields = (params && params.fields || []).concat(['id', 'display_name']);
+        return this._rpc({
+                model: 'account.analytic.tag',
+                method: 'read',
+                args: [
+                    params.res_ids,
+                    fields,
+                ],
+            }).then(function (tags) {
+                for (var i=0; i<tags.length; i++) {
+                    var tag = tags[i];
+                    self.analyticTags[tag.id] = tag;
+                }
+            });
+    },
+    _loadReconciliationModel: function (params) {
+        var self = this;
+        return this._rpc({
+                model: 'account.reconcile.model',
+                method: 'search_read',
+                domain: params.domainReconcile || [],
+            })
+            .then(function (reconcileModels) {
+               var analyticTagIds = [];
+                for (var i=0; i<reconcileModels.length; i++) {
+                    var modelTags = reconcileModels[i].analytic_tag_ids || [];
+                    for (var j=0; j<modelTags.length; j++) {
+                        if (analyticTagIds.indexOf(modelTags[j]) === -1) {
+                            analyticTagIds.push(modelTags[j]);
+                        }
+                    }
+                }
+                return self._readAnalyticTags({res_ids: analyticTagIds}).then(function () {
+                    for (var i=0; i<reconcileModels.length; i++) {
+                        var recModel = reconcileModels[i];
+                        var analyticTagData = [];
+                        var modelTags = reconcileModels[i].analytic_tag_ids || [];
+                        for (var j=0; j<modelTags.length; j++) {
+                            var tagId = modelTags[j];
+                            analyticTagData.push([tagId, self.analyticTags[tagId].display_name])
+                        }
+                        recModel.analytic_tag_ids = analyticTagData;
+                    }
+                    self.reconcileModels = reconcileModels;
+                });
+            });
+    },
+    _loadTaxes: function(){
+        var self = this;
+        self.taxes = {};
+        return this._rpc({
+            model: 'account.tax',
+            method: 'search_read',
+            fields: ['price_include', 'amount_type'],
+        }).then(function (taxes) {
+            _.each(taxes, function(tax){
+                self.taxes[tax.id] = {
+                    price_include: tax.price_include,
+                    amount_type: tax.amount_type,
+                }
+            })
         });
     },
     /**
@@ -510,13 +568,15 @@ var StatementModel = BasicModel.extend({
         line.mode = (id || line.mode !== "create") && isNaN(id) && !this.avoidCreate ? 'create' : 'match';
         defs.push(this._computeLine(line));
         if (line.mode === 'create') {
-            return $.when(defs).then(function () {
+            return $.when.apply($, defs).then(function () {
                 return self.createProposition(handle);
             });
         } else if (line.mode === 'match') {
-            return $.when(defs, self._performMoveLine(handle));
+            return $.when.apply($, defs).then(function () {
+                return self._performMoveLine(handle);
+            });
         }
-        return $.when(defs);
+        return $.when.apply($, defs);
     },
     searchBalanceAmount: function (handle) {
         var line = this.getLine(handle);
@@ -838,7 +898,8 @@ var StatementModel = BasicModel.extend({
                                 'link': prop.id,
                                 'tax_id': [tax.id, null],
                                 'amount': tax.amount,
-                                'label': tax.name,
+                                'label': prop.label ? prop.label + " " + tax.name : tax.name,
+                                'date': prop.date,
                                 'account_id': tax.account_id ? [tax.account_id, null] : prop.account_id,
                                 'analytic': tax.analytic,
                                 'is_tax': true,
@@ -884,11 +945,11 @@ var StatementModel = BasicModel.extend({
             });
             var company_currency = session.get_currency(line.st_line.currency_id);
             var company_precision = company_currency && company_currency.digits[1] || 2;
-            total = utils.round_precision(total*1000, company_precision)/1000 || 0;
+            total = utils.round_decimals(total, company_precision) || 0;
             if(isOtherCurrencyId){
                 var other_currency = session.get_currency(isOtherCurrencyId);
                 var other_precision = other_currency && other_currency.digits[1] || 2;
-                amount_currency = utils.round_precision(amount_currency, other_precision)
+                amount_currency = utils.round_decimals(amount_currency, other_precision);
             }
             line.balance = {
                 amount: total,
@@ -933,7 +994,7 @@ var StatementModel = BasicModel.extend({
     _formatMany2ManyTags: function (value) {
         var res = [];
         for (var i=0, len=value.length; i<len; i++) {
-            res[i] = {data: {'id': value[i][0], 'display_name': value[i][1]}};
+            res[i] = {'id': value[i][0], 'display_name': value[i][1]};
         }
         return res;
     },
@@ -994,6 +1055,11 @@ var StatementModel = BasicModel.extend({
                                 'display_name': line.reconciliation_proposition[0].partner_name,
                             }, true);
                         }
+                    }else if(!line.st_line.partner_id && line.partner_id && line.partner_name){
+                        return self.changePartner(line.handle, {
+                            'id': line.partner_id,
+                            'display_name': line.partner_name,
+                        }, true);
                     }
                     return true;
                 })
@@ -1047,6 +1113,7 @@ var StatementModel = BasicModel.extend({
      */
     _formatQuickCreate: function (line, values) {
         values = values || {};
+        var today = new moment().utc().format();
         var account = this._formatNameGet(values.account_id);
         var formatOptions = {
             currency_id: line.st_line.currency_id,
@@ -1063,6 +1130,7 @@ var StatementModel = BasicModel.extend({
             'tax_id': this._formatNameGet(values.tax_id),
             'debit': 0,
             'credit': 0,
+            'date': values.date ? values.date : field_utils.parse.date(today, {}, {isUTC: true}),
             'base_amount': values.amount_type !== "percentage" ?
                 (amount) : line.balance.amount * values.amount / 100,
             'percent': values.amount_type === "percentage" ? values.amount : null,
@@ -1213,12 +1281,23 @@ var StatementModel = BasicModel.extend({
  * datas allowing manual reconciliation
  */
 var ManualModel = StatementModel.extend({
-    quickCreateFields: ['account_id', 'journal_id', 'amount', 'analytic_account_id', 'label', 'tax_id', 'force_tax_included', 'analytic_tag_ids'],
+    quickCreateFields: ['account_id', 'journal_id', 'amount', 'analytic_account_id', 'label', 'tax_id', 'force_tax_included', 'analytic_tag_ids', 'date'],
 
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
 
+    /**
+     * Return a boolean telling if load button needs to be displayed or not
+     *
+     * @returns {boolean} true if load more button needs to be displayed
+     */
+    hasMoreLines: function () {
+        if (this.manualLines.length > this.pagerIndex) {
+            return true;
+        }
+        return false;
+    },
     /**
      * load data from
      * - 'account.reconciliation.widget' fetch the lines to reconciliate
@@ -1251,15 +1330,15 @@ var ManualModel = StatementModel.extend({
                 self.accounts = _.object(self.account_ids, _.pluck(accounts, 'code'));
             });
 
-        var def_reconcileModel = this._rpc({
-                model: 'account.reconcile.model',
-                method: 'search_read',
-            })
-            .then(function (reconcileModels) {
-                self.reconcileModels = reconcileModels;
-            });
+        var domainReconcile = [];
+        var company_ids = context && context.company_ids || [session.company_id]
+        if (company_ids) {
+            domainReconcile.push(['company_id', 'in', company_ids]);
+        }
+        var def_reconcileModel = this._loadReconciliationModel({domainReconcile: domainReconcile});
+        var def_taxes = this._loadTaxes();
 
-        return $.when(def_reconcileModel, def_account).then(function () {
+        return $.when(def_reconcileModel, def_account, def_taxes).then(function () {
             switch(context.mode) {
                 case 'customers':
                 case 'suppliers':
@@ -1272,10 +1351,12 @@ var ManualModel = StatementModel.extend({
                             context: context,
                         })
                         .then(function (result) {
-                            var defs = _.map(result, self._formatLine.bind(self, context.mode));
+                            self.manualLines = result;
                             self.valuenow = 0;
-                            self.valuemax = Object.keys(self.lines).length;
-                            return $.when.apply($, defs);
+                            self.valuemax = Object.keys(self.manualLines).length;
+                            var lines = self.manualLines.splice(0, self.defaultDisplayQty);
+                            self.pagerIndex = lines.length;
+                            return self.loadData(lines);
                         });
                 case 'accounts':
                     return self._rpc({
@@ -1285,10 +1366,12 @@ var ManualModel = StatementModel.extend({
                             context: context,
                         })
                         .then(function (result) {
-                            var defs = _.map(result, self._formatLine.bind(self, 'accounts'));
+                            self.manualLines = result;
                             self.valuenow = 0;
-                            self.valuemax = Object.keys(self.lines).length;
-                            return $.when.apply($, defs);
+                            self.valuemax = Object.keys(self.manualLines).length;
+                            var lines = self.manualLines.splice(0, self.defaultDisplayQty);
+                            self.pagerIndex = lines.length;
+                            return self.loadData(lines);
                         });
                 default:
                     var partner_ids = context.partner_ids;
@@ -1304,15 +1387,45 @@ var ManualModel = StatementModel.extend({
                             context: context,
                         })
                         .then(function (result) {
-                            var defs = _.map(result.accounts, self._formatLine.bind(self, 'accounts'));
-                            defs = defs.concat(_.map(result.customers, self._formatLine.bind(self, 'customers')));
-                            defs = defs.concat(_.map(result.suppliers, self._formatLine.bind(self, 'suppliers')));
+                            // Flatten the result
+                            self.manualLines = [].concat(result.accounts, result.customers, result.suppliers)
                             self.valuenow = 0;
-                            self.valuemax = Object.keys(self.lines).length;
-                            return $.when.apply($, defs);
+                            self.valuemax = Object.keys(self.manualLines).length;
+                            var lines = self.manualLines.splice(0, self.defaultDisplayQty);
+                            self.pagerIndex = lines.length;
+                            return self.loadData(lines);
                         });
             }
         });
+    },
+    /**
+     * Load more partners/accounts
+     *
+     * @param {integer} qty quantity to load
+     * @returns {Deferred}
+     */
+    loadMore: function(qty) {
+        if (qty === undefined) {
+            qty = this.defaultDisplayQty;
+        }
+        var lines = this.manualLines.splice(this.pagerIndex, qty);
+        this.pagerIndex += qty;
+        return this.loadData(lines);
+    },
+    /**
+     * Method to load informations on lines
+     *
+     * @param {Array} lines manualLines to load
+     * @returns {Deferred}
+     */
+    loadData: function(lines) {
+        var self = this;
+        var defs = [];
+        _.each(lines, function (l) {
+            defs.push(self._formatLine(l.mode, l))
+        });
+        return $.when.apply($, defs);
+
     },
     /**
      * Mark the account or the partner as reconciled
@@ -1364,7 +1477,6 @@ var ManualModel = StatementModel.extend({
             }
             line.reconciliation_proposition = [];
         });
-
         if (process_reconciliations.length) {
             def = self._rpc({
                     model: 'account.reconciliation.widget',
@@ -1555,6 +1667,12 @@ var ManualModel = StatementModel.extend({
                 context: this.context,
             })
             .then(this._formatMoveLine.bind(this, handle));
+    },
+    
+    _formatToProcessReconciliation: function (line, prop) {
+        var result = this._super(line, prop);
+        result['date'] = prop.date;
+        return result;
     },
 });
 

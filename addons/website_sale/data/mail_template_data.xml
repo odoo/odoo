@@ -38,7 +38,7 @@
                     <h1 style="color:#A9A9A9;">THERE'S SOMETHING IN YOUR CART.</h1>
                     Would you like to complete your purchase?<br/><br/>
                     % if object.order_line:
-                        % for line in object.order_line:
+                        % for line in object.website_order_line:
                             <hr/>
                             <table width="100%">
                                 <tr>
@@ -57,7 +57,7 @@
                         <hr/>
                     % endif
                     <div style="text-align: center; margin: 16px 0px 16px 0px; font-size: 14px;">
-                        <a href="/shop/cart?access_token=${object.access_token}"
+                        <a href="${object.get_base_url()}/shop/cart?access_token=${object.access_token}"
                             target="_blank"
                             style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
                             Resume order

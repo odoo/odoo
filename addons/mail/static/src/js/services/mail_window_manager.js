@@ -94,38 +94,54 @@ MailManager.include({
      *   is not open yet, and do nothing otherwise.
      * @param {boolean} [options.keepFoldState=false] if set to true, keep the
      *   fold state of the thread
+     * @param {boolean} [options.skipCrossTabSync=false] if set, thread
+     *   should not notify other tabs from new document thread chat window state.
      */
     openThreadWindow: function (threadID, options) {
         var self = this;
         options = options || {};
         // valid threadID, therefore no check
         var thread = this.getThread(threadID);
-        var threadWindow = this._getThreadWindow(threadID);
-        if (!threadWindow) {
-            threadWindow = this._makeNewThreadWindow(thread, options);
-            this._placeNewThreadWindow(threadWindow, options.passively);
-
-            threadWindow.appendTo($(this.THREAD_WINDOW_APPENDTO))
-                .then(function () {
-                    self._repositionThreadWindows();
-                    return thread.fetchMessages();
-                }).then(function () {
-                    threadWindow.render();
-                    threadWindow.scrollToBottom();
-                    if (
-                        !self._areAllThreadWindowsHidden() &&
-                        !thread.isFolded() &&
-                        !threadWindow.isPassive()
-                    ) {
-                        thread.markAsRead();
-                    }
-                });
-        } else if (!options.passively) {
-            if (threadWindow.isHidden()) {
-                this._makeThreadWindowVisible(threadWindow);
-            }
+        if (thread.isCreatingWindow) {
+            // abort creating a chat window, to prevent open chat window twice.
+            // This may happen due to concurrent calls to this method from
+            // messaging menu preview click and handling of longpolling chat
+            // window state.
+            return;
         }
-        threadWindow.updateVisualFoldState();
+        var threadWindow = this._getThreadWindow(threadID);
+        var def = $.when();
+        if (!threadWindow) {
+            thread.isCreatingWindow = true;
+            def = thread.fetchMessages().then(function () {
+                threadWindow = self._makeNewThreadWindow(thread, options);
+                self._placeNewThreadWindow(threadWindow, options.passively);
+                return threadWindow.appendTo($(self.THREAD_WINDOW_APPENDTO));
+            }).then(function () {
+                self._repositionThreadWindows();
+                threadWindow.render();
+                threadWindow.scrollToBottom();
+                if (
+                    !self._areAllThreadWindowsHidden() &&
+                    !thread.isFolded() &&
+                    !threadWindow.isPassive()
+                ) {
+                    thread.markAsRead();
+                }
+            }).fail(function () {
+                // thread window could not be open, which may happen due to
+                // access error while fetching messages to the document.
+                // abort opening the thread window in this case.
+                thread.close({
+                    skipCrossTabSync: true,
+                });
+            }).always(function () {
+                thread.isCreatingWindow = false;
+            });
+        }
+        def.then(function () {
+            threadWindow.updateVisualFoldState();
+        });
     },
     /**
      * Called when a thread has its window state that has been changed, so its
@@ -532,9 +548,6 @@ MailManager.include({
      * @private
      */
     _repositionThreadWindows: function () {
-        if (this._areAllThreadWindowsHidden()) {
-            return;
-        }
         this._computeAvailableSlotsForThreadWindows();
 
         this._repositionVisibleThreadWindows();
@@ -576,9 +589,6 @@ MailManager.include({
      *   the focus is on the thread window.
      */
     _updateThreadWindowsFromMessage: function (message, options) {
-        if (this._areAllThreadWindowsHidden()) {
-            return;
-        }
         _.each(this._threadWindows, function (threadWindow) {
             if (_.contains(message.getThreadIDs(), threadWindow.getID())) {
                 threadWindow.update(options);

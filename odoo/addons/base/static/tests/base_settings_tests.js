@@ -25,7 +25,7 @@ QUnit.module('base_settings_tests', {
     QUnit.module('BaseSetting');
 
     QUnit.test('change setting on nav bar click in base settings', function (assert) {
-        assert.expect(4);
+        assert.expect(5);
 
         var form = createView({
             View: BaseSettingsView,
@@ -63,7 +63,7 @@ QUnit.module('base_settings_tests', {
                                             '<field name="foo"/>'+
                                         '</div>'+
                                         '<div class="o_setting_right_pane">'+
-                                            '<label for="foo"/>'+
+                                            '<span class="o_form_label">Foo</span>'+
                                             '<div class="text-muted">'+
                                                 'this is foo'+
                                             '</div>'+
@@ -77,17 +77,19 @@ QUnit.module('base_settings_tests', {
         });
 
         form.$("div[setting='project']").click();
-        assert.strictEqual(form.$('.selected').attr('data-key'),"crm","crm setting selected");
-        assert.strictEqual(form.$(".settings .app_settings_block").hasClass('o_hidden'),false,"project settings show");
+        assert.strictEqual(form.$('.selected').attr('data-key'), "crm", "crm setting selected");
+        assert.strictEqual(form.$(".settings .app_settings_block").hasClass('o_hidden'), false, "project settings show");
         form.$('.searchInput').val('b').trigger('keyup');
-        assert.strictEqual($('.highlighter').html(),"B","b word hilited");
+        assert.strictEqual(form.$('.highlighter').html(), "B", "b word highlighted");
         form.$('.searchInput').val('bx').trigger('keyup');
-        assert.strictEqual(form.$('.notFound').hasClass('o_hidden'),false,"record not found message shown");
+        assert.strictEqual(form.$('.notFound').hasClass('o_hidden'), false, "record not found message shown");
+        form.$('.searchInput').val('f').trigger('keyup');
+        assert.strictEqual(form.$('span.o_form_label .highlighter').html(), "F", "F word highlighted");
         form.destroy();
     });
 
     QUnit.test('settings views does not read existing id when coming back in breadcrumbs', function (assert) {
-        assert.expect(7);
+        assert.expect(8);
 
         var actions = [{
             id: 1,
@@ -127,6 +129,8 @@ QUnit.module('base_settings_tests', {
         actionManager.doAction(1);
         actionManager.$('button[name="4"]').click();
         $('.o_control_panel .breadcrumb-item a').click();
+        assert.ok(actionManager.$('.o_form_view').hasClass('o_form_editable'),
+            'settings view should still be in edit mode');
         assert.verifySteps([
             'load_views', // initial setting action
             'default_get', // this is a setting view => create new record

@@ -3,19 +3,18 @@
 # * pos_cache
 # 
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2018
 # amrnegm <amrnegm.01@gmail.com>, 2018
 # Martin Trigaux, 2018
-# Osoul <baruni@osoul.ly>, 2018
 # Osama Ahmaro <osamaahmaro@gmail.com>, 2018
-# Yihya Hugirat <hugirat@gmail.com>, 2018
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Yihya Hugirat <hugirat@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-01-22 11:13+0000\n"
+"PO-Revision-Date: 2018-08-24 09:22+0000\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,17 +26,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_cache.field_pos_cache__cache
 #: model:ir.model.fields,field_description:pos_cache.field_pos_config__cache_ids
 msgid "Cache"
-msgstr "ذاكرة وسيطة"
+msgstr "الذاكرة الوسيطة"
 
 #. module: pos_cache
 #: model:ir.model.fields,field_description:pos_cache.field_pos_cache__compute_user_id
 msgid "Cache compute user"
-msgstr ""
+msgstr "مستخدم الذاكرة الوسيطة المحسوبة"
 
 #. module: pos_cache
 #: model:ir.model.fields,field_description:pos_cache.field_pos_cache__config_id
 msgid "Config"
-msgstr ""
+msgstr "إعداد"
 
 #. module: pos_cache
 #: model:ir.model.fields,field_description:pos_cache.field_pos_cache__create_uid
@@ -52,7 +51,7 @@ msgstr "أنشئ في"
 #. module: pos_cache
 #: model:ir.model.fields,field_description:pos_cache.field_pos_cache__display_name
 msgid "Display Name"
-msgstr "اسم العرض"
+msgstr "الاسم المعروض"
 
 #. module: pos_cache
 #: model:ir.model.fields,field_description:pos_cache.field_pos_cache__id
@@ -62,7 +61,7 @@ msgstr "المعرف"
 #. module: pos_cache
 #: model_terms:ir.ui.view,arch_db:pos_cache.pos_config_view_form_inherit_pos_cache
 msgid "Invalidate cache"
-msgstr ""
+msgstr "إبطال الذاكرة الوسيطة"
 
 #. module: pos_cache
 #: model:ir.model.fields,field_description:pos_cache.field_pos_cache____last_update
@@ -89,14 +88,19 @@ msgstr "جاري التحميل"
 #. module: pos_cache
 #: model:ir.model.fields,field_description:pos_cache.field_pos_config__oldest_cache_time
 msgid "Oldest cache time"
-msgstr "أقدم وقت للذاكر الوسيطة"
+msgstr "أقدم وقت للذاكرة الوسيطة"
 
 #. module: pos_cache
 #: model:ir.actions.server,name:pos_cache.refresh_pos_cache_cron_ir_actions_server
 #: model:ir.cron,cron_name:pos_cache.refresh_pos_cache_cron
 #: model:ir.cron,name:pos_cache.refresh_pos_cache_cron
 msgid "PoS: refresh cache"
-msgstr ""
+msgstr "نقطة البيع: تحديث الذاكرة الوسيطة"
+
+#. module: pos_cache
+#: model:ir.model,name:pos_cache.model_pos_cache
+msgid "Point of Sale Cache"
+msgstr "الذاكرة الوسيطة لنقطة البيع"
 
 #. module: pos_cache
 #: model:ir.model,name:pos_cache.model_pos_config
@@ -106,14 +110,9 @@ msgstr "إعدادات نقطة البيع"
 #. module: pos_cache
 #: model:ir.model.fields,field_description:pos_cache.field_pos_cache__product_domain
 msgid "Product Domain"
-msgstr ""
+msgstr "نطاق المنتج"
 
 #. module: pos_cache
 #: model:ir.model.fields,field_description:pos_cache.field_pos_cache__product_fields
 msgid "Product Fields"
-msgstr ""
-
-#. module: pos_cache
-#: model:ir.model,name:pos_cache.model_pos_cache
-msgid "pos.cache"
-msgstr ""
+msgstr "حقول المنتج"

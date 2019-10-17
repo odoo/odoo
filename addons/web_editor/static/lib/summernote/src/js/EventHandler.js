@@ -365,7 +365,7 @@ define([
             (keycode > 185 && keycode < 193) || // ;=,-./` (in order)
             (keycode > 218 && keycode < 223))) {   // [\]' (in order))
           eventName = 'visible';
-        } else if (!keycode) {
+        } else if (!keycode && event.key !== 'Dead') {
           self.invoke('restoreRange', $editable);
         }
         // ODOO: end_modification)

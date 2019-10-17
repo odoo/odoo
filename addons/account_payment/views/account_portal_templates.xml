@@ -48,7 +48,7 @@
                             <div t-if="pms or acquirers" id="payment_method" class="text-left col-md-13">
                                 <t t-call="payment.payment_tokens_list">
                                     <t t-set="mode" t-value="'payment'"/>
-                                    <t t-set="partner_id" t-value="invoice.partner_id.id"/>
+                                    <t t-set="partner_id" t-value="invoice.partner_id.id if request.env.user._is_public() else request.env.user.partner_id.id"/>
                                     <t t-set="success_url" t-value="invoice.get_portal_url()"/>
                                     <t t-set="error_url" t-value="invoice.get_portal_url()"/>
                                     <t t-set="access_token" t-value="access_token or ''"/>

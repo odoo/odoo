@@ -79,6 +79,14 @@ var ListController = BasicController.extend({
             return $.Deferred().resolve();
         }
     },
+    /*
+     * @override
+     */
+    getContext: function () {
+        var context = this._super.apply(this, arguments);
+        context.orderedBy = this.model.get(this.handle, {raw: true}).orderedBy || [];
+        return context;
+    },
     /**
      * Returns the list of currently selected res_ids (with the check boxes on
      * the left)
@@ -199,6 +207,7 @@ var ListController = BasicController.extend({
         } else {
             this.selectedRecords = [];
         }
+
         params.selectedRecords = this.selectedRecords;
         return this._super.apply(this, arguments);
     },
@@ -364,8 +373,9 @@ var ListController = BasicController.extend({
      * @returns {Deferred}
      */
     _update: function () {
-        this._toggleSidebar();
-        return this._super.apply(this, arguments);
+        return this._super.apply(this, arguments)
+            .then(this._toggleSidebar.bind(this))
+            .then(this._updateButtons.bind(this, 'readonly'));
     },
     /**
      * This helper simply makes sure that the control panel buttons matches the
@@ -569,6 +579,7 @@ var ListController = BasicController.extend({
      * @param {OdooEvent} event
      */
     _onToggleGroup: function (event) {
+        event.stopPropagation();
         this.model
             .toggleGroup(event.data.group.id)
             .then(this.update.bind(this, {}, {keepSelection: true, reload: false}));

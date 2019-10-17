@@ -13,6 +13,17 @@ var AbstractStorageService = AbstractService.extend({
     // this abstraction
     storage: null,
 
+    /**
+     * @override
+     */
+    destroy: function () {
+        // storage can be permanent or transient, destroy transient ones
+        if ((this.storage || {}).destroy) {
+            this.storage.destroy();
+        }
+        this._super.apply(this, arguments);
+    },
+
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
@@ -32,6 +43,19 @@ var AbstractStorageService = AbstractService.extend({
     getItem: function(key, defaultValue) {
         var val = this.storage.getItem(key);
         return val ? JSON.parse(val) : defaultValue;
+    },
+    /**
+     * @param {integer} index
+     * @return {string}
+     */
+    key: function (index) {
+        return this.storage.key(index);
+    },
+    /**
+     * @return {integer}
+     */
+    length: function () {
+        return this.storage.length;
     },
     /**
      * Removes the given key from the storage

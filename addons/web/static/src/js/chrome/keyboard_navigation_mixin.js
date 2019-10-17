@@ -45,13 +45,21 @@ odoo.define('web.KeyboardNavigationMixin', function (require) {
             var accesskeyElements = $(document).find('[accesskey]').filter(':visible');
             _.each(accesskeyElements, function (elem) {
                 var overlay = $(_.str.sprintf("<div class='o_web_accesskey_overlay'>%s</div>", $(elem).attr('accesskey').toUpperCase()));
+
+                var $overlayParent;
                 if (elem.tagName.toUpperCase() === "INPUT") {
-                    // special case for the search input that has an access key defined. We cannot set the overlay on the input itself, only on its parent
-                    overlay.appendTo($(elem).parent().css('position', 'relative'));
+                    // special case for the search input that has an access key
+                    // defined. We cannot set the overlay on the input itself,
+                    // only on its parent.
+                    $overlayParent = $(elem).parent();
+                } else {
+                    $overlayParent = $(elem);
                 }
-                else {
-                    overlay.appendTo($(elem).css('position', 'relative'));
+
+                if ($overlayParent.css('position') !== 'absolute') {
+                    $overlayParent.css('position', 'relative');
                 }
+                overlay.appendTo($overlayParent);
             });
         },
         /**

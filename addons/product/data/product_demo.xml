@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
+        <!-- We want to activate product variant by default for easier demoing. -->
+        <record id="base.group_user" model="res.groups">
+            <field name="implied_ids" eval="[(4, ref('product.group_product_variant'))]"/>
+        </record>
 
         <record id="product_category_2" model="product.category">
             <field name="parent_id" ref="product.product_category_all"/>
@@ -124,26 +128,32 @@
 
         <record id="product_attribute_1" model="product.attribute">
             <field name="name">Legs</field>
+            <field name="sequence">1</field>
         </record>
         <record id="product_attribute_value_1" model="product.attribute.value">
             <field name="name">Steel</field>
             <field name="attribute_id" ref="product_attribute_1"/>
+            <field name="sequence">1</field>
         </record>
         <record id="product_attribute_value_2" model="product.attribute.value">
             <field name="name">Aluminium</field>
             <field name="attribute_id" ref="product_attribute_1"/>
+            <field name="sequence">2</field>
         </record>
 
         <record id="product_attribute_2" model="product.attribute">
             <field name="name">Color</field>
+            <field name="sequence">2</field>
         </record>
         <record id="product_attribute_value_3" model="product.attribute.value">
             <field name="name">White</field>
             <field name="attribute_id" ref="product_attribute_2"/>
+            <field name="sequence">1</field>
         </record>
         <record id="product_attribute_value_4" model="product.attribute.value">
             <field name="name">Black</field>
             <field name="attribute_id" ref="product_attribute_2"/>
+            <field name="sequence">2</field>
         </record>
 
         <record id="product_attribute_3" model="product.attribute">

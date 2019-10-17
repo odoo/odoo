@@ -39,11 +39,11 @@ widgets) to your form view will get you up and running in no time.
             _name = 'business.trip'
             _inherit = ['mail.thread']
             _description = 'Business Trip'
-            
+
             name = fields.Char()
             partner_id = fields.Many2one('res.partner', 'Responsible')
             guest_ids = fields.Many2many('res.partner', 'Participants')
-        
+
     In the form view:
 
     .. code-block:: xml
@@ -78,13 +78,13 @@ to manage followers on your record:
 .. rubric:: Posting messages
 
 .. method:: message_post(self, body='', subject=None, message_type='notification', subtype=None, parent_id=False, attachments=None, **kwargs)
-    
+
     Post a new message in an existing thread, returning the new
     mail.message ID.
-    
+
     :param str body: body of the message, usually raw HTML that will
         be sanitized
-    :param str message_type: see mail_message.type field
+    :param str message_type: see mail_message.message_type field
     :param int parent_id: handle reply to a previous message by adding the
         parent partners to the message in case of private discussion
     :param list(tuple(str,str)) attachments: list of attachment tuples in the form
@@ -95,20 +95,20 @@ to manage followers on your record:
     :rtype: int
 
 .. method:: message_post_with_view(views_or_xmlid, **kwargs):
-    
+
     Helper method to send a mail / post a message using a view_id to
     render using the ir.qweb engine. This method is stand alone, because
     there is nothing in template and composer that allows to handle
     views in batch. This method will probably disappear when templates
     handle ir ui views.
-    
+
     :param str or ``ir.ui.view`` record: external id or record of the view that
         should be sent
 
 .. method:: message_post_with_template(template_id, **kwargs)
-        
+
     Helper method to send a mail with a template
-    
+
     :param template_id: the id of the template to render to create the body of the message
     :param `\**kwargs`: parameter to create a mail.compose.message wizzard (which inherit from mail.message)
 
@@ -121,7 +121,7 @@ on the thread's record depending on some values from the email itself (i.e. upda
 a date or an e-mail address, add CC's addresses as followers, etc.).
 
 .. method:: message_new(msg_dict, custom_values=None)
-    
+
     Called by ``message_process`` when a new message is received
     for a given thread model, if the message did not belong to
     an existing thread.
@@ -129,7 +129,7 @@ a date or an e-mail address, add CC's addresses as followers, etc.).
     The default behavior is to create a new record of the corresponding
     model (based on some very basic info extracted from the message).
     Additional behavior may be implemented by overriding this method.
-    
+
     :param dict msg_dict: a map containing the email details and
         attachments. See ``message_process`` and ``mail.message.parse`` for details
     :param dict custom_values: optional dictionary of additional
@@ -140,14 +140,14 @@ a date or an e-mail address, add CC's addresses as followers, etc.).
     :return: the id of the newly created thread object
 
 .. method:: message_update(msg_dict, update_vals=None)
-        
+
     Called by ``message_process`` when a new message is received
     for an existing thread. The default behavior is to update the record
     with ``update_vals`` taken from the incoming email.
-    
+
     Additional behavior may be implemented by overriding this
     method.
-    
+
     :param dict msg_dict: a map containing the email details and attachments;
         see ``message_process`` and ``mail.message.parse()`` for details.
     :param dict update_vals: a dict containing values to update records given
@@ -159,7 +159,7 @@ a date or an e-mail address, add CC's addresses as followers, etc.).
 .. method:: message_subscribe(partner_ids=None, channel_ids=None, subtype_ids=None, force=True)
 
     Add partners to the records followers.
-    
+
     :param list(int) partner_ids: IDs of the partners that will be subscribed
         to the record
     :param list(int) channel_ids: IDs of the channels that will be subscribed
@@ -170,22 +170,12 @@ a date or an e-mail address, add CC's addresses as followers, etc.).
         using the subtypes given in the parameters
     :return: Success/Failure
     :rtype: bool
-    
-.. method:: message_subscribe_users(user_ids=None, subtype_ids=None)
 
-    Wrapper on message_subscribe, using users instead of partners.
-    
-    :param list(int) user_ids: IDs of the users that will be subscribed
-        to the record; if ``None``, subscribe the current user instead.
-    :param list(int) subtype_ids: IDs of the subtypes that the channels/partners
-        will be subscribed to
-    :return: Success
-    :rtype: bool
 
 .. method:: message_unsubscribe(partner_ids=None, channel_ids=None)
 
     Remove partners from the record's followers.
-    
+
     :param list(int) partner_ids: IDs of the partners that will be subscribed
         to the record
     :param list(int) channel_ids: IDs of the channels that will be subscribed
@@ -211,10 +201,8 @@ The ``mail`` module adds a powerful tracking system on fields, allowing you
 to log changes to specific fields in the record's chatter.
 
 To add tracking to a field, simple add the track_visibility attribute with the
-value ``onchange`` (if it should be displayed in the notification only if the
-field changed) or ``always`` (if the value should always be displayed in change
-notifications even if this particular field did not change - useful to make
-notification more explanatory by always adding the name field, for example).
+value ``True`` to be displayed in the notification only if the
+field changed.
 
 .. admonition:: Example
 
@@ -226,12 +214,12 @@ notification more explanatory by always adding the name field, for example).
             _name = 'business.trip'
             _inherit = ['mail.thread']
             _description = 'Business Trip'
-            
-            name = fields.Char(track_visibility='always')
+
+            name = fields.Char(track_visibility=True)
             partner_id = fields.Many2one('res.partner', 'Responsible',
-                                         track_visibility='onchange')
+                                         track_visibility=True)
             guest_ids = fields.Many2many('res.partner', 'Participants')
-    
+
     From now on, every change to a trip's name or responsible will log a note
     on the record. The ``name`` field will be displayed in the notification as
     well to give more context about the notification (even if the name did not
@@ -247,32 +235,32 @@ subtype of notifications they wish to receive.
 
 Subtypes are created as data in your module; the model has the following fields:
 
-``name`` (mandatory) - :class:`~odoo.fields.Char` 
+``name`` (mandatory) - :class:`~odoo.fields.Char`
     name of the subtype, will be displayed in the notification customization
     popup
-``description`` - :class:`~odoo.fields.Char` 
+``description`` - :class:`~odoo.fields.Char`
     description that will be added in the message posted for this
     subtype. If void, the name will be added instead
-``internal`` - :class:`~odoo.fields.Boolean` 
+``internal`` - :class:`~odoo.fields.Boolean`
     messages with internal subtypes will be visible only by employees,
     aka members of the ``base.group_user`` group
-``parent_id`` - :class:`~odoo.fields.Many2one` 
+``parent_id`` - :class:`~odoo.fields.Many2one`
     link subtypes for automatic subscription; for example project subtypes are
     linked to task subtypes through this link. When someone is subscribed to
     a project, he will be subscribed to all tasks of this project with
     subtypes found using the parent subtype
-``relation_field`` - :class:`~odoo.fields.Char` 
+``relation_field`` - :class:`~odoo.fields.Char`
     as an example, when linking project and tasks subtypes, the relation
     field is the project_id field of tasks
-``res_model`` - :class:`~odoo.fields.Char` 
+``res_model`` - :class:`~odoo.fields.Char`
     model the subtype applies to; if False, this subtype applies to all models
-``default`` - :class:`~odoo.fields.Boolean` 
+``default`` - :class:`~odoo.fields.Boolean`
     wether the subtype is activated by default when subscribing
-``sequence`` - :class:`~odoo.fields.Integer` 
+``sequence`` - :class:`~odoo.fields.Integer`
     used to order subtypes in the notification customization popup
-``hidden`` - :class:`~odoo.fields.Boolean` 
+``hidden`` - :class:`~odoo.fields.Boolean`
     wether the subtype is hidden in the notification customization popup
-    
+
 
 Interfacing subtypes with field tracking allows to subscribe to different kind
 of notifications depending on what might interest users. To do this, you
@@ -316,13 +304,13 @@ can override the ``_track_subtype()`` function:
             _name = 'business.trip'
             _inherit = ['mail.thread']
             _description = 'Business Trip'
-            
-            name = fields.Char(track_visibility='onchange')
+
+            name = fields.Char(track_visibility=True)
             partner_id = fields.Many2one('res.partner', 'Responsible',
-                                         track_visibility='onchange')
+                                         track_visibility=True)
             guest_ids = fields.Many2many('res.partner', 'Participants')
             state = fields.Selection([('draft', 'New'), ('confirmed', 'Confirmed')],
-                                     track_visibility='onchange')
+                                     track_visibility=True)
 
             def _track_subtype(self, init_values):
                 # init_values contains the modified fields' values before the changes
@@ -407,7 +395,7 @@ yourself by overriding the function ``_notification_recipients``.
     :returns: a subtype's full external id or False if no subtype is triggered
 
 
-The urls in the actions list can be generated automatically by calling the 
+The urls in the actions list can be generated automatically by calling the
 ``_notification_link_helper()`` function:
 
 
@@ -417,7 +405,7 @@ The urls in the actions list can be generated automatically by calling the
     record if the kwargs ``model`` and ``res_id`` are set).
 
     :param str link_type: link type to be generated; can be any of these values:
-    
+
         ``view``
           link to form view of the record
         ``assign``
@@ -433,8 +421,8 @@ The urls in the actions list can be generated automatically by calling the
         ``new``
           open an empty form view for a new record; you can specify
           a specific action by providing its id (database id or fully resolved
-          external id) in the kwarg ``action_id``        
-    
+          external id) in the kwarg ``action_id``
+
     :returns: link of the type selected for the record
     :rtype: str
 
@@ -443,7 +431,7 @@ The urls in the actions list can be generated automatically by calling the
     Let's add a custom button to the Business Trip state change notification;
     this button will reset the state to Draft and will be only visible to a member
     of the (imaginary) group Travel Manager (``business.group_trip_manager``)
-    
+
     .. code-block:: python
 
         class BusinessTrip(models.Model):
@@ -452,10 +440,10 @@ The urls in the actions list can be generated automatically by calling the
             _description = 'Business Trip'
 
             # Pevious code goes here
-            
+
             def action_cancel(self):
                 self.write({'state': 'draft'})
-            
+
             def _notification_recipients(self, message, groups):
                 """ Handle Trip Manager recipients that can cancel the trip at the last
                 minute and kill all the fun. """
@@ -466,7 +454,7 @@ The urls in the actions list can be generated automatically by calling the
                     app_action = self._notification_link_helper('method',
                                         method='action_cancel')
                     trip_actions = [{'url': app_action, 'title': _('Cancel')}]
-                
+
                 new_group = (
                     'group_trip_manager',
                     lambda partner: bool(partner.user_ids) and
@@ -477,11 +465,11 @@ The urls in the actions list can be generated automatically by calling the
                     })
 
                 return [new_group] + groups
-            
 
-    Note that that I could have defined my evaluation function outside of this 
+
+    Note that that I could have defined my evaluation function outside of this
     method and define a global function to do it instead of a lambda, but for
-    the sake of being more brief and less verbose in these documentation files 
+    the sake of being more brief and less verbose in these documentation files
     that can sometimes be boring, I choose the former instead of the latter.
 
 Overriding defaults
@@ -498,7 +486,7 @@ Context keys:
     These context keys can be used to somewhat control ``mail.thread`` features
     like auto-subscription or field tracking during calls to ``create()`` or
     ``write()`` (or any other method where it may be useful).
-    
+
     - ``mail_create_nosubscribe``: at create or message_post, do not subscribe
       the current user to the record thread
     - ``mail_create_nolog``: at create, do not log the automatic '<Document>
@@ -511,7 +499,7 @@ Context keys:
     - ``mail_notify_force_send``: if less than 50 email notifications to send,
       send them directly instead of using the queue; True by default
     - ``mail_notify_user_signature``: add the current user signature in
-      email notifications; True by default          
+      email notifications; True by default
 
 
 .. _reference/mixins/mail/alias:
@@ -555,14 +543,14 @@ or issues, Sales Team have aliases to generate Leads.
 
 .. note:: The model that will be created by the alias **must** inherit the
           ``mail_thread`` model.
-                    
+
 Alias support is added by inheriting ``mail.alias.mixin``; this mixin will
 generate a new ``mail.alias`` record for each record of the parent class that
 gets created (for example, every ``project.project`` record having its ``mail.alias``
 record initialized on creation).
 
 .. note:: Aliases can also be created manually and supported by a simple
-    :class:`~odoo.fields.Many2one` field. This guide assumes you wish a 
+    :class:`~odoo.fields.Many2one` field. This guide assumes you wish a
     more complete integration with automatic creation of the alias, record-specific
     default values, etc.
 
@@ -572,25 +560,25 @@ of the created alias, like the kind of record it must create and possibly
 some default values these records may have depending on the parent object:
 
 .. method:: get_alias_model_name(vals)
-    
+
     Return the model name for the alias. Incoming emails that are not
     replies to existing records will cause the creation of a new record
     of this alias model. The value may depend on ``vals``, the dict of
     values passed to ``create`` when a record of this model is created.
-    
+
     :param vals dict: values of the newly created record that will holding
                       the alias
     :return: model name
     :rtype: str
 
 .. method:: get_alias_values()
-    
+
     Return values to create an alias, or to write on the alias after its
     creation. While not completely mandatory, it is usually required to make
     sure that newly created records will be linked to the alias' parent (i.e.
     tasks getting created in the right project) by setting a dictionary of
     default values in the alias' ``alias_defaults`` field.
-    
+
     :return: dictionnary of values that will be written to the new alias
     :rtype: dict
 
@@ -598,24 +586,24 @@ The ``get_alias_values()`` override is particularly interesting as it allows you
 to modify the behaviour of your aliases easily. Among the fields that can be set
 on the alias, the following are of particular interest:
 
-``alias_name`` - :class:`~odoo.fields.Char` 
+``alias_name`` - :class:`~odoo.fields.Char`
     name of the email alias, e.g. 'jobs' if you want to catch emails for
     <jobs@example.odoo.com>
-``alias_user_id`` - :class:`~odoo.fields.Many2one` (``res.users``) 
+``alias_user_id`` - :class:`~odoo.fields.Many2one` (``res.users``)
     owner of records created upon receiving emails on this alias;
     if this field is not set the system will attempt to find the right owner
     based on the sender (From) address, or will use the Administrator account
     if no system user is found for that address
-``alias_defaults`` - :class:`~odoo.fields.Text` 
+``alias_defaults`` - :class:`~odoo.fields.Text`
     Python dictionary that will be evaluated to provide
     default values when creating new records for this alias
-``alias_force_thread_id`` - :class:`~odoo.fields.Integer` 
+``alias_force_thread_id`` - :class:`~odoo.fields.Integer`
     optional ID of a thread (record) to which all incoming messages will be
     attached, even if they did not reply to it; if set, this will disable the
     creation of new records completely
-``alias_contact`` - :class:`~odoo.fields.Selection` 
+``alias_contact`` - :class:`~odoo.fields.Selection`
     Policy to post a message on the document using the mailgateway
-    
+
     - *everyone*: everyone can post
     - *partners*: only authenticated partners
     - *followers*: only followers of the related document or members of following channels
@@ -637,16 +625,16 @@ you to make your alias easily configurable from the record's form view.
             _inherit = ['mail.thread', 'mail.alias.mixin']
             _description = 'Business Trip'
 
-            name = fields.Char(track_visibility='onchange')
+            name = fields.Char(track_visibility=True)
             partner_id = fields.Many2one('res.partner', 'Responsible',
-                                         track_visibility='onchange')
+                                         track_visibility=True)
             guest_ids = fields.Many2many('res.partner', 'Participants')
             state = fields.Selection([('draft', 'New'), ('confirmed', 'Confirmed')],
-                                     track_visibility='onchange')
+                                     track_visibility=True)
             expense_ids = fields.One2many('business.expense', 'trip_id', 'Expenses')
             alias_id = fields.Many2one('mail.alias', string='Alias', ondelete="restrict",
                                        required=True)
-                     
+
             def get_alias_model_name(self, vals):
             """ Specify the model that will get created when the alias receives a message """
                 return 'business.expense'
@@ -656,7 +644,7 @@ you to make your alias easily configurable from the record's form view.
                 values = super(BusinessTrip, self).get_alias_values()
                 # alias_defaults holds a dictionnary that will be written
                 # to all records created by this alias
-                # 
+                #
                 # in this case, we want all expense records sent to a trip alias
                 # to be linked to the corresponding business trip
                 values['alias_defaults'] = {'trip_id': self.id}
@@ -664,7 +652,7 @@ you to make your alias easily configurable from the record's form view.
                 # by default
                 values['alias_contact'] = 'followers'
                 return values
-                
+
         class BusinessExpense(models.Model):
             _name = 'business.expense'
             _inherit = ['mail.thread']
@@ -677,9 +665,9 @@ you to make your alias easily configurable from the record's form view.
 
     We would like our alias to be easily configurable from the form view of our
     business trips, so let's add the following to our form view:
-    
+
     .. code-block:: xml
-    
+
         <page string="Emails">
             <group name="group_alias">
                 <label for="alias_name" string="Email Alias"/>
@@ -699,7 +687,7 @@ you to make your alias easily configurable from the record's form view.
                         string="Accept Emails From"/>
             </group>
         </page>
-        
+
     Now we can change the alias address directly from the form view and change
     who can send e-mails to the alias.
 
@@ -711,12 +699,12 @@ you to make your alias easily configurable from the record's form view.
         class BusinessExpense(models.Model):
             # Previous code goes here
             # ...
-            
+
             def message_new(self, msg, custom_values=None):
-                """ Override to set values according to the email. 
-                
+                """ Override to set values according to the email.
+
                 In this simple example, we simply use the email title as the name
-                of the expense, try to find a partner with this email address and 
+                of the expense, try to find a partner with this email address and
                 do a regex match to find the amount of the expense."""
                 name = msg_dict.get('subject', 'New Expense')
                 # Match the last occurence of a float in the string
@@ -743,7 +731,7 @@ Activities tracking
 -------------------
 
 Activities are actions users have to take on a document like making a phone call
-or organizing a meeting. Activities come with the mail module as they are 
+or organizing a meeting. Activities come with the mail module as they are
 integrated in the Chatter but are *not bundled with mail.thread*. Activities
 are records of the ``mail.activity`` class, which have a type (``mail.activity.type``),
 name, description, scheduled time (among others). Pending activities are visible
@@ -813,16 +801,16 @@ campaigns through arguments in links to specified resources. The mixin adds
 
 * ``campaign_id``: :class:`~odoo.fields.Many2one` field to a ``utm.campaign``
   object (i.e. Christmas_Special, Fall_Collection, etc.)
-* ``source_id``: :class:`~odoo.fields.Many2one` field to a ``utm.source`` 
+* ``source_id``: :class:`~odoo.fields.Many2one` field to a ``utm.source``
   object (i.e. Search Engine, mailing list, etc.)
-* ``medium_id``: :class:`~odoo.fields.Many2one` field to a ``utm.medium`` 
+* ``medium_id``: :class:`~odoo.fields.Many2one` field to a ``utm.medium``
   object (i.e. Snail Mail, e-Mail, social network update, etc.)
 
 These models have a single field ``name`` (i.e. they are simply there to
 distinguish campaigns but don't have any specific behaviour).
 
 Once a customer visits your website with these parameters set in the url
-(i.e. http://www.odoo.com/?campaign_id=mixin_talk&source_id=www.odoo.com&medium_id=website),
+(i.e. https://www.odoo.com/?campaign_id=mixin_talk&source_id=www.odoo.com&medium_id=website),
 three cookies are set in the visitor's website for these parameters.
 Once a object that inherits the utm.mixin is created from the website (i.e. lead
 form, job application, etc.), the utm.mixin code kicks in and fetches the values
@@ -849,7 +837,7 @@ model should support the *quick create* (i.e. call to ``create()`` with a single
         _description = 'My Tracked Object'
 
         my_field = fields.Many2one('my_module.my_track', 'My Field')
-        
+
         @api.model
         def tracking_fields(self):
             result = super(MyModel, self).tracking_fields()
@@ -899,7 +887,7 @@ This mixin adds 2 fields on your model:
   the status of the publication
 * ``website_url``: :class:`~odoo.fields.Char` field which represents
   the URL through which the object is accessed
-  
+
 Note that this last field is a computed field and must be implemented for your class:
 
 .. code-block:: python
@@ -933,13 +921,13 @@ buttons to website visitors:
         </t>
     </div>
 
-Note that you must pass your object as the variable ``object`` to the template; 
+Note that you must pass your object as the variable ``object`` to the template;
 in this example, the ``blog.post`` record was passed as the ``blog_post`` variable
 to the ``qweb`` rendering engine, it is necessary to specify this to the publish
 management template. The ``publish_edit`` variable allow the frontend
 button to link to the backend (allowing you to switch from frontend to backend
 and vice-versa easily); if set, you must specify the full external id of the action
-you want to call in the backend in the ``action`` variable (note that a Form View 
+you want to call in the backend in the ``action`` variable (note that a Form View
 must exist for the model).
 
 The action ``website_publish_button`` is defined in the mixin and adapts its
@@ -1002,7 +990,7 @@ To add rating support, simply inherit the ``rating.mixin`` model:
     class MyModel(models.Models):
         _name = 'my_module.my_model'
         _inherit = ['rating.mixin', 'mail.thread']
-        
+
         user_id = fields.Many2one('res.users', 'Responsible')
         partner_id = fields.Many2one('res.partner', 'Customer')
 
@@ -1010,18 +998,18 @@ The behaviour of the mixin adapts to your model:
 
 * The ``rating.rating`` record will be linked to the ``partner_id`` field of your
   model (if the field is present).
-  
+
   - this behaviour can be overriden with the function ``rating_get_partner_id()``
     if you use another field than ``partner_id``
-      
+
 * The ``rating.rating`` record will be linked to the partner of the ``user_id``
   field of your model (if the field is present) (i.e. the partner who is rated)
-  
+
   - this behaviour can be overriden with the function ``rating_get_rated_partner_id()``
     if you use another field than ``user_id`` (note that the function must return a
     ``res.partner``, for ``user_id`` the system automatically fetches the partner
     of the user)
-      
+
 * The chatter history will display the rating event (if your model inherits from
   ``mail.thread``)
 
@@ -1051,7 +1039,7 @@ links to the rating object. A very basic email template could look like this:
     </ul>
     ]]></field>
     </record>
-    
+
 Your customer will then receive an e-mail with links to a simple webpage allowing
 them to provide a feedback on their interaction with your users (including a free-text
 feedback message).
@@ -1089,4 +1077,3 @@ You can find concrete examples of integration in the following models:
 
 * ``project.task`` in the Project (*rating_project*) Application
 * ``helpdesk.ticket`` in the Helpdesk (*helpdesk* - Odoo Enterprise only) Application
-

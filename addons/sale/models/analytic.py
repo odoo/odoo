@@ -19,7 +19,7 @@ class AccountAnalyticLine(models.Model):
     @api.model
     def create(self, values):
         result = super(AccountAnalyticLine, self).create(values)
-        if 'so_line' not in values and not result.so_line and result.product_id and result.product_id.expense_policy != 'no' and result.amount <= 0:  # allow to force a False value for so_line
+        if 'so_line' not in values and not result.so_line and result.product_id and result.product_id.expense_policy not in [False, 'no'] and result.amount <= 0:  # allow to force a False value for so_line
             result.sudo()._sale_determine_order_line()
         return result
 
@@ -28,7 +28,8 @@ class AccountAnalyticLine(models.Model):
         result = super(AccountAnalyticLine, self).write(values)
         if 'so_line' not in values:  # allow to force a False value for so_line
             # only take the AAL from expense or vendor bill, meaning having a negative amount
-            self.sudo().filtered(lambda aal: not aal.so_line and aal.product_id and aal.product_id.expense_policy != 'no' and aal.amount <= 0)._sale_determine_order_line()
+            self.sudo().filtered(lambda aal: not aal.so_line and aal.product_id and aal.product_id.expense_policy not in [False, 'no'] and aal.amount <= 0)._sale_determine_order_line()
+        return result
 
     # ----------------------------------------------------------
     # Vendor Bill / Expense : determine the Sale Order to reinvoice
@@ -39,7 +40,7 @@ class AccountAnalyticLine(models.Model):
         self.ensure_one()
         if self.product_id.expense_policy == 'sales_price':
             return self.product_id.with_context(
-                partner=order.partner_id.id,
+                partner=order.partner_id,
                 date_order=order.date_order,
                 pricelist=order.pricelist_id.id,
                 uom=self.product_uom_id.id

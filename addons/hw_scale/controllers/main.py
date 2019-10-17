@@ -8,7 +8,7 @@ import time
 
 from collections import namedtuple
 from os import listdir
-from threading import Thread, Lock
+from threading import Event, Lock, Thread
 
 from odoo import http
 
@@ -51,7 +51,7 @@ def _toledo8217StatusParse(status):
 ScaleProtocol = namedtuple(
     'ScaleProtocol',
     "name baudrate bytesize stopbits parity timeout writeTimeout weightRegexp statusRegexp "
-    "statusParse commandTerminator commandDelay weightDelay newWeightDelay "
+    "statusParse commandTerminator commandDelay weightDelay newWeightDelay disable "
     "weightCommand zeroCommand tareCommand clearCommand emptyAnswerValid autoResetWeight")
 
 # 8217 Mettler-Toledo (Weight-only) Protocol, as described in the scale's Service Manual.
@@ -134,6 +134,7 @@ class Scale(Thread):
         self.path_to_scale = ''
         self.protocol = None
         self.disabled = False
+        self.weight_request_event = Event()
 
     def lockedstart(self):
         with self.lock:
@@ -261,8 +262,8 @@ class Scale(Thread):
             return None
 
     def get_weight(self):
-        self.repeats = 5
         self.disabled = False
+        self.weight_request_event.set()
         self.lockedstart()
         return self.weight
 
@@ -361,11 +362,13 @@ class Scale(Thread):
                         self.device = self.get_device()
                     if not self.device:
                         # retry later to support "plug and play"
-                        time.sleep(10)
+                        self.weight_request_event.clear()
+                        self.weight_request_event.wait(10)
                     else: 
                         self.disabled = self.protocol.disable
             else:
-                time.sleep(10)
+                self.weight_request_event.clear()
+                self.weight_request_event.wait(10)
 
 
 scale_thread = None

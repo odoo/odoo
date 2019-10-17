@@ -2,6 +2,7 @@ odoo.define('web_editor.ace', function (require) {
 'use strict';
 
 var ajax = require('web.ajax');
+var concurrency = require('web.concurrency');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
@@ -359,7 +360,7 @@ var ViewEditor = Widget.extend({
         this.aceEditor.setSession(editingSession);
 
         if (this.currentType === 'xml') {
-            this.$viewID.text(_.str.sprintf(_t("Template ID: %s"), this.views[resID].xml_id));
+            this.$viewID.text(_.str.sprintf(_t("Template ID: %s"), this.views[resID].key));
         } else {
             this.$viewID.text(_.str.sprintf(_t("SCSS file: %s"), resID));
         }
@@ -536,6 +537,7 @@ var ViewEditor = Widget.extend({
      *                    error occured.
      */
     _saveResources: function () {
+        var self = this;
         var toSave = {};
         var errorFound = false;
         _.each(this.editingSessions, (function (editingSessions, type) {
@@ -563,8 +565,15 @@ var ViewEditor = Widget.extend({
         if (errorFound) return $.Deferred().reject(errorFound);
 
         var defs = [];
+        var mutex = new concurrency.Mutex();
         _.each(toSave, (function (_toSave, type) {
-            defs = defs.concat(_.map(_toSave, (type === 'xml' ? this._saveView : this._saveSCSS).bind(this)));
+            // Child views first as COW on a parent would delete them
+            _toSave = _.sortBy(_toSave, 'id').reverse();
+            _.each(_toSave, function (session) {
+                defs.push(mutex.exec(function () {
+                    return (type === 'xml' ? self._saveView(session) : self._saveSCSS(session));
+                }));
+            });
         }).bind(this));
 
         return $.when.apply($, defs).fail((function (session, error) {
@@ -594,7 +603,8 @@ var ViewEditor = Widget.extend({
             model: 'ir.ui.view',
             method: 'write',
             args: [[session.id], {arch: session.text}],
-            context: _.extend({}, weContext.get(), {lang: undefined}),
+        }, {
+            noContextKeys: 'lang',
         }).then(function () {
             self._toggleDirtyInfo(session.id, 'xml', false);
             def.resolve();

@@ -46,14 +46,22 @@ class Partner(models.Model):
             if message.add_sign:
                 signature = "<p>-- <br/>%s</p>" % message.author_id.name
 
-        company = record.company_id if record and 'company_id' in record else user.company_id
+        company = record.company_id.sudo() if record and 'company_id' in record else user.company_id
         if company.website:
             website_url = 'http://%s' % company.website if not company.website.lower().startswith(('http:', 'https:')) else company.website
         else:
             website_url = False
 
+        # Retrieve the language in which the template was rendered, in order to render the custom
+        # layout in the same language.
+        lang = self.env.context.get('lang')
+        if {'default_template_id', 'default_model', 'default_res_id'} <= self.env.context.keys():
+            template = self.env['mail.template'].browse(self.env.context['default_template_id'])
+            if template and template.lang:
+                lang = template._render_template(template.lang, self.env.context['default_model'], self.env.context['default_res_id'])
+
         if not model_description and message.model:
-            model_description = self.env['ir.model']._get(message.model).display_name
+            model_description = self.env['ir.model'].with_context(lang=lang)._get(message.model).display_name
 
         tracking = []
         for tracking_value in self.env['mail.tracking.value'].sudo().search([('mail_message_id', '=', message.id)]):
@@ -74,6 +82,7 @@ class Partner(models.Model):
             'tracking_values': tracking,
             'is_discussion': is_discussion,
             'subtype': message.subtype_id,
+            'lang': lang,
         }
 
     @api.model
@@ -95,14 +104,13 @@ class Partner(models.Model):
         if not rdata:
             return True
 
+        base_template_ctx = self._notify_prepare_template_context(message, record, model_description=model_description)
         template_xmlid = message.layout if message.layout else 'mail.message_notification_email'
         try:
-            base_template = self.env.ref(template_xmlid, raise_if_not_found=True)
+            base_template = self.env.ref(template_xmlid, raise_if_not_found=True).with_context(lang=base_template_ctx['lang'])
         except ValueError:
             _logger.warning('QWeb template %s not found when sending notification emails. Sending without layouting.' % (template_xmlid))
             base_template = False
-
-        base_template_ctx = self._notify_prepare_template_context(message, record, model_description=model_description)
 
         # prepare notification mail values
         base_mail_values = {

@@ -47,7 +47,7 @@ class ResConfigSettings(models.TransientModel):
         oldname='default_deposit_product_id',
         help='Default product used for payment advances')
     auto_done_setting = fields.Boolean("Lock Confirmed Sales", config_parameter='sale.auto_done_setting')
-    module_website_sale_digital = fields.Boolean("Sell digital products - provide downloadable content on your customer portal")
+    module_website_sale_digital = fields.Boolean("Digital Content")
 
     auth_signup_uninvited = fields.Selection([
         ('b2b', 'On invitation'),
@@ -79,6 +79,8 @@ class ResConfigSettings(models.TransientModel):
 
     def set_values(self):
         super(ResConfigSettings, self).set_values()
+        if self.default_invoice_policy != 'order':
+            self.env['ir.config_parameter'].set_param('sale.automatic_invoice', False)
         if not self.group_discount_per_so_line:
             pl = self.env['product.pricelist'].search([('discount_policy', '=', 'without_discount')])
             pl.write({'discount_policy': 'with_discount'})

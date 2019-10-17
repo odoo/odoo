@@ -65,4 +65,8 @@
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
+    <record id="base.user_admin" model="res.users">
+        <field name="groups_id" eval="[(4, ref('group_equipment_manager'))]"/>
+    </record>
+
 </odoo>

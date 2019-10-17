@@ -206,7 +206,7 @@
             <field name="res_model">lunch.order.line</field>
             <field name="view_mode">tree,kanban</field>
             <field name="search_view_id" ref="lunch_order_line_view_search"/>
-            <field name="context">{"search_default_group_by_supplier":1, "search_default_today":1}</field>
+            <field name="context">{"search_default_group_by_supplier":1, "search_default_date_filter":1}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_empty_folder">
                 Nothing to order today
@@ -383,7 +383,7 @@
                                     <div class="o_kanban_record_headings">
                                         <strong class="o_kanban_record_title"><field name="product_id"/></strong>
                                     </div>
-                                    <field name="state" widget="kanban_label_selection" options="{'classes': {'new': 'default', 'confirmed': 'success', 'cancelled':'danger'}}"/>
+                                    <field name="state" widget="label_selection" options="{'classes': {'new': 'default', 'confirmed': 'success', 'cancelled':'danger'}}"/>
                                 </div>
                                 <div>
                                     <field name="note"/>

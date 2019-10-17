@@ -40,7 +40,7 @@
                     <field name="standard_price" position="replace">
                         <field name="standard_price"
                             attrs="{'readonly':[('valuation','=','real_time')]}"
-                            widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"
+                            widget='monetary' options="{'currency_field': 'cost_currency_id', 'field_digits': True}"
                             class="float-left"/>
                         <div name="update_cost_price" class="col-lg-2">
                             <button string="Update Cost" type="action"
@@ -62,6 +62,19 @@
             </field>
         </record>
 
+        <record id="product_normal_form_view_inherit" model="ir.ui.view">
+            <field name="name">product.product.form.inherit.stock_account</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//div[@name='update_cost_price']/button" position="attributes">
+                        <attribute name="attrs">{'invisible':['|', ('valuation','!=', 'real_time'), ('cost_method', 'not in', ['average', 'standard'])]}</attribute>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
         <record id="product_variant_easy_edit_view_inherit" model="ir.ui.view">
             <field name="name">product.product.product.view.form.easy.inherit</field>
             <field name="model">product.product</field>
@@ -77,7 +90,7 @@
                         <div name="standard_price_div">
                             <field name="standard_price"
                                 attrs="{'readonly':[('valuation','=','real_time')]}"
-                                widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" class="float-left"/>
+                                widget='monetary' options="{'currency_field': 'cost_currency_id', 'field_digits': True}" class="float-left"/>
                             <div name="update_cost_price" class="col-lg-2">
                                 <button string="Update Cost" type="action"
                                 name="%(action_view_change_standard_price)d"

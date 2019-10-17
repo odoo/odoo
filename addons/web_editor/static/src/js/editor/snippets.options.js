@@ -4,7 +4,7 @@ odoo.define('web_editor.snippets.options', function (require) {
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
-var weContext = require('web_editor.context');
+var summernoteCustomColors = require('web_editor.rte.summernote_custom_colors');
 var weWidgets = require('web_editor.widget');
 
 var qweb = core.qweb;
@@ -127,7 +127,7 @@ var SnippetOption = Widget.extend({
      * @param {jQuery} $opt - the related DOMElement option
      */
     selectClass: function (previewMode, value, $opt) {
-        var $group = $opt && $opt.closest('.dropdown-submenu');
+        var $group = $opt && $opt.parents('.dropdown-submenu').last();
         if (!$group || !$group.length) {
             $group = this.$el;
         }
@@ -280,15 +280,50 @@ var SnippetOption = Widget.extend({
      */
     _setActive: function () {
         var self = this;
-        this.$el.find('[data-toggle-class], [data-select-class]')
-            .addBack('[data-toggle-class], [data-select-class]')
+        this.$el.find('[data-toggle-class]')
+            .addBack('[data-toggle-class]')
             .removeClass('active')
             .filter(function () {
-                var $elem = $(this);
-                var className = $elem.data('toggleClass') || $elem.data('selectClass');
-                return self.$target.hasClass(className);
+                var className = $(this).data('toggleClass');
+                return !className || self.$target.hasClass(className);
             })
             .addClass('active');
+
+        // Get submenus which are not inside submenus
+        var $submenus = this.$el.find('.dropdown-submenu')
+            .addBack('.dropdown-submenu')
+            .not('.dropdown-submenu .dropdown-submenu');
+
+        // Add unique active class for each submenu active item
+        _.each($submenus, function (submenu) {
+            var $elements = _getSelectClassElements($(submenu));
+            _processSelectClassElements($elements);
+        });
+
+        // Add unique active class for out-of-submenu active item
+        var $externalElements = _getSelectClassElements(this.$el)
+            .not('.dropdown-submenu *, .dropdown-submenu');
+        _processSelectClassElements($externalElements);
+
+        function _getSelectClassElements($el) {
+            return $el.find('[data-select-class]')
+                .addBack('[data-select-class]');
+        }
+        function _processSelectClassElements($elements) {
+            var maxNbClasses = -1;
+            $elements.removeClass('active')
+                .filter(function () {
+                    var className = $(this).data('selectClass');
+                    var nbClasses = className ? className.split(' ').length : 0;
+                    if (nbClasses >= maxNbClasses && (!className || self.$target.hasClass(className))) {
+                        maxNbClasses = nbClasses;
+                        return true;
+                    }
+                    return false;
+                })
+                .last()
+                .addClass('active');
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -303,8 +338,8 @@ var SnippetOption = Widget.extend({
      * @param {Event} ev
      */
     _onLinkEnter: function (ev) {
-        var $opt = $(ev.target);
-        if (!$opt.hasClass('dropdown-item')) {
+        var $opt = $(ev.target).closest('.dropdown-item');
+        if (!$opt.length) {
             return;
         }
 
@@ -331,8 +366,8 @@ var SnippetOption = Widget.extend({
      * @param {Event} ev
      */
     _onLinkClick: function (ev) {
-        var $opt = $(ev.target);
-        if (!$opt.hasClass('dropdown-item') || !$opt.is(':hasData')) {
+        var $opt = $(ev.target).closest('.dropdown-item');
+        if (!$opt.length || !$opt.is(':hasData')) {
             return;
         }
 
@@ -631,7 +666,7 @@ registry.colorpicker = SnippetOption.extend({
             var $clpicker = $(qweb.render('web_editor.colorpicker'));
 
             _.each($clpicker.find('.o_colorpicker_section'), function (elem) {
-                $(elem).prepend("<div class='text-muted mt8'>" + elem.dataset.display + "</div>")
+                $(elem).prepend("<div class='text-muted mt8'>" + elem.dataset.display + "</div>");
             });
 
             // Retrieve excluded palettes list
@@ -651,25 +686,32 @@ registry.colorpicker = SnippetOption.extend({
 
             // Add common colors to palettes if not excluded
             if (!('common' in excluded)) {
-                var colors = [
-                    '#000000', '#424242', '#636363', '#9C9C94', '#CEC6CE', '#EFEFEF', '#F7F7F7', '#FFFFFF',
-                    '#FF0000', '#FF9C00', '#FFFF00', '#00FF00', '#00FFFF', '#0000FF', '#9C00FF', '#FF00FF',
-                    '#F7C6CE', '#FFE7CE', '#FFEFC6', '#D6EFD6', '#CEDEE7', '#CEE7F7', '#D6D6E7', '#E7D6DE',
-                    '#E79C9C', '#FFC69C', '#FFE79C', '#B5D6A5', '#A5C6CE', '#9CC6EF', '#B5A5D6', '#D6A5BD',
-                    '#E76363', '#F7AD6B', '#FFD663', '#94BD7B', '#73A5AD', '#6BADDE', '#8C7BC6', '#C67BA5',
-                    '#CE0000', '#E79439', '#EFC631', '#6BA54A', '#4A7B8C', '#3984C6', '#634AA5', '#A54A7B',
-                    '#9C0000', '#B56308', '#BD9400', '#397B21', '#104A5A', '#085294', '#311873', '#731842',
-                    '#630000', '#7B3900', '#846300', '#295218', '#083139', '#003163', '#21104A', '#4A1031'
-                ];
                 var $commonColorSection = $clpicker.find('[data-name="common"]');
-                _.each(colors, function (color) {
-                    $commonColorSection.append('<button class="o_custom_color" style="background-color: ' + color + '" />');
+                _.each(summernoteCustomColors, function (colorRow, i) {
+                    var $div = $('<div/>', {class: 'clearfix'}).appendTo($commonColorSection);
+                    if (i === 0) {
+                        // Ignore the summernote gray palette and use ours
+                        return;
+                    }
+                    _.each(colorRow, function (color) {
+                        $div.append('<button class="o_custom_color" style="background-color: ' + color + '" />');
+                    });
                 });
             }
 
             $pt.find('.o_colorpicker_section_tabs').append($clpicker);
             this.$el.find('.dropdown-menu').append($pt);
         }
+
+        // TODO refactor in master
+        // The primary and secondary are hardcoded here (but marked as hidden)
+        // so they can be removed from snippets when selecting another color.
+        // Normally, the chosable colors do not contain them, which prevents
+        // them to be removed. Indeed, normally, the 'alpha' and 'beta' colors
+        // (which are the same) are displayed instead... but not for all themes.
+        var $colorpicker = this.$el.find('.colorpicker');
+        $colorpicker.append($('<button/>', {'class': 'd-none', 'data-color': 'primary'}));
+        $colorpicker.append($('<button/>', {'class': 'd-none', 'data-color': 'secondary'}));
 
         var classes = [];
         this.$el.find('.colorpicker button').each(function () {
@@ -738,7 +780,7 @@ registry.colorpicker = SnippetOption.extend({
         if ($selected.length) {
             if ($selected.data('color')) {
                 this.$target.addClass(this.colorPrefix + $selected.data('color'));
-            } else {
+            } else if ($selected.hasClass('o_custom_color')) {
                 this.$target.css('background-color', $selected.css('background-color'));
             }
         }
@@ -752,6 +794,7 @@ registry.colorpicker = SnippetOption.extend({
      */
     _onColorResetButtonClick: function () {
         this.$target.removeClass(this.classes).css('background-color', '');
+        this.$target.trigger('content_changed');
         this.$el.find('.colorpicker button.selected').removeClass('selected');
     },
 });
@@ -854,7 +897,9 @@ registry.background = SnippetOption.extend({
      */
     setTarget: function () {
         this._super.apply(this, arguments);
+        // TODO should be automatic for all options as equal to the start method
         this.bindBackgroundEvents();
+        this.__customImageSrc = this._getSrcFromCssValue();
     },
 
     //--------------------------------------------------------------------------
@@ -899,7 +944,7 @@ registry.background = SnippetOption.extend({
      * @param {string} value
      */
     _setCustomBackground: function (value) {
-        this.__customImageSrc = this._getSrcFromCssValue(value);
+        this.__customImageSrc = value;
         this.background(false, this.__customImageSrc);
         this.$target.addClass('oe_custom_bg');
         this._setActive();

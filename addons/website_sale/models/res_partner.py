@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-from odoo.http import request
+from odoo.addons.website.models import ir_http
 
 
 class ResPartner(models.Model):
@@ -13,11 +13,15 @@ class ResPartner(models.Model):
     @api.multi
     def _compute_last_website_so_id(self):
         SaleOrder = self.env['sale.order']
-        website_team = self.env.ref('sales_team.salesteam_website_sales', raise_if_not_found=False)
         for partner in self:
-            if request and hasattr(request, 'website'):
-                my_website_so = SaleOrder.search([('partner_id', '=', partner.id), ('team_id', '=', website_team.id)])
-                current_website_orders = my_website_so.filtered(lambda so: so.order_line.mapped('product_id.product_tmpl_id').can_access_from_current_website())
-                partner.last_website_so_id = current_website_orders and current_website_orders[0]
+            is_public = any([u._is_public()
+                             for u in partner.with_context(active_test=False).user_ids])
+            website = ir_http.get_request_website()
+            if website and not is_public:
+                partner.last_website_so_id = SaleOrder.search([
+                    ('partner_id', '=', partner.id),
+                    ('website_id', '=', website.id),
+                    ('state', '=', 'draft'),
+                ], order='write_date desc', limit=1)
             else:
-                partner.last_website_so_id = False  # Not in a website context
+                partner.last_website_so_id = SaleOrder  # Not in a website context or public User

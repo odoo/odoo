@@ -186,9 +186,12 @@ var FormViewDialog = ViewDialog.extend({
         }
 
         fields_view_def.then(function (viewInfo) {
+            var refinedContext = _.pick(self.context, function (value, key) {
+                return key.indexOf('_view_ref') === -1;
+            });
             var formview = new FormView(viewInfo, {
                 modelName: self.res_model,
-                context: self.context,
+                context: refinedContext,
                 ids: self.res_id ? [self.res_id] : [],
                 currentId: self.res_id || undefined,
                 index: 0,
@@ -235,8 +238,13 @@ var FormViewDialog = ViewDialog.extend({
      * @override
      */
     _focusOnClose: function() {
-        this.trigger_up('form_dialog_discarded');
-        return true;
+        var isFocusSet = false;
+        this.trigger_up('form_dialog_discarded', {
+            callback: function (isFocused) {
+                isFocusSet = isFocused;
+            },
+        });
+        return isFocusSet;
     },
 
     /**
@@ -300,7 +308,7 @@ var SelectCreateDialog = ViewDialog.extend({
             event.stopPropagation(); // prevent this event from bubbling up to the action manager
             var d = event.data;
             var searchData = this._process_search_data(d.domains, d.contexts, d.groupbys);
-            this.list_controller.reload(searchData);
+            this.list_controller.reload(_.extend({offset: 0}, searchData));
         },
         get_controller_context: '_onGetControllerContext',
     }),
@@ -463,8 +471,13 @@ var SelectCreateDialog = ViewDialog.extend({
      * @override
      */
     _focusOnClose: function() {
-        this.trigger_up('form_dialog_discarded');
-        return true;
+        var isFocusSet = false;
+        this.trigger_up('form_dialog_discarded', {
+            callback: function (isFocused) {
+                isFocusSet = isFocused;
+            },
+        });
+        return isFocusSet;
     },
     //--------------------------------------------------------------------------
     // Handlers

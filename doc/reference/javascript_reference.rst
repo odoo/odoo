@@ -15,13 +15,8 @@ description into a live application, able to interact with every model and
 records in the database.  It is even possible to use the web client to modify
 the interface of the web client.
 
-.. note:: An html version of all docstrings in Odoo is available at:
-
-    .. toctree::
-        :maxdepth: 2
-
-        javascript_api
-
+.. note:: An html version of all js docstrings in Odoo is available at:
+      :ref:`JS API <api/js>`
 
 Overview
 =========
@@ -49,7 +44,7 @@ Single Page Application
 -----------------------
 
 In short, the *webClient*, instance of *WebClient* is the root component of the
-whole user interface.  Its responsability is to orchestrate all various
+whole user interface.  Its responsibility is to orchestrate all various
 subcomponents, and to provide services, such as rpcs, local storage and more.
 
 In runtime, the web client is a single page application. It does not need to
@@ -259,7 +254,7 @@ As an example, it may look like this:
         return B;
     });
 
-An alternative way to define a module is to give explicitely a list of dependencies
+An alternative way to define a module is to give explicitly a list of dependencies
 in the second argument.
 
 .. code-block:: javascript
@@ -296,7 +291,7 @@ The *odoo.define* method is given three arguments:
 - *dependencies*: the second argument is optional. If given, it should be a list
   of strings, each corresponding to a javascript module.  This describes the
   dependencies that are required to be loaded before the module is executed. If
-  the dependencies are not explicitely given here, then the module system will
+  the dependencies are not explicitly given here, then the module system will
   extract them from the function by calling toString on it, then using a regexp
   to find all *require* statements.
 
@@ -366,7 +361,7 @@ Best practices
 Class System
 ============
 
-Odoo was developped before ECMAScript 6 classes were available.  In Ecmascript 5,
+Odoo was developed before ECMAScript 6 classes were available.  In Ecmascript 5,
 the standard way to define a class is to define a function and to add methods
 on its prototype object.  This is fine, but it is slightly complex when we want
 to use inheritance, mixins.
@@ -566,7 +561,7 @@ rendering takes place, then *start* and finally *destroy*.
     hook that should return a deferred.  The JS framework will wait for this deferred
     to complete before moving on to the rendering step.  Note that at this point,
     the widget does not have a DOM root element.  The *willStart* hook is mostly
-    useful to perfom some asynchronous work, such as fetching data from the server
+    useful to perform some asynchronous work, such as fetching data from the server
 
 .. function:: [Rendering]
 
@@ -637,12 +632,12 @@ Widget API
 .. attribute:: Widget.el
 
     raw DOM element set as root to the widget (only available after the start
-    lifecyle method)
+    lifecycle method)
 
 .. attribute:: Widget.$el
 
     jQuery wrapper around :attr:`~Widget.el`. (only available after the start
-    lifecyle method)
+    lifecycle method)
 
 .. attribute:: Widget.template
 
@@ -1176,7 +1171,7 @@ The notification system in Odoo is designed with the following components:
 - a *Notification* widget: this is a simple widget that is meant to be created
   and displayed with the desired information
 
-- a *NotificationService*: a service whose responsability is to create and
+- a *NotificationService*: a service whose responsibility is to create and
   destroy notifications whenever a request is done (with a custom_event). Note
   that the web client is a service provider.
 
@@ -1383,7 +1378,7 @@ the AbstractView, AbstractController, AbstractRenderer and AbstractModel classes
 .. raw:: html
 
     <svg width="550" height="173">
-        <!-- Created with Method Draw - http://github.com/duopixel/Method-Draw/ -->
+        <!-- Created with Method Draw - https://github.com/duopixel/Method-Draw/ -->
         <path id="svg_1" d="m147.42498,79.79206c0.09944,-8.18859 -0.06363,-16.38812 0.81774,-24.5623c21.65679,2.68895 43.05815,7.08874 64.35,11.04543c1.14304,-4.01519 0.60504,-7.34585 1.59817,-11.05817c13.67878,7.81176 27.23421,15.73476 40.23409,24.03505c-12.47212,9.41539 -26.77809,17.592 -40.82272,25.96494c-0.4548,-3.89916 -0.90967,-7.79828 -1.36448,-11.69744c-20.69972,3.77225 -42.59036,7.6724 -63.42391,11.12096c-1.41678,-7.95741 -1.37514,-16.62327 -1.38888,-24.84846z" stroke-width="1.5" stroke="#000" fill="#fff"/>
         <rect id="svg_3" height="41" width="110" y="57.5" x="7" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" stroke="#000" fill="#fff"/>
         <rect stroke="#000" id="svg_5" height="41" width="135" y="20.5" x="328" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" fill="#fff"/>
@@ -1428,6 +1423,8 @@ the AbstractView, AbstractController, AbstractRenderer and AbstractModel classes
     The JS code for the views has been designed to be usable outside of the
     context of a view manager/action manager.  They could be used in a client action,
     or, they could be displayed in the public website (with some work on the assets).
+
+.. _reference/js/widgets:
 
 Field Widgets
 =============
@@ -1501,15 +1498,15 @@ order.
 
     - type: setting the input type (*text* by default, can be set on *number*)
 
-    On edit mode, the field is rendered as an input with the HTML attribute type 
-    setted on *number* (so user can benefit the native support, especially on 
+    On edit mode, the field is rendered as an input with the HTML attribute type
+    setted on *number* (so user can benefit the native support, especially on
     mobile). In this case, the default formatting is disabled to avoid incompability.
 
     .. code-block:: xml
 
         <field name="int_value" options='{"type": "number"}'/>
 
-    - step: set the step to the value up and down when the user click on buttons 
+    - step: set the step to the value up and down when the user click on buttons
         (only for input of type number, 1 by default)
 
     .. code-block:: xml
@@ -1533,15 +1530,15 @@ order.
 
     - type: setting the input type (*text* by default, can be set on *number*)
 
-    On edit mode, the field is rendered as an input with the HTML attribute type 
-    setted on *number* (so user can benefit the native support, especially on 
+    On edit mode, the field is rendered as an input with the HTML attribute type
+    setted on *number* (so user can benefit the native support, especially on
     mobile). In this case, the default formatting is disabled to avoid incompability.
 
     .. code-block:: xml
 
         <field name="int_value" options='{"type": "number"}'/>
 
-    - step: set the step to the value up and down when the user click on buttons 
+    - step: set the step to the value up and down when the user click on buttons
         (only for input of type number, 1 by default)
 
     .. code-block:: xml
@@ -1611,7 +1608,7 @@ order.
 
     .. code-block:: xml
 
-        <field name="datefield" options='{"datepicker": {"daysOfWeekDisabled": [0, 6]}}'/>
+        <field name="datetimefield" options='{"datepicker": {"daysOfWeekDisabled": [0, 6]}}'/>
 
 - monetary (FieldMonetary)
     This is the default field type for fields of type 'monetary'. It is used to
@@ -1871,7 +1868,6 @@ order.
 
     Options:
 
-    - title: title of the bar, displayed on top of the bar options
     - editable: boolean if value is editable
     - current_value: get the current_value from the field that must be present in the view
     - max_value: get the max_value from the field that must be present in the view
@@ -1931,7 +1927,7 @@ Relational fields
 
 .. autoclass:: web.relational_fields.FieldSelection
 
-    Supported field types: *selection*, *many2one*
+    Supported field types: *selection*
 
     .. attribute:: placeholder
 
@@ -1952,7 +1948,7 @@ Relational fields
 
     Options:
 
-    - horizontal: if true, radio buttons will be diplayed horizontally.
+    - horizontal: if true, radio buttons will be displayed horizontally.
 
     .. code-block:: xml
 
@@ -1972,7 +1968,7 @@ Relational fields
 - many2one (FieldMany2One)
     Default widget for many2one fields.
 
-    - Supported field types: *selection, many2one*
+    - Supported field types: *many2one*
 
     Attributes:
 
@@ -2013,7 +2009,7 @@ Relational fields
     - Supported field types: *many2one*
 
 - many2many (FieldMany2Many)
-    Defaut widget for many2many fields.
+    Default widget for many2many fields.
 
     - Supported field types: *many2many*
 
@@ -2067,7 +2063,7 @@ Relational fields
     - Supported field types: *many2many*
 
 - one2many (FieldOne2Many)
-    Defaut widget for one2many fields.
+    Default widget for one2many fields.
 
     It usually displays data in a sub list view, or a sub kanban view.
 
@@ -2215,20 +2211,20 @@ do that, several steps should be done.
 For more information, look into the *control_panel.js* file.
 
 .. _.appendTo():
-    http://api.jquery.com/appendTo/
+    https://api.jquery.com/appendTo/
 
 .. _.prependTo():
-    http://api.jquery.com/prependTo/
+    https://api.jquery.com/prependTo/
 
 .. _.insertAfter():
-    http://api.jquery.com/insertAfter/
+    https://api.jquery.com/insertAfter/
 
 .. _.insertBefore():
-    http://api.jquery.com/insertBefore/
+    https://api.jquery.com/insertBefore/
 
 .. _event delegation:
-    http://api.jquery.com/delegate/
+    https://api.jquery.com/delegate/
 
 .. _datepicker: https://github.com/Eonasdan/bootstrap-datetimepicker
 
-.. _deferred: http://api.jquery.com/category/deferred-object/
+.. _deferred: https://api.jquery.com/category/deferred-object/

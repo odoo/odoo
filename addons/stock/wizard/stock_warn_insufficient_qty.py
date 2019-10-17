@@ -34,3 +34,7 @@ class StockWarnInsufficientQtyScrap(models.TransientModel):
 
     def action_done(self):
         return self.scrap_id.do_scrap()
+
+    def action_cancel(self):
+        # FIXME in master: we should not have created the scrap in a first place
+        return self.scrap_id.sudo().unlink()

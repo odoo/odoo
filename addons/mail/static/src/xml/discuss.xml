@@ -267,10 +267,11 @@
         @param {string} [preview.title]
         @param {string} [preview.status]
         @param {integer} [preview.unreadCounter]
+        @param {integer[]} [preview.messageIDs]
     -->
     <t t-name="mail.Preview">
         <div t-attf-class="o_mail_preview #{preview.unreadCounter &gt; 0 ? 'o_preview_unread' : ''}"
-             t-att-data-preview-id="preview.id" t-att-data-document-id="preview.documentID" t-att-data-document-model="preview.documentModel" t-att-data-unread-counter="preview.unreadCounter">
+             t-att-data-preview-id="preview.id" t-att-data-document-id="preview.documentID" t-att-data-document-model="preview.documentModel" t-att-data-unread-counter="preview.unreadCounter" t-att-data-message-ids="preview.messageIDs">
             <div t-attf-class="o_mail_preview_image #{preview.documentModel ? 'o_mail_preview_app' : ''}">
                 <img class="o_mail_preview_image" t-att-src="preview.imageSRC" alt="Preview"/>
                 <i t-if="preview.status === 'online'" class="o_mail_user_status o_user_online fa fa-circle" title="Online" role="img" aria-label="User is online"/>
@@ -286,14 +287,16 @@
                     </span>
                     <span class="o_last_message_date"> <t t-esc="preview.date ? preview.date.fromNow() : ''"/> </span>
                 </div>
-                <div t-if="preview.body" class="o_last_message_preview">
-                    <t t-if="preview.isMyselfAuthor">
-                        <span class="fa fa-mail-reply" role="img" aria-label="Reply"/> You:
+                <div class="o_last_message_preview">
+                    <t t-if="preview.body">
+                        <t t-if="preview.isMyselfAuthor">
+                            <span class="fa fa-mail-reply" role="img" aria-label="Reply"/> You:
+                        </t>
+                        <t t-elif="preview.author">
+                            <t t-esc="preview.author"/>:
+                        </t>
+                        <t t-raw="preview.body"/>
                     </t>
-                    <t t-elif="preview.author">
-                        <t t-esc="preview.author"/>:
-                    </t>
-                    <t t-raw="preview.body"/>
                 </div>
                 <span title="Mark as Read" class="o_discuss_icon o_mail_preview_mark_as_read fa fa-check" t-if="preview.unreadCounter"/>
             </div>

@@ -4,6 +4,7 @@ import hashlib
 import hmac
 import logging
 from datetime import datetime
+from dateutil import relativedelta
 import pprint
 
 from odoo import api, exceptions, fields, models, _
@@ -13,6 +14,7 @@ from odoo.exceptions import ValidationError
 from odoo import api, SUPERUSER_ID
 from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.misc import formatLang
+from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
@@ -210,6 +212,19 @@ class PaymentAcquirer(models.Model):
         (_check_required_if_provider, 'Required fields not filled', []),
     ]
 
+    def get_base_url(self):
+        self.ensure_one()
+        # priority is always given to url_root
+        # from the request
+        url = ''
+        if request:
+            url = request.httprequest.url_root
+
+        if not url and 'website_id' in self and self.website_id:
+            url = self.website_id._get_http_domain()
+
+        return url or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+
     def _get_feature_support(self):
         """Get advanced feature support by provider.
 
@@ -229,7 +244,7 @@ class PaymentAcquirer(models.Model):
         :return: a dictionary to create a account.journal record.
         '''
         self.ensure_one()
-        account_vals = self.env['account.chart.template']._prepare_transfer_account_for_direct_creation(self.name, self.company_id)
+        account_vals = self.company_id.chart_template_id._prepare_transfer_account_for_direct_creation(self.name, self.company_id)
         account = self.env['account.account'].create(account_vals)
         inbound_payment_method_ids = []
         if self.token_implemented and self.payment_flow == 's2s':
@@ -323,7 +338,7 @@ class PaymentAcquirer(models.Model):
             'acquirers': acquirers,
             'pms': self.env['payment.token'].search([
                 ('partner_id', '=', partner.id),
-                ('acquirer_id', 'in', acquirers.filtered(lambda acq: acq.payment_flow == 's2s').ids)]),
+                ('acquirer_id', 'in', acquirers.ids)]),
         }
 
     @api.multi
@@ -355,6 +370,7 @@ class PaymentAcquirer(models.Model):
         if values is None:
             values = {}
 
+        values.setdefault('return_url', '/payment/process')
         # reference and amount
         values.setdefault('reference', reference)
         amount = float_round(amount, 2)
@@ -446,7 +462,6 @@ class PaymentAcquirer(models.Model):
             'context': self._context,
             'type': values.get('type') or 'form',
         })
-        values.setdefault('return_url', False)
 
         _logger.info('payment.acquirer.render: <%s> values rendered for form payment:\n%s', self.provider, pprint.pformat(values))
         return self.view_template_id.render(values, engine='ir.qweb')
@@ -623,13 +638,6 @@ class PaymentTransaction(models.Model):
     @api.multi
     def _prepare_account_payment_vals(self):
         self.ensure_one()
-
-        communication = []
-        for invoice in self.invoice_ids:
-            inv_communication = invoice.type in ('in_invoice', 'in_refund') and invoice.reference or invoice.number
-            if invoice.origin:
-                communication.append('%s (%s)' % (inv_communication, invoice.origin))
-
         return {
             'amount': self.amount,
             'payment_type': 'inbound' if self.amount > 0 else 'outbound',
@@ -642,13 +650,17 @@ class PaymentTransaction(models.Model):
             'payment_method_id': self.env.ref('payment.account_payment_method_electronic_in').id,
             'payment_token_id': self.payment_token_id and self.payment_token_id.id or None,
             'payment_transaction_id': self.id,
-            'communication': ' / '.join(communication),
+            'communication': self.reference,
         }
 
     @api.multi
     def get_last_transaction(self):
         transactions = self.filtered(lambda t: t.state != 'draft')
         return transactions and transactions[0] or transactions
+
+    def _get_processing_info(self):
+        """ Extensible method for providers if they need specific fields/info regarding a tx in the payment processing page. """
+        return dict()
 
     @api.multi
     def _get_payment_transaction_sent_message(self):
@@ -790,16 +802,22 @@ class PaymentTransaction(models.Model):
     @api.multi
     def _cron_post_process_after_done(self):
         if not self:
+            ten_minutes_ago = datetime.now() - relativedelta.relativedelta(minutes=10)
+            # we don't want to forever try to process a transaction that doesn't go through
+            retry_limit_date = datetime.now() - relativedelta.relativedelta(days=2)
             # we retrieve all the payment tx that need to be post processed
             self = self.search([('state', '=', 'done'),
-                                ('is_processed', '=', False)
+                                ('is_processed', '=', False),
+                                ('date', '<=', ten_minutes_ago),
+                                ('date', '>=', retry_limit_date),
                             ])
         for tx in self:
             try:
                 tx._post_process_after_done()
                 self.env.cr.commit()
             except Exception as e:
-                _logger.error("Transaction post processing failed, reason \"%s\"", e)
+                _logger.exception("Transaction post processing failed")
+                self.env.cr.rollback()
 
     @api.model
     def _compute_reference_prefix(self, values):
@@ -858,7 +876,11 @@ class PaymentTransaction(models.Model):
             invoice = invoice_ids[0]
             action['res_id'] = invoice
             action['view_mode'] = 'form'
-            action['views'] = [(self.env.ref('account.invoice_form').id, 'form')]
+            form_view = [(self.env.ref('account.invoice_form').id, 'form')]
+            if 'views' in action:
+                action['views'] = form_view + [(state,view) for state,view in action['views'] if view != 'form']
+            else:
+                action['views'] = form_view
         else:
             action['view_mode'] = 'tree,form'
             action['domain'] = [('id', 'in', invoice_ids)]
@@ -874,29 +896,30 @@ class PaymentTransaction(models.Model):
     def create(self, values):
         # call custom create method if defined (i.e. ogone_create for ogone)
         acquirer = self.env['payment.acquirer'].browse(values['acquirer_id'])
-        partner = self.env['res.partner'].browse(values['partner_id'])
+        if values.get('partner_id'):
+            partner = self.env['res.partner'].browse(values['partner_id'])
 
-        values.update({
-            'partner_name': partner.name,
-            'partner_lang': partner.lang or 'en_US',
-            'partner_email': partner.email,
-            'partner_zip': partner.zip,
-            'partner_address': _partner_format_address(partner.street or '', partner.street2 or ''),
-            'partner_city': partner.city,
-            'partner_country_id': partner.country_id.id or self._get_default_partner_country_id(),
-            'partner_phone': partner.phone,
-        })
+            values.update({
+                'partner_name': partner.name,
+                'partner_lang': partner.lang or self.env.user.lang,
+                'partner_email': partner.email,
+                'partner_zip': partner.zip,
+                'partner_address': _partner_format_address(partner.street or '', partner.street2 or ''),
+                'partner_city': partner.city,
+                'partner_country_id': partner.country_id.id or self._get_default_partner_country_id(),
+                'partner_phone': partner.phone,
+            })
 
         # compute fees
         custom_method_name = '%s_compute_fees' % acquirer.provider
         if hasattr(acquirer, custom_method_name):
             fees = getattr(acquirer, custom_method_name)(
-                values.get('amount', 0.0), values.get('currency_id'), partner.country_id.id)
+                values.get('amount', 0.0), values.get('currency_id'), values['partner_country_id'])
             values['fees'] = fees
 
         # custom create
         custom_method_name = '%s_create' % acquirer.provider
-        if hasattr(acquirer, custom_method_name):
+        if hasattr(self, custom_method_name):
             values.update(getattr(self, custom_method_name)(values))
 
         if not values.get('reference'):

@@ -13,8 +13,11 @@ var DateWidget = Widget.extend({
     type_of_date: "date",
     events: {
         'change.datetimepicker': 'changeDatetime',
+        'error.datetimepicker': 'errorDatetime',
         'change .o_datepicker_input': 'changeDatetime',
         'input input': '_onInput',
+        'keydown': '_onKeydown',
+        'show.datetimepicker': '_onDateTimePickerShow',
     },
     /**
      * @override
@@ -24,9 +27,10 @@ var DateWidget = Widget.extend({
 
         this.name = parent.name;
         this.options = _.extend({
+            locale: moment.locale(),
             format : this.type_of_date === 'datetime' ? time.getLangDatetimeFormat() : time.getLangDateFormat(),
             minDate: moment({ y: 1900 }),
-            maxDate: moment().add(200, "y"),
+            maxDate: moment({ y: 9999, M: 11, d: 31 }),
             useCurrent: false,
             icons: {
                 time: 'fa fa-clock-o',
@@ -80,8 +84,15 @@ var DateWidget = Widget.extend({
      * set datetime value
      */
     changeDatetime: function () {
+        if (this.__libInput > 0) {
+            if (this.options.warn_future) {
+                this._warnFuture(this.getValue());
+            }
+            this.trigger("datetime_changed");
+            return;
+        }
+        var oldValue = this.getValue();
         if (this.isValid()) {
-            var oldValue = this.getValue();
             this._setValueFromUi();
             var newValue = this.getValue();
             var hasChanged = !oldValue !== !newValue;
@@ -93,14 +104,21 @@ var DateWidget = Widget.extend({
                 }
             }
             if (hasChanged) {
-                // The condition is strangely written; this is because the
-                // values can be false/undefined
                 if (this.options.warn_future) {
                     this._warnFuture(newValue);
                 }
                 this.trigger("datetime_changed");
             }
+        } else {
+            var formattedValue = oldValue ? this._formatClient(oldValue) : null;
+            this.$input.val(formattedValue);
         }
+    },
+    /**
+     * Library clears the wrong date format so just ignore error
+     */
+    errorDatetime: function (e) {
+        return false;
     },
     /**
      * Focuses the datepicker input. This function must be called in order to
@@ -182,7 +200,7 @@ var DateWidget = Widget.extend({
             this.$warning.attr('title', title);
             this.$input.after(this.$warning);
         }
-        if (currentDate.isAfter(moment())) {
+        if (currentDate && currentDate.isAfter(moment())) {
             this.$warning.show();
         } else {
             this.$warning.hide();
@@ -227,6 +245,29 @@ var DateWidget = Widget.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * Reacts to the datetimepicker being shown
+     * Could set/verify our widget value
+     * And subsequently update the datetimepicker
+     *
+     * @private
+     */
+    _onDateTimePickerShow: function () {
+        if (this.$input.val().length !== 0 && this.isValid()) {
+            this.$input.select();
+        }
+    },
+    /**
+     * @private
+     * @param {KeyEvent} ev
+     */
+    _onKeydown: function (ev) {
+        if (ev.which === $.ui.keyCode.ESCAPE) {
+            this.__libInput++;
+            this.$el.datetimepicker('hide');
+            this.__libInput--;
+        }
+    },
     /**
      * Prevents 'input' events triggered by the library to bubble up, as they
      * might have unwanted effects (like triggering 'field_changed' events in

@@ -79,7 +79,7 @@ var AbstractThreadWindow = Widget.extend({
         this.$header = this.$('.o_thread_window_header');
 
         this._threadWidget = new ThreadWidget(this, {
-            displayDocumentLinks: false,
+            areMessageAttachmentsDeletable: false,
             displayMarkAsRead: false,
             displayStars: this.options.displayStars,
         });
@@ -293,7 +293,9 @@ var AbstractThreadWindow = Widget.extend({
     updateVisualFoldState: function () {
         if (!this.isFolded()) {
             this._threadWidget.scrollToBottom();
-            this._focusInput();
+            if (this.options.autofocus) {
+                this._focusInput();
+            }
         }
         this._animateFold();
     },

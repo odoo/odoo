@@ -16,9 +16,34 @@ class IrModel(models.Model):
     )
 
     def unlink(self):
-        # Delete followers for models that will be unlinked.
+        # Delete followers, messages and attachments for models that will be unlinked.
+        models = tuple(self.mapped('model'))
+
         query = "DELETE FROM mail_followers WHERE res_model IN %s"
-        self.env.cr.execute(query, [tuple(self.mapped('model'))])
+        self.env.cr.execute(query, [models])
+
+        query = "DELETE FROM mail_message WHERE model in %s"
+        self.env.cr.execute(query, [models])
+
+        # Get files attached solely by the models
+        query = """
+            SELECT DISTINCT store_fname
+            FROM ir_attachment
+            WHERE res_model IN %s
+            EXCEPT
+            SELECT store_fname
+            FROM ir_attachment
+            WHERE res_model not IN %s;
+        """
+        self.env.cr.execute(query, [models, models])
+        fnames = self.env.cr.fetchall()
+
+        query = """DELETE FROM ir_attachment WHERE res_model in %s"""
+        self.env.cr.execute(query, [models])
+
+        for (fname,) in fnames:
+            self.env['ir.attachment']._file_delete(fname)
+
         return super(IrModel, self).unlink()
 
     @api.multi

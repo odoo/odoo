@@ -103,10 +103,12 @@ var TimeRangeMenu = Widget.extend({
                     this.timeRangeId,
                     this.dateField.type
                 );
-                timeRangeDescription = _.findWhere(
+                var rawDescriptionRange = _.findWhere(
                     this.periodOptions,
                     {optionId: this.timeRangeId}
                 ).description;
+                // the attribute is a lazy loaded translation
+                timeRangeDescription = rawDescriptionRange.toString ? rawDescriptionRange.toString() : rawDescriptionRange;
             }
             if (this.comparisonIsSelected) {
                 comparisonTimeRange = Domain.prototype.constructDomain(
@@ -116,10 +118,12 @@ var TimeRangeMenu = Widget.extend({
                     null,
                     this.comparisonTimeRangeId
                 );
-                comparisonTimeRangeDescription = _.findWhere(
+                var rawDescriptionCompare = _.findWhere(
                     this.comparisonOptions,
                     {optionId: this.comparisonTimeRangeId}
                 ).description;
+                // the attribute is a lazy loaded translation
+                comparisonTimeRangeDescription = rawDescriptionCompare.toString ? rawDescriptionCompare.toString() : rawDescriptionCompare;
             }
         }
 

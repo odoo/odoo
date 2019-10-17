@@ -3,16 +3,16 @@
 # * pos_discount
 # 
 # Translators:
-# Vladimir Sedivy <vladimir@lepremier.cz>, 2018
-# trendspotter, 2018
 # Martin Trigaux, 2018
+# trendspotter <j.podhorecky@volny.cz>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:16+0000\n"
-"PO-Revision-Date: 2018-09-21 13:16+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:22+0000\n"
+"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,12 +30,12 @@ msgstr "Umožnit pokladníkovi poskytnout slevy na celou objednávku."
 #: code:addons/pos_discount/static/src/xml/discount_templates.xml:6
 #, python-format
 msgid "Discount"
-msgstr "Sleva (%)"
+msgstr "Sleva"
 
 #. module: pos_discount
 #: model_terms:ir.ui.view,arch_db:pos_discount.pos_config_view_form_inherit_pos_discount
 msgid "Discount %"
-msgstr ""
+msgstr "Sleva %"
 
 #. module: pos_discount
 #. openerp-web
@@ -43,7 +43,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config__discount_pc
 #, python-format
 msgid "Discount Percentage"
-msgstr ""
+msgstr "Sleva v procentech"
 
 #. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config__discount_product_id
@@ -56,12 +56,12 @@ msgstr "Zlevněný produkt"
 #: code:addons/pos_discount/static/src/js/discount.js:28
 #, python-format
 msgid "No discount product found"
-msgstr ""
+msgstr "Nenalezen žádný slevový produkt"
 
 #. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config__iface_discount
 msgid "Order Discounts"
-msgstr ""
+msgstr "Objednat slevy"
 
 #. module: pos_discount
 #: model:ir.model,name:pos_discount.model_pos_config
@@ -71,7 +71,7 @@ msgstr "Nastavení prodejního místa"
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config__discount_pc
 msgid "The default discount percentage"
-msgstr ""
+msgstr "Výchozí sleva v procentech"
 
 #. module: pos_discount
 #. openerp-web
@@ -81,8 +81,10 @@ msgid ""
 "The discount product seems misconfigured. Make sure it is flagged as 'Can be"
 " Sold' and 'Available in Point of Sale'."
 msgstr ""
+"Zdá se, že slevový produkt není správně nakonfigurován. Ujistěte se, že je "
+"označeno jako 'Může být prodáno' a 'Dostupné v místě prodeje'."
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config__discount_product_id
 msgid "The product used to model the discount."
-msgstr ""
+msgstr "Produkt slouží k modelování slevy."

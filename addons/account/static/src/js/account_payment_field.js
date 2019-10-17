@@ -128,6 +128,8 @@ var ShowPaymentLineWidget = AbstractField.extend({
      * @param {MouseEvent} event
      */
     _onOutstandingCreditAssign: function (event) {
+        event.stopPropagation();
+        event.preventDefault();
         var self = this;
         var id = $(event.target).data('id') || false;
         this._rpc({
@@ -160,4 +162,8 @@ var ShowPaymentLineWidget = AbstractField.extend({
 
 field_registry.add('payment', ShowPaymentLineWidget);
 
+return {
+    ShowPaymentLineWidget: ShowPaymentLineWidget
+};
+    
 });

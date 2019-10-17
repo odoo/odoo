@@ -90,7 +90,7 @@
                             </t>
                         </div>
                     </li>
-                    <li groups="website.group_multi_website">
+                    <li groups="website.group_multi_website" t-if="multi_website_websites">
                         <a class="dropdown-toggle waves" data-toggle="dropdown" href="#"><t t-esc="multi_website_websites_current['name']"/></a>
                         <div class="dropdown-menu" role="menu">
                             <t t-foreach="multi_website_websites" t-as="multi_website_website">
@@ -136,7 +136,7 @@
                                         </a>
                                     </div>
                                     <div groups="base.group_system" name="module_website_hr_recruitment" t-att-data-module-id="env.ref('base.module_website_hr_recruitment').id" t-att-data-module-shortdesc="env.ref('base.module_website_hr_recruitment').shortdesc" class="col-md-4 mb8 o_new_content_element">
-                                        <a href="/jobs/add">
+                                        <a href="#">
                                             <i class="fa fa-briefcase"/>
                                             <p>New Job Offer</p>
                                         </a>
@@ -171,7 +171,7 @@
                             <span class="sr-only">Toggle Dropdown</span>
                         </a>
                         <div class="dropdown-menu" role="menu">
-                            <a role="menuitem" style="text-align: left;" t-attf-href="/web#return_label=Website&amp;view_type=form&amp;model=#{main_object._name}&amp;id=#{main_object.id}&amp;action=#{action}"
+                            <a role="menuitem" style="text-align: left;" t-attf-href="/web#return_label=Website&amp;view_type=form&amp;model=#{main_object._name}&amp;id=#{main_object.id}&amp;action=#{action}&amp;menu_id=#{menu or main_object.env.ref('website.menu_website_configuration').id}"
                                    class="dropdown-item" title='Edit in backend' id="edit-in-backend">Edit in backend</a>
                         </div>
                     </li>

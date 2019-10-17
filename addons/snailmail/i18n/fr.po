@@ -3,17 +3,20 @@
 # * snailmail
 # 
 # Translators:
-# Martin Trigaux, 2018
 # Clo <clo@odoo.com>, 2018
 # Eloïse Stilmant <est@odoo.com>, 2018
 # Marie Willemyns <mwi@odoo.com>, 2018
+# Martin Trigaux, 2018
+# Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2019
+# Cécile Collart <cco@odoo.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 10:06+0000\n"
-"PO-Revision-Date: 2018-10-02 10:06+0000\n"
-"Last-Translator: Marie Willemyns <mwi@odoo.com>, 2018\n"
+"POT-Creation-Date: 2019-01-09 10:32+0000\n"
+"PO-Revision-Date: 2018-08-24 09:25+0000\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,7 +25,16 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:243
+#: model_terms:ir.ui.view,arch_db:snailmail.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\"/>"
+
+#. module: snailmail
+#: code:addons/snailmail/models/snailmail_letter.py:249
 #, python-format
 msgid "An error occured when sending the document by post.<br>Error: %s"
 msgstr ""
@@ -30,7 +42,7 @@ msgstr ""
 "Erreur: %s"
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:211
+#: code:addons/snailmail/models/snailmail_letter.py:215
 #, python-format
 msgid "An unknown error happened. Please contact the support."
 msgstr "Une erreur inconnue est survenue. Contactez le support. "
@@ -169,7 +181,7 @@ msgid "Model"
 msgstr "Modèle"
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:209
+#: code:addons/snailmail/models/snailmail_letter.py:211
 #, python-format
 msgid "One or more required fields are empty."
 msgstr "Un ou plusieurs champs requis sont vides."
@@ -180,7 +192,7 @@ msgid "Optional report to print and attach"
 msgstr "Rapport facultatif à imprimer et à joindre"
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:248
+#: code:addons/snailmail/models/snailmail_letter.py:264
 #, python-format
 msgid "Post letter: an error occured."
 msgstr "Lettre par la poste: une erreur est survenue."
@@ -203,7 +215,7 @@ msgstr "Imprimer en couleur"
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_ir_qweb_field_contact
 msgid "Qweb Field Contact"
-msgstr ""
+msgstr "Champ Qweb de Contact"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__partner_id
@@ -213,7 +225,7 @@ msgstr "Destinataire"
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_ir_actions_report
 msgid "Report Action"
-msgstr ""
+msgstr "Signaler l'action"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_form
@@ -243,13 +255,21 @@ msgid "Status"
 msgstr "État"
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:207
+#: code:addons/snailmail/models/snailmail_letter.py:213
+#, python-format
+msgid ""
+"The attachment of the letter could not be sent. Please check its content and"
+" contact the support if the problem persists."
+msgstr ""
+
+#. module: snailmail
+#: code:addons/snailmail/models/snailmail_letter.py:209
 #, python-format
 msgid "The country of the partner is not covered by Snailmail."
 msgstr "Le pays du partenaire n'est pas couvert par Snailmail."
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:238
+#: code:addons/snailmail/models/snailmail_letter.py:242
 #, python-format
 msgid ""
 "The document was correctly sent by post.<br>The tracking id is %ssend_id"
@@ -274,7 +294,7 @@ msgstr ""
 "Si pas, elle tombera sous le statut 'Erreur' et le message d'erreur sera affiché dans le champ 'Message d'erreur'."
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:205
+#: code:addons/snailmail/models/snailmail_letter.py:207
 #, python-format
 msgid ""
 "You don't have an IAP account registered for this service.<br>Please go to "
@@ -282,7 +302,7 @@ msgid ""
 msgstr ""
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:202
+#: code:addons/snailmail/models/snailmail_letter.py:204
 #, python-format
 msgid ""
 "You don't have enough credits to perform this operation.<br>Please go to "

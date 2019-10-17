@@ -12,6 +12,8 @@
                     <field name="composition_mode" invisible="1"/>
                     <field name="composer_id" invisible="1"/>
                     <field name="invoice_ids" invisible="1"/>
+                    <field name="email_from" invisible="1" />
+                    <field name="mail_server_id" invisible="1"/>
                     <div name="option_print">
                         <field name="is_print" />
                         <b><label for="is_print"/></b>
@@ -22,6 +24,9 @@
                     <div name="option_email">
                         <field name="is_email" />
                         <b><label for="is_email"/></b>
+                    </div>
+                    <div class="text-left d-inline-block mr8" attrs="{'invisible': ['|', ('is_email','=', False), ('invoice_without_email', '=', False)]}">
+                        <field name="invoice_without_email" class="mr4"/>
                     </div>
                     <div name="mail_form"  attrs="{'invisible': [('is_email', '=', False)]}">
                         <!-- visible wizard -->
@@ -83,7 +88,8 @@
             view_type="form"
             context="{
                 'default_template_id': ref('account.email_template_edi_invoice'),
-                'default_is_print': False}"
+                'mark_invoice_as_sent': True,
+            }"
             groups="account.group_account_invoice"/>
 
     </data>

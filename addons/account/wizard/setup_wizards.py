@@ -11,22 +11,39 @@ class FinancialYearOpeningWizard(models.TransientModel):
     company_id = fields.Many2one(comodel_name='res.company', required=True)
     opening_move_posted = fields.Boolean(string='Opening Move Posted', compute='_compute_opening_move_posted')
     opening_date = fields.Date(string='Opening Date', required=True, related='company_id.account_opening_date', help="Date from which the accounting is managed in Odoo. It is the date of the opening entry.", readonly=False)
-    fiscalyear_last_day = fields.Integer(related="company_id.fiscalyear_last_day", required=True,
-                                         help="The last day of the month will be taken if the chosen day doesn't exist.")
+    fiscalyear_last_day = fields.Integer(related="company_id.fiscalyear_last_day", required=True, readonly=False,
+                                         help="Fiscal year last day.")
     fiscalyear_last_month = fields.Selection(selection=[(1, 'January'), (2, 'February'), (3, 'March'), (4, 'April'), (5, 'May'), (6, 'June'), (7, 'July'), (8, 'August'), (9, 'September'), (10, 'October'), (11, 'November'), (12, 'December')],
                                              related="company_id.fiscalyear_last_month", readonly=False,
                                              required=True,
-                                             help="The last day of the month will be taken if the chosen day doesn't exist.")
+                                             help="Fiscal year last month.")
 
     @api.depends('company_id.account_opening_move_id')
     def _compute_opening_move_posted(self):
         for record in self:
             record.opening_move_posted = record.company_id.opening_move_posted()
 
+    @api.multi
+    def write(self, vals):
+        # Amazing workaround: non-stored related fields on company are a BAD idea since the 3 fields
+        # must follow the constraint '_check_fiscalyear_last_day'. The thing is, in case of related
+        # fields, the inverse write is done one value at a time, and thus the constraint is verified
+        # one value at a time... so it is likely to fail.
+        for wiz in self:
+            wiz.company_id.write({
+                'account_opening_date': vals.get('opening_date') or wiz.company_id.account_opening_date,
+                'fiscalyear_last_day': vals.get('fiscalyear_last_day') or wiz.company_id.fiscalyear_last_day,
+                'fiscalyear_last_month': vals.get('fiscalyear_last_month') or wiz.company_id.fiscalyear_last_month,
+            })
+        vals.pop('opening_date', None)
+        vals.pop('fiscalyear_last_day', None)
+        vals.pop('fiscalyear_last_month', None)
+        return super().write(vals)
 
     @api.multi
     def action_save_onboarding_fiscal_year(self):
         self.env.user.company_id.set_onboarding_step_done('account_setup_fy_data_state')
+
 
 class SetupBarBankConfigWizard(models.TransientModel):
     _inherits = {'res.partner.bank': 'res_partner_bank_id'}
@@ -89,4 +106,4 @@ class SetupBarBankConfigWizard(models.TransientModel):
         """ Called by the validation button of this wizard. Serves as an
         extension hook in account_bank_statement_import.
         """
-        pass
+        self.env.user.company_id.set_onboarding_step_done('account_setup_bank_data_state')

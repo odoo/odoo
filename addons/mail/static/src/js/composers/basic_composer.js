@@ -56,7 +56,7 @@ var BasicComposer = Widget.extend({
         // Attachments
         this._attachmentDataSet = new data.DataSetSearch(this, 'ir.attachment', this.context);
         this.fileuploadID = _.uniqueId('o_chat_fileupload');
-        this.set('attachment_ids', []);
+        this.set('attachment_ids', options.attachmentIds || []);
 
         // Mention
         this._mentionManager = new MentionManager(this);
@@ -118,6 +118,7 @@ var BasicComposer = Widget.extend({
         });
 
         // Attachments
+        this._renderAttachments();
         $(window).on(this.fileuploadID, this._onAttachmentLoaded.bind(this));
         this.on('change:attachment_ids', this, this._renderAttachments);
 
@@ -211,7 +212,8 @@ var BasicComposer = Widget.extend({
      * displayed to the user. If none of them match, then it will fetch for more
      * partner suggestions (@see _mentionFetchPartners).
      *
-     * @param {$.Deferred<Object[]>} prefetchedPartners
+     * @param {$.Deferred<Object[]>} prefetchedPartners list of list of
+     *   prefetched partners.
      */
     mentionSetPrefetchedPartners: function (prefetchedPartners) {
         this._mentionPrefetchedPartners = prefetchedPartners;
@@ -302,21 +304,23 @@ var BasicComposer = Widget.extend({
      */
     _mentionFetchPartners: function (search) {
         var self = this;
-        return $.when(this._mentionPrefetchedPartners).then(function (partners) {
+        return $.when(this._mentionPrefetchedPartners).then(function (prefetchedPartners) {
             // filter prefetched partners with the given search string
             var suggestions = [];
             var limit = self.options.mentionFetchLimit;
             var searchRegexp = new RegExp(_.str.escapeRegExp(mailUtils.unaccent(search)), 'i');
-            if (limit > 0) {
-                var filteredPartners = _.filter(partners, function (partner) {
-                    return partner.email && searchRegexp.test(partner.email) ||
-                           partner.name && searchRegexp.test(mailUtils.unaccent(partner.name));
-                });
-                if (filteredPartners.length) {
-                    suggestions.push(filteredPartners.slice(0, limit));
-                    limit -= filteredPartners.length;
+            _.each(prefetchedPartners, function (partners) {
+                if (limit > 0) {
+                    var filteredPartners = _.filter(partners, function (partner) {
+                        return partner.email && searchRegexp.test(partner.email) ||
+                            partner.name && searchRegexp.test(mailUtils.unaccent(partner.name));
+                    });
+                    if (filteredPartners.length) {
+                        suggestions.push(filteredPartners.slice(0, limit));
+                        limit -= filteredPartners.length;
+                    }
                 }
-            }
+            });
             if (!suggestions.length && !self.options.mentionPartnersRestricted) {
                 // no result found among prefetched partners, fetch other suggestions
                 suggestions = self._mentionFetchThrottled(
@@ -371,6 +375,7 @@ var BasicComposer = Widget.extend({
             attachment_ids: _.pluck(this.get('attachment_ids'), 'id'),
             partner_ids: _.uniq(_.pluck(this._mentionManager.getListenerSelection('@'), 'id')),
             canned_response_ids: _.uniq(_.pluck(this._mentionManager.getListenerSelections()[':'], 'id')),
+            channel_ids: _.uniq(_.pluck(this._mentionManager.getListenerSelection('#'), 'id')),
             command: commands.length > 0 ? commands[0].name : undefined,
         });
     },
@@ -443,6 +448,7 @@ var BasicComposer = Widget.extend({
         });
         attachments = attachments.concat(uploadAttachments);
         this.set('attachment_ids', attachments);
+        ev.target.value = "";
     },
     /**
      * @private

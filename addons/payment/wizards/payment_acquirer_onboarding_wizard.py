@@ -114,22 +114,33 @@ class PaymentWizard(models.TransientModel):
                     'paypal_seller_account': self.paypal_seller_account,
                     'paypal_pdt_token': self.paypal_pdt_token,
                     'website_published': True,
+                    'environment': 'prod',
                 })
             if self.payment_method == 'stripe':
                 new_env.ref('payment.payment_acquirer_stripe').write({
                     'stripe_secret_key': self.stripe_secret_key,
                     'stripe_publishable_key': self.stripe_publishable_key,
                     'website_published': True,
+                    'environment': 'prod',
                 })
             if self.payment_method == 'manual':
                 manual_acquirer = self._get_manual_payment_acquirer(new_env)
+                if not manual_acquirer:
+                    raise UserError(_(
+                        'No manual payment method could be found for this company. ' +
+                        'Please create one from the Payment Acquirer menu.'
+                    ))
                 manual_acquirer.name = self.manual_name
                 manual_acquirer.post_msg = self.manual_post_msg
                 manual_acquirer.website_published = True
+                manual_acquirer.environment = 'prod'
 
                 journal = manual_acquirer.journal_id
-                journal.name = self.journal_name
-                journal.bank_acc_number = self.acc_number
+                if journal:
+                    journal.name = self.journal_name
+                    journal.bank_acc_number = self.acc_number
+                else:
+                    raise UserError(_("You have to set a journal for your payment acquirer %s." % (self.manual_name,)))
 
             # delete wizard data immediately to get rid of residual credentials
             self.unlink()

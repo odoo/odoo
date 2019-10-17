@@ -296,8 +296,9 @@ var PivotController = AbstractController.extend({
         } else {
             this.lastHeaderSelected = id;
             var position = $target.position();
-            var top = position.top + $target.height();
-            var left = position.left + event.offsetX;
+            var $parent = $target.offsetParent();
+            var top = position.top + $target.height() + $parent.scrollTop();
+            var left = position.left + event.offsetX + $parent.scrollLeft();
             this._renderFieldSelection(top, left);
             event.stopPropagation();
         }
@@ -336,7 +337,8 @@ var PivotController = AbstractController.extend({
         var col_id = $target.data('id');
         var measure = $target.data('measure');
         var isAscending = $target.hasClass('o_pivot_measure_row_sorted_asc');
-        this.model.sortRows(col_id, measure, isAscending);
+        var dataType = $target.data('data_type');
+        this.model.sortRows(col_id, measure, isAscending, dataType);
         this.update({}, {reload: false});
     },
     /**

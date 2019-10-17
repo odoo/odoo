@@ -5,6 +5,7 @@ from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.tools import pycompat
 from odoo.tools.misc import formatLang
+from odoo.tools import misc
 
 
 class AccountReconciliation(models.AbstractModel):
@@ -79,24 +80,45 @@ class AccountReconciliation(models.AbstractModel):
 
     @api.model
     def _get_bank_statement_line_partners(self, st_lines):
+        params = []
+
+        # Add the res.partner.ban's IR rules. In case partners are not shared between companies,
+        # identical bank accounts may exist in a company we don't have access to.
+        ir_rules_query = self.env['res.partner.bank']._where_calc([])
+        self.env['res.partner.bank']._apply_ir_rules(ir_rules_query, 'read')
+        from_clause, where_clause, where_clause_params = ir_rules_query.get_sql()
+        if where_clause:
+            where_bank = ('AND %s' % where_clause).replace('res_partner_bank', 'bank')
+            params += where_clause_params
+        else:
+            where_bank = ''
+
+        # Add the res.partner's IR rules. In case partners are not shared between companies,
+        # identical partners may exist in a company we don't have access to.
+        ir_rules_query = self.env['res.partner']._where_calc([])
+        self.env['res.partner']._apply_ir_rules(ir_rules_query, 'read')
+        from_clause, where_clause, where_clause_params = ir_rules_query.get_sql()
+        if where_clause:
+            where_partner = ('AND %s' % where_clause).replace('res_partner', 'p3')
+            params += where_clause_params
+        else:
+            where_partner = ''
+
         query = '''
             SELECT
                 st_line.id                          AS id,
-                partner.id                          AS partner_id
+                COALESCE(p1.id,p2.id,p3.id)         AS partner_id
             FROM account_bank_statement_line st_line
-            LEFT JOIN res_partner_bank bank         ON bank.id = st_line.bank_account_id OR bank.acc_number = st_line.account_number
-            LEFT JOIN res_partner partner           ON (
-                CASE WHEN st_line.partner_id IS NOT NULL THEN
-                    partner.id = st_line.partner_id
-                WHEN bank.partner_id IS NOT NULL THEN
-                    partner.id = bank.partner_id
-                ELSE
-                    partner.name ILIKE st_line.partner_name
-                END
-            )
-            WHERE st_line.id IN %s
         '''
-        params = [tuple(st_lines.ids)]
+        query += 'LEFT JOIN res_partner_bank bank ON bank.id = st_line.bank_account_id OR bank.acc_number = st_line.account_number %s\n' % (where_bank)
+        query += 'LEFT JOIN res_partner p1 ON st_line.partner_id=p1.id \n'
+        query += 'LEFT JOIN res_partner p2 ON bank.partner_id=p2.id \n'
+        # By definition the commercial partner_id doesn't have a parent_id set
+        query += 'LEFT JOIN res_partner p3 ON p3.name ILIKE st_line.partner_name %s AND p3.parent_id is NULL \n' % (where_partner)
+        query += 'WHERE st_line.id IN %s'
+
+        params += [tuple(st_lines.ids)]
+
         self._cr.execute(query, params)
 
         result = {}
@@ -141,14 +163,22 @@ class AccountReconciliation(models.AbstractModel):
             else:
                 aml_ids = matching_amls[line.id]['aml_ids']
                 bank_statements_left += line.statement_id
+                target_currency = line.currency_id or line.journal_id.currency_id or line.journal_id.company_id.currency_id
 
                 amls = aml_ids and self.env['account.move.line'].browse(aml_ids)
-                results['lines'].append({
+                line_vals = {
                     'st_line': self._get_statement_line(line),
-                    'reconciliation_proposition': aml_ids and self._prepare_move_lines(amls) or [],
+                    'reconciliation_proposition': aml_ids and self._prepare_move_lines(amls, target_currency=target_currency, target_date=line.date) or [],
                     'model_id': matching_amls[line.id].get('model') and matching_amls[line.id]['model'].id,
                     'write_off': matching_amls[line.id].get('status') == 'write_off',
-                })
+                }
+                if not line.partner_id and partner_map.get(line.id):
+                    partner = self.env['res.partner'].browse(partner_map[line.id])
+                    line_vals.update({
+                        'partner_id': partner.id,
+                        'partner_name': partner.name,
+                    })
+                results['lines'].append(line_vals)
 
         return results
 
@@ -224,6 +254,27 @@ class AccountReconciliation(models.AbstractModel):
         """ Returns the data required for the invoices & payments matching of partners/accounts.
             If an argument is None, fetch all related reconciliations. Use [] to fetch nothing.
         """
+        MoveLine = self.env['account.move.line']
+        aml_ids = self._context.get('active_ids') and self._context.get('active_model') == 'account.move.line' and tuple(self._context.get('active_ids'))
+        if aml_ids:
+            aml = MoveLine.browse(aml_ids)
+            aml._check_reconcile_validity()
+            account = aml[0].account_id
+            currency = account.currency_id or account.company_id.currency_id
+            return {
+                'accounts': [{
+                    'reconciliation_proposition': self._prepare_move_lines(aml, target_currency=currency),
+                    'company_id': account.company_id.id,
+                    'currency_id': currency.id,
+                    'mode': 'accounts',
+                    'account_id': account.id,
+                    'account_name': account.name,
+                    'account_code': account.code,
+                }],
+                'customers': [],
+                'suppliers': [],
+            }
+
         return {
             'customers': self.get_data_for_manual_reconciliation('partner', partner_ids, 'receivable'),
             'suppliers': self.get_data_for_manual_reconciliation('partner', partner_ids, 'payable'),
@@ -323,6 +374,12 @@ class AccountReconciliation(models.AbstractModel):
             allowed_ids = set(Partner.browse(ids).ids)
             rows = [row for row in rows if row['partner_id'] in allowed_ids]
 
+        # Keep mode for future use in JS
+        if res_type == 'account':
+            mode = 'accounts'
+        else:
+            mode = 'customers' if account_type == 'receivable' else 'suppliers'
+
         # Fetch other data
         for row in rows:
             account = Account.browse(row['account_id'])
@@ -331,8 +388,12 @@ class AccountReconciliation(models.AbstractModel):
             partner_id = is_partner and row['partner_id'] or None
             rec_prop = aml_ids and self.env['account.move.line'].browse(aml_ids) or self._get_move_line_reconciliation_proposition(account.id, partner_id)
             row['reconciliation_proposition'] = self._prepare_move_lines(rec_prop, target_currency=currency)
+            row['mode'] = mode
             row['company_id'] = account.company_id.id
-        return rows
+
+        # Return the partners with a reconciliation proposition first, since they are most likely to
+        # be reconciled.
+        return [r for r in rows if r['reconciliation_proposition']] + [r for r in rows if not r['reconciliation_proposition']]
 
     @api.model
     def process_move_lines(self, data):
@@ -422,21 +483,12 @@ class AccountReconciliation(models.AbstractModel):
             ('payment_id', '<>', False)
         ]
 
-        # Black lines = unreconciled & (not linked to a payment or open balance created by statement
-        domain_matching = [('reconciled', '=', False)]
-        if partner_id:
-            domain_matching = expression.AND([
-                domain_matching,
-                [('account_id.internal_type', 'in', ['payable', 'receivable'])]
-            ])
-        else:
-            # TODO : find out what use case this permits (match a check payment, registered on a journal whose account type is other instead of liquidity)
-            domain_matching = expression.AND([
-                domain_matching,
-                [('account_id.reconcile', '=', True)]
-            ])
+        # default domain matching
+        domain_matching = expression.AND([
+            [('reconciled', '=', False)],
+            [('account_id.reconcile', '=', True)]
+        ])
 
-        # Let's add what applies to both
         domain = expression.OR([domain_reconciliation, domain_matching])
         if partner_id:
             domain = expression.AND([domain, [('partner_id', '=', partner_id)]])
@@ -444,11 +496,10 @@ class AccountReconciliation(models.AbstractModel):
         # Domain factorized for all reconciliation use cases
         if search_str:
             str_domain = self._domain_move_lines(search_str=search_str)
-            if not partner_id:
-                str_domain = expression.OR([
-                    str_domain,
-                    [('partner_id.name', 'ilike', search_str)]
-                ])
+            str_domain = expression.OR([
+                str_domain,
+                [('partner_id.name', 'ilike', search_str)]
+            ])
             domain = expression.AND([
                 domain,
                 str_domain
@@ -464,7 +515,6 @@ class AccountReconciliation(models.AbstractModel):
 
         if st_line.company_id.account_bank_reconciliation_start:
             domain = expression.AND([domain, [('date', '>=', st_line.company_id.account_bank_reconciliation_start)]])
-
         return domain
 
     @api.model
@@ -497,6 +547,8 @@ class AccountReconciliation(models.AbstractModel):
         for line in move_lines:
             company_currency = line.company_id.currency_id
             line_currency = (line.currency_id and line.amount_currency) and line.currency_id or company_currency
+            date_maturity = misc.format_date(self.env, line.date_maturity, lang_code=self.env.user.lang)
+
             ret_line = {
                 'id': line.id,
                 'name': line.name and line.name != '/' and line.move_id.name + ': ' + line.name or line.move_id.name,
@@ -508,7 +560,7 @@ class AccountReconciliation(models.AbstractModel):
                 'account_code': line.account_id.code,
                 'account_name': line.account_id.name,
                 'account_type': line.account_id.internal_type,
-                'date_maturity': line.date_maturity,
+                'date_maturity': date_maturity,
                 'date': line.date,
                 'journal_id': [line.journal_id.id, line.journal_id.display_name],
                 'partner_id': line.partner_id.id,
@@ -598,13 +650,14 @@ class AccountReconciliation(models.AbstractModel):
             amount_currency = amount
             amount_currency_str = ""
         amount_str = formatLang(self.env, abs(amount), currency_obj=st_line.currency_id or statement_currency)
+        date = misc.format_date(self.env, st_line.date, lang_code=self.env.user.lang)
 
         data = {
             'id': st_line.id,
             'ref': st_line.ref,
             'note': st_line.note or "",
             'name': st_line.name,
-            'date': st_line.date,
+            'date': date,
             'amount': amount,
             'amount_str': amount_str,  # Amount in the statement line currency
             'currency_id': st_line.currency_id.id or statement_currency.id,
@@ -686,13 +739,15 @@ class AccountReconciliation(models.AbstractModel):
         # Create writeoff move lines
         if len(new_mv_line_dicts) > 0:
             company_currency = account_move_line[0].account_id.company_id.currency_id
-            company = account_move_line[0].account_id.company_id
-            date = fields.Date.today()
-            writeoff_currency = account_move_line[0].currency_id or company_currency
+            same_currency = False
+            currencies = list(set([aml.currency_id or company_currency for aml in account_move_line]))
+            if len(currencies) == 1 and currencies[0] != company_currency:
+                same_currency = True
+            # We don't have to convert debit/credit to currency as all values in the reconciliation widget are displayed in company currency
+            # If all the lines are in the same currency, create writeoff entry with same currency also
             for mv_line_dict in new_mv_line_dicts:
-                if writeoff_currency != company_currency:
-                    mv_line_dict['debit'] = writeoff_currency._convert(mv_line_dict['debit'], company_currency, company, date)
-                    mv_line_dict['credit'] = writeoff_currency._convert(mv_line_dict['credit'], company_currency, company, date)
+                if not same_currency:
+                    mv_line_dict['amount_currency'] = False
                 writeoff_lines += account_move_line._create_writeoff([mv_line_dict])
 
             (account_move_line + writeoff_lines).reconcile()

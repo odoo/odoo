@@ -36,6 +36,15 @@
             width: 450px;
         }
     }
+    .o_kanban_group {
+        &:not(.o_column_folded) {
+            width: 450px + 2*$o-kanban-group-padding;
+
+            @include media-breakpoint-down(sm) {
+                width: 100%;
+            }
+        }
+    }
 }
 
 // Style for the widget "dashboard_graph"

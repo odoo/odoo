@@ -3,6 +3,7 @@ odoo.define('website_blog.s_latest_posts_editor', function (require) {
 
 var core = require('web.core');
 var sOptions = require('web_editor.snippets.options');
+var wUtils = require('website.utils');
 
 var _t = core._t;
 
@@ -53,7 +54,7 @@ sOptions.registry.js_get_posts_selectBlog = sOptions.Class.extend({
         var def = this._rpc({
             model: 'blog.blog',
             method: 'search_read',
-            args: [[], ['name', 'id']],
+            args: [wUtils.websiteDomain(), ['name']],
         }).then(function (blogs) {
             var $menu = self.$el.find('[data-filter-by-blog-id="0"]').parent();
             _.each(blogs, function (blog) {

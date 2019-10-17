@@ -13,19 +13,11 @@ var optionalProductsMap = {};
 var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixin, {
     events:  _.extend({}, Dialog.prototype.events, ProductConfiguratorMixin.events, {
         'click a.js_add, a.js_remove': '_onAddOrRemoveOption',
-        'change .in_cart.main_product input.js_quantity': '_onChangeQuantity'
+        'click button.js_add_cart_json': 'onClickAddCartJSON',
+        'change .in_cart.main_product input.js_quantity': '_onChangeQuantity',
     }),
     /**
      * Initializes the optional products modal
-     *
-     * If the "isWebsite" param is true, will also disable the following events:
-     * - change [data-attribute_exclusions]
-     * - click button.js_add_cart_json
-     *
-     * This has to be done because those events are already registered at the "website_sale"
-     * component level.
-     * This modal is part of the form that has these events registered and we
-     * want to avoid duplicates.
      *
      * @override
      * @param {$.Element} parent The parent container
@@ -47,7 +39,7 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixi
     init: function (parent, params) {
         var self = this;
 
-        this._super(parent, {
+        var options = _.extend({
             size: 'large',
             buttons: [{
                 text: params.okButtonText,
@@ -57,23 +49,17 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixi
                 text: params.cancelButtonText,
                 click: this._onCancelButtonClick
             }],
-            title: params.title
-        });
+            technical: !params.isWebsite,
+        }, params || {});
+
+        this._super(parent, options);
 
         this.rootProduct = params.rootProduct;
         this.container = parent;
         this.pricelistId = params.pricelistId;
         this.isWebsite = params.isWebsite;
         this.dialogClass = 'oe_optional_products_modal' + (params.isWebsite ? ' oe_website_sale' : '');
-
-        if (this.isWebsite) {
-            delete this.events['change [data-attribute_exclusions]'];
-            delete this.events['click button.js_add_cart_json'];
-        }
-
-        this._opened.then(function () {
-            self.triggerVariantChange(self.$el);
-        });
+        this._productImageField = 'image_medium';
     },
      /**
      * @override
@@ -85,7 +71,8 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixi
         var getModalContent = ajax.jsonRpc(uri, 'call', {
             product_id: self.rootProduct.product_id,
             variant_values: self.rootProduct.variant_values,
-            pricelist_id: self.pricelistId,
+            pricelist_id: self.pricelistId || false,
+            add_qty: self.rootProduct.quantity,
             kwargs: {
                 context: _.extend({
                     'quantity': self.rootProduct.quantity
@@ -124,6 +111,7 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixi
                 self.$modal.attr('open', true);
                 self.$modal.removeAttr("aria-hidden");
                 self.$modal.modal().appendTo(self.container);
+                self.$modal.focus();
                 self._opened.resolve();
             }
         });
@@ -138,16 +126,43 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixi
      *
      * @override
      */
-    start: function (){
-        this._super.apply(this, arguments);
+    start: function () {
+        var def = this._super.apply(this, arguments);
+        var self = this;
 
         this.$el.find('input[name="add_qty"]').val(this.rootProduct.quantity);
+
+        return def.then(function () {
+            // This has to be triggered to compute the "out of stock" feature
+            self._opened.then(function () {
+                self.triggerVariantChange(self.$el);
+            });
+        });
     },
 
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
 
+    /**
+     * Computes and updates the total price, useful when a product is added or
+     * when the quantity is changed.
+     * TODO awa: add a container context to avoid global selectors ?
+     */
+    computePriceTotal: function () {
+        if ($('.js_price_total').length) {
+            var price = 0;
+            $('.js_product.in_cart').each(function () {
+                var quantity = parseInt($('input[name="add_qty"]').first().val());
+                price += parseFloat($(this).find('.js_raw_price').html()) * quantity;
+            });
+
+            $('.js_price_total .oe_currency_value').html(
+                this._priceToStr(parseFloat(price))
+            );
+        }
+        ProductConfiguratorMixin.computePriceTotal.apply(this, arguments);
+    },
     /**
      * Returns the list of selected products.
      * The root product is added on top of the list.
@@ -357,7 +372,7 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixi
 
             ajax.jsonRpc(self._getUri("/product_configurator/optional_product_items"), 'call', {
                 'product_id': productId,
-                'pricelist_id': self.pricelistId
+                'pricelist_id': self.pricelistId || false,
             }).then(function (addedItem) {
                 var $addedItem = $(addedItem);
                 $modal.find('tr:last').after($addedItem);
@@ -408,7 +423,7 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixi
 
         this._removeOptionOption($modal, productTemplateId);
 
-        $('tr:last').after($parent);
+        $modal.find('tr:last').after($parent);
     },
 
     /**
@@ -432,7 +447,19 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixi
             delete optionalProductsMap[optionId];
         }
     },
+    /**
+     * @override
+     */
+    _onChangeCombination:function (ev, $parent, combination) {
+        $parent
+            .find('.td-product_name .product-name')
+            .first()
+            .text(combination.display_name);
 
+        ProductConfiguratorMixin._onChangeCombination.apply(this, arguments);
+
+        this.computePriceTotal();
+    },
     /**
      * When the quantity of the root product is updated, we need to update
      * the quantity of all the selected optional products.

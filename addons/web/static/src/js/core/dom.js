@@ -20,6 +20,7 @@ odoo.define('web.dom', function (require) {
  * something happens in the DOM.
  */
 
+var concurrency = require('web.concurrency');
 var config = require('web.config');
 var core = require('web.core');
 var _t = core._t;
@@ -40,7 +41,9 @@ function _notify(content, callbacks) {
     core.bus.trigger('DOM_updated', content);
 }
 
-return {
+var dom = {
+    DEBOUNCE: 400,
+
     /**
      * Appends content in a jQuery object and optionnally triggers an event
      *
@@ -207,6 +210,91 @@ return {
             e = e.offsetParent;
         }
         return position;
+    },
+    /**
+     * Protects a function which is to be used as a handler by preventing its
+     * execution for the duration of a previous call to it (including async
+     * parts of that call).
+     *
+     * Limitation: as the handler is ignored during async actions,
+     * the 'preventDefault' or 'stopPropagation' calls it may want to do
+     * will be ignored too. Using the 'preventDefault' and 'stopPropagation'
+     * arguments solves that problem.
+     *
+     * @param {function} fct
+     *      The function which is to be used as a handler. If a promise
+     *      is returned, it is used to determine when the handler's action is
+     *      finished. Otherwise, the return is used as jQuery uses it.
+     * @param {function|boolean} preventDefault
+     * @param {function|boolean} stopPropagation
+     */
+    makeAsyncHandler: function (fct, preventDefault, stopPropagation) {
+        // Create a deferred indicating if a previous call to this handler is
+        // still pending.
+        var def = $.when();
+
+        return function (ev) {
+            if (preventDefault === true || preventDefault && preventDefault()) {
+                ev.preventDefault();
+            }
+            if (stopPropagation === true || stopPropagation && stopPropagation()) {
+                ev.stopPropagation();
+            }
+
+            if (def.state() === 'pending') {
+                // If a previous call to this handler is still pending, ignore
+                // the new call.
+                return;
+            }
+            var result = fct.apply(this, arguments);
+            def = $.when(result);
+            return result;
+        };
+    },
+    /**
+     * Creates a debounced version of a function to be used as a button click
+     * handler. Also improves the handler to disable the button for the time of
+     * the debounce and/or the time of the async actions it performs.
+     *
+     * Limitation: if two handlers are put on the same button, the button will
+     * become enabled again once any handler's action finishes (multiple click
+     * handlers should however not be binded to the same button).
+     *
+     * @param {function} fct
+     *      The function which is to be used as a button click handler. If a
+     *      promise is returned, it is used to determine when the button can be
+     *      re-enabled. Otherwise, the return is used as jQuery uses it.
+     */
+    makeButtonHandler: function (fct) {
+        // Fallback: if the final handler is not binded to a button, at least
+        // make it an async handler (also handles the case where some events
+        // might ignore the disabled state of the button).
+        fct = dom.makeAsyncHandler(fct);
+
+        return function (ev) {
+            var result = fct.apply(this, arguments);
+
+            var $button = $(ev.target).closest('.btn');
+            if (!$button.length) {
+                return result;
+            }
+
+            // Disable the button for the duration of the handler's action
+            // or at least for the duration of the click debounce. This makes
+            // a 'real' debounce creation useless. Also, during the debouncing
+            // part, the button is disabled without any visual effect.
+            $button.addClass('o_debounce_disabled');
+            $.when(dom.DEBOUNCE && concurrency.delay(dom.DEBOUNCE)).then(function () {
+                $button.addClass('disabled').prop('disabled', true);
+                $button.removeClass('o_debounce_disabled');
+
+                return $.when(result).always(function () {
+                    $button.removeClass('disabled').prop('disabled', false);
+                });
+            });
+
+            return result;
+        };
     },
     /**
      * Prepends content in a jQuery object and optionnally triggers an event
@@ -397,9 +485,10 @@ return {
             if (options.maxWidth) {
                 maxWidth = options.maxWidth();
             } else {
-                var rect = $el[0].getBoundingClientRect();
+                var mLeft = $el.is('.ml-auto, .mx-auto, .m-auto');
+                var mRight = $el.is('.mr-auto, .mx-auto, .m-auto');
+                maxWidth = computeFloatOuterWidthWithMargins($el[0], mLeft, mRight);
                 var style = window.getComputedStyle($el[0]);
-                maxWidth = (rect.right - rect.left);
                 maxWidth -= (parseFloat(style.paddingLeft) + parseFloat(style.paddingRight) + parseFloat(style.borderLeftWidth) + parseFloat(style.borderRightWidth));
                 maxWidth -= _.reduce($unfoldableItems, function (sum, el) {
                     return sum + computeFloatOuterWidthWithMargins(el);
@@ -417,7 +506,7 @@ return {
 
             var $dropdownMenu = $('<ul/>', {class: 'dropdown-menu'});
             $extraItemsToggle = $('<li/>', {class: 'nav-item dropdown o_extra_menu_items'})
-                .append($('<a/>', {href: '#', class: 'nav-link dropdown-toggle o-no-caret', 'data-toggle': 'dropdown'})
+                .append($('<a/>', {role: 'button', href: '#', class: 'nav-link dropdown-toggle o-no-caret', 'data-toggle': 'dropdown', 'aria-expanded': false})
                     .append($('<i/>', {class: 'fa fa-plus'})))
                 .append($dropdownMenu);
             $extraItemsToggle.insertAfter($items.last());
@@ -425,7 +514,7 @@ return {
             menuItemsWidth += computeFloatOuterWidthWithMargins($extraItemsToggle[0]);
             do {
                 menuItemsWidth -= computeFloatOuterWidthWithMargins($items.eq(--nbItems)[0]);
-            } while (!(maxWidth - menuItemsWidth >= -0.001));
+            } while (!(maxWidth - menuItemsWidth >= -0.001) && (nbItems > 0));
 
             var $extraItems = $items.slice(nbItems).detach();
             $extraItems.removeClass('nav-item');
@@ -434,10 +523,17 @@ return {
             $extraItemsToggle.find('.nav-link').toggleClass('active', $extraItems.children().hasClass('active'));
         }
 
-        function computeFloatOuterWidthWithMargins(el) {
+        function computeFloatOuterWidthWithMargins(el, mLeft, mRight) {
             var rect = el.getBoundingClientRect();
             var style = window.getComputedStyle(el);
-            return rect.right - rect.left + parseFloat(style.marginLeft) + parseFloat(style.marginRight);
+            var outerWidth = rect.right - rect.left;
+            if (mLeft !== false) {
+                outerWidth += parseFloat(style.marginLeft);
+            }
+            if (mRight !== false) {
+                outerWidth += parseFloat(style.marginRight);
+            }
+            return outerWidth;
         }
     },
     /**
@@ -452,4 +548,5 @@ return {
         }
     },
 };
+return dom;
 });

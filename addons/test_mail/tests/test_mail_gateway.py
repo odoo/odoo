@@ -9,6 +9,7 @@ from odoo.addons.test_mail.data.test_mail_data import \
     MAIL_TEMPLATE, MAIL_TEMPLATE_PLAINTEXT, MAIL_MULTIPART_MIXED, MAIL_MULTIPART_MIXED_TWO, \
     MAIL_MULTIPART_IMAGE, MAIL_SINGLE_BINARY, MAIL_EML_ATTACHMENT, MAIL_XHTML
 from odoo.addons.test_mail.tests.common import BaseFunctionalTest, MockEmails
+from odoo.addons.test_mail.tests.common import mail_new_test_user
 from odoo.tools import mute_logger
 
 
@@ -57,7 +58,7 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
         super(TestMailgateway, cls).setUpClass()
         mail_test_simple_model = cls.env['ir.model']._get('mail.test.simple')
 
-        cls.partner_1 = cls.env['res.partner'].with_context(cls._quick_create_ctx).create({
+        cls.partner_1 = cls.env['res.partner'].with_context(BaseFunctionalTest._test_context).create({
             'name': 'Valid Lelitre',
             'email': 'valid.lelitre@agrolait.com',
         })
@@ -431,7 +432,7 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
         self.assertEqual(self.test_record.message_ids[0].author_id, from_1)
         self.test_record.message_unsubscribe([from_1.id])
 
-        from_2 = self.env['res.users'].with_context(self._quick_create_user_ctx).create({'name': 'Brice Denisse', 'login': 'B', 'email': 'from.test@example.com'})
+        from_2 = mail_new_test_user(self.env, login='B', groups='base.group_user', name='Brice Denisse', email='from.test@example.com')
 
         self.format_and_process(MAIL_TEMPLATE, msg_id='<2>', email_from='Brice Denisse <from.test@example.com>')
         self.assertEqual(self.test_record.message_ids[0].author_id, from_2.partner_id)
@@ -485,19 +486,23 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models', 'odoo.addons.mail.models.mail_mail')
     def test_private_discussion(self):
         """ Testing private discussion between partners. """
-        msg1_pids = [self.env.user.partner_id.id, self.partner_1.id]
+        self.partner_2 = self.env['res.partner'].with_context(BaseFunctionalTest._test_context).create({
+            'name': 'Admin',
+            'email': 'admin@agrolait.com',
+        })
+        msg1_pids = [self.partner_1.id, self.partner_2.id]
 
         # Do: Raoul writes to Bert and Administrator, with a model specific by parameter that should not be taken into account
         msg1 = self.env['mail.thread'].sudo(self.user_employee).message_post(partner_ids=msg1_pids, subtype='mail.mt_comment', model='mail.test')
 
         # Test: message recipients
         msg = self.env['mail.message'].browse(msg1.id)
-        self.assertEqual(msg.partner_ids, self.env.user.partner_id | self.partner_1,
+        self.assertEqual(msg.partner_ids, self.partner_2 | self.partner_1,
                          'message_post: private discussion: incorrect recipients')
         self.assertEqual(msg.model, False,
                          'message_post: private discussion: parameter model not correctly ignored when having no res_id')
         # Test: message-id
-        self.assertIn('openerp-private', msg.message_id, 'message_post: private discussion: message-id should contain the private keyword')
+        self.assertIn('openerp-private', msg.message_id.split('@')[0], 'message_post: private discussion: message-id should contain the private keyword')
 
         # Do: Bert replies through mailgateway (is a customer)
         self.format_and_process(
@@ -509,7 +514,7 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
         # Test: message recipients
         self.assertEqual(msg2.author_id, self.partner_1,
                          'message_post: private discussion: wrong author through mailgateway based on email')
-        self.assertEqual(msg2.partner_ids, self.user_employee.partner_id | self.env.user.partner_id,
+        self.assertEqual(msg2.partner_ids, self.user_employee.partner_id | self.partner_2,
                          'message_post: private discussion: incorrect recipients when replying')
 
         # Do: Bert replies through chatter (is a customer)
@@ -517,17 +522,17 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
 
         # Test: message recipients
         msg = self.env['mail.message'].browse(msg3.id)
-        self.assertEqual(msg.partner_ids, self.user_employee.partner_id | self.env.user.partner_id,
+        self.assertEqual(msg.partner_ids, self.user_employee.partner_id | self.partner_2,
                          'message_post: private discussion: incorrect recipients when replying')
-        self.assertEqual(msg.needaction_partner_ids, self.user_employee.partner_id | self.env.user.partner_id,
+        self.assertEqual(msg.needaction_partner_ids, self.user_employee.partner_id | self.partner_2,
                          'message_post: private discussion: incorrect notified recipients when replying')
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models', 'odoo.addons.mail.models.mail_mail')
     def test_forward_parent_id(self):
         msg = self.test_record.sudo(self.user_employee).message_post(no_auto_thread=True, subtype='mail.mt_comment')
-        self.assertNotIn(msg.model, msg.message_id)
-        self.assertNotIn('-%d-' % msg.res_id, msg.message_id)
-        self.assertIn('reply_to', msg.message_id)
+        self.assertNotIn(msg.model, msg.message_id.split('@')[0])
+        self.assertNotIn('-%d-' % msg.res_id, msg.message_id.split('@')[0])
+        self.assertIn('reply_to', msg.message_id.split('@')[0])
 
         # forward it to a new thread AND an existing thread
         fw_msg_id = '<THIS.IS.A.FW.MESSAGE.1@bert.fr>'

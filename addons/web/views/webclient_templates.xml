@@ -40,6 +40,7 @@
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/import_bootstrap_part1.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/bs_mixins_overrides.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/import_bootstrap_part2.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/bootstrap_review.scss"/>
     </template>
 
     <template id="assets_common" name="Common Assets (used in backend interface and website)">
@@ -49,6 +50,7 @@
         <link rel="stylesheet" type="text/css" href="/web/static/lib/fontawesome/css/font-awesome.css"/>
         <link rel="stylesheet" type="text/css" href="/web/static/lib/select2/select2.css"/>
         <link rel="stylesheet" type="text/css" href="/web/static/lib/select2-bootstrap-css/select2-bootstrap.css"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/lib/tempusdominus/tempusdominus.scss"/>
 
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/fonts.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/ui.scss"/>
@@ -63,9 +65,7 @@
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/colorpicker.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/keyboard.scss"/>
 
-        <t t-if="request and request.env['res.lang'].search([('code', '=', request.env.lang)]).direction == 'rtl'">
-            <link rel="stylesheet" type="text/less" href="/web/static/src/scss/fontawesome_overriden.scss"/>
-        </t>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/scss/fontawesome_overriden.scss"/>
 
         <script type="text/javascript" src="/web/static/lib/es5-shim/es5-shim.min.js"></script>
         <script type="text/javascript" src="/web/static/lib/underscore/underscore.js"></script>
@@ -144,7 +144,6 @@
         <t t-call="web._assets_backend_helpers"/>
 
         <t t-call="web._assets_bootstrap"/>
-        <link rel="stylesheet" type="text/scss" href="/web/static/lib/tempusdominus/tempusdominus.scss"/>
 
         <link rel="stylesheet" type="text/css" href="/base/static/src/css/modules.css"/>
 
@@ -317,7 +316,6 @@
         <t t-call="web._assets_frontend_helpers"/>
 
         <t t-call="web._assets_bootstrap"/>
-        <link rel="stylesheet" type="text/scss" href="/web/static/lib/tempusdominus/tempusdominus.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/navbar_mobile.scss"/>
 
         <script type="text/javascript" src="/web/static/src/js/services/session.js"></script>
@@ -433,6 +431,8 @@
         <t t-call-assets="web.assets_common" t-css="false"/>
         <t t-call-assets="web.assets_backend" t-css="false"/>
 
+        <script type="text/javascript" src="/web/static/tests/helpers/qunit_asserts.js"></script>
+
         <!-- add lazy-loaded libs to make tests synchronous -->
         <link rel="stylesheet" href="/web/static/lib/fullcalendar/css/fullcalendar.css"/>
         <script type="text/javascript" src="/web/static/lib/fullcalendar/js/fullcalendar.js"></script>
@@ -488,6 +488,15 @@
             }
         </style>
 
+        <script type="text/javascript" src="/web/static/tests/helpers/test_utils_create.js"></script>
+        <script type="text/javascript" src="/web/static/tests/helpers/test_utils_dom.js"></script>
+        <script type="text/javascript" src="/web/static/tests/helpers/test_utils_fields.js"></script>
+        <script type="text/javascript" src="/web/static/tests/helpers/test_utils_form.js"></script>
+        <script type="text/javascript" src="/web/static/tests/helpers/test_utils_graph.js"></script>
+        <script type="text/javascript" src="/web/static/tests/helpers/test_utils_kanban.js"></script>
+        <script type="text/javascript" src="/web/static/tests/helpers/test_utils_mock.js"></script>
+        <script type="text/javascript" src="/web/static/tests/helpers/test_utils_modal.js"></script>
+        <script type="text/javascript" src="/web/static/tests/helpers/test_utils_pivot.js"></script>
         <script type="text/javascript" src="/web/static/tests/helpers/test_utils.js"></script>
         <script type="text/javascript" src="/web/static/tests/helpers/mock_server.js"></script>
 
@@ -582,6 +591,7 @@
                                     define.call(this, 'web.config.patch', function (require) {
                                         var config = require('web.config');
                                         config.device.isMobile = true;
+                                        config.device.size_class = config.device.SIZES.XS;
                                     });
                                 }
                             };
@@ -666,6 +676,16 @@
                         display: inherit;
                     }
                 </style>
+
+                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_create.js"></script>
+                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_dom.js"></script>
+                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_fields.js"></script>
+                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_form.js"></script>
+                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_graph.js"></script>
+                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_kanban.js"></script>
+                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_mock.js"></script>
+                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_modal.js"></script>
+                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_pivot.js"></script>
                 <script type="text/javascript" src="/web/static/tests/helpers/test_utils.js"></script>
                 <script type="text/javascript" src="/web/static/tests/helpers/mock_server.js"></script>
 

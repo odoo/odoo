@@ -3,14 +3,21 @@
 # * base_import
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2018
+# Goh Gangtai <gangtai.goh@gmail.com>, 2018
+# heejun lee <tkm01b@gmail.com>, 2018
+# Link Up링크업 <linkup.way@gmail.com>, 2018
+# Seongseok Shin <shinss61@hotmail.com>, 2018
+# Linkup <link-up@naver.com>, 2019
+# JH CHOI <hwangtog@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"POT-Creation-Date: 2018-10-02 10:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:16+0000\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2019\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,255 +27,376 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:535
+#: code:addons/base_import/static/src/js/import_action.js:612
 #, python-format
-msgid "(%d more)"
-msgstr ""
+msgid "%d records were successfully imported"
+msgstr "%d 레코드를 성공적으로 가져 왔습니다."
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:309
+#: code:addons/base_import/static/src/js/import_action.js:647
+#, python-format
+msgid "(%d more)"
+msgstr "(%d 추가)"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:378
 #, python-format
 msgid ""
 "A single column was found in the file, this often means the file separator "
 "is incorrect"
-msgstr ""
+msgstr "파일에 단 하나의 열만 있는데, 이는 보통 파일 구분자가 잘못되었음을 의미합니다."
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:89
+#: code:addons/base_import/static/src/js/import_action.js:582
+#, python-format
+msgid ""
+"An unknown issue occurred during import (possibly lost connection, data "
+"limit exceeded or memory limits exceeded). Please retry in case the issue is"
+" transient. If the issue still occurs, try to split the file rather than "
+"import it at once."
+msgstr ""
+"가져 오기 과정 중에 알 수 없는 문제가 발생했습니다(연결 오류, 데이터 초과 제한 또는 메모리 초과 제한). 문제가 일시적인 경우 다시"
+" 시도하십시오. 문제가 계속 발생하면 즉시 파일을 가져 오는 대신 파일을 분할 해 보십시오."
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base
+msgid "Base"
+msgstr "기본"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_import
+msgid "Base Import"
+msgstr "기본 가져오기"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_mapping
+msgid "Base Import Mapping"
+msgstr "기본 가져 오기 매핑"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:102
 #, python-format
 msgid "Cancel"
 msgstr "취소"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:596
+#: code:addons/base_import/models/base_import.py:693
 #, python-format
 msgid "Column %s contains incorrect values (value: %s)"
-msgstr ""
+msgstr "%s 열에 잘못된 값이 포함되어 있습니다(값 : %s)."
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:618
+#: code:addons/base_import/models/base_import.py:788
 #, python-format
 msgid "Column %s contains incorrect values. Error in line %d: %s"
-msgstr ""
+msgstr "%s 열에 잘못된 값이 포함되어 있습니다. 라인 %d : %s에 오류가 있습니다."
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
+msgid "Column Name"
+msgstr "열 이름"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:176
-#: code:addons/base_import/static/src/js/import_action.js:187
-#: code:addons/base_import/static/src/js/import_action.js:194
-#: code:addons/base_import/static/src/js/import_action.js:206
+#: code:addons/base_import/static/src/js/import_action.js:211
+#: code:addons/base_import/static/src/js/import_action.js:228
 #, python-format
 msgid "Comma"
-msgstr ""
+msgstr "콤마"
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_import_create_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_create_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly_create_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_readonly_create_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_required_create_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_states_create_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_stillreadonly_create_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_create_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_related_create_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_create_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_related_create_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child_create_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_create_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_create_uid
+#: code:addons/base_import/models/base_import.py:825
+#, python-format
+msgid ""
+"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
+"%(error)s"
+msgstr ""
+"URL을 검색 할 수 없습니다 : %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:108
+#, python-format
+msgid "Create if doesn't exist"
+msgstr "존재하지 않는 경우 새로 만들기"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__create_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__create_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char__create_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly__create_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_readonly__create_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_required__create_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_states__create_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_stillreadonly__create_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__create_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_float__create_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o__create_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_related__create_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required__create_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_related__create_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m__create_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__create_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__create_uid
 msgid "Created by"
 msgstr "작성자"
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_import_create_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_create_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly_create_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_readonly_create_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_required_create_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_states_create_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_stillreadonly_create_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_create_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_related_create_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_create_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_related_create_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child_create_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_create_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_create_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__create_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__create_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char__create_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly__create_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_readonly__create_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_required__create_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_states__create_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_stillreadonly__create_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__create_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_float__create_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o__create_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_related__create_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required__create_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_related__create_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m__create_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__create_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__create_date
 msgid "Created on"
 msgstr "작성일"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:145
-#: code:addons/base_import/models/base_import.py:150
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:107
+#, python-format
+msgid ""
+"Creates new records if they can't be found (instead of failing to import). "
+"Note that the value in the column will be used as the new record's 'name', "
+"and assumes this is sufficient to create the record."
+msgstr ""
+"실패한 가져 오기 대신 새 레코드를 찾을 수 없는 경우 새 레코드를 만듭니다. 열의 값은 새 레코드의 '이름'이 될 것이며 레코드를 "
+"작성하기에 충분하다고 가정합니다."
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__currency_id
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_float__currency_id
+msgid "Currency"
+msgstr "통화"
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:207
+#: code:addons/base_import/models/base_import.py:212
 #, python-format
 msgid "Database ID"
-msgstr ""
+msgstr "데이터베이스 ID"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:55
+#: code:addons/base_import/static/src/js/import_action.js:83
 #, python-format
 msgid "Date Format:"
-msgstr ""
+msgstr "날짜 형식 :"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:56
+#: code:addons/base_import/static/src/js/import_action.js:84
 #, python-format
 msgid "Datetime Format:"
-msgstr ""
+msgstr "날짜시간 형식 :"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:58
+#: code:addons/base_import/static/src/js/import_action.js:88
 #, python-format
 msgid "Decimal Separator:"
-msgstr ""
-
-#. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_import_display_name
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_display_name
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly_display_name
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_readonly_display_name
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_required_display_name
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_states_display_name
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_stillreadonly_display_name
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_display_name
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_related_display_name
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_display_name
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_related_display_name
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child_display_name
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_display_name
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_display_name
-msgid "Display Name"
-msgstr "표시 이름"
+msgstr "소수 구분 기호 :"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:353
+#: code:addons/base_import/static/src/xml/base_import.xml:56
+#, python-format
+msgid "Defer parent/child computation"
+msgstr "지연 상속 계산"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__display_name
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char__display_name
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly__display_name
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_readonly__display_name
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_required__display_name
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_states__display_name
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_stillreadonly__display_name
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__display_name
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_float__display_name
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o__display_name
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_related__display_name
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required__display_name
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_related__display_name
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m__display_name
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__display_name
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__display_name
+msgid "Display Name"
+msgstr "제목"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:445
 #, python-format
 msgid "Don't import"
-msgstr ""
+msgstr "가져오지 않음"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:195
-#: code:addons/base_import/static/src/js/import_action.js:213
+#: code:addons/base_import/static/src/js/import_action.js:229
 #, python-format
 msgid "Dot"
-msgstr ""
+msgstr "점"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:50
+#: code:addons/base_import/static/src/xml/base_import.xml:87
+#, python-format
+msgid "Download"
+msgstr "다운로드"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__dt
+msgid "Dt"
+msgstr "Dt"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:78
 #, python-format
 msgid "Encoding:"
-msgstr ""
+msgstr "인코딩 :"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:620
+#: code:addons/base_import/models/base_import.py:790
 #, python-format
 msgid "Error Parsing Date [%s:L%d]: %s"
-msgstr ""
+msgstr "날짜 구문 오류 [%s:L%d]: %s"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:227
+#: code:addons/base_import/models/base_import.py:289
 #, python-format
 msgid "Error cell found while reading XLS/XLSX file: %s"
-msgstr ""
+msgstr "XLS/XLSX 파일을 읽는 중에 오류 셀을 찾았습니다 : %s"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:512
+#: code:addons/base_import/static/src/js/import_action.js:624
 #, python-format
 msgid "Everything seems valid."
-msgstr ""
+msgstr "사용가능합니다."
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:110
-#: code:addons/base_import/models/base_import.py:144
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:82
+#, python-format
+msgid "Excel files are recommended as fields formatting is automatic."
+msgstr "자동으로 포맷을 생성하는데에 엑셀파일을 추천합니다."
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:169
+#: code:addons/base_import/models/base_import.py:206
 #, python-format
 msgid "External ID"
-msgstr ""
+msgstr "외부 ID"
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_import_file
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__field_name
+msgid "Field Name"
+msgstr "필드명"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__file
 msgid "File"
-msgstr ""
+msgstr "파일"
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_import_file_name
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__file_name
 msgid "File Name"
-msgstr ""
+msgstr "파일명"
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_import_file_type
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__file_type
 msgid "File Type"
-msgstr ""
+msgstr "파일 유형"
 
 #. module: base_import
-#: model:ir.model.fields,help:base_import.field_base_import_import_file
-msgid "File to check and/or import, raw binary (not base64)"
-msgstr ""
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:115
+#: code:addons/base_import/models/base_import.py:808
+#: code:addons/base_import/models/base_import.py:814
 #, python-format
-msgid "For CSV files, the issue could be an incorrect encoding."
-msgstr ""
+msgid "File size exceeds configured maximum (%s bytes)"
+msgstr "파일 크기가 설정된 최대 값을 초과합니다 (%s bytes)"
+
+#. module: base_import
+#: model:ir.model.fields,help:base_import.field_base_import_import__file
+msgid "File to check and/or import, raw binary (not base64)"
+msgstr "raw 바이너리(base64 아님)로 가져오거나 검사할 파일"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:559
+#: code:addons/base_import/static/src/xml/base_import.xml:137
+#, python-format
+msgid "For CSV files, you may need to select the correct separator."
+msgstr "CSV 파일의 경우 올바른 구분 기호를 선택해야 사용할 수 있습니다."
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:13
+#, python-format
+msgid "Formatting Options…"
+msgstr "포맷 옵션 ..."
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:671
 #, python-format
 msgid "Get all possible values"
-msgstr ""
+msgstr "가능한 값을 모두 가져옵니다"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:11
-#, python-format
-msgid "Help"
-msgstr ""
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:546
+#: code:addons/base_import/static/src/js/import_action.js:658
 #, python-format
 msgid "Here are the possible values:"
-msgstr ""
+msgstr "가능한 값은 다음과 같습니다 :"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:116
+#: code:addons/base_import/static/src/xml/base_import.xml:138
 #, python-format
 msgid "Here is the start of the file we could not import:"
-msgstr ""
+msgstr "가져오지 못한 파일의 시작입니다 : "
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_import_id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly_id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_readonly_id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_required_id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_states_id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_stillreadonly_id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_related_id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_related_id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child_id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_id
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__id
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__id
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char__id
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly__id
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_readonly__id
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_required__id
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_states__id
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_stillreadonly__id
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__id
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_float__id
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o__id
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_related__id
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required__id
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_related__id
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m__id
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__id
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__id
 msgid "ID"
 msgstr "ID"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:73
+#: code:addons/base_import/static/src/xml/base_import.xml:67
 #, python-format
 msgid ""
 "If the file contains\n"
@@ -276,361 +404,450 @@ msgid ""
 "                field corresponding to the column. This makes imports\n"
 "                simpler especially when the file has many columns."
 msgstr ""
+"만약 파일이 컬럼 이름을 포함하고 있으면\n"
+"                     Odoo는 컬럼 이름에 대응하는 필드를 자동으로 검출합니다.\n"
+"                     이것은 가져오기를 많은 컬럼을 가진 파일을 다룰 때 간편하게 해줍니다"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:60
+#: code:addons/base_import/static/src/xml/base_import.xml:45
 #, python-format
 msgid ""
 "If the model uses openchatter, history tracking                             "
 "will set up subscriptions and send notifications"
 "                             during the import, but lead to a slower import."
 msgstr ""
+"모델이 openchatter를 사용하면 기록 추적은 가져오기 동안에 가입을 설정하고 알림을 전송할 수 있지만 가져오기를 느리게 합니다."
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:88
-#: code:addons/base_import/static/src/xml/base_import.xml:147
+#: code:addons/base_import/static/src/xml/base_import.xml:54
+#, python-format
+msgid ""
+"If the model uses parent/child relations, computing the                     "
+"parent / child relation occurs on every line, and lead to a slower import."
+"                     Defering it can speed up import."
+msgstr ""
+"모델에서 상속 관계를 사용하는 경우 각 행은 상속 관계를 계산하므로 가져 오기 속도가 느려집니다. 그것을 연기하면 가져 오기 속도를 높일"
+" 수 있습니다."
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:98
+#: code:addons/base_import/static/src/xml/base_import.xml:169
 #, python-format
 msgid "Import"
-msgstr ""
+msgstr "가져오기"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:111
+#: code:addons/base_import/static/src/xml/base_import.xml:91
+#, python-format
+msgid "Import FAQ"
+msgstr "FAQ 가져오기"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:140
 #, python-format
 msgid "Import a File"
-msgstr ""
+msgstr "파일 가져오기"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:114
+#: code:addons/base_import/static/src/js/import_action.js:612
 #, python-format
-msgid "Import preview failed due to:"
-msgstr ""
+msgid "Import completed"
+msgstr "가져오기를 완료했습니다"
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_import___last_update
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char___last_update
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly___last_update
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_readonly___last_update
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_required___last_update
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_states___last_update
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_stillreadonly___last_update
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o___last_update
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_related___last_update
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required___last_update
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_related___last_update
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m___last_update
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child___last_update
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview___last_update
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:136
+#, python-format
+msgid "Import preview failed due to:"
+msgstr "가져오기 미리보기를 실패했습니다:"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:579
+#, python-format
+msgid ""
+"Import timed out. Please retry. If you still encounter this issue, the file "
+"may be too big for the system's configuration, try to split it (import less "
+"records per file)."
+msgstr ""
+"가져 오기 시간이 초과되었습니다. 다시 시도하십시오. 이 문제가 계속 발생하면 시스템 설정에 비해 파일 크기가 너무 클 수 있으므로 파일"
+" (파일 당 더 적은 레코드 가져 오기)을 분할 해보십시오."
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_import____last_update
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping____last_update
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char____last_update
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly____last_update
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_readonly____last_update
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_required____last_update
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_states____last_update
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_stillreadonly____last_update
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex____last_update
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_float____last_update
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o____last_update
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_related____last_update
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required____last_update
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_related____last_update
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m____last_update
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child____last_update
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview____last_update
 msgid "Last Modified on"
 msgstr "최근 수정"
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_import_write_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly_write_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_readonly_write_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_required_write_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_states_write_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_stillreadonly_write_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_write_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_related_write_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_related_write_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_write_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_write_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child_write_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_write_uid
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_write_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__write_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__write_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char__write_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly__write_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_readonly__write_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_required__write_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_states__write_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_stillreadonly__write_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__write_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_float__write_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o__write_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_related__write_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required__write_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_related__write_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m__write_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__write_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__write_uid
 msgid "Last Updated by"
 msgstr "최근 갱신한 사람"
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_import_write_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly_write_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_readonly_write_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_required_write_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_states_write_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_stillreadonly_write_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_write_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_related_write_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_related_write_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_write_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_write_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child_write_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_write_date
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_write_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__write_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__write_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char__write_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly__write_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_readonly__write_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_required__write_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_states__write_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_stillreadonly__write_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__write_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_float__write_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o__write_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_related__write_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required__write_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_related__write_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m__write_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__write_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__write_date
 msgid "Last Updated on"
 msgstr "최근 갱신 날짜"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:19
+#: code:addons/base_import/static/src/xml/base_import.xml:101
 #, python-format
 msgid "Load File"
-msgstr ""
+msgstr "파일 불러오기"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:56
+#: code:addons/base_import/static/src/js/import_action.js:364
+#, python-format
+msgid "Load New File"
+msgstr "새로운 파일 불러오기"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:41
 #, python-format
 msgid "Map your columns to import"
-msgstr ""
+msgstr "가져올 행을 연동합니다"
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_import_res_model
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__res_model
 msgid "Model"
-msgstr ""
+msgstr "모델"
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_name
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__name
 msgid "Name"
-msgstr ""
+msgstr "이름"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:15
+#: code:addons/base_import/static/src/xml/base_import.xml:85
 #, python-format
-msgid "No file chosen..."
-msgstr ""
+msgid "Need Help?"
+msgstr "도움이 필요하세요?"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:418
+#: code:addons/base_import/static/src/js/import_action.js:231
+#, python-format
+msgid "No Separator"
+msgstr "구분 기호 없음"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:513
 #, python-format
 msgid "Normal Fields"
-msgstr ""
+msgstr "일반 필드"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:30
-#, python-format
-msgid "Options…"
-msgstr ""
-
-#. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_othervalue
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__othervalue
 msgid "Other Variable"
-msgstr ""
+msgstr "기타 변수"
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child_parent_id
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__parent_id
 msgid "Parent"
-msgstr ""
+msgstr "상위"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:419
+#: code:addons/base_import/static/src/js/import_action.js:514
 #, python-format
 msgid "Relation Fields"
-msgstr ""
+msgstr "관련 필드"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:24
+#: code:addons/base_import/static/src/xml/base_import.xml:100
 #, python-format
 msgid "Reload File"
-msgstr ""
+msgstr "파일 다시 불러오기"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__res_model
+msgid "Res Model"
+msgstr "Res 모델"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:11
+#: code:addons/base_import/static/src/xml/base_import.xml:79
 #, python-format
 msgid "Select a CSV or Excel file to import."
-msgstr ""
+msgstr "CSV 또는 엑셀파일을 선택하세요."
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:177
+#: code:addons/base_import/static/src/js/import_action.js:212
 #, python-format
 msgid "Semicolon"
-msgstr ""
+msgstr "세미콜론"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:51
+#: code:addons/base_import/static/src/js/import_action.js:79
 #, python-format
 msgid "Separator:"
-msgstr ""
+msgstr "구분 기호 :"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:72
+#: code:addons/base_import/static/src/xml/base_import.xml:66
 #, python-format
 msgid "Show fields of relation fields (advanced)"
-msgstr ""
+msgstr "관계 필드(고급)의 필드 표시"
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_somevalue
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__somevalue
 msgid "Some Value"
-msgstr ""
+msgstr "어떤 값"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:179
+#: code:addons/base_import/static/src/js/import_action.js:214
 #, python-format
 msgid "Space"
-msgstr ""
+msgstr "스페이스 바"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:178
+#: code:addons/base_import/static/src/js/import_action.js:213
 #, python-format
 msgid "Tab"
-msgstr ""
+msgstr "탭"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:86
+#: code:addons/base_import/static/src/xml/base_import.xml:99
 #, python-format
 msgid "Test Import"
-msgstr ""
+msgstr "불러오기 테스트"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_preview
+msgid "Tests : Base Import Model Preview"
+msgstr "테스트 : 기본 가져 오기 모델 미리보기"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_char
+msgid "Tests : Base Import Model, Character"
+msgstr "테스트 : 기본 가져 오기 모델, 문자"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_char_noreadonly
+msgid "Tests : Base Import Model, Character No readonly"
+msgstr "테스트 : 기본 가져 오기 모델, 문자는 읽기 전용이 아닙니다."
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_char_readonly
+msgid "Tests : Base Import Model, Character readonly"
+msgstr "테스트 : 기본 가져 오기 모델, 문자 읽기 전용"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_char_required
+msgid "Tests : Base Import Model, Character required"
+msgstr "테스트 : 기본 가져 오기 모델, 필요한 문자"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_char_states
+msgid "Tests : Base Import Model, Character states"
+msgstr "테스트 : 기본 가져 오기 모델, 문자 상태"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_char_stillreadonly
+msgid "Tests : Base Import Model, Character still readonly"
+msgstr "테스트 : 기본 가져 오기 모델, 문자는 여전히 읽기 전용입니다."
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_m2o
+msgid "Tests : Base Import Model, Many to One"
+msgstr "테스트 : 기본 가져 오기 모델, 다대일"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_m2o_related
+msgid "Tests : Base Import Model, Many to One related"
+msgstr "테스트 : 기본 가져 오기 모델, 다대일 관계"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required
+msgid "Tests : Base Import Model, Many to One required"
+msgstr "테스트 : 기본 가져 오기 모델, 다대일 필요"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required_related
+msgid "Tests : Base Import Model, Many to One required related"
+msgstr "테스트 : 기본 가져 오기 모델, 다대일 필수 상관 관계"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_o2m
+msgid "Tests : Base Import Model, One to Many"
+msgstr "테스트 : 기본 가져 오기 모델, 일대다"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_o2m_child
+msgid "Tests : Base Import Model, One to Many child"
+msgstr "테스트 : 기본 가져 오기 모델, 일대다 자식"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_complex
+msgid "Tests: Base Import Model Complex"
+msgstr "테스트 : 기본 가져 오기 모델 컴플렉스"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_float
+msgid "Tests: Base Import Model Float"
+msgstr "테스트 : 기본 가져 오기 모델 float"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:52
+#: code:addons/base_import/static/src/js/import_action.js:80
 #, python-format
 msgid "Text Delimiter:"
-msgstr ""
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:68
-#, python-format
-msgid ""
-"The first row\n"
-"                 contains the label of the column"
-msgstr ""
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:57
-#, python-format
-msgid "Thousands Separator:"
-msgstr ""
+msgstr "텍스트 구분 기호 :"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:62
 #, python-format
-msgid "Track history during import"
+msgid ""
+"The first row\n"
+"                 contains the label of the column"
 msgstr ""
+"파일의 첫 번째 줄에는 \n"
+"                열 라벨이 포함되어 있습니다."
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:192
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:87
+#, python-format
+msgid "Thousands Separator:"
+msgstr "천 단위 구분 기호 :"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:47
+#, python-format
+msgid "Track history during import"
+msgstr "가져올 때 가져 오기 내역 추적"
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:254
 #, python-format
 msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
-msgstr ""
+msgstr "\"{extension}\" 파일을 로드할 수 없습니다 : Python 모듈 \"{modname}\"이 필요합니다"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:193
+#: code:addons/base_import/models/base_import.py:255
 #, python-format
 msgid ""
 "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
-msgstr ""
+msgstr "지원되지 않는 파일 형식 \"{}\", 가져 오기는 CSV, ODS, XLS 및 XLSX 만 지원합니다."
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly_value
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_readonly_value
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_required_value
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_states_value
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_stillreadonly_value
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_value
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_related_value
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_related_value
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_value
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_value
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child_value
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_value
+#: model:ir.model,name:base_import.model_res_users
+msgid "Users"
+msgstr "사용자"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char__value
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly__value
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_readonly__value
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_required__value
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_states__value
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_stillreadonly__value
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_float__value
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o__value
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_related__value
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required__value
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_related__value
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m__value
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__value
 msgid "Value"
-msgstr ""
+msgstr "값"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:534
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_float__value2
+msgid "Value2"
+msgstr "값2"
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:760
+#, python-format
+msgid ""
+"You can not import images via URL, check with your administrator or support "
+"for the reason."
+msgstr "URL을 통해 이미지를 가져올 수 없으므로 관리자에게 문의하십시오."
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:631
 #, python-format
 msgid "You must configure at least one field to import"
-msgstr ""
+msgstr " 가져올 필드를 하나 이상 구성해야합니다."
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:529
+#: code:addons/base_import/static/src/js/import_action.js:641
 #, python-format
 msgid "at row %d"
-msgstr ""
-
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_import
-msgid "base_import.import"
-msgstr ""
-
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_char
-msgid "base_import.tests.models.char"
-msgstr ""
-
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_char_noreadonly
-msgid "base_import.tests.models.char.noreadonly"
-msgstr ""
-
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_char_readonly
-msgid "base_import.tests.models.char.readonly"
-msgstr ""
-
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_char_required
-msgid "base_import.tests.models.char.required"
-msgstr ""
-
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_char_states
-msgid "base_import.tests.models.char.states"
-msgstr ""
-
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_char_stillreadonly
-msgid "base_import.tests.models.char.stillreadonly"
-msgstr ""
-
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_m2o
-msgid "base_import.tests.models.m2o"
-msgstr ""
-
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_m2o_related
-msgid "base_import.tests.models.m2o.related"
-msgstr ""
-
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required
-msgid "base_import.tests.models.m2o.required"
-msgstr ""
-
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required_related
-msgid "base_import.tests.models.m2o.required.related"
-msgstr ""
-
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_o2m
-msgid "base_import.tests.models.o2m"
-msgstr ""
-
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_o2m_child
-msgid "base_import.tests.models.o2m.child"
-msgstr ""
-
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_preview
-msgid "base_import.tests.models.preview"
-msgstr ""
+msgstr "%d 행에"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:531
+#: code:addons/base_import/static/src/js/import_action.js:643
 #, python-format
 msgid "between rows %d and %d"
-msgstr ""
+msgstr "%d 과 %d 행 사이에"

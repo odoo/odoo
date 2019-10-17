@@ -17,7 +17,7 @@ class report_product_pricelist(models.AbstractModel):
         quantities = self._get_quantity(data)
         return {
             'doc_ids': data.get('ids', data.get('active_ids')),
-            'doc_model': 'hr.contribution.register',
+            'doc_model': 'product.pricelist',
             'docs': products,
             'data': dict(
                 data,
@@ -28,7 +28,8 @@ class report_product_pricelist(models.AbstractModel):
         }
 
     def _get_quantity(self, data):
-        return sorted([data['form'][key] for key in data['form'] if key.startswith('qty') and data['form'][key]])
+        form = data and data.get('form') or {}
+        return sorted([form[key] for key in form if key.startswith('qty') and form[key]])
 
     def _get_categories(self, pricelist, products, quantities):
         categ_data = []

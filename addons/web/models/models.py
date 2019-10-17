@@ -40,11 +40,14 @@ class Base(models.AbstractModel):
         records_values = self.search_read(domain or [], [progress_bar['field'], group_by])
 
         data = {}
+        field_type = self._fields[group_by].type
+        if field_type == 'selection':
+            selection_labels = dict(self.fields_get()[group_by]['selection'])
+
         for record_values in records_values:
             group_by_value = record_values[group_by]
 
             # Again, imitating what _read_group_format_result and _read_group_prepare_data do
-            field_type = self._fields[group_by].type
             if group_by_value and field_type in ['date', 'datetime']:
                 locale = self._context.get('lang') or 'en_US'
                 group_by_value = fields.Datetime.to_datetime(group_by_value)
@@ -61,7 +64,8 @@ class Base(models.AbstractModel):
                         locale=locale)
 
             if field_type == 'selection':
-                group_by_value = dict(self.fields_get()[group_by]['selection'])[group_by_value]
+                group_by_value = selection_labels[group_by_value] \
+                    if group_by_value in selection_labels else False
 
             if type(group_by_value) == tuple:
                 group_by_value = group_by_value[1] # FIXME should use technical value (0)

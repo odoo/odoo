@@ -18,7 +18,8 @@ class SaleOrderLine(models.Model):
         if product_uom_id != product_id.uom_id:
             purchase_price = product_id.uom_id._compute_price(purchase_price, product_uom_id)
         price = frm_cur._convert(
-            purchase_price, to_cur, order_id.company_id, order_id.date_order or fields.Date.today(), round=False)
+            purchase_price, to_cur, order_id.company_id or self.env.user.company_id,
+            order_id.date_order or fields.Date.today(), round=False)
         return price
 
     @api.model
@@ -46,7 +47,7 @@ class SaleOrderLine(models.Model):
 
         # Calculation of the margin for programmatic creation of a SO line. It is therefore not
         # necessary to call product_id_change_margin manually
-        if 'purchase_price' not in vals:
+        if 'purchase_price' not in vals and ('display_type' not in vals or not vals['display_type']):
             order_id = self.env['sale.order'].browse(vals['order_id'])
             product_id = self.env['product.product'].browse(vals['product_id'])
             product_uom_id = self.env['uom.uom'].browse(vals['product_uom'])
@@ -60,14 +61,6 @@ class SaleOrderLine(models.Model):
         for line in self:
             currency = line.order_id.pricelist_id.currency_id
             price = line.purchase_price
-            if not price:
-                from_cur = line.env.user.company_id.currency_id
-                price = from_cur._convert(
-                    line.product_id.standard_price,
-                    currency,
-                    line.order_id.company_id or self.env.user.company_id,
-                    line.order_id.date_order or fields.Date.today(), round=False)
-
             line.margin = currency.round(line.price_subtotal - (price * line.product_uom_qty))
 
 

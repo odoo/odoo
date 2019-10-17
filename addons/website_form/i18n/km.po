@@ -6,13 +6,15 @@
 # Sengtha Chay <sengtha@gmail.com>, 2018
 # Chan Nath <channath@gmail.com>, 2018
 # AN Souphorn <ansouphorn@gmail.com>, 2018
+# Lux Sok <sok.lux@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-09-21 13:18+0000\n"
-"Last-Translator: AN Souphorn <ansouphorn@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-01-09 10:32+0000\n"
+"PO-Revision-Date: 2018-08-24 09:34+0000\n"
+"Last-Translator: Lux Sok <sok.lux@gmail.com>, 2019\n"
 "Language-Team: Khmer (https://www.transifex.com/odoo/teams/41243/km/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,51 +34,60 @@ msgstr "'%s' គឺជាកាលបរិច្ឆេតមិនត្រឹ�
 #: code:addons/website_form/static/src/js/website_form.js:225
 #, python-format
 msgid "'%s' is not a correct datetime"
-msgstr ""
+msgstr "'%s''' មិនមែនជាពេលវេលាត្រឹមត្រូវទេ"
 
 #. module: website_form
 #: code:addons/website_form/controllers/main.py:229
 #, python-format
 msgid "<p>Attached files : </p>"
+msgstr "<p>ឯកសារ​ភ្ជាប់៖ </p>"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
+"specific.\" groups=\"website.group_multi_website\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
+"specific.\" groups=\"website.group_multi_website\"/>"
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_access
 msgid "Allowed to use in forms"
-msgstr ""
+msgstr "អនុញ្ញាតឱ្យប្រើក្នុងទម្រង់"
 
 #. module: website_form
 #. openerp-web
 #: code:addons/website_form/static/src/xml/website_form.xml:21
 #, python-format
 msgid "An error has occured, the form has not been sent."
-msgstr ""
+msgstr "កំហុសមួយបានកើតឡើង ទម្រង់មិនត្រូវបានផ្ញើទេ។"
 
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model_fields__website_form_blacklisted
 msgid "Blacklist this field for web forms"
-msgstr ""
+msgstr "ដាក់ក្នុងបញ្ជីខ្មៅសម្រាប់ទម្រង់គេហទំព័រ"
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model_fields__website_form_blacklisted
 msgid "Blacklisted in web forms"
-msgstr ""
+msgstr "បានចុះក្នុងបញ្ជីខ្មៅនៅក្នុងទម្រង់គេហទំព័រ"
 
 #. module: website_form
 #: model:ir.model,name:website_form.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "កំណត់រចនាសម្ព័ន្ធ"
 
 #. module: website_form
 #: code:addons/website_form/controllers/main.py:54
 #, python-format
 msgid "Custom infos"
-msgstr ""
+msgstr "ព័ត៌មានផ្ទាល់ខ្លួន"
 
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model__website_form_access
 msgid "Enable the form builder feature for this model."
-msgstr ""
+msgstr "បើកដំណើរការលក្ខណៈពិសេសអ្នកបង្កើតទម្រង់សម្រាប់ម៉ូតនេះ។ "
 
 #. module: website_form
 #. openerp-web
@@ -89,12 +100,12 @@ msgstr "កំហុស"
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_default_field_id
 msgid "Field for custom form data"
-msgstr ""
+msgstr "ផ្នែកសម្រាប់ទិន្នន័យសំណុំបែបបទផ្ទាល់ខ្លួន"
 
 #. module: website_form
 #: model:ir.model,name:website_form.model_ir_model_fields
 msgid "Fields"
-msgstr ""
+msgstr "ឯកសារ"
 
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model__website_form_label
@@ -102,60 +113,65 @@ msgid ""
 "Form action label. Ex: crm.lead could be 'Send an e-mail' and project.issue "
 "could be 'Create an Issue'."
 msgstr ""
+"ស្លាកសកម្មភាពទម្រង់។ ឧទាហរណ៍៖ crm.lead អាចជា 'ផ្ញើអ៊ីមែល' ហើយ project.issue "
+"អាចជា 'បង្កើតបញ្ហា' ។"
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_label
 msgid "Label for form action"
-msgstr ""
+msgstr "ស្លាកសម្រាប់សកម្មភាពទម្រង់ "
 
 #. module: website_form
 #: code:addons/website_form/controllers/main.py:55
 #, python-format
 msgid "Metadata"
-msgstr ""
+msgstr "ទិន្នន័យមេតា"
 
 #. module: website_form
 #: model:ir.model,name:website_form.model_ir_model
 msgid "Models"
-msgstr ""
+msgstr "ម៉ូត"
 
 #. module: website_form
 #. openerp-web
 #: code:addons/website_form/static/src/xml/website_form.xml:14
 #, python-format
 msgid "Please fill in the form correctly."
-msgstr ""
+msgstr "សូមបំពេញទម្រង់បែបបទអោយបានត្រឹមត្រូវ។"
 
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model__website_form_default_field_id
 msgid ""
 "Specify the field which will contain meta and custom form fields datas."
 msgstr ""
+"បញ្ជាក់វាលដែលនឹងមានសំណុំទិន្នន័យមេតានិងសំណុំបែបបទសំណុំបែបបទផ្ទាល់ខ្លួន។"
 
 #. module: website_form
 #. openerp-web
 #: code:addons/website_form/static/src/xml/website_form.xml:7
 #, python-format
 msgid "Success"
-msgstr ""
+msgstr "ជោគជ័យ"
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_res_config_settings__website_form_enable_metadata
 #: model:ir.model.fields,field_description:website_form.field_website__website_form_enable_metadata
 msgid "Technical data on contact form"
-msgstr ""
+msgstr "ទិន្នន័យបច្ចេកទេសលើសំណុំបែបបទទំនាក់ទំនង"
 
 #. module: website_form
 #. openerp-web
 #: code:addons/website_form/static/src/xml/website_form.xml:7
 #, python-format
 msgid "The form has been sent successfully."
-msgstr ""
+msgstr "សំណុំបែបបទត្រូវបានផ្ញើដោយជោគជ័យ។ "
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.res_config_settings_view_form
 msgid "Track metadata (IP, User Agent, ...) on your Website Forms"
 msgstr ""
+"តាមដានទិន្នន័យមេតា (អាយភីភ្នាក់ងារភ្នាក់ងារអ្នកប្រើ ... ) "
+"នៅលើទម្រង់គេហទំព័ររបស់អ្នក។"
 
 #. module: website_form
 #: model:ir.model,name:website_form.model_website
@@ -166,4 +182,4 @@ msgstr "វែបសាយ"
 #: model:ir.model.fields,help:website_form.field_res_config_settings__website_form_enable_metadata
 #: model:ir.model.fields,help:website_form.field_website__website_form_enable_metadata
 msgid "You can choose to log technical data like IP, User Agent ,..."
-msgstr ""
+msgstr "អ្នកអាចជ្រើសរើសបញ្ចូលទិន្នន័យបច្ចេកទេសដូចជាIP ភ្នាក់ងារអ្នកប្រើ ..."

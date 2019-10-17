@@ -145,6 +145,7 @@ TRANSLATED_ELEMENTS = {
 TRANSLATED_ATTRS = {
     'string', 'help', 'sum', 'avg', 'confirm', 'placeholder', 'alt', 'title', 'aria-label',
     'aria-keyshortcuts', 'aria-placeholder', 'aria-roledescription', 'aria-valuetext',
+    'value_label',
 }
 
 TRANSLATED_ATTRS = TRANSLATED_ATTRS | {'t-attf-' + attr for attr in TRANSLATED_ATTRS}
@@ -162,7 +163,7 @@ def translate_xml_node(node, callback, parse, serialize):
     """
 
     def nonspace(text):
-        return bool(text) and not text.isspace()
+        return bool(text) and len(re.sub(r'\W+', '', text)) > 1
 
     def concat(text1, text2):
         return text2 if text1 is None else text1 + (text2 or "")
@@ -254,7 +255,10 @@ def translate_xml_node(node, callback, parse, serialize):
             # complete result and return it
             append_content(result, todo)
             result.tail = node.tail
-            has_text = todo_has_text or nonspace(result.text) or nonspace(result.tail)
+            has_text = (
+                todo_has_text or nonspace(result.text) or nonspace(result.tail)
+                or any((key in TRANSLATED_ATTRS and val) for key, val in result.attrib.items())
+            )
             return (has_text, result)
 
         # translate the content of todo and append it to result
@@ -505,7 +509,7 @@ class PoFile(object):
         return self.lines_count - len(self.lines)
 
     def next(self):
-        trans_type = name = res_id = source = trad = None
+        trans_type = name = res_id = source = trad = module = None
         if self.extra_lines:
             trans_type, name, res_id, source, trad, comments = self.extra_lines.pop(0)
             if not res_id:
@@ -526,6 +530,8 @@ class PoFile(object):
                     line = line[2:].strip()
                     if not line.startswith('module:'):
                         comments.append(line)
+                    else:
+                        module = line[7:].strip()
                 elif line.startswith('#:'):
                     # Process the `reference` comments. Each line can specify
                     # multiple targets (e.g. model, view, code, selection,
@@ -599,7 +605,7 @@ class PoFile(object):
                 _logger.warning('Missing "#:" formatted comment at line %d for the following source:\n\t%s',
                                 self.cur_line(), source[:30])
             return next(self)
-        return trans_type, name, res_id, source, trad, '\n'.join(comments)
+        return trans_type, name, res_id, source, trad, '\n'.join(comments), module
     __next__ = next
 
     def write_infos(self, modules):
@@ -814,14 +820,6 @@ def trans_generate(lang, modules, cr):
         # empty and one-letter terms are ignored, they probably are not meant to be
         # translated, and would be very hard to translate anyway.
         sanitized_term = (source or '').strip()
-        try:
-            # verify the minimal size without eventual xml tags
-            # wrap to make sure html content like '<a>b</a><c>d</c>' is accepted by lxml
-            wrapped = u"<div>%s</div>" % sanitized_term
-            node = etree.fromstring(wrapped)
-            sanitized_term = etree.tostring(node, encoding='unicode', method='text')
-        except etree.ParseError:
-            pass
         # remove non-alphanumeric chars
         sanitized_term = re.sub(r'\W+', '', sanitized_term)
         if not sanitized_term or len(sanitized_term) <= 1:
@@ -966,8 +964,11 @@ def trans_generate(lang, modules, cr):
         extra_comments = extra_comments or []
         if not module: return
         src_file = open(fabsolutepath, 'rb')
+        options = {}
+        if extract_method == 'python':
+            options['encoding'] = 'UTF-8'
         try:
-            for extracted in extract.extract(extract_method, src_file, keywords=extract_keywords):
+            for extracted in extract.extract(extract_method, src_file, keywords=extract_keywords, options=options):
                 # Babel 0.9.6 yields lineno, message, comments
                 # Babel 1.3 yields lineno, message, comments, context
                 lineno, message, comments = extracted[:3]
@@ -1049,7 +1050,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
 
         elif fileformat == 'po':
             reader = PoFile(fileobj)
-            fields = ['type', 'name', 'res_id', 'src', 'value', 'comments']
+            fields = ['type', 'name', 'res_id', 'src', 'value', 'comments', 'module']
 
             # Make a reader for the POT file and be somewhat defensive for the
             # stable branch.
@@ -1083,7 +1084,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
                 self.comments = None
 
         pot_targets = defaultdict(Target)
-        for type, name, res_id, src, _ignored, comments in pot_reader:
+        for type, name, res_id, src, _ignored, comments, module in pot_reader:
             if type is not None:
                 target = pot_targets[src]
                 target.targets.add((type, name, type != 'code' and res_id or 0))
@@ -1101,6 +1102,10 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
                                  'comments', 'imd_model', 'imd_name', 'module'))
             dic['lang'] = lang
             dic.update(pycompat.izip(fields, row))
+
+            # do not import empty values
+            if not env.context.get('create_empty_translation', False) and not dic['value']:
+                return
 
             if use_pot_reference:
                 # discard the target from the POT targets.

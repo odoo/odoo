@@ -4,13 +4,18 @@
 ///
 
 // LAYOUTING
-body.o_connected_user {
+body {
+    // Set frontend direction that will be flipped with
+    // rtlcss for right-to-left text direction.
     direction: ltr;
+}
+body.o_connected_user {
     padding-top: $o-navbar-height!important;
 }
 
 // MAIN MENU STYLE (added above navbar.scss)
 #oe_main_menu_navbar {
+    @include o-w-preserve-dropdown-menus;
     @include o-position-absolute(0, 0, auto, 0);
     position: fixed;
     z-index: $zindex-modal - 10;
@@ -103,6 +108,7 @@ body.o_connected_user {
 body .modal {
     &.o_technical_modal {
         @include o-w-preserve-base;
+        @include o-w-preserve-dropdown-menus;
         @include o-w-preserve-headings;
         @include o-w-preserve-forms;
         @include o-w-preserve-links;
@@ -130,10 +136,14 @@ body .modal {
                     cursor: pointer;
                     font-family: $o-we-font-family;
 
+                    &, .close {
+                        color: white;
+                    }
+
                     h4 {
-                        color: lightgray;
-                        font-family:inherit;
+                        font-family: inherit;
                         font-weight: normal;
+                        color: inherit;
 
                         .fa {
                             margin-left: $grid-gutter-width/2;
@@ -294,6 +304,7 @@ body .modal {
 }
 
 #o_new_content_menu_choices {
+    @include o-w-preserve-base;
     @include o-position-absolute($o-navbar-height, 0, 0, 0);
     position: fixed;
     display: flex;
@@ -366,7 +377,7 @@ body .modal {
 
     @include o-position-absolute($o-navbar-height, 0, 0);
     position: fixed;
-    z-index: 1001;
+    z-index: $zindex-modal;
 }
 
 // POPOVER NAVIGATION

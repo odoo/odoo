@@ -4,15 +4,17 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
 # Thomas Pot <thomas@open2bizz.nl>, 2018
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 10:06+0000\n"
-"PO-Revision-Date: 2018-10-02 10:06+0000\n"
-"Last-Translator: Thomas Pot <thomas@open2bizz.nl>, 2018\n"
+"POT-Creation-Date: 2019-01-09 10:32+0000\n"
+"PO-Revision-Date: 2018-08-24 09:25+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,16 +23,27 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:243
+#: model_terms:ir.ui.view,arch_db:snailmail.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"De waardes die u hier instelt"
+" zijn bedrijf specifiek.\"/>"
+
+#. module: snailmail
+#: code:addons/snailmail/models/snailmail_letter.py:249
 #, python-format
 msgid "An error occured when sending the document by post.<br>Error: %s"
 msgstr ""
+"Er is een fout opgetreden bij het verzenden van het document per post. "
+"<br>Fout: %s"
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:211
+#: code:addons/snailmail/models/snailmail_letter.py:215
 #, python-format
 msgid "An unknown error happened. Please contact the support."
-msgstr ""
+msgstr "Er is een onbekende fout opgetreden. Neem contact op met de support."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__attachment_id
@@ -40,12 +53,12 @@ msgstr "Bijlage"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__duplex
 msgid "Both side"
-msgstr ""
+msgstr "Beide kanten"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_duplex
 msgid "Both sides"
-msgstr ""
+msgstr "Beide kanten"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_form
@@ -60,12 +73,12 @@ msgstr "Geannuleerd"
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.res_config_settings_view_form
 msgid "Choose the ink used to print documents"
-msgstr ""
+msgstr "Kies de inkt om het document mee af te drukken"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.res_config_settings_view_form
 msgid "Choose the layout to print documents"
-msgstr ""
+msgstr "Kies de layout om documenten mee af te drukken"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_color
@@ -106,7 +119,7 @@ msgstr "Aangemaakt op"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__display_name
 msgid "Display Name"
-msgstr "Weergave naam"
+msgstr "Weergavenaam"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__res_id
@@ -158,7 +171,7 @@ msgstr "Laatst bijgewerkt op"
 #: model:ir.ui.menu,name:snailmail.menu_snailmail_letters
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_list
 msgid "Letters"
-msgstr ""
+msgstr "Brieven"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__model
@@ -166,10 +179,10 @@ msgid "Model"
 msgstr "Model"
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:209
+#: code:addons/snailmail/models/snailmail_letter.py:211
 #, python-format
 msgid "One or more required fields are empty."
-msgstr ""
+msgstr "Een of meer verplichte velden zijn niet ingevuld."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__report_template
@@ -177,25 +190,25 @@ msgid "Optional report to print and attach"
 msgstr "Optioneel rapport om af te drukken en te koppelen"
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:248
+#: code:addons/snailmail/models/snailmail_letter.py:264
 #, python-format
 msgid "Post letter: an error occured."
-msgstr ""
+msgstr "Brief posten: er is een fout opgetreden."
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.res_config_settings_view_form
 msgid "Postal Printings"
-msgstr "Post prints"
+msgstr "Afdrukken voor post"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_duplex
 msgid "Print Both sides"
-msgstr ""
+msgstr "Beide kanten afdrukken"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_color
 msgid "Print In Color"
-msgstr ""
+msgstr "In kleur afdrukken"
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_ir_qweb_field_contact
@@ -225,14 +238,14 @@ msgstr "Verzonden"
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_snailmail_letter
 msgid "Snailmail Letter"
-msgstr ""
+msgstr "Snailmail brief"
 
 #. module: snailmail
 #: model:ir.actions.server,name:snailmail.snailmail_print_ir_actions_server
 #: model:ir.cron,cron_name:snailmail.snailmail_print
 #: model:ir.cron,name:snailmail.snailmail_print
 msgid "Snailmail: process letters queue"
-msgstr ""
+msgstr "Snailmail: verwerk brieven wachtrij"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__state
@@ -240,22 +253,33 @@ msgid "Status"
 msgstr "Status"
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:207
+#: code:addons/snailmail/models/snailmail_letter.py:213
 #, python-format
-msgid "The country of the partner is not covered by Snailmail."
+msgid ""
+"The attachment of the letter could not be sent. Please check its content and"
+" contact the support if the problem persists."
 msgstr ""
+"De bijlage van de brief kon niet worden verzonden. Controleer de inhoud en "
+"neem contact op met de support als het probleem aanhoudt."
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:238
+#: code:addons/snailmail/models/snailmail_letter.py:209
+#, python-format
+msgid "The country of the partner is not covered by Snailmail."
+msgstr "Het land van de klant is niet ondersteund door Snailmail."
+
+#. module: snailmail
+#: code:addons/snailmail/models/snailmail_letter.py:242
 #, python-format
 msgid ""
 "The document was correctly sent by post.<br>The tracking id is %ssend_id"
 msgstr ""
+"Het document is correct per post verzonden.<br> De tracking-ID is %ssend_id"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__user_id
 msgid "User sending the letter"
-msgstr ""
+msgstr "Gebruiker die de brief verzend"
 
 #. module: snailmail
 #: model:ir.model.fields,help:snailmail.field_snailmail_letter__state
@@ -264,19 +288,26 @@ msgid ""
 "If the letter is correctly sent, the status goes in 'Sent',\n"
 "If not, it will got in state 'Error' and the error message will be displayed in the field 'Error Message'."
 msgstr ""
+"Wanneer een brief wordt aangemaakt, is de status 'Concept'.\n"
+"Als de brief correct is verzonden, gaat de status in 'Verzonden',\n"
+"Als dat niet het geval is, krijgt het de status 'Fout' en wordt het foutbericht weergegeven in het veld 'Foutbericht'."
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:205
+#: code:addons/snailmail/models/snailmail_letter.py:207
 #, python-format
 msgid ""
 "You don't have an IAP account registered for this service.<br>Please go to "
 "<a href=%s target=\"new\">iap.odoo.com</a> to claim your free credits."
 msgstr ""
+"U hebt geen IAP-account geregistreerd voor deze service. <br>Ga naar <a "
+"href=%s target=\"new\"> iap.odoo.com </a>om uw gratis krediet te claimen."
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:202
+#: code:addons/snailmail/models/snailmail_letter.py:204
 #, python-format
 msgid ""
 "You don't have enough credits to perform this operation.<br>Please go to "
 "your <a href=%s target=\"new\">iap account</a>."
 msgstr ""
+"U hebt niet genoeg kredieten om deze bewerking uit te voeren. <br>Ga naar uw"
+" <a href=%s target=\"new\"> iap-account</a>."

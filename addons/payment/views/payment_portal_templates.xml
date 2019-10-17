@@ -34,7 +34,7 @@
     <!-- TDE FIXME: was customize_show=True -->
     <template id="pay_meth_link" inherit_id="portal.portal_layout">
         <xpath expr="//div[hasclass('o_portal_my_details')]" position="inside">
-            <t t-if="request.env['payment.acquirer'].search([('website_published', '=', True), ('registration_view_template_id', '!=', False), ('payment_flow', '=', 's2s')])">
+            <t t-if="request.env['payment.acquirer'].search([('website_published', '=', True), ('registration_view_template_id', '!=', False), ('payment_flow', '=', 's2s'), ('company_id', '=', request.env.user.company_id.id)])">
                 <div class='manage_payment_method mt16'><a href="/my/payment_method">Manage your payment methods</a></div>
             </t>
         </xpath>
@@ -139,7 +139,7 @@
             <div t-if="thanks_msg and payment_tx_id.acquirer_id.provider == 'transfer' and reference">
                 <b>Communication: </b><span t-esc='reference'/>
             </div>
-            <div t-if="(payment_tx_id.partner_id.country_id.code in ['BE', 'AT', 'DE', 'FI', 'NL']) and (payment_tx_id.acquirer_id.qr_code == True) and (payment_tx_id.currency_id.name == 'EUR')">
+            <div t-if="(payment_tx_id.acquirer_id.qr_code == True) and (payment_tx_id.currency_id.name == 'EUR')">
                 <div t-if="payment_tx_id.acquirer_id.journal_id.bank_account_id.qr_code_valid">
                     <h3>Or scan me with your banking app.</h3>
                     <img class="border border-dark rounded" t-att-src="payment_tx_id.acquirer_id.journal_id.bank_account_id.build_qr_code_url(payment_tx_id.amount,payment_tx_id.reference)"/>

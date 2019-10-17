@@ -448,6 +448,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
             displayEmailIcons: false,
             displayReplyIcons: true,
             displayBottomThreadFreeSpace: true,
+            displayModerationCommands: true,
         };
     },
     /**
@@ -714,7 +715,8 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
      */
     _renderThread: function () {
         this._threadWidget = new ThreadWidget(this, {
-            loadMoreOnScroll: true
+            areMessageAttachmentsDeletable: false,
+            loadMoreOnScroll: true,
         });
 
         this._threadWidget
@@ -851,7 +853,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
 
             // Update control panel before focusing the composer, otherwise
             // focus is on the searchview
-            self.set("title", '#' + self._thread.getName());
+            self.set("title", self._thread.getTitle());
             self._updateControlPanel();
             self._updateControlPanelButtons(self._thread);
 
@@ -1320,12 +1322,16 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
      */
     _onPostMessage: function (messageData) {
         var self = this;
+        var options = {};
         if (this._selectedMessage) {
             messageData.subtype = this._selectedMessage.isNote() ? 'mail.mt_note': 'mail.mt_comment';
             messageData.subtype_id = false;
             messageData.message_type = 'comment';
+
+            options.documentID = this._selectedMessage.getDocumentID();
+            options.documentModel = this._selectedMessage.getDocumentModel();
         }
-        this._thread.postMessage(messageData)
+        this._thread.postMessage(messageData, options)
             .then(function () {
                 if (self._selectedMessage) {
                     self._renderSnackbar('mail.discuss.MessageSentSnackbar', {

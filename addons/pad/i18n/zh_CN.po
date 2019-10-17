@@ -4,14 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
-# 珠海-杜哥 <liangjia@qq.com>, 2018
+# inspur qiuguodong <qiuguodong@inspur.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2018
 # ChinaMaker <liuct@chinamaker.net>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"POT-Creation-Date: 2019-01-22 11:12+0000\n"
+"PO-Revision-Date: 2018-08-24 09:21+0000\n"
 "Last-Translator: ChinaMaker <liuct@chinamaker.net>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -23,7 +25,7 @@ msgstr ""
 #. module: pad
 #: model_terms:ir.ui.view,arch_db:pad.res_config_settings_view_form
 msgid "API Key"
-msgstr "API Key"
+msgstr "API密钥"
 
 #. module: pad
 #: model:ir.model,name:pad.model_res_company
@@ -44,13 +46,13 @@ msgstr "显示名称"
 #: model:ir.model.fields,help:pad.field_res_company__pad_key
 #: model:ir.model.fields,help:pad.field_res_config_settings__pad_key
 msgid "Etherpad lite api key."
-msgstr "Etherpad lite 的 api key。"
+msgstr "API密钥的EthPad Lite。"
 
 #. module: pad
 #: model:ir.model.fields,help:pad.field_res_company__pad_server
 #: model:ir.model.fields,help:pad.field_res_config_settings__pad_server
 msgid "Etherpad lite server. Example: beta.primarypad.com"
-msgstr "Etherpad lite服务器，例如 beta.primarypad.com"
+msgstr "Etherpad一些服务器。例如：beta.primarypad.com"
 
 #. module: pad
 #: model:ir.model.fields,field_description:pad.field_pad_common__id
@@ -72,12 +74,17 @@ msgstr "正在加载"
 #. module: pad
 #: model:ir.model.fields,field_description:pad.field_res_company__pad_key
 msgid "Pad Api Key"
-msgstr "Pad Api Key"
+msgstr "Pad Api 密钥"
 
 #. module: pad
 #: model:ir.model.fields,field_description:pad.field_res_config_settings__pad_key
 msgid "Pad Api Key *"
 msgstr "Pad Api 密钥 *"
+
+#. module: pad
+#: model:ir.model,name:pad.model_pad_common
+msgid "Pad Common"
+msgstr ""
 
 #. module: pad
 #: model:ir.model.fields,field_description:pad.field_res_company__pad_server
@@ -90,12 +97,12 @@ msgid "Pad Server *"
 msgstr "Pad 服务器 *"
 
 #. module: pad
-#: code:addons/pad/models/pad.py:57
+#: code:addons/pad/models/pad.py:58
 #, python-format
 msgid ""
 "Pad creation failed, either there is a problem with your pad server URL or "
 "with your connection."
-msgstr "Pad的创建失败了，估你的Pad URL有问题或者你的连接有问题"
+msgstr "Pad创建失败，请检查Pad URL或连接。"
 
 #. module: pad
 #. openerp-web
@@ -123,21 +130,16 @@ msgstr "切换 pad"
 #: code:addons/pad/static/src/js/pad.js:166
 #, python-format
 msgid "This pad will be initialized on first edit"
-msgstr "Pad讲在第一个编辑时初始化"
+msgstr "Pad将在首次编辑时初始化"
 
 #. module: pad
 #. openerp-web
 #: code:addons/pad/static/src/js/pad.js:160
 #, python-format
 msgid "Unable to load pad"
-msgstr "不能装入Pad"
+msgstr "无法载入Pad"
 
 #. module: pad
 #: model_terms:ir.ui.view,arch_db:pad.res_config_settings_view_form
 msgid "e.g. beta.primarypad.com"
 msgstr "例如： beta.primarypad.com"
-
-#. module: pad
-#: model:ir.model,name:pad.model_pad_common
-msgid "pad.common"
-msgstr "pad.common"

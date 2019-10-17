@@ -935,6 +935,10 @@ following attributes:
   the name of a field to use in the view. If used for grouping (rather
   than aggregating)
 
+``string``
+  the name that will be used to display the field in the pivot view,
+  overrides the default python String attribute of the field.
+
 ``type``
   indicates whether the field should be used as a grouping criteria or as an
   aggregated value within a group. Possible values are:
@@ -949,6 +953,11 @@ following attributes:
     on date and datetime fields, groups by the specified interval (``day``,
     ``week``, ``month``, ``quarter`` or ``year``) instead of grouping on the
     specific datetime (fixed second resolution) or date (fixed day resolution).
+
+``invisible``
+  if true, the field will not appear either in the active measures nor in the
+  selectable measures (useful for fields that do not make sense aggregated,
+  such as fields in different units, e.g. € and $).
 
 The measures are automatically generated from the model fields; only the
 aggregatable fields are used. Those measures are also alphabetically
@@ -1011,7 +1020,7 @@ attributes:
 ``quick_create``
   whether it should be possible to create records without switching to the
   form view. By default, ``quick_create`` is enabled when the Kanban view is
-  grouped, and disabled when not.
+  grouped by many2one, selection, char or boolean fields, and disabled when not.
 
   Set to ``true`` to always enable it, and to ``false`` to always disable it.
 
@@ -1727,8 +1736,12 @@ Possible children elements of the search view are:
 
         The groupby defined above allows to group data by category.
 
-        When the field is of type ``date`` or ``datetime``, the records are grouped by month by default.
-        This can be modified by using one of the following options: day, week, quarter, year.
+        When the field is of type ``date`` or ``datetime``, the filter generates a submenu of the Group By
+        menu in which the following interval options are available: day, week, month, quarter, year.
+
+        In case the filter is in the default set of filters activated at the view initialization,
+        the records are grouped by month by default. This can be changed by using the syntax
+        'date_field:interval' as in the following example.
 
         Example:
 

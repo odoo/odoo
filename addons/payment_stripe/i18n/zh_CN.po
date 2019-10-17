@@ -4,13 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# inspur qiuguodong <qiuguodong@inspur.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:22+0000\n"
+"Last-Translator: liAnGjiA <liangjia@qq.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,7 +35,7 @@ msgid ""
 "product. As defined in your Stripe profile. See: "
 "https://stripe.com/docs/checkout"
 msgstr ""
-"指向您的品牌或产品的正方形图片的相对或绝对网址。在条纹配置文件中定义。请参阅：https://stripe.com/docs/checkout"
+"一个相对的或绝对的URL，指向你的品牌或产品的正方形图像。在条纹轮廓中定义。参见：https://stripe.com/docs/checkout"
 
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0
@@ -93,7 +96,7 @@ msgstr "到期日 (MM / YY)"
 #: code:addons/payment_stripe/static/src/js/stripe.js:33
 #, python-format
 msgid "Just one more second, confirming your payment..."
-msgstr "正在确认您的付款，只需再等一秒钟..."
+msgstr "正在确认您的付款，请您稍等..."
 
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0
@@ -143,12 +146,12 @@ msgstr "Paypal"
 msgid ""
 "Perhaps the problem can be solved by double-checking your credit card "
 "details, or contacting your bank?"
-msgstr "或许再次检查您的信用卡详细信息或联系您的银行能够解决该问题？"
+msgstr "请检查您的信用卡详细信息或联系银行。"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__provider
 msgid "Provider"
-msgstr "服务商"
+msgstr "供应商"
 
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0
@@ -189,10 +192,16 @@ msgid "Stripe: no order found for reference %s"
 msgstr "Stripe：未找到可用于参考 %s 的订单"
 
 #. module: payment_stripe
+#: code:addons/payment_stripe/models/payment.py:260
+#, python-format
+msgid "Stripe: no payment token was provided or the token creation failed."
+msgstr ""
+
+#. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:170
 #, python-format
 msgid "We're sorry to report that the transaction has failed."
-msgstr "很遗憾地告诉您，交易已失败。"
+msgstr "交易失败。"
 
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0

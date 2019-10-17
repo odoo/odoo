@@ -4,13 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"POT-Creation-Date: 2018-12-19 08:20+0000\n"
+"PO-Revision-Date: 2018-08-24 09:15+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,9 +40,14 @@ msgid "Company"
 msgstr "Компанія"
 
 #. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_company_ldap
+msgid "Company LDAP configuration"
+msgstr "Налаштування компанії LDAP"
+
+#. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Налаштування"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_user
@@ -139,6 +146,8 @@ msgstr "Інформація входу"
 #, python-format
 msgid "No local user found for LDAP login and not configured to create one"
 msgstr ""
+"Не знайдено локального користувача для входу LDAP і немає налаштувань для "
+"його створення"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
@@ -192,7 +201,7 @@ msgid ""
 "Leave empty to connect anonymously."
 msgstr ""
 "Обліковий запис користувача на сервері LDAP, який використовується для "
-"запиту каталогу. Залишити порожнім, щоб з'єднатися анонімно."
+"запиту каталогу. Залиште порожнім, щоби з'єднатися анонімно."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_tls
@@ -213,8 +222,3 @@ msgstr "Копіювання користувача при створенні н
 #: model:ir.model,name:auth_ldap.model_res_users
 msgid "Users"
 msgstr "Користувачі"
-
-#. module: auth_ldap
-#: model:ir.model,name:auth_ldap.model_res_company_ldap
-msgid "res.company.ldap"
-msgstr "res.company.ldap"

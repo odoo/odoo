@@ -3,17 +3,18 @@
 # * crm_project
 # 
 # Translators:
-# krnkris, 2017
-# gezza <geza.nagy@oregional.hu>, 2017
-# Ákos Nagy <akos.nagy@oregional.hu>, 2017
-# Martin Trigaux, 2017
+# Martin Trigaux, 2018
+# krnkris, 2018
+# gezza <geza.nagy@oregional.hu>, 2018
+# Ákos Nagy <akos.nagy@oregional.hu>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:11+0000\n"
-"PO-Revision-Date: 2018-08-02 09:11+0000\n"
-"Last-Translator: Martin Trigaux, 2017\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:17+0000\n"
+"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2018\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,26 +23,26 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: crm_project
-#: model:ir.ui.view,arch_db:crm_project.crm_lead_view_form
+#: model_terms:ir.ui.view,arch_db:crm_project.crm_lead_view_form
 msgid ""
 "<span class=\"o_stat_text\">Convert To</span>\n"
 "                            <span class=\"o_stat_text\">Task</span>"
 msgstr ""
 
 #. module: crm_project
-#: model:ir.ui.view,arch_db:crm_project.crm_lead_convert2task_view_form
+#: model_terms:ir.ui.view,arch_db:crm_project.crm_lead_convert2task_view_form
 msgid "Cancel"
 msgstr "Mégsem"
 
 #. module: crm_project
 #: model:ir.actions.act_window,name:crm_project.crm_lead_convert2task_action
-#: model:ir.ui.view,arch_db:crm_project.crm_lead_convert2task_view_form
-#: model:ir.ui.view,arch_db:crm_project.crm_lead_view_form
+#: model_terms:ir.ui.view,arch_db:crm_project.crm_lead_convert2task_view_form
+#: model_terms:ir.ui.view,arch_db:crm_project.crm_lead_view_form
 msgid "Convert to Task"
 msgstr ""
 
 #. module: crm_project
-#: model:ir.ui.view,arch_db:crm_project.crm_lead_convert2task_view_form
+#: model_terms:ir.ui.view,arch_db:crm_project.crm_lead_convert2task_view_form
 msgid "Create Task"
 msgstr ""
 
@@ -83,22 +84,27 @@ msgstr "Azonosító"
 #. module: crm_project
 #: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task____last_update
 msgid "Last Modified on"
-msgstr "Utoljára módosítva"
+msgstr "Legutóbb frissítve"
 
 #. module: crm_project
 #: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__write_uid
 msgid "Last Updated by"
-msgstr "Utoljára frissítette"
+msgstr "Legutóbb frissítette"
 
 #. module: crm_project
 #: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__write_date
 msgid "Last Updated on"
-msgstr "Utoljára frissítve "
+msgstr "Legutóbb frissítve "
 
 #. module: crm_project
 #: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__lead_id
 msgid "Lead"
 msgstr "Érdeklődő"
+
+#. module: crm_project
+#: model:ir.model,name:crm_project.model_crm_lead_convert2task
+msgid "Lead convert to Task"
+msgstr ""
 
 #. module: crm_project
 #: selection:crm.lead.convert2task,action:0
@@ -114,8 +120,3 @@ msgstr "Projekt"
 #: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__action
 msgid "Related Customer"
 msgstr "Ide vonatkozó vevő"
-
-#. module: crm_project
-#: model:ir.model,name:crm_project.model_crm_lead_convert2task
-msgid "crm.lead.convert2task"
-msgstr ""

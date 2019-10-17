@@ -109,7 +109,7 @@
                                         <field name="date_create"/>
                                     </div>
                                     <div class="oe_kanban_bottom_right mr4">
-                                        <field name="state" widget="kanban_label_selection" options="{'classes': {'new': 'default', 'done': 'success', 'skip':'warning'}}"/>
+                                        <field name="state" widget="label_selection" options="{'classes': {'new': 'default', 'done': 'success', 'skip':'warning'}}"/>
                                     </div>
                                 </div>
                             </div>
@@ -240,7 +240,7 @@
                         <div t-name="kanban-box" t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
                             <div class="o_dropdown_kanban dropdown" t-if="widget.editable">
 
-                                <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" data-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                     <span class="fa fa-ellipsis-v"/>
                                 </a>
                                 <div class="dropdown-menu" role="menu">

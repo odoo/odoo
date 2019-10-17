@@ -179,21 +179,34 @@ var Char = Field.extend({
 
 var DateTime = Field.extend({
     tagName: 'span',
+    serverFormat: 'YYYY-MM-DD HH:mm:ss',
     attributes: {
         type: 'datetime'
     },
     operators: [
         {value: "=", text: _lt("is equal to")},
         {value: "!=", text: _lt("is not equal to")},
-        {value: ">=", text: _lt("is after")},
-        {value: "<=", text: _lt("is before")},
+        {value: ">", text: _lt("is after")},
+        {value: "<", text: _lt("is before")},
+        {value: ">=", text: _lt("is after or equal to")},
+        {value: "<=", text: _lt("is before or equal to")},
         {value: "between", text: _lt("is between")},
         {value: "∃", text: _lt("is set")},
         {value: "∄", text: _lt("is not set")}
     ],
+    /**
+     * Gets the value of the datepicker
+     *
+     * @public
+     * @param {Integer} [index] The datepicker's index.
+     *  0 for the lower boundary (default)
+     *  1 for the higher boundary
+     *
+     * @return {Moment} The value in UTC
+     */
     get_value: function (index) {
         // retrieve the datepicker value
-        var value = this["datewidget_" + (index || 0)].getValue();
+        var value = this["datewidget_" + (index || 0)].getValue().clone();
         // convert to utc
         return value.add(-this.getSession().getTZOffset(value), 'minutes');
     },
@@ -204,9 +217,12 @@ var DateTime = Field.extend({
         case '∄':
             return [[field.name, '=', false]];
         case 'between':
-            return [[field.name, '>=', this.get_value()], [field.name, '<=', this.get_value(1)]];
+            return [
+                [field.name, '>=', this._formatMomentToServer(this.get_value(0))],
+                [field.name, '<=', this._formatMomentToServer(this.get_value(1))]
+            ];
         default:
-            return [[field.name, operator.value, this.get_value()]];
+            return [[field.name, operator.value, this._formatMomentToServer(this.get_value())]];
         }
     },
     show_inputs: function ($operator) {
@@ -226,7 +242,8 @@ var DateTime = Field.extend({
     },
     toString: function () {
         var str = field_utils.format[this.attributes.type](this.get_value(), {type: this.attributes.type});
-        var date_1_value = this.datewidget_1 && this.get_value(1);
+        // the second datewidget might have been hidden because the operator has changed
+        var date_1_value = this.datewidget_1 && !this.datewidget_1.$el.hasClass('o_hidden') && this.get_value(1);
         if (date_1_value) {
             str += _lt(" and ") + field_utils.format[this.attributes.type](date_1_value, {type: this.attributes.type});
         }
@@ -241,21 +258,37 @@ var DateTime = Field.extend({
     _create_new_widget: function (name) {
         this[name] = new (this._get_widget_class())(this);
         return this[name].appendTo(this.$el).then((function () {
-            this[name].setValue(moment(new Date()));
+            this[name].setValue(moment());
         }).bind(this));
     },
     _get_widget_class: function () {
         return datepicker.DateTimeWidget;
     },
+    /**
+     * Transform a Moment in a server acceptable format
+     *
+     * @private
+     * @param {Moment} momentValue The moment to get the string for
+     *
+     * @return {String} Represents the value in UTC
+     */
+    _formatMomentToServer: function (momentValue) {
+        return momentValue.locale('en').format(this.serverFormat);
+    },
 });
 
 var Date = DateTime.extend({
+    serverFormat: 'YYYY-MM-DD',
     attributes: {
         type: 'date'
     },
+    /**
+     * @override
+     */
     get_value: function (index) {
         // retrieve the datepicker value
-        return this["datewidget_" + (index || 0)].getValue();
+        var value = this["datewidget_" + (index || 0)].getValue();
+        return value && value.clone();
     },
     _get_widget_class: function () {
         return datepicker.DateWidget;

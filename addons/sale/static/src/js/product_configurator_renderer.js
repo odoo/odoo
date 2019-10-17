@@ -5,6 +5,10 @@ var FormRenderer = require('web.FormRenderer');
 var ProductConfiguratorMixin = require('sale.ProductConfiguratorMixin');
 
 var ProductConfiguratorFormRenderer = FormRenderer.extend(ProductConfiguratorMixin ,{
+
+    events: _.extend({}, FormRenderer.prototype.events, ProductConfiguratorMixin.events, {
+        'click button.js_add_cart_json': 'onClickAddCartJSON',
+    }),
     /**
      * @override
      */
@@ -28,6 +32,7 @@ var ProductConfiguratorFormRenderer = FormRenderer.extend(ProductConfiguratorMix
      * Renders the product configurator within the form
      *
      * Will also:
+     *
      * - add events handling for variant changes
      * - trigger variant change to compute the price and other
      *   variant specific changes
@@ -43,7 +48,22 @@ var ProductConfiguratorFormRenderer = FormRenderer.extend(ProductConfiguratorMix
         $configuratorHtml.appendTo($configuratorContainer);
 
         this.triggerVariantChange($configuratorContainer);
-    }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Toggles the add button depending on the possibility of the current
+     * combination.
+     *
+     * @override
+     */
+    _toggleDisable: function ($parent, isCombinationPossible) {
+        ProductConfiguratorMixin._toggleDisable.apply(this, arguments);
+        $parent.parents('.modal').find('.o_sale_product_configurator_add').toggleClass('disabled', !isCombinationPossible);
+    },
 });
 
 return ProductConfiguratorFormRenderer;

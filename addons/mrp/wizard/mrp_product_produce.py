@@ -46,7 +46,7 @@ class MrpProductProduce(models.TransientModel):
     product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure')
     lot_id = fields.Many2one('stock.production.lot', string='Lot/Serial Number')
     produce_line_ids = fields.One2many('mrp.product.produce.line', 'product_produce_id', string='Product to Track')
-    product_tracking = fields.Selection(related="product_id.tracking", readonly=False)
+    product_tracking = fields.Selection(related="product_id.tracking", readonly=True)
 
     @api.multi
     def do_produce(self):
@@ -84,6 +84,7 @@ class MrpProductProduce(models.TransientModel):
                 existing_move_line.product_uom_qty += produced_qty
                 existing_move_line.qty_done += produced_qty
             else:
+                location_dest_id = produce_move.location_dest_id.get_putaway_strategy(self.product_id).id or produce_move.location_dest_id.id
                 vals = {
                   'move_id': produce_move.id,
                   'product_id': produce_move.product_id.id,
@@ -93,7 +94,7 @@ class MrpProductProduce(models.TransientModel):
                   'qty_done': self.product_qty,
                   'lot_id': self.lot_id.id,
                   'location_id': produce_move.location_id.id,
-                  'location_dest_id': produce_move.location_dest_id.id,
+                  'location_dest_id': location_dest_id,
                 }
                 self.env['stock.move.line'].create(vals)
 
@@ -164,7 +165,7 @@ class MrpProductProduce(models.TransientModel):
                         'product_id': move.product_id.id,
                     })
 
-        self.produce_line_ids = [(0, 0, x) for x in lines]
+        self.produce_line_ids = [(5,)] + [(0, 0, x) for x in lines]
 
 class MrpProductProduceLine(models.TransientModel):
     _name = "mrp.product.produce.line"
@@ -172,13 +173,13 @@ class MrpProductProduceLine(models.TransientModel):
 
     product_produce_id = fields.Many2one('mrp.product.produce')
     product_id = fields.Many2one('product.product', 'Product')
-    product_tracking = fields.Selection(related="product_id.tracking", readonly=False)
+    product_tracking = fields.Selection(related="product_id.tracking")
     lot_id = fields.Many2one('stock.production.lot', 'Lot/Serial Number')
     qty_to_consume = fields.Float('To Consume', digits=dp.get_precision('Product Unit of Measure'))
     product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure')
-    qty_done = fields.Float('Consumed')
+    qty_done = fields.Float('Consumed', digits=dp.get_precision('Product Unit of Measure'))
     move_id = fields.Many2one('stock.move')
-    qty_reserved = fields.Float('Reserved')
+    qty_reserved = fields.Float('Reserved', digits=dp.get_precision('Product Unit of Measure'))
 
     @api.onchange('lot_id')
     def _onchange_lot_id(self):

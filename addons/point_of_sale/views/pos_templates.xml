@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+<template id="pos_assets_backend" name="POS UI Backend Assets" inherit_id="web.assets_backend" primary="True">
+    <xpath expr="//script[contains(@src, '/mail/static/src/js/services/mail_service.js')]" position="replace"></xpath>
+</template>
+
 <template id="index" name="POS Index">&lt;!DOCTYPE html&gt;
 <html>
     <head>
@@ -31,7 +35,7 @@
         </script>
 
         <t t-call-assets="web.assets_common" t-css="false"/>
-        <t t-call-assets="web.assets_backend" t-css="false"/>
+        <t t-call-assets="point_of_sale.pos_assets_backend" t-css="false"/>
         <t t-call-assets="web_editor.summernote" t-css="false"/>
         <t t-call-assets="web_editor.assets_editor" t-css="false"/>
         <t t-call-assets="point_of_sale.assets"/>
@@ -114,7 +118,7 @@
         </div>
 
         <div data-js='pos_background' data-selector=".pos-company_logo, .pos-adv">
-            <a href="#" class="dropdown-item" data-choose-image="true" data-no-preview="true"><b>Set Custom Image...</b></a>
+            <a href="#" class="dropdown-item font-weight-bold" data-choose-image="true" data-no-preview="true">Set Custom Image...</a>
             <a href="#" class="dropdown-item d-none pos-use_default_logo" data-background="">Default company logo</a>
             <div class="dropdown-divider"/>
             <a href="#" class="dropdown-item" data-toggle-class="pos-hidden"><i class="fa fa-eye-slash"/>Hide</a>

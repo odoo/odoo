@@ -109,6 +109,7 @@
                     <script type="text/javascript" src="/mail/static/tests/thread_window/basic_thread_window_tests.js"></script>
                     <script type="text/javascript" src="/mail/static/tests/thread_window/blank_thread_window_tests.js"></script>
                     <script type="text/javascript" src="/mail/static/tests/thread_window/hidden_thread_window_tests.js"></script>
+                    <script type="text/javascript" src="/mail/static/tests/thread_window/moderation_thread_window_tests.js"></script>
                 <script type="text/javascript" src="/mail/static/tests/document_thread_window_tests.js"></script>
                 <script type="text/javascript" src="/mail/static/tests/chatter_tests.js"></script>
                 <script type="text/javascript" src="/mail/static/tests/mail_utils_tests.js"></script>
@@ -138,7 +139,7 @@
         </template>
 
         <template id="message_origin_link">
-            <p>This <t t-esc="self._description.lower()"/> has been <span t-if="edit">modified</span><span t-if="not edit">created</span> from:
+            <p>This <t t-esc="self.env['ir.model']._get(self._name).name.lower()"/> has been <span t-if="edit">modified</span><span t-if="not edit">created</span> from:
                 <t t-foreach="origin" t-as="o">
                     <a href="#" t-att-data-oe-model="o._name" t-att-data-oe-id="o.id"> <t t-esc="o.display_name"/></a><span t-if="origin.ids[-1:] != o.ids">, </span>
                 </t>

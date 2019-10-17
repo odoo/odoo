@@ -3,9 +3,9 @@
 
 Index: addons/openacademy/models.py
 ===================================================================
---- addons.orig/openacademy/models.py	2014-08-26 17:26:02.903783329 +0200
-+++ addons/openacademy/models.py	2014-08-26 17:26:02.895783329 +0200
-@@ -23,7 +23,8 @@
+--- addons.orig/openacademy/models.py
++++ addons/openacademy/models.py
+@@ -25,7 +25,8 @@
      seats = fields.Integer(string="Number of seats")
  
      instructor_id = fields.Many2one('res.partner', string="Instructor",
@@ -17,13 +17,12 @@ Index: addons/openacademy/models.py
      attendee_ids = fields.Many2many('res.partner', string="Attendees")
 Index: addons/openacademy/views/partner.xml
 ===================================================================
---- addons.orig/openacademy/views/partner.xml	2014-08-26 17:26:02.903783329 +0200
-+++ addons/openacademy/views/partner.xml	2014-08-26 17:26:02.895783329 +0200
-@@ -28,5 +28,21 @@
-         <menuitem id="contact_menu" name="Contacts"
+--- addons.orig/openacademy/views/partner.xml
++++ addons/openacademy/views/partner.xml
+@@ -29,4 +29,20 @@
                    parent="configuration_menu"
                    action="contact_list_action"/>
-+
+ 
 +        <record model="ir.actions.act_window" id="contact_cat_list_action">
 +            <field name="name">Contact Tags</field>
 +            <field name="res_model">res.partner.category</field>
@@ -39,5 +38,5 @@ Index: addons/openacademy/views/partner.xml
 +        <record model="res.partner.category" id="teacher2">
 +            <field name="name">Teacher / Level 2</field>
 +        </record>
- 
++
  </odoo>

@@ -122,7 +122,7 @@ html[data-browser^="msie"] div.media_iframe_video iframe {
 }
 
 @include media-breakpoint-down(sm) {
-    img:not(.cke_iframe), .media_iframe_video, span.fa, i.fa {
+    img, .media_iframe_video, span.fa, i.fa {
         transform: none !important;
     }
 }
@@ -159,7 +159,7 @@ ul.oe_menu_editor {
 @mixin o-spacing-all($factor: 1) {
     // Generate vertical margin/padding classes used by the editor
     @for $i from 0 through (256 / 8) {
-        @include o-vspacing($i * 8);
+        @include o-vspacing($i * 8, $factor);
     }
     @include o-vspacing(4, $factor);
 

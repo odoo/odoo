@@ -8,6 +8,7 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 
 from odoo import api, exceptions, fields, models, _
+from odoo.tools import pycompat
 
 class SignupError(Exception):
     pass
@@ -34,9 +35,9 @@ class ResPartner(models.Model):
     @api.depends('signup_token', 'signup_expiration')
     def _compute_signup_valid(self):
         dt = now()
-        for partner in self.sudo():
-            partner.signup_valid = bool(partner.signup_token) and \
-            (not partner.signup_expiration or dt <= partner.signup_expiration)
+        for partner, partner_sudo in pycompat.izip(self, self.sudo()):
+            partner.signup_valid = bool(partner_sudo.signup_token) and \
+            (not partner_sudo.signup_expiration or dt <= partner_sudo.signup_expiration)
 
     @api.multi
     def _compute_signup_url(self):
@@ -53,21 +54,21 @@ class ResPartner(models.Model):
             the url state components (menu_id, id, view_type) """
 
         res = dict.fromkeys(self.ids, False)
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for partner in self:
+            base_url = partner.get_base_url()
             # when required, make sure the partner has a valid signup token
             if self.env.context.get('signup_valid') and not partner.user_ids:
-                partner.signup_prepare()
+                partner.sudo().signup_prepare()
 
             route = 'login'
             # the parameters to encode for the query
             query = dict(db=self.env.cr.dbname)
-            signup_type = self.env.context.get('signup_force_type_in_url', partner.signup_type or '')
+            signup_type = self.env.context.get('signup_force_type_in_url', partner.sudo().signup_type or '')
             if signup_type:
                 route = 'reset_password' if signup_type == 'reset' else signup_type
 
-            if partner.signup_token and signup_type:
-                query['token'] = partner.signup_token
+            if partner.sudo().signup_token and signup_type:
+                query['token'] = partner.sudo().signup_token
             elif partner.user_ids:
                 query['login'] = partner.user_ids[0].login
             else:
@@ -106,7 +107,7 @@ class ResPartner(models.Model):
 
         allow_signup = self.env['res.users']._get_signup_invitation_scope() == 'b2c'
         for partner in self:
-            if allow_signup and not partner.user_ids:
+            if allow_signup and not partner.sudo().user_ids:
                 partner = partner.sudo()
                 partner.signup_prepare()
                 res[partner.id]['auth_signup_token'] = partner.signup_token

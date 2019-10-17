@@ -40,6 +40,15 @@ var FormController = BasicController.extend({
         this.hasSidebar = params.hasSidebar;
         this.toolbarActions = params.toolbarActions || {};
     },
+    /**
+     * Force mode back to readonly. Whenever we leave a form view, it is saved,
+     * and should no longer be in edit mode.
+     *
+     * @override
+     */
+    willRestore: function () {
+        this.mode = 'readonly';
+    },
 
     //--------------------------------------------------------------------------
     // Public
@@ -219,17 +228,16 @@ var FormController = BasicController.extend({
                 // are displayed with an alert
                 var fields = self.renderer.state.fields;
                 var data = self.renderer.state.data;
-                var alertFields = [];
+                var alertFields = {};
                 for (var k = 0; k < changedFields.length; k++) {
                     var field = fields[changedFields[k]];
                     var fieldData = data[changedFields[k]];
                     if (field.translate && fieldData) {
-                        alertFields.push(field);
+                        alertFields[changedFields[k]] = field;
                     }
                 }
-                if (alertFields.length) {
-                    self.renderer.alertFields = alertFields;
-                    self.renderer.displayTranslationAlert();
+                if (!_.isEmpty(alertFields)) {
+                    self.renderer.updateAlertFields(alertFields);
                 }
             }
             return changedFields;
@@ -242,7 +250,7 @@ var FormController = BasicController.extend({
      * @override
      */
     update: function (params, options) {
-        params = _.extend({viewType: 'form'}, params);
+        params = _.extend({viewType: 'form', mode: this.mode}, params);
         return this._super(params, options);
     },
 
@@ -358,6 +366,19 @@ var FormController = BasicController.extend({
         var env = this.model.get(this.handle, {env: true});
         state.id = env.currentId;
         this._super(state);
+    },
+    /**
+     * Overrides to reload the form when saving failed in readonly (e.g. after
+     * a change on a widget like priority or statusbar).
+     *
+     * @override
+     * @private
+     */
+    _rejectSave: function () {
+        if (this.mode === 'readonly') {
+            return this.reload();
+        }
+        return this._super.apply(this, arguments);
     },
     /**
      * Calls unfreezeOrder when changing the mode.
@@ -540,7 +561,9 @@ var FormController = BasicController.extend({
      * @private
      */
     _onEdit: function () {
-        this._setMode('edit');
+        // wait for potential pending changes to be saved (done with widgets
+        // allowing to edit in readonly)
+        this.mutex.getUnlockedDef().then(this._setMode.bind(this, 'edit'));
     },
     /**
      * This method is called when someone tries to freeze the order, most likely
@@ -575,9 +598,12 @@ var FormController = BasicController.extend({
      * @private
      * @param {OdooEvent} event
      */
-    _onFormDialogDiscarded: function(e) {
-        e.stopPropagation();
-        this.renderer.focusLastActivatedWidget();
+    _onFormDialogDiscarded: function(ev) {
+        ev.stopPropagation();
+        var isFocused = this.renderer.focusLastActivatedWidget();
+        if (ev.data.callback) {
+            ev.data.callback(_.str.toBool(isFocused));
+        }
     },
     /**
      * Opens a one2many record (potentially new) in a dialog. This handler is

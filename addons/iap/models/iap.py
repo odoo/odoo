@@ -7,7 +7,7 @@ import uuid
 import werkzeug.urls
 import requests
 
-from odoo import api, fields, models, exceptions
+from odoo import api, fields, models, exceptions, _
 from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
@@ -67,8 +67,10 @@ def jsonrpc(url, method='call', params=None, timeout=15):
             e.data = response['error']['data']
             raise e
         return response.get('result')
-    except (ValueError, requests.exceptions.ConnectionError, requests.exceptions.MissingSchema, requests.exceptions.Timeout) as e:
-        raise exceptions.AccessError('The url that this service requested returned an error. Please contact the author the app. The url it tried to contact was ' + url)
+    except (ValueError, requests.exceptions.ConnectionError, requests.exceptions.MissingSchema, requests.exceptions.Timeout, requests.exceptions.HTTPError) as e:
+        raise exceptions.AccessError(
+            _('The url that this service requested returned an error. Please contact the author the app. The url it tried to contact was %s') % url
+        )
 
 #----------------------------------------------------------
 # Helpers for proxy
@@ -77,6 +79,46 @@ class IapTransaction(object):
 
     def __init__(self):
         self.credit = None
+
+def authorize(env, key, account_token, credit, dbuuid=False, description=None, credit_template=None):
+    endpoint = get_endpoint(env)
+    params = {
+        'account_token': account_token,
+        'credit': credit,
+        'key': key,
+        'description': description,
+    }
+    if dbuuid:
+        params.update({'dbuuid': dbuuid})
+    try:
+        transaction_token = jsonrpc(endpoint + '/iap/1/authorize', params=params)
+    except InsufficientCreditError as e:
+        if credit_template:
+            arguments = json.loads(e.args[0])
+            arguments['body'] = pycompat.to_text(env['ir.qweb'].render(credit_template))
+            e.args = (json.dumps(arguments),)
+        raise e
+    return transaction_token
+
+def cancel(env, transaction_token, key):
+    endpoint = get_endpoint(env)
+    params = {
+        'token': transaction_token,
+        'key': key,
+    }
+    r = jsonrpc(endpoint + '/iap/1/cancel', params=params)
+    return r
+
+def capture(env, transaction_token, key, credit):
+    endpoint = get_endpoint(env)
+    params = {
+        'token': transaction_token,
+        'key': key,
+        'credit_to_capture': credit,
+    }
+    r = jsonrpc(endpoint + '/iap/1/capture', params=params)
+    return r
+
 
 @contextlib.contextmanager
 def charge(env, key, account_token, credit, dbuuid=False, description=None, credit_template=None):
@@ -97,42 +139,16 @@ def charge(env, key, account_token, credit, dbuuid=False, description=None, cred
                             credits for the requested operation
     :type credit_template: str
     """
-    endpoint = get_endpoint(env)
-    params = {
-        'account_token': account_token,
-        'credit': credit,
-        'key': key,
-        'description': description,
-    }
-    if dbuuid:
-        params.update({'dbuuid': dbuuid})
-    try:
-        transaction_token = jsonrpc(endpoint + '/iap/1/authorize', params=params)
-    except InsufficientCreditError as e:
-        if credit_template:
-            arguments = json.loads(e.args[0])
-            arguments['body'] = pycompat.to_text(env['ir.qweb'].render(credit_template))
-            e.args = (json.dumps(arguments),)
-        raise e
+    transaction_token = authorize(env, key, account_token, credit, dbuuid, description, credit_template)
     try:
         transaction = IapTransaction()
         transaction.credit = credit
         yield transaction
     except Exception as e:
-        params = {
-            'token': transaction_token,
-            'key': key,
-        }
-        r = jsonrpc(endpoint + '/iap/1/cancel', params=params)
+        r = cancel(env,transaction_token, key)
         raise e
     else:
-        params = {
-            'token': transaction_token,
-            'key': key,
-            'credit_to_capture': transaction.credit,
-        }
-        r = jsonrpc(endpoint + '/iap/1/capture', params=params) # noqa
-
+        r = capture(env,transaction_token, key, transaction.credit)
 
 #----------------------------------------------------------
 # Models for client
@@ -148,7 +164,7 @@ class IapAccount(models.Model):
 
     @api.model
     def get(self, service_name, force_create=True):
-        account = self.search([('service_name', '=', service_name), ('company_id', 'in', [self.env.user.company_id.id, False])])
+        account = self.search([('service_name', '=', service_name), ('company_id', 'in', [self.env.user.company_id.id, False])], limit=1, order='company_id desc, id desc')
         if not account and force_create:
             account = self.create({'service_name': service_name})
             # Since the account did not exist yet, we will encounter a NoCreditError,

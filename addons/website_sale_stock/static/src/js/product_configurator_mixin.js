@@ -27,9 +27,16 @@ var xml_load = ajax.loadXML(
  * @param {Array} combination
  */
 ProductConfiguratorMixin._onChangeCombinationStock = function (ev, $parent, combination) {
+    var product_id = 0;
+    // needed for list view of variants
+    if ($parent.find('input.product_id:checked').length) {
+        product_id = $parent.find('input.product_id:checked').val();
+    } else {
+        product_id = $parent.find('.product_id').val();
+    }
     var isMainProduct = combination.product_id &&
         ($parent.is('.js_main_product') || $parent.is('.main_product')) &&
-        combination.product_id === parseInt($parent.find('.product_id').val());
+        combination.product_id === parseInt(product_id);
 
     if (!this.isWebsite || !isMainProduct){
         return;
@@ -38,7 +45,7 @@ ProductConfiguratorMixin._onChangeCombinationStock = function (ev, $parent, comb
     var qty = $parent.find('input[name="add_qty"]').val();
 
     $parent.find('#add_to_cart').removeClass('out_of_stock');
-    if (_.contains(['always', 'threshold'], combination.inventory_availability)) {
+    if (combination.product_type === 'product' && _.contains(['always', 'threshold'], combination.inventory_availability)) {
         combination.virtual_available -= parseInt(combination.cart_qty);
         if (combination.virtual_available < 0) {
             combination.virtual_available = 0;

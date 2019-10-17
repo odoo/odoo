@@ -81,8 +81,8 @@ class SyncEvent(object):
                 self.OP = Delete((self.OE.status and "OE") or (self.GG.status and "GG"),
                                  'The event has been deleted from one side, we delete on other side !')
             #If event is not deleted !
-            elif self.OE.status and (self.GG.status or not is_owner):
-                if self.OE.update.split('.')[0] != self.GG.update.split('.')[0]:
+            elif self.OE.status and (self.GG.status or (not is_owner and self.GG.update)):
+                if abs(self.OE.update - self.GG.update) > timedelta(seconds=1):
                     if self.OE.update < self.GG.update:
                         tmpSrc = 'GG'
                     elif self.OE.update > self.GG.update:
@@ -100,7 +100,7 @@ class SyncEvent(object):
                     else:
                         self.OP = Update(tmpSrc, 'Simply Update... I\'m a single event')
                 else:
-                    if not self.OE.synchro or self.OE.synchro.split('.')[0] < self.OE.update.split('.')[0]:
+                    if not self.OE.synchro or self.OE.synchro < (self.OE.update + timedelta(seconds=1)):
                         self.OP = Update('OE', 'Event already updated by another user, but not synchro with my google calendar')
                     else:
                         self.OP = NothingToDo("", 'Not update needed')
@@ -193,8 +193,8 @@ class GoogleCalendar(models.AbstractModel):
 
     def generate_data(self, event, isCreating=False):
         if event.allday:
-            start_date = event.start_date
-            final_date = event.stop_date + timedelta(days=1)
+            start_date = fields.Date.to_string(event.start_date)
+            final_date = fields.Date.to_string(event.stop_date + timedelta(days=1))
             type = 'date'
             vstype = 'dateTime'
         else:
@@ -398,7 +398,17 @@ class GoogleCalendar(models.AbstractModel):
         url = "/calendar/v3/calendars/%s/events/%s?access_token=%s" % ('primary', instance_id, self.get_token())
         headers = {'Content-type': 'application/json'}
 
-        data.update(recurringEventId=event_ori_google_id, originalStartTime=event_new.recurrent_id_date, sequence=self.get_sequence(instance_id))
+        _originalStartTime = dict()
+        if event_new.allday:
+            _originalStartTime['date'] = event_new.recurrent_id_date.strftime("%Y-%m-%d")
+        else:
+            _originalStartTime['datetime'] = event_new.recurrent_id_date.strftime("%Y-%m-%dT%H:%M:%S.%fz")
+
+        data.update(
+            recurringEventId=event_ori_google_id,
+            originalStartTime=_originalStartTime,
+            sequence=self.get_sequence(instance_id)
+        )
         data_json = json.dumps(data)
         return self.env['google.service']._do_request(url, data_json, headers, type='PUT')
 
@@ -442,7 +452,9 @@ class GoogleCalendar(models.AbstractModel):
                 if google_attendee.get('found'):
                     continue
 
-                attendee = ResPartner.search([('email', '=', google_attendee['email'])], limit=1)
+                attendee = ResPartner.search([('email', '=ilike', google_attendee['email']), ('user_ids', '!=', False)], limit=1)
+                if not attendee:
+                    attendee = ResPartner.search([('email', '=ilike', google_attendee['email'])], limit=1)
                 if not attendee:
                     data = {
                         'email': partner_email,
@@ -647,10 +659,11 @@ class GoogleCalendar(models.AbstractModel):
             if not source_attendee_record:
                 continue
 
-            if att.event_id.recurrent_id_date and source_event_record.allday and source_attendee_record.google_internal_event_id:
-                new_google_internal_event_id = source_attendee_record.google_internal_event_id + '_' + att.event_id.recurrent_id_date.split(' ')[0].replace('-', '')
-            elif att.event_id.recurrent_id_date and source_attendee_record.google_internal_event_id:
-                new_google_internal_event_id = source_attendee_record.google_internal_event_id + '_' + att.event_id.recurrent_id_date.replace('-', '').replace(' ', 'T').replace(':', '') + 'Z'
+            recurrent_id_date = fields.Datetime.to_string(att.event_id.recurrent_id_date)
+            if recurrent_id_date and source_event_record.allday and source_attendee_record.google_internal_event_id:
+                new_google_internal_event_id = source_attendee_record.google_internal_event_id + '_' + recurrent_id_date.split(' ')[0].replace('-', '')
+            elif recurrent_id_date and source_attendee_record.google_internal_event_id:
+                new_google_internal_event_id = source_attendee_record.google_internal_event_id + '_' + recurrent_id_date.replace('-', '').replace(' ', 'T').replace(':', '') + 'Z'
 
             if new_google_internal_event_id:
                 #TODO WARNING, NEED TO CHECK THAT EVENT and ALL instance NOT DELETE IN GMAIL BEFORE !
@@ -663,8 +676,9 @@ class GoogleCalendar(models.AbstractModel):
                     else:
                         _logger.warning("Impossible to create event %s. [%s]", att.event_id.id, status)
                         _logger.debug("Response : %s", response)
-                except:
-                    pass
+                except Exception as e:
+                    _logger.warning("Exception when updating recurrent event exclusions on google: %s", e)
+
         return new_ids
 
     def update_events(self, lastSync=False):
@@ -770,9 +784,9 @@ class GoogleCalendar(models.AbstractModel):
             ev_to_sync.GG.found = True
             ev_to_sync.GG.isRecurrence = bool(event.get('recurrence', ''))
             ev_to_sync.GG.isInstance = bool(event.get('recurringEventId', 0))
-            ev_to_sync.GG.update = event.get('updated', None)  # if deleted, no date without browse event
+            ev_to_sync.GG.update = event.get('updated') and parser.parse(event['updated']) or None  # if deleted, no date without browse event
             if ev_to_sync.GG.update:
-                ev_to_sync.GG.update = ev_to_sync.GG.update.replace('T', ' ').replace('Z', '')
+                ev_to_sync.GG.update = ev_to_sync.GG.update.replace(tzinfo=None)
             ev_to_sync.GG.status = (event.get('status') != 'cancelled')
 
         ######################
@@ -875,7 +889,7 @@ class GoogleCalendar(models.AbstractModel):
     def get_token(self):
         current_user = self.env.user
         if not current_user.google_calendar_token_validity or \
-                fields.Datetime.from_string(current_user.google_calendar_token_validity.split('.')[0]) < (datetime.now() + timedelta(minutes=1)):
+                current_user.google_calendar_token_validity < (datetime.now() + timedelta(minutes=1)):
             self.do_refresh_token()
             current_user.refresh()
         return current_user.google_calendar_token

@@ -41,6 +41,9 @@ var AppsMenu = Widget.extend({
      * Open the first app in the list of apps
      */
     openFirstApp: function () {
+        if (!this._apps.length) {
+            return
+        }
         var firstApp = this._apps[0];
         this._openApp(firstApp);
     },

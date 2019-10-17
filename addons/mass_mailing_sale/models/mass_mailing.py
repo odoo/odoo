@@ -14,15 +14,21 @@ class MassMailing(models.Model):
 
     @api.depends('mailing_domain')
     def _compute_sale_quotation_count(self):
+        has_so_access = self.env['sale.order'].check_access_rights('read', raise_exception=False)
         for mass_mailing in self:
-            mass_mailing.sale_quotation_count = self.env['sale.order'].search_count(self._get_sale_utm_domain())
+            mass_mailing.sale_quotation_count = self.env['sale.order'].search_count(self._get_sale_utm_domain()) if has_so_access else 0
 
     @api.depends('mailing_domain')
     def _compute_sale_invoiced_amount(self):
+        has_so_access = self.env['sale.order'].check_access_rights('read', raise_exception=False)
+        has_invoice_report_access = self.env['account.invoice.report'].check_access_rights('read', raise_exception=False)
         for mass_mailing in self:
-            invoices = self.env['sale.order'].search(self._get_sale_utm_domain()).mapped('invoice_ids')
-            res = self.env['account.invoice.report'].search_read([('invoice_id', 'in', invoices.ids)], ['user_currency_price_total'])
-            mass_mailing.sale_invoiced_amount = sum(r['user_currency_price_total'] for r in res)
+            if has_so_access and has_invoice_report_access:
+                invoices = self.env['sale.order'].search(self._get_sale_utm_domain()).mapped('invoice_ids')
+                res = self.env['account.invoice.report'].search_read([('invoice_id', 'in', invoices.ids)], ['user_currency_price_total'])
+                mass_mailing.sale_invoiced_amount = sum(r['user_currency_price_total'] for r in res)
+            else:
+                mass_mailing.sale_invoiced_amount = 0
 
     @api.multi
     def action_redirect_to_quotations(self):

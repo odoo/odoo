@@ -4,13 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"POT-Creation-Date: 2018-12-19 08:20+0000\n"
+"PO-Revision-Date: 2018-08-24 09:15+0000\n"
+"Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,8 +26,8 @@ msgid ""
 "Automatically create local user accounts for new users authenticating via "
 "LDAP"
 msgstr ""
-"LDAP -р баталгаажиж буй шинэ хэрэглэгчдэд автоматаар дотоод хэрэглэгчийн "
-"бүртгэл үүсгэх"
+"LDAP ашиглан нэвтэрч орж буй шинэ хэрэглэгчдэд автоматаар хэрэглэгчийн "
+"бүртгэл үүсгэнэ."
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company
@@ -38,9 +40,14 @@ msgid "Company"
 msgstr "Компани"
 
 #. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_company_ldap
+msgid "Company LDAP configuration"
+msgstr "Компаны LDAP тохиргоо"
+
+#. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Тохируулга"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_user
@@ -50,17 +57,17 @@ msgstr "Хэрэглэгч үүсэх"
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_uid
 msgid "Created by"
-msgstr "Үүсгэгч"
+msgstr "Үүсгэсэн этгээд"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_date
 msgid "Created on"
-msgstr "Үүсгэсэн"
+msgstr "Үүсгэсэн огноо"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__display_name
 msgid "Display Name"
-msgstr "Дэлгэцийн Нэр"
+msgstr "Дэлгэрэнгүй нэр"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__id
@@ -82,7 +89,7 @@ msgstr "LDAP параметрүүд"
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.res_config_settings_view_form
 msgid "LDAP Server"
-msgstr ""
+msgstr "LDAP сервер"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server
@@ -117,17 +124,17 @@ msgstr "LDAP нууц үг"
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap____last_update
 msgid "Last Modified on"
-msgstr "Сүүлийн засвар хийсэн огноо"
+msgstr "Сүүлд зассан огноо"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__write_uid
 msgid "Last Updated by"
-msgstr "Сүүлийн засвар хийсэн"
+msgstr "Сүүлд зассан этгээд"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__write_date
 msgid "Last Updated on"
-msgstr "Сүүлийн засвар хийсэн огноо"
+msgstr "Сүүлд зассан огноо"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
@@ -139,11 +146,13 @@ msgstr "Нэвтрэх мэдээлэл"
 #, python-format
 msgid "No local user found for LDAP login and not configured to create one"
 msgstr ""
+"LDAP нэвтрэх хандалтанд тохирох хэрэглэгч олдохгүй байгаа бөгөөд шинэ "
+"хэрэглэгч автоматаар үүсгэх тохиргоо хийгдээгүй байна"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Process Parameter"
-msgstr "Парамтерийг Боловсруулах"
+msgstr "Боловсруулах параметр"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_tls
@@ -153,8 +162,8 @@ msgid ""
 " attempts will fail."
 msgstr ""
 "LDAP сервертэй холбогдоход TLS/SSL нууцлагдсан кодчлолыг ашиглана. Энэ "
-"сонголт нь STARTTLS зөвшөөрөгдсөн байхыг шаардах бөгөөд үгүй бол бүх эрх "
-"шалгах оролдлого бүтэлгүй болно."
+"сонголт нь STARTTLS зөвшөөрөгдсөн байхыг шаардах бөгөөд үгүй бол бүх нэвтрэх"
+" эрх шалгах ажиллагаа амжилтгүй болно."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__sequence
@@ -174,7 +183,7 @@ msgstr "Өөрийн LDAP серверийг тохируулах"
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__user
 msgid "Template User"
-msgstr "Үлгэр Хэрэглэгч"
+msgstr "Загвар хэрэглэгч"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_password
@@ -213,8 +222,3 @@ msgstr "Шинэ хэрэглэгчдийг үүсгэх үед хуулах х�
 #: model:ir.model,name:auth_ldap.model_res_users
 msgid "Users"
 msgstr "Хэрэглэгчид"
-
-#. module: auth_ldap
-#: model:ir.model,name:auth_ldap.model_res_company_ldap
-msgid "res.company.ldap"
-msgstr "res.company.ldap"

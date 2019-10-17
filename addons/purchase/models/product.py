@@ -43,7 +43,7 @@ class ProductTemplate(models.Model):
     @api.multi
     def action_view_po(self):
         action = self.env.ref('purchase.action_purchase_order_report_all').read()[0]
-        action['domain'] = [('state', 'in', ['purchase', 'done']), '&', ('product_tmpl_id', 'in', self.ids)]
+        action['domain'] = ['&', ('state', 'in', ['purchase', 'done']), ('product_tmpl_id', 'in', self.ids)]
         action['context'] = {
             'search_default_last_year_purchase': 1,
             'search_default_status': 1, 'search_default_order_month': 1,
@@ -75,7 +75,7 @@ class ProductProduct(models.Model):
     @api.multi
     def action_view_po(self):
         action = self.env.ref('purchase.action_purchase_order_report_all').read()[0]
-        action['domain'] = [('state', 'in', ['purchase', 'done']), '&', ('product_id', 'in', self.ids)]
+        action['domain'] = ['&', ('state', 'in', ['purchase', 'done']), ('product_id', 'in', self.ids)]
         action['context'] = {
             'search_default_last_year_purchase': 1,
             'search_default_status': 1, 'search_default_order_month': 1,
@@ -91,3 +91,11 @@ class ProductCategory(models.Model):
         'account.account', string="Price Difference Account",
         company_dependent=True,
         help="This account will be used to value price difference between purchase price and accounting cost.")
+
+
+class SupplierInfo(models.Model):
+    _inherit = "product.supplierinfo"
+
+    @api.onchange('name')
+    def _onchange_partner_id(self):
+        self.currency_id = self.name.property_purchase_currency_id or self.env.user.company_id.currency_id

@@ -21,6 +21,7 @@ var CHART_TYPES = ['pie', 'bar', 'line'];
 
 // hide top legend when too many items for device size
 var MAX_LEGEND_LENGTH = 25 * (Math.max(1, config.device.size_class));
+var SPLIT_THRESHOLD = config.device.isMobile ? Infinity : 20;
 
 return AbstractRenderer.extend({
     className: "o_graph_container",
@@ -193,10 +194,12 @@ return AbstractRenderer.extend({
             }
         }
 
-        // For Bar chart View, we keep only groups where count > 0
-        data[0].values  = _.filter(data[0].values, function (elem, index) {
-            return self.state.data[index].count > 0;
-        });
+        // For one level Bar chart View, we keep only groups where count > 0
+        if (this.state.groupedBy.length <= 1) {
+            data[0].values  = _.filter(data[0].values, function (elem, index) {
+                return self.state.data[index].count > 0;
+            });
+        }
 
         var $svgContainer = $('<div/>', {class: 'o_graph_svg_container'});
         this.$el.append($svgContainer);
@@ -210,6 +213,10 @@ return AbstractRenderer.extend({
           margin: {left: 80, bottom: 100, top: 80, right: 0},
           delay: 100,
           transition: 10,
+          controlLabels: {
+            'grouped': _t('Grouped'),
+            'stacked': _t('Stacked'),
+          },
           showLegend: _.size(data) <= MAX_LEGEND_LENGTH,
           showXAxis: true,
           showYAxis: true,
@@ -332,8 +339,8 @@ return AbstractRenderer.extend({
         var self = this;
 
         // Remove Undefined of first GroupBy
-        var graphData = _.filter(this.state.data, function(elem){
-            return elem.labels[0] !== undefined;
+        var graphData = _.filter(this.state.data, function (elem) {
+            return elem.labels[0] !== undefined && elem.labels[0] !== _t("Undefined");
         });
 
         // undefined label value becomes a string 'Undefined' translated
@@ -341,7 +348,6 @@ return AbstractRenderer.extend({
 
         var data = [];
         var ticksLabels = [];
-        var tickValues = [];
         var measure = this.state.fields[this.state.measure].string;
         var values;
 
@@ -362,18 +368,6 @@ return AbstractRenderer.extend({
                     values: values,
                     key: measure + ' (compare)',
                     color: '#ff7f0e',
-                });
-
-                if (this.state.comparisonData.length > graphData.length) {
-                    tickValues = this.state.comparisonData.map(function (d, i) {
-                        return i;
-                    });
-                }
-            }
-
-            if (!tickValues.length) {
-                tickValues = graphData.map(function (d, i) {
-                    return i;
                 });
             }
 
@@ -399,11 +393,9 @@ return AbstractRenderer.extend({
             var tick = 0;
             var serie, tickLabel;
             var identity = function (p) {return p;};
-
-            for (var i = 0; i < this.state.data.length; i++) {
+            for (var i = 0; i < graphData.length; i++) {
                 if (graphData[i].labels[0] !== tickLabel) {
-                    tickLabel = this.state.data[i].labels[0];
-                    tickValues.push(tick);
+                    tickLabel = graphData[i].labels[0];
                     ticksLabels.push(tickLabel);
                     tick++;
                 }
@@ -421,7 +413,11 @@ return AbstractRenderer.extend({
             }
         }
 
-        var $svgContainer = $('<div/>', {class: 'o_graph_svg_container'});
+        var $svgContainer = $('<div/>', { class: 'o_graph_svg_container'});
+        // Split the tooltip into columns for large data because some portion goes out off the screen.
+        if (data.length >= SPLIT_THRESHOLD) {
+            $svgContainer.addClass('o_tooltip_split_in_columns');
+        }
         this.$el.append($svgContainer);
         var svg = d3.select($svgContainer[0]).append('svg');
         svg.datum(data);
@@ -438,7 +434,6 @@ return AbstractRenderer.extend({
         });
         chart.forceY([0]);
         chart.xAxis
-            .tickValues(tickValues)
             .tickFormat(function (d) {
                 return ticksLabels[d];
             });
@@ -491,19 +486,6 @@ return AbstractRenderer.extend({
                 $('.nv-y .tick > line').attr('x2', function (i, value) {
                     return Math.abs(value);
                 });
-
-                // We don't need to show all labels
-                $('.o_graph_svg_container svg .nv-x g.tick > text').show();
-                var $ticksText = $('svg .nv-x g.tick:not(.zero) > text');
-                var ticksLength = $ticksText.length;
-                var tickTextMargin = 5;
-                if (ticksLength) {
-                    var tickWidth = $ticksText[0].getBBox().width + tickTextMargin;
-                    var svgWidth = $('.o_graph_svg_container').width();
-                    var keepOneOf = Math.ceil(ticksLength / (svgWidth / tickWidth));
-                    // FIXME: should work with two line charts
-                    $('.o_graph_svg_container svg .nv-x g.tick:not(:nth-child(' + keepOneOf + 'n+1)) > text').hide();
-                }
             })
 
             chartResize(chart);

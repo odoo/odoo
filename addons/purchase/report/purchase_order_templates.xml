@@ -2,7 +2,7 @@
 <odoo>
 <template id="report_purchaseorder_document">
     <t t-call="web.external_layout">
-        <t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})"/>
+        <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)"/>
         <t t-set="address">
             <div t-field="o.partner_id"
             t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
@@ -26,22 +26,22 @@
             <h2 t-if="o.state in ['purchase', 'done']">Purchase Order Confirmation #<span t-field="o.name"/></h2>
             <h2 t-if="o.state == 'cancel'">Cancelled Purchase Order #<span t-field="o.name"/></h2>
 
-            <div class="row mt32 mb32">
-                <div t-if="o.name" class="col-3">
+            <div id="informations" class="row mt32 mb32">
+                <div t-if="o.name" class="col-3 bm-2">
                     <strong>Our Order Reference:</strong>
-                    <p t-field="o.name"/>
+                    <p t-field="o.name" class="m-0"/>
                 </div>
-                <div t-if="o.partner_ref" class="col-3">
+                <div t-if="o.partner_ref" class="col-3 bm-2">
                     <strong>Your Order Reference:</strong>
-                    <p t-field="o.partner_ref"/>
+                    <p t-field="o.partner_ref" class="m-0"/>
                 </div>
-                <div t-if="o.date_order" class="col-3">
+                <div t-if="o.date_order" class="col-3 bm-2">
                     <strong>Order Date:</strong>
-                    <p t-field="o.date_order"/>
+                    <p t-field="o.date_order" class="m-0"/>
                 </div>
             </div>
 
-            <table class="table table-sm">
+            <table class="table table-sm o_main_table">
                 <thead>
                     <tr>
                         <th><strong>Description</strong></th>
@@ -78,7 +78,7 @@
                 </tbody>
             </table>
 
-            <div class="row justify-content-end">
+            <div id="total" class="row justify-content-end">
                 <div class="col-4">
                     <table class="table table-sm">
                         <tr class="border-black">
@@ -95,7 +95,7 @@
                                     t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                             </td>
                         </tr>
-                        <tr class="border-black">
+                        <tr class="border-black o_total">
                             <td><strong>Total</strong></td>
                             <td class="text-right">
                                 <span t-field="o.amount_total"

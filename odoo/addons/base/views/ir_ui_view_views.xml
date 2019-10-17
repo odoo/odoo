@@ -64,6 +64,7 @@
             <field name="arch" type="xml">
                 <search string="Views">
                     <field name="name" filter_domain="['|', '|', ('name','ilike',self), ('model','ilike',self), ('model_data_id','ilike',self)]" string="View"/>
+                    <field name="key"/>
                     <filter string="Active" name="active" domain="[('active', '=',True)]"/>
                     <filter string="Inactive" name="inactive" domain="[('active', '=',False)]"/>
                     <separator/>

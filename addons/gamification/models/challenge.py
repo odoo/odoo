@@ -344,12 +344,12 @@ class Challenge(models.Model):
                 date_clause = ""
                 query_params = [line.id]
                 if start_date:
-                    date_clause += "AND g.start_date = %s"
+                    date_clause += " AND g.start_date = %s"
                     query_params.append(start_date)
                 if end_date:
-                    date_clause += "AND g.end_date = %s"
+                    date_clause += " AND g.end_date = %s"
                     query_params.append(end_date)
-            
+
                 query = """SELECT u.id AS user_id
                              FROM res_users u
                         LEFT JOIN gamification_goal g
@@ -507,6 +507,9 @@ class Challenge(models.Model):
                 goals = Goals.search(domain, order="completeness desc, current desc")
             else:
                 goals = Goals.search(domain, order="completeness desc, current asc")
+            if not goals:
+                continue
+
             for ranking, goal in enumerate(goals):
                 if user and goal.user_id == user:
                     line_data['own_goal_id'] = goal.id
@@ -523,8 +526,20 @@ class Challenge(models.Model):
                     'completeness': goal.completeness,
                     'state': goal.state,
                 })
-            if goals:
-                res_lines.append(line_data)
+            if len(goals) < 3:
+                # display at least the top 3 in the results
+                missing = 3 - len(goals)
+                for ranking, mock_goal in enumerate([{'id': False,
+                                                      'user_id': False,
+                                                      'name': '',
+                                                      'current': 0,
+                                                      'completeness': 0,
+                                                      'state': False}] * missing,
+                                                    start=len(goals)):
+                    mock_goal['rank'] = ranking
+                    line_data['goals'].append(mock_goal)
+
+            res_lines.append(line_data)
         return res_lines
 
     ##### Reporting #####

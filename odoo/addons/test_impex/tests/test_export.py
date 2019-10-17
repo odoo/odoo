@@ -20,11 +20,11 @@ class CreatorCase(common.TransactionCase):
         super(CreatorCase, self).setUp()
         self.model = self.env[self.model_name]
 
-    def make(self, value):
-        return self.model.create({'value': value})
+    def make(self, value, context=None):
+        return self.model.with_context(**(context or {})).create({'value': value})
 
     def export(self, value, fields=('value',), context=None):
-        record = self.make(value)
+        record = self.make(value, context=context)
         record.invalidate_cache()
         return record._export_rows([f.split('/') for f in fields])
 
@@ -243,19 +243,21 @@ class test_datetime(CreatorCase):
             [['']])
 
     def test_basic(self):
+        """ Export value with no TZ set on the user
+        """
+        self.env.user.write({'tz': False})
         self.assertEqual(
             self.export('2011-11-07 21:05:48'),
             [[u'2011-11-07 21:05:48']])
 
     def test_tz(self):
-        """ Export ignores the timezone and always exports to UTC
+        """ Export converts the value in the user's TZ
 
         .. note:: on the other hand, export uses user lang for name_get
         """
-        # NOTE: ignores user timezone, always exports to UTC
         self.assertEqual(
             self.export('2011-11-07 21:05:48', context={'tz': 'Pacific/Norfolk'}),
-            [[u'2011-11-07 21:05:48']])
+            [[u'2011-11-08 08:35:48']])
 
 
 class test_selection(CreatorCase):
@@ -291,7 +293,7 @@ class test_selection(CreatorCase):
             })
         self.assertEqual(
             self.export(2, context={'lang': 'fr_FR'}),
-            [[u'Bar']])
+            [[u'titi']])
 
 
 class test_selection_function(CreatorCase):

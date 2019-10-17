@@ -258,8 +258,8 @@ var Domain = collections.Tree.extend({
                     });
                     break;
                 case 'previous_year':
-                    leftBoundaryParams.years = leftBoundaryParams.years ? leftBoundaryParams.years-- : -1;
-                    rightBoundaryParams.years = rightBoundaryParams.years ? rightBoundaryParams.years-- : -1;
+                    leftBoundaryParams.years = leftBoundaryParams.years ? leftBoundaryParams.years - 1 : -1;
+                    rightBoundaryParams.years = rightBoundaryParams.years ? rightBoundaryParams.years - 1 : -1;
                   break;
             }
 

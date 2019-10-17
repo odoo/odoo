@@ -47,7 +47,10 @@ ActionManager.include({
      * @param {string} [state.view_type]
      */
     loadState: function (state) {
+        var callersArguments = arguments;
+        var self = this;
         var action;
+        var def;
         var options = {
             clear_breadcrumbs: true,
             pushState: false,
@@ -102,11 +105,20 @@ ActionManager.include({
                 action = lastAction;
                 options.viewType = state.view_type;
             }
+        } else if (state.sa) {
+            def = this._rpc({
+                route: '/web/session/get_session_action',
+                params: {key: state.sa},
+            }).then(function (sessionAction) {
+                action = sessionAction;
+            });
         }
-        if (action) {
-            return this.doAction(action, options);
-        }
-        return this._super.apply(this, arguments);
+        return $.when(def).then(function () {
+            if (action) {
+                return self.doAction(action, options);
+            }
+            return self._super.apply(self, callersArguments);
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -646,8 +658,10 @@ ActionManager.include({
                     });
                 } else {
                     viewOptions = _.extend(viewOptions || {}, action.env);
-                    return controller.widget.reload(viewOptions).then(function () {
-                        return controller;
+                    return $.when(controller.widget.willRestore()).then(function () {
+                        return controller.widget.reload(viewOptions).then(function () {
+                            return controller;
+                        });
                     });
                 }
             });
@@ -772,7 +786,7 @@ ActionManager.include({
                     _.object(_.reject(_.pairs(env.context), function (pair) {
                         return pair[0].match('^(?:(?:default_|search_default_|show_).+|' +
                                              '.+_view_ref|group_by|group_by_no_leaf|active_id|' +
-                                             'active_ids)$') !== null;
+                                             'active_ids|orderedBy)$') !== null;
                     }))
                 );
                 ctx.add(actionData.context || {});

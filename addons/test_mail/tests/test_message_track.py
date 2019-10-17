@@ -26,7 +26,7 @@ class TestTracking(common.BaseFunctionalTest, common.MockEmails):
     def setUp(self):
         super(TestTracking, self).setUp()
 
-        record = self.env['mail.test.full'].sudo(self.user_employee).with_context(self._quick_create_ctx).create({
+        record = self.env['mail.test.full'].sudo(self.user_employee).with_context(common.BaseFunctionalTest._test_context).create({
             'name': 'Test',
         })
         self.record = record.with_context(mail_notrack=False)

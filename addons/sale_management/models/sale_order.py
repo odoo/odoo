@@ -31,7 +31,8 @@ class SaleOrder(models.Model):
     @api.onchange('partner_id')
     def onchange_partner_id(self):
         super(SaleOrder, self).onchange_partner_id()
-        self.note = self.sale_order_template_id.note or self.note
+        template = self.sale_order_template_id.with_context(lang=self.partner_id.lang)
+        self.note = template.note or self.note
 
     def _compute_line_data_for_template_change(self, line):
         return {
@@ -71,7 +72,11 @@ class SaleOrder(models.Model):
                     price = self.pricelist_id.with_context(uom=line.product_uom_id.id).get_product_price(line.product_id, 1, False)
                     if self.pricelist_id.discount_policy == 'without_discount' and line.price_unit:
                         discount = (line.price_unit - price) / line.price_unit * 100
-                        price = line.price_unit
+                        # negative discounts (= surcharge) are included in the display price
+                        if discount < 0:
+                            discount = 0
+                        else:
+                            price = line.price_unit
 
                 else:
                     price = line.price_unit
@@ -113,6 +118,21 @@ class SaleOrder(models.Model):
             if order.sale_order_template_id and order.sale_order_template_id.mail_template_id:
                 self.sale_order_template_id.mail_template_id.send_mail(order.id)
         return res
+
+    @api.multi
+    def get_access_action(self, access_uid=None):
+        """ Instead of the classic form view, redirect to the online quote if it exists. """
+        self.ensure_one()
+        user = access_uid and self.env['res.users'].sudo().browse(access_uid) or self.env.user
+
+        if not self.sale_order_template_id or (not user.share and not self.env.context.get('force_website')):
+            return super(SaleOrder, self).get_access_action(access_uid)
+        return {
+            'type': 'ir.actions.act_url',
+            'url': self.get_portal_url(),
+            'target': 'self',
+            'res_id': self.id,
+        }
 
 
 class SaleOrderLine(models.Model):
@@ -194,4 +214,5 @@ class SaleOrderOption(models.Model):
             'product_uom_qty': self.quantity,
             'product_uom': self.uom_id.id,
             'discount': self.discount,
+            'company_id': self.order_id.company_id.id,
         }

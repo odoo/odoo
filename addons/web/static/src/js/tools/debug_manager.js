@@ -365,6 +365,10 @@ DebugManager.include({
             views: [[false, 'list'], [false, 'form']],
             type: 'ir.actions.act_window',
             domain: [['res_model', '=', this._action.res_model], ['res_id', '=', selectedIDs[0]]],
+            context: {
+                default_res_model: this._action.res_model,
+                default_res_id: selectedIDs[0],
+            },
         });
     },
     get_metadata: function() {
@@ -429,6 +433,7 @@ DebugManager.include({
         var fields = state.fields;
         var fieldsInfo = state.fieldsInfo.form;
         var fieldNamesInView = state.getFieldNames();
+        var fieldNamesOnlyOnView = ['message_attachment_count'];
         var fieldsValues = state.data;
         var modifierDatas = {};
         _.each(fieldNamesInView, function (fieldName) {
@@ -437,6 +442,7 @@ DebugManager.include({
             });
         });
         this.fields = _.chain(fieldNamesInView)
+            .difference(fieldNamesOnlyOnView)
             .map(function (fieldName) {
                 var modifierData = modifierDatas[fieldName];
                 var invisibleOrReadOnly;

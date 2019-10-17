@@ -56,14 +56,18 @@ $-font-numbers: (
     // anyway. Automatically mimic navbar-dark if the user's menu color is dark.
     // Note: this only works because navbar-light is defined before navbar-dark,
     // we may want to use a safest way when possible.
-    background-color: color('menu') !important;
-    @if (color-yiq(color('menu')) != $yiq-text-dark) {
-        @extend .navbar-dark;
+    @if color('menu') {
+        background-color: color('menu') !important;
+        @if (color-yiq(color('menu')) != $yiq-text-dark) {
+            @extend .navbar-dark;
+        }
     }
 }
 
 .o_footer {
-    @include o-bg-color(color('footer'));
+    @if color('footer') {
+        @include o-bg-color(color('footer'));
+    }
 
     > #footer {
         // FIXME needed to prevent the dropzone at the bottom of the #wrap element
@@ -262,6 +266,10 @@ table.table_desc tr td {
     }
 }
 
+// Jumbotron
+.jumbotron {
+    border-radius: 0;
+}
 
 //
 // Snippets
@@ -465,8 +473,8 @@ table.table_desc tr td {
     // Default
     &.s_carousel_default {
         // Controls - chevron
-        .carousel-control-prev-icon:before { content: "\f053"; margin-left: 1.5rem; }
-        .carousel-control-next-icon:before { content: "\f054"; margin-right: 1.5rem; }
+        .carousel-control-prev-icon:before { content: "\f053" #{"/*rtl:'\f054'*/"}; margin-left: 1.5rem; }
+        .carousel-control-next-icon:before { content: "\f054" #{"/*rtl:'\f053'*/"}; margin-right: 1.5rem; }
         .carousel-control-prev-icon:before,
         .carousel-control-next-icon:before {
             background-color: rgba(0,0,0,0);
@@ -839,8 +847,14 @@ table.table_desc tr td {
             background-color: inherit;
         }
     }
-    &.s_parallax_is_fixed > .s_parallax_bg {
-        background-attachment: fixed;
+    @include media-breakpoint-up(xl) {
+        // Fixed backgrounds are disabled when using a mobile/tablet device,
+        // which is not a big deal but, on some of them (iOS...), defining the
+        // background as fixed breaks the background-size/position props.
+        // So we enable this only for >= XL devices.
+        &.s_parallax_is_fixed > .s_parallax_bg {
+            background-attachment: fixed;
+        }
     }
 }
 
@@ -1057,4 +1071,9 @@ table.table_desc tr td {
     .bg-#{$color}-light {
         background-color: rgba($value, 0.1);
     }
+}
+
+// TODO: Will be handled properly in master/saas-12.2, temp fix for website_event.registration_attendee_details
+.modal-footer > .float-left {
+    margin-right: auto;
 }

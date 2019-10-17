@@ -107,9 +107,9 @@ var ActivityRenderer = AbstractRenderer.extend({
                     activity_ids: {},
                     activity_state: {
                         selection: [
-                            ['overdue', "Overdue"],
-                            ['today', "Today"],
-                            ['planned', "Planned"],
+                            ['overdue', _t("Overdue")],
+                            ['today', _t("Today")],
+                            ['planned', _t("Planned")],
                         ],
                     },
                 },

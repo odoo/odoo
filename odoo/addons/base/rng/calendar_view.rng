@@ -19,6 +19,7 @@
             <rng:optional><rng:attribute name="quick_add" /></rng:optional>
             <rng:optional><rng:attribute name="color" /></rng:optional>
             <rng:optional><rng:attribute name="event_open_popup" /></rng:optional>
+            <rng:optional><rng:attribute name="js_class"/></rng:optional>
             <rng:optional>
                 <rng:attribute name="mode">
                     <rng:choice>
@@ -32,7 +33,7 @@
                 <rng:ref name="field"/>
             </rng:zeroOrMore>
             <rng:optional>
-                <rng:element name="template">
+                <rng:element name="templates">
                     <rng:oneOrMore>
                         <rng:ref name="any"/>
                     </rng:oneOrMore>

@@ -14,8 +14,8 @@
 </template>
 
 <template id="s_cover" name="Cover">
-    <section class="s_cover parallax bg-black-50 oe_img_bg oe_custom_bg pt96 pb96" data-scroll-background-ratio="1">
-        <span class="s_parallax_bg" style="background-image: url('/web/image/website.s_cover_default_image'); background-position: 50% 0;"/>
+    <section class="s_cover parallax s_parallax_is_fixed bg-black-50 pt96 pb96" data-scroll-background-ratio="1">
+        <span class="s_parallax_bg oe_img_bg oe_custom_bg" style="background-image: url('/web/image/website.s_cover_default_image'); background-position: 50% 0;"/>
         <div class="container">
             <div class="row s_nb_column_fixed">
                 <div class="col-lg-12 s_title" data-name="Title">
@@ -74,11 +74,11 @@
 </template>
 
 <template id="s_banner" name="Banner">
-    <section class="s_banner parallax s_parallax_is_fixed oe_img_bg pt96 pb96" data-scroll-background-ratio="1">
-        <span class="s_parallax_bg" style="background-image: url('/web/image/website.s_banner_default_image'); background-position: 50% 0;"/>
+    <section class="s_banner parallax s_parallax_is_fixed pt96 pb96" data-scroll-background-ratio="1">
+        <span class="s_parallax_bg oe_img_bg oe_custom_bg" style="background-image: url('/web/image/website.s_banner_default_image'); background-position: 50% 0;"/>
         <div class="container">
             <div class="row s_nb_column_fixed">
-                <div class="col-lg-7 jumbotron pt32 pb32" style="background-color: rgb(255, 255, 255);" data-name="Box">
+                <div class="col-lg-7 bg-white jumbotron rounded pt32 pb32" data-name="Box">
                     <div class="row">
                         <div class="col-lg-12 s_title s_col_no_bgcolor" data-name="Title">
                             <h1 class="s_title_thin"><font style="font-size: 62px;"><b>Sell Online.</b> Easily.</font></h1>
@@ -135,11 +135,11 @@
 </template>
 
 <template id="s_three_columns" name="Three Columns">
-    <section class="s_three_columns pt32 pb32" style="background-color: rgb(239, 239, 239);">
+    <section class="s_three_columns bg-200 pt32 pb32">
         <div class="container">
             <div class="row d-flex align-items-stretch">
                 <div class="col-lg-4 s_col_no_bgcolor pt16 pb16">
-                    <div class="card">
+                    <div class="card bg-white">
                         <img class="card-img-top" src="/web/image/website.library_image_11" alt="Odoo - Sample 1 for three columns"/>
                         <div class="card-body">
                             <h3 class="card-title">Feature One</h3>
@@ -148,7 +148,7 @@
                     </div>
                 </div>
                 <div class="col-lg-4 s_col_no_bgcolor pt16 pb16">
-                    <div class="card">
+                    <div class="card bg-white">
                         <img class="card-img-top" src="/web/image/website.library_image_13" alt="Odoo - Sample 2 for three columns"/>
                         <div class="card-body">
                             <h3 class="card-title">Feature Two</h3>
@@ -160,7 +160,7 @@
                     </div>
                 </div>
                 <div class="col-lg-4 s_col_no_bgcolor pt16 pb16">
-                    <div class="card">
+                    <div class="card bg-white">
                         <img class="card-img-top" src="/web/image/website.library_image_07" alt="Odoo - Sample 3 for three columns"/>
                         <div class="card-body">
                             <h3 class="card-title">Feature Three</h3>
@@ -177,7 +177,7 @@
 </template>
 
 <template id="s_picture" name="Picture">
-    <section class="s_picture pt48 pb24" style="background-color: rgb(239, 239, 239);">
+    <section class="s_picture bg-200 pt48 pb24">
         <div class="container">
             <div class="row s_nb_column_fixed">
                 <div class="col-lg-12 s_title pt16 pb16">
@@ -280,7 +280,7 @@
 </template>
 
 <template id="s_card" name="Card">
-    <div class="s_card card w-100" style="background-color: rgba(255,255,255);">
+    <div class="s_card card bg-white w-100">
         <h4 class="card-header">Feature Title</h4>
         <div class="card-body">
             <p class="card-text">A card is a flexible and extensible content container. It includes options for headers and footers, a wide variety of content, contextual background colors, and powerful display options.</p>
@@ -366,7 +366,7 @@
             </div>
             <div class="row">
                 <div class="col-lg-4 s_col_no_bgcolor text-center pt16 pb16" data-name="Box">
-                    <div class="card" style="background-color: rgb(239, 239, 239);">
+                    <div class="card bg-200">
                         <h4 class="card-header">Beginner</h4>
                         <div class="card-body text-center">
                             <h2 class="card-title">
@@ -510,7 +510,7 @@
 </template>
 
 <template id="s_call_to_action" name="Call to Action">
-    <section class="s_call_to_action pt48 pb24" style="background-color: rgb(239, 239, 239);">
+    <section class="s_call_to_action bg-200 pt48 pb24">
         <div class="container">
             <div class="row">
                 <div class="col-lg-9 pb24">
@@ -529,7 +529,7 @@
 </template>
 
 <template id="s_references" name="References">
-    <section class="s_references pt16 pb16" style="background-color: rgb(239, 239, 239);">
+    <section class="s_references bg-200 pt16 pb16">
         <div class="container">
             <div class="row">
                 <div class="col-lg-2 pt32">
@@ -566,16 +566,16 @@
             <div class="row s_col_no_bgcolor">
                 <div class="col-lg-12 pt16 pb16">
                     <div id="myCollapse" class="accordion" role="tablist">
-                        <div class="card" style="background-color: rgb(255, 255, 255);">
-                            <a href="#" role="tab" data-toggle="collapse" aria-expanded="true" class="card-header text-primary">Terms of service</a>
+                        <div class="card bg-white">
+                            <a href="#" role="tab" data-toggle="collapse" aria-expanded="true" class="card-header">Terms of service</a>
                             <div class="collapse show" role="tabpanel">
                                 <div class="card-body">
                                     <p class="card-text">These terms of service ("Terms", "Agreement") are an agreement between the website ("Website operator", "us", "we" or "our") and you ("User", "you" or "your"). This Agreement sets forth the general terms and conditions of your use of this website and any of its products or services (collectively, "Website" or "Services").</p>
                                 </div>
                             </div>
                         </div>
-                        <div class="card" style="background-color: rgb(255, 255, 255);">
-                            <a href="#" role="tab" data-toggle="collapse" aria-expanded="false" class="collapsed card-header text-primary">Links to other Websites</a>
+                        <div class="card bg-white">
+                            <a href="#" role="tab" data-toggle="collapse" aria-expanded="false" class="collapsed card-header">Links to other Websites</a>
                             <div class="collapse" role="tabpanel">
                                 <div class="card-body">
                                     <p class="card-text">Although this Website may be linked to other websites, we are not, directly or indirectly, implying any approval, association, sponsorship, endorsement, or affiliation with any linked website, unless specifically stated herein.</p>
@@ -583,8 +583,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="card" style="background-color: rgb(255, 255, 255);">
-                            <a href="#" role="tab" data-toggle="collapse" aria-expanded="false" class="collapsed card-header text-primary">Use of Cookies</a>
+                        <div class="card bg-white">
+                            <a href="#" role="tab" data-toggle="collapse" aria-expanded="false" class="collapsed card-header">Use of Cookies</a>
                             <div class="collapse" role="tabpanel">
                                 <div class="card-body">
                                     <p class="card-text">Website may use cookies to personalize and facilitate maximum navigation of the User by this site. The User may configure his / her browser to notify and reject the installation of the cookies sent by us.</p>
@@ -670,7 +670,7 @@
         <div class="container">
             <div class="row s_col_no_bgcolor">
                 <div class="col-lg-8 offset-lg-2 pt48 pb48">
-                    <div class="card">
+                    <div class="card bg-white">
                         <div class="card-header">
                             <ul class="nav nav-tabs card-header-tabs" role="tablist">
                                 <li class="nav-item">
@@ -736,8 +736,8 @@
 </template>
 
 <template id="s_parallax" name="Parallax">
-    <section class="s_parallax s_parallax_is_fixed parallax bg-black-50 pt160 pb160" data-scroll-background-ratio="1">
-        <span class="s_parallax_bg" style="background-image: url('/web/image/website.s_parallax_default_image'); background-position: 50% 75%;"/>
+    <section class="s_parallax parallax s_parallax_is_fixed bg-black-50 pt160 pb160" data-scroll-background-ratio="1">
+        <span class="s_parallax_bg oe_img_bg oe_custom_bg" style="background-image: url('/web/image/website.s_parallax_default_image'); background-position: 50% 75%;"/>
         <div class="oe_structure">
             <section>
                 <div class="container">
@@ -763,10 +763,10 @@
         <!-- Content -->
         <div class="carousel-inner">
             <!-- #01 -->
-            <div class="carousel-item active pt80 pb80" style="background-color: rgb(239, 239, 239);" data-name="Slide">
+            <div class="carousel-item active bg-200 pt80 pb80" data-name="Slide">
                 <div class="container">
                     <div class="row content">
-                        <blockquote class="carousel-content col-lg-6 offset-lg-3" style="background-color: rgb(255, 255, 255);">
+                        <blockquote class="carousel-content col-lg-6 bg-white offset-lg-3">
                             <i class="fa fa-1x fa-quote-left rounded-0 bg-secondary s_quotes_carousel_icon"/>
                             <p>Write a quote here from one of your customers. Quotes are a great way to build confidence in your products or services.</p>
                             <footer>
@@ -781,7 +781,7 @@
             <div class="carousel-item oe_img_bg pt80 pb80" style="background-image: url('/web/image/website.s_quotes_carousel_demo_image_1'); background-position: 50% 50%;" data-name="Slide">
                 <div class="container">
                     <div class="row content">
-                        <blockquote class="col-lg-6" style="background-color: rgb(255, 255, 255);">
+                        <blockquote class="col-lg-6 bg-white">
                             <p>Odoo provides essential platform for our project management. Things are better organized and more visible with it.</p>
                             <footer>
                                 <img class="img" src="/web/image/website.s_quotes_carousel_demo_image_4" alt=""/>
@@ -795,7 +795,7 @@
             <div class="carousel-item oe_img_bg pt80 pb80" style="background-image: url('/web/image/website.s_quotes_carousel_demo_image_2'); background-position: 50% 50%;" data-name="Slide">
                 <div class="container">
                     <div class="row content">
-                        <blockquote class="col-lg-6 offset-lg-6" style="background-color: rgb(255, 255, 255);">
+                        <blockquote class="col-lg-6 offset-lg-6 bg-white">
                             <p>Odoo provides essential platform for our project management. Things are better organized and more visible with it.</p>
                             <footer class="blockquote-footer">
                                 <img class="img" src="/web/image/website.s_quotes_carousel_demo_image_5" alt=""/>
@@ -1003,7 +1003,7 @@
     </div>
 
     <!-- STYLES | .s_rating -->
-    <div data-selector=".s_rating [class*='col-lg-']">
+    <div data-selector=".s_rating > div">
         <div class="dropdown-submenu">
             <a tabindex="-1" href="#" class="dropdown-item">Icon</a>
             <div class="dropdown-menu" role="menu">
@@ -1081,7 +1081,7 @@
                 <a href="#" class="dropdown-item" role="menuitem" data-select-class="slide">Slide</a>
                 <a href="#" class="dropdown-item" role="menuitem" data-select-class="carousel-fade slide">Fade</a>
                 <div class="dropdown-divider"/>
-                <a href="#" class="dropdown-item" role="menuitem" data-select-class="s_carousel_no_transition">None</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-select-class="">None</a>
             </div>
         </div>
         <div class="dropdown-submenu">
@@ -1109,7 +1109,10 @@
         <a href="#" class="dropdown-item" data-remove-slide="true" data-no-preview="true"><i class="fa fa-trash-o"/>Remove Slide</a>
     </div>
 
-    <div data-js="navTabs" data-selector="section .row > div" data-target=".nav-tabs"/>
+    <div data-js="navTabs" data-selector="section .row > div" data-target=".nav-tabs">
+        <a href="#" class="dropdown-item" data-add-tab="1" data-no-preview="true"><i class="fa fa-plus"/>Add Tab</a>
+        <a href="#" class="dropdown-item" data-remove-tab="1" data-no-preview="true"><i class="fa fa-minus"/>Remove Tab</a>
+    </div>
 
     <!-- Parallax -->
     <div data-js="parallax" data-selector=".parallax">
@@ -1275,35 +1278,33 @@
 
     <!-- Color | Columns -->
     <div data-js="colorpicker"
-        data-selector="section [class*='col-lg-']"
-        data-exclude=".s_col_no_bgcolor, .s_col_no_bgcolor > [class*='col-lg-'], .o_gallery [class*='col-lg-']">
+        data-selector="section .row > div"
+        data-exclude=".s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .o_gallery .row > div">
         <div class="dropdown-submenu">
             <a tabindex="-1" href="#" class="dropdown-item"><i class="fa fa-eyedropper"/>Background Color</a>
             <div class="dropdown-menu" role="menu"/>
         </div>
     </div>
 
-    <div data-selector="section [class*='col-lg-']"
-        data-exclude=".s_col_no_bgcolor, .s_col_no_bgcolor > [class*='col-lg-'], .o_gallery [class*='col-lg-']">
+    <div data-selector="section .row > div"
+        data-exclude=".s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .o_gallery .row > div">
         <div class="dropdown-submenu">
             <a tabindex="-1" href="#" class="dropdown-item"><i class="fa fa-magic"/>Styles</a>
             <div class="dropdown-menu" role="menu">
-                <a href="#" class="dropdown-item" role="menuitem" data-select-class="border">Border</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-select-class="rounded">Rounded</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-select-class="shadow">Shadow</a>
-                <div class="dropdown-divider"/>
-                <a href="#" class="dropdown-item" role="menuitem" data-select-class="">None</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-toggle-class="border">Border</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-toggle-class="rounded">Rounded</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-toggle-class="shadow">Shadow</a>
             </div>
         </div>
     </div>
 
     <div data-js="sizing_y"
-        data-selector="section, .row > [class*='col-lg-'], :not(.o_gallery > .container) > .carousel, .parallax, .s_hr, .s_btn"/>
+        data-selector="section, .row > div, :not(.o_gallery > .container) > .carousel, .parallax, .s_hr, .s_btn"/>
 
     <div data-js="sizing_x"
-        data-selector=".row > [class*='col-lg-']"
-        data-drop-near=".row > [class*='col-lg-']"
-        data-exclude=".s_col_no_resize > [class*='col-lg-']">
+        data-selector=".row > div"
+        data-drop-near=".row > div"
+        data-exclude=".s_col_no_resize.row > div">
     </div>
 
     <div id="so_snippet_addition"

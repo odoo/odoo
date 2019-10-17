@@ -48,7 +48,7 @@ class MailResendMessage(models.TransientModel):
             rec['mail_message_id'] = mail_message_id.id
             rec['partner_ids'] = partner_ids
         else:
-            raise UserError('No message_id found in context')
+            raise UserError(_('No message_id found in context'))
         return rec
 
     @api.multi
@@ -68,7 +68,7 @@ class MailResendMessage(models.TransientModel):
                 rdata = []
                 for pid, cid, active, pshare, ctype, notif, groups in self.env['mail.followers']._get_recipient_data(None, False, pids=to_send.ids):
                     if pid and notif == 'email' or not notif:
-                        pdata = {'id': pid, 'share': pshare, 'active': active, 'notif': 'email', 'groups': groups}
+                        pdata = {'id': pid, 'share': pshare, 'active': active, 'notif': 'email', 'groups': groups or []}
                         if not pshare and notif:  # has an user and is not shared, is therefore user
                             rdata.append(dict(pdata, type='user'))
                         elif pshare and notif:  # has an user and is shared, is therefore portal

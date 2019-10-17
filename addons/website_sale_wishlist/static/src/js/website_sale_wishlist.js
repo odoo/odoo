@@ -20,28 +20,55 @@ sAnimations.registry.ProductWishlist = sAnimations.Class.extend(ProductConfigura
     },
     events: sAnimations.Class.events,
 
-    start: function () {
+    /**
+     * @constructor
+     */
+    init: function (parent) {
+        this._super.apply(this, arguments);
+        this.wishlistProductIDs = [];
+    },
+    /**
+     * Gets the current wishlist items.
+     * In editable mode, do nothing instead.
+     *
+     * @override
+     */
+    willStart: function () {
         var self = this;
         var def = this._super.apply(this, arguments);
         if (this.editableMode) {
             return def;
         }
 
-        this.wishlistProductIDs = [];
-
         var wishDef = $.get('/shop/wishlist', {
             count: 1,
         }).then(function (res) {
             self.wishlistProductIDs = JSON.parse(res);
-            self._updateWishlistView();
-            if ($('input.js_product_change').length) { // manage "List View of variants"
-                $('input.js_product_change:checked').first().trigger('change');
-            } else {
-                $('input.js_variant_change').trigger('change');
-            }
         });
 
         return $.when(def, wishDef);
+    },
+    /**
+     * Updates the wishlist view (navbar) & the wishlist button (product page).
+     * In editable mode, do nothing instead.
+     *
+     * @override
+     */
+    start: function () {
+        var def = this._super.apply(this, arguments);
+        if (this.editableMode) {
+            return def;
+        }
+
+        this._updateWishlistView();
+        // trigger change on only one input
+        if (this.$('input.js_product_change').length) { // manage "List View of variants"
+            this.$('input.js_product_change:checked').first().trigger('change');
+        } else {
+            this.$('input.product_id').first().trigger('change');
+        }
+
+        return def;
     },
 
     //--------------------------------------------------------------------------
@@ -61,11 +88,17 @@ sAnimations.registry.ProductWishlist = sAnimations.Class.extend(ProductConfigura
             }
             productID = parseInt(productID, 10);
         }
-
+        var $form = $el.closest('form');
+        var templateId = $form.find('.product_template_id').val();
+        // when adding from /shop instead of the product page, need another selector
+        if (!templateId) {
+            templateId = $el.data('product-template-id');
+        }
+        $el.prop("disabled", true).addClass('disabled');
         var productReady = this.selectOrCreateProduct(
             $el.closest('form'),
             productID,
-            $el.closest('form').find('.product_template_id').val(),
+            templateId,
             false
         );
 
@@ -82,9 +115,12 @@ sAnimations.registry.ProductWishlist = sAnimations.Class.extend(ProductConfigura
                     self.wishlistProductIDs.push(productId);
                     self._updateWishlistView();
                     wSaleUtils.animateClone($('#my_wish'), $el.closest('form'), 25, 40);
-                    $el.prop("disabled", true).addClass('disabled');
+                }).fail(function () {
+                    $el.prop("disabled", false).removeClass('disabled');
                 });
             }
+        }).fail(function () {
+            $el.prop("disabled", false).removeClass('disabled');
         });
     },
     /**
@@ -132,9 +168,9 @@ sAnimations.registry.ProductWishlist = sAnimations.Class.extend(ProductConfigura
         wSaleUtils.animateClone($('#my_cart'), tr, 25, 40);
 
         if ($('#b2b_wish').is(':checked')) {
-            return this._addToCart(product, tr.find('qty').val() || 1);
+            return this._addToCart(product, tr.find('add_qty').val() || 1);
         } else {
-            var adding_deffered = this._addToCart(product, tr.find('qty').val() || 1);
+            var adding_deffered = this._addToCart(product, tr.find('add_qty').val() || 1);
             this._removeWish(e, adding_deffered);
             return adding_deffered;
         }

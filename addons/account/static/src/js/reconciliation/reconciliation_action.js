@@ -42,6 +42,8 @@ var StatementAction = AbstractAction.extend(ControlPanelMixin, {
         LineRenderer: ReconciliationRenderer.LineRenderer,
         // used context params
         params: ['statement_ids'],
+        // number of statements/partners/accounts to display
+        defaultDisplayQty: 10,
         // number of moves lines displayed in 'match' mode
         limitMoveLines: 15,
     },
@@ -58,6 +60,7 @@ var StatementAction = AbstractAction.extend(ControlPanelMixin, {
         this.params = params;
         this.model = new this.config.Model(this, {
             modelName: "account.reconciliation.widget",
+            defaultDisplayQty: params.params && params.params.defaultDisplayQty || this.config.defaultDisplayQty,
             limitMoveLines: params.params && params.params.limitMoveLines || this.config.limitMoveLines,
         });
         this.widgets = [];
@@ -302,9 +305,12 @@ var StatementAction = AbstractAction.extend(ControlPanelMixin, {
                 'context': self.model.getContext(),
             });
             _.each(result.handles, function (handle) {
-                self._getWidget(handle).destroy();
-                var index = _.findIndex(self.widgets, function (widget) {return widget.handle===handle;});
-                self.widgets.splice(index, 1);
+                var widget = self._getWidget(handle);
+                if (widget) {
+                    widget.destroy();
+                    var index = _.findIndex(self.widgets, function (widget) {return widget.handle===handle;});
+                    self.widgets.splice(index, 1);
+                }
             });
             // Get number of widget and if less than constant and if there are more to laod, load until constant
             if (self.widgets.length < self.model.defaultDisplayQty 
@@ -329,6 +335,7 @@ var ManualAction = StatementAction.extend({
         ActionRenderer: ReconciliationRenderer.ManualRenderer,
         LineRenderer: ReconciliationRenderer.ManualLineRenderer,
         params: ['company_ids', 'mode', 'partner_ids', 'account_ids'],
+        defaultDisplayQty: 30,
         limitMoveLines: 15,
     },
 

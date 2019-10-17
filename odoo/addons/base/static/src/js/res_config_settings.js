@@ -305,7 +305,7 @@ var BaseSettingRenderer = FormRenderer.extend({
             module.settingView.find('h2').addClass('o_hidden');
             module.settingView.find('.settingSearchHeader').addClass('o_hidden');
             module.settingView.find('.o_settings_container').removeClass('mt16');
-            var resultSetting = module.settingView.find("label:containsTextLike('" + self.searchText + "')");
+            var resultSetting = module.settingView.find(".o_form_label:containsTextLike('" + self.searchText + "')");
             if (resultSetting.length > 0) {
                 resultSetting.each(function () {
                     var settingBox = $(this).closest('.o_setting_box');
@@ -343,8 +343,8 @@ var BaseSettingRenderer = FormRenderer.extend({
         }
         var match = text.search(new RegExp(word, "i"));
         word = text.substring(match, match + word.length);
-        var hilitedWord = "<span class='highlighter'>" + word + '</span>';
-        return text.replace(word, hilitedWord);
+        var highlightedWord = "<span class='highlighter'>" + word + '</span>';
+        return text.replace(word, highlightedWord);
     },
 });
 
@@ -353,6 +353,15 @@ var BaseSettingController = FormController.extend({
         this._super.apply(this, arguments);
         this.disableAutofocus = true;
         this.renderer.activeSettingTab = this.initialState.context.module;
+    },
+    /**
+     * Settings view should always be in edit mode, so we have to override
+     * default behaviour
+     *
+     * @override
+     */
+    willRestore: function () {
+        this.mode = 'edit';
     },
 });
 

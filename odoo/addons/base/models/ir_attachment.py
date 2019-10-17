@@ -382,6 +382,15 @@ class IrAttachment(models.Model):
                 raise AccessError(_("Sorry, you are not allowed to access this document."))
 
     @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        """Override read_group to add res_field=False in domain if not present."""
+        if not any(item[0] in ('id', 'res_field') for item in domain):
+            domain.insert(0, ('res_field', '=', False))
+        return super(IrAttachment, self).read_group(domain, fields, groupby,
+                                                    offset=offset, limit=limit,
+                                                    orderby=orderby, lazy=lazy)
+
+    @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
         # add res_field=False in domain if not present; the arg[0] trick below
         # works for domain items and '&'/'|'/'!' operators too
@@ -433,6 +442,16 @@ class IrAttachment(models.Model):
 
         # sort result according to the original sort ordering
         result = [id for id in orig_ids if id in ids]
+
+        # If the original search reached the limit, it is important the
+        # filtered record set does so too. When a JS view recieve a
+        # record set whose length is bellow the limit, it thinks it
+        # reached the last page.
+        if len(orig_ids) == limit and len(result) < len(orig_ids):
+            result.extend(self._search(args, offset=offset + len(orig_ids),
+                                       limit=limit, order=order, count=count,
+                                       access_rights_uid=access_rights_uid)[:limit - len(result)])
+
         return len(result) if count else list(result)
 
     @api.multi
@@ -496,6 +515,10 @@ class IrAttachment(models.Model):
             values = self._make_thumbnail(values)
             self.browse().check('write', values=values)
         return super(IrAttachment, self).create(vals_list)
+
+    @api.multi
+    def _post_add_create(self):
+        pass
 
     @api.one
     def generate_access_token(self):
@@ -595,3 +618,8 @@ class IrAttachment(models.Model):
         domain = [('type', '=', 'binary'), ('url', '=', url)] + (extra_domain or [])
         fieldNames = ['__last_update', 'datas', 'mimetype'] + (extra_fields or [])
         return self.search_read(domain, fieldNames, order=order, limit=1)
+
+    @api.model
+    def get_attachment_by_key(self, key, extra_domain=None, order=None):
+        domain = [('key', '=', key)] + (extra_domain or [])
+        return self.search(domain, order=order, limit=1)

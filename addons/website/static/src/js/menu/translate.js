@@ -21,11 +21,10 @@ var TranslatePageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * @override
      */
     start: function () {
-        var defs = [this._super.apply(this, arguments)];
         if (ctx.edit_translations) {
-            defs.push(this._startTranslateMode());
+            this._startTranslateMode();
         }
-        return $.when.apply($, defs);
+        return this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------

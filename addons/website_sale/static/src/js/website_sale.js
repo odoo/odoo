@@ -145,12 +145,13 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
         'change form.js_attributes input, form.js_attributes select': '_onChangeAttribute',
         'mouseup form.js_add_cart_json label': '_onMouseupAddCartLabel',
         'touchend form.js_add_cart_json label': '_onMouseupAddCartLabel',
-        'change .css_attribute_color input': '_onChangeColorAttribute',
         'click .show_coupon': '_onClickShowCoupon',
         'submit .o_website_sale_search': '_onSubmitSaleSearch',
         'change select[name="country_id"]': '_onChangeCountry',
         'change #shipping_use_same': '_onChangeShippingUseSame',
         'click .toggle_summary': '_onToggleSummary',
+        'click input.js_product_change': 'onChangeVariant',
+        'change .js_main_product [data-attribute_exclusions]': 'onChangeVariant',
     },
 
     /**
@@ -163,6 +164,9 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
         this._changeCountry = _.debounce(this._changeCountry.bind(this), 500);
 
         this.isWebsite = true;
+
+        delete this.events['change .main_product:not(.in_cart) input.js_quantity'];
+        delete this.events['change [data-attribute_exclusions]'];
     },
     /**
      * @override
@@ -177,6 +181,7 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
             $('input.js_product_change', product).first().trigger('change');
         });
 
+        // This has to be triggered to compute the "out of stock" feature
         this.triggerVariantChange(this.$el);
 
         this.$('select[name="country_id"]').change();
@@ -189,33 +194,23 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
             }
         });
 
-        // Do not activate image zoom for mobile devices, since it might prevent users from scrolling the page
-        if (!config.device.isMobile) {
-            var autoZoom = $('.ecom-zoomable').data('ecom-zoom-auto') || false,
-            factorZoom = parseFloat($('.ecom-zoomable').data('ecom-zoom-factor')) || 1.5,
-            attach = '#o-carousel-product';
-            _.each($('.ecom-zoomable img[data-zoom]'), function (el) {
-                onImageLoaded(el, function () {
-                    var $img = $(el);
-                    if (!_.str.endsWith(el.src, el.dataset.zoomImage) || // if zoom-img != img
-                        el.naturalWidth >= $(attach).width() * factorZoom || el.naturalHeight >= $(attach).height() * factorZoom) {
-                        $img.zoomOdoo({event: autoZoom ? 'mouseenter' : 'click', attach: attach});
-                    } else {
-                        $img.removeAttr('data-zoom');  // remove cursor
-                    }
-                });
-            });
-        }
-
-        function onImageLoaded(img, callback) {
-            $(img).on('load', function () { callback(); });
-            if (img.complete) {
-                $(img).off('load');
-                callback();
-            }
-        }
+        this._startZoom();
 
         return def;
+    },
+    /**
+     * The selector is different when using list view of variants.
+     *
+     * @override
+     */
+    getSelectedVariantValues: function ($container) {
+        var combination = $container.find('input.js_product_change:checked')
+            .data('combination');
+
+        if (combination) {
+            return combination;
+        }
+        return ProductConfiguratorMixin.getSelectedVariantValues.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -328,6 +323,124 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
             }
         });
     },
+    /**
+     * This is overridden to handle the "List View of Variants" of the web shop.
+     * That feature allows directly selecting the variant from a list instead of selecting the
+     * attribute values.
+     *
+     * Since the layout is completely different, we need to fetch the product_id directly
+     * from the selected variant.
+     *
+     * @override
+     */
+    _getProductId: function ($parent) {
+        if ($parent.find('input.js_product_change').length !== 0) {
+            return parseInt($parent.find('input.js_product_change:checked').val());
+        }
+        else {
+            return ProductConfiguratorMixin._getProductId.apply(this, arguments);
+        }
+    },
+    /**
+     * @private
+     */
+    _startZoom: function () {
+        // Do not activate image zoom for mobile devices, since it might prevent users from scrolling the page
+        if (!config.device.isMobile) {
+            var autoZoom = $('.ecom-zoomable').data('ecom-zoom-auto') || false,
+            factorZoom = parseFloat($('.ecom-zoomable').data('ecom-zoom-factor')) || 1.5,
+            attach = '#o-carousel-product';
+            _.each($('.ecom-zoomable img[data-zoom]'), function (el) {
+                onImageLoaded(el, function () {
+                    var $img = $(el);
+                    if (!_.str.endsWith(el.src, el.dataset.zoomImage) || // if zoom-img != img
+                        el.naturalWidth >= $(attach).width() * factorZoom || el.naturalHeight >= $(attach).height() * factorZoom) {
+                        $img.zoomOdoo({event: autoZoom ? 'mouseenter' : 'click', attach: attach});
+                        $img.attr('data-zoom', 1); // add cursor (if previously removed)
+                    } else {
+                        $img.removeAttr('data-zoom'); // remove cursor
+                        // remove zooming but keep the attribute because
+                        // it can potentially be set back
+                        $img.attr('data-zoom-image', '');
+                    }
+                });
+            });
+        }
+
+        function onImageLoaded(img, callback) {
+            // On Chrome the load event already happened at this point so we
+            // have to rely on complete. On Firefox it seems that the event is
+            // always triggered after this so we can rely on it.
+            //
+            // However on the "complete" case we still want to keep listening to
+            // the event because if the image is changed later (eg. product
+            // configurator) a new load event will be triggered (both browsers).
+            $(img).on('load', function () {
+                callback();
+            });
+            if (img.complete) {
+                callback();
+            }
+        }
+    },
+    /**
+     * On website, we display a carousel instead of only one image
+     *
+     * @override
+     * @private
+     */
+    _updateProductImage: function ($productContainer, productId, productTemplateId, new_carousel, isCombinationPossible) {
+        var $img;
+        var $carousel = $productContainer.find('#o-carousel-product');
+
+        if (isCombinationPossible === undefined) {
+            isCombinationPossible = this.isSelectedVariantAllowed;
+        }
+
+        if (new_carousel) {
+            // When using the web editor, don't reload this or the images won't
+            // be able to be edited depending on if this is done loading before
+            // or after the editor is ready.
+            if (window.location.search.indexOf('enable_editor') === -1) {
+                var $new_carousel = $(new_carousel);
+                $carousel.after($new_carousel);
+                $carousel.remove();
+                $carousel = $new_carousel;
+                $carousel.carousel(0);
+                this._startZoom();
+                // fix issue with carousel height
+                this.trigger_up('animation_start_demand', {$target: $carousel});
+            }
+        }
+        else { // compatibility 12.0
+            var model = productId ? 'product.product' : 'product.template';
+            var modelId = productId || productTemplateId;
+            var imageSrc = '/web/image/{0}/{1}/image'
+                .replace("{0}", model)
+                .replace("{1}", modelId);
+
+            $img = $productContainer.find('img.js_variant_img');
+            $img.attr("src", imageSrc);
+            $img.parent().attr('data-oe-model', model).attr('data-oe-id', modelId)
+                .data('oe-model', model).data('oe-id', modelId);
+
+            var $thumbnail = $productContainer.find('img.js_variant_img_small');
+            if ($thumbnail.length !== 0) { // if only one, thumbnails are not displayed
+                $thumbnail.attr("src", "/web/image/{0}/{1}/image/90x90"
+                    .replace('{0}', model)
+                    .replace('{1}', modelId));
+                $('.carousel').carousel(0);
+            }
+
+            // reset zooming constructs
+            $img.filter('[data-zoom-image]').attr('data-zoom-image', $img.attr('src'));
+            if ($img.data('zoomOdoo') !== undefined) {
+                $img.data('zoomOdoo').isReady = false;
+            }
+        }
+
+        $carousel.toggleClass('css_not_available', !isCombinationPossible);
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -436,15 +549,6 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
      * @private
      * @param {Event} ev
      */
-    _onChangeColorAttribute: function (ev) { // highlight selected color
-        $('.css_attribute_color').removeClass("active")
-                                 .filter(':has(input:checked)')
-                                 .addClass("active");
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
     _onClickShowCoupon: function (ev) {
         $(ev.currentTarget).hide();
         $('.coupon_form').removeClass('d-none');
@@ -484,6 +588,16 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
         $('.ship_to_other').toggle(!$(ev.currentTarget).prop('checked'));
     },
     /**
+     * Toggles the add to cart button depending on the possibility of the
+     * current combination.
+     *
+     * @override
+     */
+    _toggleDisable: function ($parent, isCombinationPossible) {
+        ProductConfiguratorMixin._toggleDisable.apply(this, arguments);
+        $parent.find("#add_to_cart").toggleClass('disabled', !isCombinationPossible);
+    },
+    /**
      * @private
      */
     _onToggleSummary: function () {
@@ -520,7 +634,7 @@ sAnimations.registry.websiteSaleCart = sAnimations.Class.extend({
         $new.removeClass('js_change_shipping');
         $new.addClass('border_primary');
 
-        var $form = $(ev.currentTarget).parent('div.one_kanban').find('form.hide');
+        var $form = $(ev.currentTarget).parent('div.one_kanban').find('form.d-none');
         $.post($form.attr('action'), $form.serialize()+'&xhr=1');
     },
     /**

@@ -6,13 +6,13 @@ from odoo import models, fields, api, _
 class IrActionsReport(models.Model):
     _inherit = 'ir.actions.report'
 
-    @api.model
-    def _get_rendering_context(self, docids, data):
-        res = super(IrActionsReport, self)._get_rendering_context(docids, data)
-        #  Add snailmail_layout if specified in the context
+    @api.multi
+    def retrieve_attachment(self, record):
+        # Override this method in order to force to re-render the pdf in case of
+        # using snailmail
         if self.env.context.get('snailmail_layout'):
-            res.update({'snailmail_layout': True})
-        return res
+            return False
+        return super(IrActionsReport, self).retrieve_attachment(record)
 
     @api.model
     def get_paperformat(self):

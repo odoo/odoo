@@ -26,6 +26,16 @@ var MultiUserChannel = Channel.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Returns the title to display in thread window's headers.
+     * For channels, the title is prefixed with "#".
+     *
+     * @override
+     * @returns {string|Object} the name of the thread by default (see getName)
+     */
+    getTitle: function () {
+        return "#" + this._super.apply(this, arguments);
+    },
+    /**
      * States whether this thread has the mass mailing setting active or not.
      * This is a server-side setting, that determine the type of composer that
      * is used (basic or extended composer).

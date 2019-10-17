@@ -3,16 +3,18 @@
 # * snailmail
 # 
 # Translators:
-# Sengtha Chay <sengtha@gmail.com>, 2018
 # Chan Nath <channath@gmail.com>, 2018
 # AN Souphorn <ansouphorn@gmail.com>, 2018
+# Sengtha Chay <sengtha@gmail.com>, 2018
+# Lux Sok <sok.lux@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 10:06+0000\n"
-"PO-Revision-Date: 2018-10-02 10:06+0000\n"
-"Last-Translator: AN Souphorn <ansouphorn@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-01-09 10:32+0000\n"
+"PO-Revision-Date: 2018-08-24 09:25+0000\n"
+"Last-Translator: Lux Sok <sok.lux@gmail.com>, 2019\n"
 "Language-Team: Khmer (https://www.transifex.com/odoo/teams/41243/km/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,31 +23,40 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:243
-#, python-format
-msgid "An error occured when sending the document by post.<br>Error: %s"
+#: model_terms:ir.ui.view,arch_db:snailmail.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\"/>"
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:211
+#: code:addons/snailmail/models/snailmail_letter.py:249
+#, python-format
+msgid "An error occured when sending the document by post.<br>Error: %s"
+msgstr "កំហុសមួយបានកើតឡើងនៅពេលផ្ញើឯកសារតាមប្រៃសណីយ៍។ <br>កំហុស៖%s"
+
+#. module: snailmail
+#: code:addons/snailmail/models/snailmail_letter.py:215
 #, python-format
 msgid "An unknown error happened. Please contact the support."
-msgstr ""
+msgstr "កំហុសមិនស្គាល់បានកើតឡើង។ សូមទាក់ទងជំនួយ។"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__attachment_id
 msgid "Attachment"
-msgstr ""
+msgstr "ឯកសារ​ភ្ជាប់"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__duplex
 msgid "Both side"
-msgstr ""
+msgstr "ទាំងសងខាង"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_duplex
 msgid "Both sides"
-msgstr ""
+msgstr "ទាំងសងខាង"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_form
@@ -55,23 +66,23 @@ msgstr "លុបចោល"
 #. module: snailmail
 #: selection:snailmail.letter,state:0
 msgid "Canceled"
-msgstr ""
+msgstr "លុបចោល"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.res_config_settings_view_form
 msgid "Choose the ink used to print documents"
-msgstr ""
+msgstr "ជ្រើសរើសទឹកថ្នាំដែលប្រើសម្រាប់បោះពុម្ពឯកសារ។"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.res_config_settings_view_form
 msgid "Choose the layout to print documents"
-msgstr ""
+msgstr "ជ្រើសរើសប្លង់ដើម្បីបោះពុម្ពឯកសារ"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_color
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__color
 msgid "Color"
-msgstr ""
+msgstr "ព័ណ៍"
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_res_company
@@ -86,7 +97,7 @@ msgstr "ក្រុមហ៊ុន"
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "កំណត់រចនាសម្ព័ន្ធ"
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_res_partner
@@ -131,12 +142,12 @@ msgstr "ID"
 #. module: snailmail
 #: selection:snailmail.letter,state:0
 msgid "In Queue"
-msgstr ""
+msgstr "នៅក្នុងជួរ"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__info_msg
 msgid "Information"
-msgstr ""
+msgstr "ពត៌មាន"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter____last_update
@@ -158,104 +169,116 @@ msgstr "ផ្លាស់ប្តូរចុងក្រោយ"
 #: model:ir.ui.menu,name:snailmail.menu_snailmail_letters
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_list
 msgid "Letters"
-msgstr ""
+msgstr "អក្សរ"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__model
 msgid "Model"
-msgstr ""
+msgstr "ម៉ូដែល"
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:209
+#: code:addons/snailmail/models/snailmail_letter.py:211
 #, python-format
 msgid "One or more required fields are empty."
-msgstr ""
+msgstr "ផ្នែកដែលត្រូវការមួយឬច្រើនគឺទទេ។"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__report_template
 msgid "Optional report to print and attach"
-msgstr ""
+msgstr "របាយការណ៍ស្រេចចិត្តដើម្បីបោះពុម្ពនិងភ្ជាប់ "
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:248
+#: code:addons/snailmail/models/snailmail_letter.py:264
 #, python-format
 msgid "Post letter: an error occured."
-msgstr ""
+msgstr "លិខិតប្រៃសណីយៈកំហុសមួយបានកើតឡើង។"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.res_config_settings_view_form
 msgid "Postal Printings"
-msgstr ""
+msgstr "ការបោះពុម្ពប្រៃសណីយ៍ "
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_duplex
 msgid "Print Both sides"
-msgstr ""
+msgstr "បោះពុម្ពទាំងសងខាង "
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_color
 msgid "Print In Color"
-msgstr ""
+msgstr "បោះពុម្ពជាពណ៌ "
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_ir_qweb_field_contact
 msgid "Qweb Field Contact"
-msgstr ""
+msgstr "ទំនាក់ទំនងជំនាញ Qweb "
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__partner_id
 msgid "Recipient"
-msgstr ""
+msgstr "ការទទួល"
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_ir_actions_report
 msgid "Report Action"
-msgstr ""
+msgstr "ឯកសារសកម្មភាព"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_form
 msgid "Send Now"
-msgstr ""
+msgstr "ការផ្ញើរឥឡូវ"
 
 #. module: snailmail
 #: selection:snailmail.letter,state:0
 msgid "Sent"
-msgstr ""
+msgstr "បានផ្ងើរ"
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_snailmail_letter
 msgid "Snailmail Letter"
-msgstr ""
+msgstr "សំបុត្រ​Snailmail"
 
 #. module: snailmail
 #: model:ir.actions.server,name:snailmail.snailmail_print_ir_actions_server
 #: model:ir.cron,cron_name:snailmail.snailmail_print
 #: model:ir.cron,name:snailmail.snailmail_print
 msgid "Snailmail: process letters queue"
-msgstr ""
+msgstr "Snailmail៖ ដំណើរការជួរអក្សរ "
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__state
 msgid "Status"
-msgstr ""
+msgstr "ស្ថានភាព"
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:207
+#: code:addons/snailmail/models/snailmail_letter.py:213
+#, python-format
+msgid ""
+"The attachment of the letter could not be sent. Please check its content and"
+" contact the support if the problem persists."
+msgstr ""
+"ឯកសារភ្ជាប់នៃលិខិតមិនអាចត្រូវបានផ្ញើទេ។ "
+"សូមពិនិត្យមើលមាតិការបស់វាហើយទាក់ទងការគាំទ្រប្រសិនបើបញ្ហានៅតែបន្តកើតមាន។ "
+
+#. module: snailmail
+#: code:addons/snailmail/models/snailmail_letter.py:209
 #, python-format
 msgid "The country of the partner is not covered by Snailmail."
-msgstr ""
+msgstr "ប្រទេសនៃដៃគូមិនត្រូវបានគ្របដណ្តប់ដោយ Snailmail ឡើយ។ "
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:238
+#: code:addons/snailmail/models/snailmail_letter.py:242
 #, python-format
 msgid ""
 "The document was correctly sent by post.<br>The tracking id is %ssend_id"
 msgstr ""
+"ឯកសារត្រូវបានផ្ញើយ៉ាងត្រឹមត្រូវតាមប្រៃសណីយ។ <br>លេខសម្គាល់តាមដានគឺ %ssend_id"
+" "
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__user_id
 msgid "User sending the letter"
-msgstr ""
+msgstr "អ្នកប្រើប្រាស់ផ្ញើលិខិត "
 
 #. module: snailmail
 #: model:ir.model.fields,help:snailmail.field_snailmail_letter__state
@@ -264,19 +287,28 @@ msgid ""
 "If the letter is correctly sent, the status goes in 'Sent',\n"
 "If not, it will got in state 'Error' and the error message will be displayed in the field 'Error Message'."
 msgstr ""
+"នៅពេលលិខិតមួយត្រូវបានបង្កើតស្ថានភាពគឺ 'ព្រាង' ។\n"
+" ប្រសិនបើលិខិតនេះត្រូវបានផ្ញើយ៉ាងត្រឹមត្រូវស្ថានភាពនឹងមាននៅក្នុង 'បានផ្ញើ',\n"
+" បើមិនដូច្នោះទេវានឹងមានស្ថានភាពកំហុសហើយសារកំហុសនឹងត្រូវបានបង្ហាញនៅក្នុងវាល 'សារកំហុស' ។\n"
+" "
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:205
+#: code:addons/snailmail/models/snailmail_letter.py:207
 #, python-format
 msgid ""
 "You don't have an IAP account registered for this service.<br>Please go to "
 "<a href=%s target=\"new\">iap.odoo.com</a> to claim your free credits."
 msgstr ""
+"អ្នកមិនមានគណនី IAP ដែលបានចុះឈ្មោះសម្រាប់សេវាកម្មនេះទេ។<br> សូមចូលទៅកាន់<a "
+"href=%s target=\"new\"> iap.odoo.com</a> ដើម្បីទាមទារឥណទានឥតគិតថ្លៃរបស់អ្នក។"
+" "
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:202
+#: code:addons/snailmail/models/snailmail_letter.py:204
 #, python-format
 msgid ""
 "You don't have enough credits to perform this operation.<br>Please go to "
 "your <a href=%s target=\"new\">iap account</a>."
 msgstr ""
+"អ្នកមិនមានទឹកប្រាក់គ្រប់គ្រាន់ដើម្បីអនុវត្តប្រតិបត្តិការនេះទេ។ "
+"<br>សូមចូលទៅកាន់<a href=%s target=\"new\">គណនីអាយភីរបស់អ្នក</a>។ "

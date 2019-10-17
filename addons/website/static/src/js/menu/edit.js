@@ -15,8 +15,13 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     xmlDependencies: ['/website/static/src/xml/website.editor.xml'],
     actions: _.extend({}, websiteNavbarData.WebsiteNavbarActionWidget.prototype.actions, {
         edit: '_startEditMode',
+        on_save: '_onSave',
     }),
     custom_events: _.extend({}, websiteNavbarData.WebsiteNavbarActionWidget.custom_events || {}, {
+        content_will_be_destroyed: '_onContentWillBeDestroyed',
+        content_was_recreated: '_onContentWasRecreated',
+        snippet_will_be_cloned: '_onSnippetWillBeCloned',
+        snippet_cloned: '_onSnippetCloned',
         snippet_dropped: '_onSnippetDropped',
     }),
 
@@ -37,7 +42,8 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
 
         // If we auto start the editor, do not show a welcome message
         if (this._editorAutoStart) {
-            return $.when(def, this._startEditMode());
+            this._startEditMode();
+            return def;
         }
 
         // Check that the page is empty
@@ -51,8 +57,8 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         this.$welcomeMessage.css('min-height', $wrap.parent('main').height() - ($wrap.outerHeight(true) - $wrap.height()));
         $wrap.empty().append(this.$welcomeMessage);
 
-        setTimeout(function(){
-            if($('.o_tooltip.o_animated').length) {
+        setTimeout(function () {
+            if ($('.o_tooltip.o_animated').length) {
                 $('.o_tooltip_container').addClass('show');
             }
         }, 1000); // ugly hack to wait that tooltip is loaded
@@ -78,7 +84,8 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                 self.$welcomeMessage.remove();
             }
             var $wrapwrap = $('#wrapwrap'); // TODO find this element another way
-            $wrapwrap.find('.oe_structure.oe_empty, [data-oe-type="html"]').attr('data-editor-message', _t('DRAG BUILDING BLOCKS HERE'));
+            self.$editorMessageElements = $wrapwrap.find('.oe_structure.oe_empty, [data-oe-type="html"]')
+                .attr('data-editor-message', _t('DRAG BUILDING BLOCKS HERE'));
             var def = $.Deferred();
             self.trigger_up('animation_start_demand', {
                 editableMode: true,
@@ -88,11 +95,91 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             return def;
         });
     },
+    /**
+     * On save, the editor will ask to parent widgets if something needs to be
+     * done first. The website navbar will receive that demand and asks to its
+     * action-capable components to do something. For example, the content menu
+     * handles page-related options saving. However, some users with limited
+     * access rights do not have the content menu... but the website navbar
+     * expects that the save action is performed. So, this empty action is
+     * defined here so that all users have an 'on_save' related action.
+     *
+     * As explained above, that action should always be defined in the current
+     * implementation (even an empty one) but in fact it is also needed to
+     * remove the data-editor-message attributes which are added when entering
+     * edition.
+     *
+     * @private
+     * @todo improve the system to somehow declare required/optional actions
+     */
+    _onSave: function () {
+        if (this.$editorMessageElements) {
+            this.$editorMessageElements.removeAttr('data-editor-message');
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * Called when content will be destroyed in the page. Notifies the
+     * WebsiteRoot that is should stop the animations.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onContentWillBeDestroyed: function (ev) {
+        this.trigger_up('animation_stop_demand', {
+            $target: ev.data.$target,
+        });
+    },
+    /**
+     * Called when content will be recreated in the page. Notifies the
+     * WebsiteRoot that is should start the animations.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onContentWasRecreated: function (ev) {
+        this.trigger_up('animation_start_demand', {
+            editableMode: true,
+            $target: ev.data.$target,
+        });
+    },
+    /**
+     * Called when a snippet is about to be cloned in the page. Notifies the
+     * WebsiteRoot that is should destroy the animations for this snippet.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onSnippetWillBeCloned: function (ev) {
+        this.trigger_up('animation_stop_demand', {
+            $target: ev.data.$target,
+        });
+    },
+    /**
+     * Called when a snippet is cloned in the page. Notifies the WebsiteRoot
+     * that is should start the animations for this snippet and the snippet it
+     * was cloned from.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onSnippetCloned: function (ev) {
+        this.trigger_up('animation_start_demand', {
+            editableMode: true,
+            $target: ev.data.$target,
+        });
+        // TODO: remove in saas-12.5, undefined $origin will restart #wrapwrap
+        if (ev.data.$origin) {
+            this.trigger_up('animation_start_demand', {
+                editableMode: true,
+                $target: ev.data.$origin,
+            });
+        }
+    },
     /**
      * Called when a snippet is dropped in the page. Notifies the WebsiteRoot
      * that is should start the animations for this snippet.

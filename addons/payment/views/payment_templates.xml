@@ -87,6 +87,9 @@
                                 <input type="checkbox" name="o_payment_form_save_token" data-remove-me=""/>
                                 Save my payment data
                             </label>
+                            <t t-if="acq.save_token == 'always'">
+                                <input type="checkbox" name="o_payment_form_save_token" checked="'checked'" class="o_hidden" data-remove-me=""/>
+                            </t>
                         </div>
                     </t>
                     <t t-else="acq.payment_flow == 's2s'">
@@ -137,7 +140,7 @@
                         <i class="fa fa-lock"> Pay</i>
                     </t>
                 </button>
-                <button t-if="mode == 'manage' and acquirers.filtered(lambda x: x.payment_flow == 's2s')" id="o_payment_form_add_pm" class="btn btn-primary btn-lg mb8 mt8">
+                <button t-if="mode == 'manage' and list(filter(lambda x: x.payment_flow == 's2s', acquirers))" id="o_payment_form_add_pm" class="btn btn-primary btn-lg mb8 mt8">
                     <i class="fa fa-plus-circle"> Add new card</i>
                 </button>
             </div>

@@ -52,13 +52,14 @@
                                     <field name="list_price" string="Sales Price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"/>
                                     <label for="standard_price" groups="base.group_user" attrs="{'invisible': [('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}"/>
                                     <div name="standard_price_uom" groups="base.group_user" attrs="{'invisible': [('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}">
-                                        <field name="standard_price" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                        <field name="standard_price" widget='monetary' options="{'currency_field': 'cost_currency_id'}"/>
                                     </div>
                                     <field name="company_id" groups="base.group_multi_company"
                                         options="{'no_create': True}"/>
                                     <field name="uom_id" groups="uom.group_uom" options="{'no_create': True}"/>
                                     <field name="uom_po_id" groups="uom.group_uom" options="{'no_create': True}"/>
                                     <field name="currency_id" invisible="1"/>
+                                    <field name="cost_currency_id" invisible="1"/>
                                     <field name="product_variant_id" invisible="1"/>
                                 </group>
                             </group>
@@ -71,15 +72,65 @@
                                 <group groups="product.group_product_pricelist" name="pricelists">
                                     <div name="pricelist_item" groups="product.group_product_pricelist">
                                         <separator string="Pricing"/>
-                                        <field name="item_ids" nolabel="1" context="{'default_base':'list_price', 'default_applied_on' :'1_product'}">
+                                        <field name="item_ids" nolabel="1" mode="tree,kanban" context="{'default_base':'list_price', 'default_applied_on' :'1_product'}">
                                             <tree string="Pricelist Items" editable="bottom">
                                                 <field name="pricelist_id" string="Pricelist" required='1'/>
-                                                <field name="fixed_price" string="Price" required='1'/>
+                                                <field name="currency_id" invisible="1"/>
+                                                <field name="fixed_price" string="Price" required='1' widget='monetary' options="{'currency_field': 'currency_id'}"/>
                                                 <field name="min_quantity"/>
                                                 <field name="date_start"/>
                                                 <field name="date_end"/>
                                                 <field name="applied_on" invisible="1"/>
                                             </tree>
+                                            <kanban string="Pricelist Items" class="o_kanban_mobile">
+                                               <field name="pricelist_id"/>
+                                               <field name="currency_id"/>
+                                               <field name="fixed_price"/>
+                                               <field name="min_quantity"/>
+                                               <field name="date_start"/>
+                                               <field name="date_end"/>
+                                               <templates>
+                                                   <t t-name="kanban-box">
+                                                       <div t-attf-class="oe_kanban_global_click">
+                                                           <div class="row">
+                                                               <div class="col-12">
+                                                                   <strong>
+                                                                       <field name='pricelist_id'/>: <field name="fixed_price" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                                                   </strong>
+                                                               </div>
+                                                           </div>
+                                                           <div class="row">
+                                                               <div class="col-12">
+                                                                   <span><t t-esc='record.min_quantity.string'/>: <t t-esc='record.min_quantity.value'/></span>
+                                                               </div>
+                                                           </div>
+                                                           <span t-if='record.date_start.value || record.date_end.value'>
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    Valid <span t-if='record.date_start.value'> from <t t-esc='record.date_start.value'/></span><span t-if='record.date_end.value'> until <t t-esc='record.date_end.value'/></span>
+                                                                </div>
+                                                            </div>
+                                                           </span>
+                                                       </div>
+                                                   </t>
+                                               </templates>
+                                           </kanban>
+                                           <form string="Pricelist Items">
+                                               <h1><field name="name"/></h1>
+                                               <group>
+                                                   <group>
+                                                       <field name="applied_on" invisible="1"/>
+                                                       <field name="pricelist_id" string="Pricelist" required='1'/>
+                                                       <field name="currency_id" invisible="1"/>
+                                                       <field name="fixed_price" string="Price" required='1' widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                                   </group>
+                                                   <group>
+                                                       <field name="min_quantity"/>
+                                                       <field name="date_start"/>
+                                                       <field name="date_end"/>
+                                                   </group>
+                                               </group>
+                                           </form>
                                         </field>
                                     </div>
                                 </group>
@@ -138,8 +189,8 @@
                 <filter string="Services" name="services" domain="[('type','=','service')]"/>
                 <filter string="Products" name="consumable" domain="[('type', 'in', ['consu', 'product'])]"/>
                 <separator/>
-                <filter string="Can be Sold" name="filter_to_sell" domain="[('sale_ok','=',1)]"/>
-                <filter string="Can be Purchased" name="filter_to_purchase" domain="[('purchase_ok', '=', 1)]"/>
+                <filter string="Can be Sold" name="filter_to_sell" domain="[('sale_ok','=',True)]"/>
+                <filter string="Can be Purchased" name="filter_to_purchase" domain="[('purchase_ok', '=', True)]"/>
                 <separator/>
                 <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 <field string="Attributes" name="attribute_line_ids" groups="product.group_product_variant"/>
@@ -238,8 +289,9 @@
                             <group name="pricing" string="Pricing">
                                 <field name="product_variant_count" invisible="1"/>
                                 <field name="lst_price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'readonly': [('product_variant_count', '&gt;', 1)]}"/>
-                                <field name="standard_price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                                <field name="standard_price" widget='monetary' options="{'currency_field': 'cost_currency_id', 'field_digits': True}"/>
                                 <field name="currency_id" invisible='1'/>
+                                <field name="cost_currency_id" invisible="1"/>
                             </group>
                             <group name="weight">
                                 <group name="weight" string="Weights" attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}">
@@ -251,7 +303,7 @@
                                     <label for="weight"/>
                                     <div class="o_row">
                                         <field name="weight"/>
-                                        <span>kg</span>
+                                        <span><field name="weight_uom_name"/></span>
                                     </div>
                                 </group>
                             </group>
@@ -552,7 +604,7 @@
                     <group>
                         <group string="Vendor">
                             <field name="product_variant_count" invisible="1"/>
-                            <field name="product_id" groups="product.group_product_variant" domain="[('product_tmpl_id', '=', product_tmpl_id)]"/>
+                            <field name="product_id" groups="product.group_product_variant" domain="[('product_tmpl_id', '=', product_tmpl_id)]" options="{'no_create_edit': True}"/>
                             <field name="name" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"/>
                             <field name="product_name"/>
                             <field name="product_code"/>

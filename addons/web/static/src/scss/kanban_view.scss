@@ -7,7 +7,6 @@
 
     @include media-breakpoint-down(sm) {
         padding: 0px!important;
-        overflow-x: auto;
     }
 
     .o_kanban_record, .o_kanban_quick_create {
@@ -102,7 +101,7 @@
             .oe_kanban_bottom_left, .oe_kanban_bottom_right {
                 display: flex;
                 align-items: center;
-                height: 20px;
+                min-height: 20px;
             }
             .oe_kanban_bottom_left {
                 flex: 1 1 auto;
@@ -237,6 +236,7 @@
                 font-weight: 500;
                 background-color: transparent;
                 color: inherit;
+                box-shadow: none;
                 @include o-kanban-tag-color;
 
                 span {
@@ -283,20 +283,8 @@
         }
 
         .o_attachment_image > img {
-            overflow: hidden;
-            padding-top: 75%;
-
-            .o_attachment_image {
-                @include o-position-absolute(0, 0, 0, 0);
-                background-size: cover;
-                background-position: center;
-                transform: scale(1.05);
-                transition: all 0.3s;
-            }
-
-            &:hover .o_attachment_image {
-                transform: scale(1);
-            }
+            width: 100%;
+            height: auto;
         }
 
         .o_progressbar {
@@ -336,6 +324,10 @@
 
         .oe_kanban_details {
             width: 100%;
+
+            // Useful for the class 'o_text_overflow'
+            min-width: 0;
+
             ul {
                 margin-bottom: $o-kanban-inner-hmargin*0.5;;
                 padding-left: 0;
@@ -576,6 +568,8 @@
     @include o-kanban-record-color;
 
     .oe_kanban_color_help {
-        @include o-position-absolute(0, 5px, 0, -1px);
+        @include o-position-absolute(0, auto, 0, -1px);
+        width: $o-kanban-color-border-width;
+        z-index: 1; // show the title over kanban color
     }
 }

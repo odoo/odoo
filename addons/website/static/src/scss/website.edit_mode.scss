@@ -180,8 +180,6 @@
     font-family: Roboto, $font-family-sans-serif;
 
     .o_tooltip_container {
-        display: inline-flex;
-        align-items: center;
         transition: opacity 1s linear;
 
         > .o_tooltip {
@@ -209,6 +207,9 @@
         display: inline-block;
     }
     .btn, &.btn {
+        -webkit-user-select: auto;
+        -moz-user-select: auto;
+        -ms-user-select: auto;
         user-select: auto;
         cursor: text!important;
     }
@@ -256,7 +257,8 @@
     display: block!important;
 }
 
-[data-oe-type=html].oe_no_empty:empty {
+// TODO: in master check if the class / rule is relevant at all
+.editor_enable [data-oe-type=html].oe_no_empty:empty {
     height: 16px!important;
 }
 

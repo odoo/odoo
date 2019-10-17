@@ -61,16 +61,34 @@
         </field>
     </record>
 
+    <record model="ir.ui.view" id="product_template_form_view_invoice_policy">
+        <field name="name">product.template.invoice.policy</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="sale.product_template_form_view_invoice_policy"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='invoicing']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+        </field>
+    </record>
+
     <record model="ir.ui.view" id="product_template_form_view">
         <field name="name">product.template.product.website.form</field>
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="arch" type="xml">
             <!-- add state field in header -->
+            <xpath expr="//group[@name='email_template_and_project']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            <xpath expr="//group[@name='description']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
             <xpath expr="//button[@name='toggle_active']" position="before">
                 <button class="oe_stat_button" name="website_publish_button"
                     type="object" icon="fa-globe" attrs="{'invisible': [('sale_ok','=',False)]}">
                     <field name="website_published" widget="website_button"/>
+                    <field name="is_published" invisible="1"/>
                 </button>
             </xpath>
             <xpath expr="//page[@name='sales']" position="after">
@@ -80,7 +98,7 @@
                             <field name="website_url" invisible="1"/>
                             <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
                             <field name="public_categ_ids" widget="many2many_tags" string="Categories"/>
-                            <field name="alternative_product_ids" widget="many2many_tags"/>
+                            <field name="alternative_product_ids" widget="many2many_tags" domain="[('id', '!=', active_id)]"/>
                             <field name="accessory_product_ids" widget="many2many_tags"/>
                             <field name="website_style_ids" widget="many2many_tags" groups="base.group_no_one"/>
                         </group>
@@ -182,7 +200,7 @@
         <field name="arch" type="xml">
             <field name='currency_id' position='after'>
                 <field name="selectable"/>
-                <field name="website_id" options="{'no_create': True}" string="Allow to use on " placeholder="None website"/>
+                <field name="website_id" options="{'no_create': True}" />
             </field>
         </field>
     </record>

@@ -764,7 +764,7 @@ var SeoConfigurator = Dialog.extend({
         if (!obj) {
             return $.Deferred().reject();
         } else {
-            return rpc.query({
+            return this._rpc({
                 model: obj.model,
                 method: 'write',
                 args: [[obj.id], data],

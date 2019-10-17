@@ -74,5 +74,8 @@
             </div>
         </div>
     </xpath>
+    <xpath expr="//div[@data-js='layout_column']" position="attributes">
+        <attribute name="data-exclude" add=".s_latest_posts, .s_latest_posts_big_picture" separator=","/>
+    </xpath>
 </template>
 </odoo>

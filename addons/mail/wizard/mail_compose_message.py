@@ -199,6 +199,13 @@ class MailComposer(models.TransientModel):
         """ Process the wizard content and proceed with sending the related
             email(s), rendering any template patterns on the fly if needed. """
         notif_layout = self._context.get('custom_layout')
+        # Several custom layouts make use of the model description at rendering, e.g. in the
+        # 'View <document>' button. Some models are used for different business concepts, such as
+        # 'purchase.order' which is used for a RFQ and and PO. To avoid confusion, we must use a
+        # different wording depending on the state of the object.
+        # Therefore, we can set the description in the context from the beginning to avoid falling
+        # back on the regular display_name retrieved in '_notify_prepare_template_context'.
+        model_description = self._context.get('model_description')
         for wizard in self:
             # Duplicate attachments linked to the email.template.
             # Indeed, basic mail.compose.message wizard duplicates attachments in mass
@@ -253,6 +260,7 @@ class MailComposer(models.TransientModel):
                             notif_layout=notif_layout,
                             add_sign=not bool(wizard.template_id),
                             mail_auto_delete=wizard.template_id.auto_delete if wizard.template_id else False,
+                            model_description=model_description,
                             **mail_values)
                         if ActiveModel._name == 'mail.thread' and wizard.model:
                             post_params['model'] = wizard.model
@@ -383,6 +391,7 @@ class MailComposer(models.TransientModel):
             values = self.generate_email_for_composer(template_id, [res_id])[res_id]
             # transform attachments into attachment_ids; not attached to the document because this will
             # be done further in the posting process, allowing to clean database if email not send
+            attachment_ids = []
             Attachment = self.env['ir.attachment']
             for attach_fname, attach_datas in values.pop('attachments', []):
                 data_attach = {
@@ -393,7 +402,9 @@ class MailComposer(models.TransientModel):
                     'res_id': 0,
                     'type': 'binary',  # override default_type from context, possibly meant for another model!
                 }
-                values.setdefault('attachment_ids', list()).append(Attachment.create(data_attach).id)
+                attachment_ids.append(Attachment.create(data_attach).id)
+            if values.get('attachment_ids', []) or attachment_ids:
+                values['attachment_ids'] = [(5,)] + values.get('attachment_ids', []) + attachment_ids
         else:
             default_values = self.with_context(default_composition_mode=composition_mode, default_model=model, default_res_id=res_id).default_get(['composition_mode', 'model', 'res_id', 'parent_id', 'partner_ids', 'subject', 'body', 'email_from', 'reply_to', 'attachment_ids', 'mail_server_id'])
             values = dict((key, default_values[key]) for key in ['subject', 'body', 'partner_ids', 'email_from', 'reply_to', 'attachment_ids', 'mail_server_id'] if key in default_values)
@@ -489,9 +500,9 @@ class MailComposer(models.TransientModel):
         for res_id in res_ids:
             if template_values.get(res_id):
                 # recipients are managed by the template
-                results[res_id].pop('partner_ids')
-                results[res_id].pop('email_to')
-                results[res_id].pop('email_cc')
+                results[res_id].pop('partner_ids', None)
+                results[res_id].pop('email_to', None)
+                results[res_id].pop('email_cc', None)
                 # remove attachments from template values as they should not be rendered
                 template_values[res_id].pop('attachment_ids', None)
             else:

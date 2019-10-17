@@ -45,6 +45,8 @@ def _auto_install_l10n(cr, registry):
             'PL', 'PT', 'RO', 'SI', 'TR', 'UK', 'VE', 'VN'
             ]:
             module_list.append('base_vat')
+        if country_code == 'MX':
+            module_list.append('l10n_mx_edi')
 
         # European countries will be using SEPA
         europe = env.ref('base.europe', raise_if_not_found=False)

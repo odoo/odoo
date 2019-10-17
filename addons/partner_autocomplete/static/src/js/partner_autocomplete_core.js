@@ -50,6 +50,12 @@ return {
                 });
             }
 
+            odooSuggestions = _.filter(odooSuggestions, function (suggestion) {
+                return !suggestion.ignored;
+            });
+            _.each(odooSuggestions, function(suggestion){
+              delete suggestion.ignored;
+            });
             return def.resolve(odooSuggestions);
         };
 
@@ -95,7 +101,7 @@ return {
      */
     getCreateData: function (company) {
         var removeUselessFields = function (company) {
-            var fields = 'label,description,domain,logo,legal_name'.split(',');
+            var fields = 'label,description,domain,logo,legal_name,ignored'.split(',');
             fields.forEach(function (field) {
                 delete company[field];
             });

@@ -100,10 +100,30 @@ var FieldTimezoneMismatch = FieldSelection.extend({
             this._renderDateTimeTimezone();
         }
     },
+    /**
+     * @override
+     * @private
+     * this.$el can have other elements than select
+     * that should not be touched
+     */
+    _renderEdit: function () {
+        // FIXME: hack to handle multiple root elements
+        // in this.$el , which is a bad idea
+        // In master we should make this.$el a wrapper
+        // around multiple subelements
+        var $otherEl = this.$el.not('select');
+        this.$el = this.$el.first();
+
+        this._super.apply(this, arguments);
+
+        $otherEl.insertAfter(this.$el);
+        this.$el = this.$el.add($otherEl);
+    },
 });
 
 var FieldReportLayout = relational_fields.FieldMany2One.extend({
-    supportedFieldTypes: ['many2one', 'selection'],
+    // this widget is not generic, so we disable its studio use
+    // supportedFieldTypes: ['many2one', 'selection'],
     events: _.extend({}, relational_fields.FieldMany2One.prototype.events, {
         'click img': '_onImgClicked',
     }),

@@ -4,13 +4,15 @@
 # 
 # Translators:
 # Sengtha Chay <sengtha@gmail.com>, 2018
+# Lux Sok <sok.lux@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Sengtha Chay <sengtha@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-12-19 08:21+0000\n"
+"PO-Revision-Date: 2018-08-24 09:24+0000\n"
+"Last-Translator: Lux Sok <sok.lux@gmail.com>, 2019\n"
 "Language-Team: Khmer (https://www.transifex.com/odoo/teams/41243/km/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,12 +26,24 @@ msgid "&amp;times;"
 msgstr "&amp;times;"
 
 #. module: sale_quotation_builder
+#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.brand_promotion
+msgid ""
+",\n"
+"                an awesome"
+msgstr ""
+",\n"
+"អស្ចារ្យណាស់"
+
+#. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
 msgid ""
 ":\n"
 "                                        this content will appear on the quotation only if this\n"
 "                                        product is put on the quote."
 msgstr ""
+":\n"
+"មាតិកានេះនឹងបង្ហាញនៅលើសម្រង់តែក្នុងករណីនេះ។ \n"
+"ផលិតផលត្រូវបានដាក់នៅលើសម្រង់។"
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
@@ -38,6 +52,20 @@ msgid ""
 "                                        this content will appear on the quotation only if this\n"
 "                                        product is used in the quote."
 msgstr ""
+":\n"
+"                                        មាតិកានេះនឹងបង្ហាញនៅលើសម្រង់តែក្នុងករណីនេះ\n"
+"ផលិតផលត្រូវបានប្រើនៅក្នុងសម្រង់។"
+
+#. module: sale_quotation_builder
+#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_portal_content_inherit_sale_quotation_builder
+msgid ""
+":\n"
+"                        this content will appear on the quotation only if this\n"
+"                        product is not removed."
+msgstr ""
+":\n"
+"                       មាតិកានេះនឹងបង្ហាញនៅលើសម្រង់តែក្នុងករណីនេះ\n"
+"                         ផលិតផលមិនត្រូវបានយកចេញទេ។ "
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
@@ -46,11 +74,14 @@ msgid ""
 "                                    will appear on all quotations using this\n"
 "                                    template."
 msgstr ""
+"<strong>ចំណងជើងទំព័រគំរូ: </strong>មាតិកានេះ\n"
+" នឹងបង្ហាញនៅលើសម្រង់ទាំងអស់ដោយប្រើគំរូនេះ\n"
+" "
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
 msgid "About us"
-msgstr ""
+msgstr "អំពី​ពួក​យើង "
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -59,11 +90,14 @@ msgid ""
 "                                we know that success is all about the\n"
 "                                commitment we put on strong services."
 msgstr ""
+"ក្នុងនាមជាក្រុមហ៊ុនសេវាកម្មជំនាញឈានមុខគេមួយ។\n"
+" យើងដឹងថាភាពជោគជ័យគឺទាក់ទងនឹង\n"
+" យើងបានប្តេជ្ញាចិត្តលើសេវាកម្មរឹងមាំ។ "
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
 msgid "Back"
-msgstr ""
+msgstr "ថយក្រោយ"
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
@@ -73,12 +107,12 @@ msgstr "បិទ"
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "កំណត់រចនាសម្ព័ន្ធ"
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_template_view_form_inherit_sale_quotation_builder
 msgid "Edit Template"
-msgstr ""
+msgstr "កែសម្រួលពុម្ពគំរូ "
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -89,6 +123,11 @@ msgid ""
 "                                your references, your methodology or\n"
 "                                guarantees, your team, SLA, terms and conditions, etc."
 msgstr ""
+"គំរូសម្រង់ដ៏អស្ចារ្យនឹងមានច្រើន\n"
+" <strong>ជំរុញអត្រាជោគជ័យរបស់អ្នក</strong>។\n"
+" ផ្នែកដំបូងគឺនិយាយអំពីក្រុមហ៊ុនរបស់អ្នក\n"
+" ឯកសារយោងរបស់អ្នកវិធីសាស្ត្ររបស់អ្នកឬ\n"
+" ការធានា, ក្រុមរបស់អ្នក, SLA , លក្ខខណ្ឌនិងល។ "
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -98,36 +137,55 @@ msgid ""
 "                        template (from the Configuration menu), all future quotations will\n"
 "                        use this modified template."
 msgstr ""
+"ប្រសិនបើអ្នកកែសម្រួលសម្រង់ពី 'មើលជាមុន' នៃសម្រង់មួយអ្នកនឹង\n"
+" ធ្វើបច្ចុប្បន្នភាពសម្រង់នោះ។ ប្រសិនបើអ្នកកែសម្រួលសម្រង់\n"
+" គំរូ (ពីម៉ឺនុយកំណត់រចនាសម្ព័ន្ធ) រាល់ការដកស្រង់នាពេលអនាគតនឹងមាន\n"
+" ប្រើគំរូដែលបានកែប្រែនេះ។ "
+
+#. module: sale_quotation_builder
+#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.brand_promotion
+msgid "Odoo"
+msgstr "Odoo"
+
+#. module: sale_quotation_builder
+#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.brand_promotion
+msgid "Open Source CRM"
+msgstr "បើកប្រភព CRM "
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
 msgid "Optional Product:"
-msgstr ""
+msgstr "ផលិតផលជ្រើសស្រេចចិត្ត៖ "
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
 msgid "Our Offer"
-msgstr ""
+msgstr "ការផ្តល់ជូនរបស់យើង "
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
 msgid "Our Quality"
-msgstr ""
+msgstr "គុណភាពរបស់យើង "
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
 msgid "Our Service"
-msgstr ""
+msgstr "សេវាកម្មរបស់យើង "
+
+#. module: sale_quotation_builder
+#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.brand_promotion
+msgid "Powered by"
+msgstr "ឧបត្ថម្ភដោយ"
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
 msgid "Price"
-msgstr ""
+msgstr "តម្លៃ"
 
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "គំរូផលិតផល"
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -136,73 +194,73 @@ msgid ""
 "                                stand on; we build it with a relentless\n"
 "                                focus on fabric, performance and craftsmanship."
 msgstr ""
+"គុណភាពផលិតផលគឺជាគ្រឹះរបស់យើង\n"
+" ឈរ​លើ; យើងសាងសង់វាដោយឥតឈប់ឈរ\n"
+" ផ្តោតលើក្រណាត់ការសម្តែងនិងសិល្បៈហត្ថកម្ម។ "
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
 msgid "Product:"
-msgstr ""
+msgstr "ផលិតផល:"
 
 #. module: sale_quotation_builder
-#: model:ir.model.fields,field_description:sale_quotation_builder.field_product_product__quotation_description
 #: model:ir.model.fields,field_description:sale_quotation_builder.field_product_template__quotation_description
 msgid "Quotation Description"
-msgstr ""
+msgstr "ការពិពណ៌នាសម្រង់ "
 
 #. module: sale_quotation_builder
-#: model:ir.model.fields,field_description:sale_quotation_builder.field_product_product__quotation_only_description
 #: model:ir.model.fields,field_description:sale_quotation_builder.field_product_template__quotation_only_description
 msgid "Quotation Only Description"
-msgstr ""
+msgstr "ការពិពណ៌នាដកស្រង់តែប៉ុណ្ណោះ"
 
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_sale_order_template
 msgid "Quotation Template"
-msgstr ""
+msgstr "គំរូសម្រង់"
 
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_sale_order_template_line
 msgid "Quotation Template Line"
-msgstr ""
+msgstr "បន្ទាត់គំរូសម្រង់"
 
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_sale_order_template_option
 msgid "Quotation Template Option"
-msgstr ""
+msgstr "ជម្រើសទំព័រគំរូសម្រង់"
 
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_sale_order_option
 msgid "Sale Options"
-msgstr ""
+msgstr "ជម្រើសលក់"
 
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_sale_order
 msgid "Sale Order"
-msgstr ""
+msgstr "លក់តាមការម៉ង់"
 
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "លំដាប់បញ្ជាទិញ"
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
 msgid "Terms &amp; Conditions"
-msgstr ""
+msgstr "ការកំណត់& amp; ល័ក្ខខ័ណ្ឌ "
 
 #. module: sale_quotation_builder
-#: model:ir.model.fields,help:sale_quotation_builder.field_product_product__quotation_only_description
 #: model:ir.model.fields,help:sale_quotation_builder.field_product_template__quotation_only_description
 #: model:ir.model.fields,help:sale_quotation_builder.field_sale_order_template_line__website_description
 msgid "The quotation description (not used on eCommerce)"
-msgstr ""
+msgstr "ការពិពណ៌នាអំពីការដកស្រង់ (មិនត្រូវបានប្រើលើអ៊ីម៉ែលអេឡិចត្រូនិច) "
 
 #. module: sale_quotation_builder
-#: model:ir.model.fields,help:sale_quotation_builder.field_product_product__quotation_description
 #: model:ir.model.fields,help:sale_quotation_builder.field_product_template__quotation_description
 msgid ""
 "This field uses the Quotation Only Description if it is defined, otherwise "
 "it will try to read the eCommerce Description."
 msgstr ""
+"វាលនេះប្រើការពិពណ៌នាអំពីសម្រង់តែប៉ុណ្ណោះប្រសិនបើវាត្រូវបានកំណត់បើមិនដូច្នេះទេវានឹងព្យាយាមអានការពិពណ៌នាអេឡិចត្រូនិច។"
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -212,6 +270,10 @@ msgid ""
 "                                application, using the menu: Configuration /\n"
 "                                Quotation Templates."
 msgstr ""
+"នេះគឺ<strong>ជាគំរូសម្រង់គំរូ</strong>។ អ្នក​គួរតែ\n"
+" ប្ដូរតាមបំណងវាឱ្យសមនឹងតម្រូវការផ្ទាល់ខ្លួនរបស់អ្នកពី<i>ការលក់</i>\n"
+" កម្មវិធីដោយប្រើម៉ឺនុយ៖ ការកំណត់រចនាសម្ព័ន្ធ /\n"
+" ពុម្ពសម្រង់។ "
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
@@ -220,6 +282,9 @@ msgid ""
 "                                    <i>Heading 2</i> will be used to generate the\n"
 "                                    table of content automatically."
 msgstr ""
+"ចំណងជើងជាមួយរចនាបទ<i>ក្បាល 1 </i>និង\n"
+" <i>ក្បាល 2</i> នឹងត្រូវបានប្រើដើម្បីបង្កើតឯកសារ\n"
+" តារាងមាតិកាដោយស្វ័យប្រវត្តិ។ "
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -228,6 +293,9 @@ msgid ""
 "                                set at a fair price so that you will be\n"
 "                                happy to buy them."
 msgstr ""
+"យើងតែងតែធានាថាផលិតផលរបស់យើងគឺ\n"
+" កំណត់ក្នុងតម្លៃសមរម្យដូច្នេះអ្នកនឹងក្លាយជា\n"
+" រីករាយក្នុងការទិញវា។ "
 
 #. module: sale_quotation_builder
 #: model:ir.model.fields,field_description:sale_quotation_builder.field_sale_order__website_description
@@ -238,7 +306,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_quotation_builder.field_sale_order_template_option__website_description
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_template_view_form_inherit_sale_quotation_builder
 msgid "Website Description"
-msgstr ""
+msgstr "ការពិពណ៌នាគេហទំព័រ "
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -249,3 +317,8 @@ msgid ""
 "                        on the left is generated automatically using the styles you\n"
 "                        used in your description (heading 1, heading 2, ...)"
 msgstr ""
+"អ្នកអាច<strong>កំណត់ការពិពណ៌នាក្នុងផលិតផលមួយ</strong>។ Odooនឹង\n"
+" បង្កើតសម្រង់ដោយស្វ័យប្រវត្តិដោយប្រើការពិពណ៌នា\n"
+" នៃផលិតផលទាំងអស់នៅក្នុងសំណើ។ តារាងមាតិកា\n"
+" នៅខាងឆ្វេងត្រូវបានបង្កើតដោយស្វ័យប្រវត្តិដោយប្រើរចនាបទអ្នក\n"
+" ប្រើនៅក្នុងការពិពណ៌នារបស់អ្នក (ក្បាល 1 ក្បាល 2, ... ) "

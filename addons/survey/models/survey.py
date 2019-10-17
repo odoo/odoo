@@ -744,6 +744,7 @@ class SurveyUserInput(models.Model):
         """ Send again the invitation """
         self.ensure_one()
         local_context = {
+            'survey_resent_user_input': self.id,
             'survey_resent_token': True,
             'default_partner_ids': self.partner_id and [self.partner_id.id] or [],
             'default_multi_email': self.email or "",

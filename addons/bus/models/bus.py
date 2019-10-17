@@ -53,8 +53,6 @@ class ImBus(models.Model):
                 "message": json_dump(message)
             }
             self.sudo().create(values)
-            if random.random() < 0.01:
-                self.gc()
         if channels:
             # We have to wait until the notifications are commited in database.
             # When calling `NOTIFY imbus`, some concurrent threads will be
@@ -143,7 +141,7 @@ class ImDispatch(object):
 
             event = self.Event()
             for channel in channels:
-                self.channels.setdefault(hashable(channel), []).append(event)
+                self.channels.setdefault(hashable(channel), set()).add(event)
             try:
                 event.wait(timeout=timeout)
                 with registry.cursor() as cr:
@@ -152,6 +150,12 @@ class ImDispatch(object):
             except Exception:
                 # timeout
                 pass
+            finally:
+                # gc pointers to event
+                for channel in channels:
+                    channel_events = self.channels.get(hashable(channel))
+                    if channel_events and event in channel_events:
+                        channel_events.remove(event)
         return notifications
 
     def loop(self):
@@ -172,7 +176,7 @@ class ImDispatch(object):
                     # dispatch to local threads/greenlets
                     events = set()
                     for channel in channels:
-                        events.update(self.channels.pop(hashable(channel), []))
+                        events.update(self.channels.pop(hashable(channel), set()))
                     for event in events:
                         event.set()
 

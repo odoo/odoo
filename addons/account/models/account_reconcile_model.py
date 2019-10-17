@@ -17,7 +17,7 @@ class AccountReconcileModel(models.Model):
 
     rule_type = fields.Selection(selection=[
         ('writeoff_button', _('Manually create a write-off on clicked button.')),
-        ('writeoff_suggestion', _('Suggest a write-off.')),
+        ('writeoff_suggestion', _('Suggest counterpart values.')),
         ('invoice_matching', _('Match existing invoices/bills.'))
     ], string='Type', default='writeoff_button', required=True)
     auto_reconcile = fields.Boolean(string='Auto-validate',
@@ -154,6 +154,7 @@ class AccountReconcileModel(models.Model):
                 'analytic_account_id': tax.analytic and base_line_dict['analytic_account_id'],
                 'analytic_tag_ids': tax.analytic and base_line_dict['analytic_tag_ids'],
                 'tax_exigible': tax.tax_exigibility == 'on_payment',
+                'tax_line_id': tax.id,
             })
 
             # Handle price included taxes.
@@ -176,15 +177,16 @@ class AccountReconcileModel(models.Model):
         line_residual = st_line.currency_id and st_line.amount_currency or st_line.amount
         line_currency = st_line.currency_id or st_line.journal_id.currency_id or st_line.company_id.currency_id
         total_residual = move_lines and sum(aml.currency_id and aml.amount_residual_currency or aml.amount_residual for aml in move_lines) or 0.0
-        balance = line_residual - total_residual
 
-        if not self.account_id\
-            or float_is_zero(balance, precision_rounding=line_currency.rounding)\
-            or (st_line.amount > 0 and balance < 0)\
-            or (st_line.amount < 0 and balance > 0):
+        balance = total_residual - line_residual
+
+        if not self.account_id or float_is_zero(balance, precision_rounding=line_currency.rounding):
             return []
 
-        line_balance = self.amount_type == 'percentage' and balance * (self.amount / 100.0) or self.amount
+        if self.amount_type == 'percentage':
+            line_balance = balance * (self.amount / 100.0)
+        else:
+            line_balance = self.amount * (1 if balance > 0.0 else -1)
 
         new_aml_dicts = []
 
@@ -194,8 +196,8 @@ class AccountReconcileModel(models.Model):
             'account_id': self.account_id.id,
             'analytic_account_id': self.analytic_account_id.id,
             'analytic_tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
-            'debit': line_balance < 0 and -line_balance or 0,
-            'credit': line_balance > 0 and line_balance or 0,
+            'debit': line_balance > 0 and line_balance or 0,
+            'credit': line_balance < 0 and -line_balance or 0,
         }
         new_aml_dicts.append(writeoff_line)
 
@@ -208,14 +210,18 @@ class AccountReconcileModel(models.Model):
 
         # Second write-off line.
         if self.has_second_line and self.second_account_id:
-            line_balance = balance - sum(aml['debit'] - aml['credit'] for aml in new_aml_dicts)
+            remaining_balance = balance - sum(aml['debit'] - aml['credit'] for aml in new_aml_dicts)
+            if self.second_amount_type == 'percentage':
+                line_balance = remaining_balance * (self.second_amount / 100.0)
+            else:
+                line_balance = self.second_amount * (1 if remaining_balance > 0.0 else -1)
             second_writeoff_line = {
                 'name': self.second_label or st_line.name,
                 'account_id': self.second_account_id.id,
                 'analytic_account_id': self.second_analytic_account_id.id,
                 'analytic_tag_ids': [(6, 0, self.second_analytic_tag_ids.ids)],
-                'debit': line_balance < 0 and -line_balance or 0,
-                'credit': line_balance > 0 and line_balance or 0,
+                'debit': line_balance > 0 and line_balance or 0,
+                'credit': line_balance < 0 and -line_balance or 0,
             }
             new_aml_dicts.append(second_writeoff_line)
 
@@ -324,7 +330,7 @@ class AccountReconcileModel(models.Model):
             query += ' AND st_line.name NOT ILIKE %s'
             params += ['%%%s%%' % rule.match_label_param]
         elif rule.match_label == 'match_regex':
-            query += ' AND st_line.name ~ %s'
+            query += ' AND st_line.name ~* %s'
             params += [rule.match_label_param]
 
         # Filter on partners.
@@ -392,14 +398,20 @@ class AccountReconcileModel(models.Model):
                 aml.date_maturity                   AS aml_date_maturity,
                 aml.amount_residual                 AS aml_amount_residual,
                 aml.amount_residual_currency        AS aml_amount_residual_currency,
-                CASE WHEN
-                    REGEXP_REPLACE(st_line.name, '[^0-9]', '', 'g') ~ REGEXP_REPLACE(move.name, '[^0-9]', '', 'g')
-                    OR (
-                        move.ref IS NOT NULL
-                        AND
-                        REGEXP_REPLACE(st_line.name, '[^0-9]', '', 'g') ~ REGEXP_REPLACE(move.ref, '[^0-9]', '', 'g')
-                    )
-                THEN TRUE ELSE FALSE END            AS communication_flag
+                aml.balance                         AS aml_balance,
+                aml.amount_currency                 AS aml_amount_currency,
+                account.internal_type               AS account_internal_type,
+
+                -- Determine a matching or not with the statement line communication using the move.name or move.ref.
+                regexp_split_to_array(TRIM(REGEXP_REPLACE(move.name, '[^0-9|^\s]', '', 'g')),'\s+')
+                && regexp_split_to_array(TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')), '\s+')
+                OR
+                (
+                    move.ref IS NOT NULL
+                    AND
+                        regexp_split_to_array(TRIM(REGEXP_REPLACE(move.ref, '[^0-9|^\s]', '', 'g')),'\s+')
+                        && regexp_split_to_array(TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')), '\s+')
+                )                                   AS communication_flag
             FROM account_bank_statement_line st_line
             LEFT JOIN account_journal journal       ON journal.id = st_line.journal_id
             LEFT JOIN jnl_precision                 ON jnl_precision.journal_id = journal.id
@@ -424,19 +436,32 @@ class AccountReconcileModel(models.Model):
 
                 -- if there is a partner, propose all aml of the partner, otherwise propose only the ones
                 -- matching the statement line communication
-                AND CASE WHEN line_partner.partner_id != 0 THEN
+                AND
+                (
+                    (
+                        line_partner.partner_id != 0
+                        AND
                         aml.partner_id = line_partner.partner_id
-                    ELSE
+                    )
+                    OR
+                    (
+                        line_partner.partner_id = 0
+                        AND
+                        TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')) != ''
+                        AND
                         (
-                            REGEXP_REPLACE(st_line.name, '[^0-9]', '', 'g') ~ REGEXP_REPLACE(move.name, '[^0-9]', '', 'g')
-                            OR (
+                            regexp_split_to_array(TRIM(REGEXP_REPLACE(move.name, '[^0-9|^\s]', '', 'g')),'\s+')
+                            && regexp_split_to_array(TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')), '\s+')
+                            OR
+                            (
                                 move.ref IS NOT NULL
                                 AND
-                                REGEXP_REPLACE(st_line.name, '[^0-9]', '', 'g') ~ REGEXP_REPLACE(move.ref, '[^0-9]', '', 'g')
+                                    regexp_split_to_array(TRIM(REGEXP_REPLACE(move.ref, '[^0-9|^\s]', '', 'g')),'\s+')
+                                    && regexp_split_to_array(TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')), '\s+')
                             )
                         )
-                    END
-
+                    )
+                )
                 AND
                 (
                     (
@@ -523,23 +548,29 @@ class AccountReconcileModel(models.Model):
         '''
         if not self.match_total_amount:
             return True
+        if not candidates:
+            return False
 
         # Match total residual amount.
-        total_residual = sum(
-            aml['aml_currency_id'] and aml['aml_amount_residual_currency'] or aml['aml_amount_residual'] for aml in
-            candidates)
+        total_residual = 0.0
+        for aml in candidates:
+            if aml['account_internal_type'] == 'liquidity':
+                total_residual += aml['aml_currency_id'] and aml['aml_amount_currency'] or aml['aml_balance']
+            else:
+                total_residual += aml['aml_currency_id'] and aml['aml_amount_residual_currency'] or aml['aml_amount_residual']
         line_residual = statement_line.currency_id and statement_line.amount_currency or statement_line.amount
         line_currency = statement_line.currency_id or statement_line.journal_id.currency_id or statement_line.company_id.currency_id
-
-        # Statement line amount must not be lower than the total residual.
-        if float_compare(line_residual, total_residual, precision_rounding=line_currency.rounding) < 0:
-            return False
 
         # Statement line amount is equal to the total residual.
         if float_is_zero(total_residual - line_residual, precision_rounding=line_currency.rounding):
             return True
 
-        amount_percentage = (total_residual / line_residual) * 100
+        if line_residual > total_residual:
+            amount_percentage = (total_residual / line_residual) * 100
+        elif total_residual:
+            amount_percentage = (line_residual / total_residual) * 100
+        else:
+            return False
         return amount_percentage >= self.match_total_amount_param
 
     @api.multi
@@ -676,6 +707,8 @@ class AccountReconcileModel(models.Model):
                             new_aml_dicts = reconciliation_results['new_aml_dicts']
                             if reconciliation_results['open_balance_dict']:
                                 new_aml_dicts.append(reconciliation_results['open_balance_dict'])
+                            if not line.partner_id and partner:
+                                line.partner_id = partner
                             counterpart_moves = line.process_reconciliation(
                                 counterpart_aml_dicts=reconciliation_results['counterpart_aml_dicts'],
                                 payment_aml_rec=reconciliation_results['payment_aml_rec'],
@@ -707,6 +740,8 @@ class AccountReconcileModel(models.Model):
                         new_aml_dicts = reconciliation_results['new_aml_dicts']
                         if reconciliation_results['open_balance_dict']:
                             new_aml_dicts.append(reconciliation_results['open_balance_dict'])
+                        if not line.partner_id and partner:
+                            line.partner_id = partner
                         counterpart_moves = line.process_reconciliation(
                             counterpart_aml_dicts=reconciliation_results['counterpart_aml_dicts'],
                             payment_aml_rec=reconciliation_results['payment_aml_rec'],

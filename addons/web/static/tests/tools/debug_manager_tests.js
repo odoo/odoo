@@ -46,6 +46,10 @@ QUnit.module('DebugManager', {}, function () {
             intercepts: {
                 do_action: function (event) {
                     assert.deepEqual(event.data.action, {
+                      context: {
+                        default_res_model: "test.model",
+                        default_res_id: 5,
+                      },
                       domain: [["res_model", "=", "test.model"],["res_id", "=", 5]],
                       name: "Manage Attachments",
                       res_model: "ir.attachment",

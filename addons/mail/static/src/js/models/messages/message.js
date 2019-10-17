@@ -262,6 +262,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
             documentID: this.getDocumentID(),
             id: id,
             imageSRC: this._getModuleIcon() || this.getAvatarSource(),
+            messageID: this.getID(),
             status: this.status,
             title: title,
         };
@@ -457,6 +458,9 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
      */
     setModerationStatus: function (newModerationStatus, options) {
         var self = this;
+        if (newModerationStatus === this._moderationStatus) {
+            return;
+        }
         this._moderationStatus = newModerationStatus;
         if (newModerationStatus === 'accepted' && options) {
             _.each(options.additionalThreadIDs, function (threadID) {

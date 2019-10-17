@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import tests
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysBase
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import AccessError, ValidationError, UserError
 from odoo.tools import mute_logger
 
 
@@ -19,6 +19,7 @@ class TestLeavesRights(TestHrHolidaysBase):
             'name': 'Unlimited',
             'validation_type': 'hr',
             'allocation_type': 'no',
+            'validity_start': False,
         })
         self.rd_dept.manager_id = False
         self.hr_dept.manager_id = False
@@ -118,6 +119,24 @@ class TestLeavesRights(TestHrHolidaysBase):
             other_leave.sudo(self.user_employee_id).write({'name': 'Crocodile Dundee is my man'})
 
     # ----------------------------------------
+    # Creation
+    # ----------------------------------------
+
+    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
+    def test_leave_creation_for_other_user(self):
+        """ Employee cannot creates a leave request for another employee """
+        HolidaysEmployeeGroup = self.env['hr.leave'].sudo(self.user_employee_id)
+        with self.assertRaises(AccessError):
+            HolidaysEmployeeGroup.create({
+                'name': 'Hol10',
+                'employee_id': self.employee_hruser_id,
+                'holiday_status_id': self.leave_type.id,
+                'date_from': (datetime.today() - relativedelta(days=1)),
+                'date_to': datetime.today(),
+                'number_of_days': 1,
+            })
+
+    # ----------------------------------------
     # Reset
     # ----------------------------------------
 
@@ -137,7 +156,7 @@ class TestLeavesRights(TestHrHolidaysBase):
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_leave_reset_by_manager_other(self):
-        """ Manager may not reset other leaves """
+        """ Manager may reset other leaves """
         self.employee_leave.sudo(self.user_hrmanager).action_draft()
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
@@ -187,19 +206,23 @@ class TestLeavesRights(TestHrHolidaysBase):
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_leave_validation_hr_by_manager(self):
         """ Manager validates hr-only leaves """
+        self.assertEqual(self.employee_leave.state, 'confirm')
         self.employee_leave.sudo(self.user_hrmanager_id).action_approve()
+        self.assertEqual(self.employee_leave.state, 'validate')
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_leave_validation_hr_by_officer_department(self):
         """ Officer validates hr-only leaves for co-workers """
+        self.assertEqual(self.employee_leave.state, 'confirm')
         self.employee_leave.sudo(self.user_hruser).action_approve()
+        self.assertEqual(self.employee_leave.state, 'validate')
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_leave_validation_hr_by_officer_no_department(self):
         """ Officer validates hr-only leaves for workers from no department and with no manager """
         self.employee_hruser.write({'department_id': False})
-        # TDE FIXME: not sure for this one
-        # self.employee_leave.sudo(self.user_hruser).action_approve()
+        with self.assertRaises(AccessError):
+            self.employee_leave.sudo(self.user_hruser).action_approve()
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_leave_validation_hr_by_officer_other_department_with_manager(self):
@@ -207,6 +230,7 @@ class TestLeavesRights(TestHrHolidaysBase):
         self.employee_hruser.write({'department_id': self.hr_dept.id})
         with self.assertRaises(AccessError):
             self.employee_leave.sudo(self.user_hruser).action_approve()
+        self.assertEqual(self.employee_leave.state, 'confirm')
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_leave_validation_hr_by_officer_other_department_wo_manager(self):
@@ -214,6 +238,7 @@ class TestLeavesRights(TestHrHolidaysBase):
         self.employee_hruser.write({'department_id': self.hr_dept.id})
         with self.assertRaises(AccessError):
             self.employee_leave.sudo(self.user_hruser).action_approve()
+        self.assertEqual(self.employee_leave.state, 'confirm')
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_leave_validation_hr_by_officer_other_department_manager(self):
@@ -221,7 +246,9 @@ class TestLeavesRights(TestHrHolidaysBase):
         self.employee_hruser.write({'department_id': self.hr_dept.id})
         self.employee_leave.sudo().department_id.write({'manager_id': self.employee_hruser.id})
 
+        self.assertEqual(self.employee_leave.state, 'confirm')
         self.employee_leave.sudo(self.user_hruser).action_approve()
+        self.assertEqual(self.employee_leave.state, 'validate')
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_leave_validation_hr_by_user(self):
@@ -231,6 +258,36 @@ class TestLeavesRights(TestHrHolidaysBase):
 
         with self.assertRaises(UserError):
             self.employee_leave.sudo(self.user_employee_id).write({'state': 'validate'})
+
+    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
+    def test_leave_validate_by_manager(self):
+        """ Manager (who has no manager) validate its own leaves """
+        manager_leave = self.env['hr.leave'].sudo(self.user_hrmanager_id).create({
+            'name': 'Hol manager',
+            'holiday_status_id': self.leave_type.id,
+            'employee_id': self.employee_hrmanager_id,
+            'date_from': (datetime.today() + relativedelta(days=15)),
+            'date_to': (datetime.today() + relativedelta(days=16)),
+            'number_of_days': 1,
+        })
+        self.assertEqual(manager_leave.state, 'confirm')
+        manager_leave.action_approve()
+        self.assertEqual(manager_leave.state, 'validate')
+
+    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
+    def test_leave_validate_by_manager_2(self):
+        """ Manager (who has also a manager) validate its own leaves """
+        manager_leave2 = self.env['hr.leave'].sudo(self.user_hrmanager_2_id).create({
+            'name': 'Hol manager2',
+            'holiday_status_id': self.leave_type.id,
+            'employee_id': self.employee_hrmanager_2_id,
+            'date_from': (datetime.today() + relativedelta(days=15)),
+            'date_to': (datetime.today() + relativedelta(days=16)),
+            'number_of_days': 1,
+        })
+        self.assertEqual(manager_leave2.state, 'confirm')
+        manager_leave2.action_approve()
+        self.assertEqual(manager_leave2.state, 'validate')
 
     # ----------------------------------------
     # Validation: one validation, manager

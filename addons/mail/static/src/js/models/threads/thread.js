@@ -15,7 +15,8 @@ var ServicesMixin = require('web.ServicesMixin');
  * In particular, channels and mailboxes are two different kinds of threads.
  */
 var Thread = AbstractThread.extend(ServicesMixin, {
-
+    // max number of fetched messages from the server
+    _FETCH_LIMIT: 30,
     /**
      * @override
      * @param {Object} params
@@ -33,8 +34,6 @@ var Thread = AbstractThread.extend(ServicesMixin, {
         // means that there is no message in this channel.
         this._previewed = false;
         this._type = params.data.type || params.data.channel_type;
-        // max number of fetched messages from the server
-        this._FETCH_LIMIT = 30;
     },
 
     //--------------------------------------------------------------------------
@@ -111,7 +110,7 @@ var Thread = AbstractThread.extend(ServicesMixin, {
      * By default, a thread has not listener.
      *
      * @abstract
-     * @returns {$.Promise<Object[]>}
+     * @returns {$.Promise<Array<Object[]>>}
      */
     getMentionPartnerSuggestions: function () {
         return $.when([]);
@@ -337,6 +336,9 @@ var Thread = AbstractThread.extend(ServicesMixin, {
         body = this._generateEmojis(body);
         var messageData = {
             partner_ids: data.partner_ids,
+            channel_ids: _.map(data.channel_ids, function (channelID) {
+               return [4, channelID, false];
+            }),
             body: body,
             attachment_ids: data.attachment_ids,
             canned_response_ids: data.canned_response_ids,

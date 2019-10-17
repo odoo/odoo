@@ -21,6 +21,7 @@ sAnimation.registry.affixMenu = sAnimation.Class.extend({
         this.$headerClone.insertAfter(this.$target);
         this.$headers = this.$target.add(this.$headerClone);
         this.$dropdowns = this.$headers.find('.dropdown');
+        this.$dropdownMenus = this.$headers.find('.dropdown-menu');
         this.$navbarCollapses = this.$headers.find('.navbar-collapse');
 
         // Handle events for the collapse menus
@@ -60,12 +61,16 @@ sAnimation.registry.affixMenu = sAnimation.Class.extend({
      * @private
      */
     _onWindowUpdate: function () {
+        if (this.$navbarCollapses.hasClass('show')) {
+            return;
+        }
+
         var wOffset = $(window).scrollTop();
         var hOffset = this.$target.scrollTop();
         this.$headerClone.toggleClass('affixed', wOffset > (hOffset + 300));
 
         // Reset opened menus
-        this.$dropdowns.removeClass('show');
+        this.$dropdowns.add(this.$dropdownMenus).removeClass('show');
         this.$navbarCollapses.removeClass('show').attr('aria-expanded', false);
     },
 });
@@ -98,6 +103,17 @@ sAnimation.registry.autohideMenu = sAnimation.Class.extend({
                     def.resolve();
                 });
             });
+
+            // The previous code will make sure we wait for images to be fully
+            // loaded before initializing the auto more menu. But in some cases,
+            // it is not enough, we also have to wait for fonts or even extra
+            // scripts. Those will have no impact on the feature in most cases
+            // though, so we will only update the auto more menu at that time,
+            // no wait for it to initialize the feature.
+            var $window = $(window);
+            $window.on('load.autohideMenu', function () {
+                $window.trigger('resize');
+            });
         }
         return $.when.apply($, defs).then(function () {
             if (!self.noAutohide) {
@@ -112,6 +128,7 @@ sAnimation.registry.autohideMenu = sAnimation.Class.extend({
     destroy: function () {
         this._super.apply(this, arguments);
         if (!this.noAutohide) {
+            $(window).off('.autohideMenu');
             dom.destroyAutoMoreMenu(this.$el);
         }
     },

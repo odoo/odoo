@@ -11,7 +11,11 @@ var QWeb = core.qweb;
 
 var KioskMode = AbstractAction.extend({
     events: {
-        "click .o_hr_attendance_button_employees": function(){ this.do_action('hr_attendance.hr_employee_attendance_action_kanban'); },
+        "click .o_hr_attendance_button_employees": function() {
+            this.do_action('hr_attendance.hr_employee_attendance_action_kanban', {
+                additional_context: {'no_group_by': true},
+            });
+        },
     },
 
     start: function () {
@@ -47,7 +51,10 @@ var KioskMode = AbstractAction.extend({
                     self.do_action(result.action);
                 } else if (result.warning) {
                     self.do_warn(result.warning);
+                    core.bus.on('barcode_scanned', self, self._onBarcodeScanned);
                 }
+            }, function () {
+                core.bus.on('barcode_scanned', self, self._onBarcodeScanned);
             });
     },
 
@@ -66,7 +73,7 @@ var KioskMode = AbstractAction.extend({
 
     _callServer: function () {
         // Make a call to the database to avoid the auto close of the session
-        return ajax.rpc("/web/webclient/version_info", {});
+        return ajax.rpc("/hr_attendance/kiosk_keepalive", {});
     },
 
 });

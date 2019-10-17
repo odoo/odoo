@@ -121,7 +121,7 @@ class TestPurchaseOrder(AccountingTestCase):
             'type': 'in_invoice',
         })
         self.invoice.purchase_order_change()
-        self.invoice.invoice_validate()
+        self.invoice.action_invoice_open()
         self.assertEqual(self.po.order_line.mapped('qty_invoiced'), [5.0, 5.0], 'Purchase: all products should be invoiced"')
 
         # Check quantity received
@@ -154,5 +154,5 @@ class TestPurchaseOrder(AccountingTestCase):
         self.invoice.purchase_order_change()
         self.invoice.invoice_line_ids[0].quantity = 2.0
         self.invoice.invoice_line_ids[1].quantity = 2.0
-        self.invoice.invoice_validate()
+        self.invoice.action_invoice_open()
         self.assertEqual(self.po.order_line.mapped('qty_invoiced'), [3.0, 3.0], 'Purchase: Billed quantity should be 3.0')

@@ -198,11 +198,11 @@ def concat_xml(file_list):
 
     :param list(str) file_list: list of files to check
     :returns: (concatenation_result, checksum)
-    :rtype: (str, str)
+    :rtype: (bytes, str)
     """
     checksum = hashlib.new('sha1')
     if not file_list:
-        return '', checksum.hexdigest()
+        return b'', checksum.hexdigest()
 
     root = None
     for fname in file_list:
@@ -525,7 +525,7 @@ class Home(http.Controller):
             request.env['res.users']._invalidate_session_cache()
             request.session.session_token = security.compute_session_token(request.session, request.env)
 
-        return http.redirect_with_hash(self._login_redirect(uid))
+        return http.local_redirect(self._login_redirect(uid), keep_hash=True)
 
 class WebClient(http.Controller):
 
@@ -1069,7 +1069,7 @@ class Binary(http.Controller):
     def content_image(self, xmlid=None, model='ir.attachment', id=None, field='datas',
                       filename_field='datas_fname', unique=None, filename=None, mimetype=None,
                       download=None, width=0, height=0, crop=False, related_id=None, access_mode=None,
-                      access_token=None, avoid_if_small=False, upper_limit=False, signature=False):
+                      access_token=None, avoid_if_small=False, upper_limit=False, signature=False, **kw):
         status, headers, content = binary_content(
             xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
             filename_field=filename_field, download=download, mimetype=mimetype,
@@ -1088,10 +1088,17 @@ class Binary(http.Controller):
             height = int(height or 0)
             width = int(width or 0)
 
+        if not content:
+            content = base64.b64encode(self.placeholder(image='placeholder.png'))
+            headers = self.force_contenttype(headers, contenttype='image/png')
+            if not (width or height):
+                suffix = field.split('_')[-1]
+                if suffix in ('small', 'medium', 'big'):
+                    content = getattr(odoo.tools, 'image_resize_image_%s' % suffix)(content)
+
         if crop and (width or height):
             content = crop_image(content, type='center', size=(width, height), ratio=(1, 1))
-
-        elif content and (width or height):
+        elif (width or height):
             if not upper_limit:
                 # resize maximum 500*500
                 if width > 500:
@@ -1102,12 +1109,7 @@ class Binary(http.Controller):
                                                     encoding='base64', upper_limit=upper_limit,
                                                     avoid_if_small=avoid_if_small)
 
-        if content:
-            image_base64 = base64.b64decode(content)
-        else:
-            image_base64 = self.placeholder(image='placeholder.png')  # could return (contenttype, content) in master
-            headers = self.force_contenttype(headers, contenttype='image/png')
-
+        image_base64 = base64.b64decode(content)
         headers.append(('Content-Length', len(image_base64)))
         response = request.make_response(image_base64, headers)
         response.status_code = status
@@ -1165,6 +1167,7 @@ class Binary(http.Controller):
                     'res_model': model,
                     'res_id': int(id)
                 })
+                attachment._post_add_create()
             except Exception:
                 args.append({'error': _("Something horrible happened")})
                 _logger.exception("Fail to upload attachment %s" % ufile.filename)

@@ -117,7 +117,11 @@ class AccountInvoiceRefund(models.TransientModel):
                     view_ref = self.env.ref('account.invoice_supplier_form')
                 else:
                     view_ref = self.env.ref('account.invoice_form')
-                result['views'] = [(view_ref.id, 'form')]
+                form_view = [(view_ref.id, 'form')]
+                if 'views' in result:
+                    result['views'] = form_view + [(state,view) for state,view in result['views'] if view != 'form']
+                else:
+                    result['views'] = form_view
                 result['res_id'] = inv_refund.id
             else:
                 invoice_domain = safe_eval(result['domain'])

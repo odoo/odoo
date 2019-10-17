@@ -21,7 +21,7 @@ tour.register('shop_buy_product', {
         },
         {
             content: "select conference chair",
-            trigger: '.oe_product_cart a:contains("Conference Chair")',
+            trigger: '.oe_product_cart:first a:contains("Conference Chair")',
         },
         {
             content: "select Conference Chair Aluminium",
@@ -44,8 +44,8 @@ tour.register('shop_buy_product', {
         },
         {
             content: "add suggested",
-            extra_trigger: '#wrap:not(:has(#cart_products:contains("[A8767] Storage Box")))',
-            trigger: '.oe_cart:has(tr:contains("Steel")) a:contains("Add to Cart")',
+            extra_trigger: '#wrap:not(:has(#cart_products:contains("Storage Box")))',
+            trigger: '.oe_cart:has(tr:contains("Storage Box")) a:contains("Add to Cart")',
         },
         {
             content: "add one more",
@@ -53,7 +53,7 @@ tour.register('shop_buy_product', {
             trigger: '#cart_products tr:contains("Steel") a.js_add_cart_json:eq(1)',
         },
         {
-            content: "remove Headphones",
+            content: "remove Storage Box",
             extra_trigger: '#cart_products tr:contains("Steel") input.js_quantity:propValue(2)',
             trigger: '#cart_products tr:contains("Storage Box") a.js_add_cart_json:first',
         },

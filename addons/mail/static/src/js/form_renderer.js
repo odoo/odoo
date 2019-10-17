@@ -54,6 +54,7 @@ FormRenderer.include({
             if (!this.chatter) {
                 this.chatter = new Chatter(this, this.state, this.mailFields, {
                     isEditable: this.activeActions.edit,
+                    viewType: 'form',
                 });
                 this.chatter.appendTo($('<div>'));
                 this._handleAttributes(this.chatter.$el, node);

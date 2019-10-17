@@ -3,16 +3,15 @@
 # * base_iban
 # 
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2018
-# Martin Trigaux, 2018
-# Shaima Safar <shaima.safar@open-inside.com>, 2018
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:55+0000\n"
-"PO-Revision-Date: 2018-08-02 09:55+0000\n"
-"Last-Translator: Shaima Safar <shaima.safar@open-inside.com>, 2018\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-08-24 09:16+0000\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,15 +28,13 @@ msgstr "الحسابات البنكية"
 #: code:addons/base_iban/models/res_partner_bank.py:67
 #, python-format
 msgid "Cannot compute the BBAN because the account number is not an IBAN."
-msgstr ""
-"لا يمكن حساب رقم الحساب المصرفي الأساسي لأنه الحساب ليس رقم الحساب المصرفي "
-"الدولي."
+msgstr "لا يمكن احتساب الـBBAN لأن الحساب لا يملك رقم IBAN."
 
 #. module: base_iban
 #: code:addons/base_iban/models/res_partner_bank.py:54
 #, python-format
 msgid "IBAN"
-msgstr ""
+msgstr "IBAN"
 
 #. module: base_iban
 #: code:addons/base_iban/models/res_partner_bank.py:39
@@ -46,24 +43,23 @@ msgid ""
 "The IBAN does not seem to be correct. You should have entered something like this %s\n"
 "Where B = National bank code, S = Branch code, C = Account No, k = Check digit"
 msgstr ""
-"لا يبدو رقم الحساب المصرفي الدولي صحيحا. يجب أن كنت قد أدخلت شيئا من هذا القبيل %s\n"
-"حيث B = رمز البنك الوطني، S = رمز فرع، C = رقم الحساب، ك = أرقام تحقق."
+"لا يبدو رقم IBAN صحيحًا. ينبغي أن تدخل رقمًا على هذه الصيغة%s\n"
+"حيث B = رمز البنك الوطني، S = رمز الفرع، C = رقم الحساب، k = رقم التحقق"
 
 #. module: base_iban
 #: code:addons/base_iban/models/res_partner_bank.py:35
 #, python-format
 msgid "The IBAN is invalid, it should begin with the country code"
-msgstr "رقم ال IBAN خاطئ، يجب أن تبدأ برمز الدولة"
+msgstr "رقم الـIBAN خاطئ، يجب أن يبدأ برمز الدولة"
 
 #. module: base_iban
 #: code:addons/base_iban/models/res_partner_bank.py:31
 #, python-format
 msgid "There is no IBAN code."
-msgstr ""
+msgstr "لا يوجد كود IBAN."
 
 #. module: base_iban
 #: code:addons/base_iban/models/res_partner_bank.py:45
 #, python-format
 msgid "This IBAN does not pass the validation check, please verify it."
-msgstr ""
-" رقم الحساب المصرفي الدولي هذا لا يمر تحقق من صحته، يرجى إثبات ملكيتك له."
+msgstr "لا يمكننا اعتماد رقم الـIBAN هذا، يرجى التحقق منه."

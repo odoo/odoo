@@ -95,10 +95,12 @@ body {
         font-weight: 300;
         width: 100%;
         height: 100%;
+        padding: 0;
         @include flex-display;
         @include flex-direction(row);
 
-        .pos-customer_products, .pos-payment_info {
+        .pos-customer_products,
+        .pos-payment_info {
             height: 100%;
             padding: 2%;
             @include flex-display;
@@ -138,11 +140,14 @@ body {
                     box-shadow: none;
                     animation: none;
 
-                    > div, > div:last-child {
-                        border-left-width: 0;
-                        text-align: center;
-                        font-size: 70%;
-                        font-weight: normal;
+                    > div {
+                        &,
+                        &:last-child {
+                            border-left-width: 0;
+                            text-align: center;
+                            font-size: 70%;
+                            font-weight: normal;
+                        }
                     }
 
                     > div:last-child {
@@ -193,7 +198,8 @@ body {
             @include flex-direction(column);
             @include justify-content(space-between);
 
-            .pos-adv, .pos-company_logo {
+            .pos-adv,
+            .pos-company_logo {
                 @include pos-bg;
             }
 
@@ -211,7 +217,8 @@ body {
             }
 
             .pos-payment_info_details{
-                .pos-total, .pos-paymentlines {
+                .pos-total,
+                .pos-paymentlines {
                     @include flex-direction(row);
                     @include flex-display;
                     @include flex-wrap(wrap);
@@ -220,6 +227,7 @@ body {
 
                     > div {
                         @include flex(1 0 48%);
+
                         &:nth-child(even) {
                             font-weight: bold;
                             font-size: 120%;
@@ -439,7 +447,7 @@ body {
             }
         }
 
-        #oe_manipulators .oe_overlay > .oe_overlay_options > .btn-group> .dropdown.oe_options.btn-group.snippet-option-pos_palette > ul {
+        #oe_manipulators .oe_overlay > .oe_overlay_options > .btn-group> .dropdown.oe_options.btn-group.snippet-option-pos_palette > .dropdown-menu {
             min-width: 100px;
             max-width: 100px;
 
@@ -447,7 +455,7 @@ body {
                 display: none;
             }
 
-            > li > a {
+            > a {
                 position: relative;
                 padding: 14px 0!important;
                 margin-bottom: 1px;
@@ -459,7 +467,8 @@ body {
         }
 
         #oe_manipulators .no_parent_options {
-            .snippet-option-pos_palette, .o_parent_editor_header {
+            .snippet-option-pos_palette,
+            .o_parent_editor_header {
                 display: none;
             }
         }
@@ -468,7 +477,7 @@ body {
 
 
 // =========== PALETTE GENERATOR ===========
-.palette_variant (
+@mixin palette-variant (
     $bg-info: $color-gray-dark,
     $text-info: $color-gray-lighter,
     $bg-products: $color-gray-lighter,
@@ -503,7 +512,7 @@ body {
     }
 
     // Editor dropdown buttons
-    #oe_manipulators .oe_overlay > .oe_overlay_options .snippet-option-pos_palette > ul > li > & {
+    #oe_manipulators .oe_overlay > .oe_overlay_options .snippet-option-pos_palette > .dropdown-menu > & {
         background: $bg-products!important;
 
         &:after {
@@ -517,7 +526,7 @@ body {
         }
 
         &:before {
-            text-shadow: 0 0 1px (#fff - $bg-products);
+            text-shadow: 0 0 1px invert($bg-products);
         }
     }
 };

@@ -3,16 +3,17 @@
 # * product_email_template
 # 
 # Translators:
-# Martin Trigaux, 2018
-# 珠海-杜哥 <liangjia@qq.com>, 2018
-# ChinaMaker <liuct@chinamaker.net>, 2018
+# Jeffery CHEN <jeffery9@gmail.com>, 2019
+# Martin Trigaux, 2019
+# guohuadeng <guohuadeng@hotmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: ChinaMaker <liuct@chinamaker.net>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:23+0000\n"
+"Last-Translator: guohuadeng <guohuadeng@hotmail.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +24,7 @@ msgstr ""
 #. module: product_email_template
 #: model_terms:ir.ui.view,arch_db:product_email_template.product_template_form_view
 msgid "Automatic Email at Invoice"
-msgstr "自动发送电子邮件发票"
+msgstr "自动发送EMail发票"
 
 #. module: product_email_template
 #: model_terms:ir.ui.view,arch_db:product_email_template.email_template_form_simplified
@@ -34,7 +35,7 @@ msgstr "正文"
 #: model_terms:ir.ui.view,arch_db:product_email_template.email_template_form_simplified
 #: model_terms:ir.ui.view,arch_db:product_email_template.product_template_form_view
 msgid "Email Template"
-msgstr "Email模板"
+msgstr "EMail模板"
 
 #. module: product_email_template
 #: model:ir.model,name:product_email_template.model_account_invoice
@@ -45,7 +46,7 @@ msgstr "发票"
 #: model:ir.model.fields,field_description:product_email_template.field_product_product__email_template_id
 #: model:ir.model.fields,field_description:product_email_template.field_product_template__email_template_id
 msgid "Product Email Template"
-msgstr "产品 Email 模板"
+msgstr "产品 EMail 模板"
 
 #. module: product_email_template
 #: model:ir.model,name:product_email_template.model_product_template
@@ -54,11 +55,14 @@ msgstr "产品模板"
 
 #. module: product_email_template
 #: model_terms:ir.ui.view,arch_db:product_email_template.product_template_form_view
-msgid "Send a product-specific email once the invoice is paid"
-msgstr "一旦发票支付发送一个特定产品的电子邮件"
+msgid "Send a product-specific email once the invoice is validated"
+msgstr "发票验证后，发送针对特定产品的EMail"
 
 #. module: product_email_template
 #: model:ir.model.fields,help:product_email_template.field_product_product__email_template_id
 #: model:ir.model.fields,help:product_email_template.field_product_template__email_template_id
-msgid "Send a product-specific email once the invoice is paid."
-msgstr "发票付款后发送产品相关邮件"
+msgid ""
+"When validating an invoice, an email will be sent to the customer based on "
+"this template. The customer will receive an email for each product linked to"
+" an email template."
+msgstr "当确认发票的时候，根据这个模板生成的邮件自动发送。对于每个产品来说，客户会收到邮件"

@@ -1,27 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data noupdate="1">
-        <!-- Default Menu to store module menus for new website -->
-        <record id="main_menu" model="website.menu">
-          <field name="name">Default Main Menu</field>
-          <field name="url">/default-main-menu</field>
-        </record>
-        <record id="menu_home" model="website.menu">
-            <field name="name">Home</field>
-            <field name="url">/</field>
-            <field name="parent_id" ref="website.main_menu"/>
-            <field name="sequence" type="int">10</field>
-        </record>
-        <record id="menu_contactus" model="website.menu">
-            <field name="name">Contact us</field>
-            <field name="url">/contactus</field>
-            <field name="parent_id" ref="website.main_menu"/>
-            <field name="sequence" type="int">60</field>
-        </record>
-
+    <data>
         <!-- split between ir_ui_view & website_page record to keep external_id on ir_ui_view -->
-
-        <!-- Homepage -->
         <record id="homepage" model="ir.ui.view">
             <field name="name">Home</field>
             <field name="type">qweb</field>
@@ -35,13 +15,7 @@
                 </t>
             </field>
         </record>
-        <record id="homepage_page" model="website.page">
-            <field name="website_published">True</field>
-            <field name="url">/</field>
-            <field name="view_id" ref="homepage"/>
-        </record>
 
-        <!-- Contact Us page -->
         <record id="contactus" model="ir.ui.view">
             <field name="name">Contact Us</field>
             <field name="type">qweb</field>
@@ -78,7 +52,7 @@
                                                 </div>
                                             </section>
                                         </div>
-                                        <div class="text-center mt-3" name="mail_button">
+                                        <div class="text-center my-3" name="mail_button">
                                             <a role="button" t-attf-href="mailto:{{ res_company.email }}" class="btn btn-primary" id="o_contact_mail">Send us an email</a>
                                         </div>
                                     </div>
@@ -93,13 +67,7 @@
                 </t>
             </field>
         </record>
-        <record id="contactus_page" model="website.page">
-            <field name="url">/contactus</field>
-            <field name="website_published">True</field>
-            <field name="view_id" ref="contactus"/>
-        </record>
 
-        <!-- About Us page -->
         <record id="aboutus" model="ir.ui.view">
             <field name="name">About us</field>
             <field name="type">qweb</field>
@@ -145,10 +113,41 @@
                 </t>
             </field>
         </record>
+    </data>
+
+    <data noupdate="1">
+        <record id="homepage_page" model="website.page">
+            <field name="website_published">True</field>
+            <field name="url">/</field>
+            <field name="view_id" ref="homepage"/>
+        </record>
+        <record id="contactus_page" model="website.page">
+            <field name="url">/contactus</field>
+            <field name="website_published">True</field>
+            <field name="view_id" ref="contactus"/>
+        </record>
         <record id="aboutus_page" model="website.page">
             <field name="website_published">True</field>
             <field name="url">/aboutus</field>
             <field name="view_id" ref="aboutus"/>
+        </record>
+
+        <!-- Default Menu to store module menus for new website -->
+        <record id="main_menu" model="website.menu">
+          <field name="name">Default Main Menu</field>
+          <field name="url">/default-main-menu</field>
+        </record>
+        <record id="menu_home" model="website.menu">
+            <field name="name">Home</field>
+            <field name="url">/</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence" type="int">10</field>
+        </record>
+        <record id="menu_contactus" model="website.menu">
+            <field name="name">Contact us</field>
+            <field name="url">/contactus</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence" type="int">60</field>
         </record>
 
         <record id="default_website" model="website">
@@ -549,6 +548,7 @@
     <data>
         <record id="group_multi_website" model="res.groups">
             <field name="name">Multi-website</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
         </record>
     </data>
 </odoo>

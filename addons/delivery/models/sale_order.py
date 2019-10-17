@@ -25,7 +25,7 @@ class SaleOrder(models.Model):
     def _compute_available_carrier(self):
         carriers = self.env['delivery.carrier'].search([])
         for rec in self:
-            rec.available_carrier_ids = carriers.available_carriers(rec.partner_id) if rec.partner_id else carriers
+            rec.available_carrier_ids = carriers.available_carriers(rec.partner_shipping_id) if rec.partner_id else carriers
 
     def get_delivery_price(self):
         for order in self.filtered(lambda o: o.state in ('draft', 'sent') and len(o.order_line) > 0):
@@ -99,9 +99,15 @@ class SaleOrder(models.Model):
             taxes_ids = self.fiscal_position_id.map_tax(taxes, carrier.product_id, self.partner_id).ids
 
         # Create the sales order line
+        carrier_with_partner_lang = carrier.with_context(lang=self.partner_id.lang)
+        if carrier_with_partner_lang.product_id.description_sale:
+            so_description = '%s: %s' % (carrier_with_partner_lang.name,
+                                        carrier_with_partner_lang.product_id.description_sale)
+        else:
+            so_description = carrier_with_partner_lang.name
         values = {
             'order_id': self.id,
-            'name': carrier.with_context(lang=self.partner_id.lang).name,
+            'name': so_description,
             'product_uom_qty': 1,
             'product_uom': carrier.product_id.uom_id.id,
             'product_id': carrier.product_id.id,
@@ -119,7 +125,7 @@ class SaleOrder(models.Model):
     def _get_invoiced(self):
         super(SaleOrder, self)._get_invoiced()
         for order in self:
-            order_line = order.order_line.filtered(lambda x: not x.is_delivery and not x.is_downpayment)
+            order_line = order.order_line.filtered(lambda x: not x.is_delivery and not x.is_downpayment and not x.display_type)
             if all(line.product_id.invoice_policy == 'delivery' and line.invoice_status == 'no' for line in order_line):
                 order.update({'invoice_status': 'no'})
 
@@ -134,7 +140,7 @@ class SaleOrderLine(models.Model):
     def _compute_product_qty(self):
         for line in self:
             if not line.product_id or not line.product_uom or not line.product_uom_qty:
-                return 0.0
+                continue
             line.product_qty = line.product_uom._compute_quantity(line.product_uom_qty, line.product_id.uom_id)
 
     def _is_delivery(self):

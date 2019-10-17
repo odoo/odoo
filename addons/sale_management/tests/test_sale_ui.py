@@ -1,6 +1,7 @@
 import odoo.tests
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+
 @odoo.tests.tagged('post_install', '-at_install')
 class TestUi(odoo.tests.HttpCase):
 
@@ -8,14 +9,28 @@ class TestUi(odoo.tests.HttpCase):
         self.phantom_js("/web", "odoo.__DEBUG__.services['web_tour.tour'].run('sale_tour')", "odoo.__DEBUG__.services['web_tour.tour'].tours.sale_tour.ready", login="admin")
 
     def test_02_product_configurator(self):
-        # To be able to test the product configurator, admin user must have access to "variants and options" feature, so we give him the right group for that
-        self.env.ref('base.user_admin').write({'groups_id': [(4, self.env.ref('product.group_product_variant').id)]})
+        # group_product_variant: use the product configurator
+        # group_sale_pricelist: display the pricelist to determine when it is changed after choosing
+        #                       the partner
+        self.env.ref('base.user_admin').write({
+            'groups_id': [
+                (4, self.env.ref('product.group_product_variant').id),
+                (4, self.env.ref('product.group_sale_pricelist').id),
+            ],
+        })
 
         self.phantom_js("/web", "odoo.__DEBUG__.services['web_tour.tour'].run('sale_product_configurator_tour')", "odoo.__DEBUG__.services['web_tour.tour'].tours.sale_product_configurator_tour.ready", login="admin")
 
     def test_03_product_configurator_advanced(self):
-        # To be able to test the product configurator, admin user must have access to "variants and options" feature, so we give him the right group for that
-        self.env.ref('base.user_admin').write({'groups_id': [(4, self.env.ref('product.group_product_variant').id)]})
+        # group_product_variant: use the product configurator
+        # group_sale_pricelist: display the pricelist to determine when it is changed after choosing
+        #                       the partner
+        self.env.ref('base.user_admin').write({
+            'groups_id': [
+                (4, self.env.ref('product.group_product_variant').id),
+                (4, self.env.ref('product.group_sale_pricelist').id),
+            ],
+        })
 
         # Prepare relevant test data
         # This is not included in demo data to avoid useless noise
@@ -68,3 +83,43 @@ class TestUi(odoo.tests.HttpCase):
         })
 
         self.phantom_js("/web", "odoo.__DEBUG__.services['web_tour.tour'].run('sale_product_configurator_advanced_tour')", "odoo.__DEBUG__.services['web_tour.tour'].tours.sale_product_configurator_advanced_tour.ready", login="admin")
+
+    def test_04_product_configurator_pricelist(self):
+        """The goal of this test is to make sure pricelist rules are correctly
+        applied on the backend product configurator.
+        Also testing B2C setting: no impact on the backend configurator.
+        """
+
+        admin = self.env.ref('base.user_admin')
+
+        # Activate B2C
+        self.env.ref('account.group_show_line_subtotals_tax_excluded').users -= admin
+        self.env.ref('account.group_show_line_subtotals_tax_included').users |= admin
+
+        # Active pricelist on SO
+        self.env.ref('product.group_sale_pricelist').users |= admin
+
+        # Add a 15% tax on desk
+        tax = self.env['account.tax'].create({'name': "Test tax", 'amount': 15})
+        self.env.ref('product.product_product_4_product_template').taxes_id = tax
+
+        # Remove tax from Conference Chair and Chair floor protection
+        self.env.ref('sale.product_product_1_product_template').taxes_id = None
+        self.env.ref('product.product_product_11_product_template').taxes_id = None
+
+        # Make sure pricelist rule exist
+        product_template = self.env.ref('product.product_product_4_product_template')
+        pricelist = self.env.ref('product.list0')
+
+        if not pricelist.item_ids.filtered(lambda i: i.product_tmpl_id == product_template and i.price_discount == 20):
+            self.env['product.pricelist.item'].create({
+                'base': 'list_price',
+                'applied_on': '1_product',
+                'pricelist_id': pricelist.id,
+                'product_tmpl_id': product_template.id,
+                'price_discount': 20,
+                'min_quantity': 2,
+                'compute_price': 'formula',
+            })
+
+        self.phantom_js("/web", "odoo.__DEBUG__.services['web_tour.tour'].run('sale_product_configurator_pricelist_tour')", "odoo.__DEBUG__.services['web_tour.tour'].tours.sale_product_configurator_pricelist_tour.ready", login="admin")

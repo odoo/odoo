@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
 import re
 
 from odoo import api, fields, models, tools, _
@@ -10,6 +11,9 @@ from odoo.osv import expression
 from odoo.addons import decimal_precision as dp
 
 from odoo.tools import float_compare, pycompat
+
+_logger = logging.getLogger(__name__)
+
 
 
 class ProductCategory(models.Model):
@@ -83,13 +87,16 @@ class ProductProduct(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'default_code, name, id'
 
+    # price: total price, context dependent (partner, pricelist, quantity)
     price = fields.Float(
         'Price', compute='_compute_product_price',
         digits=dp.get_precision('Product Price'), inverse='_set_product_price')
+    # price_extra: catalog extra value only, sum of variant extra attributes
     price_extra = fields.Float(
         'Variant Price Extra', compute='_compute_product_price_extra',
         digits=dp.get_precision('Product Price'),
         help="This is the sum of the extra price of all attributes")
+    # lst_price: catalog value + extra, context dependent (uom)
     lst_price = fields.Float(
         'Sale Price', compute='_compute_product_lst_price',
         digits=dp.get_precision('Product Price'), inverse='_set_product_lst_price',
@@ -163,8 +170,8 @@ class ProductProduct(models.Model):
         pricelist_id_or_name = self._context.get('pricelist')
         if pricelist_id_or_name:
             pricelist = None
-            partner = self._context.get('partner', False)
-            quantity = self._context.get('quantity', 1.0)
+            partner = self.env.context.get('partner', False)
+            quantity = self.env.context.get('quantity', 1.0)
 
             # Support context pricelists specified as display_name or ID for compatibility
             if isinstance(pricelist_id_or_name, pycompat.string_types):
@@ -273,16 +280,39 @@ class ProductProduct(models.Model):
         if isinstance(value, pycompat.text_type):
             value = value.encode('ascii')
         image = tools.image_resize_image_big(value)
-        if self.product_tmpl_id.image:
+
+        # This is needed because when there is only one variant, the user
+        # doesn't know there is a difference between template and variant, he
+        # expects both images to be the same.
+        if self.product_tmpl_id.image and self.product_variant_count > 1:
             self.image_variant = image
         else:
+            self.image_variant = False
             self.product_tmpl_id.image = image
 
+    @api.depends('product_tmpl_id', 'attribute_value_ids')
     def _compute_product_template_attribute_value_ids(self):
+        # Fetch and pre-map the values first for performance. It assumes there
+        # won't be too many values, but there might be a lot of products.
+        values = self.env['product.template.attribute.value'].search([
+            ('product_tmpl_id', 'in', self.mapped('product_tmpl_id').ids),
+            ('product_attribute_value_id', 'in', self.mapped('attribute_value_ids').ids),
+        ])
+
+        values_per_template = {}
+        for ptav in values:
+            pt_id = ptav.product_tmpl_id.id
+            if pt_id not in values_per_template:
+                values_per_template[pt_id] = {}
+            values_per_template[pt_id][ptav.product_attribute_value_id.id] = ptav
+
         for product in self:
-            product.product_template_attribute_value_ids = self.env['product.template.attribute.value']._search([
-                ('product_tmpl_id', '=', product.product_tmpl_id.id),
-                ('product_attribute_value_id', 'in', product.attribute_value_ids.ids)])
+            product.product_template_attribute_value_ids = self.env['product.template.attribute.value']
+            for pav in product.attribute_value_ids:
+                if product.product_tmpl_id.id not in values_per_template or pav.id not in values_per_template[product.product_tmpl_id.id]:
+                    _logger.warning("A matching product.template.attribute.value was not found for the product.attribute.value #%s on the template #%s" % (pav.id, product.product_tmpl_id.id))
+                else:
+                    product.product_template_attribute_value_ids += values_per_template[product.product_tmpl_id.id][pav.id]
 
     @api.one
     def _get_pricelist_items(self):
@@ -314,6 +344,18 @@ class ProductProduct(models.Model):
             # When a unique variant is created from tmpl then the standard price is set by _set_standard_price
             if not (self.env.context.get('create_from_tmpl') and len(product.product_tmpl_id.product_variant_ids) == 1):
                 product._set_standard_price(vals.get('standard_price') or 0.0)
+        # `_get_variant_id_for_combination` depends on existing variants
+        self.clear_caches()
+        self.env['product.template'].invalidate_cache(
+            fnames=[
+                'valid_archived_variant_ids',
+                'valid_existing_variant_ids',
+                'product_variant_ids',
+                'product_variant_id',
+                'product_variant_count'
+            ],
+            ids=products.mapped('product_tmpl_id').ids
+        )
         return products
 
     @api.multi
@@ -322,6 +364,15 @@ class ProductProduct(models.Model):
         res = super(ProductProduct, self).write(values)
         if 'standard_price' in values:
             self._set_standard_price(values['standard_price'])
+        if 'attribute_value_ids' in values:
+            # `_get_variant_id_for_combination` depends on `attribute_value_ids`
+            self.clear_caches()
+        if 'active' in values:
+            # prefetched o2m have to be reloaded (because of active_test)
+            # (eg. product.template: product_variant_ids)
+            self.invalidate_cache()
+            # `_get_first_possible_variant_id` depends on variants active state
+            self.clear_caches()
         return res
 
     @api.multi
@@ -342,6 +393,8 @@ class ProductProduct(models.Model):
         # delete templates after calling super, as deleting template could lead to deleting
         # products due to ondelete='cascade'
         unlink_templates.unlink()
+        # `_get_variant_id_for_combination` depends on existing variants
+        self.clear_caches()
         return res
 
     @api.multi
@@ -388,6 +441,24 @@ class ProductProduct(models.Model):
         self.check_access_rule("read")
 
         result = []
+
+        # Prefetch the fields used by the `name_get`, so `browse` doesn't fetch other fields
+        # Use `load=False` to not call `name_get` for the `product_tmpl_id`
+        self.sudo().read(['name', 'default_code', 'product_tmpl_id', 'attribute_value_ids', 'attribute_line_ids'], load=False)
+
+        product_template_ids = self.sudo().mapped('product_tmpl_id').ids
+
+        if partner_ids:
+            supplier_info = self.env['product.supplierinfo'].sudo().search([
+                ('product_tmpl_id', 'in', product_template_ids),
+                ('name', 'in', partner_ids),
+            ])
+            # Prefetch the fields used by the `name_get`, so `browse` doesn't fetch other fields
+            # Use `load=False` to not call `name_get` for the `product_tmpl_id` and `product_id`
+            supplier_info.sudo().read(['product_tmpl_id', 'product_id', 'product_name', 'product_code'], load=False)
+            supplier_info_by_template = {}
+            for r in supplier_info:
+                supplier_info_by_template.setdefault(r.product_tmpl_id, []).append(r)
         for product in self.sudo():
             # display only the attributes with multiple possible values on the template
             variable_attributes = product.attribute_line_ids.filtered(lambda l: len(l.value_ids) > 1).mapped('attribute_id')
@@ -396,9 +467,10 @@ class ProductProduct(models.Model):
             name = variant and "%s (%s)" % (product.name, variant) or product.name
             sellers = []
             if partner_ids:
-                sellers = [x for x in product.seller_ids if (x.name.id in partner_ids) and (x.product_id == product)]
+                product_supplier_info = supplier_info_by_template.get(product.product_tmpl_id, [])
+                sellers = [x for x in product_supplier_info if x.product_id and x.product_id == product]
                 if not sellers:
-                    sellers = [x for x in product.seller_ids if (x.name.id in partner_ids) and not x.product_id]
+                    sellers = [x for x in product_supplier_info if not x.product_id]
             if sellers:
                 for s in sellers:
                     seller_variant = s.product_name and (
@@ -496,7 +568,10 @@ class ProductProduct(models.Model):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
 
         res = self.env['product.supplierinfo']
-        for seller in self._prepare_sellers(params):
+        sellers = self._prepare_sellers(params)
+        if self.env.context.get('force_company'):
+            sellers = sellers.filtered(lambda s: not s.company_id or s.company_id.id == self.env.context['force_company'])
+        for seller in sellers:
             # Set quantity in UoM of seller
             quantity_uom_seller = quantity
             if quantity_uom_seller and uom_id and uom_id != seller.product_uom:
@@ -597,6 +672,51 @@ class ProductProduct(models.Model):
             name += '\n' + self.description_sale
 
         return name
+
+    def _has_valid_attributes(self, valid_attributes, valid_values):
+        """ Check if a product has valid attributes. It is considered valid if:
+            - it uses ALL valid attributes
+            - it ONLY uses valid values
+            We must make sure that all attributes are used to take into account the case where
+            attributes would be added to the template.
+
+            This method does not check if the combination is possible, it just
+            checks if it has valid attributes and values. A possible combination
+            is always valid, but a valid combination is not always possible.
+
+            :param valid_attributes: a recordset of product.attribute
+            :param valid_values: a recordset of product.attribute.value
+            :return: True if the attibutes and values are correct, False instead
+        """
+        self.ensure_one()
+        values = self.attribute_value_ids
+        attributes = values.mapped('attribute_id')
+        if attributes != valid_attributes:
+            return False
+        for value in values:
+            if value not in valid_values:
+                return False
+        return True
+
+    @api.multi
+    def _is_variant_possible(self, parent_combination=None):
+        """Return whether the variant is possible based on its own combination,
+        and optionally a parent combination.
+
+        See `_is_combination_possible` for more information.
+
+        This will always exclude variants for templates that have `no_variant`
+        attributes because the variant itself will not be the full combination.
+
+        :param parent_combination: combination from which `self` is an
+            optional or accessory product.
+        :type parent_combination: recordset `product.template.attribute.value`
+
+        :return: ẁhether the variant is possible based on its own combination
+        :rtype: bool
+        """
+        self.ensure_one()
+        return self.product_tmpl_id._is_combination_possible(self.product_template_attribute_value_ids, parent_combination=parent_combination)
 
 
 class ProductPackaging(models.Model):

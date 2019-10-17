@@ -36,7 +36,6 @@ class Web_Editor(http.Controller):
             model=model,
             res_id=res_id,
             field=field,
-            datarecord=json.loads(kwargs['datarecord']),
             debug=request.debug)
 
         for k in kwargs:
@@ -51,11 +50,16 @@ class Web_Editor(http.Controller):
 
         kwargs.update(trans)
 
-        record = None
-        if model and kwargs.get('res_id'):
-            record = request.env[model].with_context(trans).browse(kwargs.get('res_id'))
+        content = None
+        if model:
+            Model = request.env[model].with_context(trans)
+            if kwargs.get('res_id'):
+                record = Model.browse(kwargs.get('res_id'))
+                content = record and getattr(record, field)
+            else:
+                content = Model.default_get([field]).get(field)
 
-        kwargs.update(content=record and getattr(record, field) or "")
+        kwargs.update(content=content or '')
 
         return request.render(kwargs.get("template") or "web_editor.FieldTextHtml", kwargs, uid=request.uid)
 
@@ -252,7 +256,7 @@ class Web_Editor(http.Controller):
     @http.route('/web_editor/get_image_info', type='json', auth='user', website=True)
     def get_image_info(self, image_id=None, xml_id=None):
         if xml_id:
-            record = request.env.ref(xml_id)
+            record = request.env['ir.attachment'].get_attachment_by_key(xml_id)
         elif image_id:
             record = request.env['ir.attachment'].browse(image_id)
         result = {
@@ -266,6 +270,9 @@ class Web_Editor(http.Controller):
             result['originalSrc'] = record.url
         return result
 
+    def _get_view_fields_to_read(self):
+        return ['name', 'id', 'key', 'xml_id', 'arch', 'active', 'inherit_id']
+
     ## The get_assets_editor_resources route is in charge of transmitting the resources the assets
     ## editor needs to work.
     ## @param key - the xml_id or id of the view the resources are related to
@@ -278,7 +285,7 @@ class Web_Editor(http.Controller):
     def get_assets_editor_resources(self, key, get_views=True, get_scss=True, bundles=False, bundles_restriction=[]):
         # Related views must be fetched if the user wants the views and/or the style
         views = request.env["ir.ui.view"].get_related_views(key, bundles=bundles)
-        views = views.read(['name', 'id', 'key', 'xml_id', 'arch', 'active', 'inherit_id'])
+        views = views.read(self._get_view_fields_to_read())
 
         scss_files_data_by_bundle = []
 
@@ -417,7 +424,17 @@ class Web_Editor(http.Controller):
 
             # Create a view to extend the template which adds the original file to link the new modified version instead
             IrUiView = request.env["ir.ui.view"]
-            view_to_xpath = IrUiView.get_related_views(bundle_xmlid, bundles=True).filtered(lambda v: v.arch.find(url) >= 0)
+
+            def views_linking_url(view):
+                """
+                Returns whether the view arch has some html link tag linked to the url.
+
+                (note: searching for the URL string is not enough as it could appear in a comment or an xpath expression.)
+                """
+                return bool(etree.XML(view.arch).xpath("//link[@href='{}']".format(url)))
+
+            view_to_xpath = IrUiView.get_related_views(bundle_xmlid, bundles=True).filtered(views_linking_url)
+
             new_view = {
                 'name': custom_url,
                 'key': 'web_editor.scss_%s' % str(uuid.uuid4())[:6],

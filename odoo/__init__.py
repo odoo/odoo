@@ -3,17 +3,21 @@
 
 """ OpenERP core library."""
 
+
 #----------------------------------------------------------
 # odoo must be a namespace package for odoo.addons to become one too
 # https://packaging.python.org/guides/packaging-namespace-packages/
 #----------------------------------------------------------
 __path__ = __import__('pkgutil').extend_path(__path__, __name__)
 
+# As of version 12.0, python 2 is no longer supported, ensure py version is >= 3.5
+import sys
+assert sys.version_info > (3, 5), "Python 2 detected, Odoo requires Python >= 3.5 to run."
+
 #----------------------------------------------------------
 # Running mode flags (gevent, prefork)
 #----------------------------------------------------------
 # Is the server running with gevent.
-import sys
 evented = False
 if len(sys.argv) > 1 and sys.argv[1] == 'gevent':
     sys.argv.remove('gevent')
@@ -58,12 +62,47 @@ import time
 if hasattr(time, 'tzset'):
     time.tzset()
 
+# ----------------------------------------------------------
+# module babel hack
+# make sure unicode [world] territory is "001"
+# whereas "unitag" notation is "AA"
+# http://www.unicode.org/reports/tr35/#unicode_region_subtag
+# http://www.unicode.org/reports/tr35/#unicode_region_subtag_validity
+# BCP47: https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry
+# ----------------------------------------------------------
+import babel
+_babelCoreParseLocale = babel.core.parse_locale
+def _babelCoreParseLocale_unitag(identifier, sep='_'):
+    lang, territory, script, variant = _babelCoreParseLocale(identifier, sep)
+    territory = '001' if territory == 'AA' else territory
+    return lang, territory, script, variant
+
+babel.core.parse_locale = _babelCoreParseLocale_unitag
+
+# ----------------------------------------------------------
+# PyPDF2 hack
+# ensure that zlib does not throw error -5 when decompressing
+# because some pdf won't fit into allocated memory
+# https://docs.python.org/3/library/zlib.html#zlib.decompressobj
+# ----------------------------------------------------------
+import PyPDF2
+
+try:
+    import zlib
+
+    def _decompress(data):
+        zobj = zlib.decompressobj()
+        return zobj.decompress(data)
+
+    PyPDF2.filters.decompress = _decompress
+except ImportError:
+    pass # no fix required
+
 #----------------------------------------------------------
 # Shortcuts
 #----------------------------------------------------------
 # The hard-coded super-user id (a.k.a. administrator, or root user).
 SUPERUSER_ID = 1
-ADMINUSER_ID = 2
 
 
 def registry(database_name=None):

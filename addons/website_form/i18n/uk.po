@@ -6,14 +6,15 @@
 # Martin Trigaux, 2018
 # Bohdan Lisnenko, 2018
 # ТАрас <tratatuta@i.ua>, 2018
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-09-21 13:18+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-01-09 10:32+0000\n"
+"PO-Revision-Date: 2018-08-24 09:34+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,9 +43,18 @@ msgid "<p>Attached files : </p>"
 msgstr "<p>Прикріплені файли: </p>"
 
 #. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
+"specific.\" groups=\"website.group_multi_website\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
+"specific.\" groups=\"website.group_multi_website\"/>"
+
+#. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_access
 msgid "Allowed to use in forms"
-msgstr "Дозволено використовувати в формах"
+msgstr "Дозволено використовувати у формах"
 
 #. module: website_form
 #. openerp-web
@@ -66,7 +76,7 @@ msgstr "Чорний список у веб-формах"
 #. module: website_form
 #: model:ir.model,name:website_form.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Налаштування"
 
 #. module: website_form
 #: code:addons/website_form/controllers/main.py:54
@@ -103,8 +113,8 @@ msgid ""
 "Form action label. Ex: crm.lead could be 'Send an e-mail' and project.issue "
 "could be 'Create an Issue'."
 msgstr ""
-"Форма дії етикетки. Наприклад: crm.lead може бути \"Надіслати електронний "
-"лист\" і project.issue може бути \"Створити випуск\"."
+"Форма дії логотипу. Наприклад: crm.lead може бути \"Надіслати електронний "
+"лист\" і project.issue може бути \"Створити проблему\"."
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_label
@@ -133,7 +143,7 @@ msgstr "Будь ласка, заповніть форму вірно."
 #: model:ir.model.fields,help:website_form.field_ir_model__website_form_default_field_id
 msgid ""
 "Specify the field which will contain meta and custom form fields datas."
-msgstr "Вкажіть поле, яке буде містити мету і спеціальні поля форми даних."
+msgstr "Вкажіть поле, яке буде містити мету і спеціальні  дані поля форми."
 
 #. module: website_form
 #. openerp-web
@@ -146,7 +156,7 @@ msgstr "Успіх"
 #: model:ir.model.fields,field_description:website_form.field_res_config_settings__website_form_enable_metadata
 #: model:ir.model.fields,field_description:website_form.field_website__website_form_enable_metadata
 msgid "Technical data on contact form"
-msgstr ""
+msgstr "Технічні дані на формі контракту"
 
 #. module: website_form
 #. openerp-web
@@ -159,6 +169,7 @@ msgstr "Форму успішно надіслано."
 #: model_terms:ir.ui.view,arch_db:website_form.res_config_settings_view_form
 msgid "Track metadata (IP, User Agent, ...) on your Website Forms"
 msgstr ""
+"Відслідковуйте метадані (IP, Агент користувача, ...) на формі веб-сайту"
 
 #. module: website_form
 #: model:ir.model,name:website_form.model_website
@@ -170,3 +181,5 @@ msgstr "Веб-сайт"
 #: model:ir.model.fields,help:website_form.field_website__website_form_enable_metadata
 msgid "You can choose to log technical data like IP, User Agent ,..."
 msgstr ""
+"Ви можете вибрати журнал технічних даних, таких як IP, агент користувача, "
+"..."
