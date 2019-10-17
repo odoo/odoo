@@ -64,7 +64,7 @@
             <field name="model">ir.ui.menu</field>
             <field name="arch" type="xml">
                 <search string="Menu">
-                    <field name="name" string="Menu"/>
+                    <field name="name" string="Menu" filter_domain="['|', ('name', 'ilike', self), ('complete_name', 'ilike', self)]"/>
                     <field name="parent_id"/>
                 </search>
             </field>
