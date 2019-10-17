@@ -1009,7 +1009,7 @@ var define_action_button = function(classe, options){
         }
     } else if (options.before) {
         for (i = 0; i < classes.length; i++) {
-            if (classes[i].name === options.after) {
+            if (classes[i].name === options.before) {
                 index = i;
                 break;
             }
