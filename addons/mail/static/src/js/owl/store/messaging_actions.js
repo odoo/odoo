@@ -177,13 +177,12 @@ const actions = {
             method: type === 'chat' ? 'channel_get' : 'channel_create',
             args: type === 'chat' ? [[partnerId]] : [name, publicStatus],
             kwargs: {
-                context: {
-                    ...env.session.user_content,
-                    isMobile: config.device.isMobile
-                }
+                context: Object.assign({}, env.session.user_content, {
+                    isMobile: config.device.isMobile,
+                }),
             }
         });
-        const threadLocalId = dispatch('_createThread', { ...data });
+        const threadLocalId = dispatch('_createThread', Object.assign({}, data));
         if (state.threads[threadLocalId].is_minimized) {
             dispatch('openThread', threadLocalId, {
                 chatWindowMode: 'last',
@@ -281,11 +280,10 @@ const actions = {
             fields: ['id', 'name', 'mimetype'],
         });
         for (const attachmentData of attachmentsData) {
-            dispatch('_insertAttachment', {
+            dispatch('_insertAttachment', Object.assign({
                 res_id: resId,
                 res_model: resModel,
-                ...attachmentData,
-            });
+            }, attachmentData));
         }
     },
     /**
@@ -402,10 +400,9 @@ const actions = {
         { ready }
     ) {
         await env.session.is_bound;
-        const context = {
+        const context = Object.assign({
             isMobile: config.device.isMobile,
-            ...env.session.user_context
-        };
+        }, env.session.user_context);
         const data = await env.rpc({
             route: '/mail/init_messaging',
             params: { context: context }
@@ -434,22 +431,19 @@ const actions = {
      */
     insertThread(
         { dispatch, getters, state },
-        {
-            _model,
-            id,
-            ...kwargs
-        }
+        param1
     ) {
+        const _model = param1._model;
+        const id = param1.id;
+        const kwargs = Object.assign({}, param1);
+        delete kwargs.id;
+        delete kwargs._model;
         let thread = getters.thread({
             _model,
             id,
         });
         if (!thread) {
-            const threadLocalId = dispatch('_createThread', {
-                _model,
-                id,
-                ...kwargs,
-            });
+            const threadLocalId = dispatch('_createThread', param1);
             thread = state.threads[threadLocalId];
         } else {
             Object.assign(thread, kwargs); // aku todo
@@ -479,8 +473,8 @@ const actions = {
             method: 'channel_join_and_get_info',
             args: [[channelId]]
         });
-        const threadLocalId = dispatch('_createThread', { ...data });
-        if (state.threads[threadLocalId].is_minimized){
+        const threadLocalId = dispatch('_createThread', Object.assign({}, data));
+        if (state.threads[threadLocalId].is_minimized) {
             dispatch('openThread', threadLocalId, {
                 chatWindowMode: 'last',
             });
@@ -762,10 +756,9 @@ const actions = {
                 _model: res_model,
                 id: res_id,
             });
-            return dispatch('postMessageOnThread', otherThread.localId, {
-                ...data,
+            return dispatch('postMessageOnThread', otherThread.localId, Object.assign({}, data, {
                 threadLocalId,
-            });
+            }));
         }
         const {
             attachmentLocalIds,
@@ -831,11 +824,10 @@ const actions = {
                 method: 'message_format',
                 args: [[id]]
             });
-            dispatch('_createMessage', {
-                ...messageData,
+            dispatch('_createMessage', Object.assign({}, messageData, {
                 model: thread._model,
                 res_id: thread.id
-            });
+            }));
         }
         if (threadCacheLocalId) {
             const threadCache = state.threadCaches[threadCacheLocalId];
@@ -1186,7 +1178,7 @@ const actions = {
      * @param {any} changes
      */
     updateDialogInfo({ state }, id, changes) {
-        const dialog  = state.dialogManager.dialogs.find(dialog => dialog.id === id);
+        const dialog = state.dialogManager.dialogs.find(dialog => dialog.id === id);
         if (!dialog) {
             return;
         }
@@ -1203,7 +1195,7 @@ const actions = {
      * @param {string} [changes.targetThreadLocalId]
      */
     updateDiscuss({ dispatch, state }, changes) {
-        let toApplyChanges = { ...changes };
+        let toApplyChanges = Object.assign({}, changes);
         const wasDiscussOpen = state.discuss.isOpen;
         if (
             'activeMobileNavbarTabId' in changes &&
@@ -1372,7 +1364,7 @@ const actions = {
             // some visible, some hidden
             for (let i = 0; i < maxAmountWithHidden; i++) {
                 const chatWindowLocalId = chatWindowLocalIds[i];
-                const offset = START_GAP_WIDTH + i * ( CHAT_WINDOW_WIDTH + BETWEEN_GAP_WIDTH );
+                const offset = START_GAP_WIDTH + i * (CHAT_WINDOW_WIDTH + BETWEEN_GAP_WIDTH);
                 computed.visible.push({ chatWindowLocalId, offset });
             }
             if (chatWindowLocalIds.length > maxAmountWithHidden) {
@@ -1803,10 +1795,9 @@ const actions = {
         if (Object.values(thread.cacheLocalIds).includes(threadCacheLocalId)) {
             return threadCacheLocalId;
         }
-        thread.cacheLocalIds = {
-            ...thread.cacheLocalIds,
+        thread.cacheLocalIds = Object.assign({}, thread.cacheLocalIds, {
             [stringifiedDomain]: threadCacheLocalId,
-        };
+        });
         return threadCacheLocalId;
     },
     /**
@@ -1937,7 +1928,7 @@ const actions = {
     _getMentionedPartnerIdsFromHtml(unused, content) {
         const parser = new window.DOMParser();
         const node = parser.parseFromString(content, 'text/html');
-        const mentions = [ ...node.querySelectorAll('.o_mention') ];
+        const mentions = [...node.querySelectorAll('.o_mention')];
         const allPartnerIds = mentions
             .filter(mention =>
                 (
@@ -1945,7 +1936,7 @@ const actions = {
                     !isNaN(Number(mention.dataset.oeId))
                 ))
             .map(mention => Number(mention.dataset.oeId));
-        return [ ...new Set(allPartnerIds) ];
+        return [...new Set(allPartnerIds)];
     },
     /**
      * @private
@@ -2031,7 +2022,10 @@ const actions = {
      */
     async _handleNotificationChannelMessage(
         { dispatch, env, state },
-        { channelId, ...data }) {
+        param1) {
+        const channelId = param1.channelId;
+        const data = Object.assign({}, param1);
+        delete data.channelId;
         const {
             author_id: [authorPartnerId]=[],
             channel_ids,
@@ -2223,7 +2217,7 @@ const actions = {
         }
         if (!state.threads[`mail.channel_${id}`]) {
             const threadLocalId = dispatch('_createThread', data);
-            if (state.threads[threadLocalId].is_minimized){
+            if (state.threads[threadLocalId].is_minimized) {
                 dispatch('openThread', threadLocalId, {
                     chatWindowMode: 'last',
                 });
@@ -2341,22 +2335,18 @@ const actions = {
      * @param {function} param0.dispatch
      * @param {Object} param0.state
      * @param {Object} param1
-     * @param {...Object} param1.kwargs
      */
     _handleNotificationPartnerTransientMessage(
         { dispatch, state },
-        {
-            ...kwargs
-        }
+        param1
     ) {
         const messageIds = Object.values(state.messages).map(message => message.id);
         const odoobot = state.partners['res.partner_odoobot'];
-        dispatch('_createMessage', {
-            ...kwargs,
+        dispatch('_createMessage', Object.assign({}, param1, {
             author_id: [odoobot.id, odoobot.name],
             id: (messageIds ? Math.max(...messageIds) : 0) + 0.01,
             isTransient: true,
-        });
+        }));
     },
     /**
      * @private
@@ -2432,14 +2422,11 @@ const actions = {
                 case 'ir.needaction':
                     return dispatch('_handleNotificationNeedaction', data);
                 case 'mail.channel':
-                    return dispatch('_handleNotificationChannel', {
+                    return dispatch('_handleNotificationChannel', Object.assign({
                         channelId: id,
-                        ...data
-                    });
+                    }, data));
                 case 'res.partner':
-                    return dispatch('_handleNotificationPartner', {
-                        ...data
-                    });
+                    return dispatch('_handleNotificationPartner', Object.assign({}, data));
                 default:
                     console.warn(`[messaging store] Unhandled notification "${model}"`);
                     return;
@@ -2563,10 +2550,9 @@ const actions = {
         }
     ) {
         for (const data of channel_channel) {
-            const threadLocalId = dispatch('insertThread', {
+            const threadLocalId = dispatch('insertThread', Object.assign({
                 _model: 'mail.channel',
-                ...data,
-            });
+            }, data));
             const thread = state.threads[threadLocalId];
             if (thread.is_minimized) {
                 dispatch('openThread', thread.localId, {
@@ -2575,10 +2561,9 @@ const actions = {
             }
         }
         for (const data of channel_direct_message) {
-            const threadLocalId = dispatch('insertThread', {
+            const threadLocalId = dispatch('insertThread', Object.assign({
                 _model: 'mail.channel',
-                ...data,
-            });
+            }, data));
             const thread = state.threads[threadLocalId];
             if (thread.is_minimized) {
                 dispatch('openThread', thread.localId, {
@@ -2587,10 +2572,9 @@ const actions = {
             }
         }
         for (const data of channel_private_group) {
-            const threadLocalId = dispatch('insertThread', {
+            const threadLocalId = dispatch('insertThread', Object.assign({
                 _model: 'mail.channel',
-                ...data,
-            });
+            }, data));
             const thread = state.threads[threadLocalId];
             if (thread.is_minimized) {
                 dispatch('openThread', thread.localId, {
@@ -2608,10 +2592,9 @@ const actions = {
     _initMessagingCommands({ state }, commandsData) {
         const commands = commandsData
             .map(command => {
-                return {
+                return Object.assign({
                     id: command.name,
-                    ...command
-                };
+                }, command);
             })
             .reduce((obj, command) => {
                 obj[command.id] = command;
@@ -2672,11 +2655,10 @@ const actions = {
      */
     _initMessagingMailFailures({ state }, mailFailuresData) {
         for (const data of mailFailuresData) {
-            const mailFailure = {
-                ...data,
+            const mailFailure = Object.assign({}, data, {
                 _model: 'mail.failure',
                 localId: `mail.failure_${data.message_id}`,
-            };
+            });
             // /**
             //  * Get a valid object for the 'mail.preview' template
             //  *
@@ -2746,10 +2728,13 @@ const actions = {
      * @param {...Object} param1.kwargs
      * @return {string} attachment local Id
      */
-    _insertAttachment({ dispatch, state }, { id, ...kwargs }) {
+    _insertAttachment({ dispatch, state }, param1) {
+        const id = param1.id;
+        const kwargs = Object.assign({}, param1);
+        delete kwargs.id;
         const attachmentLocalId = `ir.attachment_${id}`;
         if (!state.attachments[attachmentLocalId]) {
-            dispatch('createAttachment', { id, ...kwargs });
+            dispatch('createAttachment', Object.assign({ id }, kwargs));
         } else {
             dispatch('_updateAttachment', attachmentLocalId, kwargs);
         }
@@ -2765,10 +2750,12 @@ const actions = {
      * @param {...Object} param1.kwargs
      * @return {string} message local Id
      */
-    _insertMessage({ dispatch, state }, { id, ...kwargs }) {
+    _insertMessage({ dispatch, state }, param1) {
+        const id = param1.id;
+        const kwargs = Object.assign({}, param1);
         const messageLocalId = `mail.message_${id}`;
         if (!state.messages[messageLocalId]) {
-            dispatch('_createMessage', { id, ...kwargs });
+            dispatch('_createMessage', Object.assign({ id }, kwargs));
         } else {
             dispatch('_updateMessage', messageLocalId, kwargs);
         }
@@ -2786,10 +2773,12 @@ const actions = {
      * @param {...Object} param1.kwargs
      * @return {string} partner local Id
      */
-    _insertPartner({ dispatch, state }, { id, ...kwargs }) {
+    _insertPartner({ dispatch, state }, param1) {
+        const id = param1.id;
+        const kwargs = Object.assign({}, param1);
         const partnerLocalId = `res.partner_${id}`;
         if (!state.partners[partnerLocalId]) {
-            dispatch('_createPartner', { id, ...kwargs });
+            dispatch('_createPartner', Object.assign({ id }, kwargs));
         } else {
             dispatch('_updatePartner', partnerLocalId, kwargs);
         }
@@ -2808,20 +2797,20 @@ const actions = {
      */
     _insertThreadCache(
         { dispatch, state },
-        {
-            stringifiedDomain='[]',
-            threadLocalId,
-            ...kwargs
-        }
+        param1
     ) {
+        const stringifiedDomain = param1.stringifiedDomain;
+        const threadLocalId = param1.threadLocalId;
+        const kwargs = Object.assign({}, param1);
+        delete kwargs.stringifiedDomain;
+        delete kwargs.threadLocalId;
         let threadCacheLocalId;
         const thread = state.threads[threadLocalId];
         if (!thread.cacheLocalIds[stringifiedDomain]) {
-            threadCacheLocalId = dispatch('_createThreadCache', {
+            threadCacheLocalId = dispatch('_createThreadCache', Object.assign({
                 stringifiedDomain,
                 threadLocalId,
-                ...kwargs,
-            });
+            }, kwargs));
         } else {
             threadCacheLocalId = thread.cacheLocalIds[stringifiedDomain];
             const threadCache = state.threadCaches[threadCacheLocalId];
