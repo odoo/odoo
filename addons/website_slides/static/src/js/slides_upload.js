@@ -182,6 +182,7 @@ var SlideUploadDialog = Dialog.extend({
     _getModalButtons: function () {
         var btnList = [];
         var state = this.get('state');
+        console.log(this);
         if (state === '_select') {
             btnList.push({text: _t("Cancel"), classes: 'o_w_slide_cancel', close: true});
         } else if (state === '_import') {

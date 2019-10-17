@@ -143,6 +143,21 @@ $o-wslides-fs-side-width: 300px;
     }
 }
 
+.o_wslides_empty_course_content {
+    background-color:  rgba(0,0,0,.02);
+
+    .o_wslides_empty_list_icon {
+        width: 100%;
+        div {
+            background-color: #dcdcdc;
+            border-radius: 10px;
+            height: 30px;
+            margin-bottom: 20px;
+            width: 50%;
+        }
+    }
+}
+
 @mixin o-wslides-tabs($tab-active-color: $o-wslides-color-bg) {
     margin-top: ($o-wslides-tabs-height * -1) + 0.05rem;
     border-bottom: 0;
