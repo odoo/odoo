@@ -50,7 +50,7 @@ class TestGetCurrentWebsite(TransactionCase):
         self.assertEqual(Website._get_current_website_id('', country3.id), website2.id)
 
         # CASE: no domain, wrong country: get first
-        self.assertEqual(Website._get_current_website_id('', country4.id), website1.id)
+        self.assertEqual(Website._get_current_website_id('', country4.id), Website.search([]).sorted('country_group_ids')[0].id)
 
         # CASE: no domain, multiple country: get first
         self.assertEqual(Website._get_current_website_id('', country5.id), website1.id)
