@@ -364,7 +364,7 @@ class MailTemplate(models.Model):
             results[res_id]['partner_ids'] = partner_ids
         return results
 
-    def generate_email(self, res_ids, fields=None):
+    def generate_email(self, res_ids, fields):
         """Generates an email from the template for given the given model based on
         records given by res_ids.
 
@@ -379,8 +379,6 @@ class MailTemplate(models.Model):
         if isinstance(res_ids, int):
             res_ids = [res_ids]
             multi_mode = False
-        if fields is None:
-            fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to', 'scheduled_date']
 
         res_ids_to_templates = self.get_email_template(res_ids)
 
@@ -473,7 +471,7 @@ class MailTemplate(models.Model):
         Attachment = self.env['ir.attachment']  # TDE FIXME: should remove default_type from context
 
         # create a mail_mail based on values, without attachments
-        values = self.generate_email(res_id)
+        values = self.generate_email(res_id, ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to', 'scheduled_date'])
         values['recipient_ids'] = [(4, pid) for pid in values.get('partner_ids', list())]
         values['attachment_ids'] = [(4, aid) for aid in values.get('attachment_ids', list())]
         values.update(email_values or {})
