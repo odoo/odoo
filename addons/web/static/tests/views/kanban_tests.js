@@ -178,7 +178,7 @@ QUnit.module('Views', {
                     '</t></templates></kanban>',
             groupBy: ['bar'],
             mockRPC: function (route, args) {
-                if (route === '/web/dataset/call_kw/partner/toggle_active') {
+                if (route === '/web/dataset/call_kw/partner/action_archive') {
                     var partnerIDS = args.args[0];
                     var records = this.data.partner.records
                     _.each(partnerIDS, function(partnerID) {
@@ -235,7 +235,7 @@ QUnit.module('Views', {
                     '</t></templates></kanban>',
             groupBy: ['bar'],
             mockRPC: function (route, args) {
-                if (route === '/web/dataset/call_kw/partner/toggle_active') {
+                if (route === '/web/dataset/call_kw/partner/action_archive') {
                     var partnerIDS = args.args[0];
                     var records = this.data.partner.records
                     _.each(partnerIDS, function(partnerID) {
@@ -4939,7 +4939,7 @@ QUnit.module('Views', {
                 '</kanban>',
             groupBy: ['bar'],
             mockRPC: function (route, args) {
-                if (route === '/web/dataset/call_kw/partner/toggle_active') {
+                if (route === '/web/dataset/call_kw/partner/action_archive') {
                     var partnerIDS = args.args[0];
                     var records = this.data.partner.records
                     _.each(partnerIDS, function(partnerID) {
@@ -4996,7 +4996,7 @@ QUnit.module('Views', {
                 '</kanban>',
             groupBy: ['bar'],
             mockRPC: function (route, args) {
-                if (route === '/web/dataset/call_kw/partner/toggle_active') {
+                if (route === '/web/dataset/call_kw/partner/action_archive') {
                     var partnerIDS = args.args[0];
                     var records = this.data.partner.records
                     _.each(partnerIDS, function(partnerID) {
