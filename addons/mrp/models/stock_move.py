@@ -13,7 +13,7 @@ class StockMoveLine(models.Model):
     production_id = fields.Many2one('mrp.production', 'Production Order', check_company=True)
     lot_produced_ids = fields.Many2many('stock.production.lot', string='Finished Lot/Serial Number', check_company=True)
     lot_produced_qty = fields.Float(
-        'Quantity Finished Product', digits='Product Unit of Measure', check_company=True,
+        'Quantity Finished Product', digits='Product Unit of Measure',
         help="Informative, not used in matching")
     done_move = fields.Boolean('Move Done', related='move_id.is_done', readonly=False, store=True)  # TDE FIXME: naming
 
