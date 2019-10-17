@@ -70,6 +70,7 @@ class Invite(models.TransientModel):
                     'res_id': wizard.res_id,
                     'no_auto_thread': True,
                     'add_sign': True,
+                    'message_type': 'user_notification',
                 })
                 partners_data = []
                 recipient_data = self.env['mail.followers']._get_recipient_data(document, 'comment', False, pids=new_partners.ids)
