@@ -236,9 +236,10 @@ options.registry.carousel = options.Class.extend({
 
         var def = this._super.apply(this, arguments);
 
-        // set background and prepare to clean for save
+        // update slide counter, set background and prepare to clean for save
         this.$target.on('slid.bs.carousel', function () {
             self.$target.carousel('pause');
+            self._updateSlideCounter();
             self.trigger_up('option_update', {
                 optionNames: ['background', 'background_position', 'colorpicker', 'sizing_y'],
                 name: 'target',
@@ -258,6 +259,7 @@ options.registry.carousel = options.Class.extend({
         this.$target.attr('id', this.id);
         this.$target.find('[data-target]').attr('data-target', '#' + this.id);
         this._rebindEvents();
+        this._updateSlideCounter();
     },
     /**
      * @override
@@ -311,6 +313,7 @@ options.registry.carousel = options.Class.extend({
         _.defer(function () {
             self.$target.carousel().carousel(++index);
             self._rebindEvents();
+            self._updateSlideCounter();
         });
     },
     /**
@@ -337,6 +340,7 @@ options.registry.carousel = options.Class.extend({
                 self.$indicators.find('li:last').remove();
                 self.$target.off('slid.bs.carousel.slide_removal');
                 self._rebindEvents();
+                self._updateSlideCounter();
                 self.remove_process = false;
                 if (cycle === 1) {
                     self.$target.find('.carousel-control-prev, .carousel-control-next, .carousel-indicators').addClass('d-none');
@@ -355,6 +359,21 @@ options.registry.carousel = options.Class.extend({
      */
     interval: function (previewMode, value) {
         this.$target.attr('data-interval', value);
+    },
+    /**
+     * Goes to next slide or previous slide.
+     *
+     * @see this.selectClass for parameters
+     */
+    slide: function (previewMode, value) {
+        switch (value) {
+            case 'left':
+                this.$target.find('.carousel-control-prev')[0].click();
+                break;
+            case 'right':
+                this.$target.find('.carousel-control-next')[0].click();
+                break;
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -386,6 +405,21 @@ options.registry.carousel = options.Class.extend({
         /* Fix: backward compatibility saas-3 */
         this.$target.find('.item.text_image, .item.image_text, .item.text_only').find('.container > .carousel-caption > div, .container > img.carousel-image').attr('contentEditable', 'true');
     },
+    /**
+     * Updates the slide counter.
+     *
+     * @private
+     */
+    _updateSlideCounter: function () {
+        const $slideCounter = this.$el.find('.slide-counter');
+        const $slides = this.$inner.find('.carousel-item');
+        if ($slides.length === 1) {
+            $slideCounter.text(_t("1 slide"));
+        } else {
+            const $activeSlide = $slides.filter('.active');
+            $slideCounter.text(`${$activeSlide.index() + 1}/${$slides.length}` + _t("slides"));
+        }
+    }
 });
 
 options.registry.navTabs = options.Class.extend({
