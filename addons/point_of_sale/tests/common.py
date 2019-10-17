@@ -19,6 +19,7 @@ class TestPointOfSaleCommon(StockAccountMinimalTest):
         cls.PosOrder = cls.env['pos.order']
         cls.PosSession = cls.env['pos.session']
         cls.company = cls.env.ref('base.main_company')
+        cls.company.point_of_sale_update_stock_quantities = 'real'
         cls.company_id = cls.company.id
         coa = cls.env['account.chart.template'].search([
             ('currency_id', '=', cls.company.currency_id.id),
@@ -162,6 +163,7 @@ class TestPoSCommon(StockAccountMinimalTest):
 
         # Set basic defaults
         cls.company = cls.env.ref('base.main_company')
+        cls.company.point_of_sale_update_stock_quantities = 'real'
         cls.pos_sale_journal = cls.env['account.journal'].create({
             'type': 'sale',
             'name': 'Point of Sale Test',
@@ -183,8 +185,8 @@ class TestPoSCommon(StockAccountMinimalTest):
             'name': 'Debtors - (POS)',
             'reconcile': True,
             'user_type_id': cls.env.ref('account.data_account_type_receivable').id,
-        }) 
-        cls.pos_receivable_account = cls.company.account_default_pos_receivable_account_id 
+        })
+        cls.pos_receivable_account = cls.company.account_default_pos_receivable_account_id
         cls.other_receivable_account = cls.env['account.account'].create({
             'name': 'Other Receivable',
             'code': 'RCV00' ,

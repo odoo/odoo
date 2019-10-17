@@ -91,8 +91,8 @@ class TestPoSStock(TestPoSCommon):
 
         # picking and stock moves should be in done state
         for order in self.pos_session.order_ids:
-            self.assertEqual(order.picking_id.state, 'done', 'Picking should be in done state.')
-            self.assertTrue(all(state == 'done' for state in order.picking_id.move_lines.mapped('state')), 'Move Lines should be in done state.' )
+            self.assertEqual(order.picking_ids[0].state, 'done', 'Picking should be in done state.')
+            self.assertTrue(all(state == 'done' for state in order.picking_ids[0].move_lines.mapped('state')), 'Move Lines should be in done state.' )
 
         # close the session
         self.pos_session.action_pos_session_validate()
@@ -166,8 +166,8 @@ class TestPoSStock(TestPoSCommon):
 
         # picking and stock moves should be in done state
         for order in self.pos_session.order_ids:
-            self.assertEqual(order.picking_id.state, 'done', 'Picking should be in done state.')
-            self.assertTrue(all(state == 'done' for state in order.picking_id.move_lines.mapped('state')), 'Move Lines should be in done state.' )
+            self.assertEqual(order.picking_ids[0].state, 'done', 'Picking should be in done state.')
+            self.assertTrue(all(state == 'done' for state in order.picking_ids[0].move_lines.mapped('state')), 'Move Lines should be in done state.' )
 
         # close the session
         self.pos_session.action_pos_session_validate()

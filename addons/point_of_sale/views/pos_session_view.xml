@@ -26,6 +26,7 @@
                 </header>
                 <sheet>
                     <field name="cash_register_id" invisible="1"/>
+                    <field name="failed_pickings" invisible="1"/>
                     <div class="oe_button_box" name="button_box">
                         <button name="action_view_order"
                             class="oe_stat_button"
@@ -33,8 +34,9 @@
                             type="object">
                             <field name="order_count" widget="statinfo" string="Orders"/>
                         </button>
-                        <button class="oe_stat_button" name="action_stock_picking" type="object" icon="fa-arrows-v" attrs="{'invisible':[('picking_count', '=', 0)]}">
-                            <field name="picking_count" widget="statinfo" string="Picking Errors"/>
+                        <button class="oe_stat_button" name="action_stock_picking" type="object" icon="fa-truck" attrs="{'invisible':[('picking_count', '=', 0)]}">
+                            <field name="picking_count" widget="statinfo" string="Pickings" attrs="{'invisible': [('failed_pickings', '!=', False)]}"/>
+                            <field name="picking_count" widget="statinfo" string="Pickings" class="text-danger" attrs="{'invisible': [('failed_pickings', '=', False)]}"/>
                         </button>
                         <button
                             name="action_show_payments_list"
@@ -180,7 +182,7 @@
                 <field name="config_id" />
                 <field name="user_id" />
                 <filter name="my_sessions" string="My Sessions" domain="[('user_id', '=', uid)]"/>
-                <separator/>    
+                <separator/>
                 <filter name="open_sessions" string="In Progress" domain="[('state', '=', 'opened')]"/>
                 <separator/>
                 <filter string="Opening Date" name="start_date" date="start_at" />

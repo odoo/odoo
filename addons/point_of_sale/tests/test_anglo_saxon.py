@@ -42,6 +42,7 @@ class TestAngloSaxonCommon(common.TransactionCase):
             'type': 'product',
         })
         self.company.anglo_saxon_accounting = True
+        self.company.point_of_sale_update_stock_quantities = 'real'
         self.product.categ_id = self.category
         self.product.property_account_expense_id = account_expense
         self.product.property_account_income_id = account_income
