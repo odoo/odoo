@@ -8,3 +8,4 @@ pref("browser.shell.checkDefaultBrowser", false);
 // Open all links in the same tab
 // Needed to change URL without having multiple tabs running
 pref("browser.link.open_newwindow", 1);
+pref("browser.shell.checkDefaultBrowser",false);
