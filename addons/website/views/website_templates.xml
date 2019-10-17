@@ -207,6 +207,35 @@
     </xpath>
 </template>
 
+<!-- Navbar templates -->
+<template id="template_header_hamburger" inherit_id="website.layout" name="Template Header Logo Hamburger" active="False">
+    <xpath expr="//header//nav[hasclass('navbar')]" position="attributes">
+        <attribute name="class" remove="navbar-expand-md" separator=" "/>
+    </xpath>
+    <xpath expr="//header//button[hasclass('navbar-toggler')]" position="replace">
+        <div class="o_navbar_toggler_container">$0</div>
+    </xpath>
+</template>
+
+<template id="template_header_navbar_text_center" inherit_id="website.layout" name="Template Header Navbar Text Center" active="False">
+    <xpath expr="//header//ul[hasclass('nav')]" position="attributes">
+        <attribute name="class" remove="text-right" add="text-center" separator=" "/>
+    </xpath>
+</template>
+
+<template id="template_header_hamburger_left" inherit_id="website.layout" name="Template Header Hamburger" active="False">
+    <xpath expr="//header//a[hasclass('navbar-brand')]" position="before">
+        <div class="o_navbar_toggler_container o_not_editable"></div>
+    </xpath>
+    <xpath expr="//div[hasclass('o_navbar_toggler_container')]" position="inside">
+        <xpath expr="//header//button[hasclass('navbar-toggler')]" position="move"/>
+    </xpath>
+    <xpath expr="//header//ul[hasclass('nav')]" position="attributes">
+        <attribute name="class" remove="text-right" add="text-left" separator=" "/>
+    </xpath>
+</template>
+
+<!-- Navbar options -->
 <template id="layout_logo_show" inherit_id="website.layout" name="Show Logo">
     <xpath expr="//header//a[hasclass('navbar-brand')]" position="replace">
         <a href="/" class="navbar-brand logo">
