@@ -717,27 +717,23 @@
                     <dd>
                         <span t-raw="app.summary"/>
                     </dd><dd class="text-muted" groups='base.group_no_one'>
-                        Technical name: <span t-field="app.name"/>, updated: <span t-field="app.write_date"/>, author: <span t-field="app.author"/>
+                        Technical name: <span t-field="app.name"/>, author: <span t-field="app.author"/>
                     </dd>
                 </dl>
 
-                <div groups='base.group_no_one'>
-                    <h2>Installed Modules</h2>
-                    <dl class="dl-horizontal">
-                        <t t-foreach="modules" t-as="app">
-                            <dt>
-                                <span t-raw="app.shortdesc"/>
-                            </dt>
-                            <dd t-if="app.summary">
-                                <span t-raw="app.summary"/>
-                            </dd><dd>
-                                Technical name: <span t-field="app.name"/>,
-                                updated: <span t-field="app.write_date"/>
-                                <t t-if="app.author">
-                                    , author: <span t-field="app.author"/>
-                                </t>
-                            </dd>
-                        </t>
+                <div t-if="l10n">
+                    <h2 class='mt32'>Installed Localizations / Account Charts</h2>
+                    <dl class="dl-horizontal" t-foreach="l10n" t-as="app">
+                        <dt>
+                            <a t-attf-href="https://www.odoo.com/page/accounting/#{app.name}">
+                                <t t-raw="app.shortdesc"/>
+                            </a>
+                        </dt>
+                        <dd>
+                            <span t-raw="app.summary"/>
+                        </dd><dd class="text-muted" groups='base.group_no_one'>
+                            Technical name: <span t-field="app.name"/>, author: <span t-field="app.author"/>
+                        </dd>
                     </dl>
                 </div>
               </t>

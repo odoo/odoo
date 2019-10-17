@@ -205,10 +205,10 @@ class Website(Home):
             return request.env['ir.http']._handle_exception(e, 404)
         Module = request.env['ir.module.module'].sudo()
         apps = Module.search([('state', '=', 'installed'), ('application', '=', True)])
-        modules = Module.search([('state', '=', 'installed'), ('application', '=', False)])
+        l10n = Module.search([('state', '=', 'installed'), ('name', '=like', 'l10n_%')])
         values = {
             'apps': apps,
-            'modules': modules,
+            'l10n': l10n,
             'version': odoo.service.common.exp_version()
         }
         return request.render('website.website_info', values)
