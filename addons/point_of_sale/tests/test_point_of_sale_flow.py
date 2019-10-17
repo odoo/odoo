@@ -155,12 +155,12 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         # I test that the pickings are created as expected during payment
         # One picking attached and having all the positive move lines in the correct state
         self.assertEqual(
-            self.pos_order_pos1.picking_id.state,
+            self.pos_order_pos1.picking_ids[0].state,
             'done',
             'Picking should be in done state.'
         )
         self.assertEqual(
-            self.pos_order_pos1.picking_id.move_lines.mapped('state'),
+            self.pos_order_pos1.picking_ids[0].move_lines.mapped('state'),
             ['done', 'done'],
             'Move Lines should be in done state.'
         )
@@ -219,14 +219,13 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
         # I test that the pickings are created as expected
         # One picking attached and having all the positive move lines in the correct state
-        self.pos_order_pos2.create_picking()
         self.assertEqual(
-            self.pos_order_pos2.picking_id.state,
+            self.pos_order_pos2.picking_ids[0].state,
             'done',
             'Picking should be in done state.'
         )
         self.assertEqual(
-            self.pos_order_pos2.picking_id.move_lines.mapped('state'),
+            self.pos_order_pos2.picking_ids[0].move_lines.mapped('state'),
             ['done', 'done'],
             'Move Lines should be in done state.'
         )
@@ -285,12 +284,12 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         # I test that the pickings are created as expected
         # One picking attached and having all the positive move lines in the correct state
         self.assertEqual(
-            self.pos_order_pos3.picking_id.state,
+            self.pos_order_pos3.picking_ids[0].state,
             'done',
             'Picking should be in done state.'
         )
         self.assertEqual(
-            self.pos_order_pos3.picking_id.move_lines.mapped('state'),
+            self.pos_order_pos3.picking_ids[0].move_lines.mapped('state'),
             ['done'],
             'Move Lines should be in done state.'
         )

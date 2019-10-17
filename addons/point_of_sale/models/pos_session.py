@@ -84,7 +84,9 @@ class PosSession(models.Model):
     order_ids = fields.One2many('pos.order', 'session_id',  string='Orders')
     order_count = fields.Integer(compute='_compute_order_count')
     statement_ids = fields.One2many('account.bank.statement', 'pos_session_id', string='Cash Statements', readonly=True)
+    failed_pickings = fields.Boolean(compute='_compute_picking_count')
     picking_count = fields.Integer(compute='_compute_picking_count')
+    picking_ids = fields.One2many('stock.picking', 'pos_session_id')
     rescue = fields.Boolean(string='Recovery Session',
         help="Auto-generated session for orphan orders, ignored in constraints",
         readonly=True,
@@ -93,6 +95,7 @@ class PosSession(models.Model):
     payment_method_ids = fields.Many2many('pos.payment.method', related='config_id.payment_method_ids', string='Payment Methods')
     total_payments_amount = fields.Float(compute='_compute_total_payments_amount', string='Total Payments Amount')
     is_in_company_currency = fields.Boolean('Is Using Company Currency', compute='_compute_is_in_company_currency')
+    update_stock_at_closing = fields.Boolean('Stock should be updated at closing')
 
     _sql_constraints = [('uniq_name', 'unique(name)', "The name of this POS Session must be unique !")]
 
@@ -128,17 +131,18 @@ class PosSession(models.Model):
         for session in self:
             session.order_count = sessions_data.get(session.id, 0)
 
+    @api.depends('picking_ids', 'picking_ids.state')
     def _compute_picking_count(self):
-        for pos in self:
-            pickings = pos.order_ids.mapped('picking_id').filtered(lambda x: x.state != 'done')
-            pos.picking_count = len(pickings.ids)
+        for session in self:
+            session.picking_count = len(session.picking_ids.ids)
+            session.failed_pickings = bool(session.picking_ids.filtered(lambda p: p.state != 'done'))
 
     def action_stock_picking(self):
-        pickings = self.order_ids.mapped('picking_id').filtered(lambda x: x.state != 'done')
+        self.ensure_one()
         action_picking = self.env.ref('stock.action_picking_tree_ready')
         action = action_picking.read()[0]
         action['context'] = {}
-        action['domain'] = [('id', 'in', pickings.ids)]
+        action['domain'] = [('id', 'in', self.picking_ids.ids)]
         return action
 
     @api.depends('config_id', 'statement_ids', 'payment_method_ids')
@@ -204,10 +208,13 @@ class PosSession(models.Model):
             }
             statement_ids |= statement_ids.with_context(ctx).create(st_values)
 
+        update_stock_at_closing = pos_config.company_id.point_of_sale_update_stock_quantities == "closing"
+
         values.update({
             'name': pos_name,
             'statement_ids': [(6, 0, statement_ids.ids)],
             'config_id': config_id,
+            'update_stock_at_closing': update_stock_at_closing,
         })
 
         if self.user_has_groups('point_of_sale.group_pos_user'):
@@ -283,6 +290,8 @@ class PosSession(models.Model):
     def _validate_session(self):
         self.ensure_one()
         self._check_if_no_draft_orders()
+        if self.update_stock_at_closing:
+            self._create_picking_at_end_of_session()
         self._create_account_move()
         if self.move_id.line_ids:
             self.move_id.post()
@@ -301,6 +310,30 @@ class PosSession(models.Model):
             'tag': 'reload',
             'params': {'menu_id': self.env.ref('point_of_sale.menu_point_root').id},
         }
+
+    def _create_picking_at_end_of_session(self):
+        self.ensure_one()
+        lines_grouped_by_dest_location = {}
+        picking_type = self.config_id.picking_type_id
+
+        if not picking_type or not picking_type.default_location_dest_id:
+            session_destination_id = self.env['stock.warehouse']._get_partner_locations()[0].id
+        else:
+            session_destination_id = picking_type.default_location_dest_id.id
+
+        for order in self.order_ids:
+            if order.company_id.anglo_saxon_accounting and order.to_invoice:
+                continue
+            destination_id = order.partner_id.property_stock_customer.id or session_destination_id
+            if destination_id in lines_grouped_by_dest_location:
+                lines_grouped_by_dest_location[destination_id] |= order.lines
+            else:
+                lines_grouped_by_dest_location[destination_id] = order.lines
+
+        for location_dest_id, lines in lines_grouped_by_dest_location.items():
+            pickings = self.env['stock.picking']._create_picking_from_pos_order_lines(location_dest_id, lines, picking_type)
+            pickings.write({'pos_session_id': self.id, 'origin': self.name})
+
 
     def _create_account_move(self):
         """ Create account.move and account.move.line records for this session.
@@ -397,7 +430,7 @@ class PosSession(models.Model):
                 if self.company_id.anglo_saxon_accounting:
                     # Combine stock lines
                     stock_moves = self.env['stock.move'].search([
-                        ('picking_id', '=', order.picking_id.id),
+                        ('picking_id', 'in', order.picking_ids.ids),
                         ('company_id.anglo_saxon_accounting', '=', True),
                         ('product_id.categ_id.property_valuation', '=', 'real_time')
                     ])
@@ -407,6 +440,21 @@ class PosSession(models.Model):
                         amount = -sum(move.stock_valuation_layer_ids.mapped('value'))
                         stock_expense[exp_key] = self._update_amounts(stock_expense[exp_key], {'amount': amount}, move.picking_id.date)
                         stock_output[out_key] = self._update_amounts(stock_output[out_key], {'amount': amount}, move.picking_id.date)
+
+        if self.company_id.anglo_saxon_accounting:
+            global_session_pickings = self.picking_ids.filtered(lambda p: not p.pos_order_id)
+            if global_session_pickings:
+                stock_moves = self.env['stock.move'].search([
+                    ('picking_id', 'in', global_session_pickings.ids),
+                    ('company_id.anglo_saxon_accounting', '=', True),
+                    ('product_id.categ_id.property_valuation', '=', 'real_time'),
+                ])
+                for move in stock_moves:
+                    exp_key = move.product_id.property_account_expense_id or move.product_id.categ_id.property_account_expense_categ_id
+                    out_key = move.product_id.categ_id.property_stock_account_output_categ_id
+                    amount = -sum(move.stock_valuation_layer_ids.mapped('value'))
+                    stock_expense[exp_key] = self._update_amounts(stock_expense[exp_key], {'amount': amount}, move.picking_id.date)
+                    stock_output[out_key] = self._update_amounts(stock_output[out_key], {'amount': amount}, move.picking_id.date)
 
         ## SECTION: Create non-reconcilable move lines
         # Create account.move.line records for
@@ -514,7 +562,9 @@ class PosSession(models.Model):
             ).reconcile()
 
         # reconcile stock output lines
-        stock_moves = self.env['stock.move'].search([('picking_id', 'in', self.order_ids.filtered(lambda order: not order.is_invoiced).mapped('picking_id').ids)])
+        pickings = self.picking_ids.filtered(lambda p: not p.pos_order_id)
+        pickings |= self.order_ids.filtered(lambda o: not o.is_invoiced).mapped('picking_ids')
+        stock_moves = self.env['stock.move'].search([('picking_id', 'in', pickings.ids)])
         stock_account_move_lines = self.env['account.move'].search([('stock_move_id', 'in', stock_moves.ids)]).mapped('line_ids')
         for account_id in stock_output_lines:
             ( stock_output_lines[account_id]
