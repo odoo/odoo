@@ -25,7 +25,8 @@
                     <field name="filter_domain" widget="domain" options="{'model': 'model_name', 'in_dialog': True}"/>
 
                     <field name="on_change_fields"
-                        attrs="{'invisible': [('trigger', '!=', 'on_change')], 'required': [('trigger', '=', 'on_change')]}"/>
+                        domain="[('model_id', '=', model_id)]"
+                        attrs="{'invisible': [('trigger', '!=', 'on_change')], 'required': [('trigger', '=', 'on_change')]}" widget='many2many_tags' options="{'no_create': True}"/>
                     <field name="trg_date_id"
                         attrs="{'invisible': [('trigger', '!=', 'on_time')], 'required': [('trigger', '=', 'on_time')]}"/>
                     <label for="trg_date_range"

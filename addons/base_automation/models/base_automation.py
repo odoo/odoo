@@ -60,8 +60,8 @@ class BaseAutomation(models.Model):
                                     help="If present, this condition must be satisfied before the update of the record.")
     filter_domain = fields.Char(string='Apply on', help="If present, this condition must be satisfied before executing the action rule.")
     last_run = fields.Datetime(readonly=True, copy=False)
-    on_change_fields = fields.Char(string="On Change Fields Trigger", help="Comma-separated list of field names that triggers the onchange.")
-    trigger_field_ids = fields.Many2many('ir.model.fields', string='Trigger Fields',
+    on_change_fields = fields.Many2many('ir.model.fields','model_id',string="On Change Fields Trigger", help="Comma-separated list of field names that triggers the onchange.")
+    trigger_field_ids = fields.Many2many('ir.model.fields', 'base_automation_trigger', string='Trigger Fields',
                                         help="The action will be triggered if and only if one of these fields is updated."
                                              "If empty, all fields are watched.")
 
@@ -377,8 +377,8 @@ class BaseAutomation(models.Model):
             elif action_rule.trigger == 'on_change':
                 # register an onchange method for the action_rule
                 method = make_onchange(action_rule.id)
-                for field_name in action_rule.on_change_fields.split(","):
-                    Model._onchange_methods[field_name.strip()].append(method)
+                for field_name in action_rule.on_change_fields:
+                    Model._onchange_methods[field_name.id].append(method)
 
     @api.model
     def _check_delay(self, action, record, record_dt):
