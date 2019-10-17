@@ -654,7 +654,9 @@ table.table_desc tr td {
     transition: margin-top 500ms ease 0s;
     @include media-breakpoint-down(sm) {
         .navbar-collapse {
-            max-height: 70vh;
+            @if o-website-value('header-template') != 'logo_hamburger' {
+                max-height: 70vh;
+            }
             overflow-y: auto;
         }
     }
@@ -686,6 +688,71 @@ table.table_desc tr td {
             padding: 0;
             border: none;
             box-shadow: none;
+        }
+    }
+}
+
+// Header templates
+header {
+    @include media-breakpoint-up(md) {
+        // Allow to center the logo, ignoring the toggler space
+        .o_navbar_toggler_container {
+            flex: 0 0 0;
+            min-width: 0;
+        }
+    }
+    @if index(('hamburger_logo', 'logo_hamburger'), o-website-value('header-template')) {
+        .navbar-brand {
+            text-align: center;
+        }
+        .navbar-brand, .logo img {
+            margin: auto;
+        }
+        .navbar-nav {
+            margin-top: $spacer / 2;
+        }
+        @if o-website-value('header-template') == 'logo_hamburger' {
+            .o_navbar_toggler_container {
+                direction: rtl;
+            }
+            .container {
+                padding-top: $spacer;
+                padding-bottom: $spacer;
+
+                #top_menu.navbar-nav {
+                    height: 90vh;
+                    padding-top : 10vh;
+                }
+            }
+        }
+    } @else if index(('logo_menu_below', 'menu_logo_below'), o-website-value('header-template')) {
+        .navbar-brand {
+            text-align: center;
+        }
+        .navbar-expand-md {
+            > .container {
+                flex-wrap: wrap;
+            }
+            .navbar-collapse {
+                flex-basis: 100%;
+            }
+        }
+        .navbar-brand, #top_menu.navbar-nav, .logo img {
+            margin: auto;
+        }
+        .navbar-brand {
+            @if o-website-value('header-template') == 'menu_logo_below' {
+                margin-top: $navbar-padding-y;
+            } @else {
+                margin-bottom: $navbar-padding-y;
+            }
+        }
+        @if o-website-value('header-template') == 'menu_logo_below' {
+            .navbar-collapse {
+                @include media-breakpoint-up(md) {
+                    order: -1;
+                }
+            }
         }
     }
 }
