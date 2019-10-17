@@ -52,6 +52,7 @@ class TemplatePreview(models.TransientModel):
         if self._context.get('template_id'):
             template = self.env['mail.template'].browse(self._context['template_id'])
             self.name = template.name
-            mail_values = template.with_context(template_preview_lang=self.preview_lang).generate_email(self.res_id)
+            mail_values = template.with_context(template_preview_lang=self.preview_lang).generate_email(
+                self.res_id, ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to', 'scheduled_date'])
         for field in ['email_from', 'email_to', 'email_cc', 'reply_to', 'subject', 'body_html', 'partner_to', 'partner_ids', 'attachment_ids']:
             setattr(self, field, mail_values.get(field, False))
