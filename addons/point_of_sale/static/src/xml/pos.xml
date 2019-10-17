@@ -677,10 +677,10 @@
                     <t t-foreach='paymentlines' t-as='line'>
                         <t t-if='line.selected'>
                             <tr class='paymentline selected'>
-                                <td class='col-due'> <t t-esc='widget.format_currency_no_symbol(order.get_due(line))' /> </td>
+                                <td class='col-due'> <t t-esc='widget.format_currency(order.get_due(line))' /> </td>
                                 <t t-if="line &amp;&amp; line.payment_status &amp;&amp; ['done', 'waitingCard', 'waiting', 'reversing', 'reversed'].includes(line.payment_status)">
                                     <td class='col-tendered'>
-                                        <t t-esc='widget.format_currency_no_symbol(line.get_amount())' />
+                                        <t t-esc='widget.format_currency(line.get_amount())' />
                                     </td>
                                 </t>
                                 <t t-else="">
@@ -690,7 +690,7 @@
                                 </t>
                                 <t t-if='order.get_change(line)'>
                                     <td class='col-change highlight' >
-                                        <t t-esc='widget.format_currency_no_symbol(order.get_change(line))' />
+                                        <t t-esc='widget.format_currency(order.get_change(line))' />
                                     </td>
                                 </t>
                                 <t t-if='!order.get_change(line)'>
@@ -714,11 +714,11 @@
                         </t>
                         <t t-if='!line.selected'>
                             <tr class='paymentline' t-att-data-cid='line.cid'>
-                                <td class='col-due'> <t t-esc='widget.format_currency_no_symbol(order.get_due(line))' /> </td>
-                                <td class='col-tendered'> <t t-esc='widget.format_currency_no_symbol(line.get_amount())' /> </td>
+                                <td class='col-due'> <t t-esc='widget.format_currency(order.get_due(line))' /> </td>
+                                <td class='col-tendered'> <t t-esc='widget.format_currency(line.get_amount())' /> </td>
                                 <td class='col-change'>
                                     <t t-if='order.get_change(line)'>
-                                        <t t-esc='widget.format_currency_no_symbol(order.get_change(line))' />
+                                        <t t-esc='widget.format_currency(order.get_change(line))' />
                                      </t>
                                 </td>
                                 <td class='col-name'> <t t-esc='line.name' /> </td>
@@ -735,7 +735,7 @@
                     </t>
                     <t t-if='extradue'>
                         <tr class='paymentline extra' t-att-data-cid='0'>
-                            <td class='col-due'> <t t-esc='widget.format_currency_no_symbol(extradue)' /> </td>
+                            <td class='col-due'> <t t-esc='widget.format_currency(extradue)' /> </td>
                         </tr>
                     </t>
                 </tbody>
@@ -927,7 +927,7 @@
                     <t t-if='simple'>
                         <div>
                             <t t-esc='line.product_name_wrapped[0]' />
-                            <span t-esc='widget.format_currency_no_symbol(line.price_display)' class="price_display pos-receipt-right-align"/>
+                            <span t-esc='widget.format_currency(line.price_display)' class="price_display pos-receipt-right-align"/>
                         </div>
                         <t t-call="OrderReceiptWrappedProductNameLines"/>
                     </t>
@@ -936,18 +936,18 @@
                         <t t-call="OrderReceiptWrappedProductNameLines"/>
                         <t t-if="line.display_discount_policy == 'without_discount' &amp;&amp; line.price != line.price_lst">
                             <div class="pos-receipt-left-padding">
-                                <t t-esc="widget.format_currency_no_symbol(line.price_lst)" />
+                                <t t-esc="widget.format_currency(line.price_lst)" />
                                 ->
-                                <t t-esc="widget.format_currency_no_symbol(line.price)" />
+                                <t t-esc="widget.format_currency(line.price)" />
                             </div>
                         </t>
                         <t t-elif='line.discount !== 0'>
                             <div class="pos-receipt-left-padding">
                                 <t t-if="pos.config.iface_tax_included === 'total'">
-                                    <t t-esc="widget.format_currency_no_symbol(line.price_with_tax_before_discount)"/>
+                                    <t t-esc="widget.format_currency(line.price_with_tax_before_discount)"/>
                                 </t>
                                 <t t-else="">
-                                    <t t-esc="widget.format_currency_no_symbol(line.price)"/>
+                                    <t t-esc="widget.format_currency(line.price)"/>
                                 </t>
                             </div>
                         </t>
@@ -960,9 +960,9 @@
                             <t t-esc="Math.round(line.quantity * Math.pow(10, pos.dp['Product Unit of Measure'])) / Math.pow(10, pos.dp['Product Unit of Measure'])"/>
                             <t t-if='line.unit_name !== "Units"' t-esc='line.unit_name'/>
                             x
-                            <t t-esc='widget.format_currency_no_symbol(line.price_display_one)' />
+                            <t t-esc='widget.format_currency(line.price_display_one)' />
                             <span class="price_display pos-receipt-right-align">
-                                <t t-esc='widget.format_currency_no_symbol(line.price_display)'/>
+                                <t t-esc='widget.format_currency(line.price_display)'/>
                             </span>
                         </div>
                     </t>
@@ -975,11 +975,11 @@
             <t t-if='!taxincluded'>
                 <div class="pos-receipt-right-align">--------</div>
                 <br/>
-                <div>Subtotal<span t-esc='widget.format_currency_no_symbol(receipt.subtotal)' class="pos-receipt-right-align"/></div>
+                <div>Subtotal<span t-esc='widget.format_currency(receipt.subtotal)' class="pos-receipt-right-align"/></div>
                 <t t-foreach='receipt.tax_details' t-as='tax'>
                     <div>
                         <t t-esc='tax.name' />
-                        <span t-esc='widget.format_currency_no_symbol(tax.amount)' class="pos-receipt-right-align"/>
+                        <span t-esc='widget.format_currency(tax.amount)' class="pos-receipt-right-align"/>
                     </div>
                 </t>
             </t>
@@ -989,7 +989,7 @@
             <br/>
             <div class="pos-receipt-amount">
                 TOTAL
-                <span t-esc='widget.format_currency_no_symbol(receipt.total_with_tax)' class="pos-receipt-right-align"/>
+                <span t-esc='widget.format_currency(receipt.total_with_tax)' class="pos-receipt-right-align"/>
             </div>
             <br/><br/>
 
@@ -998,14 +998,14 @@
             <t t-foreach='paymentlines' t-as='line'>
                 <div>
                     <t t-esc='line.name' />
-                    <span t-esc='widget.format_currency_no_symbol(line.get_amount())' class="pos-receipt-right-align"/>
+                    <span t-esc='widget.format_currency(line.get_amount())' class="pos-receipt-right-align"/>
                 </div>
             </t>
             <br/>
 
             <div class="pos-receipt-amount receipt-change">
                 CHANGE
-                <span t-esc='widget.format_currency_no_symbol(receipt.change)' class="pos-receipt-right-align"/>
+                <span t-esc='widget.format_currency(receipt.change)' class="pos-receipt-right-align"/>
             </div>
             <br/>
 
@@ -1014,19 +1014,19 @@
             <t t-if='receipt.total_discount'>
                 <div>
                     Discounts
-                    <span t-esc='widget.format_currency_no_symbol(receipt.total_discount)' class="pos-receipt-right-align"/>
+                    <span t-esc='widget.format_currency(receipt.total_discount)' class="pos-receipt-right-align"/>
                 </div>
             </t>
             <t t-if='taxincluded'>
                 <t t-foreach='receipt.tax_details' t-as='tax'>
                     <div>
                         <t t-esc='tax.name' />
-                        <span t-esc='widget.format_currency_no_symbol(tax.amount)' class="pos-receipt-right-align"/>
+                        <span t-esc='widget.format_currency(tax.amount)' class="pos-receipt-right-align"/>
                     </div>
                 </t>
                 <div>
                     Total Taxes
-                    <span t-esc='widget.format_currency_no_symbol(receipt.total_tax)' class="pos-receipt-right-align"/>
+                    <span t-esc='widget.format_currency(receipt.total_tax)' class="pos-receipt-right-align"/>
                 </div>
             </t>
 
@@ -1088,7 +1088,7 @@
                                 <t t-esc='line.uom' />
                             </t>
                             x
-                            <t t-esc='widget.format_currency_no_symbol(line.price_unit)' />
+                            <t t-esc='widget.format_currency(line.price_unit)' />
                         </span>
                     </div>
                     <t t-if='line.discount !== 0'>
@@ -1106,7 +1106,7 @@
             </div>
             <div t-foreach='payments' t-as='payment'>
                 <t t-esc='payment.name'/>
-                <span t-esc='widget.format_currency_no_symbol(payment.total)' class="pos-receipt-right-align"/>
+                <span t-esc='widget.format_currency(payment.total)' class="pos-receipt-right-align"/>
             </div>
 
             <br/>
@@ -1118,7 +1118,7 @@
             </div>
             <div t-foreach='taxes' t-as='taxe'>
                 <t t-esc='taxe.name'/>
-                <span t-esc='widget.format_currency_no_symbol(taxe.tax_amount)' class="pos-receipt-right-align"/>
+                <span t-esc='widget.format_currency(taxe.tax_amount)' class="pos-receipt-right-align"/>
             </div>
 
             <br/>
@@ -1127,7 +1127,7 @@
 
             <div>
                 Total:
-                <span t-esc='widget.format_currency_no_symbol(total_paid)' class="pos-receipt-right-align"/>
+                <span t-esc='widget.format_currency(total_paid)' class="pos-receipt-right-align"/>
             </div>
 
             <br/>
