@@ -9,7 +9,7 @@ from odoo import api, models
 class MailTemplate(models.Model):
     _inherit = 'mail.template'
 
-    def generate_email(self, res_ids, fields=None):
+    def generate_email(self, res_ids, fields):
         """ Method overridden in order to add an attachment containing the ISR
         to the draft message when opening the 'send by mail' wizard on an invoice.
         This attachment generation will only occur if all the required data are
