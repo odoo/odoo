@@ -99,7 +99,7 @@ class Employee(models.Model):
                     SELECT holiday_status_id, number_of_days,
                         state, employee_id
                     FROM hr_leave_allocation
-                    UNION
+                    UNION ALL
                     SELECT holiday_status_id, (number_of_days * -1) as number_of_days,
                         state, employee_id
                     FROM hr_leave
@@ -146,6 +146,7 @@ class Employee(models.Model):
         all_leaves = self.env['hr.leave.report'].read_group([
             ('employee_id', 'in', self.ids),
             ('holiday_status_id.allocation_type', '!=', 'no'),
+            ('holiday_status_id.active', '=', 'True'),
             ('state', '=', 'validate')
         ], fields=['number_of_days', 'employee_id'], groupby=['employee_id'])
         mapping = dict([(leave['employee_id'][0], leave['number_of_days']) for leave in all_leaves])

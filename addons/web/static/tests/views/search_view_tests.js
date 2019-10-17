@@ -542,6 +542,9 @@ QUnit.module('Search View', {
         $autocomplete = $('.o_searchview_input');
         stringToEvent($autocomplete, '07/15/1983 00:00:00');
 
+        $autocomplete.trigger($.Event('keydown', {
+            which: $.ui.keyCode.DOWN,
+        }));
         $autocomplete.trigger($.Event('keyup', {
             which: $.ui.keyCode.ENTER,
             keyCode: $.ui.keyCode.ENTER,

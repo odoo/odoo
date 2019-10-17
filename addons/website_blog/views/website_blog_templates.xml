@@ -164,7 +164,7 @@
 
                             <!-- To display tags //no options -->
                             <t t-foreach="blog_post.tag_ids" t-as="one_tag">
-                                <a class="mr8" t-attf-href="#{blog_url(tag=one_tag.id, date_begin=False, date_end=False)}" t-esc="one_tag.name"/>
+                                <a class="mr8" t-attf-href="#{blog_url(tag=slug(one_tag), date_begin=False, date_end=False)}" t-esc="one_tag.name"/>
                             </t>
                             <div class="o_sharing_links">
                                 <a class="fa fa-twitter-square o_twitter" aria-label="Twitter" title="Twitter"></a>
@@ -249,7 +249,7 @@
                     <p class="post-meta text-muted text-center" t-if="len(blog_post.tag_ids)">
                         <span class="fa fa-tags" role="img" aria-label="Tags" title="Tags"/>
                         <t t-foreach="blog_post.tag_ids" t-as="one_tag">
-                            <a class="badge badge-primary mr8" t-attf-href="#{blog_url(tag=one_tag.id)}" t-esc="one_tag.name"/>
+                            <a class="badge badge-primary mr8" t-attf-href="#{blog_url(tag=slug(one_tag))}" t-esc="one_tag.name"/>
                         </t>
                     </p>
                     <div t-if="'cover_full' in blog_post_cover_properties.get('resize_class', '')" id="blog_angle_down">
@@ -393,7 +393,7 @@
             <t t-foreach="tags" t-as="tag">
                 <t t-if="tag.post_ids">
                     <li class="nav-item">
-                        <a t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" t-attf-class="nav-link#{tag.id in active_tag_ids and ' active' or ''}">
+                        <a t-att-rel="'nofollow' if active_tag_ids else None" t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" t-attf-class="nav-link#{tag.id in active_tag_ids and ' active' or ''}">
                             <span t-field="tag.name"/>
                         </a>
                     </li>
@@ -443,10 +443,10 @@
                 <ul t-attf-class="blog_post_year collapse nav nav-pills flex-column #{not date and year_index == 0 and 'in'}" t-att-id="'b_' + year" role="menu">
                     <t t-foreach="nav_list[year]" t-as="months">
                         <li t-if="months['date_begin'] == date" class="nav-item">
-                            <a role="menuitem" t-ignore="True" t-attf-href="#{blog_url(date_begin=False, date_end=False)}" class="nav-link active"><t t-esc="months['month']"/><span class="float-right badge badge-pill" t-esc="months['post_date_count']"/></a>
+                            <a role="menuitem" rel="nofollow" t-ignore="True" t-attf-href="#{blog_url(date_begin=False, date_end=False)}" class="nav-link active"><t t-esc="months['month']"/><span class="float-right badge badge-pill" t-esc="months['post_date_count']"/></a>
                         </li>
                         <li t-else="1" class="nav-item">
-                            <a role="menuitem" t-ignore="True" t-attf-href="#{blog_url(date_begin=months['date_begin'], date_end=months['date_end'])}" class="nav-link"><t t-esc="months['month']"/><span class="float-right badge badge-pill" t-esc="months['post_date_count']"/></a>
+                            <a role="menuitem" rel="nofollow" t-ignore="True" t-attf-href="#{blog_url(date_begin=months['date_begin'], date_end=months['date_end'])}" class="nav-link"><t t-esc="months['month']"/><span class="float-right badge badge-pill" t-esc="months['post_date_count']"/></a>
                         </li>
                     </t>
                 </ul>
@@ -565,7 +565,7 @@
     <title t-esc="blog.name"/>
     <link t-att-href="'%s/blog/%s' % (base_url ,blog.id)"/>
     <id t-esc="'%s/blog/%s' % (base_url, blog.id)"/>
-    <updated t-esc="str((posts[0] if posts else blog).post_date).replace(' ', 'T') + 'Z'"/>
+    <updated t-esc="str(posts[0].post_date).replace(' ', 'T') + 'Z' if posts else ''"/>
     <entry t-foreach="posts" t-as="post">
         <title t-esc="post.name"/>
         <link t-att-href="'%s%s' % (base_url, post.website_url)"/>

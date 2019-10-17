@@ -14,6 +14,7 @@ from odoo.exceptions import ValidationError
 from odoo import api, SUPERUSER_ID
 from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.misc import formatLang
+from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
@@ -210,6 +211,19 @@ class PaymentAcquirer(models.Model):
     _constraints = [
         (_check_required_if_provider, 'Required fields not filled', []),
     ]
+
+    def get_base_url(self):
+        self.ensure_one()
+        # priority is always given to url_root
+        # from the request
+        url = ''
+        if request:
+            url = request.httprequest.url_root
+
+        if not url and 'website_id' in self and self.website_id:
+            url = self.website_id._get_http_domain()
+
+        return url or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
 
     def _get_feature_support(self):
         """Get advanced feature support by provider.
@@ -644,6 +658,10 @@ class PaymentTransaction(models.Model):
         transactions = self.filtered(lambda t: t.state != 'draft')
         return transactions and transactions[0] or transactions
 
+    def _get_processing_info(self):
+        """ Extensible method for providers if they need specific fields/info regarding a tx in the payment processing page. """
+        return dict()
+
     @api.multi
     def _get_payment_transaction_sent_message(self):
         self.ensure_one()
@@ -858,7 +876,11 @@ class PaymentTransaction(models.Model):
             invoice = invoice_ids[0]
             action['res_id'] = invoice
             action['view_mode'] = 'form'
-            action['views'] = [(self.env.ref('account.invoice_form').id, 'form')]
+            form_view = [(self.env.ref('account.invoice_form').id, 'form')]
+            if 'views' in action:
+                action['views'] = form_view + [(state,view) for state,view in action['views'] if view != 'form']
+            else:
+                action['views'] = form_view
         else:
             action['view_mode'] = 'tree,form'
             action['domain'] = [('id', 'in', invoice_ids)]

@@ -56,7 +56,8 @@ class ChangeProductionQty(models.TransientModel):
             for line, line_data in lines:
                 move = production.move_raw_ids.filtered(lambda x: x.bom_line_id.id == line.id and x.state not in ('done', 'cancel'))
                 if move:
-                    old_qty = move[0].product_uom_qty
+                    move = move[0]
+                    old_qty = move.product_uom_qty
                 else:
                     old_qty = 0
                 iterate_key = production._get_document_iterate_key(move)

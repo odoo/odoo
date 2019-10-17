@@ -56,11 +56,26 @@ def _message_post_helper(res_model='', res_id=None, message='', token='', nosubs
             raise Forbidden()
     kw.pop('csrf_token', None)
     kw.pop('attachment_ids', None)
-    return record.with_context(mail_create_nosubscribe=nosubscribe).message_post(body=message,
-                                                                                   message_type=kw.pop('message_type', "comment"),
-                                                                                   subtype=kw.pop('subtype', "mt_comment"),
-                                                                                   author_id=author_id,
-                                                                                   **kw)
+
+    email_from = None
+    if author_id and 'email_from' not in kw:
+        partner = request.env['res.partner'].sudo().browse(author_id)
+        email_from = partner.email_formatted if partner.email else None
+
+    message_post_args = dict(
+        body=message,
+        message_type=kw.pop('message_type', "comment"),
+        subtype=kw.pop('subtype', "mt_comment"),
+        author_id=author_id,
+        **kw
+    )
+
+    # This is necessary as mail.message checks the presence
+    # of the key to compute its default email from
+    if email_from:
+        message_post_args['email_from'] = email_from
+
+    return record.with_context(mail_create_nosubscribe=nosubscribe).message_post(**message_post_args)
 
 
 class PortalChatter(http.Controller):

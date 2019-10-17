@@ -286,8 +286,6 @@ class WebsiteEventController(http.Controller):
 
     @http.route(['''/event/<model("event.event", "[('website_id', 'in', (False, current_website_id))]"):event>/ics'''], type='http', auth="public", website=True)
     def make_event_ics_file(self, event, **kwargs):
-        if not event or not event.registration_ids:
-            return request.not_found()
         files = event._get_ics_file()
         content = files[event.id]
         return request.make_response(content, [

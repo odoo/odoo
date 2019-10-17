@@ -154,6 +154,19 @@ class Website(models.Model):
             self.env['ir.qweb'].clear_caches()
         return result
 
+    @api.multi
+    def unlink(self):
+        # Do not delete invoices, delete what's strictly necessary
+        attachments_to_unlink = self.env['ir.attachment'].search([
+            ('website_id', 'in', self.ids),
+            '|', '|',
+            ('key', '!=', False),  # theme attachment
+            ('url', 'ilike', '.custom.'),  # customized theme attachment
+            ('url', 'ilike', '.assets\\_'),
+        ])
+        attachments_to_unlink.unlink()
+        return super(Website, self).unlink()
+
     # ----------------------------------------------------------
     # Page Management
     # ----------------------------------------------------------
@@ -712,9 +725,6 @@ class Website(models.Model):
                 domain_part, url = rule.build(value, append_unknown=False)
                 if not query_string or query_string.lower() in url.lower():
                     page = {'loc': url}
-                    for key, val in value.items():
-                        if key.startswith('__'):
-                            page[key[2:]] = val
                     if url in ('/sitemap.xml',):
                         continue
                     if url in url_set:
@@ -738,9 +748,9 @@ class Website(models.Model):
         for page in pages:
             record = {'loc': page['url'], 'id': page['id'], 'name': page['name']}
             if page.view_id and page.view_id.priority != 16:
-                record['__priority'] = min(round(page.view_id.priority / 32.0, 1), 1)
+                record['priority'] = min(round(page.view_id.priority / 32.0, 1), 1)
             if page['write_date']:
-                record['__lastmod'] = page['write_date'].date()
+                record['lastmod'] = page['write_date'].date()
             yield record
 
     @api.multi
@@ -896,7 +906,7 @@ class WebsiteMultiMixin(models.AbstractModel):
     _name = 'website.multi.mixin'
     _description = 'Multi Website Mixin'
 
-    website_id = fields.Many2one('website', string='Website', help='Restrict publishing to this website.')
+    website_id = fields.Many2one('website', string='Website', ondelete='restrict', help='Restrict publishing to this website.')
 
     @api.multi
     def can_access_from_current_website(self, website_id=False):
@@ -1183,7 +1193,7 @@ class Menu(models.Model):
     page_id = fields.Many2one('website.page', 'Related Page', ondelete='cascade')
     new_window = fields.Boolean('New Window')
     sequence = fields.Integer(default=_default_sequence)
-    website_id = fields.Many2one('website', 'Website')
+    website_id = fields.Many2one('website', 'Website', ondelete='cascade')
     parent_id = fields.Many2one('website.menu', 'Parent Menu', index=True, ondelete="cascade")
     child_id = fields.One2many('website.menu', 'parent_id', string='Child Menus')
     parent_path = fields.Char(index=True)
@@ -1311,7 +1321,7 @@ class Menu(models.Model):
                 if menu_id.page_id:
                     menu_id.page_id = None
             else:
-                page = self.env['website.page'].search(['|', ('url', '=', menu['url']), ('url', '=', '/' + menu['url'])], limit=1)
+                page = self.env['website.page'].search(self.env["website"].website_domain(website_id) + ['|', ('url', '=', menu['url']), ('url', '=', '/' + menu['url'])], limit=1)
                 if page:
                     menu['page_id'] = page.id
                     menu['url'] = page.url
@@ -1331,6 +1341,6 @@ class WebsiteRedirect(models.Model):
     type = fields.Selection([('301', 'Moved permanently (301)'), ('302', 'Moved temporarily (302)')], string='Redirection Type', required=True, default='301')
     url_from = fields.Char('Redirect From', required=True)
     url_to = fields.Char('Redirect To', required=True)
-    website_id = fields.Many2one('website', 'Website')
+    website_id = fields.Many2one('website', 'Website', ondelete='cascade')
     active = fields.Boolean(default=True)
     sequence = fields.Integer()

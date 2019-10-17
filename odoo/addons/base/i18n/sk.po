@@ -7,9 +7,9 @@
 # Radoslav Sloboda <rado.sloboda@gmail.com>, 2018
 # Matus Krnac <matus.krnac@gmail.com>, 2018
 # Martin Trigaux, 2018
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
 # Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2018
 # gebri <gebri@inmail.sk>, 2019
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2019
 # Jan Prokop, 2019
 # 
 msgid ""
@@ -6134,7 +6134,7 @@ msgid ""
 "label=\"Search\" title=\"Search\"/></span>"
 msgstr ""
 "<span class=\"searchIcon\"><i class=\"fa fa-search\" role=\"img\" aria-"
-"label=\"Search\" title=\"Hľahať\"/></span>"
+"label=\"Search\" title=\"Hľadať\"/></span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
@@ -8056,6 +8056,12 @@ msgid "Barcode scan in Mobile"
 msgstr ""
 
 #. module: base
+#: code:addons/base/models/ir_qweb_fields.py:607
+#, python-format
+msgid "Barcode symbology"
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/ir_qweb_fields.py:603
 #, python-format
 msgid "Barcode type"
@@ -8906,7 +8912,7 @@ msgstr "Mesto"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_address_city
 msgid "City Addresses"
-msgstr ""
+msgstr "Adresy miest"
 
 #. module: base
 #: selection:ir.logging,type:0
@@ -9571,7 +9577,7 @@ msgstr "Dátum Vytvorenia"
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_reveal
 msgid "Create Leads/Opportunities from your website's traffic"
-msgstr ""
+msgstr "Vytvoriť iniciatívy/príležitosti z prevádzky vašej webovej stránky"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.act_menu_create
@@ -9633,7 +9639,7 @@ msgstr "Vytvoriť nový štítok kontaktu"
 #: model_terms:ir.actions.act_window,help:base.action_partner_customer_form
 #: model_terms:ir.actions.act_window,help:base.action_partner_form
 msgid "Create a new customer in your address book"
-msgstr ""
+msgstr "Vytvorte nového zákazníka v adresári"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_attachment
@@ -9648,7 +9654,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_supplier_form
 msgid "Create a new vendor in your address book"
-msgstr ""
+msgstr "Vytvorte nového dodávateľa v adresári"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_web_studio
@@ -13566,7 +13572,7 @@ msgstr "Neaktívne"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_search
 msgid "Inactive Users"
-msgstr "Nektívny Používatelia"
+msgstr "Neaktívni používatelia"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__index
@@ -24203,8 +24209,8 @@ msgstr "napr. en_US"
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_address_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
-msgid "e.g. www.odoo.com"
-msgstr "napr. www.odoo.com"
+msgid "e.g. https://www.odoo.com"
+msgstr "napr. https://www.odoo.com"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_ebay

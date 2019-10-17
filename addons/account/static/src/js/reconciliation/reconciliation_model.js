@@ -382,7 +382,7 @@ var StatementModel = BasicModel.extend({
             domainReconcile.push(['company_id', 'in', context.company_ids]);
         }
         if (context && context.active_model === 'account.journal' && context.active_ids) {
-            domainReconcile.push(['journal_id', 'in', [false].concat(context.active_ids)]);
+            domainReconcile.push(['match_journal_ids', 'in', [false].concat(context.active_ids)]);
         }
         var def_reconcileModel = this._loadReconciliationModel({domainReconcile: domainReconcile});
         var def_account = this._rpc({
@@ -898,7 +898,7 @@ var StatementModel = BasicModel.extend({
                                 'link': prop.id,
                                 'tax_id': [tax.id, null],
                                 'amount': tax.amount,
-                                'label': tax.name,
+                                'label': prop.label ? prop.label + " " + tax.name : tax.name,
                                 'date': prop.date,
                                 'account_id': tax.account_id ? [tax.account_id, null] : prop.account_id,
                                 'analytic': tax.analytic,

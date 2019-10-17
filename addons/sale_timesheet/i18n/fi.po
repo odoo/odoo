@@ -15,6 +15,7 @@
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2018
 # Janne Rättyä <janne.rattya@web-veistamo.fi>, 2019
 # Simo Suurla <simo@suurla.fi>, 2019
+# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2019
 # 
 msgid ""
 msgstr ""
@@ -22,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-08 06:49+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: Simo Suurla <simo@suurla.fi>, 2019\n"
+"Last-Translator: Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2019\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -93,6 +94,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Tuotteen kokoonpanon mukaan toimitettu määrä voidaan laskea automaattisesti mekanismilla:\n"
+"   - Manuaalinen: määrä asetetaan manuaalisesti riville\n"
+"   - Analytic Kustannuksista: määrä on lähetettyjen kulujen määrä\n"
+"   - Aikataulu: määrä on tämän myyntilinjan tehtäviin kirjattujen tuntien summa\n"
+"   - Varastoliikkeet: määrä tulee vahvistetuista keräyksistä\n"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__amount_to_invoice
@@ -115,7 +121,7 @@ msgstr "Kustannuspaikka"
 #. module: sale_timesheet
 #: selection:sale.order.line,qty_delivered_method:0
 msgid "Analytic From Expenses"
-msgstr ""
+msgstr "Analyytiikka kustannuksista"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_analytic_line
@@ -564,11 +570,14 @@ msgid ""
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
+"Aseta määrät manuaalisesti tilauksesta: Lasku perustuu manuaalisesti syötettyyn määrään luomatta analyyttistä tiliä.\n"
+"Sopimuksen aikataulut: Lasku perustuu siihen liittyvän aikataulun seurattuihin tunteihin.\n"
+"Luo tehtävä ja seuraa tunteja: Luo tehtävä myyntitilauksen vahvistukseen ja seuraa työtuntia. "
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__qty_delivered_method
 msgid "Method to update delivered qty"
-msgstr ""
+msgstr "Menetelmä päivittääkseen toimitettuja määriä"
 
 #. module: sale_timesheet
 #: selection:product.template,service_policy:0
@@ -1185,7 +1194,7 @@ msgstr "Tuntikortit: %s"
 #. module: sale_timesheet
 #: selection:product.template,service_type:0
 msgid "Timesheets on project (one fare per SO/Project)"
-msgstr ""
+msgstr "Projektin aikataulut (yksi hinta / SO / projekti)"
 
 #. module: sale_timesheet
 #: selection:product.template,service_policy:0
@@ -1267,6 +1276,8 @@ msgstr "Ohjattu toiminto"
 #: model:ir.model.fields,help:sale_timesheet.field_project_task_assign_sale__partner_id
 msgid "You can find a customer by its Name, TIN, Email or Internal Reference."
 msgstr ""
+"Löydät asiakkaan nimen, TIN-tunnuksen, sähköpostin tai sisäisen viitteen "
+"perusteella."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/account.py:62

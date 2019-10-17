@@ -184,13 +184,13 @@ database:
             These examples use the `Ripcord <https://code.google.com/p/ripcord/>`_
             library, which provides a simple XML-RPC API. Ripcord requires that
             `XML-RPC support be enabled
-            <http://php.net/manual/en/xmlrpc.installation.php>`_ in your PHP
+            <https://php.net/manual/en/xmlrpc.installation.php>`_ in your PHP
             installation.
 
             Since calls are performed over
-            `HTTPS <http://en.wikipedia.org/wiki/HTTP_Secure>`_, it also requires that
+            `HTTPS <https://en.wikipedia.org/wiki/HTTP_Secure>`_, it also requires that
             the `OpenSSL extension
-            <http://php.net/manual/en/openssl.installation.php>`_ be enabled.
+            <https://php.net/manual/en/openssl.installation.php>`_ be enabled.
 
     .. case:: Java
 
@@ -219,7 +219,7 @@ database:
 Logging in
 ----------
 
-Odoo requires users of the API to be authenticated before they can query most 
+Odoo requires users of the API to be authenticated before they can query most
 data.
 
 The ``xmlrpc/2/common`` endpoint provides meta-calls which don't require
@@ -414,31 +414,31 @@ available to only retrieve a subset of all matched records.
 .. container:: doc-aside
 
     .. switcher::
-    
+
         .. code-block:: python3
-    
+
             models.execute_kw(db, uid, password,
                 'res.partner', 'search',
                 [[['is_company', '=', True], ['customer', '=', True]]],
                 {'offset': 10, 'limit': 5})
-    
+
         .. code-block:: ruby
-    
+
             models.execute_kw(db, uid, password,
                 'res.partner', 'search',
                 [[['is_company', '=', true], ['customer', '=', true]]],
                 {offset: 10, limit: 5})
-    
+
         .. code-block:: php
-    
+
             $models->execute_kw($db, $uid, $password,
                 'res.partner', 'search',
                 array(array(array('is_company', '=', true),
                             array('customer', '=', true))),
                 array('offset'=>10, 'limit'=>5));
-    
+
         .. code-block:: java
-    
+
             asList((Object[])models.execute("execute_kw", asList(
                 db, uid, password,
                 "res.partner", "search",
@@ -447,9 +447,9 @@ available to only retrieve a subset of all matched records.
                     asList("customer", "=", true))),
                 new HashMap() {{ put("offset", 10); put("limit", 5); }}
             )));
-    
+
     .. code-block:: json
-    
+
         [13, 20, 30, 22, 29]
 
 Count records
@@ -464,28 +464,28 @@ only the number of records matching the query. It takes the same
 .. container:: doc-aside
 
     .. switcher::
-    
+
         .. code-block:: python3
-    
+
             models.execute_kw(db, uid, password,
                 'res.partner', 'search_count',
                 [[['is_company', '=', True], ['customer', '=', True]]])
-    
+
         .. code-block:: ruby
-    
+
             models.execute_kw(db, uid, password,
                 'res.partner', 'search_count',
                 [[['is_company', '=', true], ['customer', '=', true]]])
-    
+
         .. code-block:: php
-    
+
             $models->execute_kw($db, $uid, $password,
                 'res.partner', 'search_count',
                 array(array(array('is_company', '=', true),
                             array('customer', '=', true))));
-    
+
         .. code-block:: java
-    
+
             (Integer)models.execute("execute_kw", asList(
                 db, uid, password,
                 "res.partner", "search_count",
@@ -493,9 +493,9 @@ only the number of records matching the query. It takes the same
                     asList("is_company", "=", true),
                     asList("customer", "=", true)))
             ));
-    
+
     .. code-block:: json
-    
+
         19
 
 .. warning::
@@ -514,11 +514,11 @@ fetch. By default, it will fetch all the fields the current user can read,
 which tends to be a huge amount.
 
 .. container:: doc-aside
-    
+
     .. switcher::
-    
+
         .. code-block:: python3
-    
+
             ids = models.execute_kw(db, uid, password,
                 'res.partner', 'search',
                 [[['is_company', '=', True], ['customer', '=', True]]],
@@ -527,9 +527,9 @@ which tends to be a huge amount.
                 'res.partner', 'read', [ids])
             # count the number of fields fetched by default
             len(record)
-    
+
         .. code-block:: ruby
-    
+
             ids = models.execute_kw(db, uid, password,
                 'res.partner', 'search',
                 [[['is_company', '=', true], ['customer', '=', true]]],
@@ -538,9 +538,9 @@ which tends to be a huge amount.
                 'res.partner', 'read', [ids]).first
             # count the number of fields fetched by default
             record.length
-    
+
         .. code-block:: php
-    
+
             $ids = $models->execute_kw($db, $uid, $password,
                 'res.partner', 'search',
                 array(array(array('is_company', '=', true),
@@ -550,9 +550,9 @@ which tends to be a huge amount.
                 'res.partner', 'read', array($ids));
             // count the number of fields fetched by default
             count($records[0]);
-    
+
         .. code-block:: java
-    
+
             final List ids = asList((Object[])models.execute(
                 "execute_kw", asList(
                     db, uid, password,
@@ -570,9 +570,9 @@ which tends to be a huge amount.
             ))[0];
             // count the number of fields fetched by default
             record.size();
-    
+
     .. code-block:: json
-    
+
         121
 
 Conversedly, picking only three fields deemed interesting.
@@ -910,7 +910,7 @@ a record).
 Delete records
 --------------
 
-Records can be deleted in bulk by providing their ids to 
+Records can be deleted in bulk by providing their ids to
 :meth:`~odoo.models.Model.unlink`.
 
 .. container:: doc-aside
@@ -1296,6 +1296,6 @@ activated as actual fields on the model.
         ]
 
 
-.. _PostgreSQL: http://www.postgresql.org
-.. _XML-RPC: http://en.wikipedia.org/wiki/XML-RPC
-.. _base64: http://en.wikipedia.org/wiki/Base64
+.. _PostgreSQL: https://www.postgresql.org
+.. _XML-RPC: https://en.wikipedia.org/wiki/XML-RPC
+.. _base64: https://en.wikipedia.org/wiki/Base64

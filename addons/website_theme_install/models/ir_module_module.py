@@ -193,7 +193,6 @@ class IrModuleModule(models.Model):
                                 ON CONFLICT DO NOTHING""",
                              (dst_field, new_rec.id, src_field, old_rec.id))
 
-
     @api.multi
     def _theme_load(self, website):
         """

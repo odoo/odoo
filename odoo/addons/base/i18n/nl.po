@@ -11,8 +11,8 @@
 # Cas Vissers <c.vissers@brahoo.nl>, 2018
 # Eric Geens <ericgeens@yahoo.com>, 2018
 # Martin Trigaux, 2018
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # Cas Vissers <casvissers@brahoo.nl>, 2019
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # 
 msgid ""
@@ -10111,6 +10111,12 @@ msgid "Barcode scan in Mobile"
 msgstr "Barcode scan in mobiel"
 
 #. module: base
+#: code:addons/base/models/ir_qweb_fields.py:607
+#, python-format
+msgid "Barcode symbology"
+msgstr "Barcode symboliek"
+
+#. module: base
 #: code:addons/base/models/ir_qweb_fields.py:603
 #, python-format
 msgid "Barcode type"
@@ -12320,7 +12326,7 @@ msgstr "Fouten opsporen"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency__decimal_places
 msgid "Decimal Places"
-msgstr "Decimale plaatsen"
+msgstr "Aantal decimalen"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_decimal_precision
@@ -26287,14 +26293,14 @@ msgstr "De afrondingsfactor moet groter zijn dan 0!"
 msgid ""
 "The server refused the sender address (%(email_from)s) with error %(repl)s"
 msgstr ""
-"De server heeft het afzenderadres (%(email_from)s) met een fout geweigerd "
+"De server heeft het afzenderadres (%(email_from)s) met een fout afgewezen "
 "%(repl)s"
 
 #. module: base
 #: code:addons/base/models/ir_mail_server.py:182
 #, python-format
 msgid "The server refused the test connection with error %(repl)s"
-msgstr "De server heeft de testverbinding met een fout geweigerd %(repl)s"
+msgstr "De server heeft de testverbinding met een fout afgewezen%(repl)s"
 
 #. module: base
 #: code:addons/base/models/ir_mail_server.py:175
@@ -28563,8 +28569,8 @@ msgstr "bijv. en_US"
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_address_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
-msgid "e.g. www.odoo.com"
-msgstr "bijv. www.odoo.com"
+msgid "e.g. https://www.odoo.com"
+msgstr "bijvoorbeeld https://www.odoo.com"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_ebay

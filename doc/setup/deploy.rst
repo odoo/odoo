@@ -624,16 +624,16 @@ of the supported browsers is the following:
     environment than over the internet.
 
 .. _regular expression: https://docs.python.org/3/library/re.html
-.. _ARP spoofing: http://en.wikipedia.org/wiki/ARP_spoofing
+.. _ARP spoofing: https://en.wikipedia.org/wiki/ARP_spoofing
 .. _Nginx termination example:
-    http://nginx.com/resources/admin-guide/nginx-ssl-termination/
+    https://nginx.com/resources/admin-guide/nginx-ssl-termination/
 .. _Nginx proxying example:
-    http://nginx.com/resources/admin-guide/reverse-proxy/
+    https://nginx.com/resources/admin-guide/reverse-proxy/
 .. _socat: http://www.dest-unreach.org/socat/
 .. _PostgreSQL connection settings:
 .. _listen to network interfaces:
-    http://www.postgresql.org/docs/9.6/static/runtime-config-connection.html
+    https://www.postgresql.org/docs/9.6/static/runtime-config-connection.html
 .. _use an SSH tunnel:
-    http://www.postgresql.org/docs/9.6/static/ssh-tunnels.html
-.. _WSGI: http://wsgi.readthedocs.org/
+    https://www.postgresql.org/docs/9.6/static/ssh-tunnels.html
+.. _WSGI: https://wsgi.readthedocs.org/
 .. _POSBox: https://www.odoo.com/page/point-of-sale-hardware#part_2

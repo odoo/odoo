@@ -210,7 +210,11 @@ class AccountReconcileModel(models.Model):
 
         # Second write-off line.
         if self.has_second_line and self.second_account_id:
-            line_balance = balance - sum(aml['debit'] - aml['credit'] for aml in new_aml_dicts)
+            remaining_balance = balance - sum(aml['debit'] - aml['credit'] for aml in new_aml_dicts)
+            if self.second_amount_type == 'percentage':
+                line_balance = remaining_balance * (self.second_amount / 100.0)
+            else:
+                line_balance = self.second_amount * (1 if remaining_balance > 0.0 else -1)
             second_writeoff_line = {
                 'name': self.second_label or st_line.name,
                 'account_id': self.second_account_id.id,
@@ -326,7 +330,7 @@ class AccountReconcileModel(models.Model):
             query += ' AND st_line.name NOT ILIKE %s'
             params += ['%%%s%%' % rule.match_label_param]
         elif rule.match_label == 'match_regex':
-            query += ' AND st_line.name ~ %s'
+            query += ' AND st_line.name ~* %s'
             params += [rule.match_label_param]
 
         # Filter on partners.
@@ -432,7 +436,7 @@ class AccountReconcileModel(models.Model):
 
                 -- if there is a partner, propose all aml of the partner, otherwise propose only the ones
                 -- matching the statement line communication
-                AND 
+                AND
                 (
                     (
                         line_partner.partner_id != 0
@@ -544,6 +548,8 @@ class AccountReconcileModel(models.Model):
         '''
         if not self.match_total_amount:
             return True
+        if not candidates:
+            return False
 
         # Match total residual amount.
         total_residual = 0.0
@@ -561,8 +567,10 @@ class AccountReconcileModel(models.Model):
 
         if line_residual > total_residual:
             amount_percentage = (total_residual / line_residual) * 100
-        else:
+        elif total_residual:
             amount_percentage = (line_residual / total_residual) * 100
+        else:
+            return False
         return amount_percentage >= self.match_total_amount_param
 
     @api.multi

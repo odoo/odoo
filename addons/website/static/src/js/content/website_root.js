@@ -303,21 +303,14 @@ var WebsiteRoot = BodyManager.extend({
      * @param {OdooEvent} ev
      */
     _multiWebsiteSwitch: function (ev) {
-        var website_id_to_switch_to = ev.currentTarget.getAttribute('website-id');
-
-        // need to force in each case, even if domain is set
-        // Website 1: localhost; Website 2: 0.0.0.0; website 3: -
-        // when you switch 3 <--> 1, you need to force the website
-
-        var website_domain = ev.currentTarget.getAttribute('domain');
-        var url = $.param.querystring(window.location.href, {'fw': website_id_to_switch_to});
-        if (website_domain && window.location.hostname !== website_domain) {
-            // if domain unchanged, this line will do a nop while we need to refresh
-            // the page to load the new forced website.
-            url = new URL(url);
-            url.hostname = website_domain;
+        var websiteId = ev.currentTarget.getAttribute('website-id');
+        var websiteDomain = ev.currentTarget.getAttribute('domain');
+        var url = window.location.href;
+        if (websiteDomain && window.location.hostname !== websiteDomain) {
+            var path = window.location.pathname + window.location.search + window.location.hash;
+            url = websiteDomain + path;
         }
-        window.location.href = url;
+        window.location.href = $.param.querystring(url, {'fw': websiteId});
     },
 
     _multiCompanySwitch: function (ev) {

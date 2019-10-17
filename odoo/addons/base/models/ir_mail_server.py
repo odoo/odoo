@@ -126,7 +126,7 @@ def encode_rfc2822_address_header(header_text):
             return formataddr((name, email))
         except UnicodeEncodeError:
             _logger.warning(_('Failed to encode the address %s\n'
-                              'from mail header:\n%s') % addr, header_text)
+                              'from mail header:\n%s') % (addr, header_text))
             return ""
 
     addresses = getaddresses([pycompat.to_native(ustr(header_text))])

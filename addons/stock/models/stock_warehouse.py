@@ -441,7 +441,7 @@ class Warehouse(models.Model):
         delivery_steps = vals.get('delivery_steps', def_values['delivery_steps'])
         code = vals.get('code') or self.code
         code = code.replace(' ', '').upper()
-        company_id = vals.get('company_id', self.company_id.id)
+        company_id = vals.get('company_id', self.default_get(['company_id'])['company_id'])
         sub_locations = {
             'lot_stock_id': {
                 'name': _('Stock'),
@@ -490,12 +490,13 @@ class Warehouse(models.Model):
         avoid mistakes during picking types and rules creation.
         """
         for warehouse in self:
-            sub_locations = warehouse._get_locations_values(vals)
+            company_id = vals.get('company_id', warehouse.company_id.id)
+            sub_locations = warehouse._get_locations_values(dict(vals, company_id=company_id))
             missing_location = {}
             for location, location_values in sub_locations.items():
                 if not warehouse[location] and location not in vals:
                     location_values['location_id'] = vals.get('view_location_id', warehouse.view_location_id.id)
-                    location_values['company_id'] = vals.get('company_id', warehouse.company_id.id)
+                    location_values['company_id'] = company_id
                     missing_location[location] = self.env['stock.location'].create(location_values).id
             if missing_location:
                 warehouse.write(missing_location)
@@ -655,7 +656,10 @@ class Warehouse(models.Model):
         if not change_to_multiple:
             # If single delivery we should create the necessary MTO rules for the resupply
             routings = [self.Routing(self.lot_stock_id, location, self.out_type_id, 'pull') for location in rules.mapped('location_id')]
-            mto_rule_vals = self._get_rule_values(routings)
+            mto_vals = self._get_global_route_rules_values().get('mto_pull_id')
+            values = mto_vals['create_values']
+            mto_rule_vals = self._get_rule_values(routings, values, name_suffix='MTO')
+
             for mto_rule_val in mto_rule_vals:
                 Rule.create(mto_rule_val)
         else:

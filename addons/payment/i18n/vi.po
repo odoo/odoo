@@ -8,6 +8,8 @@
 # Thang Duong Bao <nothingctrl@gmail.com>, 2018
 # Duy BQ <duybq86@gmail.com>, 2018
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
+# Chinh Chinh <trinhttp@trobz.com>, 2019
+# Christine Nguyen <dungnt@trobz.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -15,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:21+0000\n"
-"Last-Translator: Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019\n"
+"Last-Translator: Christine Nguyen <dungnt@trobz.com>, 2019\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,7 +43,7 @@ msgstr "HTML bảo mật 3D"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "<b>Amount:</b>"
-msgstr ""
+msgstr "<b>Số tiền:</b>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
@@ -51,12 +53,12 @@ msgstr "<b>Trao đổi: </b>"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "<b>Reference:</b>"
-msgstr ""
+msgstr "<b>Mã:</b>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 msgid "<i class=\"fa fa-arrow-circle-right\"/> Back to My Account"
-msgstr "<i class=\"fa fa-arrow-circle-right\"/> Trở về Tài khoản của tôi"
+msgstr "<i class=\"fa fa-arrow-circle-right\"/> Trở về tài khoản của tôi"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -64,6 +66,8 @@ msgid ""
 "<i class=\"fa fa-check text-success\" title=\"This payment method is "
 "verified by our system.\" role=\"img\" aria-label=\"Ok\"/>"
 msgstr ""
+"<i class=\"fa fa-check text-success\" title=\"Phương thức thanh toán này "
+"được xác nhận bởi hệ thống.\" role=\"img\" aria-label=\"Ok\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -71,11 +75,14 @@ msgid ""
 "<i class=\"fa fa-close text-danger\" title=\"This payment method has not "
 "been verified by our system.\" role=\"img\" aria-label=\"Not verified\"/>"
 msgstr ""
+"<i class=\"fa fa-close text-danger\" title=\"Phương thức thanh toán này "
+"không được xác nhận bởi hệ thống.\" role=\"img\" aria-label=\"Not "
+"verified\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay_methods
 msgid "<i class=\"fa fa-home\" role=\"img\" aria-label=\"Home\" title=\"Home\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-home\" role=\"img\" aria-label=\"Home\" title=\"Home\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -85,12 +92,12 @@ msgstr "<i class=\"fa fa-lock\">Thanh toán</i>"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<i class=\"fa fa-plus-circle\"> Add new card</i>"
-msgstr "<i class=\"fa fa-plus-circle\">Thêm thẻ mởi</i>"
+msgstr "<i class=\"fa fa-plus-circle\">Thêm thẻ mới</i>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<i class=\"fa fa-trash\"/> Delete"
-msgstr "<i class=\"fa fa-trash\"/>Xóa"
+msgstr "<i class=\"fa fa-trash\"/> Xóa"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:124
@@ -140,17 +147,17 @@ msgstr "<p>Thẻ này hiện được liên kết với các hồ sơ sau:<p/>"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "<span class=\"fa fa-arrow-right\"> Create a PayPal account</span>"
-msgstr ""
+msgstr "<span class=\"fa fa-arrow-right\"> Tạo tài khoản PayPal</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "<span class=\"fa fa-arrow-right\"> Get my Stripe keys</span>"
-msgstr ""
+msgstr "<span class=\"fa fa-arrow-right\"> Lấy mã Stripe</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
 msgid "<span class=\"o_stat_text\">Credit card(s)</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Thẻ tín dụng</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
@@ -199,7 +206,7 @@ msgid ""
 "<span><i>Done,</i> Your online payment has been successfully processed. "
 "Thank you for your order.</span>"
 msgstr ""
-"<span><i>Hoàn thành,</i> Khoản thnah toán trực tuyến của bạn đã được xử lý "
+"<span><i>Hoàn thành,</i> Khoản thanhh toán trực tuyến của bạn đã được xử lý "
 "thành công. Cám ơn bạn đã đặt mua!</span>"
 
 #. module: payment
@@ -219,6 +226,10 @@ msgid ""
 "hesitate to contact us if you have any questions on the status of your "
 "order.</span>"
 msgstr ""
+"<span><i>Lỗi,</i> xin lưu ý rằng có lỗi xảy ra trong quá trình giao dịch. "
+"Đơn hàng đã được xác nhận nhưng sẽ không được thanh toán. Đừng ngần ngại "
+"liên hệ với chúng tôi nếu bạn có bất kỳ câu hỏi nào về tình trạng đơn đặt "
+"hàng của bạn.</span>"
 
 #. module: payment
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_adyen
@@ -234,7 +245,7 @@ msgid ""
 "<span><i>Pending,</i> Your online payment has been successfully processed. "
 "But your order is not validated yet.</span>"
 msgstr ""
-"<span><i>Đang treo,</i> Khoản thanh toán trực tuyến của bạn đã được xử lý "
+"<span><i>Đang treo,</i> khoản thanh toán trực tuyến của bạn đã được xử lý "
 "thành công. Nhưng đơn hàng của bạn vẫn chưa được thẩm định.</span>"
 
 #. module: payment
@@ -262,37 +273,37 @@ msgstr "Dịch vụ thanh toán cần tạo một giao dịch."
 #: code:addons/payment/models/account_payment.py:55
 #, python-format
 msgid "A payment transaction already exists."
-msgstr ""
+msgstr "Một giao dịch thanh toán đã tồn tại."
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:57
 #, python-format
 msgid "A token is required to create a new payment transaction."
-msgstr ""
+msgstr "Cần có mã token để tạo một giao dịch thanh toán mới."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:657
 #, python-format
 msgid "A transaction %s with %s initiated using %s credit card."
-msgstr ""
+msgstr "Một giao dịch %s với %s bắt đầu sử dụng %s thẻ tín dụng."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:663
 #, python-format
 msgid "A transaction %s with %s initiated."
-msgstr ""
+msgstr "Một giao dịch %s với %s đã được bắt đầu"
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:36
 #, python-format
 msgid "A transaction can't be linked to invoices having different currencies."
-msgstr ""
+msgstr "Giao dịch không thể liên kết với hóa đơn khác loại tiền tệ"
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:41
 #, python-format
 msgid "A transaction can't be linked to invoices having different partners."
-msgstr ""
+msgstr "Giao dịch không thể liên kết với hóa đơn khác đối tác"
 
 #. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:34
@@ -324,12 +335,12 @@ msgstr "Tài khoản tổ chức thanh toán"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__acquirer_ref
 msgid "Acquirer Ref."
-msgstr "Tham chiếu Tổ chức thanh toán"
+msgstr "Mã tổ chức thanh toán"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__acquirer_reference
 msgid "Acquirer Reference"
-msgstr "Tham chiếu Tổ chức thanh toán"
+msgstr "Mã tổ chức thanh toán"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon__acquirer_ids
@@ -339,7 +350,7 @@ msgstr "Tổ chức thanh toán"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_icon_form_view
 msgid "Acquirers list"
-msgstr "Danh sách Tổ chức thanh toán"
+msgstr "Danh sách tổ chức thanh toán"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_kanban
@@ -354,7 +365,7 @@ msgstr "Có hiệu lực"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_active
 msgid "Add Extra Fees"
-msgstr "Thêm Phí bổ sung"
+msgstr "Thêm phí bổ sung"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_address
@@ -384,7 +395,7 @@ msgstr "Tổng tiền"
 #: code:addons/payment/static/src/xml/payment_processing.xml:17
 #, python-format
 msgid "An error occured during the processing of this payment."
-msgstr ""
+msgstr "Đã xảy ra lỗi trong quá trình thanh toán này."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
@@ -398,11 +409,13 @@ msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
 msgstr ""
+"Bạn có chắc chắn muốn hủy bỏ giao dịch được ủy quyền không? Hành động này "
+"không thể được hoàn tất."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__authorize_implemented
 msgid "Authorize Mechanism Supported"
-msgstr "Được hỗ trợ Cơ chế ủy quyền"
+msgstr "Được hỗ trợ cơ chế ủy quyền"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_authorize
@@ -418,7 +431,7 @@ msgstr "Cơ chế ủy quyền"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_invoice__authorized_transaction_ids
 msgid "Authorized Transactions"
-msgstr ""
+msgstr "Giao dịch được ủy quyền"
 
 #. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:34
@@ -474,7 +487,7 @@ msgstr "Hủy"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__cancel_msg
 msgid "Cancel Message"
-msgstr "Huỷ Thông điệp"
+msgstr "Huỷ tin nhắn"
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -486,20 +499,20 @@ msgstr "Đã huỷ"
 #: code:addons/payment/static/src/xml/payment_processing.xml:109
 #, python-format
 msgid "Cancelled payments"
-msgstr ""
+msgstr "Đã hủy thanh toán"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:190
 #, python-format
 msgid "Cannot set-up the payment"
-msgstr "Không thể thiết đặt thanh toán"
+msgstr "Không thể thiết lập thanh toán"
 
 #. module: payment
 #: code:addons/payment/controllers/portal.py:225
 #, python-format
 msgid "Cannot setup the payment."
-msgstr ""
+msgstr "Không thể thiết lập thanh toán"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__capture_manually
@@ -520,13 +533,13 @@ msgstr "Nắm bắt số tiền từ hệ thống, khi giao hàng được hoàn
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "Check here"
-msgstr ""
+msgstr "Chọn tại đây"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_open_payment_onboarding_payment_acquirer_wizard
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "Choose a payment method"
-msgstr ""
+msgstr "Chọn phương thức thanh toán"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_city
@@ -539,7 +552,7 @@ msgstr "Thành phố"
 #: code:addons/payment/static/src/xml/payment_processing.xml:40
 #, python-format
 msgid "Click here to be redirected to the confirmation page."
-msgstr ""
+msgstr "Bấm vào đây để chuyển hướng đến trang xác nhận."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
@@ -575,7 +588,7 @@ msgstr "Cấu hình"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
 msgid "Configure your payment methods."
-msgstr ""
+msgstr "Cấu hình phương thức thanh toán của bạn"
 
 #. module: payment
 #. openerp-web
@@ -614,22 +627,22 @@ msgstr "Quốc gia"
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_acquirer
 msgid "Create a new payment acquirer"
-msgstr ""
+msgstr "Tạo một tổ chức thanh toán mới"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_transaction
 msgid "Create a new payment transaction"
-msgstr ""
+msgstr "Tạo một giao dịch thanh toán mới"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_icon
 msgid "Create a payment icon"
-msgstr ""
+msgstr "Tạo một biểu tượng thanh toán mới"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.payment_token_action
 msgid "Create a saved payment data"
-msgstr ""
+msgstr "Tạo một dữ liệu thanh toán đã lưu"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__create_uid
@@ -677,7 +690,7 @@ msgstr "Khách hàng"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__description
 msgid "Description"
-msgstr "Miêu tả"
+msgstr "Mô tả"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__sequence
@@ -687,7 +700,7 @@ msgstr "Chỉ ra thứ tự hiển thị"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
 msgid "Dismiss"
-msgstr ""
+msgstr "Bỏ qua"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__display_name
@@ -707,7 +720,7 @@ msgstr "Hoàn thành"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__done_msg
 msgid "Done Message"
-msgstr "Thông điệp hoàn tất"
+msgstr "Hoàn tất tin nhắn"
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -815,7 +828,7 @@ msgstr "Nhóm theo"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__is_processed
 msgid "Has the payment been post processed"
-msgstr ""
+msgstr "Thanh toán đã được xử lý chưa"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__pre_msg
@@ -837,14 +850,15 @@ msgid ""
 "If you leave it empty, the payment acquirer will be available for all the "
 "countries."
 msgstr ""
-"Nếu bạn để trống, nhà cung cấp thanh toán sẽ có sẵn cho tất cả các quốc gia."
+"Nếu bạn để trống, nhà cung cấp thanh toán sẽ sẵn sàng cho tất cả các quốc "
+"gia."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:132
 #, python-format
 msgid "If, the payment hasn't been confirmed you can contact us."
-msgstr ""
+msgstr "Nếu thanh toán chưa được xác nhận, bạn có thể liên hệ với chúng tôi"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__image
@@ -855,7 +869,7 @@ msgstr "Hình ảnh"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon__image_payment_form
 msgid "Image displayed on the payment form"
-msgstr "Hình ảnh hiển thị trên Thanh toán từ"
+msgstr "Hình ảnh hiển thị trên thanh toán từ"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_ogone
@@ -876,26 +890,27 @@ msgstr "Trạng thái cài đặt"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__reference
 msgid "Internal reference of the TX"
-msgstr "Tham chiếu nội bộ của TX"
+msgstr "Mã nội bộ của TX"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:145
 #, python-format
 msgid "Internal server error"
-msgstr ""
+msgstr "Lỗi máy chủ"
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:55
 #, python-format
 msgid "Invalid token found! Token acquirer %s != %s"
 msgstr ""
+"Mã bảo mật không hợp lệ! Tổ chức thanh toán cung cấp mã bảo mật %s != %s"
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:58
 #, python-format
 msgid "Invalid token found! Token partner %s != %s"
-msgstr ""
+msgstr "Mã bảo mật không hợp lệ! Mã bảo mật của đối tác %s != %s"
 
 #. module: payment
 #: model:ir.model,name:payment.model_account_invoice
@@ -905,14 +920,14 @@ msgstr "Hóa đơn"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
 msgid "Invoice(s)"
-msgstr ""
+msgstr "Hóa đơn"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:851
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__invoice_ids
 #, python-format
 msgid "Invoices"
-msgstr "Các hóa đơn"
+msgstr "Hóa đơn"
 
 #. module: payment
 #: selection:res.company,payment_acquirer_onboarding_state:0
@@ -964,17 +979,17 @@ msgstr "Danh sách nhà cung cấp hỗ trợ biểu tượng thanh toán này."
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__website_published
 msgid "Make this payment acquirer available (Customer invoices, etc.)"
-msgstr ""
+msgstr "Cung cấp công cụ thanh toán này (Hóa đơn khách hàng, v.v.) "
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay_methods
 msgid "Manage your Payment Methods"
-msgstr "Quản lý Phương thức thanh toán của bạn"
+msgstr "Quản lý phương thức thanh toán của bạn"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay_meth_link
 msgid "Manage your payment methods"
-msgstr "Quản lý Phương thức thanh toán của bạn"
+msgstr "Quản lý phương thức thanh toán của bạn"
 
 #. module: payment
 #: selection:res.company,payment_onboarding_payment_method:0
@@ -993,9 +1008,9 @@ msgid ""
 "Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"
 "Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo,you are suggested to reconcile the transaction with the batch deposit. Enable this option from the settings."
 msgstr ""
-"Manual: Get paid by cash, check or any other method outside of Odoo.\n"
-"Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"
-"Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo,you are suggested to reconcile the transaction with the batch deposit. Enable this option from the settings."
+"Thủ công: thanh toán bằng tiền mặt, séc hoặc thực hiện bất kỳ phương thức thanh toán khác ngoài hệ thống.\n"
+"Thanh toán điện tử: thanh toán tự động thông qua tổ chức thanh toán bằng tạo giao dịch trên thẻ được lưu bởi khách hàng khi mua hoặc đăng ký trực tuyến (mã bảo mật thanh toán)\n"
+"Đặt cọc hàng loạt: ghi lại một số séc của khách hàng cùng một lúc bằng cách tạo một khoản đặt cọc hàng loạt để gửi tới ngân hàng của bạn. Khi mã hóa bảng sao kê ngân hàng trong hệ thống, bạn được đề nghị để đối soát giao dịch với khoản đặt cọc này. Kích hoạt tùy chọn này trong mục thiết lập."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__image_medium
@@ -1009,12 +1024,15 @@ msgid ""
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
 msgstr ""
+"Hình ảnh kích thước chuẩn của người cung cấp. Nó sẽ tự động thay đổi kích "
+"thước thành hình ảnh 128x128px , với tỷ lệ khung hình được bảo toàn. Sử dụng"
+" trường này trong dạng view hoặc kanban."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__state_message
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
 msgid "Message"
-msgstr "Thông điệp"
+msgstr "Thông báo"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__post_msg
@@ -1029,13 +1047,15 @@ msgstr "Thông báo được hiển thị để giải thích và giúp quá tr�
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__error_msg
 msgid "Message displayed, if error is occur during the payment process."
-msgstr "Thông báo được hiển thị, nếu xảy ra lỗi trong quá trình thanh toán."
+msgstr ""
+"Thông báo sẽ được hiển thị, nếu xảy ra lỗi trong quá trình thanh toán."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__cancel_msg
 msgid "Message displayed, if order is cancel during the payment process."
 msgstr ""
-"Thông báo được hiển thị, nếu đơn đặt hàng bị hủy trong quá trình thanh toán."
+"Thông báo sẽ được hiển thị, nếu đơn đặt hàng bị hủy trong quá trình thanh "
+"toán."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__done_msg
@@ -1043,8 +1063,8 @@ msgid ""
 "Message displayed, if order is done successfully after having done the "
 "payment process."
 msgstr ""
-"Thông báo được hiển thị, nếu lệnh được thực hiện thành công sau khi thực "
-"hiện quy trình thanh toán."
+"Thông báo sẽ được hiển thị, nếu đơn đặt hàng được thực hiện thành công sau "
+"khi thực hiện quy trình thanh toán."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__pending_msg
@@ -1052,13 +1072,13 @@ msgid ""
 "Message displayed, if order is in pending state after having done the "
 "payment process."
 msgstr ""
-"Thông báo được hiển thị, nếu đơn đặt hàng đang ở trạng thái chờ xử lý sau "
-"khi đã thực hiện quy trình thanh toán."
+"Thông báo sẽ được hiển thị, nếu đơn đặt hàng đang ở trạng thái chờ xử lý sau"
+" khi đã thực hiện quy trình thanh toán."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Messages"
-msgstr "Thông điệp"
+msgstr "Thông báo"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__manual_name
@@ -1069,7 +1089,7 @@ msgstr "Phương thức"
 #: code:addons/payment/models/payment_acquirer.py:469
 #, python-format
 msgid "Missing partner reference when trying to create a new payment token"
-msgstr "Thiếu tham chiếu đối tác khi cố gắng tạo mã thông báo thanh toán mới"
+msgstr "Thiếu mã đối tác khi cố gắng tạo mã bảo mật thanh toán mới"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__name
@@ -1098,18 +1118,20 @@ msgid ""
 "No manual payment method could be found for this company. Please create one "
 "from the Payment Acquirer menu."
 msgstr ""
+"Không thể tìm thấy phương thức thanh toán thủ công cho công ty này. Vui lòng"
+" tạo một cái mới từ mục Tổ chức thanh toán."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "No payment acquirer found."
-msgstr ""
+msgstr "Không tìm thấy tổ chức thanh toán nào."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:118
 #, python-format
 msgid "No payment has been processed."
-msgstr ""
+msgstr "Không có thanh toán nào đã được xử lý."
 
 #. module: payment
 #. openerp-web
@@ -1130,6 +1152,8 @@ msgid ""
 "Note that tokens from acquirers set to only authorize transactions (instead "
 "of capturing the amount) are not available."
 msgstr ""
+"Lưu ý rằng mã bảo mật từ tổ chức thanh toán được đặt chỉ ủy quyền giao dịch "
+"(thay vì nắm bắt số tiền) không có sẵn"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__payment_flow
@@ -1137,11 +1161,13 @@ msgid ""
 "Note: Subscriptions does not take this field in account, it uses server to "
 "server by default."
 msgstr ""
+"Lưu ý: Đăng ký không lấy trường này trong tài khoản, nó sử dụng từ máy chủ "
+"đến máy chủ theo mặc định."
 
 #. module: payment
 #: selection:payment.acquirer,provider:0
 msgid "Ogone"
-msgstr ""
+msgstr "Ogone"
 
 #. module: payment
 #. openerp-web
@@ -1154,50 +1180,50 @@ msgstr "Đồng ý"
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:48
 #, python-format
 msgid "Only administrators can access this data."
-msgstr ""
+msgstr "Chỉ có admin mới có thể truy cập vào dữ liệu này."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:723
 #, python-format
 msgid "Only draft transaction can be authorized."
-msgstr ""
+msgstr "Chỉ những giao dịch nháp mới có thể ủy quyền."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:714
 #: code:addons/payment/models/payment_acquirer.py:775
 #, python-format
 msgid "Only draft transaction can be processed."
-msgstr ""
+msgstr "Chỉ xử lý những giao dịch nháp."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:763
 #, python-format
 msgid "Only draft/authorized transaction can be cancelled."
-msgstr ""
+msgstr "Chỉ hủy bỏ những giao dịch nháp/ đã được ủy quyền."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:732
 #, python-format
 msgid "Only draft/authorized transaction can be posted."
-msgstr ""
+msgstr "Chỉ vào sổ những giao dịch nháp/ đã được ủy quyền."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:1018
 #, python-format
 msgid "Only transactions having the capture status can be captured."
-msgstr ""
+msgstr "Chỉ những giao dịch có trạng thái lưu giữ mới có thể được lưu giữ"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:1025
 #, python-format
 msgid "Only transactions having the capture status can be voided."
-msgstr ""
+msgstr "Chỉ các giao dịch có trạng thái lưu giữ mới có thể bị vô hiệu. "
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
 msgid "Or scan me with your banking app."
-msgstr ""
+msgstr "Hoặc quét mã với ứng dụng ngân hàng của bạn "
 
 #. module: payment
 #: selection:res.company,payment_onboarding_payment_method:0
@@ -1217,33 +1243,33 @@ msgstr "Tên đối tác"
 #. module: payment
 #: selection:payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Pay with PayPal"
-msgstr ""
+msgstr "Thanh toán với PayPal"
 
 #. module: payment
 #: selection:payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Pay with another payment acquirer"
-msgstr ""
+msgstr "Thanh toán với tổ chức thanh toán khác"
 
 #. module: payment
 #: selection:payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Pay with credit card (via Stripe)"
-msgstr ""
+msgstr "Thanh toán với thẻ tín dụng (thông qua Stripe)"
 
 #. module: payment
 #: selection:res.company,payment_onboarding_payment_method:0
 msgid "PayPal"
-msgstr ""
+msgstr "PayPal"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__paypal_email_account
 msgid "PayPal Email ID"
-msgstr ""
+msgstr "PayPal Email ID"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_payu
 #: selection:payment.acquirer,provider:0
 msgid "PayUmoney"
-msgstr ""
+msgstr "PayUmoney"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__payment_id
@@ -1285,7 +1311,7 @@ msgstr "Biểu tượng thanh toán"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__manual_post_msg
 msgid "Payment Instructions"
-msgstr ""
+msgstr "Hướng dẫn thanh toán"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__journal_id
@@ -1322,7 +1348,7 @@ msgstr "Mã thanh toán"
 #: model:ir.model,name:payment.model_payment_transaction
 #: model:ir.model.fields,field_description:payment.field_account_payment__payment_transaction_id
 msgid "Payment Transaction"
-msgstr "Giao dịch Thanh toán"
+msgstr "Giao dịch thanh toán"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_transaction
@@ -1332,12 +1358,12 @@ msgstr "Giao dịch Thanh toán"
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
 #: model_terms:ir.ui.view,arch_db:payment.transaction_list
 msgid "Payment Transactions"
-msgstr "Giao dịch Thanh toán"
+msgstr "Giao dịch thanh toán"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_acquirer_onboarding_wizard
 msgid "Payment acquire onboarding wizard"
-msgstr ""
+msgstr "Cửa sổ tổ chức thanh toán mới"
 
 #. module: payment
 #: selection:payment.acquirer,payment_flow:0
@@ -1347,13 +1373,13 @@ msgstr "Thanh toán từ hệ thống"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
 msgid "Payment method set!"
-msgstr ""
+msgstr "Phương thức thanh toán đã được chọn!"
 
 #. module: payment
 #: code:addons/payment/controllers/portal.py:252
 #, python-format
 msgid "Payment transaction failed."
-msgstr ""
+msgstr "Giao dịch thanh toán thất bại."
 
 #. module: payment
 #: model:ir.model,name:payment.model_account_payment
@@ -1367,14 +1393,14 @@ msgstr "Các thanh toán"
 #: code:addons/payment/static/src/xml/payment_processing.xml:9
 #, python-format
 msgid "Payments failed"
-msgstr ""
+msgstr "Thanh toán thất bại"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:26
 #, python-format
 msgid "Payments received"
-msgstr ""
+msgstr "Thanh toán đã nhận"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__journal_id
@@ -1387,6 +1413,15 @@ msgid ""
 "                reconcile the bank statement line with this temporary transfer account. Use reconciliation\n"
 "                templates to do it in one-click."
 msgstr ""
+"Các khoản thanh toán sẽ được vào sổ nhật kí này. Nếu bạn được thanh toán "
+"thẳng qua tài khoản ngân hàng của mình, \\ nchọn tài khoản ngân hàng của "
+"bạn. Nếu bạn được thanh toán theo đợt cho một số giao dịch, hãy tạo một nhật"
+" ký thanh toán \\ ncụ thể cho tổ chức thanh toán này để dễ dàng quản lý việc"
+" đối chiếu ngân hàng. Bạn giữ \\ nsố tiền trong tài khoản chuyển tạm thời "
+"của bạn (được tạo tự động khi bạn tạo \\ nnhật ký thanh toán). Sau đó, khi "
+"bạn được người thanh toán thanh toán trên tài khoản ngân hàng của mình, bạn "
+"\\ nđối chiếu dòng sao kê ngân hàng với tài khoản chuyển khoản tạm thời này."
+" Sử dụng mẫu đối chiếu \\ nđể làm điều đó trong một cú nhấp chuột."
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_paypal
@@ -1397,12 +1432,12 @@ msgstr "Paypal"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__paypal_seller_account
 msgid "Paypal Merchant ID"
-msgstr ""
+msgstr "PayPal ID của người bán"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__paypal_pdt_token
 msgid "Paypal PDT Token"
-msgstr ""
+msgstr "Mã PDT PayPal"
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -1412,7 +1447,7 @@ msgstr "Đang chờ"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__pending_msg
 msgid "Pending Message"
-msgstr "Thông điệp Treo"
+msgstr "Thông báo treo"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_phone
@@ -1422,7 +1457,7 @@ msgstr "Điện thoại"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "Please configure a payment acquirer."
-msgstr ""
+msgstr "Vui lòng cấu hình một tổ chức thanh toán."
 
 #. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:33
@@ -1431,6 +1466,8 @@ msgid ""
 "Please make a payment to <ul><li>Bank: %s</li><li>Account Number: "
 "%s</li><li>Account Holder: %s</li></ul>"
 msgstr ""
+"Vui lòng thanh toán đến <ul><li>Ngân hàng: %s</li><li>Số tài khoản: "
+"%s</li><li>Chủ tài khoản: %s</li></ul>"
 
 #. module: payment
 #. openerp-web
@@ -1463,14 +1500,14 @@ msgstr "Vui lòng sử dụng tên đơn hàng làm tham chiếu giao tiếp."
 #: code:addons/payment/static/src/xml/payment_processing.xml:139
 #, python-format
 msgid "Please wait ..."
-msgstr ""
+msgstr "Vui lòng đợi ..."
 
 #. module: payment
 #: model:ir.actions.server,name:payment.cron_post_process_payment_tx_ir_actions_server
 #: model:ir.cron,cron_name:payment.cron_post_process_payment_tx
 #: model:ir.cron,name:payment.cron_post_process_payment_tx
 msgid "Post process payment transactions"
-msgstr ""
+msgstr "Vào sổ quá trình thanh toán giao dịch"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -1494,48 +1531,48 @@ msgstr "Nhà cung cấp"
 #: code:addons/payment/static/src/xml/payment_processing.xml:19
 #, python-format
 msgid "Reason:"
-msgstr ""
+msgstr "Lý do:"
 
 #. module: payment
 #: selection:payment.acquirer,payment_flow:0
 msgid "Redirection to the acquirer website"
-msgstr ""
+msgstr "Chuyển hướng đến trang web của tổ chức thanh toán"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__reference
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 msgid "Reference"
-msgstr "Tham chiếu"
+msgstr "Mã tham chiếu"
 
 #. module: payment
 #: sql_constraint:payment.transaction:0
 msgid "Reference must be unique!"
-msgstr ""
+msgstr "Mã cần phải duy nhất!"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__acquirer_reference
 msgid "Reference of the TX as stored in the acquirer database"
-msgstr ""
+msgstr "Mã của TX được lưu trữ trong cơ sở dữ liệu của tổ chức thanh toán"
 
 #. module: payment
 #: constraint:payment.acquirer:0
 msgid "Required fields not filled"
-msgstr "Các trường bắt buộc không được điền"
+msgstr "Các trường bắt buộc chưa được điền"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__return_url
 msgid "Return URL after payment"
-msgstr ""
+msgstr "Quay trở lại đường dẫn sau khi thanh toán"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__registration_view_template_id
 msgid "S2S Form Template"
-msgstr ""
+msgstr "Mẫu S2S"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__save_token
 msgid "Save Cards"
-msgstr "Lưu card"
+msgstr "Lưu thẻ"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -1546,7 +1583,7 @@ msgstr "Lưu dữ liệu thanh toán của tôi"
 #: model:ir.actions.act_window,name:payment.payment_token_action
 #: model:ir.ui.menu,name:payment.payment_token_menu
 msgid "Saved Payment Data"
-msgstr "Dữ liệu Thanh toán Đã lưu"
+msgstr "Dữ liệu thanh toán Đã lưu"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment__payment_token_id
@@ -1556,12 +1593,12 @@ msgstr "Token thanh toán đã lưu"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__token_implemented
 msgid "Saving Card Data supported"
-msgstr "Hỗ trợ lưu trữ thông tin card"
+msgstr "Hỗ trợ lưu trữ thông tin thẻ"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_onboarding_payment_method
 msgid "Selected onboarding payment method"
-msgstr ""
+msgstr "Chọn phương thức thanh toán mới"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__sequence
@@ -1579,7 +1616,7 @@ msgstr "Trình tự"
 #: code:addons/payment/static/src/js/payment_form.js:369
 #, python-format
 msgid "Server Error"
-msgstr "Lỗi Máy chủ"
+msgstr "Lỗi Máy Chủ"
 
 #. module: payment
 #: selection:payment.transaction,type:0
@@ -1598,12 +1635,12 @@ msgstr "Lỗi máy chủ"
 #: code:addons/payment/static/src/xml/payment_processing.xml:138
 #, python-format
 msgid "Server error:"
-msgstr ""
+msgstr "Lỗi máy chủ:"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
 msgid "Set payments"
-msgstr ""
+msgstr "Chọn thanh toán"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__short_name
@@ -1614,7 +1651,7 @@ msgstr "Tên viết tắt"
 #: model:payment.acquirer,name:payment.payment_acquirer_sips
 #: selection:payment.acquirer,provider:0
 msgid "Sips"
-msgstr ""
+msgstr "Sips"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__image_small
@@ -1640,7 +1677,7 @@ msgstr "Các quốc gia cụ thể"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_acquirer_onboarding_state
 msgid "State of the onboarding payment acquirer step"
-msgstr ""
+msgstr "Trạng thái các bước thanh toán mới của tổ chức thanh toán"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__state
@@ -1652,17 +1689,17 @@ msgstr "Trạng thái"
 #: selection:payment.acquirer,provider:0
 #: selection:res.company,payment_onboarding_payment_method:0
 msgid "Stripe"
-msgstr ""
+msgstr "Stripe"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__stripe_publishable_key
 msgid "Stripe Publishable Key"
-msgstr ""
+msgstr "Stripe Publishable Key"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__stripe_secret_key
 msgid "Stripe Secret Key"
-msgstr ""
+msgstr "Stripe Secret Key"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__payment_icon_ids
@@ -1682,25 +1719,26 @@ msgstr "Kiểm thử"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__post_msg
 msgid "Thanks Message"
-msgstr "Thông điệp Cám ơn"
+msgstr "Thông điệp cám ơn"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:871
 #, python-format
 msgid "The %s payment acquirers are not allowed to manual capture mode!"
 msgstr ""
+"Tổ chức thanh toán %s không cho phép thực hiện thủ công chế độ lưu giữ!"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
 msgid "The SEPA QR Code informations are not set correctly."
-msgstr ""
+msgstr "Thông tin mã QR SEPA không đúng."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:660
 #, python-format
 msgid "The customer has selected %s to pay this document."
-msgstr ""
+msgstr "Khách hàng sẽ chọn %s để thanh toán cho giao dịch này."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:677
@@ -1709,6 +1747,7 @@ msgid ""
 "The transaction %s with %s for %s has been authorized. Waiting for "
 "capture..."
 msgstr ""
+"Giao dịch %s với %s cho %s đã dược ủy quyền. Hãy chờ đợi việc lưu giữ..."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:682
@@ -1716,13 +1755,13 @@ msgstr ""
 msgid ""
 "The transaction %s with %s for %s has been cancelled with the following "
 "message: %s"
-msgstr ""
+msgstr "Giao dịch %s với %s cho %s đã bị hủy bỏ với thông báo sau: %s"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:685
 #, python-format
 msgid "The transaction %s with %s for %s has been cancelled."
-msgstr ""
+msgstr "Giao dịch %s với %s cho %s đã bị hủy bỏ."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:679
@@ -1731,12 +1770,14 @@ msgid ""
 "The transaction %s with %s for %s has been confirmed. The related payment is"
 " posted: %s"
 msgstr ""
+"Giao dịch %s với %s cho %s đã được xác nhận. Thanh toán liên quan là: %s đã "
+"vào sổ: %s"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:675
 #, python-format
 msgid "The transaction %s with %s for %s is pending."
-msgstr ""
+msgstr "Giao dịch %s với %s cho %s đã bị treo."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_icon__image
@@ -1744,12 +1785,16 @@ msgid ""
 "This field holds the image used for this payment icon, limited to "
 "1024x1024px"
 msgstr ""
+"Trường này lưu trữ hình ảnh sử dụng cho biểu tưởng thanh toán, giới hạn "
+"1024x1024px"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__image
 msgid ""
 "This field holds the image used for this provider, limited to 1024x1024px"
 msgstr ""
+"Trường này lưu trữ hình ảnh sử dụng cho biểu tưởng nhà cung cấp, giới hạn "
+"1024x1024px"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__save_token
@@ -1759,10 +1804,10 @@ msgid ""
 " invoicing), you need it to automatically charge the customer when you issue"
 " an invoice."
 msgstr ""
-"Tùy chọn này cho phép khách hàng lưu thẻ tín dụng của họ làm mã thông báo "
-"thanh toán và sử dụng lại thẻ đó để mua sau. Nếu bạn quản lý đăng ký (lập "
-"hóa đơn định kỳ), bạn cần nó để tự động tính phí khách hàng khi bạn phát "
-"hành hóa đơn."
+"Tùy chọn này cho phép khách hàng lưu thẻ tín dụng của họ như mã token thanh "
+"toán và sử dụng lại thẻ đó để mua sau. Nếu bạn quản lý đăng ký (lập hóa đơn "
+"định kỳ), bạn cần nó để tự động tính phí khách hàng khi bạn phát hành hóa "
+"đơn."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__country_ids
@@ -1771,7 +1816,7 @@ msgid ""
 "selected it is available for all countries."
 msgstr ""
 "Cổng thanh toán này có sẵn cho các quốc gia được chọn. Nếu không có gì được "
-"chọn, nó có sẵn cho tất cả các quốc gia."
+"chọn, nó sẽ được sử dụng cho tất cả các quốc gia."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
@@ -1787,7 +1832,7 @@ msgstr ""
 #: code:addons/payment/static/src/xml/payment_processing.xml:117
 #, python-format
 msgid "This transaction has been cancelled."
-msgstr ""
+msgstr "Giao dịch này đã bị hủy."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_invoice__transaction_ids
@@ -1799,7 +1844,7 @@ msgstr "Giao dịch"
 msgid ""
 "Transfer information will be provided after choosing the payment aquirer."
 msgstr ""
-"Thông tin chuyển khoản sẽ được cung cấp sau khi chọn người thanh toán."
+"Thông tin chuyển khoản sẽ được cung cấp sau khi chọn tổ chức thanh toán."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__type
@@ -1811,17 +1856,17 @@ msgstr "Loại"
 #: code:addons/payment/static/src/xml/payment_processing.xml:138
 #, python-format
 msgid "Unable to contact the Odoo server."
-msgstr ""
+msgstr "Không thể kết nối với máy chủ."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__qr_code
 msgid "Use SEPA QR Code"
-msgstr ""
+msgstr "Sử dụng mã QR SEPA"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__date
 msgid "Validation Date"
-msgstr "Ngày Thẩm định"
+msgstr "Ngày thẩm định"
 
 #. module: payment
 #: selection:payment.transaction,type:0
@@ -1846,7 +1891,7 @@ msgstr "Đã xác thực"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__website_published
 msgid "Visible in Portal / Website"
-msgstr "Hiện Cổng thông tin/Website"
+msgstr "Hiện cổng thông tin/website"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.account_invoice_view_form_inherit_payment
@@ -1859,13 +1904,13 @@ msgstr "Giao dịch trống"
 #: code:addons/payment/static/src/xml/payment_processing.xml:87
 #, python-format
 msgid "Waiting for payment"
-msgstr ""
+msgstr "Đang đợi thành toán"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:666
 #, python-format
 msgid "Waiting for payment confirmation..."
-msgstr ""
+msgstr "Đang đợi thông tin thanh toán ..."
 
 #. module: payment
 #. openerp-web
@@ -1903,6 +1948,7 @@ msgstr "Chúng tôi không thể xóa phương thức thanh toán của bạn v�
 #, python-format
 msgid "We are not able to find your payment, but don't worry."
 msgstr ""
+"Chúng tôi không thể tìm khoản thanh toán của bạn, nhưng đừng lo lắng nhé."
 
 #. module: payment
 #. openerp-web
@@ -1916,21 +1962,21 @@ msgstr "Chúng tôi không thể chuyển hướng bạn đến biểu mẫu tha
 #: code:addons/payment/static/src/js/payment_form.js:182
 #, python-format
 msgid "We are not able to redirect you to the payment form. "
-msgstr ""
+msgstr "Chúng tôi không thể chuyển hướng bạn đến biểu mẫu thanh toán"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_processing.js:117
 #, python-format
 msgid "We are processing your payments, please wait ..."
-msgstr ""
+msgstr "Chúng tôi đang xử lý thanh toán của bạn, vui lòng chờ  ..."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:99
 #, python-format
 msgid "We are waiting for the payment acquirer to confirm the payment."
-msgstr ""
+msgstr "Chúng tôi đang chờ tổ chức thanh toán xác nhận khoản thanh toán."
 
 #. module: payment
 #. openerp-web
@@ -1950,13 +1996,13 @@ msgstr "Chuyển khoản ngân hàng"
 #: code:addons/payment/static/src/xml/payment_processing.xml:59
 #, python-format
 msgid "You can click here to be redirected to the confirmation page."
-msgstr ""
+msgstr "Bạn có thể bấm vào đây để chuyển hướng đến trang xác nhận."
 
 #. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:135
 #, python-format
 msgid "You have to set a journal for your payment acquirer %s."
-msgstr ""
+msgstr "Bạn phải chọn sổ nhật ký cho tổ chức thanh toán %s của bạn."
 
 #. module: payment
 #. openerp-web
@@ -1964,25 +2010,28 @@ msgstr ""
 #, python-format
 msgid "You should receive an email confirming your payment in a few minutes."
 msgstr ""
+"Bạn sẽ nhận được email xác nhận khoản thanh toán của bạn trong vài phút nữa."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:77
 #, python-format
 msgid "You will be notified when the payment is confirmed."
-msgstr ""
+msgstr "Bạn sẽ được thông báo khi thanh toán được xác nhận. "
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:58
 #, python-format
 msgid "You will be notified when the payment is fully confirmed."
-msgstr ""
+msgstr "Bạn sẽ được thông báo khi thanh toán được xác nhận đầy đủ."
 
 #. module: payment
 #: model_terms:payment.acquirer,pre_msg:payment.payment_acquirer_stripe
 msgid "You will be prompted with Stripe Payment page for payment information."
 msgstr ""
+"Bạn sẽ được nhắc nhở với trang thanh toán Stripe để biết thông tin thanh "
+"toán"
 
 #. module: payment
 #: model_terms:payment.acquirer,pre_msg:payment.payment_acquirer_adyen
@@ -1999,7 +2048,7 @@ msgid ""
 "You will be redirected to the Authorize website after clicking on the "
 "payment button."
 msgstr ""
-"Bạn sẽ được chuyển hướng đến trang web Ủy quyền sau khi nhấp vào nút thanh "
+"Bạn sẽ được chuyển hướng đến trang web Authorize sau khi nhấp vào nút thanh "
 "toán."
 
 #. module: payment
@@ -2050,14 +2099,14 @@ msgstr ""
 #: code:addons/payment/static/src/xml/payment_processing.xml:39
 #, python-format
 msgid "Your order has been processed."
-msgstr ""
+msgstr "Đơn đặt hàng của bạn đã được xử lý."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:36
 #, python-format
 msgid "Your order is being processed, please wait ..."
-msgstr ""
+msgstr "Đơn đặt hàng của bạn đang được xử lý, vui lòng chờ ..."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
@@ -2069,14 +2118,14 @@ msgstr "Thanh toán của bạn đã được chứng thực."
 #: code:addons/payment/static/src/xml/payment_processing.xml:76
 #, python-format
 msgid "Your payment has been received but need to be confirmed manually."
-msgstr ""
+msgstr "Thanh toán của bạn đã nhận nhưng cần xác nhận thủ công."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:57
 #, python-format
 msgid "Your payment is in pending state."
-msgstr ""
+msgstr "Thanh toán của bạn đang treo."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
@@ -2139,12 +2188,12 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "reference: the transaction reference number"
-msgstr "tham khảo: số giao dịch tham khảo"
+msgstr "Mã giao dịch: số giao dịch tham khảo"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "to choose another payment method."
-msgstr ""
+msgstr "để chọn phương thức thanh toán khác."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
@@ -2159,4 +2208,4 @@ msgstr "tx_values: giá trị giao dịch"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "user: current user browse record"
-msgstr "người dùng: là người dùng hiện hành mà truy cập bản ghi"
+msgstr "người dùng: là người dùng hiện hành truy cập bản ghi"

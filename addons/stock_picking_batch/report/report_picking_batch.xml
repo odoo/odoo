@@ -32,7 +32,7 @@
                                             <span t-field="pick.name"/>
                                         </td>
                                         <td>
-                                            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', pick.name, 300, 50)" alt="Barcode"/>
+                                            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', pick.name, 600, 100)" style="width:300px;height:50px" alt="Barcode"/>
                                         </td>
                                         <td>
                                             <span t-field="pick.state"/>

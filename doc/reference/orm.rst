@@ -708,6 +708,34 @@ Model Reference
 
         :type: bool
 
+     .. attribute:: _parent_name
+
+         Alternative field to use as parent, used by indexed storage of the tree structure of records
+        (default: ``'parent_id'``)
+
+         :type: str
+
+     .. attribute:: _date_name
+
+         Alternative field to use for default calendar view
+        (default: ``'date'``)
+
+         :type: str     
+
+     .. attribute:: _fold_name
+
+         Alternative field to determine folded groups in kanban views
+        (default: ``'fold'``)
+
+         :type: str 
+
+     .. attribute:: _translate
+
+         False disables translations export for this model
+        (default: ``True``)
+
+         :type: bool
+
     .. rubric:: CRUD
 
     .. automethod:: create
@@ -1116,6 +1144,12 @@ A domain is a list of criteria, each criterion being a triple (either a
         Takes the semantics of the model into account (i.e following the
         relationship field named by
         :attr:`~odoo.models.Model._parent_name`).
+    ``parent_of``
+        is a parent (ascendant) of a ``value`` record.
+
+        Takes the semantics of the model into account (i.e following the
+        relationship field named by
+        :attr:`~odoo.models.Model._parent_name`). 
 
 ``value``
     variable type, must be comparable (through ``operator``) to the named

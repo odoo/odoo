@@ -131,13 +131,13 @@ class LandedCost(models.Model):
         prec_digits = self.env.user.company_id.currency_id.decimal_places
         for landed_cost in self:
             total_amount = sum(landed_cost.valuation_adjustment_lines.mapped('additional_landed_cost'))
-            if not tools.float_compare(total_amount, landed_cost.amount_total, precision_digits=prec_digits) == 0:
+            if not tools.float_is_zero(total_amount - landed_cost.amount_total, precision_digits=prec_digits):
                 return False
 
             val_to_cost_lines = defaultdict(lambda: 0.0)
             for val_line in landed_cost.valuation_adjustment_lines:
                 val_to_cost_lines[val_line.cost_line_id] += val_line.additional_landed_cost
-            if any(tools.float_compare(cost_line.price_unit, val_amount, precision_digits=prec_digits) != 0
+            if any(not tools.float_is_zero(cost_line.price_unit - val_amount, precision_digits=prec_digits)
                    for cost_line, val_amount in val_to_cost_lines.items()):
                 return False
         return True

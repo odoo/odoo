@@ -20,6 +20,11 @@ class MailMessage(models.Model):
         message_values = self.read(fields_list)
         message_tree = dict((m.id, m) for m in self.sudo())
         self._message_read_dict_postprocess(message_values, message_tree)
+        IrAttachmentSudo = self.env['ir.attachment'].sudo()
+        for message in message_values:
+            for attachment in message.get('attachment_ids', []):
+                if not attachment.get('access_token'):
+                    attachment['access_token'] = IrAttachmentSudo.browse(attachment['id']).generate_access_token()[0]
         return message_values
 
     @api.model

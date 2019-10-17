@@ -206,7 +206,7 @@ class PosConfig(models.Model):
         for pos_config in self:
             session = pos_config.session_ids.filtered(lambda s: s.state in ['opening_control', 'opened', 'closing_control'] and not s.rescue)
             if session:
-                pos_config.pos_session_username = session[0].user_id.name
+                pos_config.pos_session_username = session[0].user_id.sudo().name
                 pos_config.pos_session_state = session[0].state
                 pos_config.pos_session_duration = (
                     datetime.now() - session[0].start_at

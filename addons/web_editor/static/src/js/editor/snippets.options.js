@@ -703,6 +703,16 @@ registry.colorpicker = SnippetOption.extend({
             this.$el.find('.dropdown-menu').append($pt);
         }
 
+        // TODO refactor in master
+        // The primary and secondary are hardcoded here (but marked as hidden)
+        // so they can be removed from snippets when selecting another color.
+        // Normally, the chosable colors do not contain them, which prevents
+        // them to be removed. Indeed, normally, the 'alpha' and 'beta' colors
+        // (which are the same) are displayed instead... but not for all themes.
+        var $colorpicker = this.$el.find('.colorpicker');
+        $colorpicker.append($('<button/>', {'class': 'd-none', 'data-color': 'primary'}));
+        $colorpicker.append($('<button/>', {'class': 'd-none', 'data-color': 'secondary'}));
+
         var classes = [];
         this.$el.find('.colorpicker button').each(function () {
             var $color = $(this);
@@ -770,7 +780,7 @@ registry.colorpicker = SnippetOption.extend({
         if ($selected.length) {
             if ($selected.data('color')) {
                 this.$target.addClass(this.colorPrefix + $selected.data('color'));
-            } else {
+            } else if ($selected.hasClass('o_custom_color')) {
                 this.$target.css('background-color', $selected.css('background-color'));
             }
         }

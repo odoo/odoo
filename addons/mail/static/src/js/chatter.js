@@ -96,12 +96,7 @@ var Chatter = Widget.extend({
             }));
         }
         // render and append the buttons
-        this._$topbar.prepend(QWeb.render('mail.chatter.Buttons', {
-            newMessageButton: !!this.fields.thread,
-            logNoteButton: this.hasLogButton,
-            scheduleActivityButton: !!this.fields.activity,
-            isMobile: config.device.isMobile,
-        }));
+        this._$topbar.prepend(this._renderButtons());
         // start and append the widgets
         var fieldDefs = _.invoke(this.fields, 'appendTo', $('<div>'));
         var def = this._dp.add($.when.apply($, fieldDefs));
@@ -405,6 +400,14 @@ var Chatter = Widget.extend({
             // disable widgets in create mode, otherwise enable
             self._isCreateMode ? self._disableChatter() : self._enableChatter();
             $spinner.remove();
+        });
+    },
+    _renderButtons: function () {
+        return QWeb.render('mail.chatter.Buttons', {
+            newMessageButton: !!this.fields.thread,
+            logNoteButton: this.hasLogButton,
+            scheduleActivityButton: !!this.fields.activity,
+            isMobile: config.device.isMobile,
         });
     },
     /**

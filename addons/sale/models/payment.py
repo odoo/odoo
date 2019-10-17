@@ -27,7 +27,7 @@ class PaymentTransaction(models.Model):
     def _compute_sale_order_reference(self, order):
         self.ensure_one()
         if self.acquirer_id.so_reference_type == 'so_name':
-            identification_number = int(re.match('.*?([0-9]+)$', order.name).group(1))
+            identification_number = int(re.match('.*?([0-9]+)[^0-9]*$', order.name).group(1))
             prefix = order.name
         else:
             # self.acquirer_id.so_reference_type == 'partner'

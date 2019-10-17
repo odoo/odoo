@@ -169,8 +169,9 @@
                 display: inline-block;
                 word-break: break-all;
             }
-            img {
+            :not(.o_image_box) > img {
                 max-width: 100%;
+                height: auto;
             }
 
             .o_mail_body_long {

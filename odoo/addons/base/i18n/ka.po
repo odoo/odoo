@@ -5854,12 +5854,12 @@ msgstr "ანგარიშთა გეგმები"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__partner_id
 msgid "Account Holder"
-msgstr ""
+msgstr "ანგარიშის მფლობელი"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__acc_holder_name
 msgid "Account Holder Name"
-msgstr ""
+msgstr "ანგარიშის მფლობელის სახელი"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_invoice_extract
@@ -5907,6 +5907,8 @@ msgid ""
 "Account holder name, in case it is different than the name of the Account "
 "Holder"
 msgstr ""
+"ანგარიშის მფლობელის სახელი, იმშემტხვევაში, თუ ის განსხვავებულია ამგარიშის "
+"მფლობელისგან"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting
@@ -7054,6 +7056,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_barcodes_mobile
 msgid "Barcode scan in Mobile"
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/ir_qweb_fields.py:607
+#, python-format
+msgid "Barcode symbology"
 msgstr ""
 
 #. module: base
@@ -22844,7 +22852,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_address_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
-msgid "e.g. www.odoo.com"
+msgid "e.g. https://www.odoo.com"
 msgstr ""
 
 #. module: base

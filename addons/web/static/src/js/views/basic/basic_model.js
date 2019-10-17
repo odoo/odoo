@@ -857,6 +857,7 @@ var BasicModel = AbstractModel.extend({
         });
         _.each(fields, function (field) {
             var dataPoint;
+            record.data[field.name] = null;
             if (field.type === 'many2one') {
                 if (field.value) {
                     var id = _.isArray(field.value) ? field.value[0] : field.value;
@@ -1455,9 +1456,9 @@ var BasicModel = AbstractModel.extend({
         // apply changes to local data
         for (var fieldName in changes) {
             field = record.fields[fieldName];
-            if (field.type === 'one2many' || field.type === 'many2many') {
+            if (field && (field.type === 'one2many' || field.type === 'many2many')) {
                 defs.push(this._applyX2ManyChange(record, fieldName, changes[fieldName], options.viewType, options.allowWarning));
-            } else if (field.type === 'many2one' || field.type === 'reference') {
+            } else if (field && (field.type === 'many2one' || field.type === 'reference')) {
                 defs.push(this._applyX2OneChange(record, fieldName, changes[fieldName]));
             } else {
                 record._changes[fieldName] = changes[fieldName];
@@ -1472,7 +1473,7 @@ var BasicModel = AbstractModel.extend({
             var onChangeFields = []; // the fields that have changed and that have an on_change
             for (var fieldName in changes) {
                 field = record.fields[fieldName];
-                if (field.onChange) {
+                if (field && field.onChange) {
                     var isX2Many = field.type === 'one2many' || field.type === 'many2many';
                     if (!isX2Many || (self._isX2ManyValid(record._changes[fieldName] || record.data[fieldName]))) {
                         onChangeFields.push(fieldName);

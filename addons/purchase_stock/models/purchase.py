@@ -125,7 +125,11 @@ class PurchaseOrder(models.Model):
             result['domain'] = "[('id','in',%s)]" % (pick_ids.ids)
         elif len(pick_ids) == 1:
             res = self.env.ref('stock.view_picking_form', False)
-            result['views'] = [(res and res.id or False, 'form')]
+            form_view = [(res and res.id or False, 'form')]
+            if 'views' in result:
+                result['views'] = form_view + [(state,view) for state,view in result['views'] if view != 'form']
+            else:
+                result['views'] = form_view
             result['res_id'] = pick_ids.id
         return result
 
@@ -338,12 +342,14 @@ class PurchaseOrderLine(models.Model):
         if float_compare(diff_quantity, 0.0,  precision_rounding=self.product_uom.rounding) > 0:
             quant_uom = self.product_id.uom_id
             get_param = self.env['ir.config_parameter'].sudo().get_param
-            if self.product_uom.id != quant_uom.id and get_param('stock.propagate_uom') != '1':
+            # Always call '_compute_quantity' to round the diff_quantity. Indeed, the PO quantity
+            # is not rounded automatically following the UoM.
+            if get_param('stock.propagate_uom') != '1':
                 product_qty = self.product_uom._compute_quantity(diff_quantity, quant_uom, rounding_method='HALF-UP')
                 template['product_uom'] = quant_uom.id
                 template['product_uom_qty'] = product_qty
             else:
-                template['product_uom_qty'] = diff_quantity
+                template['product_uom_qty'] = self.product_uom._compute_quantity(diff_quantity, self.product_uom, rounding_method='HALF-UP')
             res.append(template)
         return res
 

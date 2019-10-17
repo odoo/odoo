@@ -5,6 +5,9 @@
         <field name="name">res.config.settings.view.form.inherit.website.mass.mailing</field>
         <field name="model">res.config.settings</field>
         <field name="arch" type="xml">
+          <xpath expr="//h2[@id='mailing_list_settings_title']" position="attributes">
+            <attribute name="invisible">0</attribute>
+          </xpath>
             <xpath expr="//div[@id='mailing_list']" position="inside">
                 <div class="col-lg-6 o_setting_box col-12" title="This adds a new Newsletter Popup snippet to drag &amp; drop on your website pages. It triggers a popup when visitors land on the page. This popup prompts them to enter their email address to join a mailing list.">
                     <div class="o_setting_left_pane">

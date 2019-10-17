@@ -135,7 +135,7 @@ Sample script
 Here are 2 examples of database upgrade request creation using:
 
 * one in the python programming language using the requests library
-* one in the bash programming language using `curl <http://curl.haxx.se>`_ (tool
+* one in the bash programming language using `curl <https://curl.haxx.se>`_ (tool
   for transfering data using http) and `jq <https://stedolan.github.io/jq>`_ (JSON processor):
 
 .. rst-class:: setup doc-aside

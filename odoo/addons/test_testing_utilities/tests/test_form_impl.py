@@ -497,6 +497,17 @@ class TestO2M(TransactionCase):
     def test_o2m_self_recursive(self):
         Form(self.env['test_testing_utilities.recursive'], view='test_testing_utilities.o2m_recursive_relation_view')
 
+    def test_o2m_attrs(self):
+        Model = self.env['test_testing_utilities.parent'].with_context(
+            default_subs=[{
+                'value': 5,
+            }, {
+                'value': 7,
+            }]
+        )
+        f = Form(Model, view='test_testing_utilities.o2m_modifier')
+        f.save()
+
 class TestEdition(TransactionCase):
     """ These use the context manager form as we don't need the record
     post-save (we already have it) and it's easier to see what bits act on

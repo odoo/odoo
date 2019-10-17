@@ -468,12 +468,11 @@
                                         <div
                                             t-if="line.discount &gt;= 0"
                                             t-field="line.price_unit"
-                                            t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'
                                             t-att-style="line.discount and 'text-decoration: line-through' or None"
                                             t-att-class="(line.discount and 'text-danger' or '') + ' text-right'"
                                         />
                                         <div t-if="line.discount">
-                                            <t t-esc="(1-line.discount / 100.0) * line.price_unit" t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'/>
+                                            <t t-esc="(1-line.discount / 100.0) * line.price_unit" t-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
                                         </div>
                                     </td>
                                     <td t-if="display_discount" t-attf-class="text-right {{ 'd-none d-sm-table-cell' if report_type == 'html' else '' }}">

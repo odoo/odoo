@@ -94,12 +94,9 @@ class Partner(models.Model):
                  'associate_member.membership_state')
     def _compute_membership_cancel(self):
         for partner in self:
-            if partner.membership_state == 'canceled':
-                partner.membership_cancel = self.env['membership.membership_line'].search([
-                    ('partner', '=', partner.id)
-                ], limit=1, order='date_cancel').date_cancel
-            else:
-                partner.membership_cancel = False
+            partner.membership_cancel = self.env['membership.membership_line'].search([
+                ('partner', '=', partner.id)
+            ], limit=1, order='date_cancel desc').date_cancel
 
     def _membership_state(self):
         """This Function return Membership State For Given Partner. """

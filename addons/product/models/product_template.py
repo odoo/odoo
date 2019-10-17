@@ -394,7 +394,7 @@ class ProductTemplate(models.Model):
     @api.multi
     def name_get(self):
         # Prefetch the fields used by the `name_get`, so `browse` doesn't fetch other fields
-        self.read(['name', 'default_code'])
+        self.browse(self.ids).read(['name', 'default_code'])
         return [(template.id, '%s%s' % (template.default_code and '[%s] ' % template.default_code or '', template.name))
                 for template in self]
 
@@ -407,13 +407,20 @@ class ProductTemplate(models.Model):
 
         Product = self.env['product.product']
         templates = self.browse([])
+        domain_no_variant = [('product_variant_ids', '=', False)]
         while True:
             domain = templates and [('product_tmpl_id', 'not in', templates.ids)] or []
             args = args if args is not None else []
             products_ns = Product._name_search(name, args+domain, operator=operator, name_get_uid=name_get_uid)
             products = Product.browse([x[0] for x in products_ns])
             templates |= products.mapped('product_tmpl_id')
-            if (not products) or (limit and (len(templates) > limit)):
+            current_round_templates = self.browse([])
+            if not products:
+                domain_template = args + domain_no_variant + (templates and [('id', 'not in', templates.ids)] or [])
+                template_ns = super(ProductTemplate, self)._name_search(name=name, args=domain_template, operator=operator, limit=limit, name_get_uid=name_get_uid)
+                current_round_templates |= self.browse([ns[0] for ns in template_ns])
+                templates |= current_round_templates
+            if (not products and not current_round_templates) or (limit and (len(templates) > limit)):
                 break
 
         # re-apply product.template order + name_get

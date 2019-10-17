@@ -12,17 +12,17 @@
 # Somchart Jabsung <jabsung.s@gmail.com>, 2018
 # Martin Trigaux, 2018
 # monchai7 <montchye@gmail.com>, 2018
-# Pornvibool Tippayawat <pornvibool.t@gmail.com>, 2019
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2019
 # Panupong Jantapoon <panupong.jtp@gmail.com>, 2019
+# Pornvibool Tippayawat <pornvibool.t@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-29 10:09+0000\n"
+"POT-Creation-Date: 2019-08-08 13:35+0000\n"
 "PO-Revision-Date: 2018-08-24 09:24+0000\n"
-"Last-Translator: Panupong Jantapoon <panupong.jtp@gmail.com>, 2019\n"
+"Last-Translator: Pornvibool Tippayawat <pornvibool.t@gmail.com>, 2019\n"
 "Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1147,7 +1147,7 @@ msgstr ""
 #. module: sale
 #: selection:product.template,invoice_policy:0
 msgid "Delivered quantities"
-msgstr ""
+msgstr "จำนวนที่ถูกส่งมอบ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_invoice__partner_shipping_id
@@ -2138,7 +2138,7 @@ msgstr "ชำระเงินออนไลน์"
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__portal_confirmation_sign
 #: model:ir.model.fields,field_description:sale.field_sale_order__require_signature
 msgid "Online Signature"
-msgstr ""
+msgstr "ลายเซ็นออนไลน์"
 
 #. module: sale
 #. openerp-web
@@ -2272,7 +2272,7 @@ msgstr ""
 #. module: sale
 #: selection:product.template,invoice_policy:0
 msgid "Ordered quantities"
-msgstr ""
+msgstr "จำนวนที่สั่งซื้อ"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_order
@@ -2949,7 +2949,7 @@ msgstr "การขายเสร็จสิ้น"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Sales Information"
-msgstr "ข้องมูลการขาย"
+msgstr "ข้อมูลการขาย"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:271
@@ -3260,7 +3260,7 @@ msgstr "ส่งสินค้า"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery
 msgid "Shipping Costs"
-msgstr ""
+msgstr "ค่าใช้จ่ายการจัดส่ง"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3421,7 +3421,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_by_group
 msgid "Tax amount by group"
-msgstr ""
+msgstr "จำนวนภาษีตามกลุ่ม"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_tax
@@ -3740,7 +3740,7 @@ msgstr "ราคารวม"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_tax
 msgid "Total Tax"
-msgstr ""
+msgstr "ภาษีทั้งหมด"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
@@ -3865,7 +3865,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__price_subtotal
 msgid "Untaxed Total"
-msgstr ""
+msgstr "ทั้งหมดไม่รวมภาษี"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:402
@@ -4026,6 +4026,14 @@ msgid ""
 "You can set here the communication type that will appear on sales orders.The"
 " communication will be given to the customer when they choose the payment "
 "method."
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/models/sale.py:1115
+#, python-format
+msgid ""
+"You cannot change the type of a sale order line. Instead you should delete "
+"the current line and create a new line of the proper type."
 msgstr ""
 
 #. module: sale

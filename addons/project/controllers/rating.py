@@ -9,7 +9,7 @@ from odoo.http import request
 
 class RatingProject(http.Controller):
 
-    @http.route(['/project/rating/'], type='http', auth="public", website=True)
+    @http.route(['/project/rating'], type='http', auth="public", website=True)
     def index(self, **kw):
         projects = request.env['project.project'].sudo().search([('rating_status', '!=', 'no'), ('portal_show_rating', '=', True)])
         values = {'projects': projects}

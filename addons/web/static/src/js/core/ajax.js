@@ -29,9 +29,9 @@ function genericJsonRpc (fct_name, params, settings, fct) {
         core.bus.trigger('rpc:result', data, result);
         if (result.error !== undefined) {
             if (result.error.data.arguments[0] !== "bus.Bus not available in test mode") {
-                var func = console.error;
+                var func = console.error.bind(console);
                 if (result.error.data.exception_type === "user_error") {
-                    func = console.log;
+                    func = console.log.bind(console);
                 }
                 func(
                     "Server application error\n",

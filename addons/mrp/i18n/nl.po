@@ -1978,9 +1978,9 @@ msgid ""
 "                of workers and/or machines, they are used for costing, scheduling, capacity planning, etc.\n"
 "                The Work Centers are defined on the Routing's operations."
 msgstr ""
-"Productie handelingen worden verwerkt in werkcentra. Een werkcentrum kan worden samengesteld\n"
+"Productie handelingen worden verwerkt in werkplek. Een werkplek kan worden samengesteld\n"
 " uit werknemers en/of machines, ze worden gebruikt voor calculatie, planning, capaciteitsplanning, etc.\n"
-" De werkcentra worden gedefinieerd bij de bewerkingen van de routering."
+" De werkplek worden gedefinieerd bij de bewerkingen van de routing."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_kanban_action
@@ -1989,9 +1989,9 @@ msgid ""
 "                workers and/or machines, they are used for costing, scheduling, capacity planning, etc.\n"
 "                The Work Centers are defined on the Routing's operations."
 msgstr ""
-"Productie handelingen worden verwerkt in werkcentra. Een werkcentrum kan worden samengesteld\n"
+"Productie handelingen worden verwerkt in werkplek. Een werkplek kan worden samengesteld\n"
 " uit werknemers en/of machines, ze worden gebruikt voor calculatie, planning, capaciteitsplanning, etc.\n"
-" De werkcentra worden gedefinieerd bij de bewerkingen van de routering."
+" De werkplek worden gedefinieerd bij de bewerkingen van de routing."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -4457,6 +4457,13 @@ msgid "You cannot delete an unbuild order if the state is 'Done'."
 msgstr ""
 "Het is niet mogelijk een demontageorder te verwijderen welke in de fase "
 "'Gereed' is."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_production.py:533
+#, python-format
+msgid "You cannot produce a MO with a bom kit product."
+msgstr ""
+"Het is niet mogelijk een productieorder te verwerken met een kit stuklijst."
 
 #. module: mrp
 #: code:addons/mrp/wizard/mrp_product_produce.py:82

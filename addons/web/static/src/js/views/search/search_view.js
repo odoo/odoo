@@ -145,8 +145,13 @@ var InputView = Widget.extend({
         focus: function () { this.trigger('focused', this); },
         blur: function () { this.$el.val(''); this.trigger('blurred', this); },
         keydown: 'onKeydown',
+        'compositionend': '_onCompositionend',
+        'compositionstart': '_onCompositionstart',
     },
     onKeydown: function (e) {
+        if (this._isComposing) {
+            return;
+        }
         switch (e.which) {
             case $.ui.keyCode.BACKSPACE:
                 if(this.$el.val() === '') {
@@ -169,7 +174,21 @@ var InputView = Widget.extend({
                 }
                 break;
         }
-    }
+    },
+    /**
+     * @private
+     * @param {CompositionEvent} ev
+     */
+    _onCompositionend: function (ev) {
+        this._isComposing = false;
+    },
+    /**
+     * @private
+     * @param {CompositionEvent} ev
+     */
+    _onCompositionstart: function (ev) {
+        this._isComposing = true;
+    },
 });
 
 var FacetView = Widget.extend({
@@ -308,6 +327,9 @@ var SearchView = Widget.extend({
             this.toggle_buttons();
         },
         'keydown .o_searchview_input, .o_searchview_facet': function (e) {
+            if (this._isInputComposing) {
+                return;
+            }
             switch(e.which) {
                 case $.ui.keyCode.LEFT:
                     this.focusPreceding(e.target);
@@ -327,6 +349,8 @@ var SearchView = Widget.extend({
                     }
             }
         },
+        'compositionend .o_searchview_input': '_onCompositionendInput',
+        'compositionstart .o_searchview_input': '_onCompositionstartInput',
     },
     custom_events: {
         menu_item_toggled: '_onItemToggled',
@@ -1076,6 +1100,21 @@ var SearchView = Widget.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+
+    /**
+     * @rivate
+     * @param {CompositionEvent} ev
+     */
+    _onCompositionendInput: function () {
+        this._isInputComposing = false;
+    },
+    /**
+     * @rivate
+     * @param {CompositionEvent} ev
+     */
+    _onCompositionstartInput: function () {
+        this._isInputComposing = true;
+    },
     /**
      *
      * this function is called in response to an event 'on_item_toggled'.

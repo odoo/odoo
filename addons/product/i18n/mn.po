@@ -7,6 +7,8 @@
 # Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2018
 # Onii Onii <onii0223@yahoo.com>, 2018
 # Batzul B <batzul.active@gmail.com>, 2018
+# Baasansuren Sharavsuren <baasansuren@bumanit.mn>, 2019
+# nurbakhit nurka <nurbakhit@bumanit.mn>, 2019
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
 # 
 msgid ""
@@ -127,7 +129,7 @@ msgstr "<strong>Үнийн Хүснэгтийн Нэр</strong>:<br/>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_simple_label
 msgid "<strong>Price:</strong>"
-msgstr ""
+msgstr "Үнэ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist
@@ -173,6 +175,9 @@ msgid ""
 "A price is a set of sales prices or rules to compute the price of sales order lines based on products, product categories, dates and ordered quantities.\n"
 "                This is the perfect tool to handle several pricings, seasonal discounts, etc."
 msgstr ""
+"Үнэ нь бараа, барааны төрөл, огноо болон захиалгын тоо, хэмжээнд суурилсан "
+"захиалгын мөрөнд хэрэгжих үнийг тооцоолох зориулалт бүхий худалдах үнүүд "
+"болон дүрмүүдийн бүрдэл юм"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__type
@@ -248,7 +253,7 @@ msgstr ""
 #: model:product.template.attribute.value,name:product.product_template_attribute_value_1
 #: model:product.template.attribute.value,name:product.product_template_attribute_value_2
 msgid "Aluminium"
-msgstr ""
+msgstr "хөнгөн цагаан"
 
 #. module: product
 #: selection:product.attribute,create_variant:0
@@ -430,7 +435,7 @@ msgstr "Дэд Ангилалууд"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Choose the unit to measure weight"
-msgstr ""
+msgstr "Жинг хэмжих нэгжээ сонгоно уу"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -484,7 +489,7 @@ msgstr "Үнэ Тооцоолох"
 #: model:product.product,name:product.product_product_11b
 #: model:product.template,name:product.product_product_11b_product_template
 msgid "Conference Chair"
-msgstr ""
+msgstr "Хурлын сандал"
 
 #. module: product
 #: model:ir.model,name:product.model_res_config_settings
@@ -494,7 +499,7 @@ msgstr "Тохируулга"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Configure Variants"
-msgstr ""
+msgstr "Хувилбар тохируулах"
 
 #. module: product
 #: model:product.category,name:product.product_category_consumable
@@ -510,12 +515,12 @@ msgstr "Холбох хаяг"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging__qty
 msgid "Contained Quantity"
-msgstr ""
+msgstr "Тоо, хэмжээ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_form_view
 msgid "Contained quantity"
-msgstr ""
+msgstr "Тоо, хэмжээ"
 
 #. module: product
 #: model:product.product,name:product.product_product_13
@@ -541,7 +546,7 @@ msgstr "Өртөг"
 #: model:ir.model.fields,field_description:product.field_product_product__cost_currency_id
 #: model:ir.model.fields,field_description:product.field_product_template__cost_currency_id
 msgid "Cost Currency"
-msgstr ""
+msgstr "Өртгийн вальют"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template__standard_price
@@ -571,12 +576,12 @@ msgstr "Улсын Бүлгүүд"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_variant
 msgid "Create Variants"
-msgstr ""
+msgstr "Хувилбар үүсгэх"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
 msgid "Create a new pricelist"
-msgstr ""
+msgstr "Шинэ үнийн хүснэгт үүсгэх"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_template_action
@@ -677,7 +682,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_product__uom_id
 #: model:ir.model.fields,help:product.field_product_template__uom_id
 msgid "Default unit of measure used for all stock operations."
-msgstr ""
+msgstr "Агуулахын үйл ажиллагаанд ашиглагдах үндсэн хэмжих нэгж"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__uom_po_id
@@ -691,7 +696,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_product__seller_ids
 #: model:ir.model.fields,help:product.field_product_template__seller_ids
 msgid "Define vendor pricelists."
-msgstr ""
+msgstr "Нийлүүлэгчийн үнийн хүснэгт тодорхойлох"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__delay
@@ -1030,7 +1035,7 @@ msgstr ""
 #: code:addons/product/models/product_pricelist.py:348
 #, python-format
 msgid "Import Template for Pricelists"
-msgstr ""
+msgstr "Үнийн хүснэгтийн загвар импортлох"
 
 #. module: product
 #: code:addons/product/models/product_template.py:573
@@ -1042,7 +1047,7 @@ msgstr "Барааны загвар импортлох"
 #: code:addons/product/models/product.py:665
 #, python-format
 msgid "Import Template for Vendor Pricelists"
-msgstr ""
+msgstr "Нийлүүлэгчийн үнийн хүснэгтийн загвар импортлох"
 
 #. module: product
 #: model:product.product,name:product.product_product_24
@@ -1075,7 +1080,7 @@ msgstr "Барааны Олон улсын хувийн дугаар"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Inventory"
-msgstr "Хадгалах"
+msgstr "Агуулах"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_is_follower
@@ -1086,7 +1091,7 @@ msgstr "Дагагч эсэх"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__is_product_variant
 msgid "Is Product Variant"
-msgstr ""
+msgstr "Барааны хувилбар"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template__is_product_variant
@@ -1096,7 +1101,7 @@ msgstr ""
 #. module: product
 #: selection:res.config.settings,product_weight_in_lbs:0
 msgid "Kilogram"
-msgstr ""
+msgstr "Килограм"
 
 #. module: product
 #: model:product.product,name:product.product_product_6
@@ -1359,7 +1364,7 @@ msgstr "Уншаагүй зурвасын тоо"
 #: model:product.product,name:product.product_delivery_01
 #: model:product.template,name:product.product_delivery_01_product_template
 msgid "Office Chair"
-msgstr ""
+msgstr "Оффисын сандал"
 
 #. module: product
 #: model:product.product,name:product.product_product_12
@@ -1694,17 +1699,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_stock_packaging
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_tree_view
 msgid "Product Packagings"
-msgstr ""
+msgstr "Барааны савлагаа"
 
 #. module: product
 #: model:ir.model,name:product.model_product_price_history
 msgid "Product Price List History"
-msgstr ""
+msgstr "Барааны үнийн хүснэгтийн түүх"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_pricelist
 msgid "Product Price List Report"
-msgstr ""
+msgstr "Барааны үнийн хүснэгтийн тайлан"
 
 #. module: product
 #: model:ir.model,name:product.model_product_price_list
@@ -2079,7 +2084,7 @@ msgstr "Төмөр"
 #. module: product
 #: selection:product.template,type:0
 msgid "Storable Product"
-msgstr ""
+msgstr "Нөөцлөх бараа"
 
 #. module: product
 #: model:product.product,name:product.product_product_7
@@ -2228,7 +2233,7 @@ msgstr "Агуулгын жин Кг- аар, ямар ч баглалт оро�
 #: code:addons/product/models/product_template.py:1010
 #, python-format
 msgid "There are no possible combination."
-msgstr ""
+msgstr "Боломжит комбинаци алга байна"
 
 #. module: product
 #: code:addons/product/models/product_template.py:1005
@@ -2423,7 +2428,7 @@ msgstr "Үнийн хүснэгтийг ашиглан захиалгчидаа�
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Valid"
-msgstr ""
+msgstr "Батлагдсан"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__valid_archived_variant_ids
@@ -2532,7 +2537,7 @@ msgstr "Хувилбарууд"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_product_variant
 msgid "Variants and Options"
-msgstr ""
+msgstr "Онцлог утга болон сонголтууд"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__name
@@ -2839,7 +2844,7 @@ msgstr "кг"
 #: code:addons/product/models/product_template.py:566
 #, python-format
 msgid "product"
-msgstr ""
+msgstr "бараа"
 
 #. module: product
 #: model:product.product,description_sale:product.consu_delivery_02

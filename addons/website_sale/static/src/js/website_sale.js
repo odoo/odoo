@@ -208,7 +208,7 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
             .data('combination');
 
         if (combination) {
-            return JSON.parse(combination);
+            return combination;
         }
         return ProductConfiguratorMixin.getSelectedVariantValues.apply(this, arguments);
     },

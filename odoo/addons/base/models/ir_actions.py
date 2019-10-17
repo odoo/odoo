@@ -332,9 +332,7 @@ class IrActionsServer(models.Model):
     The available actions are :
 
     - 'Execute Python Code': a block of python code that will be executed
-    - 'Run a Client Action': choose a client action to launch
-    - 'Create or Copy a new Record': create a new record with new values, or
-      copy an existing record in your database
+    - 'Create a new Record': create a new record with new values
     - 'Write on a Record': update the values of a record
     - 'Execute several actions': define an action that triggers several other
       server actions
@@ -375,11 +373,12 @@ class IrActionsServer(models.Model):
         default='object_write', required=True,
         help="Type of server action. The following values are available:\n"
              "- 'Execute Python Code': a block of python code that will be executed\n"
-             "- 'Create or Copy a new Record': create a new record with new values, or copy an existing record in your database\n"
-             "- 'Write on a Record': update the values of a record\n"
+             "- 'Create': create a new record with new values\n"
+             "- 'Update a Record': update the values of a record\n"
              "- 'Execute several actions': define an action that triggers several other server actions\n"
-             "- 'Add Followers': add followers to a record (available in Discuss)\n"
-             "- 'Send Email': automatically send an email (available in email_template)")
+             "- 'Send Email': automatically send an email (Discuss)\n"
+             "- 'Add Followers': add followers to a record (Discuss)\n"
+             "- 'Create Next Activity': create an activity (Discuss)")
     # Generic
     sequence = fields.Integer(default=5,
                               help="When dealing with multiple actions, the execution order is "
@@ -457,15 +456,7 @@ class IrActionsServer(models.Model):
 
     @api.model
     def run_action_object_write(self, action, eval_context=None):
-        """ Write server action.
-
-         - 1. evaluate the value mapping
-         - 2. depending on the write configuration:
-
-          - `current`: id = active_id
-          - `other`: id = from reference object
-          - `expression`: id = from expression evaluation
-        """
+        """Apply specified write changes to active_id."""
         res = {}
         for exp in action.fields_lines:
             res[exp.col1.name] = exp.eval_value(eval_context=eval_context)[exp.id]
@@ -479,16 +470,9 @@ class IrActionsServer(models.Model):
 
     @api.model
     def run_action_object_create(self, action, eval_context=None):
-        """ Create and Copy server action.
+        """Create specified model object with specified values.
 
-         - 1. evaluate the value mapping
-         - 2. depending on the write configuration:
-
-          - `new`: new record in the base model
-          - `copy_current`: copy the current record (id = active_id) + gives custom values
-          - `new_other`: new record in target model
-          - `copy_other`: copy the current record (id from reference object)
-            + gives custom values
+        If applicable, link active_id.<self.link_field_id> to the new record.
         """
         res = {}
         for exp in action.fields_lines:

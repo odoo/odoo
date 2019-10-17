@@ -28,6 +28,7 @@ CalendarRenderer.include({
 var createView = testUtils.createView;
 var createAsyncView = testUtils.createAsyncView;
 
+// 2016-12-12 08:00:00
 var initialDate = new Date(2016, 11, 12, 8, 0, 0);
 initialDate = new Date(initialDate.getTime() - initialDate.getTimezoneOffset()*60*1000);
 
@@ -563,7 +564,7 @@ QUnit.module('Views', {
 
     QUnit.test('default week start (US)', function (assert) {
         // if not given any option, default week start is on Sunday
-        assert.expect(1);
+        assert.expect(3);
         var done = assert.async();
 
         createAsyncView({
@@ -581,9 +582,21 @@ QUnit.module('Views', {
             viewOptions: {
                 initialDate: initialDate,
             },
+            mockRPC: function (route, args) {
+                if (args.method === 'search_read' && args.model === 'event') {
+                    assert.deepEqual(args.kwargs.domain, [
+                        ["start","<=","2016-12-17 23:59:59"],
+                        ["stop",">=","2016-12-11 00:00:00"]
+                    ],
+                    'The domain to search events in should be correct');
+                }
+                return this._super.apply(this, arguments);
+            }
         }).then(function (calendar) {
             assert.strictEqual(calendar.$('.fc-day-header').first().text(), "Sun 12/11",
                 "The first day of the week should be Sunday");
+            assert.strictEqual(calendar.$('.fc-day-header').last().text(), "Sat 12/17",
+                "The last day of the week should be Saturday");
             calendar.destroy();
             done();
         });
@@ -591,7 +604,7 @@ QUnit.module('Views', {
 
     QUnit.test('European week start', function (assert) {
         // the week start depends on the locale
-        assert.expect(1);
+        assert.expect(3);
         var done = assert.async();
 
         createAsyncView({
@@ -612,9 +625,21 @@ QUnit.module('Views', {
             translateParameters: {
                 week_start: 1,
             },
+            mockRPC: function (route, args) {
+                if (args.method === 'search_read' && args.model === 'event') {
+                    assert.deepEqual(args.kwargs.domain, [
+                        ["start","<=","2016-12-18 23:59:59"],
+                        ["stop",">=","2016-12-12 00:00:00"]
+                    ],
+                    'The domain to search events in should be correct');
+                }
+                return this._super.apply(this, arguments);
+            }
         }).then(function (calendar) {
             assert.strictEqual(calendar.$('.fc-day-header').first().text(), "Mon 12/12",
                 "The first day of the week should be Monday");
+            assert.strictEqual(calendar.$('.fc-day-header').last().text(), "Sun 12/18",
+                "The last day of the week should be Sunday");
             calendar.destroy();
             done();
         });
@@ -2644,6 +2669,121 @@ QUnit.module('Views', {
         calendar.destroy();
     });
 
+    QUnit.test('default week start (US) month mode', function (assert) {
+        // if not given any option, default week start is on Sunday
+        assert.expect(7);
+        var done = assert.async();
+
+        // 2019-09-12 08:00:00
+        var initDate = new Date(2019, 8, 12, 8, 0, 0);
+        initDate = new Date(initDate.getTime() - initDate.getTimezoneOffset()*60*1000);
+
+        createAsyncView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar class="o_calendar_test" '+
+                'date_start="start" '+
+                'date_stop="stop" '+
+                'mode="month">'+
+            '</calendar>',
+            archs: archs,
+
+            viewOptions: {
+                initialDate: initDate,
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'search_read' && args.model === 'event') {
+                    assert.deepEqual(args.kwargs.domain, [
+                        ["start","<=","2019-10-12 23:59:59"],
+                        ["stop",">=","2019-09-01 00:00:00"]
+                    ],
+                    'The domain to search events in should be correct');
+                }
+                return this._super.apply(this, arguments);
+            }
+        }).then(function (calendar) {
+            assert.strictEqual(calendar.$('.fc-day-header').first().text(), "Sun",
+                "The first day of the week should be Sunday");
+            assert.strictEqual(calendar.$('.fc-day-header').last().text(), "Sat",
+                "The last day of the week should be Saturday");
+
+            var $firstDay = calendar.$('.fc-day-top').first();
+            assert.strictEqual($firstDay.text(), "1",
+                "The first day of the week should be 2019-09-01");
+            assert.strictEqual($firstDay.data('date'), "2019-09-01",
+                "The first day of the week should be 2019-09-01");
+
+            var $lastDay = calendar.$('.fc-day-top').last();
+            assert.strictEqual($lastDay.text(), "12",
+                "The last day of the week should be 2019-10-12");
+            assert.strictEqual($lastDay.data('date'), "2019-10-12",
+                "The first day of the week should be 2019-10-12");
+
+            calendar.destroy();
+            done();
+        });
+    });
+
+    QUnit.test('European week start month mode', function (assert) {
+        assert.expect(7);
+        var done = assert.async();
+
+        // 2019-09-12 08:00:00
+        var initDate = new Date(2019, 8, 12, 8, 0, 0);
+        initDate = new Date(initDate.getTime() - initDate.getTimezoneOffset()*60*1000);
+
+        createAsyncView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar class="o_calendar_test" '+
+                'date_start="start" '+
+                'date_stop="stop" '+
+                'mode="month">'+
+            '</calendar>',
+            archs: archs,
+
+            viewOptions: {
+                initialDate: initDate,
+            },
+            translateParameters: {
+                week_start: 1,
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'search_read' && args.model === 'event') {
+                    assert.deepEqual(args.kwargs.domain, [
+                        ["start","<=","2019-10-06 23:59:59"],
+                        ["stop",">=","2019-08-26 00:00:00"]
+                    ],
+                    'The domain to search events in should be correct');
+                }
+                return this._super.apply(this, arguments);
+            }
+        }).then(function (calendar) {
+            assert.strictEqual(calendar.$('.fc-day-header').first().text(), "Mon",
+                "The first day of the week should be Monday");
+            assert.strictEqual(calendar.$('.fc-day-header').last().text(), "Sun",
+                "The last day of the week should be Sunday");
+
+            var $firstDay = calendar.$('.fc-day-top').first();
+            assert.strictEqual($firstDay.text(), "26",
+                "The first day of the week should be 2019-08-26");
+            assert.strictEqual($firstDay.data('date'), "2019-08-26",
+                "The first day of the week should be 2019-08-26");
+
+            var $lastDay = calendar.$('.fc-day-top').last();
+            assert.strictEqual($lastDay.text(), "6",
+                "The last day of the week should be 2019-10-06");
+            assert.strictEqual($lastDay.data('date'), "2019-10-06",
+                "The first day of the week should be 2019-10-06");
+
+            calendar.destroy();
+            done();
+        });
+    });
 });
 
 });

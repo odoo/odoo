@@ -273,7 +273,6 @@ class AccountVoucher(models.Model):
             'currency_id': self.currency_id.id,
             'payment_date': self.date,
             'journal_id': self.payment_journal_id.id,
-            'company_id': self.company_id.id,
             'communication': self.name,
         }
 
@@ -347,10 +346,13 @@ class AccountVoucher(models.Model):
                         }
                         if company_currency != current_currency:
                             ctx = {}
+                            sign = temp['credit'] and -1 or 1
+                            amount_currency = company_cur._convert(tax_vals['amount'], current_cur, line.company_id,
+                                                 self.account_date or fields.Date.today(), round=True)
                             if self.account_date:
                                 ctx['date'] = self.account_date
                             temp['currency_id'] = current_currency
-                            temp['amount_currency'] = company_cur._convert(tax_vals['amount'], current_cur, line.company_id, self.account_date or fields.Date.today(), round=True)
+                            temp['amount_currency'] = sign * abs(amount_currency)
                         self.env['account.move.line'].create(temp)
 
             # When global rounding is activated, we must wait until all tax lines are computed to
@@ -419,7 +421,9 @@ class AccountVoucher(models.Model):
 
             # Create a payment to allow the reconciliation when pay_now = 'pay_now'.
             if voucher.pay_now == 'pay_now':
-                payment_id = self.env['account.payment'].create(voucher.voucher_pay_now_payment_create())
+                payment_id = (self.env['account.payment']
+                    .with_context(force_counterpart_account=voucher.account_id.id)
+                    .create(voucher.voucher_pay_now_payment_create()))
                 payment_id.post()
 
                 # Reconcile the receipt with the payment
@@ -542,3 +546,19 @@ class AccountVoucherLine(models.Model):
                 values['price_unit'] = values['price_unit'] * currency.rate
 
         return {'value': values, 'domain': {}}
+
+
+class AccountPayment(models.Model):
+    _inherit = 'account.payment'
+
+    # Allows to force the destination account
+    # for receivable/payable
+    #
+    # @override
+    def _get_counterpart_move_line_vals(self, invoice=False):
+        values = super(AccountPayment, self)._get_counterpart_move_line_vals(invoice)
+
+        if self._context.get('force_counterpart_account'):
+            values['account_id'] = self._context['force_counterpart_account']
+
+        return values

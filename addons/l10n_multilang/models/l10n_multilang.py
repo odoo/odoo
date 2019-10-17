@@ -12,6 +12,19 @@ _logger = logging.getLogger(__name__)
 class AccountChartTemplate(models.Model):
     _inherit = 'account.chart.template'
 
+    def load_for_current_company(self, sale_tax_rate, purchase_tax_rate):
+        res = super(AccountChartTemplate, self).load_for_current_company(sale_tax_rate, purchase_tax_rate)
+        # Copy chart of account translations when loading chart of account
+        for chart_template in self.filtered('spoken_languages'):
+            external_id = self.env['ir.model.data'].search([
+                ('model', '=', 'account.chart.template'),
+                ('res_id', '=', chart_template.id),
+            ], order='id', limit=1)
+            module = external_id and self.env.ref('base.module_' + external_id.module)
+            if module and module.state == 'installed':
+                chart_template.process_coa_translations()
+        return res
+
     @api.multi
     def process_translations(self, langs, in_field, in_ids, out_ids):
         """
@@ -112,6 +125,9 @@ class AccountChartTemplate(models.Model):
             in_xml_ids = {xml_id.name: xml_id for xml_id in in_xml_ids}
 
             for name, xml_id in expected_in_xml_id_names.items():
+                # ignore nonconforming customized data
+                if name not in in_xml_ids:
+                    continue
                 in_records += self.env[model + '.template'].browse(in_xml_ids[name].res_id)
                 out_records += self.env[model].browse(xml_id.res_id)
 

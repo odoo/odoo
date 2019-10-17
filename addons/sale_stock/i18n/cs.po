@@ -224,7 +224,7 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Exception(s) occurred on the sale order(s):"
-msgstr ""
+msgstr "Na prodejní objednávce (objednávkách) došlo k výjimkám (vyjímce):"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -337,6 +337,9 @@ msgid ""
 "for procurement and delivery that many days earlier than the actual promised"
 " date, to cope with unexpected delays in the supply chain."
 msgstr ""
+"Rozpětí chyb pro data přislíbená zákazníkům. Produkty budou naplánovány na "
+"pořízení a dodání o mnoho dní dříve, než je skutečné slíbené datum, aby bylo"
+" možné čelit neočekávaným prodlevám v dodavatelském řetězci."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_delivered_method
@@ -352,7 +355,7 @@ msgstr "Přesunutí očekávaných termínů doručení na později o"
 #: code:addons/sale_stock/models/sale_order.py:280
 #, python-format
 msgid "Not enough inventory!"
-msgstr ""
+msgstr "Nedostatek inventáře!"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__group_route_so_lines
@@ -363,7 +366,7 @@ msgstr ""
 #: code:addons/sale_stock/models/sale_order.py:294
 #, python-format
 msgid "Ordered quantity decreased!"
-msgstr ""
+msgstr "Objednané množství se snížilo!"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__product_packaging
@@ -519,7 +522,7 @@ msgstr "Pohyby zásob"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rule
 msgid "Stock Rule"
-msgstr ""
+msgstr "Pravidlo zásob"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rules_report
@@ -539,6 +542,10 @@ msgid ""
 "available in sales orders, routes must have 'Sales Order Line' option "
 "checked in their setup form."
 msgstr ""
+"To umožňuje použít speciální trasu na řádcích prodejních objednávek (např. "
+"Dropshipping, výrova na objednávku) v případě neobvyklého scénáře "
+"objednávky. Aby byly trasy dostupné v prodejních objednávkách, musí mít ve "
+"formuláři nastavení zaškrtnutou možnost „Prodejní řádek“."
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:397

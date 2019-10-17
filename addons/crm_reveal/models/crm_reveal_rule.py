@@ -8,7 +8,8 @@ import re
 from dateutil.relativedelta import relativedelta
 from math import floor, log10
 
-from odoo import api, fields, models, tools, _, _geoip_resolver
+import odoo
+from odoo import api, fields, models, tools, _
 from odoo.addons.iap import jsonrpc
 from odoo.addons.crm.models import crm_stage
 from odoo.exceptions import ValidationError
@@ -74,7 +75,7 @@ class CRMRevealRule(models.Model):
 
     @api.model
     def _assert_geoip(self):
-        if not _geoip_resolver:
+        if not odoo._geoip_resolver:
             message = _('Lead Generation requires a GeoIP resolver which could not be found on your system. Please consult https://pypi.org/project/GeoIP/.')
             self.env['bus.bus'].sendone(
                 (self._cr.dbname, 'res.partner', self.env.user.partner_id.id),

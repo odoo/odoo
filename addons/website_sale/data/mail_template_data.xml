@@ -38,7 +38,7 @@
                     <h1 style="color:#A9A9A9;">THERE'S SOMETHING IN YOUR CART.</h1>
                     Would you like to complete your purchase?<br/><br/>
                     % if object.order_line:
-                        % for line in object.order_line:
+                        % for line in object.website_order_line:
                             <hr/>
                             <table width="100%">
                                 <tr>
