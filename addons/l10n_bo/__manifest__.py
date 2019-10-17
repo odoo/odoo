@@ -6,6 +6,7 @@
 {
     "name": "Bolivia - Accounting",
     "version": "2.0",
+    'website': 'https://www.odoo.com/page/accounting',
     "description": """
 Bolivian accounting chart and tax localization.
 
@@ -13,7 +14,7 @@ Plan contable boliviano e impuestos de acuerdo a disposiciones vigentes
 
     """,
     "author": "Cubic ERP",
-    'category': 'Localization',
+    'category': 'Localization/Account Charts',
     "depends": ["account"],
     "data": [
         "data/l10n_bo_chart_data.xml",

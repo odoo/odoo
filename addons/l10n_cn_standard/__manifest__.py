@@ -10,7 +10,7 @@
 {
     'name': 'China - Standard CoA',
     'version': '2.0',
-    'category': 'Localization',
+    'category': 'Localization/Account Charts',
     'author': ['lvxin@gmail.co', 'oldrev@gmail.co', 'ccdos@intoerp.com', 'jeff@osbzr.com', 'jeffery9@gmail.com'],
 
     'website': 'http://shine-it.net',

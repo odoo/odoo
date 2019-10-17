@@ -40,7 +40,8 @@ Izvori podataka:
 """,
     "version": "13.0",
     "author": "OpenERP Croatian Community",
-    'category': 'Localization',
+    'website': 'https://www.odoo.com/page/accounting',
+    'category': 'Localization/Account Charts',
 
     'depends': [
         'account',

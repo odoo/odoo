@@ -6,9 +6,10 @@
 {
     'name': 'Netherlands - Accounting',
     'version': '3.0',
-    'category': 'Localization',
+    'category': 'Localization/Account Charts',
     'author': 'Onestein',
-    'website': 'http://www.onestein.eu',
+    'website': 'https://www.odoo.com/page/accounting',
+    "description": """ Netherlands Accounting Chart and Taxes""",
     'depends': [
         'account',
         'base_iban',

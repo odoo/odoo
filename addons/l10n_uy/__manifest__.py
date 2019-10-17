@@ -5,7 +5,8 @@
     'name': 'Uruguay - Chart of Accounts',
     'version': '0.1',
     'author': 'Uruguay l10n Team, Guillem Barba',
-    'category': 'Localization',
+    'website': 'https://www.odoo.com/page/accounting',
+    'category': 'Localization/Account Charts',
     'description': """
 General Chart of Accounts.
 ==========================

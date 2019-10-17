@@ -7,8 +7,8 @@
     "name": "Slovenian - Accounting",
     "version": "1.1",
     "author": "Mentis d.o.o.",
-    "website": "http://www.mentis.si",
-    'category': 'Localization',
+    'website': 'https://www.odoo.com/page/accounting',
+    'category': 'Localization/Account Charts',
     "description": "Kontni načrt za gospodarske družbe",
     "depends": [
         "account",

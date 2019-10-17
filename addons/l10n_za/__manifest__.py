@@ -5,14 +5,14 @@
 {
     'name': 'South Africa - Accounting',
     'version': '1.0',
-    'category': 'Localization',
+    'category': 'Localization/Account Charts',
     'description': """
 This is the latest basic South African localisation necessary to run Odoo in ZA:
 ================================================================================
     - a generic chart of accounts
     - SARS VAT Ready Structure""",
     'author': 'Paradigm Digital',
-    'website': 'https://www.paradigmdigital.co.za',
+    'website': 'https://www.odoo.com/page/accounting',
     'depends': ['account', 'base_vat'],
     'data': [
         'data/account.account.tag.csv',

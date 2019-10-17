@@ -6,7 +6,7 @@
 {
     'name': 'Japan - Accounting',
     'version': '2.1',
-    'category': 'Localization',
+    'category': 'Localization/Account Charts',
     'description': """
 
 Overview:
@@ -27,7 +27,7 @@ circumstances, you might not need to use those at all.
 
     """,
     'author': 'Quartile Limited',
-    'website': 'https://www.odoo-asia.com/',
+    'website': 'https://www.odoo.com/page/accounting',
     'depends': ['account'],
     'data': [
         'data/l10n_jp_chart_data.xml',

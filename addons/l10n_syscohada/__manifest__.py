@@ -7,7 +7,7 @@
 {
     'name' : 'OHADA - Accounting',
     'author' : 'Baamtu Senegal',
-    'category': 'Localization',
+    'category': 'Localization/Account Charts',
     'description': """
 This module implements the accounting chart for OHADA area.
 ===========================================================
@@ -22,7 +22,7 @@ Countries that use OHADA are the following:
     
     Replica of Democratic Congo, Senegal, Chad, Togo.
     """,
-    'website': 'http://www.baamtu.com',
+    'website': 'https://www.odoo.com/page/accounting',
     'depends' : [
         'account',
     ],

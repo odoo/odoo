@@ -4,7 +4,7 @@
 {
     'name': 'Thailand - Accounting',
     'version': '2.0',
-    'category': 'Localization',
+    'category': 'Localization/Account Charts',
     'description': """
 Chart of Accounts for Thailand.
 ===============================
@@ -12,7 +12,7 @@ Chart of Accounts for Thailand.
 Thai accounting chart and localization.
     """,
     'author': 'Almacom',
-    'website': 'http://almacom.co.th/',
+    'website': 'https://www.odoo.com/page/accounting',
     'depends': ['account'],
     'data': [
         'data/account_data.xml',

@@ -8,7 +8,8 @@
 {
     'name': 'Luxembourg - Accounting',
     'version': '2.0',
-    'category': 'Localization',
+    'website': 'https://www.odoo.com/page/accounting',
+    'category': 'Localization/Account Charts',
     'description': """
 This is the base module to manage the accounting chart for Luxembourg.
 ======================================================================

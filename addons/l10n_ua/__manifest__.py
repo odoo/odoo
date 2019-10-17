@@ -5,13 +5,13 @@
 {
     'name': 'Ukraine - Accounting',
     'author': 'ERP Ukraine',
-    'website': 'https://erp.co.ua',
+    'website': 'https://www.odoo.com/page/accounting',
     'version': '1.3',
     'description': """
 Ukraine - Chart of accounts.
 ============================
     """,
-    'category': 'Localization',
+    'category': 'Localization/Account Charts',
     'depends': ['account'],
     'data': [
         'data/account_chart_template.xml',

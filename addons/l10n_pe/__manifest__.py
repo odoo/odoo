@@ -3,7 +3,9 @@
     'name': 'Peru - Accounting',
     "version": "2.0",
     'summary': "PCGE Simplified",
-    'category': 'Localization',
+    'website': 'https://www.odoo.com/page/accounting',
+    'category': 'Localization/Account Charts',
+    'description': """ Peru Accounting Chart and Taxes""",
     'author': 'Vauxoo, Odoo',
     'license': 'LGPL-3',
     'depends': [

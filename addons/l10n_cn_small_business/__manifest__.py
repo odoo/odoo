@@ -9,7 +9,7 @@
 {
     'name': 'China - Small Business CoA',
     'version': '1.8',
-    'category': 'Localization',
+    'category': 'Localization/Account Charts',
     'author': 'www.openerp-china.org',
     'maintainer': 'jeff@osbzr.com',
     'website': 'http://openerp-china.org',

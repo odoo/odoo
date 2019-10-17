@@ -4,7 +4,8 @@
 {
     'name': 'United States - Accounting',
     'version': '1.1',
-    'category': 'Localization',
+    'website': 'https://www.odoo.com/page/accounting',
+    'category': 'Localization/Account Charts',
     'description': """
 United States - Chart of accounts.
 ==================================

@@ -6,7 +6,7 @@
 {
     'name': 'Ethiopia - Accounting',
     'version': '2.0',
-    'category': 'Localization',
+    'category': 'Localization/Account Charts',
     'description': """
 Base Module for Ethiopian Localization
 ======================================
@@ -18,7 +18,7 @@ This is the latest Ethiopian Odoo localization and consists of:
     - Regional State listings
     """,
     'author':'Michael Telahun Makonnen <mmakonnen@gmail.com>',
-    'website':'http://miketelahun.wordpress.com',
+    'website': 'https://www.odoo.com/page/accounting',
     'depends': [
         'account',
     ],

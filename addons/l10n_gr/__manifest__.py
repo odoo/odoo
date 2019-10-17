@@ -6,8 +6,8 @@
 {
     'name': 'Greece - Accounting',
     'author': 'P. Christeas, OpenERP SA.',
-    'website': 'http://openerp.hellug.gr/',
-    'category': 'Localization',
+    'website': 'https://www.odoo.com/page/accounting',
+    'category': 'Localization/Account Charts',
     'description': """
 This is the base module to manage the accounting chart for Greece.
 ==================================================================
