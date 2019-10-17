@@ -65,7 +65,7 @@ class LeaveReport(models.Model):
                 from hr_leave_allocation as allocation
                 union all select
                     request.employee_id as employee_id,
-                    request.name as name,
+                    request.private_name as name,
                     (request.number_of_days * -1) as number_of_days,
                     request.category_id as category_id,
                     request.department_id as department_id,
