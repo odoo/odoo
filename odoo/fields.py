@@ -1434,7 +1434,7 @@ class _String(Field):
         update_trans = False
         single_lang = len(records.env['res.lang'].get_installed()) <= 1
         if self.translate:
-            lang = records.env.lang or 'en_US'
+            lang = records.env.lang or None  # used in _update_translations below
             if single_lang:
                 # a single language is installed
                 update_trans = True
@@ -1442,10 +1442,11 @@ class _String(Field):
                 # update the source and synchronize translations
                 update_column = True
                 update_trans = True
-            elif lang != 'en_US':
+            elif lang != 'en_US' and lang is not None:
                 # update the translations only except if emptying
                 update_column = cache_value is None
                 update_trans = True
+            # else: lang = None
 
         # update towrite if modifying the source
         if update_column:
@@ -1456,6 +1457,7 @@ class _String(Field):
             if self.translate is True and cache_value is not None:
                 tname = "%s,%s" % (records._name, self.name)
                 records.env['ir.translation']._set_source(tname, real_recs._ids, value)
+                records.invalidate_cache(fnames=[self.name], ids=records.ids)
 
         if update_trans:
             if callable(self.translate):
@@ -1466,7 +1468,7 @@ class _String(Field):
             else:
                 # update translations
                 value = self.convert_to_column(value, records)
-                source_recs = real_recs.with_context(lang='en_US')
+                source_recs = real_recs.with_context(lang=None)
                 source_value = first(source_recs)[self.name]
                 if not source_value:
                     source_recs[self.name] = value
