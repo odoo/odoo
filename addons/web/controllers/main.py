@@ -35,7 +35,7 @@ import odoo
 import odoo.modules.registry
 from odoo.api import call_kw, Environment
 from odoo.modules import get_module_path, get_resource_path
-from odoo.tools import image_process, topological_sort, html_escape, pycompat, ustr, apply_inheritance_specs
+from odoo.tools import image_process, topological_sort, html_escape, pycompat, ustr, apply_inheritance_specs, lazy_property
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.translate import _
 from odoo.tools.misc import str2bool, xlsxwriter, file_open
@@ -63,6 +63,37 @@ CONTENT_MAXAGE = http.STATIC_CACHE_LONG  # menus, translations, static qweb
 DBNAME_PATTERN = '^[a-zA-Z0-9][a-zA-Z0-9_.-]+$'
 
 COMMENT_PATTERN = r'Modified by [\s\w\-.]+ from [\s\w\-.]+'
+
+
+def none_values_filtered(func):
+    @functools.wraps(func)
+    def wrap(iterable):
+        return func(v for v in iterable if v is not None)
+    return wrap
+
+def allow_empty_iterable(func):
+    """
+    Some functions do not accept empty iterables (e.g. max, min with no default value)
+    This returns the function `func` such that it returns None if the iterable
+    is empty instead of raising a ValueError.
+    """
+    @functools.wraps(func)
+    def wrap(iterable):
+        iterator = iter(iterable)
+        try:
+            value = next(iterator)
+            return func(itertools.chain([value], iterator))
+        except StopIteration:
+            return None
+    return wrap
+
+OPERATOR_MAPPING = {
+    'max': none_values_filtered(allow_empty_iterable(max)),
+    'min': none_values_filtered(allow_empty_iterable(min)),
+    'sum': sum,
+    'bool_and': all,
+    'bool_or': any,
+}
 
 #----------------------------------------------------------
 # Odoo Web helpers
@@ -584,17 +615,73 @@ class GroupsTreeNode:
     build a leaf. The entire tree is built by inserting all leaves.
     """
 
-    def __init__(self, model, fields, groupby, root=None):
+    def __init__(self, model, fields, groupby, groupby_type, root=None):
         self._model = model
-        self._fields = fields
+        self._export_field_names = fields  # exported field names (e.g. 'journal_id', 'account_id/name', ...)
         self._groupby = groupby
+        self._groupby_type = groupby_type
 
         self.count = 0  # Total number of records in the subtree
-        self.aggregated_values = Counter()  # Fields aggregated values {field_name: aggregated value}
         self.children = OrderedDict()
         self.data = []  # Only leaf nodes have data
+
         if root:
             self.insert_leaf(root)
+
+    def _get_aggregate(self, field_name, data, group_operator):
+        # When exporting one2many fields, multiple data lines might be exported for one record.
+        # Blank cells of additionnal lines are filled with an empty string. This could lead to '' being
+        # aggregated with an integer or float.
+        data = (value for value in data if value != '')
+
+        if group_operator == 'avg':
+            return self._get_avg_aggregate(field_name, data)
+
+        aggregate_func = OPERATOR_MAPPING.get(group_operator)
+        if not aggregate_func:
+            _logger.warning("Unsupported export of group_operator '%s' for field %s on model %s" % (group_operator, field_name, self._model._name))
+            return
+
+        if self.data:
+            return aggregate_func(data)
+        return aggregate_func((child.aggregated_values.get(field_name) for child in self.children.values()))
+
+    def _get_avg_aggregate(self, field_name, data):
+        aggregate_func = OPERATOR_MAPPING.get('sum')
+        if self.data:
+            return aggregate_func(data) / self.count
+        children_sums = (child.aggregated_values.get(field_name) * child.count for child in self.children.values())
+        return aggregate_func(children_sums) / self.count
+
+    def _get_aggregated_field_names(self):
+        """ Return field names of exported field having a group operator """
+        aggregated_field_names = []
+        for field_name in self._export_field_names:
+            if '/' in field_name:
+                # Currently no support of aggregated value for nested record fields
+                # e.g. line_ids/analytic_line_ids/amount
+                continue
+            field = self._model._fields[field_name]
+            if field.group_operator:
+                aggregated_field_names.append(field_name)
+        return aggregated_field_names
+
+    # Lazy property to memoize aggregated values of children nodes to avoid useless recomputations
+    @lazy_property
+    def aggregated_values(self):
+
+        aggregated_values = {}
+
+        # Transpose the data matrix to group all values of each field in one iterable
+        field_values = zip(*self.data)
+        for field_name in self._export_field_names:
+            field_data = self.data and next(field_values) or []
+
+            if field_name in self._get_aggregated_field_names():
+                field = self._model._fields[field_name]
+                aggregated_values[field_name] = self._get_aggregate(field_name, field_data, field.group_operator)
+
+        return aggregated_values
 
     def child(self, key):
         """
@@ -605,7 +692,7 @@ class GroupsTreeNode:
         :return: the child node
         """
         if key not in self.children:
-            self.children[key] = GroupsTreeNode(self._model, self._fields, self._groupby)
+            self.children[key] = GroupsTreeNode(self._model, self._export_field_names, self._groupby, self._groupby_type)
         return self.children[key]
 
     def insert_leaf(self, group):
@@ -613,17 +700,9 @@ class GroupsTreeNode:
         Build a leaf from `group` and insert it in the tree.
         :param group: dict as returned by `read_group(lazy=False)`
         """
-        # Pop every known key in the group dict (__domain, __count and grouped values)
-        # Remaining keys are aggregated fields.
-        leaf_path = [group.pop(groupby_field) for groupby_field in self._groupby]
+        leaf_path = [group.get(groupby_field) for groupby_field in self._groupby]
         domain = group.pop('__domain')
         count = group.pop('__count')
-        aggregated_values = group
-
-        keys = list(aggregated_values)
-        for key in keys:
-            if not isinstance(aggregated_values[key], (int, float)):
-                del aggregated_values[key]
 
         records = self._model.search(domain, offset=0, limit=False, order=False)
 
@@ -636,9 +715,8 @@ class GroupsTreeNode:
             node = node.child(node_key)
             # Update count value and aggregated value.
             node.count += count
-            node.aggregated_values += Counter(aggregated_values)
 
-        node.data = records.export_data(self._fields).get('datas',[])
+        node.data = records.export_data(self._export_field_names).get('datas',[])
 
 
 class ExportXlsxWriter:
@@ -710,7 +788,9 @@ class GroupExportXlsxWriter(ExportXlsxWriter):
         self.fields = fields
 
     def write_group(self, row, column, group_name, group, group_depth=0):
-        group_name = group_name[1] if isinstance(group_name, tuple) and len(group_name) > 1 else group_name or _("Undefined")
+        group_name = group_name[1] if isinstance(group_name, tuple) and len(group_name) > 1 else group_name
+        if group._groupby_type[group_depth] != 'boolean':
+            group_name = group_name or _("Undefined")
         row, column = self._write_group_header(row, column, group_name, group, group_depth)
 
         # Recursively write sub-groups
@@ -734,7 +814,8 @@ class GroupExportXlsxWriter(ExportXlsxWriter):
         self.write(row, column, label, self.header_bold_style)
         for field in self.fields[1:]: # No aggregates allowed in the first column because of the group title
             column += 1
-            self.write(row, column, aggregates.get(field['name'], ''), self.header_bold_style)
+            aggregated_value = aggregates.get(field['name'])
+            self.write(row, column, str(aggregated_value if aggregated_value is not None else ''), self.header_bold_style)
         return row + 1, 0
 
 
@@ -1749,12 +1830,13 @@ class ExportFormat(object):
         Model = request.env[model].with_context(**params.get('context', {}))
         groupby = params.get('groupby')
         if not import_compat and groupby:
+            groupby_type = [Model._fields[x.split(':')[0]].type for x in groupby]
             domain = [('id', 'in', ids)] if ids else domain
             groups_data = Model.read_group(domain, field_names, groupby, lazy=False)
 
             # read_group(lazy=False) returns a dict only for final groups (with actual data),
             # not for intermediary groups. The full group tree must be re-constructed.
-            tree = GroupsTreeNode(Model, field_names, groupby)
+            tree = GroupsTreeNode(Model, field_names, groupby, groupby_type)
             for leaf in groups_data:
                 tree.insert_leaf(leaf)
 
