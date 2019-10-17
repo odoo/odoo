@@ -18,6 +18,7 @@ from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools import float_compare
 from odoo.tools.float_utils import float_round
 from odoo.tools.translate import _
+from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
 
@@ -101,7 +102,8 @@ class HolidaysRequest(models.Model):
         return new_values
 
     # description
-    name = fields.Char('Description')
+    name = fields.Char('Description', compute='_compute_description', inverse='_inverse_description', search='_search_description', compute_sudo=False)
+    private_name = fields.Char('Time Off Description', groups='hr_holidays.group_hr_holidays_user')
     state = fields.Selection([
         ('draft', 'To Submit'),
         ('cancel', 'Cancelled'),
@@ -260,6 +262,36 @@ class HolidaysRequest(models.Model):
         tools.create_index(self._cr, 'hr_leave_date_to_date_from_index',
                            self._table, ['date_to', 'date_from'])
         return res
+
+    @api.depends_context('uid')
+    def _compute_description(self):
+        self.check_access_rights('read')
+        self.check_access_rule('read')
+
+        is_officer = self.user_has_groups('hr_holidays.group_hr_holidays_user')
+
+        for leave in self:
+            if is_officer or leave.user_id == self.env.user or leave.manager_id == self.env.user:
+                leave.name = leave.sudo().private_name
+            else:
+                leave.name = '*****'
+
+    def _inverse_description(self):
+        is_officer = self.user_has_groups('hr_holidays.group_hr_holidays_user')
+
+        for leave in self:
+            if is_officer or leave.user_id == self.env.user or leave.manager_id == self.env.user:
+                leave.sudo().private_name = leave.name
+
+    def _search_description(self, operator, value):
+        is_officer = self.user_has_groups('hr_holidays.group_hr_holidays_user')
+        domain = [('private_name', operator, value)]
+
+        if not is_officer:
+            domain = expression.AND([domain, [('user_id', '=', self.env.user.id)]])
+
+        leaves = self.search(domain)
+        return [('id', 'in', leaves.ids)]
 
     @api.onchange('holiday_status_id')
     def _onchange_holiday_status_id(self):
@@ -618,26 +650,8 @@ class HolidaysRequest(models.Model):
                 holiday_sudo.activity_update()
         return holiday
 
-    def _read(self, fields):
-        if 'name' in fields and 'employee_id' not in fields:
-            fields.add('employee_id')
-        super(HolidaysRequest, self)._read(fields)
-        if 'name' in fields:
-            if self.user_has_groups('hr_holidays.group_hr_holidays_user'):
-                return
-            current_employee = self.env['hr.employee'].sudo().search([('user_id', '=', self.env.uid)], limit=1)
-            for record in self:
-                emp_id = record._cache.get('employee_id') or False
-                if emp_id != current_employee.id:
-                    try:
-                        record._cache['name']
-                        record._cache['name'] = '*****'
-                    except Exception:
-                        # skip SpecialValue (e.g. for missing record or access right)
-                        pass
-
     def write(self, values):
-        is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
+        is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user') or self.env.is_superuser()
 
         if not is_officer:
             if any(hol.date_from.date() < fields.Date.today() for hol in self):
