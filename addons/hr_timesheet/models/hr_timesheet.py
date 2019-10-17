@@ -5,8 +5,8 @@ from lxml import etree
 import re
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
-
+from odoo.exceptions import UserError, AccessError
+from odoo.osv import expression
 
 class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
@@ -20,11 +20,29 @@ class AccountAnalyticLine(models.Model):
             result['employee_id'] = self.env['hr.employee'].search([('user_id', '=', result['user_id'])], limit=1).id
         return result
 
+    def _domain_project_id(self):
+        domain = [('allow_timesheets', '=', True)]
+        if not self.user_has_groups('hr_timesheet.group_timesheet_manager'):
+            return expression.AND([domain,
+                ['|', ('privacy_visibility', '!=', 'followers'), ('message_partner_ids', 'in', [self.env.user.partner_id.id])]
+            ])
+        return domain
+
+    def _domain_employee_id(self):
+        if not self.user_has_groups('hr_timesheet.group_hr_timesheet_approver'):
+            return [('user_id', '=', self.env.user.id)]
+        return []
+
+    def _domain_task_id(self):
+        if not self.user_has_groups('hr_timesheet.group_hr_timesheet_approver'):
+            return ['|', ('privacy_visibility', '!=', 'followers'), ('message_partner_ids', 'in', [self.env.user.partner_id.id])]
+        return []
+
     task_id = fields.Many2one(
         'project.task', 'Task', index=True,
         domain="[('company_id', '=', company_id), ('project_id.allow_timesheets', '=', True), ('project_id', '=?', project_id)]"
     )
-    project_id = fields.Many2one('project.project', 'Project', domain=[('allow_timesheets', '=', True)])
+    project_id = fields.Many2one('project.project', 'Project', domain=_domain_project_id)
 
     employee_id = fields.Many2one('hr.employee', "Employee", check_company=True)
     department_id = fields.Many2one('hr.department', "Department", compute='_compute_department_id', store=True, compute_sudo=True)
@@ -81,6 +99,12 @@ class AccountAnalyticLine(models.Model):
         return lines
 
     def write(self, values):
+        # If it's a basic user then check if the timesheet is his own.
+        for record in self:
+            if not self.user_has_groups('hr_timesheet.group_hr_timesheet_approver'):
+                if self.env.user.id != record.user_id.id:
+                    raise AccessError(_("You aren't allowed to access to the timesheet that it's not yours"))
+
         values = self._timesheet_preprocess(values)
         result = super(AccountAnalyticLine, self).write(values)
         # applied only for timesheet
