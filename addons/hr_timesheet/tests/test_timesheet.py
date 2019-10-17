@@ -16,7 +16,7 @@ class TestCommonTimesheet(TransactionCase):
         rule = self.env.ref('timesheet_grid.hr_timesheet_rule_approver_update', raise_if_not_found=False)
         if rule:
             rule.active = False
-        
+
         # customer partner
         self.partner = self.env['res.partner'].create({
             'name': 'Customer Task',
@@ -84,6 +84,16 @@ class TestCommonTimesheet(TransactionCase):
 
 
 class TestTimesheet(TestCommonTimesheet):
+
+    def setUp(self):
+        super(TestTimesheet, self).setUp()
+
+        # Crappy hack to disable the rule from timesheet grid, if it exists
+        # The registry doesn't contain the field timesheet_manager_id.
+        # but there is an ir.rule about it, crashing during its evaluation
+        rule = self.env.ref('timesheet_grid.timesheet_line_rule_user_update-unlink', raise_if_not_found=False)
+        if rule:
+            rule.active = False
 
     def test_log_timesheet(self):
         """ Test when log timesheet : check analytic account, user and employee are correctly set. """
@@ -260,12 +270,18 @@ class TestTimesheet(TestCommonTimesheet):
         timesheets = timesheet_1 + timesheet_2
 
         # increase unit_amount to trigger amount recomputation
-        timesheets.sudo().write({
+        with self.assertRaises(AccessError):
+            # because the employee 1 is the sudo and he doesn't have the access right to update timesheet of employee 2
+            timesheets.sudo().write({
+                'unit_amount': 2,
+            })
+
+        timesheets.with_user(self.user_manager).write({
             'unit_amount': 2,
         })
 
         # since timesheet costs are different for both employees, we should get different amounts
-        self.assertRecordValues(timesheets, [{
+        self.assertRecordValues(timesheets.with_user(self.user_manager), [{
             'amount': -10.0,
         }, {
             'amount': -12.0,
