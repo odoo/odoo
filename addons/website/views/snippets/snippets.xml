@@ -400,6 +400,33 @@
             <we-fontfamilypicker data-variable="navbar-font-number"/>
             <we-input data-customize-website-variable="null" data-variable="header-font-size" data-unit="px" data-save-unit="rem"/>
         </we-row>
+        <we-select id="header_templates_select" data-variable="header-template" string="Header Template" data-reload="/">
+            <we-button id="option_template_header_logo_menu"
+                       data-name="header_logo_menu_opt"
+                       data-customize-website-views=""
+                       data-customize-website-variable="logo_menu"
+                       string="Logo - Menu"/>
+            <we-button id="option_template_header_hamburger_logo_centered"
+                       data-name="header_hamburger_logo_centered_opt"
+                       data-customize-website-views="website.template_header_hamburger, website.template_header_hamburger_left"
+                       data-customize-website-variable="hamburger_logo"
+                       string="Hamburger - Logo"/>
+            <we-button id="option_template_header_logo_menu_below"
+                       data-name="header_logo_menu_below_opt"
+                       data-customize-website-views=""
+                       data-customize-website-variable="logo_menu_below"
+                       string="Logo (Top) - Menu"/>
+            <we-button id="option_template_header_menu_logo_below"
+                       data-name="header_menu_logo_below_opt"
+                       data-customize-website-views=""
+                       data-customize-website-variable="menu_logo_below"
+                       string="Menu - Logo (Bottom)"/>
+            <we-button id="option_template_header_logo_hamburger"
+                       data-name="header_logo_hamburger_opt"
+                       data-customize-website-views="website.template_header_hamburger, website.template_header_navbar_text_center"
+                       data-customize-website-variable="logo_hamburger"
+                       string="Logo - Hamburger (cover)"/>
+        </we-select>
     </div>
 
     <div data-js="topMenuTransparency"

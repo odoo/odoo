@@ -153,7 +153,7 @@ class Theme(models.AbstractModel):
     _auto = False
 
     def _post_copy(self, mod):
-        # Reinitialize font customizations
+        # Reinitialize some css customizations
         self.env['web_editor.assets'].make_scss_customization(
             '/website/static/src/scss/options/user_values.scss',
             {
@@ -161,8 +161,14 @@ class Theme(models.AbstractModel):
                 'headings-font-number': 'null',
                 'navbar-font-number': 'null',
                 'buttons-font-number': 'null',
+                'header-template': 'null',
             }
         )
+
+        # Reinitialize header templates
+        self.disable_view('website.template_header_hamburger')
+        self.disable_view('website.template_header_hamburger_left')
+        self.disable_view('website.template_header_navbar_text_center')
 
         # Call specific theme post copy
         theme_post_copy = '_%s_post_copy' % mod.name
