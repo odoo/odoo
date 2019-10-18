@@ -430,18 +430,17 @@ registry.slider = publicWidget.Widget.extend({
     selector: '.carousel',
     disabledInEditableMode: false,
     edit_events: {
-        'slid.bs.carousel': '_onEditionSlide',
+        'content_changed': '_onContentChanged',
     },
 
     /**
      * @override
      */
     start: function () {
-        if (!this.editableMode) {
-            this.$('img').on('load.slider', this._onImageLoaded.bind(this));
-            this._computeHeights();
-        }
-        this.$target.carousel();
+        this.$('img').on('load.slider', () => this._computeHeights());
+        this._computeHeights();
+        // Initialize carousel and pause if in edit mode.
+        this.$target.carousel(this.editableMode ? 'pause' : undefined);
         return this._super.apply(this, arguments);
     },
     /**
@@ -467,6 +466,7 @@ registry.slider = publicWidget.Widget.extend({
     _computeHeights: function () {
         var maxHeight = 0;
         var $items = this.$('.carousel-item');
+        $items.css('min-height', '');
         _.each($items, function (el) {
             var $item = $(el);
             var isActive = $item.hasClass('active');
@@ -477,9 +477,7 @@ registry.slider = publicWidget.Widget.extend({
             }
             $item.toggleClass('active', isActive);
         });
-        _.each($items, function (el) {
-            $(el).css('min-height', maxHeight);
-        });
+        $items.css('min-height', maxHeight);
     },
 
     //--------------------------------------------------------------------------
@@ -489,13 +487,7 @@ registry.slider = publicWidget.Widget.extend({
     /**
      * @private
      */
-    _onEditionSlide: function () {
-        this._computeHeights();
-    },
-    /**
-     * @private
-     */
-    _onImageLoaded: function () {
+    _onContentChanged: function (ev) {
         this._computeHeights();
     },
 });
