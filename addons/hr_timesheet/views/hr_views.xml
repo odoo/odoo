@@ -33,12 +33,14 @@
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
             <xpath expr="//page[@name='hr_settings']" position="inside">
-                <group string="Timesheets" name="timesheet" groups="hr_timesheet.group_timesheet_manager">
-                    <label for="timesheet_cost"/>
-                    <div>
-                        <field name="timesheet_cost" class="oe_inline"/> per hour
-                        <field name="currency_id" invisible="1"/>
-                    </div>
+                <group>
+                    <group string="Timesheets" name="timesheet" groups="hr_timesheet.group_timesheet_manager">
+                        <label for="timesheet_cost"/>
+                        <div>
+                            <field name="timesheet_cost" class="oe_inline"/> per hour
+                            <field name="currency_id" invisible="1"/>
+                        </div>
+                    </group>
                 </group>
             </xpath>
             <div name="button_box" position="inside">

@@ -745,6 +745,7 @@ class IrTranslation(models.Model):
             'target': 'current',
             'flags': {'search_view': True, 'action_buttons': True},
             'domain': domain,
+            'context': {},
         }
         if field:
             fld = record._fields[field]
@@ -763,8 +764,11 @@ class IrTranslation(models.Model):
                     pass
 
             action['target'] = 'new'
+            action['context']['translation_type'] = 'text' if fld.type in ['text', 'html'] else 'char'
+            action['context']['translation_show_src'] = False
             if callable(fld.translate):
                 action['view_id'] = self.env.ref('base.view_translation_lang_src_value_tree').id,
+                action['context']['translation_show_src'] = True
             else:
                 action['view_id'] = self.env.ref('base.view_translation_lang_value_tree').id,
 
@@ -832,7 +836,7 @@ class IrTranslation(models.Model):
         :return: action definition to open the list of available translations
         """
         fields = self.env['ir.model.fields'].search([('model', '=', model_name)])
-        selection_ids = [field.selection_ids.ids for field in fields if field.type == 'selection']
+        selection_ids = tools.flatten([field.selection_ids.ids for field in fields if field.ttype == 'selection'])
         view = self.env.ref("base.view_translation_tree", False) or self.env['ir.ui.view']
         return {
             'name': _("Technical Translations"),

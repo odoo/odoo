@@ -12,6 +12,7 @@ from odoo.tools import float_is_zero
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.osv.expression import AND
+import base64
 
 _logger = logging.getLogger(__name__)
 
@@ -19,7 +20,7 @@ _logger = logging.getLogger(__name__)
 class PosOrder(models.Model):
     _name = "pos.order"
     _description = "Point of Sale Orders"
-    _order = "id desc"
+    _order = "date_order desc, name desc, id desc"
 
     @api.model
     def _amount_line_tax(self, line, fiscal_position_id):
@@ -34,11 +35,11 @@ class PosOrder(models.Model):
     def _order_fields(self, ui_order):
         process_line = partial(self.env['pos.order.line']._order_line_fields, session_id=ui_order['pos_session_id'])
         return {
-            'name':         ui_order['name'],
             'user_id':      ui_order['user_id'] or False,
             'session_id':   ui_order['pos_session_id'],
             'lines':        [process_line(l) for l in ui_order['lines']] if ui_order['lines'] else False,
             'pos_reference': ui_order['name'],
+            'sequence_number': ui_order['sequence_number'],
             'partner_id':   ui_order['partner_id'] or False,
             'date_order':   ui_order['creation_date'].replace('T', ' ')[:19],
             'fiscal_position_id': ui_order['fiscal_position_id'],
@@ -59,6 +60,8 @@ class PosOrder(models.Model):
             'amount': ui_paymentline['amount'] or 0.0,
             'payment_date': payment_date,
             'payment_method_id': ui_paymentline['payment_method_id'],
+            'card_type': ui_paymentline.get('card_type'),
+            'transaction_id': ui_paymentline.get('transaction_id'),
             'pos_order_id': order.id,
         }
 
@@ -318,11 +321,18 @@ class PosOrder(models.Model):
 
     @api.model
     def _complete_values_from_session(self, session, values):
-        values['name'] = session.config_id.sequence_id._next()
+        if values.get('state') and values['state'] == 'paid':
+            values['name'] = session.config_id.sequence_id._next()
         values.setdefault('pricelist_id', session.config_id.pricelist_id.id)
         values.setdefault('fiscal_position_id', session.config_id.default_fiscal_position_id.id)
         values.setdefault('company_id', session.config_id.company_id.id)
         return values
+
+    def write(self, vals):
+        for order in self:
+            if vals.get('state') and vals['state'] == 'paid' and order.name == '/':
+                vals['name'] = order.config_id.sequence_id._next()
+        return super(PosOrder, self).write(vals)
 
     def action_view_invoice(self):
         return {
@@ -603,6 +613,35 @@ class PosOrder(models.Model):
             'type': 'ir.actions.act_window',
             'target': 'current',
         }
+
+    @api.model
+    def action_receipt_to_customer(self, name, client, ticket, order_ids=False):
+        template_obj = self.env['mail.mail']
+        message = "<p>Dear %s,<br/>Here is your electronic ticket from the %s. </p>" % (client['name'], name)
+        template_data = {
+            'subject': 'Receipt %s' % name,
+            'body_html': message + '<img src="data:image/jpeg;base64,%s"/>' % ticket,
+            'email_from': self.env.company.email,
+            'email_to': client['email']
+        }
+
+        if order_ids and self.env['pos.order'].browse(order_ids[0]).account_move:
+            report = self.env.ref('point_of_sale.pos_invoice_report').render_qweb_pdf(order_ids[0])
+            filename = name + '.pdf'
+            attachment = self.env['ir.attachment'].create({
+                'name': filename,
+                'type': 'binary',
+                'datas': base64.b64encode(report[0]),
+                'datas_fname': filename,
+                'store_fname': filename,
+                'res_model': 'account.move',
+                'res_id': order_ids[0],
+                'mimetype': 'application/x-pdf'
+            })
+            template_data['attachment_ids'] = attachment
+
+        template_id = template_obj.create(template_data)
+        template_obj.send(template_id)
 
     @api.model
     def remove_from_ui(self, server_ids):

@@ -20,7 +20,7 @@ class BaseLanguageInstall(models.TransientModel):
 
     @api.model
     def _get_languages(self):
-        return self.env['res.lang'].get_available()
+        return [[code, name] for code, _, name in self.env['res.lang'].get_available()]
 
     lang = fields.Selection(_get_languages, string='Language', required=True,
                             default=_default_language)
@@ -35,6 +35,8 @@ class BaseLanguageInstall(models.TransientModel):
         mods = self.env['ir.module.module'].search([('state', '=', 'installed')])
         mods.with_context(overwrite=self.overwrite)._update_translations(self.lang)
         self.state = 'done'
+        self.env.cr.execute('ANALYZE ir_translation')
+
         return {
             'name': _('Language Pack'),
             'view_mode': 'form',

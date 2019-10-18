@@ -8,7 +8,7 @@ Create coupon and promotion codes to share in order to boost your sales (free pr
 
 Coupon & promotion programs can be edited in the Catalog menu of the Website app.
     """,
-    'category': 'Website',
+    'category': 'Website/Website',
     'version': '1.0',
     'depends': ['website_sale', 'sale_coupon'],
     'data': [

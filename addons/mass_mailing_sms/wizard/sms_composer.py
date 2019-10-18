@@ -3,7 +3,7 @@
 
 import werkzeug.urls
 
-from odoo import fields, models
+from odoo import fields, models, _
 
 
 class SMSComposer(models.TransientModel):
@@ -45,7 +45,7 @@ class SMSComposer(models.TransientModel):
             trace_values['ignored'] = fields.Datetime.now()
         else:
             if self.mass_sms_allow_unsubscribe:
-                sms_values['body'] = '%s %s' % ((sms_values['body'] or ''), self._get_unsubscribe_url(record.id, trace_code, sms_values['number']))
+                sms_values['body'] = '%s\n%s' % (sms_values['body'] or '', _('STOP SMS : %s') % self._get_unsubscribe_url(record.id, trace_code, sms_values['number']))
         return trace_values
 
     def _get_blacklist_record_ids(self, records, recipients_info):
@@ -74,12 +74,9 @@ class SMSComposer(models.TransientModel):
                 all_bodies[sms_id] = body
         return all_bodies
 
-    def _prepare_mass_sms_values(self, records=None):
-        result = super(SMSComposer, self)._prepare_mass_sms_values(records=records)
+    def _prepare_mass_sms_values(self, records):
+        result = super(SMSComposer, self)._prepare_mass_sms_values(records)
         if self.composition_mode == 'mass' and self.mailing_id:
-            records = records if records is not None else self._get_records()
-
-            # for record_id, sms_values in result.items():
             for record in records:
                 sms_values = result[record.id]
 
@@ -90,8 +87,8 @@ class SMSComposer(models.TransientModel):
                 })
         return result
 
-    def _action_send_sms_mass(self, records=None):
-        sms_all = super(SMSComposer, self)._action_send_sms_mass()
+    def _prepare_mass_sms(self, records, sms_record_values):
+        sms_all = super(SMSComposer, self)._prepare_mass_sms(records, sms_record_values)
         if self.mailing_id:
             updated_bodies = sms_all._update_body_short_links()
             for sms in sms_all:

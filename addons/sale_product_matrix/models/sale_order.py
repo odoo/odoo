@@ -9,7 +9,7 @@ class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     report_grids = fields.Boolean(
-        string="Print Products Grids", default=True,
+        string="Print Variant Grids", default=True,
         help="If set, the matrix of the products configurable by matrix will be shown on the report of the order.")
 
     """ Matrix loading and update: fields and methods :

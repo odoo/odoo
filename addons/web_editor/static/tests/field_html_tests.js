@@ -55,6 +55,19 @@ QUnit.module('web_editor', {}, function () {
                         body_arch: "<div class='field_body'>yep</div>",
                     }],
                 },
+                "ir.translation": {
+                    fields: {
+                        lang_code: {type: "char"},
+                        value: {type: "char"},
+                        res_id: {type: "integer"}
+                    },
+                    records: [{
+                        id: 99,
+                        res_id: 12,
+                        value: '',
+                        lang_code: 'en_US'
+                    }]
+                },
             });
 
             testUtils.mock.patch(ajax, {
@@ -382,7 +395,7 @@ QUnit.module('web_editor', {}, function () {
         QUnit.module('translation');
 
         QUnit.test('field html translatable', async function (assert) {
-            assert.expect(3);
+            assert.expect(4);
 
             var multiLang = _t.database.multi_lang;
             _t.database.multi_lang = true;
@@ -400,7 +413,13 @@ QUnit.module('web_editor', {}, function () {
                 mockRPC: function (route, args) {
                     if (route === '/web/dataset/call_button' && args.method === 'translate_fields') {
                         assert.deepEqual(args.args, ['note.note', 1, 'body'], "should call 'call_button' route");
-                        return Promise.resolve();
+                        return Promise.resolve({
+                            domain: [],
+                            context: {search_default_name: 'partnes,foo'},
+                        });
+                    }
+                    if (route === "/web/dataset/call_kw/res.lang/get_installed") {
+                        return Promise.resolve([["en_US"], ["fr_BE"]]);
                     }
                     return this._super.apply(this, arguments);
                 },
@@ -412,6 +431,7 @@ QUnit.module('web_editor', {}, function () {
             var $button = form.$('.oe_form_field_html .o_field_translate');
             assert.strictEqual($button.length, 1, "should have a translate button");
             await testUtils.dom.click($button);
+            assert.containsOnce($(document), '.o_translation_dialog', 'should have a modal to translate');
 
             form.destroy();
             _t.database.multi_lang = multiLang;

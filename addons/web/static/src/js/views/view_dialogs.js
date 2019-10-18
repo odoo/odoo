@@ -155,13 +155,7 @@ var FormViewDialog = ViewDialog.extend({
 
                 var multi = options.disable_multiple_selection;
                 if (!multi && this.deletable) {
-                    options.buttons.push({
-                        text: _t("Remove"),
-                        classes: 'btn-secondary ' + oBtnRemove,
-                        click: function() {
-                            self._remove().then(self.close.bind(self));
-                        }
-                    });
+                    this._setRemoveButtonOption(options, oBtnRemove);
                 }
             }
         }
@@ -276,6 +270,24 @@ var FormViewDialog = ViewDialog.extend({
             return self.on_saved(record, !!changedFields.length);
         });
     },
+
+    /**
+     * Set the "remove" button into the options' buttons list
+     *
+     * @private
+     * @param {Object} options The options object to modify
+     * @param {string} btnClasses The classes for the remove button
+     */
+    _setRemoveButtonOption(options, btnClasses) {
+        const self = this;
+        options.buttons.push({
+            text: _t("Remove"),
+            classes: 'btn-secondary ' + btnClasses,
+            click: function() {
+                self._remove().then(self.close.bind(self));
+            }
+        });
+    },
 });
 
 /**
@@ -308,6 +320,7 @@ var SelectCreateDialog = ViewDialog.extend({
         this._super.apply(this, arguments);
         _.defaults(this.options, { initial_view: 'search' });
         this.on_selected = this.options.on_selected || (function () {});
+        this.on_closed = this.options.on_closed || (function () {});
         this.initialIDs = this.options.initial_ids;
         this.viewType = 'list';
     },
@@ -382,6 +395,10 @@ var SelectCreateDialog = ViewDialog.extend({
         }).then(function () {
             return fragment;
         });
+    },
+    close: function () {
+        this._super.apply(this, arguments);
+        this.on_closed();
     },
     create_edit_record: function () {
         var self = this;

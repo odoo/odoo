@@ -28,6 +28,34 @@ class test_inherits(common.TransactionCase):
         pallet.write({'name': 'C'})
         self.assertEqual(pallet.name, 'C')
 
+    def test_write_4_one2many(self):
+        """ Check that we can write on an inherited one2many field. """
+        box = self.env.ref('test_inherits.box_a')
+        box.write({'line_ids': [(0, 0, {'name': 'Line 1'})]})
+        self.assertTrue(all(box.line_ids._ids))
+        self.assertEqual(box.line_ids.mapped('name'), ['Line 1'])
+        self.assertEqual(box.line_ids, box.unit_id.line_ids)
+        box.flush()
+        box.invalidate_cache(['line_ids'])
+        box.write({'line_ids': [(0, 0, {'name': 'Line 2'})]})
+        self.assertTrue(all(box.line_ids._ids))
+        self.assertEqual(box.line_ids.mapped('name'), ['Line 1', 'Line 2'])
+        self.assertEqual(box.line_ids, box.unit_id.line_ids)
+        box.flush()
+        box.invalidate_cache(['line_ids'])
+        box.write({'line_ids': [(1, box.line_ids[0].id, {'name': 'First line'})]})
+        self.assertTrue(all(box.line_ids._ids))
+        self.assertEqual(box.line_ids.mapped('name'), ['First line', 'Line 2'])
+        self.assertEqual(box.line_ids, box.unit_id.line_ids)
+
+    def test_write_5_field_readonly(self):
+        """ Check that we can write on an inherited readonly field. """
+        self.assertTrue(self.env['test.box']._fields['readonly_name'])
+        box = self.env.ref('test_inherits.box_a')
+        box.write({'readonly_name': "Superuser's box"})
+        self.assertEqual(box.readonly_name, "Superuser's box")
+        self.assertEqual(box.unit_id.readonly_name, "Superuser's box")
+
     def test_ir_model_data_inherits(self):
         """ Check the existence of the correct ir.model.data """
         IrModelData = self.env['ir.model.data']

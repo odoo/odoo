@@ -11,12 +11,15 @@ from odoo.tools import float_compare, float_round, float_is_zero
 class MrpAbstractWorkorder(models.AbstractModel):
     _name = "mrp.abstract.workorder"
     _description = "Common code between produce wizards and workorders."
+    _check_company_auto = True
 
-    production_id = fields.Many2one('mrp.production', 'Manufacturing Order', required=True)
-    product_id = fields.Many2one(related='production_id.product_id', readonly=True, store=True)
+    production_id = fields.Many2one('mrp.production', 'Manufacturing Order', required=True, check_company=True)
+    product_id = fields.Many2one(related='production_id.product_id', readonly=True, store=True, check_company=True)
     qty_producing = fields.Float(string='Currently Produced Quantity', digits='Product Unit of Measure')
     product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure', required=True, readonly=True)
-    finished_lot_id = fields.Many2one('stock.production.lot', string='Lot/Serial Number', domain="[('product_id', '=', product_id)]")
+    finished_lot_id = fields.Many2one(
+        'stock.production.lot', string='Lot/Serial Number',
+        domain="[('product_id', '=', product_id), ('company_id', '=', company_id)]", check_company=True)
     product_tracking = fields.Selection(related="product_id.tracking")
     consumption = fields.Selection([
         ('strict', 'Strict'),
@@ -24,6 +27,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
         required=True,
     )
     use_create_components_lots = fields.Boolean(related="production_id.picking_type_id.use_create_components_lots")
+    company_id = fields.Many2one(related='production_id.company_id')
 
     @api.model
     def _prepare_component_quantity(self, move, qty_producing):
@@ -186,7 +190,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
                 continue
             # search wo line on which the lot is not fully consumed or other reserved lot
             linked_wo_line = self._workorder_line_ids().filtered(
-                lambda line: line.product_id == move_line.product_id and
+                lambda line: line.move_id == move and
                 line.lot_id == move_line.lot_id
             )
             if linked_wo_line:
@@ -295,20 +299,37 @@ class MrpAbstractWorkorder(models.AbstractModel):
                 if float_compare(qty_done, qty_to_consume, precision_rounding=rounding) != 0:
                     raise UserError(_('You should consume the quantity of %s defined in the BoM. If you want to consume more or less components, change the consumption setting on the BoM.') % lines[0].product_id.name)
 
+    def _check_sn_uniqueness(self):
+        """ Alert the user if the serial number as already been produced """
+        if self.product_tracking == 'serial' and self.finished_lot_id:
+            sml = self.env['stock.move.line'].search_count([
+                ('lot_id', '=', self.finished_lot_id.id),
+                ('location_id.usage', '=', 'production'),
+                ('qty_done', '=', 1),
+                ('state', '=', 'done')
+            ])
+            if sml:
+                raise UserError(_('This serial number for product %s has already been produced') % self.product_id.name)
+
 
 class MrpAbstractWorkorderLine(models.AbstractModel):
     _name = "mrp.abstract.workorder.line"
     _description = "Abstract model to implement product_produce_line as well as\
     workorder_line"
+    _check_company_auto = True
 
-    move_id = fields.Many2one('stock.move')
-    product_id = fields.Many2one('product.product', 'Product', required=True)
+    move_id = fields.Many2one('stock.move', check_company=True)
+    product_id = fields.Many2one('product.product', 'Product', required=True, check_company=True)
     product_tracking = fields.Selection(related="product_id.tracking")
-    lot_id = fields.Many2one('stock.production.lot', 'Lot/Serial Number')
+    lot_id = fields.Many2one(
+        'stock.production.lot', 'Lot/Serial Number',
+        check_company=True,
+        domain="[('product_id', '=', product_id), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]")
     qty_to_consume = fields.Float('To Consume', digits='Product Unit of Measure')
     product_uom_id = fields.Many2one('uom.uom', string='Unit of Measure')
     qty_done = fields.Float('Consumed', digits='Product Unit of Measure')
     qty_reserved = fields.Float('Reserved', digits='Product Unit of Measure')
+    company_id = fields.Many2one('res.company', compute='_compute_company_id')
 
     @api.onchange('lot_id')
     def _onchange_lot_id(self):
@@ -335,6 +356,10 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
                 res['warning'] = {'title': _('Warning'), 'message': message}
         return res
 
+    def _compute_company_id(self):
+        for line in self:
+            line.company_id = line._get_production().company_id
+
     def _update_move_lines(self):
         """ update a move line to save the workorder line data"""
         self.ensure_one()
@@ -347,9 +372,6 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
         # consumed move lines, raise.
         if self.product_id.tracking != 'none' and not self.lot_id:
             raise UserError(_('Please enter a lot or serial number for %s !' % self.product_id.display_name))
-
-        if self.lot_id and self.product_id.tracking == 'serial' and self.lot_id in self.move_id.move_line_ids.filtered(lambda ml: ml.qty_done).mapped('lot_id'):
-            raise UserError(_('You cannot consume the same serial number twice. Please correct the serial numbers encoded.'))
 
         # Update reservation and quantity done
         for ml in move_lines:
@@ -432,6 +454,51 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
             vals_list.append(vals)
 
         return vals_list
+
+    def _check_line_sn_uniqueness(self):
+        """ Alert the user if the line serial number as already been consumed/produced """
+        self.ensure_one()
+        if self.product_tracking == 'serial' and self.lot_id:
+            domain = [
+                ('lot_id', '=', self.lot_id.id),
+                ('qty_done', '=', 1),
+                ('state', '=', 'done')
+            ]
+            # Adapt domain and error message in case of component or byproduct
+            if self[self._get_raw_workorder_inverse_name()]:
+                message = _('The serial number %s used for component %s has already been consumed') % (self.lot_id.name, self.product_id.name)
+                co_prod_move_lines = self._get_production().move_raw_ids.move_line_ids
+                co_prod_wo_lines = self[self._get_raw_workorder_inverse_name()].raw_workorder_line_ids
+                domain_unbuild = domain + [
+                    ('production_id', '=', False),
+                    ('location_id.usage', '=', 'production')
+                ]
+                domain.append(('location_dest_id.usage', '=', 'production'))
+            else:
+                message = _('The serial number %s used for byproduct %s has already been produced') % (self.lot_id.name, self.product_id.name)
+                co_prod_move_lines = self._get_production().move_finished_ids.move_line_ids.filtered(lambda ml: ml.product_id != self._get_production().product_id)
+                co_prod_wo_lines = self[self._get_finished_workoder_inverse_name()].finished_workorder_line_ids
+                domain_unbuild = domain + [
+                    ('production_id', '=', False),
+                    ('location_dest_id.usage', '=', 'production')
+                ]
+                domain.append(('location_id.usage', '=', 'production'))
+
+            # Check presence of same sn in previous productions
+            duplicates = self.env['stock.move.line'].search_count(domain)
+            if duplicates:
+                # Maybe some move lines have been compensated by unbuild
+                duplicates_unbuild = self.env['stock.move.line'].search_count(domain_unbuild)
+                if not (duplicates_unbuild and duplicates - duplicates_unbuild == 0):
+                    raise UserError(message)
+            # Check presence of same sn in current production
+            duplicates = co_prod_move_lines.filtered(lambda ml: ml.qty_done and ml.lot_id == self.lot_id)
+            if duplicates:
+                raise UserError(message)
+            # Check presence of same sn in current wizard/workorder
+            duplicates = co_prod_wo_lines.filtered(lambda wol: wol.lot_id == self.lot_id) - self
+            if duplicates:
+                raise UserError(message)
 
     def _unreserve_order(self):
         """ Unreserve line with lower reserved quantity first """

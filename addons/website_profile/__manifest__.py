@@ -6,7 +6,7 @@
     'category': 'Hidden',
     'version': '1.0',
     'summary': 'Access the website profile of the users',
-    'description': """Allows to acces the website profile of the users and see their statistics (karma, badges, etc..)""",
+    'description': "Allows to access the website profile of the users and see their statistics (karma, badges, etc..)",
     'depends': [
         'website_partner',
         'gamification'

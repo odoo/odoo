@@ -2,6 +2,7 @@ odoo.define('web.action_manager_tests', function (require) {
 "use strict";
 
 var ReportClientAction = require('report.client_action');
+var Notification = require('web.Notification');
 var NotificationService = require('web.NotificationService');
 var AbstractAction = require('web.AbstractAction');
 var AbstractStorageService = require('web.AbstractStorageService');
@@ -1275,30 +1276,6 @@ QUnit.module('ActionManager', {
         actionManager.destroy();
     });
 
-    QUnit.test('state.sa should load action from session', async function (assert) {
-        assert.expect(1);
-
-        var actionManager = await createActionManager({
-            actions: this.actions,
-            archs: this.archs,
-            data: this.data,
-            mockRPC: function (route, args) {
-                if (route === '/web/session/get_session_action') {
-                    return Promise.resolve(1);
-                }
-                return this._super.apply(this, arguments);
-            },
-        });
-        await actionManager.loadState({
-            sa: 1,
-        });
-
-        assert.strictEqual(actionManager.$('.o_kanban_view').length, 1,
-            "should have rendered a kanban view");
-
-        actionManager.destroy();
-    });
-
     QUnit.module('Concurrency management');
 
     QUnit.test('drop previous actions if possible', async function (assert) {
@@ -1922,6 +1899,64 @@ QUnit.module('ActionManager', {
         delete core.action_registry.map.HelloWorldTest;
     });
 
+    QUnit.test('test display_notification client action', async function (assert) {
+        assert.expect(6);
+
+        testUtils.mock.patch(Notification, {
+            _animation: false,
+        });
+
+        const actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            services: {
+                notification: NotificationService,
+            },
+        });
+
+        await actionManager.doAction(1);
+        assert.containsOnce(actionManager, '.o_kanban_view');
+
+        await actionManager.doAction({
+            type: 'ir.actions.client',
+            tag: 'display_notification',
+            params: {
+                title: 'title',
+                message: 'message',
+                sticky: true,
+            }
+        });
+        const notificationSelector = '.o_notification_manager .o_notification';
+
+        assert.containsOnce(document.body, notificationSelector,
+            'a notification should be present');
+
+        const notificationElement = document.body.querySelector(notificationSelector);
+        assert.strictEqual(
+            notificationElement.querySelector('.o_notification_title').textContent,
+            'title',
+            "the notification should have the correct title"
+        );
+        assert.strictEqual(
+            notificationElement.querySelector('.o_notification_content').textContent,
+            'message',
+            "the notification should have the correct message"
+        );
+
+        assert.containsOnce(actionManager, '.o_kanban_view');
+
+        await testUtils.dom.click(
+            notificationElement.querySelector('.o_notification_close')
+        );
+
+        assert.containsNone(document.body, notificationSelector,
+            "the notification should be destroy ");
+
+        actionManager.destroy();
+        testUtils.mock.unpatch(Notification);
+    });
+
     QUnit.module('Server actions');
 
     QUnit.test('can execute server actions from db ID', async function (assert) {
@@ -2203,6 +2238,46 @@ QUnit.module('ActionManager', {
 
         actionManager.destroy();
         testUtils.mock.unpatch(ReportClientAction);
+    });
+
+    QUnit.test('crashmanager service called on failed report download actions', async function (assert) {
+        assert.expect(1);
+
+        var actionManager = await createActionManager({
+            data: this.data,
+            actions: this.actions,
+            services: {
+                report: ReportService,
+            },
+            mockRPC: function (route) {
+                if (route === '/report/check_wkhtmltopdf') {
+                    return Promise.resolve('ok');
+                }
+                return this._super.apply(this, arguments);
+            },
+            session: {
+                get_file: function (params) {
+                    params.error({
+                        data: {
+                            name: 'error',
+                            exception_type: 'warning',
+                            arguments: ['could not download file'],
+                        }
+                    });
+                    params.complete();
+                },
+            },
+        });
+
+        try {
+            await actionManager.doAction(11);
+        } catch (e) {
+            // e is undefined if we land here because of a rejected promise,
+            // otherwise, it is an Error, which is not what we expect
+            assert.strictEqual(e, undefined);
+        }
+
+        actionManager.destroy();
     });
 
     QUnit.module('Window Actions');
@@ -3478,7 +3553,7 @@ QUnit.module('ActionManager', {
                 active_ids: [1],
             },
             flags: {
-                withSearchPanel: false,
+                searchPanelDefaultNoFilter: true,
             },
         });
         var checkSessionStorage = false;
@@ -4184,6 +4259,45 @@ QUnit.module('ActionManager', {
         await testUtils.fields.triggerKeydown($searchInput, 'enter');
 
         assert.verifySteps(["search_read |,foo,ilike,m,foo,ilike,o"]);
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('Call twice clearUncommittedChanges in a row does not display twice the discard warning', async function (assert) {
+        assert.expect(4);
+
+        var actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            intercepts: {
+                clear_uncommitted_changes: function () {
+                    actionManager.clearUncommittedChanges();
+                },
+            },
+        });
+
+        // execute an action and edit existing record
+        await actionManager.doAction(3);
+
+        await testUtils.dom.click(actionManager.$('.o_list_view .o_data_row:first'));
+        assert.containsOnce(actionManager, '.o_form_view.o_form_readonly');
+
+        await testUtils.dom.click($('.o_control_panel .o_form_button_edit'));
+        assert.containsOnce(actionManager, '.o_form_view.o_form_editable');
+
+        await testUtils.fields.editInput(actionManager.$('input[name=foo]'), 'val');
+        actionManager.trigger_up('clear_uncommitted_changes');
+        await testUtils.nextTick();
+
+        assert.containsOnce($('body'), '.modal'); // confirm discard dialog
+        // confirm discard changes
+        await testUtils.dom.click($('.modal .modal-footer .btn-primary'));
+
+        actionManager.trigger_up('clear_uncommitted_changes');
+        await testUtils.nextTick();
+
+        assert.containsNone($('body'), '.modal');
 
         actionManager.destroy();
     });

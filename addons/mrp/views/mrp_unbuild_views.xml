@@ -27,8 +27,6 @@
                             domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                         <filter invisible="1" string="Future Activitie" name="activities_upcoming_all"
                             domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
-                        <filter string="Exception Activities" name="activities_exception"
-                            domain="[('activity_exception_decoration', '!=', False)]"/>
                     </group>
                     <group expand='0' string='Group by...'>
                         <filter string='Product' name="productgroup" context="{'group_by': 'product_id'}"/>
@@ -112,13 +110,8 @@
                         </div>
                         <group>
                             <group>
-                                <field name="product_id" domain="[('bom_ids', '!=', False)]" attrs="{'readonly':[('mo_id','!=',False)]}" force_save="1"/>
-                                <field name="bom_id" domain="['|',
-                                            ('product_id','=',product_id),
-                                            '&amp;',
-                                                ('product_tmpl_id.product_variant_ids','=',product_id),
-                                                ('product_id','=',False),
-                                                ('type', '=', 'normal')]" attrs="{'readonly':[('mo_id','!=',False)]}" force_save="1"/>
+                                <field name="product_id" attrs="{'readonly':[('mo_id','!=',False)]}" force_save="1"/>
+                                <field name="bom_id" attrs="{'readonly':[('mo_id','!=',False)]}" force_save="1"/>
                                 <label for="product_qty"/>
                                 <div class="o_row">
                                     <field name="product_qty"/>
@@ -127,10 +120,11 @@
                             </group>
                             <group>
                                 <field name="mo_id"/>
-                                <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" domain="[('usage','=','internal')]"/>
-                                <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" domain="[('usage','=','internal')]"/>
+                                <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
+                                <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
                                 <field name="has_tracking" invisible="1"/>
                                 <field name="lot_id" attrs="{'invisible': [('has_tracking', '=', 'none')], 'required': [('has_tracking', '!=', 'none')]}" groups="stock.group_production_lot"/>
+                                <field name="company_id" group="base.group_multi_company"/>
                             </group>
                         </group>
                     </sheet>
@@ -158,6 +152,7 @@
                     <field name="state"/>
                     <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>

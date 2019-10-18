@@ -4,7 +4,7 @@
 from collections import defaultdict
 from datetime import timedelta
 
-from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_is_zero
 
@@ -72,7 +72,6 @@ class PosSession(models.Model):
         help="Total of all paid sales orders")
     cash_register_balance_end = fields.Monetary(
         compute='_compute_cash_balance',
-        digits=0,
         string="Theoretical Closing Balance",
         help="Sum of opening balance and transactions.",
         readonly=True)
@@ -187,10 +186,10 @@ class PosSession(models.Model):
         if values.get('name'):
             pos_name += ' ' + values['name']
 
-        uid = SUPERUSER_ID if self.env.user.has_group('point_of_sale.group_pos_user') else self.env.user.id
-
         cash_payment_methods = pos_config.payment_method_ids.filtered(lambda pm: pm.is_cash_count)
         statement_ids = self.env['account.bank.statement']
+        if self.user_has_groups('point_of_sale.group_pos_user'):
+            statement_ids = statement_ids.sudo()
         for cash_journal in cash_payment_methods.mapped('cash_journal_id'):
             ctx['journal_id'] = cash_journal.id if pos_config.cash_control and cash_journal.type == 'cash' else False
             st_values = {
@@ -199,7 +198,7 @@ class PosSession(models.Model):
                 'name': pos_name,
                 'balance_start': self.env["account.bank.statement"]._get_opening_balance(cash_journal.id) if cash_journal.type == 'cash' else 0
             }
-            statement_ids |= statement_ids.with_context(ctx).with_user(uid).create(st_values)
+            statement_ids |= statement_ids.with_context(ctx).create(st_values)
 
         values.update({
             'name': pos_name,
@@ -207,7 +206,10 @@ class PosSession(models.Model):
             'config_id': config_id,
         })
 
-        res = super(PosSession, self.with_context(ctx).with_user(uid)).create(values)
+        if self.user_has_groups('point_of_sale.group_pos_user'):
+            res = super(PosSession, self.with_context(ctx).sudo()).create(values)
+        else:
+            res = super(PosSession, self.with_context(ctx)).create(values)
         if not pos_config.cash_control:
             res.action_pos_session_open()
 
@@ -220,9 +222,11 @@ class PosSession(models.Model):
 
     def login(self):
         self.ensure_one()
+        login_number = self.login_number + 1
         self.write({
-            'login_number': self.login_number + 1,
+            'login_number': login_number,
         })
+        return login_number
 
     def action_pos_session_open(self):
         # second browse because we need to refetch the data from the DB for cash_register_id
@@ -307,7 +311,6 @@ class PosSession(models.Model):
             'journal_id': journal.id,
             'date': fields.Date.context_today(self),
             'ref': self.name,
-            'name': journal.sequence_id.next_by_id()
         })
         self.write({'move_id': account_move.id})
 
@@ -519,7 +522,7 @@ class PosSession(models.Model):
         """
         def get_income_account(order_line):
             product = order_line.product_id
-            income_account = product.property_account_income_id or product.categ_id.property_account_income_categ_id
+            income_account = product.with_context(force_company=order_line.company_id.id).property_account_income_id or product.categ_id.with_context(force_company=order_line.company_id.id).property_account_income_categ_id
             if not income_account:
                 raise UserError(_('Please define income account for this product: "%s" (id:%d).')
                                 % (product.name, product.id))
@@ -737,18 +740,17 @@ class PosSession(models.Model):
             'name': _('Payments'),
             'type': 'ir.actions.act_window',
             'res_model': 'pos.payment',
-            'view_id': self.env.ref('point_of_sale.view_pos_payment_tree').id,
-            'view_mode': 'tree',
+            'view_mode': 'tree,form',
             'domain': [('session_id', '=', self.id)],
             'context': {'search_default_group_by_payment_method': 1}
         }
 
     def open_frontend_cb(self):
         """Open the pos interface with config_id as an extra argument.
-            
+
         In vanilla PoS each user can only have one active session, therefore it was not needed to pass the config_id
         on opening a session. It is also possible to login to sessions created by other users.
-            
+
         :returns: dict
         """
         if not self.ids:
@@ -802,7 +804,7 @@ class PosSession(models.Model):
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'closing.balance.confirm.wizard',
-            'view_id': self.env.ref('point_of_sale.closing_balance_confirm').id,
+            'views': [(False, 'form')],
             'type': 'ir.actions.act_window',
             'context': context,
             'target': 'new'

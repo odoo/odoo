@@ -30,6 +30,8 @@ class TestPyLint(TransactionCase):
         'unreachable',
 
         'mixed-indentation',
+        'deprecated-method',
+        'sql-injection',
     ]
 
     BAD_FUNCTIONS = [
@@ -43,7 +45,7 @@ class TestPyLint(TransactionCase):
     ] + list(tools.SUPPORTED_DEBUGGER)
 
     def _skip_test(self, reason):
-        _logger.warn(reason)
+        _logger.warning(reason)
         self.skipTest(reason)
 
     def test_pylint(self):
@@ -67,7 +69,7 @@ class TestPyLint(TransactionCase):
             '--enable=%s' % ','.join(self.ENABLED_CODES),
             '--reports=n',
             "--msg-template='{msg} ({msg_id}) at {path}:{line}'",
-            '--load-plugins=pylint.extensions.bad_builtin,_odoo_checkers',
+            '--load-plugins=pylint.extensions.bad_builtin,_odoo_checkers,_odoo_checker_sql_injection',
             '--bad-functions=%s' % ','.join(self.BAD_FUNCTIONS),
             '--deprecated-modules=%s' % ','.join(self.BAD_MODULES)
         ]

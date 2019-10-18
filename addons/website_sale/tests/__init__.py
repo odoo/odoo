@@ -7,3 +7,4 @@ from . import test_website_sale_pricelist
 from . import test_website_sale_product_attribute_value_config
 from . import test_website_sale_image
 from . import test_website_sequence
+from . import test_website_sale_visitor

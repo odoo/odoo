@@ -12,7 +12,6 @@ var DateWidget = Widget.extend({
     template: "web.datepicker",
     type_of_date: "date",
     events: {
-        'change.datetimepicker': 'changeDatetime',
         'error.datetimepicker': 'errorDatetime',
         'change .o_datepicker_input': 'changeDatetime',
         'click input': '_onInputClicked',
@@ -32,7 +31,7 @@ var DateWidget = Widget.extend({
             locale: moment.locale(),
             format : this.type_of_date === 'datetime' ? time.getLangDatetimeFormat() : time.getLangDateFormat(),
             minDate: moment({ y: 1900 }),
-            maxDate: moment().add(200, "y"),
+            maxDate: moment({ y: 9999, M: 11, d: 31 }),
             useCurrent: false,
             icons: {
                 time: 'fa fa-clock-o',
@@ -43,7 +42,7 @@ var DateWidget = Widget.extend({
                 next: 'fa fa-chevron-right',
                 today: 'fa fa-calendar-check-o',
                 clear: 'fa fa-delete',
-                close: 'fa fa-times'
+                close: 'fa fa-check primary',
             },
             calendarWeeks: true,
             buttons: {
@@ -92,8 +91,15 @@ var DateWidget = Widget.extend({
      * set datetime value
      */
     changeDatetime: function () {
+        if (this.__libInput > 0) {
+            if (this.options.warn_future) {
+                this._warnFuture(this.getValue());
+            }
+            this.trigger("datetime_changed");
+            return;
+        }
+        var oldValue = this.getValue();
         if (this.isValid()) {
-            var oldValue = this.getValue();
             this._setValueFromUi();
             var newValue = this.getValue();
             var hasChanged = !oldValue !== !newValue;
@@ -110,6 +116,9 @@ var DateWidget = Widget.extend({
                 }
                 this.trigger("datetime_changed");
             }
+        } else {
+            var formattedValue = oldValue ? this._formatClient(oldValue) : null;
+            this.$input.val(formattedValue);
         }
     },
     /**
@@ -251,9 +260,11 @@ var DateWidget = Widget.extend({
      */
     _onDateTimePickerHide: function () {
         this.__isOpen = false;
+        this.changeDatetime();
         if (this._onScroll) {
             window.removeEventListener('scroll', this._onScroll, true);
         }
+        this.changeDatetime();
     },
     /**
      * Reacts to the datetimepicker being shown

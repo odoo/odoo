@@ -1,6 +1,7 @@
 odoo.define('mail.discuss_test', function (require) {
 "use strict";
 
+const Discuss = require('mail.Discuss');
 var mailTestUtils = require('mail.testUtils');
 
 var testUtils = require('web.test_utils');
@@ -138,6 +139,109 @@ QUnit.test('basic rendering', async function (assert) {
     var $history = $sidebar.find('.o_mail_discuss_item[data-thread-id=mailbox_history]');
     assert.strictEqual($history.length, 1,
         "should have the mailbox item 'mailbox_history' in the sidebar");
+    discuss.destroy();
+});
+
+QUnit.test('messaging not ready', async function (assert) {
+    assert.expect(9);
+
+    const messagingReadyProm = testUtils.makeTestPromise();
+    const discuss = await createDiscuss({
+        id: 1,
+        context: {},
+        params: {},
+        data: this.data,
+        services: this.services,
+        async mockRPC(route, args) {
+            if (route === '/mail/init_messaging') {
+                const _super = this._super.bind(this, ...arguments); // limitation of class.js
+                assert.step('/mail/init_messaging:pending');
+                await messagingReadyProm;
+                assert.step('/mail/init_messaging:resolved');
+                return _super();
+            }
+            return this._super(...arguments);
+        },
+    });
+
+    assert.verifySteps(['/mail/init_messaging:pending']);
+    assert.ok(
+        discuss.el,
+        "discuss should be rendered");
+    assert.strictEqual(
+        $('.o_action')[0],
+        discuss.el,
+        "should display discuss even when messaging is not ready");
+    assert.containsOnce(
+        discuss,
+        '.o_mail_discuss_sidebar .o_mail_discuss_loading',
+        "should display sidebar is loading (messaging not yet ready)");
+    assert.containsOnce(
+        discuss,
+        '.o_mail_discuss_content .o_mail_discuss_loading',
+        "should display content is loading (messaging not yet ready)");
+
+    messagingReadyProm.resolve();
+    await testUtils.nextTick();
+    assert.verifySteps(['/mail/init_messaging:resolved']);
+    assert.containsNone(
+        discuss,
+        '.o_mail_discuss_loading',
+        "should no longer display sidebar or content is loading (messaging is ready)");
+
+    discuss.destroy();
+});
+
+QUnit.test('messaging initially ready', async function (assert) {
+    assert.expect(7);
+
+    const startDiscussProm = testUtils.makeTestPromise();
+
+    testUtils.mock.patch(Discuss, {
+        /**
+         * @override
+         */
+        async start() {
+            const _super = this._super.bind(this, ...arguments); // due to limitation of class.js
+            assert.step('discuss:starting');
+            await startDiscussProm;
+            assert.step('discuss:started');
+            return _super();
+        },
+    });
+
+    const discussProm = createDiscuss({
+        id: 1,
+        context: {},
+        params: {},
+        data: this.data,
+        services: this.services,
+        mockRPC(route) {
+            if (route === '/mail/init_messaging') {
+                assert.step(route);
+            }
+            return this._super(...arguments);
+        }
+    });
+    await testUtils.nextTick();
+    assert.verifySteps([
+        '/mail/init_messaging',
+        'discuss:starting',
+    ]);
+
+    startDiscussProm.resolve();
+    await testUtils.nextTick();
+    assert.verifySteps(['discuss:started']);
+    const discuss = await discussProm;
+    assert.ok(
+        discuss.el,
+        "discuss should be rendered");
+    assert.containsNone(
+        discuss,
+        '.o_mail_discuss_loading',
+        "should not display sidebar or content is loading (messaging is ready)");
+
+    testUtils.mock.unpatch(Discuss);
     discuss.destroy();
 });
 
@@ -1115,6 +1219,53 @@ QUnit.test('drag and drop file in composer [REQUIRE NON-INCOGNITO WINDOW]', asyn
         "should display the correct filename");
     assert.hasClass($('.o_attachment_uploaded i'), 'fa-check',
         "text file should have been uploaded");
+
+    discuss.destroy();
+});
+
+QUnit.test('non-deletable message attachments', async function (assert) {
+    assert.expect(2);
+
+    this.data['mail.message'].records = [{
+        attachment_ids: [{
+            filename: "text.txt",
+            id: 250,
+            mimetype: 'text/plain',
+            name: "text.txt",
+        }, {
+            filename: "image.png",
+            id: 251,
+            mimetype: 'image/png',
+            name: "image.png",
+        }],
+        author_id: [5, "Demo User"],
+        body: "<p>test</p>",
+        id: 1,
+        needaction: true,
+        needaction_partner_ids: [3],
+        model: 'some.document',
+        record_name: "SomeDocument",
+        res_id: 100,
+    }];
+
+    const discuss = await createDiscuss({
+        context: {},
+        data: this.data,
+        params: {},
+        services: this.services,
+        session: {
+            partner_id: 3,
+        },
+    });
+    assert.containsN(
+        discuss,
+        '.o_attachment',
+        2,
+        "should display 2 attachments");
+    assert.containsNone(
+        discuss.$('.o_attachment'),
+        'o_attachment_delete_cross',
+        "attachments should not be deletable");
 
     discuss.destroy();
 });

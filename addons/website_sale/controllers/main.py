@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
 import logging
+from datetime import datetime
 from werkzeug.exceptions import Forbidden, NotFound
 
 from odoo import fields, http, tools, _
@@ -136,11 +137,6 @@ class Website(Website):
 
 class WebsiteSale(http.Controller):
 
-    def _get_compute_currency_and_context(self, product=None):
-        pricelist_context, pricelist = self._get_pricelist_context()
-        compute_currency = self._get_compute_currency(pricelist, product)
-        return compute_currency, pricelist_context, pricelist
-
     def _get_pricelist_context(self):
         pricelist_context = dict(request.env.context)
         pricelist = False
@@ -151,12 +147,6 @@ class WebsiteSale(http.Controller):
             pricelist = request.env['product.pricelist'].browse(pricelist_context['pricelist'])
 
         return pricelist_context, pricelist
-
-    def _get_compute_currency(self, pricelist, product=None):
-        company = product and product._get_current_company(pricelist=pricelist, website=request.website) or pricelist.company_id or request.website.company_id
-        from_currency = (product or request.env['res.company']._get_main_company()).currency_id
-        to_currency = pricelist.currency_id
-        return lambda price: from_currency._convert(price, to_currency, company, fields.Date.today())
 
     def _get_search_order(self, post):
         # OrderBy will be parsed in orm and so no direct sql injection
@@ -282,8 +272,6 @@ class WebsiteSale(http.Controller):
         else:
             attributes = ProductAttribute.browse(attributes_ids)
 
-        compute_currency = self._get_compute_currency(pricelist, products[:1])
-
         layout_mode = request.session.get('website_sale_shop_layout_mode')
         if not layout_mode:
             if request.website.viewref('website_sale.products_list_view').active:
@@ -306,7 +294,6 @@ class WebsiteSale(http.Controller):
             'ppr': ppr,
             'categories': categs,
             'attributes': attributes,
-            'compute_currency': compute_currency,
             'keep': keep,
             'search_categories_ids': search_categories.ids,
             'layout_mode': layout_mode,
@@ -343,12 +330,12 @@ class WebsiteSale(http.Controller):
 
         pricelist = request.website.get_current_pricelist()
 
-        def compute_currency(price):
-            return product.currency_id._convert(price, pricelist.currency_id, product._get_current_company(pricelist=pricelist, website=request.website), fields.Date.today())
-
         if not product_context.get('pricelist'):
             product_context['pricelist'] = pricelist.id
             product = product.with_context(product_context)
+
+        # Needed to trigger the recently viewed product rpc
+        view_track = request.website.viewref("website_sale.product").track
 
         return {
             'search': search,
@@ -361,6 +348,7 @@ class WebsiteSale(http.Controller):
             'main_object': product,
             'product': product,
             'add_qty': add_qty,
+            'view_track': view_track,
         }
 
     @http.route(['/shop/change_pricelist/<model("product.pricelist"):pl_id>'], type='http', auth="public", website=True, sitemap=False)
@@ -410,17 +398,8 @@ class WebsiteSale(http.Controller):
             elif abandoned_order.id != request.session.get('sale_order_id'):  # abandoned cart found, user have to choose what to do
                 values.update({'access_token': abandoned_order.access_token})
 
-        if order:
-            from_currency = order.company_id.currency_id
-            to_currency = order.pricelist_id.currency_id
-            compute_currency = lambda price: from_currency._convert(
-                price, to_currency, request.env.company, fields.Date.today())
-        else:
-            compute_currency = lambda price: price
-
         values.update({
             'website_sale_order': order,
-            'compute_currency': compute_currency,
             'date': fields.Date.today(),
             'suggested_products': [],
         })
@@ -482,8 +461,6 @@ class WebsiteSale(http.Controller):
 
         order = request.website.sale_get_order()
         value['cart_quantity'] = order.cart_quantity
-        from_currency = order.company_id.currency_id
-        to_currency = order.pricelist_id.currency_id
 
         if not display:
             return value
@@ -495,8 +472,6 @@ class WebsiteSale(http.Controller):
         })
         value['website_sale.short_cart_summary'] = request.env['ir.ui.view'].render_template("website_sale.short_cart_summary", {
             'website_sale_order': order,
-            'compute_currency': lambda price: from_currency._convert(
-                price, to_currency, order.company_id, fields.Date.today()),
         })
         return value
 
@@ -649,7 +624,7 @@ class WebsiteSale(http.Controller):
         if mode[0] == 'new':
             new_values['company_id'] = request.website.company_id.id
 
-        lang = request.lang if request.lang in request.website.mapped('language_ids.code') else None
+        lang = request.lang.code if request.lang.code in request.website.mapped('language_ids.code') else None
         if lang:
             new_values['lang'] = lang
         if mode == ('edit', 'billing') and order.partner_id.type == 'contact':
@@ -977,7 +952,10 @@ class WebsiteSale(http.Controller):
     @http.route('/shop/payment/get_status/<int:sale_order_id>', type='json', auth="public", website=True)
     def payment_get_status(self, sale_order_id, **post):
         order = request.env['sale.order'].sudo().browse(sale_order_id).exists()
-        assert order.id == request.session.get('sale_last_order_id')
+        if order.id != request.session.get('sale_last_order_id'):
+            # either something went wrong or the session is unbound
+            # prevent recalling every 3rd of a second in the JS widget
+            return {}
 
         return {
             'recall': order.get_portal_last_transaction().state == 'pending',
@@ -1230,3 +1208,63 @@ class WebsiteSale(http.Controller):
                 res_product['price'] = FieldMonetary.value_to_html(res_product['price'], monetary_options)
 
         return res
+
+    # --------------------------------------------------------------------------
+    # Products Recently Viewed
+    # --------------------------------------------------------------------------
+    @http.route('/shop/products/recently_viewed', type='json', auth='public', website=True)
+    def products_recently_viewed(self, **kwargs):
+        return self._get_products_recently_viewed()
+
+    def _get_products_recently_viewed(self):
+        """
+        Returns list of recently viewed products according to current user
+        """
+        max_number_of_product_for_carousel = 12
+        visitor = request.env['website.visitor']._get_visitor_from_request()
+        if visitor:
+            excluded_products = request.website.sale_get_order().mapped('order_line.product_id.id')
+            products = request.env['website.track'].sudo().read_group(
+                [('visitor_id', '=', visitor.id), ('product_id', '!=', False), ('product_id', 'not in', excluded_products)],
+                ['product_id', 'visit_datetime:max'], ['product_id'], limit=max_number_of_product_for_carousel, orderby='visit_datetime DESC')
+            products_ids = [product['product_id'][0] for product in products]
+            if products_ids:
+                viewed_products = request.env['product.product'].browse(products_ids)
+
+                FieldMonetary = request.env['ir.qweb.field.monetary']
+                monetary_options = {
+                    'display_currency': request.website.get_current_pricelist().currency_id,
+                }
+                rating = request.website.viewref('website_sale.product_comment').active
+                res = {'products': []}
+                for product in viewed_products:
+                    combination_info = product._get_combination_info_variant()
+                    res_product = product.read(['id', 'name', 'website_url'])[0]
+                    res_product.update(combination_info)
+                    res_product['price'] = FieldMonetary.value_to_html(res_product['price'], monetary_options)
+                    if rating:
+                        res_product['rating'] = request.env["ir.ui.view"].render_template('website_rating.rating_widget_stars_static', values={
+                            'rating_avg': product.rating_avg,
+                            'rating_count': product.rating_count,
+                        })
+                    res['products'].append(res_product)
+
+                return res
+        return {}
+
+    @http.route('/shop/products/recently_viewed_update', type='json', auth='public', website=True)
+    def products_recently_viewed_update(self, product_id, **kwargs):
+        res = {}
+        visitor_sudo = request.env['website.visitor']._get_visitor_from_request(force_create=True)
+        if visitor_sudo:
+            if request.httprequest.cookies.get('visitor_uuid', '') != visitor_sudo.access_token:
+                res['visitor_uuid'] = visitor_sudo.access_token
+            visitor_sudo._add_viewed_product(product_id)
+        return res
+
+    @http.route('/shop/products/recently_viewed_delete', type='json', auth='public', website=True)
+    def products_recently_viewed_delete(self, product_id, **kwargs):
+        visitor_sudo = request.env['website.visitor']._get_visitor_from_request()
+        if visitor_sudo:
+            request.env['website.track'].sudo().search([('visitor_id', '=', visitor_sudo.id), ('product_id', '=', product_id)]).unlink()
+        return self._get_products_recently_viewed()

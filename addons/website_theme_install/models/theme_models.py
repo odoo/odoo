@@ -14,6 +14,8 @@ class ThemeView(models.Model):
     _description = 'Theme UI View'
 
     def compute_arch_fs(self):
+        if 'install_filename' not in self._context:
+            return ''
         path_info = get_resource_from_path(self._context['install_filename'])
         if path_info:
             return '/'.join(path_info[0:2])
@@ -39,6 +41,14 @@ class ThemeView(models.Model):
             if not inherit:
                 # inherit_id not yet created, add to the queue
                 return False
+
+        if inherit and inherit.website_id != website:
+            website_specific_inherit = self.env['ir.ui.view'].with_context(active_test=False).search([
+                ('key', '=', inherit.key),
+                ('website_id', '=', website.id)
+            ], limit=1)
+            if website_specific_inherit:
+                inherit = website_specific_inherit
 
         new_view = {
             'type': self.type or 'qweb',

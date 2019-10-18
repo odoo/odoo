@@ -74,7 +74,7 @@
         <field name="model">stock.quant</field>
         <field eval="10" name="priority"/>
         <field name="arch" type="xml">
-            <tree decoration-danger="inventory_quantity &lt; 0" editable="top"
+            <tree decoration-danger="inventory_quantity &lt; 0" editable="bottom"
                   create="1" edit="1" js_class="singleton_list">
                 <field name="id" invisible="1"/>
                 <field name="tracking" invisible="1"/>
@@ -91,8 +91,7 @@
                             'required': [('tracking', '!=', 'none')]
                        }"
                        invisible="context.get('hide_lot', False)"
-                       context="{'default_product_id': product_id}"
-                       domain="[('product_id', '=', product_id)]"/>
+                       context="{'default_product_id': product_id, 'default_company_id': company_id}"/>
                 <field name="package_id" groups="stock.group_tracking_lot"
                        attrs="{'readonly': [('id', '!=', False)]}"/>
                 <field name="owner_id" groups="stock.group_tracking_owner"

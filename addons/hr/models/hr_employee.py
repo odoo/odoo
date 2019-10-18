@@ -48,7 +48,7 @@ class HrEmployeePrivate(models.Model):
         'The employee address has a company linked',
         compute='_compute_is_address_home_a_company',
     )
-    private_email = fields.Char(related='address_home_id.email', string="Private Email", readonly=False, groups="hr.group_hr_user")
+    private_email = fields.Char(related='address_home_id.email', string="Private Email", groups="hr.group_hr_user")
     country_id = fields.Many2one(
         'res.country', 'Nationality (Country)', groups="hr.group_hr_user", tracking=True)
     gender = fields.Selection([
@@ -97,9 +97,7 @@ class HrEmployeePrivate(models.Model):
     image_1920 = fields.Image(default=_default_image)
     phone = fields.Char(related='address_home_id.phone', related_sudo=False, string="Private Phone", groups="hr.group_hr_user")
     # employee in company
-    parent_id = fields.Many2one('hr.employee', 'Manager', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     child_ids = fields.One2many('hr.employee', 'parent_id', string='Direct subordinates')
-    coach_id = fields.Many2one('hr.employee', 'Coach', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     category_ids = fields.Many2many(
         'hr.employee.category', 'employee_category_rel',
         'emp_id', 'category_id', groups="hr.group_hr_manager",
@@ -196,13 +194,6 @@ class HrEmployeePrivate(models.Model):
             if employee.pin and not employee.pin.isdigit():
                 raise ValidationError(_("The PIN must be a sequence of digits."))
 
-    @api.onchange('parent_id')
-    def _onchange_parent_id(self):
-        manager = self.parent_id
-        previous_manager = self._origin.parent_id
-        if manager and (self.coach_id == previous_manager or not self.coach_id):
-            self.coach_id = manager
-
     @api.onchange('job_id')
     def _onchange_job_id(self):
         if self.job_id:
@@ -220,7 +211,8 @@ class HrEmployeePrivate(models.Model):
 
     @api.onchange('department_id')
     def _onchange_department(self):
-        self.parent_id = self.department_id.manager_id
+        if self.department_id.manager_id:
+            self.parent_id = self.department_id.manager_id
 
     @api.onchange('user_id')
     def _onchange_user(self):
@@ -251,7 +243,7 @@ class HrEmployeePrivate(models.Model):
             vals['name'] = vals.get('name', user.name)
         employee = super(HrEmployeePrivate, self).create(vals)
         url = '/web#%s' % url_encode({'action': 'hr.plan_wizard_action', 'active_id': employee.id, 'active_model': 'hr.employee'})
-        employee._message_log(body=_('<b>Congratulations !</b> May I recommand you to setup an <a href="%s">onboarding plan ?</a>') % (url))
+        employee._message_log(body=_('<b>Congratulations!</b> May I recommend you to setup an <a href="%s">onboarding plan?</a>') % (url))
         if employee.department_id:
             self.env['mail.channel'].sudo().search([
                 ('subscription_department_ids', 'in', employee.department_id.id)
@@ -335,51 +327,6 @@ class HrEmployeePrivate(models.Model):
             self = self.with_user(real_user)
         return self
 
-    def _get_work_interval(self, start, end):
-        """ Return interval's start datetime for interval closest to start. And interval's end datetime for interval closest to end.
-            If none is found return None
-            Note: this method is used in enterprise (forecast and planning)
-
-            :start: datetime
-            :end: datetime
-            :return: (datetime|None, datetime|None)
-        """
-        start_datetime = timezone_datetime(start)
-        end_datetime = timezone_datetime(end)
-        employee_mapping = {}
-        for employee in self:
-            work_intervals = sorted(
-                employee.resource_calendar_id._work_intervals(start_datetime, end_datetime, employee.resource_id),
-                key=lambda x: x[0]
-            )
-            if work_intervals:
-                employee_mapping[employee.id] = (work_intervals[0][0].astimezone(pytz.utc), work_intervals[-1][1].astimezone(pytz.utc))
-            else:
-                employee_mapping[employee.id] = (None, None)
-        return employee_mapping
-
-    def _get_unavailable_intervals(self, start, end):
-        """ Compute the intervals during which employee is unavailable with hour granularity between start and end
-            Note: this method is used in enterprise (forecast and planning)
-
-        """
-        start_datetime = timezone_datetime(start)
-        end_datetime = timezone_datetime(end)
-        employee_mapping = {}
-        for employee in self:
-            calendar = employee.resource_calendar_id
-            resource = employee.resource_id
-            employee_work_intervals = calendar._work_intervals(start_datetime, end_datetime, resource)
-            employee_work_intervals = [(start, stop) for start, stop, meta in employee_work_intervals]
-            # start + flatten(intervals) + end
-            employee_work_intervals = [start_datetime] + list(itertools.chain.from_iterable(employee_work_intervals)) + [end_datetime]
-            # put it back to UTC
-            employee_work_intervals = list(map(lambda dt: dt.astimezone(pytz.utc), employee_work_intervals))
-            # pick groups of two
-            employee_work_intervals = list(zip(employee_work_intervals[0::2], employee_work_intervals[1::2]))
-            employee_mapping[employee.id] = employee_work_intervals
-        return employee_mapping
-
     # ---------------------------------------------------------
     # Messaging
     # ---------------------------------------------------------
@@ -388,8 +335,8 @@ class HrEmployeePrivate(models.Model):
         return super(HrEmployeePrivate, self._post_author())._message_log(**kwargs)
 
     @api.returns('mail.message', lambda value: value.id)
-    def message_post(self, *args, **kwargs):
-        return super(HrEmployeePrivate, self._post_author()).message_post(*args, **kwargs)
+    def message_post(self, **kwargs):
+        return super(HrEmployeePrivate, self._post_author()).message_post(**kwargs)
 
     def _sms_get_partner_fields(self):
         return ['user_partner_id']

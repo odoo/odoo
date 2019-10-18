@@ -1083,7 +1083,11 @@ var FormRenderer = BasicRenderer.extend({
      */
     _onTranslate: function (ev) {
         ev.preventDefault();
-        this.trigger_up('translate', {fieldName: ev.target.name, id: this.state.id});
+        this.trigger_up('translate', {
+            fieldName: ev.target.name,
+            id: this.state.id,
+            isComingFromTranslationAlert: true,
+        });
     },
     /**
      * remove alert fields of record from alertFields object

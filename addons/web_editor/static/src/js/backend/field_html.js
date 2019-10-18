@@ -432,6 +432,8 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
         if (ev.offsetX > 0) {
             return;
         }
+        ev.stopPropagation();
+        ev.preventDefault();
         var checked = $(ev.target).hasClass('o_checked');
         var checklistId = parseInt(($(ev.target).attr('id') || '0').replace(/^checklist-id-/, ''));
 

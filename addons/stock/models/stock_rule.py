@@ -21,6 +21,7 @@ class StockRule(models.Model):
     _name = 'stock.rule'
     _description = "Stock Rule"
     _order = "sequence, id"
+    _check_company_auto = True
 
     name = fields.Char(
         'Name', required=True, translate=True,
@@ -39,8 +40,8 @@ class StockRule(models.Model):
     sequence = fields.Integer('Sequence', default=20)
     company_id = fields.Many2one('res.company', 'Company',
         default=lambda self: self.env.company)
-    location_id = fields.Many2one('stock.location', 'Destination Location', required=True)
-    location_src_id = fields.Many2one('stock.location', 'Source Location')
+    location_id = fields.Many2one('stock.location', 'Destination Location', required=True, check_company=True)
+    location_src_id = fields.Many2one('stock.location', 'Source Location', check_company=True)
     route_id = fields.Many2one('stock.location.route', 'Route', required=True, ondelete='cascade')
     procure_method = fields.Selection([
         ('make_to_stock', 'Take From Stock'),
@@ -50,16 +51,19 @@ class StockRule(models.Model):
              "Trigger Another Rule: the system will try to find a stock rule to bring the products in the source location. The available stock will be ignored.\n"
              "Take From Stock, if Unavailable, Trigger Another Rule: the products will be taken from the available stock of the source location."
              "If there is no stock available, the system will try to find a  rule to bring the products in the source location.")
-    route_sequence = fields.Integer('Route Sequence', related='route_id.sequence', store=True, readonly=False)
+    route_sequence = fields.Integer('Route Sequence', related='route_id.sequence', store=True, readonly=False, compute_sudo=True)
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type',
-        required=True)
+        required=True, check_company=True)
     delay = fields.Integer('Delay', default=0, help="The expected date of the created transfer will be computed based on this delay.")
-    partner_address_id = fields.Many2one('res.partner', 'Partner Address', help="Address where goods should be delivered. Optional.")
+    partner_address_id = fields.Many2one(
+        'res.partner', 'Partner Address',
+        check_company=True,
+        help="Address where goods should be delivered. Optional.")
     propagate_cancel = fields.Boolean(
         'Cancel Next Move', default=False,
         help="When ticked, if the move created by this rule is cancelled, the next move will be cancelled too.")
-    warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse')
+    warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', check_company=True)
     propagate_warehouse_id = fields.Many2one(
         'stock.warehouse', 'Warehouse to Propagate',
         help="The warehouse to propagate on the created move/procurement, which can be different of the warehouse this rule is for (e.g for resupplying rules from another warehouse)")
@@ -165,18 +169,21 @@ class StockRule(models.Model):
                 move._push_apply()
         else:
             new_move_vals = self._push_prepare_move_copy_values(move, new_date)
-            new_move = move.copy(new_move_vals)
+            new_move = move.sudo().copy(new_move_vals)
             move.write({'move_dest_ids': [(4, new_move.id)]})
             new_move._action_confirm()
 
     def _push_prepare_move_copy_values(self, move_to_copy, new_date):
+        company_id = self.company_id.id
+        if not company_id:
+            company_id = self.sudo().warehouse_id and self.sudo().warehouse_id.company_id.id or self.sudo().picking_type_id.warehouse_id.company_id.id
         new_move_vals = {
             'origin': move_to_copy.origin or move_to_copy.picking_id.name or "/",
             'location_id': move_to_copy.location_dest_id.id,
             'location_dest_id': self.location_id.id,
             'date': new_date,
             'date_expected': new_date,
-            'company_id': self.company_id.id,
+            'company_id': company_id,
             'picking_id': False,
             'picking_type_id': self.picking_type_id.id,
             'propagate_cancel': self.propagate_cancel,
@@ -411,9 +418,25 @@ class ProcurementGroup(models.Model):
         result = False
         location = location_id
         while (not result) and location:
-            result = self._search_rule(values.get('route_ids', False), product_id, values.get('warehouse_id', False), [('location_id', '=', location.id), ('action', '!=', 'push')])
+            domain = self._get_rule_domain(location, values)
+            result = self._search_rule(values.get('route_ids', False), product_id, values.get('warehouse_id', False), domain)
             location = location.location_id
         return result
+
+    @api.model
+    def _get_rule_domain(self, location, values):
+        return [('location_id', '=', location.id), ('action', '!=', 'push')]
+
+    def _merge_domain(self, values, rule, group_id):
+        return [
+            ('group_id', '=', group_id), # extra logic?
+            ('location_id', '=', rule.location_src_id.id),
+            ('location_dest_id', '=', values['location_id'].id),
+            ('picking_type_id', '=', rule.picking_type_id.id),
+            ('picking_id.printed', '=', False),
+            ('picking_id.state', 'in', ['draft', 'confirmed', 'waiting', 'assigned']),
+            ('picking_id.backorder_id', '=', False),
+            ('product_id', '=', values['product_id'].id)]
 
     @api.model
     def _get_moves_to_assign_domain(self):

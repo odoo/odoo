@@ -34,7 +34,7 @@ var PrinterMixin = {
 
     /**
      * Generate a jpeg image from a canvas
-     * @param {DOMElement} canvas 
+     * @param {DOMElement} canvas
      */
     process_canvas: function (canvas) {
         return canvas.toDataURL('image/jpeg').replace('data:image/jpeg;base64,','');
@@ -46,23 +46,18 @@ var PrinterMixin = {
      */
     htmlToImg: function (receipt) {
         var self = this;
-        $('.pos-receipts').html(receipt);
-        $('.pos-receipt').addClass('pos-receipt-print');
+        $('.pos-receipt-print').html(receipt);
         var promise = new Promise(function (resolve, reject) {
-            html2canvas($('.pos-receipt')[0], {
-                ignoreElements: function (node) {
-                    // By default, html2canvas copies the whole DOM even if we just capture a part
-                    // of it. When copying the list of products, it gets all of the product from the
-                    // backend. We ignore the content of <div class="pos"> to speed things up.
-                    if (node.className == "pos") {
-                        return true;
-                    }
-                    return false;
+            self.receipt = $('.pos-receipt-print>.pos-receipt');
+            html2canvas(self.receipt[0], {
+                onparsed: function(queue) {
+                    queue.stack.ctx.height = Math.ceil(self.receipt.outerHeight() + self.receipt.offset().top);
+                },
+                onrendered: function (canvas) {
+                    $('.pos-receipt-print').empty();
+                    resolve(self.process_canvas(canvas));
                 }
-            }).then(function (canvas) {
-                $('.pos-receipts').empty();
-                resolve(self.process_canvas(canvas));
-            });
+            })
         });
         return promise;
     },

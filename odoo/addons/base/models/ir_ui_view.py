@@ -23,7 +23,7 @@ from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.modules.module import get_resource_from_path, get_resource_path
-from odoo.tools import config, graph, ConstantMapping, pycompat, apply_inheritance_specs, locate_node
+from odoo.tools import config, ConstantMapping, pycompat, apply_inheritance_specs, locate_node
 from odoo.tools.convert import _fix_multiple_roots
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.safe_eval import safe_eval
@@ -136,7 +136,7 @@ class ViewCustom(models.Model):
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         if name:
             view_ids = self._search([('user_id', operator, name)] + (args or []), limit=limit, access_rights_uid=name_get_uid)
-            return self.browse(view_ids).name_get()
+            return models.lazy_name_get(self.browse(view_ids).with_user(name_get_uid))
         return super(ViewCustom, self)._name_search(name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
     def _auto_init(self):
@@ -212,7 +212,6 @@ class View(models.Model):
                              ('graph', 'Graph'),
                              ('pivot', 'Pivot'),
                              ('calendar', 'Calendar'),
-                             ('diagram', 'Diagram'),
                              ('gantt', 'Gantt'),
                              ('kanban', 'Kanban'),
                              ('search', 'Search'),
@@ -259,6 +258,7 @@ actual arch.
          """)
 
     @api.depends('arch_db', 'arch_fs', 'arch_updated')
+    @api.depends_context('read_arch_from_file')
     def _compute_arch(self):
         def resolve_external_ids(arch_fs, view_xml_id):
             def replacer(m):
@@ -298,6 +298,7 @@ actual arch.
             view.write(data)
 
     @api.depends('arch')
+    @api.depends_context('read_arch_from_file')
     def _compute_arch_base(self):
         # 'arch_base' is the same as 'arch' without translation
         for view, view_wo_lang in zip(self, self.with_context(lang=None)):
@@ -352,7 +353,7 @@ actual arch.
                     message = "View inheritance may not use attribute %r as a selector." % match.group(1)
                     self.raise_view_error(message, self.id)
                 if WRONGCLASS.search(node.get('expr', '')):
-                    _logger.warn(
+                    _logger.warning(
                         "Error-prone use of @class in view %s (%s): use the "
                         "hasclass(*classes) function to filter elements by "
                         "their classes", self.name, self.xml_id
@@ -386,7 +387,10 @@ actual arch.
                 view_doc = etree.fromstring(view_arch_utf8)
                 self._check_groups_validity(view_doc, view.name)
                 # verify that all fields used are valid, etc.
-                self.postprocess_and_fields(view.model, view_doc, view.id)
+                try:
+                    self.postprocess_and_fields(view.model, view_doc, view.id)
+                except ValueError as e:
+                    raise ValidationError("%s\n\n%s" % (_("Error while validating view"), tools.ustr(e)))
                 # RNG-based validation is not possible anymore with 7.0 forms
                 view_docs = [view_doc]
                 if view_docs[0].tag == 'data':
@@ -614,7 +618,7 @@ actual arch.
         return specs_tree
 
     @api.model
-    def apply_inheritance_specs(self, source, specs_tree, inherit_id):
+    def apply_inheritance_specs(self, source, specs_tree, inherit_id, pre_locate=lambda s: True):
         """ Apply an inheriting view (a descendant of the base view)
 
         Apply to a source architecture all the spec nodes (i.e. nodes
@@ -624,6 +628,8 @@ actual arch.
         :param Element source: a parent architecture to modify
         :param Elepect specs_tree: a modifying architecture in an inheriting view
         :param inherit_id: the database id of specs_arch
+        :param (optional) pre_locate: function that is execute before locating a node.
+                                        This function receives an arch as argument.
         :return: a modified source where the specs are applied
         :rtype: Element
         """
@@ -631,7 +637,8 @@ actual arch.
         # changes to apply to some parent architecture).
         try:
             source = apply_inheritance_specs(source, specs_tree,
-                                             inherit_branding=self._context.get('inherit_branding'))
+                                             inherit_branding=self._context.get('inherit_branding'),
+                                             pre_locate=pre_locate)
         except ValueError as e:
             self.raise_view_error(str(e), inherit_id)
         return source
@@ -721,11 +728,16 @@ actual arch.
         """
         Model = self.env[model]
 
-        if node.tag == 'field' and node.get('name') in Model._fields:
-            field = Model._fields[node.get('name')]
+        field_name = None
+        if node.tag == "field":
+            field_name = node.get("name")
+        elif node.tag == "label":
+            field_name = node.get("for")
+        if field_name and field_name in Model._fields:
+            field = Model._fields[field_name]
             if field.groups and not self.user_has_groups(groups=field.groups):
                 node.getparent().remove(node)
-                fields.pop(node.get('name'), None)
+                fields.pop(field_name, None)
                 # no point processing view-level ``groups`` anymore, return
                 return False
         if node.get('groups'):
@@ -765,18 +777,7 @@ actual arch.
             self.raise_view_error(_('Model not found: %(model)s') % dict(model=model), view_id)
         Model = self.env[model]
 
-        if node.tag in ('field', 'node', 'arrow'):
-            if node.get('object'):
-                attrs = {}
-                views = {}
-                xml_form = E.form(*(f for f in node if f.tag == 'field'))
-                xarch, xfields = self.with_context(base_model_name=model).postprocess_and_fields(node.get('object'), xml_form, view_id)
-                views['form'] = {
-                    'arch': xarch,
-                    'fields': xfields,
-                }
-                attrs = {'views': views}
-                fields = xfields
+        if node.tag == 'field':
             if node.get('name'):
                 attrs = {}
                 field = Model._fields.get(node.get('name'))
@@ -812,7 +813,7 @@ actual arch.
             field = Model._fields.get(node.get('name'))
             if field:
                 if field.type != 'many2one':
-                    self.raise_view_error(_('groupby can only target many2one (%(field)s') % dict(field=field.name), view_id)
+                    self.raise_view_error(_("'groupby' tags can only target many2one (%(field)s)") % dict(field=field.name), view_id)
                 attrs = fields.setdefault(node.get('name'), {})
                 children = False
                 # move all children nodes into a new node <groupby>
@@ -917,17 +918,7 @@ actual arch.
         if model not in self.env:
             self.raise_view_error(_('Model not found: %(model)s') % dict(model=model), view_id)
         Model = self.env[model]
-
-        if node.tag == 'diagram':
-            if node.getchildren()[0].tag == 'node':
-                node_model = self.env[node.getchildren()[0].get('object')]
-                node_fields = node_model.fields_get(None)
-                fields.update(node_fields)
-            if node.getchildren()[1].tag == 'arrow':
-                arrow_fields = self.env[node.getchildren()[1].get('object')].fields_get(None)
-                fields.update(arrow_fields)
-        else:
-            fields = Model.fields_get(None)
+        fields = Model.fields_get(None)
 
         node = self.add_on_change(model, node)
 
@@ -971,14 +962,6 @@ actual arch.
         many2one-based grouping views. """
         Model = self.env[model]
         is_base_model = self.env.context.get('base_model_name', model) == model
-
-        if node.tag == 'diagram':
-            if node.getchildren()[0].tag == 'node':
-                node_model = self.env[node.getchildren()[0].get('object')]
-                if (not node.get("create") and
-                        not node_model.check_access_rights('create', raise_exception=False) or
-                        not self._context.get("create", True) and is_base_model):
-                    node.set("create", 'false')
 
         if node.tag in ('kanban', 'tree', 'form', 'activity'):
             for action, operation in (('create', 'create'), ('delete', 'unlink'), ('edit', 'write')):
@@ -1180,79 +1163,6 @@ actual arch.
     def open_translations(self):
         """ Open a view for editing the translations of field 'arch_db'. """
         return self.env['ir.translation'].translate_fields('ir.ui.view', self.id, 'arch_db')
-
-    @api.model
-    def graph_get(self, id, model, node_obj, conn_obj, src_node, des_node, label, scale):
-        def rec_name(rec):
-            return (rec.name if 'name' in rec else
-                    rec.x_name if 'x_name' in rec else
-                    None)
-
-        nodes = []
-        nodes_name = []
-        transitions = []
-        start = []
-        tres = {}
-        labels = {}
-        no_ancester = []
-        blank_nodes = []
-
-        Model = self.env[model]
-        Node = self.env[node_obj]
-
-        for model_key, model_value in Model._fields.items():
-            if model_value.type == 'one2many':
-                if model_value.comodel_name == node_obj:
-                    _Node_Field = model_key
-                    _Model_Field = model_value.inverse_name
-                for node_key, node_value in Node._fields.items():
-                    if node_value.type == 'one2many':
-                        if node_value.comodel_name == conn_obj:
-                             # _Source_Field = "Incoming Arrows" (connected via des_node)
-                            if node_value.inverse_name == des_node:
-                                _Source_Field = node_key
-                             # _Destination_Field = "Outgoing Arrows" (connected via src_node)
-                            if node_value.inverse_name == src_node:
-                                _Destination_Field = node_key
-
-        record = Model.browse(id)
-        for line in record[_Node_Field]:
-            if line[_Source_Field] or line[_Destination_Field]:
-                nodes_name.append((line.id, rec_name(line)))
-                nodes.append(line.id)
-            else:
-                blank_nodes.append({'id': line.id, 'name': rec_name(line)})
-
-            if 'flow_start' in line and line.flow_start:
-                start.append(line.id)
-            elif not line[_Source_Field]:
-                no_ancester.append(line.id)
-
-            for t in line[_Destination_Field]:
-                transitions.append((line.id, t[des_node].id))
-                tres[str(t['id'])] = (line.id, t[des_node].id)
-                label_string = ""
-                if label:
-                    for lbl in safe_eval(label):
-                        if tools.ustr(lbl) in t and tools.ustr(t[lbl]) == 'False':
-                            label_string += ' '
-                        else:
-                            label_string = label_string + " " + tools.ustr(t[lbl])
-                labels[str(t['id'])] = (line.id, label_string)
-
-        g = graph(nodes, transitions, no_ancester)
-        g.process(start)
-        g.scale(*scale)
-        result = g.result_get()
-        results = {}
-        for node_id, node_name in nodes_name:
-            results[str(node_id)] = result[node_id]
-            results[str(node_id)]['name'] = node_name
-        return {'nodes': results,
-                'transitions': tres,
-                'label': labels,
-                'blank_nodes': blank_nodes,
-                'node_parent_field': _Model_Field}
 
     @api.model
     def _validate_custom_views(self, model):

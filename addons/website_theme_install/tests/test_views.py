@@ -1,7 +1,57 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import HttpCase
+from odoo.tests import HttpCase, tagged, TransactionCase
+
+
+@tagged('post_install', '-at_install')
+class TestViews(TransactionCase):
+    def test_inherit_specific(self):
+        View = self.env['ir.ui.view']
+        Website = self.env['website']
+
+        website_1 = Website.create({'name': 'Website 1'})
+
+        # 1. Simulate COW structure
+        main_view = View.create({
+            'name': 'Test Main View',
+            'type': 'qweb',
+            'arch': '<body>Arch is not relevant for this test</body>',
+            'key': '_test.main_view',
+        }).with_context(load_all_views=True)
+        # Trigger COW
+        main_view.with_context(website_id=website_1.id).arch = '<body>specific</body>'
+
+        # 2. Simulate a theme install with a child view of `main_view`
+        test_theme_module = self.env['ir.module.module'].create({'name': 'test_theme'})
+        self.env['ir.model.data'].create({
+            'module': 'base',
+            'name': 'module_test_theme_module',
+            'model': 'ir.module.module',
+            'res_id': test_theme_module.id,
+        })
+        theme_view = self.env['theme.ir.ui.view'].with_context(install_filename='/testviews').create({
+            'name': 'Test Child View',
+            'mode': 'extension',
+            'inherit_id': 'ir.ui.view,%s' % main_view.id,
+            'arch': '<xpath expr="//body" position="replace"><span>C</span></xpath>',
+            'key': 'test_theme.test_child_view',
+        })
+        self.env['ir.model.data'].create({
+            'module': 'test_theme',
+            'name': 'products',
+            'model': 'theme.ir.ui.view',
+            'res_id': theme_view.id,
+        })
+        test_theme_module.with_context(load_all_views=True)._theme_load(website_1)
+
+        # 3. Ensure everything went correctly
+        main_views = View.search([('key', '=', '_test.main_view')])
+        self.assertEqual(len(main_views), 2, "View should have been COWd when writing on its arch in a website context")
+        specific_main_view = main_views.filtered(lambda v: v.website_id == website_1)
+        specific_main_view_children = specific_main_view.inherit_children_ids
+        self.assertEqual(specific_main_view_children.name, 'Test Child View', "Ensure theme.ir.ui.view has been loaded as an ir.ui.view into the website..")
+        self.assertEqual(specific_main_view_children.website_id, website_1, "..and the website is the correct one.")
 
 
 class Crawler(HttpCase):
@@ -70,13 +120,13 @@ class Crawler(HttpCase):
             # It should crash as it should not find a view on website 1 for '_theme_kea_sale.products', !!and certainly not a theme.ir.ui.view!!.
             view = View.with_context(website_id=website_1.id)._view_obj('_theme_kea_sale.products')
         view = View.with_context(website_id=website_2.id)._view_obj('_theme_kea_sale.products')
-        self.assertEquals(len(view), 1, "It should find the ir.ui.view with key '_theme_kea_sale.products' on website 2..")
-        self.assertEquals(view._name, 'ir.ui.view', "..and not a theme.ir.ui.view")
+        self.assertEqual(len(view), 1, "It should find the ir.ui.view with key '_theme_kea_sale.products' on website 2..")
+        self.assertEqual(view._name, 'ir.ui.view', "..and not a theme.ir.ui.view")
 
         views = View.with_context(website_id=website_1.id).get_related_views('_website_sale.products')
-        self.assertEquals(len(views), 2, "It should not mix apples and oranges, only ir.ui.view ['_website_sale.products', '_website_sale.child_view_w1'] should be returned")
+        self.assertEqual(len(views), 2, "It should not mix apples and oranges, only ir.ui.view ['_website_sale.products', '_website_sale.child_view_w1'] should be returned")
         views = View.with_context(website_id=website_2.id).get_related_views('_website_sale.products')
-        self.assertEquals(len(views), 2, "It should not mix apples and oranges, only ir.ui.view ['_website_sale.products', '_theme_kea_sale.products'] should be returned")
+        self.assertEqual(len(views), 2, "It should not mix apples and oranges, only ir.ui.view ['_website_sale.products', '_theme_kea_sale.products'] should be returned")
 
         # Part 2 of the test, it test the same stuff but from a higher level (get_related_views ends up calling _view_obj)
         called_theme_view = self.env['theme.ir.ui.view'].with_context(install_filename='/testviews').create({
@@ -115,9 +165,9 @@ class Crawler(HttpCase):
 
         # Next line should not crash (was mixing apples and oranges - ir.ui.view and theme.ir.ui.view)
         views = View.with_context(website_id=website_1.id).get_related_views('_website_sale.products')
-        self.assertEquals(len(views), 2, "It should not mix apples and oranges, only ir.ui.view ['_website_sale.products', '_website_sale.child_view_w1'] should be returned (2)")
+        self.assertEqual(len(views), 2, "It should not mix apples and oranges, only ir.ui.view ['_website_sale.products', '_website_sale.child_view_w1'] should be returned (2)")
         views = View.with_context(website_id=website_2.id).get_related_views('_website_sale.products')
-        self.assertEquals(len(views), 3, "It should not mix apples and oranges, only ir.ui.view ['_website_sale.products', '_theme_kea_sale.products', '_theme_kea_sale.t_called_view'] should be returned")
+        self.assertEqual(len(views), 3, "It should not mix apples and oranges, only ir.ui.view ['_website_sale.products', '_theme_kea_sale.products', '_theme_kea_sale.t_called_view'] should be returned")
 
         # ########################################################
         # Test the controller (which is calling get_related_views)

@@ -17,6 +17,7 @@ from PIL import Image, ImageOps
 
 from odoo import http, _
 from odoo.addons.hw_drivers.controllers.driver import event_manager, Driver, PPDs, conn, printers, cups_lock, iot_devices
+from odoo.addons.hw_drivers.tools import helpers
 from odoo.addons.hw_proxy.controllers.main import drivers as old_drivers
 
 _logger = logging.getLogger(__name__)
@@ -74,7 +75,6 @@ bus.add_signal_receiver(cups_notification_handler, signal_name="PrinterStateChan
 
 class PrinterDriver(Driver):
     connection_type = 'printer'
-    status = {'status': "disconnected", 'printers': [], 'messages': []}
 
     def __init__(self, device):
         super(PrinterDriver, self).__init__(device)
@@ -88,7 +88,6 @@ class PrinterDriver(Driver):
         }
         self.send_status()
         if 'direct' in self._device_connection:
-            self.add_connected_printer()
             self.print_status()
 
     @classmethod
@@ -136,21 +135,12 @@ class PrinterDriver(Driver):
 
     @classmethod
     def get_status(cls):
-        return cls.status
+        status = 'connected' if any(iot_devices[d].device_type == "printer" and iot_devices[d].device_connection == 'direct' for d in iot_devices) else 'disconnected'
+        return {'status': status, 'messages': ''}
 
     @property
     def device_identifier(self):
         return self.dev['identifier']
-
-    def add_connected_printer(self):
-        PrinterDriver.status['status'] = "connected"
-        PrinterDriver.status['printers'].append(self.device_identifier)
-
-    def remove_connected_printer(self):
-        if self.device_identifier in PrinterDriver.status['printers']:
-            PrinterDriver.status['printers'].remove(self.device_identifier)
-            if not PrinterDriver.status['printers']:
-                PrinterDriver.status['status'] = "disconnected"
 
     def action(self, data):
         if data.get('action') == 'cashbox':
@@ -161,7 +151,6 @@ class PrinterDriver(Driver):
             self.print_raw(b64decode(data['document']))
 
     def disconnect(self):
-        self.remove_connected_printer()
         self.update_status('disconnected', 'Printer was disconnected')
         super(PrinterDriver, self).disconnect()
 
@@ -245,14 +234,14 @@ class PrinterDriver(Driver):
         homepage = ''
 
         hosting_ap = os.system('pgrep hostapd') == 0
-        ssid = subprocess.check_output('iwconfig 2>&1 | grep \'ESSID:"\' | sed \'s/.*"\\(.*\\)"/\\1/\'', shell=True).decode('utf-8').rstrip()
+        ssid = helpers.get_ssid()
         if hosting_ap:
             with open('/root_bypass_ramdisks/etc/hostapd/hostapd.conf') as config_file:
                 lines = config_file.readlines()
             ssid = lines[1].split("=")[1].replace("\n", "")
-            wlan = 'Wireless network:\n%s\n\n' % ssid
+            wlan = '\nWireless network:\n%s\n\n' % ssid
         elif ssid:
-            wlan = 'Wireless network:\n%s\n\n' % ssid
+            wlan = '\nWireless network:\n%s\n\n' % ssid
 
         interfaces = ni.interfaces()
         ips = []

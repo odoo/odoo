@@ -8,7 +8,6 @@
                <search string="Mailings">
                     <field name="name" string="Mailing" filter_domain="['|', ('name', 'ilike', self), ('subject', 'ilike', self)]"/>
                     <field name="campaign_id" string="Campaign"/>
-                    <field name="mailing_type" invisible="1"/>
                     <filter string="My Mailings" name="assigned_to_me"
                             domain="[('user_id', '=', uid)]"
                             help="Mailings that are assigned to me"/>
@@ -30,7 +29,8 @@
             <field name="priority">10</field>
             <field name="arch" type="xml">
                 <tree string="Mailings">
-                    <field name="name"/>
+                    <field name="state" invisible="1"/>
+                    <field name="subject" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                     <field name="mailing_type" invisible="1"/>
                     <field name="sent"/>
                     <field name="delivered"/>
@@ -48,7 +48,7 @@
             <field name="arch" type="xml">
                 <form string="Mailing">
                     <header style="min-height:31px;">
-                        <button name="action_put_in_queue" type="object" attrs="{'invisible': [('state', 'in', ('in_queue', 'done'))]}" class="oe_highlight" string="Send Now"
+                        <button name="action_put_in_queue" type="object" attrs="{'invisible': [('state', 'in', ('in_queue', 'done'))]}" class="oe_highlight" string="Send"
                             confirm="This will send the email to all recipients. Do you still want to proceed ?"/>
                         <button name="action_schedule" type="object" attrs="{'invisible': [('state', 'in', ('in_queue', 'done'))]}" class="btn-secondary" string="Schedule"/>
                         <button name="action_test" type="object" class="btn-secondary" string="Test"/>
@@ -57,9 +57,9 @@
 
                         <field name="state" readonly="1" widget="statusbar"/>
                     </header>
-                    <div class="alert alert-info text-center" attrs="{'invisible': [('ignored', '=', 0)]}" role="alert">
-                        <p>
-                            <button class="btn-link"
+                    <div class="alert alert-info text-center" role="alert" attrs="{'invisible': ['&amp;','&amp;',('ignored', '=', 0),('scheduled', '=', 0),('failed', '=', 0)]}">
+                        <div attrs="{'invisible': [('ignored', '=', 0)]}">
+                            <button class="btn-link py-0"
                                     name="action_view_traces_ignored"
                                     type="object">
                                 <strong>
@@ -67,11 +67,9 @@
                                     <span name="ignored_text">emails have been ignored and will not be sent.</span>
                                 </strong>
                             </button>
-                        </p>
-                    </div>
-                    <div class="alert alert-info text-center" attrs="{'invisible': [('scheduled', '=', 0)]}" role="alert">
-                        <p>
-                            <button class="btn-link"
+                        </div>
+                        <div attrs="{'invisible': [('scheduled', '=', 0)]}">
+                            <button class="btn-link py-0"
                                     name="action_view_traces_scheduled"
                                     type="object">
                                 <strong>
@@ -79,11 +77,9 @@
                                     <span name="scheduled_text">emails are in queue and will be sent soon.</span>
                                 </strong>
                             </button>
-                        </p>
-                    </div>
-                    <div class="alert alert-info text-center" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('failed', '=', 0)]}" role="alert">
-                        <p>
-                            <button class="btn-link"
+                        </div>
+                        <div attrs="{'invisible': ['|', ('state', '!=', 'done'), ('failed', '=', 0)]}">
+                            <button class="btn-link py-0"
                                     name="action_view_traces_failed"
                                     type="object">
                                 <strong>
@@ -91,13 +87,13 @@
                                     <span name="failed_text">emails could not be sent.</span>
                                 </strong>
                             </button>
-                        </p>
+                        </div>
                     </div>
                     <div class="alert alert-info text-center" attrs="{'invisible': [('state', '!=', 'in_queue')]}" role="alert">
-                        <p><strong>
-                            This mailing is scheduled for
+                        <strong>
+                            <span name="next_departure_text">This mailing is scheduled for </span>
                             <field name="next_departure" class="oe_inline"/>.
-                        </strong></p>
+                        </strong>
                     </div>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
@@ -141,81 +137,111 @@
                         <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <group>
                             <field name="active" invisible="1"/>
-                            <field name="name" required="1" string="Mailing Name"/>
-                            <field name="mailing_type" widget="radio" options="{'horizontal': true}" invisible="1"/>
-                            <field name="subject" string="Subject"/>
+                            <field name="mailing_type" widget="radio" options="{'horizontal': true}" invisible="1"
+                                attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
+                            <field name="subject" string="Subject" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                             <label for="mailing_model_id" string="Recipients"/>
-                            <div>
-                                <field name="mailing_model_id" widget="selection" required="1"/>
+                            <div name="mailing_model_id_container">
+                                <div class="row">
+                                    <div class="col-xs-12 col-md-3" >
+                                        <field name="mailing_model_id" widget="selection" required="True"
+                                            attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
+                                    </div>
+                                    <div attrs="{'invisible': [('mailing_model_name', '!=', 'mailing.list')]}" class="col-xs-12 col-md-9 pt-1">
+                                        <label for="contact_list_ids" string="Select mailing lists:" class="oe_edit_only"/>
+                                        <field name="contact_list_ids" widget="many2many_tags"
+                                            placeholder="Select mailing lists..." class="oe_inline"
+                                            attrs="{
+                                                'required':[('mailing_model_name','=','mailing.list')],
+                                                'readonly': [('state', 'in', ('sending', 'done'))]
+                                        }"/>
+                                    </div>
+                                </div>
+
                                 <field name="mailing_model_name" invisible="1"/>
                                 <field name="mailing_model_real" invisible="1"/>
-                                <field name="mailing_domain" widget="domain"
-                                    attrs="{'invisible': [('mailing_model_name', '=', 'mailing.list')]}"
-                                    options="{'model': 'mailing_model_real'}">
-                                </field>
-                                <div attrs="{'invisible': [('mailing_model_name', '!=', 'mailing.list')]}">
-                                    <label for="contact_list_ids" string="Select mailing lists:" class="oe_edit_only"/>
-                                    <field name="contact_list_ids" widget="many2many_tags"
-                                        placeholder="Select mailing lists..." class="oe_inline"/>
+                                <div attrs="{'invisible': [('mailing_model_name', '=', 'mailing.list')]}">
+                                    <field name="mailing_domain" widget="domain" options="{'model': 'mailing_model_real'}"
+                                    attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                                 </div>
                             </div>
                         </group>
                         <notebook>
                             <page string="Mail Body" name="mail_body">
-                                <field name="body_html" class="oe_read_only" widget="html" options="{
-                                    'cssReadonly': 'mass_mailing.iframe_css_assets_readonly',
-                                }"/>
-                                <field name="body_arch" class="o_mail_body oe_edit_only" widget="mass_mailing_html" options="{
-                                    'snippets': 'mass_mailing.email_designer_snippets',
-                                    'cssEdit': 'mass_mailing.iframe_css_assets_edit',
-                                    'inline-field': 'body_html'
-                                }"/>
+                                <field name="body_html" class="oe_read_only" widget="html"
+                                    options="{'cssReadonly': 'mass_mailing.iframe_css_assets_readonly'}"/>
+                                <field name="body_arch" class="o_mail_body oe_edit_only" widget="mass_mailing_html"
+                                    options="{
+                                        'snippets': 'mass_mailing.email_designer_snippets',
+                                        'cssEdit': 'mass_mailing.iframe_css_assets_edit',
+                                        'inline-field': 'body_html'
+                                }" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                             </page>
-                            <page string="Options">
+                            <page string="Settings">
                                 <group>
-                                    <group string="Mailing">
+                                    <group>
+                                        <field name="name" required="False" groups="base.group_no_one" string="Name"/>
                                         <field name="user_id"/>
-                                        <field name="unique_ab_testing" groups="base.group_no_one"/>
-                                        <field name="email_from"/>
+                                        <field name="email_from" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                                         <label for="reply_to"/>
                                         <div name="reply_to_details">
                                             <field name="reply_to_mode" widget="radio"
-                                                attrs="{'invisible': [('mailing_model_name', 'in', ['mailing.contact', 'res.partner', 'mailing.list'])]}"/>
+                                                attrs="{
+                                                    'invisible': [('mailing_model_name', 'in', ['mailing.contact', 'res.partner', 'mailing.list'])],
+                                                    'readonly': [('state', 'in', ('sending', 'done'))]
+                                            }"/>
                                             <field name="reply_to"
-                                                attrs="{'required': [('reply_to_mode', '=', 'email')], 'invisible': [('reply_to_mode', '=', 'thread')]}"/>
+                                                attrs="{
+                                                    'required': [('reply_to_mode', '=', 'email')],
+                                                    'invisible': [('reply_to_mode', '=', 'thread')],
+                                                    'readonly': [('state', 'in', ('sending', 'done'))]
+                                            }"/>
                                         </div>
                                         <label for="attachment_ids"/>
                                         <div name="attachment_ids_details">
-                                            <field name="attachment_ids"  widget="many2many_binary" string="Attach a file" class="oe_inline"/>
+                                            <field name="attachment_ids"  widget="many2many_binary" string="Attach a file" class="oe_inline"
+                                                attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                                         </div>
-                                        <field name="mail_server_id" groups="base.group_no_one" options="{'no_create': True, 'no_open': True}"/>
-                                        <field name="schedule_date" groups='base.group_no_one'/>
-                                        <field name="keep_archives" groups="base.group_no_one"/>
-                                        <field name="create_date" readonly="1" attrs="{'invisible': [('create_date', '=', False)]}"/>
-                                        <field name="sent_date" readonly="1" attrs="{'invisible': [('sent_date', '=', False)]}"/>
+                                        <field name="mail_server_id" groups="base.group_no_one" options="{'no_create': True, 'no_open': True}"
+                                            attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
+                                        <field name="keep_archives" groups="base.group_no_one" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                                     </group>
                                     <group string="Marketing" groups="base.group_no_one,mass_mailing.group_mass_mailing_campaign">
                                         <field name="campaign_id"
                                             string="Mailing Campaign"
-                                            groups="mass_mailing.group_mass_mailing_campaign"/>
+                                            groups="mass_mailing.group_mass_mailing_campaign"
+                                            attrs="{'readonly': [('state', 'in', ('sending', 'done'))],
+                                                    'required': [('unique_ab_testing', '=', True)]}"/>
                                         <field name="source_id"
                                             string="Source"
                                             readonly="1"
                                             required="False"
-                                            groups="base.group_no_one"/>
+                                            groups="base.group_no_one"
+                                            attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                                         <field name="medium_id"
                                              string="Medium"
                                              required="True"
-                                             groups="base.group_no_one"/>
+                                             groups="base.group_no_one"
+                                             attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
+                                        <field name="unique_ab_testing" 
+                                            groups="mass_mailing.group_mass_mailing_campaign"
+                                            attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                                         <label for="contact_ab_pc" groups="mass_mailing.group_mass_mailing_campaign"/>
                                         <div groups="mass_mailing.group_mass_mailing_campaign">
-                                            <field name="contact_ab_pc" class="oe_inline"/> %
+                                            <field name="contact_ab_pc"
+                                                class="oe_inline"
+                                                attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/> %
                                         </div>
                                     </group>
                                 </group>
                             </page>
                         </notebook>
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -224,12 +250,16 @@
             <field name="name">mailing.mailing.kanban</field>
             <field name="model">mailing.mailing</field>
             <field name="arch" type="xml">
-                <kanban default_group_by="state">
+                <kanban default_group_by="state" quick_create="false">
                     <field name='state' readonly="1"/>
                     <field name='email_from' readonly="1"/>
                     <field name='color'/>
+                    <field name='user_id'/>
                     <field name='expected'/>
                     <field name='failed'/>
+                    <field name='total'/>
+                    <field name='mailing_model_id'/>
+                    <field name='mailing_model_name'/>
                     <field name='sent_date'/>
                     <field name='active'/>
                     <templates>
@@ -253,52 +283,60 @@
                                  <div class="oe_kanban_content">
                                     <div class="o_kanban_record_top">
                                         <div class="o_kanban_record_headings">
-                                            <h3 class="mt4 mb4"><field name="name"/></h3>
+                                            <div class="row"  attrs="{'invisible': [('sent_date', '=', False)]}">
+                                                <h3 class="my-1 col-8 o_text_overflow">
+                                                    <field name="subject"/>
+                                                </h3>
+                                                <div class="progress border col-3 px-0 mt-2" style="background-color: inherit; height:12px;">
+                                                    <div class="progress-bar" role="progressbar" 
+                                                        aria-valuemin="0"
+                                                        t-att-aria-valuenow="record.delivered.raw_value"
+                                                        t-att-aria-valuemax="record.expected.raw_value"
+                                                        t-attf-style="width: #{record.delivered.raw_value * 100 / record.expected.raw_value}%"/>
+                                                </div>
+                                            </div>
+                                            <h3 class="my-1 o_text_overflow"  attrs="{'invisible': [('sent_date', '!=', False)]}">
+                                                <field name="subject"/>
+                                            </h3>
                                             <field name="mailing_type" invisible="1"/>
                                             <div class="o_kanban_record_subtitle" attrs="{'invisible': [('sent_date', '=', False)]}">
-                                                <h5 style="display: inline;"><field name="campaign_id" groups="mass_mailing.group_mass_mailing_campaign"/></h5>
-                                                <t t-if="record.campaign_id.raw_value" groups="mass_mailing.group_mass_mailing_campaign"> - </t><field name="sent_date"/>
+                                                <h5 style="display: inline;">
+                                                    <field name="campaign_id" groups="mass_mailing.group_mass_mailing_campaign"/>
+                                                </h5>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="o_kanban_record_body" t-if="!selection_mode" attrs="{'invisible': [('sent_date', '=', False)]}">
-                                        <t t-if="record.sent_date">
-                                            <div class="row" name="stat_opened">
-                                                <div class="col-8">
-                                                    <a name="%(action_view_mail_mail_statistics_mailing)d"
-                                                       context="{'search_default_filter_opened': True}"
-                                                       type="action">Opened</a>
-                                                </div>
-                                                <div class="col-4 text-right">
-                                                    <field name="opened_ratio"/> %
-                                                </div>
+                                        <div>
+                                            <b><field name="delivered"/> / <field name="expected"/></b> Delivered to  
+                                            <field name='mailing_model_id' attrs="{'invisible': [('mailing_model_name','=','mailing.list')]}"/>
+                                            <span attrs="{'invisible': [('mailing_model_name','!=','mailing.list')]}">Mailing Contact</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between">
+                                            <div name="stat_opened">
+                                                <b><field name="opened_ratio" />%</b> Opened 
                                             </div>
-                                            <div class="row" name="stat_replied">
-                                                <div class="col-8">
-                                                    <a name="%(action_view_mail_mail_statistics_mailing)d"
-                                                       context="{'search_default_filter_replied': True}"
-                                                       type="action">Replied</a>
-                                                </div>
-                                                <div class="col-4 text-right">
-                                                    <field name="replied_ratio"/> %
-                                                </div>
+                                            <div name="stat_replied">
+                                                <b><field name="replied_ratio" />%</b> Replied 
                                             </div>
-                                            <div class="row" name="stat_clicks">
-                                                <div class="col-8">
-                                                    <a name="%(link_tracker_action_mass_mailing)d"
-                                                       type="action">Clicks</a>
-                                                </div>
-                                                <div class="col-4 text-right">
-                                                    <field name="clicks_ratio"/> %
-                                                </div>
+                                            <div name="stat_clicks">
+                                                <b><field name="clicks_ratio" />%</b> Clicks 
                                             </div>
-                                            <div class='o_kanban_primary_bottom' name="stat_delivered">
-                                                <field name="delivered" widget="progressbar" title="Delivered" options="{'current_value': 'delivered', 'max_value': 'expected', 'editable': false}"/>
-                                            </div>
-                                        </t>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="oe_clear"></div>
+                                <div name="div_responsible_avatar">
+                                    <span attrs="{'invisible': [('sent_date', '=', False)]}">
+                                        <span class="fa fa-clock-o text-muted mr-2"/>
+                                        <field name="sent_date" widget="date"/>
+                                    </span>
+                                    <span attrs="{'invisible': [('sent_date', '!=', False)]}" class="oe_clear text-muted">
+                                        <field name='total'/>
+                                        <field name='mailing_model_id' attrs="{'invisible': [('mailing_model_name','=','mailing.list')]}"/>
+                                        <span attrs="{'invisible': [('mailing_model_name','!=','mailing.list')]}">Mailing Contact</span>
+                                    </span>
+                                    <img t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" class="o_image_24_cover oe_kanban_avatar float-right"/>
+                                </div>
                             </div>
                         </t>
                     </templates>
@@ -347,6 +385,7 @@
                 'default_user_id': uid,
             }
             </field>
+            <field name="domain">[('mailing_type', '=', 'mail')]</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a new mailing
@@ -365,28 +404,6 @@
                 'search_default_assigned_to_me': 1,
                 'search_default_campaign_id': [active_id],
                 'default_campaign_id': active_id,
-                'default_user_id': uid,
-            }
-            </field>
-            <field name="help" type="html">
-              <p class="o_view_nocontent_smiling_face">
-                Create a new mailing
-              </p><p>
-                You don't need to import your mailing lists, you can easily
-                send emails<br/> to any contact saved in other Odoo apps.
-              </p>
-            </field>
-        </record>
-
-        <record id="action_create_ab_mass_mailings_from_campaign" model="ir.actions.act_window">
-            <field name="name">Mailings</field>
-            <field name="res_model">mailing.mailing</field>
-            <field name="view_mode">form,kanban,tree</field>
-            <field name="context">{
-                'search_default_assigned_to_me': 1,
-                'search_default_campaign_id': [active_id],
-                'default_campaign_id': active_id,
-                'default_contact_ab_pc': 10,
                 'default_user_id': uid,
             }
             </field>

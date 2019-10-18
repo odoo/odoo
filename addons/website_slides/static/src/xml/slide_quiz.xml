@@ -3,9 +3,6 @@
     <t t-name="slide.slide.quiz">
         <div class="o_wslides_fs_quiz_container o_wslides_wrap h-100 w-100 overflow-auto pb-5">
             <div class="container">
-                <div t-if="widget.slide.completed" class="row">
-                    <div class="o_wslides_js_lesson_quiz_validation col py-2 bg-100 mb-2 border-bottom"/>
-                </div>
 
                 <div t-foreach="widget.quiz.questions" t-as="question"
                      t-attf-class="o_wslides_js_lesson_quiz_question mt-3 mb-4 #{widget.readonly ? 'disabled' : ''} #{widget.slide.completed ? 'completed-disabled' : ''}"
@@ -40,6 +37,9 @@
                     </button>
                 </div>
                 <div t-if="!widget.slide.completed" class="o_wslides_js_lesson_quiz_validation border-top pt-3"/>
+                <div t-else="" class="row">
+                    <div class="o_wslides_js_lesson_quiz_validation col py-2 bg-100 mb-2 border-bottom"/>
+                </div>
             </div>
         </div>
     </t>

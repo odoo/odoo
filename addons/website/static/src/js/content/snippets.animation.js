@@ -6,9 +6,9 @@ odoo.define('website.content.snippets.animation', function (require) {
  */
 
 var Class = require('web.Class');
+var config = require('web.config');
 var core = require('web.core');
 var mixins = require('web.mixins');
-var utils = require('web.utils');
 var publicWidget = require('web.public.widget');
 var utils = require('web.utils');
 
@@ -681,6 +681,130 @@ registry.mediaVideo = publicWidget.Widget.extend({
     },
 });
 
+registry.backgroundVideo = publicWidget.Widget.extend({
+    selector: '.o_background_video',
+    xmlDependencies: ['/website/static/src/xml/website.background.video.xml'],
+    disabledInEditableMode: false,
+
+    /**
+     * @override
+     */
+    start: function () {
+        var proms = [this._super(...arguments)];
+
+        this.videoSrc = this.el.dataset.bgVideoSrc;
+        this.iframeID = _.uniqueId('o_bg_video_iframe_');
+
+        this.isYoutubeVideo = this.videoSrc.indexOf('youtube') >= 0;
+        this.isMobileEnv = config.device.size_class <= config.device.SIZES.LG && config.device.touch;
+        if (this.isYoutubeVideo && this.isMobileEnv) {
+            this.videoSrc = this.videoSrc + "&enablejsapi=1";
+
+            if (!window.YT) {
+                proms.push(new Promise(resolve => {
+                    window.onYouTubeIframeAPIReady = () => resolve();
+                }));
+                $('<script/>', {
+                    src: 'https://www.youtube.com/iframe_api',
+                }).appendTo('head');
+            }
+        }
+
+        var throttledUpdate = _.throttle(() => this._adjustIframe(), 50);
+
+        var $dropdownMenu = this.$el.closest('.dropdown-menu');
+        if ($dropdownMenu.length) {
+            this.$dropdownParent = $dropdownMenu.parent();
+            this.$dropdownParent.on('shown.bs.dropdown.backgroundVideo', throttledUpdate);
+        }
+
+        $(window).on('resize.' + this.iframeID, throttledUpdate);
+
+        return Promise.all(proms).then(() => this._appendBgVideo());
+    },
+    /**
+     * @override
+     */
+    destroy: function () {
+        this._super.apply(this, arguments);
+
+        if (this.$dropdownParent) {
+            this.$dropdownParent.off('.backgroundVideo');
+        }
+
+        $(window).off('resize.' + this.iframeID);
+
+        if (this.$bgVideoContainer) {
+            this.$bgVideoContainer.remove();
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Adjusts iframe sizes and position so that it fills the container and so
+     * that it is centered in it.
+     *
+     * @private
+     */
+    _adjustIframe: function () {
+        this.$iframe.removeClass('show');
+
+        // Adjust the iframe
+        var wrapperWidth = this.$target.innerWidth();
+        var wrapperHeight = this.$target.innerHeight();
+        var relativeRatio = (wrapperWidth / wrapperHeight) / (16 / 9);
+        var style = {};
+        if (relativeRatio >= 1.0) {
+            style['width'] = '100%';
+            style['height'] = (relativeRatio * 100) + '%';
+            style['left'] = '0';
+            style['top'] = (-(relativeRatio - 1.0) / 2 * 100) + '%';
+        } else {
+            style['width'] = ((1 / relativeRatio) * 100) + '%';
+            style['height'] = '100%';
+            style['left'] = (-((1 / relativeRatio) - 1.0) / 2 * 100) + '%';
+            style['top'] = '0';
+        }
+        this.$iframe.css(style);
+
+        void this.$iframe[0].offsetWidth; // Force style addition
+        this.$iframe.addClass('show');
+    },
+    /**
+     * Append background video related elements to the target.
+     *
+     * @private
+     */
+    _appendBgVideo: function () {
+        var $oldContainer = this.$bgVideoContainer || this.$('> .o_bg_video_container');
+        this.$bgVideoContainer = $(qweb.render('website.background.video', {
+            videoSrc: this.videoSrc,
+            iframeID: this.iframeID,
+        }));
+        this.$iframe = this.$bgVideoContainer.find('.o_bg_video_iframe');
+        this.$iframe.one('load', () => {
+            this.$bgVideoContainer.find('.o_bg_video_loading').remove();
+        });
+        this.$bgVideoContainer.prependTo(this.$target);
+        $oldContainer.remove();
+
+        this._adjustIframe();
+
+        // YouTube does not allow to auto-play video in mobile devices, so we
+        // have to play the video manually.
+        if (this.isMobileEnv && this.isYoutubeVideo) {
+            new window.YT.Player(this.iframeID, {
+                events: {
+                    onReady: ev => ev.target.playVideo(),
+                }
+            });
+        }
+    },
+});
+
 registry.ul = publicWidget.Widget.extend({
     selector: 'ul.o_ul_folded, ol.o_ul_folded',
     events: {
@@ -890,7 +1014,6 @@ registry.socialShare = publicWidget.Widget.extend({
         this.$('.oe_social_facebook').click($.proxy(this._renderSocial, this, 'facebook'));
         this.$('.oe_social_twitter').click($.proxy(this._renderSocial, this, 'twitter'));
         this.$('.oe_social_linkedin').click($.proxy(this._renderSocial, this, 'linkedin'));
-        this.$('.oe_social_google-plus').click($.proxy(this._renderSocial, this, 'google-plus'));
     },
     /**
      * @private
@@ -926,7 +1049,6 @@ registry.socialShare = publicWidget.Widget.extend({
             'facebook': 'https://www.facebook.com/sharer/sharer.php?u=' + url,
             'twitter': 'https://twitter.com/intent/tweet?original_referer=' + url + '&text=' + encodeURIComponent(title + hashtags + ' - ') + url,
             'linkedin': 'https://www.linkedin.com/shareArticle?mini=true&url=' + url + '&title=' + encodeURIComponent(title),
-            'google-plus': 'https://plus.google.com/share?url=' + url,
         };
         if (!_.contains(_.keys(socialNetworks), social)) {
             return;
@@ -948,7 +1070,7 @@ registry.socialShare = publicWidget.Widget.extend({
      */
     _onMouseEnter: function () {
         var social = this.$el.data('social');
-        this.socialList = social ? social.split(',') : ['facebook', 'twitter', 'linkedin', 'google-plus'];
+        this.socialList = social ? social.split(',') : ['facebook', 'twitter', 'linkedin'];
         this.hashtags = this.$el.data('hashtags') || '';
 
         this._render();

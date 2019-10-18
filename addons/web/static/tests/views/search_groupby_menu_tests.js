@@ -176,5 +176,25 @@ QUnit.module('GroupByMenu', {
 
         groupByMenu.destroy();
     });
+
+    QUnit.test('custom group by dropdown should not have ID field', async function (assert) {
+        assert.expect(2);
+
+        this.fields.id = {sortable: true, string: 'ID', type: 'integer'};
+
+        var groupByMenu = await createGroupByMenu([], this.fields);
+        // open groupBy menu
+        await testUtils.dom.click(groupByMenu.$('button:first'));
+        // open Add Custom Group submenu
+        await testUtils.dom.click(groupByMenu.$('.o_add_custom_group'))
+
+        assert.containsOnce(groupByMenu, '.o_group_selector option',
+            'groupby menu should have only one option');
+        // custom group by should not have 'ID' field
+        assert.containsNone(groupByMenu, '.o_group_selector option[value="id"]',
+            'id field should not be in custom group by');
+
+        groupByMenu.destroy();
+    });
 });
 });

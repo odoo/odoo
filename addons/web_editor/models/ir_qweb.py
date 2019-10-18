@@ -48,7 +48,7 @@ class QWeb(models.AbstractModel):
         el.set('t-call', el.attrib.pop('t-snippet'))
         View = self.env['ir.ui.view']
         view_id = View.get_view_id(el.attrib.get('t-call'))
-        name = View.browse(view_id).display_name
+        name = View.browse(view_id).name
         thumbnail = el.attrib.pop('t-thumbnail', "oe-thumbnail")
         div = u'<div name="%s" data-oe-type="snippet" data-oe-thumbnail="%s">' % (
             escape(pycompat.to_text(name)),
@@ -250,7 +250,7 @@ class DateTime(models.AbstractModel):
 
                 dt = user_tz.localize(dt).astimezone(utc)
             except Exception:
-                logger.warn(
+                logger.warning(
                     "Failed to convert the value for a field of the model"
                     " %s back from the user's timezone (%s) to UTC",
                     model, tz_name,
@@ -394,7 +394,6 @@ class Image(models.AbstractModel):
 
 class Monetary(models.AbstractModel):
     _name = 'ir.qweb.field.monetary'
-    _description = 'Qweb Field Monerary'
     _inherit = 'ir.qweb.field.monetary'
 
     @api.model

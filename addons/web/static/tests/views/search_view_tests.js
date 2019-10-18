@@ -372,7 +372,7 @@ QUnit.module('Search View', {
         assert.expect(7);
 
         const unpatchDate = patchDate(2019,6,31,13,43,0);
-        
+
         var actionManager = await createActionManager({
             actions: this.actions,
             archs: this.archs,
@@ -524,7 +524,7 @@ QUnit.module('Search View', {
         await testUtils.dom.click($('.o_search_options button span.fa-filter'));
         await testUtils.dom.click($('.o_filters_menu .o_menu_item a').first());
         await testUtils.dom.click($('.o_graph_controller .o_control_panel .o_cp_buttons button').eq(1));
-        await testUtils.dom.click($('.o_graph_controller .o_group_by_menu .o_menu_item').eq(1));   
+        await testUtils.dom.click($('.o_graph_controller .o_group_by_menu .o_menu_item').eq(1));
         assert.doesNotHaveClass($('.o_graph_controller .o_group_by_menu .o_menu_item > .dropdown-item').eq(1), 'selected',
             'groupby should be still unselected');
         actionManager.destroy();
@@ -701,6 +701,7 @@ QUnit.module('Search View', {
         // DateTime case
         $autocomplete = $('.o_searchview_input');
         await stringToEvent($autocomplete, '07/15/1983 00:00:00');
+        await testUtils.fields.triggerKey('down', $autocomplete, 'down');
         await testUtils.fields.triggerKey('up', $autocomplete, 'enter');
 
         assert.equal($('.o_searchview_facet .o_facet_values').text().trim(), '07/15/1983 00:00:00',
@@ -892,6 +893,112 @@ QUnit.module('Search View', {
 
         actionManager.destroy();
         unpatchDate();
+    });
+
+    QUnit.test('Custom Filter datetime with equal operator', async function (assert) {
+        assert.expect(5);
+
+        this.data.partner.fields.date_time_field = {string: "DateTime", type: "datetime", store: true, searchable: true};
+
+        var searchReadCount = 0;
+        var actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            session: {
+                getTZOffset: function () {
+                    return -240;
+                },
+            },
+            mockRPC: async function (route, args) {
+                if (route === '/web/dataset/search_read') {
+                    if (searchReadCount === 1) {
+                        assert.deepEqual(args.domain,
+                            [['date_time_field', '=', '2017-02-22 15:00:00']], // In UTC
+                            'domain is correct'
+                        );
+                    }
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        // List view
+        await actionManager.doAction(2);
+
+        await testUtils.dom.click($('button:contains(Filters)'));
+        await testUtils.dom.click($('.o_dropdown_menu .o_add_custom_filter'));
+        assert.strictEqual($('.o_dropdown_menu select.o_searchview_extended_prop_field').val(), 'date_time_field',
+            'the date_time_field should be selected in the custom filter');
+
+        assert.strictEqual($('.o_dropdown_menu select.o_searchview_extended_prop_op').val(), 'between',
+            'The between operator is selected');
+
+        await testUtils.fields.editSelect($('.o_dropdown_menu select.o_searchview_extended_prop_op'), '=');
+
+        assert.strictEqual($('.o_dropdown_menu select.o_searchview_extended_prop_op').val(), '=',
+            'The equal operator is selected');
+
+        await testUtils.fields.editAndTrigger($('.o_searchview_extended_prop_value input:first'), '02/22/2017 11:00:00', ['change']); // in TZ
+
+        searchReadCount = 1;
+        await testUtils.dom.click($('.o_dropdown_menu .o_apply_filter'));
+
+        assert.strictEqual($('.o_dropdown_menu .dropdown-item.selected').text().trim(), 'DateTime is equal to "02/22/2017 11:00:00"',
+            'Label of Filter is correct');
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('Custom Filter datetime between operator', async function (assert) {
+        assert.expect(4);
+
+        this.data.partner.fields.date_time_field = {string: "DateTime", type: "datetime", store: true, searchable: true};
+
+        var searchReadCount = 0;
+        var actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            session: {
+                getTZOffset: function () {
+                    return -240;
+                },
+            },
+            mockRPC: async function (route, args) {
+                if (route === '/web/dataset/search_read') {
+                    if (searchReadCount === 1) {
+                        assert.deepEqual(args.domain,
+                            [
+                                '&', ['date_time_field', '>=', '2017-02-22 15:00:00'], ['date_time_field', '<=', '2017-02-22 21:00:00']  // In UTC
+                            ],
+                            'domain is correct'
+                        );
+                    }
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        // List view
+        await actionManager.doAction(2);
+
+        await testUtils.dom.click($('button:contains(Filters)'));
+        await testUtils.dom.click($('.o_dropdown_menu .o_add_custom_filter'));
+        assert.strictEqual($('.o_dropdown_menu select.o_searchview_extended_prop_field').val(), 'date_time_field',
+            'the date_time_field should be selected in the custom filter');
+
+        assert.strictEqual($('.o_dropdown_menu select.o_searchview_extended_prop_op').val(), 'between',
+            'The between operator is selected');
+
+        await testUtils.fields.editAndTrigger($('.o_searchview_extended_prop_value input:first'), '02/22/2017 11:00:00', ['change']); // in TZ
+        await testUtils.fields.editAndTrigger($('.o_searchview_extended_prop_value input:last'), '02/22/2017 17:00:00', ['change']); // in TZ
+
+        searchReadCount = 1;
+        await testUtils.dom.click($('.o_dropdown_menu .o_apply_filter'));
+
+        assert.strictEqual($('.o_dropdown_menu .dropdown-item.selected').text().trim(), 'DateTime is between "02/22/2017 11:00:00 and 02/22/2017 17:00:00"',
+            'Label of Filter is correct');
+
+        actionManager.destroy();
     });
 
     QUnit.module('Favorites Menu');
@@ -1116,7 +1223,7 @@ QUnit.module('Search View', {
         // activate Foo a
         await testUtils.fields.triggerKey('press', $('.o_searchview_input'), 97);
         await testUtils.fields.triggerKey('up', $('.o_searchview_input'), 'enter');
-        
+
         // activate Date Filter with This Month
         await testUtils.dom.click($('button .fa-filter'));
         await testUtils.dom.click($('.o_filters_menu .o_menu_item a'));
@@ -1265,56 +1372,36 @@ QUnit.module('Search View', {
 
     QUnit.module('Autocompletion');
 
-    QUnit.test('selection via autocompletion and deletion modifies appropriately submenus', async function (assert) {
-        assert.expect(6);
+    QUnit.test('select an autocomplete field', async function (assert) {
+        assert.expect(3);
 
+        var searchRead = 0;
         var actionManager = await createActionManager({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/search_read') {
+                    if (searchRead === 1) {
+                        assert.deepEqual(args.domain, [["foo", "ilike", "a"]]);
+                    }
+                    searchRead++;
+                }
+                return this._super.apply(this, arguments);
+            },
         });
 
-        const unpatchDate = patchDate(2019,6,31,13,43,0);
-
-        await actionManager.doAction(9);
+        await actionManager.doAction(11);
 
         await testUtils.fields.triggerKey('press', $('.o_searchview_input'), 97);
-        await testUtils.fields.triggerKey('up', $('.o_searchview_input'), 'enter');
-        await testUtils.fields.triggerKey('press', $('.o_searchview_input'), 103);
-        await testUtils.fields.triggerKey('up', $('.o_searchview_input'), 'enter');
+        assert.strictEqual(actionManager.$('.o_searchview_autocomplete li').length, 2,
+            "there should be 2 result for 'a' in search bar autocomplete");
 
+        await testUtils.fields.triggerKey('up', $('.o_searchview_input'), 'enter');
         assert.strictEqual($('.o_searchview_input_container .o_facet_values').eq(0).text().trim(),
-            "Date Field Filter: July 2019",
-            "There should be a filter facet with label 'Date Field Filter: July 2019'");
-        assert.strictEqual($('.o_searchview_input_container .o_facet_values').eq(1).text().trim(),
-            "Date Field Groupby: Day",
-            "There should be a filter facet with label 'Date Field Groupby: Day'");
-
-        await testUtils.dom.click($('button .fa-filter'));
-        await testUtils.dom.click($('.o_filters_menu .o_menu_item').eq(0));
-        assert.strictEqual($('.o_filters_menu .o_item_option a.selected').text().trim(), "July2019",
-            "The item 'July 2019' should be selected in the filters menu");
-
-        await testUtils.dom.click($('button .fa-bars'));
-        await testUtils.dom.click($('.o_group_by_menu .o_menu_item').eq(0));
-        assert.strictEqual($('.o_group_by_menu .o_item_option a.selected').text().trim(), "Day",
-            "The item 'Day' should be selected in the groupby menu");
-
-        await testUtils.dom.click($('div .o_searchview_facet .o_facet_remove').eq(0));
-        await testUtils.dom.click($('div .o_searchview_facet .o_facet_remove').eq(0));
-
-        await testUtils.dom.click($('button .fa-filter'));
-        await testUtils.dom.click($('.o_filters_menu .o_menu_item').eq(0));
-        assert.containsNone($('.o_filters_menu .o_item_option a.selected'),
-            "The item 'This Month' should have unselected in the filters menu");
-
-        await testUtils.dom.click($('button .fa-bars'));
-        await testUtils.dom.click($('.o_group_by_menu .o_menu_item').eq(0));
-        assert.containsNone($('.o_group_by_menu .o_item_option a.selected'),
-            "The item 'Day' should have been unselected in the groupby menu");
+            "a", "There should be a field facet with label 'a'");
 
         actionManager.destroy();
-        unpatchDate();
     });
 
     QUnit.test('select an autocomplete field with `context` key', async function (assert) {
@@ -1624,7 +1711,7 @@ QUnit.module('Search View', {
         var $filterDropdown = $('.modal .o_filters_menu');
         await testUtils.dom.click($filterDropdown.find('.o_add_custom_filter'));
 
-        assert.containsN($filterDropdown, '.o_input', 3);
+        assert.containsN($filterDropdown, '.o_input', 4);
 
         // We really are interested in the click event
         // We do it twice on each input to make sure

@@ -20,6 +20,18 @@
         <record id="frequency_field_lang_id" model="crm.lead.scoring.frequency.field">
             <field name="field_id" eval="ref('crm.field_crm_lead__lang_id')"/>
         </record>
+        <record id="crm_pls_fields_param" model="ir.config_parameter">
+            <field name="key">crm.pls_fields</field>
+            <field name="value" eval="'state_id,country_id,phone_state,email_state,source_id'"/>
+        </record>
+        <record id="crm_pls_start_date_param" model="ir.config_parameter">
+            <field name="key">crm.pls_start_date</field>
+            <field name="value" eval="(datetime.now() - timedelta(days=8)).strftime('%Y-%m-%d')"/>
+        </record>
+        <record id="crm_pls_rebuild_threshold_param" model="ir.config_parameter">
+            <field name="key">crm.pls_rebuild_threshold</field>
+            <field name="value">100</field>
+        </record>
     </data>
 
 	<record id="website_crm_score_cron" model="ir.cron">

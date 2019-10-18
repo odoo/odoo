@@ -1,6 +1,6 @@
 {
     'name': 'eCommerce',
-    'category': 'Website',
+    'category': 'Website/Website',
     'sequence': 55,
     'summary': 'Sell your products online',
     'website': 'https://www.odoo.com/page/e-commerce',
@@ -23,6 +23,7 @@
         'views/snippets.xml',
         'views/res_config_settings_views.xml',
         'views/digest_views.xml',
+        'views/website_sale_visitor_views.xml',
     ],
     'demo': [
         'data/demo.xml',

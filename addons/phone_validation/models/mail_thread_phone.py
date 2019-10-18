@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.addons.phone_validation.tools import phone_validation
 from odoo.exceptions import UserError
 
 
@@ -24,7 +25,7 @@ class PhoneMixin(models.AbstractModel):
     """
     _name = 'mail.thread.phone'
     _description = 'Phone Blacklist Mixin'
-    _inherit = ['mail.thread', 'phone.validation.mixin']
+    _inherit = ['mail.thread']
 
     phone_sanitized = fields.Char(
         string='Sanitized Number', compute="_compute_phone_sanitized", compute_sudo=True, store=True,
@@ -95,6 +96,25 @@ class PhoneMixin(models.AbstractModel):
         """ This method returns the fields to use to find the number to use to
         send an SMS on a record. """
         return []
+
+    def _phone_get_country_field(self):
+        if 'country_id' in self:
+            return 'country_id'
+        return False
+
+    def phone_get_sanitized_numbers(self, number_fname='mobile', force_format='E164'):
+        res = dict.fromkeys(self.ids, False)
+        country_fname = self._phone_get_country_field()
+        for record in self:
+            number = record[number_fname]
+            res[record.id] = phone_validation.phone_sanitize_numbers_w_record([number], record, record_country_fname=country_fname, force_format=force_format)[number]['sanitized']
+        return res
+
+    def phone_get_sanitized_number(self, number_fname='mobile', force_format='E164'):
+        self.ensure_one()
+        country_fname = self._phone_get_country_field()
+        number = self[number_fname]
+        return phone_validation.phone_sanitize_numbers_w_record([number], self, record_country_fname=country_fname, force_format=force_format)[number]['sanitized']
 
     def _phone_set_blacklisted(self):
         return self.env['phone.blacklist'].sudo()._add([r.phone_sanitized for r in self])

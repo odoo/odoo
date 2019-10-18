@@ -10,7 +10,7 @@
 Base module for the Brazilian localization
 ==========================================
 
-This module consists in:
+This module consists of:
 
  - Generic Brazilian chart of accounts
  - Brazilian taxes such as:

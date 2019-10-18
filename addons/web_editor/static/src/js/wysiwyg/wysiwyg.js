@@ -78,9 +78,7 @@ var Wysiwyg = Widget.extend({
         this.$editor.data('oe-id', options.recordInfo.res_id);
         $(document).on('mousedown', this._blur);
         this._value = this.$target.html() || this.$target.val();
-        return this._super.apply(this, arguments).then(() => {
-            this.$editor.trigger('mouseup');
-        });
+        return this._super.apply(this, arguments);
     },
     /**
      * @override

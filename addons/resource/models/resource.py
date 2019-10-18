@@ -17,6 +17,7 @@ from odoo.osv import expression
 from odoo.tools.float_utils import float_round
 
 from odoo.tools import date_utils, float_utils
+from .resource_mixin import timezone_datetime
 
 # Default hour per day value. The one should
 # only be used when the one from the calendar
@@ -701,6 +702,50 @@ class ResourceResource(models.Model):
     def _onchange_user_id(self):
         if self.user_id:
             self.tz = self.user_id.tz
+
+    def _get_work_interval(self, start, end):
+        """ Return interval's start datetime for interval closest to start. And interval's end datetime for interval closest to end.
+            If none is found return None
+            Note: this method is used in enterprise (forecast and planning)
+
+            :start: datetime
+            :end: datetime
+            :return: (datetime|None, datetime|None)
+        """
+        start_datetime = timezone_datetime(start)
+        end_datetime = timezone_datetime(end)
+        resource_mapping = {}
+        for resource in self:
+            work_intervals = sorted(
+                resource.calendar_id._work_intervals(start_datetime, end_datetime, resource),
+                key=lambda x: x[0]
+            )
+            if work_intervals:
+                resource_mapping[resource.id] = (work_intervals[0][0].astimezone(utc), work_intervals[-1][1].astimezone(utc))
+            else:
+                resource_mapping[resource.id] = (None, None)
+        return resource_mapping
+
+    def _get_unavailable_intervals(self, start, end):
+        """ Compute the intervals during which employee is unavailable with hour granularity between start and end
+            Note: this method is used in enterprise (forecast and planning)
+
+        """
+        start_datetime = timezone_datetime(start)
+        end_datetime = timezone_datetime(end)
+        resource_mapping = {}
+        for resource in self:
+            calendar = resource.calendar_id
+            resource_work_intervals = calendar._work_intervals(start_datetime, end_datetime, resource)
+            resource_work_intervals = [(start, stop) for start, stop, meta in resource_work_intervals]
+            # start + flatten(intervals) + end
+            resource_work_intervals = [start_datetime] + list(chain.from_iterable(resource_work_intervals)) + [end_datetime]
+            # put it back to UTC
+            resource_work_intervals = list(map(lambda dt: dt.astimezone(utc), resource_work_intervals))
+            # pick groups of two
+            resource_work_intervals = list(zip(resource_work_intervals[0::2], resource_work_intervals[1::2]))
+            resource_mapping[resource.id] = resource_work_intervals
+        return resource_mapping
 
 
 class ResourceCalendarLeaves(models.Model):

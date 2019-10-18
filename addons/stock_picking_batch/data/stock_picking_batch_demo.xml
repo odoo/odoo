@@ -4,9 +4,11 @@
     <!-- Add batch picking -->
     <record id="stock_picking_batch_dry_1" model="stock.picking.batch">
         <field name="state">in_progress</field>
+        <field name="company_id" ref="base.main_company"/>
     </record>
     <record id="stock_picking_batch_freeze_1" model="stock.picking.batch">
         <field name="state">in_progress</field>
+        <field name="company_id" ref="base.main_company"/>
     </record>
 
     <!-- Resource: stock.inventory -->
@@ -56,6 +58,7 @@
         <field name="batch_id" ref="stock_picking_batch_freeze_1"/>
         <field name="location_id" ref="stock.stock_location_stock"/>
         <field name="location_dest_id" ref="stock.stock_location_output"/>
+        <field name="company_id" ref="base.main_company"/>
     </record>
     <record id="Picking_B" model="stock.picking">
         <field name="move_type">one</field>
@@ -65,6 +68,7 @@
         <field name="batch_id" ref="stock_picking_batch_freeze_1"/>
         <field name="location_id" ref="stock.stock_location_stock"/>
         <field name="location_dest_id" ref="stock.stock_location_output"/>
+        <field name="company_id" ref="base.main_company"/>
     </record>
     <record id="Picking_C" model="stock.picking">
         <field name="move_type">one</field>
@@ -74,6 +78,7 @@
         <field name="batch_id" ref="stock_picking_batch_dry_1"/>
         <field name="location_id" ref="stock.stock_location_stock"/>
         <field name="location_dest_id" ref="stock.stock_location_output"/>
+        <field name="company_id" ref="base.main_company"/>
     </record>
 
     <!-- Add stock move -->

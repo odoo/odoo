@@ -20,8 +20,8 @@ Note:
 -----
 
 * Fiscal positions '内税' and '外税' have been added to handle special \
-requirements which might arise from POS implementation. [1]  You may not \
-need to use these at all under normal circumstances.
+requirements which might arise from POS implementation. [1]  Under normal \
+circumstances, you might not need to use those at all.
 
 [1] See https://github.com/odoo/odoo/pull/6470 for detail.
 

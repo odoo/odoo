@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <search string="UTM Campaigns">
                 <field name="name" string="Campaigns"/>
-                <field name="tag_ids"/>
+                <field name="tag_ids" widget="many2many_tags"/>
                 <field name="user_id"/>
                 <group expand="0" string="Group By">
                     <filter string="Stage" name="group_stage_id"
@@ -23,6 +23,9 @@
         <field name="model">utm.campaign</field>
         <field name="arch" type="xml">
             <form string="UTM Campaign">
+                <header>
+                    <field name="stage_id" widget="statusbar" options="{'clickable': '1'}"/>
+                </header>
                 <sheet>
                     <div class="oe_button_box d-flex justify-content-end" name="button_box">
                     </div>
@@ -46,7 +49,7 @@
                 <field name="name"/>
                 <field name="user_id"/>
                 <field name="stage_id"/>
-                <field name="tag_ids"/>
+                <field name="tag_ids" widget="many2many_tags"/>
             </tree>
         </field>
     </record>
@@ -55,7 +58,7 @@
         <field name="name">utm.campaign.view.kanban</field>
         <field name="model">utm.campaign</field>
         <field name="arch" type="xml">
-            <kanban default_group_by='stage_id'>
+            <kanban default_group_by='stage_id' class="o_utm_kanban">
                 <field name='color'/>
                 <field name='user_id'/>
                 <field name="stage_id"/>
@@ -79,16 +82,20 @@
                                 </div>
                             </div>
                             <div class="oe_kanban_content">
-                                <div class="o_kanban_record_top mb16">
+                                <div class="o_kanban_record_top">
                                     <div class="o_kanban_record_headings">
                                         <h3 class="oe_margin_bottom_8 o_kanban_record_title"><field name="name"/></h3>
                                     </div>
                                 </div>
                                 <div class="o_kanban_record_body">
                                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                    <ul id="o_utm_actions" class="list-group list-group-horizontal"/>
                                 </div>
-                                <div class="o_kanban_record_bottom mt16" style="height:90px">
-                                    <div id="utm_statistics" class="d-flex flex-column justify-content-start align-items-start w-100"/>
+                                <div class="o_kanban_record_bottom h5 mt-2 mb-0">
+                                    <div id="utm_statistics" class="d-flex flex-grow-1 text-600 mt-1"/>
+                                    <div class="oe_kanban_bottom_right">
+                                        <img t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)" t-att-data-member_id="record.user_id.raw_value" t-att-alt="record.user_id.raw_value" width="32" height="32" class="oe_kanban_avatar"/>
+                                    </div>
                                 </div>
                             </div>
                             <div class="oe_clear"></div>
@@ -100,17 +107,13 @@
     </record>
 
     <!--  CAMPAIGN TAGS !-->
-    <record id="utm_tag_view_form" model="ir.ui.view">
-        <field name="name">utm.tag.view.form</field>
+    <record id="utm_tag_view_tree" model="ir.ui.view">
+        <field name="name">utm.tag.view.tree</field>
         <field name="model">utm.tag</field>
         <field name="arch" type="xml">
-            <form string="Campaign Tags">
-                <sheet>
-                    <group>
-                        <field name="name"/>
-                    </group>
-                </sheet>
-            </form>
+            <tree string="Campaign Tags" editable="top">
+                <field name="name"/>
+            </tree>
         </field>
     </record>
 
@@ -120,6 +123,8 @@
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
             Add a new tag
+            </p><p>
+            Use tags to organize campaigns and easily filter them.
             </p>
         </field>
     </record>
@@ -153,7 +158,9 @@
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-            Create a new utm stage
+            Create a stage for your campaigns
+            </p><p>
+            Stages allow you to organize your workflow  (e.g. : plan, design, in progress,  done, …).
             </p>
         </field>
     </record>

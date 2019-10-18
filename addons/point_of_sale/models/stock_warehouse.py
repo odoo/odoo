@@ -37,6 +37,7 @@ class Warehouse(models.Model):
                 'default_location_dest_id': self.env.ref('stock.stock_location_customers').id,
                 'sequence': max_sequence + 1,
                 'sequence_code': 'POS',
+                'company_id': self.company_id.id,
             }
         })
         return picking_type_create_values, max_sequence + 2

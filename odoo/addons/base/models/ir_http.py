@@ -20,8 +20,8 @@ import werkzeug.utils
 import odoo
 from odoo import api, http, models, tools, SUPERUSER_ID
 from odoo.exceptions import AccessDenied, AccessError
-from odoo.http import request, STATIC_CACHE, content_disposition
-from odoo.tools import consteq, pycompat, ustr
+from odoo.http import request, content_disposition
+from odoo.tools import consteq, pycompat
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.modules.module import get_resource_path, get_module_path
 
@@ -87,8 +87,8 @@ class IrHttp(models.AbstractModel):
         return {'model': ModelConverter, 'models': ModelsConverter, 'int': SignedIntConverter}
 
     @classmethod
-    def _find_handler(cls, return_rule=False):
-        return cls.routing_map().bind_to_environ(request.httprequest.environ).match(return_rule=return_rule)
+    def _match(cls, path_info, key=None):
+        return cls.routing_map().bind_to_environ(request.httprequest.environ).match(path_info=path_info, return_rule=True)
 
     @classmethod
     def _auth_method_user(cls):
@@ -152,7 +152,7 @@ class IrHttp(models.AbstractModel):
             wdate = attach[0]['__last_update']
             datas = attach[0]['datas'] or b''
             name = attach[0]['name']
-            checksum = attach[0]['checksum'] or hashlib.sha1(datas).hexdigest()
+            checksum = attach[0]['checksum'] or hashlib.sha512(datas).hexdigest()[:64]  # sha512/256
 
             if (not datas and name != request.httprequest.path and
                     name.startswith(('http://', 'https://', '/'))):
@@ -178,33 +178,6 @@ class IrHttp(models.AbstractModel):
         if attach:
             return attach
         return False
-
-    @classmethod
-    def serialize_exception(self, e):
-        tmp = {
-            "name": type(e).__module__ + "." + type(e).__name__ if type(e).__module__ else type(e).__name__,
-            "debug": traceback.format_exc(),
-            "message": ustr(e),
-            "arguments": e.args,
-            "exception_type": "internal_error"
-        }
-        if isinstance(e, odoo.exceptions.UserError):
-            tmp["exception_type"] = "user_error"
-        elif isinstance(e, odoo.exceptions.Warning):
-            tmp["exception_type"] = "warning"
-        elif isinstance(e, odoo.exceptions.RedirectWarning):
-            tmp["exception_type"] = "warning"
-        elif isinstance(e, odoo.exceptions.AccessError):
-            tmp["exception_type"] = "access_error"
-        elif isinstance(e, odoo.exceptions.MissingError):
-            tmp["exception_type"] = "missing_error"
-        elif isinstance(e, odoo.exceptions.AccessDenied):
-            tmp["exception_type"] = "access_denied"
-        elif isinstance(e, odoo.exceptions.ValidationError):
-            tmp["exception_type"] = "validation_error"
-        elif isinstance(e, odoo.exceptions.except_orm):
-            tmp["exception_type"] = "except_orm"
-        return tmp
 
     @classmethod
     def _handle_exception(cls, exception):
@@ -235,7 +208,7 @@ class IrHttp(models.AbstractModel):
 
         # locate the controller method
         try:
-            rule, arguments = cls._find_handler(return_rule=True)
+            rule, arguments = cls._match(request.httprequest.path)
             func = rule.endpoint
         except werkzeug.exceptions.NotFound as e:
             return cls._handle_exception(e)
@@ -272,24 +245,37 @@ class IrHttp(models.AbstractModel):
                     return cls._handle_exception(werkzeug.exceptions.NotFound())
 
     @classmethod
-    def routing_map(cls):
+    def _generate_routing_rules(cls, modules, converters):
+        return http._generate_routing_rules(modules, False, converters)
+
+    @classmethod
+    def routing_map(cls, key=None):
         if not hasattr(cls, '_routing_map'):
-            _logger.info("Generating routing map")
-            installed = request.registry._init_modules - {'web'}
+            cls._routing_map = {}
+            cls._rewrite_len = {}
+        if key not in cls._routing_map:
+            _logger.info("Generating routing map for key %s" % str(key))
+            installed = request.registry._init_modules | set(odoo.conf.server_wide_modules)
             if tools.config['test_enable'] and odoo.modules.module.current_test:
                 installed.add(odoo.modules.module.current_test)
-            mods = [''] + odoo.conf.server_wide_modules + sorted(installed)
+            mods = sorted(installed)
             # Note : when routing map is generated, we put it on the class `cls`
             # to make it available for all instance. Since `env` create an new instance
             # of the model, each instance will regenared its own routing map and thus
             # regenerate its EndPoint. The routing map should be static.
-            cls._routing_map = http.routing_map(mods, False, converters=cls._get_converters())
-        return cls._routing_map
+            routing_map = werkzeug.routing.Map(strict_slashes=False, converters=cls._get_converters())
+            for url, endpoint, routing in cls._generate_routing_rules(mods, converters=cls._get_converters()):
+                xtra_keys = 'defaults subdomain build_only strict_slashes redirect_to alias host'.split()
+                kw = {k: routing[k] for k in xtra_keys if k in routing}
+                routing_map.add(werkzeug.routing.Rule(url, endpoint=endpoint, methods=routing['methods'], **kw))
+            cls._routing_map[key] = routing_map
+        return cls._routing_map[key]
 
     @classmethod
     def _clear_routing_map(cls):
         if hasattr(cls, '_routing_map'):
-            del cls._routing_map
+            cls._routing_map = {}
+            _logger.debug("Clear routing map")
 
     #------------------------------------------------------
     # Binary server
@@ -321,7 +307,7 @@ class IrHttp(models.AbstractModel):
                 record = record_sudo
             elif self.env.user.has_group('base.group_portal'):
                 # Check the read access on the record linked to the attachment
-                # eg: Allow to download an attachment on a task from /my/task/task_id 
+                # eg: Allow to download an attachment on a task from /my/task/task_id
                 record.check('read')
                 record = record_sudo
             # We have prefetched some fields of record, among which the field
@@ -364,8 +350,6 @@ class IrHttp(models.AbstractModel):
                 status = 301
                 content = record.url
 
-
-
         return status, content, filename, mimetype, filehash
 
     def _binary_record_content(
@@ -396,7 +380,11 @@ class IrHttp(models.AbstractModel):
                 filename = "%s-%s-%s" % (record._name, record.id, field)
 
         if not mimetype:
-            mimetype = guess_mimetype(base64.b64decode(content), default=default_mimetype)
+            try:
+                decoded_content = base64.b64decode(content)
+            except base64.binascii.Error:  # if we could not decode it, no need to pass it down: it would crash elsewhere...
+                return (404, [], None)
+            mimetype = guess_mimetype(decoded_content, default=default_mimetype)
 
         # extension
         _, existing_extension = os.path.splitext(filename)
@@ -420,7 +408,7 @@ class IrHttp(models.AbstractModel):
             headers.append(('ETag', filehash))
             if etag == filehash and status == 200:
                 status = 304
-        headers.append(('Cache-Control', 'max-age=%s' % (STATIC_CACHE if unique else 0)))
+        headers.append(('Cache-Control', 'max-age=%s' % (http.STATIC_CACHE_LONG if unique else 0)))
         # content-disposition default name
         if download:
             headers.append(('Content-Disposition', content_disposition(filename)))

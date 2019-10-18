@@ -282,29 +282,28 @@ var BasicView = AbstractView.extend({
             });
         }
 
+        attrs.views = attrs.views || {};
+
+        // Keep compatibility with 'tree' syntax
+        attrs.mode = attrs.mode === 'tree' ? 'list' : attrs.mode;
+        if (!attrs.views.list && attrs.views.tree) {
+            attrs.views.list = attrs.views.tree;
+        }
+
         if (field.type === 'one2many' || field.type === 'many2many') {
             if (attrs.Widget.prototype.useSubview) {
-                if (!attrs.views) {
-                    attrs.views = {};
-                }
                 var mode = attrs.mode;
                 if (!mode) {
-                    if (attrs.views.tree && attrs.views.kanban) {
-                        mode = 'tree';
-                    } else if (!attrs.views.tree && attrs.views.kanban) {
+                    if (attrs.views.list && !attrs.views.kanban) {
+                        mode = 'list';
+                    } else if (!attrs.views.list && attrs.views.kanban) {
                         mode = 'kanban';
                     } else {
-                        mode = 'tree,kanban';
+                        mode = 'list,kanban';
                     }
                 }
                 if (mode.indexOf(',') !== -1) {
-                    mode = config.device.isMobile ? 'kanban' : 'tree';
-                }
-                if (mode === 'tree') {
-                    mode = 'list';
-                    if (!attrs.views.list && attrs.views.tree) {
-                        attrs.views.list = attrs.views.tree;
-                    }
+                    mode = config.device.isMobile ? 'kanban' : 'list';
                 }
                 attrs.mode = mode;
                 if (mode in attrs.views) {

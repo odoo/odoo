@@ -134,7 +134,7 @@ tour.register('shop_wishlist', {
                     method: 'create',
                     args: [{
                         'name': "color",
-                        'type': 'color',
+                        'display_type': 'color',
                         'create_variant': 'dynamic'
                     }],
                 }).then(function (attributeId) {

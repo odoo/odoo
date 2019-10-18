@@ -58,8 +58,11 @@ _logger = logging.getLogger(__name__)
 rpc_request = logging.getLogger(__name__ + '.rpc.request')
 rpc_response = logging.getLogger(__name__ + '.rpc.response')
 
-# 1 week cache for statics as advised by Google Page Speed
-STATIC_CACHE = 60 * 60 * 24 * 7
+# One week cache for static content (static files in apps, library files, ...)
+# Safe resources may use what google page speed recommends (1 year)
+# (attachments with unique hash in the URL, ...)
+STATIC_CACHE = 3600 * 24 * 7
+STATIC_CACHE_LONG = 3600 * 24 * 365
 
 # To remove when corrected in Babel
 babel.core.LOCALE_ALIASES['nb'] = 'nb_NO'
@@ -84,7 +87,6 @@ ALLOWED_DEBUG_MODES = ['', '1', 'assets', 'tests']
 #----------------------------------------------------------
 # Thread local global request object
 _request_stack = werkzeug.local.LocalStack()
-
 request = _request_stack()
 """
     A global proxy that always redirect to the current request object.
@@ -159,31 +161,20 @@ def dispatch_rpc(service_name, method, params):
         raise
 
 def local_redirect(path, query=None, keep_hash=False, code=303):
+    # FIXME: drop the `keep_hash` param, now useless
     url = path
     if not query:
         query = {}
     if query:
         url += '?' + werkzeug.url_encode(query)
-    if keep_hash:
-        return redirect_with_hash(url, code)
-    else:
-        return werkzeug.utils.redirect(url, code)
+    return werkzeug.utils.redirect(url, code)
 
 def redirect_with_hash(url, code=303):
-    # Most IE and Safari versions decided not to preserve location.hash upon
-    # redirect. And even if IE10 pretends to support it, it still fails
-    # inexplicably in case of multiple redirects (and we do have some).
-    # See extensive test page at http://greenbytes.de/tech/tc/httpredirects/
-    if request.httprequest.user_agent.browser in ('firefox',):
-        return werkzeug.utils.redirect(url, code)
-    # FIXME: decide whether urls should be bytes or text, apparently
-    # addons/website/controllers/main.py:91 calls this with a bytes url
-    # but addons/web/controllers/main.py:481 uses text... (blows up on login)
-    url = pycompat.to_text(url).strip()
-    if urls.url_parse(url, scheme='http').scheme not in ('http', 'https'):
-        url = u'http://' + url
-    url = url.replace("'", "%27").replace("<", "%3C")
-    return "<html><head><script>window.location = '%s' + location.hash;</script></head></html>" % url
+    # Section 7.1.2 of RFC 7231 requires preservation of URL fragment through redirects,
+    # so we don't need any special handling anymore. This function could be dropped in the future.
+    # seealso : http://www.rfc-editor.org/info/rfc7231
+    #           https://tools.ietf.org/html/rfc7231#section-7.1.2
+    return werkzeug.utils.redirect(url, code)
 
 class WebRequest(object):
     """ Parent class for all Odoo Web request types, mostly deals with
@@ -270,13 +261,6 @@ class WebRequest(object):
         return self._env
 
     @lazy_property
-    def lang(self):
-        context = dict(self.context)
-        self.session._fix_lang(context)
-        self.context = context
-        return context["lang"]
-
-    @lazy_property
     def session(self):
         """ :class:`OpenERPSession` holding the HTTP session data for the
         current http session
@@ -339,14 +323,18 @@ class WebRequest(object):
         if self.endpoint.first_arg_is_req:
             args = (request,) + args
 
+        first_time = True
+
         # Correct exception handling and concurency retry
         @service_model.check
         def checked_call(___dbname, *a, **kw):
+            nonlocal first_time
             # The decorator can call us more than once if there is an database error. In this
             # case, the request cursor is unusable. Rollback transaction to create a new one.
-            if self._cr:
+            if self._cr and not first_time:
                 self._cr.rollback()
                 self.env.clear()
+            first_time = False
             result = self.endpoint(*a, **kw)
             if isinstance(result, Response) and result.is_qweb:
                 # Early rendering of lazy responses to benefit from @service_model.check protection
@@ -513,9 +501,14 @@ def route(route=None, **kw):
         @functools.wraps(f)
         def response_wrap(*args, **kw):
             # if controller cannot be called with extra args (utm, debug, ...), call endpoint ignoring them
-            spec = inspect.getargspec(f)
-            if not spec.keywords:
-                ignored = ['<%s=%s>' % (k, kw.pop(k)) for k in list(kw) if k not in spec.args]
+            params = inspect.signature(f).parameters.values()
+            is_kwargs = lambda p: p.kind == inspect.Parameter.VAR_KEYWORD
+            if not any(is_kwargs(p) for p in params):  # missing **kw
+                is_keyword_compatible = lambda p: p.kind in (
+                    inspect.Parameter.POSITIONAL_OR_KEYWORD,
+                    inspect.Parameter.KEYWORD_ONLY)
+                fargs = {p.name for p in params if is_keyword_compatible(p)}
+                ignored = ['<%s=%s>' % (k, kw.pop(k)) for k in list(kw) if k not in fargs]
                 if ignored:
                     _logger.info("<function %s.%s> called ignoring args %s" % (f.__module__, f.__name__, ', '.join(ignored)))
 
@@ -533,7 +526,7 @@ def route(route=None, **kw):
                 response.set_default()
                 return response
 
-            _logger.warn("<function %s.%s> returns an invalid response type for an http request" % (f.__module__, f.__name__))
+            _logger.warning("<function %s.%s> returns an invalid response type for an http request" % (f.__module__, f.__name__))
             return response
         response_wrap.routing = routing
         response_wrap.original_func = f
@@ -641,7 +634,7 @@ class JsonRequest(WebRequest):
             error = {
                 'code': 200,
                 'message': "Odoo Server Error",
-                'data': request.registry['ir.http'].serialize_exception(exception),
+                'data': serialize_exception(exception),
             }
             if isinstance(exception, werkzeug.exceptions.NotFound):
                 error['http_status'] = 404
@@ -690,6 +683,33 @@ class JsonRequest(WebRequest):
             return self._json_response(result)
         except Exception as e:
             return self._handle_exception(e)
+
+
+def serialize_exception(e):
+    tmp = {
+        "name": type(e).__module__ + "." + type(e).__name__ if type(e).__module__ else type(e).__name__,
+        "debug": traceback.format_exc(),
+        "message": ustr(e),
+        "arguments": e.args,
+        "exception_type": "internal_error"
+    }
+    if isinstance(e, odoo.exceptions.UserError):
+        tmp["exception_type"] = "user_error"
+    elif isinstance(e, odoo.exceptions.Warning):
+        tmp["exception_type"] = "warning"
+    elif isinstance(e, odoo.exceptions.RedirectWarning):
+        tmp["exception_type"] = "warning"
+    elif isinstance(e, odoo.exceptions.AccessError):
+        tmp["exception_type"] = "access_error"
+    elif isinstance(e, odoo.exceptions.MissingError):
+        tmp["exception_type"] = "missing_error"
+    elif isinstance(e, odoo.exceptions.AccessDenied):
+        tmp["exception_type"] = "access_denied"
+    elif isinstance(e, odoo.exceptions.ValidationError):
+        tmp["exception_type"] = "validation_error"
+    elif isinstance(e, odoo.exceptions.except_orm):
+        tmp["exception_type"] = "except_orm"
+    return tmp
 
 
 class HttpRequest(WebRequest):
@@ -756,14 +776,14 @@ class HttpRequest(WebRequest):
             token = self.params.pop('csrf_token', None)
             if not self.validate_csrf(token):
                 if token is not None:
-                    _logger.warn("CSRF validation failed on path '%s'",
+                    _logger.warning("CSRF validation failed on path '%s'",
                                  request.httprequest.path)
                 else:
-                    _logger.warn("""No CSRF validation token provided for path '%s'
+                    _logger.warning("""No CSRF validation token provided for path '%s'
 
 Odoo URLs are CSRF-protected by default (when accessed with unsafe
 HTTP methods). See
-https://www.odoo.com/documentation/12.0/reference/http.html#csrf for
+https://www.odoo.com/documentation/13.0/reference/http.html#csrf for
 more details.
 
 * if this endpoint is accessed through Odoo via py-QWeb form, embed a CSRF
@@ -854,12 +874,12 @@ class ControllerType(type):
                 parent_routing_type = getattr(parent[0], k).original_func.routing_type if parent else routing_type or 'http'
                 if routing_type is not None and routing_type is not parent_routing_type:
                     routing_type = parent_routing_type
-                    _logger.warn("Subclass re-defines <function %s.%s.%s> with different type than original."
+                    _logger.warning("Subclass re-defines <function %s.%s.%s> with different type than original."
                                     " Will use original type: %r" % (cls.__module__, cls.__name__, k, parent_routing_type))
                 v.original_func.routing_type = routing_type or parent_routing_type
 
-                spec = inspect.getargspec(v.original_func)
-                first_arg = spec.args[1] if len(spec.args) >= 2 else None
+                sign = inspect.signature(v.original_func)
+                first_arg = list(sign.parameters)[1] if len(sign.parameters) >= 2 else None
                 if first_arg in ["req", "request"]:
                     v._first_arg_is_req = True
 
@@ -893,9 +913,8 @@ class EndPoint(object):
     def __call__(self, *args, **kw):
         return self.method(*args, **kw)
 
-def routing_map(modules, nodb_only, converters=None):
-    routing_map = werkzeug.routing.Map(strict_slashes=False, converters=converters)
 
+def _generate_routing_rules(modules, nodb_only, converters=None):
     def get_subclasses(klass):
         def valid(c):
             return c.__module__.startswith('odoo.addons.') and c.__module__.split(".")[2] in modules
@@ -934,16 +953,8 @@ def routing_map(modules, nodb_only, converters=None):
                         assert routing['routes'], "Method %r has not route defined" % mv
                         endpoint = EndPoint(mv, routing)
                         for url in routing['routes']:
-                            if routing.get("combine", False):
-                                # deprecated v7 declaration
-                                url = o._cp_path.rstrip('/') + '/' + url.lstrip('/')
-                                if url.endswith("/") and len(url) > 1:
-                                    url = url[: -1]
+                            yield (url, endpoint, routing)
 
-                            xtra_keys = 'defaults subdomain build_only strict_slashes redirect_to alias host'.split()
-                            kw = {k: routing[k] for k in xtra_keys if k in routing}
-                            routing_map.add(werkzeug.routing.Rule(url, endpoint=endpoint, methods=routing['methods'], **kw))
-    return routing_map
 
 #----------------------------------------------------------
 # HTTP Sessions
@@ -1261,7 +1272,10 @@ class Root(object):
     @lazy_property
     def nodb_routing_map(self):
         _logger.info("Generating nondb routing")
-        return routing_map([''] + odoo.conf.server_wide_modules, True)
+        routing_map = werkzeug.routing.Map(strict_slashes=False, converters=None)
+        for url, endpoint, routing in odoo.http._generate_routing_rules([''] + odoo.conf.server_wide_modules, True):
+            routing_map.add(werkzeug.routing.Rule(url, endpoint=endpoint, methods=routing['methods']))
+        return routing_map
 
     def __call__(self, environ, start_response):
         """ Handle a WSGI request
@@ -1276,14 +1290,15 @@ class Root(object):
         controllers and configure them.  """
         # TODO should we move this to ir.http so that only configured modules are served ?
         statics = {}
-        for addons_path in odoo.modules.module.ad_paths:
+        for addons_path in odoo.addons.__path__:
             for module in sorted(os.listdir(str(addons_path))):
                 if module not in addons_manifest:
                     mod_path = opj(addons_path, module)
                     manifest_path = module_manifest(mod_path)
                     path_static = opj(addons_path, module, 'static')
                     if manifest_path and os.path.isdir(path_static):
-                        manifest_data = open(manifest_path, 'rb').read()
+                        with open(manifest_path, 'rb') as fd:
+                            manifest_data = fd.read()
                         manifest = ast.literal_eval(pycompat.to_text(manifest_data))
                         if not manifest.get('installable', True):
                             continue
@@ -1319,7 +1334,7 @@ class Root(object):
         # Check if session.db is legit
         if db:
             if db not in db_filter([db], httprequest=httprequest):
-                _logger.warn("Logged into database '%s', but dbfilter "
+                _logger.warning("Logged into database '%s', but dbfilter "
                              "rejects it; logging session out.", db)
                 httprequest.session.logout()
                 db = None

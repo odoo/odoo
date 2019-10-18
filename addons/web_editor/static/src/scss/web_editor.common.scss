@@ -81,7 +81,7 @@ ul.o_checklist {
         }
     }
 }
-ul > li.o_indent {
+ol > li.o_indent, ul > li.o_indent {
     margin-left: 0;
     list-style: none;
     &::before {
@@ -399,5 +399,104 @@ a.o_underline {
 
     .o_empty_folder_image:before {
         @extend %o-nocontent-empty-document;
+    }
+}
+
+@include media-breakpoint-down(sm) {
+    odoo-wysiwyg-container {
+        .panel-heading.note-toolbar {
+            overflow-x: auto;
+        }
+        .btn-group {
+            position: static;
+        }
+    }
+    // modal select media
+    .o_technical_modal {
+        // see template 'web_editor.FieldTextHtml.fullscreen'
+        z-index: 2001;
+
+        > .o_select_media_dialog {
+            max-width: inherit !important;
+            z-index: 2001;
+
+            .modal-dialog, .model-content {
+                height: 100%;
+            }
+
+            .modal-body {
+                .nav .nav-item.search {
+                    width: 100%;
+
+                    .btn-group {
+                        display: flex;
+                        justify-content: space-around;
+                        padding: 5px;
+                    }
+                }
+
+                // center pictogram
+                .font-icons-icons {
+                    text-align: center;
+                }
+
+                // fix search image
+                .form-control.o_we_search {
+                    height: inherit;
+                }
+
+                .form-inline {
+                    .btn-group {
+                        width: 100%;
+
+                        .btn.btn-primary:not(.dropdown-toggle) {
+                            width: 90%;
+                        }
+                    }
+
+                    > .input-group.ml-2 {
+                        margin-left: 0 !important;
+
+                        > .input-group-append {
+                            width: 100%;
+
+                            > .btn {
+                                width: 100%;
+                            }
+
+                            > .ml-2 {
+                                margin-left: 0 !important;
+                            }
+                        }
+                    }
+                }
+
+                // attachment cells
+                .o_we_existing_attachments > .row {
+                    flex-direction: column;
+
+                    > .o_existing_attachment_cell {
+                        flex: initial;
+                        max-width: 100%;
+
+                        > .o_existing_attachment_remove {
+                            opacity: inherit;
+                            top: 10px;
+                        }
+                    }
+                }
+
+                // select media dialog unsplash error
+                #editor-media-image .unsplash_img_container .unsplash_error .mx-auto {
+                    width: 100%;
+
+                    .form-group {
+                        input.w-100 {
+                            min-width: 100px;
+                        }
+                    }
+                }
+            }
+        }
     }
 }

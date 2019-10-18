@@ -112,6 +112,16 @@ class TestORM(TransactionCase):
         found = partner.search_read([('name', '=', 'Does not exists')], ['name'])
         self.assertEqual(len(found), 0)
 
+        # search_read with an empty array of fields
+        found = partner.search_read([], [], limit=1)
+        self.assertEqual(len(found), 1)
+        self.assertTrue(field in list(found[0]) for field in ['id', 'name', 'display_name', 'email'])
+
+        # search_read without fields
+        found = partner.search_read([], False, limit=1)
+        self.assertEqual(len(found), 1)
+        self.assertTrue(field in list(found[0]) for field in ['id', 'name', 'display_name', 'email'])
+
     def test_exists(self):
         partner = self.env['res.partner']
 

@@ -20,6 +20,9 @@ var ThreadField = AbstractField.extend({
      */
     init: function () {
         this._super.apply(this, arguments);
+        this._isMessagingReady = this.call('mail_service', 'isReady');
+        this._isStarted = false;
+        this.call('mail_service', 'getMailBus').on('messaging_ready', this, this._onMessagingReady);
         // Used to automatically mark document thread as read at the moment we
         // access the document and render the thread.
         this._markAsReadOnNextRender = false;
@@ -28,21 +31,17 @@ var ThreadField = AbstractField.extend({
     /**
      * @override
      */
-    willStart: function () {
-        return this.alive(this.call('mail_service', 'isReady'));
-    },
-    /**
-     * @override
-     */
     start: function () {
         var self = this;
 
+        this._isStarted = true;
         this.dp = new concurrency.DropPrevious();
 
         this._threadWidget = new ThreadWidget(this, {
             displayOrder: ThreadWidget.ORDER.DESC,
             displayDocumentLinks: false,
             displayMarkAsRead: false,
+            hasMessageAttachmentDeletable: true,
             squashCloseMessages: false,
         });
 
@@ -113,7 +112,10 @@ var ThreadField = AbstractField.extend({
      */
     _fetchAndRenderThread: function (options) {
         var self = this;
-        if (!this._documentThread) {
+        if (!this._isMessagingReady) {
+            self._threadWidget.renderLoading();
+            return Promise.resolve();
+        } else if (!this._documentThread) {
             var thread = new CreateModeDocumentThread();
             options = { isCreateMode: true };
             self._threadWidget.render(thread, options);
@@ -159,6 +161,9 @@ var ThreadField = AbstractField.extend({
      * If it is a new document in create mode, unset the document thread.
      */
     _setDocumentThread: function () {
+        if (!this._isMessagingReady) {
+            return;
+        }
         var params = {
             messageIDs: this.value.res_ids,
             name: this.recordData.display_name,
@@ -184,6 +189,20 @@ var ThreadField = AbstractField.extend({
      */
     _onLoadMoreMessages: function () {
         this._fetchAndRenderThread({ forceFetch: true });
+    },
+    /**
+     * @private
+     */
+    _onMessagingReady: function () {
+        if (this._isMessagingReady) {
+            return;
+        }
+        this._isMessagingReady = true;
+        if (!this._isStarted) {
+            return;
+        }
+        this._setDocumentThread();
+        this._render();
     },
     /**
      * @private

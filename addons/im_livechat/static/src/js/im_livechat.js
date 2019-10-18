@@ -123,6 +123,14 @@ var LivechatButton = Widget.extend({
             serverURL: this._serverURL,
         });
         var message = new WebsiteLivechatMessage(this, data, options);
+
+        var hasAlreadyMessage = _.some(this._messages, function (msg) {
+            return message.getID() === msg.getID();
+        });
+        if (hasAlreadyMessage) {
+            return;
+        }
+
         if (this._livechat) {
             this._livechat.addMessage(message);
         }
@@ -232,7 +240,9 @@ var LivechatButton = Widget.extend({
                     data: livechatData
                 });
                 return self._openChatWindow().then(function () {
-                    self._sendWelcomeMessage();
+                    if (!self._history) {
+                        self._sendWelcomeMessage();
+                    }
                     self._renderMessages();
                     self.call('bus_service', 'addChannel', self._livechat.getUUID());
                     self.call('bus_service', 'startPolling');
@@ -439,23 +449,20 @@ var Feedback = Widget.extend({
      * @private
      * @param {Object} options
      */
-    _sendFeedback: function (options) {
+    _sendFeedback: function (reason) {
         var self = this;
         var args = {
             uuid: this._livechat.getUUID(),
             rate: this.rating,
-            reason : options.reason
+            reason: reason,
         };
         this.dp.add(session.rpc('/im_livechat/feedback', args)).then(function () {
-            if (options.close) {
-                var emoji = RATING_TO_EMOJI[self.rating] || "??" ;
-                var content = _.str.sprintf(_t("Rating: %s"), emoji);
-                if (options.reason) {
-                    content += " \n" + options.reason;
-                }
-                self.trigger('send_message', { content: content });
-                self.trigger('feedback_sent'); // will close the chat
+            var emoji = RATING_TO_EMOJI[self.rating] || "??" ;
+            var content = _.str.sprintf(_t("Rating: %s"), emoji);
+            if (reason) {
+                content += " \n" + reason;
             }
+            self.trigger('send_message', { content: content });
         });
     },
     /**
@@ -482,9 +489,10 @@ var Feedback = Widget.extend({
      * @private
      */
     _onClickSend: function () {
+        this.$('.o_livechat_rating_reason').hide();
         this._showThanksMessage();
         if (_.isNumber(this.rating)) {
-            this._sendFeedback({ reason: this.$('textarea').val(), close: true });
+            this._sendFeedback(this.$('textarea').val());
         }
     },
     /**
@@ -502,8 +510,8 @@ var Feedback = Widget.extend({
         } else {
             this.$('.o_livechat_rating_reason').hide();
             this._showThanksMessage();
+            this._sendFeedback();
         }
-        this._sendFeedback({ close: false });
     },
     /**
     * @private

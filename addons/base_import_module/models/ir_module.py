@@ -8,6 +8,7 @@ import sys
 import zipfile
 from os.path import join as opj
 
+import odoo
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.modules import load_information_from_description_file
@@ -125,7 +126,7 @@ class IrModule(models.Model):
             with tempdir() as module_dir:
                 import odoo.modules.module as module
                 try:
-                    module.ad_paths.append(module_dir)
+                    odoo.addons.__path__.append(module_dir)
                     z.extractall(module_dir)
                     dirs = [d for d in os.listdir(module_dir) if os.path.isdir(opj(module_dir, d))]
                     for mod_name in dirs:
@@ -139,7 +140,7 @@ class IrModule(models.Model):
                             _logger.exception('Error while importing module')
                             errors[mod_name] = exception_to_unicode(e)
                 finally:
-                    module.ad_paths.remove(module_dir)
+                    odoo.addons.__path__.remove(module_dir)
         r = ["Successfully imported module '%s'" % mod for mod in success]
         for mod, error in errors.items():
             r.append("Error while importing module '%s'.\n\n %s \n Make sure those modules are installed and try again." % (mod, error))

@@ -81,6 +81,22 @@ odoo.define('pos_reataurant.tour.synchronized_table_management', function (requi
         return steps;
     }
 
+    function transfer_order_to_table(table_id, order_uid) {
+        return [{
+            content: 'Click transfer button',
+            trigger: '.control-button:contains("Transfer")',
+            run: 'click',
+        }, {
+            content: 'Transfer order to table ' + table_id,
+            trigger: '.label:contains(' + table_id +')',
+            run: 'click',
+        }, {
+            content: 'Check if order ' + order_uid + ' is open after transfer',
+            trigger: '.order-button.selected .order-sequence:contains("' + order_uid + '")',
+            run: function(){} // Check
+        }];
+    }
+
     function finish_order() {
         var steps = [{
             content: "validate the order",
@@ -165,10 +181,26 @@ odoo.define('pos_reataurant.tour.synchronized_table_management', function (requi
     steps = steps.concat(open_table('T5', 1));
     steps = steps.concat(verify_order_total('4.40'));
 
+    // Test transfering an order
+    steps = steps.concat(transfer_order_to_table('T4', '002-0001'));
+
+    // Test if products still get merged after transfering the order
+    steps = steps.concat(add_product_to_order('Coca-Cola'));
+    steps = steps.concat({
+        content: 'check the order-line for Coca-Cola has 2 Units',
+        trigger: '.orderlines:has(.orderline .product-name:contains("Coca-Cola")) .info-list:contains("2.000")',
+        run: function () {},
+    })
+    steps = steps.concat(generate_product_screen_keypad_steps('1'));
+
     steps = steps.concat(goto_payment_screen_and_select_payment_method());
-    steps = steps.concat(generate_payment_screen_keypad_steps('4.40'));
+    steps = steps.concat(generate_payment_screen_keypad_steps('4.4'));
     steps = steps.concat(finish_order());
     steps = steps.concat(open_table('T2'));
+
+    // Test transfering an empty order
+    steps = steps.concat(transfer_order_to_table('T4', '2'));
+
     steps = steps.concat(add_product_to_order('Coca-Cola'));
     steps = steps.concat(verify_order_total('2.20'));
     steps = steps.concat([{

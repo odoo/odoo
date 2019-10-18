@@ -31,6 +31,7 @@
             var odoo = <t t-raw="json.dumps({
                 'csrf_token': request.csrf_token(None),
                 'session_info': session_info,
+                'login_number': login_number,
                 'debug': debug,
             })"/>;
         </script>
@@ -61,24 +62,6 @@
     <body>
     </body>
 </html>
-</template>
-
-<!-- This is a duplicate of Qweb template JS side CustomerFacingDisplayHead. We could have told models.js to do an extra rpc call for this-->
-<template id="extra_head">
-    <link href="/point_of_sale/static/src/css/customer_facing_display.css" rel="stylesheet"/>
-    <script type="text/javascript">
-        $(document).ready(function(){
-            $(window).on('resize', function () {
-                $('.pos-customer_facing_display').toggleClass('pos-js_no_ADV', $('.pos-adv').hasClass('pos-hidden'));
-            }).trigger('resize');
-        });
-    </script>
-</template>
-
-<template id="pos_editor_assets" inherit_id="web_editor.wysiwyg_snippets">
-    <xpath expr="//script[last()]" position="after">
-        <script type="text/javascript" src="/point_of_sale/static/src/js/pos.web_editor.js"/>
-    </xpath>
 </template>
 
 </odoo>

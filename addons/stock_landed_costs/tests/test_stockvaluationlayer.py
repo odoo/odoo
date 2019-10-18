@@ -40,17 +40,17 @@ class TestStockValuationLC(TestStockValuationCommon):
     def _get_stock_input_move_lines(self):
         return self.env['account.move.line'].search([
             ('account_id', '=', self.stock_input_account.id),
-        ], order='date, id')
+        ], order='id')
 
     def _get_stock_output_move_lines(self):
         return self.env['account.move.line'].search([
             ('account_id', '=', self.stock_output_account.id),
-        ], order='date, id')
+        ], order='id')
 
     def _get_stock_valuation_move_lines(self):
         return self.env['account.move.line'].search([
             ('account_id', '=', self.stock_valuation_account.id),
-        ], order='date, id')
+        ], order='id')
 
     def _get_payable_move_lines(self):
         return self.env['account.move.line'].search([

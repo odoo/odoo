@@ -56,7 +56,7 @@ class TestPurchaseOrderReport(common.TransactionCase):
         })
         po.button_confirm()
 
-        f = Form(self.env['account.move'])
+        f = Form(self.env['account.move'].with_context(default_type='in_invoice'))
         f.partner_id = po.partner_id
         f.purchase_id = po
         invoice = f.save()
@@ -67,14 +67,14 @@ class TestPurchaseOrderReport(common.TransactionCase):
             ('order_id', '=', po.id), ('product_id', '=', self.product1.id)])
 
         # check that report will convert dozen to unit or not
-        self.assertEquals(res_product1.qty_ordered, 12.0, 'UoM conversion is not working')
+        self.assertEqual(res_product1.qty_ordered, 12.0, 'UoM conversion is not working')
         # report should show in company currency (amount/rate) = (100/2)
-        self.assertEquals(res_product1.price_total, 50.0, 'Currency conversion is not working')
+        self.assertEqual(res_product1.price_total, 50.0, 'Currency conversion is not working')
 
         res_product2 = self.PurchaseReport.search([
             ('order_id', '=', po.id), ('product_id', '=', self.product2.id)])
 
         # Check that repost should show 6 unit of product
-        self.assertEquals(res_product2.qty_ordered, 12.0, 'UoM conversion is not working')
+        self.assertEqual(res_product2.qty_ordered, 12.0, 'UoM conversion is not working')
         # report should show in company currency (amount/rate) = (200/2)
-        self.assertEquals(res_product2.price_total, 100.0, 'Currency conversion is not working')
+        self.assertEqual(res_product2.price_total, 100.0, 'Currency conversion is not working')

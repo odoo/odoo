@@ -162,7 +162,7 @@ class AccountMove(models.Model):
                         elements = etax.xpath('cbc:Percent', namespaces=namespaces)
                         if elements:
                             tax = self.env['account.tax'].search([
-                                ('company_id', '=', self.env.user.company_id.id),
+                                ('company_id', '=', self.env.company.id),
                                 ('amount', '=', float(elements[0].text)),
                                 ('type_tax_use', '=', invoice_form.journal_id.type),
                             ], order='sequence ASC', limit=1)

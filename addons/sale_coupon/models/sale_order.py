@@ -12,9 +12,9 @@ class SaleOrder(models.Model):
     generated_coupon_ids = fields.One2many('sale.coupon', 'order_id', string="Offered Coupons", copy=False)
     reward_amount = fields.Float(compute='_compute_reward_total')
     no_code_promo_program_ids = fields.Many2many('sale.coupon.program', string="Applied Immediate Promo Programs",
-        domain=[('promo_code_usage', '=', 'no_code_needed')], copy=False)
+        domain="[('promo_code_usage', '=', 'no_code_needed'), '|', ('company_id', '=', False), ('company_id', '=', company_id)]", copy=False)
     code_promo_program_id = fields.Many2one('sale.coupon.program', string="Applied Promo Program",
-        domain=[('promo_code_usage', '=', 'code_needed')], copy=False)
+        domain="[('promo_code_usage', '=', 'code_needed'), '|', ('company_id', '=', False), ('company_id', '=', company_id)]", copy=False)
     promo_code = fields.Char(related='code_promo_program_id.promo_code', help="Applied program code", readonly=False)
 
     @api.depends('order_line')
@@ -206,10 +206,12 @@ class SaleOrder(models.Model):
 
     def _get_reward_line_values(self, program):
         self.ensure_one()
+        self = self.with_context(lang=self.partner_id.lang)
+        program = program.with_context(lang=self.partner_id.lang)
         if program.reward_type == 'discount':
-            return self._get_reward_values_discount(program.with_context(lang=self.partner_id.lang))
+            return self._get_reward_values_discount(program)
         elif program.reward_type == 'product':
-            return [self._get_reward_values_product(program.with_context(lang=self.partner_id.lang))]
+            return [self._get_reward_values_product(program)]
 
     def _create_reward_line(self, program):
         self.write({'order_line': [(0, False, value) for value in self._get_reward_line_values(program)]})
@@ -433,10 +435,10 @@ class SaleOrderLine(models.Model):
     # Another possibility is to add on product.product a one2many to sale.order.line 'order_line_ids',
     # and then add the depends @api.depends('discount_line_product_id.order_line_ids'),
     # but I am not sure this will as efficient as the below.
-    def modified(self, fnames, modified=None, create=False):
-        super(SaleOrderLine, self).modified(fnames, modified=modified)
+    def modified(self, fnames, create=False):
+        super(SaleOrderLine, self).modified(fnames, create)
         if 'product_id' in fnames:
-            Program = self.env['sale.coupon.program']
+            Program = self.env['sale.coupon.program'].sudo()
             field_order_count = Program._fields['order_count']
             programs = self.env.cache.get_records(Program, field_order_count)
             if programs:

@@ -608,7 +608,7 @@ Model Reference
 
 .. currentmodule:: odoo.models
 
-.. autoclass:: odoo.models.Model
+.. autoclass:: Model
 
     .. rubric:: Structural attributes
 
@@ -696,6 +696,41 @@ Model Reference
         (default: ``False``)
 
         :type: bool
+
+
+    .. attribute:: _check_company_auto
+
+        On write and create, call ``_check_company`` to ensure companies
+        consistency on the relational fields having ``check_company=True``
+        as attribute.
+        (default: ``False``)
+
+     .. attribute:: _parent_name
+
+        Alternative field to use as parent, used by indexed storage of the tree structure of records
+          (default: ``'parent_id'``)
+
+         :type: str
+
+     .. attribute:: _date_name
+
+         Alternative field to use for default calendar view (default: ``'date'``)
+
+         :type: str
+
+     .. attribute:: _fold_name
+
+        Alternative field to determine folded groups in kanban views
+          (default: ``'fold'``)
+
+         :type: str
+
+     .. attribute:: _translate
+
+        False disables translations export for this model
+          (default: ``True``)
+
+         :type: bool
 
     .. rubric:: CRUD
 
@@ -833,7 +868,7 @@ Method decorators
 =================
 
 .. automodule:: odoo.api
-    :members: model, depends, constrains, onchange, returns,
+    :members: model, depends, constrains, onchange, returns
 
 .. _reference/orm/fields:
 
@@ -1102,6 +1137,12 @@ A domain is a list of criteria, each criterion being a triple (either a
         is unequal to all of the items from ``value``
     ``child_of``
         is a child (descendant) of a ``value`` record.
+
+        Takes the semantics of the model into account (i.e following the
+        relationship field named by
+        :attr:`~odoo.models.Model._parent_name`).
+    ``parent_of``
+        is a parent (ascendant) of a ``value`` record.
 
         Takes the semantics of the model into account (i.e following the
         relationship field named by

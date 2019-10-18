@@ -3,7 +3,7 @@
 
 {
     'name': 'Online Members Directory',
-    'category': 'Website',
+    'category': 'Website/Website',
     'summary': 'Publish your members directory',
     'version': '1.0',
     'description': """

@@ -21,8 +21,7 @@ class MrpRouting(models.Model):
         'mrp.routing.workcenter', 'routing_id', 'Operations',
         copy=True)
     company_id = fields.Many2one(
-        'res.company', 'Company',
-        default=lambda self: self.env.company)
+        'res.company', 'Company', default=lambda self: self.env.company)
 
     @api.model
     def create(self, vals):
@@ -35,9 +34,10 @@ class MrpRoutingWorkcenter(models.Model):
     _name = 'mrp.routing.workcenter'
     _description = 'Work Center Usage'
     _order = 'sequence, id'
+    _check_company_auto = True
 
     name = fields.Char('Operation', required=True)
-    workcenter_id = fields.Many2one('mrp.workcenter', 'Work Center', required=True)
+    workcenter_id = fields.Many2one('mrp.workcenter', 'Work Center', required=True, check_company=True)
     sequence = fields.Integer(
         'Sequence', default=100,
         help="Gives the sequence order when displaying a list of routing Work Centers.")
@@ -86,7 +86,7 @@ class MrpRoutingWorkcenter(models.Model):
                 limit=operation.time_mode_batch)
             count_data = dict((item['operation_id'][0], (item['duration'], item['qty_produced'])) for item in data)
             if count_data.get(operation.id) and count_data[operation.id][1]:
-                operation.time_cycle = count_data[operation.id][0] / count_data[operation.id][1]
+                operation.time_cycle = (count_data[operation.id][0] / count_data[operation.id][1]) * (operation.workcenter_id.capacity or 1.0)
             else:
                 operation.time_cycle = operation.time_cycle_manual
 

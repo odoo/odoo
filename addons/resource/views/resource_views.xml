@@ -107,7 +107,7 @@
         <field name="model">resource.calendar.leaves</field>
         <field name="arch" type="xml">
             <calendar date_start="date_from" date_stop="date_to" mode="month" string="Resource" color="resource_id" event_limit="5">
-                <field name="resource_id" avatar_field="image_small"/>
+                <field name="resource_id" avatar_field="image_128"/>
                 <field name="company_id"/>
                 <field name="name"/>
             </calendar>
@@ -213,6 +213,7 @@
         <field name="model">resource.calendar.attendance</field>
         <field name="arch" type="xml">
             <form string="Working Time">
+                <sheet>
                 <group>
                     <field name="name"/>
                     <field name="date_from"/>
@@ -225,6 +226,7 @@
                     </div>
                     <field name="day_period"/>
                 </group>
+                </sheet>
             </form>
         </field>
     </record>

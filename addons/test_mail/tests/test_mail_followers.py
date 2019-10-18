@@ -4,7 +4,6 @@
 from psycopg2 import IntegrityError
 
 from odoo.addons.test_mail.tests import common
-from odoo.addons.test_mail.tests.common import mail_new_test_user
 from odoo.tools.misc import mute_logger
 
 
@@ -13,6 +12,10 @@ class BaseFollowersTest(common.BaseFunctionalTest):
     @classmethod
     def setUpClass(cls):
         super(BaseFollowersTest, cls).setUpClass()
+        cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({'name': 'Test', 'email_from': 'ignasse@example.com'})
+        cls._create_portal_user()
+        cls._create_channel_listener()
+
         Subtype = cls.env['mail.message.subtype']
         cls.mt_mg_def = Subtype.create({'name': 'mt_mg_def', 'default': True, 'res_model': 'mail.test.simple'})
         cls.mt_cl_def = Subtype.create({'name': 'mt_cl_def', 'default': True, 'res_model': 'mail.test'})
@@ -54,15 +57,13 @@ class BaseFollowersTest(common.BaseFunctionalTest):
         self.assertEqual(follower.subtype_ids, self.default_group_subtypes)
 
     def test_followers_subtypes_default_internal(self):
-        user_portal = mail_new_test_user(self.env, login='chell', groups='base.group_portal', name='Chell Gladys')
-
         test_record = self.test_record.with_user(self.user_employee)
-        test_record.message_subscribe(partner_ids=[user_portal.partner_id.id])
-        self.assertEqual(test_record.message_partner_ids, user_portal.partner_id)
+        test_record.message_subscribe(partner_ids=[self.partner_portal.id])
+        self.assertEqual(test_record.message_partner_ids, self.partner_portal)
         follower = self.env['mail.followers'].search([
             ('res_model', '=', 'mail.test.simple'),
             ('res_id', '=', test_record.id),
-            ('partner_id', '=', user_portal.partner_id.id)])
+            ('partner_id', '=', self.partner_portal.id)])
         self.assertEqual(follower.subtype_ids, self.default_group_subtypes_portal)
 
     def test_followers_subtypes_specified(self):
@@ -120,8 +121,7 @@ class AdvancedFollowersTest(common.BaseFunctionalTest):
     @classmethod
     def setUpClass(cls):
         super(AdvancedFollowersTest, cls).setUpClass()
-
-        cls.user_portal = mail_new_test_user(cls.env, login='chell', groups='base.group_portal', name='Chell Gladys')
+        cls._create_portal_user()
 
         cls.test_track = cls.env['mail.test.track'].with_user(cls.user_employee).create({
             'name': 'Test',
@@ -183,12 +183,12 @@ class AdvancedFollowersTest(common.BaseFunctionalTest):
          * subscribing to a sub-record as creator applies default subtype values
          * portal user should not have access to internal subtypes
         """
-        umbrella = self.env['mail.test'].with_context(common.BaseFunctionalTest._test_context).create({
+        umbrella = self.env['mail.test'].with_context(self._test_context).create({
             'name': 'Project-Like',
         })
 
-        umbrella.message_subscribe(partner_ids=[self.user_portal.partner_id.id])
-        self.assertEqual(umbrella.message_partner_ids, self.user_portal.partner_id)
+        umbrella.message_subscribe(partner_ids=[self.partner_portal.id])
+        self.assertEqual(umbrella.message_partner_ids, self.partner_portal)
 
         sub1 = self.env['mail.test.track'].with_user(self.user_employee).create({
             'name': 'Task-Like Test',
@@ -198,9 +198,9 @@ class AdvancedFollowersTest(common.BaseFunctionalTest):
         all_defaults = self.env['mail.message.subtype'].search([('default', '=', True), '|', ('res_model', '=', 'mail.test.track'), ('res_model', '=', False)])
         external_defaults = all_defaults.filtered(lambda subtype: not subtype.internal)
 
-        self.assertEqual(sub1.message_partner_ids, self.user_portal.partner_id | self.user_employee.partner_id)
+        self.assertEqual(sub1.message_partner_ids, self.partner_portal | self.user_employee.partner_id)
         self.assertEqual(
-            sub1.message_follower_ids.filtered(lambda fol: fol.partner_id == self.user_portal.partner_id).subtype_ids,
+            sub1.message_follower_ids.filtered(lambda fol: fol.partner_id == self.partner_portal).subtype_ids,
             external_defaults | self.sub_umb1)
         self.assertEqual(
             sub1.message_follower_ids.filtered(lambda fol: fol.partner_id == self.user_employee.partner_id).subtype_ids,

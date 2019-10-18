@@ -1,19 +1,19 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * payment_transfer
+# 	* payment_transfer
 # 
 # Translators:
-# Martin Trigaux, 2018
-# zbik2607 <darek@krokus.com.pl>, 2018
-# Piotr Szlązak <szlazakpiotr@gmail.com>, 2018
-# Radosław Biegalski <radoslaw.biegalski@openglobe.pl>, 2018
+# Martin Trigaux, 2019
+# Dariusz Żbikowski <darek@krokus.com.pl>, 2019
+# Piotr Szlązak <szlazakpiotr@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Radosław Biegalski <radoslaw.biegalski@openglobe.pl>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:12+0000\n"
+"Last-Translator: Piotr Szlązak <szlazakpiotr@gmail.com>, 2019\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,19 +22,19 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:83
+#: code:addons/payment_transfer/models/payment.py:0
 #, python-format
 msgid "; multiple order found"
 msgstr "; znaleziono wielokrotne zamówienie"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:81
+#: code:addons/payment_transfer/models/payment.py:0
 #, python-format
 msgid "; no order found"
 msgstr "; nie znaleziono zamówienia"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:41
+#: code:addons/payment_transfer/models/payment.py:0
 #, python-format
 msgid ""
 "<div>\n"
@@ -47,45 +47,20 @@ msgid ""
 msgstr ""
 
 #. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "Adyen"
-msgstr "Adyen"
-
-#. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "Authorize.Net"
-msgstr "Authorize.Net"
-
-#. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:39
+#: code:addons/payment_transfer/models/payment.py:0
 #, python-format
 msgid "Bank Account"
 msgstr "Konto bankowe"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:39
+#: code:addons/payment_transfer/models/payment.py:0
 #, python-format
 msgid "Bank Accounts"
 msgstr "Konta bankowe"
 
 #. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "Buckaroo"
-msgstr "Buckaroo"
-
-#. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "Manual Configuration"
-msgstr "Manualna Konfiguracja"
-
-#. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "Ogone"
-msgstr "Ogone"
-
-#. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "PayUmoney"
+#: model:ir.model.fields.selection,name:payment_transfer.selection__payment_acquirer__provider__transfer
+msgid "Manual Payment"
 msgstr ""
 
 #. module: payment_transfer
@@ -99,32 +74,12 @@ msgid "Payment Transaction"
 msgstr "Transakcja płatności"
 
 #. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "Paypal"
-msgstr "Paypal"
-
-#. module: payment_transfer
 #: model:ir.model.fields,field_description:payment_transfer.field_payment_acquirer__provider
 msgid "Provider"
 msgstr "Dostawca"
 
 #. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "Sips"
-msgstr "Sips"
-
-#. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "Stripe"
-msgstr ""
-
-#. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "Wire Transfer"
-msgstr "Przelew bankowy"
-
-#. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:79
+#: code:addons/payment_transfer/models/payment.py:0
 #, python-format
 msgid "received data for reference %s"
 msgstr "odebrane dane do referencji %s"

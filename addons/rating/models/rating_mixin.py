@@ -48,8 +48,8 @@ class RatingMixin(models.AbstractModel):
 
     rating_ids = fields.One2many('rating.rating', 'res_id', string='Rating', domain=lambda self: [('res_model', '=', self._name)], auto_join=True)
     rating_last_value = fields.Float('Rating Last Value', compute='_compute_rating_last_value', compute_sudo=True, store=True)
-    rating_last_feedback = fields.Text('Rating Last Feedback', related='rating_ids.feedback', readonly=False)
-    rating_last_image = fields.Binary('Rating Last Image', related='rating_ids.rating_image', readonly=False)
+    rating_last_feedback = fields.Text('Rating Last Feedback', related='rating_ids.feedback')
+    rating_last_image = fields.Binary('Rating Last Image', related='rating_ids.rating_image')
     rating_count = fields.Integer('Rating count', compute="_compute_rating_stats")
     rating_avg = fields.Float("Rating Average", compute='_compute_rating_stats')
 

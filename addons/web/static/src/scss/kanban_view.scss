@@ -6,7 +6,6 @@
 
     @include media-breakpoint-down(sm) {
         padding: 0px!important;
-        overflow-x: auto;
     }
 
     .o_kanban_record, .o_kanban_quick_create {
@@ -122,6 +121,7 @@
                 .oe_kanban_avatar {
                     width: 20px;
                     height: 20px;
+                    object-fit: cover;
                     margin-left: 6px;
                 }
             }
@@ -167,6 +167,7 @@
                 min-height: $o-kanban-image-width;
                 align-self: baseline;
                 background: {
+                    size: cover;
                     repeat: no-repeat;
                     position: center;
                 }
@@ -336,6 +337,10 @@
 
         .oe_kanban_details {
             width: 100%;
+
+            // Useful for the class 'o_text_overflow'
+            min-width: 0;
+
             ul {
                 margin-bottom: $o-kanban-inner-hmargin*0.5;;
                 padding-left: 0;
@@ -414,7 +419,6 @@
 
             &:hover .o_kanban_config, .o_kanban_config.show {
                 visibility: visible;
-                margin-left: $o-kanban-inside-hgutter;
             }
 
             .o_kanban_config {

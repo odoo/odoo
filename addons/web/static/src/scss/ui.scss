@@ -8,6 +8,7 @@
 
 .ui-autocomplete {
     z-index: $zindex-modal + 1;
+    max-width: 600px;
 }
 
 [aria-hidden="true"], [aria-hidden="1"] {
@@ -82,4 +83,50 @@
 // Declare a similar class as 'disabled' but with no visual effect
 .o_debounce_disabled {
     pointer-events: none;
+}
+
+span.o_force_ltr {
+    display: inline-block;
+}
+.o_force_ltr, .o_field_phone {
+    /*rtl:ignore*/
+    direction: ltr;
+}
+
+// To fill the available space while keeping aspect ratio (crop).
+// Assuming the important part of the image is its center.
+.o_object_fit_cover {
+    object-fit: cover;
+}
+
+.o_image_24_cover {
+    width: 24px;
+    height: 24px;
+    object-fit: cover;
+}
+
+.o_image_40_cover {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+}
+
+.o_image_64_cover {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+}
+
+// Keep ratio but avoid cropping (so part of the background becomes visible).
+.o_image_64_contain {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+}
+
+// When having a square is not necessary, the image will take less space if any
+// of its width or height is smaller than 64px.
+.o_image_64_max {
+    max-width: 64px;
+    max-height: 64px;
 }

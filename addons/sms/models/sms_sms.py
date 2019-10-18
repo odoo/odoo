@@ -22,7 +22,7 @@ class SmsSms(models.Model):
         'server_error': 'sms_server'
     }
 
-    number = fields.Char('Number', required=True)
+    number = fields.Char('Number')
     body = fields.Text()
     partner_id = fields.Many2one('res.partner', 'Customer')
     mail_message_id = fields.Many2one('mail.message', index=True)
@@ -56,6 +56,9 @@ class SmsSms(models.Model):
             if auto_commit is True and not getattr(threading.currentThread(), 'testing', False):
                 self._cr.commit()
 
+    def cancel(self):
+        self.state = 'canceled'
+
     @api.model
     def _process_queue(self, ids=None):
         """ Send immediately queued messages, committing after each message is sent.
@@ -83,7 +86,7 @@ class SmsSms(models.Model):
         return res
 
     def _split_batch(self):
-        batch_size = int(self.env['ir.config_parameter'].sudo().get_param('sms.session.batch.size', 10))
+        batch_size = int(self.env['ir.config_parameter'].sudo().get_param('sms.session.batch.size', 500))
         for sms_batch in tools.split_every(batch_size, self.ids):
             yield sms_batch
 

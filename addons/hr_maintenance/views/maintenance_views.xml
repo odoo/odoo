@@ -100,7 +100,7 @@
                 <field name="department_id"/>
             </xpath>
             <xpath expr="//img[@t-att-title='record.owner_user_id.value']" position='replace'>
-                <img t-att-src="kanban_image('hr.employee', 'image_64', record.employee_id.raw_value)" t-att-title="record.employee_id.value" t-att-alt="record.employee_id.value" width="27" height="27" class="oe_kanban_avatar"/>
+                <img t-att-src="kanban_image('hr.employee', 'image_128', record.employee_id.raw_value)" t-att-title="record.employee_id.value" t-att-alt="record.employee_id.value" class="oe_kanban_avatar"/>
             </xpath>
             <div t-if="record.serial_no.raw_value" position='after'>
                 <div t-if="!record.employee_id.raw_value">Unassigned</div>

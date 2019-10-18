@@ -2,9 +2,9 @@
 {
     'name': "HR Attendance Holidays",
     'summary': """""",
-    'category': 'HR',
+    'category': 'Human Resources',
     'description': """
-        Hides attendance presence stat button when an employee is on leave.
+Hides the attendance presence button when an employee is on leave.
     """,
     'version': '1.0',
     'depends': ['hr_attendance', 'hr_holidays'],

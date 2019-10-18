@@ -80,7 +80,7 @@ def load_demo(cr, package, idref, mode, report=None):
 
     try:
         _logger.info("Module %s: loading demo", package.name)
-        with cr.savepoint():
+        with cr.savepoint(flush=False):
             load_data(cr, idref, mode, kind='demo', package=package, report=report)
         return True
     except Exception as e:

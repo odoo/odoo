@@ -47,6 +47,7 @@ class AccountBankStmtCashWizard(models.Model):
     @api.depends('start_bank_stmt_ids', 'end_bank_stmt_ids')
     def _compute_currency(self):
         for cashbox in self:
+            cashbox.currency_id = False
             if cashbox.end_bank_stmt_ids:
                 cashbox.currency_id = cashbox.end_bank_stmt_ids[0].currency_id
             if cashbox.start_bank_stmt_ids:
@@ -300,7 +301,7 @@ class AccountBankStatement(models.Model):
                 self.env['ir.attachment'].create({
                     'name': statement.name and _("Bank Statement %s.pdf") % statement.name or _("Bank Statement.pdf"),
                     'type': 'binary',
-                    'datas': base64.encodestring(content),
+                    'datas': base64.encodebytes(content),
                     'res_model': statement._name,
                     'res_id': statement.id
                 })
@@ -331,6 +332,9 @@ class AccountBankStatement(models.Model):
                     st_number = SequenceObj.with_context(**context).next_by_code('account.bank.statement')
                 statement.name = st_number
             statement.state = 'open'
+
+    def button_reopen(self):
+        self.state = 'open'
 
     def action_bank_reconcile_bank_statements(self):
         self.ensure_one()
@@ -445,9 +449,9 @@ class AccountBankStatementLine(models.Model):
         if aml_to_cancel:
             aml_to_cancel.remove_move_reconcile()
             moves_to_cancel = aml_to_cancel.mapped('move_id')
-            moves_to_cancel.button_cancel()
             moves_to_cancel.button_draft()
-            moves_to_cancel.unlink()
+            moves_to_cancel.button_cancel()
+            moves_to_cancel.with_context(force_delete=True).unlink()
         if payment_to_cancel:
             payment_to_cancel.unlink()
 
@@ -722,7 +726,7 @@ class AccountBankStatementLine(models.Model):
             total -= aml_currency._convert(balance, currency, aml_rec.company_id, aml_rec.date)
             aml_rec.with_context(check_move_validity=False).write({'statement_line_id': self.id})
             counterpart_moves = (counterpart_moves | aml_rec.move_id)
-            if aml_rec.journal_id.post_at_bank_rec and aml_rec.payment_id and aml_rec.move_id.state == 'draft':
+            if aml_rec.journal_id.post_at == 'bank_rec' and aml_rec.payment_id and aml_rec.move_id.state == 'draft':
                 # In case the journal is set to only post payments when performing bank
                 # reconciliation, we modify its date and post it.
                 aml_rec.move_id.date = self.date
@@ -843,3 +847,6 @@ class AccountBankStatementLine(models.Model):
 
     def _check_invoice_state(self, invoice):
         invoice._compute_amount()
+
+    def button_confirm_bank(self):
+        self.statement_id.button_confirm_bank()

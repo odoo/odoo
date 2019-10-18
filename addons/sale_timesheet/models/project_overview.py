@@ -6,6 +6,7 @@ import json
 
 from odoo import fields, _, models
 from odoo.tools import float_round
+from odoo.tools.misc import get_lang
 
 from odoo.addons.web.controllers.main import clean_action
 
@@ -256,7 +257,7 @@ class Project(models.Model):
 
         def _to_short_month_name(date):
             month_index = fields.Date.from_string(date).month
-            return babel.dates.get_month_names('abbreviated', locale=self.env.context.get('lang', 'en_US'))[month_index]
+            return babel.dates.get_month_names('abbreviated', locale=get_lang(self.env).code)[month_index]
 
         header_names = [_('Name'), _('Before')] + [_to_short_month_name(date) for date in ts_months] + [_('Total'), _('Sold'), _('Remaining')]
 

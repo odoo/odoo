@@ -18,6 +18,7 @@ import lxml.html
 import tempfile
 import subprocess
 import re
+import json
 
 from lxml import etree
 from contextlib import closing
@@ -179,7 +180,7 @@ class IrActionsReport(models.Model):
             img = Image.open(stream)
             img.convert("RGB").save(stream, format="pdf")
             return stream
-        return io.BytesIO(base64.decodestring(attachment.datas))
+        return io.BytesIO(base64.decodebytes(attachment.datas))
 
     def retrieve_attachment(self, record):
         '''Retrieve an attachment for a specific record.
@@ -188,7 +189,7 @@ class IrActionsReport(models.Model):
         :param attachment_name: The optional name of the attachment.
         :return: A recordset of length <=1 or None
         '''
-        attachment_name = safe_eval(self.attachment, {'object': record, 'time': time})
+        attachment_name = safe_eval(self.attachment, {'object': record, 'time': time}) if self.attachment else ''
         if not attachment_name:
             return None
         return self.env['ir.attachment'].search([
@@ -211,7 +212,7 @@ class IrActionsReport(models.Model):
             return None
         attachment_vals = {
             'name': attachment_name,
-            'datas': base64.encodestring(buffer.getvalue()),
+            'datas': base64.encodebytes(buffer.getvalue()),
             'res_model': self.model,
             'res_id': record.id,
             'type': 'binary',
@@ -790,10 +791,6 @@ class IrActionsReport(models.Model):
         :param docids: id/ids/browserecord of the records to print (if not used, pass an empty list)
         :param report_name: Name of the template to generate an action for
         """
-        discard_logo_check = self.env.context.get('discard_logo_check')
-        if self.env.is_admin() and ((not self.env.company.external_report_layout_id) or (not discard_logo_check and not self.env.company.logo)) and config:
-            return self.env.ref('base.action_base_document_layout_configurator').read()[0]
-
         context = self.env.context
         if docids:
             if isinstance(docids, models.Model):
@@ -804,7 +801,7 @@ class IrActionsReport(models.Model):
                 active_ids = docids
             context = dict(self.env.context, active_ids=active_ids)
 
-        return {
+        report_action = {
             'context': context,
             'data': data,
             'type': 'ir.actions.report',
@@ -813,3 +810,15 @@ class IrActionsReport(models.Model):
             'report_file': self.report_file,
             'name': self.name,
         }
+
+        discard_logo_check = self.env.context.get('discard_logo_check')
+        if self.env.is_admin() and not self.env.company.external_report_layout_id and config and not discard_logo_check:
+            action = self.env.ref('base.action_base_document_layout_configurator').read()[0]
+            ctx = action.get('context')
+            py_ctx = json.loads(ctx) if ctx else {}
+            report_action['close_on_report_download'] = True
+            py_ctx['report_action'] = report_action
+            action['context'] = py_ctx
+            return action
+
+        return report_action

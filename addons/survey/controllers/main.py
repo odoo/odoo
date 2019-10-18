@@ -20,6 +20,10 @@ _logger = logging.getLogger(__name__)
 
 class Survey(http.Controller):
 
+    # ------------------------------------------------------------
+    # ACCESS
+    # ------------------------------------------------------------
+
     def _fetch_from_access_token(self, survey_token, answer_token):
         """ Check that given token matches an answer from the given survey_id.
         Returns a sudo-ed browse record of survey in order to avoid access rights
@@ -181,6 +185,10 @@ class Survey(http.Controller):
             'input_type': answer.input_type,
             'deadline': answer.deadline,
         }
+
+    # ------------------------------------------------------------
+    # TAKING SURVEY ROUTES
+    # ------------------------------------------------------------
 
     @http.route('/survey/start/<string:survey_token>', type='http', auth='public', website=True)
     def survey_start(self, survey_token, answer_token=None, email=False, **post):
@@ -403,10 +411,11 @@ class Survey(http.Controller):
                     answer_tag = "%s_%s" % (survey_sudo.id, question.id)
                     request.env['survey.user_input_line'].sudo().save_lines(answer_sudo.id, question, post, answer_tag)
 
+            vals = {}
             if answer_sudo.is_time_limit_reached or survey_sudo.questions_layout == 'one_page':
                 go_back = False
                 answer_sudo._mark_done()
-            else:
+            elif 'button_submit' in post:
                 go_back = post['button_submit'] == 'previous'
                 next_page, last = request.env['survey.survey'].next_page_or_question(answer_sudo, page_or_question_id, go_back=go_back)
                 vals = {'last_displayed_page_id': page_or_question_id}
@@ -415,13 +424,22 @@ class Survey(http.Controller):
                     answer_sudo._mark_done()
                 else:
                     vals.update({'state': 'skip'})
-                answer_sudo.write(vals)
 
-            ret['redirect'] = '/survey/fill/%s/%s' % (survey_sudo.access_token, answer_token)
-            if go_back:
-                ret['redirect'] += '?prev=prev'
+            if 'breadcrumb_redirect' in post:
+                ret['redirect'] = post['breadcrumb_redirect']
+            else:
+                if vals:
+                    answer_sudo.write(vals)
+
+                ret['redirect'] = '/survey/fill/%s/%s' % (survey_sudo.access_token, answer_token)
+                if go_back:
+                    ret['redirect'] += '?prev=prev'
 
         return json.dumps(ret)
+
+    # ------------------------------------------------------------
+    # COMPLETED SURVEY ROUTES
+    # ------------------------------------------------------------
 
     @http.route('/survey/print/<string:survey_token>', type='http', auth='public', website=True)
     def survey_print(self, survey_token, review=False, answer_token=None, **post):
@@ -639,4 +657,12 @@ class Survey(http.Controller):
         values = {'survey': survey, 'answer': answer}
         if token:
             values['token'] = token
+        if survey.scoring_type != 'no_scoring' and survey.certificate:
+            answer_perf = survey._get_answers_correctness(answer)[answer]
+            values['graph_data'] = json.dumps([
+                {"text": "Correct", "count": answer_perf['correct']},
+                {"text": "Partially", "count": answer_perf['partial']},
+                {"text": "Incorrect", "count": answer_perf['incorrect']},
+                {"text": "Unanswered", "count": answer_perf['skipped']}
+            ])
         return values

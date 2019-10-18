@@ -4,6 +4,7 @@
 from odoo import api, fields, models, _
 from odoo.addons.mail.wizard.mail_compose_message import _reopen
 from odoo.exceptions import UserError
+from odoo.tools.misc import get_lang
 
 
 class AccountInvoiceSend(models.TransientModel):
@@ -52,6 +53,17 @@ class AccountInvoiceSend(models.TransientModel):
             self.composer_id.onchange_template_id_wrapper()
 
     @api.onchange('is_email')
+    def onchange_is_email(self):
+        if self.is_email:
+            if not self.composer_id:
+                res_ids = self._context.get('active_ids')
+                self.composer_id = self.env['mail.compose.message'].create({
+                    'composition_mode': 'comment' if len(res_ids) == 1 else 'mass_mail',
+                    'template_id': self.template_id.id
+                })
+            self.composer_id.onchange_template_id_wrapper()
+
+    @api.onchange('is_email')
     def _compute_invoice_without_email(self):
         for wizard in self:
             if wizard.is_email and len(wizard.invoice_ids) > 1:
@@ -92,7 +104,7 @@ class AccountInvoiceSend(models.TransientModel):
             active_ids = self.env.context.get('active_ids', self.res_id)
             active_records = self.env[self.model].browse(active_ids)
             langs = active_records.mapped('partner_id.lang')
-            default_lang = self.env.context.get('lang', 'en_US')
+            default_lang = get_lang(self.env)
             for lang in (set(langs) or [default_lang]):
                 active_ids_lang = active_records.filtered(lambda r: r.partner_id.lang == lang).ids
                 self_lang = self.with_context(active_ids=active_ids_lang, lang=lang)

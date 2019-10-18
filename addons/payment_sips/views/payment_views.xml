@@ -11,9 +11,9 @@
                     <group attrs="{'invisible': [('provider', '!=', 'sips')]}">
                         <field name="sips_merchant_id" attrs="{'required':[ ('provider', '=', 'sips'), ('state', '!=', 'disabled')]}"/>
                         <field name="sips_secret" attrs="{'required':[ ('provider', '=', 'sips'), ('state', '!=', 'disabled')]}"/>
-                        <field name="sips_test_url" attrs="{'required':[ ('provider', '=', 'sips'), ('state', '!=', 'disabled')]}"/>
-                        <field name="sips_prod_url" attrs="{'required':[ ('provider', '=', 'sips'), ('state', '!=', 'disabled')]}"/>
-                        <field name="sips_version" attrs="{'required':[ ('provider', '=', 'sips'), ('state', '!=', 'disabled')]}"/>
+                        <field name="sips_test_url" attrs="{'required':[ ('provider', '=', 'sips'), ('state', '!=', 'disabled')]}" groups='base.group_no_one'/>
+                        <field name="sips_prod_url" attrs="{'required':[ ('provider', '=', 'sips'), ('state', '!=', 'disabled')]}" groups='base.group_no_one'/>
+                        <field name="sips_version" attrs="{'required':[ ('provider', '=', 'sips'), ('state', '!=', 'disabled')]}" groups='base.group_no_one'/>
                     </group>
                 </xpath>
             </field>

@@ -31,7 +31,7 @@ class MailingTrace(models.Model):
     model = fields.Char(string='Document model')
     res_id = fields.Integer(string='Document ID')
     # campaign / wave data
-    mass_mailing_id = fields.Many2one('mailing.mailing', string='Mailing', index=True)
+    mass_mailing_id = fields.Many2one('mailing.mailing', string='Mailing', index=True, ondelete='cascade')
     campaign_id = fields.Many2one(
         related='mass_mailing_id.campaign_id',
         string='Campaign',

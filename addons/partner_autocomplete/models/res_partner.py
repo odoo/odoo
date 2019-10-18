@@ -50,8 +50,8 @@ class ResPartner(models.Model):
         if not country:
             country = self.env['res.country'].search([['name', '=ilike', country_name]])
 
-        state_id = {}
-        country_id = {}
+        state_id = False
+        country_id = False
         if country:
             country_id = {
                 'id': country.id,
@@ -127,7 +127,12 @@ class ResPartner(models.Model):
         else:
             result = {}
 
-        if error:
+        if response and response.get('credit_error'):
+            result.update({
+                'error': True,
+                'error_message': 'Insufficient Credit'
+            })
+        elif error:
             result.update({
                 'error': True,
                 'error_message': error

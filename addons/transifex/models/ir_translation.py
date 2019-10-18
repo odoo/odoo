@@ -10,8 +10,8 @@ from os.path import join as opj
 import os
 import werkzeug
 
+import odoo
 from odoo import models, fields
-from odoo.modules.module import ad_paths
 
 
 class IrTranslation(models.Model):
@@ -27,7 +27,7 @@ class IrTranslation(models.Model):
 
         tx_config_file = ConfigParser()
         tx_sections = []
-        for addon_path in ad_paths:
+        for addon_path in odoo.addons.__path__:
             tx_path = opj(addon_path, '.tx', 'config')
             if os.path.isfile(tx_path):
                 tx_config_file.read(tx_path)

@@ -5,7 +5,7 @@ from collections import OrderedDict
 from itertools import chain
 
 from odoo.addons.hr.tests.common import TestHrCommon
-from odoo.tests import new_test_user, tagged
+from odoo.tests import new_test_user, tagged, Form
 from odoo.exceptions import AccessError
 
 @tagged('post_install', '-at_install')
@@ -23,6 +23,31 @@ class TestSelfAccessProfile(TestHrCommon):
         view_infos = james.fields_view_get(view_id=view.id)
         fields = view_infos['fields'].keys()
         james.read(fields)
+
+    def test_readonly_fields(self):
+        """ Employee related fields should be readonly if self editing is not allowed """
+        self.env['ir.config_parameter'].sudo().set_param('hr.hr_employee_self_edit', False)
+        james = new_test_user(self.env, login='hel', groups='base.group_user', name='Simple employee', email='ric@example.com')
+        james = james.with_user(james)
+        self.env['hr.employee'].create({
+            'name': 'James',
+            'user_id': james.id,
+        })
+
+        view = self.env.ref('hr.res_users_view_form_profile')
+        view_infos = james.fields_view_get(view_id=view.id)
+
+        employee_related_fields = {
+            field_name
+            for field_name, field_attrs in view_infos['fields'].items()
+            if field_attrs.get('related', (None,))[0] == 'employee_id'
+        }
+
+        form = Form(james, view=view)
+        for field in employee_related_fields:
+            with self.assertRaises(AssertionError, msg="Field '%s' should be readonly in the employee profile when self edition is not allowed." % field):
+                form.__setattr__(field, 'some value')
+
 
     def test_profile_view_fields(self):
         """ A simple user should see all fields in profile view, even if they are protected by groups """

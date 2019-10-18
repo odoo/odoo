@@ -10,11 +10,8 @@ import sys
 import netifaces
 import odoo
 from odoo import http
-import zipfile
-import io
 import os
 from odoo.tools import misc
-import urllib3
 from pathlib import Path
 
 from uuid import getnode as get_mac
@@ -52,22 +49,6 @@ list_credential_template = jinja_env.get_template('list_credential.html')
 
 class IoTboxHomepage(web.Home):
 
-    def get_hw_screen_message(self):
-        return """
-        <p>
-            The activate the customer display feature, you will need to reinstall the IoT Box software.
-            You can find the latest images on the <a href="http://nightly.odoo.com/master/posbox/">Odoo Nightly builds</a> website.
-            Make sure to download at least the version 16.<br/>
-            Odoo version 11, or above, is required to use the customer display feature.
-        </p>
-        """
-
-    def get_pos_device_status(self):
-        statuses = {}
-        for driver in hw_proxy.drivers:
-            statuses[driver] = hw_proxy.drivers[driver].get_status()
-        return statuses
-
     def get_six_terminal(self):
         terminal_id = helpers.read_file_first_line('odoo-six-payment-terminal.conf')
         return terminal_id or 'Not Configured'
@@ -76,8 +57,8 @@ class IoTboxHomepage(web.Home):
         hostname = str(socket.gethostname())
         mac = get_mac()
         h = iter(hex(mac)[2:].zfill(12))
-        ssid = subprocess.check_output('iwconfig 2>&1 | grep \'ESSID:"\' | sed \'s/.*"\\(.*\\)"/\\1/\'', shell=True).decode('utf-8').rstrip()
-        wired = subprocess.check_output('cat /sys/class/net/eth0/operstate', shell=True).decode('utf-8').strip('\n')
+        ssid = helpers.get_ssid()
+        wired = subprocess.check_output(['cat', '/sys/class/net/eth0/operstate']).decode('utf-8').strip('\n')
         if wired == 'up':
             network = 'Ethernet'
         elif ssid:
@@ -88,18 +69,7 @@ class IoTboxHomepage(web.Home):
         else:
             network = 'Not Connected'
 
-        pos_device = self.get_pos_device_status()
         iot_device = []
-
-        if not iot_devices:
-            for status in pos_device:
-                if pos_device[status]['status'] == 'connected':
-                    iot_device.append({
-                        'name': status,
-                        'type': 'device',
-                        'message': ' '.join(pos_device[status]['messages'])
-                    })
-
         for device in iot_devices:
             iot_device.append({
                 'name': iot_devices[device].device_name + ' : ' + str(iot_devices[device].data['value']),
@@ -127,7 +97,7 @@ class IoTboxHomepage(web.Home):
                 'title': 'Configure IoT Box',
                 'breadcrumb': 'Configure IoT Box',
                 'loading_message': 'Configuring your IoT Box',
-                'ssid': self.get_wifi_essid(),
+                'ssid': helpers.get_wifi_essid(),
                 'server': helpers.get_odoo_server_url(),
                 'hostname': subprocess.check_output('hostname').decode('utf-8'),
                 })
@@ -149,32 +119,8 @@ class IoTboxHomepage(web.Home):
 
     @http.route('/load_drivers', type='http', auth='none', website=True)
     def load_drivers(self):
-        subprocess.check_call("sudo mount -o remount,rw /", shell=True)
-        subprocess.check_call("sudo mount -o remount,rw /root_bypass_ramdisks", shell=True)
-
-        mac = subprocess.check_output("/sbin/ifconfig eth0 |grep -Eo ..\(\:..\){5}", shell=True).decode('utf-8').split('\n')[0]
-
-        #response = requests.get(url, auth=(username, db_uuid.split('\n')[0]), stream=True)
-        server = helpers.get_odoo_server_url()
-        if server:
-            urllib3.disable_warnings()
-            pm = urllib3.PoolManager(cert_reqs='CERT_NONE')
-            resp = False
-            server = server + '/iot/get_drivers'
-            try:
-                resp = pm.request('POST',
-                                   server,
-                                   fields={'mac': mac})
-            except Exception as e:
-                _logger.error('Could not reach configured server')
-                _logger.error('A error encountered : %s ' % e)
-            if resp and resp.data:
-                zip_file = zipfile.ZipFile(io.BytesIO(resp.data))
-                zip_file.extractall(get_resource_path('hw_drivers', 'drivers'))
-        subprocess.check_call("sudo service odoo restart", shell=True)
-        subprocess.check_call("sudo mount -o remount,ro /", shell=True)
-        subprocess.check_call("sudo mount -o remount,ro /root_bypass_ramdisks", shell=True)
-
+        helpers.download_drivers(False)
+        subprocess.check_call(["sudo", "service", "odoo", "restart"])
         return "<meta http-equiv='refresh' content='20; url=http://" + helpers.get_ip() + ":8069/list_drivers'>"
 
     @http.route('/list_credential', type='http', auth='none', website=True)
@@ -194,26 +140,10 @@ class IoTboxHomepage(web.Home):
 
     @http.route('/clear_credential', type='http', auth='none', cors='*', csrf=False)
     def clear_credential(self):
-        subprocess.check_call(["sudo", "mount", "-o", "remount,rw", "/"])
         helpers.unlink_file('odoo-db-uuid.conf')
         helpers.unlink_file('odoo-enterprise-code.conf')
         subprocess.check_call(["sudo", "service", "odoo", "restart"])
-        subprocess.check_call(["sudo", "mount", "-o", "remount,ro", "/"])
         return "<meta http-equiv='refresh' content='20; url=http://" + helpers.get_ip() + ":8069'>"
-
-    def get_wifi_essid(self):
-        wifi_options = []
-        try:
-            f = open('/tmp/scanned_networks.txt', 'r')
-            for line in f:
-                line = line.rstrip()
-                line = misc.html_escape(line)
-                if line not in wifi_options:
-                    wifi_options.append(line)
-            f.close()
-        except IOError:
-            _logger.warning("No /tmp/scanned_networks.txt")
-        return wifi_options
 
     @http.route('/wifi', type='http', auth='none', website=True)
     def wifi(self):
@@ -221,7 +151,7 @@ class IoTboxHomepage(web.Home):
             'title': 'Wifi configuration',
             'breadcrumb': 'Configure Wifi',
             'loading_message': 'Connecting to Wifi',
-            'ssid': self.get_wifi_essid(),
+            'ssid': helpers.get_wifi_essid(),
         })
 
     @http.route('/wifi_connect', type='http', auth='none', cors='*', csrf=False)
@@ -240,6 +170,11 @@ class IoTboxHomepage(web.Home):
             res_payload['server'] = {
                 'url': server,
                 'message': 'Redirect to Odoo Server'
+            }
+        else:
+            res_payload['server'] = {
+                'url': 'http://' + helpers.get_ip() + ':8069',
+                'message': 'Redirect to IoT Box'
             }
 
         return json.dumps(res_payload)
@@ -263,14 +198,18 @@ class IoTboxHomepage(web.Home):
 
     @http.route('/server_connect', type='http', auth='none', cors='*', csrf=False)
     def connect_to_server(self, token, iotname):
-        credential = token.split('|')
-        url = credential[0]
-        token = credential[1]
-        if len(credential) > 2:
-            # IoT Box send token with db_uuid and enterprise_code only since V13
-            db_uuid = credential[2]
-            enterprise_code = credential[3]
-            helpers.add_credential(db_uuid, enterprise_code)
+        if token:
+            credential = token.split('|')
+            url = credential[0]
+            token = credential[1]
+            if len(credential) > 2:
+                # IoT Box send token with db_uuid and enterprise_code only since V13
+                db_uuid = credential[2]
+                enterprise_code = credential[3]
+                helpers.add_credential(db_uuid, enterprise_code)
+        else:
+            url = helpers.get_odoo_server_url()
+            token = helpers.get_token()
         reboot = 'reboot'
         subprocess.check_call([get_resource_path('point_of_sale', 'tools/posbox/configuration/connect_to_server.sh'), url, iotname, token, reboot])
         return 'http://' + helpers.get_ip() + ':8069'
@@ -281,7 +220,7 @@ class IoTboxHomepage(web.Home):
             'title': 'Configure IoT Box',
             'breadcrumb': 'Configure IoT Box',
             'loading_message': 'Configuring your IoT Box',
-            'ssid': self.get_wifi_essid(),
+            'ssid': helpers.get_wifi_essid(),
             'server': helpers.get_odoo_server_url(),
             'hostname': subprocess.check_output('hostname').decode('utf-8').strip('\n'),
         })

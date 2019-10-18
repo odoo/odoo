@@ -23,6 +23,7 @@ class View(models.Model):
     website_id = fields.Many2one('website', ondelete='cascade', string="Website")
     page_ids = fields.One2many('website.page', 'view_id')
     first_page_id = fields.Many2one('website.page', string='Website Page', help='First page linked to this view', compute='_compute_first_page_id')
+    track = fields.Boolean(string='Track', default=False, help="Allow to specify for one page of the website to be trackable or not")
 
     def _compute_first_page_id(self):
         for view in self:
@@ -62,6 +63,16 @@ class View(models.Model):
             if view.website_id:
                 super(View, view).write(vals)
                 continue
+
+            # Ensure the cache of the pages stay consistent when doing COW.
+            # This is necessary when writing view fields from a page record
+            # because the generic page will put the given values on its cache
+            # but in reality the values were only meant to go on the specific
+            # page. Invalidate all fields and not only those in vals because
+            # other fields could have been changed implicitly too.
+            pages = view.page_ids
+            pages.flush(records=pages)
+            pages.invalidate_cache(ids=pages.ids)
 
             # If already a specific view for this generic view, write on it
             website_specific_view = view.search([
@@ -302,7 +313,7 @@ class View(models.Model):
         if request and getattr(request, 'is_frontend', False):
 
             editable = request.website.is_publisher()
-            translatable = editable and self._context.get('lang') != request.website.default_lang_code
+            translatable = editable and self._context.get('lang') != request.website.default_lang_id.code
             editable = not translatable and editable
 
             # in edit mode ir.ui.view will tag nodes
@@ -311,9 +322,13 @@ class View(models.Model):
                     new_context = dict(self._context, inherit_branding=True)
                 elif request.env.user.has_group('website.group_website_publisher'):
                     new_context = dict(self._context, inherit_branding_auto=True)
-            # Fallback incase main_object dont't inherit 'website.seo.metadata'
-            if values and 'main_object' in values and not hasattr(values['main_object'], 'get_website_meta'):
-                values['main_object'].get_website_meta = lambda: {}
+            if values and 'main_object' in values:
+                func = getattr(values['main_object'], 'get_backend_menu_id', False)
+                values['backend_menu_id'] = func and func() or self.env.ref('website.menu_website_configuration').id
+
+                # Fallback incase main_object dont't inherit 'website.seo.metadata'
+                if not hasattr(values['main_object'], 'get_website_meta'):
+                    values['main_object'].get_website_meta = lambda: {}
 
         if self._context != new_context:
             self = self.with_context(new_context)
@@ -332,30 +347,29 @@ class View(models.Model):
             translatable = editable and self._context.get('lang') != request.env['ir.http']._get_default_lang().code
             editable = not translatable and editable
 
-            if 'main_object' not in qcontext:
-                qcontext['main_object'] = self
-
             cur = Website.get_current_website()
-            qcontext['multi_website_websites_current'] = {'website_id': cur.id, 'name': cur.name, 'domain': cur.domain}
-            qcontext['multi_website_websites'] = [
-                {'website_id': website.id, 'name': website.name, 'domain': website.domain}
-                for website in Website.search([]) if website != cur
-            ]
+            if self.env.user.has_group('website.group_website_publisher') and self.env.user.has_group('website.group_multi_website'):
+                qcontext['multi_website_websites_current'] = {'website_id': cur.id, 'name': cur.name, 'domain': cur._get_http_domain()}
+                qcontext['multi_website_websites'] = [
+                    {'website_id': website.id, 'name': website.name, 'domain': website._get_http_domain()}
+                    for website in Website.search([]) if website != cur
+                ]
 
-            cur_company = self.env.company
-            qcontext['multi_website_companies_current'] = {'company_id': cur_company.id, 'name': cur_company.name}
-            qcontext['multi_website_companies'] = [
-                {'company_id': comp.id, 'name': comp.name}
-                for comp in self.env.user.company_ids if comp != cur_company
-            ]
+                cur_company = self.env.company
+                qcontext['multi_website_companies_current'] = {'company_id': cur_company.id, 'name': cur_company.name}
+                qcontext['multi_website_companies'] = [
+                    {'company_id': comp.id, 'name': comp.name}
+                    for comp in self.env.user.company_ids if comp != cur_company
+                ]
 
             qcontext.update(dict(
                 self._context.copy(),
+                main_object=self,
                 website=request.website,
                 url_for=url_for,
                 res_company=request.website.company_id.sudo(),
                 default_lang_code=request.env['ir.http']._get_default_lang().code,
-                languages=request.env['ir.http']._get_language_codes(),
+                languages=request.env['res.lang'].get_available(),
                 translatable=translatable,
                 editable=editable,
                 menu_data=self.env['ir.ui.menu'].load_menus_root() if request.website.is_user() else None,
@@ -367,7 +381,7 @@ class View(models.Model):
     def get_default_lang_code(self):
         website_id = self.env.context.get('website_id')
         if website_id:
-            lang_code = self.env['website'].browse(website_id).default_lang_code
+            lang_code = self.env['website'].browse(website_id).default_lang_id.code
             return lang_code
         else:
             return super(View, self).get_default_lang_code()

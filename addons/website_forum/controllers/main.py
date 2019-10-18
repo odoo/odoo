@@ -73,7 +73,7 @@ class WebsiteForum(WebsiteProfile):
                  '''/forum/<model("forum.forum"):forum>/tag/<model("forum.tag"):tag>/questions''',
                  '''/forum/<model("forum.forum"):forum>/tag/<model("forum.tag"):tag>/questions/page/<int:page>''',
                  ], type='http', auth="public", website=True, sitemap=sitemap_forum)
-    def questions(self, forum, tag=None, page=1, filters='all', sorting=None, search='', **post):
+    def questions(self, forum, tag=None, page=1, filters='all', my=None, sorting=None, search='', **post):
         if not forum.can_access_from_current_website():
             raise werkzeug.exceptions.NotFound()
 
@@ -86,8 +86,21 @@ class WebsiteForum(WebsiteProfile):
             domain += [('tag_ids', 'in', tag.id)]
         if filters == 'unanswered':
             domain += [('child_ids', '=', False)]
-        elif filters == 'followed':
-            domain += [('message_partner_ids', '=', request.env.user.partner_id.id)]
+        elif filters == 'solved':
+            domain += [('has_validated_answer', '=', True)]
+        elif filters == 'unsolved':
+            domain += [('has_validated_answer', '=', False)]
+
+        user = request.env.user
+
+        if my == 'mine':
+            domain += [('create_uid', '=', user.id)]
+        elif my == 'followed':
+            domain += [('message_partner_ids', '=', user.partner_id.id)]
+        elif my == 'tagged':
+            domain += [('tag_ids.message_partner_ids', '=', user.partner_id.id)]
+        elif my == 'favourites':
+            domain += [('favourite_ids', '=', user.id)]
 
         if sorting:
             # check that sorting is valid
@@ -123,11 +136,13 @@ class WebsiteForum(WebsiteProfile):
         values = self._prepare_user_values(forum=forum, searches=post, header={'ask_hide': not forum.active})
         values.update({
             'main_object': tag or forum,
+            'edit_in_backend': not tag,
             'question_ids': question_ids,
             'question_count': question_count,
             'pager': pager,
             'tag': tag,
             'filters': filters,
+            'my': my,
             'sorting': sorting,
             'search': search,
         })
@@ -153,10 +168,9 @@ class WebsiteForum(WebsiteProfile):
         first_char_tag = forum.get_tags_first_char()
         first_char_list = [(t, t.lower()) for t in first_char_tag if t.isalnum()]
         first_char_list.insert(0, (_('All'), 'all'))
-        # get active first char tag
-        active_char_tag = first_char_list[1][1] if len(first_char_list) > 1 else 'all'
-        if tag_char:
-            active_char_tag = tag_char.lower()
+
+        active_char_tag = tag_char and tag_char.lower() or 'all'
+
         # generate domain for searched tags
         domain = [('forum_id', '=', forum.id), ('posts_count', '>', 0)]
         order_by = 'name'
@@ -173,10 +187,6 @@ class WebsiteForum(WebsiteProfile):
             'active_char_tag': active_char_tag,
         })
         return request.render("website_forum.tag", values)
-
-    @http.route('/forum/<model("forum.forum"):forum>/edit_welcome_message', auth="user", website=True)
-    def edit_welcome_message(self, forum, **kw):
-        return request.render("website_forum.edit_welcome_message", {'forum': forum})
 
     # Questions
     # --------------------------------------------------
@@ -226,13 +236,13 @@ class WebsiteForum(WebsiteProfile):
     def question_toggle_favorite(self, forum, question, **post):
         if not request.session.uid:
             return {'error': 'anonymous_user'}
-        # TDE: add check for not public
-        favourite = False if question.user_favourite else True
+        favourite = not question.user_favourite
+        question.sudo().favourite_ids = [(favourite and 4 or 3, request.uid)]
         if favourite:
-            favourite_ids = [(4, request.uid)]
-        else:
-            favourite_ids = [(3, request.uid)]
-        question.sudo().write({'favourite_ids': favourite_ids})
+            # Automatically add the user as follower of the posts that he
+            # favorites (on unfavorite we chose to keep him as a follower until
+            # he decides to not follow anymore).
+            question.sudo().message_subscribe(request.env.user.partner_id.ids)
         return favourite
 
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/ask_for_close', type='http', auth="user", methods=['POST'], website=True)
@@ -282,7 +292,7 @@ class WebsiteForum(WebsiteProfile):
         user = request.env.user
         if not user.email or not tools.single_email_re.match(user.email):
             return werkzeug.utils.redirect("/forum/%s/user/%s/edit?email_required=1" % (slug(forum), request.session.uid))
-        values = self._prepare_user_values(forum=forum, searches={}, header={'ask_hide': True})
+        values = self._prepare_user_values(forum=forum, searches={}, header={'ask_hide': True}, new_question=True)
         return request.render("website_forum.new_question", values)
 
     @http.route(['/forum/<model("forum.forum"):forum>/new',
@@ -349,6 +359,7 @@ class WebsiteForum(WebsiteProfile):
         values.update({
             'tags': tags,
             'post': post,
+            'is_edit': True,
             'is_answer': bool(post.parent_id),
             'searches': kwargs,
             'content': post.name,
@@ -518,8 +529,8 @@ class WebsiteForum(WebsiteProfile):
     # -----------------------------------
 
     @http.route(['/forum/<model("forum.forum"):forum>/user/<int:user_id>'], type='http', auth="public", website=True)
-    def view_user_forum_profile(self, forum, user_id, **post):
-        return werkzeug.utils.redirect('/profile/user/' + str(user_id) + '?forum_id=' + str(forum.id))
+    def view_user_forum_profile(self, forum, user_id, forum_origin, **post):
+        return werkzeug.utils.redirect('/profile/user/' + str(user_id) + '?forum_id=' + str(forum.id) + '&forum_origin=' + str(forum_origin))
 
     def _prepare_user_profile_values(self, user, **post):
         values = super(WebsiteForum, self)._prepare_user_profile_values(user, **post)

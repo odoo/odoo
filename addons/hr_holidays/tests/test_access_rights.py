@@ -713,9 +713,7 @@ class TestAccessRightsWrite(TestLeavesRights):
         }
         self.employee_hrmanager.leave_manager_id = self.env['res.users'].browse(1)
         hr_leave = self.request_leave(self.user_hruser_id, datetime.now() + relativedelta(days=6), 1, values)
-        hr_user_leave = hr_leave.with_user(self.user_hruser_id)
-        with self.assertRaises(AccessError):
-            hr_user_leave.action_approve()
+
         with self.assertRaises(AccessError):
             hr_leave.with_user(self.user_employee_id).action_approve()
 

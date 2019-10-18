@@ -252,7 +252,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                     self.displayError(
                         _t('Server Error'),
                         _t("We are not able to add your payment method at the moment.") +
-                            this._parseError(error)
+                            self._parseError(error)
                     );
                 });
             }
@@ -301,15 +301,15 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                     }).guardedCatch(function (error) {
                         self.displayError(
                             _t('Server Error'),
-                            _t("We are not able to redirect you to the payment form. ") +
-                                this._parseError(error)
+                            _t("We are not able to redirect you to the payment form.") + " " +
+                                self._parseError(error)
                         );
                     });
                 }
                 else {
                     // we append the form to the body and send it.
                     this.displayError(
-                        _t("Cannot set-up the payment"),
+                        _t("Cannot setup the payment"),
                         _t("We're unable to process your payment.")
                     );
                 }
@@ -434,7 +434,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                 self.displayError(
                     _t('Server error'),
                     _t("We are not able to add your payment method at the moment.</p>") +
-                        this._parseError(error)
+                        self._parseError(error)
                 );
             });
         }

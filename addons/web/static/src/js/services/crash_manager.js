@@ -146,20 +146,6 @@ var CrashManager = AbstractService.extend({
     disable: function () {
         active = false;
     },
-    /**
-     * @return {Object}
-     */
-    getMapTitle() {
-        return {
-            access_denied: _lt("Access Denied"),
-            access_error: _lt("Access Error"),
-            except_orm: _lt("Global Business Error"),
-            missing_error: _lt("Missing Record"),
-            user_error: _lt("User Error"),
-            validation_error: _lt("Validation Error"),
-            warning: _lt("Warning"),
-        };
-    },
     handleLostConnection: function () {
         var self = this;
         if (!this.isConnected) {
@@ -188,7 +174,15 @@ var CrashManager = AbstractService.extend({
         if (!document.body) {
             return;
         }
-        var map_title = this.getMapTitle();
+        var map_title = {
+            access_denied: _lt("Access Denied"),
+            access_error: _lt("Access Error"),
+            except_orm: _lt("Global Business Error"),
+            missing_error: _lt("Missing Record"),
+            user_error: _lt("User Error"),
+            validation_error: _lt("Validation Error"),
+            warning: _lt("Warning"),
+        };
         if (!active) {
             return;
         }
@@ -317,10 +311,9 @@ var CrashManager = AbstractService.extend({
      * @param {Object} options
      */
     _displayWarning: function (message, title, options) {
-        return new WarningDialog(this, {
-            ...options,
+        return new WarningDialog(this, Object.assign({}, options, {
             title,
-        }, {
+        }), {
             message,
         }).open();
     },

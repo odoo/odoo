@@ -17,7 +17,6 @@ class ResConfigSettings(models.TransientModel):
     group_sale_delivery_address = fields.Boolean("Customer Addresses", implied_group='sale.group_delivery_invoice_address')
     group_proforma_sales = fields.Boolean(string="Pro-Forma Invoice", implied_group='sale.group_proforma_sales',
         help="Allows you to send pro-forma invoice.")
-    group_sale_order_dates = fields.Boolean("Delivery Date", implied_group='sale.group_sale_order_dates')
     default_invoice_policy = fields.Selection([
         ('order', 'Invoice what is ordered'),
         ('delivery', 'Invoice what is delivered')
@@ -30,7 +29,6 @@ class ResConfigSettings(models.TransientModel):
         domain="[('type', '=', 'service')]",
         config_parameter='sale.default_deposit_product_id',
         help='Default product used for payment advances')
-    module_website_sale_digital = fields.Boolean("Digital Content")
 
     auth_signup_uninvited = fields.Selection([
         ('b2b', 'On invitation'),

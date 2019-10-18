@@ -48,7 +48,7 @@ class Bank(models.Model):
             if operator in expression.NEGATIVE_TERM_OPERATORS:
                 domain = ['&'] + domain
         bank_ids = self._search(domain + args, limit=limit, access_rights_uid=name_get_uid)
-        return self.browse(bank_ids).name_get()
+        return models.lazy_name_get(self.browse(bank_ids).with_user(name_get_uid))
         
     @api.onchange('country')
     def _onchange_country_id(self):
@@ -137,11 +137,6 @@ class ResPartnerBank(models.Model):
 
     def _validate_qr_code_arguments(self):
         for bank in self:
-            if bank.currency_id.name == False:
-                currency = bank.company_id.currency_id
-            else:
-                currency = bank.currency_id
             bank.qr_code_valid = (bank.bank_bic
                                             and bank.company_id.name
-                                            and bank.acc_number
-                                            and (currency.name == 'EUR'))
+                                            and bank.acc_number)

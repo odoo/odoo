@@ -10,3 +10,4 @@ class LunchLocation(models.Model):
 
     name = fields.Char('Location Name', required=True)
     address = fields.Text('Address')
+    company_id = fields.Many2one('res.company', default=lambda self: self.env.company)

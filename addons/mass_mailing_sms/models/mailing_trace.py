@@ -59,6 +59,10 @@ class MailingTrace(models.Model):
             domain = expression.AND([domain, additional_domain])
         return self.search(domain)
 
+    def set_failed(self, failure_type):
+        for trace in self:
+            trace.write({'exception': fields.Datetime.now(), 'failure_type': failure_type})
+
     def set_sms_sent(self, sms_sms_ids=None):
         statistics = self._get_records_from_sms(sms_sms_ids, [('sent', '=', False)])
         statistics.write({'sent': fields.Datetime.now()})

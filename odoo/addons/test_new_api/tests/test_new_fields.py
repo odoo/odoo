@@ -2,6 +2,7 @@
 # test cases for new-style fields
 #
 import base64
+from collections import OrderedDict
 from datetime import date, datetime, time
 import io
 from PIL import Image
@@ -82,6 +83,13 @@ class TestFields(common.TransactionCase):
         })
         field = self.env['test_new_api.message']._fields['x_bool_false_computed']
         self.assertFalse(field.depends)
+
+    def test_10_display_name(self):
+        """ test definition of automatic field 'display_name' """
+        field = type(self.env['test_new_api.discussion']).display_name
+        self.assertTrue(field.automatic)
+        self.assertTrue(field.compute)
+        self.assertEqual(field.depends, ('name',))
 
     def test_10_non_stored(self):
         """ test non-stored fields """
@@ -1531,6 +1539,56 @@ class TestX2many(common.TransactionCase):
         record_a.unlink()
         self.assertFalse(record_a.exists())
 
+    def test_12_active_test_one2many(self):
+        Model = self.env['test_new_api.model_active_field']
+
+        parent = Model.create({})
+        self.assertFalse(parent.children_ids)
+
+        # create with implicit active_test=True in context
+        child1, child2 = Model.create([
+            {'parent_id': parent.id, 'active': True},
+            {'parent_id': parent.id, 'active': False},
+        ])
+        act_children = child1
+        all_children = child1 + child2
+        self.assertEqual(parent.children_ids, act_children)
+        self.assertEqual(parent.with_context(active_test=True).children_ids, act_children)
+        self.assertEqual(parent.with_context(active_test=False).children_ids, all_children)
+
+        # create with active_test=False in context
+        child3, child4 = Model.with_context(active_test=False).create([
+            {'parent_id': parent.id, 'active': True},
+            {'parent_id': parent.id, 'active': False},
+        ])
+        act_children = child1 + child3
+        all_children = child1 + child2 + child3 + child4
+        self.assertEqual(parent.children_ids, act_children)
+        self.assertEqual(parent.with_context(active_test=True).children_ids, act_children)
+        self.assertEqual(parent.with_context(active_test=False).children_ids, all_children)
+
+        # replace active children
+        parent.write({'children_ids': [(6, 0, [child1.id])]})
+        act_children = child1
+        all_children = child1 + child2 + child4
+        self.assertEqual(parent.children_ids, act_children)
+        self.assertEqual(parent.with_context(active_test=True).children_ids, act_children)
+        self.assertEqual(parent.with_context(active_test=False).children_ids, all_children)
+
+        # replace all children
+        parent.with_context(active_test=False).write({'children_ids': [(6, 0, [child1.id])]})
+        act_children = child1
+        all_children = child1
+        self.assertEqual(parent.children_ids, act_children)
+        self.assertEqual(parent.with_context(active_test=True).children_ids, act_children)
+        self.assertEqual(parent.with_context(active_test=False).children_ids, all_children)
+
+        # check recomputation of inactive records
+        parent.write({'children_ids': [(6, 0, child4.ids)]})
+        self.assertTrue(child4.parent_active)
+        parent.active = False
+        self.assertFalse(child4.parent_active)
+
     def test_search_many2many(self):
         """ Tests search on many2many fields. """
         tags = self.env['test_new_api.multi.tag']
@@ -1701,6 +1759,43 @@ class TestMagicFields(common.TransactionCase):
         record = self.env['test_new_api.discussion'].create({'name': 'Booba'})
         self.assertEqual(record.create_uid, self.env.user)
         self.assertEqual(record.write_uid, self.env.user)
+
+    def test_mro_mixin(self):
+        #                               Mixin
+        #                                |
+        #                                |
+        #                                |
+        #   ExtendedDisplay    'test_new_api.mixin'    Display    'base'
+        #         |                      |                |         |
+        #         +----------------------+-+--------------+---------+
+        #                                  |
+        #                       'test_new_api.display'
+        #
+        # The field 'display_name' is defined as store=True on the class Display
+        # above.  The field 'display_name' on the model 'test_new_api.mixin' is
+        # expected to be automatic and non-stored.  But the field 'display_name'
+        # on the model 'test_new_api.display' should not be automatic: it must
+        # correspond to the definition given in class Display, even if the MRO
+        # of the model shows the automatic field on the mixin model before the
+        # actual definition.
+        registry = self.env.registry
+        models = registry.models
+
+        # check setup of models in alphanumeric order
+        self.patch(registry, 'models', OrderedDict(sorted(models.items())))
+        registry.model_cache.clear()
+        registry.setup_models(self.cr)
+        field = registry['test_new_api.display'].display_name
+        self.assertFalse(field.automatic)
+        self.assertTrue(field.store)
+
+        # check setup of models in reverse alphanumeric order
+        self.patch(registry, 'models', OrderedDict(sorted(models.items(), reverse=True)))
+        registry.model_cache.clear()
+        registry.setup_models(self.cr)
+        field = registry['test_new_api.display'].display_name
+        self.assertFalse(field.automatic)
+        self.assertTrue(field.store)
 
 
 class TestParentStore(common.TransactionCase):
@@ -1884,3 +1979,37 @@ class TestRequiredMany2one(common.TransactionCase):
 
         with self.assertRaises(ValueError):
             field._setup_regular_base(Model)
+
+
+class TestRequiredMany2oneTransient(common.TransactionCase):
+
+    def test_explicit_ondelete(self):
+        field = self.env['test_new_api.req_m2o_transient']._fields['foo']
+        self.assertEqual(field.ondelete, 'restrict')
+
+    def test_implicit_ondelete(self):
+        field = self.env['test_new_api.req_m2o_transient']._fields['bar']
+        self.assertEqual(field.ondelete, 'cascade')
+
+    def test_explicit_set_null(self):
+        Model = self.env['test_new_api.req_m2o_transient']
+        field = Model._fields['foo']
+
+        # invalidate registry to redo the setup afterwards
+        self.registry.registry_invalidated = True
+        self.patch(field, 'ondelete', 'set null')
+
+        with self.assertRaises(ValueError):
+            field._setup_regular_base(Model)
+
+
+@common.tagged('m2oref')
+class TestMany2oneReference(common.TransactionCase):
+
+    def test_delete_m2o_reference_records(self):
+        m = self.env['test_new_api.model_many2one_reference']
+        self.env.cr.execute("SELECT max(id) FROM test_new_api_model_many2one_reference")
+        ids = self.env.cr.fetchone()
+        # fake record to emulate the unlink of a non-existant record
+        foo = m.browse(1 if not ids[0] else (ids[0] + 1))
+        self.assertTrue(foo.unlink())

@@ -13,7 +13,6 @@ RATING_LIMIT_MIN = 1
 
 
 class Rating(models.Model):
-
     _name = "rating.rating"
     _description = "Rating"
     _order = 'write_date desc'
@@ -50,7 +49,10 @@ class Rating(models.Model):
         ('highly_dissatisfied', 'Highly dissatisfied'),
         ('no_rating', 'No Rating yet')], string='Rating', store=True, compute='_compute_rating_text', readonly=True)
     feedback = fields.Text('Comment', help="Reason of the rating")
-    message_id = fields.Many2one('mail.message', string="Linked message", help="Associated message when posting a review. Mainly used in website addons.", index=True)
+    message_id = fields.Many2one(
+        'mail.message', string="Linked message",
+        index=True, ondelete='cascade',
+        help="Associated message when posting a review. Mainly used in website addons.")
     access_token = fields.Char('Security Token', default=_default_access_token, help="Access token to set the rating of the value")
     consumed = fields.Boolean(string="Filled Rating", help="Enabled if the rating has been filled.")
 
@@ -65,9 +67,18 @@ class Rating(models.Model):
 
     @api.depends('rating')
     def _compute_rating_image(self):
+        # Due to some new widgets, we may have ratings different from 0/1/5/10 (e.g. slide.channel review)
+        # Let us have some custom rounding while finding a better solution for images.
         for rating in self:
+            rating_for_img = 0
+            if rating.rating >= 8:
+                rating_for_img = 10
+            elif rating.rating > 3:
+                rating_for_img = 5
+            elif rating.rating >= 1:
+                rating_for_img = 1
             try:
-                image_path = get_resource_path('rating', 'static/src/img', 'rating_%s.png' % (int(rating.rating),))
+                image_path = get_resource_path('rating', 'static/src/img', 'rating_%s.png' % rating_for_img)
                 rating.rating_image = base64.b64encode(open(image_path, 'rb').read())
             except (IOError, OSError):
                 rating.rating_image = False

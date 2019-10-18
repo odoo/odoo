@@ -8,6 +8,7 @@
     var viewUpdateCount = 0;
     var testedApps;
     var testedMenus;
+    var blackListedMenus = ['base.menu_theme_store', 'base.menu_third_party'];
 
     function createWebClientHooks() {
         var AbstractController = odoo.__DEBUG__.services['web.AbstractController'];
@@ -126,6 +127,7 @@
         if (testedMenus.indexOf(element.dataset.menuXmlid) >= 0) return Promise.resolve(); // Avoid infinite loop
         console.log("Testing menu", element.innerText.trim(), " ", element.dataset.menuXmlid);
         testedMenus.push(element.dataset.menuXmlid);
+        if (blackListedMenus.includes(element.dataset.menuXmlid)) return Promise.resolve(); // Skip black listed menus
         var startActionCount = clientActionCount;
         _click($(element));
         var isModal = false;
@@ -203,7 +205,7 @@
     function testFilters() {
         var filterProm = Promise.resolve();
         // var $filters = $('div.o_control_panel div.btn-group.o_dropdown > ul.o_filters_menu > li:not(.o_add_custom_filter)');
-        var $filters = $('.o_filters_menu > .o_menu_item');
+        var $filters = $('.o_filters_menu > .o_menu_item:not(.d-none)');
         console.log("Testing " + $filters.length + " filters");
         var filter_ids = _.compact(_.map($filters, function(f) { return f.dataset.id}));
         filter_ids.forEach(function(filter_id){

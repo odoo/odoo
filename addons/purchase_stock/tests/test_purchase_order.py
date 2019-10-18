@@ -42,9 +42,7 @@ class TestPurchaseOrder(AccountingTestCase):
                 })],
         }
 
-
     def test_00_purchase_order_flow(self):
-
         # Ensure product_id_2 doesn't have res_partner_1 as supplier
         if self.partner_id in self.product_id_2.seller_ids.mapped('name'):
             id_to_remove = self.product_id_2.seller_ids.filtered(lambda r: r.name == self.partner_id).ids[0] if self.product_id_2.seller_ids.filtered(lambda r: r.name == self.partner_id) else False

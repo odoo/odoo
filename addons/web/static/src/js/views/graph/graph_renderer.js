@@ -71,8 +71,6 @@ return AbstractRenderer.extend({
 
         this.chart = null;
         this.chartId = _.uniqueId('chart');
-        // the bar charts are considered stackable a priori
-        this.isStackable = true;
         this.$legendTooltip = null;
         this.$tooltip = null;
     },
@@ -782,34 +780,9 @@ return AbstractRenderer.extend({
         // prepare data
         var data = this._prepareData(dataPoints);
 
-        // The datapoints (with non zero value) can be grouped by
-        // their originIndex and associated labels.
-        // If at least one group formed in that way has two elements
-        // this.isStackable will be true.
-        var groupMemberCounts = data.labels.map(function () {
-            return {};
-        });
-        this.isStackable = false;
-        for (var i = 0; i < data.datasets.length; i++) {
-            var dataset = data.datasets[i];
-            var originIndex = dataset.originIndex;
-            if (this.isStackable) {
-                break;
-            }
-            for (var j = 0; j < dataset.data.length; j++) {
-                if (dataset.data[j]) {
-                    if (originIndex in groupMemberCounts[j]) {
-                        this.isStackable = true;
-                        break;
-                    } else {
-                        groupMemberCounts[j][originIndex] = 1;
-                    }
-                }
-            }
-        }
         data.datasets.forEach(function (dataset, index) {
             // used when stacked
-            dataset.stack = self.isStackable && self.state.stacked ? self.state.origins[dataset.originIndex] : undefined;
+            dataset.stack = self.state.stacked ? self.state.origins[dataset.originIndex] : undefined;
             // set dataset color
             var color = self._getColor(index);
             dataset.backgroundColor = color;

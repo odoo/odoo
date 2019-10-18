@@ -65,7 +65,7 @@
                             </t>
                             <span class="payment_option_name">
                               <t t-esc="acq.display_as or acq.name"/>
-                              <div t-if="acq.state == 'test'" class="badge-pill badge-warning float-right">
+                              <div t-if="acq.state == 'test'" class="badge-pill badge-warning float-right" style="margin-left:5px">
                                 Test Mode
                               </div>
                             </span>

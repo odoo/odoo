@@ -1,22 +1,40 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import odoo
+from lxml.html import document_fromstring
+
 import odoo.tests
 
 
-@odoo.tests.tagged('-at_install', 'post_install')
-class TestBaseUrl(odoo.tests.HttpCase):
-    def test_base_url(self):
-        ICP = self.env['ir.config_parameter']
-        Website = self.env['website']
+class TestUrlCommon(odoo.tests.HttpCase):
+    def setUp(self):
+        super(TestUrlCommon, self).setUp()
+        self.domain = 'http://' + odoo.tests.HOST
+        self.website = self.env['website'].create({
+            'name': 'test base url',
+            'domain': self.domain,
+        })
 
+        lang_fr = self.env.ref('base.lang_fr')
+        lang_fr.write({'active': True})
+        self.website.language_ids = self.env.ref('base.lang_en') + lang_fr
+        self.website.default_lang_id = self.env.ref('base.lang_en')
+
+    def _assertCanonical(self, url, canonical_url):
+        res = self.url_open(url)
+        canonical_link = document_fromstring(res.content).xpath("/html/head/link[@rel='canonical']")
+        self.assertEqual(len(canonical_link), 1)
+        self.assertEqual(canonical_link[0].attrib["href"], canonical_url)
+
+
+@odoo.tests.tagged('-at_install', 'post_install')
+class TestBaseUrl(TestUrlCommon):
+    def test_01_base_url(self):
+        ICP = self.env['ir.config_parameter']
         icp_base_url = ICP.sudo().get_param('web.base.url')
-        domain = 'https://www.domain.jke'
-        website = Website.create({'name': 'test base url', 'domain': domain})
 
         # Test URL is correct for the website itself when the domain is set
-        self.assertEqual(website.get_base_url(), domain)
+        self.assertEqual(self.website.get_base_url(), self.domain)
 
         # Test URL is correct for a model without website_id
         without_website_id = self.env['ir.attachment'].create({'name': 'test base url'})
@@ -30,12 +48,19 @@ class TestBaseUrl(odoo.tests.HttpCase):
         self.assertEqual(with_website_id.get_base_url(), icp_base_url)
 
         # ...when the website is correctly set
-        with_website_id.website_id = website
-        self.assertEqual(with_website_id.get_base_url(), domain)
+        with_website_id.website_id = self.website
+        self.assertEqual(with_website_id.get_base_url(), self.domain)
 
         # ...when the set website doesn't have a domain
-        website.domain = False
+        self.website.domain = False
         self.assertEqual(with_website_id.get_base_url(), icp_base_url)
 
         # Test URL is correct for the website itself when no domain is set
-        self.assertEqual(website.get_base_url(), icp_base_url)
+        self.assertEqual(self.website.get_base_url(), icp_base_url)
+
+    def test_02_canonical_url(self):
+        self._assertCanonical('/', self.domain + '/')
+        self._assertCanonical('/?debug=1', self.domain + '/')
+        self._assertCanonical('/a-page', self.domain + '/a-page')
+        self._assertCanonical('/en_US', self.domain + '/')
+        self._assertCanonical('/fr_FR', self.domain + '/fr/')

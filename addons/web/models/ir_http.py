@@ -40,7 +40,7 @@ class Http(models.AbstractModel):
         }
 
         menu_json_utf8 = json.dumps(request.env['ir.ui.menu'].load_menus(request.session.debug), default=ustr, sort_keys=True).encode()
-        translations_json_utf8 = json.dumps(translation_cache,  sort_keys=True).encode()
+        translations_json_utf8 = json.dumps(translation_cache, sort_keys=True).encode()
 
         return {
             "uid": request.session.uid,
@@ -62,19 +62,19 @@ class Http(models.AbstractModel):
             "show_effect": True,
             "display_switch_company_menu": user.has_group('base.group_multi_company') and len(user.company_ids) > 1,
             "cache_hashes": {
-                "load_menus": hashlib.sha1(menu_json_utf8).hexdigest(),
+                "load_menus": hashlib.sha512(menu_json_utf8).hexdigest()[:64],  # sha512/256
                 "qweb": qweb_checksum,
-                "translations": hashlib.sha1(translations_json_utf8).hexdigest(),
+                "translations": hashlib.sha512(translations_json_utf8).hexdigest()[:64],  # sha512/256
             },
         }
 
     @api.model
     def get_frontend_session_info(self):
         return {
-            'is_admin': self.env.user._is_admin(),
-            'is_system': self.env.user._is_system(),
-            'is_website_user': self.env.user._is_public(),
-            'user_id': self.env.user.id,
+            'is_admin': request.session.uid and self.env.user._is_admin() or False,
+            'is_system': request.session.uid and self.env.user._is_system() or False,
+            'is_website_user': request.session.uid and self.env.user._is_public() or False,
+            'user_id': request.session.uid and self.env.user.id or False,
             'is_frontend': True,
         }
 

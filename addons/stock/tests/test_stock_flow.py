@@ -12,6 +12,7 @@ class TestStockFlow(TestStockCommon):
         cls.partner_company2 = cls.env['res.partner'].create({
             'name': 'My Company (Chicago)-demo',
             'email': 'chicago@yourcompany.com',
+            'company_id': False,
             })
         cls.company = cls.env['res.company'].create({
             'currency_id': cls.env.ref('base.USD').id,
@@ -93,7 +94,7 @@ class TestStockFlow(TestStockCommon):
         move_b.move_line_ids.qty_done = 5
         move_c.move_line_ids.qty_done = 5
         move_d.move_line_ids.qty_done = 5
-        lot2_productC = LotObj.create({'name': 'C Lot 2', 'product_id': self.productC.id})
+        lot2_productC = LotObj.create({'name': 'C Lot 2', 'product_id': self.productC.id, 'company_id': self.env.company.id})
         self.StockPackObj.create({
             'product_id': self.productC.id,
             'qty_done': 2,
@@ -311,12 +312,12 @@ class TestStockFlow(TestStockCommon):
         # Back Order of Incoming shipment
         # -----------------------------------------------------------------------
 
-        lot3_productC = LotObj.create({'name': 'Lot 3', 'product_id': self.productC.id})
-        lot4_productC = LotObj.create({'name': 'Lot 4', 'product_id': self.productC.id})
-        lot5_productC = LotObj.create({'name': 'Lot 5', 'product_id': self.productC.id})
-        lot6_productC = LotObj.create({'name': 'Lot 6', 'product_id': self.productC.id})
-        lot1_productD = LotObj.create({'name': 'Lot 1', 'product_id': self.productD.id})
-        LotObj.create({'name': 'Lot 2', 'product_id': self.productD.id})
+        lot3_productC = LotObj.create({'name': 'Lot 3', 'product_id': self.productC.id, 'company_id': self.env.company.id})
+        lot4_productC = LotObj.create({'name': 'Lot 4', 'product_id': self.productC.id, 'company_id': self.env.company.id})
+        lot5_productC = LotObj.create({'name': 'Lot 5', 'product_id': self.productC.id, 'company_id': self.env.company.id})
+        lot6_productC = LotObj.create({'name': 'Lot 6', 'product_id': self.productC.id, 'company_id': self.env.company.id})
+        lot1_productD = LotObj.create({'name': 'Lot 1', 'product_id': self.productD.id, 'company_id': self.env.company.id})
+        LotObj.create({'name': 'Lot 2', 'product_id': self.productD.id, 'company_id': self.env.company.id})
 
         # Confirm back order of incoming shipment.
         back_order_in.action_confirm()
@@ -1159,7 +1160,7 @@ class TestStockFlow(TestStockCommon):
         lot_obj = self.env['stock.production.lot']
         pack1 = pack_obj.create({'name': 'PACK00TEST1'})
         pack_obj.create({'name': 'PACK00TEST2'})
-        lot1 = lot_obj.create({'name': 'Lot001', 'product_id': lotproduct.id})
+        lot1 = lot_obj.create({'name': 'Lot001', 'product_id': lotproduct.id, 'company_id': self.env.company.id})
         move = self.MoveObj.search([('product_id', '=', productKG.id), ('inventory_id', '=', inventory.id)], limit=1)
         self.assertEqual(len(move), 0, "Partial filter should not create a lines upon prepare")
 
@@ -1245,9 +1246,9 @@ class TestStockFlow(TestStockCommon):
         picking_out.action_confirm()
         picking_out.action_assign()
         pack_opt = self.StockPackObj.search([('picking_id', '=', picking_out.id)], limit=1)
-        lot1 = self.LotObj.create({'product_id': self.productA.id, 'name': 'LOT1'})
-        lot2 = self.LotObj.create({'product_id': self.productA.id, 'name': 'LOT2'})
-        lot3 = self.LotObj.create({'product_id': self.productA.id, 'name': 'LOT3'})
+        lot1 = self.LotObj.create({'product_id': self.productA.id, 'name': 'LOT1', 'company_id': self.env.company.id})
+        lot2 = self.LotObj.create({'product_id': self.productA.id, 'name': 'LOT2', 'company_id': self.env.company.id})
+        lot3 = self.LotObj.create({'product_id': self.productA.id, 'name': 'LOT3', 'company_id': self.env.company.id})
 
         pack_opt.write({'lot_id': lot1.id, 'qty_done': 1.0})
         self.StockPackObj.create({'product_id': self.productA.id, 'move_id': move_out.id, 'product_uom_id': move_out.product_uom.id, 'lot_id': lot2.id, 'qty_done': 1.0, 'location_id': self.stock_location, 'location_dest_id': self.customer_location})
@@ -1259,6 +1260,7 @@ class TestStockFlow(TestStockCommon):
 
     def test_40_pack_in_pack(self):
         """ Put a pack in pack"""
+        self.env['stock.picking.type'].browse(self.picking_type_in).show_reserved = True
         picking_out = self.PickingObj.create({
             'picking_type_id': self.picking_type_out,
             'location_id': self.pack_location,
@@ -1540,7 +1542,7 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.customer_location})
         # validate this delivery order, it should be in the waiting state
         picking_out.action_assign()
-        self.assertEquals(picking_out.state, "confirmed")
+        self.assertEqual(picking_out.state, "confirmed")
 
         # receive one product in stock
         inventory = self.env['stock.inventory'].create({
@@ -1556,9 +1558,9 @@ class TestStockFlow(TestStockCommon):
         inventory.action_validate()
         # recheck availability of the delivery order, it should be assigned
         picking_out.action_assign()
-        self.assertEquals(len(picking_out.move_lines), 1.0)
-        self.assertEquals(picking_out.move_lines.product_qty, 2.0)
-        self.assertEquals(picking_out.state, "assigned")
+        self.assertEqual(len(picking_out.move_lines), 1.0)
+        self.assertEqual(picking_out.move_lines.product_qty, 2.0)
+        self.assertEqual(picking_out.state, "assigned")
 
     def test_71_picking_state_all_at_once_force_assign(self):
         """ This test will check that the state of the picking is correctly computed according
@@ -1588,7 +1590,7 @@ class TestStockFlow(TestStockCommon):
 
         # validate this delivery order, it should be in the waiting state
         picking_out.action_assign()
-        self.assertEquals(picking_out.state, "confirmed")
+        self.assertEqual(picking_out.state, "confirmed")
 
     def test_72_picking_state_partial_reserve(self):
         """ This test will check that the state of the picking is correctly computed according
@@ -1631,7 +1633,7 @@ class TestStockFlow(TestStockCommon):
 
         # validate this delivery order, it should be in partially available
         picking_out.action_assign()
-        self.assertEquals(picking_out.state, "assigned")
+        self.assertEqual(picking_out.state, "assigned")
 
         # receive one product in stock
         inventory = self.env['stock.inventory'].create({
@@ -1648,7 +1650,7 @@ class TestStockFlow(TestStockCommon):
 
         # recheck availability of the delivery order, it should be assigned
         picking_out.action_assign()
-        self.assertEquals(picking_out.state, "assigned")
+        self.assertEqual(picking_out.state, "assigned")
 
     def test_73_picking_state_partial_force_assign(self):
         """ This test will check that the state of the picking is correctly computed according
@@ -1677,7 +1679,7 @@ class TestStockFlow(TestStockCommon):
 
         # validate this delivery order, it should be in the waiting state
         picking_out.action_assign()
-        self.assertEquals(picking_out.state, "confirmed")
+        self.assertEqual(picking_out.state, "confirmed")
 
     def test_74_move_state_waiting_mto(self):
         """ This test will check that when a move is unreserved, its state changes to 'waiting' if
@@ -1732,9 +1734,9 @@ class TestStockFlow(TestStockCommon):
         move_with_ancestors._do_unreserve()
         other_move._do_unreserve()
 
-        self.assertEquals(move_mto_alone.state, "draft")
-        self.assertEquals(move_with_ancestors.state, "waiting")
-        self.assertEquals(other_move.state, "confirmed")
+        self.assertEqual(move_mto_alone.state, "draft")
+        self.assertEqual(move_with_ancestors.state, "waiting")
+        self.assertEqual(other_move.state, "confirmed")
 
     def test_80_partial_picking_without_backorder(self):
         """ This test will create a picking with an initial demand for a product
@@ -1767,19 +1769,19 @@ class TestStockFlow(TestStockCommon):
         self.assertFalse(picking.backorder_id)
 
         # Checking that the original move is still in the same picking
-        self.assertEquals(move_a.picking_id.id, picking.id)
+        self.assertEqual(move_a.picking_id.id, picking.id)
 
         move_lines = picking.move_lines
         move_done = move_lines.browse(move_a.id)
         move_canceled = move_lines - move_done
 
         # Checking that the original move was set to done
-        self.assertEquals(move_done.product_uom_qty, 4)
-        self.assertEquals(move_done.state, 'done')
+        self.assertEqual(move_done.product_uom_qty, 4)
+        self.assertEqual(move_done.state, 'done')
 
         # Checking that the new move created was canceled
-        self.assertEquals(move_canceled.product_uom_qty, 6)
-        self.assertEquals(move_canceled.state, 'cancel')
+        self.assertEqual(move_canceled.product_uom_qty, 6)
+        self.assertEqual(move_canceled.state, 'cancel')
 
         # Checking that the canceled move is in the original picking
         self.assertIn(move_canceled.id, picking.move_lines.mapped('id'))
@@ -1966,11 +1968,11 @@ class TestStockFlow(TestStockCommon):
         f.scheduled_date = fields.Datetime.now()
         picking = f.save()
 
-        self.assertEquals(f.state, 'draft')
+        self.assertEqual(f.state, 'draft')
         picking.action_confirm()
 
         f = Form(picking, view='stock.view_picking_form')
         f.scheduled_date = fields.Datetime.now()
         picking = f.save()
 
-        self.assertEquals(f.state, 'confirmed')
+        self.assertEqual(f.state, 'confirmed')

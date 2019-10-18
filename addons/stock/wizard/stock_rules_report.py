@@ -17,7 +17,7 @@ class StockRulesReport(models.TransientModel):
     @api.model
     def default_get(self, fields):
         res = super(StockRulesReport, self).default_get(fields)
-        product_tmpl_id = False
+        product_tmpl_id = self.env['product.template']
         if 'product_id' in fields:
             if self.env.context.get('default_product_id'):
                 product_id = self.env['product.product'].browse(self.env.context['default_product_id'])
@@ -31,7 +31,8 @@ class StockRulesReport(models.TransientModel):
                 if len(product_tmpl_id.product_variant_ids) > 1:
                     res['product_has_variants'] = True
         if 'warehouse_ids' in fields:
-            warehouse_id = self.env['stock.warehouse'].search([], limit=1).id
+            company = product_tmpl_id.company_id or self.env.company
+            warehouse_id = self.env['stock.warehouse'].search([('company_id', '=', company.id)], limit=1).id
             res['warehouse_ids'] = [(6, 0, [warehouse_id])]
         return res
 

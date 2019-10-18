@@ -78,15 +78,40 @@ def _message_post_helper(res_model, res_id, message, token='', _hash=False, pid=
     elif _hash and pid:
         author_id = pid
 
-    return record.with_context(mail_create_nosubscribe=nosubscribe).message_post(
-        body=message, message_type=kw.pop('message_type', "comment"),
-        subtype=kw.pop('subtype', "mt_comment"), author_id=author_id, **kw)
+    email_from = None
+    if author_id and 'email_from' not in kw:
+        partner = request.env['res.partner'].sudo().browse(author_id)
+        email_from = partner.email_formatted if partner.email else None
+
+    message_post_args = dict(
+        body=message,
+        message_type=kw.pop('message_type', "comment"),
+        subtype=kw.pop('subtype', "mt_comment"),
+        author_id=author_id,
+        **kw
+    )
+
+    # This is necessary as mail.message checks the presence
+    # of the key to compute its default email from
+    if email_from:
+        message_post_args['email_from'] = email_from
+
+    return record.with_context(mail_create_nosubscribe=nosubscribe).message_post(**message_post_args)
 
 
 class PortalChatter(http.Controller):
 
     def _portal_post_filter_params(self):
         return ['token', 'hash', 'pid']
+
+    def _portal_post_check_attachments(self, attachment_ids, attachment_tokens):
+        if len(attachment_tokens) != len(attachment_ids):
+            raise UserError(_("An access token must be provided for each attachment."))
+        for (attachment_id, access_token) in zip(attachment_ids, attachment_tokens):
+            try:
+                CustomerPortal._document_check_access(self, 'ir.attachment', attachment_id, access_token)
+            except (AccessError, MissingError):
+                raise UserError(_("The attachment %s does not exist or you do not have the rights to access it.") % attachment_id)
 
     @http.route(['/mail/chatter_post'], type='http', methods=['POST'], auth='public', website=True)
     def portal_chatter_post(self, res_model, res_id, message, redirect=None, attachment_ids='', attachment_tokens='', **kw):
@@ -103,13 +128,7 @@ class PortalChatter(http.Controller):
 
         attachment_ids = [int(attachment_id) for attachment_id in attachment_ids.split(',') if attachment_id]
         attachment_tokens = [attachment_token for attachment_token in attachment_tokens.split(',') if attachment_token]
-        if len(attachment_tokens) != len(attachment_ids):
-            raise UserError(_("An access token must be provided for each attachment."))
-        for (attachment_id, access_token) in zip(attachment_ids, attachment_tokens):
-            try:
-                CustomerPortal._document_check_access(self, 'ir.attachment', attachment_id, access_token)
-            except (AccessError, MissingError):
-                raise UserError(_("The attachment %s does not exist or you do not have the rights to access it.") % attachment_id)
+        self._portal_post_check_attachments(attachment_ids, attachment_tokens)
 
         if message or attachment_ids:
             # message is received in plaintext and saved in html

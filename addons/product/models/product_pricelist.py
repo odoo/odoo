@@ -5,6 +5,7 @@ from itertools import chain
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools.misc import get_lang
 
 
 class Pricelist(models.Model):
@@ -40,7 +41,7 @@ class Pricelist(models.Model):
         if name and operator == '=' and not args:
             # search on the name of the pricelist and its currency, opposite of name_get(),
             # Used by the magic context filter in the product search view.
-            query_args = {'name': name, 'limit': limit, 'lang': self._context.get('lang') or 'en_US'}
+            query_args = {'name': name, 'limit': limit, 'lang': get_lang(self.env).code}
             query = """SELECT p.id
                        FROM ((
                                 SELECT pr.id, pr.name
@@ -71,7 +72,7 @@ class Pricelist(models.Model):
             # regular search() to apply ACLs - may limit results below limit in some cases
             pricelist_ids = self._search([('id', 'in', ids)], limit=limit, access_rights_uid=name_get_uid)
             if pricelist_ids:
-                return self.browse(pricelist_ids).name_get()
+                return models.lazy_name_get(self.browse(pricelist_ids).with_user(name_get_uid))
         return super(Pricelist, self)._name_search(name, args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
     def _compute_price_rule_multi(self, products_qty_partner, date=False, uom_id=False):
@@ -121,7 +122,7 @@ class Pricelist(models.Model):
         """ Low-level method - Mono pricelist, multi products
         Returns: dict{product_id: (price, suitable_rule) for the given pricelist}
 
-        If date in context: Date of the pricelist (%Y-%m-%d)
+        Date in context can be a date, datetime, ...
 
             :param products_qty_partner: list of typles products, quantity, partner
             :param datetime date: validity date
@@ -129,7 +130,8 @@ class Pricelist(models.Model):
         """
         self.ensure_one()
         if not date:
-            date = self._context.get('date') or fields.Date.context_today(self)
+            date = self._context.get('date') or fields.Date.today()
+        date = fields.Date.to_date(date)  # boundary conditions differ if we have a datetime
         if not uom_id and self._context.get('uom'):
             uom_id = self._context['uom']
         if uom_id:
@@ -305,10 +307,10 @@ class Pricelist(models.Model):
             list(zip(**products_by_qty_by_partner)))
 
     def _get_partner_pricelist_multi_search_domain_hook(self):
-        return []
+        return [('active', '=', True)]
 
     def _get_partner_pricelist_multi_filter_hook(self):
-        return self
+        return self.filtered('active')
 
     def _get_partner_pricelist_multi(self, partner_ids, company_id=None):
         """ Retrieve the applicable pricelist for given partners in a given company.

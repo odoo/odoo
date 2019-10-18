@@ -415,7 +415,7 @@ function parseDate(value, field, options) {
     if (options && options.isUTC) {
         date = moment.utc(value);
     } else {
-        date = moment.utc(value, [datePattern, datePatternWoZero, moment.ISO_8601], true);
+        date = moment.utc(value, [datePattern, datePatternWoZero, moment.ISO_8601]);
     }
     if (date.isValid()) {
         if (date.year() === 0) {
@@ -459,7 +459,7 @@ function parseDateTime(value, field, options) {
         // phatomjs crash if we don't use this format
         datetime = moment.utc(value.replace(' ', 'T') + 'Z');
     } else {
-        datetime = moment.utc(value, [pattern1, pattern2, moment.ISO_8601], true);
+        datetime = moment.utc(value, [pattern1, pattern2, moment.ISO_8601]);
         if (options && options.timezone) {
             datetime.add(-session.getTZOffset(datetime), 'minutes');
         }
@@ -662,6 +662,7 @@ return {
         integer: formatInteger,
         many2many: formatX2Many,
         many2one: formatMany2one,
+        many2one_reference: formatInteger,
         monetary: formatMonetary,
         one2many: formatX2Many,
         percentage: formatPercentage,

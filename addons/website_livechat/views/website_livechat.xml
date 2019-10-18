@@ -88,9 +88,9 @@
                                         <h3>Statistics</h3>
                                         <div class="row">
                                             <div class="col-lg-5">
-                                                <div class="card bg-success text-white" t-attf-style="height: #{150 + int(percentage['great'])}px;">
+                                                <div class="card bg-success text-white" t-attf-style="height: #{160 + int(percentage['great'])}px;">
                                                     <div class="card-body text-center">
-                                                        <img src="/rating/static/src/img/rating_10_white.png" style="height:40px" alt="Happy face"/>
+                                                        <img src="/rating/static/src/img/rating_10.png" style="height:40px" alt="Happy face"/>
                                                     </div>
                                                     <div class="card-body text-center">
                                                         <h2 style="margin: 0">
@@ -103,9 +103,9 @@
                                                 </div>
                                             </div>
                                             <div class="col-lg-4">
-                                                <div class="card bg-warning text-white" t-attf-style="height: #{150 + int(percentage['okay'])}px;">
+                                                <div class="card bg-warning text-white" t-attf-style="height: #{160 + int(percentage['okay'])}px;">
                                                     <div class="card-body text-center">
-                                                        <img src="/rating/static/src/img/rating_5_white.png" style="height:40px" alt="Neutral face"/>
+                                                        <img src="/rating/static/src/img/rating_5.png" style="height:40px" alt="Neutral face"/>
                                                     </div>
                                                     <div class="card-body text-center">
                                                         <h2 style="margin: 0">
@@ -118,9 +118,9 @@
                                                 </div>
                                             </div>
                                             <div class="col-lg-3">
-                                                <div class="card bg-danger text-white" t-attf-style="height: #{150 + int(percentage['bad'])}px;">
+                                                <div class="card bg-danger text-white" t-attf-style="height: #{160 + int(percentage['bad'])}px;">
                                                     <div class="card-body text-center">
-                                                        <img src="/rating/static/src/img/rating_1_white.png" style="height:40px" alt="Sad face"/>
+                                                        <img src="/rating/static/src/img/rating_1.png" style="height:40px" alt="Sad face"/>
                                                     </div>
                                                     <div class="card-body text-center">
                                                         <h2 style="margin: 0">
@@ -150,23 +150,14 @@
                                 </div>
                             </t>
                             <t t-if="len(ratings) == 0">
-                                <h4 style="text-align:center">There is no rating for this channel for now.</h4>
+                                <h4 style="text-align:center">There are no ratings for this channel for now.</h4>
                             </t>
                         </div>
                         <div class="col-lg-4 mb32">
                             <h3>The Team</h3>
                             <t t-foreach="team" t-as="user">
                                 <div class="media mt-3">
-                                    <t t-if="user.image_64">
-                                        <t t-if="user.livechat_username">
-                                            <img t-att-src="user.image_64 and image_data_uri(user.image_64) or '/web/static/src/img/placeholder.png'"
-                                            class="rounded o_livechat_operator_avatar" t-att-alt="user.livechat_username"/>
-                                        </t>
-                                        <t t-else="">
-                                            <img t-att-src="user.image_64 and image_data_uri(user.image_64) or '/web/static/src/img/placeholder.png'"
-                                            class="rounded o_livechat_operator_avatar" t-att-alt="user.name"/>
-                                        </t>
-                                    </t>
+                                    <img t-if="user.image_128" t-att-src="image_data_uri(user.image_128)" class="o_image_64_cover rounded o_livechat_operator_avatar" t-att-alt="user.livechat_username or user.name"/>
                                     <div class="media-body">
                                         <h5>
                                             <t t-if="user.livechat_username">
@@ -217,7 +208,7 @@
                         <div class="row mt32 mb32">
                             <t t-if="not len(channels)">
                                 <div class="col-lg-6 offset-lg-3">
-                                    There is no public livechat channel to show.
+                                    There are no public livechat channels to show.
                                 </div>
                             </t>
                             <t t-if="len(channels)">
@@ -225,7 +216,7 @@
                                     <t t-foreach="channels" t-as="channel">
                                         <div t-attf-class="media#{' mt-3' if channel_index else ''}">
                                             <a t-attf-href="/livechat/channel/#{ slug(channel)}">
-                                                <img t-att-src="channel.image_64 and image_data_uri(channel.image_64) or '/web/static/src/img/placeholder.png'" t-att-alt="channel.name" />
+                                                <img t-att-src="channel.image_128 and image_data_uri(channel.image_128) or '/web/static/src/img/placeholder.png'" t-att-alt="channel.name" class="o_image_64_cover"/>
                                             </a>
                                             <div class="media-body">
                                                 <h4><t t-esc="channel.name"/></h4>

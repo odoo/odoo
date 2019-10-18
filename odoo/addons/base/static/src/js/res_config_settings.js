@@ -353,6 +353,9 @@ var BaseSettingRenderer = FormRenderer.extend({
 });
 
 var BaseSettingController = FormController.extend({
+    custom_events: _.extend({}, FormController.prototype.custom_events, {
+        button_clicked: '_onButtonClicked',
+    }),
     init: function () {
         this._super.apply(this, arguments);
         this.disableAutofocus = true;
@@ -367,6 +370,28 @@ var BaseSettingController = FormController.extend({
     willRestore: function () {
         this.mode = 'edit';
     },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onButtonClicked: function (ev) {
+        var self = this;
+        if (ev.data.attrs.name !== 'execute' && ev.data.attrs.name !== 'cancel') {
+            var recordID = ev.data.recordID;
+            var _super = this._super;
+            var args = arguments;
+            this._discardChanges(recordID).then(function () {
+                _super.apply(self, args);
+            });
+        } else {
+            this._super.apply(this, arguments);
+        }
+    },
+
 });
 
 var BaseSettingsModel = BasicModel.extend({

@@ -17,7 +17,7 @@ class BaseImportModule(models.TransientModel):
     def import_module(self):
         self.ensure_one()
         IrModule = self.env['ir.module.module']
-        zip_data = base64.decodestring(self.module_file)
+        zip_data = base64.decodebytes(self.module_file)
         fp = BytesIO()
         fp.write(zip_data)
         res = IrModule.import_zipfile(fp, force=self.force)

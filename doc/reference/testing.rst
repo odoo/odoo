@@ -43,12 +43,6 @@ and ``__init__.py`` contains::
     test modules which are not imported from ``tests/__init__.py`` will not be
     run
 
-.. versionchanged:: 8.0
-
-    previously, the test runner would only run modules added to two lists
-    ``fast_suite`` and ``checks`` in ``tests/__init__.py``. In 8.0 it will
-    run all imported modules
-
 The test runner will simply run any test case, as described in the official
 `unittest documentation`_, but Odoo provides a number of utilities and helpers
 related to testing Odoo content (modules, mainly):
@@ -108,10 +102,7 @@ Tests are automatically run when installing or updating modules if
 :option:`--test-enable <odoo-bin --test-enable>` was enabled when starting the
 Odoo server.
 
-As of Odoo 8, running tests outside of the install/update cycle is not
-supported.
-
-.. _unittest documentation: https://docs.python.org/2/library/unittest.html
+.. _unittest documentation: https://docs.python.org/3/library/unittest.html
 
 Test selection
 --------------
@@ -528,7 +519,7 @@ Two new command line arguments were added since Odoo 13.0 to control this behavi
 :option:`--screenshots <odoo-bin --screenshots>` and :option:`--screencasts <odoo-bin --screencasts>`
 
 
-.. _qunit: http://qunitjs.com/
+.. _qunit: https://qunitjs.com/
 .. _qunit_config.js: https://github.com/odoo/odoo/blob/51ee0c3cb59810449a60dae0b086b49b1ed6f946/addons/web/static/tests/helpers/qunit_config.js#L49
 .. _web.js_tests_assets: https://github.com/odoo/odoo/blob/51ee0c3cb59810449a60dae0b086b49b1ed6f946/addons/web/views/webclient_templates.xml#L427
 .. _web.qunit_suite: https://github.com/odoo/odoo/blob/51ee0c3cb59810449a60dae0b086b49b1ed6f946/addons/web/views/webclient_templates.xml#L509

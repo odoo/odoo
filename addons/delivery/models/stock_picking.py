@@ -77,9 +77,9 @@ class StockPicking(models.Model):
 
     carrier_price = fields.Float(string="Shipping Cost")
     delivery_type = fields.Selection(related='carrier_id.delivery_type', readonly=True)
-    carrier_id = fields.Many2one("delivery.carrier", string="Carrier", domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    carrier_id = fields.Many2one("delivery.carrier", string="Carrier", check_company=True)
     volume = fields.Float(copy=False)
-    weight = fields.Float(compute='_cal_weight', digits='Stock Weight', store=True, help="Total weight of the products in the picking.")
+    weight = fields.Float(compute='_cal_weight', digits='Stock Weight', store=True, help="Total weight of the products in the picking.", compute_sudo=True)
     carrier_tracking_ref = fields.Char(string='Tracking Reference', copy=False)
     carrier_tracking_url = fields.Char(string='Tracking URL', compute='_compute_carrier_tracking_url')
     weight_uom_name = fields.Char(string='Weight unit of measure label', compute='_compute_weight_uom_name', readonly=True, default=_get_default_weight_uom)
@@ -153,14 +153,13 @@ class StockPicking(models.Model):
         res = self.carrier_id.send_shipping(self)[0]
         if self.carrier_id.free_over and self.sale_id and self.sale_id._compute_amount_total_without_delivery() >= self.carrier_id.amount:
             res['exact_price'] = 0.0
-        self.carrier_price = res['exact_price']
+        self.carrier_price = res['exact_price'] * (1.0 + (self.carrier_id.margin / 100.0))
         if res['tracking_number']:
             self.carrier_tracking_ref = res['tracking_number']
         order_currency = self.sale_id.currency_id or self.company_id.currency_id
         msg = _("Shipment sent to carrier %s for shipping with tracking number %s<br/>Cost: %.2f %s") % (self.carrier_id.name, self.carrier_tracking_ref, self.carrier_price, order_currency.name)
         self.message_post(body=msg)
         self._add_delivery_cost_to_so()
-
 
     def print_return_label(self):
         self.ensure_one()
@@ -172,7 +171,7 @@ class StockPicking(models.Model):
         if sale_order and self.carrier_id.invoice_policy == 'real' and self.carrier_price:
             delivery_lines = sale_order.order_line.filtered(lambda l: l.is_delivery and l.currency_id.is_zero(l.price_unit) and l.product_id == self.carrier_id.product_id)
             if not delivery_lines:
-                sale_order._create_delivery_line(self.carrier_id, self.carrier_price, price_unit_in_description=False)
+                sale_order._create_delivery_line(self.carrier_id, self.carrier_price)
             else:
                 delivery_line = delivery_lines[0]
                 delivery_line[0].write({

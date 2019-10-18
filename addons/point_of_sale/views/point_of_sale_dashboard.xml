@@ -118,12 +118,10 @@
                                 </div>
                                 <div style="text-align:right;" t-if="record.current_user_id.value">
                                     <img
-                                        class="oe_kanban_avatar"
-                                        t-att-src="kanban_image('res.users', 'image_64', record.current_user_id.raw_value)"
+                                        class="oe_kanban_avatar o_image_24_cover"
+                                        t-att-src="kanban_image('res.users', 'image_128', record.current_user_id.raw_value)"
                                         t-att-title="record.current_user_id.value"
                                         t-att-alt="record.current_user_id.value"
-                                        width="24"
-                                        height="24"
                                     />
                                 </div>
                             </div><div class="container o_kanban_card_manage_pane dropdown-menu" role="menu">

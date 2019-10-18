@@ -138,7 +138,7 @@ class Message(models.Model):
 
     @api.constrains('author', 'discussion')
     def _check_author(self):
-        for message in self:
+        for message in self.with_context(active_test=False):
             if message.discussion and message.author not in message.discussion.participants:
                 raise ValidationError(_("Author must be among the discussion participants."))
 
@@ -250,6 +250,7 @@ class MultiLine(models.Model):
 class MultiLine2(models.Model):
     _name = 'test_new_api.multi.line2'
     _inherit = 'test_new_api.multi.line'
+    _description = 'Test New API Multi Line 2'
 
 
 class MultiTag(models.Model):
@@ -373,8 +374,8 @@ class Related(models.Model):
     related_related_name = fields.Char(related='related_name', string='A related on a related on Name', readonly=False)
 
     message = fields.Many2one('test_new_api.message')
-    message_name = fields.Text(related="message.body", related_sudo=False, string='Message Body', readonly=False)
-    message_currency = fields.Many2one(related="message.author", string='Message Author', readonly=False)
+    message_name = fields.Text(related="message.body", related_sudo=False, string='Message Body')
+    message_currency = fields.Many2one(related="message.author", string='Message Author')
 
 class ComputeProtected(models.Model):
     _name = 'test_new_api.compute.protected'
@@ -495,6 +496,27 @@ class ComputeCascade(models.Model):
             record.baz = "<%s>" % (record.bar or "")
 
 
+class ComputeOnchange(models.Model):
+    _name = 'test_new_api.compute.onchange'
+    _description = "Compute method as an onchange"
+
+    active = fields.Boolean()
+    foo = fields.Char()
+    bar = fields.Char(compute='_compute_bar', store=True)
+    baz = fields.Char(compute='_compute_baz', store=True, readonly=False)
+
+    @api.depends('foo')
+    def _compute_bar(self):
+        for record in self:
+            record.bar = record.foo
+
+    @api.depends('active', 'foo')
+    def _compute_baz(self):
+        for record in self:
+            if record.active:
+                record.baz = record.foo
+
+
 class ModelImage(models.Model):
     _name = 'test_new_api.model_image'
     _description = 'Test Image field'
@@ -573,6 +595,14 @@ class RequiredM2O(models.Model):
     bar = fields.Many2one('res.country', required=True)
 
 
+class RequiredM2OTransient(models.TransientModel):
+    _name = 'test_new_api.req_m2o_transient'
+    _description = 'Transient Model with Required Many2one'
+
+    foo = fields.Many2one('res.currency', required=True, ondelete='restrict')
+    bar = fields.Many2one('res.country', required=True)
+
+
 class Attachment(models.Model):
     _name = 'test_new_api.attachment'
     _description = 'Attachment'
@@ -587,7 +617,7 @@ class Attachment(models.Model):
             rec.name = self.env[rec.res_model].browse(rec.res_id).display_name
 
     # DLE P55: `test_cache_invalidation`
-    def modified(self, fnames, modified=None, create=False):
+    def modified(self, fnames, create=False):
         if not self:
             return
         comodel = self.env[self.res_model]
@@ -596,11 +626,7 @@ class Attachment(models.Model):
             record = comodel.browse(self.res_id)
             self.env.cache.invalidate([(field, record._ids)])
             record.modified(['attachment_ids'])
-            if modified is None:
-                modified = {field: record}
-            else:
-                modified[field] = modified.get(field, record) | record
-        return super(Attachment, self).modified(fnames, modified=modified)
+        return super(Attachment, self).modified(fnames, create)
 
 
 class AttachmentHost(models.Model):
@@ -637,3 +663,87 @@ class ModelB(models.Model):
     name = fields.Char()
     a_restricted_a_ids = fields.Many2many('test_new_api.model_a', relation='rel_model_a_model_b_1', ondelete='restrict')
     b_restricted_a_ids = fields.Many2many('test_new_api.model_a', relation='rel_model_a_model_b_2')
+
+
+class ModelParent(models.Model):
+    _name = 'test_new_api.model_parent'
+    _description = 'Model Multicompany parent'
+
+    name = fields.Char()
+    company_id = fields.Many2one('res.company', required=True)
+
+
+class ModelChild(models.Model):
+    _name = 'test_new_api.model_child'
+    _description = 'Model Multicompany child'
+    _check_company_auto = True
+
+    name = fields.Char()
+    company_id = fields.Many2one('res.company', required=True)
+    parent_id = fields.Many2one('test_new_api.model_parent', check_company=True)
+
+
+class ModelChildNoCheck(models.Model):
+    _name = 'test_new_api.model_child_nocheck'
+    _description = 'Model Multicompany child'
+    _check_company_auto = True
+
+    name = fields.Char()
+    company_id = fields.Many2one('res.company', required=True)
+    parent_id = fields.Many2one('test_new_api.model_parent', check_company=False)
+
+
+# model with explicit and stored field 'display_name'
+class Display(models.Model):
+    _name = 'test_new_api.display'
+    _description = 'Model that overrides display_name'
+
+    display_name = fields.Char(compute='_compute_display_name', store=True)
+
+    def _compute_display_name(self):
+        for record in self:
+            record.display_name = 'My id is %s' % (record.id)
+
+
+# abstract model with automatic and non-stored field 'display_name'
+class Mixin(models.AbstractModel):
+    _name = 'test_new_api.mixin'
+    _description = 'Dummy mixin model'
+
+
+# in this model extension, the field 'display_name' should not be inherited from
+# 'test_new_api.mixin'
+class ExtendedDisplay(models.Model):
+    _name = 'test_new_api.display'
+    _inherit = ['test_new_api.mixin', 'test_new_api.display']
+
+
+class ModelActiveField(models.Model):
+    _name = 'test_new_api.model_active_field'
+    _description = 'A model with active field'
+
+    active = fields.Boolean(default=True)
+    parent_id = fields.Many2one('test_new_api.model_active_field')
+    children_ids = fields.One2many('test_new_api.model_active_field', 'parent_id')
+    parent_active = fields.Boolean(string='Active Parent', related='parent_id.active', store=True)
+
+
+class ModelMany2oneReference(models.Model):
+    _name = 'test_new_api.model_many2one_reference'
+    _description = 'dummy m2oref model'
+
+    res_model = fields.Char('Resource Model')
+    res_id = fields.Many2oneReference('Resource ID', model_field='res_model')
+
+
+class InverseM2oRef(models.Model):
+    _name = 'test_new_api.inverse_m2o_ref'
+    _description = 'dummy m2oref inverse model'
+
+    model_ids = fields.One2many('test_new_api.model_many2one_reference', 'res_id', string="Models")
+    model_ids_count = fields.Integer("Count", compute='_compute_model_ids_count')
+
+    @api.depends('model_ids')
+    def _compute_model_ids_count(self):
+        for rec in self:
+            rec.model_ids_count = len(rec.model_ids)

@@ -73,7 +73,7 @@ class WebsiteProfile(http.Controller):
         '/profile/avatar/<int:user_id>',
     ], type='http', auth="public", website=True, sitemap=False)
     def get_user_profile_avatar(self, user_id, field='image_256', width=0, height=0, crop=False, **post):
-        if field not in ('image_64', 'image_128', 'image_256'):
+        if field not in ('image_128', 'image_256'):
             return werkzeug.exceptions.Forbidden()
 
         can_sudo = self._check_avatar_access(user_id, **post)
@@ -137,10 +137,10 @@ class WebsiteProfile(http.Controller):
         }
 
         if 'clear_image' in kwargs:
-            values['image'] = False
+            values['image_1920'] = False
         elif kwargs.get('ufile'):
             image = kwargs.get('ufile').read()
-            values['image'] = base64.b64encode(image)
+            values['image_1920'] = base64.b64encode(image)
 
         if request.uid == user.id:  # the controller allows to edit only its own privacy settings; use partner management for other cases
             values['website_published'] = kwargs.get('website_published') == 'True'

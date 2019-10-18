@@ -105,7 +105,7 @@ var CalendarView = AbstractView.extend({
             };
             if (fields[fieldName].relation) {
                 if (['res.users', 'res.partner', 'hr.employee'].indexOf(fields[fieldName].relation) !== -1) {
-                    filters[fieldName].avatar_field = 'image_64';
+                    filters[fieldName].avatar_field = 'image_128';
                 }
                 filters[fieldName].avatar_model = fields[fieldName].relation;
             }

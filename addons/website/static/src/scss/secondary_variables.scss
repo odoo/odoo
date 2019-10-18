@@ -58,6 +58,13 @@ $o-website-values-palette-number: length($o-website-values-palettes);
     }
 }
 
+// Add odoo unicode support for all fonts
+$-with-support-theme-fonts: ();
+@each $font in $o-theme-fonts {
+    $-with-support-theme-fonts: append($-with-support-theme-fonts, o-add-unicode-support-font($font));
+}
+$o-theme-fonts: $-with-support-theme-fonts;
+
 $o-theme-navbar-logo-height: o-website-value('logo-height') !default;
 $o-theme-font: nth($o-theme-fonts, o-website-value('font-number')) !default;
 $o-theme-headings-font: nth($o-theme-fonts, o-website-value('headings-font-number')) !default;

@@ -4,7 +4,7 @@
 {
     'name' : 'Analytic Accounting',
     'version': '1.1',
-    'category': 'Hidden/Dependency',
+    'category': 'Accounting/Accounting',
     'depends' : ['base', 'mail', 'uom'],
     'description': """
 Module for defining analytic accounting object.

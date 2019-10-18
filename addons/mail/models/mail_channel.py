@@ -5,13 +5,12 @@ import base64
 import logging
 import re
 
-from email.utils import formataddr
 from uuid import uuid4
 
 from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import ormcache
+from odoo.tools import ormcache, formataddr
 
 MODERATION_FIELDS = ['moderation', 'moderator_ids', 'moderation_ids', 'moderation_notify', 'moderation_notify_msg', 'moderation_guidelines', 'moderation_guidelines_msg']
 _logger = logging.getLogger(__name__)
@@ -355,7 +354,7 @@ class Channel(models.Model):
         return moderation_status, email
 
     @api.returns('mail.message', lambda value: value.id)
-    def message_post(self, message_type='notification', **kwargs):
+    def message_post(self, *, message_type='notification', **kwargs):
         moderation_status, email = self._extract_moderation_values(message_type, **kwargs)
         if moderation_status == 'rejected':
             return self.env['mail.message']

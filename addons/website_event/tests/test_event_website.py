@@ -2,6 +2,8 @@ from datetime import datetime, timedelta
 
 from odoo import fields
 from odoo.addons.event.tests.common import TestEventCommon
+from odoo.addons.website.tests.test_base_url import TestUrlCommon
+import odoo.tests
 
 
 class TestEventWebsiteHelper(TestEventCommon):
@@ -35,3 +37,10 @@ class TestEventWebsite(TestEventWebsiteHelper):
         self.assertFalse(self.event_0.menu_id)
         self.event_0.website_menu = True
         self._assert_website_menus(self.event_0)
+
+
+@odoo.tests.tagged('-at_install', 'post_install')
+class TestUrlCanonical(TestUrlCommon):
+    def test_01_canonical_url(self):
+        self._assertCanonical('/event?date=all', self.domain + '/event')
+        self._assertCanonical('/event?date=old', self.domain + '/event?date=old')

@@ -2,9 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import email
+import email.policy
 import socket
 
-from email.utils import formataddr
 from unittest.mock import DEFAULT
 from unittest.mock import patch
 
@@ -15,7 +15,10 @@ from odoo.addons.test_mail.models.test_mail_models import MailTestGateway
 from odoo.addons.test_mail.tests.common import BaseFunctionalTest, MockEmails
 from odoo.addons.test_mail.tests.common import mail_new_test_user
 from odoo.tests import tagged
-from odoo.tools import mute_logger, pycompat
+from odoo.tools import email_split_and_format, mute_logger, pycompat, formataddr
+
+def from_string(text):
+    return email.message_from_string(pycompat.to_text(text), policy=email.policy.SMTP)
 
 
 @tagged('mail_gateway')
@@ -23,17 +26,17 @@ class TestEmailParsing(BaseFunctionalTest, MockEmails):
 
     def test_message_parse_body(self):
         # test pure plaintext
-        plaintext = self.format(test_mail_data.MAIL_TEMPLATE_PLAINTEXT, email_from='Sylvie Lelitre <test.sylvie.lelitre@agrolait.com>')
-        res = self.env['mail.thread'].message_parse(email.message_from_string(pycompat.to_text(plaintext)))
+        plaintext = self.format(test_mail_data.MAIL_TEMPLATE_PLAINTEXT, email_from='"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>')
+        res = self.env['mail.thread'].message_parse(from_string(plaintext))
         self.assertIn('Please call me as soon as possible this afternoon!', res['body'])
 
         # test multipart / text and html -> html has priority
-        multipart = self.format(MAIL_TEMPLATE, email_from='Sylvie Lelitre <test.sylvie.lelitre@agrolait.com>')
-        res = self.env['mail.thread'].message_parse(email.message_from_string(pycompat.to_text(multipart)))
+        multipart = self.format(MAIL_TEMPLATE, email_from='"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>')
+        res = self.env['mail.thread'].message_parse(from_string(multipart))
         self.assertIn('<p>Please call me as soon as possible this afternoon!</p>', res['body'])
 
         # test multipart / mixed
-        res = self.env['mail.thread'].message_parse(email.message_from_string(pycompat.to_text(test_mail_data.MAIL_MULTIPART_MIXED)))
+        res = self.env['mail.thread'].message_parse(from_string(test_mail_data.MAIL_MULTIPART_MIXED))
         self.assertNotIn(
             'Should create a multipart/mixed: from gmail, *bold*, with attachment', res['body'],
             'message_parse: text version should not be in body after parsing multipart/mixed')
@@ -41,7 +44,7 @@ class TestEmailParsing(BaseFunctionalTest, MockEmails):
             '<div dir="ltr">Should create a multipart/mixed: from gmail, <b>bold</b>, with attachment.<br clear="all"><div><br></div>', res['body'],
             'message_parse: html version should be in body after parsing multipart/mixed')
 
-        res = self.env['mail.thread'].message_parse(email.message_from_string(pycompat.to_text(test_mail_data.MAIL_MULTIPART_MIXED_TWO)))
+        res = self.env['mail.thread'].message_parse(from_string(test_mail_data.MAIL_MULTIPART_MIXED_TWO))
         self.assertNotIn('First and second part', res['body'],
                          'message_parse: text version should not be in body after parsing multipart/mixed')
         self.assertIn('First part', res['body'],
@@ -49,24 +52,35 @@ class TestEmailParsing(BaseFunctionalTest, MockEmails):
         self.assertIn('Second part', res['body'],
                       'message_parse: second part of the html version should be in body after parsing multipart/mixed')
 
-        res = self.env['mail.thread'].message_parse(email.message_from_string(pycompat.to_text(test_mail_data.MAIL_SINGLE_BINARY)))
+        res = self.env['mail.thread'].message_parse(from_string(test_mail_data.MAIL_SINGLE_BINARY))
         self.assertEqual(res['body'], '')
         self.assertEqual(res['attachments'][0][0], 'thetruth.pdf')
 
+        res = self.env['mail.thread'].message_parse(from_string(test_mail_data.MAIL_MULTIPART_WEIRD_FILENAME))
+        self.assertEqual(res['attachments'][0][0], '62_@;,][)=.(ÇÀÉ.txt')
+
     def test_message_parse_eml(self):
         # Test that the parsing of mail with embedded emails as eml(msg) which generates empty attachments, can be processed.
-        mail = self.format(test_mail_data.MAIL_EML_ATTACHMENT, email_from='Sylvie Lelitre <test.sylvie.lelitre@agrolait.com>', to='generic@test.com')
-        self.env['mail.thread'].message_parse(email.message_from_string(pycompat.to_text(mail)))
+        mail = self.format(test_mail_data.MAIL_EML_ATTACHMENT, email_from='"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>', to='generic@test.com')
+        self.env['mail.thread'].message_parse(from_string(mail))
 
     def test_message_parse_plaintext(self):
         """ Incoming email in plaintext should be stored as html """
-        mail = self.format(test_mail_data.MAIL_TEMPLATE_PLAINTEXT, email_from='Sylvie Lelitre <test.sylvie.lelitre@agrolait.com>', to='generic@test.com')
-        res = self.env['mail.thread'].message_parse(email.message_from_string(pycompat.to_text(mail)))
+        mail = self.format(test_mail_data.MAIL_TEMPLATE_PLAINTEXT, email_from='"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>', to='generic@test.com')
+        res = self.env['mail.thread'].message_parse(from_string(mail))
         self.assertIn('<pre>\nPlease call me as soon as possible this afternoon!\n\n--\nSylvie\n</pre>', res['body'])
 
     def test_message_parse_xhtml(self):
         # Test that the parsing of XHTML mails does not fail
-        self.env['mail.thread'].message_parse(email.message_from_string(pycompat.to_text(test_mail_data.MAIL_XHTML)))
+        self.env['mail.thread'].message_parse(from_string(test_mail_data.MAIL_XHTML))
+
+
+@tagged('mail_gateway')
+class TestMailAlias(BaseFunctionalTest):
+
+    def test_alias_setup(self):
+        alias = self.env['mail.alias'].with_context(alias_model_name='mail.test').create({'alias_name': 'b4r+_#_R3wl$$'})
+        self.assertEqual(alias.alias_name, 'b4r+_-_r3wl-', 'Disallowed chars should be replaced by hyphens')
 
 
 @tagged('mail_gateway')
@@ -76,7 +90,7 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
     def setUpClass(cls):
         super(TestMailgateway, cls).setUpClass()
         cls.test_model = cls.env['ir.model']._get('mail.test.gateway')
-        cls.email_from = 'Sylvie Lelitre <test.sylvie.lelitre@agrolait.com>'
+        cls.email_from = '"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>'
 
         cls.test_record = cls.env['mail.test.gateway'].with_context(cls._test_context).create({
             'name': 'Test',
@@ -105,9 +119,7 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
             'message_id': '<123456-openerp-%s-mail.test.gateway@%s>' % (cls.test_record.id, socket.gethostname()),
         })
 
-        cls.env['ir.config_parameter'].set_param('mail.bounce.alias', 'bounce.test')
-        cls.env['ir.config_parameter'].set_param('mail.catchall.domain', 'test.com')
-        cls.env['ir.config_parameter'].set_param('mail.catchall.alias', 'catchall.test')
+        cls._init_mail_gateway()
 
     # --------------------------------------------------
     # Base low-level tests
@@ -180,7 +192,7 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
         self.assertEqual(len(self._mails), 0, 'No notification / bounce should be sent')
 
         # Email recognized if partner has a formatted email
-        self.partner_1.write({'email': 'Valid Lelitre <%s>' % self.partner_1.email})
+        self.partner_1.write({'email': '"Valid Lelitre" <%s>' % self.partner_1.email})
         record = self.format_and_process(MAIL_TEMPLATE, self.partner_1.email, 'groups@test.com', subject='Test2')
 
         self.assertEqual(record.message_ids[0].author_id, self.partner_1,
@@ -259,7 +271,7 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
         # Test bounce email
         self.assertEqual(self._mails[0].get('subject'), 'Re: Should Bounce')
         self.assertEqual(self._mails[0].get('email_to')[0], 'whatever-2a840@postmaster.twitter.com')
-        self.assertEqual(self._mails[0].get('email_from'), formataddr(('MAILER-DAEMON', 'bounce.test@test.com')))
+        self.assertEqual(self._mails[0].get('email_from'), 'MAILER-DAEMON <bounce.test@test.com>')
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_message_process_alias_followers_bounce(self):
@@ -277,7 +289,7 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
                          'message_process: incoming email on Followers alias should send a bounce email')
         self.assertEqual(self._mails[0].get('subject'), 'Re: Should Bounce')
         self.assertEqual(self._mails[0].get('email_to')[0], 'whatever-2a840@postmaster.twitter.com')
-        self.assertEqual(self._mails[0].get('email_from'), formataddr(('MAILER-DAEMON', 'bounce.test@test.com')))
+        self.assertEqual(self._mails[0].get('email_from'), 'MAILER-DAEMON <bounce.test@test.com>')
 
         # Test: partner on followers alias -> bounce
         self._init_mock_build_email()
@@ -287,7 +299,7 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
                          'message_process: incoming email on Followers alias should send a bounce email')
         self.assertEqual(self._mails[0].get('subject'), 'Re: Should Bounce')
         self.assertEqual(self._mails[0].get('email_to')[0], 'whatever-2a840@postmaster.twitter.com')
-        self.assertEqual(self._mails[0].get('email_from'), formataddr(('MAILER-DAEMON', 'bounce.test@test.com')))
+        self.assertEqual(self._mails[0].get('email_from'), 'MAILER-DAEMON <bounce.test@test.com>')
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_process_alias_partner(self):
@@ -388,6 +400,7 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
 
         # name order win
         self.test_record.message_unsubscribe(follower_user.partner_id.ids)
+        self.test_record.flush()
         record = self.format_and_process(MAIL_TEMPLATE, self.user_employee.email_formatted, 'groups@test.com', subject='FirstFoundWinner')
         self.assertEqual(record.create_uid, self.user_employee)
         self.assertEqual(record.message_ids[0].subject, 'FirstFoundWinner')
@@ -410,7 +423,7 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
         # Test bounce email
         self.assertEqual(self._mails[0].get('subject'), 'Re: Should Bounce')
         self.assertEqual(self._mails[0].get('email_to')[0], 'whatever-2a840@postmaster.twitter.com')
-        self.assertEqual(self._mails[0].get('email_from'), formataddr(('MAILER-DAEMON', 'bounce.test@test.com')))
+        self.assertEqual(self._mails[0].get('email_from'), 'MAILER-DAEMON <bounce.test@test.com>')
 
     @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_message_process_bounce_alias(self):
@@ -739,3 +752,46 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
         self.assertEqual(len(record), 1)
         self.assertEqual(record.name, 'Spammy')
         self.assertEqual(record._name, 'mail.test.gateway')
+
+
+class TestMailThreadCC(BaseFunctionalTest, MockEmails):
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestMailThreadCC, cls).setUpClass()
+
+        cls.email_from = 'Sylvie Lelitre <test.sylvie.lelitre@agrolait.com>'
+        cls.alias = cls.env['mail.alias'].create({
+            'alias_name': 'cc_record',
+            'alias_user_id': False,
+            'alias_model_id': cls.env['ir.model']._get('mail.test.cc').id,
+            'alias_contact': 'everyone'})
+
+        cls._init_mail_gateway()
+
+    @mute_logger('odoo.addons.mail.models.mail_thread')
+    def test_message_cc_new(self):
+        record = self.format_and_process(MAIL_TEMPLATE, self.email_from, 'cc_record@test.com',
+                                         cc='cc1@example.com, cc2@example.com', target_model='mail.test.cc')
+        cc = email_split_and_format(record.email_cc)
+        self.assertEqual(sorted(cc), ['cc1@example.com', 'cc2@example.com'])
+
+    @mute_logger('odoo.addons.mail.models.mail_thread')
+    def test_message_cc_update_with_old(self):
+        record = self.env['mail.test.cc'].create({'email_cc': 'cc1 <cc1@example.com>, cc2@example.com'})
+        self.alias.write({'alias_force_thread_id': record.id})
+
+        self.format_and_process(MAIL_TEMPLATE, self.email_from, 'cc_record@test.com',
+                                cc='cc2 <cc2@example.com>, cc3@example.com', target_model='mail.test.cc')
+        cc = email_split_and_format(record.email_cc)
+        self.assertEqual(sorted(cc), ['"cc1" <cc1@example.com>', 'cc2@example.com', 'cc3@example.com'], 'new cc should have been added on record (unique)')
+
+    @mute_logger('odoo.addons.mail.models.mail_thread')
+    def test_message_cc_update_no_old(self):
+        record = self.env['mail.test.cc'].create({})
+        self.alias.write({'alias_force_thread_id': record.id})
+
+        self.format_and_process(MAIL_TEMPLATE, self.email_from, 'cc_record@test.com',
+                                cc='cc2 <cc2@example.com>, cc3@example.com', target_model='mail.test.cc')
+        cc = email_split_and_format(record.email_cc)
+        self.assertEqual(sorted(cc), ['"cc2" <cc2@example.com>', 'cc3@example.com'], 'new cc should have been added on record (unique)')

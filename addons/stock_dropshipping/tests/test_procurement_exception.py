@@ -24,7 +24,7 @@ class TestProcurementException(common.TransactionCase):
         so_form.partner_id = self.env.ref('base.res_partner_2')
         so_form.partner_invoice_id = self.env.ref('base.res_partner_address_3')
         so_form.partner_shipping_id = self.env.ref('base.res_partner_address_3')
-        so_form.payment_term_id = self.env.ref('account.account_payment_term')
+        so_form.payment_term_id = self.env.ref('account.account_payment_term_end_following_month')
         with so_form.order_line.new() as line:
             line.product_id = product_with_no_seller
             line.product_uom_qty = 3

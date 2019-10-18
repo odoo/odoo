@@ -3,7 +3,7 @@
 
 from datetime import datetime, timedelta
 
-from openerp.addons.sale_coupon.tests.common import TestSaleCouponCommon
+from odoo.addons.sale_coupon.tests.common import TestSaleCouponCommon
 from odoo.exceptions import UserError
 from odoo.fields import Date
 

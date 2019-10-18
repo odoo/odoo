@@ -8,7 +8,12 @@ var _t = core._t;
 function parseAndTransform(htmlString, transformFunction) {
     var openToken = "OPEN" + Date.now();
     var string = htmlString.replace(/&lt;/g, openToken);
-    var children = $('<div>').html(string).contents();
+    var children;
+    try {
+        children = $('<div>').html(string).contents();
+    } catch (e) {
+        children = $('<div>').html('<pre>' + string + '</pre>').contents();
+    }
     return _parseAndTransform(children, transformFunction)
                 .replace(new RegExp(openToken, "g"), "&lt;");
 }
@@ -27,6 +32,9 @@ function linkify(text, attrs) {
     attrs = attrs || {};
     if (attrs.target === undefined) {
         attrs.target = '_blank';
+    }
+    if (attrs.target === '_blank') {
+      attrs.rel = 'noreferrer noopener';
     }
     attrs = _.map(attrs, function (value, key) {
         return key + '="' + _.escape(value) + '"';

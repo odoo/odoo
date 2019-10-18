@@ -1,18 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_rating
+# 	* website_rating
 # 
 # Translators:
-# Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
-# Paolo Valier, 2018
-# Léonie Bouchat <lbo@odoo.com>, 2018
+# Sergio Zanchetta <primes2h@gmail.com>, 2019
+# Francesco Garganese <francesco.garganese@aeromnia.aero>, 2019
+# Paolo Valier, 2019
+# David Minneci <david@numeko.it>, 2019
+# Léonie Bouchat <lbo@odoo.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"PO-Revision-Date: 2019-08-26 09:16+0000\n"
+"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,70 +25,125 @@ msgstr ""
 
 #. module: website_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/website_mail.xml:24
+#: code:addons/website_rating/static/src/xml/portal_chatter.xml:0
 #, python-format
-msgid "Average"
-msgstr "Media"
+msgid ""
+"#{widget.options['force_submit_url'] ? widget.options['force_submit_url'] : "
+"'/mail/chatter_post'}"
+msgstr ""
 
 #. module: website_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/website_mail.xml:34
+#: code:addons/website_rating/static/src/xml/portal_rating_composer.xml:0
+#, python-format
+msgid "&times;"
+msgstr "&times;"
+
+#. module: website_rating
+#. openerp-web
+#: code:addons/website_rating/static/src/xml/portal_rating_composer.xml:0
+#: code:addons/website_rating/static/src/xml/portal_rating_composer.xml:0
+#, python-format
+msgid "Add a review"
+msgstr ""
+
+#. module: website_rating
+#. openerp-web
+#: code:addons/website_rating/static/src/xml/portal_tools.xml:0
+#, python-format
+msgid "Average"
+msgstr "Medio"
+
+#. module: website_rating
+#. openerp-web
+#: code:addons/website_rating/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid "Cancel"
+msgstr "Annulla"
+
+#. module: website_rating
+#. openerp-web
+#: code:addons/website_rating/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid "Comment"
+msgstr "Commento"
+
+#. module: website_rating
+#: model:ir.model.fields,field_description:website_rating.field_rating_rating__publisher_id
+msgid "Commented by"
+msgstr ""
+
+#. module: website_rating
+#: model:ir.model.fields,field_description:website_rating.field_rating_rating__publisher_datetime
+msgid "Commented on"
+msgstr ""
+
+#. module: website_rating
+#. openerp-web
+#: code:addons/website_rating/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid "Delete"
+msgstr "Elimina"
+
+#. module: website_rating
+#. openerp-web
+#: code:addons/website_rating/static/src/xml/portal_tools.xml:0
 #, python-format
 msgid "Details"
 msgstr "Dettagli"
 
 #. module: website_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/website_mail.xml:69
+#: code:addons/website_rating/static/src/xml/portal_chatter.xml:0
 #, python-format
-msgid "Five stars on five"
-msgstr "Cinque stelle su cinque"
+msgid "Edit"
+msgstr "Modifica"
 
 #. module: website_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/website_mail.xml:68
-#, python-format
-msgid "Four stars on five"
-msgstr "Quattro stelle su cinque"
-
-#. module: website_rating
-#. openerp-web
-#: code:addons/website_rating/static/src/xml/website_mail.xml:13
+#: code:addons/website_rating/static/src/xml/portal_tools.xml:0
+#: code:addons/website_rating/static/src/xml/portal_tools.xml:0
 #, python-format
 msgid "Half a star"
 msgstr "Una mezza stella"
 
 #. module: website_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/js/website_mail.js:43
+#: code:addons/website_rating/static/src/js/portal_composer.js:0
 #, python-format
 msgid "I don't like it"
 msgstr "Non mi piace"
 
 #. module: website_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/js/website_mail.js:42
+#: code:addons/website_rating/static/src/js/portal_composer.js:0
 #, python-format
 msgid "I hate it"
 msgstr "Lo odio"
 
 #. module: website_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/js/website_mail.js:45
+#: code:addons/website_rating/static/src/js/portal_composer.js:0
 #, python-format
 msgid "I like it"
 msgstr "Mi piace"
 
 #. module: website_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/js/website_mail.js:46
+#: code:addons/website_rating/static/src/js/portal_composer.js:0
 #, python-format
 msgid "I love it"
 msgstr "Lo adoro"
 
 #. module: website_rating
+#: code:addons/website_rating/controllers/portal_rating.py:0
+#, python-format
+msgid "Invalid rating"
+msgstr ""
+
+#. module: website_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/js/website_mail.js:44
+#: code:addons/website_rating/static/src/js/portal_composer.js:0
 #, python-format
 msgid "It's okay"
 msgstr "Va bene"
@@ -97,22 +155,55 @@ msgstr "Messaggio"
 
 #. module: website_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/website_mail.xml:10
+#: code:addons/website_rating/static/src/xml/portal_rating_composer.xml:0
+#: code:addons/website_rating/static/src/xml/portal_rating_composer.xml:0
+#, python-format
+msgid "Modify your review"
+msgstr ""
+
+#. module: website_rating
+#. openerp-web
+#: code:addons/website_rating/static/src/xml/portal_tools.xml:0
+#: code:addons/website_rating/static/src/xml/portal_tools.xml:0
 #, python-format
 msgid "One star"
 msgstr "Una stella"
 
 #. module: website_rating
-#. openerp-web
-#: code:addons/website_rating/static/src/xml/website_mail.xml:65
+#: code:addons/website_rating/models/rating.py:0
 #, python-format
-msgid "One star on five"
-msgstr "Una stella su cinque"
+msgid "Only the publisher of the website can change the rating comment"
+msgstr ""
+
+#. module: website_rating
+#. openerp-web
+#: code:addons/website_rating/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid "Post comment"
+msgstr ""
 
 #. module: website_rating
 #: model:ir.model.fields,field_description:website_rating.field_rating_rating__website_published
 msgid "Published"
-msgstr "Pubblicato"
+msgstr "Pubblicata"
+
+#. module: website_rating
+#. openerp-web
+#: code:addons/website_rating/static/src/xml/portal_chatter.xml:0
+#: code:addons/website_rating/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid "Published on"
+msgstr ""
+
+#. module: website_rating
+#: model:ir.model.fields,field_description:website_rating.field_rating_rating__publisher_comment
+msgid "Publisher Comment"
+msgstr ""
+
+#. module: website_rating
+#: model_terms:ir.ui.view,arch_db:website_rating.rating_rating_view_form
+msgid "Publisher comment"
+msgstr ""
 
 #. module: website_rating
 #: model:ir.model,name:website_rating.model_rating_rating
@@ -121,33 +212,48 @@ msgstr "Valutazione"
 
 #. module: website_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/website_mail.xml:52
+#: code:addons/website_rating/static/src/xml/portal_tools.xml:0
 #, python-format
-msgid "Remove selection"
-msgstr "Elimina la selezione"
+msgid "Remove Selection"
+msgstr ""
 
 #. module: website_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/website_mail.xml:67
+#: code:addons/website_rating/static/src/xml/portal_chatter.xml:0
 #, python-format
-msgid "Three stars on five"
-msgstr "Tre stelle su cinque"
-
-#. module: website_rating
-#. openerp-web
-#: code:addons/website_rating/static/src/xml/website_mail.xml:66
-#, python-format
-msgid "Two stars on five"
-msgstr "Due stelle su cinque"
+msgid "Update comment"
+msgstr ""
 
 #. module: website_rating
 #: model:ir.model.fields,help:website_rating.field_rating_rating__website_published
 msgid "Visible on the website as a comment"
-msgstr "Visibile sul sito come commento"
+msgstr "Visibile nel sito web come commento"
 
 #. module: website_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/website_mail.xml:40
+#: code:addons/website_rating/static/src/js/portal_chatter.js:0
+#, python-format
+msgid "Write your comment"
+msgstr ""
+
+#. module: website_rating
+#. openerp-web
+#: code:addons/website_rating/static/src/xml/portal_chatter.xml:0
+#: code:addons/website_rating/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid "avatar"
+msgstr ""
+
+#. module: website_rating
+#. openerp-web
+#: code:addons/website_rating/static/src/xml/portal_rating_composer.xml:0
+#, python-format
+msgid "ratings)"
+msgstr ""
+
+#. module: website_rating
+#. openerp-web
+#: code:addons/website_rating/static/src/xml/portal_tools.xml:0
 #, python-format
 msgid "stars"
 msgstr "stelle"

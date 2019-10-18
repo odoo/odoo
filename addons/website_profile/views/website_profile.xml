@@ -17,9 +17,6 @@
                     <!-- Desktop Mode -->
                     <nav aria-label="breadcrumb" class="col d-none d-md-flex">
                         <ol class="breadcrumb bg-transparent mb-0 pl-0 py-0">
-                            <li class="breadcrumb-item">
-                                <a t-att-href="home_url or '/'">Home</a>
-                            </li>
                             <li t-attf-class="breadcrumb-item #{'active' if not view_user else ''}">
                                 <a href="/profile/users">Users</a>
                             </li>
@@ -44,7 +41,7 @@
                     </div>
 
                     <!-- Mobile Mode -->
-                    <div class="col d-md-none py-1">
+                    <div class="col d-md-none py-1 o_wprofile_user_profile_sub_nav_mobile_col">
                         <div class="btn-group w-100 position-relative" role="group" aria-label="Mobile sub-nav">
                             <div class="btn-group w-100 ml-2">
                                 <a class="btn bg-black-25 text-white dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Nav</a>
@@ -171,7 +168,7 @@
                                 <div class="form-group col-12">
                                     <label class="mb-1 text-primary" for="description"><span class="font-weight-bold">Biography</span></label>
                                     <textarea name="description" id="description" style="min-height: 120px"
-                                        class="form-control load_editor"><t t-esc="user.partner_id.website_description"/></textarea>
+                                        class="form-control o_wysiwyg_loader"><t t-esc="user.partner_id.website_description"/></textarea>
                                 </div>
                                 <div class="col">
                                     <button type="submit" class="btn btn-primary o_wprofile_submit_btn">Update</button>
@@ -252,7 +249,7 @@
                         <div class="o_wprofile_sidebar_top d-flex justify-content-between">
                             <div t-if="user.rank_id" class="d-flex align-items-center">
                                 <small class="font-weight-bold mr-2">Current rank:</small>
-                                <img t-att-src="website.image_url(user.rank_id, 'image_64')" height="16" alt="" class="mr-1"/>
+                                <img t-att-src="website.image_url(user.rank_id, 'image_128')" width="16" height="16" alt="" class="o_object_fit_cover mr-1"/>
                                 <a href="/profile/ranks_badges" t-field="user.rank_id"/>
                             </div>
                             <button class="btn btn-sm d-md-none bg-white border" type="button" data-toggle="collapse" data-target="#o_wprofile_sidebar_collapse" aria-expanded="false" aria-controls="o_wprofile_sidebar_collapse">More info</button>
@@ -368,7 +365,7 @@
                         <div class="card">
                             <div class="card-body p-2 pr-3">
                                 <div class="media align-items-center">
-                                  <img height="38" t-att-src="website.image_url(badge.badge_id, 'image_64')" class="mr-0"/>
+                                  <img width="38" height="38" t-att-src="website.image_url(badge.badge_id, 'image_128')" class="o_object_fit_cover mr-0"/>
                                   <div class="media-body col-md-10 p-0">
                                     <h6 class="my-0 text-truncate" t-field="badge.badge_id.name"/>
                                   </div>
@@ -408,7 +405,7 @@
                                 <t t-foreach="ranks" t-as="rank">
                                     <li t-attf-class="list-group-item">
                                         <div class="media align-items-center">
-                                            <img width="40" t-att-src="website.image_url(rank, 'image_64')" class="mr-2" alt="Rank badge"/>
+                                            <img t-att-src="website.image_url(rank, 'image_128')" class="mr-2 o_image_40_cover" alt="Rank badge"/>
                                             <div class="media-body">
                                                 <h5 class="mt-0 mb-0" t-field="rank.name"/>
                                                 <span class="badge badge-success"><span t-field="rank.karma_min"/></span> point<span t-if="rank.karma_min">s</span>
@@ -514,7 +511,9 @@
         <div class="card text-center mb-2 border-bottom-0 o_wprofile_pointer">
             <div class="card-body">
                 <div class="d-inline-block position-relative">
-                    <img class="rounded-circle img-fluid" t-att-src="'/profile/avatar/%s?field=image_128%s' % (user['id'], '&amp;res_model=%s&amp;res_id=%s' % (record._name, record.id) if record else '')"/>
+                    <img class="rounded-circle img-fluid"
+                        style="width: 128px; height: 128px; object-fit: cover;"
+                        t-att-src="'/profile/avatar/%s?field=image_256%s' % (user['id'], '&amp;res_model=%s&amp;res_id=%s' % (record._name, record.id) if record else '')"/>
                     <img class="position-absolute" t-attf-src="/website_profile/static/src/img/rank_#{user_index + 1}.svg" alt="User rank" style="bottom: 0; right: -10px"/>
                 </div>
                 <h3 class="mt-2 mb-0" t-esc="user['name']"></h3>
@@ -533,7 +532,7 @@
             <span t-esc="user['position']"/>
         </td>
         <td class="align-middle d-none d-sm-table-cell">
-            <img class="rounded-circle o_wprofile_img_small" height="30" t-att-src="'/profile/avatar/%s?field=image_128%s' % (user['id'], '&amp;res_model=%s&amp;res_id=%s' % (record._name, record.id) if record else '')"/>
+            <img class="o_object_fit_cover rounded-circle o_wprofile_img_small" width="30" height="30" t-att-src="'/profile/avatar/%s?field=image_128%s' % (user['id'], '&amp;res_model=%s&amp;res_id=%s' % (record._name, record.id) if record else '')"/>
         </td>
         <td class="align-middle w-md-75">
             <span class="font-weight-bold" t-esc="user['name']"/><br/>

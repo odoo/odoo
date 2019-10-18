@@ -40,3 +40,14 @@ class ObjCateg(models.Model):
         if self.env.context.get('only_media'):
             args += [('name', '=', 'Media')]
         return super(ObjCateg, self).search(args, **kwargs)
+
+
+class FakeTicket(models.Model):
+    """We want to simulate a record that would typically be accessed by a portal user,
+       with a relational field to records that could not be accessed by a portal user.
+    """
+    _name = 'test_access_right.ticket'
+    _description = 'Fake ticket For Test Access Right'
+
+    name = fields.Char()
+    message_partner_ids = fields.Many2many(comodel_name='res.partner')

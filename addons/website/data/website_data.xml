@@ -120,19 +120,19 @@
             <field name="is_published">True</field>
             <field name="url">/</field>
             <field name="view_id" ref="homepage"/>
-            <field name="is_tracked">True</field>
+            <field name="track">True</field>
         </record>
         <record id="contactus_page" model="website.page">
             <field name="url">/contactus</field>
             <field name="is_published">True</field>
             <field name="view_id" ref="contactus"/>
-            <field name="is_tracked">True</field>
+            <field name="track">True</field>
         </record>
         <record id="aboutus_page" model="website.page">
             <field name="is_published">True</field>
             <field name="url">/aboutus</field>
             <field name="view_id" ref="aboutus"/>
-            <field name="is_tracked">True</field>
+            <field name="track">True</field>
         </record>
 
         <!-- Default Menu to store module menus for new website -->
@@ -503,6 +503,12 @@
             <field name="name">s_company_team_image_4.png</field>
             <field name="type">url</field>
             <field name="url">/website/static/src/img/snippets_demo/s_team_member_4.png</field>
+        </record>
+        <record id="website.s_mega_menu_menu_image_menu_default_image" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">s_mega_menu_menu_image_menu_default_image.png</field>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/snippets_demo/s_references_5.png</field>
         </record>
     </data>
     <data>

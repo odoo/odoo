@@ -115,7 +115,7 @@
             <field name="model">sale.order</field>
             <field name="arch" type="xml">
                 <calendar string="Sales Orders" date_start="date_order" color="state" hide_time="true" event_limit="5">
-                    <field name="partner_id" avatar_field="image_small"/>
+                    <field name="partner_id" avatar_field="image_128"/>
                     <field name="amount_total" widget="monetary"/>
                     <field name="payment_term_id"/>
                 </calendar>
@@ -186,16 +186,18 @@
             <field name="model">sale.order</field>
             <field name="priority">2</field>
             <field name="arch" type="xml">
-                <tree string="Sales Orders" decoration-bf="message_needaction==True" decoration-muted="state=='cancel'">
+                <tree string="Sales Orders" decoration-bf="message_needaction==True" decoration-muted="state=='cancel'" multi_edit="1">
                     <field name="message_needaction" invisible="1"/>
-                    <field name="name" string="Order Number"/>
+                    <field name="name" string="Order Number" readonly="1"/>
                     <field name="date_order" string="Order Date"/>
-                    <field name="commitment_date" groups="sale.group_sale_order_dates"/>
-                    <field name="expected_date" groups="sale.group_sale_order_dates"/>
-                    <field name="partner_id"/>
+                    <field name="commitment_date"/>
+                    <field name="expected_date"/>
+                    <field name="partner_id" readonly="1"/>
                     <field name="user_id" optional="show"/>
                     <field name="team_id" optional="hide"/>
-                    <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                    <field name="company_id" groups="base.group_multi_company" optional="show" readonly="1"/>
+                    <field name="amount_untaxed" sum="Total Tax Excluded" widget="monetary" optional="hide"/>
+                    <field name="amount_tax" sum="Tax Total" widget="monetary" optional="hide"/>
                     <field name="amount_total" sum="Total Tax Included" widget="monetary" optional="show"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="invoice_status" optional="show"/>
@@ -210,16 +212,18 @@
             <field name="model">sale.order</field>
             <field name="priority">4</field>
             <field name="arch" type="xml">
-                <tree string="Quotation" class="o_sale_order" decoration-bf="message_needaction==True" decoration-muted="state=='cancel'">
+                <tree string="Quotation" class="o_sale_order" decoration-bf="message_needaction==True" decoration-muted="state=='cancel'" multi_edit="1">
                     <field name="message_needaction" invisible="1"/>
-                    <field name="name" string="Quotation Number"/>
+                    <field name="name" string="Quotation Number" readonly="1"/>
                     <field name="create_date" string="Create Date"/>
-                    <field name="commitment_date" groups="sale.group_sale_order_dates"/>
-                    <field name="expected_date" groups="sale.group_sale_order_dates"/>
-                    <field name="partner_id"/>
+                    <field name="commitment_date"/>
+                    <field name="expected_date"/>
+                    <field name="partner_id" readonly="1" />
                     <field name="user_id" optional="show"/>
                     <field name="team_id" optional="hide"/>
-                    <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                    <field name="company_id" groups="base.group_multi_company" optional="show" readonly="1"/>
+                    <field name="amount_untaxed" sum="Total Tax Excluded" widget="monetary" optional="hide"/>
+                    <field name="amount_tax" sum="Tax Total" widget="monetary" optional="hide"/>
                     <field name="amount_total" sum="Total Tax Included" widget="monetary" optional="show"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="state" optional="show"/>
@@ -308,12 +312,12 @@
                         </group>
                         <group>
                             <field name="validity_date" attrs="{'invisible': [('state', 'in', ['sale', 'done'])]}"/>
-                            <div class="o_td_label" groups="base.group_no_one" attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])]}"> 
-                                <label for="date_order" string="Quotation Date"/> 
+                            <div class="o_td_label" groups="base.group_no_one" attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])]}">
+                                <label for="date_order" string="Quotation Date"/>
                             </div>
                             <field name="date_order" nolabel="1" groups="base.group_no_one" attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])]}"/>
-                            <div class="o_td_label" attrs="{'invisible': [('state', 'in', ['draft', 'sent'])]}"> 
-                                <label for="date_order" string="Order Date"/> 
+                            <div class="o_td_label" attrs="{'invisible': [('state', 'in', ['draft', 'sent'])]}">
+                                <label for="date_order" string="Order Date"/>
                             </div>
                             <field name="date_order" attrs="{'required': [('state', 'in', ['sale', 'done'])], 'invisible': [('state', 'in', ['draft', 'sent'])]}" nolabel="1"/>
                             <field name="pricelist_id" groups="product.group_product_pricelist" options="{'no_open':True,'no_create': True}"/>
@@ -413,6 +417,7 @@
                                         <field name="invoice_lines"/>
                                     </div>
                                     <field name="state" invisible="1"/>
+                                    <field name="company_id" invisible="1"/>
                                 </form>
                                 <tree
                                     string="Sales Order Lines"
@@ -520,7 +525,11 @@
                                         options='{"no_open": True}'
                                         optional="show"
                                     />
-                                    <field name="customer_lead" optional="hide"/>
+                                    <field
+                                        name="customer_lead"
+                                        optional="hide"
+                                        attrs="{'readonly': [('parent.state', 'not in', ['draft', 'sent'])]}"
+                                    />
                                     <field
                                         name="price_unit"
                                         attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"
@@ -540,6 +549,7 @@
                                     <field name="invoice_status" invisible="1"/>
                                     <field name="currency_id" invisible="1"/>
                                     <field name="price_tax" invisible="1"/>
+                                    <field name="company_id" invisible="1"/>
                                 </tree>
                                 <kanban class="o_kanban_mobile">
                                     <field name="name"/>
@@ -552,6 +562,7 @@
                                     <field name="price_unit"/>
                                     <field name="display_type"/>
                                     <field name="tax_id" invisible="1"/>
+                                    <field name="company_id" invisible="1"/>
                                     <templates>
                                         <t t-name="kanban-box">
                                             <div t-attf-class="oe_kanban_card oe_kanban_global_click {{ record.display_type.raw_value ? 'o_is_' + record.display_type.raw_value : '' }}">
@@ -637,9 +648,11 @@
                                 </group>
                             </group>
                             <group>
-                                <group name="sale_shipping" groups="sale.group_sale_order_dates">
-                                    <field name="expected_date"/>
-                                    <field name="commitment_date"/>
+                                <group name="sale_shipping">
+                                    <label for="commitment_date" string="Delivery Date"/>
+                                    <div class="o_row">
+                                        <field name="commitment_date"/> <span class="text-muted">Expected: <field name="expected_date" widget="date"/></span>
+                                    </div>
                                 </group>
                                 <group string="Reporting" name="sale_reporting" groups="base.group_no_one">
                                     <group name="technical" colspan="2" class="mb-0">
@@ -710,8 +723,6 @@
                         domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
-                    <filter string="Exception Activities" name="activities_exception"
-                        domain="[('activity_exception_decoration', '!=', False)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Salesperson" name="salesperson" domain="[]" context="{'group_by': 'user_id'}"/>
                         <filter name="customer" string="Customer" domain="[]" context="{'group_by': 'partner_id'}"/>
@@ -1149,7 +1160,7 @@
                     <xpath expr="//field[@name='invoice_line_ids']//field[@name='discount']" position="attributes">
                         <attribute name="groups">product.group_discount_per_so_line</attribute>
                     </xpath>
-                    <xpath expr="//group[@name='sale_info_group']" position="inside">
+                    <xpath expr="//group[@name='sale_info_group']/field[@name='invoice_user_id']" position="after">
                         <field name="team_id" kanban_view_ref="%(sales_team.crm_team_view_kanban)s"/>
                     </xpath>
                     <xpath expr="//group[@id='other_tab_group']" position="inside">
@@ -1225,7 +1236,7 @@
         <record id="action_invoice_salesteams" model="ir.actions.act_window">
             <field name="name">Invoices</field>
             <field name="res_model">account.move</field>
-            <field name="view_mode">tree,form,calendar,graph,kanban,pivot</field>
+            <field name="view_mode">tree,form,kanban</field>
             <field name="view_id" ref="account.view_move_tree"/>
             <field name="domain">[
                 ('state', '=', 'posted'),

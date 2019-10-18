@@ -3,10 +3,10 @@
 
 {
     'name': 'IoTBox Software Upgrader',
-    'category': 'Point of Sale',
+    'category': 'Sales/Point Of Sale',
     'website': 'https://www.odoo.com/page/point-of-sale-hardware',
     'sequence': 6,
-    'summary': 'Allows to remotely upgrade the IoTBox software',
+    'summary': 'Remotely upgrade the IoTBox software',
     'description': """
 IoTBox Software Upgrader
 ========================

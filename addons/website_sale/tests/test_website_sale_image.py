@@ -26,7 +26,7 @@ class TestWebsiteSaleImage(odoo.tests.HttpCase):
         # create the color attribute
         product_attribute = self.env['product.attribute'].create({
             'name': 'Beautiful Color',
-            'type': 'color',
+            'display_type': 'color',
         })
 
         # create the color attribute values
@@ -93,11 +93,13 @@ class TestWebsiteSaleImage(odoo.tests.HttpCase):
         })
 
         # set the color attribute and values on the template
-        self.env['product.template.attribute.line'].create([{
+        line = self.env['product.template.attribute.line'].create([{
             'attribute_id': product_attribute.id,
             'product_tmpl_id': template.id,
             'value_ids': [(6, 0, attr_values.ids)]
         }])
+        value_red = line.product_template_value_ids[0]
+        value_green = line.product_template_value_ids[1]
 
         # set a different price on the variants to differentiate them
         product_template_attribute_values = self.env['product.template.attribute.value'].search([('product_tmpl_id', '=', template.id)])
@@ -108,22 +110,20 @@ class TestWebsiteSaleImage(odoo.tests.HttpCase):
             else:
                 val.price_extra = 20
 
-        # Create RED variant, and set image to blue (will be set on the template
+        # Get RED variant, and set image to blue (will be set on the template
         # because the template image is empty and there is only one variant)
-        product_red = self.env['product.product'].create({
-            'product_tmpl_id': template.id,
+        product_red = template._get_variant_for_combination(value_red)
+        product_red.write({
             'image_1920': blue_image,
-            'attribute_value_ids': [(6, 0, attr_values.filtered(lambda l: l.name == name_red).ids)],
             'product_variant_image_ids': [(0, 0, {'name': 'image 2', 'image_1920': image_bmp})],
         })
 
         self.assertEqual(template.image_1920, blue_image)
 
-        # create the green variant
-        product_green = self.env['product.product'].create({
+        # Get the green variant
+        product_green = template._get_variant_for_combination(value_green)
+        product_green.write({
             'image_1920': green_image,
-            'product_tmpl_id': template.id,
-            'attribute_value_ids': [(6, 0, attr_values.filtered(lambda l: l.name == name_green).ids)],
             'product_variant_image_ids': [(0, 0, {'name': 'image 3', 'image_1920': image_png})],
         })
 
@@ -198,17 +198,6 @@ class TestWebsiteSaleImage(odoo.tests.HttpCase):
         self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_red, "red")
         image = Image.open(io.BytesIO(base64.b64decode(product_green.image_128)))
         self.assertEqual(image.size, (128, 72))
-        self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_green, "green")
-
-        # Verify 64 size: keep aspect ratio
-        image = Image.open(io.BytesIO(base64.b64decode(template.image_64)))
-        self.assertEqual(image.size, (64, 36))
-        self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_blue, "blue")
-        image = Image.open(io.BytesIO(base64.b64decode(product_red.image_64)))
-        self.assertEqual(image.size, (64, 40))
-        self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_red, "red")
-        image = Image.open(io.BytesIO(base64.b64decode(product_green.image_64)))
-        self.assertEqual(image.size, (64, 36))
         self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_green, "green")
 
         # self.env.cr.commit()  # uncomment to save the product to test in browser

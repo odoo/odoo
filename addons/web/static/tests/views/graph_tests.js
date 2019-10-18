@@ -133,7 +133,7 @@ QUnit.module('Views', {
                 data: [3,5],
                 label: "Count",
                 originIndex: 0,
-                stack: undefined,
+                stack: "",
             }
         );
         assert.checkLegend(graph, 'Count');
@@ -173,6 +173,27 @@ QUnit.module('Views', {
         assert.strictEqual(graph.$('.o_graph_renderer label').text(), "Partners",
             "should have 'Partners as title'");
 
+        graph.destroy();
+    });
+
+    QUnit.test('field id not in groupBy', async function (assert) {
+        assert.expect(1);
+
+        var graph = await createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            arch: '<graph string="Partners">' +
+                        '<field name="id"/>' +
+                '</graph>',
+            mockRPC: function (route, args) {
+                if (args.method === 'read_group') {
+                    assert.deepEqual(args.kwargs.groupby, [],
+                        'groupby should not contain id field');
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
         graph.destroy();
     });
 

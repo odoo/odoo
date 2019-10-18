@@ -12,11 +12,14 @@ class AccountBankStmtCashWizard(models.Model):
     _inherit = 'account.bank.statement.cashbox'
 
     @api.depends('pos_config_ids')
+    @api.depends_context('current_currency_id')
     def _compute_currency(self):
         super(AccountBankStmtCashWizard, self)._compute_currency()
         for cashbox in self:
             if cashbox.pos_config_ids:
                 cashbox.currency_id = cashbox.pos_config_ids[0].currency_id.id
+            elif self.env.context.get('current_currency_id'):
+                cashbox.currency_id = self.env.context.get('current_currency_id')
 
     pos_config_ids = fields.One2many('pos.config', 'default_cashbox_id')
     is_a_template = fields.Boolean(default=False)
@@ -119,7 +122,6 @@ class PosConfig(models.Model):
         default=_default_invoice_journal)
     currency_id = fields.Many2one('res.currency', compute='_compute_currency', string="Currency")
     iface_cashdrawer = fields.Boolean(string='Cashdrawer', help="Automatically open the cashdrawer.")
-    iface_payment_terminal = fields.Boolean(string='Payment Terminal', help="Enables Payment Terminal integration.")
     iface_electronic_scale = fields.Boolean(string='Electronic Scale', help="Enables Electronic Scale integration.")
     iface_vkeyboard = fields.Boolean(string='Virtual KeyBoard', help=u"Don’t turn this option on if you take orders on smartphones or tablets. \n Such devices already benefit from a native keyboard.")
     iface_customer_facing_display = fields.Boolean(string='Customer Facing Display', help="Show checkout to customers with a remotely-connected screen.")
@@ -137,6 +139,7 @@ class PosConfig(models.Model):
         help='The point of sale will display this product category by default. If no category is specified, all available products will be shown.')
     iface_available_categ_ids = fields.Many2many('pos.category', string='Available PoS Product Categories',
         help='The point of sale will only display products which are within one of the selected category trees. If no category is specified, all available products will be shown')
+    selectable_categ_ids = fields.Many2many('pos.category', compute='_compute_selectable_categories')
     iface_display_categ_images = fields.Boolean(string='Display Category Pictures',
         help="The product categories will be displayed with pictures.")
     restrict_price_control = fields.Boolean(string='Restrict Price Modifications to Managers',
@@ -264,7 +267,7 @@ class PosConfig(models.Model):
         for pos_config in self:
             session = pos_config.session_ids.filtered(lambda s: s.state in ['new_session', 'opening_control', 'opened', 'closing_control'] and not s.rescue)
             if session:
-                pos_config.pos_session_username = session[0].user_id.name
+                pos_config.pos_session_username = session[0].user_id.sudo().name
                 pos_config.pos_session_state = session[0].state
                 pos_config.pos_session_duration = (
                     datetime.now() - session[0].start_at
@@ -275,6 +278,14 @@ class PosConfig(models.Model):
                 pos_config.pos_session_state = False
                 pos_config.pos_session_duration = 0
                 pos_config.current_user_id = False
+
+    @api.depends('iface_available_categ_ids')
+    def _compute_selectable_categories(self):
+        for config in self:
+            if config.iface_available_categ_ids:
+                config.selectable_categ_ids = config.iface_available_categ_ids
+            else:
+                config.selectable_categ_ids = self.env['pos.category'].search([])
 
     @api.constrains('cash_control')
     def _check_session_state(self):
@@ -318,6 +329,13 @@ class PosConfig(models.Model):
     def _check_companies(self):
         if any(self.available_pricelist_ids.mapped(lambda pl: pl.company_id.id not in (False, self.company_id.id))):
             raise ValidationError(_("The selected pricelists must belong to no company or the company of the point of sale."))
+
+    @api.onchange('iface_tipproduct')
+    def _onchange_tipproduct(self):
+        if self.iface_tipproduct:
+            self.tip_product_id = self.env.ref('point_of_sale.product_product_tip', False)
+        else:
+            self.tip_product_id = False
 
     @api.onchange('iface_print_via_proxy')
     def _onchange_iface_print_via_proxy(self):
@@ -372,12 +390,8 @@ class PosConfig(models.Model):
         res = {}
         if not self.limit_categories:
             self.iface_available_categ_ids = False
-        elif not len(self.iface_available_categ_ids):
-             res = {'domain': {'iface_start_categ_id': [('id', 'in', self.env['pos.category'].search([]).ids)]}}
-        elif self.iface_start_categ_id not in self.iface_available_categ_ids:
+        if self.iface_available_categ_ids and self.iface_start_categ_id.id not in self.iface_available_categ_ids.ids:
             self.iface_start_categ_id = False
-        if self.iface_available_categ_ids:
-            res = {'domain': {'iface_start_categ_id': [('id', 'in', self.iface_available_categ_ids.ids)]}}
         return res
 
     @api.onchange('is_header_or_footer')
@@ -429,10 +443,11 @@ class PosConfig(models.Model):
         return result
 
     def unlink(self):
-        for pos_config in self.filtered(lambda pos_config: pos_config.sequence_id or pos_config.sequence_line_id):
-            pos_config.sequence_id.unlink()
-            pos_config.sequence_line_id.unlink()
-        return super(PosConfig, self).unlink()
+        # Delete the pos.config records first then delete the sequences linked to them
+        sequences_to_delete = self.sequence_id | self.sequence_line_id
+        res = super(PosConfig, self).unlink()
+        sequences_to_delete.unlink()
+        return res
 
     def _set_fiscal_position(self):
         for config in self:
@@ -442,16 +457,22 @@ class PosConfig(models.Model):
                 config.fiscal_position_ids = [(5, 0, 0)]
 
     def _check_modules_to_install(self):
-        module_installed = False
-        for pos_config in self:
-            for field_name in [f for f in pos_config.fields_get_keys() if f.startswith('module_')]:
-                module_name = field_name.split('module_')[1]
-                module_to_install = self.env['ir.module.module'].sudo().search([('name', '=', module_name)])
-                if getattr(pos_config, field_name) and module_to_install.state not in ('installed', 'to install', 'to upgrade'):
-                    module_to_install.button_immediate_install()
-                    module_installed = True
-        # just in case we want to do something if we install a module. (like a refresh ...)
-        return module_installed
+        # determine modules to install
+        expected = [
+            fname[7:]           # 'module_account' -> 'account'
+            for fname in self.fields_get_keys()
+            if fname.startswith('module_')
+            if any(pos_config[fname] for pos_config in self)
+        ]
+        if expected:
+            STATES = ('installed', 'to install', 'to upgrade')
+            modules = self.env['ir.module.module'].sudo().search([('name', 'in', expected)])
+            modules = modules.filtered(lambda module: module.state not in STATES)
+            if modules:
+                modules.button_immediate_install()
+                # just in case we want to do something if we install a module. (like a refresh ...)
+                return True
+        return False
 
     def _check_groups_implied(self):
         for pos_config in self:
@@ -496,6 +517,9 @@ class PosConfig(models.Model):
         """
         self.ensure_one()
         if not self.current_session_id:
+            if not self.company_has_template:
+                raise UserError(_("A Chart of Accounts is not yet installed in your current company. Please install a "
+                                  "Chart of Accounts through the Invoicing/Accounting settings before launching a PoS session." ))
             self._check_company_journal()
             self._check_company_invoice_journal()
             self._check_company_payment()

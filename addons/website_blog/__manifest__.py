@@ -3,7 +3,7 @@
 
 {
     'name': 'Blogs',
-    'category': 'Website',
+    'category': 'Website/Website',
     'sequence': 140,
     'website': 'https://www.odoo.com/page/blog-engine',
     'summary': 'Publish blog posts, announces, news',

@@ -25,6 +25,7 @@ class AccountInvoiceSend(models.TransientModel):
 
     @api.depends('invoice_ids')
     def _get_partner(self):
+        self.partner_id = self.env['res.partner']
         for wizard in self:
             if wizard.invoice_ids and len(wizard.invoice_ids) == 1:
                 wizard.partner_id = wizard.invoice_ids.partner_id.id

@@ -93,6 +93,7 @@ class MaintenanceEquipment(models.Model):
     _name = 'maintenance.equipment'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = 'Maintenance Equipment'
+    _check_company_auto = True
 
     def _track_subtype(self, init_values):
         self.ensure_one()
@@ -117,7 +118,7 @@ class MaintenanceEquipment(models.Model):
             equipment_ids = self._search([('name', '=', name)] + args, limit=limit, access_rights_uid=name_get_uid)
         if not equipment_ids:
             equipment_ids = self._search([('name', operator, name)] + args, limit=limit, access_rights_uid=name_get_uid)
-        return self.browse(equipment_ids).name_get()
+        return models.lazy_name_get(self.browse(equipment_ids).with_user(name_get_uid))
 
     name = fields.Char('Equipment Name', required=True, translate=True)
     company_id = fields.Many2one('res.company', string='Company',
@@ -127,7 +128,7 @@ class MaintenanceEquipment(models.Model):
     owner_user_id = fields.Many2one('res.users', string='Owner', tracking=True)
     category_id = fields.Many2one('maintenance.equipment.category', string='Equipment Category',
                                   tracking=True, group_expand='_read_group_category_ids')
-    partner_id = fields.Many2one('res.partner', string='Vendor')
+    partner_id = fields.Many2one('res.partner', string='Vendor', check_company=True)
     partner_ref = fields.Char('Vendor Reference')
     location = fields.Char('Location')
     model = fields.Char('Model')
@@ -144,7 +145,7 @@ class MaintenanceEquipment(models.Model):
     maintenance_open_count = fields.Integer(compute='_compute_maintenance_count', string="Current Maintenance", store=True)
     period = fields.Integer('Days between each preventive maintenance')
     next_action_date = fields.Date(compute='_compute_next_maintenance', string='Date of the next preventive maintenance', store=True)
-    maintenance_team_id = fields.Many2one('maintenance.team', string='Maintenance Team')
+    maintenance_team_id = fields.Many2one('maintenance.team', string='Maintenance Team', check_company=True)
     maintenance_duration = fields.Float(help="Maintenance Duration in hours.")
 
     @api.depends('effective_date', 'period', 'maintenance_ids.request_date', 'maintenance_ids.close_date')
@@ -196,6 +197,12 @@ class MaintenanceEquipment(models.Model):
             equipment.maintenance_count = len(equipment.maintenance_ids)
             equipment.maintenance_open_count = len(equipment.maintenance_ids.filtered(lambda x: not x.stage_id.done))
 
+    @api.onchange('company_id')
+    def _onchange_company_id(self):
+        if self.company_id and self.maintenance_team_id:
+            if self.maintenance_team_id.company_id and not self.maintenance_team_id.company_id.id == self.company_id.id:
+                self.maintenance_team_id = False
+
     @api.onchange('category_id')
     def _onchange_category_id(self):
         self.technician_user_id = self.category_id.technician_user_id
@@ -237,6 +244,7 @@ class MaintenanceEquipment(models.Model):
             'user_id': self.technician_user_id.id,
             'maintenance_team_id': self.maintenance_team_id.id,
             'duration': self.maintenance_duration,
+            'company_id': self.company_id.id or self.env.company.id
             })
 
     @api.model
@@ -258,6 +266,7 @@ class MaintenanceRequest(models.Model):
     _inherit = ['mail.thread.cc', 'mail.activity.mixin']
     _description = 'Maintenance Request'
     _order = "id desc"
+    _check_company_auto = True
 
     @api.returns('self')
     def _default_stage(self):
@@ -288,7 +297,7 @@ class MaintenanceRequest(models.Model):
     owner_user_id = fields.Many2one('res.users', string='Created by User', default=lambda s: s.env.uid)
     category_id = fields.Many2one('maintenance.equipment.category', related='equipment_id.category_id', string='Category', store=True, readonly=True)
     equipment_id = fields.Many2one('maintenance.equipment', string='Equipment',
-                                   ondelete='restrict', index=True)
+                                   ondelete='restrict', index=True, check_company=True)
     user_id = fields.Many2one('res.users', string='Technician', tracking=True)
     stage_id = fields.Many2one('maintenance.stage', string='Stage', ondelete='restrict', tracking=True,
                                group_expand='_read_group_stage_ids', default=_default_stage)
@@ -301,7 +310,7 @@ class MaintenanceRequest(models.Model):
     archive = fields.Boolean(default=False, help="Set archive to true to hide the maintenance request without deleting it.")
     maintenance_type = fields.Selection([('corrective', 'Corrective'), ('preventive', 'Preventive')], string='Maintenance Type', default="corrective")
     schedule_date = fields.Datetime('Scheduled Date', help="Date the maintenance team plans the maintenance.  It should not differ much from the Request Date. ")
-    maintenance_team_id = fields.Many2one('maintenance.team', string='Team', required=True, default=_get_default_team_id)
+    maintenance_team_id = fields.Many2one('maintenance.team', string='Team', required=True, default=_get_default_team_id, check_company=True)
     duration = fields.Float(help="Duration in hours.")
     done = fields.Boolean(related='stage_id.done')
 
@@ -313,6 +322,12 @@ class MaintenanceRequest(models.Model):
         first_stage_obj = self.env['maintenance.stage'].search([], order="sequence asc", limit=1)
         # self.write({'active': True, 'stage_id': first_stage_obj.id})
         self.write({'archive': False, 'stage_id': first_stage_obj.id})
+
+    @api.onchange('company_id')
+    def _onchange_company_id(self):
+        if self.company_id and self.maintenance_team_id:
+            if self.maintenance_team_id.company_id and not self.maintenance_team_id.company_id.id == self.company_id.id:
+                self.maintenance_team_id = False
 
     @api.onchange('equipment_id')
     def onchange_equipment_id(self):
@@ -400,7 +415,9 @@ class MaintenanceTeam(models.Model):
     active = fields.Boolean(default=True)
     company_id = fields.Many2one('res.company', string='Company',
         default=lambda self: self.env.company)
-    member_ids = fields.Many2many('res.users', 'maintenance_team_users_rel', string="Team Members")
+    member_ids = fields.Many2many(
+        'res.users', 'maintenance_team_users_rel', string="Team Members",
+        domain="[('company_ids', 'in', company_id)]")
     color = fields.Integer("Color Index", default=0)
     request_ids = fields.One2many('maintenance.request', 'maintenance_team_id', copy=False)
     equipment_ids = fields.One2many('maintenance.equipment', 'maintenance_team_id', copy=False)

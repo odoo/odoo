@@ -89,10 +89,10 @@ class TestTimesheet(TestCommonTimesheet):
             'name': 'my first timesheet',
             'unit_amount': 4,
         })
-        self.assertEquals(timesheet1.account_id, self.project_customer.analytic_account_id, 'Analytic account should be the same as the project')
-        self.assertEquals(timesheet1.employee_id, self.empl_employee, 'Employee should be the one of the current user')
-        self.assertEquals(timesheet1.partner_id, self.task1.partner_id, 'Customer of task should be the same of the one set on new timesheet')
-        self.assertEquals(timesheet1.product_uom_id, timesheet_uom, "The UoM of the timesheet should be the one set on the company of the analytic account.")
+        self.assertEqual(timesheet1.account_id, self.project_customer.analytic_account_id, 'Analytic account should be the same as the project')
+        self.assertEqual(timesheet1.employee_id, self.empl_employee, 'Employee should be the one of the current user')
+        self.assertEqual(timesheet1.partner_id, self.task1.partner_id, 'Customer of task should be the same of the one set on new timesheet')
+        self.assertEqual(timesheet1.product_uom_id, timesheet_uom, "The UoM of the timesheet should be the one set on the company of the analytic account.")
 
         # employee 1 cannot log timesheet for employee 2
         with self.assertRaises(AccessError):
@@ -113,8 +113,8 @@ class TestTimesheet(TestCommonTimesheet):
             'employee_id': self.empl_employee2.id,
         })
         timesheet3._onchange_employee_id()
-        self.assertEquals(timesheet3.user_id, self.user_employee2, 'Timesheet user should be the one linked to the given employee')
-        self.assertEquals(timesheet3.product_uom_id, timesheet_uom, "The UoM of the timesheet 3 should be the one set on the company of the analytic account.")
+        self.assertEqual(timesheet3.user_id, self.user_employee2, 'Timesheet user should be the one linked to the given employee')
+        self.assertEqual(timesheet3.product_uom_id, timesheet_uom, "The UoM of the timesheet 3 should be the one set on the company of the analytic account.")
 
         # employee 1 log some timesheet on project (no task)
         timesheet4 = Timesheet.with_user(self.user_employee).create({
@@ -122,7 +122,7 @@ class TestTimesheet(TestCommonTimesheet):
             'name': 'my first timesheet',
             'unit_amount': 4,
         })
-        self.assertEquals(timesheet4.partner_id, self.project_customer.partner_id, 'Customer of new timesheet should be the same of the one set project (since no task on timesheet)')
+        self.assertEqual(timesheet4.partner_id, self.project_customer.partner_id, 'Customer of new timesheet should be the same of the one set project (since no task on timesheet)')
 
     def test_log_access_rights(self):
         """ Test access rights : user can update its own timesheets only, and manager can change all """
@@ -145,7 +145,7 @@ class TestTimesheet(TestCommonTimesheet):
             'unit_amount': 8,
             'employee_id': self.empl_employee2.id,
         })
-        self.assertEquals(timesheet1.user_id, self.user_employee2, 'Changing timesheet employee should change the related user')
+        self.assertEqual(timesheet1.user_id, self.user_employee2, 'Changing timesheet employee should change the related user')
 
     def test_create_unlink_project(self):
         """ Check project creation, and if necessary the analytic account generated when project should track time. """
@@ -165,9 +165,9 @@ class TestTimesheet(TestCommonTimesheet):
         })
         self.assertTrue(tracked_project.analytic_account_id, "A time-tracked project should generate an analytic account")
         self.assertTrue(tracked_project.analytic_account_id.active, "A time-tracked project should generate an active analytic account")
-        self.assertEquals(tracked_project.partner_id, tracked_project.analytic_account_id.partner_id, "The generated AA should have the same partner as the project")
-        self.assertEquals(tracked_project.name, tracked_project.analytic_account_id.name, "The generated AA should have the same name as the project")
-        self.assertEquals(tracked_project.analytic_account_id.project_count, 1, "The generated AA should be linked to the project")
+        self.assertEqual(tracked_project.partner_id, tracked_project.analytic_account_id.partner_id, "The generated AA should have the same partner as the project")
+        self.assertEqual(tracked_project.name, tracked_project.analytic_account_id.name, "The generated AA should have the same name as the project")
+        self.assertEqual(tracked_project.analytic_account_id.project_count, 1, "The generated AA should be linked to the project")
 
         # create a project without tracking time, but with analytic account
         analytic_project = self.env['project.project'].create({
@@ -176,8 +176,8 @@ class TestTimesheet(TestCommonTimesheet):
             'partner_id': self.partner.id,
             'analytic_account_id': tracked_project.analytic_account_id.id,
         })
-        self.assertNotEquals(analytic_project.name, tracked_project.analytic_account_id.name, "The name of the associated AA can be different from the project")
-        self.assertEquals(tracked_project.analytic_account_id.project_count, 2, "The AA should be linked to 2 project")
+        self.assertNotEqual(analytic_project.name, tracked_project.analytic_account_id.name, "The name of the associated AA can be different from the project")
+        self.assertEqual(tracked_project.analytic_account_id.project_count, 2, "The AA should be linked to 2 project")
 
         # analytic linked to projects containing tasks can not be removed
         task = self.env['project.task'].create({
@@ -211,9 +211,9 @@ class TestTimesheet(TestCommonTimesheet):
 
         timesheet_count1 = Timesheet.search_count([('project_id', '=', self.project_customer.id)])
         timesheet_count2 = Timesheet.search_count([('project_id', '=', self.project_customer2.id)])
-        self.assertEquals(timesheet_count1, 1, "One timesheet in project 1")
-        self.assertEquals(timesheet_count2, 0, "No timesheet in project 2")
-        self.assertEquals(len(self.task1.timesheet_ids), 1, "The timesheet should be linked to task 1")
+        self.assertEqual(timesheet_count1, 1, "One timesheet in project 1")
+        self.assertEqual(timesheet_count2, 0, "No timesheet in project 2")
+        self.assertEqual(len(self.task1.timesheet_ids), 1, "The timesheet should be linked to task 1")
 
         # change project of task 1
         self.task1.write({
@@ -222,9 +222,9 @@ class TestTimesheet(TestCommonTimesheet):
 
         timesheet_count1 = Timesheet.search_count([('project_id', '=', self.project_customer.id)])
         timesheet_count2 = Timesheet.search_count([('project_id', '=', self.project_customer2.id)])
-        self.assertEquals(timesheet_count1, 1, "Still one timesheet in project 1")
-        self.assertEquals(timesheet_count2, 0, "No timesheet in project 2")
-        self.assertEquals(len(self.task1.timesheet_ids), 1, "The timesheet still should be linked to task 1")
+        self.assertEqual(timesheet_count1, 1, "Still one timesheet in project 1")
+        self.assertEqual(timesheet_count2, 0, "No timesheet in project 2")
+        self.assertEqual(len(self.task1.timesheet_ids), 1, "The timesheet still should be linked to task 1")
 
         # it is forbidden to set a task with timesheet without project
         with self.assertRaises(UserError):

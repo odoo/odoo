@@ -8,7 +8,7 @@ odoo.define('website_forum.tour_forum_question', function (require) {
         url: '/forum/help-1',
     }, [{
         content: "Ask the question in this forum by clicking on the button.",
-        trigger: '.btn-lg.btn-block',
+        trigger: '.o_forum_ask_btn',
     }, {
         content: "Give your question content.",
         trigger: 'input[name=post_name]',
@@ -41,13 +41,13 @@ odoo.define('website_forum.tour_forum_question', function (require) {
         trigger: 'button:contains("Post Answer")',
     }, {
         content: "This page contain new created question and its answer.",
-        extra_trigger: '#wrap:has(".fa-check-circle")',
+        extra_trigger: '#wrap:has(".o_wforum_validate_toggler")',
         trigger: 'button[data-dismiss="modal"]',
     }, {
         content: "Click here to accept this answer.",
-        trigger: 'a[data-karma="20"]:first',
+        trigger: '.o_wforum_validate_toggler[data-karma="20"]:first',
     }, {
         content: "Congratulations! You just created and post your first question and answer.",
-        trigger: '#wrap:has(".oe_answer_true")',
+        trigger: '#wrap:has(".o_wforum_answer_correct")',
     }]);
 });

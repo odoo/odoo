@@ -1,6 +1,6 @@
 # Please note that this Dockerfile is used for testing nightly builds and should
 # not be used to deploy Odoo
-FROM debian:stretch
+FROM debian:buster
 MAINTAINER Odoo S.A. <info@odoo.com>
 
 RUN apt-get update && \
@@ -12,11 +12,14 @@ RUN dpkg-reconfigure locales && \
     locale-gen C.UTF-8 && \
     /usr/sbin/update-locale LANG=C.UTF-8
 ENV LC_ALL C.UTF-8
+ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update -qq &&  \
     apt-get upgrade -qq -y && \
     apt-get install -qq -y\
         adduser \
+        dh-python \
+        packaging-dev \
         postgresql \
         postgresql-client \
         python3 \
@@ -51,7 +54,8 @@ RUN apt-get update -qq &&  \
         python3-vatnumber \
         python3-vobject \
         python3-werkzeug \
-        python3-xlsxwriter && \
+        python3-xlsxwriter \
+        rsync && \
     rm -rf /var/lib/apt/lists/*
 
 RUN echo "PS1=\"[\u@nightly-tests] # \"" > ~/.bashrc

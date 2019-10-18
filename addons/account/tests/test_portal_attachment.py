@@ -10,7 +10,7 @@ from odoo.tools import mute_logger
 @tests.tagged('post_install', '-at_install')
 class TestUi(tests.HttpCase):
 
-    @mute_logger('odoo.addons.website.models.ir_http', 'odoo.http')
+    @mute_logger('odoo.addons.http_routing.models.ir_http', 'odoo.http')
     def test_01_portal_attachment(self):
         """Test the portal chatter attachment route."""
 
@@ -32,7 +32,7 @@ class TestUi(tests.HttpCase):
         files = [('file', ('test.txt', b'test', 'plain/text'))]
         res = self.url_open(url=create_url, data=create_data, files=files)
         self.assertEqual(res.status_code, 400)
-        self.assertTrue("you do not have the rights" in res.text)
+        self.assertIn("you do not have the rights", res.text)
 
         # Test public user can create attachment with token
         create_data['access_token'] = invoice._portal_ensure_token()
@@ -73,7 +73,7 @@ class TestUi(tests.HttpCase):
         res = self.opener.post(url=remove_url, json={'params': remove_data})
         self.assertEqual(res.status_code, 200)
         self.assertTrue(self.env['ir.attachment'].search([('id', '=', create_res['id'])]))
-        self.assertTrue("you do not have the rights" in res.text)
+        self.assertIn("you do not have the rights", res.text)
 
         # Test attachment can be removed with token if "pending" state
         remove_data['access_token'] = create_res['access_token']
@@ -95,13 +95,14 @@ class TestUi(tests.HttpCase):
         res = self.opener.post(url=remove_url, json={'params': remove_data})
         self.assertEqual(res.status_code, 200)
         self.assertTrue(self.env['ir.attachment'].search([('id', '=', attachment.id)]))
-        self.assertTrue("not in a pending state" in res.text)
+        self.assertIn("not in a pending state", res.text)
 
         # Test attachment can't be removed if attached to a message
         attachment.write({
             'res_model': 'mail.compose.message',
             'res_id': 0,
         })
+        attachment.flush()
         message = self.env['mail.message'].create({
             'attachment_ids': [(6, 0, attachment.ids)],
         })
@@ -112,7 +113,7 @@ class TestUi(tests.HttpCase):
         res = self.opener.post(url=remove_url, json={'params': remove_data})
         self.assertEqual(res.status_code, 200)
         self.assertTrue(attachment.exists())
-        self.assertTrue("it is linked to a message" in res.text)
+        self.assertIn("it is linked to a message", res.text)
         message.unlink()
 
         # Test attachment can't be associated if no attachment token.

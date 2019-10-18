@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-12 11:32+0000\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 08:16+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -38,6 +38,11 @@ msgid "Active"
 msgstr ""
 
 #. module: crm_iap_lead_website
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_view_search
+msgid "Archived"
+msgstr ""
+
+#. module: crm_iap_lead_website
 #: model:ir.model,name:crm_iap_lead_website.model_crm_reveal_rule
 msgid "CRM Lead Generation Rules"
 msgstr ""
@@ -53,12 +58,12 @@ msgid "Choose whether to track companies only or companies and their contacts"
 msgstr ""
 
 #. module: crm_iap_lead_website
-#: selection:crm.reveal.rule,lead_for:0
+#: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_rule__lead_for__companies
 msgid "Companies"
 msgstr ""
 
 #. module: crm_iap_lead_website
-#: selection:crm.reveal.rule,lead_for:0
+#: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_rule__lead_for__people
 msgid "Companies and their Contacts"
 msgstr ""
 
@@ -121,7 +126,7 @@ msgid "Display Name"
 msgstr ""
 
 #. module: crm_iap_lead_website
-#: code:addons/crm_iap_lead_website/models/crm_reveal_rule.py:74
+#: code:addons/crm_iap_lead_website/models/crm_reveal_rule.py:0
 #, python-format
 msgid "Enter Valid Regex."
 msgstr ""
@@ -157,7 +162,7 @@ msgid "HTTP Routing"
 msgstr ""
 
 #. module: crm_iap_lead_website
-#: selection:crm.reveal.rule,priority:0
+#: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_rule__priority__2
 msgid "High"
 msgstr ""
 
@@ -202,7 +207,7 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: crm_iap_lead_website
-#: selection:crm.reveal.rule,lead_type:0
+#: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_rule__lead_type__lead
 msgid "Lead"
 msgstr ""
 
@@ -212,7 +217,6 @@ msgid "Lead Data"
 msgstr ""
 
 #. module: crm_iap_lead_website
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_lead_form
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_lead_opportunity_form
 msgid "Lead Generation Information"
 msgstr ""
@@ -230,7 +234,7 @@ msgid "Lead Generation Views"
 msgstr ""
 
 #. module: crm_iap_lead_website
-#: code:addons/crm_iap_lead_website/models/crm_reveal_rule.py:79
+#: code:addons/crm_iap_lead_website/models/crm_reveal_rule.py:0
 #, python-format
 msgid ""
 "Lead Generation requires a GeoIP resolver which could not be found on your "
@@ -255,7 +259,7 @@ msgid "Leave empty to always match. Odoo will not create lead if no match"
 msgstr ""
 
 #. module: crm_iap_lead_website
-#: selection:crm.reveal.rule,priority:0
+#: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_rule__priority__0
 msgid "Low"
 msgstr ""
 
@@ -267,23 +271,23 @@ msgid ""
 msgstr ""
 
 #. module: crm_iap_lead_website
-#: sql_constraint:crm.reveal.rule:0
+#: model:ir.model.constraint,message:crm_iap_lead_website.constraint_crm_reveal_rule_limit_extra_contacts
 msgid "Maximum 5 contacts are allowed!"
 msgstr ""
 
 #. module: crm_iap_lead_website
-#: selection:crm.reveal.rule,priority:0
+#: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_rule__priority__1
 msgid "Medium"
 msgstr ""
 
 #. module: crm_iap_lead_website
-#: code:addons/crm_iap_lead_website/models/crm_reveal_rule.py:82
+#: code:addons/crm_iap_lead_website/models/crm_reveal_rule.py:0
 #, python-format
 msgid "Missing Library"
 msgstr ""
 
 #. module: crm_iap_lead_website
-#: selection:crm.reveal.view,reveal_state:0
+#: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_view__reveal_state__not_found
 msgid "Not Found"
 msgstr ""
 
@@ -317,7 +321,7 @@ msgid ""
 msgstr ""
 
 #. module: crm_iap_lead_website
-#: selection:crm.reveal.rule,lead_type:0
+#: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_rule__lead_type__opportunity
 msgid "Opportunity"
 msgstr ""
 
@@ -360,8 +364,13 @@ msgid "Restrict Lead generation to this website."
 msgstr ""
 
 #. module: crm_iap_lead_website
-#: selection:crm.reveal.rule,contact_filter_type:0
+#: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_rule__contact_filter_type__role
 msgid "Role"
+msgstr ""
+
+#. module: crm_iap_lead_website
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_view_search
+msgid "Rule"
 msgstr ""
 
 #. module: crm_iap_lead_website
@@ -380,8 +389,13 @@ msgid "Salesperson"
 msgstr ""
 
 #. module: crm_iap_lead_website
-#: selection:crm.reveal.rule,contact_filter_type:0
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_view_search
+msgid "Search CRM Reveal Rule"
+msgstr ""
+
+#. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__seniority_id
+#: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_rule__contact_filter_type__seniority
 msgid "Seniority"
 msgstr ""
 
@@ -426,7 +440,7 @@ msgid ""
 msgstr ""
 
 #. module: crm_iap_lead_website
-#: selection:crm.reveal.view,reveal_state:0
+#: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_view__reveal_state__to_process
 msgid "To Process"
 msgstr ""
 
@@ -453,7 +467,7 @@ msgid ""
 msgstr ""
 
 #. module: crm_iap_lead_website
-#: selection:crm.reveal.rule,priority:0
+#: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_rule__priority__3
 msgid "Very High"
 msgstr ""
 

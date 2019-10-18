@@ -68,13 +68,13 @@ class TestEquipment(TransactionCase):
         assert maintenance_request_01, "Maintenance Request not created"
 
         # I check that Initially maintenance request is in the "New Request" stage
-        self.assertEquals(maintenance_request_01.stage_id.id, self.ref('maintenance.stage_0'))
+        self.assertEqual(maintenance_request_01.stage_id.id, self.ref('maintenance.stage_0'))
 
         # I check that change the maintenance_request stage on click statusbar
         maintenance_request_01.with_user(self.user).write({'stage_id': self.ref('maintenance.stage_1')})
 
         # I check that maintenance request is in the "In Progress" stage
-        self.assertEquals(maintenance_request_01.stage_id.id, self.ref('maintenance.stage_1'))
+        self.assertEqual(maintenance_request_01.stage_id.id, self.ref('maintenance.stage_1'))
 
     def test_20_cron(self):
         """ Check the cron creates the necessary preventive maintenance requests"""

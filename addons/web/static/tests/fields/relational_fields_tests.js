@@ -1191,7 +1191,7 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('required selection widget should not have blank option', async function (assert) {
-        assert.expect(3);
+        assert.expect(12);
 
         this.data.partner.fields.feedback_value = {
             type: "selection",
@@ -1212,15 +1212,38 @@ QUnit.module('relational_fields', {
         });
 
         await testUtils.form.clickEdit(form);
-        assert.strictEqual(form.$('.o_field_widget[name=color]')[0].options.length, 3,
-            "non required selection field must have 3 options 1 blank option and 2 value options");
-        assert.strictEqual(form.$('.o_field_widget[name=feedback_value]')[0].options.length, 2,
-            "should have only 2 options without blank option");
+
+        var $colorField = form.$('.o_field_widget[name=color]');
+        assert.containsN($colorField, 'option', 3, "Three options in non required field");
+
+        assert.hasAttrValue($colorField.find('option:first()'), 'style', "",
+            "Should not have display=none");
+        assert.hasAttrValue($colorField.find('option:eq(1)'), 'style', "",
+            "Should not have display=none");
+        assert.hasAttrValue($colorField.find('option:eq(2)'), 'style', "",
+            "Should not have display=none");
+
+        const $requiredSelect = form.$('.o_field_widget[name=feedback_value]');
+
+        assert.containsN($requiredSelect, 'option', 3, "Three options in required field");
+        assert.hasAttrValue($requiredSelect.find('option:first()'), 'style', "display: none",
+            "Should have display=none");
+        assert.hasAttrValue($requiredSelect.find('option:eq(1)'), 'style', "",
+            "Should not have display=none");
+        assert.hasAttrValue($requiredSelect.find('option:eq(2)'), 'style', "",
+            "Should not have display=none");
 
         // change value to update widget modifier values
-        await testUtils.fields.editSelect(form.$('.o_field_widget[name=feedback_value]'), '"bad"');
-        assert.strictEqual(form.$('.o_field_widget[name=color]')[0].options.length, 2,
-            "should have only 2 options");
+        await testUtils.fields.editSelect($requiredSelect, '"bad"');
+        $colorField = form.$('.o_field_widget[name=color]');
+
+        assert.containsN($colorField, 'option', 3, "Three options in required field");
+        assert.hasAttrValue($colorField.find('option:first()'), 'style', "display: none",
+            "Should have display=none");
+        assert.hasAttrValue($colorField.find('option:eq(1)'), 'style', "",
+            "Should not have display=none");
+        assert.hasAttrValue($colorField.find('option:eq(2)'), 'style', "",
+            "Should not have display=none");
 
         form.destroy();
     });
@@ -1518,6 +1541,28 @@ QUnit.module('relational_fields', {
         await testUtils.nextTick();
         assert.strictEqual(form.$('.badge:first()').data('color'), color,
             'should have correctly updated the color (in edit)');
+
+        form.destroy();
+    });
+
+    QUnit.test('fieldmany2many tags with no_edit_color option', async function (assert) {
+        assert.expect(1);
+
+        this.data.partner.records[0].timmy = [12];
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="timmy" widget="many2many_tags" options="{\'color_field\': \'color\', \'no_edit_color\': 1}"/>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        // Click to try to open colorpicker
+        await testUtils.dom.click(form.$('.badge:first() .dropdown-toggle'));
+        assert.containsNone(document.body, '.o_colorpicker');
 
         form.destroy();
     });
@@ -1863,7 +1908,7 @@ QUnit.module('relational_fields', {
         });
 
         assert.containsN(form, '.o_field_many2manytags.avatar.o_field_widget .badge', 2, "should have 2 records");
-        assert.strictEqual(form.$('.o_field_many2manytags.avatar.o_field_widget .badge:first img').data('src'), '/web/image/partner/2/image_64',
+        assert.strictEqual(form.$('.o_field_many2manytags.avatar.o_field_widget .badge:first img').data('src'), '/web/image/partner/2/image_128',
             "should have correct avatar image");
 
         form.destroy();
@@ -2272,7 +2317,7 @@ QUnit.module('relational_fields', {
     QUnit.module('FieldMany2ManyBinaryMultiFiles');
 
     QUnit.test('widget many2many_binary', async function (assert) {
-        assert.expect(15);
+        assert.expect(16);
         this.data['ir.attachment'] = {
             fields: {
                 name: {string:"Name", type: "char"},
@@ -2296,7 +2341,7 @@ QUnit.module('relational_fields', {
             model: 'turtle',
             data: this.data,
             arch:'<form string="Turtles">' +
-                    '<group><field name="picture_ids" widget="many2many_binary"/></group>' +
+                    '<group><field name="picture_ids" widget="many2many_binary" options="{\'accepted_file_extensions\': \'image/*\'}"/></group>' +
                 '</form>',
             archs: {
                 'ir.attachment,false,list': '<tree string="Pictures"><field name="name"/></tree>',
@@ -2328,6 +2373,9 @@ QUnit.module('relational_fields', {
             "the button should be correctly named");
         assert.containsOnce(form, 'div.o_field_widget.oe_fileupload .o_hidden_input_file form',
             "there should be a hidden form to upload attachments");
+
+        assert.strictEqual(form.$('input.o_input_file').attr('accept'), 'image/*',
+            "there should be an attribute \"accept\" on the input")
 
         // TODO: add an attachment
         // no idea how to test this
@@ -2573,6 +2621,49 @@ QUnit.module('relational_fields', {
         await testUtils.form.clickSave(form);
         assert.strictEqual(form.$('a.o_form_uri:contains(gold)').length, 1,
                         "should contain a link with the new value");
+
+        form.destroy();
+    });
+
+    QUnit.test('interact with reference field changed by onchange', async function (assert) {
+        assert.expect(2);
+
+        this.data.partner.onchanges = {
+            bar: function (obj) {
+                if (!obj.bar) {
+                    obj.reference = 'partner,1';
+                }
+            },
+        };
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `<form>
+                    <field name="bar"/>
+                    <field name="reference"/>
+                </form>`,
+            mockRPC: function (route, args) {
+                if (args.method === 'create') {
+                    assert.deepEqual(args.args[0], {
+                        bar: false,
+                        reference: 'partner,4',
+                    });
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        // trigger the onchange to set a value for the reference field
+        await testUtils.dom.click(form.$('.o_field_boolean input'));
+
+        assert.strictEqual(form.$('.o_field_widget[name=reference] select').val(), 'partner');
+
+        // manually update reference field
+        await testUtils.fields.many2one.searchAndClickItem('reference', {search: 'aaa'});
+
+        // save
+        await testUtils.form.clickSave(form);
 
         form.destroy();
     });

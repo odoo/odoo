@@ -38,9 +38,10 @@ class ReturnPicking(models.TransientModel):
     move_dest_exists = fields.Boolean('Chained Move Exists', readonly=True)
     original_location_id = fields.Many2one('stock.location')
     parent_location_id = fields.Many2one('stock.location')
+    company_id = fields.Many2one(related='picking_id.company_id')
     location_id = fields.Many2one(
         'stock.location', 'Return Location',
-        domain="['|', ('id', '=', original_location_id), ('return_location', '=', True)]")
+        domain="['|', ('id', '=', original_location_id), '|', '&', ('return_location', '=', True), ('company_id', '=', False), '&', ('return_location', '=', True), ('company_id', '=', company_id)]")
 
     @api.onchange('picking_id')
     def _onchange_picking_id(self):

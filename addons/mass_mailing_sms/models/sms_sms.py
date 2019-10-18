@@ -43,5 +43,5 @@ class SmsSms(models.Model):
                 if traces and state == 'success':
                     traces.write({'sent': fields.Datetime.now(), 'exception': False})
                 elif traces:
-                    traces.write({'exception': fields.Datetime.now(), 'failure_type': self.IAP_TO_SMS_STATE[state]})
+                    traces.set_failed(failure_type=self.IAP_TO_SMS_STATE[state])
         return super(SmsSms, self)._postprocess_iap_sent_sms(iap_results, failure_reason=failure_reason, delete_all=delete_all)

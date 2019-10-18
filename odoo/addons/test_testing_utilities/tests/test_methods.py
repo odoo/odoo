@@ -11,9 +11,11 @@ class TestBasic(common.TransactionCase):
         Y3 = {'f1': "Y", 'f2': 3}
         records = self.env['test_testing_utilities.a'].create([X1, Y2])
 
-        # match in any order
         self.assertRecordValues(records, [X1, Y2])
-        self.assertRecordValues(records, [Y2, X1])
+
+        with self.assertRaises(AssertionError):
+            # order should match
+            self.assertRecordValues(records, [Y2, X1])
 
         # fail if wrong size
         with self.assertRaises(AssertionError):

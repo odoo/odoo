@@ -3,7 +3,7 @@
 
 {
     'name': 'CRM Livechat',
-    'category': 'crm',
+    'category': 'Sales/CRM',
     'summary': 'Create lead from livechat conversation',
     'data': [
         'data/utm_data.xml',

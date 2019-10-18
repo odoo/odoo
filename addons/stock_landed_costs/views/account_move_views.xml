@@ -4,6 +4,7 @@
         <field name="name">account.view.move.form.inherited</field>
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="groups_id" eval="[(4,ref('stock.group_stock_manager'))]"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@name='button_box']" position="inside">
                 <field name="landed_costs_ids" invisible="1"/>

@@ -148,7 +148,7 @@ PortalChatter.include({
         return {
             mes_index: messageIndex,
             publisher_id: this.options.partner_id,
-            publisher_avatar: _.str.sprintf('/web/image/%s/%s/image_64/50x50', 'res.partner', this.options.partner_id),
+            publisher_avatar: _.str.sprintf('/web/image/%s/%s/image_128/50x50', 'res.partner', this.options.partner_id),
             publisher_name: _t("Write your comment"),
             publisher_datetime: '',
             publisher_comment: '',
@@ -173,7 +173,7 @@ PortalChatter.include({
         if (rawRating.publisher_id && rawRating.publisher_id.length >= 2) {
             ratingData.publisher_id = rawRating.publisher_id[0];
             ratingData.publisher_name = rawRating.publisher_id[1];
-            ratingData.publisher_avatar = _.str.sprintf('/web/image/%s/%s/image_64/50x50', 'res.partner', ratingData.publisher_id);
+            ratingData.publisher_avatar = _.str.sprintf('/web/image/%s/%s/image_128/50x50', 'res.partner', ratingData.publisher_id);
         }
         var commentData = _.extend(this._newPublisherCommentData(messageIndex), ratingData);
         return commentData;

@@ -6,6 +6,7 @@ from . import test_account_move_in_invoice
 from . import test_account_move_in_refund
 from . import test_account_move_entry
 from . import test_account_move_partner_count
+from . import test_account_move_rounding
 from . import test_account_invoice_report
 from . import test_account_journal_dashboard
 from . import test_bank_statement_reconciliation
@@ -14,6 +15,7 @@ from . import test_reconciliation_widget
 from . import test_payment
 from . import test_reconciliation
 from . import test_search
+from . import test_settings
 from . import test_tax
 from . import test_invoice_taxes
 from . import test_templates_consistency

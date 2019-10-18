@@ -247,7 +247,7 @@ var ProductConfiguratorFormController = FormController.extend({
     _onModalClose: function () {
         if (this.renderer.state.context.configuratorMode === 'options'
             && this._wasConfirmed !== true) {
-            this._onAddRootProductOnly();
+              this.do_action({type: 'ir.actions.act_window_close'});
         }
     },
 

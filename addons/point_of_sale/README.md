@@ -45,7 +45,7 @@ stay operational even after a complete disconnection.
 A super clean user interface
 ----------------------------
 
-### Simple and beautifull
+### Simple and beautiful
 
 Say goodbye to ugly, outdated POS software and enjoy the Odoo web interface
 designed for modern retailer.

@@ -25,7 +25,7 @@ class TrackLocation(models.Model):
     _name = "event.track.location"
     _description = 'Event Track Location'
 
-    name = fields.Char('Location')
+    name = fields.Char('Location', required=True)
 
 
 class TrackStage(models.Model):
@@ -60,7 +60,7 @@ class Track(models.Model):
     active = fields.Boolean(default=True)
     user_id = fields.Many2one('res.users', 'Responsible', tracking=True, default=lambda self: self.env.user)
     company_id = fields.Many2one('res.company', related='event_id.company_id')
-    partner_id = fields.Many2one('res.partner', 'Partner')
+    partner_id = fields.Many2one('res.partner', 'Speaker')
     partner_name = fields.Char('Name')
     partner_email = fields.Char('Email')
     partner_phone = fields.Char('Phone')
@@ -111,8 +111,11 @@ class Track(models.Model):
     @api.depends('date', 'duration')
     def _compute_end_date(self):
         for track in self:
-            delta = timedelta(minutes=60 * track.duration)
-            track.date_end = track.date + delta
+            if track.date:
+                delta = timedelta(minutes=60 * track.duration)
+                track.date_end = track.date + delta
+            else:
+                track.date_end = False
 
     @api.model
     def create(self, vals):
@@ -163,7 +166,7 @@ class Track(models.Model):
     def _message_get_suggested_recipients(self):
         recipients = super(Track, self)._message_get_suggested_recipients()
         for track in self:
-            if track.partner_email != track.partner_id.email:
+            if track.partner_email and track.partner_email != track.partner_id.email:
                 track._message_add_suggested_recipient(recipients, email=track.partner_email, reason=_('Speaker Email'))
         return recipients
 

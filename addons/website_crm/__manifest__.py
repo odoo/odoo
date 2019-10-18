@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Contact Form',
-    'category': 'Website',
+    'category': 'Website/Website',
     'sequence': 54,
     'summary': 'Generate leads from a contact form',
     'version': '2.1',
@@ -14,6 +14,7 @@ This module includes contact phone and mobile numbers validation.""",
     'depends': ['website_form', 'crm'],
     'data': [
         'data/website_crm_data.xml',
+        'views/website_crm_lead_views.xml',
         'views/website_crm_templates.xml',
         'views/res_config_settings_views.xml',
         'views/website_visitor_views.xml',

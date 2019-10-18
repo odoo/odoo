@@ -7,7 +7,7 @@
     'name': 'Belgium - Structured Communication',
     'version': '1.2',
     'author': 'Noviat',
-    'category': 'Invoicing Management',
+    'category': 'Accounting/Accounting',
     'description': """
 
 Add Structured Communication to customer invoices.

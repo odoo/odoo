@@ -78,7 +78,8 @@ class MrpProductProduce(models.TransientModel):
         self.ensure_one()
         product_produce_wiz = self.env.ref('mrp.view_mrp_product_produce_wizard', False)
         self.finished_lot_id = self.env['stock.production.lot'].create({
-            'product_id': self.product_id.id
+            'product_id': self.product_id.id,
+            'company_id': self.production_id.company_id.id
         })
         return {
             'name': _('Produce'),
@@ -94,6 +95,7 @@ class MrpProductProduce(models.TransientModel):
         """ Save the current wizard and go back to the MO. """
         self.ensure_one()
         self._record_production()
+        self._check_company()
         return {'type': 'ir.actions.act_window_close'}
 
     def _get_todo(self, production):
@@ -127,13 +129,15 @@ class MrpProductProduce(models.TransientModel):
                             'raw_material_production_id': self.production_id.id,
                             'group_id': self.production_id.procurement_group_id.id,
                             'origin': self.production_id.name,
-                            'state': 'confirmed'
+                            'state': 'confirmed',
+                            'company_id': self.production_id.company_id.id,
                         }
                     else:
                         values = self.production_id._get_finished_move_value(line.product_id.id, 0, line.product_uom_id.id)
                     move_id = self.env['stock.move'].create(values)
                 line.move_id = move_id.id
 
+            line._check_line_sn_uniqueness()
         # because of an ORM limitation (fields on transient models are not
         # recomputed by updates in non-transient models), the related fields on
         # this model are not recomputed by the creations above
@@ -143,6 +147,8 @@ class MrpProductProduce(models.TransientModel):
         quantity = self.qty_producing
         if float_compare(quantity, 0, precision_rounding=self.product_uom_id.rounding) <= 0:
             raise UserError(_("The production order for '%s' has no quantity specified.") % self.product_id.display_name)
+
+        self._check_sn_uniqueness()
         self._update_finished_move()
         self._update_moves()
         if self.production_id.state == 'confirmed':

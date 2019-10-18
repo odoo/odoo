@@ -40,13 +40,9 @@ var TranslatableFieldMixin = {
      * @returns {jQuery}
      */
     _renderTranslateButton: function () {
-        if (_t.database.multi_lang && this.field.translate && this.res_id) {
+        if (_t.database.multi_lang && this.field.translate) {
             var lang = _t.database.parameters.code.split('_')[0].toUpperCase();
-            return $('<button>', {
-                    type: 'button',
-                    'class': 'o_field_translate fa fa-globe btn btn-link',
-                    'data-code': lang,
-                })
+            return $(`<span class="o_field_translate btn btn-link">${lang}</span>`)
                 .on('click', this._onTranslate.bind(this));
         }
         return $();
@@ -59,10 +55,16 @@ var TranslatableFieldMixin = {
     /**
      * open the translation view for the current field
      *
+     * @param {MouseEvent} ev
      * @private
      */
-    _onTranslate: function () {
-        this.trigger_up('translate', {fieldName: this.name, id: this.dataPointID});
+    _onTranslate: function (ev) {
+        ev.preventDefault();
+        this.trigger_up('translate', {
+            fieldName: this.name,
+            id: this.dataPointID,
+            isComingFromTranslationAlert: false,
+        });
     },
 };
 
@@ -213,7 +215,9 @@ var InputField = DebouncedField.extend({
         if (!event || event === this.lastChangeEvent) {
             this.isDirty = false;
         }
-        if (this.isDirty || (event && event.target === this && event.data.changes[this.name] === this.value)) {
+        if (this.isDirty || (event && event.target === this &&
+            event.data.changes &&
+            event.data.changes[this.name] === this.value)) {
             if (this.attrs.decorations) {
                 // if a field is modified, then it could have triggered an onchange
                 // which changed some of its decorations. Since we bypass the
@@ -258,7 +262,7 @@ var InputField = DebouncedField.extend({
             inputAttrs = _.extend(inputAttrs, { type: 'password', autocomplete: 'new-password' });
             inputVal = this.value || '';
         } else {
-            inputAttrs = _.extend(inputAttrs, { type: 'text', autocomplete: this.attrs.autocomplete });
+            inputAttrs = _.extend(inputAttrs, { type: 'text', autocomplete: this.attrs.autocomplete || 'none'});
             inputVal = this._formatValue(this.value);
         }
 
@@ -498,7 +502,10 @@ var FieldChar = InputField.extend(TranslatableFieldMixin, {
         if (this.field.size && this.field.size > 0) {
             this.$el.attr('maxlength', this.field.size);
         }
-        this.$el = this.$el.add(this._renderTranslateButton());
+        if (this.field.translate) {
+            this.$el = this.$el.add(this._renderTranslateButton());
+            this.$el.addClass('o_field_translate');
+        }
         return def;
     },
     /**
@@ -581,7 +588,7 @@ var FieldDateRange = InputField.extend({
                 timePicker: !this.isDateField,
                 timePicker24Hour: _t.database.parameters.time_format.search('%H') !== -1,
                 autoUpdateInput: false,
-                timePickerIncrement: 10,
+                timePickerIncrement: 5,
                 locale: {
                     format: this.isDateField ? time.getLangDateFormat() : time.getLangDatetimeFormat(),
                 },
@@ -677,6 +684,9 @@ var FieldDate = InputField.extend({
     className: "o_field_date",
     tagName: "span",
     supportedFieldTypes: ['date', 'datetime'],
+    // we don't need to listen on 'input' nor 'change' events because the
+    // datepicker widget is already listening, and will correctly notify changes
+    events: AbstractField.prototype.events,
 
     /**
      * @override
@@ -1073,6 +1083,8 @@ var FieldBoolean = AbstractField.extend({
     _onKeydown: function (ev) {
         switch (ev.which) {
             case $.ui.keyCode.ENTER:
+                // prevent subsequent 'click' event (see _onKeydown of AbstractField)
+                ev.preventDefault();
                 this.$input.prop('checked', !this.value);
                 this._setValue(!this.value);
                 return;
@@ -1154,7 +1166,6 @@ var FieldFloatTime = FieldFloat.extend({
 });
 
 var FieldFloatFactor = FieldFloat.extend({
-    description: "",
     supportedFieldTypes: ['float'],
     className: 'o_field_float_factor',
     formatType: 'float_factor',
@@ -1327,8 +1338,10 @@ var FieldText = InputField.extend(TranslatableFieldMixin, {
     start: function () {
         if (this.mode === 'edit') {
             dom.autoresize(this.$el, this.autoResizeOptions);
-
-            this.$el = this.$el.add(this._renderTranslateButton());
+            if (this.field.translate) {
+                this.$el = this.$el.add(this._renderTranslateButton());
+                this.$el.addClass('o_field_translate');
+            }
         }
         return this._super();
     },
@@ -1357,6 +1370,7 @@ var FieldText = InputField.extend(TranslatableFieldMixin, {
      */
     _onKeydown: function (ev) {
         if (ev.which === $.ui.keyCode.ENTER) {
+            ev.stopPropagation();
             return;
         }
         this._super.apply(this, arguments);
@@ -1380,7 +1394,7 @@ var HandleWidget = AbstractField.extend({
     description: _lt("Handle"),
     noLabel: true,
     className: 'o_row_handle fa fa-arrows ui-sortable-handle',
-    widthInList: '32px',
+    widthInList: '33px',
     tagName: 'span',
     supportedFieldTypes: ['integer'],
 
@@ -1586,13 +1600,6 @@ var CopyClipboard = {
     /**
      * @override
      */
-    _render: function () {
-        this._super.apply(this, arguments);
-        this.$el.addClass('o_field_copy');
-    },
-    /**
-     * @override
-     */
     _renderReadonly: function () {
         this._super.apply(this, arguments);
         if (this.value) {
@@ -1605,11 +1612,13 @@ var CopyClipboard = {
 var TextCopyClipboard = FieldText.extend(CopyClipboard, {
     description: _lt("Copy to Clipboard"),
     clipboardTemplate: 'CopyClipboardText',
+    className: "o_field_copy",
 });
 
 var CharCopyClipboard = FieldChar.extend(CopyClipboard, {
     description: _lt("Copy to Clipboard"),
     clipboardTemplate: 'CopyClipboardChar',
+    className: 'o_field_copy o_text_overflow',
 });
 
 var AbstractFieldBinary = AbstractField.extend({
@@ -1624,7 +1633,8 @@ var AbstractFieldBinary = AbstractField.extend({
         this._super.apply(this, arguments);
         this.fields = record.fields;
         this.useFileAPI = !!window.FileReader;
-        this.max_upload_size = 25 * 1024 * 1024; // 25Mo
+        this.max_upload_size = 64 * 1024 * 1024; // 64Mo
+        this.accepted_file_extensions = (this.nodeOptions && this.nodeOptions.accepted_file_extensions) || this.accepted_file_extensions || '*';
         if (!this.useFileAPI) {
             var self = this;
             this.fileupload_id = _.uniqueId('o_fileupload');
@@ -1756,6 +1766,7 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
         'i': 'png',
         'P': 'svg+xml',
     },
+    accepted_file_extensions: 'image/*',
     /**
      * Returns the image URL from a model.
      *
@@ -1822,8 +1833,11 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
 
         if(this.nodeOptions.zoom) {
             var unique = this.recordData.__last_update;
-            var url = this._getImageUrl(this.model, this.res_id, 'image', unique);
+            var url = this._getImageUrl(this.model, this.res_id, 'image_1920', unique);
             var $img;
+            var imageField = _.find(Object.keys(this.recordData), function(o) {
+                return o.startsWith('image_');
+            });
 
             if(this.nodeOptions.background)
             {
@@ -1844,7 +1858,7 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
                 $img = this.$('img');
             }
 
-            if(this.recordData.image) {
+            if(this.recordData[imageField]) {
                 $img.attr('data-zoom', 1);
                 $img.attr('data-zoom-image', url);
 
@@ -1865,6 +1879,17 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
             }
         }
     },
+});
+
+var KanbanFieldBinaryImage = FieldBinaryImage.extend({
+    // In kanban views, there is a weird logic to determine whether or not a
+    // click on a card should open the record in a form view.  This logic checks
+    // if the clicked element has click handlers bound on it, and if so, does
+    // not open the record (assuming that the click will be handle by someone
+    // else).  In the case of this widget, there are clicks handler but they
+    // only apply in edit mode, which is never the case in kanban views, so we
+    // simply remove them.
+    events: {},
 });
 
 var FieldBinaryFile = AbstractFieldBinary.extend({
@@ -1941,7 +1966,7 @@ var FieldBinaryFile = AbstractFieldBinary.extend({
                     'download': true,
                     'data': utils.is_bin_size(this.value) ? null : this.value,
                 },
-                error: () => this.call('crash_manager', 'rpc_error', ...arguments),
+                error: (error) => this.call('crash_manager', 'rpc_error', error),
                 url: '/web/content',
             });
             ev.stopPropagation();
@@ -1953,6 +1978,7 @@ var FieldPdfViewer = FieldBinaryFile.extend({
     description: _lt("PDF Viewer"),
     supportedFieldTypes: ['binary'],
     template: 'FieldPdfViewer',
+    accepted_file_extensions: 'application/pdf',
     /**
      * @override
      */
@@ -2522,11 +2548,28 @@ var FieldProgressBar = AbstractField.extend({
         if (this.recordData[this.nodeOptions.current_value]) {
             this.value = this.recordData[this.nodeOptions.current_value];
         }
-        this.max_value = this.recordData[this.nodeOptions.max_value] || 100;
+
+        // The few next lines determine if the widget can write on the record or not
+        this.editable_readonly = !!this.nodeOptions.editable_readonly;
+        // "hard" readonly
         this.readonly = this.nodeOptions.readonly || !this.nodeOptions.editable;
-        this.edit_max_value = this.nodeOptions.edit_max_value || false;
+
+        this.canWrite = !this.readonly && (
+            this.mode === 'edit' ||
+            (this.editable_readonly && this.mode === 'readonly') ||
+            (this.viewType === 'kanban') // Keep behavior before commit
+        );
+
+        // Boolean to toggle if we edit the numerator (value) or the denominator (max_value)
+        this.edit_max_value = !!this.nodeOptions.edit_max_value;
+        this.max_value = this.recordData[this.nodeOptions.max_value] || 100;
+
         this.title = _t(this.attrs.title || this.nodeOptions.title) || '';
-        this.edit_on_click = !this.nodeOptions.edit_max_value || false;
+
+        // Ability to edit the field through the bar
+        // /!\ this feature is disabled
+        this.enableBarAsInput = false;
+        this.edit_on_click = this.enableBarAsInput && this.mode === 'readonly' && !this.edit_max_value;
 
         this.write_mode = false;
     },
@@ -2534,19 +2577,19 @@ var FieldProgressBar = AbstractField.extend({
         var self = this;
         this._render_value();
 
-        if (!this.readonly) {
+        if (this.canWrite) {
             if (this.edit_on_click) {
                 this.$el.on('click', '.o_progress', function (e) {
                     var $target = $(e.currentTarget);
-                    self.value = Math.floor((e.pageX - $target.offset().left) / $target.outerWidth() * self.max_value);
+                    var numValue = Math.floor((e.pageX - $target.offset().left) / $target.outerWidth() * self.max_value);
+                    self.on_update(numValue);
                     self._render_value();
-                    self.on_update(self.value);
                 });
             } else {
                 this.$el.on('click', function () {
                     if (!self.write_mode) {
                         var $input = $('<input>', {type: 'text', class: 'o_progressbar_value o_input'});
-                        $input.on('blur', _.bind(self.on_change_input, self));
+                        $input.on('blur', self.on_change_input.bind(self));
                         self.$('.o_progressbar_value').replaceWith($input);
                         self.write_mode = true;
                         self._render_value();
@@ -2556,24 +2599,25 @@ var FieldProgressBar = AbstractField.extend({
         }
         return this._super();
     },
+    /**
+     * Updates the widget with value
+     *
+     * @param {Number} value
+     */
     on_update: function (value) {
-        if (!isNaN(value)) {
-            if (this.edit_max_value) {
-                try {
-                    this.max_value = this._parseValue(value);
-                    this._isValid = true;
-                } catch (e) {
-                    this._isValid = false;
-                }
-                var changes = {};
-                changes[this.nodeOptions.max_value] = this.max_value;
-                this.trigger_up('field_changed', {
-                    dataPointID: this.dataPointID,
-                    changes: changes,
-                });
-            } else {
-                this._setValue(value);
-            }
+        if (this.edit_max_value) {
+            this.max_value = value;
+            this._isValid = true;
+            var changes = {};
+            changes[this.nodeOptions.max_value] = this.max_value;
+            this.trigger_up('field_changed', {
+                dataPointID: this.dataPointID,
+                changes: changes,
+            });
+        } else {
+            // _setValues accepts string and will parse it
+            var formattedValue = this._formatValue(value);
+            this._setValue(formattedValue);
         }
     },
     on_change_input: function (e) {
@@ -2581,29 +2625,42 @@ var FieldProgressBar = AbstractField.extend({
         if (e.type === 'change' && !$input.is(':focus')) {
             return;
         }
-        if (isNaN($input.val())) {
-            this.do_warn(_t("Wrong value entered!"), _t("Only Integer Value should be valid."));
-        } else {
-            if (e.type === 'input') {
-                this._render_value($input.val());
-                if (parseFloat($input.val()) === 0) {
+
+        var parsedValue;
+        try {
+            // Cover all numbers with parseFloat
+            parsedValue = field_utils.parse.float($input.val());
+        } catch (error) {
+            this.do_warn(_t("Wrong value entered!"), _t("Only Integer or Float Value should be valid."));
+        }
+
+        if (parsedValue !== undefined) {
+            if (e.type === 'input') { // ensure what has just been typed in the input is a number
+                // returns NaN if not a number
+                this._render_value(parsedValue);
+                if (parsedValue === 0) {
                     $input.select();
                 }
-            } else {
+            } else { // Implicit type === 'blur': we commit the value
                 if (this.edit_max_value) {
-                    this.max_value = $(e.target).val();
-                } else {
-                    this.value = $(e.target).val() || 0;
+                    parsedValue = parsedValue || 100;
                 }
+
                 var $div = $('<div>', {class: 'o_progressbar_value'});
                 this.$('.o_progressbar_value').replaceWith($div);
                 this.write_mode = false;
 
+                this.on_update(parsedValue);
                 this._render_value();
-                this.on_update(this.edit_max_value ? this.max_value : this.value);
             }
         }
     },
+    /**
+     * Renders the value
+     *
+     * @private
+     * @param {Number} v
+     */
     _render_value: function (v) {
         var value = this.value;
         var max_value = this.max_value;
@@ -3212,11 +3269,22 @@ var AceEditor = DebouncedField.extend({
  */
 var FieldColor = AbstractField.extend({
     template: 'FieldColor',
-    events: {
+    events: _.extend({}, AbstractField.prototype.events, {
         'click .o_field_color': '_onColorClick',
-    },
-    custom_events: {
+    }),
+    custom_events: _.extend({}, AbstractField.prototype.custom_events, {
         'colorpicker:saved': '_onColorpickerSaved',
+    }),
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    getFocusableElement: function () {
+        return this.$('.o_field_color');
     },
 
     //--------------------------------------------------------------------------
@@ -3228,10 +3296,10 @@ var FieldColor = AbstractField.extend({
     * @private
     */
     _render: function () {
-        this._super.apply(this, arguments);
         this.$('.o_field_color').data('value', this.value)
             .css('background-color', this.value)
             .attr('title', this.value);
+        return this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -3240,13 +3308,20 @@ var FieldColor = AbstractField.extend({
 
     /**
     * @private
-    * @param {MouseEvent} ev
     */
-    _onColorClick: function (ev) {
-        new ColorpickerDialog(this, {
-            defaultColor: this.value,
-            noTransparency: true,
-        }).open();
+    _onColorClick: function () {
+        if (this.mode === 'edit') {
+            const dialog = new ColorpickerDialog(this, {
+                defaultColor: this.value,
+                noTransparency: true,
+            }).open();
+            dialog.on('closed', this, () => {
+                // we need to wait for the modal to execute its whole close function.
+                Promise.resolve().then(() => {
+                    this.getFocusableElement().focus();
+                });
+            });
+        }
     },
 
     /**
@@ -3255,6 +3330,20 @@ var FieldColor = AbstractField.extend({
     */
     _onColorpickerSaved: function (ev) {
         this._setValue(ev.data.hex);
+    },
+
+    /**
+     * @override
+     * @private
+     */
+    _onKeydown: function (ev) {
+        if (ev.which === $.ui.keyCode.ENTER) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            this._onColorClick(ev);
+        } else {
+            this._super.apply(this, arguments);
+        }
     },
 });
 
@@ -3266,6 +3355,7 @@ return {
     FieldPdfViewer: FieldPdfViewer,
     AbstractFieldBinary: AbstractFieldBinary,
     FieldBinaryImage: FieldBinaryImage,
+    KanbanFieldBinaryImage: KanbanFieldBinaryImage,
     FieldBoolean: FieldBoolean,
     BooleanToggle: BooleanToggle,
     FieldChar: FieldChar,
@@ -3278,7 +3368,7 @@ return {
     FieldFloatTime: FieldFloatTime,
     FieldFloatFactor: FieldFloatFactor,
     FieldFloatToggle: FieldFloatToggle,
-    FieldPercentage : FieldPercentage,
+    FieldPercentage: FieldPercentage,
     FieldInteger: FieldInteger,
     FieldMonetary: FieldMonetary,
     FieldPercentPie: FieldPercentPie,

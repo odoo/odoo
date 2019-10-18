@@ -71,7 +71,6 @@ class TestValuationReconciliation(ValuationReconciliationTestCase):
         picking = self.env['stock.picking'].search([('purchase_id','=',purchase_order.id)])
         self.check_reconciliation(invoice, picking)
         # cancel the invoice
-        invoice.journal_id.write({'update_posted': 1})
         invoice.button_cancel()
 
     def test_invoice_shipment(self):
@@ -131,7 +130,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCase):
         })
 
         # Refund the invoice
-        refund_invoice_wiz = self.env['account.move.reversal'].with_context(active_ids=[invoice.id]).create({
+        refund_invoice_wiz = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=[invoice.id]).create({
             'reason': 'test_invoice_shipment_refund',
             'refund_method': 'cancel',
             'date': '2018-03-15',

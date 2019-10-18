@@ -4,7 +4,7 @@
     'name': "Free Delivery with Coupon on eCommerce",
     'summary': """Allows to offer free shippings in coupon reward on eCommerce""",
     'description': """Allows to offer free shippings in coupon reward on eCommerce""",
-    'category': 'Website',
+    'category': 'Website/Website',
     'version': '1.0',
     'depends': ['website_sale_delivery', 'sale_coupon_delivery'],
     'data': [

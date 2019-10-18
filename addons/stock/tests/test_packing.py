@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import SavepointCase
+from odoo.tools import float_round
 
 
 class TestPacking(SavepointCase):
@@ -73,8 +74,8 @@ class TestPacking(SavepointCase):
         pick_picking.move_line_ids.filtered(lambda ml: ml.product_id == self.productB).qty_done = 2.0
 
         first_pack = pick_picking.put_in_pack()
-        self.assertEquals(len(pick_picking.package_level_ids), 1, 'Put some products in pack should create a package_level')
-        self.assertEquals(pick_picking.package_level_ids[0].state, 'new', 'A new pack should be in state "new"')
+        self.assertEqual(len(pick_picking.package_level_ids), 1, 'Put some products in pack should create a package_level')
+        self.assertEqual(pick_picking.package_level_ids[0].state, 'new', 'A new pack should be in state "new"')
         pick_picking.move_line_ids.filtered(lambda ml: ml.product_id == self.productA and ml.qty_done == 0.0).qty_done = 4.0
         pick_picking.move_line_ids.filtered(lambda ml: ml.product_id == self.productB and ml.qty_done == 0.0).qty_done = 3.0
         second_pack = pick_picking.put_in_pack()
@@ -103,43 +104,44 @@ class TestPacking(SavepointCase):
             'package_id': pack.id,
             'picking_id': picking.id,
             'location_dest_id': self.stock_location.id,
+            'company_id': picking.company_id.id,
         })
-        self.assertEquals(package_level.state, 'draft',
+        self.assertEqual(package_level.state, 'draft',
                           'The package_level should be in draft as it has no moves, move lines and is not confirmed')
         picking.action_confirm()
         self.assertEqual(len(picking.move_ids_without_package), 0)
         self.assertEqual(len(picking.move_lines), 1,
                          'One move should be created when the package_level has been confirmed')
-        self.assertEquals(len(package_level.move_ids), 1,
+        self.assertEqual(len(package_level.move_ids), 1,
                           'The move should be in the package level')
-        self.assertEquals(package_level.state, 'confirmed',
+        self.assertEqual(package_level.state, 'confirmed',
                           'The package level must be state confirmed when picking is confirmed')
         picking.action_assign()
         self.assertEqual(len(picking.move_lines), 1,
                          'You still have only one move when the picking is assigned')
         self.assertEqual(len(picking.move_lines.move_line_ids), 1,
                          'The move  should have one move line which is the reservation')
-        self.assertEquals(picking.move_line_ids.package_level_id.id, package_level.id,
+        self.assertEqual(picking.move_line_ids.package_level_id.id, package_level.id,
                           'The move line created should be linked to the package level')
-        self.assertEquals(picking.move_line_ids.package_id.id, pack.id,
+        self.assertEqual(picking.move_line_ids.package_id.id, pack.id,
                           'The move line must have been reserved on the package of the package_level')
-        self.assertEquals(picking.move_line_ids.result_package_id.id, pack.id,
+        self.assertEqual(picking.move_line_ids.result_package_id.id, pack.id,
                           'The move line must have the same package as result package')
-        self.assertEquals(package_level.state, 'assigned', 'The package level must be in state assigned')
+        self.assertEqual(package_level.state, 'assigned', 'The package level must be in state assigned')
         package_level.write({'is_done': True})
-        self.assertEquals(len(package_level.move_line_ids), 1,
+        self.assertEqual(len(package_level.move_line_ids), 1,
                           'The package level should still keep one move line after have been set to "done"')
-        self.assertEquals(package_level.move_line_ids[0].qty_done, 20.0,
+        self.assertEqual(package_level.move_line_ids[0].qty_done, 20.0,
                           'All quantity in package must be procesed in move line')
         picking.button_validate()
         self.assertEqual(len(picking.move_lines), 1,
                          'You still have only one move when the picking is assigned')
         self.assertEqual(len(picking.move_lines.move_line_ids), 1,
                          'The move  should have one move line which is the reservation')
-        self.assertEquals(package_level.state, 'done', 'The package level must be in state done')
-        self.assertEquals(pack.location_id.id, picking.location_dest_id.id,
+        self.assertEqual(package_level.state, 'done', 'The package level must be in state done')
+        self.assertEqual(pack.location_id.id, picking.location_dest_id.id,
                           'The quant package must be in the destination location')
-        self.assertEquals(pack.quant_ids[0].location_id.id, picking.location_dest_id.id,
+        self.assertEqual(pack.quant_ids[0].location_id.id, picking.location_dest_id.id,
                           'The quant must be in the destination location')
 
     def test_multi_pack_reservation(self):
@@ -165,11 +167,13 @@ class TestPacking(SavepointCase):
             'package_id': pack.id,
             'picking_id': picking.id,
             'location_dest_id': self.stock_location.id,
+            'company_id': picking.company_id.id,
         })
         package_level = self.env['stock.package_level'].create({
             'package_id': pack.id,
             'picking_id': picking.id,
             'location_dest_id': self.stock_location.id,
+            'company_id': picking.company_id.id,
         })
         picking.action_confirm()
         self.assertEqual(picking.package_level_ids.mapped('location_id.id'), [self.stock_location.id],
@@ -195,6 +199,7 @@ class TestPacking(SavepointCase):
             location should trigger a wizard. This wizard applies the same destination
             location to all the move lines
         """
+        self.warehouse.in_type_id.show_reserved = True
         shelf1_location = self.env['stock.location'].create({
             'name': 'shelf1',
             'usage': 'internal',
@@ -261,3 +266,49 @@ class TestPacking(SavepointCase):
         qp1 = pack2.quant_ids[0]
         qp2 = pack2.quant_ids[1]
         self.assertEqual(qp1.quantity + qp2.quantity, 12, 'The quant has not the good quantity')
+
+    def test_move_picking_with_package(self):
+        """
+        355.4 rounded with 0.001 precision is 355.40000000000003.
+        check that nonetheless, moving a picking is accepted
+        """
+        self.assertEqual(self.productA.uom_id.rounding, 0.001)
+        self.assertEqual(
+            float_round(355.4, precision_rounding=self.productA.uom_id.rounding),
+            355.40000000000003,
+        )
+        location_dict = {
+            'location_id': self.stock_location.id,
+        }
+        quant = self.env['stock.quant'].create({
+            **location_dict,
+            **{'product_id': self.productA.id, 'quantity': 355.4},  # important number
+        })
+        package = self.env['stock.quant.package'].create({
+            **location_dict, **{'quant_ids': [(6, 0, [quant.id])]},
+        })
+        location_dict.update({
+            'state': 'draft',
+            'location_dest_id': self.ship_location.id,
+        })
+        move = self.env['stock.move'].create({
+            **location_dict,
+            **{
+                'name': "XXX",
+                'product_id': self.productA.id,
+                'product_uom': self.productA.uom_id.id,
+                'product_uom_qty': 355.40000000000003,  # other number
+            }})
+        picking = self.env['stock.picking'].create({
+            **location_dict,
+            **{
+                'picking_type_id': self.warehouse.in_type_id.id,
+                'move_lines': [(6, 0, [move.id])],
+        }})
+
+        picking.action_confirm()
+        picking.action_assign()
+        move.quantity_done = move.reserved_availability
+        picking.action_done()
+        # if we managed to get there, there was not any exception
+        # complaining that 355.4 is not 355.40000000000003. Good job!

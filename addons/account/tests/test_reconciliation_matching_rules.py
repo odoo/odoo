@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo import fields
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
 from odoo.tests.common import Form
 from odoo.tests import tagged
@@ -9,6 +10,7 @@ class TestReconciliationMatchingRules(AccountingTestCase):
     def _create_invoice_line(self, amount, partner, type):
         ''' Create an invoice on the fly.'''
         invoice_form = Form(self.env['account.move'].with_context(default_type=type))
+        invoice_form.invoice_date = fields.Date.from_string('2019-09-01')
         invoice_form.partner_id = partner
         with invoice_form.invoice_line_ids.new() as invoice_line_form:
             invoice_line_form.name = 'xxxx'
@@ -47,7 +49,7 @@ class TestReconciliationMatchingRules(AccountingTestCase):
         current_assets_account = self.env['account.account'].search(
             [('user_type_id', '=', self.env.ref('account.data_account_type_current_assets').id)], limit=1)
 
-        self.rule_0 = self.env['account.reconcile.model'].search([('company_id', '=', self.env.company.id)])
+        self.rule_0 = self.env['account.reconcile.model'].search([('company_id', '=', self.env.company.id), ('rule_type', '=', 'invoice_matching')])
         self.rule_1 = self.rule_0.copy()
         self.rule_1.account_id = current_assets_account
         self.rule_1.match_partner = True
@@ -109,6 +111,7 @@ class TestReconciliationMatchingRules(AccountingTestCase):
             self.bank_line_2.id: {'aml_ids': [
                 self.invoice_line_2.id,
                 self.invoice_line_3.id,
+                self.invoice_line_1.id,
             ], 'model': self.rule_1},
             self.cash_line_1.id: {'aml_ids': [self.invoice_line_4.id], 'model': self.rule_1},
         })
@@ -129,6 +132,7 @@ class TestReconciliationMatchingRules(AccountingTestCase):
             self.bank_line_2.id: {'aml_ids': [
                 self.invoice_line_2.id,
                 self.invoice_line_3.id,
+                self.invoice_line_1.id,
             ], 'model': self.rule_1},
             self.cash_line_1.id: {'aml_ids': []},
         })
@@ -209,6 +213,7 @@ class TestReconciliationMatchingRules(AccountingTestCase):
             self.bank_line_2.id: {'aml_ids': [
                 self.invoice_line_2.id,
                 self.invoice_line_3.id,
+                self.invoice_line_1.id,
             ], 'model': self.rule_1},
             self.cash_line_1.id: {'aml_ids': [self.invoice_line_4.id], 'model': self.rule_1},
         })
@@ -223,6 +228,7 @@ class TestReconciliationMatchingRules(AccountingTestCase):
             self.bank_line_2.id: {'aml_ids': [
                 self.invoice_line_2.id,
                 self.invoice_line_3.id,
+                self.invoice_line_1.id,
             ], 'model': self.rule_1},
             self.cash_line_1.id: {'aml_ids': [self.invoice_line_4.id], 'model': self.rule_1},
         })
@@ -252,6 +258,7 @@ class TestReconciliationMatchingRules(AccountingTestCase):
             self.bank_line_2.id: {'aml_ids': [
                 self.invoice_line_2.id,
                 self.invoice_line_3.id,
+                self.invoice_line_1.id,
             ], 'model': self.rule_1},
             self.cash_line_1.id: {'aml_ids': [self.invoice_line_4.id], 'model': self.rule_1},
         })
@@ -329,9 +336,9 @@ class TestReconciliationMatchingRules(AccountingTestCase):
 
         # Check first line has been well reconciled.
         self.assertRecordValues(self.bank_line_1.journal_entry_ids, [
-            {'partner_id': self.partner_1.id, 'debit': 100.0, 'credit': 0.0, 'tax_ids': [self.tax21.id]},
-            {'partner_id': self.partner_1.id, 'debit': 21.0, 'credit': 0.0, 'tax_line_id': self.tax21.id},
-            {'partner_id': self.partner_1.id, 'debit': 0.0, 'credit': 121.0},
+            {'partner_id': self.partner_1.id, 'debit': 100.0, 'credit': 0.0, 'tax_ids': [self.tax21.id], 'tax_line_id': False},
+            {'partner_id': self.partner_1.id, 'debit': 21.0, 'credit': 0.0, 'tax_ids': [], 'tax_line_id': self.tax21.id},
+            {'partner_id': self.partner_1.id, 'debit': 0.0, 'credit': 121.0, 'tax_ids': [], 'tax_line_id': False},
         ])
 
     def test_reverted_move_matching(self):

@@ -5,7 +5,7 @@
 {
     'name': 'Dropship and Subcontracting Management',
     'version': '0.1',
-    'category': 'Hidden',
+    'category': 'Operations/Purchase',
     'description': """
         This bridge module allows to manage subcontracting with the dropshipping module.
     """,

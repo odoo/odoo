@@ -83,12 +83,16 @@ class TestAccountNoChartCommon(SavepointCase):
             'code': 'AJ-PURC',
             'type': 'purchase',
             'company_id': cls.env.user.company_id.id,
+            'default_debit_account_id': cls.account_expense.id,
+            'default_credit_account_id': cls.account_expense.id,
         })
         cls.journal_sale = cls.env['account.journal'].create({
             'name': 'Sale Journal - Test',
             'code': 'AJ-SALE',
             'type': 'sale',
             'company_id': cls.env.user.company_id.id,
+            'default_debit_account_id': cls.account_income.id,
+            'default_credit_account_id': cls.account_income.id,
         })
         cls.journal_general = cls.env['account.journal'].create({
             'name': 'General Journal - Test',

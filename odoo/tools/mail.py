@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 import collections
 import logging
 from lxml.html import clean
@@ -10,8 +11,7 @@ import socket
 import threading
 import time
 
-from email.header import decode_header, Header
-from email.utils import getaddresses, formataddr
+from email.utils import getaddresses
 from lxml import etree
 
 import odoo
@@ -19,31 +19,6 @@ from odoo.loglevels import ustr
 from odoo.tools import misc
 
 _logger = logging.getLogger(__name__)
-
-# Optional Flanker dependency for email validation.
-_flanker_warning = False
-try:
-    from flanker.addresslib import address
-    if hasattr(address, 'six'):
-        # Python 3 supported
-        def checkmail(mail):
-            return bool(address.validate_address(mail))
-    else:
-        def checkmail(mail):
-            global _flanker_warning
-            if not _flanker_warning:
-                _logger.info("Flanker version 0.9 or greater required for Python 3 compatibility")
-                _flanker_warning = True
-            return True
-
-except ImportError:
-    _logger.info('The flanker Python module is not installed, so email validation with flanker is unavailable')
-    def checkmail(mail):
-        global _flanker_warning
-        if not _flanker_warning:
-            _logger.info('The flanker Python module is not installed, so email validation with flanker is unavailable')
-            _flanker_warning = True
-        return True
 
 #----------------------------------------------------------
 # HTML Sanitizer
@@ -58,7 +33,7 @@ safe_attrs = clean.defs.safe_attrs | frozenset(
     ['style',
      'data-o-mail-quote',  # quote detection
      'data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-type', 'data-oe-expression', 'data-oe-translation-id', 'data-oe-nodeid',
-     'data-publish', 'data-id', 'data-res_id', 'data-member_id', 'data-view-id'
+     'data-publish', 'data-id', 'data-res_id', 'data-interval', 'data-member_id', 'data-scroll-background-ratio', 'data-view-id',
      ])
 
 
@@ -286,7 +261,7 @@ def html_keep_url(text):
     link_tags = re.compile(r"""(?<!["'])((ftp|http|https):\/\/(\w+:{0,1}\w*@)?([^\s<"']+)(:[0-9]+)?(\/|\/([^\s<"']))?)(?![^\s<"']*["']|[^\s<"']*</a>)""")
     for item in re.finditer(link_tags, text):
         final += text[idx:item.start()]
-        final += '<a href="%s" target="_blank">%s</a>' % (item.group(0), item.group(0))
+        final += '<a href="%s" target="_blank" rel="noreferrer noopener">%s</a>' % (item.group(0), item.group(0))
         idx = item.end()
     final += text[idx:]
     return final
@@ -438,6 +413,8 @@ single_email_re = re.compile(r"""^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6
 
 mail_header_msgid_re = re.compile('<[^<>]+>')
 
+email_addr_escapes_re = re.compile(r'[\\"]')
+
 
 def generate_tracking_message_id(res_id):
     """Returns a string that can be used in the Message-ID RFC822 header field
@@ -531,33 +508,45 @@ def email_normalize(text):
         return False
     return emails[0].lower()
 
-def email_validate(email):
-    """
-    Check is the email is valid using email normalization + optional Flanker module.
-    If Flanker is installed, it will check if email is valid (checking DNS and other stuff).
-    If Flanker is not installed, this method only normalizes the email
-    :param text: string containing the email to validate
-    :return: normalized email if mail is valid or False
-    """
-    return email_normalize(email) if checkmail(email) else False
-
 def email_escape_char(email_address):
     """ Escape problematic characters in the given email address string"""
     return email_address.replace('\\', '\\\\').replace('%', '\\%').replace('_', '\\_')
 
-# was mail_message.decode()
-def decode_smtp_header(smtp_header):
-    """Returns unicode() string conversion of the given encoded smtp header
-    text. email.header decode_header method return a decoded string and its
-    charset for each decoded par of the header. This method unicodes the
-    decoded header and join them in a complete string. """
-    if isinstance(smtp_header, Header):
-        smtp_header = ustr(smtp_header)
-    if smtp_header:
-        text = decode_header(smtp_header.replace('\r', ''))
-        return ''.join([ustr(x[0], x[1]) for x in text])
-    return u''
-
 # was mail_thread.decode_header()
 def decode_message_header(message, header, separator=' '):
-    return separator.join(decode_smtp_header(h) for h in message.get_all(header, []) if h)
+    return separator.join(h for h in message.get_all(header, []) if h)
+
+def formataddr(pair):
+    """Takes a 2-tuple of the form (realname, email_address) and returns
+    the string value suitable for an RFC 2822 From, To or Cc header.
+
+    The email address is considered valid and is left unmodified.
+
+    If the first element of pair is falsy then only the email address
+    is returned.
+
+    >>> formataddr(('John Doe', 'johndoe@example.com'))
+    '"John Doe" <johndoe@example.com>'
+
+    >>> formataddr(('', 'johndoe@example.com'))
+    'johndoe@example.com'
+    """
+    name, address = pair
+    address.encode('ascii')
+    if name:
+        try:
+            name.encode('ascii')
+        except UnicodeEncodeError:
+            # non-ascii name, transcode the name in a safe format
+            # rfc2047 - MIME Message Header Extensions for Non-ASCII Text
+            return "=?utf-8?b?{name}?= {addr}".format(
+                name=base64.b64encode(name.encode('utf-8')).decode('ascii'),
+                addr=address)
+        else:
+            # ascii name, escape it if needed
+            # rfc2822 - Internet Message Format
+            #   #section-3.4 - Address Specification
+            return '"{name}" <{addr}>'.format(
+                name=email_addr_escapes_re.sub(r'\\\g<0>', name),
+                addr=address)
+    return address

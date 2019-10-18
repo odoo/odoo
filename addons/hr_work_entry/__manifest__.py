@@ -5,7 +5,7 @@
     'name': 'Work Entries',
     'category': 'Human Resources/Employees',
     'sequence': 39,
-    'summary': 'Manages work entries',
+    'summary': 'Manage work entries',
     'description': "",
     'installable': True,
     'depends': [

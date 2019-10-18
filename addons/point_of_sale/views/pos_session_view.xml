@@ -161,7 +161,7 @@
                                     <span><field name="start_at" /></span>
                                 </div>
                                 <div class="oe_kanban_bottom_right">
-                                    <img t-att-src="kanban_image('res.users', 'image_64', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24" class="oe_kanban_avatar float-right"/>
+                                    <img t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" class="oe_kanban_avatar float-right"/>
                                 </div>
                             </div>
                         </div>
@@ -183,13 +183,10 @@
                 <separator/>    
                 <filter name="open_sessions" string="In Progress" domain="[('state', '=', 'opened')]"/>
                 <separator/>
-                <filter string="Start Today" name="start_at_filter" domain="[
-                    ('start_at', '>=', (datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S')),
-                    ('start_at', '&lt;', (datetime.datetime.combine(context_today() + relativedelta(days=1), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
+                <filter string="Opening Date" name="start_date" date="start_at" />
                 <group expand="0" string="Group By">
                     <filter string="Responsible" name="user" domain="[]" context="{'group_by' : 'user_id'}"/>
                     <filter string="Point of Sale" name="point_of_sale" domain="[]" context="{'group_by': 'config_id'}"/>
-                    <filter string="Opening Date" name="start_date" domain="[]" context="{'group_by': 'start_at'}"/>
                 </group>
             </search>
         </field>

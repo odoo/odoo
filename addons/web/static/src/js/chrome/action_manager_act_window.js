@@ -58,11 +58,8 @@ ActionManager.include({
      * @param {string} [state.view_type]
      */
     loadState: function (state) {
-        var callersArguments = arguments;
         var _super = this._super.bind(this);
-        var self = this;
         var action;
-        var def;
         var options = {
             clear_breadcrumbs: true,
             pushState: false,
@@ -117,20 +114,12 @@ ActionManager.include({
                 action = lastAction;
                 options.viewType = state.view_type;
             }
-        } else if (state.sa) {
-            def = this._rpc({
-                route: '/web/session/get_session_action',
-                params: {key: state.sa},
-            }).then(function (sessionAction) {
-                action = sessionAction;
-            });
         }
-        return Promise.all([def]).then(function () {
-            if (action) {
-                return self.doAction(action, options);
-            }
-            return _super.apply(self, callersArguments);
-        });
+        if (action) {
+            return this.doAction(action, options);
+        }
+        return _super.apply(this, arguments);
+
     },
 
     //--------------------------------------------------------------------------
@@ -616,7 +605,10 @@ ActionManager.include({
 
         // determine the action to execute according to the actionData
         if (actionData.special) {
-            def = Promise.resolve({type: 'ir.actions.act_window_close', infos: 'special'});
+            def = Promise.resolve({
+                type: 'ir.actions.act_window_close',
+                infos: { special: true },
+            });
         } else if (actionData.type === 'object') {
             // call a Python Object method, which may return an action to execute
             var args = recordID ? [[recordID]] : [env.resIDs];
@@ -697,7 +689,7 @@ ActionManager.include({
                 };
             }
             var options = {on_close: ev.data.on_closed};
-            action.flags = _.extend({}, action.flags, {withSearchPanel: false});
+            action.flags = _.extend({}, action.flags, {searchPanelDefaultNoFilter: true});
             return self.doAction(action, options).then(ev.data.on_success, ev.data.on_fail);
         });
     },

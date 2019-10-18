@@ -217,7 +217,12 @@ var TableWidget = PosBaseWidget.extend({
                             self.table[field] = table[field];
                         }
                         self.pos.tables_by_id[table.id] = self.table;
-                        self.renderElement();
+                        // If selected, render with drag and resize event handlers.
+                        if (!self.selected) {
+                            self.renderElement();
+                        } else {
+                            self.select();
+                        }
                     });
             }, function(type,err) {
                     self.gui.show_sync_error_popup();
@@ -926,8 +931,14 @@ models.PosModel = models.PosModel.extend({
                             self.set_table(table);
                         }
                     });
-            } else if (ids_to_remove.length) {
-                self.remove_from_server_and_set_sync_state(ids_to_remove);
+            } else {
+                if (ids_to_remove.length) {
+                    self.remove_from_server_and_set_sync_state(ids_to_remove);
+                }
+                if (self.order_to_transfer_to_different_table && table) {
+                    self.order_to_transfer_to_different_table = null;
+                    self.set_table(table);
+                }
             }
             this.set_order(null); // unset curent selected order
 

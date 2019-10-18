@@ -64,7 +64,7 @@ var InventoryValidationController = ListController.extend({
                 var exitCallback = function (infos) {
                     // In case we discarded a wizard, we do nothing to stay on
                     // the same view...
-                    if (infos === 'special') {
+                    if (infos && infos.special) {
                         return;
                     }
                     // ... but in any other cases, we go back on the inventory form.

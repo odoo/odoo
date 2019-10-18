@@ -173,6 +173,29 @@
     }
 }
 
+// Odoo defines a limited Noto font-family for a small variety of unicode
+// characters that are not necessary defined in the user system or even defined
+// but not properly readable. This function allows to add this font family in a
+// given font list.
+//
+// @param {list} $font - a list of font names ending with the generic one.
+// @param {integer} [$index] - the position where to add the support font, if
+//        not given, it will be placed before the generic one.
+@function o-add-unicode-support-font($font, $index: false) {
+    @if $index == false {
+        $index: length($font);
+    }
+
+    $-with-support-font: ();
+    @for $i from 1 through length($font) {
+        @if $i == $index {
+            $-with-support-font: append($-with-support-font, 'Odoo Unicode Support Noto', $separator: comma);
+        }
+        $-with-support-font: append($-with-support-font, nth($font, $i), $separator: comma);
+    }
+
+    @return $-with-support-font;
+}
 
 // Mixin which allows to extend the BS4 bg-variant mixin
 @mixin o-bg-color-extension($color, $text-color, $with-muted) {}

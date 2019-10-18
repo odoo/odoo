@@ -113,10 +113,7 @@
                     <templates>
                         <t t-name="kanban-box">
                         <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record">
-                            <!-- Medium employee's picture -->
-                            <field name="image_128" widget="image" class="o_kanban_image_fill_left d-none d-md-block" options="{'zoom': true, 'background': true, 'preventClicks': false}"/>
-                            <!-- Employee's picture optimized for mobile -->
-                            <field name="image_64" widget="image" class="o_kanban_image d-md-none rounded-circle" options="{'zoom': true, 'background': true, 'preventClicks': false}"/>
+                            <field name="image_128" widget="image" class="o_kanban_image_fill_left o_hr_rounded_circle" options="{'zoom': true, 'background': true, 'preventClicks': false}"/>
 
                             <div class="oe_kanban_details">
                                 <div class="o_kanban_record_top">

@@ -8,7 +8,7 @@ from odoo.exceptions import UserError, ValidationError
 class Project(models.Model):
     _inherit = "project.project"
 
-    allow_timesheets = fields.Boolean("Allow timesheets", default=True, help="Enable timesheeting on the project.")
+    allow_timesheets = fields.Boolean("Timesheets", default=True, help="Enable timesheeting on the project.")
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):

@@ -251,7 +251,7 @@ var ProductConfiguratorWidget = relationalFields.FieldMany2One.extend({
                     _.each(recordData.data, function (record) {
                         if (record.ref === resId) {
                             convertedValues.push([0, 0, {
-                                attribute_value_id: record.data.attribute_value_id.data.id,
+                                custom_product_template_attribute_value_id: record.data.custom_product_template_attribute_value_id.data.id,
                                 custom_value: record.data.custom_value
                             }]);
                         }

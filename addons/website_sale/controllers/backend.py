@@ -7,6 +7,7 @@ from datetime import datetime, timedelta, time
 from odoo import fields, http, _
 from odoo.addons.website.controllers.backend import WebsiteBackend
 from odoo.http import request
+from odoo.tools.misc import get_lang
 
 
 class WebsiteSaleBackend(WebsiteBackend):
@@ -175,7 +176,7 @@ class WebsiteSaleBackend(WebsiteBackend):
         sales_graph = [{
             '0': fields.Date.to_string(d) if not previous else fields.Date.to_string(d + timedelta(days=days_between)),
             # Respect read_group format in models.py
-            '1': daily_sales_dict.get(babel.dates.format_date(d, format='dd MMM yyyy', locale=request.env.context.get('lang') or 'en_US'), 0)
+            '1': daily_sales_dict.get(babel.dates.format_date(d, format='dd MMM yyyy', locale=get_lang(request.env).code), 0)
         } for d in date_list]
 
         return sales_graph

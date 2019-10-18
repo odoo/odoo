@@ -2,11 +2,11 @@
 <odoo>
 <!-- Snippets & Themes Menu -->
 <template id="email_designer_snippets" inherit_id="web_editor.snippets" primary="True">
-    <xpath expr="//h2[@id='snippets_menu']" position="replace">
-        <t t-set="company_id" t-value="res_company"/>
-        <h2 id="snippets_menu">Select a template</h2>
+    <xpath expr="//div[@id='snippets_menu']" position="inside">
+        <button type="button" disabled="disabled">Select a template</button>
     </xpath>
     <xpath expr="//div[@id='o_scroll']" position="replace">
+        <t t-set="company_id" t-value="res_company"/>
         <div id="o_scroll">
             <div id="email_designer_themes">
                 <div data-name="basic"
@@ -72,7 +72,6 @@
             </div>
         </div>
     </xpath>
-
     <xpath expr="//div[@id='snippet_options']" position="inside">
         <t t-call="mass_mailing.snippet_options"/>
     </xpath>
@@ -811,10 +810,10 @@
     <div data-js="colorpicker"
         data-selector=".note-editable > div:not(.o_layout), .note-editable .oe_structure > div, td, th"
         data-exclude=".o_mail_no_colorpicker, .o_mail_no_options">
-        <div class="dropdown-submenu">
-            <a tabindex="-1" href="#" class="dropdown-item"><i class="fa fa-eyedropper"/>Background Color</a>
-            <div class="dropdown-menu" role="menu"/>
-        </div>
+        <we-collapse-area>
+            <we-toggler><i class="fa fa-eyedropper"/> Background Color</we-toggler>
+            <we-collapse/>
+        </we-collapse-area>
     </div>
 </template>
 </odoo>

@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
+import binascii
 import io
 
-from PIL import Image
+from PIL import Image, ImageOps
 # We can preload Ico too because it is considered safe
 from PIL import IcoImagePlugin
 
 from random import randrange
 
+from odoo.exceptions import UserError
 from odoo.tools.translate import _
 
 
@@ -23,6 +25,21 @@ FILETYPE_BASE64_MAGICWORD = {
     b'R': 'gif',
     b'i': 'png',
     b'P': 'svg+xml',
+}
+
+EXIF_TAG_ORIENTATION = 0x112
+# The target is to have 1st row/col to be top/left
+# Note: rotate is counterclockwise
+EXIF_TAG_ORIENTATION_TO_TRANSPOSE_METHODS = {  # Initial side on 1st row/col:
+    0: [],                                          # reserved
+    1: [],                                          # top/left
+    2: [Image.FLIP_LEFT_RIGHT],                     # top/right
+    3: [Image.ROTATE_180],                          # bottom/right
+    4: [Image.FLIP_TOP_BOTTOM],                     # bottom/left
+    5: [Image.FLIP_LEFT_RIGHT, Image.ROTATE_90],    # left/top
+    6: [Image.ROTATE_270],                          # right/top
+    7: [Image.FLIP_TOP_BOTTOM, Image.ROTATE_90],    # right/bottom
+    8: [Image.ROTATE_90],                           # left/bottom
 }
 
 # Arbitraty limit to fit most resolutions, including Nokia Lumia 1020 photo,
@@ -49,8 +66,7 @@ class ImageProcess():
         :rtype: ImageProcess
 
         :raise: ValueError if `verify_resolution` is True and the image is too large
-        :raise: binascii.Error: if the base64 is incorrect
-        :raise: OSError if the image can't be identified by PIL
+        :raise: UserError if the base64 is incorrect or the image can't be identified by PIL
         """
         self.base64_source = base64_source or False
         self.operationsCount = 0
@@ -61,11 +77,16 @@ class ImageProcess():
         else:
             self.image = base64_to_image(self.base64_source)
 
+            # Original format has to be saved before fixing the orientation or
+            # doing any other operations because the information will be lost on
+            # the resulting image.
+            self.original_format = (self.image.format or '').upper()
+
+            self.image = image_fix_orientation(self.image)
+
             w, h = self.image.size
             if verify_resolution and w * h > IMAGE_MAX_RESOLUTION:
                 raise ValueError(_("Image size excessive, uploaded images must be smaller than %s million pixels.") % str(IMAGE_MAX_RESOLUTION / 10e6))
-
-            self.original_format = self.image.format.upper()
 
     def image_base64(self, quality=0, output_format=''):
         """Return the base64 encoded image resulting of all the image processing
@@ -151,7 +172,7 @@ class ImageProcess():
         :return: self to allow chaining
         :rtype: ImageProcess
         """
-        if self.image and self.image.format != 'GIF' and (max_width or max_height):
+        if self.image and self.original_format != 'GIF' and (max_width or max_height):
             w, h = self.image.size
             asked_width = max_width or (w * max_height) // h
             asked_height = max_height or (h * max_width) // w
@@ -197,7 +218,7 @@ class ImageProcess():
         :return: self to allow chaining
         :rtype: ImageProcess
         """
-        if self.image and self.image.format != 'GIF' and max_width and max_height:
+        if self.image and self.original_format != 'GIF' and max_width and max_height:
             w, h = self.image.size
             # We want to keep as much of the image as possible -> at least one
             # of the 2 crop dimensions always has to be the same value as the
@@ -215,8 +236,8 @@ class ImageProcess():
                 new_w, new_h = (new_w * h) // new_h, h
 
             # Correctly place the center of the crop.
-            x_offset = (w - new_w) * center_x
-            h_offset = (h - new_h) * center_y
+            x_offset = int((w - new_w) * center_x)
+            h_offset = int((h - new_h) * center_y)
 
             if new_w != w or new_h != h:
                 self.image = self.image.crop((x_offset, h_offset, x_offset + new_w, h_offset + new_h))
@@ -330,6 +351,45 @@ def average_dominant_color(colors, mitigate=175, max_margin=140):
     return tuple(final_dominant), remaining
 
 
+def image_fix_orientation(image):
+    """Fix the orientation of the image if it has an EXIF orientation tag.
+
+    This typically happens for images taken from a non-standard orientation
+    by some phones or other devices that are able to report orientation.
+
+    The specified transposition is applied to the image before all other
+    operations, because all of them expect the image to be in its final
+    orientation, which is the case only when the first row of pixels is the top
+    of the image and the first column of pixels is the left of the image.
+
+    Moreover the EXIF tags will not be kept when the image is later saved, so
+    the transposition has to be done to ensure the final image is correctly
+    orientated.
+
+    Note: to be completely correct, the resulting image should have its exif
+    orientation tag removed, since the transpositions have been applied.
+    However since this tag is not used in the code, it is acceptable to
+    save the complexity of removing it.
+
+    :param image: the source image
+    :type image: PIL.Image
+
+    :return: the resulting image, copy of the source, with orientation fixed
+        or the source image if no operation was applied
+    :rtype: PIL.Image
+    """
+    # `exif_transpose` was added in Pillow 6.0
+    if hasattr(ImageOps, 'exif_transpose'):
+        return ImageOps.exif_transpose(image)
+    if (image.format or '').upper() == 'JPEG' and hasattr(image, '_getexif'):
+        exif = image._getexif()
+        if exif:
+            orientation = exif.get(EXIF_TAG_ORIENTATION, 0)
+            for method in EXIF_TAG_ORIENTATION_TO_TRANSPOSE_METHODS.get(orientation, []):
+                image = image.transpose(method)
+    return image
+
+
 def base64_to_image(base64_source):
     """Return a PIL image from the given `base64_source`.
 
@@ -339,10 +399,12 @@ def base64_to_image(base64_source):
     :return: the PIL image
     :rtype: PIL.Image
 
-    :raise: binascii.Error: if the base64 is incorrect
-    :raise: OSError if the image can't be identified by PIL
+    :raise: UserError if the base64 is incorrect or the image can't be identified by PIL
     """
-    return Image.open(io.BytesIO(base64.b64decode(base64_source)))
+    try:
+        return Image.open(io.BytesIO(base64.b64decode(base64_source)))
+    except (OSError, binascii.Error):
+        raise UserError(_("This file could not be decoded as an image file. Please try with a different file."))
 
 
 def image_to_base64(image, format, **params):
@@ -371,8 +433,8 @@ def is_image_size_above(base64_source_1, base64_source_2):
     if base64_source_1[:1] in (b'P', 'P') or base64_source_2[:1] in (b'P', 'P'):
         # False for SVG
         return False
-    image_source = base64_to_image(base64_source_1)
-    image_target = base64_to_image(base64_source_2)
+    image_source = image_fix_orientation(base64_to_image(base64_source_1))
+    image_target = image_fix_orientation(base64_to_image(base64_source_2))
     return image_source.width > image_target.width or image_source.height > image_target.height
 
 

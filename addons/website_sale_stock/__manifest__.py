@@ -3,7 +3,7 @@
 
 {
     'name': 'Product Availability',
-    'category': 'Website',
+    'category': 'Website/Website',
     'summary': 'Manage product inventory & availability',
     'description': """
 Manage the inventory of your products and display their availability status in your eCommerce store.

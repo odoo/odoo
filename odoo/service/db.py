@@ -304,7 +304,7 @@ def restore_db(db, dump_file, copy=False):
 
             if odoo.tools.config['unaccent']:
                 try:
-                    with cr.savepoint():
+                    with cr.savepoint(flush=False):
                         cr.execute("CREATE EXTENSION unaccent")
                 except psycopg2.Error:
                     pass

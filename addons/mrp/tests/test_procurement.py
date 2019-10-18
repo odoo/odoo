@@ -116,7 +116,7 @@ class TestProcurement(TestMrpCommon):
         # set the product of `self.bom_1` to this child category
         for bom_line_id in self.bom_1.bom_line_ids:
             # check that no routes are defined on the product
-            self.assertEquals(len(bom_line_id.product_id.route_ids), 0)
+            self.assertEqual(len(bom_line_id.product_id.route_ids), 0)
             # set the category of the product to a child category
             bom_line_id.product_id.categ_id = child_categ_id
 
@@ -194,5 +194,6 @@ class TestProcurement(TestMrpCommon):
 
         move_dest_scheduled_date = move_dest.date_expected
         mo.date_planned_start += timedelta(days=5)
-
-        self.assertAlmostEqual(move_dest.date_expected, move_dest_scheduled_date + timedelta(days=5), delta=timedelta(seconds=1), msg='date is not propagated')
+        # Adding 5 days to the date planned start makes the next move's date 4 days and 23 hours
+        # later since the date planned start was set one hour before the date_planned_end.
+        self.assertAlmostEqual(move_dest.date_expected, move_dest_scheduled_date + timedelta(days=4, hours=23), delta=timedelta(seconds=1), msg='date is not propagated')

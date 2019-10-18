@@ -149,17 +149,27 @@ ProductConfiguratorWidget.include({
         this.do_action('sale_product_configurator.sale_product_configurator_action', {
             additional_context: data,
             on_close: function (result) {
-                if (result && result !== 'special') {
+                if (result && !result.special) {
                     self._addProducts(result, dataPointId);
                 } else {
-                    // is this restoreProductTemplateId ability useful ???
                     if (self.restoreProductTemplateId) {
+                        // if configurator opened in edit mode.
                         self.trigger_up('field_changed', {
                             dataPointID: dataPointId,
                             preventProductIdCheck: true,
                             changes: {
                                 product_template_id: self.restoreProductTemplateId.data
                             }
+                        });
+                    } else {
+                        // if configurator opened to create line:
+                        // destroy line if configurator closed during configuration process.
+                        self.trigger_up('field_changed', {
+                            dataPointID: dataPointId,
+                            changes: {
+                                product_template_id: false,
+                                product_id: false,
+                            },
                         });
                     }
                 }
@@ -265,7 +275,7 @@ ProductConfiguratorWidget.include({
                 customValuesCommands.push({
                     operation: 'CREATE',
                     context: [{
-                        default_attribute_value_id: customValue.attribute_value_id,
+                        default_custom_product_template_attribute_value_id: customValue.custom_product_template_attribute_value_id,
                         default_custom_value: customValue.custom_value
                     }]
                 });
@@ -341,7 +351,7 @@ ProductConfiguratorWidget.include({
                 _.each(product.product_custom_attribute_values, function (attributeValue) {
                     defaultCustomAttributeValues.push(
                             [0, 0, {
-                                attribute_value_id: attributeValue.attribute_value_id,
+                                custom_product_template_attribute_value_id: attributeValue.custom_product_template_attribute_value_id,
                                 custom_value: attributeValue.custom_value
                             }]
                         );

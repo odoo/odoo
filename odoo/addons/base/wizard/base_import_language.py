@@ -31,7 +31,7 @@ class BaseLanguageImport(models.TransientModel):
         this = this.with_context(overwrite=this.overwrite)
         with TemporaryFile('wb+') as buf:
             try:
-                buf.write(base64.decodestring(this.data))
+                buf.write(base64.decodebytes(this.data))
 
                 # now we determine the file format
                 buf.seek(0)

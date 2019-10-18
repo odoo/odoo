@@ -41,7 +41,7 @@
 !define PUBLISHER 'Odoo S.A.'
 
 !ifndef MAJOR_VERSION
-    !define MAJOR_VERSION '12'
+    !define MAJOR_VERSION '13'
 !endif
 
 !ifndef MINOR_VERSION

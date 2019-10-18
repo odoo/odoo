@@ -197,6 +197,10 @@ root can have the following attributes:
 
     .. note:: if the ``edit`` attribute is set to ``false``, the ``editable`` option will be ignored.
 
+``multi_edit``
+    editable or not editable list can activate the multi-edition feature by defining
+    the multi_edit=1
+
 ``default_order``
     overrides the ordering of the view, replacing the model's default order.
     The value is a comma-separated list of fields, postfixed by ``desc`` to
@@ -219,7 +223,7 @@ root can have the following attributes:
     (``font-style: italic``), or any `bootstrap contextual color
     <https://getbootstrap.com/docs/3.3/components/#available-variations>`_ (``danger``,
     ``info``, ``muted``, ``primary``, ``success`` or ``warning``).
-``create``, ``edit``, ``delete``, ``duplicate``, ``import``
+``create``, ``edit``, ``delete``, ``duplicate``, ``import``, ``export_xlsx``
     allows *dis*\ abling the corresponding action in the view by setting the
     corresponding attribute to ``false``
 ``limit``
@@ -1052,6 +1056,8 @@ attributes:
   whether it should be possible to create records without switching to the
   form view. By default, ``quick_create`` is enabled when the Kanban view is
   grouped by many2one, selection, char or boolean fields, and disabled when not.
+``records_draggable``
+  whether it should be possible to drag records when kanban is grouped. Default: true.
 
   Set to ``true`` to always enable it, and to ``false`` to always disable it.
 
@@ -1076,8 +1082,8 @@ Possible children of the view element are:
     the progressbar
 
   ``colors`` (required)
-    JSON mapping the above field values to either "danger", "warning" or
-    "success" colors
+    JSON mapping the above field values to either "danger", "warning", "success"
+    or "muted" colors
 
   ``sum_field`` (optional)
     the name of the field whose column's records' values will be summed and
@@ -1382,56 +1388,12 @@ take the following attributes:
       <gantt
         date_start="date_start"
         date_stop="date_stop"
-        thumbnails="{'user_id': 'image_64'}"
+        thumbnails="{'user_id': 'image_128'}"
       >
       </gantt>
 
 
 will display the users avatars next to their names when grouped by user_id
-
-.. _reference/views/diagram:
-
-Diagram
-=======
-
-The diagram view can be used to display directed graphs of records. The root
-element is ``<diagram>`` and takes no attributes.
-
-Possible children of the diagram view are:
-
-``node`` (required, 1)
-    Defines the nodes of the graph. Its attributes are:
-
-    ``object``
-      the node's Odoo model
-    ``shape``
-      conditional shape mapping similar to colors and fonts in :ref:`the list
-      view <reference/views/list>`. The only valid shape is ``rectangle`` (the
-      default shape is an ellipsis)
-    ``bgcolor``
-      same as ``shape``, but conditionally maps a background color for
-      nodes. The default background color is white, the only valid alternative
-      is ``grey``.
-``arrow`` (required, 1)
-    Defines the directed edges of the graph. Its attributes are:
-
-    ``object`` (required)
-      the edge's Odoo model
-    ``source`` (required)
-      :class:`~odoo.fields.Many2one` field of the edge's model pointing to
-      the edge's source node record
-    ``destination`` (required)
-      :class:`~odoo.fields.Many2one` field of the edge's model pointing to
-      the edge's destination node record
-    ``label``
-      Python list of attributes (as quoted strings). The corresponding
-      attributes's values will be concatenated and displayed as the edge's
-      label
-
-``label``
-    Explanatory note for the diagram, the ``string`` attribute defines the
-    note's content. Each ``label`` is output as a paragraph in the diagram
-    header, easily visible but without any special emphasis.
 
 .. _reference/views/dashboard:
 
@@ -2068,8 +2030,12 @@ The view's root element is ``<map>`` multiple attributes are allowed
     If a field is provided the view will override the model's default order. The field must be apart of the model on which the view is applied not from res.partner
 ``routing``
     if ``true`` the routes between the records will be shown. The view still needs a valid MapBox token and at least two located records. (i.e the records has a res.partner many2one and the partner has a address or valid coordinates)
+``hide_name``
+    if ``true`` hide a name from the marker's popup (default: false)
+``hide_address``
+    if ``true`` hide a address from the marker's popup (default: false)
 
-The only element allowed within the ``<map>`` element is the ``<marker-popup>``. This element is able to contain multiple ``<field>`` elements. Each of these elements will be interpreted as a line in the marker's popup. The field's attributes are the following:
+The ``<map>`` element can contain multiple ``<field>`` elements. Each ``<field>`` element will be interpreted as a line in the marker's popup. The field's attributes are the following:
 
 ``name``
     The field to display.
@@ -2081,10 +2047,8 @@ No attribute or element is mandatory but as stated above if no res.partner many2
 For example here is a map:
     .. code-block:: xml
 
-        <map res_partner="partner_id" default_order="date_begin" routing="true">
-            <marker-popup>
-                <field name="name" string="Task: "/>
-            </marker-popup>
+        <map res_partner="partner_id" default_order="date_begin" routing="true" hide_name="true">
+            <field name="partner_id" string="Customer Name"/>
         </map>
 
 .. _reference/views/qweb:

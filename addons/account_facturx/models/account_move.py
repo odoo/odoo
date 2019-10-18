@@ -54,13 +54,21 @@ class AccountMove(models.Model):
         '''
         amount_total_import = None
 
+        default_type = False
         if self._context.get('default_journal_id'):
             journal = self.env['account.journal'].browse(self.env.context['default_journal_id'])
             default_type = 'out_invoice' if journal.type == 'sale' else 'in_invoice'
         elif self._context.get('default_type'):
             default_type = self._context['default_type']
-        else:
+        elif self.type in self.env['account.move'].get_invoice_types(include_receipts=True):
+            # in case an attachment is saved on a draft invoice previously created, we might
+            # have lost the default value in context but the type was already set
+            default_type = self.type
+
+        if not default_type:
             raise UserError(_("No information about the journal or the type of invoice is passed"))
+        if default_type == 'entry':
+            return
 
         # Total amount.
         elements = tree.xpath('//ram:GrandTotalAmount', namespaces=tree.nsmap)
@@ -74,6 +82,7 @@ class AccountMove(models.Model):
         elements = tree.xpath('//rsm:ExchangedDocument/ram:TypeCode', namespaces=tree.nsmap)
         type_code = elements[0].text
 
+        default_type.replace('_refund', '_invoice')
         if type_code == '381':
             default_type = 'out_refund' if default_type == 'out_invoice' else 'in_refund'
             refund_sign = -1
@@ -221,16 +230,11 @@ class AccountMove(models.Model):
         # /!\ 'default_res_id' in self._context is used to don't process attachment when using a form view.
         res = super(AccountMove, self).message_post(**kwargs)
 
-        if 'no_new_invoice' not in self.env.context and len(self) == 1 and self.state == 'draft':
-            # Get attachments.
-            # - 'attachments' is a namedtuple defined in mail.thread looking like:
-            # _Attachment = namedtuple('Attachment', ('fname', 'content', 'info'))
-            # - 'attachment_ids' is a list of ir.attachment records ids.
-            attachments = kwargs.get('attachments', [])
-            if kwargs.get('attachment_ids'):
-                attachments += self.env['ir.attachment'].browse(kwargs['attachment_ids'])
-
-            for attachment in attachments:
+        if not self.env.context.get('no_new_invoice') and len(self) == 1 and self.state == 'draft' and (
+            self.env.context.get('default_type', self.type) in self.env['account.move'].get_invoice_types(include_receipts=True)
+            or self.env['account.journal'].browse(self.env.context.get('default_journal_id')).type in ('sale', 'purchase')
+        ):
+            for attachment in self.env['ir.attachment'].browse(kwargs.get('attachment_ids', [])):
                 self._create_invoice_from_attachment(attachment)
         return res
 
@@ -243,20 +247,7 @@ class AccountMove(models.Model):
                 move._create_invoice_from_xml(attachment)
 
     def _create_invoice_from_pdf(self, attachment):
-        def _get_attachment_filename(attachment):
-            # Handle both _Attachment namedtuple in mail.thread or ir.attachment.
-            return hasattr(attachment, 'fname') and getattr(attachment, 'fname') or attachment.name
-
-        def _get_attachment_content(attachment):
-            # Handle both _Attachment namedtuple in mail.thread or ir.attachment.
-            return hasattr(attachment, 'content') and getattr(attachment, 'content') or base64.b64decode(attachment.datas)
-        filename = _get_attachment_filename(attachment)
-
-        # Check if the attachment is a pdf.
-        if not filename.endswith('.pdf'):
-            return
-
-        content = _get_attachment_content(attachment)
+        content = base64.b64decode(attachment.datas)
 
         with io.BytesIO(content) as buffer:
             try:
@@ -325,4 +316,5 @@ class AccountMove(models.Model):
             raise UserError(_('No decoder was found for the xml file: {}. The file is badly formatted, not supported or the decoder is not installed').format(attachment.name))
 
     def _remove_ocr_option(self):
-        self.write({'extract_state': 'done'})
+        if 'extract_state' in self:
+            self.write({'extract_state': 'done'})

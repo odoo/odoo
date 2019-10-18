@@ -9,6 +9,7 @@ var qweb = core.qweb;
 publicWidget.registry.twitter = publicWidget.Widget.extend({
     selector: '.twitter',
     xmlDependencies: ['/website_twitter/static/src/xml/website.twitter.xml'],
+    disabledInEditableMode: false,
     events: {
         'mouseenter .wrap-row': '_onEnterRow',
         'mouseleave .wrap-row': '_onLeaveRow',
@@ -73,6 +74,7 @@ publicWidget.registry.twitter = publicWidget.Widget.extend({
                         text: text,
                         href: url,
                         target: '_blank',
+                        rel: 'noreferrer noopener',
                     });
                     return c.prop('outerHTML');
                 }

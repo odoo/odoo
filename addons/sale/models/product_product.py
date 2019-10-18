@@ -59,11 +59,10 @@ class ProductProduct(models.Model):
 class ProductAttribute(models.Model):
     _inherit = "product.attribute"
 
-    # YTI FIX ME: PLEASE RENAME ME INTO attribute_type
-    type = fields.Selection([
+    display_type = fields.Selection([
         ('radio', 'Radio'),
         ('select', 'Select'),
-        ('color', 'Color')], default='radio', required=True)
+        ('color', 'Color')], default='radio', required=True, help="The display type used in the Product Configurator.")
 
 
 class ProductAttributeValue(models.Model):
@@ -71,10 +70,9 @@ class ProductAttributeValue(models.Model):
 
     is_custom = fields.Boolean('Is custom value', help="Allow users to input custom values for this attribute value")
     html_color = fields.Char(
-        string='HTML Color Index',
-        help="""Here you can set a
-        specific HTML color index (e.g. #ff0000) to display the color if the
-        attribute type is 'Color'.""")
+        string='Color',
+        help="Here you can set a specific HTML color index (e.g. #ff0000) to display the color if the attribute type is 'Color'.")
+    display_type = fields.Selection(related='attribute_id.display_type', readonly=True)
 
 
 class ProductTemplateAttributeValue(models.Model):
@@ -82,14 +80,27 @@ class ProductTemplateAttributeValue(models.Model):
 
     html_color = fields.Char('HTML Color Index', related="product_attribute_value_id.html_color")
     is_custom = fields.Boolean('Is custom value', related="product_attribute_value_id.is_custom")
+    display_type = fields.Selection(related='product_attribute_value_id.display_type', readonly=True)
 
 
 class ProductAttributeCustomValue(models.Model):
     _name = "product.attribute.custom.value"
-    _rec_name = 'custom_value'
     _description = 'Product Attribute Custom Value'
-    _order = 'attribute_value_id, id'
+    _order = 'custom_product_template_attribute_value_id, id'
 
-    attribute_value_id = fields.Many2one('product.attribute.value', string='Attribute Value')
-    sale_order_line_id = fields.Many2one('sale.order.line', string='Sale order line')
-    custom_value = fields.Char('Custom value')
+    name = fields.Char("Name", compute='_compute_name')
+    custom_product_template_attribute_value_id = fields.Many2one('product.template.attribute.value', string="Attribute Value", required=True, ondelete='restrict')
+    sale_order_line_id = fields.Many2one('sale.order.line', string="Sales Order Line", required=True, ondelete='cascade')
+    custom_value = fields.Char("Custom Value")
+
+    @api.depends('custom_product_template_attribute_value_id.name', 'custom_value')
+    def _compute_name(self):
+        for record in self:
+            name = (record.custom_value or '').strip()
+            if record.custom_product_template_attribute_value_id.display_name:
+                name = "%s: %s" % (record.custom_product_template_attribute_value_id.display_name, name)
+            record.name = name
+
+    _sql_constraints = [
+        ('sol_custom_value_unique', 'unique(custom_product_template_attribute_value_id, sale_order_line_id)', "Only one Custom Value is allowed per Attribute Value per Sales Order Line.")
+    ]

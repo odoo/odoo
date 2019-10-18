@@ -522,3 +522,156 @@ class TestOnChange(common.TransactionCase):
             self.Message.onchange(values, 'discussion', field_onchange)
 
         self.assertFalse(called[0], "discussion.messages has been read")
+
+
+class TestComputeOnchange(common.TransactionCase):
+
+    def test_create(self):
+        model = self.env['test_new_api.compute.onchange']
+
+        # compute 'bar' and 'baz'
+        record = model.create({'active': True, 'foo': "foo"})
+        self.assertEqual(record.bar, "foo")
+        self.assertEqual(record.baz, "foo")
+
+        # compute 'bar' but not 'baz'
+        record = model.create({'active': True, 'foo': "foo", 'bar': "bar", 'baz': "baz"})
+        self.assertEqual(record.bar, "foo")
+        self.assertEqual(record.baz, "baz")
+
+        # compute 'bar' and 'baz', but do not change its value
+        record = model.create({'active': False, 'foo': "foo"})
+        self.assertEqual(record.bar, "foo")
+        self.assertEqual(record.baz, False)
+
+        # compute 'bar' but not 'baz'
+        record = model.create({'active': False, 'foo': "foo", 'bar': "bar", 'baz': "baz"})
+        self.assertEqual(record.bar, "foo")
+        self.assertEqual(record.baz, "baz")
+
+    def test_write(self):
+        model = self.env['test_new_api.compute.onchange']
+        record = model.create({'active': True, 'foo': "foo"})
+        self.assertEqual(record.bar, "foo")
+        self.assertEqual(record.baz, "foo")
+
+        # recompute 'bar' and 'baz'
+        record.write({'foo': "foo1"})
+        self.assertEqual(record.bar, "foo1")
+        self.assertEqual(record.baz, "foo1")
+
+        # recompute 'bar' but not 'baz'
+        record.write({'foo': "foo2", 'bar': "bar2", 'baz': "baz2"})
+        self.assertEqual(record.bar, "foo2")
+        self.assertEqual(record.baz, "baz2")
+
+        # recompute 'bar' and 'baz', but do not change its value
+        record.write({'active': False, 'foo': "foo3"})
+        self.assertEqual(record.bar, "foo3")
+        self.assertEqual(record.baz, "baz2")
+
+        # recompute 'bar' but not 'baz'
+        record.write({'active': False, 'foo': "foo4", 'bar': "bar4", 'baz': "baz4"})
+        self.assertEqual(record.bar, "foo4")
+        self.assertEqual(record.baz, "baz4")
+
+    def test_set(self):
+        model = self.env['test_new_api.compute.onchange']
+        record = model.create({'active': True, 'foo': "foo"})
+        self.assertEqual(record.bar, "foo")
+        self.assertEqual(record.baz, "foo")
+
+        # recompute 'bar' and 'baz'
+        record.foo = "foo1"
+        self.assertEqual(record.bar, "foo1")
+        self.assertEqual(record.baz, "foo1")
+
+        # do not recompute 'baz'
+        record.baz = "baz2"
+        self.assertEqual(record.bar, "foo1")
+        self.assertEqual(record.baz, "baz2")
+
+        # recompute 'baz', but do not change its value
+        record.active = False
+        self.assertEqual(record.bar, "foo1")
+        self.assertEqual(record.baz, "baz2")
+
+        # recompute 'baz', but do not change its value
+        record.foo = "foo3"
+        self.assertEqual(record.bar, "foo3")
+        self.assertEqual(record.baz, "baz2")
+
+        # do not recompute 'baz'
+        record.baz = "baz4"
+        self.assertEqual(record.bar, "foo3")
+        self.assertEqual(record.baz, "baz4")
+
+    def test_set_new(self):
+        model = self.env['test_new_api.compute.onchange']
+        record = model.new({'active': True, 'foo': "foo"})
+        self.assertEqual(record.bar, "foo")
+        self.assertEqual(record.baz, "foo")
+
+        # recompute 'bar' and 'baz'
+        record.foo = "foo1"
+        self.assertEqual(record.bar, "foo1")
+        self.assertEqual(record.baz, "foo1")
+
+        # do not recompute 'baz'
+        record.baz = "baz2"
+        self.assertEqual(record.bar, "foo1")
+        self.assertEqual(record.baz, "baz2")
+
+        # recompute 'baz', but do not change its value
+        record.active = False
+        self.assertEqual(record.bar, "foo1")
+        self.assertEqual(record.baz, "baz2")
+
+        # recompute 'baz', but do not change its value
+        record.foo = "foo3"
+        self.assertEqual(record.bar, "foo3")
+        self.assertEqual(record.baz, "baz2")
+
+        # do not recompute 'baz'
+        record.baz = "baz4"
+        self.assertEqual(record.bar, "foo3")
+        self.assertEqual(record.baz, "baz4")
+
+    def test_onchange(self):
+        form = common.Form(self.env['test_new_api.compute.onchange'])
+        form.active = True
+        form.foo = "foo1"
+        self.assertEqual(form.bar, "foo1")
+        self.assertEqual(form.baz, "foo1")
+        form.baz = "baz2"
+        self.assertEqual(form.bar, "foo1")
+        self.assertEqual(form.baz, "baz2")
+        form.active = False
+        self.assertEqual(form.bar, "foo1")
+        self.assertEqual(form.baz, "baz2")
+        form.foo = "foo3"
+        self.assertEqual(form.bar, "foo3")
+        self.assertEqual(form.baz, "baz2")
+        form.active = True
+        self.assertEqual(form.bar, "foo3")
+        self.assertEqual(form.baz, "foo3")
+
+        record = form.save()
+        self.assertEqual(record.bar, "foo3")
+        self.assertEqual(record.baz, "foo3")
+
+        form = common.Form(record)
+        self.assertEqual(form.bar, "foo3")
+        self.assertEqual(form.baz, "foo3")
+        form.foo = "foo4"
+        self.assertEqual(form.bar, "foo4")
+        self.assertEqual(form.baz, "foo4")
+        form.baz = "baz5"
+        self.assertEqual(form.bar, "foo4")
+        self.assertEqual(form.baz, "baz5")
+        form.active = False
+        self.assertEqual(form.bar, "foo4")
+        self.assertEqual(form.baz, "baz5")
+        form.foo = "foo6"
+        self.assertEqual(form.bar, "foo6")
+        self.assertEqual(form.baz, "baz5")

@@ -210,7 +210,7 @@ class FSWatcherBase(object):
 class FSWatcherWatchdog(FSWatcherBase):
     def __init__(self):
         self.observer = Observer()
-        for path in odoo.modules.module.ad_paths:
+        for path in odoo.addons.__path__:
             _logger.info('Watching addons folder %s', path)
             self.observer.schedule(self, path, recursive=True)
 
@@ -236,7 +236,7 @@ class FSWatcherInotify(FSWatcherBase):
         inotify.adapters._LOGGER.setLevel(logging.ERROR)
         # recreate a list as InotifyTrees' __init__ deletes the list's items
         paths_to_watch = []
-        for path in odoo.modules.module.ad_paths:
+        for path in odoo.addons.__path__:
             paths_to_watch.append(path)
             _logger.info('Watching addons folder %s', path)
         self.watcher = InotifyTrees(paths_to_watch, mask=INOTIFY_LISTEN_EVENTS, block_duration_s=.5)
@@ -507,6 +507,8 @@ class ThreadedServer(CommonServer):
                         # We wait there is no processing requests
                         # other than the ones exceeding the limits, up to 1 min,
                         # before asking for a reload.
+                        _logger.info('Dumping stacktrace of limit exceeding threads before reloading')
+                        dumpstacks(thread_idents=[thread.ident for thread in self.limits_reached_threads])
                         self.reload()
                         # `reload` increments `self.quit_signals_received`
                         # and the loop will end after this iteration,
@@ -554,9 +556,28 @@ class GeventServer(CommonServer):
     def start(self):
         import gevent
         try:
-            from gevent.pywsgi import WSGIServer
+            from gevent.pywsgi import WSGIServer, WSGIHandler
         except ImportError:
-            from gevent.wsgi import WSGIServer
+            from gevent.wsgi import WSGIServer, WSGIHandler
+
+        class ProxyHandler(WSGIHandler):
+            """ When logging requests, try to get the client address from
+            the environment so we get proxyfix's modifications (if any).
+
+            Derived from werzeug.serving.WSGIRequestHandler.log
+            / werzeug.serving.WSGIRequestHandler.address_string
+            """
+            def format_request(self):
+                old_address = self.client_address
+                if getattr(self, 'environ', None):
+                    self.client_address = self.environ['REMOTE_ADDR']
+                elif not self.client_address:
+                    self.client_address = '<local>'
+                # other cases are handled inside WSGIHandler
+                try:
+                    return super().format_request()
+                finally:
+                    self.client_address = old_address
 
         set_limit_memory_hard()
         if os.name == 'posix':
@@ -565,7 +586,12 @@ class GeventServer(CommonServer):
             signal.signal(signal.SIGUSR1, log_ormcache_stats)
             gevent.spawn(self.watchdog)
 
-        self.httpd = WSGIServer((self.interface, self.port), self.app)
+        self.httpd = WSGIServer(
+            (self.interface, self.port), self.app,
+            log=logging.getLogger('longpolling'),
+            error_log=logging.getLogger('longpolling'),
+            handler_class=ProxyHandler,
+        )
         _logger.info('Evented Service (longpolling) running on %s:%s', self.interface, self.port)
         try:
             self.httpd.serve_forever()
@@ -633,7 +659,7 @@ class PreforkServer(CommonServer):
             self.queue.append(sig)
             self.pipe_ping(self.pipe)
         else:
-            _logger.warn("Dropping signal: %s", sig)
+            _logger.warning("Dropping signal: %s", sig)
 
     def worker_spawn(self, klass, workers_registry):
         self.generation += 1
@@ -685,7 +711,7 @@ class PreforkServer(CommonServer):
                 raise KeyboardInterrupt
             elif sig == signal.SIGQUIT:
                 # dump stacks on kill -3
-                self.dumpstacks()
+                dumpstacks()
             elif sig == signal.SIGUSR1:
                 # log ormcache stats on kill -SIGUSR1
                 log_ormcache_stats()

@@ -23,16 +23,19 @@
         <script type="text/javascript" src="/website/static/tests/tours/rte.js"/>
         <script type="text/javascript" src="/website/static/tests/tours/html_editor.js"/>
         <script type="text/javascript" src="/website/static/tests/tours/restricted_editor.js"/>
+        <script type="text/javascript" src="/website/static/tests/tours/dashboard_tour.js"/>
     </xpath>
 </template>
 
 <template id="assets_backend" inherit_id="web.assets_backend" name="Website Backend Assets (used in backend interface)">
     <xpath expr="//link[last()]" position="after">
         <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.backend.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website_visitor_views.scss"/>
     </xpath>
     <xpath expr="//script[last()]" position="after">
         <script type="text/javascript" src="/website/static/src/js/backend/button.js"/>
         <script type="text/javascript" src="/website/static/src/js/backend/dashboard.js"/>
+        <script type="text/javascript" src="/website/static/src/js/backend/res_config_settings.js"/>
     </xpath>
 </template>
 
@@ -63,6 +66,8 @@
         <script type="text/javascript" src="/website/static/src/js/content/website_root_instance.js"/>
     </xpath>
     <xpath expr="//script[last()]" position="after">
+        <script type="text/javascript" src="/website/static/src/js/set_view_track.js"/>
+        <script type="text/javascript" src="/website/static/lib/jstz.min.js"/>
         <script type="text/javascript" src="/website/static/src/js/utils.js"/>
 
         <script type="text/javascript" src="/website/static/src/js/content/website_root.js"/>
@@ -73,6 +78,7 @@
 
         <script type="text/javascript" src="/website/static/src/js/menu/navbar.js"/>
 
+        <script type="text/javascript" src="/website/static/src/js/visitor_timezone.js"/>
         <!-- Custom empty file for user javascript -->
         <script type="text/javascript" src="/website/static/src/js/user_custom_javascript.js"/>
     </xpath>
@@ -91,10 +97,8 @@
 <template id="website.assets_wysiwyg" name="Website Editor Assets (used in website editor)">
     <t t-call="web._assets_helpers">
         <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/bootstrap_overridden.scss"/>
-        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/wysiwyg_variables.scss"/>
     </t>
     <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.wysiwyg.scss"/>
-    <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.editor.ui.scss"/>
     <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.edit_mode.scss"/>
 
     <script type="text/javascript" src="/website/static/src/js/editor/editor.js"/>
@@ -108,6 +112,8 @@
 
 <template id="website.assets_editor" name="Website Editor Assets (used in website editor)">
     <t t-call="web._assets_helpers"/>
+
+    <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.editor.ui.scss"/>
 
     <script type="text/javascript" src="/website/static/src/js/editor/editor_menu.js"/>
     <script type="text/javascript" src="/website/static/src/js/editor/editor_menu_translate.js"/>
@@ -130,7 +136,7 @@
 
 <!-- Layout -->
 <template id="submenu" name="Submenu">
-    <t t-set="has_visible_submenu" t-value="submenu.child_id.filtered(lambda menu: menu.is_visible)"/>
+    <t t-set="has_visible_submenu" t-value="(submenu.is_mega_menu and submenu.is_visible) or submenu.child_id.filtered(lambda menu: menu.is_visible)"/>
     <li t-if="submenu.is_visible and not has_visible_submenu" t-attf-class="#{item_class or ''}">
         <a t-att-href="submenu.clean_url()"
             t-attf-class="#{link_class or ''} #{'active' if submenu.clean_url() and unslug_url(request.httprequest.path) == unslug_url(submenu.clean_url()) else ''}"
@@ -143,11 +149,15 @@
     <li t-if="has_visible_submenu" t-attf-class="#{item_class or ''} dropdown #{
         (submenu.clean_url() and submenu.clean_url() != '/' and any([request.httprequest.path == child.url for child in submenu.child_id if child.url]) or
          (submenu.clean_url() and request.httprequest.path == submenu.clean_url())) and 'active'
-        }">
-        <a t-attf-class="#{link_class or ''} dropdown-toggle" data-toggle="dropdown" href="#">
+        } #{submenu.is_mega_menu and 'position-static'}">
+        <a t-attf-class="#{link_class or ''} dropdown-toggle #{submenu.is_mega_menu and 'o_mega_menu_toggle'}" data-toggle="dropdown" href="#">
             <span t-field="submenu.name"/>
         </a>
-        <ul class="dropdown-menu" role="menu">
+        <div t-if="submenu.is_mega_menu"
+             t-attf-class="dropdown-menu o_mega_menu #{submenu.mega_menu_classes}"
+             data-name="Mega Menu"
+             t-field="submenu.mega_menu_content"/>
+        <ul t-else="" class="dropdown-menu" role="menu">
             <t t-foreach="submenu.child_id" t-as="submenu">
                 <t t-call="website.submenu">
                     <t t-set="item_class" t-value="None"/>
@@ -227,12 +237,15 @@
             </t>
         </t>
 
-        <t t-set="languages" t-value="website.get_languages() if website else None"/>
         <t t-if="request and request.is_frontend_multilang and website">
-            <t t-foreach="website.get_alternate_languages(request.httprequest)" t-as="lg">
+            <t t-set="alternate_languages" t-value="website._get_alternate_languages(canonical_params=canonical_params)"/>
+            <t t-foreach="alternate_languages" t-as="lg">
                 <link rel="alternate" t-att-hreflang="lg['hreflang']" t-att-href="lg['href']"/>
             </t>
         </t>
+        <link t-if="request and website" rel="canonical" t-att-href="website._get_canonical_url(canonical_params=canonical_params)"/>
+
+        <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin=""/>
     </xpath>
 
     <xpath expr="//head/t[@t-js='false'][last()]" position="after">
@@ -242,6 +255,9 @@
         <t t-call-assets="website.assets_editor" t-css="false" groups="website.group_website_publisher" lazy_load="True"/>
     </xpath>
 
+    <xpath expr="//header" position="attributes">
+        <attribute name="data-name">Header</attribute>
+    </xpath>
     <xpath expr="//header//a[hasclass('navbar-brand')]" position="replace">
         <a class="navbar-brand" href="/" t-if="website" t-field="website.name">My Website</a>
     </xpath>
@@ -355,7 +371,7 @@
                             <h5>Connect with us</h5>
                             <ul class="list-unstyled">
                                 <li><a href="/contactus">Contact us</a></li>
-                                <li><i class="fa fa-phone"/> <span t-field="res_company.phone"/></li>
+                                <li><i class="fa fa-phone"/> <span class="o_force_ltr" t-field="res_company.phone"/></li>
                                 <li><i class="fa fa-envelope"/>  <span t-field="res_company.email"/></li>
                             </ul>
                             <p>
@@ -363,7 +379,6 @@
                                 <a t-if="website.social_twitter" t-att-href="website.social_twitter" class="btn btn-sm btn-link"><i class="fa fa-2x fa-twitter"/></a>
                                 <a t-if="website.social_linkedin" t-att-href="website.social_linkedin" class="btn btn-sm btn-link"><i class="fa fa-2x fa-linkedin"/></a>
                                 <a t-if="website.social_youtube" t-att-href="website.social_youtube" class="btn btn-sm btn-link"><i class="fa fa-2x fa-youtube-play"/></a>
-                                <a t-if="website.social_googleplus" t-att-href="website.social_googleplus" class="btn btn-sm btn-link" rel="publisher"><i class="fa fa-2x fa-google-plus-square"/></a>
                                 <a t-if="website.social_github" t-att-href="website.social_github" class="btn btn-sm btn-link"><i class="fa fa-2x fa-github"/></a>
                                 <a t-if="website.social_instagram" t-att-href="website.social_instagram" class="btn btn-sm btn-link"><i class="fa fa-2x fa-instagram"/></a>
                             </p>
@@ -395,16 +410,15 @@
         <li class="list-inline-item">
             <div class="dropup">
                 <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    <span t-esc="list(filter(lambda lg : lg[0] == lang, languages))[0][1].split('/').pop()"/>
+                    <span t-esc="list(filter(lambda lg : lg[0] == lang, languages))[0][2].split('/').pop()"/>
                     <span class="caret ml4"/>
                 </button>
                 <div class="dropdown-menu" role="menu">
                     <t t-foreach="languages" t-as="lg">
-                        <a t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang=lg[0])"
+                        <a t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang_code=lg[0])"
                            class="dropdown-item js_change_lang"
-                           t-att-data-default-lang="(editable or translatable) and 'true' if website and lg[0] == website.default_lang_code else None"
-                           t-att-data-lang="lg[0]">
-                            <t t-esc="lg[1].split('/').pop()"/>
+                           t-att-data-url_code="lg[1]">
+                            <t t-esc="lg[2].split('/').pop()"/>
                         </a>
                     </t>
                 </div>
@@ -420,6 +434,21 @@
     </ul>
 </template>
 
+<template id="record_cover">
+    <t t-set="_cp" t-value="_cp or json.loads(_record.cover_properties)"/>
+    <div t-att-data-use_size="use_size"
+         t-att-data-use_filters="use_filters"
+         t-att-data-use_text_size="use_text_size"
+         t-att-data-use_text_align="use_text_align"
+         t-att-data-res-model="request.env.user.has_group('website.group_website_publisher') and _record._name"
+         t-att-data-res-id="request.env.user.has_group('website.group_website_publisher') and _record.id"
+         t-attf-class="o_record_cover_container d-flex flex-column h-100 bg-secondary #{use_size and _cp.get('resize_class')} #{use_text_size and _cp.get('text_size_class')} #{use_text_align and _cp.get('text_align_class')} #{additionnal_classes}">
+        <div class="o_record_cover_component o_record_cover_image" t-attf-style="background-image: #{_cp.get('background-image')};"/>
+        <div t-if="use_filters" t-attf-class="o_record_cover_component o_record_cover_filter #{_cp.get('background-color')}" t-attf-style="opacity: #{_cp.get('opacity', 0.0)};"/>
+        <t t-raw="0"/>
+    </div>
+</template>
+
 <!-- Util template -->
 <template id="publish_management">
     <div groups="website.group_website_publisher" t-ignore="true" class="float-right css_editable_mode_hidden" t-att-style="style or None">
@@ -429,7 +458,7 @@
             <button type="button" t-attf-class="btn btn-default dropdown-toggle dropdown-toggle-split" t-att-id="'dopprod-%s' % object.id" data-toggle="dropdown"/>
             <div class="dropdown-menu" role="menu" t-att-aria-labelledby="'dopprod-%s' % object.id">
                 <t t-raw="0"/>
-                <a role="menuitem" t-attf-href="/web#return_label=Website&amp;view_type=form&amp;model=#{object._name}&amp;id=#{object.id}&amp;action=#{action}&amp;menu_id=#{menu or object.env.ref('website.menu_website_configuration').id}"
+                <a role="menuitem" t-attf-href="/web#view_type=form&amp;model=#{object._name}&amp;id=#{object.id}&amp;action=#{action}&amp;menu_id=#{menu or object.env.ref('website.menu_website_configuration').id}"
                     title='Edit in backend' class="dropdown-item" t-if="publish_edit">Edit</a>
             </div>
         </div>
@@ -439,8 +468,8 @@
 <template id="publish_short">
     <t groups="website.group_website_publisher" t-ignore="true">
         <div t-attf-class="float-right js_publish_management #{object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-controller="publish_controller">
-            <button class="btn btn-danger js_publish_btn">Unpublished</button>
-            <button class="btn btn-success js_publish_btn">Published</button>
+            <button t-attf-class="btn btn-danger js_publish_btn #{additionnal_btn_classes or ''}">Unpublished</button>
+            <button t-attf-class="btn btn-success js_publish_btn #{additionnal_btn_classes or ''}">Published</button>
         </div>
     </t>
 </template>
@@ -688,27 +717,23 @@
                     <dd>
                         <span t-raw="app.summary"/>
                     </dd><dd class="text-muted" groups='base.group_no_one'>
-                        Technical name: <span t-field="app.name"/>, updated: <span t-field="app.write_date"/>, author: <span t-field="app.author"/>
+                        Technical name: <span t-field="app.name"/>, author: <span t-field="app.author"/>
                     </dd>
                 </dl>
 
-                <div groups='base.group_no_one'>
-                    <h2>Installed Modules</h2>
-                    <dl class="dl-horizontal">
-                        <t t-foreach="modules" t-as="app">
-                            <dt>
-                                <span t-raw="app.shortdesc"/>
-                            </dt>
-                            <dd t-if="app.summary">
-                                <span t-raw="app.summary"/>
-                            </dd><dd>
-                                Technical name: <span t-field="app.name"/>,
-                                updated: <span t-field="app.write_date"/>
-                                <t t-if="app.author">
-                                    , author: <span t-field="app.author"/>
-                                </t>
-                            </dd>
-                        </t>
+                <div t-if="l10n">
+                    <h2 class='mt32'>Installed Localizations / Account Charts</h2>
+                    <dl class="dl-horizontal" t-foreach="l10n" t-as="app">
+                        <dt>
+                            <a t-attf-href="https://www.odoo.com/page/accounting/#{app.name}">
+                                <t t-raw="app.shortdesc"/>
+                            </a>
+                        </dt>
+                        <dd>
+                            <span t-raw="app.summary"/>
+                        </dd><dd class="text-muted" groups='base.group_no_one'>
+                            Technical name: <span t-field="app.name"/>, author: <span t-field="app.author"/>
+                        </dd>
                     </dl>
                 </div>
               </t>
@@ -759,7 +784,7 @@
 </template>
 
 <template id="page_404">
-    <t t-call="website.404">
+    <t t-call="http_routing.404">
         <div class="container">
             <div class="alert alert-info mt32">
                 <p>This page does not exist, but you can create it as you are administrator of this site.</p>
@@ -771,256 +796,104 @@
     </t>
 </template>
 
-<template id="http_error">
-    <t t-call="website.layout">
-        <div id="wrap">
-            <div class="oe_structure">
-                <h1 class="container mt32"><t t-esc="status_code"/>: <t t-esc="status_message"/></h1>
-            </div>
-            <t t-if="editable or debug">
-                <t t-call="website.http_error_debug"/>
-            </t>
-        </div>
-    </t>
-</template>
-
-<template id="error_message">
-    <p t-if="error_message">
-        <strong>Error message:</strong>
-        <pre t-esc="error_message"/>
-    </p>
-</template>
-
-<template id="http_error_debug">
-    <div class="container accordion mb32 mt32" id="debug_infos">
-        <div class="card" t-if="error_message">
-            <h4 class="card-header">
-                <a data-toggle="collapse" href="#error_main">Error</a>
-            </h4>
-            <div id="error_main" class="collapse show">
-                <div class="card-body">
-                    <t t-call="website.error_message"/>
-                </div>
-            </div>
-        </div>
-        <div class="card" t-if="qweb_exception">
-            <h4 class="card-header">
-                <a data-toggle="collapse" href="#error_qweb">QWeb</a>
-            </h4>
-            <div id="error_qweb" class="collapse show">
-                <div class="card-body">
-                    <p t-if="exception.message">
-                        <strong>Error message:</strong>
-                        <pre t-esc="exception.message"/>
-                    </p>
-                    <p>
-                        The error occured while rendering the template <code t-esc="qweb_exception.name"/>
-                        <t t-if="qweb_exception.html">and evaluating the following expression: <code t-esc="qweb_exception.html"/></t>
-                    </p>
-                </div>
-            </div>
-        </div>
-        <div class="card" t-if="traceback">
-            <h4 class="card-header">
-                <a data-toggle="collapse" href="#error_traceback">Traceback</a>
-            </h4>
-            <div id="error_traceback" t-attf-class="collapse #{not error_message and not qweb_exception and 'show'}">
-                <div class="card-body">
-                    <pre id="exception_traceback" t-esc="traceback"/>
-                </div>
-            </div>
-        </div>
-    </div>
-</template>
-
-<template id="400">
-    <t t-call="website.layout">
-        <div id="wrap">
-            <div class="container">
-                <h1 class="mt-5">Something went wrong.</h1>
-                <p>Take a look at the error message below.</p>
-            </div>
-            <t t-if="editable or request.session.debug">
-                <t t-call="website.http_error_debug"/>
-            </t>
-            <t t-else="">
-                <div class="container">
-                    <t t-call="website.error_message"/>
-                </div>
-            </t>
-    </div>
-    </t>
-</template>
-
-<template id="403">
-    <t t-call="website.layout">
-        <div id="wrap">
-            <div class="container">
-                <h1 class="mt-5">403: Forbidden</h1>
-                <p>The page you were looking for could not be authorized.</p>
-            </div>
-                <t t-if="editable or request.session.debug">
-                    <t t-call="website.http_error_debug"/>
-                </t>
-                <t t-else="">
-                    <div class="container">
-                        <t t-call="website.error_message"/>
-                    </div>
-                </t>
-        </div>
-    </t>
-</template>
-
-<template id="404">
-    <t t-call="website.layout">
-        <div id="wrap">
-            <t t-raw="0"/>
-            <div class="oe_structure oe_empty">
-                <div class="container">
-                    <h1 class="mt-5">404: Page not found!</h1>
-                    <p>
-                        The page you were looking for could not be found; it is possible you have
-                        typed the address incorrectly, but it has most probably been removed due
-                        to the recent website reorganisation.
-                    </p>
-                    <p>Maybe you were looking for one of these popular pages ?</p>
-                    <ul>
-                        <li><a href="/">Homepage</a></li>
-                        <li><a href="/contactus">Contact Us</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </t>
-</template>
-
-<template id="500">
+<template id="qweb_500" inherit_id="http_routing.500">
     <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
     <!-- This template should not use any variable except those provided by website.ir_http._handle_exception  -->
     <!--    no request.crsf_token, no theme style, no assets, ... cursor can be broken during rendering !      -->
     <!--    see test_05_reset_specific_view_controller_broken_request                                          -->
     <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
-    <html>
-        <head>
-            <title t-esc="status_message">Internal Server Error</title>
-            <t t-set="debug" t-value="True"/>
-
-            <link rel="stylesheet" href="/web/static/lib/bootstrap/css/bootstrap.css"/>
-            <script src="/web/static/lib/jquery/jquery.js" type="text/javascript"/>
-            <script type="text/javascript" src="/web/static/lib/bootstrap/js/util.js"/>
-            <script type="text/javascript" src="/web/static/lib/bootstrap/js/collapse.js"/>
-            <script type="text/javascript" src="/web/static/lib/bootstrap/js/modal.js"/>
-            <style>
-                html {
-                    font-size: 14px;
-                }
-            </style>
-
-            <t t-if='view'>
-                <script>
-                    $(document).ready(function() {
-                        var button = $('.reset_templates_button');
-                        button.click(function() {
-                            $('#reset_templates_mode').val($(this).data('mode'));
-                            var dialog = $('#reset_template_confirmation').modal('show');
-                            var input = dialog.find('input[type="text"]').val('').focus();
-                            var dialog_form = dialog.find('form');
-                            dialog_form.submit(function() {
-                                if (input.val() == dialog.find('.confirm_word').text()) {
-                                    dialog.modal('hide');
-                                    button.prop('disabled', true).text('Working...');
-                                    $('#reset_templates_form').attr('action', '/website/reset_template');
-                                    $('#reset_templates_form').trigger('submit');
-                                } else {
-                                    input.val('').focus();
-                                }
-                                return false;
-                            });
+    <xpath expr="//script[last()]" position="before">
+        <script type="text/javascript" src="/web/static/lib/bootstrap/js/modal.js"/>
+    </xpath>
+    <xpath expr="//style" position="after">
+        <t t-if='view'>
+            <script>
+                $(document).ready(function() {
+                    var button = $('.reset_templates_button');
+                    button.click(function() {
+                        $('#reset_templates_mode').val($(this).data('mode'));
+                        var dialog = $('#reset_template_confirmation').modal('show');
+                        var input = dialog.find('input[type="text"]').val('').focus();
+                        var dialog_form = dialog.find('form');
+                        dialog_form.submit(function() {
+                            if (input.val() == dialog.find('.confirm_word').text()) {
+                                dialog.modal('hide');
+                                button.prop('disabled', true).text('Working...');
+                                $('#reset_templates_form').attr('action', '/website/reset_template');
+                                $('#reset_templates_form').trigger('submit');
+                            } else {
+                                input.val('').focus();
+                            }
                             return false;
                         });
+                        return false;
                     });
-                </script>
-            </t>
-        </head>
-        <body>
-            <div t-if="view" role="dialog" id="reset_template_confirmation" class="modal" tabindex="-1" t-ignore="true">
-                <div class="modal-dialog">
-                    <form role="form">
-                        <div class="modal-content">
-                            <header class="modal-header">
-                                <h4 class="modal-title">Reset templates</h4>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
-                            </header>
-                            <main class="modal-body">
-                                <div class="form-group row mb0">
-                                    <label for="page-name" class="col-md-12 col-form-label">
-                                        <p>The selected templates will be reset to their factory settings.</p>
-                                    </label>
-                                </div>
-                                <div class="form-group row mb0">
-                                    <label for="page-name" class="col-md-9 col-form-label">
-                                        <p>Type '<i class="confirm_word">yes</i>' in the box below if you want to confirm.</p>
-                                    </label>
-                                    <div class="col-md-3 mt16">
-                                        <input type="text" id="page-name" class="form-control" required="required" placeholder="yes"/>
-                                    </div>
-                                </div>
-                            </main>
-                            <footer class="modal-footer">
-                                <button type="button" class="btn" data-dismiss="modal" aria-label="Cancel">Cancel</button>
-                                <input type="submit" value="Confirm" class="btn btn-primary"/>
-                            </footer>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <div id="wrapwrap">
-                <header>
-                    <div class="navbar navbar-expand-md navbar-light bg-light">
-                        <div class="container">
-                            <div class="collapse navbar-collapse navbar-top-collapse">
-                                <ul class="navbar-nav ml-auto" id="top_menu">
-                                    <li class="nav-item"><a href="/" class="nav-link">Home</a></li>
-                                    <li class="nav-item"><a href="javascript: window.history.back()" class="nav-link">Back</a></li>
-                                </ul>
+                });
+            </script>
+        </t>
+    </xpath>
+    <xpath expr="//div[@id='wrapwrap']" position="before">
+        <div t-if="view" role="dialog" id="reset_template_confirmation" class="modal" tabindex="-1" t-ignore="true">
+            <div class="modal-dialog">
+                <form role="form">
+                    <div class="modal-content">
+                        <header class="modal-header">
+                            <h4 class="modal-title">Reset templates</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+                        </header>
+                        <main class="modal-body">
+                            <div class="form-group row mb0">
+                                <label for="page-name" class="col-md-12 col-form-label">
+                                    <p>The selected templates will be reset to their factory settings.</p>
+                                </label>
                             </div>
-                        </div>
+                            <div class="form-group row mb0">
+                                <label for="page-name" class="col-md-9 col-form-label">
+                                    <p>Type '<i class="confirm_word">yes</i>' in the box below if you want to confirm.</p>
+                                </label>
+                                <div class="col-md-3 mt16">
+                                    <input type="text" id="page-name" class="form-control" required="required" placeholder="yes"/>
+                                </div>
+                            </div>
+                        </main>
+                        <footer class="modal-footer">
+                            <button type="button" class="btn" data-dismiss="modal" aria-label="Cancel">Cancel</button>
+                            <input type="submit" value="Confirm" class="btn btn-primary"/>
+                        </footer>
                     </div>
-                </header>
-                <main>
-                    <div class="oe_structure">
-                        <h2 class="container mt32"><t t-esc="status_code"/>: <t t-esc="status_message"/></h2>
-                    </div>
-                    <div class="container" t-if="view and editable">
-                        <div class="alert alert-danger" t-if="debug" role="alert">
-                            <h4>Template fallback</h4>
-                            <p>An error occured while rendering the template <code t-esc="qweb_exception.name"/>.</p>
-                            <p>If this error is caused by a change of yours in the templates, you have the possibility to reset the template to its <strong>factory settings</strong>.</p>
-                            <form action="#" method="post" id="reset_templates_form">
-                                <ul>
-                                    <li>
-                                        <label>
-                                            <t t-esc="view.name"/>
-                                        </label>
-                                    </li>
-                                </ul>
-                                <input type="hidden" name="redirect" t-att-value="request.httprequest.path"/>
-                                <input type="hidden" id="reset_templates_view_id" name="view_id" t-att-value="view.id"/>
-                                <input type="hidden" id="reset_templates_mode" name="mode"/>
-                                <button data-mode="soft" class="reset_templates_button btn btn-info">Restore previous version (soft reset).</button>
-                                <button t-if="view.arch_fs" data-mode="hard" class="reset_templates_button btn btn-outline-danger">Reset to initial version (hard reset).</button>
-                            </form>
-                        </div>
-                    </div>
-
-                    <t t-if="editable or debug">
-                        <t t-call="website.http_error_debug"/>
-                    </t>
-                </main>
+                </form>
             </div>
-        </body>
-    </html>
+        </div>
+    </xpath>
+    <xpath expr="//div[@id='error_message']" position="after">
+        <div class="container" t-if="view and editable">
+            <div class="alert alert-danger" t-if="debug" role="alert">
+                <h4>Template fallback</h4>
+                <p>An error occured while rendering the template <code t-esc="qweb_exception.name"/>.</p>
+                <p>If this error is caused by a change of yours in the templates, you have the possibility to reset the template to its <strong>factory settings</strong>.</p>
+                <form action="#" method="post" id="reset_templates_form">
+                    <ul>
+                        <li>
+                            <label>
+                                <t t-esc="view.name"/>
+                            </label>
+                        </li>
+                    </ul>
+                    <input type="hidden" name="redirect" t-att-value="request.httprequest.path"/>
+                    <input type="hidden" id="reset_templates_view_id" name="view_id" t-att-value="view.id"/>
+                    <input type="hidden" id="reset_templates_mode" name="mode"/>
+                    <button data-mode="soft" class="reset_templates_button btn btn-info">Restore previous version (soft reset).</button>
+                    <button t-if="view.arch_fs" data-mode="hard" class="reset_templates_button btn btn-outline-danger">Reset to initial version (hard reset).</button>
+                </form>
+            </div>
+        </div>
+    </xpath>
+</template>
+
+<template id="portal_404" inherit_id="portal.portal_404">
+    <xpath expr="//li" position="before">
+        <li><a href="/">Homepage</a></li>
+    </xpath>
 </template>
 
 <template id="robots">
@@ -1069,7 +942,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 </template>
 
 <template id="website_search_box" name="Website Searchbox">
-    <div class="input-group">
+    <div t-attf-class="input-group #{_classes}" role="search">
         <input type="text" name="search" class="search-query form-control oe_search_box" placeholder="Search..." t-att-value="search"/>
         <div class="input-group-append">
             <button type="submit" class="btn btn-primary oe_search_button" aria-label="Search" title="Search"><i class="fa fa-search"/></button>

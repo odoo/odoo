@@ -144,12 +144,13 @@ var ProxyDevice  = core.Class.extend(mixins.PropertiesMixin,{
 
         window.hw_proxy = this;
     },
-    set_connection_status: function(status,drivers){
+    set_connection_status: function(status, drivers, msg=''){
         var oldstatus = this.get('status');
         var newstatus = {};
         newstatus.status = status;
         newstatus.drivers = status === 'disconnected' ? {} : oldstatus.drivers;
         newstatus.drivers = drivers ? drivers : newstatus.drivers;
+        newstatus.msg = msg;
         this.set('status',newstatus);
     },
     disconnect: function(){

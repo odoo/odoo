@@ -6,7 +6,7 @@
             <h4>Drag Files Here <span class="fa fa-download"/></h4>
          </div>
          <div class="o_composer_container">
-             <img t-if="widget.avatarURL" height="36" width="36" class="o_thread_message_sidebar o_chatter_avatar rounded-circle" t-att-src="widget.avatarURL" alt="Avatar"/>
+             <img t-if="widget.avatarURL" height="36" width="36" class="o_thread_message_sidebar o_chatter_avatar o_object_fit_cover rounded-circle" t-att-src="widget.avatarURL" alt="Avatar"/>
              <div t-if="widget.extended" class="o_composer_subject">
                  <input tabindex="1" type="text" placeholder="Subject" class="o_input"/>
              </div>

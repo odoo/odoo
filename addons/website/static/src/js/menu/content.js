@@ -86,7 +86,7 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
         }));
 
         defs.push(this._rpc({
-            model: 'website.redirect',
+            model: 'website.rewrite',
             method: 'fields_get',
         }).then(function (fields) {
             self.fields = fields;
@@ -369,14 +369,15 @@ var MenuEntryDialog = weWidgets.LinkDialog.extend({
      * @constructor
      */
     init: function (parent, options, data) {
-        data.text = data.name || '';
-        data.isNewWindow = data.new_window;
-
         this._super(parent, _.extend({
             title: _t("Add a menu item"),
         }, options || {}), _.extend({
             needLabel: true,
+            text: data.name || '',
+            isNewWindow: data.new_window,
         }, data || {}));
+
+        this.menuType = data.menuType;
     },
     /**
      * @override
@@ -390,6 +391,13 @@ var MenuEntryDialog = weWidgets.LinkDialog.extend({
 
         // Adapt URL label
         this.$('label[for="o_link_dialog_label_input"]').text(_t("Menu Label"));
+
+        // Auto add '#' URL and hide the input if for mega menu
+        if (this.menuType === 'mega') {
+            var $url = this.$('input[name="url"]');
+            $url.val('#').trigger('change');
+            $url.closest('.form-group').addClass('d-none');
+        }
 
         return this._super.apply(this, arguments);
     },
@@ -469,7 +477,6 @@ var EditMenuDialog = weWidgets.Dialog.extend({
      */
     willStart: function () {
         var defs = [this._super.apply(this, arguments)];
-        var self = this;
         var context;
         this.trigger_up('context_get', {
             callback: function (ctx) {
@@ -480,11 +487,11 @@ var EditMenuDialog = weWidgets.Dialog.extend({
             model: 'website.menu',
             method: 'get_tree',
             args: [context.website_id, this.rootID],
-        }).then(function (menu) {
-            self.menu = menu;
-            self.root_menu_id = menu.id;
-            self.flat = self._flatenize(menu);
-            self.to_delete = [];
+        }).then(menu => {
+            this.menu = menu;
+            this.rootMenuID = menu.fields['id'];
+            this.flat = this._flatenize(menu);
+            this.toDelete = [];
         }));
         return Promise.all(defs);
     },
@@ -505,6 +512,10 @@ var EditMenuDialog = weWidgets.Dialog.extend({
             tolerance: 'pointer',
             attribute: 'data-menu-id',
             expression: '()(.+)', // nestedSortable takes the second match of an expression (*sigh*)
+            isAllowed: (placeholder, placeholderParent, currentItem) => {
+                return !placeholderParent
+                    || !currentItem[0].dataset.megaMenu && !placeholderParent[0].dataset.megaMenu;
+            },
         });
         return r;
     },
@@ -518,8 +529,7 @@ var EditMenuDialog = weWidgets.Dialog.extend({
      */
     save: function () {
         var _super = this._super.bind(this);
-        var self = this;
-        var new_menu = this.$('.oe_menu_editor').nestedSortable('toArray', {startDepthCount: 0});
+        var newMenus = this.$('.oe_menu_editor').nestedSortable('toArray', {startDepthCount: 0});
         var levels = [];
         var data = [];
         var context;
@@ -529,20 +539,25 @@ var EditMenuDialog = weWidgets.Dialog.extend({
             },
         });
         // Resequence, re-tree and remove useless data
-        new_menu.forEach(function (menu) {
+        newMenus.forEach(menu => {
             if (menu.id) {
                 levels[menu.depth] = (levels[menu.depth] || 0) + 1;
-                var mobj = self.flat[menu.id];
-                mobj.sequence = levels[menu.depth];
-                mobj.parent_id = (menu.parent_id|0) || menu.parent_id || self.root_menu_id;
-                delete(mobj.children);
-                data.push(mobj);
+                var menuFields = this.flat[menu.id].fields;
+                menuFields['sequence'] = levels[menu.depth];
+                menuFields['parent_id'] = menu['parent_id'] || this.rootMenuID;
+                data.push(menuFields);
             }
         });
-        this._rpc({
+        return this._rpc({
             model: 'website.menu',
             method: 'save',
-            args: [context.website_id, { data: data, to_delete: self.to_delete }],
+            args: [
+                context.website_id,
+                {
+                    'data': data,
+                    'to_delete': this.toDelete,
+                }
+            ],
         }).then(function () {
             return _super();
         });
@@ -563,10 +578,9 @@ var EditMenuDialog = weWidgets.Dialog.extend({
      */
     _flatenize: function (node, _dict) {
         _dict = _dict || {};
-        var self = this;
-        _dict[node.id] = node;
-        node.children.forEach(function (child) {
-            self._flatenize(child, _dict);
+        _dict[node.fields['id']] = node;
+        node.children.forEach(child => {
+            this._flatenize(child, _dict);
         });
         return _dict;
     },
@@ -580,23 +594,31 @@ var EditMenuDialog = weWidgets.Dialog.extend({
      * dialog to edit this new menu.
      *
      * @private
+     * @param {Event} ev
      */
-    _onAddMenuButtonClick: function () {
-        var self = this;
-        var dialog = new MenuEntryDialog(this, {}, {});
-        dialog.on('save', this, function (link) {
-            var new_menu = {
-                id: _.uniqueId('new-'),
-                name: link.text,
-                url: link.url,
-                new_window: link.isNewWindow,
-                parent_id: false,
-                sequence: 0,
-                children: [],
+    _onAddMenuButtonClick: function (ev) {
+        var menuType = ev.currentTarget.dataset.type;
+        var dialog = new MenuEntryDialog(this, {}, {
+            menuType: menuType,
+        });
+        dialog.on('save', this, link => {
+            var newMenu = {
+                'fields': {
+                    'id': _.uniqueId('new-'),
+                    'name': link.text,
+                    'url': link.url,
+                    'new_window': link.isNewWindow,
+                    'is_mega_menu': menuType === 'mega',
+                    'sequence': 0,
+                    'parent_id': false,
+                },
+                'children': [],
+                'is_homepage': false,
             };
-            self.flat[new_menu.id] = new_menu;
-            self.$('.oe_menu_editor').append(
-                qweb.render('website.contentMenu.dialog.submenu', { submenu: new_menu }));
+            this.flat[newMenu.fields['id']] = newMenu;
+            this.$('.oe_menu_editor').append(
+                qweb.render('website.contentMenu.dialog.submenu', {submenu: newMenu})
+            );
         });
         dialog.open();
     },
@@ -607,9 +629,9 @@ var EditMenuDialog = weWidgets.Dialog.extend({
      */
     _onDeleteMenuButtonClick: function (ev) {
         var $menu = $(ev.currentTarget).closest('[data-menu-id]');
-        var menuID = $menu.data('menu-id')|0;
+        var menuID = parseInt($menu.data('menu-id'));
         if (menuID) {
-            this.to_delete.push(menuID);
+            this.toDelete.push(menuID);
         }
         $menu.remove();
     },
@@ -620,21 +642,20 @@ var EditMenuDialog = weWidgets.Dialog.extend({
      * @private
      */
     _onEditMenuButtonClick: function (ev) {
-        var self = this;
-        var menu_id = $(ev.currentTarget).closest('[data-menu-id]').data('menu-id');
-        var menu = self.flat[menu_id];
+        var $menu = $(ev.currentTarget).closest('[data-menu-id]');
+        var menuID = $menu.data('menu-id');
+        var menu = this.flat[menuID];
         if (menu) {
-            var dialog = new MenuEntryDialog(this, {}, menu);
-            dialog.on('save', this, function (link) {
-                var id = link.id;
-                var menu_obj = self.flat[id];
-                _.extend(menu_obj, {
+            var dialog = new MenuEntryDialog(this, {}, _.extend({
+                menuType: menu.fields['is_mega_menu'] ? 'mega' : undefined,
+            }, menu.fields));
+            dialog.on('save', this, link => {
+                _.extend(menu.fields, {
                     'name': link.text,
                     'url': link.url,
                     'new_window': link.isNewWindow,
                 });
-                var $menu = self.$('[data-menu-id="' + id + '"]');
-                $menu.find('.js_menu_label').first().text(menu_obj.name);
+                $menu.find('.js_menu_label').first().text(menu.fields['name']);
             });
             dialog.open();
         } else {

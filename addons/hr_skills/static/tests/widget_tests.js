@@ -154,8 +154,8 @@ odoo.define('hr_skills.field_one_to_many_group_tests', function (require) {
             });
             var $headers = form.$('.o_resume_group_header');
             assert.strictEqual($headers.length, 2, 'There should be 2 headers');
-            assert.strictEqual($headers.find('th:contains(AAA)').length, 1, "it should have line type AAA");
-            assert.strictEqual($headers.find('th:contains(BBB)').length, 1, "it should have line type BBB");
+            assert.strictEqual($headers.find('td:contains(AAA)').length, 1, "it should have line type AAA");
+            assert.strictEqual($headers.find('td:contains(BBB)').length, 1, "it should have line type BBB");
 
             var dataRows = form.$('.o_data_row');
             assert.strictEqual(dataRows.length, 3, 'There should be 3 data rows');
@@ -301,8 +301,8 @@ odoo.define('hr_skills.field_one_to_many_group_tests', function (require) {
 
             var $headers = form.$('.o_group_header');
             assert.strictEqual($headers.length, 2, 'There should be 2 headers');
-            assert.strictEqual($headers.find('th:contains(Dev)').length, 1, "it should have skill type Dev");
-            assert.strictEqual($headers.find('th:contains(Music)').length, 1, "it should have skill type Music");
+            assert.strictEqual($headers.find('td:contains(Dev)').length, 1, "it should have skill type Dev");
+            assert.strictEqual($headers.find('td:contains(Music)').length, 1, "it should have skill type Music");
 
             var dataRows = form.$('.o_data_row');
             assert.strictEqual(dataRows.length, 3, 'There should be 3 data rows');

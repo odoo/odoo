@@ -5,12 +5,12 @@
 {
     'name': 'pos_epson_printer',
     'version': '1.0',
-    'category': 'Point of Sale',
+    'category': 'Sales/Point Of Sale',
     'sequence': 6,
     'summary': 'Epson ePOS Printers in PoS',
     'description': """
 
-Use Epson ePOS Printers without IoT Box in the Point of Sale
+Use Epson ePOS Printers without the IoT Box in the Point of Sale
 """,
     'depends': ['point_of_sale'],
     'data': [

@@ -157,7 +157,7 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
     @return fileobject if pathinfo is False else (fileobject, filepath)
     """
     import odoo.modules as addons
-    adps = addons.module.ad_paths
+    adps = odoo.addons.__path__
     rtp = os.path.normcase(os.path.abspath(config['root_path']))
 
     basename = name
@@ -205,7 +205,7 @@ def _fileopen(path, mode, basedir, pathinfo, basename=None):
     name = os.path.normpath(os.path.normcase(os.path.join(basedir, path)))
 
     import odoo.modules as addons
-    paths = addons.module.ad_paths + [config['root_path']]
+    paths = odoo.addons.__path__ + [config['root_path']]
     for addons_path in paths:
         addons_path = os.path.normpath(os.path.normcase(addons_path)) + os.sep
         if name.startswith(addons_path):
@@ -926,8 +926,10 @@ class ConstantMapping(Mapping):
         return self._value
 
 
-def dumpstacks(sig=None, frame=None):
-    """ Signal handler: dump a stack trace for each existing thread."""
+def dumpstacks(sig=None, frame=None, thread_idents=None):
+    """ Signal handler: dump a stack trace for each existing thread or given
+    thread(s) specified through the ``thread_idents`` sequence.
+    """
     code = []
 
     def extract_stack(stack):
@@ -944,14 +946,15 @@ def dumpstacks(sig=None, frame=None):
                                'url': getattr(th, 'url', 'n/a')}
                     for th in threading.enumerate()}
     for threadId, stack in sys._current_frames().items():
-        thread_info = threads_info.get(threadId, {})
-        code.append("\n# Thread: %s (db:%s) (uid:%s) (url:%s)" %
-                    (thread_info.get('repr', threadId),
-                     thread_info.get('dbname', 'n/a'),
-                     thread_info.get('uid', 'n/a'),
-                     thread_info.get('url', 'n/a')))
-        for line in extract_stack(stack):
-            code.append(line)
+        if not thread_idents or threadId in thread_idents:
+            thread_info = threads_info.get(threadId, {})
+            code.append("\n# Thread: %s (db:%s) (uid:%s) (url:%s)" %
+                        (thread_info.get('repr', threadId),
+                         thread_info.get('dbname', 'n/a'),
+                         thread_info.get('uid', 'n/a'),
+                         thread_info.get('url', 'n/a')))
+            for line in extract_stack(stack):
+                code.append(line)
 
     if odoo.evented:
         # code from http://stackoverflow.com/questions/12510648/in-gevent-how-can-i-dump-stack-traces-of-all-running-greenlets
@@ -1159,6 +1162,21 @@ else:
     def html_escape(text):
         return werkzeug.utils.escape(text)
 
+
+def get_lang(env, lang_code=False):
+    """
+    Retrieve the first lang object installed, by checking the parameter lang_code,
+    the context and then the company. If no lang is installed from those variables,
+    fallback on the first lang installed in the system.
+    :param str lang_code: the locale (i.e. en_US)
+    :return res.lang: the first lang found that is installed on the system.
+    """
+    langs = [code for code, _ in env['res.lang'].get_installed()]
+    for code in [lang_code, env.context.get('lang'), env.user.company_id.partner_id.lang, langs[0]]:
+        if code in langs:
+            return env['res.lang']._lang_get(code)
+
+
 def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False, currency_obj=False):
     """
         Assuming 'Account' decimal.precision=3:
@@ -1179,9 +1197,7 @@ def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False,
     if isinstance(value, str) and not value:
         return ''
 
-    langs = [code for code, _ in env['res.lang'].get_installed()]
-    lang_code = env.context['lang'] if env.context.get('lang') in langs else (env.user.company_id.partner_id.lang or langs[0])
-    lang_obj = env['res.lang']._lang_get(lang_code)
+    lang_obj = get_lang(env)
 
     res = lang_obj.format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)
 
@@ -1218,12 +1234,31 @@ def format_date(env, value, lang_code=False, date_format=False):
         else:
             value = odoo.fields.Datetime.from_string(value)
 
-    lang = env['res.lang']._lang_get(lang_code or env.context.get('lang') or 'en_US')
+    lang = get_lang(env, lang_code)
     locale = babel.Locale.parse(lang.code)
     if not date_format:
         date_format = posix_to_ldml(lang.date_format, locale=locale)
 
     return babel.dates.format_date(value, format=date_format, locale=locale)
+
+def parse_date(env, value, lang_code=False):
+    '''
+        Parse the date from a given format. If it is not a valid format for the
+        localization, return the original string.
+
+        :param env: an environment.
+        :param string value: the date to parse.
+        :param string lang_code: the lang code, if not specified it is extracted from the
+            environment context.
+        :return: date object from the localized string
+        :rtype: datetime.date
+    '''
+    lang = get_lang(env, lang_code)
+    locale = babel.Locale.parse(lang.code)
+    try:
+        return babel.dates.parse_date(value, locale=locale)
+    except:
+        return value
 
 
 def format_datetime(env, value, tz=False, dt_format='medium', lang_code=False):
@@ -1249,8 +1284,9 @@ def format_datetime(env, value, tz=False, dt_format='medium', lang_code=False):
     except Exception:
         localized_datetime = utc_datetime
 
-    lang = env['res.lang']._lang_get(lang_code or env.context.get('lang') or 'en_US')
-    locale = babel.Locale.parse(lang.code)
+    lang = get_lang(env, lang_code)
+
+    locale = babel.Locale.parse(lang.code or lang_code)  # lang can be inactive, so `lang`is empty
     if not dt_format:
         date_format = posix_to_ldml(lang.date_format, locale=locale)
         time_format = posix_to_ldml(lang.time_format, locale=locale)
@@ -1278,7 +1314,7 @@ def format_time(env, value, tz=False, time_format='medium', lang_code=False):
     if not value:
         return ''
 
-    lang = env['res.lang']._lang_get(lang_code or env.context.get('lang') or 'en_US')
+    lang = get_lang(env, lang_code)
     locale = babel.Locale.parse(lang.code)
     if not time_format:
         time_format = posix_to_ldml(lang.time_format, locale=locale)
@@ -1286,17 +1322,17 @@ def format_time(env, value, tz=False, time_format='medium', lang_code=False):
     return babel.dates.format_time(value, format=time_format, locale=locale)
 
 
-def _format_time_ago(env, time_delta, lang_code=False):
+def _format_time_ago(env, time_delta, lang_code=False, add_direction=True):
     if not lang_code:
         langs = [code for code, _ in env['res.lang'].get_installed()]
         lang_code = env.context['lang'] if env.context.get('lang') in langs else (env.user.company_id.partner_id.lang or langs[0])
     locale = babel.Locale.parse(lang_code)
-    return babel.dates.format_timedelta(-time_delta, add_direction=True, locale=locale)
+    return babel.dates.format_timedelta(-time_delta, add_direction=add_direction, locale=locale)
 
 
 def format_amount(env, amount, currency, lang_code=False):
     fmt = "%.{0}f".format(currency.decimal_places)
-    lang = env['res.lang']._lang_get(lang_code or env.context.get('lang') or 'en_US')
+    lang = get_lang(env, lang_code)
 
     formatted_amount = lang.format(fmt, currency.round(amount), grouping=True, monetary=True)\
         .replace(r' ', u'\N{NO-BREAK SPACE}').replace(r'-', u'-\N{ZERO WIDTH NO-BREAK SPACE}')
@@ -1314,13 +1350,14 @@ def format_duration(value):
     """ Format a float: used to display integral or fractional values as
         human-readable time spans (e.g. 1.5 as "01:30").
     """
-    sign = math.copysign(1.0, value)
     hours, minutes = divmod(abs(value) * 60, 60)
     minutes = round(minutes)
     if minutes == 60:
         minutes = 0
         hours += 1
-    return '%02d:%02d' % (sign * hours, minutes)
+    if value < 0:
+        return '-%02d:%02d' % (hours, minutes)
+    return '%02d:%02d' % (hours, minutes)
 
 
 def _consteq(str1, str2):

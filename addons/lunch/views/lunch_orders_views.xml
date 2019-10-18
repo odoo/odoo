@@ -80,18 +80,18 @@
                             </div>
                             <div class="row mt4">
                                 <div class="col-6">
-                                    <a class="btn btn-sm btn-success" role="button" name="order" string="Order" type="object" attrs="{'invisible': ['|',('state','=','confirmed'),('state','=','ordered')]}" groups="lunch.group_lunch_manager">
+                                    <a class="btn btn-sm btn-success" role="button" name="action_order" string="Order" type="object" attrs="{'invisible': ['|',('state','=','confirmed'),('state','=','ordered')]}" groups="lunch.group_lunch_manager">
                                         <i class="fa fa-phone" role="img" aria-label="Order button" title="Order button"/>
                                     </a>
-                                    <a class="btn btn-sm btn-info" role="button" name="confirm" string="Receive" type="object" attrs="{'invisible': [('state','!=','ordered')]}" groups="lunch.group_lunch_manager">
+                                    <a class="btn btn-sm btn-info" role="button" name="action_confirm" string="Receive" type="object" attrs="{'invisible': [('state','!=','ordered')]}" groups="lunch.group_lunch_manager">
                                         <i class="fa fa-check" role="img" aria-label="Receive button" title="Receive button"/>
                                     </a>
-                                    <a class="btn btn-sm btn-danger" role="button" name="cancel" string="Cancel" type="object" attrs="{'invisible': [('state','=','cancelled')]}" groups="lunch.group_lunch_manager">
+                                    <a class="btn btn-sm btn-danger" role="button" name="action_cancel" string="Cancel" type="object" attrs="{'invisible': [('state','=','cancelled')]}" groups="lunch.group_lunch_manager">
                                         <i class="fa fa-times" role="img" aria-label="Cancel button" title="Cancel button"/>
                                     </a>
                                 </div>
                                 <div class="col-6">
-                                    <img t-att-src="kanban_image('res.users', 'image_64', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24" class="oe_kanban_avatar float-right"/>
+                                    <img t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" class="oe_kanban_avatar o_image_24_cover float-right"/>
                                 </div>
                             </div>
                         </div>
