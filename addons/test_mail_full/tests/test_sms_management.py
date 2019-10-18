@@ -20,7 +20,7 @@ class TestSMSWizards(test_mail_full_common.TestSMSCommon, test_mail_full_common.
             'res_partner_id': cls.partner_1.id,
             'sms_number': cls.partner_1.mobile,
             'notification_type': 'sms',
-            'notification_status': 'exception',
+            'notification_status': 'error',
             'failure_type': 'sms_number_format',
         })
         cls.notif_p2 = cls.env['mail.notification'].create({
@@ -28,7 +28,7 @@ class TestSMSWizards(test_mail_full_common.TestSMSCommon, test_mail_full_common.
             'res_partner_id': cls.partner_2.id,
             'sms_number': cls.partner_2.mobile,
             'notification_type': 'sms',
-            'notification_status': 'exception',
+            'notification_status': 'error',
             'failure_type': 'sms_credit',
         })
 
@@ -71,16 +71,16 @@ class TestSMSWizards(test_mail_full_common.TestSMSCommon, test_mail_full_common.
                 wizard.action_cancel()
 
         self.assertSMSNotification([
-            {'partner': self.partner_1, 'state': 'canceled', 'number': self.notif_p1.sms_number, 'failure_type': 'sms_number_format'},
-            {'partner': self.partner_2, 'state': 'canceled', 'number': self.notif_p2.sms_number, 'failure_type': 'sms_credit'}
+            {'partner': self.partner_1, 'state': 'cancel', 'number': self.notif_p1.sms_number, 'failure_type': 'sms_number_format'},
+            {'partner': self.partner_2, 'state': 'cancel', 'number': self.notif_p2.sms_number, 'failure_type': 'sms_credit'}
         ], 'TEST BODY', self.msg, check_sms=False)
         self.assertMessageBusNotifications(self.msg)
 
     def test_sms_resend_internals(self):
         self._reset_bus()
         self.assertSMSNotification([
-            {'partner': self.partner_1, 'state': 'exception', 'number': self.notif_p1.sms_number, 'failure_type': 'sms_number_format'},
-            {'partner': self.partner_2, 'state': 'exception', 'number': self.notif_p2.sms_number, 'failure_type': 'sms_credit'}
+            {'partner': self.partner_1, 'state': 'error', 'number': self.notif_p1.sms_number, 'failure_type': 'sms_number_format'},
+            {'partner': self.partner_2, 'state': 'error', 'number': self.notif_p2.sms_number, 'failure_type': 'sms_credit'}
         ], 'TEST BODY', self.msg, check_sms=False)
 
         with self.with_user('employee'):
@@ -101,7 +101,7 @@ class TestSMSWizards(test_mail_full_common.TestSMSCommon, test_mail_full_common.
                 wizard.action_resend()
 
         self.assertSMSNotification([{'partner': self.partner_1, 'state': 'sent'}], 'TEST BODY', self.msg, check_sms=True)
-        self.assertSMSNotification([{'partner': self.partner_2, 'state': 'canceled', 'number': self.notif_p2.sms_number, 'failure_type': 'sms_credit'}], 'TEST BODY', self.msg, check_sms=False)
+        self.assertSMSNotification([{'partner': self.partner_2, 'state': 'cancel', 'number': self.notif_p2.sms_number, 'failure_type': 'sms_credit'}], 'TEST BODY', self.msg, check_sms=False)
         self.assertMessageBusNotifications(self.msg)
 
     def test_sms_cancel(self):
@@ -111,6 +111,6 @@ class TestSMSWizards(test_mail_full_common.TestSMSCommon, test_mail_full_common.
             wizard = self.env['sms.cancel'].with_context(default_model=self.msg.model).create({})
             wizard.action_cancel()
 
-            self.assertEqual((self.notif_p1 | self.notif_p2).mapped('notification_status'), ['canceled', 'canceled'])
+            self.assertEqual((self.notif_p1 | self.notif_p2).mapped('notification_status'), ['cancel', 'cancel'])
 
         self.assertMessageBusNotifications(self.msg)

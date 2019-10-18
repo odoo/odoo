@@ -158,7 +158,7 @@ class MailMail(models.Model):
             notifications = self.env['mail.notification'].search([
                 ('notification_type', '=', 'email'),
                 ('mail_id', 'in', notif_mails_ids),
-                ('notification_status', 'not in', ('sent', 'canceled'))
+                ('notification_status', 'not in', ('sent', 'cancel'))
             ])
             if notifications:
                 # find all notification linked to a failure
@@ -172,7 +172,7 @@ class MailMail(models.Model):
                 })
                 if failed:
                     failed.sudo().write({
-                        'notification_status': 'exception',
+                        'notification_status': 'error',
                         'failure_type': failure_type,
                         'failure_reason': failure_reason,
                     })
@@ -336,12 +336,12 @@ class MailMail(models.Model):
                 notifs = self.env['mail.notification'].search([
                     ('notification_type', '=', 'email'),
                     ('mail_id', 'in', mail.ids),
-                    ('notification_status', 'not in', ('sent', 'canceled'))
+                    ('notification_status', 'not in', ('sent', 'cancel'))
                 ])
                 if notifs:
                     notif_msg = _('Error without exception. Probably due do concurrent access update of notification records. Please see with an administrator.')
                     notifs.sudo().write({
-                        'notification_status': 'exception',
+                        'notification_status': 'error',
                         'failure_type': 'UNKNOWN',
                         'failure_reason': notif_msg,
                     })

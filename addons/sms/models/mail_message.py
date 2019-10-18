@@ -25,13 +25,13 @@ class MailMessage(models.Model):
         sms_error_from_notification = self.env['mail.notification'].sudo().search([
             ('notification_type', '=', 'sms'),
             ('mail_message_id', 'in', self.ids),
-            ('notification_status', '=', 'exception')]).mapped('mail_message_id')
+            ('notification_status', '=', 'error')]).mapped('mail_message_id')
         for message in self:
             message.has_sms_error = message in sms_error_from_notification
 
     def _search_has_sms_error(self, operator, operand):
         if operator == '=' and operand:
-            return ['&', ('notification_ids.notification_status', '=', 'exception'), ('notification_ids.notification_type', '=', 'sms')]
+            return ['&', ('notification_ids.notification_status', '=', 'error'), ('notification_ids.notification_type', '=', 'sms')]
         raise NotImplementedError()
 
     def message_format(self):

@@ -28,7 +28,7 @@ class MailResendMessage(models.TransientModel):
         message_id = self._context.get('mail_message_to_resend')
         if message_id:
             mail_message_id = self.env['mail.message'].browse(message_id)
-            notification_ids = mail_message_id.notification_ids.filtered(lambda notif: notif.notification_type == 'email' and notif.notification_status in ('exception', 'bounce'))
+            notification_ids = mail_message_id.notification_ids.filtered(lambda notif: notif.notification_type == 'email' and notif.notification_status in ('error', 'bounce'))
             partner_ids = [(0, 0, {
                 "partner_id": notif.res_partner_id.id,
                 "name": notif.res_partner_id.name,
@@ -56,8 +56,8 @@ class MailResendMessage(models.TransientModel):
             "If a partner disappeared from partner list, we cancel the notification"
             to_cancel = wizard.partner_ids.filtered(lambda p: not p.resend).mapped("partner_id")
             to_send = wizard.partner_ids.filtered(lambda p: p.resend).mapped("partner_id")
-            notif_to_cancel = wizard.notification_ids.filtered(lambda notif: notif.notification_type == 'email' and notif.res_partner_id in to_cancel and notif.notification_status in ('exception', 'bounce'))
-            notif_to_cancel.sudo().write({'notification_status': 'canceled'})
+            notif_to_cancel = wizard.notification_ids.filtered(lambda notif: notif.notification_type == 'email' and notif.res_partner_id in to_cancel and notif.notification_status in ('error', 'bounce'))
+            notif_to_cancel.sudo().write({'notification_status': 'cancel'})
             if to_send:
                 message = wizard.mail_message_id
                 record = self.env[message.model].browse(message.res_id) if message.is_thread_message() else self.env['mail.thread']
@@ -81,7 +81,7 @@ class MailResendMessage(models.TransientModel):
     def cancel_mail_action(self):
         for wizard in self:
             for notif in wizard.notification_ids:
-                notif.filtered(lambda notif: notif.notification_type == 'email' and notif.notification_status in ('exception', 'bounce')).sudo().write({'notification_status': 'canceled'})
+                notif.filtered(lambda notif: notif.notification_type == 'email' and notif.notification_status in ('error', 'bounce')).sudo().write({'notification_status': 'cancel'})
             wizard.mail_message_id._notify_message_notification_update()
         return {'type': 'ir.actions.act_window_close'}
 

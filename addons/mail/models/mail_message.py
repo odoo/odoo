@@ -167,14 +167,14 @@ class Message(models.Model):
     def _compute_has_error(self):
         error_from_notification = self.env['mail.notification'].sudo().search([
             ('mail_message_id', 'in', self.ids),
-            ('notification_status', 'in', ('bounce', 'exception'))]).mapped('mail_message_id')
+            ('notification_status', 'in', ('bounce', 'error'))]).mapped('mail_message_id')
         for message in self:
             message.has_error = message in error_from_notification
 
     def _search_has_error(self, operator, operand):
         if operator == '=' and operand:
-            return [('notification_ids.notification_status', 'in', ('bounce', 'exception'))]
-        return ['!', ('notification_ids.notification_status', 'in', ('bounce', 'exception'))]  # this wont work and will be equivalent to "not in" beacause of orm restrictions. Dont use "has_error = False"
+            return [('notification_ids.notification_status', 'in', ('bounce', 'error'))]
+        return ['!', ('notification_ids.notification_status', 'in', ('bounce', 'error'))]  # this wont work and will be equivalent to "not in" beacause of orm restrictions. Dont use "has_error = False"
 
     @api.depends('starred_partner_ids')
     @api.depends_context('uid')

@@ -22,7 +22,7 @@ class MailThread(models.AbstractModel):
         if self.ids:
             self._cr.execute(""" SELECT msg.res_id, COUNT(msg.res_id) FROM mail_message msg
                                  RIGHT JOIN mail_notification rel
-                                 ON rel.mail_message_id = msg.id AND rel.notification_type = 'sms' AND rel.notification_status in ('exception')
+                                 ON rel.mail_message_id = msg.id AND rel.notification_type = 'sms' AND rel.notification_status in ('error')
                                  WHERE msg.author_id = %s AND msg.model = %s AND msg.res_id in %s AND msg.message_type != 'user_notification'
                                  GROUP BY msg.res_id""",
                              (self.env.user.partner_id.id, self._name, tuple(self.ids),))
@@ -322,7 +322,7 @@ class MailThread(models.AbstractModel):
                 'notification_type': 'sms',
                 'sms_id': sms.id,
                 'is_read': True,  # discard Inbox notification
-                'notification_status': 'ready' if sms.state == 'outgoing' else 'exception',
+                'notification_status': 'outgoing' if sms.state == 'outgoing' else 'error',
                 'failure_type': '' if sms.state == 'outgoing' else sms.error_code,
             } for sms in sms_all if (sms.partner_id and sms.partner_id.id not in existing_pids) or (not sms.partner_id and sms.number not in existing_numbers)]
             if notif_create_values:
@@ -336,7 +336,7 @@ class MailThread(models.AbstractModel):
                     if notif:
                         notif.write({
                             'notification_type': 'sms',
-                            'notification_status': 'ready',
+                            'notification_status': 'outgoing',
                             'sms_id': sms.id,
                             'sms_number': sms.number,
                         })

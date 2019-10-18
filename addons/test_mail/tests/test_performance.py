@@ -754,12 +754,12 @@ class TestMailComplexPerformance(BaseMailPerformance):
                 (0, 0, {
                     'res_partner_id': self.partners[4].id,
                     'notification_type': 'email',
-                    'notification_status': 'exception',
+                    'notification_status': 'error',
                 }),
                 (0, 0, {
                     'res_partner_id': self.partners[6].id,
                     'notification_type': 'email',
-                    'notification_status': 'exception',
+                    'notification_status': 'error',
                 }),
             ],
             'tracking_value_ids': [
@@ -798,7 +798,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
                 (0, 0, {
                     'res_partner_id': self.partners[6].id,
                     'notification_type': 'email',
-                    'notification_status': 'exception',
+                    'notification_status': 'error',
                 }),
             ],
             'tracking_value_ids': [

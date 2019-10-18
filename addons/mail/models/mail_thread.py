@@ -224,7 +224,7 @@ class MailThread(models.AbstractModel):
         if self.ids:
             self._cr.execute(""" SELECT msg.res_id, COUNT(msg.res_id) FROM mail_message msg
                                  RIGHT JOIN mail_notification rel
-                                 ON rel.mail_message_id = msg.id AND rel.notification_status in ('exception','bounce')
+                                 ON rel.mail_message_id = msg.id AND rel.notification_status in ('error','bounce')
                                  WHERE msg.author_id = %s AND msg.model = %s AND msg.res_id in %s AND msg.message_type != 'user_notification'
                                  GROUP BY msg.res_id""",
                              (self.env.user.partner_id.id, self._name, tuple(self.ids),))
@@ -2326,7 +2326,7 @@ class MailThread(models.AbstractModel):
                         if existing_notifications:
                             tocreate_recipient_ids = [rid for rid in recipient_ids if rid not in existing_notifications.mapped('res_partner_id.id')]
                             existing_notifications.write({
-                                'notification_status': 'ready',
+                                'notification_status': 'outgoing',
                                 'mail_id': email.id,
                             })
                     notif_create_values += [{
@@ -2335,7 +2335,7 @@ class MailThread(models.AbstractModel):
                         'notification_type': 'email',
                         'mail_id': email.id,
                         'is_read': True,  # discard Inbox notification
-                        'notification_status': 'ready',
+                        'notification_status': 'outgoing',
                     } for recipient_id in tocreate_recipient_ids]
                 emails |= email
 

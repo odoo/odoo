@@ -24,11 +24,11 @@
                         <i class="fa fa-check o_thread_tooltip_snailmail_icon" title="Sent" role="img" aria-label="Sent"/>
                         Sent
                     </t>
-                    <t t-elif="notification.notification_status === 'canceled'">
+                    <t t-elif="notification.notification_status === 'cancel'">
                         <i class="fa fa-trash-o o_thread_tooltip_snailmail_icon" title="Canceled" role="img" aria-label="Canceled"/>
                         Canceled
                     </t>
-                    <t t-elif="notification.notification_status === 'ready'">
+                    <t t-elif="notification.notification_status === 'outgoing'">
                         <i class="fa fa-clock-o o_thread_tooltip_snailmail_icon" title="Awaiting Dispatch" role="img" aria-label="Awaiting Dispatch"/>
                         Awaiting Dispatch
                     </t>

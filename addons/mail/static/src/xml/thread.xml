@@ -457,9 +457,9 @@
             <span name="notification_status" class="d-inline-block text-center o_thread_tooltip_icon">
                 <i t-if="notification.notification_status === 'sent'" class='fa fa-check' title="Sent" role="img" aria-label="Sent"/>
                 <i t-if="notification.notification_status === 'bounce'" class='fa fa-exclamation text-danger' title="Bounced" role="img" aria-label="Bounced"/>
-                <i t-if="notification.notification_status === 'exception'" class='fa fa-exclamation text-danger' title="Error" role="img" aria-label="Error"/>
-                <i t-if="notification.notification_status === 'ready'" class='fa fa-send-o' title="Ready" role="img" aria-label="Ready"/>
-                <i t-if="notification.notification_status === 'canceled'" class='fa fa-trash-o' title="Canceled" role="img" aria-label="Canceled"/>
+                <i t-if="notification.notification_status === 'error'" class='fa fa-exclamation text-danger' title="Error" role="img" aria-label="Error"/>
+                <i t-if="notification.notification_status === 'outgoing'" class='fa fa-send-o' title="Ready" role="img" aria-label="Outgoing"/>
+                <i t-if="notification.notification_status === 'cancel'" class='fa fa-trash-o' title="Canceled" role="img" aria-label="Canceled"/>
             </span>
             <span name="partner_name" t-esc="notification.partner_name"/>
         </div>

@@ -35,7 +35,7 @@ class SMSResend(models.TransientModel):
                 'failure_type': notif.failure_type,
                 'partner_name': notif.res_partner_id.display_name or mail_message_id.record_name,
                 'sms_number': notif.sms_number,
-            }) for notif in mail_message_id.notification_ids if notif.notification_type == 'sms' and notif.notification_status in ('exception', 'bounce')]
+            }) for notif in mail_message_id.notification_ids if notif.notification_type == 'sms' and notif.notification_status in ('error', 'bounce')]
         return result
 
     mail_message_id = fields.Many2one('mail.message', 'Message', readonly=True, required=True)
@@ -64,14 +64,14 @@ class SMSResend(models.TransientModel):
         all_notifications = self.env['mail.notification'].sudo().search([
             ('mail_message_id', '=', self.mail_message_id.id),
             ('notification_type', '=', 'sms'),
-            ('notification_status', 'in', ('exception', 'bounce'))
+            ('notification_status', 'in', ('error', 'bounce'))
         ])
         sudo_self = self.sudo()
         to_cancel_ids = [r.notification_id.id for r in sudo_self.recipient_ids if not r.resend]
         to_resend_ids = [r.notification_id.id for r in sudo_self.recipient_ids if r.resend]
 
         if to_cancel_ids:
-            all_notifications.filtered(lambda n: n.id in to_cancel_ids).write({'notification_status': 'canceled'})
+            all_notifications.filtered(lambda n: n.id in to_cancel_ids).write({'notification_status': 'cancel'})
 
         if to_resend_ids:
             record = self.env[self.mail_message_id.model].browse(self.mail_message_id.res_id)
@@ -98,7 +98,7 @@ class SMSResend(models.TransientModel):
         self._check_access()
 
         sudo_self = self.sudo()
-        sudo_self.mapped('recipient_ids.notification_id').write({'notification_status': 'canceled'})
+        sudo_self.mapped('recipient_ids.notification_id').write({'notification_status': 'cancel'})
         self.mail_message_id._notify_message_notification_update()
         return {'type': 'ir.actions.act_window_close'}
 

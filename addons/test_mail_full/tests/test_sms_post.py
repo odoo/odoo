@@ -37,7 +37,7 @@ class TestSMSPost(test_mail_full_common.TestSMSCommon, test_mail_full_common.Tes
             test_record = self.env['mail.test.sms'].browse(self.test_record.id)
             messages = test_record._message_sms(self._test_body, partner_ids=self.partner_1.ids)
 
-        self.assertSMSNotification([{'partner': self.partner_1, 'state': 'exception', 'failure_type': 'sms_number_format'}], self._test_body, messages)
+        self.assertSMSNotification([{'partner': self.partner_1, 'state': 'error', 'failure_type': 'sms_number_format'}], self._test_body, messages)
 
         with self.with_user('employee'), self.mockSMSGateway():
             test_record = self.env['mail.test.sms'].browse(self.test_record.id)
@@ -305,8 +305,8 @@ class TestSMSPostException(test_mail_full_common.TestSMSCommon, test_mail_full_c
             messages = test_record._message_sms(self._test_body, partner_ids=(self.partner_1 | self.partner_2).ids)
 
         self.assertSMSNotification([
-            {'partner': self.partner_1, 'state': 'exception', 'failure_type': 'sms_credit'},
-            {'partner': self.partner_2, 'state': 'exception', 'failure_type': 'sms_credit'},
+            {'partner': self.partner_1, 'state': 'error', 'failure_type': 'sms_credit'},
+            {'partner': self.partner_2, 'state': 'error', 'failure_type': 'sms_credit'},
         ], self._test_body, messages)
 
     def test_message_sms_crash_credit_single(self):
@@ -316,7 +316,7 @@ class TestSMSPostException(test_mail_full_common.TestSMSCommon, test_mail_full_c
 
         self.assertSMSNotification([
             {'partner': self.partner_1, 'state': 'sent'},
-            {'partner': self.partner_2, 'state': 'exception', 'failure_type': 'sms_credit'},
+            {'partner': self.partner_2, 'state': 'error', 'failure_type': 'sms_credit'},
             {'partner': self.partner_3, 'state': 'sent'},
         ], self._test_body, messages)
 
@@ -326,9 +326,9 @@ class TestSMSPostException(test_mail_full_common.TestSMSCommon, test_mail_full_c
             messages = test_record._message_sms(self._test_body, partner_ids=(self.partner_1 | self.partner_2 | self.partner_3).ids)
 
         self.assertSMSNotification([
-            {'partner': self.partner_1, 'state': 'exception', 'failure_type': 'sms_server'},
-            {'partner': self.partner_2, 'state': 'exception', 'failure_type': 'sms_server'},
-            {'partner': self.partner_3, 'state': 'exception', 'failure_type': 'sms_server'},
+            {'partner': self.partner_1, 'state': 'error', 'failure_type': 'sms_server'},
+            {'partner': self.partner_2, 'state': 'error', 'failure_type': 'sms_server'},
+            {'partner': self.partner_3, 'state': 'error', 'failure_type': 'sms_server'},
         ], self._test_body, messages)
 
     def test_message_sms_crash_wrong_number(self):
@@ -337,8 +337,8 @@ class TestSMSPostException(test_mail_full_common.TestSMSCommon, test_mail_full_c
             messages = test_record._message_sms(self._test_body, partner_ids=(self.partner_1 | self.partner_2).ids)
 
         self.assertSMSNotification([
-            {'partner': self.partner_1, 'state': 'exception', 'failure_type': 'sms_number_format'},
-            {'partner': self.partner_2, 'state': 'exception', 'failure_type': 'sms_number_format'},
+            {'partner': self.partner_1, 'state': 'error', 'failure_type': 'sms_number_format'},
+            {'partner': self.partner_2, 'state': 'error', 'failure_type': 'sms_number_format'},
         ], self._test_body, messages)
 
     def test_message_sms_crash_wrong_number_single(self):
@@ -348,7 +348,7 @@ class TestSMSPostException(test_mail_full_common.TestSMSCommon, test_mail_full_c
 
         self.assertSMSNotification([
             {'partner': self.partner_1, 'state': 'sent'},
-            {'partner': self.partner_2, 'state': 'exception', 'failure_type': 'sms_number_format'},
+            {'partner': self.partner_2, 'state': 'error', 'failure_type': 'sms_number_format'},
             {'partner': self.partner_3, 'state': 'sent'},
         ], self._test_body, messages)
 

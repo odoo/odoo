@@ -22,7 +22,7 @@
         <field name="mail_message_id" ref="message_demo_partner_1_1"/>
         <field name="res_partner_id" ref="base.res_partner_address_28"/>
         <field name="notification_type">email</field>
-        <field name="notification_status">exception</field>
+        <field name="notification_status">error</field>
         <field name="failure_type">SMTP</field>
     </record>
 
@@ -48,14 +48,14 @@
         <field name="mail_message_id" ref="message_demo_partner_1_3"/>
         <field name="res_partner_id" ref="base.res_partner_address_28"/>
         <field name="notification_type">sms</field>
-        <field name="notification_status">exception</field>
+        <field name="notification_status">error</field>
         <field name="failure_type">sms_credit</field>
     </record>
     <record id="message_demo_partner_1_3_notif_1" model="mail.notification">
         <field name="mail_message_id" ref="message_demo_partner_1_3"/>
         <field name="res_partner_id" ref="base.res_partner_address_16"/>
         <field name="notification_type">sms</field>
-        <field name="notification_status">exception</field>
+        <field name="notification_status">error</field>
         <field name="failure_type">sms_credit</field>
     </record>
 

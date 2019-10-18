@@ -10,7 +10,7 @@ from odoo.tools.translate import _
 class MailNotification(models.Model):
     _name = 'mail.notification'
     _table = 'mail_notification'
-    _rec_name = 'res_partner_id'
+    _rec_name = 'id'
     _log_access = False
     _description = 'Message Notifications'
 
@@ -24,12 +24,12 @@ class MailNotification(models.Model):
         ('inbox', 'Inbox'), ('email', 'Email')
         ], string='Notification Type', default='inbox', index=True, required=True)
     notification_status = fields.Selection([
-        ('ready', 'Ready to Send'),
+        ('outgoing', 'Outgoing'),
         ('sent', 'Sent'),
         ('bounce', 'Bounced'),
-        ('exception', 'Exception'),
-        ('canceled', 'Canceled')
-        ], string='Status', default='ready', index=True)
+        ('error', 'Exception'),
+        ('cancel', 'Canceled')], string='Status',
+        default='outgoing', index=True)
     is_read = fields.Boolean('Is Read', index=True)
     read_date = fields.Datetime('Read Date', copy=False)
     failure_type = fields.Selection(selection=[
@@ -81,16 +81,16 @@ class MailNotification(models.Model):
             ('is_read', '=', True),
             ('read_date', '<', fields.Datetime.now() - relativedelta(days=max_age_days)),
             ('res_partner_id.partner_share', '=', False),
-            ('notification_status', 'in', ('sent', 'canceled'))
+            ('notification_status', 'in', ('sent', 'cancel'))
         ]
         return self.search(domain).unlink()
 
     def _filtered_for_web_client(self):
         """Returns only the notifications to show on the web client."""
         return self.filtered(lambda n:
-            n.notification_type != 'inbox' and
-            (n.notification_status in ['bounce', 'exception', 'canceled'] or n.res_partner_id.partner_share)
-        )
+                             n.notification_type != 'inbox' and
+                             (n.notification_status in ['bounce', 'error', 'cancel'] or n.res_partner_id.partner_share)
+                            )
 
     def _notification_format(self):
         """Returns the current notifications in the format expected by the web

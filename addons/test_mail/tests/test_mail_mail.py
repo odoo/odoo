@@ -49,7 +49,7 @@ class TestMailMailRace(common.TransactionCase):
                 'mail_id': mail.id,
                 'notification_type': 'email',
                 'is_read': True,
-                'notification_status': 'ready',
+                'notification_status': 'outgoing',
             })],
         })
         notif = self.env['mail.notification'].search([('res_partner_id', '=', self.partner.id)])

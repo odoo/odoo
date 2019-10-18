@@ -270,7 +270,7 @@ var AbstractMessage =  Class.extend({
      */
     hasNotificationsError() {
         return this.getNotifications().some(notif =>
-            notif.notification_status === 'exception' ||
+            notif.notification_status === 'error' ||
             notif.notification_status === 'bounce'
         );
     },

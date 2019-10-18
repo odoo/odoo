@@ -142,7 +142,7 @@ QUnit.test('Canceled', async function (assert) {
 
     this.data['mail.message'].records[0].notifications = [{
         'notification_type': 'snail',
-        'notification_status': 'canceled',
+        'notification_status': 'cancel',
     }];
 
     var form = await createView({
@@ -178,7 +178,7 @@ QUnit.test('Pending', async function (assert) {
 
     this.data['mail.message'].records[0].notifications = [{
         'notification_type': 'snail',
-        'notification_status': 'ready',
+        'notification_status': 'outgoing',
     }];
 
     var form = await createView({
@@ -214,7 +214,7 @@ QUnit.test('No Price Available', async function (assert) {
 
     this.data['mail.message'].records[0].notifications = [{
         'notification_type': 'snail',
-        'notification_status': 'exception',
+        'notification_status': 'error',
         'failure_type': 'sn_price',
     }];
 
@@ -269,7 +269,7 @@ QUnit.test('Format Error', async function (assert) {
 
     this.data['mail.message'].records[0].notifications = [{
         'notification_type': 'snail',
-        'notification_status': 'exception',
+        'notification_status': 'error',
         'failure_type': 'sn_format',
     }];
 
@@ -320,7 +320,7 @@ QUnit.test('Credit Error', async function (assert) {
 
     this.data['mail.message'].records[0].notifications = [{
         'notification_type': 'snail',
-        'notification_status': 'exception',
+        'notification_status': 'error',
         'failure_type': 'sn_credit',
     }];
 
@@ -389,7 +389,7 @@ QUnit.test('Trial Error', async function (assert) {
 
     this.data['mail.message'].records[0].notifications = [{
         'notification_type': 'snail',
-        'notification_status': 'exception',
+        'notification_status': 'error',
         'failure_type': 'sn_trial',
     }];
 
@@ -459,7 +459,7 @@ QUnit.test('Missing Required Fields', async function (assert) {
 
     this.data['mail.message'].records[0].notifications = [{
         'notification_type': 'snail',
-        'notification_status': 'exception',
+        'notification_status': 'error',
         'failure_type': 'sn_fields',
     }];
 

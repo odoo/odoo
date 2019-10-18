@@ -452,11 +452,11 @@ class MailCase(MockEmail):
                     if nstatus == 'sent':
                         if ncheck_send:
                             email_groups[ngroup].append(partner)
-                    elif nstatus == 'exception':
+                    elif nstatus == 'error':
                         mail_groups['failure'].append(partner)
                         if ncheck_send:
                             email_groups[ngroup].append(partner)
-                    elif nstatus == 'canceled':
+                    elif nstatus == 'cancel':
                         pass
                     else:
                         raise NotImplementedError()
@@ -465,7 +465,7 @@ class MailCase(MockEmail):
             done_msgs |= message
 
             # check bus notifications that should be sent (hint: message author, multiple notifications)
-            bus_notifications = message.notification_ids._filtered_for_web_client().filtered(lambda n: n.notification_status == 'exception')
+            bus_notifications = message.notification_ids._filtered_for_web_client().filtered(lambda n: n.notification_status == 'error')
             if bus_notifications:
                 self.assertMessageBusNotifications(message)
 

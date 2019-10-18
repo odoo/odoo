@@ -127,11 +127,11 @@ class SmsSms(models.Model):
                 notifications = self.env['mail.notification'].sudo().search([
                     ('notification_type', '=', 'sms'),
                     ('sms_id', 'in', sms_ids),
-                    ('notification_status', 'not in', ('sent', 'canceled'))]
+                    ('notification_status', 'not in', ('sent', 'cancel'))]
                 )
                 if notifications:
                     notifications.write({
-                        'notification_status': 'sent' if state == 'success' else 'exception',
+                        'notification_status': 'sent' if state == 'success' else 'error',
                         'failure_type': self.IAP_TO_SMS_STATE[state] if state != 'success' else False,
                         'failure_reason': failure_reason if failure_reason else False,
                     })

@@ -101,7 +101,6 @@ class SnailmailLetter(models.Model):
             'notification_type': 'snail',
             'letter_id': letter.id,
             'is_read': True,  # discard Inbox notification
-            'notification_status': 'ready',
         })
 
         return letter
@@ -311,7 +310,7 @@ class SnailmailLetter(models.Model):
             'info_msg': error_message,
         })
         self.notification_ids.sudo().write({
-            'notification_status': 'exception',
+            'notification_status': 'error',
             'failure_type': self._get_failure_type(error),
             'failure_reason': error_message,
         })
@@ -353,7 +352,7 @@ class SnailmailLetter(models.Model):
                     'error_code': error if error in ERROR_CODES else 'UNKNOWN_ERROR'
                 }
                 notification_data = {
-                    'notification_status': 'exception',
+                    'notification_status': 'error',
                     'failure_type': self._get_failure_type(error),
                     'failure_reason': note,
                 }
@@ -369,7 +368,7 @@ class SnailmailLetter(models.Model):
     def cancel(self):
         self.write({'state': 'canceled', 'error_code': False})
         self.notification_ids.sudo().write({
-            'notification_status': 'canceled',
+            'notification_status': 'cancel',
         })
         self.message_id._notify_message_notification_update()
 

@@ -33,7 +33,7 @@ class TestMailResend(TestMailCommon):
     # @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mail_resend_workflow(self):
         with self.assertSinglePostNotifications(
-                [{'partner': partner, 'type': 'email', 'status': 'exception'} for partner in self.partners],
+                [{'partner': partner, 'type': 'email', 'status': 'error'} for partner in self.partners],
                 message_info={'message_type': 'notification'},
                 sim_error='connect_failure'):
             message = self.test_record.with_user(self.user_admin).message_post(partner_ids=self.partners.ids, subtype_xmlid='mail.mt_comment', message_type='notification')
@@ -47,7 +47,7 @@ class TestMailResend(TestMailCommon):
             wizard.resend_mail_action()
         done_msgs, done_notifs = self.assertMailNotifications(message, [
             {'content': '', 'message_type': 'notification',
-             'notif': [{'partner': partner, 'type': 'email', 'status': 'exception' if partner in self.user1.partner_id | self.partner1 else 'sent'} for partner in self.partners]}]
+             'notif': [{'partner': partner, 'type': 'email', 'status': 'error' if partner in self.user1.partner_id | self.partner1 else 'sent'} for partner in self.partners]}]
         )
         self.assertEqual(wizard.notification_ids, done_notifs)
         self.assertEqual(done_msgs, message)
@@ -60,7 +60,7 @@ class TestMailResend(TestMailCommon):
             self.env['mail.resend.message'].with_context({'mail_message_to_resend': message.id}).create({}).resend_mail_action()
         done_msgs, done_notifs = self.assertMailNotifications(message, [
             {'content': '', 'message_type': 'notification',
-             'notif': [{'partner': partner, 'type': 'email', 'status': 'exception' if partner == self.partner1 else 'sent', 'check_send': partner == self.partner1} for partner in self.partners]}]
+             'notif': [{'partner': partner, 'type': 'email', 'status': 'error' if partner == self.partner1 else 'sent', 'check_send': partner == self.partner1} for partner in self.partners]}]
         )
         self.assertEqual(wizard.notification_ids, done_notifs)
         self.assertEqual(done_msgs, message)
@@ -84,7 +84,7 @@ class TestMailResend(TestMailCommon):
 
         self.assertMailNotifications(message, [
             {'content': '', 'message_type': 'notification',
-             'notif': [{'partner': partner, 'type': 'email', 'status': 'exception' if partner in self.user1.partner_id | self.partner1 else 'sent'} for partner in self.partners]}]
+             'notif': [{'partner': partner, 'type': 'email', 'status': 'error' if partner in self.user1.partner_id | self.partner1 else 'sent'} for partner in self.partners]}]
         )
 
         wizard = self.env['mail.resend.message'].with_context({'mail_message_to_resend': message.id}).create({})
@@ -96,7 +96,7 @@ class TestMailResend(TestMailCommon):
         self.assertMailNotifications(message, [
             {'content': '', 'message_type': 'notification',
              'notif': [{'partner': partner, 'type': 'email',
-                        'status': (partner == self.user1.partner_id and 'exception') or (partner == self.partner1 and 'canceled') or 'sent'} for partner in self.partners]}]
+                        'status': (partner == self.user1.partner_id and 'error') or (partner == self.partner1 and 'cancel') or 'sent'} for partner in self.partners]}]
         )
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
@@ -114,5 +114,5 @@ class TestMailResend(TestMailCommon):
             {'content': '', 'message_type': 'notification',
              'notif': [{'partner': partner, 'type': 'email',
                         'check_send': partner in self.user1.partner_id | self.partner1,
-                        'status': 'canceled' if partner in self.user1.partner_id | self.partner1 else 'sent'} for partner in self.partners]}]
+                        'status': 'cancel' if partner in self.user1.partner_id | self.partner1 else 'sent'} for partner in self.partners]}]
         )
