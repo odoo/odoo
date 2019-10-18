@@ -1240,7 +1240,7 @@
         <field name="code">Fr-NC</field>
         <field name="name">Employe non-cadre</field>
         <field eval="[(6, 0, [ref('hr_payroll_rules_C12_employe'), ref('hr_payroll_rules_C13_employe'), ref('hr_payroll_rules_C14_employe'), ref('hr_payroll_rules_C15_employe')])]" name="rule_ids"/>
-        <field name="company_id" ref="base.main_company"/>
+        <field name="country_id" ref="base.fr"/>
         <field name="parent_id" ref="hr_payroll_salary_structure_base"/>
     </record>
 
@@ -1249,7 +1249,7 @@
         <field name="code">Fr-C</field>
         <field name="name">Employe cadre</field>
         <field eval="[(6, 0, [ref('hr_payroll_rules_C16_employe'), ref('hr_payroll_rules_C17_employe'), ref('hr_payroll_rules_C18_employe'), ref('hr_payroll_rules_C19_employe'), ref('hr_payroll_rules_C20_employe'), ref('hr_payroll_rules_C21_employe'), ref('hr_payroll_rules_C38_employe'), ref('hr_payroll_rules_C39_employe')])]" name="rule_ids"/>
-        <field name="company_id" ref="base.main_company"/>
+        <field name="country_id" ref="base.fr"/>
         <field name="parent_id" ref="hr_payroll_salary_structure_base"/>
     </record>
 </odoo>
