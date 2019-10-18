@@ -1538,13 +1538,31 @@ options.registry.topMenuColor = options.registry.colorpicker.extend({
 /**
  * Handles the edition of snippet's anchor name.
  */
-options.registry.anchorName = options.Class.extend({
+options.registry.anchor = options.Class.extend({
     xmlDependencies: ['/website/static/src/xml/website.editor.xml'],
 
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
 
+    /**
+     * @override
+     */
+    start: function () {
+        // Generate anchor and copy it to clipboard on click, show the tooltip on success
+        this.$button = this.$el.find('we-button');
+        const clipboard = new ClipboardJS(this.$button[0], {text: () => this._getAnchorLink()});
+        clipboard.on('success', () => {
+            const anchor = decodeURIComponent(this._getAnchorLink());
+            this.displayNotification({
+              title: _t("Copied !"),
+              message: _.str.sprintf(_t("The anchor has been copied to your clipboard.<br>Link: %s"), anchor),
+              buttons: [{text: _t("edit"), click: () => this.openAnchorDialog()}],
+            });
+        });
+
+        return this._super.apply(this, arguments);
+    },
     /**
      * @override
      */
@@ -1559,20 +1577,19 @@ options.registry.anchorName = options.Class.extend({
     },
 
     //--------------------------------------------------------------------------
-    // Options
+    // Private
     //--------------------------------------------------------------------------
-
     /**
      * @see this.selectClass for parameters
      */
     openAnchorDialog: function (previewMode, value, $opt) {
         var self = this;
         var buttons = [{
-            text: _t("Save"),
+            text: _t("Save & copy"),
             classes: 'btn-primary',
             click: function () {
                 var $input = this.$('.o_input_anchor_name');
-                var anchorName = $input.val().trim().replace(/\s/g, '_');
+                var anchorName = self._text2Anchor($input.val());
                 if (self.$target[0].id === anchorName) {
                     // If the chosen anchor name is already the one used by the
                     // element, close the dialog and do nothing else
@@ -1580,15 +1597,13 @@ options.registry.anchorName = options.Class.extend({
                     return;
                 }
 
-                var isValid = /^[\w-]+$/.test(anchorName);
-                var alreadyExists = isValid && $('#' + anchorName).length > 0;
-                var anchorOK = isValid && !alreadyExists;
-                this.$('.o_anchor_not_valid').toggleClass('d-none', isValid);
+                const alreadyExists = !!document.getElementById(anchorName);
                 this.$('.o_anchor_already_exists').toggleClass('d-none', !alreadyExists);
-                $input.toggleClass('is-invalid', !anchorOK);
-                if (anchorOK) {
+                $input.toggleClass('is-invalid', alreadyExists);
+                if (!alreadyExists) {
                     self._setAnchorName(anchorName);
                     this.close();
+                    self.$button[0].click();
                 }
             },
         }, {
@@ -1609,16 +1624,11 @@ options.registry.anchorName = options.Class.extend({
         new Dialog(this, {
             title: _t("Link Anchor"),
             $content: $(qweb.render('website.dialog.anchorName', {
-                currentAnchor: this.$target.attr('id'),
+                currentAnchor: decodeURIComponent(this.$target.attr('id')),
             })),
             buttons: buttons,
         }).open();
     },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
     /**
      * @private
      * @param {String} value
@@ -1633,6 +1643,35 @@ options.registry.anchorName = options.Class.extend({
             this.$target.removeAttr('id data-anchor');
         }
         this.$target.trigger('content_changed');
+    },
+    /**
+     * Returns anchor text.
+     *
+     * @private
+     * @returns {string}
+     */
+    _getAnchorLink: function () {
+        if (!this.$target[0].id) {
+            const $titles = this.$target.find('h1, h2, h3, h4, h5, h6');
+            const title = $titles.length > 0 ? $titles[0].innerText : this.data.snippetName;
+            const anchorName = this._text2Anchor(title);
+            let n = '';
+            while (document.getElementById(anchorName + n)) {
+                n = (n || 1) + 1;
+            }
+            this._setAnchorName(anchorName + n);
+        }
+        return `#${this.$target[0].id}`;
+    },
+    /**
+     * Creates a safe id/anchor from text.
+     *
+     * @private
+     * @param {string} text
+     * @returns {string}
+     */
+    _text2Anchor: function (text) {
+        return encodeURIComponent(text.trim().replace(/\s+/g, '-'));
     },
 });
 
