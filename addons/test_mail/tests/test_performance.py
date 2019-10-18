@@ -24,7 +24,7 @@ class BaseMailPerformance(TransactionCase):
             'email': 'e.e@example.com',
             'signature': '--\nErnest',
             'notification_type': 'inbox',
-            'groups_id': [(6, 0, [self.env.ref('base.group_user').id])],
+            'groups_id': [(6, 0, [self.env.ref('base.group_user').id, self.env.ref('base.group_partner_manager').id])],
         })
 
         # patch registry to simulate a ready environment
@@ -124,20 +124,36 @@ class TestMailPerformance(BaseMailPerformance):
 
 
 @tagged('mail_performance')
-class TestAdvMailPerformance(BaseMailPerformance):
+class TestMailAPIPerformance(BaseMailPerformance):
 
     def setUp(self):
-        super(TestAdvMailPerformance, self).setUp()
+        super(TestMailAPIPerformance, self).setUp()
         self.customer = self.env['res.partner'].with_context(self._quick_create_ctx).create({
             'name': 'Test Customer',
-            'email': 'test@example.com',
+            'email': 'customer.test@example.com',
         })
         self.user_test = self.env['res.users'].with_context(self._quick_create_ctx).create({
             'name': 'Paulette Testouille',
             'login': 'paul',
-            'email': 'p.p@example.com',
+            'email': 'user.test.paulette@example.com',
             'notification_type': 'inbox',
             'groups_id': [(6, 0, [self.env.ref('base.group_user').id])],
+        })
+        self.test_record_full = self.env['mail.test.full'].with_context(self._quick_create_ctx).create({
+            'name': 'TestRecord',
+            'customer_id': self.customer.id,
+            'user_id': self.user_test.id,
+            'email_from': 'nopartner.test@example.com',
+        })
+        self.test_template_full = self.env['mail.template'].create({
+            'name': 'TestTemplate',
+            'model_id': self.env['ir.model']._get('mail.test.full').id,
+            'subject': 'About ${object.name}',
+            'body_html': '<p>Hello ${object.name}</p>',
+            'email_from': '${object.user_id.email_formatted | safe}',
+            'partner_to': '${object.customer_id.id}',
+            'email_to': '${("%s Customer <%s>" % (object.name, object.email_from)) | safe}',
+            'user_signature': False,
         })
 
         # automatically follow activities, for backward compatibility concerning query count
@@ -191,6 +207,46 @@ class TestAdvMailPerformance(BaseMailPerformance):
             record.action_close('Dupe feedback')
 
         self.assertEqual(record.activity_ids, self.env['mail.activity'])
+
+    @users('__system__', 'emp')
+    @warmup
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_mail_composer(self):
+        test_record = self.env['mail.test.full'].browse(self.test_record_full.id)
+        customer_id = self.customer.id
+        with self.assertQueryCount(__system__=4, emp=4):
+            composer = self.env['mail.compose.message'].with_context({
+                'default_composition_mode': 'comment',
+                'default_model': test_record._name,
+                'default_res_id': test_record.id,
+            }).create({
+                'body': '<p>Test Body</p>',
+                'partner_ids': [(4, customer_id)],
+            })
+
+        with self.assertQueryCount(__system__=38, emp=44):
+            composer.send_mail()
+
+    @users('__system__', 'emp')
+    @warmup
+    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
+    def test_mail_composer_w_template(self):
+        test_record = self.env['mail.test.full'].browse(self.test_record_full.id)
+        test_template = self.env['mail.template'].browse(self.test_template_full.id)
+        with self.assertQueryCount(__system__=25, emp=25):
+            composer = self.env['mail.compose.message'].with_context({
+                'default_composition_mode': 'comment',
+                'default_model': test_record._name,
+                'default_res_id': test_record.id,
+                'default_template_id': test_template.id,
+            }).create({})
+            composer.onchange_template_id_wrapper()
+
+        with self.assertQueryCount(__system__=46, emp=51):
+            composer.send_mail()
+
+        # remove created partner to ensure tests are the same each run
+        self.env['res.partner'].sudo().search([('email', '=', 'nopartner.test@example.com')]).unlink()
 
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('__system__', 'emp')
@@ -297,10 +353,10 @@ class TestAdvMailPerformance(BaseMailPerformance):
 
 
 @tagged('mail_performance')
-class TestHeavyMailPerformance(BaseMailPerformance):
+class TestMailComplexPerformance(BaseMailPerformance):
 
     def setUp(self):
-        super(TestHeavyMailPerformance, self).setUp()
+        super(TestMailComplexPerformance, self).setUp()
         self.user_portal = self.env['res.users'].with_context(self._quick_create_ctx).create({
             'name': 'Olivia Portal',
             'login': 'port',
@@ -309,8 +365,6 @@ class TestHeavyMailPerformance(BaseMailPerformance):
             'notification_type': 'email',
             'groups_id': [(6, 0, [self.env.ref('base.group_portal').id])],
         })
-
-        self.admin = self.env.user
 
         # setup mail gateway
         self.env['ir.config_parameter'].sudo().set_param('mail.catchall.domain', 'example.com')
@@ -600,10 +654,10 @@ class TestHeavyMailPerformance(BaseMailPerformance):
 
 
 @tagged('mail_performance')
-class TestMailPerformancePost(BaseMailPerformance):
+class TestMailHeavyPerformancePost(BaseMailPerformance):
 
     def setUp(self):
-        super(TestMailPerformancePost, self).setUp()
+        super(TestMailHeavyPerformancePost, self).setUp()
 
         # record
         self.customer = self.env['res.partner'].with_context(self._quick_create_ctx).create({
@@ -717,7 +771,7 @@ class TestMailPerformancePost(BaseMailPerformance):
         ]
         self.attachements = self.env['ir.attachment'].with_user(self.env.user).create(self.vals)
         attachement_ids = self.attachements.ids
-        with self.assertQueryCount(emp=118):  # runbot 118 // test_mail only: 110
+        with self.assertQueryCount(emp=105):  # test_mail only: 94
             self.cr.sql_log = self.warm and self.cr.sql_log_count
             record.with_context({}).message_post(
                 body='<p>Test body <img src="cid:cid1"> <img src="cid:cid2"></p>',
