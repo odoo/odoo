@@ -166,14 +166,14 @@ class Message(models.Model):
     def _compute_has_error(self):
         error_from_notification = self.env['mail.notification'].sudo().search([
             ('mail_message_id', 'in', self.ids),
-            ('notification_status', 'in', ('bounce', 'exception'))]).mapped('mail_message_id')
+            ('notification_status', 'in', ('bounced', 'exception'))]).mapped('mail_message_id')
         for message in self:
             message.has_error = message in error_from_notification
 
     def _search_has_error(self, operator, operand):
         if operator == '=' and operand:
-            return [('notification_ids.notification_status', 'in', ('bounce', 'exception'))]
-        return ['!', ('notification_ids.notification_status', 'in', ('bounce', 'exception'))]  # this wont work and will be equivalent to "not in" beacause of orm restrictions. Dont use "has_error = False"
+            return [('notification_ids.notification_status', 'in', ('bounced', 'exception'))]
+        return ['!', ('notification_ids.notification_status', 'in', ('bounced', 'exception'))]  # this wont work and will be equivalent to "not in" beacause of orm restrictions. Dont use "has_error = False"
 
     @api.depends('starred_partner_ids')
     @api.depends_context('uid')
@@ -960,7 +960,7 @@ class Message(models.Model):
             # find all notified partners
             email_notification_tree[message.id] = message.notification_ids.filtered(
                 lambda n: n.notification_type == 'email' and n.res_partner_id.active and
-                (n.notification_status in ('bounce', 'exception', 'canceled') or n.res_partner_id.partner_share))
+                (n.notification_status in ('bounced', 'exception', 'canceled') or n.res_partner_id.partner_share))
             if message.attachment_ids:
                 attachments |= message.attachment_ids
         partners |= self.env['mail.notification'].concat(*email_notification_tree.values()).mapped('res_partner_id')
@@ -1005,8 +1005,8 @@ class Message(models.Model):
             customer_email_status = (
                 (all(n.notification_status == 'sent' for n in message.notification_ids if n.notification_type == 'email') and 'sent') or
                 (any(n.notification_status == 'exception' for n in message.notification_ids if n.notification_type == 'email') and 'exception') or
-                (any(n.notification_status == 'bounce' for n in message.notification_ids if n.notification_type == 'email') and 'bounce') or
-                'ready'
+                (any(n.notification_status == 'bounced' for n in message.notification_ids if n.notification_type == 'email') and 'bounced') or
+                'outgoing'
             )
             customer_email_data = []
             for notification in email_notification_tree[message.id]:

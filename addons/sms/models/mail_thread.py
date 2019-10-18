@@ -286,7 +286,7 @@ class MailThread(models.AbstractModel):
                 'notification_type': 'sms',
                 'sms_id': sms.id,
                 'is_read': True,  # discard Inbox notification
-                'notification_status': 'ready',
+                'notification_status': 'outgoing',
             } for sms in sms_all if (sms.partner_id and sms.partner_id.id not in existing_pids) or (not sms.partner_id and sms.number not in existing_numbers)]
             if notif_create_values:
                 self.env['mail.notification'].sudo().create(notif_create_values)
@@ -299,7 +299,7 @@ class MailThread(models.AbstractModel):
                     if notif:
                         notif.write({
                             'notification_type': 'sms',
-                            'notification_status': 'ready',
+                            'notification_status': 'outgoing',
                             'sms_id': sms.id,
                             'sms_number': sms.number,
                         })

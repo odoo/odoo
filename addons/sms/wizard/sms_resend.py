@@ -35,7 +35,7 @@ class SMSResend(models.TransientModel):
                 'failure_type': notif.failure_type,
                 'partner_name': notif.res_partner_id.display_name or mail_message_id.record_name,
                 'sms_number': notif.sms_number,
-            }) for notif in mail_message_id.notification_ids if notif.notification_type == 'sms' and notif.notification_status in ('exception', 'bounce')]
+            }) for notif in mail_message_id.notification_ids if notif.notification_type == 'sms' and notif.notification_status in ('exception', 'bounced')]
         return result
 
     mail_message_id = fields.Many2one('mail.message', 'Message', readonly=True, required=True)
@@ -64,7 +64,7 @@ class SMSResend(models.TransientModel):
         all_notifications = self.env['mail.notification'].sudo().search([
             ('mail_message_id', '=', self.mail_message_id.id),
             ('notification_type', '=', 'sms'),
-            ('notification_status', 'in', ('exception', 'bounce'))
+            ('notification_status', 'in', ('exception', 'bounced'))
         ])
         sudo_self = self.sudo()
         to_cancel_ids = [r.notification_id.id for r in sudo_self.recipient_ids if not r.resend]

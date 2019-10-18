@@ -144,12 +144,12 @@ class MockSMS(common.BaseCase):
             notif = notifications.filtered(lambda n: n.res_partner_id == partner and n.sms_number == number and n.notification_status == state)
             self.assertTrue(notif, 'SMS: not found notification for %s (number: %s, state: %s)' % (partner, number, state))
 
-            if state not in ('sent', 'ready', 'canceled'):
+            if state not in ('sent', 'outgoing', 'canceled'):
                 self.assertEqual(notif.failure_type, recipient_info['failure_type'])
             if check_sms:
                 if state == 'sent':
                     self.assertSMSSent([number], content)
-                elif state == 'ready':
+                elif state == 'outgoing':
                     self.assertSMSOutgoing(partner, number, content)
                 elif state == 'exception':
                     self.assertSMSFailed(partner, number, recipient_info['failure_type'], content)

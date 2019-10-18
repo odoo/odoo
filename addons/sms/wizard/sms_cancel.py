@@ -25,7 +25,7 @@ SELECT notif.id, msg.id
 FROM mail_message_res_partner_needaction_rel notif
 JOIN mail_message msg
     ON notif.mail_message_id = msg.id
-WHERE notif.notification_type = 'sms' IS TRUE AND notif.notification_status IN ('bounce', 'exception')
+WHERE notif.notification_type = 'sms' IS TRUE AND notif.notification_status IN ('bounced', 'exception')
     AND msg.model = %s
     AND msg.author_id = %s """, (wizard.model, author_id))
             res = self._cr.fetchall()

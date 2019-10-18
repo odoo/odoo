@@ -223,7 +223,7 @@ class MailThread(models.AbstractModel):
         if self.ids:
             self._cr.execute(""" SELECT msg.res_id, COUNT(msg.res_id) FROM mail_message msg
                                  RIGHT JOIN mail_message_res_partner_needaction_rel rel
-                                 ON rel.mail_message_id = msg.id AND rel.notification_status in ('exception','bounce')
+                                 ON rel.mail_message_id = msg.id AND rel.notification_status in ('exception','bounced')
                                  WHERE msg.author_id = %s AND msg.model = %s AND msg.res_id in %s AND msg.message_type != 'user_notification'
                                  GROUP BY msg.res_id""",
                              (self.env.user.partner_id.id, self._name, tuple(self.ids),))
@@ -801,7 +801,7 @@ class MailThread(models.AbstractModel):
                 self.env['mail.notification'].sudo().search([
                     ('mail_message_id', '=', bounced_message.id),
                     ('res_partner_id', 'in', bounced_partner.ids)]
-                ).write({'notification_status': 'bounce'})
+                ).write({'notification_status': 'bounced'})
 
         if bounced_record:
             _logger.info('Routing mail from %s to %s with Message-Id %s: not routing bounce email from %s replying to %s (model %s ID %s)',
@@ -2357,7 +2357,7 @@ class MailThread(models.AbstractModel):
                         if existing_notifications:
                             tocreate_recipient_ids = [rid for rid in recipient_ids if rid not in existing_notifications.mapped('res_partner_id.id')]
                             existing_notifications.write({
-                                'notification_status': 'ready',
+                                'notification_status': 'outgoing',
                                 'mail_id': email.id,
                             })
                     notif_create_values += [{
@@ -2366,7 +2366,7 @@ class MailThread(models.AbstractModel):
                         'notification_type': 'email',
                         'mail_id': email.id,
                         'is_read': True,  # discard Inbox notification
-                        'notification_status': 'ready',
+                        'notification_status': 'outgoing',
                     } for recipient_id in tocreate_recipient_ids]
                 emails |= email
 
