@@ -453,7 +453,7 @@ var SnippetEditor = Widget.extend({
                 this,
                 val.base_target ? this.$target.find(val.base_target).eq(0) : this.$target,
                 this.$el,
-                val.data,
+                _.extend({snippetName: this._getName()}, val.data),
                 this.options
             );
             var key = optionName || _.uniqueId('option');
@@ -813,7 +813,7 @@ var SnippetsMenu = Widget.extend({
             if (!$target.closest('body > *').length) {
                 return;
             }
-            if ($target.closest('#web_editor-top-edit, #oe_snippets, #oe_manipulators, .o_technical_modal, .oe_drop_zone').length) {
+            if ($target.closest('#web_editor-top-edit, #oe_snippets, #oe_manipulators, .o_technical_modal, .oe_drop_zone, .o_notification_manager').length) {
                 return;
             }
             this._activateSnippet($target);
