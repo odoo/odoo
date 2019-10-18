@@ -40,10 +40,7 @@ var SplitbillScreenWidget = screens.ScreenWidget.extend({
         });
     },
 
-    lineselect: function($el,order,neworder,splitlines,line_id){
-        var split = splitlines[line_id] || {'quantity': 0, line: null};
-        var line  = order.get_orderline(line_id);
-        
+    split_quantity: function(split, line, splitlines) {
         if( !line.get_unit().is_pos_groupable ){
             if( split.quantity !== line.get_quantity()){
                 split.quantity = line.get_quantity();
@@ -60,7 +57,9 @@ var SplitbillScreenWidget = screens.ScreenWidget.extend({
                 split.quantity = 0;
             }
         }
+    },
 
+    set_line_on_order: function(neworder, split, line) {
         if( split.quantity ){
             if ( !split.line ){
                 split.line = line.clone();
@@ -71,7 +70,16 @@ var SplitbillScreenWidget = screens.ScreenWidget.extend({
             neworder.remove_orderline(split.line);
             split.line = null;
         }
- 
+    },
+
+    lineselect: function($el,order,neworder,splitlines,line_id){
+        var split = splitlines[line_id] || {'quantity': 0, line: null};
+        var line  = order.get_orderline(line_id);
+
+        this.split_quantity(split, line, null);
+
+        this.set_line_on_order(neworder, split, line);
+
         splitlines[line_id] = split;
         $el.replaceWith($(QWeb.render('SplitOrderline',{
             widget: this,
@@ -83,60 +91,53 @@ var SplitbillScreenWidget = screens.ScreenWidget.extend({
         this.$('.order-info .subtotal').text(this.format_currency(neworder.get_subtotal()));
     },
 
-    pay: function(order,neworder,splitlines){
-        var orderlines = order.get_orderlines();
-        var empty = true;
-        var full  = true;
+    check_full_pay_order: function (order, splitlines) {
+        return _.every(order.get_orderlines(), function(orderLine) {
+            var split = splitlines[orderLine.id];
+            return split && split.quantity === orderLine.get_quantity();
+        });
+    },
 
-        for(var i = 0; i < orderlines.length; i++){
-            var id = orderlines[i].id;
+    set_quantity_on_order: function(splitlines, order) {
+        for(var id in splitlines){
             var split = splitlines[id];
-            if(!split){
-                full = false;
-            }else{
-                if(split.quantity){
-                    empty = false;
-                    if(split.quantity !== orderlines[i].get_quantity()){
-                        full = false;
-                    }
-                }
+            var line  = order.get_orderline(parseInt(id));
+            line.set_quantity(line.get_quantity() - split.quantity, 'do not recompute unit price');
+            if(Math.abs(line.get_quantity()) < 0.00001){
+                order.remove_orderline(line);
             }
+            delete splitlines[id];
         }
-        
-        if(empty){
+    },
+
+    pay: function(order,neworder,splitlines){
+        if(_.isEmpty(splitlines))    // Splitlines is empty
             return;
-        }
 
         delete neworder.temporary;
 
-        if(full){
+        if(this.check_full_pay_order(order, splitlines)){
             this.gui.show_screen('payment');
         }else{
-            for(var id in splitlines){
-                var split = splitlines[id];
-                var line  = order.get_orderline(parseInt(id));
-                line.set_quantity(line.get_quantity() - split.quantity, 'do not recompute unit price');
-                if(Math.abs(line.get_quantity()) < 0.00001){
-                    order.remove_orderline(line);
-                }
-                delete splitlines[id];
-            }
+            this.set_quantity_on_order(splitlines, order);
+
             neworder.set_screen_data('screen','payment');
 
             // for the kitchen printer we assume that everything
-            // has already been sent to the kitchen before splitting 
-            // the bill. So we save all changes both for the old 
-            // order and for the new one. This is not entirely correct 
-            // but avoids flooding the kitchen with unnecessary orders. 
+            // has already been sent to the kitchen before splitting
+            // the bill. So we save all changes both for the old
+            // order and for the new one. This is not entirely correct
+            // but avoids flooding the kitchen with unnecessary orders.
             // Not sure what to do in this case.
 
-            if ( neworder.saveChanges ) { 
+            if ( neworder.saveChanges ) {
                 order.saveChanges();
                 neworder.saveChanges();
             }
 
             neworder.set_customer_count(1);
             order.set_customer_count(order.get_customer_count() - 1);
+            order.set_screen_data('screen','products');
 
             this.pos.get('orders').add(neworder);
             this.pos.set('selectedOrder',neworder);
@@ -169,9 +170,9 @@ var SplitbillScreenWidget = screens.ScreenWidget.extend({
 });
 
 gui.define_screen({
-    'name': 'splitbill', 
+    'name': 'splitbill',
     'widget': SplitbillScreenWidget,
-    'condition': function(){ 
+    'condition': function(){
         return this.pos.config.iface_splitbill;
     },
 });
