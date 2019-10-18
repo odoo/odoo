@@ -342,40 +342,52 @@ if(!$('.o_website_quote').length) {
 odoo.define('website_quote.payment_method', function (require) {
 'use strict';
 
-    require('website.website');
-    var ajax = require('web.ajax');
+if(!$('.o_website_quote #payment_method').length) {
+    return $.Deferred().reject("DOM doesn't contain '.o_website_quote #payment_method'");
+}
 
-    if(!$('#payment_method').length) {
-        return $.Deferred().reject("DOM doesn't contain '#payment_method'");
-    }
+var animation = require('web_editor.snippets.animation');
 
-    // dbo note: website_sale code for payment
-    // if we standardize payment somehow, this should disappear
-    // When choosing an acquirer, display its Pay Now button
-    var $payment = $("#payment_method");
-    $payment.on("click", "input[name='acquirer']", function (ev) {
-            var payment_id = $(ev.currentTarget).val();
-            $("div.oe_quote_acquirer_button[data-id]", $payment).addClass("hidden");
-            $("div.oe_quote_acquirer_button[data-id='"+payment_id+"']", $payment).removeClass("hidden");
-        })
-        .find("input[name='acquirer']:checked").click();
+require('website.website');
+var ajax = require('web.ajax');
 
-    // When clicking on payment button: create the tx using json then continue to the acquirer
-    $('.oe_quote_acquirer_button').on("click", 'button[type="submit"],button[name="submit"]', function (ev) {
-      ev.preventDefault();
-      ev.stopPropagation();
-      var $form = $(ev.currentTarget).parents('form');
-      var acquirer_id = $(ev.currentTarget).parents('.oe_quote_acquirer_button').first().data('id');
-      if (! acquirer_id) {
+animation.registry.website_quote_payment = animation.Class.extend({
+    selector: '.o_website_quote #payment_method',
+    
+    start: function() {
+        this._super();
+        this.$target.on("click", "input[name='acquirer']", this.switchAcquirer.bind(this)).find("input[name='acquirer']:checked").click();
+        this.$target.on("submit", this.makePayment.bind(this));
+    },
+
+    switchAcquirer: function(ev) {
+        var payment_id = $(ev.currentTarget).val();
+        this.$("div.oe_quote_acquirer_button[data-id]").addClass("hidden");
+        this.$("div.oe_quote_acquirer_button[data-id='"+payment_id+"']").removeClass("hidden");
+    },
+
+    makePayment: function(ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        var self = this;
+        var $form = $(ev.target);
+        var acquirer_id = $form.parents('.oe_quote_acquirer_button').first().data('id');
+        if (! acquirer_id) {
         return false;
-      }
-      var href = $(location).attr("href");
-      var order_id = href.match(/quote\/([0-9]+)/)[1];
-      var token = href.match(/quote\/[0-9]+\/([^\/?]*)/);
-      token = token ? token[1] : '';
-      ajax.jsonRpc('/quote/' + order_id +'/transaction/' + acquirer_id + (token ? '/' + token : ''), 'call', {}).then(function (data) {
-          $form.html(data);
-          $form.submit();
-      });
-   });
+        }
+        var href = $(location).attr("href");
+        var order_id = href.match(/quote\/([0-9]+)/)[1];
+        var token = href.match(/quote\/[0-9]+\/([^\/?]*)/);
+        token = token ? token[1] : '';
+        $form.off('submit');
+        ajax.jsonRpc('/quote/' + order_id +'/transaction/' + acquirer_id + (token ? '/' + token : ''), 'call', {}).then(function (data) {
+            self.postProcessTx(data, acquirer_id);
+        });
+    },
+    postProcessTx: function(data, acquirer_id) {
+        $(data).appendTo('body').submit();
+    }
+});
+
+return animation.registry.website_quote_payment
 });
