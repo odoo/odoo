@@ -176,7 +176,7 @@ class BaseFunctionalTest(common.SavepointCase):
     def assertTracking(self, message, data):
         tracking_values = message.sudo().tracking_value_ids
         for field_name, value_type, old_value, new_value in data:
-            tracking = tracking_values.filtered(lambda track: track.field == field_name)
+            tracking = tracking_values.filtered(lambda track: track.field.name == field_name)
             self.assertEqual(len(tracking), 1)
             if value_type in ('char', 'integer'):
                 self.assertEqual(tracking.old_value_char, old_value)
