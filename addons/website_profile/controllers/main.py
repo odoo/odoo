@@ -180,7 +180,7 @@ class WebsiteProfile(http.Controller):
 
         Badge = request.env['gamification.badge']
         badges = Badge.sudo().search(self._prepare_badges_domain(**kwargs))
-        badges = sorted(badges, key=lambda b: b.stat_count_distinct, reverse=True)
+        badges = sorted(badges, key=lambda b: b.granted_users_count, reverse=True)
         values = self._prepare_user_values(searches={'badges': True})
 
         values.update({
