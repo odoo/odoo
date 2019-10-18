@@ -116,6 +116,12 @@ class TestEventFlow(TestEventCommon):
     def test_event_data(self):
         self.event_0.write({'registration_ids': [(0, 0, {'partner_id': self.user_eventuser.partner_id.id})]})
         self.assertEqual(self.event_0.registration_ids.get_date_range_str(), u'tomorrow')
+        self.event_0.write({
+            'date_begin': '2019-11-09 14:30:00',
+            'date_end': '2019-11-10 00:00:00',
+            'date_tz': 'Mexico/General'
+        })
+        self.assertTrue(self.event_0.is_one_day)
 
     def test_event_date_range(self):
         self.event_0.write({'registration_ids': [(0, 0, {'partner_id': self.user_eventuser.partner_id.id})]})
