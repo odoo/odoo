@@ -307,7 +307,8 @@ exports.PosModel = Backbone.Model.extend({
                 });
                 if (user.id === session.uid) {
                     self.user = user;
-                    self.employee = user;
+                    self.employee.name = user.name;
+                    self.employee.role = user.role;
                     self.employee.user_id = [user.id, user.name];
                 }
             });
