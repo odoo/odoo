@@ -35,7 +35,7 @@
         <field name="arch" type="xml">
             <tree string="Badge List">
                 <field name="name"/>
-                <field name="stat_count"/>
+                <field name="granted_count"/>
                 <field name="stat_this_month"/>
                 <field name="stat_my"/>
                 <field name="rule_auth"/>
@@ -93,9 +93,9 @@
                     </group>
                     <group string="Statistics">
                         <group>
-                            <field name="stat_count"/>
+                            <field name="granted_count"/>
                             <field name="stat_this_month"/>
-                            <field name="stat_count_distinct"/>
+                            <field name="granted_users_count"/>
                         </group>
                         <group>
                             <field name="stat_my"/>
@@ -117,7 +117,7 @@
                 <field name="name"/>
                 <field name="description"/>
                 <field name="stat_my"/>
-                <field name="stat_count"/>
+                <field name="granted_count"/>
                 <field name="stat_this_month"/>
                 <field name="unique_owner_ids"/>
                 <field name="stat_my_monthly_sending"/>
@@ -141,7 +141,7 @@
                                 </span>
                                 <div t-if="record.remaining_sending.value == 0" class="oe_grey">Can not grant</div>
                                 <div>
-                                    <strong><t t-esc="record.stat_count.raw_value"/></strong> granted,
+                                    <strong><t t-esc="record.granted_count.raw_value"/></strong> granted,
                                     <strong><t t-esc="record.stat_this_month.raw_value"/></strong> this month
                                 </div>
                                 <div t-if="record.description.value" class="o_kanban_badge_description">
