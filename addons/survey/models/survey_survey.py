@@ -582,6 +582,12 @@ class Survey(models.Model):
 
         questions = self.env['survey.question']
 
+        # First append questions without page
+        for question in self.question_ids:
+            if not question.page_id:
+                questions |= question
+
+        # Then, questions in sections
         for page in self.page_ids:
             if self.questions_selection == 'all':
                 questions |= page.question_ids
@@ -590,8 +596,5 @@ class Survey(models.Model):
                     questions = questions.concat(*random.sample(page.question_ids, page.random_questions_count))
                 else:
                     questions |= page.question_ids
-
-        if not questions:
-            questions = self.question_ids
 
         return questions
