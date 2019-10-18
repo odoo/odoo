@@ -107,8 +107,8 @@ class GamificationBadge(models.Model):
         'gamification.badge.user', 'badge_id',
         string='Owners', help='The list of instances of this badge granted to users')
 
-    stat_count = fields.Integer("Total", compute='_get_owners_info', help="The number of time this badge has been received.")
-    stat_count_distinct = fields.Integer("Number of users", compute='_get_owners_info', help="The number of time this badge has been received by unique users.")
+    granted_count = fields.Integer("Total", compute='_get_owners_info', help="The number of time this badge has been received.")
+    granted_users_count = fields.Integer("Number of users", compute='_get_owners_info', help="The number of time this badge has been received by unique users.")
     unique_owner_ids = fields.Many2many(
         'res.users', string="Unique Owners", compute='_get_owners_info',
         help="The list of unique users having received this badge.")
@@ -139,8 +139,8 @@ class GamificationBadge(models.Model):
             the total number of users this badge was granted to
         """
         self.env.cr.execute("""
-            SELECT badge_id, count(user_id) as stat_count,
-                count(distinct(user_id)) as stat_count_distinct,
+            SELECT badge_id, count(user_id) as granted_count,
+                count(distinct(user_id)) as granted_users_count,
                 array_agg(distinct(user_id)) as unique_owner_ids
             FROM gamification_badge_user
             WHERE badge_id in %s
@@ -148,14 +148,14 @@ class GamificationBadge(models.Model):
             """, [tuple(self.ids)])
 
         defaults = {
-            'stat_count': 0,
-            'stat_count_distinct': 0,
+            'granted_count': 0,
+            'granted_users_count': 0,
             'unique_owner_ids': [],
         }
         mapping = {
             badge_id: {
-                'stat_count': count,
-                'stat_count_distinct': distinct_count,
+                'granted_count': count,
+                'granted_users_count': distinct_count,
                 'unique_owner_ids': owner_ids,
             }
             for (badge_id, count, distinct_count, owner_ids) in self.env.cr._obj
