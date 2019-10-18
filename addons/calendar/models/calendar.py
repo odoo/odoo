@@ -964,7 +964,9 @@ class Meeting(models.Model):
         if self.start_datetime:
             start = self.start_datetime
             self.start = self.start_datetime
-            self.stop = start + timedelta(hours=self.duration) - timedelta(seconds=1)
+            # check if this is a fake allday event : not allday but duration is multiple of 24h and start at midnight.
+            is_allday_event = self.duration % 24 == 0 and self.start_datetime.time() == datetime.time(0, 0)
+            self.stop = start + timedelta(hours=self.duration) - timedelta(seconds=1 if is_allday_event else 0)
 
     @api.onchange('start_date')
     def _onchange_start_date(self):
