@@ -746,7 +746,7 @@ class HrExpenseSheet(models.Model):
 
     @api.model
     def create(self, vals):
-        sheet = super(HrExpenseSheet, self.with_context(mail_create_nosubscribe=True)).create(vals)
+        sheet = super(HrExpenseSheet, self.with_context(mail_create_nosubscribe=True, mail_auto_subscribe_no_notify=True)).create(vals)
         sheet.activity_update()
         return sheet
 
