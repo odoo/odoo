@@ -522,6 +522,148 @@ class TestAccountMoveOutInvoiceOnchanges(InvoiceTestCommon):
             'amount_total': 1730.0,
         })
 
+    def test_out_invoice_line_onchange_analytic(self):
+        self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
+        self.env.user.groups_id += self.env.ref('analytic.group_analytic_tags')
+
+        analytic_tag = self.env['account.analytic.tag'].create({
+            'name': 'test_analytic_tag',
+        })
+
+        analytic_account = self.env['account.analytic.account'].create({
+            'name': 'test_analytic_account',
+            'partner_id': self.invoice.partner_id.id,
+            'code': 'TEST'
+        })
+
+        move_form = Form(self.invoice)
+        with move_form.invoice_line_ids.edit(0) as line_form:
+            line_form.analytic_account_id = analytic_account
+            line_form.analytic_tag_ids.add(analytic_tag)
+        move_form.save()
+
+        # The tax is not flagged as an analytic one. It should change nothing on the taxes.
+        self.assertInvoiceValues(self.invoice, [
+            {
+                **self.product_line_vals_1,
+                'analytic_account_id': analytic_account.id,
+                'analytic_tag_ids': analytic_tag.ids,
+            },
+            {
+                **self.product_line_vals_2,
+                'analytic_account_id': False,
+                'analytic_tag_ids': [],
+            },
+            {
+                **self.tax_line_vals_1,
+                'analytic_account_id': False,
+                'analytic_tag_ids': [],
+            },
+            {
+                **self.tax_line_vals_2,
+                'analytic_account_id': False,
+                'analytic_tag_ids': [],
+            },
+            {
+                **self.term_line_vals_1,
+                'analytic_account_id': False,
+                'analytic_tag_ids': [],
+            },
+        ], self.move_vals)
+
+        move_form = Form(self.invoice)
+        with move_form.invoice_line_ids.edit(0) as line_form:
+            line_form.analytic_account_id = self.env['account.analytic.account']
+            line_form.analytic_tag_ids.clear()
+        move_form.save()
+
+        # Enable the analytic
+        self.tax_sale_a.analytic = True
+
+        move_form = Form(self.invoice)
+        with move_form.invoice_line_ids.edit(0) as line_form:
+            line_form.analytic_account_id = analytic_account
+            line_form.analytic_tag_ids.add(analytic_tag)
+        move_form.save()
+
+        # The tax is flagged as an analytic one.
+        # A new tax line must be generated.
+        self.assertInvoiceValues(self.invoice, [
+            {
+                **self.product_line_vals_1,
+                'analytic_account_id': analytic_account.id,
+                'analytic_tag_ids': analytic_tag.ids,
+            },
+            {
+                **self.product_line_vals_2,
+                'analytic_account_id': False,
+                'analytic_tag_ids': [],
+            },
+            {
+                **self.tax_line_vals_1,
+                'price_unit': 150.0,
+                'price_subtotal': 150.0,
+                'price_total': 150.0,
+                'credit': 150.0,
+                'analytic_account_id': analytic_account.id,
+                'analytic_tag_ids': analytic_tag.ids,
+            },
+            {
+                **self.tax_line_vals_1,
+                'price_unit': 30.0,
+                'price_subtotal': 30.0,
+                'price_total': 30.0,
+                'credit': 30.0,
+                'analytic_account_id': False,
+                'analytic_tag_ids': [],
+            },
+            {
+                **self.tax_line_vals_2,
+                'analytic_account_id': False,
+                'analytic_tag_ids': [],
+            },
+            {
+                **self.term_line_vals_1,
+                'analytic_account_id': False,
+                'analytic_tag_ids': [],
+            },
+        ], self.move_vals)
+
+        move_form = Form(self.invoice)
+        with move_form.invoice_line_ids.edit(0) as line_form:
+            line_form.analytic_account_id = self.env['account.analytic.account']
+            line_form.analytic_tag_ids.clear()
+        move_form.save()
+
+        # The tax line has been removed.
+        self.assertInvoiceValues(self.invoice, [
+            {
+                **self.product_line_vals_1,
+                'analytic_account_id': False,
+                'analytic_tag_ids': [],
+            },
+            {
+                **self.product_line_vals_2,
+                'analytic_account_id': False,
+                'analytic_tag_ids': [],
+            },
+            {
+                **self.tax_line_vals_1,
+                'analytic_account_id': False,
+                'analytic_tag_ids': [],
+            },
+            {
+                **self.tax_line_vals_2,
+                'analytic_account_id': False,
+                'analytic_tag_ids': [],
+            },
+            {
+                **self.term_line_vals_1,
+                'analytic_account_id': False,
+                'analytic_tag_ids': [],
+            },
+        ], self.move_vals)
+
     def test_out_invoice_line_onchange_cash_rounding_1(self):
         move_form = Form(self.invoice)
         # Add a cash rounding having 'add_invoice_line'.
