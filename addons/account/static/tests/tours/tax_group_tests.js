@@ -1,4 +1,4 @@
-odoo.define('account.tax_group_tour_tests', function (require) {
+odoo.define('account.tax.group.tour.tests', function (require) {
     "use strict";
 
     var core = require('web.core');
@@ -10,14 +10,25 @@ odoo.define('account.tax_group_tour_tests', function (require) {
         url: "/web",
     }, [tour.STEPS.SHOW_APPS_MENU_ITEM,
         {
+            content: "Go to Invoicing",
+            trigger: '.o_app[data-menu-xmlid="account.menu_finance"]',
+            edition: 'community',
+        },
+        {
             content: "Go to Accounting",
             trigger: '.o_app[data-menu-xmlid="account_accountant.menu_accounting"]',
+            edition: 'enterprise',
+        },
+        {
+            content: "Go to Vendors",
+            trigger: 'a:contains("Vendors")',
         },
         {
             content: "Go to Bills",
-            trigger: 'span:contains("Vendor Bills")',
+            trigger: 'span:contains("Bills")',
         },
         {
+            extra_trigger: '.breadcrumb:contains("Bills")',
             content: "Create new bill",
             trigger: '.o_list_button_add',
         },
@@ -66,13 +77,10 @@ odoo.define('account.tax_group_tour_tests', function (require) {
         },
         {
             content: "Modify the input value",
-            trigger: '.oe_tax_group_amount_value input',
-            run: "text 200",
-        },
-        {
-            content: "Valid the new value",
-            trigger: '.oe_tax_group_amount_value input',
+            trigger: '.tax_group_edit_input input',
             run: function (actions) {
+                $('.tax_group_edit_input input').val(200);
+                $('.tax_group_edit_input input').select();
                 var keydownEvent = jQuery.Event('keydown');
                 keydownEvent.which = 13;
                 this.$anchor.trigger(keydownEvent);
