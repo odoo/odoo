@@ -609,7 +609,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
         rec1 = rec.with_context(active_test=False)      # to see inactive records
         self.assertEqual(rec1.message_partner_ids, self.user_portal.partner_id | self.env.user.partner_id)
         self.assertEqual(len(rec1.message_ids), 1)
-        with self.assertQueryCount(__system__=86, emp=87):
+        with self.assertQueryCount(__system__=87, emp=88):
             rec.write({
                 'name': 'Test2',
                 'umbrella_id': self.umbrella.id,
@@ -646,12 +646,13 @@ class TestMailComplexPerformance(BaseMailPerformance):
         rec1 = rec.with_context(active_test=False)      # to see inactive records
         self.assertEqual(rec1.message_partner_ids, self.user_portal.partner_id | self.env.user.partner_id)
 
-        with self.assertQueryCount(__system__=94, emp=95):
+        with self.assertQueryCount(__system__=95, emp=96):
             rec.write({
                 'name': 'Test2',
                 'umbrella_id': umbrella_id,
                 'customer_id': customer_id,
                 })
+
 
         self.assertEqual(rec1.message_partner_ids, self.partners | self.env.user.partner_id | self.user_portal.partner_id)
         # write tracking message
@@ -837,3 +838,27 @@ class TestMailHeavyPerformancePost(BaseMailPerformance):
         self.assertEqual(self.attachements.mapped('res_model'), [record._name for i in range(3)])
         self.assertEqual(self.attachements.mapped('res_id'), [record.id for i in range(3)])
         # self.assertEqual(record.message_ids[0].notified_partner_ids, [])
+
+
+@tagged('mail_performance')
+class TestTrackingPerformance(BaseMailPerformance):
+
+    @users('__system__', 'demo')
+    @warmup
+    def test_tracking_multiple_fields(self):
+        """ Check that tracking multiple fields is scalable """
+
+        record = self.env['mail.test.tracking'].create({'name': 'Zizizatestname'})
+        with self.assertQueryCount(__system__=3, demo=3):
+            record.write({'name': 'Zizizanewtestname'})
+            record.flush()
+
+        with self.assertQueryCount(__system__=5, demo=5):
+            record.write({'field_%s' % (i): 'Tracked Char Fields %s' % (i) for i in range(3)})
+            record.flush()
+
+        with self.assertQueryCount(__system__=10, demo=10):
+            record.write({'field_%s' % (i): 'Field Without Cache %s' % (i) for i in range(3)})
+            record.flush()
+            record.write({'field_%s' % (i): 'Field With Cache %s' % (i) for i in range(3)})
+            record.flush()
