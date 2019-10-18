@@ -593,6 +593,7 @@ registry.sizing = SnippetOption.extend({
             var direction = $handle.hasClass('n') ? 'top': 'bottom';
             $handle.height(self.$target.css('padding-' + direction));
         });
+        this.$target.trigger('content_changed');
     },
 });
 

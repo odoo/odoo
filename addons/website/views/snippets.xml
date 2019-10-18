@@ -198,76 +198,78 @@
 </template>
 
 <template id="s_carousel" name="Carousel">
-    <div id="myCarousel" class="s_carousel s_carousel_default carousel slide" data-interval="10000">
-        <!-- Indicators -->
-        <ol class="carousel-indicators">
-            <li data-target="#myCarousel" data-slide-to="0" class="active"/>
-            <li data-target="#myCarousel" data-slide-to="1"/>
-            <li data-target="#myCarousel" data-slide-to="2"/>
-        </ol>
-        <!-- Content -->
-        <div class="carousel-inner">
-            <!-- #01 -->
-            <div class="carousel-item active oe_custom_bg oe_img_bg pt152 pb152" style="background-image: url('/web/image/website.s_carousel_default_image_1');" data-name="Slide">
-                <div class="container">
-                    <div class="row content">
-                        <div class="carousel-content col-lg-7">
-                            <div class="s_title pb8" data-name="Title">
-                                <h2 class="s_title_default"><font style="font-size: 62px;">Slide Title</font></h2>
+    <section class="s_carousel_wrapper">
+        <div id="myCarousel" class="s_carousel s_carousel_default carousel slide" data-interval="10000">
+            <!-- Indicators -->
+            <ol class="carousel-indicators">
+                <li data-target="#myCarousel" data-slide-to="0" class="active"/>
+                <li data-target="#myCarousel" data-slide-to="1"/>
+                <li data-target="#myCarousel" data-slide-to="2"/>
+            </ol>
+            <!-- Content -->
+            <div class="carousel-inner">
+                <!-- #01 -->
+                <div class="carousel-item active oe_custom_bg oe_img_bg pt152 pb152" style="background-image: url('/web/image/website.s_carousel_default_image_1');" data-name="Slide">
+                    <div class="container">
+                        <div class="row content">
+                            <div class="carousel-content col-lg-7">
+                                <div class="s_title pb8" data-name="Title">
+                                    <h2 class="s_title_default"><font style="font-size: 62px;">Slide Title</font></h2>
+                                </div>
+                                <p class="lead">Use this snippet to presents your content in a slideshow-like format.<br/> Don't write about products or services here, write about solutions.</p>
+                                <div class="s_btn text-left pt16 pb16" data-name="Buttons">
+                                    <a href="/aboutus" class="btn btn-secondary flat">About us</a>
+                                    <a href="/contactus" class="btn btn-primary flat">Contact us</a>
+                                </div>
                             </div>
-                            <p class="lead">Use this snippet to presents your content in a slideshow-like format.<br/> Don't write about products or services here, write about solutions.</p>
-                            <div class="s_btn text-left pt16 pb16" data-name="Buttons">
-                                <a href="/aboutus" class="btn btn-secondary flat">About us</a>
-                                <a href="/contactus" class="btn btn-primary flat">Contact us</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- #02 -->
+                <div class="carousel-item oe_custom_bg oe_img_bg pt96 pb96" style="background-image: url('/web/image/website.s_carousel_default_image_2');" data-name="Slide">
+                    <div class="container">
+                        <div class="row content">
+                            <div class="carousel-content col-lg-8 offset-lg-2 bg-black-50 text-center pt48 pb40">
+                                <h2 style="font-size: 62px;">Clever Slogan</h2>
+                                <div class="s_hr pt8 pb32">
+                                    <hr class="s_hr_5px s_hr_dotted border-600 w-25 border-epsilon mx-auto text-center"/>
+                                </div>
+                                <p class="lead">Storytelling is powerful.<br/> It draws readers in and engages them.</p>
+                                <div class="s_btn text-center pt16 pb16" data-name="Buttons">
+                                    <a href="/" class="btn btn-epsilon rounded-circle">Start your journey</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- #03 -->
+                <div class="carousel-item oe_custom_bg oe_img_bg pt128 pb128" style="background-image: url('/web/image/website.s_carousel_default_image_3');" data-name="Slide">
+                    <div class="container">
+                        <div class="row content">
+                            <div class="carousel-content col-lg-6 offset-lg-6">
+                                <h2><font style="font-size: 62px; background-color: rgb(255, 255, 255);">Edit this title</font></h2>
+                                <h4><font style="background-color: rgb(255, 255, 255);">Good writing is simple, but not simplistic.</font></h4>
+                                <p class="mt24">Good copy starts with understanding how your product or service helps your customers. Simple words communicate better than big words and pompous language.</p>
+                                <t t-call="website.s_share">
+                                    <t t-set="_classes" t-value="'text-left pt16 pb16'"/>
+                                    <t t-set="_no_title" t-value="True"/>
+                                </t>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- #02 -->
-            <div class="carousel-item oe_custom_bg oe_img_bg pt96 pb96" style="background-image: url('/web/image/website.s_carousel_default_image_2');" data-name="Slide">
-                <div class="container">
-                    <div class="row content">
-                        <div class="carousel-content col-lg-8 offset-lg-2 bg-black-50 text-center pt48 pb40">
-                            <h2 style="font-size: 62px;">Clever Slogan</h2>
-                            <div class="s_hr pt8 pb32">
-                                <hr class="s_hr_5px s_hr_dotted border-600 w-25 border-epsilon mx-auto text-center"/>
-                            </div>
-                            <p class="lead">Storytelling is powerful.<br/> It draws readers in and engages them.</p>
-                            <div class="s_btn text-center pt16 pb16" data-name="Buttons">
-                                <a href="/" class="btn btn-epsilon rounded-circle">Start your journey</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- #03 -->
-            <div class="carousel-item oe_custom_bg oe_img_bg pt128 pb128" style="background-image: url('/web/image/website.s_carousel_default_image_3');" data-name="Slide">
-                <div class="container">
-                    <div class="row content">
-                        <div class="carousel-content col-lg-6 offset-lg-6">
-                            <h2><font style="font-size: 62px; background-color: rgb(255, 255, 255);">Edit this title</font></h2>
-                            <h4><font style="background-color: rgb(255, 255, 255);">Good writing is simple, but not simplistic.</font></h4>
-                            <p class="mt24">Good copy starts with understanding how your product or service helps your customers. Simple words communicate better than big words and pompous language.</p>
-                            <t t-call="website.s_share">
-                                <t t-set="_classes" t-value="'text-left pt16 pb16'"/>
-                                <t t-set="_no_title" t-value="True"/>
-                            </t>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <!-- Controls -->
+            <a class="carousel-control-prev" href="#myCarousel" data-slide="prev" role="img" aria-label="Previous" title="Previous">
+                <span class="carousel-control-prev-icon"/>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#myCarousel" data-slide="next" role="img" aria-label="Next" title="Next">
+                <span class="carousel-control-next-icon"/>
+                <span class="sr-only">Next</span>
+            </a>
         </div>
-        <!-- Controls -->
-        <div class="carousel-control-prev" data-target="#myCarousel" data-slide="prev" role="img" aria-label="Previous" title="Previous">
-            <span class="carousel-control-prev-icon"/>
-            <span class="sr-only">Previous</span>
-        </div>
-        <div class="carousel-control-next" data-target="#myCarousel" data-slide="next" role="img" aria-label="Next" title="Next">
-            <span class="carousel-control-next-icon"/>
-            <span class="sr-only">Next</span>
-        </div>
-    </div>
+    </section>
 </template>
 
 <template id="s_alert" name="Alert">
@@ -750,69 +752,71 @@
 </template>
 
 <template id="s_quotes_carousel" name="Quotes">
-    <div id="myQuoteCarousel" class="s_quotes_carousel s_carousel_default carousel slide" data-interval="10000">
-        <!-- Indicators -->
-        <ol class="carousel-indicators">
-            <li data-target="#myQuoteCarousel" data-slide-to="0" class="active"></li>
-            <li data-target="#myQuoteCarousel" data-slide-to="1"></li>
-            <li data-target="#myQuoteCarousel" data-slide-to="2"></li>
-        </ol>
-        <!-- Content -->
-        <div class="carousel-inner">
-            <!-- #01 -->
-            <div class="carousel-item active bg-200 pt80 pb80" data-name="Slide">
-                <div class="container">
-                    <div class="row content">
-                        <blockquote class="carousel-content col-lg-6 bg-white offset-lg-3">
-                            <i class="fa fa-1x fa-quote-left rounded-0 bg-secondary s_quotes_carousel_icon"/>
-                            <p>Write a quote here from one of your customers. Quotes are a great way to build confidence in your products or services.</p>
-                            <footer>
-                                <img class="img" src="/web/image/website.s_quotes_carousel_demo_image_3" alt=""/>
-                                <span>— Jane DOE, CEO of <b>MyCompany</b></span>
-                            </footer>
-                        </blockquote>
+    <section class="s_quotes_carousel_wrapper">
+        <div id="myQuoteCarousel" class="s_quotes_carousel s_carousel_default carousel slide" data-interval="10000">
+            <!-- Indicators -->
+            <ol class="carousel-indicators">
+                <li data-target="#myQuoteCarousel" data-slide-to="0" class="active"></li>
+                <li data-target="#myQuoteCarousel" data-slide-to="1"></li>
+                <li data-target="#myQuoteCarousel" data-slide-to="2"></li>
+            </ol>
+            <!-- Content -->
+            <div class="carousel-inner">
+                <!-- #01 -->
+                <div class="carousel-item active bg-200 pt80 pb80" data-name="Slide">
+                    <div class="container">
+                        <div class="row content">
+                            <blockquote class="carousel-content col-lg-6 bg-white offset-lg-3">
+                                <i class="fa fa-1x fa-quote-left rounded-0 bg-secondary s_quotes_carousel_icon"/>
+                                <p>Write a quote here from one of your customers. Quotes are a great way to build confidence in your products or services.</p>
+                                <footer>
+                                    <img class="img" src="/web/image/website.s_quotes_carousel_demo_image_3" alt=""/>
+                                    <span>— Jane DOE, CEO of <b>MyCompany</b></span>
+                                </footer>
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+                <!-- #02 -->
+                <div class="carousel-item oe_img_bg pt80 pb80" style="background-image: url('/web/image/website.s_quotes_carousel_demo_image_1'); background-position: 50% 50%;" data-name="Slide">
+                    <div class="container">
+                        <div class="row content">
+                            <blockquote class="col-lg-6 bg-white">
+                                <p>Odoo provides essential platform for our project management. Things are better organized and more visible with it.</p>
+                                <footer>
+                                    <img class="img" src="/web/image/website.s_quotes_carousel_demo_image_4" alt=""/>
+                                    <span>— John DOE, CEO of <b>MyCompany</b></span>
+                                </footer>
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+                <!-- #03 -->
+                <div class="carousel-item oe_img_bg pt80 pb80" style="background-image: url('/web/image/website.s_quotes_carousel_demo_image_2'); background-position: 50% 50%;" data-name="Slide">
+                    <div class="container">
+                        <div class="row content">
+                            <blockquote class="col-lg-6 offset-lg-6 bg-white">
+                                <p>Odoo provides essential platform for our project management. Things are better organized and more visible with it.</p>
+                                <footer class="blockquote-footer">
+                                    <img class="img" src="/web/image/website.s_quotes_carousel_demo_image_5" alt=""/>
+                                    <span>— Jane DOE, CEO of <b>MyCompany</b></span>
+                                </footer>
+                            </blockquote>
+                        </div>
                     </div>
                 </div>
             </div>
-            <!-- #02 -->
-            <div class="carousel-item oe_img_bg pt80 pb80" style="background-image: url('/web/image/website.s_quotes_carousel_demo_image_1'); background-position: 50% 50%;" data-name="Slide">
-                <div class="container">
-                    <div class="row content">
-                        <blockquote class="col-lg-6 bg-white">
-                            <p>Odoo provides essential platform for our project management. Things are better organized and more visible with it.</p>
-                            <footer>
-                                <img class="img" src="/web/image/website.s_quotes_carousel_demo_image_4" alt=""/>
-                                <span>— John DOE, CEO of <b>MyCompany</b></span>
-                            </footer>
-                        </blockquote>
-                    </div>
-                </div>
+            <!-- Controls -->
+            <div class="carousel-control-prev" data-target="#myQuoteCarousel" data-slide="prev" role="img" aria-label="Previous" title="Previous">
+                <span class="carousel-control-prev-icon"/>
+                <span class="sr-only">Previous</span>
             </div>
-            <!-- #03 -->
-            <div class="carousel-item oe_img_bg pt80 pb80" style="background-image: url('/web/image/website.s_quotes_carousel_demo_image_2'); background-position: 50% 50%;" data-name="Slide">
-                <div class="container">
-                    <div class="row content">
-                        <blockquote class="col-lg-6 offset-lg-6 bg-white">
-                            <p>Odoo provides essential platform for our project management. Things are better organized and more visible with it.</p>
-                            <footer class="blockquote-footer">
-                                <img class="img" src="/web/image/website.s_quotes_carousel_demo_image_5" alt=""/>
-                                <span>— Jane DOE, CEO of <b>MyCompany</b></span>
-                            </footer>
-                        </blockquote>
-                    </div>
-                </div>
+            <div class="carousel-control-next" data-target="#myQuoteCarousel" data-slide="next" role="img" aria-label="Next" title="Next">
+                <span class="carousel-control-next-icon"/>
+                <span class="sr-only">Next</span>
             </div>
         </div>
-        <!-- Controls -->
-        <div class="carousel-control-prev" data-target="#myQuoteCarousel" data-slide="prev" role="img" aria-label="Previous" title="Previous">
-            <span class="carousel-control-prev-icon"/>
-            <span class="sr-only">Previous</span>
-        </div>
-        <div class="carousel-control-next" data-target="#myQuoteCarousel" data-slide="next" role="img" aria-label="Next" title="Next">
-            <span class="carousel-control-next-icon"/>
-            <span class="sr-only">Next</span>
-        </div>
-    </div>
+    </section>
 </template>
 
 <!-- Mega menu snippets -->
@@ -1147,7 +1151,8 @@
 
     <!-- Carousel | .s_carousel | .s_quotes_carousel -->
     <div data-js="carousel"
-        data-selector=":not(.o_gallery > .container) > .carousel">
+        data-selector="section"
+        data-target="> .carousel">
         <we-button data-add-slide="true" data-no-preview="true">
             <i class="fa fa-fw fa-plus-circle"/> Add Slide
         </we-button>
@@ -1310,9 +1315,9 @@
     </div>
 
     <!-- Background Image -->
-    <div data-js="background"
-        data-selector="section, .parallax, :not(.o_gallery > .container) > .carousel"
-        data-exclude=".s_hr, .s_image_gallery">
+    <div data-js="background" string="Background"
+        data-selector="section, .parallax, .carousel-item"
+        data-exclude=".s_hr, .s_image_gallery, .o_gallery .carousel-item">
         <we-button data-choose-image="true" data-no-preview="true">
             <i class="fa fa-fw fa-picture-o"/> Background
         </we-button>
@@ -1320,7 +1325,8 @@
 
     <!-- Background Image -->
     <div data-js="background_position"
-        data-selector="section, .parallax, :not(.o_gallery > .container) > .carousel">
+        data-selector="section, .parallax, .carousel-item"
+        data-exclude=".o_gallery .carousel-item">
         <we-button data-background-position="true" data-no-preview="true">
             <i class="fa fa-fw fa-arrows"/> Background Image Sizing
         </we-button>
@@ -1346,8 +1352,8 @@
     <!-- Color | Section -->
     <div id="so_main_colorpicker"
         data-js="colorpicker"
-        data-selector="section, :not(.o_gallery > .container) > .carousel"
-        data-exclude=".parallax">
+        data-selector="section, .carousel-item"
+        data-exclude=".parallax, .o_gallery .carousel-item">
         <we-collapse-area>
             <we-toggler><i class="fa fa-fw fa-eyedropper"/> Background Color</we-toggler>
             <we-collapse/>
@@ -1389,7 +1395,8 @@
     </div>
 
     <div data-js="sizing_y"
-        data-selector="section, .row > div, :not(.o_gallery > .container) > .carousel, .parallax, .s_hr, .s_btn"/>
+        data-selector="section, .row > div, .parallax, .s_hr, .s_btn, .carousel-item"
+        data-exclude="section:has(> .carousel), .o_gallery .carousel-item"/>
 
     <div data-js="sizing_x"
         data-selector=".row > div"
@@ -1397,7 +1404,7 @@
         data-exclude=".s_col_no_resize.row > div"/>
 
     <div id="so_snippet_addition"
-        data-selector="section, :not(.o_gallery > .container) > .carousel, .parallax"
+        data-selector="section, .parallax"
         data-drop-in=":not(p).oe_structure:not(.oe_structure_solo), :not(p)[data-oe-type=html], :not(p).oe_structure.oe_structure_solo:not(:has(> section, > div))"/>
 
     <!-- Main content drop -->
