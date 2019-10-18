@@ -931,7 +931,7 @@ def trans_generate(lang, modules, cr):
         record = env[model].browse(res_id)
         if not record.exists():
             _logger.warning(u"Unable to find object %r with id %d", model, res_id)
-            return False
+            continue
 
         if not translatable_model(record):
             continue
