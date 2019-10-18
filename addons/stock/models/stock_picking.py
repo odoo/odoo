@@ -356,6 +356,7 @@ class Picking(models.Model):
         check_company=True,
         help="When validating the transfer, the products will be assigned to this owner.")
     printed = fields.Boolean('Printed')
+    signature = fields.Image('Signature', help='Signature', copy=False, attachment=True)
     is_locked = fields.Boolean(default=True, help='When the picking is not done this allows changing the '
                                'initial demand. When the picking is done this allows '
                                'changing the done quantities.')
@@ -576,6 +577,9 @@ class Picking(models.Model):
         if vals.get('picking_type_id') and self.state != 'draft':
             raise UserError(_("Changing the operation type of this record is forbidden at this point."))
         res = super(Picking, self).write(vals)
+        if vals.get('signature'):
+            for picking in self:
+                picking._attach_sign()
         # Change locations of moves if those of the picking change
         after_vals = {}
         if vals.get('location_id'):
@@ -1219,3 +1223,18 @@ class Picking(models.Model):
         action['context'] = self.env.context
         action['domain'] = [('picking_id', 'in', self.ids)]
         return action
+
+    def _attach_sign(self):
+        """ Render the delivery report in pdf and attach it to the picking in `self`. """
+        self.ensure_one()
+        report = self.env.ref('stock.action_report_delivery').render_qweb_pdf(self.id)
+        filename = "%s_signed_delivery_slip" % self.name
+        if self.partner_id:
+            message = _('Order signed by %s') % (self.partner_id.name)
+        else:
+            message = _('Order signed')
+        self.message_post(
+            attachments=[('%s.pdf' % filename, report[0])],
+            body=message,
+        )
+        return True
