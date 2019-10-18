@@ -377,6 +377,7 @@ class account_register_payments(models.TransientModel):
         '''
         if self.multi:
             groups = self._groupby_invoices()
+            raise UserError('%s ' % groups)
             return [self._prepare_payment_vals(invoices) for invoices in groups.values()]
         return [self._prepare_payment_vals(self.invoice_ids)]
 
