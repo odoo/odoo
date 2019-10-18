@@ -194,8 +194,6 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
      * @override
      */
     start: function () {
-        var self = this;
-
         this.ppr = this.$target.closest('[data-ppr]').data('ppr');
         this.productTemplateID = parseInt(this.$target.find('[data-oe-model="product.template"]').data('oe-id'));
 
@@ -204,15 +202,14 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
         defs.push(this._rpc({
             model: 'product.style',
             method: 'search_read',
-        }).then(function (data) {
-            var $menu = self.$el.find('[name="style"]').find('we-toggler + *');
+        }).then(data => {
+            var $menu = this.$el.find('[name="style"]');
             for (var k in data) {
-                $menu.append(
-                    $('<we-button data-style="' + data[k]['id'] + '" data-toggle-class="' + data[k]['html_class'] + '"/>')
-                        .append(data[k]['name'])
-                );
+                var $checkbox = $('<we-checkbox string="' + data[k]['name'] + '" data-style="' + data[k]['id'] + '" data-toggle-class="' + data[k]['html_class'] + '"/>');
+                $menu.append($checkbox);
+                this.buildCheckboxElement($checkbox[0]);
             }
-            self._updateUI();
+            this._updateUI();
         }));
 
         return $.when.apply($, defs);

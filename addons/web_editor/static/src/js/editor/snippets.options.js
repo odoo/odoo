@@ -397,6 +397,63 @@ var SnippetOption = Widget.extend({
         }
         this._reset();
     },
+
+    //--------------------------------------------------------------------------
+    // Static
+    //--------------------------------------------------------------------------
+
+    /**
+     * Build the correct DOM for a we-checkbox element.
+     *
+     * @static
+     * @param {HTMLElement} checkboxEl
+     */
+    buildCheckboxElement: function (checkboxEl) {
+        var titleEl = SnippetOption.prototype.stringToTitle(checkboxEl);
+
+        var buttonEl = document.createElement('we-button');
+        buttonEl.classList.add('o_we_checkbox_wrapper');
+        checkboxEl.classList.forEach(className => buttonEl.classList.add(className));
+        checkboxEl.setAttribute('class', '');
+        for (const key in checkboxEl.dataset) {
+            buttonEl.dataset[key] = checkboxEl.dataset[key];
+            delete checkboxEl.dataset[key];
+        }
+
+        checkboxEl.parentNode.insertBefore(buttonEl, checkboxEl);
+        buttonEl.appendChild(titleEl);
+        buttonEl.appendChild(checkboxEl);
+    },
+    /**
+     * Build the correct DOM for a we-select element.
+     *
+     * @static
+     * @param {HTMLElement} el
+     */
+    buildSelectElement: function (selectEl) {
+        var titleEl = SnippetOption.prototype.stringToTitle(selectEl);
+
+        var menuTogglerEl = document.createElement('we-toggler');
+
+        var menuEl = document.createElement('we-select-menu');
+        while (selectEl.firstChild) {
+            menuEl.appendChild(selectEl.firstChild);
+        }
+
+        selectEl.appendChild(titleEl);
+        selectEl.appendChild(menuTogglerEl);
+        selectEl.appendChild(menuEl);
+    },
+    /**
+     * @static
+     * @param {HTMLElement} el
+     */
+    stringToTitle: function (el) {
+        var titleEl = document.createElement('we-title');
+        titleEl.textContent = el.getAttribute('string');
+        el.removeAttribute('string');
+        return titleEl;
+    },
 });
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

@@ -1831,5 +1831,34 @@ options.registry.SectionStretch = options.Class.extend({
 
         return this._super.apply(this, arguments);
     },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * @see this.selectClass for parameters
+     */
+    toggleContainerFluid: function (previewMode, value, $opt) {
+        var isFluid = this.$el.find('[data-toggle-container-fluid]').hasClass('active');
+        this.$target.toggleClass('container', !isFluid)
+                    .toggleClass('container-fluid', isFluid);
+        if (previewMode !== 'reset') {
+            this.$target.toggleClass('container').toggleClass('container-fluid');
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _setActive: function () {
+        this._super.apply(this, arguments);
+        var isFluid = this.$target.hasClass('container-fluid');
+        this.$el.find('[data-toggle-container-fluid]').toggleClass('active', isFluid);
+    },
 });
 });

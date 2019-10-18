@@ -317,21 +317,14 @@ var SnippetEditor = Widget.extend({
     _createOptionUI: function ($el) {
         var $optionSection = $(core.qweb.render('web_editor.customize_block_option'));
         $optionSection.append($el);
+        var uiEl = $optionSection[0];
 
-        $optionSection[0].querySelectorAll('we-select').forEach(selectEl => {
-            var titleEl = document.createElement('we-title');
-            titleEl.textContent = selectEl.getAttribute('string');
+        uiEl.querySelectorAll('we-select').forEach(selectEl => {
+            options.Class.prototype.buildSelectElement(selectEl);
+        });
 
-            var menuTogglerEl = document.createElement('we-toggler');
-
-            var menuEl = document.createElement('we-select-menu');
-            while (selectEl.firstChild) {
-                menuEl.appendChild(selectEl.firstChild);
-            }
-
-            selectEl.appendChild(titleEl);
-            selectEl.appendChild(menuTogglerEl);
-            selectEl.appendChild(menuEl);
+        uiEl.querySelectorAll('we-checkbox').forEach(checkboxEl => {
+            options.Class.prototype.buildCheckboxElement(checkboxEl);
         });
 
         return $optionSection;

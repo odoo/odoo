@@ -189,6 +189,14 @@ body.editor_enable.editor_has_snippets {
             white-space: nowrap;
             text-align: left;
         }
+        .o_we_checkbox_wrapper {
+            padding-left: 0;
+            padding-right: 0;
+            border: none;
+            background-color: transparent;
+            font-weight: inherit;
+            color: inherit;
+        }
 
         %we-icon-button {
             position: relative;
@@ -268,12 +276,15 @@ body.editor_enable.editor_has_snippets {
                     @include we-icon-button('\f00c', $o-we-color-success);
                 }
             }
-            we-toggler {
-                @include we-icon-button('\f104');
+            .o_we_checkbox_wrapper.active {
+                padding-right: 0;
 
-                &.active {
-                    @include we-icon-button('\f107');
+                &::after {
+                    right: 1px;
                 }
+            }
+            we-toggler {
+                @include we-icon-button('\f107');
             }
 
             we-collapse {
@@ -308,6 +319,27 @@ body.editor_enable.editor_has_snippets {
                 }
                 + we-select-menu {
                     display: block;
+                }
+            }
+
+            .o_we_checkbox_wrapper {
+                display: flex;
+                align-items: center;
+
+                > we-title {
+                    flex: 1 1 auto;
+                    min-width: 0;
+                    @include o-text-overflow(block);
+                }
+                > we-checkbox {
+                    flex: 0 0 auto;
+                    display: block;
+                    width: 1rem;
+                    height: 1rem;
+                    margin-left: auto;
+                    border: 1px solid var(--o-we-bg-color-dark);
+                    border-radius: 0;
+                    background-color: var(--o-we-bg-color-dark);
                 }
             }
 

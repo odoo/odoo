@@ -1289,14 +1289,9 @@
 
     <div data-selector="section .row > div"
         data-exclude=".s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .o_gallery .row > div">
-        <we-collapse-area>
-            <we-toggler>Styles</we-toggler>
-            <we-collapse>
-                <we-button data-toggle-class="border">Border</we-button>
-                <we-button data-toggle-class="rounded">Rounded</we-button>
-                <we-button data-toggle-class="shadow">Shadow</we-button>
-            </we-collapse>
-        </we-collapse-area>
+        <we-checkbox string="Border" data-toggle-class="border"/>
+        <we-checkbox string="Rounded" data-toggle-class="rounded"/>
+        <we-checkbox string="Shadow" data-toggle-class="shadow"/>
     </div>
 
     <div data-js="sizing_y"
@@ -1319,7 +1314,7 @@
 
     <div data-js="ul"
          data-selector=":not(li) > ul:has(ul,ol), :not(li) > ol:has(ul,ol)">
-        <we-button data-toggle-class="o_ul_folded">Folded list</we-button>
+        <we-checkbox string="Folded list" data-toggle-class="o_ul_folded"/>
     </div>
 
     <div data-js="menu_data"
@@ -1334,7 +1329,7 @@
     <div data-js="topMenuTransparency"
         data-selector="[data-main-object^='website.page('] #wrapwrap > header"
         data-no-check="true">
-        <we-button data-transparent="true" data-no-preview="true">Transparent</we-button>
+        <we-checkbox string="Transparent" data-transparent="true" data-no-preview="true"/>
     </div>
 
     <div data-js="topMenuColor"
@@ -1414,13 +1409,7 @@
     <div data-js="SectionStretch"
         data-selector="section"
         data-target="> .container, > .container-fluid">
-        <we-collapse-area>
-            <we-toggler>Stretch</we-toggler>
-            <we-collapse>
-                <we-button data-select-class="container-fluid">Yes</we-button>
-                <we-button data-select-class="container">No</we-button>
-            </we-collapse>
-        </we-collapse-area>
+        <we-checkbox string="Stretch" data-toggle-container-fluid=""/>
     </div>
 </template>
 </odoo>
