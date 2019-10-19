@@ -237,7 +237,8 @@ class MrpWorkorder(models.Model):
 
     @api.depends('production_id.product_qty', 'qty_produced')
     def _compute_is_produced(self):
-        for order in self:
+        self.is_produced = False
+        for order in self.filtered(lambda p: p.production_id):
             rounding = order.production_id.product_uom_id.rounding
             order.is_produced = float_compare(order.qty_produced, order.production_id.product_qty, precision_rounding=rounding) >= 0
 
