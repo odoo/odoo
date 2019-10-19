@@ -20,7 +20,7 @@ class ProductMargin(models.TransientModel):
 
     def action_open_window(self):
         self.ensure_one()
-        context = dict(self.env.context or {})
+        context = dict(self.env.context, create=False, edit=False)
 
         def ref(module, xml_id):
             proxy = self.env['ir.model.data']
