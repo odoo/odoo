@@ -220,7 +220,7 @@ msgstr "Condizione"
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_config_settings
 msgid "Config Settings"
-msgstr "Impostazioni di configurazione"
+msgstr "Impostazioni configurazione"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
@@ -324,12 +324,12 @@ msgstr "Imballaggio di consegna"
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_price_rule
 msgid "Delivery Price Rules"
-msgstr "Regole per le tariffe di consegna"
+msgstr "Regole prezzo di consegna"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__product_id
 msgid "Delivery Product"
-msgstr "Prodotto «Consegna»"
+msgstr "Prodotto consegna"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_rating_success
@@ -390,7 +390,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_price
 msgid "Estimated Delivery Price"
-msgstr "Costo di consegna stimato"
+msgstr "Prezzo di consegna stimato"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_sale_order__carrier_id
@@ -591,8 +591,8 @@ msgstr "Nessun vettore impostato per questo ordine."
 #, python-format
 msgid "No price rule matching this order; delivery cost cannot be computed."
 msgstr ""
-"Impossibile calcolare le spese di consegna ordine, nessuna regola tariffaria"
-" corrisponde."
+"Impossibile calcolare i costi di consegna, nessuna regola sul prezzo "
+"corrisponde all'ordine."
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.normal_delivery_carrier
@@ -652,8 +652,8 @@ msgid ""
 "Please use \"Check price\" in order to compute a shipping price for this "
 "quotation."
 msgstr ""
-"Utilizzare «Controlla prezzo» per calcolare il costo di spedizione per "
-"questo preventivo."
+"Utilizzare «Controlla prezzo» per calcolare il prezzo di spedizione del "
+"preventivo."
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -665,7 +665,7 @@ msgstr "Prezzo"
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_tree
 msgid "Price Rules"
-msgstr "Regole tariffarie"
+msgstr "Regole sul prezzo"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -820,7 +820,7 @@ msgid ""
 "                according to your settings; on the sales order (based on the\n"
 "                quotation) or the invoice (based on the delivery orders)."
 msgstr ""
-"Questo metodo consente il calcolo automatico delle spese di consegna,\n"
+"Questo metodo consente il calcolo automatico del prezzo di consegna,\n"
 "                secondo le impostazioni dell'ordine di vendita (basato sul\n"
 "                preventivo) o della fattura (basato sugli ordini di consegna)."
 
@@ -931,8 +931,7 @@ msgstr "Etichetta unità di misura del peso"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_quant_package__shipping_weight
 msgid "Weight used to compute the price of the delivery (if applicable)."
-msgstr ""
-"Peso utilizzato per calcolare il prezzo della consegna (se applicabile)."
+msgstr "Peso utilizzato per calcolare il prezzo di consegna (se applicabile)."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
@@ -965,7 +964,7 @@ msgstr ""
 #, python-format
 msgid "You can add delivery price only on unconfirmed quotations."
 msgstr ""
-"È possibile aggiungere le spese di consegna solo a preventivi non "
+"È possibile aggiungere i prezzi di consegna solo a preventivi non "
 "confermati."
 
 #. module: delivery
