@@ -2,12 +2,18 @@
 # This file contains the translation of the following modules:
 # 	* base_address_extended
 # 
+# Translators:
+# Pedro Filipe <pedro2.10@hotmail.com>, 2019
+# Manuela Silva <manuelarodsilva@gmail.com>, 2019
+# Nuno Silva <nuno.silva@arxi.pt>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-12 11:31+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
+"Last-Translator: Nuno Silva <nuno.silva@arxi.pt>, 2019\n"
 "Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,21 +27,23 @@ msgid ""
 "Change how the system computes the full street field based on the different "
 "street subfields"
 msgstr ""
+"Altere como o sistema calcula o campo de rua completa com base nos "
+"diferentes subcampos de rua"
 
 #. module: base_address_extended
 #: model:ir.model,name:base_address_extended.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Empresas"
 
 #. module: base_address_extended
 #: model:ir.model,name:base_address_extended.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Contacto"
 
 #. module: base_address_extended
 #: model:ir.model,name:base_address_extended.model_res_country
 msgid "Country"
-msgstr ""
+msgstr "País"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number2
@@ -48,7 +56,7 @@ msgstr ""
 #: model:ir.model.fields,help:base_address_extended.field_res_partner__street_number2
 #: model:ir.model.fields,help:base_address_extended.field_res_users__street_number2
 msgid "Door Number"
-msgstr ""
+msgstr "Nr. da Porta"
 
 #. module: base_address_extended
 #: model:ir.model.fields,help:base_address_extended.field_res_country__street_format
@@ -60,6 +68,12 @@ msgid ""
 "%(street_number)s: the house number\n"
 "%(street_number2)s: the door number"
 msgstr ""
+"Formato a utilizar nas ruas pertencentes a este país.\n"
+"\n"
+"Pode utilizar o padrão de estilo python com todos os campos da rua (por exemplo, utilize '%(street_name)s, %(street_number)s' se pretender exibir o nome da rua, seguido de uma vírgula e o número da casa)\n"
+"%(street_name)s: o nome da rua\n"
+"%(street_number)s: o número da casa\n"
+"%(street_number2)s: o número da porta"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number
@@ -72,35 +86,35 @@ msgstr ""
 #: model:ir.model.fields,help:base_address_extended.field_res_partner__street_number
 #: model:ir.model.fields,help:base_address_extended.field_res_users__street_number
 msgid "House Number"
-msgstr ""
+msgstr "Nr. da Casa"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_country__street_format
 msgid "Street Format"
-msgstr ""
+msgstr "Formato da Rua"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_company__street_name
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_name
 #: model:ir.model.fields,field_description:base_address_extended.field_res_users__street_name
 msgid "Street Name"
-msgstr ""
+msgstr "Nome da Rua"
 
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.view_partner_address_structured_form
 #: model_terms:ir.ui.view,arch_db:base_address_extended.view_partner_structured_form
 #: model_terms:ir.ui.view,arch_db:base_address_extended.view_res_company_extended_form
 msgid "Street Name..."
-msgstr ""
+msgstr "Nome da rua..."
 
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.view_res_country_extended_form
 msgid "Street format..."
-msgstr ""
+msgstr "Formato da rua..."
 
 #. module: base_address_extended
 #: code:addons/base_address_extended/models/base_address_extended.py:64
 #: code:addons/base_address_extended/models/base_address_extended.py:112
 #, python-format
 msgid "Unrecognized field %s in street format."
-msgstr ""
+msgstr "Campo %s desconhecido no formato da rua"

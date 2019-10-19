@@ -1,18 +1,19 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_event_questions
+# 	* website_event_questions
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2018
-# Manami Hashi <manami@roomsfor.hk>, 2018
+# Martin Trigaux, 2019
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2019
+# Manami Hashi <manami@roomsfor.hk>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-09-21 13:18+0000\n"
-"Last-Translator: Manami Hashi <manami@roomsfor.hk>, 2018\n"
+"POT-Creation-Date: 2019-09-27 09:12+0000\n"
+"PO-Revision-Date: 2019-08-26 09:15+0000\n"
+"Last-Translator: Manami Hashi <manami@roomsfor.hk>, 2019\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -112,6 +113,11 @@ msgid "Event Type"
 msgstr "イベントタイプ"
 
 #. module: website_event_questions
+#: model_terms:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
+msgid "Exclude cancelled registrations"
+msgstr ""
+
+#. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_event__general_question_ids
 msgid "General Questions"
 msgstr ""
@@ -168,7 +174,7 @@ msgid "Question"
 msgstr "質問"
 
 #. module: website_event_questions
-#: code:addons/website_event_questions/models/event.py:80
+#: code:addons/website_event_questions/models/event.py:0
 #, python-format
 msgid "Question cannot belong to both the event category and itself."
 msgstr ""

@@ -369,7 +369,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Counted Quantity</strong>"
-msgstr ""
+msgstr "<strong>Vypočítané množství</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -691,6 +691,8 @@ msgid ""
 "Allows to start with prefill counted quantity for each lines or with all "
 "counted quantity set to zero."
 msgstr ""
+"Umožňuje začít s předvyplněným počítaným množstvím pro každý řádek nebo s "
+"veškerým počítaným množstvím nastaveným na nulu."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
@@ -882,7 +884,7 @@ msgstr "Čárové kódy (ZPL)"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_picking_batch
 msgid "Batch Pickings"
-msgstr ""
+msgstr "Dávkové vyzvednutí"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_partner__picking_warn__block
@@ -2149,7 +2151,7 @@ msgstr "Pevné"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__group_id
 msgid "Fixed Procurement Group"
-msgstr ""
+msgstr "Skupina pro pevné nákupy"
 
 #. module: stock
 #. openerp-web
@@ -4196,7 +4198,7 @@ msgstr "Zásoba v plusu"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_reserved
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__show_reserved
 msgid "Pre-fill Detailed Operations"
-msgstr ""
+msgstr "Předvyplňte podrobné operace"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__route_ids
@@ -4966,7 +4968,7 @@ msgstr "Sestavy"
 #: model:ir.model.fields,field_description:stock.field_stock_move__propagate_date_minimum_delta
 #: model:ir.model.fields,field_description:stock.field_stock_rule__propagate_date_minimum_delta
 msgid "Reschedule if Higher Than"
-msgstr ""
+msgstr "Změna časového plánu, pokud je vyšší než"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_procurement_jit
@@ -5020,7 +5022,7 @@ msgstr "Zodpovědný uživatel"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 msgid "Resupply"
-msgstr ""
+msgstr "Zásobování"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__resupply_wh_ids
@@ -5517,7 +5519,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rules_report__warehouse_ids
 msgid "Show the routes that apply on selected warehouses."
-msgstr ""
+msgstr "Zobrazit trasy, které platí pro vybrané sklady."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__string_availability_info
@@ -6203,7 +6205,7 @@ msgstr "Používá se k opravě množství produktu, které máte skladem."
 #, python-format
 msgid ""
 "This location's usage cannot be changed to view as it contains products."
-msgstr ""
+msgstr "Použití tohoto umístění nelze změnit, protože obsahuje produkty."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -6485,7 +6487,7 @@ msgstr "Typ"
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__code
 #: model_terms:ir.ui.view,arch_db:stock.view_pickingtype_filter
 msgid "Type of Operation"
-msgstr ""
+msgstr "Typ operace"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__activity_exception_decoration
@@ -6957,6 +6959,9 @@ msgid ""
 "for this field, Odoo generates a procurement to bring the forecasted "
 "quantity to the Max Quantity."
 msgstr ""
+"Když se virtuální zásoba rovná nebo klesne pod minimální množství určené pro"
+" toto pole, Odoo vygeneruje zakázku s cílem přivést předpokládané množství "
+"na maximální množství."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_max_qty
@@ -7194,6 +7199,8 @@ msgid ""
 "You cannot perform the move because the unit of measure has a different "
 "category as the product unit of measure."
 msgstr ""
+"Přesun nemůžete provést, protože měrná jednotka má jinou kategorii než měrná"
+" jednotka produktu."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:0
@@ -7297,6 +7304,8 @@ msgid ""
 "You have to select a product unit of measure that is in the same category "
 "than the default unit of measure of the product"
 msgstr ""
+"Musíte vybrat měrnou jednotku produktu, která je ve stejné kategorii než je "
+"výchozí měrná jednotka produktu"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:0

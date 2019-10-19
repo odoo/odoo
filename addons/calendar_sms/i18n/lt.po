@@ -9,9 +9,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"POT-Creation-Date: 2019-10-10 13:47+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
 "Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
@@ -43,16 +43,14 @@ msgstr "Renginio signalo valdytojas"
 
 #. module: calendar_sms
 #: model:sms.template,body:calendar_sms.sms_template_data_calendar_reminder
-msgid ""
-"Event reminder: ${object.name} on ${object.start_datetime or "
-"object.start_date}"
+msgid "Event reminder: ${object.name}, ${object.display_time}"
 msgstr ""
 
 #. module: calendar_sms
 #: code:addons/calendar_sms/models/calendar.py:0
 #, python-format
-msgid "Event reminder: %s on %s."
-msgstr "Renginio priminimas: %s  %s."
+msgid "Event reminder: %s, %s."
+msgstr ""
 
 #. module: calendar_sms
 #: model:ir.model.fields.selection,name:calendar_sms.selection__calendar_alarm__alarm_type__sms

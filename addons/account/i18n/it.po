@@ -22,7 +22,7 @@
 # David Minneci <david@numeko.it>, 2019
 # efraimbiffi <eab@odoo.com>, 2019
 # mymage <stefano.consolaro@mymage.it>, 2019
-# Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2019
+# Lorenzo Battistini <lb@takobi.online>, 2019
 # Paolo Valier, 2019
 # Federico Zanuttini <fza@odoo.com>, 2019
 # Luigi Di Naro <gigidn@gmail.com>, 2019
@@ -366,7 +366,7 @@ msgid ""
 "                                    <span>Followers of the document and</span>"
 msgstr ""
 "<span attrs=\"{'invisible': [('composition_mode', '!=', 'mass_mail')]}\">\n"
-"                                        <strong>Invio massivo di email</strong> per\n"
+"                                        <strong>Invio massivo di e-mail</strong> per\n"
 "                                        <span>i record selezionati</span>\n"
 "                                    </span>\n"
 "                                    <span>Chi segue il documento e</span>"
@@ -453,7 +453,7 @@ msgstr ""
 "<span class=\"o_form_label mx-3 oe_edit_only\" attrs=\"{'invisible': [ '|', "
 "'|', '|', ('state', '!=', 'draft'), ('invoice_payment_term_id', '!=', "
 "False), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', "
-"'in_refund', 'out_receipt', 'in_receipt'))]}\"> o </span>"
+"'in_refund', 'out_receipt', 'in_receipt'))]}\"> oppure </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1369,7 +1369,7 @@ msgstr "Periodi contabili"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Accounting-related settings are managed on"
-msgstr "Le impostazioni contabili sono gestite in"
+msgstr "Le impostazioni contabili sono gestite nell'"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account_tag__applicability__accounts
@@ -2036,8 +2036,8 @@ msgid ""
 "Answers do not go in the original document discussion thread. This has an "
 "impact on the generated message-id."
 msgstr ""
-"Le risposte non vanno nella cronologia messaggi (discussion thread). Questo "
-"incide sul messaggio ID generato. "
+"Le risposte non vengono incluse nella discussione originaria del documento. "
+"Questo incide sull'ID messaggio generato. "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_exigible
@@ -2303,7 +2303,7 @@ msgstr "Feed bancari"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__bank_bic
 msgid "Bank Identifier Code"
-msgstr "Codice BIC SWIFT"
+msgstr "Codice identificativo banca (BIC/SWIFT)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_yodlee
@@ -3068,7 +3068,7 @@ msgstr "Fare clic per creare un nuovo anno fiscale."
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Click to <b>send the invoice by email.</b>"
-msgstr "Fare clic per <b>inviare la fattura via email.</b>"
+msgstr "Fare clic per <b>inviare la fattura via e-mail.</b>"
 
 #. module: account
 #. openerp-web
@@ -4232,7 +4232,7 @@ msgstr "Eliminare copia del messaggio"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__auto_delete
 msgid "Delete sent emails (mass mailing only)"
-msgstr "Elimina le email inviate (solo email massive)"
+msgstr "Elimina le e-mail inviate (solo e-mail massive)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__deprecated
@@ -4564,7 +4564,7 @@ msgstr "Dovuto il"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
 msgid "Duplicate"
-msgstr "Duplicazione"
+msgstr "Duplica"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -4624,14 +4624,14 @@ msgid ""
 "Email address of the sender. This field is set when no matching partner is "
 "found and replaces the author_id field in the chatter."
 msgstr ""
-"Indirizzo email del mittente. Questo campo è impostato quando non vengono "
+"Indirizzo e-mail del mittente. Questo campo è impostato quando non vengono "
 "trovati partner corrispondenti, sostituisce il campo author_id nella "
 "conversazione."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__invoice_is_email
 msgid "Email by default"
-msgstr "Email predefinita"
+msgstr "E-mail predefinita"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -4894,7 +4894,7 @@ msgstr "Conto finanziario"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__tag_ids
 msgid "Financial Tags"
-msgstr ""
+msgstr "Etichette finanziarie"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -5122,7 +5122,7 @@ msgstr "Libero"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__email_from
 msgid "From"
-msgstr "Dal"
+msgstr "Da"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -5858,7 +5858,7 @@ msgstr "Informazioni"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__parent_id
 msgid "Initial thread message."
-msgstr "Messaggio iniziale della conversazione."
+msgstr "Messaggio iniziale della discussione."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_stock_account_input_categ_id
@@ -7153,7 +7153,7 @@ msgstr "Errore di consegna messaggio"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__record_name
 msgid "Message Record Name"
-msgstr "Nome record messaggio"
+msgstr "Nome record del messaggio"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_warn_msg
@@ -7167,8 +7167,9 @@ msgid ""
 "Message type: email for email message, notification for system message, "
 "comment for other messages such as user replies"
 msgstr ""
-"Tipo messaggio: email per messaggi email, notifica per messaggio di sistema,"
-" commento per altri messaggi come le risposte degli utenti."
+"Tipo di messaggio: e-mail per messaggio di posta elettronica, notifica per "
+"messaggio di sistema, commento per altri messaggi come le risposte "
+"dell'utente"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__message_ids
@@ -7378,7 +7379,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__no_auto_thread
 msgid "No threading for answers"
-msgstr "Nessuna cronologia per le risposte"
+msgstr "Escludere risposte dalla discussione"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__tax_lock_date
@@ -8241,7 +8242,7 @@ msgstr "Termini di pagamento: anticipo 30% DF FM"
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_advance_60days
 msgid "Payment terms: 30% Now, Balance 60 Days"
-msgstr "Termini di pagamento: 30% adesso, saldo a 60 gg"
+msgstr "Termini di pagamento: 30% adesso, saldo 60 gg"
 
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_45days
@@ -9877,7 +9878,7 @@ msgstr "Documento origine"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_source_email
 msgid "Source Email"
-msgstr "Email origine"
+msgstr "E-mail origine"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding__strategy
@@ -10061,7 +10062,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move_line__price_subtotal
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Subtotal"
-msgstr "Subtotale"
+msgstr "Imponibile"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__subtype_id
@@ -10728,7 +10729,7 @@ msgstr "Tipo termine"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 msgid "Terms"
-msgstr "Termini"
+msgstr "Condizioni"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__invoice_terms
@@ -12012,7 +12013,7 @@ msgstr "Messaggi non letti"
 #: model:ir.model.fields,field_description:account.field_account_move__message_unread_counter
 #: model:ir.model.fields,field_description:account.field_account_payment__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "Contatore messaggi non letti"
+msgstr "Numero messaggi non letti"
 
 #. module: account
 #. openerp-web
@@ -12987,14 +12988,13 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "for this customer. You can allocate them to mark this invoice as paid."
-msgstr ""
-"per questo cliente. Puoi assegnarli per impostare la fattura come pagata."
+msgstr "per questo cliente. Assegnarli per impostare la fattura come pagata."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "for this supplier. You can allocate them to mark this bill as paid."
 msgstr ""
-"per questo fornitore. Puoi assegnarli per impostare la fattura come pagata."
+"per questo fornitore. Assegnarli per impostare la fattura come pagata."
 
 #. module: account
 #. openerp-web
@@ -13087,7 +13087,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "the parent company"
-msgstr "l'azienda madre"
+msgstr "azienda madre"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view

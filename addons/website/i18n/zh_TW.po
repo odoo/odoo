@@ -5,7 +5,6 @@
 # Translators:
 # sejun huang <sejun.huang@gmail.com>, 2019
 # Michael Yeung, 2019
-# Jeanphy <hzh0292@qq.com>, 2019
 # bluce Lan <bluce.lan@gmail.com>, 2019
 # Martin Trigaux, 2019
 # Andy Cheng <andy.cheng@richsoda.com>, 2019
@@ -53,7 +52,7 @@ msgstr "%s (id:%s)"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
 msgid "&amp;times;"
-msgstr "&amp;次數;"
+msgstr "&amp;times;"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.sitemap_index_xml
@@ -722,7 +721,7 @@ msgid ""
 "            <span class=\"sr-only\">Next</span>"
 msgstr ""
 "<span class=\"carousel-control-next-icon\"/>\n"
-"            <span class=\"sr-only\">下一個</span>"
+"            <span class=\"sr-only\">下一頁</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
@@ -732,7 +731,7 @@ msgid ""
 "            <span class=\"sr-only\">Previous</span>"
 msgstr ""
 "<span class=\"carousel-control-prev-icon\"/>\n"
-"            <span class=\"sr-only\">上一個</span>"
+"            <span class=\"sr-only\">回前頁</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -3413,7 +3412,7 @@ msgstr "移到最後"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Move to next"
-msgstr "移到下一個"
+msgstr "移到下一頁"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -3558,7 +3557,7 @@ msgstr ""
 #: model_terms:website.page,arch_db:website.bs_debug_page
 #, python-format
 msgid "Next"
-msgstr "下一個"
+msgstr "下一頁"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -3961,7 +3960,7 @@ msgstr "請輸入有效的臉書專頁網址以供預覽"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.kanban_contain
 msgid "Prev"
-msgstr "前"
+msgstr "上一頁"
 
 #. module: website
 #. openerp-web
@@ -3981,7 +3980,7 @@ msgstr "預覽"
 #: model_terms:website.page,arch_db:website.bs_debug_page
 #, python-format
 msgid "Previous"
-msgstr "前一個"
+msgstr "回前頁"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__arch_prev
@@ -5730,7 +5729,9 @@ msgid ""
 msgstr "你可以在同一個網域建立 2 個網站，然後設定不同的國家群組所用的網站。"
 
 #. module: website
+#: code:addons/website/models/res_users.py:0
 #: model:ir.model.constraint,message:website.constraint_res_users_login_key
+#, python-format
 msgid "You can not have two users with the same login!"
 msgstr "不能有兩個使用者用同樣的登入帳號！"
 
