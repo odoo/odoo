@@ -271,7 +271,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-clock-o\" aria-label=\"Dates\" title=\"Dates\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-clock-o\" aria-label=\"Data\" title=\"Data\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -729,7 +729,7 @@ msgstr "Sectie toevoegen"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Add several variants to an order from a grid"
-msgstr ""
+msgstr "Voeg meerdere varianten toe aan de verkooporder vanuit een grid"
 
 #. module: sale
 #: model:res.groups,name:sale.group_delivery_invoice_address
@@ -929,6 +929,8 @@ msgid ""
 "Check this box if you send quotations to your customers rather than "
 "confirming orders straight away."
 msgstr ""
+"Vink dit aan als u offertes naar uw klanten verzendt in plaats van "
+"bestellingen meteen te bevestigen."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_open_sale_onboarding_payment_acquirer_wizard
@@ -938,7 +940,7 @@ msgstr "Kies hoe u offertes wilt bevestigen"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
 msgid "Choose your default customer payment method."
-msgstr ""
+msgstr "Kies uw standaard betaalmethode voor klanten."
 
 #. module: sale
 #. openerp-web
@@ -1134,11 +1136,13 @@ msgid ""
 "Creation date of draft/sent orders,\n"
 "Confirmation date of confirmed orders."
 msgstr ""
+"Aanmaakdatum van offertes/verstuurde offertes,\n"
+"Bevestigingsdatum van bevestigde orders"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__stripe
 msgid "Credit card (via Stripe)"
-msgstr ""
+msgstr "Credit card (via Stripe)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__currency_id
@@ -1240,7 +1244,7 @@ msgstr "Klanten"
 #: model:product.product,name:sale.product_product_4f
 #: model:product.template,name:sale.product_product_4e_product_template
 msgid "Customizable Desk (CONFIG)"
-msgstr ""
+msgstr "Aanpasbare bureau (CONFIG)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
@@ -1360,6 +1364,11 @@ msgid ""
 "shipping, the shipping policy of the order will be taken into account to "
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
+"Leveringsdatum die u aan de klant kunt beloven, berekend vanaf de minimale "
+"doorlooptijd van de orderregels in het geval van serviceproducten. In geval "
+"van verzending wordt rekening gehouden met het verzendbeleid van de "
+"bestelling om de minimale of maximale doorlooptijd van de orderregels te "
+"gebruiken."
 
 #. module: sale
 #: model:product.product,name:sale.advance_product_0
@@ -1530,7 +1539,7 @@ msgstr "Datum verwacht"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Expected:"
-msgstr ""
+msgstr "Verwacht:"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__expense_policy
@@ -1590,6 +1599,9 @@ msgid ""
 "customers or sales orders/invoices.The default value comes from the "
 "customer."
 msgstr ""
+"Fiscale posities worden gebruikt om BTW en rekeningen voor bepaalde klanten "
+"of verkooporders/facturen aan te passen. De standaardwaarde komt van de "
+"klant."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_follower_ids
@@ -1693,6 +1705,8 @@ msgid ""
 "Here you can set a specific HTML color index (e.g. #ff0000) to display the "
 "color if the attribute type is 'Color'."
 msgstr ""
+"Hier kunt u een specifieke HTML-kleurenindex instellen (bijvoorbeeld "
+"#ff0000) om de kleur weer te geven als het kenmerktype 'Kleur' is."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1756,6 +1770,8 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
 msgid "If you change the pricelist, only newly added lines will be affected."
 msgstr ""
+"Als u de prijslijst wijzigt, heeft dit allen effect op nieuw toegevoegde "
+"regels."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2412,6 +2428,8 @@ msgstr "Alleen gehele getallen zijn geldig."
 msgid ""
 "Only one Custom Value is allowed per Attribute Value per Sales Order Line."
 msgstr ""
+"Per kenmerkwaarde per verkooporderregel is slechts één aangepaste waarde "
+"toegestaan."
 
 #. module: sale
 #. openerp-web
@@ -3690,18 +3708,20 @@ msgid ""
 "The delivery date is sooner than the expected date.You may be unable to "
 "honor the delivery date."
 msgstr ""
+"De leverdatum is eerder dan de verwachte datum. Mogelijk kunt u de "
+"leverdatum niet nakomen."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_attribute__display_type
 #: model:ir.model.fields,help:sale.field_product_attribute_value__display_type
 #: model:ir.model.fields,help:sale.field_product_template_attribute_value__display_type
 msgid "The display type used in the Product Configurator."
-msgstr ""
+msgstr "Het weergavetype dat wordt gebruikt in de Productconfigurator."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__fixed_amount
 msgid "The fixed amount to be invoiced in advance, taxes excluded."
-msgstr ""
+msgstr "Het vooraf te factureren vaste bedrag, exclusief BTW."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice
@@ -3739,7 +3759,7 @@ msgstr "De betalingscommunicatie voor deze verkooporder."
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount
 msgid "The percentage of amount to be invoiced in advance, taxes excluded."
-msgstr ""
+msgstr "Het percentage van het vooraf te factureren bedrag, exclusief BTW."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
@@ -3956,7 +3976,7 @@ msgstr "Totaal BTW"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.view_quotation_tree
 msgid "Total Tax Excluded"
-msgstr ""
+msgstr "Totaal exclusief BTW"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
@@ -4106,7 +4126,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__upselling
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__invoice_status__upselling
 msgid "Upselling Opportunity"
-msgstr "Upselling prospect"
+msgstr "Upselling verkoopkans"
 
 #. module: sale
 #. openerp-web
@@ -4309,7 +4329,7 @@ msgstr "Uw order is niet in een fase om af te wijzen."
 msgid ""
 "Your quotation contains products from company %s whereas your quotation belongs to company %s. \n"
 " Please change the company of your quotation or remove the products from other companies (%s)."
-msgstr ""
+msgstr "<div></div>"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_bpost

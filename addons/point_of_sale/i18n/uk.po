@@ -3959,7 +3959,7 @@ msgstr "Сесії"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Set Closing Cash"
-msgstr "Встановіть закриття готівки"
+msgstr "Встановіть кінцевий залишок"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3971,7 +3971,7 @@ msgstr "Вказати клієнта"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_account_bnk_stmt_cashbox_footer
 msgid "Set Default Cash Opening"
-msgstr "Встановіть відкриття готівки за замовчуванням"
+msgstr "Встановіть початковий залишок за замовчуванням"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__start_category
@@ -3981,7 +3981,7 @@ msgstr "Встановити початкову категорію"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Set Starting Cash"
-msgstr ""
+msgstr "Встановіть кінцевий залишок"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4101,7 +4101,7 @@ msgstr "Початковий баланс"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Starting Cash"
-msgstr ""
+msgstr "Початковий залишок"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4297,6 +4297,8 @@ msgid ""
 "Technical field which is used to hide use_payment_terminal when no payment "
 "interfaces are installed."
 msgstr ""
+"Технічне поле, яке використовується для приховання use_payment_terminal, "
+"коли не встановлено жодного платіжного інтерфейсу."
 
 #. module: point_of_sale
 #. openerp-web
@@ -4415,6 +4417,8 @@ msgid ""
 "The payment method is of type cash. A cash statement will be automatically "
 "generated."
 msgstr ""
+"Платіжний метод - це готівковий тип. Виписку по касі буде створено "
+"автоматично."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__config_id
@@ -4522,6 +4526,8 @@ msgid ""
 "The transactions are processed by Adyen. Set your Adyen credentials on the "
 "related payment method."
 msgstr ""
+"Транзакції обробляються Adyen. Встановіть ваші облікові дані Adyen на "
+"пов'язаному методі оплати."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_mercury
@@ -4530,6 +4536,8 @@ msgid ""
 "The transactions are processed by Vantiv. Set your Vantiv credentials on the"
 " related payment method."
 msgstr ""
+"Транзакції обробляються Vantiv. Встановіть ваші облікові дані Vantiv на "
+"пов'язаному методі оплати."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_end
@@ -4541,7 +4549,7 @@ msgstr "Теоретичний баланс закриття"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "There are no products in this category."
-msgstr ""
+msgstr "У цій категорії немає товарів."
 
 #. module: point_of_sale
 #. openerp-web
@@ -4561,6 +4569,8 @@ msgid ""
 "There are still orders in draft state in the session. Pay or cancel the following orders to validate the session:\n"
 "%s"
 msgstr ""
+"У сесії є замовлення, які досі перебувають у стані чернетки. Оплатіть або скасуйте наступні замовлення для підтвердження сесії:\n"
+"%s"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4575,6 +4585,8 @@ msgid ""
 "There is no Chart of Accounts configured on the company. Please go to the "
 "invoicing settings to install a Chart of Accounts."
 msgstr ""
+"В компанії не встановлено плану рахунків. Перейдіть у налаштування "
+"виставлення рахунків для встановлення плану рахунків."
 
 #. module: point_of_sale
 #. openerp-web
@@ -4741,6 +4753,9 @@ msgid ""
 "close a session with a too high difference between real and expected closing"
 " balance"
 msgstr ""
+"Помічник використовується для відображення повідомлень попередження, якщо "
+"менеджер хоче закрити сесію з різницею удвічі більшою за реальну та "
+"очікуваний баланс закриття"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4788,7 +4803,7 @@ msgstr "Щоби записати нове замовлення, розпочн�
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "To return product(s), you need to open a session in the POS %s"
-msgstr ""
+msgstr "Товар повернення, вам необхідно відкрити сесію у точці продажу %s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__amount_total
@@ -4826,7 +4841,7 @@ msgstr "Всього податків"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__amount
 msgid "Total amount of the payment."
-msgstr ""
+msgstr "Загальна сума платежу."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__cash_register_total_entry_encoding
@@ -4862,7 +4877,7 @@ msgstr "Разом:"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Transaction cancelled"
-msgstr ""
+msgstr "Транзакцію скасовано"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_barcode_rule__type

@@ -1,20 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_links
+# 	* website_links
 # 
 # Translators:
-# 최재호 <hwangtog@gmail.com>, 2018
-# Link Up링크업 <linkup.way@gmail.com>, 2018
-# Linkup <link-up@naver.com>, 2018
-# Seongseok Shin <shinss61@hotmail.com>, 2018
+# JH CHOI <hwangtog@gmail.com>, 2019
+# Link Up링크업 <linkup.way@gmail.com>, 2019
+# Linkup <link-up@naver.com>, 2019
+# Seongseok Shin <shinss61@hotmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-08-24 09:34+0000\n"
-"Last-Translator: Seongseok Shin <shinss61@hotmail.com>, 2018\n"
+"POT-Creation-Date: 2019-09-27 09:12+0000\n"
+"PO-Revision-Date: 2019-08-26 09:15+0000\n"
+"Last-Translator: Seongseok Shin <shinss61@hotmail.com>, 2019\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,21 +24,21 @@ msgstr ""
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links_charts.js:53
+#: code:addons/website_links/static/src/js/website_links_charts.js:0
 #, python-format
 msgid " clicks"
 msgstr "클릭"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links_charts.js:104
+#: code:addons/website_links/static/src/js/website_links_charts.js:0
 #, python-format
 msgid " countries"
 msgstr "국가"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links_charts.js:57
+#: code:addons/website_links/static/src/js/website_links_charts.js:0
 #, python-format
 msgid "# of clicks"
 msgstr "클릭 수"
@@ -94,14 +94,22 @@ msgstr ""
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/xml/recent_link.xml:37
+#: code:addons/website_links/static/src/js/website_links.js:0
+#, python-format
+msgid "Copied"
+msgstr "사본"
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links.js:0
+#: code:addons/website_links/static/src/xml/recent_link.xml:0
 #, python-format
 msgid "Copy"
 msgstr ""
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/xml/recent_link.xml:26
+#: code:addons/website_links/static/src/xml/recent_link.xml:0
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 #, python-format
 msgid "Edit code"
@@ -109,7 +117,7 @@ msgstr ""
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:356
+#: code:addons/website_links/static/src/js/website_links.js:0
 #, python-format
 msgid "Generating link..."
 msgstr "링크 생성중..."
@@ -121,7 +129,7 @@ msgstr ""
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/xml/recent_link.xml:13
+#: code:addons/website_links/static/src/xml/recent_link.xml:0
 #, python-format
 msgid "Icon"
 msgstr "아이콘"
@@ -137,10 +145,11 @@ msgid "Last Week"
 msgstr "지난 주"
 
 #. module: website_links
+#: model:ir.model,name:website_links.model_link_tracker
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "Link Tracker"
-msgstr "링크 트랙커"
+msgstr "링크 추적기"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -184,23 +193,40 @@ msgstr ""
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
+#: model_terms:ir.ui.view,arch_db:website_links.link_tracker_view_tree
 msgid "Statistics"
 msgstr "통계"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/xml/recent_link.xml:38
+#: code:addons/website_links/static/src/xml/recent_link.xml:0
 #, python-format
 msgid "Stats"
 msgstr "통계"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links_charts.js:229
-#: code:addons/website_links/static/src/js/website_links_charts.js:230
-#: code:addons/website_links/static/src/js/website_links_charts.js:231
+#: code:addons/website_links/static/src/js/website_links.js:0
+#: code:addons/website_links/static/src/js/website_links_code_editor.js:0
+#, python-format
+msgid "The code cannot be left empty"
+msgstr ""
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:0
+#: code:addons/website_links/static/src/js/website_links_charts.js:0
+#: code:addons/website_links/static/src/js/website_links_charts.js:0
 #, python-format
 msgid "There is no data to show"
+msgstr ""
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links.js:0
+#: code:addons/website_links/static/src/js/website_links_code_editor.js:0
+#, python-format
+msgid "This code is already taken"
 msgstr ""
 
 #. module: website_links
@@ -217,21 +243,27 @@ msgstr "URL"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:225
+#: code:addons/website_links/static/src/js/website_links.js:0
 #, python-format
 msgid "Unable to get recent links"
 msgstr ""
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links_charts.js:99
+#: code:addons/website_links/static/src/js/website_links_charts.js:0
 #, python-format
 msgid "Undefined"
 msgstr "미지정"
 
 #. module: website_links
+#: code:addons/website_links/models/link_tracker.py:0
+#, python-format
+msgid "Visit Webpage Statistics"
+msgstr ""
+
+#. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:248
+#: code:addons/website_links/static/src/js/website_links.js:0
 #, python-format
 msgid "You don't have any recent links."
 msgstr ""
@@ -243,7 +275,7 @@ msgstr ""
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/xml/recent_link.xml:23
+#: code:addons/website_links/static/src/xml/recent_link.xml:0
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 #, python-format
 msgid "cancel"
@@ -251,7 +283,7 @@ msgstr "취소"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/xml/recent_link.xml:8
+#: code:addons/website_links/static/src/xml/recent_link.xml:0
 #, python-format
 msgid "clicks"
 msgstr "클릭"
@@ -263,21 +295,21 @@ msgstr ""
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:266
+#: code:addons/website_links/static/src/js/website_links.js:0
 #, python-format
 msgid "e.g. Newsletter, Social Network, .."
 msgstr "예) 뉴스레터, 소셜 네트워크,.."
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:263
+#: code:addons/website_links/static/src/js/website_links.js:0
 #, python-format
 msgid "e.g. Promotion of June, Winter Newsletter, .."
 msgstr ""
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:269
+#: code:addons/website_links/static/src/js/website_links.js:0
 #, python-format
 msgid "e.g. Search Engine, Website page, .."
 msgstr ""
@@ -289,7 +321,7 @@ msgstr ""
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/xml/recent_link.xml:22
+#: code:addons/website_links/static/src/xml/recent_link.xml:0
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 #, python-format
 msgid "ok"
@@ -297,7 +329,7 @@ msgstr ""
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/xml/recent_link.xml:22
+#: code:addons/website_links/static/src/xml/recent_link.xml:0
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 #, python-format
 msgid "or"
