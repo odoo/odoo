@@ -18,17 +18,17 @@
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2019
 # Edgaras Kriukonis <edgaras@focusate.eu>, 2019
 # Martin Trigaux, 2019
-# Silvija Butko <silvija.butko@gmail.com>, 2019
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2019
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2019
 # Eimantas <eimantas@focusate.eu>, 2019
+# Silvija Butko <silvija.butko@gmail.com>, 2019
 # Linas Versada <linaskrisiukenas@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-01 12:08+0000\n"
+"POT-Creation-Date: 2019-10-07 07:11+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
 "Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
@@ -148,6 +148,11 @@ msgstr ""
 #: model:account.payment.term,name:account.account_payment_term_30days
 msgid "30 Days"
 msgstr ""
+
+#. module: account
+#: model:account.payment.term,name:account.account_payment_term_advance
+msgid "30% Advance End of Following Month"
+msgstr "30% avansas iki mėnesio pabaigos"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance_60days
@@ -654,11 +659,6 @@ msgstr "<strong>Kliento kodas:</strong>"
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<strong>Customer: </strong>"
 msgstr "<strong>Klientas: </strong>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid "<strong>Description:</strong>"
-msgstr "<strong>Aprašymas:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -8128,6 +8128,11 @@ msgid "Payment terms: 30 Days"
 msgstr ""
 
 #. module: account
+#: model:account.payment.term,note:account.account_payment_term_advance
+msgid "Payment terms: 30% Advance End of Following Month"
+msgstr "Mokėjimo sąlygos: 30% avansas sekančio mėnesio pabaiga"
+
+#. module: account
 #: model:account.payment.term,note:account.account_payment_term_advance_60days
 msgid "Payment terms: 30% Now, Balance 60 Days"
 msgstr ""
@@ -10117,7 +10122,7 @@ msgstr "Mokesčiai neįtraukti"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__tag_ids
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
-#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped_sales_purchases
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
 msgid "Tax Grids"
 msgstr ""
 
@@ -10496,9 +10501,11 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__hide_payment_method
 msgid ""
-"Technical field used to hide the payment method if theselected journal has "
+"Technical field used to hide the payment method if the selected journal has "
 "only one available which is 'manual'"
 msgstr ""
+"Techninis laukas, skirtas paslėpti mokėjimo būdą, jei pasirinktas žurnalas "
+"turi tik vieną įmanomą pasirinkimą \"rankinis\""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move__tax_cash_basis_rec_id
@@ -11007,9 +11014,11 @@ msgstr "Pasirenkama kita valiuta, jeigu tai kelių valiutų įrašas."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__quantity
 msgid ""
-"The optional quantity expressed by this line, eg: number of product sold.The"
-" quantity is not a legal requirement but is very useful for some reports."
+"The optional quantity expressed by this line, eg: number of product sold. "
+"The quantity is not a legal requirement but is very useful for some reports."
 msgstr ""
+"Papildomas kiekis, išreikštas šiuo DK įrašu, pvz. parduotų produktų kiekis. "
+"Šis kiekis nėra būtinas, tačiau naudingas kai kuriose ataskaitose."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__sequence
@@ -11252,8 +11261,8 @@ msgstr ""
 #. module: account
 #: code:addons/account/wizard/account_validate_account_move.py:0
 #, python-format
-msgid "There is no journal items in draft state to post."
-msgstr "Nėra žurnalo įrašų, kurie būtų juodraščio būsenoje, registravimui."
+msgid "There are no journal items in the draft state to post."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__amount_from_label_regex
@@ -12364,6 +12373,22 @@ msgstr "Galite registruoti mokėjimus tik atviroms sąskaitoms"
 #: code:addons/account/wizard/account_invoice_send.py:0
 #, python-format
 msgid "You can only send invoices."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"You can only set an account having the payable type on payment terms lines "
+"for vendor bill."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"You can only set an account having the receivable type on payment terms "
+"lines for customer invoice."
 msgstr ""
 
 #. module: account

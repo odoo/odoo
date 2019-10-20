@@ -438,13 +438,6 @@ msgid "Cancelled payments"
 msgstr "Скасовані платежі"
 
 #. module: payment
-#. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:0
-#, python-format
-msgid "Cannot set-up the payment"
-msgstr "Не вдається встановити оплату"
-
-#. module: payment
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
 msgid "Cannot setup the payment."
@@ -895,8 +888,8 @@ msgstr "Якщо не визначено, буде використано ім'�
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:0
 #, python-format
-msgid "If, the payment hasn't been confirmed you can contact us."
-msgstr "Якщо оплата не підтверджена, ви можете зв'язатися з нами."
+msgid "If the payment hasn't been confirmed you can contact us."
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__image_128
@@ -1299,6 +1292,7 @@ msgstr "Назва партнера"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer_onboarding_wizard__payment_method__paypal
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__paypal
+#: model:payment.acquirer,name:payment.payment_acquirer_paypal
 msgid "PayPal"
 msgstr "PayPal"
 
@@ -1455,11 +1449,6 @@ msgstr "Платежі не вдалися"
 #, python-format
 msgid "Payments received"
 msgstr "Отримані платежі"
-
-#. module: payment
-#: model:payment.acquirer,name:payment.payment_acquirer_paypal
-msgid "Paypal"
-msgstr "Paypal"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__paypal_user_type
@@ -2009,13 +1998,6 @@ msgstr "Ми не можемо знайти ваш платіж, але не х�
 #: code:addons/payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "We are not able to redirect you to the payment form."
-msgstr "Ми не можемо перенаправити вас на форму оплати."
-
-#. module: payment
-#. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:0
-#, python-format
-msgid "We are not able to redirect you to the payment form. "
 msgstr "Ми не можемо перенаправити вас на форму оплати."
 
 #. module: payment

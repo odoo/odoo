@@ -427,8 +427,12 @@ class IrHttp(models.AbstractModel):
             request.is_frontend = func.routing.get('website', False)
         except werkzeug.exceptions.NotFound as e:
             # either we have a language prefixed route, either a real 404
-            # in all cases, website processes them
-            request.is_frontend = True
+            # in all cases, website processes them exept if second element is static
+            # Checking static will avoid to generate an expensive 404 web page since
+            # most of the time the browser is loading and inexisting assets or image. A standard 404 is enough.
+            # Earlier check would be difficult since we don't want to break data modules
+            path_components = request.httprequest.path.split('/')
+            request.is_frontend = len(path_components) < 3 or path_components[2] != 'static' or not '.' in path_components[-1]
             routing_error = e
 
         request.is_frontend_multilang = not func or (func and request.is_frontend and func.routing.get('multilang', func.routing['type'] == 'http'))

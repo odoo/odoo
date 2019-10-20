@@ -150,7 +150,7 @@ class Applicant(models.Model):
     day_close = fields.Float(compute='_compute_day', string="Days to Close")
     delay_close = fields.Float(compute="_compute_day", string='Delay to Close', readonly=True, group_operator="avg", help="Number of days to close", store=True)
     color = fields.Integer("Color Index", default=0)
-    emp_id = fields.Many2one('hr.employee', string="Employee", help="Employee linked to the applicant.")
+    emp_id = fields.Many2one('hr.employee', string="Employee", help="Employee linked to the applicant.", copy=False)
     user_email = fields.Char(related='user_id.email', type="char", string="User Email", readonly=True)
     attachment_number = fields.Integer(compute='_get_attachment_number', string="Number of Attachments")
     employee_name = fields.Char(related='emp_id.name', string="Employee Name", readonly=False, tracking=False)

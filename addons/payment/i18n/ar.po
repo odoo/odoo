@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:17+0000\n"
+"POT-Creation-Date: 2019-10-01 12:10+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
 "Last-Translator: Yihya Hugirat <hugirat@gmail.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
@@ -442,13 +442,6 @@ msgid "Cancelled payments"
 msgstr "المدفوعات الملغية"
 
 #. module: payment
-#. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:0
-#, python-format
-msgid "Cannot set-up the payment"
-msgstr "لم نتمكن من إعداد عملية السداد"
-
-#. module: payment
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
 msgid "Cannot setup the payment."
@@ -517,6 +510,7 @@ msgstr "الشركات"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__company_id
+#: model:ir.model.fields,field_description:payment.field_payment_token__company_id
 msgid "Company"
 msgstr "الشركة"
 
@@ -895,8 +889,8 @@ msgstr ""
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:0
 #, python-format
-msgid "If, the payment hasn't been confirmed you can contact us."
-msgstr "إذا لم يتم تأكيد عملية السداد بعد، يمكنك التواصل معنا."
+msgid "If the payment hasn't been confirmed you can contact us."
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__image_128
@@ -1285,6 +1279,7 @@ msgstr "اسم الشريك"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer_onboarding_wizard__payment_method__paypal
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__paypal
+#: model:payment.acquirer,name:payment.payment_acquirer_paypal
 msgid "PayPal"
 msgstr "PayPal"
 
@@ -1441,11 +1436,6 @@ msgstr "فشلت عمليات السداد"
 #, python-format
 msgid "Payments received"
 msgstr "تم استلام المدفوعات"
-
-#. module: payment
-#: model:payment.acquirer,name:payment.payment_acquirer_paypal
-msgid "Paypal"
-msgstr "Paypal"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__paypal_user_type
@@ -1973,13 +1963,6 @@ msgstr "لم نتمكن من العثور على دفعتك، لكن لا تقل
 #, python-format
 msgid "We are not able to redirect you to the payment form."
 msgstr "لم نتمكن من إعادة توجيهك لنموذج السداد."
-
-#. module: payment
-#. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:0
-#, python-format
-msgid "We are not able to redirect you to the payment form. "
-msgstr "لم نتمكن من إعادة توجيهك لنموذج السداد. "
 
 #. module: payment
 #. openerp-web

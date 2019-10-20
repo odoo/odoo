@@ -59,6 +59,13 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Účetní výkazy pro Rakousko.\n"
+"================================\n"
+"\n"
+"* Definuje následující zprávy:\n"
+"* Zisk / ztráta (§ 231 UGB Gesamtkostenverfahren)\n"
+"* Rozvaha (§ 224 UGB)"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_invoice_bba
@@ -78,6 +85,18 @@ msgid ""
 "        **R..R =** Customer Reference without non-numeric characters, **SSS =** Sequence Number, **DD =** Check Digits\n"
 "    "
 msgstr ""
+"\n"
+"Přidání strukturované komunikace k fakturám zákazníků.\n"
+"--------------------------------------------------\n"
+"\n"
+"Použití strukturované komunikace BBA zjednodušuje sladění faktur a plateb.\n"
+"Strukturovanou komunikaci můžete vybrat jako platební komunikaci v nastavení Fakturace / Účetnictví.\n"
+"Jsou navrženy dva algoritmy:\n"
+"\n"
+"1) Číslo faktury +++RRR/RRRR/RRRDD+++\n"
+"**R..R=** číslo faktury, **DD =** kontrolní číslice\n"
+"2) Reference zákazníka +++RRR/RRRR/SSSDD+++\n"
+"**R..R=** Reference zákazníka bez nečíselných znaků, **SSS=** Pořadové číslo, **DD=** Kontrolní číslice"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_reprint
@@ -273,6 +292,19 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Přehled:\n"
+"---------\n"
+"\n"
+"* Šablona účtů a daní pro společnosti v Japonsku.\n"
+"* To pravděpodobně nepokrývá všechny potřebné účty pro společnost. Očekává se, že na základě této šablony přidáte / odstraníte / upravíte účty.\n"
+"\n"
+"Poznámka:\n"
+"-----\n"
+"\n"
+"* Fiskální pozice „内 税“ a „外 税“ byly přidány ke zpracování zvláštních požadavků, které by mohly vyplynout z implementace POS. [1] Za normálních okolností je možná nebudete muset použít.\n"
+"\n"
+"[1] Podrobnosti viz https://github.com/odoo/odoo/pull/6470."
 
 #. module: base
 #: code:addons/base/models/res_config.py:0
@@ -620,6 +652,8 @@ msgid ""
 "\n"
 "        Define default purchase journal on the warehouse"
 msgstr ""
+"\n"
+"Definujte výchozí peněžní deník nákupu ve skladu"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_purchase_stock
@@ -631,6 +665,9 @@ msgid ""
 "        useful when you setup the multiple GSTIN units.\n"
 "    "
 msgstr ""
+"\n"
+"Definujte výchozí peněžní deník nákupu ve skladu, při změně operace vychystávání vám pomůže vybrat správný deník nákupu v objednávce. \n"
+"užitečné při nastavování více jednotek GSTIN."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_in_sale_stock
@@ -638,6 +675,8 @@ msgid ""
 "\n"
 "        Define default sales journal on the warehouse"
 msgstr ""
+"\n"
+"Definujte ve skladu výchozí peněžní deník prodeje"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_sale_stock
@@ -649,6 +688,9 @@ msgid ""
 "        useful when you setup the multiple GSTIN units.\n"
 "    "
 msgstr ""
+"\n"
+"Definujte ve skladu výchozí peněžní deník prodeje, který vám při výběru skladu pomůže vybrat správný peněžní deník prodeje v prodejní objednávce. \n"
+"užitečné při nastavování více jednotek GSTIN."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_reports
@@ -1404,6 +1446,10 @@ msgid ""
 "Manage automatic transfers between your accounts.\n"
 "    "
 msgstr ""
+"\n"
+"Automatické převody účtu\n"
+"===========================\n"
+"Spravujte automatické převody mezi účty."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_generic_auto_transfer_demo
@@ -1414,6 +1460,10 @@ msgid ""
 "Demo data for account automatic transfers module\n"
 "    "
 msgstr ""
+"\n"
+"Ukázka automatických převodů účtu\n"
+"================================\n"
+"Ukázková data pro modul automatických převodů účtu"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_us_consolidation_demo
@@ -1422,6 +1472,9 @@ msgid ""
 "Account Consolidation Demo Data\n"
 "==================================\n"
 msgstr ""
+"\n"
+"Demonstrační data konsolidace účtu\n"
+"=================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_accountant
@@ -1991,6 +2044,15 @@ msgid ""
 "If the automated inventory valuation is active, the necessary accounting entries will be created.\n"
 "\n"
 msgstr ""
+"\n"
+"Analytické účetnictví v MRP\n"
+"==========================\n"
+"\n"
+"* Zpráva o struktuře nákladů\n"
+"\n"
+"Rovněž umožňuje vypočítat náklady na produkt na základě jeho BoM, s využitím nákladů na jeho součásti a operace pracovního centra.\n"
+"Přidá tlačítko na samotný produkt, ale také akci v zobrazení seznamu produktů.\n"
+"Pokud je automatické oceňování zásob aktivní, vytvoří se potřebné účetní záznamy.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_forum
@@ -2167,6 +2229,27 @@ msgid ""
 "2011). Those modules are also strictly licensed under AGPL V3 and today don't \n"
 "come with any additional paid permission for online use of 'private modules'.\n"
 msgstr ""
+"\n"
+"Základní modul pro brazilskou lokalizaci\n"
+"==========================================\n"
+"\n"
+"Tento modul se skládá z:\n"
+"\n"
+"- Obecná brazilská účtová osnova\n"
+"- brazilské daně, jako například:\n"
+"\n"
+"- IPI\n"
+"- ICMS\n"
+"- PIS\n"
+"- COFINS\n"
+"- ISS\n"
+"- IR\n"
+"- IRPJ\n"
+"- CSLL\n"
+"\n"
+"Pole tax_discount bylo také přidáno do objektů account.tax.template a account.tax, aby bylo možné správně vypočítat některé brazilské DPH, jako je ICMS. Schéma průvodce vytvořením účtu byla rozšířena, aby tato nová data správně šířila.\n"
+"\n"
+"Je však důležité si uvědomit, že tento modul postrádá mnoho implementací pro správné použití Odoo v Brazílii. Tyto implementace (jako je elektronická fiskální fakturace, která je již funkční) přináší více než 15 dalších modulů lokalizačního projektu brazilského Launchpadu https://launchpad.net/openerp.pt-br-localiz a jejich závislosti v dalších doplňcích větev. Účelem těchto modulů není porušit pozoruhodnou modularitu Odoo, proto je jich několik, ale malý počet. Jedním z důvodů pro zachování těchto modulů je, že brazilští lídři lokalizace se potřebují zavázat k agilitě práv, aby dokončili lokalizaci, protože společnosti financují zbývající právní požadavky (např. včasné fiskální knihy, účetní SPED, fiskální SPED a PAF ECF, které stále chybí do září 2011). Tyto moduly jsou také přísně licencovány podle AGPL V3 a dnes nepřicházejí s žádným dodatečným placeným povolením pro online použití „soukromých modulů“.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_batch_payment
@@ -2288,6 +2371,8 @@ msgid ""
 "button on Accounting's reports allowing to save the report into the\n"
 "Documents app in the desired format(s).\n"
 msgstr ""
+"\n"
+"Spojovací modul mezi aplikacemi účetnictví a dokumentů. Umožňuje vytváření faktur z modulu Dokumenty a přidává tlačítko do účetních výkazů, které umožňuje uložit sestavu do aplikace Dokumenty v požadovaném formátu (formátech).\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail_enterprise
@@ -2363,6 +2448,11 @@ msgid ""
 "This module adds certification to resumé for employees.\n"
 "        "
 msgstr ""
+"\n"
+"Certifikace a dovednosti pro HR\n"
+"===============================\n"
+"\n"
+"Tento modul přidává certifikaci k resumé pro zaměstnance."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ve
@@ -2471,6 +2561,9 @@ msgid ""
 "Plan contable chileno e impuestos de acuerdo a disposiciones vigentes\n"
 "    "
 msgstr ""
+"\n"
+"Chilské účetní schéma a lokalizace daní.\n"
+"Chilský účetní plán a daně podle platných předpisů"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_address_city
@@ -2515,6 +2608,10 @@ msgid ""
 "on old plannings.\n"
 "\n"
 msgstr ""
+"\n"
+"Porovnejte časové rozvrhy a plánování\n"
+"================================\n"
+"Lepší plánování vašich budoucích plánů sledováním počtu hodin tištěných na starých plánech.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_taxcloud
@@ -2523,6 +2620,8 @@ msgid ""
 "Computes the sales tax automatically using TaxCloud and the customer's address in United States.\n"
 "    "
 msgstr ""
+"\n"
+"Automaticky vypočítá daň z obratu pomocí TaxCloud a adresy zákazníka ve Spojených státech."
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm_enterprise
@@ -2541,6 +2640,8 @@ msgid ""
 "Contains advanced features for Live Chat such as new views\n"
 "    "
 msgstr ""
+"\n"
+"Obsahuje pokročilé funkce pro Live Chat, jako jsou nová zobrazení"
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase_enterprise
@@ -2549,6 +2650,8 @@ msgid ""
 "Contains advanced features for purchase management\n"
 "    "
 msgstr ""
+"\n"
+"Obsahuje pokročilé funkce pro správu nákupu"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_enterprise
@@ -2577,6 +2680,8 @@ msgid ""
 "Contains the enterprise views for Stock management\n"
 "    "
 msgstr ""
+"\n"
+"Obsahuje pohledy podniku na správu zásob"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_presence
@@ -2593,6 +2698,16 @@ msgid ""
 "Allows to contact directly the employee in case of unjustified absence.\n"
 "    "
 msgstr ""
+"\n"
+"Mějte pod kontrolou přítomnost zaměstnanců\n"
+"==========================\n"
+"\n"
+"Na základě:\n"
+"* IP adresy\n"
+"* Uživatelské relace\n"
+"* Odeslaných e-mailů\n"
+"\n"
+"Umožňuje přímý kontakt se zaměstnancem v případě neoprávněné nepřítomnosti."
 
 #. module: base
 #: model:ir.module.module,description:base.module_partner_autocomplete_address_extended
@@ -2600,6 +2715,8 @@ msgid ""
 "\n"
 "Correct address formating when both partner_autocomplete and base_address_extended modules are installed"
 msgstr ""
+"\n"
+"Správné formátování adresy, když jsou nainstalovány oba moduly autocomplete a base_address_extended"
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_account
@@ -2608,6 +2725,8 @@ msgid ""
 "Create Credit Notes from Helpdesk tickets\n"
 "    "
 msgstr ""
+"\n"
+"Tvorba dobropisů z tiketů Helpdesku"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_slides
@@ -2625,6 +2744,18 @@ msgid ""
 " * Filter and Tag\n"
 " * Statistics\n"
 msgstr ""
+"\n"
+"Vytvářejte online kurzy\n"
+"======================\n"
+"\n"
+"to představuje\n"
+"\n"
+"* Integrovaná správa kurzu a výuky\n"
+"* Navigace na celou obrazovku\n"
+"* Podpora Youtube videa, dokumenty Google, PDF, obrázky, webové stránky\n"
+"* Testy znalostí s kvízy\n"
+"* Filtr a značka\n"
+"* Statistiky\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_industry_fsm_report
@@ -3251,6 +3382,67 @@ msgid ""
 "* Unit of measures AFIP codes\n"
 "* Partners: Consumidor Final and AFIP\n"
 msgstr ""
+"\n"
+"Funkční\n"
+"----------\n"
+"\n"
+"Tento modul přidává účetní funkce pro argentinskou lokalizaci, které představují minimální konfiguraci potřebnou pro provoz společnosti v Argentině a podle předpisů a pokynů AFIP (Administración Federal de Ingresos Públicos).\n"
+"\n"
+"Postupujte podle následujících kroků konfigurace pro Výroba:\n"
+"\n"
+"1. Přejděte do své společnosti a nakonfigurujte své číslo DPH a typ odpovědnosti AFIP\n"
+"2. Přejděte na Účetnictví / Nastavení a nastavte Účtovní osnovu, kterou chcete použít.\n"
+"3. Vytvořte si své prodejní deníky s ohledem na informace o AFIP POS.\n"
+"\n"
+"Ukázková data pro testování:\n"
+"\n"
+"* Byly vytvořeny 3 společnosti, jedna pro každý typ odpovědnosti AFIP s nainstalovaným příslušným účtovým diagramem. Chcete-li provést testy, vyberte společnost, která vás opraví:\n"
+"\n"
+"* (AR) Responsable Inscripto\n"
+"* (AR) Exento\n"
+"* (AR) Monotributo\n"
+"\n"
+"* Prodejní peněžní deník nakonfigurován na předtištěné a Expo faktury ve všech společnostech\n"
+"* Příklady faktur a dalších dokumentů již ověřené ve společnosti  “(AR) Responsable Inscripto”\n"
+"* Příklad partnerů pro různé typy odpovědnosti:\n"
+"\n"
+"* ADHOC (IVA Responsable Inscripto)\n"
+"* Consejo Municipal Rosario (IVA Sujeto Exento)\n"
+"* Gritti (Monotributo)\n"
+"Cerro Castor. IVA Liberado v Zona Franca\n"
+"* Expresso (Cliente del Exterior)\n"
+"* Odoo (Proveedor del Exterior)\n"
+"\n"
+"Přednosti:\n"
+"\n"
+"* Účetní osnova nebude automaticky nainstalována, každá šablona CoA závisí na AFIP Responsibility společnosti, budete muset nainstalovat CoA pro vaše potřeby.\n"
+"* Při instalaci CoA nebudou generovány žádné prodejní deníky, budete muset své deníky nakonfigurovat ručně.\n"
+"* Typ dokumentu bude při vytváření faktury správně vybrán v závislosti na fiskální odpovědnosti vydavatele a příjemce dokumentu a souvisejícího deníku.\n"
+"* Byl přidán typ účtu CBU a také ověření CBU\n"
+"\n"
+"\n"
+"Technický\n"
+"---------\n"
+"\n"
+"Tento modul přidává jak modely, tak pole, která budou nakonec použita pro modul elektronické faktury. Zde je přehled hlavních funkcí:\n"
+"\n"
+"Hlavní data:\n"
+"\n"
+"* Účetní osnova: jedna pro každou odpovědnost AFIP, která souvisí s právnickou osobou:\n"
+"\n"
+"* Odpovědné Inscripto (RI)\n"
+"* Exento (EX)\n"
+"* Monotributo (Mono)\n"
+"\n"
+"* Argentinské daně a daně z účtů (daně z přidané hodnoty u stávajících alikvotů a dalších typů)\n"
+"* Typy odpovědnosti AFIP\n"
+"* Fiskální pozice (za účelem mapování daní)\n"
+"* Typy právních dokumentů v Argentině\n"
+"* Identifikační typy platné v Argentině.\n"
+"* Kódy AFIP zemí a kódy DPH zemí pro právnické osoby, fyzické osoby a další\n"
+"* Kódy AFIP měny\n"
+"* Měřicí jednotky AFIP kódy\n"
+"* Partneři: Consumidor Final a AFIP\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_gamification
@@ -3413,6 +3605,13 @@ msgid ""
 "are found in other modules that must be installed separately.\n"
 "\n"
 msgstr ""
+"\n"
+"Hardware Poxy\n"
+"==============\n"
+"\n"
+"Tento modul umožňuje vzdáleně používat periferie připojené k tomuto serveru.\n"
+"\n"
+"Tyto moduly obsahují pouze povolující framework. Skutečné ovladače zařízení se nacházejí v jiných modulech, které je třeba nainstalovat samostatně.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_proxy
@@ -3516,6 +3715,18 @@ msgid ""
 "    * FBA: A stock location and stock moves allow to monitor your stock in Amazon Fulfilment Centers.\n"
 "    * FBM: Delivery notifications are sent to Amazon for each confirmed picking (partial delivery friendly).\n"
 msgstr ""
+"\n"
+"Importujte své objednávky Amazon do Odoo a synchronizujte dodávky\n"
+"=============================================================\n"
+"\n"
+"Klíčové vlastnosti\n"
+"------------\n"
+"* Import objednávek z více účtů a tržišť.\n"
+"* Objednávky jsou porovnávány s produkty Odoo na základě jejich interní reference (SKU v Amazonu).\n"
+"* Dodávky a zrušení provedené v Odoo jsou synchronizovány v Amazonu.\n"
+"* Podpora jak splnění Amazonem (FBA), tak splněním obchodníkem (FBM):\n"
+"* FBA: Umístění skladu a pohyby skladu umožňují sledovat vaše sklady v Amazonských střediscích plnění.\n"
+"* FBM: Oznámení o doručení jsou odesílána do Amazonu pro každé potvrzené vyzvednutí (částečné doručení je uživatelsky příjemné).\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cn
@@ -3820,6 +4031,11 @@ msgid ""
 "Link module to map leads to tickets\n"
 "        "
 msgstr ""
+"\n"
+"Propojení Zájmu k  tiketům\n"
+"===============\n"
+"\n"
+"Propojení modulu mapování zájmu k tiketům"
 
 #. module: base
 #: model:ir.module.module,description:base.module_board
@@ -4348,6 +4564,19 @@ msgid ""
 "of recall defined. You can define different policies for different companies.\n"
 "\n"
 msgstr ""
+"\n"
+"Modul pro automatizaci dopisů pro nezaplacené faktury, s víceúrovňovými výzvami.\n"
+"==========================================================================\n"
+"\n"
+"V nabídce můžete definovat několik úrovní výzev:\n"
+"---------------------------------------------------------------\n"
+"Úrovně konfigurace / následování / úrovně následování\n"
+"\n"
+"Jakmile je definován, můžete automaticky vytisknout připomínky každý den jednoduše kliknutím na nabídku:\n"
+"---------------------------------------------------------------------------------------------------- -\n"
+"Následné kroky po platbách / Odeslat e-mail a dopisy\n"
+"\n"
+"Generuje PDF / posílá e-maily / nastavuje manuální akce podle různých definovaných úrovní vyvolání. Můžete definovat různé zásady pro různé společnosti.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import_camt
@@ -21815,7 +22044,7 @@ msgstr "Sestava"
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_report
 msgid "Report Action"
-msgstr ""
+msgstr "Nahlásit akci"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__report_file
@@ -24540,7 +24769,7 @@ msgstr ""
 msgid ""
 "This module lets you use the full power of certifications within your "
 "courses."
-msgstr ""
+msgstr "Tento modul vám umožňuje plně využívat certifikací ve vašich kurzech."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade
@@ -24584,7 +24813,7 @@ msgstr "Časový formát"
 #: model:ir.module.category,name:base.module_category_human_resources_time_off
 #: model:ir.module.module,shortdesc:base.module_hr_holidays
 msgid "Time Off"
-msgstr ""
+msgstr "Volno"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_holidays_gantt
@@ -24599,7 +24828,7 @@ msgstr "Ověření časového rozvrhu a zobrazení mřížky"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_timesheet_forecast
 msgid "Timesheet and Planning"
-msgstr ""
+msgstr "Časový rozvrh a plánování"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_timesheet_holidays
@@ -24955,7 +25184,7 @@ msgstr "Tuvalu"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_twitter
 msgid "Twitter Snippet"
-msgstr ""
+msgstr "Twitter Snippet"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_twitter_wall
@@ -25046,7 +25275,7 @@ msgstr "URL"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__url_code
 msgid "URL Code"
-msgstr ""
+msgstr "URL kód"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_us_reports
@@ -26099,6 +26328,9 @@ msgid ""
 "If the timezone is not set, UTC (Coordinated Universal Time) is used.\n"
 "Anywhere else, time values are computed according to the time offset of your web client."
 msgstr ""
+"Při tisku dokumentů a exportu / importu dat se vypočítají časové hodnoty podle tohoto časového pásma.\n"
+"Pokud není časové pásmo nastaveno, použije se UTC (Coordinated Universal Time).\n"
+"Kdekoli jinde se hodnoty času počítají podle časového posunu vašeho webového klienta."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.sequence_view
@@ -26290,6 +26522,8 @@ msgid ""
 "You can manage the different federal states you are working on from here. "
 "Each state is attached to one country."
 msgstr ""
+"Zde můžete spravovat různé federální státy, na kterých pracujete. Každý stát"
+" je připojen k jedné zemi."
 
 #. module: base
 #: code:addons/base/models/res_partner.py:0
@@ -26514,7 +26748,7 @@ msgstr "account_plaid"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_ponto
 msgid "account_ponto"
-msgstr ""
+msgstr "account_ponto"
 
 #. module: base
 #: code:addons/models.py:0
@@ -26668,7 +26902,7 @@ msgstr "email@yourcompany.com"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.layout_preview
 msgid "example.com"
-msgstr ""
+msgstr "example.com"
 
 #. module: base
 #: code:addons/base/models/ir_fields.py:0
@@ -26793,7 +27027,7 @@ msgstr "monetary"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_subcontracting
 msgid "mrp_subcontracting"
-msgstr ""
+msgstr "mrp_subcontracting"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -26831,7 +27065,7 @@ msgstr "pos_cache"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_epson_printer
 msgid "pos_epson_printer"
-msgstr ""
+msgstr "pos_epson_printer"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_epson_printer_restaurant
@@ -26911,7 +27145,7 @@ msgstr "test-inherits"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_inherits_depends
 msgid "test-inherits-depends"
-msgstr ""
+msgstr "test-inherits-depends"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_limits

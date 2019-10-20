@@ -438,7 +438,7 @@ var StatementModel = BasicModel.extend({
             domainReconcile.push(['company_id', 'in', self.context.company_ids]);
         }
         if (self.context && self.context.active_model === 'account.journal' && self.context.active_ids) {
-            domainReconcile.push(['journal_id', 'in', [false].concat(self.context.active_ids)]);
+            domainReconcile.push(['match_journal_ids', 'in', [false].concat(self.context.active_ids)]);
         }
         var def_reconcileModel = this._loadReconciliationModel({domainReconcile: domainReconcile});
         var def_account = this._rpc({
@@ -1238,11 +1238,11 @@ var StatementModel = BasicModel.extend({
                 break;
             case 'regex':
                 var matching = line.st_line.name.match(new RegExp(values.amount_from_label_regex))
-                amount = null;
+                amount = 0;
                 if (matching && matching.length == 2) {
                     matching = matching[1].replace(new RegExp('\\D' + values.decimal_separator, 'g'), '');
                     matching = matching.replace(values.decimal_separator, '.');
-                    amount = parseFloat(matching);
+                    amount = parseFloat(matching) || 0;
                     amount = line.balance.amount > 0 ? amount : -amount;
                 }
                 break;

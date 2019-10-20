@@ -12,10 +12,10 @@ class AccountMove(models.Model):
 
     l10n_latam_amount_untaxed = fields.Monetary(compute='_compute_l10n_latam_amount_and_taxes')
     l10n_latam_tax_ids = fields.One2many(compute="_compute_l10n_latam_amount_and_taxes", comodel_name='account.move.line')
-    l10n_latam_available_document_type_ids = fields.Many2many('l10n_latam.document.type', compute='_compute_l10n_latam_documents')
+    l10n_latam_available_document_type_ids = fields.Many2many('l10n_latam.document.type', compute='_compute_l10n_latam_available_document_types')
     l10n_latam_document_type_id = fields.Many2one(
-        'l10n_latam.document.type', string='Document Type', copy=False, readonly=True, auto_join=True, index=True,
-        states={'posted': [('readonly', True)]})
+        'l10n_latam.document.type', string='Document Type', copy=False, readonly=False, auto_join=True, index=True,
+        states={'posted': [('readonly', True)]}, compute='_compute_l10n_latam_document_type', store=True)
     l10n_latam_sequence_id = fields.Many2one('ir.sequence', compute='_compute_l10n_latam_sequence')
     l10n_latam_document_number = fields.Char(
         compute='_compute_l10n_latam_document_number', inverse='_inverse_l10n_latam_document_number',
@@ -60,7 +60,7 @@ class AccountMove(models.Model):
         remaining.l10n_latam_sequence_id = False
 
     def _compute_l10n_latam_amount_and_taxes(self):
-        recs_invoice = self.filtered(lambda x: x.is_invoice(include_receipts=True))
+        recs_invoice = self.filtered(lambda x: x.is_invoice())
         for invoice in recs_invoice:
             tax_lines = invoice.line_ids.filtered('tax_line_id')
             included_taxes = invoice.l10n_latam_document_type_id and \
@@ -141,28 +141,20 @@ class AccountMove(models.Model):
             internal_types = ['invoice', 'debit_note']
         return [('internal_type', 'in', internal_types), ('country_id', '=', self.company_id.country_id.id)]
 
-    @api.depends('journal_id', 'partner_id', 'company_id')
-    def _compute_l10n_latam_documents(self):
+    @api.depends('journal_id', 'partner_id', 'company_id', 'type')
+    def _compute_l10n_latam_available_document_types(self):
+        self.l10n_latam_available_document_type_ids = False
+        for rec in self.filtered(lambda x: x.journal_id and x.l10n_latam_use_documents and x.partner_id):
+            rec.l10n_latam_available_document_type_ids = self.env['l10n_latam.document.type'].search(rec._get_l10n_latam_documents_domain())
+
+    @api.depends('l10n_latam_available_document_type_ids')
+    @api.depends_context('internal_type')
+    def _compute_l10n_latam_document_type(self):
         internal_type = self._context.get('internal_type', False)
-        recs_with_journal_partner = self.filtered(lambda x: x.journal_id and x.l10n_latam_use_documents and x.partner_id)
-        for rec in recs_with_journal_partner:
-            document_types = self.env['l10n_latam.document.type'].search(rec._get_l10n_latam_documents_domain())
-
-            # If internal_type is in context we try to search for an specific document. for eg used on debit notes
-            document_type = internal_type and document_types.filtered(
-                lambda x: x.internal_type == internal_type) or document_types
-
-            rec.l10n_latam_available_document_type_ids = document_types
-            rec.l10n_latam_document_type_id = document_type and document_type[0]
-        remaining = self - recs_with_journal_partner
-        remaining.l10n_latam_available_document_type_ids = []
-        remaining.l10n_latam_document_type_id = False
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        recs = super().create(vals_list)
-        recs.filtered(lambda x: x.l10n_latam_use_documents and not x.l10n_latam_document_type_id)._compute_l10n_latam_documents()
-        return recs
+        for rec in self.filtered(lambda x: x.state == 'draft' and x.l10n_latam_available_document_type_ids):
+            document_types = rec.l10n_latam_available_document_type_ids._origin
+            document_types = internal_type and document_types.filtered(lambda x: x.internal_type == internal_type) or document_types
+            rec.l10n_latam_document_type_id = document_types and document_types[0].id
 
     def _compute_invoice_taxes_by_group(self):
         move_with_doc_type = self.filtered('l10n_latam_document_type_id')

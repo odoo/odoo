@@ -29,11 +29,9 @@
 # yuan wenpu <1140021222@qq.com>, 2019
 # 张宏奎 <zhanghongkui@inspur.com>, 2019
 # 红瑜 陶 <823103015@qq.com>, 2019
-# Sage <263737@qq.com>, 2019
+# r <263737@qq.com>, 2019
 # Jeanphy <hzh0292@qq.com>, 2019
-# liAnGjiA <liangjia@qq.com>, 2019
 # waveyeung <waveyeung@qq.com>, 2019
-# 老窦 北京 <2662059195@qq.com>, 2019
 # brent51 <mailbox@zengzhi.org>, 2019
 # ChinaMaker <liuct@chinamaker.net>, 2019
 # 黎伟杰 <674416404@qq.com>, 2019
@@ -42,18 +40,21 @@
 # Jeffery CHEN <jeffery9@gmail.com>, 2019
 # Gary Wei <Gary.wei@elico-corp.com>, 2019
 # Felix Yuen <fyu@odoo.com>, 2019
-# inspur qiuguodong <qiuguodong@inspur.com>, 2019
 # 夏 冰 <qndym@126.com>, 2019
 # Martin Trigaux, 2019
 # ryan ryan <itechr@outlook.com>, 2019
+# 老窦 北京 <2662059195@qq.com>, 2019
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2019
+# liAnGjiA <liangjia@qq.com>, 2019
+# inspur qiuguodong <qiuguodong@inspur.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-01 12:08+0000\n"
+"POT-Creation-Date: 2019-10-07 07:11+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: ryan ryan <itechr@outlook.com>, 2019\n"
+"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -180,6 +181,11 @@ msgstr "21 天"
 #: model:account.payment.term,name:account.account_payment_term_30days
 msgid "30 Days"
 msgstr "30天"
+
+#. module: account
+#: model:account.payment.term,name:account.account_payment_term_advance
+msgid "30% Advance End of Following Month"
+msgstr "次月月底预付30%"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance_60days
@@ -742,11 +748,6 @@ msgstr "<strong>客户代码:</strong>"
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<strong>Customer: </strong>"
 msgstr "<strong>客户: </strong>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid "<strong>Description:</strong>"
-msgstr "<strong>说明:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -2640,7 +2641,7 @@ msgstr "可显示？"
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form_multi
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_invoice_form
 msgid "Cancel"
-msgstr "取消日期"
+msgstr "取消"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -8052,6 +8053,11 @@ msgid "Payment terms: 30 Days"
 msgstr "支付条款：30天"
 
 #. module: account
+#: model:account.payment.term,note:account.account_payment_term_advance
+msgid "Payment terms: 30% Advance End of Following Month"
+msgstr "付款条款：次月月底预付30%"
+
+#. module: account
 #: model:account.payment.term,note:account.account_payment_term_advance_60days
 msgid "Payment terms: 30% Now, Balance 60 Days"
 msgstr "支付条款:现付30%，余款60天"
@@ -10014,7 +10020,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__tag_ids
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
-#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped_sales_purchases
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
 msgid "Tax Grids"
 msgstr "税收网"
 
@@ -10384,9 +10390,9 @@ msgstr "技术字段用于在表单视图中具有日记帐/税收的动态域�
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__hide_payment_method
 msgid ""
-"Technical field used to hide the payment method if theselected journal has "
+"Technical field used to hide the payment method if the selected journal has "
 "only one available which is 'manual'"
-msgstr "如果所选日记账只有一个可用的“手动”，则用于隐藏付款方式的技术字段"
+msgstr "如果选择的日记账只有“手动”选项，则自动隐藏付款方法，"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move__tax_cash_basis_rec_id
@@ -10865,9 +10871,9 @@ msgstr "多币种分录的其他币种选项."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__quantity
 msgid ""
-"The optional quantity expressed by this line, eg: number of product sold.The"
-" quantity is not a legal requirement but is very useful for some reports."
-msgstr "此行表示的可选数量，例如：销售的产品数量。数量不是法律要求，但对某些报告非常有用。"
+"The optional quantity expressed by this line, eg: number of product sold. "
+"The quantity is not a legal requirement but is very useful for some reports."
+msgstr "这一行标识了可选数量，例如可销售产品的数量这个数量不是必须的但是对很多报表很有用."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__sequence
@@ -11102,8 +11108,8 @@ msgstr "在会计设置中没有转账帐户。请定义一个来确认这个转
 #. module: account
 #: code:addons/account/wizard/account_validate_account_move.py:0
 #, python-format
-msgid "There is no journal items in draft state to post."
-msgstr "没有草稿状态待过账的日记账项目."
+msgid "There are no journal items in the draft state to post."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__amount_from_label_regex
@@ -12155,6 +12161,22 @@ msgstr "只有打开状态的发票能被登记付款"
 #, python-format
 msgid "You can only send invoices."
 msgstr "您只能寄发票。"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"You can only set an account having the payable type on payment terms lines "
+"for vendor bill."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"You can only set an account having the receivable type on payment terms "
+"lines for customer invoice."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__invoice_reference_type

@@ -12,7 +12,7 @@ from odoo.exceptions import UserError, ValidationError, AccessError, MissingErro
 
 class WebsiteTest(Home):
 
-    @http.route('/test_view', type='http', auth='public', website=True)
+    @http.route('/test_view', type='http', auth='public', website=True, sitemap=False)
     def test_view(self, **kwargs):
         return request.render('test_website.test_view')
 
@@ -43,6 +43,14 @@ class WebsiteTest(Home):
     @http.route('/multi_company_website', type='http', auth="public", website=True)
     def test_company_context(self):
         return request.make_response(json.dumps(request.context.get('allowed_company_ids')))
+
+    # Test Session
+
+    @http.route('/test_get_dbname', type='json', auth='public', website=True)
+    def test_get_dbname(self, **kwargs):
+        return request.env.cr.dbname
+
+    # Test Error
 
     @http.route('/test_error_view', type='http', auth='public', website=True)
     def test_error_view(self, **kwargs):

@@ -35,10 +35,10 @@ class SendSMS(models.TransientModel):
         if not result.get('active_domain'):
             result['active_domain'] = repr(self.env.context.get('active_domain', []))
         if not result.get('res_id'):
-            if not result.get('res_ids'):
+            if not result.get('res_ids') and self.env.context.get('active_id'):
                 result['res_id'] = self.env.context.get('active_id')
         if not result.get('res_ids'):
-            if not result.get('res_id'):
+            if not result.get('res_id') and self.env.context.get('active_ids'):
                 result['res_ids'] = repr(self.env.context.get('active_ids'))
 
         if result['res_model']:
@@ -86,7 +86,10 @@ class SendSMS(models.TransientModel):
     @api.depends('res_model', 'res_ids', 'active_domain')
     def _compute_recipients_count(self):
         self.res_ids_count = len(literal_eval(self.res_ids)) if self.res_ids else 0
-        self.active_domain_count = self.env[self.res_model].search_count(safe_eval(self.active_domain or '[]'))
+        if self.res_model:
+            self.active_domain_count = self.env[self.res_model].search_count(safe_eval(self.active_domain or '[]'))
+        else:
+            self.active_domain_count = 0
 
     @api.depends('partner_ids', 'res_model', 'res_id', 'res_ids', 'use_active_domain', 'composition_mode', 'number_field_name', 'sanitized_numbers')
     def _compute_recipients(self):
@@ -310,5 +313,5 @@ class SendSMS(models.TransientModel):
         elif self.res_id:
             records = self.env[self.res_model].browse(self.res_id)
         else:
-            records = self.env[self.res_model].browse(literal_eval(self.res_ids))
+            records = self.env[self.res_model].browse(literal_eval(self.res_ids or '[]'))
         return records

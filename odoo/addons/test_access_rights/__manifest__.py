@@ -5,6 +5,7 @@
     'category': 'Tests',
     'data': [
         'ir.model.access.csv',
+        'security.xml',
         'data.xml',
     ],
 }

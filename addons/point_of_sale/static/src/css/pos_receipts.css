@@ -1,9 +1,13 @@
 .pos-receipt-print {
     width: 512px;
+    height: 0;
+    overflow: hidden;
+    position: absolute;
+    left: 0;
+    top: 0;
     text-align: left;
     direction: ltr;
     font-size: 28px;
-    padding-bottom: 2em;
     color: #000000;
 }
 
@@ -53,11 +57,6 @@
 
 .pos-receipt .pos-order-receipt-cancel {
     color: red;
-}
-
-.pos-receipts {
-    height: 0;
-    overflow: hidden;
 }
 
 .pos-payment-terminal-receipt {

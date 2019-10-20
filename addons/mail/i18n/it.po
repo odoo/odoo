@@ -15,23 +15,23 @@
 # Martin Trigaux, 2019
 # Giovanni Perteghella <giovanni@perteghella.org>, 2019
 # Luigi Di Naro <gigidn@gmail.com>, 2019
-# Simone Bernini <simone@aperturelabs.it>, 2019
 # Marco Calcagni <mcalcagni@dinamicheaziendali.it>, 2019
 # David Minneci <david@numeko.it>, 2019
-# efraimbiffi <eab@odoo.com>, 2019
-# Léonie Bouchat <lbo@odoo.com>, 2019
 # mymage <stefano.consolaro@mymage.it>, 2019
 # Luigia Cimmino Caserta <lcc@odoo.com>, 2019
 # Federico Zanuttini <fza@odoo.com>, 2019
 # Paolo Valier, 2019
 # Davide Speranza <dsp@odoo.com>, 2019
+# Simone Bernini <simone@aperturelabs.it>, 2019
+# efraimbiffi <eab@odoo.com>, 2019
+# Léonie Bouchat <lbo@odoo.com>, 2019
 # Sergio Zanchetta <primes2h@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-01 12:10+0000\n"
+"POT-Creation-Date: 2019-10-07 07:12+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
 "Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
@@ -402,7 +402,7 @@ msgid ""
 "note. Followers won't receive any email notification."
 msgstr ""
 "<strong>Comunicazione interna</strong>: rispondere pubblicherà una nota "
-"interna. I follower non riceveranno alcuna notifica via e-mail. "
+"interna. Che sta seguendo non riceverà alcuna notifica via e-mail. "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -1865,7 +1865,7 @@ msgstr "Documento"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_followers
 msgid "Document Followers"
-msgstr "Follower documento"
+msgstr "Chi segue il documento"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__res_model_id
@@ -1926,7 +1926,7 @@ msgstr "Menù a discesa"
 #: code:addons/mail/static/src/xml/followers.xml:0
 #, python-format
 msgid "Dropdown menu - Followers"
-msgstr "Menù a discesa - Follower "
+msgstr "Menù a discesa - Chi sta seguendo "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__date_deadline
@@ -2141,7 +2141,7 @@ msgstr "Procedura reinvio e-mail"
 #: model:ir.model.fields,field_description:mail.field_mail_activity__mail_template_ids
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__mail_template_ids
 msgid "Email templates"
-msgstr ""
+msgstr "Modelli e-mail"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_mail_mail
@@ -2216,7 +2216,7 @@ msgstr "Errore, un partner non può seguire lo stesso oggetto due volte."
 msgid ""
 "Error: A follower must be either a partner or a channel (but not both)."
 msgstr ""
-"Errore: un follower deve essere o un partner o un canale (ma non entrambi)."
+"Errore: chi segue deve essere un partner o un canale (ma non entrambi)."
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_contact__everyone
@@ -2389,7 +2389,7 @@ msgstr "Segui"
 #: model:ir.ui.menu,name:mail.menu_email_followers
 #: model_terms:ir.ui.view,arch_db:mail.view_followers_tree
 msgid "Followers"
-msgstr "Follower"
+msgstr "Chi segue"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_channel_ids
@@ -2400,7 +2400,7 @@ msgstr "Follower"
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_channel_ids
 #: model:ir.model.fields,field_description:mail.field_res_users__message_channel_ids
 msgid "Followers (Channels)"
-msgstr "Follower (canali)"
+msgstr "Chi segue (canali)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_partner_ids
@@ -2411,7 +2411,7 @@ msgstr "Follower (canali)"
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_res_users__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Follower (partner)"
+msgstr "Chi segue (partner)"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_subscription_form
@@ -2423,12 +2423,12 @@ msgstr "Modulo follower"
 #: code:addons/mail/static/src/xml/chatter.xml:0
 #, python-format
 msgid "Followers of"
-msgstr "Follower di"
+msgstr "Chi sta seguendo"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_contact__followers
 msgid "Followers only"
-msgstr "Solo follower"
+msgstr "Solo chi segue"
 
 #. module: mail
 #. openerp-web
@@ -2954,7 +2954,7 @@ msgstr "È bandito"
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_is_follower
 #: model:ir.model.fields,field_description:mail.field_res_users__message_is_follower
 msgid "Is Follower"
-msgstr "È un follower"
+msgstr "Sta seguendo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__notification
@@ -3141,14 +3141,14 @@ msgstr "Elenco dei CC dalle e-mail in ingresso."
 msgid ""
 "List of channels that will be added as listeners of the current document."
 msgstr ""
-"Elenco dei canali che saranno aggiunti come follower al documento attuale"
+"Elenco dei canali che verranno messi in ascolto sul documento corrente."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_wizard_invite__partner_ids
 msgid ""
 "List of partners that will be added as follower of the current document."
 msgstr ""
-"Lista di partner che verranno aggiunti come followers al documento corrente."
+"Elenco di partner che verranno aggiunti per seguire il documento corrente."
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -3159,17 +3159,17 @@ msgstr "Elencare gli utenti nel canale attuale"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_followers__channel_id
 msgid "Listener"
-msgstr "Ascoltatore"
+msgstr "In ascolto"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__channel_partner_ids
 msgid "Listeners"
-msgstr "Ascoltatori"
+msgstr "In ascolto"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_channel_partner
 msgid "Listeners of a Channel"
-msgstr "Ascoltatori di un canale"
+msgstr "In ascolto su un canale"
 
 #. module: mail
 #. openerp-web
@@ -3263,6 +3263,7 @@ msgstr "Tipo attività e-mail"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_blacklist
 #: model:ir.model.fields,field_description:mail.field_ir_model__is_mail_blacklist
+#: model_terms:ir.ui.view,arch_db:mail.model_search_view
 msgid "Mail Blacklist"
 msgstr "Lista nera e-mail"
 
@@ -3422,7 +3423,7 @@ msgid ""
 "Members of those groups will automatically added as followers. Note that "
 "they will be able to manage their subscription manually if necessary."
 msgstr ""
-"Gli iscritti a questi gruppi verranno automaticamente aggiunti ai follower. "
+"Gli iscritti a questi gruppi verranno automaticamente aggiunti a chi segue. "
 "Se necessario, saranno in grado di gestire le loro iscrizioni manualmente."
 
 #. module: mail
@@ -3961,7 +3962,7 @@ msgstr "Nessun dato da visualizzare"
 #: code:addons/mail/static/src/js/followers.js:0
 #, python-format
 msgid "No follower"
-msgstr "Nessun follower"
+msgstr "Nessuno sta seguendo"
 
 #. module: mail
 #. openerp-web
@@ -4079,7 +4080,7 @@ msgstr "Notifiche"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__notify
 msgid "Notify followers"
-msgstr "Notificare i follower"
+msgstr "Notificare chi sta seguendo"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__notify
@@ -4216,7 +4217,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/followers.js:0
 #, python-format
 msgid "One follower"
-msgstr "Un follower"
+msgstr "Uno sta seguendo"
 
 #. module: mail
 #. openerp-web
@@ -5072,7 +5073,7 @@ msgstr "Pianifica"
 #: code:addons/mail/static/src/js/activity.js:0
 #, python-format
 msgid "Schedule Activity"
-msgstr "Pianifica Attività"
+msgstr "Pianifica attività"
 
 #. module: mail
 #. openerp-web
@@ -5705,7 +5706,7 @@ msgstr "A (partner)"
 #. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_todo
 msgid "To Do"
-msgstr "da fare"
+msgstr "Da fare"
 
 #. module: mail
 #. openerp-web
@@ -5981,7 +5982,7 @@ msgstr "Filtro di ricerca non supportato per lo stato di moderazione"
 #: model:mail.activity.type,name:mail.mail_activity_data_upload_document
 #, python-format
 msgid "Upload Document"
-msgstr "Carica Documento"
+msgstr "Carica documento"
 
 #. module: mail
 #. openerp-web
@@ -6484,6 +6485,11 @@ msgid "assigned you an activity"
 msgstr "ti ha assegnato un'attività"
 
 #. module: mail
+#: model:mail.channel,name:mail.channel_2
+msgid "board-meetings"
+msgstr "Riunioni del board"
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/activity.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_email
@@ -6538,7 +6544,7 @@ msgstr "es. Discussione proposta"
 #: code:addons/mail/static/src/js/followers.js:0
 #, python-format
 msgid "followers"
-msgstr "follower"
+msgstr "stanno seguendo"
 
 #. module: mail
 #. openerp-web
@@ -6641,6 +6647,11 @@ msgid "or"
 msgstr "/"
 
 #. module: mail
+#: model:mail.channel,name:mail.channel_3
+msgid "rd"
+msgstr "R&S"
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/thread_widget.js:0
 #, python-format
@@ -6683,13 +6694,18 @@ msgstr "limitato agli iscritti del canale"
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid "restricted to followers"
-msgstr "limitato ai follower"
+msgstr "limitato a chi sta seguendo"
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid "restricted to known authors"
 msgstr "restricted to known authors"
+
+#. module: mail
+#: model:mail.channel,name:mail.channel_1
+msgid "sales"
+msgstr "vendite"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0

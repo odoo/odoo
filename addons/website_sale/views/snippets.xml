@@ -25,19 +25,16 @@
 </template>
 
 <template id="s_products_recently_viewed" name="Products Recently Viewed">
-    <section class="s_wsale_products_recently_viewed pt24 pb24" style="min-height: 400px;">
-        <div class="alert alert-info alert-dismissible rounded-0 fade show d-print-none css_non_editable_mode_hidden">
-            <div class="container">
-                <div class="text-center">
-                    This is a preview of the recently viewed products by the user.<br/>
-                    Once the user has seen at least one product this snippet will be visible.
-                </div>
+    <section class="s_wsale_products_recently_viewed d-none pt24 pb24" style="min-height: 400px;">
+        <div class="container">
+            <div class="alert alert-info alert-dismissible rounded-0 fade show d-print-none css_non_editable_mode_hidden o_not_editable">
+                This is a preview of the recently viewed products by the user.<br/>
+                Once the user has seen at least one product this snippet will be visible.
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"> × </button>
             </div>
-        </div>
-        <div class="container">
+
             <h3 class="text-center mb32">Recently viewed Products</h3>
-            <div class="slider o_not_editable" style="display: none;"/>
+            <div class="slider o_not_editable" style="display: none;"/> <!-- TODO master: remove deprecated inline style -->
         </div>
     </section>
 </template>
@@ -122,6 +119,7 @@
             </we-button>
         </div>
 
+        <!-- TODO remove me in master -->
         <div data-js="ProductsRecentlyViewed"
             data-selector=".s_wsale_products_recently_viewed">
         </div>

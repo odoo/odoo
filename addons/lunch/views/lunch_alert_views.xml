@@ -44,7 +44,7 @@
                         <group>
                             <field name="mode" widget="radio"/>
                             <field name="recipients" attrs="{'invisible': [['mode', '!=', 'chat']]}" widget="radio"/>
-                            <field name="location_ids" widget="many2many_tags"/>
+                            <field name="location_ids" widget="many2many_tags" required="1"/>
                             <field name="until"/>
                             <field name="active"/>
                         </group>
@@ -80,5 +80,10 @@
         <field name="domain">['|', ('active', '=', True), ('active', '=', False)]</field>
         <field name="context">{}</field>
         <field name="view_id" ref="lunch_alert_view_tree"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create new lunch alerts
+            </p>
+        </field>
     </record>
 </odoo>

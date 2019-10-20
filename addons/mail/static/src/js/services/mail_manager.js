@@ -428,7 +428,6 @@ var MailManager =  AbstractService.extend({
         return this._rpc({
             model: 'mail.message',
             method: 'unstar_all',
-            args: [[]]
         });
     },
 

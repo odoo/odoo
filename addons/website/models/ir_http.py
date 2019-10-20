@@ -253,7 +253,8 @@ class Http(models.AbstractModel):
         parent = super(Http, cls)._serve_fallback(exception)
         if parent:  # attachment
             return parent
-
+        if not request.is_frontend:
+            return False
         website_page = cls._serve_page()
         if website_page:
             return website_page
@@ -328,7 +329,12 @@ class Http(models.AbstractModel):
     def _xmlid_to_obj(cls, env, xmlid):
         website_id = env['website'].get_current_website()
         if website_id and website_id.theme_id:
-            obj = env['ir.attachment'].search([('key', '=', xmlid), ('website_id', '=', website_id.id)])
+            domain = [('key', '=', xmlid), ('website_id', '=', website_id.id)]
+            Attachment = env['ir.attachment']
+            if request.env.user.share:
+                domain.append(('public', '=', True))
+                Attachment = Attachment.sudo()
+            obj = Attachment.search(domain)
             if obj:
                 return obj[0]
 

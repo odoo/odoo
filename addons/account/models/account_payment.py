@@ -121,7 +121,7 @@ class account_payment(models.Model):
             'payment_type': 'inbound' if amount > 0 else 'outbound',
             'partner_id': invoices[0].commercial_partner_id.id,
             'partner_type': MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type],
-            'communication': invoices[0].ref or invoices[0].name,
+            'communication': invoices[0].invoice_payment_ref or invoices[0].ref or invoices[0].name,
             'invoice_ids': [(6, 0, invoices.ids)],
         })
         return rec
@@ -428,6 +428,7 @@ class account_payment(models.Model):
             'views': [(self.env.ref('account.view_move_tree').id, 'tree'), (self.env.ref('account.view_move_form').id, 'form')],
             'type': 'ir.actions.act_window',
             'domain': [('id', 'in', [x.id for x in self.reconciled_invoice_ids])],
+            'context': {'create': False},
         }
 
     def unreconcile(self):
@@ -732,6 +733,8 @@ class payment_register(models.TransientModel):
     def default_get(self, fields):
         rec = super(payment_register, self).default_get(fields)
         active_ids = self._context.get('active_ids')
+        if not active_ids:
+            return rec
         invoices = self.env['account.move'].browse(active_ids)
 
         # Check all invoices are open
@@ -782,7 +785,7 @@ class payment_register(models.TransientModel):
             'journal_id': self.journal_id.id,
             'payment_method_id': self.payment_method_id.id,
             'payment_date': self.payment_date,
-            'communication': " ".join(i.ref or i.name for i in invoices),
+            'communication': " ".join(i.invoice_payment_ref or i.ref or i.name for i in invoices),
             'invoice_ids': [(6, 0, invoices.ids)],
             'payment_type': ('inbound' if amount > 0 else 'outbound'),
             'amount': abs(amount),

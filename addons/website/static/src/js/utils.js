@@ -184,10 +184,21 @@ function prompt(options, _qweb) {
     return def;
 }
 
+function websiteDomain(self) {
+    var websiteID;
+    self.trigger_up('context_get', {
+        callback: function (ctx) {
+            websiteID = ctx['website_id'];
+        },
+    });
+    return ['|', ['website_id', '=', false], ['website_id', '=', websiteID]];
+}
+
 return {
     loadAnchors: loadAnchors,
     autocompleteWithPages: autocompleteWithPages,
     onceAllImagesLoaded: onceAllImagesLoaded,
     prompt: prompt,
+    websiteDomain: websiteDomain,
 };
 });

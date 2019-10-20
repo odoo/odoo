@@ -140,6 +140,20 @@ class TestSaleOrder(TestCommonSaleNoChart):
         self.assertEqual(invoice3.amount_total, 8 * self.product_map['serv_order'].list_price, 'Sale: second invoice total amount is wrong')
         self.assertTrue(self.sale_order.invoice_status == 'invoiced', 'Sale: SO status after invoicing everything (including the upsel) should be "invoiced"')
 
+    def test_sale_sequence(self):
+        self.env['ir.sequence'].search([
+            ('code', '=', 'sale.order'),
+        ]).write({
+            'use_date_range': True, 'prefix': 'SO/%(range_year)s/',
+        })
+        sale_order = self.sale_order.copy({'date_order': '2019-01-01'})
+        self.assertTrue(sale_order.name.startswith('SO/2019/'))
+        sale_order = self.sale_order.copy({'date_order': '2020-01-01'})
+        self.assertTrue(sale_order.name.startswith('SO/2020/'))
+        # In EU/BXL tz, this is actually already 01/01/2020
+        sale_order = self.sale_order.with_context(tz='Europe/Brussels').copy({'date_order': '2019-12-31 23:30:00'})
+        self.assertTrue(sale_order.name.startswith('SO/2020/'))
+
     def test_unlink_cancel(self):
         """ Test deleting and cancelling sales orders depending on their state and on the user's rights """
         # SO in state 'draft' can be deleted
@@ -251,22 +265,12 @@ class TestSaleOrder(TestCommonSaleNoChart):
                           'Taxes should be applied')
 
     def test_so_create_multicompany(self):
-        # Preparing test Data
+        """Check that only taxes of the right company are applied on the lines."""
         user_demo = self.env.ref('base.user_demo')
         company_1 = self.env.ref('base.main_company')
         company_2 = self.env['res.company'].create({
             'name': 'company 2',
             'parent_id': company_1.id,
-        })
-        user_demo.write({
-            'groups_id': [(4, self.env.ref('sales_team.group_sale_manager').id, False)],
-            'company_ids': [(6, False, [company_1.id])],
-            'company_id': company_1.id,
-        })
-
-        so_partner = self.env.ref('base.res_partner_2')
-        so_partner.write({
-            'property_account_position_id': False,
         })
 
         tax_company_1 = self.env['account.tax'].create({
@@ -286,16 +290,10 @@ class TestSaleOrder(TestCommonSaleNoChart):
             'taxes_id': [(6, False, [tax_company_1.id, tax_company_2.id])],
         })
 
-        # Use case
         so_1 = self.env['sale.order'].with_user(user_demo.id).create({
-            'partner_id': so_partner.id,
+            'partner_id': self.env.ref('base.res_partner_2').id,
             'company_id': company_1.id,
         })
-        so_1.invalidate_cache()
-
-        # This is what is done when importing the csv lines (on sale.order):
-        # id,order_line/product_id
-        # __export__.sale_order_37_1bb960ba,Product name
         so_1.write({
             'order_line': [(0, False, {'product_id': product_shared.product_variant_id.id, 'order_id': so_1.id})],
         })
@@ -357,3 +355,21 @@ class TestSaleOrder(TestCommonSaleNoChart):
         res = self.env['account.reconciliation.widget'].get_bank_statement_line_data([st_line3.id])
         line = res.get('lines', [{}])[0]
         self.assertEquals(line.get('sale_order_ids', []), [so.id])
+
+    def test_group_invoice(self):
+        """ Test that invoicing multiple sales order for the same customer works. """
+        # Create 3 SOs for the same partner, one of which that uses another currency
+        eur_pricelist = self.env['product.pricelist'].create({'name': 'EUR', 'currency_id': self.env.ref('base.EUR').id})
+        so1 = self.sale_order.with_context(mail_notrack=True).copy()
+        so1.pricelist_id = eur_pricelist
+        so2 = so1.copy()
+        usd_pricelist = self.env['product.pricelist'].create({'name': 'USD', 'currency_id': self.env.ref('base.USD').id})
+        so3 = so1.copy()
+        so1.pricelist_id = usd_pricelist
+        orders = so1 | so2 | so3
+        orders.action_confirm()
+        # Create the invoicing wizard and invoice all of them at once
+        wiz = self.env['sale.advance.payment.inv'].with_context(active_ids=orders.ids, open_invoices=True).create({})
+        res = wiz.create_invoices()
+        # Check that exactly 2 invoices are generated
+        self.assertEqual(len(res['domain'][0][2]),2, "Grouping invoicing 3 orders for the same partner with 2 currencies should create exactly 2 invoices")

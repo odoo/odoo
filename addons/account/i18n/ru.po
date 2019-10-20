@@ -9,7 +9,6 @@
 # Denis Baranov <baranov@itlibertas.com>, 2019
 # Gennady Marchenko <gennadym@gmail.com>, 2019
 # Oleg Kuryan <oleg@ventor.tech>, 2019
-# Максим Дронь <dronmax@gmail.com>, 2019
 # Konstantin Korovin <korovin74@gmail.com>, 2019
 # Collex100, 2019
 # sergeiruzkiicode <sergei.ruzki@icode.by>, 2019
@@ -20,13 +19,14 @@
 # Sergey Vilizhanin, 2019
 # Viktor Pogrebniak <vp@aifil.ru>, 2019
 # Vasiliy Korobatov <korobatov@gmail.com>, 2019
+# Максим Дронь <dronmax@gmail.com>, 2019
 # Martin Trigaux, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-01 12:08+0000\n"
+"POT-Creation-Date: 2019-10-07 07:11+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
 "Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
@@ -146,6 +146,11 @@ msgstr ""
 #: model:account.payment.term,name:account.account_payment_term_30days
 msgid "30 Days"
 msgstr ""
+
+#. module: account
+#: model:account.payment.term,name:account.account_payment_term_advance
+msgid "30% Advance End of Following Month"
+msgstr "30 % до конца следующего месяца"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance_60days
@@ -636,11 +641,6 @@ msgstr "<strong>Код заказчика:</strong>"
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<strong>Customer: </strong>"
 msgstr "<strong>Заказчик: </strong>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid "<strong>Description:</strong>"
-msgstr "<strong>Описание:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -8011,6 +8011,11 @@ msgid "Payment terms: 30 Days"
 msgstr ""
 
 #. module: account
+#: model:account.payment.term,note:account.account_payment_term_advance
+msgid "Payment terms: 30% Advance End of Following Month"
+msgstr ""
+
+#. module: account
 #: model:account.payment.term,note:account.account_payment_term_advance_60days
 msgid "Payment terms: 30% Now, Balance 60 Days"
 msgstr ""
@@ -9980,7 +9985,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__tag_ids
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
-#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped_sales_purchases
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
 msgid "Tax Grids"
 msgstr ""
 
@@ -10356,9 +10361,11 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__hide_payment_method
 msgid ""
-"Technical field used to hide the payment method if theselected journal has "
+"Technical field used to hide the payment method if the selected journal has "
 "only one available which is 'manual'"
 msgstr ""
+"Технические поле используется, чтобы скрыть способ оплаты, если выбранный "
+"журнал имеет только один доступный способ \"Вручную\""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move__tax_cash_basis_rec_id
@@ -10842,9 +10849,12 @@ msgstr "Дополнительная валюта, если эта провод�
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__quantity
 msgid ""
-"The optional quantity expressed by this line, eg: number of product sold.The"
-" quantity is not a legal requirement but is very useful for some reports."
+"The optional quantity expressed by this line, eg: number of product sold. "
+"The quantity is not a legal requirement but is very useful for some reports."
 msgstr ""
+"Необязательное количество отраженное в этой строке, например, количество "
+"проданных товаров. Количество не является обязательным, но оно очень полезно"
+" для некоторых отчетов."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__sequence
@@ -11072,8 +11082,8 @@ msgstr ""
 #. module: account
 #: code:addons/account/wizard/account_validate_account_move.py:0
 #, python-format
-msgid "There is no journal items in draft state to post."
-msgstr "Нет пунктов журнала в статусе черновика, чтобы отправить."
+msgid "There are no journal items in the draft state to post."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__amount_from_label_regex
@@ -12169,6 +12179,22 @@ msgstr "Вы можете только зарегистрировать плат
 #: code:addons/account/wizard/account_invoice_send.py:0
 #, python-format
 msgid "You can only send invoices."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"You can only set an account having the payable type on payment terms lines "
+"for vendor bill."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"You can only set an account having the receivable type on payment terms "
+"lines for customer invoice."
 msgstr ""
 
 #. module: account

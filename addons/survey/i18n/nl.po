@@ -4,20 +4,20 @@
 # 
 # Translators:
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # Cas Vissers <casvissers@brahoo.nl>, 2019
 # Maxim Vandenbroucke <mxv@odoo.com>, 2019
 # Charles Vervaecke <cvk@odoo.com>, 2019
 # Martin Trigaux, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-13 11:28+0000\n"
+"POT-Creation-Date: 2019-10-07 07:13+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,9 +53,39 @@ msgid "00:00"
 msgstr "00:00"
 
 #. module: survey
+#: model:survey.label,value:survey.vendor_certification_page_2_question_1_choice_4
+msgid "100$"
+msgstr "100$"
+
+#. module: survey
+#: model:survey.label,value:survey.vendor_certification_page_2_question_1_choice_1
+msgid "20$"
+msgstr "20$"
+
+#. module: survey
+#: model:survey.label,value:survey.vendor_certification_page_2_question_1_choice_5
+msgid "200$"
+msgstr "200$"
+
+#. module: survey
+#: model:survey.label,value:survey.vendor_certification_page_2_question_1_choice_6
+msgid "300$"
+msgstr "300$"
+
+#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.403
 msgid "403: Forbidden"
 msgstr "403: Verboden"
+
+#. module: survey
+#: model:survey.label,value:survey.vendor_certification_page_2_question_1_choice_2
+msgid "50$"
+msgstr "50$"
+
+#. module: survey
+#: model:survey.label,value:survey.vendor_certification_page_2_question_1_choice_3
+msgid "80$"
+msgstr "80$"
 
 #. module: survey
 #: model:mail.template,body_html:survey.mail_template_certification
@@ -429,6 +459,16 @@ msgid "A length must be positive!"
 msgstr "Lengte moet positief zijn!"
 
 #. module: survey
+#: model:survey.label,value:survey.vendor_certification_page_2_question_3_choice_4
+msgid "A little bit overpriced"
+msgstr "Lichtjes te duur"
+
+#. module: survey
+#: model:survey.label,value:survey.vendor_certification_page_2_question_3_choice_5
+msgid "A lot overpriced"
+msgstr "Veel te duur"
+
+#. module: survey
 #: model:ir.model.fields,help:survey.field_survey_label__answer_score
 msgid ""
 "A positive score indicates a correct choice; a negative or null score "
@@ -446,6 +486,12 @@ msgstr "Er heeft zich een probleem voorgedaan"
 #: model:ir.model.constraint,message:survey.constraint_survey_user_input_unique_token
 msgid "A token must be unique!"
 msgstr "Een token moet uniek zijn"
+
+#. module: survey
+#: model:survey.question,question:survey.survey_feedback_p2
+#: model:survey.question,title:survey.survey_feedback_p2
+msgid "About our ecommerce"
+msgstr "Over onze e-commerce"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__survey_access_mode
@@ -526,6 +572,11 @@ msgstr "Bijkomende e-mails"
 #: model:res.groups,name:survey.group_survey_manager
 msgid "Administrator"
 msgstr "Beheerder"
+
+#. module: survey
+#: model:survey.label,value:survey.survey_feedback_p2_q2_col3
+msgid "Agree"
+msgstr "Akkoord"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__questions_selection__all
@@ -662,6 +713,11 @@ msgid "Badge Name"
 msgstr "Naam badge"
 
 #. module: survey
+#: model:survey.label,value:survey.vendor_certification_page_2_question_2_choice_3
+msgid "Cabinet with Doors"
+msgstr "Kabinet met deuren"
+
+#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
 msgid "Cancel"
 msgstr "Annuleren"
@@ -753,6 +809,11 @@ msgid "Certifies that"
 msgstr "Certificeerd dat"
 
 #. module: survey
+#: model:survey.label,value:survey.vendor_certification_page_1_question_2_choice_1
+msgid "Chair floor protection"
+msgstr "Stoel vloerbescherming"
+
+#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result
 msgid "Chart"
 msgstr "Grafiek"
@@ -789,6 +850,7 @@ msgstr "Gesloten"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_kanban
+#: model:survey.label,value:survey.vendor_certification_page_1_question_3_choice_1
 msgid "Color"
 msgstr "Kleur"
 
@@ -810,7 +872,7 @@ msgstr "Opmerking"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__comment_count_as_answer
 msgid "Comment Field is an Answer Choice"
-msgstr "Opmerkingen veld is een antwoord Keuze"
+msgstr "Opmerkingen veld is een antwoord keuze"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__comments_message
@@ -835,6 +897,11 @@ msgid "Compose Email"
 msgstr "E-mail opstellen"
 
 #. module: survey
+#: model:survey.label,value:survey.vendor_certification_page_1_question_2_choice_3
+msgid "Conference chair"
+msgstr "Conferentiestoel"
+
+#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.sfinished
 msgid "Congratulations, you have passed the test!"
 msgstr "Proficiat, u bent geslaagd voor de test!"
@@ -855,9 +922,19 @@ msgid "Contents"
 msgstr "Inhoud"
 
 #. module: survey
+#: model:survey.label,value:survey.vendor_certification_page_2_question_2_choice_1
+msgid "Corner Desk Right Sit"
+msgstr "Hoekbureau rechterzitting"
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__answer_is_correct
 msgid "Correct"
 msgstr "Correct"
+
+#. module: survey
+#: model:survey.label,value:survey.vendor_certification_page_2_question_3_choice_3
+msgid "Correctly priced"
+msgstr "Correct geprijsd"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__create_uid
@@ -934,6 +1011,11 @@ msgid "Customers will receive the same token."
 msgstr "Klanten ontvangen hetzelfde token"
 
 #. module: survey
+#: model:survey.label,value:survey.vendor_certification_page_1_question_2_choice_5
+msgid "Customizable Lamp"
+msgstr "Personaliseerbare lamp"
+
+#. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__date
 #: model:ir.model.fields.selection,name:survey.selection__survey_user_input_line__answer_type__date
 msgid "Date"
@@ -999,14 +1081,20 @@ msgid "Design easily your survey, send invitations and analyze answers."
 msgstr ""
 
 #. module: survey
-#: model:ir.ui.menu,name:survey.menu_survey_response_line_form
-msgid "Detailed Answers"
-msgstr ""
+#: model:survey.label,value:survey.vendor_certification_page_2_question_2_choice_2
+msgid "Desk Combination"
+msgstr "Bureaucombinatie"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_user_input_line
-msgid "Detailled Answers"
-msgstr ""
+#: model:ir.ui.menu,name:survey.menu_survey_response_line_form
+msgid "Detailed Answers"
+msgstr "Gedetailleerde antwoorden"
+
+#. module: survey
+#: model:survey.label,value:survey.survey_feedback_p2_q2_col2
+msgid "Disagree"
+msgstr "Niet akkoord"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__display_mode
@@ -1034,9 +1122,33 @@ msgid "Display mode of simple choice questions."
 msgstr "Weergave modus voor gemakkelijke keuzevragen."
 
 #. module: survey
+#: model:survey.question,question:survey.vendor_certification_page_1_question_1
+#: model:survey.question,title:survey.vendor_certification_page_1_question_1
+msgid "Do we sell Acoustic Bloc Screens?"
+msgstr "Verkopen we akoestische blokschermen?"
+
+#. module: survey
+#: model:survey.question,question:survey.survey_feedback_p2_q3
+#: model:survey.question,title:survey.survey_feedback_p2_q3
+msgid "Do you have any other comments, questions, or concerns ?"
+msgstr "Heeft u nog opmerkingen, vragen of bezorgdheden?"
+
+#. module: survey
+#: model:survey.question,question:survey.vendor_certification_page_1_question_5
+#: model:survey.question,title:survey.vendor_certification_page_1_question_5
+msgid "Do you think we have missing products in our catalog? (not rated)"
+msgstr ""
+"Denkt u dat er producten ontbreken in ons assortiment? (niet beoordeeld)"
+
+#. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__state__draft
 msgid "Draft"
 msgstr "Concept"
+
+#. module: survey
+#: model:survey.label,value:survey.vendor_certification_page_1_question_2_choice_4
+msgid "Drawer"
+msgstr "Lade"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_kanban
@@ -1084,6 +1196,11 @@ msgid "Error message"
 msgstr "Foutmelding"
 
 #. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
+msgid "Except Test Entries"
+msgstr ""
+
+#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Exception Activities"
 msgstr "Uitzondering activiteiten"
@@ -1097,6 +1214,11 @@ msgstr "Bestaande relatie"
 #: model:ir.model.fields,field_description:survey.field_survey_invite__existing_emails
 msgid "Existing emails"
 msgstr "Bestaande e-mails"
+
+#. module: survey
+#: model:survey.label,value:survey.vendor_certification_page_1_question_2_choice_2
+msgid "Fanta"
+msgstr "Fanta"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result_choice
@@ -1149,6 +1271,12 @@ msgid "Gamification Challenge"
 msgstr "Gamificatie uitdaging"
 
 #. module: survey
+#: model:survey.question,question:survey.survey_feedback_p1
+#: model:survey.question,title:survey.survey_feedback_p1
+msgid "General information"
+msgstr "Algemene informatie"
+
+#. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__category__default
 msgid "Generic Survey"
 msgstr "Generieke enquête"
@@ -1157,6 +1285,11 @@ msgstr "Generieke enquête"
 #: model:ir.model.fields,field_description:survey.field_survey_survey__certification_give_badge
 msgid "Give Badge"
 msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.survey_feedback_p2_q1_sug4
+msgid "Good value for money"
+msgstr "Goede waarde voor geld"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_search
@@ -1171,6 +1304,45 @@ msgstr "Groepeer op"
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
 msgid "Handle existing"
 msgstr "Handel bestaande"
+
+#. module: survey
+#: model:survey.label,value:survey.vendor_certification_page_1_question_3_choice_2
+msgid "Height"
+msgstr "Hoogte"
+
+#. module: survey
+#: model:survey.label,value:survey.survey_feedback_p2_q1_sug1
+msgid "High quality"
+msgstr "Hoge kwaliteit"
+
+#. module: survey
+#: model:survey.question,question:survey.survey_feedback_p1_q3
+#: model:survey.question,title:survey.survey_feedback_p1_q3
+msgid "How frequently do you buy products online ?"
+msgstr "Hoe frequent koopt u online producten?"
+
+#. module: survey
+#: model:survey.question,question:survey.survey_feedback_p1_q4
+#: model:survey.question,title:survey.survey_feedback_p1_q4
+msgid "How many times did you order products on our website ?"
+msgstr "Hoe vaak heeft u producten besteld op onze website?"
+
+#. module: survey
+#: model:survey.question,question:survey.vendor_certification_page_1_question_4
+#: model:survey.question,title:survey.vendor_certification_page_1_question_4
+msgid "How many versions of the Corner Desk do we have?"
+msgstr "Hoeveel versies van de hoekbureau hebben we?"
+
+#. module: survey
+#: model:survey.question,question:survey.vendor_certification_page_2_question_1
+#: model:survey.question,title:survey.vendor_certification_page_2_question_1
+msgid "How much do we sell our Cable Management Box?"
+msgstr "Voor hoeveel verkopen we onze kabelbeheer box?"
+
+#. module: survey
+#: model:survey.label,value:survey.survey_feedback_p2_q2_row5
+msgid "I have added products to my wishlist"
+msgstr "Ik heb producten toegevoegd aan mijn wenslijst"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__id
@@ -1224,6 +1396,25 @@ msgstr ""
 
 #. module: survey
 #: code:addons/survey/models/survey_question.py:0
+#: model:survey.question,comments_message:survey.survey_feedback_p1
+#: model:survey.question,comments_message:survey.survey_feedback_p1_q1
+#: model:survey.question,comments_message:survey.survey_feedback_p1_q2
+#: model:survey.question,comments_message:survey.survey_feedback_p1_q3
+#: model:survey.question,comments_message:survey.survey_feedback_p1_q4
+#: model:survey.question,comments_message:survey.survey_feedback_p2
+#: model:survey.question,comments_message:survey.survey_feedback_p2_q1
+#: model:survey.question,comments_message:survey.survey_feedback_p2_q2
+#: model:survey.question,comments_message:survey.survey_feedback_p2_q3
+#: model:survey.question,comments_message:survey.vendor_certification_page_1
+#: model:survey.question,comments_message:survey.vendor_certification_page_1_question_1
+#: model:survey.question,comments_message:survey.vendor_certification_page_1_question_2
+#: model:survey.question,comments_message:survey.vendor_certification_page_1_question_3
+#: model:survey.question,comments_message:survey.vendor_certification_page_1_question_4
+#: model:survey.question,comments_message:survey.vendor_certification_page_1_question_5
+#: model:survey.question,comments_message:survey.vendor_certification_page_2
+#: model:survey.question,comments_message:survey.vendor_certification_page_2_question_1
+#: model:survey.question,comments_message:survey.vendor_certification_page_2_question_2
+#: model:survey.question,comments_message:survey.vendor_certification_page_2_question_3
 #, python-format
 msgid "If other, please specify:"
 msgstr "Indien anders, specificeer: "
@@ -1244,9 +1435,19 @@ msgid "If you wish, you can"
 msgstr "Als je wenst kan je"
 
 #. module: survey
+#: model:survey.label,value:survey.survey_feedback_p2_q1_sug6
+msgid "Impractical"
+msgstr "Onhandig"
+
+#. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__state__open
 msgid "In Progress"
 msgstr "In behandeling"
+
+#. module: survey
+#: model:survey.label,value:survey.survey_feedback_p2_q1_sug7
+msgid "Ineffective"
+msgstr "Niet effectief"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_email
@@ -1300,6 +1501,11 @@ msgid "Is time limit reached?"
 msgstr "Is de tijdslimiet bereikt?"
 
 #. module: survey
+#: model:survey.label,value:survey.survey_feedback_p2_q2_row2
+msgid "It is easy to find the product that I want"
+msgstr "Het is gemakkelijk om het product te vinden dat ik wil"
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label__sequence
 msgid "Label Sequence order"
 msgstr "Label volgorde"
@@ -1317,6 +1523,11 @@ msgid ""
 msgstr ""
 "Labels gebruikt voor voorgestelde keuzes: gemakkelijke keuze, multiple "
 "choice en kolommen of matrix"
+
+#. module: survey
+#: model:survey.label,value:survey.vendor_certification_page_2_question_2_choice_4
+msgid "Large Desk"
+msgstr "Grote bureau"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite____last_update
@@ -1364,6 +1575,11 @@ msgid "Layout"
 msgstr "Layout"
 
 #. module: survey
+#: model:survey.label,value:survey.vendor_certification_page_1_question_3_choice_4
+msgid "Legs"
+msgstr "Poten"
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__is_attempts_limited
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__is_attempts_limited
 msgid "Limited number of attempts"
@@ -1394,7 +1610,7 @@ msgstr "Verplicht antwoord"
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_user_input__input_type__manually
 msgid "Manual"
-msgstr "Manueel"
+msgstr "Handmatig"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__matrix
@@ -1523,6 +1739,11 @@ msgid "Multiple choices per row"
 msgstr "Meerkeuzeopties per rij"
 
 #. module: survey
+#: model:survey.survey,title:survey.vendor_certification
+msgid "MyCompany Vendor Certification"
+msgstr "MyCompany leverancier certificering"
+
+#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "New"
 msgstr "Nieuw"
@@ -1558,6 +1779,11 @@ msgid "Next question"
 msgstr "Volgende vraag"
 
 #. module: survey
+#: model:survey.label,value:survey.vendor_certification_page_1_question_1_choice_1
+msgid "No"
+msgstr "Nee"
+
+#. module: survey
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid "No attempts left."
@@ -1585,7 +1811,6 @@ msgstr "Geen gebruiker invoerregels gevonden"
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_user_input
-#: model_terms:ir.actions.act_window,help:survey.action_survey_user_input_notest
 msgid "Nobody has replied to your surveys yet"
 msgstr "Nog niemand heeft geantwoord op uw enquêtes "
 
@@ -1615,6 +1840,11 @@ msgstr "Aantal pogingen"
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Number of columns"
 msgstr "Aantal kolommen"
+
+#. module: survey
+#: model:survey.label,value:survey.vendor_certification_page_1_question_3_choice_5
+msgid "Number of drawers"
+msgstr "Aantal lades"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_has_error_counter
@@ -1652,6 +1882,31 @@ msgid "Occurence"
 msgstr "Aantal keer"
 
 #. module: survey
+#: model:survey.label,value:survey.vendor_certification_page_2_question_2_choice_5
+msgid "Office Chair Black"
+msgstr "Kantoorstoel zwart"
+
+#. module: survey
+#: model:survey.label,value:survey.survey_feedback_p1_q3_sug1
+msgid "Once a day"
+msgstr "Eenmaal per dag"
+
+#. module: survey
+#: model:survey.label,value:survey.survey_feedback_p1_q3_sug3
+msgid "Once a month"
+msgstr "Eenmaal per maand"
+
+#. module: survey
+#: model:survey.label,value:survey.survey_feedback_p1_q3_sug2
+msgid "Once a week"
+msgstr "Eenmaal per week"
+
+#. module: survey
+#: model:survey.label,value:survey.survey_feedback_p1_q3_sug4
+msgid "Once a year"
+msgstr "Eenmaal per jaar"
+
+#. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__matrix_subtype__simple
 msgid "One choice per row"
 msgstr "één keuze per rij"
@@ -1678,6 +1933,16 @@ msgid "Options"
 msgstr "Opties"
 
 #. module: survey
+#: model:survey.label,value:survey.survey_feedback_p2_q1_sug9
+msgid "Other"
+msgstr "Overige"
+
+#. module: survey
+#: model:survey.label,value:survey.survey_feedback_p1_q3_sug5
+msgid "Other (answer in comment)"
+msgstr "Andere (antwoord in reactie)"
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__mail_server_id
 msgid "Outgoing mail server"
 msgstr "Uitgaande mailserver"
@@ -1688,6 +1953,11 @@ msgstr "Uitgaande mailserver"
 #, python-format
 msgid "Overall Performance %.2f%s"
 msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.survey_feedback_p2_q1_sug5
+msgid "Overpriced"
+msgstr "Te duur"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__page_id
@@ -1716,11 +1986,10 @@ msgstr "Neem deel aan ${object.survey_id.title} enquete"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_user_input
-#: model:ir.actions.act_window,name:survey.action_survey_user_input_notest
 #: model:ir.ui.menu,name:survey.menu_survey_type_form1
 #: model:ir.ui.menu,name:survey.survey_menu_user_inputs
 msgid "Participations"
-msgstr ""
+msgstr "Deelnames"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__partner_id
@@ -1754,6 +2023,11 @@ msgid ""
 msgstr ""
 
 #. module: survey
+#: model:survey.label,value:survey.survey_feedback_p2_q1_sug8
+msgid "Poor quality"
+msgstr "Slechte kwaliteit"
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__question_ids
 msgid "Predefined Questions"
 msgstr "Voorgedefinieerde vragen"
@@ -1769,10 +2043,22 @@ msgid "Previous question"
 msgstr "Vorige vraag"
 
 #. module: survey
+#: model:survey.question,question:survey.vendor_certification_page_2
+#: model:survey.question,title:survey.vendor_certification_page_2
+msgid "Prices"
+msgstr "Prijzen"
+
+#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_form
 msgid "Print"
 msgstr "Afdrukken"
+
+#. module: survey
+#: model:survey.question,question:survey.vendor_certification_page_1
+#: model:survey.question,title:survey.vendor_certification_page_1
+msgid "Products"
+msgstr "Producten"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__survey_url
@@ -1990,6 +2276,25 @@ msgid "See results"
 msgstr "Bekijk resultaten"
 
 #. module: survey
+#: model:survey.question,question:survey.vendor_certification_page_1_question_3
+#: model:survey.question,title:survey.vendor_certification_page_1_question_3
+msgid "Select all the available customizations for our Customizable Desk"
+msgstr ""
+"Selecteer alle mogelijke personalisaties voor onze gepersonaliseerde bureau"
+
+#. module: survey
+#: model:survey.question,question:survey.vendor_certification_page_1_question_2
+#: model:survey.question,title:survey.vendor_certification_page_1_question_2
+msgid "Select all the existing products"
+msgstr "Selecteer alle bestaande producten"
+
+#. module: survey
+#: model:survey.question,question:survey.vendor_certification_page_2_question_2
+#: model:survey.question,title:survey.vendor_certification_page_2_question_2
+msgid "Select all the the products that sell for 100$ or more"
+msgstr "Selecteer alle producten die verkopen voor 100$ of meer"
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__questions_selection
 #: model:ir.model.fields,field_description:survey.field_survey_survey__questions_selection
 msgid "Selection"
@@ -2089,7 +2394,7 @@ msgstr "Startdatum en tijd"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "State"
-msgstr "Provincie / Staat"
+msgstr "Status"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__state
@@ -2153,7 +2458,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:survey.action_survey_label_form
 #: model:ir.ui.menu,name:survey.menu_survey_label_form1
 msgid "Suggested Values"
-msgstr ""
+msgstr "Voorgestelde waardes"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__value_suggested
@@ -2273,6 +2578,21 @@ msgid "Test Entry"
 msgstr "Test invoer"
 
 #. module: survey
+#: model_terms:survey.question,description:survey.vendor_certification_page_2
+msgid "Test your knowledge of our prices."
+msgstr "Test uw kennis van onze prijzen."
+
+#. module: survey
+#: model_terms:survey.question,description:survey.vendor_certification_page_1
+msgid "Test your knowledge of your products!"
+msgstr "Test uw kennis van uw producten!"
+
+#. module: survey
+#: model_terms:survey.survey,description:survey.vendor_certification
+msgid "Test your vendor skills!."
+msgstr "Test uw leverancier skills!"
+
+#. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_user_input_line__answer_type__text
 msgid "Text"
 msgstr "Tekst"
@@ -2300,6 +2620,25 @@ msgstr "Het antwoord moet van het juiste type zijn"
 
 #. module: survey
 #: code:addons/survey/models/survey_question.py:0
+#: model:survey.question,validation_error_msg:survey.survey_feedback_p1
+#: model:survey.question,validation_error_msg:survey.survey_feedback_p1_q1
+#: model:survey.question,validation_error_msg:survey.survey_feedback_p1_q2
+#: model:survey.question,validation_error_msg:survey.survey_feedback_p1_q3
+#: model:survey.question,validation_error_msg:survey.survey_feedback_p1_q4
+#: model:survey.question,validation_error_msg:survey.survey_feedback_p2
+#: model:survey.question,validation_error_msg:survey.survey_feedback_p2_q1
+#: model:survey.question,validation_error_msg:survey.survey_feedback_p2_q2
+#: model:survey.question,validation_error_msg:survey.survey_feedback_p2_q3
+#: model:survey.question,validation_error_msg:survey.vendor_certification_page_1
+#: model:survey.question,validation_error_msg:survey.vendor_certification_page_1_question_1
+#: model:survey.question,validation_error_msg:survey.vendor_certification_page_1_question_2
+#: model:survey.question,validation_error_msg:survey.vendor_certification_page_1_question_3
+#: model:survey.question,validation_error_msg:survey.vendor_certification_page_1_question_4
+#: model:survey.question,validation_error_msg:survey.vendor_certification_page_1_question_5
+#: model:survey.question,validation_error_msg:survey.vendor_certification_page_2
+#: model:survey.question,validation_error_msg:survey.vendor_certification_page_2_question_1
+#: model:survey.question,validation_error_msg:survey.vendor_certification_page_2_question_2
+#: model:survey.question,validation_error_msg:survey.vendor_certification_page_2_question_3
 #, python-format
 msgid "The answer you entered is not valid."
 msgstr "Het antwoord dat u heeft ingevuld is ongeldig."
@@ -2317,6 +2656,11 @@ msgstr ""
 #: model:ir.model.constraint,message:survey.constraint_survey_survey_badge_uniq
 msgid "The badge for each survey should be unique!"
 msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.survey_feedback_p2_q2_row4
+msgid "The checkout process is clear and secure"
+msgstr "Het checkout proces is duidelijk en veilig"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__description
@@ -2350,6 +2694,11 @@ msgstr ""
 " configuratie."
 
 #. module: survey
+#: model:survey.label,value:survey.survey_feedback_p2_q2_row1
+msgid "The new layout and design is fresh and up-to-date"
+msgstr "De nieuwe lay-out en design zijn nieuw en up-to-date"
+
+#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.403
 msgid "The page you were looking for could not be authorized."
 msgstr "De pagina waarnaar u zocht is niet geautoriseerd."
@@ -2366,6 +2715,11 @@ msgid ""
 msgstr ""
 "De tijdslimiet moet een positief getal zijn indien de enquête een "
 "tijdslimiet heeft."
+
+#. module: survey
+#: model:survey.label,value:survey.survey_feedback_p2_q2_row3
+msgid "The tool to compare the products is useful to make a choice"
+msgstr "De tool om producten te vergelijken is handig om een keuze te maken"
 
 #. module: survey
 #: code:addons/survey/controllers/main.py:0
@@ -2431,9 +2785,51 @@ msgstr "Deze vraag moet ingevuld worden en kan niet overgeslagen worden."
 
 #. module: survey
 #: code:addons/survey/models/survey_question.py:0
+#: model:survey.question,constr_error_msg:survey.survey_feedback_p1
+#: model:survey.question,constr_error_msg:survey.survey_feedback_p1_q1
+#: model:survey.question,constr_error_msg:survey.survey_feedback_p1_q2
+#: model:survey.question,constr_error_msg:survey.survey_feedback_p1_q3
+#: model:survey.question,constr_error_msg:survey.survey_feedback_p1_q4
+#: model:survey.question,constr_error_msg:survey.survey_feedback_p2
+#: model:survey.question,constr_error_msg:survey.survey_feedback_p2_q1
+#: model:survey.question,constr_error_msg:survey.survey_feedback_p2_q2
+#: model:survey.question,constr_error_msg:survey.survey_feedback_p2_q3
+#: model:survey.question,constr_error_msg:survey.vendor_certification_page_1
+#: model:survey.question,constr_error_msg:survey.vendor_certification_page_1_question_1
+#: model:survey.question,constr_error_msg:survey.vendor_certification_page_1_question_2
+#: model:survey.question,constr_error_msg:survey.vendor_certification_page_1_question_3
+#: model:survey.question,constr_error_msg:survey.vendor_certification_page_1_question_4
+#: model:survey.question,constr_error_msg:survey.vendor_certification_page_1_question_5
+#: model:survey.question,constr_error_msg:survey.vendor_certification_page_2
+#: model:survey.question,constr_error_msg:survey.vendor_certification_page_2_question_1
+#: model:survey.question,constr_error_msg:survey.vendor_certification_page_2_question_2
+#: model:survey.question,constr_error_msg:survey.vendor_certification_page_2_question_3
 #, python-format
 msgid "This question requires an answer."
 msgstr "Deze vraag moet beantwoord worden."
+
+#. module: survey
+#: model_terms:survey.question,description:survey.survey_feedback_p1
+msgid ""
+"This section is about general informations about you. Answering them helps "
+"qualifying your answers."
+msgstr ""
+"Deze sectie is voor algemene informatie over u. Het beantwoorden helpt bij "
+"het in aanmerking komen van uw antwoorden."
+
+#. module: survey
+#: model_terms:survey.question,description:survey.survey_feedback_p2
+msgid "This section is about our eCommerce experience itself."
+msgstr "Deze sectie gaat over uw e-commerce ervaring."
+
+#. module: survey
+#: model_terms:survey.survey,description:survey.survey_feedback
+msgid ""
+"This survey allows you to give a feedback about your experience with our eCommerce solution.\n"
+"    Filling it helps us improving your experience."
+msgstr ""
+"Deze enquête geeft u de mogelijkheid om feedback te geven over uw ervaringen met onze e-commerce oplossing.\n"
+"Het invullen helpt ons bij het verbeteren van uw ervaring."
 
 #. module: survey
 #: code:addons/survey/wizard/survey_invite.py:0
@@ -2477,6 +2873,16 @@ msgid "Today Activities"
 msgstr "Activiteiten van vandaag"
 
 #. module: survey
+#: model:survey.label,value:survey.survey_feedback_p2_q2_col4
+msgid "Totally agree"
+msgstr "Helemaal mee eens"
+
+#. module: survey
+#: model:survey.label,value:survey.survey_feedback_p2_q2_col1
+msgid "Totally disagree"
+msgstr "Helemaal niet mee eens"
+
+#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_search
 msgid "Type"
 msgstr "Soort"
@@ -2505,9 +2911,19 @@ msgstr ""
 "afzender."
 
 #. module: survey
+#: model:survey.label,value:survey.vendor_certification_page_2_question_3_choice_2
+msgid "Underpriced"
+msgstr "Te goedkoop"
+
+#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.sfinished
 msgid "Unfortunately, you have failed the test."
 msgstr "Helaas bent u niet geslaagd voor de test."
+
+#. module: survey
+#: model:survey.label,value:survey.survey_feedback_p2_q1_sug3
+msgid "Unique"
+msgstr "Uniek"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_unread
@@ -2544,9 +2960,19 @@ msgstr ""
 "vragen van deze sectie."
 
 #. module: survey
+#: model:survey.label,value:survey.survey_feedback_p2_q1_sug2
+msgid "Useful"
+msgstr "Handig"
+
+#. module: survey
 #: model:res.groups,name:survey.group_survey_user
 msgid "User"
 msgstr "Gebruiker"
+
+#. module: survey
+#: model:survey.survey,title:survey.survey_feedback
+msgid "User Feedback Form"
+msgstr "Gebruik feedback formulier"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__user_input_id
@@ -2592,6 +3018,11 @@ msgid "Validation Error message"
 msgstr "Bevestiging foutbericht"
 
 #. module: survey
+#: model:survey.label,value:survey.vendor_certification_page_2_question_3_choice_1
+msgid "Very underpriced"
+msgstr "Veel te goedkoop"
+
+#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result_choice
 msgid "Vote"
 msgstr "Stem"
@@ -2607,6 +3038,43 @@ msgid "Website communication history"
 msgstr "Website communicatie geschiedenis"
 
 #. module: survey
+#: model:survey.question,question:survey.vendor_certification_page_2_question_3
+#: model:survey.question,title:survey.vendor_certification_page_2_question_3
+msgid "What do you think about our prices (not rated)?"
+msgstr "Wat denkt u van onze prijzen (niet beoordeeld)?"
+
+#. module: survey
+#: model:survey.question,question:survey.survey_feedback_p2_q2
+#: model:survey.question,title:survey.survey_feedback_p2_q2
+msgid "What do your think about our new eCommerce ?"
+msgstr "Wat denkt u van onze nieuwe e-commerce?"
+
+#. module: survey
+#: model:survey.question,question:survey.survey_feedback_p1_q2
+#: model:survey.question,title:survey.survey_feedback_p1_q2
+msgid "When is your date of birth ?"
+msgstr "Wat is uw geboortedatum?"
+
+#. module: survey
+#: model:survey.question,question:survey.survey_feedback_p1_q1
+#: model:survey.question,title:survey.survey_feedback_p1_q1
+msgid "Where do you live ?"
+msgstr "Waar heeft u geleefd?"
+
+#. module: survey
+#: model:survey.question,question:survey.survey_feedback_p2_q1
+#: model:survey.question,title:survey.survey_feedback_p2_q1
+msgid "Which of the following words would you use to describe our products ?"
+msgstr ""
+"Welke van de volgende woorden zou u gebruiken om onze producten te "
+"omschrijven?"
+
+#. module: survey
+#: model:survey.label,value:survey.vendor_certification_page_1_question_3_choice_3
+msgid "Width"
+msgstr "Breedte"
+
+#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid ""
 "YYYY-MM-DD\n"
@@ -2623,6 +3091,11 @@ msgid ""
 msgstr ""
 "YYYY-MM-DD hh:mm:ss\n"
 "                                        <i class=\"fa fa-calendar fa-2x\" role=\"img\" aria-label=\"Kalender\" title=\"Kalender\"/>"
+
+#. module: survey
+#: model:survey.label,value:survey.vendor_certification_page_1_question_1_choice_2
+msgid "Yes"
+msgstr "Ja"
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form

@@ -47,6 +47,7 @@ class AccountBankStmtCashWizard(models.Model):
     @api.depends('start_bank_stmt_ids', 'end_bank_stmt_ids')
     def _compute_currency(self):
         for cashbox in self:
+            cashbox.currency_id = False
             if cashbox.end_bank_stmt_ids:
                 cashbox.currency_id = cashbox.end_bank_stmt_ids[0].currency_id
             if cashbox.start_bank_stmt_ids:

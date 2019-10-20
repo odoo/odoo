@@ -969,7 +969,7 @@
                                         <field name="auto_post"
                                                attrs="{'invisible': [('type', '!=', 'entry')], 'readonly': [('reversed_entry_id', '!=', False)]}"/>
                                         <field name="reversed_entry_id"
-                                               attrs="{'invisible': [('type', '!=', 'entry')]}"/>
+                                               attrs="{'invisible': ['|', ('reversed_entry_id', '=', False), ('type', '!=', 'entry')]}"/>
                                         <field name="to_check"
                                                attrs="{'invisible': [('type', '!=', 'entry')]}" />
                                     </group>

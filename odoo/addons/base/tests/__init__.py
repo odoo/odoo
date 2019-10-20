@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from . import test_acl
 from . import test_api
 from . import test_base
@@ -38,3 +39,4 @@ from . import test_res_partner_bank
 from . import test_reports
 from . import test_tests_tags
 from . import test_base_document_layout
+from . import test_form_create

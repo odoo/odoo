@@ -840,7 +840,7 @@ class TestAccountMoveOutInvoiceOnchanges(InvoiceTestCommon):
     def test_out_invoice_create_refund(self):
         self.invoice.post()
 
-        move_reversal = self.env['account.move.reversal'].with_context(active_ids=self.invoice.ids).create({
+        move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=self.invoice.ids).create({
             'date': fields.Date.from_string('2019-02-01'),
             'reason': 'no reason',
             'refund_method': 'refund',
@@ -886,7 +886,7 @@ class TestAccountMoveOutInvoiceOnchanges(InvoiceTestCommon):
             'invoice_payment_state': 'not_paid',
         })
 
-        move_reversal = self.env['account.move.reversal'].with_context(active_ids=self.invoice.ids).create({
+        move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=self.invoice.ids).create({
             'date': fields.Date.from_string('2019-02-01'),
             'reason': 'no reason',
             'refund_method': 'cancel',
@@ -943,7 +943,7 @@ class TestAccountMoveOutInvoiceOnchanges(InvoiceTestCommon):
         self.invoice.post()
 
         # The currency rate changed from 1/3 to 1/2.
-        move_reversal = self.env['account.move.reversal'].with_context(active_ids=self.invoice.ids).create({
+        move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=self.invoice.ids).create({
             'date': fields.Date.from_string('2017-01-01'),
             'reason': 'no reason',
             'refund_method': 'refund',
@@ -999,7 +999,7 @@ class TestAccountMoveOutInvoiceOnchanges(InvoiceTestCommon):
             'invoice_payment_state': 'not_paid',
         })
 
-        move_reversal = self.env['account.move.reversal'].with_context(active_ids=self.invoice.ids).create({
+        move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=self.invoice.ids).create({
             'date': fields.Date.from_string('2017-01-01'),
             'reason': 'no reason',
             'refund_method': 'cancel',

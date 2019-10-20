@@ -78,7 +78,8 @@ $-editor-messages-margin-x: 2%;
     display: block!important;
 }
 
-[data-oe-type=html].oe_no_empty:empty {
+// TODO: in master check if the class / rule is relevant at all
+.editor_enable [data-oe-type=html].oe_no_empty:empty {
     height: 16px!important;
 }
 
@@ -134,21 +135,5 @@ table.editorbar-panel {
     }
     .o_facebook_alert .o_add_facebook_page {
         cursor: pointer;
-    }
-}
-
-// User modal in edit mode
-.editor_enable, .note-editable {
-    .modal:not(.o_technical_modal) {
-        top: 40px;
-        right: 0;
-        bottom: 0;
-        left: $o-we-sidebar-width;
-        width: auto;
-        height: auto;
-
-        .modal-dialog {
-            padding: 0.5rem 0; // To use more editor space if necessary
-        }
     }
 }

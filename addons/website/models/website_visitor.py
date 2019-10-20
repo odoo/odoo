@@ -159,7 +159,7 @@ class WebsiteVisitor(models.Model):
             'context': ctx,
         }
 
-    def _get_visitor_from_request(self):
+    def _get_visitor_from_request(self, force_create=False):
         """ Return the visitor as sudo from the request if there is a visitor_uuid cookie.
             It is possible that the partner has changed or has disconnected.
             In that case the cookie is still referencing the old visitor and need to be replaced
@@ -167,7 +167,8 @@ class WebsiteVisitor(models.Model):
 
         # This function can be called in json with mobile app.
         # In case of mobile app, no uid is set on the jsonRequest env.
-        if not request or not request.env.uid:
+        # In case of multi db, _env is None on request, and request.env unbound.
+        if not request:
             return None
         Visitor = self.env['website.visitor'].sudo()
         visitor = Visitor
@@ -175,27 +176,23 @@ class WebsiteVisitor(models.Model):
         if access_token:
             visitor = Visitor.with_context(active_test=False).search([('access_token', '=', access_token)])
 
-        if not request.env.user._is_public():
-            partner_id = request.env.user.partner_id
-            if not visitor or visitor.partner_id != partner_id:
+        if not self.env.user._is_public():
+            partner_id = self.env.user.partner_id
+            if not visitor or visitor.partner_id and visitor.partner_id != partner_id:
                 # Partner and no cookie or wrong cookie
                 visitor = Visitor.with_context(active_test=False).search([('partner_id', '=', partner_id.id)])
         elif visitor and visitor.partner_id:
             # Cookie associated to a Partner
             visitor = Visitor
-        return visitor
 
-    def _get_visitor_from_request_or_create(self):
-        """ Return a tuple (visitor, response), see _get_visitor_from_request
-            If there is no visitor creates it and ensure the consistancy of the cookie. """
-        visitor_sudo = self._get_visitor_from_request()
-        if not visitor_sudo:
-            visitor_sudo = self._create_visitor()
-        return visitor_sudo
+        if force_create and not visitor:
+            visitor = self._create_visitor()
+
+        return visitor
 
     def _handle_webpage_dispatch(self, response, website_page):
         # get visitor. Done here to avoid having to do it multiple times in case of override.
-        visitor_sudo = self._get_visitor_from_request_or_create()
+        visitor_sudo = self._get_visitor_from_request(force_create=True)
         if request.httprequest.cookies.get('visitor_uuid', '') != visitor_sudo.access_token:
             expiration_date = datetime.now() + timedelta(days=365)
             response.set_cookie('visitor_uuid', visitor_sudo.access_token, expires=expiration_date)
@@ -252,18 +249,20 @@ class WebsiteVisitor(models.Model):
 
     def _update_visitor_last_visit(self):
         """ We need to do this part here to avoid concurrent updates error. """
-        with registry(self.env.cr.dbname).cursor() as cr:
-            date_now = datetime.now()
-            query = "UPDATE website_visitor SET "
-            if self.last_connection_datetime < (date_now - timedelta(hours=8)):
-                query += "visit_count = visit_count + 1,"
-            query += """
-                active = True,
-                last_connection_datetime = %s
-                WHERE id = %s
-            """
-            try:
-                cr.execute(query, (date_now, self.id), log_exceptions=False)
-                cr.commit()
-            except Exception:
-                cr.rollback()
+        try:
+            with self.env.cr.savepoint():
+                query_lock = "SELECT * FROM website_visitor where id = %s FOR UPDATE NOWAIT"
+                self.env.cr.execute(query_lock, (self.id,), log_exceptions=False)
+
+                date_now = datetime.now()
+                query = "UPDATE website_visitor SET "
+                if self.last_connection_datetime < (date_now - timedelta(hours=8)):
+                    query += "visit_count = visit_count + 1,"
+                query += """
+                    active = True,
+                    last_connection_datetime = %s
+                    WHERE id = %s
+                """
+                self.env.cr.execute(query, (date_now, self.id), log_exceptions=False)
+        except Exception:
+            pass

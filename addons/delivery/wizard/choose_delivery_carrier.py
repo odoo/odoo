@@ -91,5 +91,4 @@ class ChooseDeliveryCarrier(models.TransientModel):
         self.order_id.write({
             'recompute_delivery_price': False,
             'delivery_message': self.delivery_message,
-            'carrier_id': self.carrier_id.id
         })

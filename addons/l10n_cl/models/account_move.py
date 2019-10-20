@@ -34,7 +34,7 @@ class AccountMove(models.Model):
             document_type_ids = self.journal_id.l10n_cl_sequence_ids.mapped('l10n_latam_document_type_id').ids
             domain += [('id', 'in', document_type_ids)]
             if self.partner_id.l10n_cl_sii_taxpayer_type == '3':
-                domain += [('code', 'in', ['35', '38', '39', '41'])]
+                domain += [('code', 'in', ['35', '38', '39', '41', '56', '61'])]
         return domain
 
     @api.constrains('type', 'l10n_latam_document_type_id')

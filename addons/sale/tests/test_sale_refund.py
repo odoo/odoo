@@ -100,7 +100,7 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
                 self.assertEquals(len(line.invoice_lines), 1, "The lines 'ordered' qty are invoiced, so it should be linked to 1 invoice lines")
 
         # Make a credit note
-        credit_note_wizard = self.env['account.move.reversal'].with_context({'active_ids': [self.invoice.id], 'active_id': self.invoice.id}).create({
+        credit_note_wizard = self.env['account.move.reversal'].with_context({'active_ids': [self.invoice.id], 'active_id': self.invoice.id, 'active_model': 'account.move'}).create({
             'refund_method': 'refund',  # this is the only mode for which the SO line is linked to the refund (https://github.com/odoo/odoo/commit/e680f29560ac20133c7af0c6364c6ef494662eac)
             'reason': 'reason test create',
         })
@@ -191,7 +191,7 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
                 self.assertEquals(line.qty_to_invoice, -1, "The quantity to invoice is negative as we invoice more than ordered")
 
         # Make a credit note
-        credit_note_wizard = self.env['account.move.reversal'].with_context({'active_ids': self.invoice.ids, 'active_id': self.invoice.id}).create({
+        credit_note_wizard = self.env['account.move.reversal'].with_context({'active_ids': self.invoice.ids, 'active_id': self.invoice.id, 'active_model': 'account.move'}).create({
             'refund_method': 'cancel',
             'reason': 'reason test cancel',
         })
@@ -253,7 +253,7 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
                 self.assertEquals(len(line.invoice_lines), 1, "The lines 'ordered' qty are invoiced, so it should be linked to 1 invoice lines")
 
         # Make a credit note
-        credit_note_wizard = self.env['account.move.reversal'].with_context({'active_ids': [self.invoice.id], 'active_id': self.invoice.id}).create({
+        credit_note_wizard = self.env['account.move.reversal'].with_context({'active_ids': [self.invoice.id], 'active_id': self.invoice.id, 'active_model': 'account.move'}).create({
             'refund_method': 'modify',  # this is the only mode for which the SO line is linked to the refund (https://github.com/odoo/odoo/commit/e680f29560ac20133c7af0c6364c6ef494662eac)
             'reason': 'reason test modify',
         })

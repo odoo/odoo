@@ -684,18 +684,8 @@ class Meeting(models.Model):
         """ get current date and time format, according to the context lang
             :return: a tuple with (format date, format time)
         """
-        lang = self._context.get("lang")
-        lang_params = {}
-        if lang:
-            record_lang = self.env['res.lang']._lang_get(lang)
-            lang_params = {
-                'date_format': record_lang.date_format,
-                'time_format': record_lang.time_format
-            }
-
-        format_date = lang_params.get("date_format", '%B-%d-%Y')
-        format_time = lang_params.get("time_format", '%I-%M %p')
-        return (format_date, format_time)
+        lang = get_lang(self.env)
+        return (lang.date_format, lang.time_format)
 
     @api.model
     def _get_recurrent_fields(self):

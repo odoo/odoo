@@ -287,7 +287,7 @@ var SnippetEditor = Widget.extend({
             var editor = $el.data('editor');
             var styles = _.values(editor.styles);
             $el.toggleClass('d-none', styles.length === 0);
-            _.sortBy(styles, '__order').reverse().forEach(style => {
+            _.sortBy(styles, '__order').forEach(style => {
                 if (focus) {
                     style.$el.appendTo($el);
                     style.onFocus();
@@ -359,6 +359,10 @@ var SnippetEditor = Widget.extend({
         $optionsSection.on('click', '.oe_snippet_remove', this._onRemoveClick.bind(this));
         this._customize$Elements.push($optionsSection);
 
+        // TODO get rid of this when possible (made as a fix to support old
+        // theme options)
+        this.$el.data('$optionsSection', $optionsSection);
+
         var i = 0;
         var defs = _.map(this.templateOptions, val => {
             if (!val.selector.is(this.$target)) {
@@ -380,7 +384,14 @@ var SnippetEditor = Widget.extend({
                 val.data,
                 this.options
             );
-            this.styles[optionName || _.uniqueId('option')] = option;
+            var key = optionName || _.uniqueId('option');
+            if (this.styles[key]) {
+                // If two snippet options use the same option name (and so use
+                // the same JS option), store the subsequent ones with a unique
+                // ID (TODO improve)
+                key = _.uniqueId(key);
+            }
+            this.styles[key] = option;
             option.__order = i++;
             var $optionSection = $(core.qweb.render('web_editor.customize_block_option'));
             $optionSection.append($el);
@@ -577,26 +588,34 @@ var SnippetEditor = Widget.extend({
      * @param {OdooEvent} ev
      */
     _onOptionUpdate: function (ev) {
+        var self = this;
+
         // If multiple option names are given, we suppose it should not be
         // propagated to parent editor
         if (ev.data.optionNames) {
             ev.stopPropagation();
-            var self = this;
             _.each(ev.data.optionNames, function (name) {
-                var option = self.styles[name];
-                if (option) {
-                    option.notify(ev.data.name, ev.data.data);
-                }
+                notifyForEachMatchedOption(name);
             });
         }
         // If one option name is given, we suppose it should be handle by the
         // first parent editor which can do it
         if (ev.data.optionName) {
-            var option = this.styles[ev.data.optionName];
-            if (option) {
+            if (notifyForEachMatchedOption(ev.data.optionName)) {
                 ev.stopPropagation();
-                option.notify(ev.data.name, ev.data.data);
             }
+        }
+
+        function notifyForEachMatchedOption(name) {
+            var regex = new RegExp('^' + name + '\\d+$');
+            var hasOption = false;
+            for (var key in self.styles) {
+                if (key === name || regex.test(key)) {
+                    self.styles[key].notify(ev.data.name, ev.data.data);
+                    hasOption = true;
+                }
+            }
+            return hasOption;
         }
     },
     /**
@@ -1588,7 +1607,9 @@ var SnippetsMenu = Widget.extend({
      * @param {*} ev
      */
     _onCollapseTogglerClick: function (ev) {
-        this.$('we-collapse-area > we-toggler').not(ev.currentTarget).removeClass('active');
+        var $hierarchyTogglers = $(ev.currentTarget).parents('we-collapse-area').children('we-toggler');
+        this.$('we-collapse-area > we-toggler').not($hierarchyTogglers).removeClass('active');
+        $hierarchyTogglers.not(ev.currentTarget).addClass('active');
         ev.currentTarget.classList.toggle('active');
     },
     /**

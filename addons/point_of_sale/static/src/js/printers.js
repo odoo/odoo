@@ -48,7 +48,11 @@ var PrinterMixin = {
         var self = this;
         $('.pos-receipt-print').html(receipt);
         var promise = new Promise(function (resolve, reject) {
-            html2canvas($('.pos-receipt-print')[0], {
+            self.receipt = $('.pos-receipt-print>.pos-receipt');
+            html2canvas(self.receipt[0], {
+                onparsed: function(queue) {
+                    queue.stack.ctx.height = Math.ceil(self.receipt.outerHeight() + self.receipt.offset().top);
+                },
                 onrendered: function (canvas) {
                     $('.pos-receipt-print').empty();
                     resolve(self.process_canvas(canvas));

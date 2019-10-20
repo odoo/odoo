@@ -12,6 +12,7 @@ from odoo import http, fields
 from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.http import request
+from odoo.osv import expression
 from odoo.tools import html2plaintext
 from odoo.tools.misc import get_lang
 
@@ -165,7 +166,7 @@ class WebsiteBlog(http.Controller):
 
         return request.render("website_blog.blog_post_short", values)
 
-    @http.route(['''/blog/<model("blog.blog", "[('website_id', 'in', (False, current_website_id))]"):blog>/feed'''], type='http', auth="public")
+    @http.route(['''/blog/<model("blog.blog", "[('website_id', 'in', (False, current_website_id))]"):blog>/feed'''], type='http', auth="public", website=True)
     def blog_feed(self, blog, limit='15', **kwargs):
         v = {}
         v['blog'] = blog
@@ -294,5 +295,6 @@ class WebsiteBlog(http.Controller):
 
     @http.route(['/blog/render_latest_posts'], type='json', auth='public', website=True)
     def render_latest_posts(self, template, domain, limit=None, order='published_date desc'):
+        domain = expression.AND([domain, request.website.website_domain()])
         posts = request.env['blog.post'].search(domain, limit=limit, order=order)
-        return request.env.ref(template).render({'posts': posts})
+        return request.website.viewref(template).render({'posts': posts})

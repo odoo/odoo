@@ -1350,13 +1350,14 @@ def format_duration(value):
     """ Format a float: used to display integral or fractional values as
         human-readable time spans (e.g. 1.5 as "01:30").
     """
-    sign = math.copysign(1.0, value)
     hours, minutes = divmod(abs(value) * 60, 60)
     minutes = round(minutes)
     if minutes == 60:
         minutes = 0
         hours += 1
-    return '%02d:%02d' % (sign * hours, minutes)
+    if value < 0:
+        return '-%02d:%02d' % (hours, minutes)
+    return '%02d:%02d' % (hours, minutes)
 
 
 def _consteq(str1, str2):
