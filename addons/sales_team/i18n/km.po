@@ -80,7 +80,7 @@ msgstr "រូបតំណាង"
 #. module: sales_team
 #: selection:crm.team,dashboard_graph_type:0
 msgid "Bar"
-msgstr ""
+msgstr "របាំង"
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:274
@@ -409,6 +409,8 @@ msgid ""
 "Sales Team the user is member of. Used to compute the members of a Sales "
 "Team through the inverse one2many"
 msgstr ""
+"ក្រុមលក់អ្នកប្រើប្រាស់គឺជាសមាជិក។ "
+"ត្រូវបានប្រើដើម្បីគណនាសមាជិកនៃក្រុមលក់តាមរយៈការដាក់បញ្ច្រាស one2many "
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.sales_team_config_action
@@ -428,12 +430,12 @@ msgstr "ឈ្មោះSalesteam ... "
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
 msgid "Salesteams Search"
-msgstr ""
+msgstr "ស្វែងរក Salesteams "
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_graph_period
 msgid "Scale"
-msgstr ""
+msgstr "ធ្វើមាត្រដ្ឋាន "
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
@@ -443,13 +445,13 @@ msgstr "ការកំណត់"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__is_favorite
 msgid "Show on dashboard"
-msgstr ""
+msgstr "បង្ហាញនៅលើផ្ទាំងព័ត៌មាន "
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__user_id
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
 msgid "Team Leader"
-msgstr ""
+msgstr "ប្រធាន​ក្រុម "
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
@@ -469,7 +471,7 @@ msgstr "ប្រភេទក្រុម"
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__color
 msgid "The color of the channel"
-msgstr ""
+msgstr "ពណ៌នៃប៉ុស្តិ៍ "
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__reply_to
@@ -477,6 +479,8 @@ msgid ""
 "The email address put in the 'Reply-To' of all emails sent by Odoo about "
 "cases in this Sales Team"
 msgstr ""
+"អាស័យដ្ឋានអ៊ីម៉ែលបានដាក់នៅក្នុង 'ឆ្លើយតបទៅ' "
+"នៃអ៊ីមែលទាំងអស់ដែលផ្ញើដោយអូដូអំពីករណីនៅក្នុងក្រុមលក់នេះ "
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__dashboard_graph_model
@@ -491,7 +495,7 @@ msgstr "កំឡុងពេលដែលក្រាហ្វិចផ្ទៃ
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__dashboard_graph_type
 msgid "The type of graph this channel will display in the dashboard."
-msgstr ""
+msgstr "ប្រភេទក្រាហ្វឆានែលនេះនឹងបង្ហាញនៅក្នុងផ្ទាំងព័ត៌មាន។ "
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__team_type
@@ -509,7 +513,7 @@ msgstr "ប្រភេទ"
 #: code:addons/sales_team/models/crm_team.py:178
 #, python-format
 msgid "Undefined graph model for Sales Team: %s"
-msgstr ""
+msgstr "គំរូក្រាហ្វដែលមិនបានកំណត់សម្រាប់ក្រុមលក់៖%s "
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_unread
@@ -528,21 +532,23 @@ msgid ""
 "Use Sales Teams to organize your sales departments.\n"
 "                    Each channel will work with a separate pipeline."
 msgstr ""
+"ប្រើក្រុមលក់ដើម្បីរៀបចំផ្នែកលក់របស់អ្នក។\n"
+" ឆានែលនីមួយៗនឹងធ្វើការជាមួយបំពង់បង្ហូរដាច់ដោយឡែក។ "
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_res_users__sale_team_id
 msgid "User's Sales Team"
-msgstr ""
+msgstr "ក្រុមលក់របស់អ្នកប្រើប្រាស់ "
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_salesman_all_leads
 msgid "User: All Documents"
-msgstr ""
+msgstr "អ្នកប្រើប្រាស់: ឯកសារទាំងអស់ "
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_salesman
 msgid "User: Own Documents Only"
-msgstr ""
+msgstr "អ្នកប្រើប្រាស់: ឯកសារផ្ទាល់ខ្លួន "
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_res_users
@@ -576,11 +582,15 @@ msgid ""
 "the user will have access to all records of everyone in the sales "
 "application."
 msgstr ""
+"អ្នកប្រើប្រាស់នឹងមានសិទ្ធិចូលមើលកំណត់ត្រារបស់មនុស្សគ្រប់គ្នានៅក្នុងពាក្យសុំលក់។"
+" "
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_salesman
 msgid "the user will have access to his own data in the sales application."
 msgstr ""
+"អ្នកប្រើនឹងមានសិទ្ធិចូលដំណើរការទិន្នន័យផ្ទាល់ខ្លួនរបស់គាត់នៅក្នុងកម្មវិធីលក់។"
+" "
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_manager
@@ -588,3 +598,5 @@ msgid ""
 "the user will have an access to the sales configuration as well as statistic"
 " reports."
 msgstr ""
+"អ្នកប្រើប្រាស់នឹងមានសិទ្ធិចូលដំណើរការការកំណត់រចនាសម្ព័ន្ធការលក់ក៏ដូចជារបាយការណ៍ស្ថិតិ។"
+" "

@@ -43,6 +43,11 @@ msgid ""
 "                                (eg. Visa, MasterCard, Discovery, American Express, ...). After setting up this\n"
 "                                configuration you should associate it with a Point Of Sale payment method."
 msgstr ""
+"<i>ការកំណត់រចនាសម្ព័ន្Mercury </i>កំណត់នូវអ្វីដែលគណនីMercuryនឹងត្រូវបានប្រើនៅពេល\n"
+" ដំណើរការប្រតិបត្តិការកាតឥណទាននៅចំនុចលក់។ ការរៀបចំMercury\n"
+" ការកំណត់រចនាសម្ព័ន្ធនឹងអនុញ្ញាតឱ្យអ្នកអនុញ្ញាតឱ្យមានការទូទាត់ជាមួយកាតឥណទានផ្សេងៗ\n"
+" (ឧទាហរណ៍៖វីសា ម៉ាស្ទឺរកាត Discovery អាមេរិចអ៊ិចប្រេស…) ។ បន្ទាប់ពីរៀបចំនេះ\n"
+" ការកំណត់រចនាសម្ព័ន្ធអ្នកគួរតែភ្ជាប់វាជាមួយវិធីសាស្ត្រទូទាត់ចំណុចនៃការលក់។ "
 
 #. module: pos_mercury
 #. openerp-web
@@ -194,6 +199,9 @@ msgid ""
 "                                (without having pressed anything else) will charge the full amount of the order to\n"
 "                                the card."
 msgstr ""
+"សម្រាប់ការបញ្ជាទិញយ៉ាងឆាប់រហ័ស: គ្រាន់តែអូសកាតឥណទាននៅពេលដែលនៅលើអេក្រង់ទូទាត់\n"
+" (ដោយមិនចាំបាច់ចុចអ្វីផ្សេងទៀត) នឹងគិតថ្លៃតាមលំដាប់ដែលត្រូវបញ្ជាទិញ\n"
+" កាតនេះ។"
 
 #. module: pos_mercury
 #. openerp-web
@@ -227,11 +235,13 @@ msgid ""
 "If you don't already have a Mercury account, contact Mercury at +1 (800) 846-4472\n"
 "                                to create one."
 msgstr ""
+"ប្រសិនបើអ្នកមិនទាន់មានគណនីMercuryសូមទំនាក់ទំនង Mercury at +1 (800) 846-4472\n"
+"ដើម្បីបង្កើតមួយ"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line__mercury_invoice_no
 msgid "Invoice number from Mercury Pay"
-msgstr ""
+msgstr "លេខវិក្ក័យប័ត្រពី Mercury Pay "
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_account_journal
@@ -280,27 +290,27 @@ msgstr "លេខសម្ងាត់អ្នកជំនួញ"
 #: model:ir.actions.act_window,name:pos_mercury.action_configuration_form
 #: model:ir.ui.menu,name:pos_mercury.menu_pos_pos_mercury_config
 msgid "Mercury Configurations"
-msgstr ""
+msgstr "ការកំណត់រចនាសម្ព័ន្ធ Mercury"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_journal__pos_mercury_config_id
 msgid "Mercury Credentials"
-msgstr ""
+msgstr "លិខិតសម្គាល់ Mercury"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line__mercury_invoice_no
 msgid "Mercury invoice number"
-msgstr ""
+msgstr "លេខវិក្កយប័ត្រ Mercury"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line__mercury_record_no
 msgid "Mercury record number"
-msgstr ""
+msgstr "លេខកំណត់ត្រាMercury"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line__mercury_ref_no
 msgid "Mercury reference number"
-msgstr ""
+msgstr "លេខយោង Mercury"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__name
@@ -310,13 +320,13 @@ msgstr "ឈ្មោះ"
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration__name
 msgid "Name of this Mercury configuration"
-msgstr ""
+msgstr "ឈ្មោះនៃការកំណត់រចនាសម្ព័ន្ធMercuryនេះ "
 
 #. module: pos_mercury
 #: code:addons/pos_mercury/models/pos_mercury_transaction.py:34
 #, python-format
 msgid "No Mercury configuration associated with the journal."
-msgstr ""
+msgstr "គ្មានការកំណត់រចនាសម្ព័ន្ធMercuryទាក់ទងនឹងទិនានុប្បវត្តិទេ។"
 
 #. module: pos_mercury
 #: code:addons/pos_mercury/models/pos_mercury_transaction.py:22
@@ -329,7 +339,7 @@ msgstr "គ្មានចំណុចចាប់ផ្តើមនៃការ
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:328
 #, python-format
 msgid "No response from Mercury (Mercury down?)"
-msgstr ""
+msgstr "គ្មានការឆ្លើយតបពី Mercury(បារតធ្លាក់ចុះ?)"
 
 #. module: pos_mercury
 #. openerp-web
@@ -351,7 +361,7 @@ msgstr "កំហុស Odoo ពេលដំណើរការប្រតិប
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:652
 #, python-format
 msgid "One credit card swipe already pending."
-msgstr ""
+msgstr "អូសកាតឥណទានមួយដែលមិនទាន់សម្រេច។ "
 
 #. module: pos_mercury
 #. openerp-web
@@ -370,13 +380,15 @@ msgstr "កញ្ជប់"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:470
 #, python-format
 msgid "Partially approved"
-msgstr ""
+msgstr "អនុម័តដោយផ្នែក"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration__merchant_pwd
 msgid ""
 "Password of the merchant to authenticate him on the payment provider server"
 msgstr ""
+"ពាក្យសំងាត់របស់អ្នកជំនួញដើម្បីបញ្ជាក់អត្តសញ្ញាណគាត់នៅលើម៉ាស៊ីនមេផ្តល់សេវាបង់ប្រាក់"
+" "
 
 #. module: pos_mercury
 #. openerp-web
@@ -388,29 +400,29 @@ msgstr "បង់ប្រាក់ជាមួយ៖"
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line__mercury_record_no
 msgid "Payment record number from Mercury Pay"
-msgstr ""
+msgstr "លេខកំណត់ត្រាការបង់ប្រាក់ពី Mercury Pay"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line__mercury_ref_no
 msgid "Payment reference number from Mercury Pay"
-msgstr ""
+msgstr "លេខយោងការទូទាត់ពី Mercury Pay "
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:416
 #, python-format
 msgid "Please setup your Mercury merchant account."
-msgstr ""
+msgstr "សូមរៀបចំគណនីអ្នកជំនួញMercuryរបស់អ្នក។"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_mercury_configuration
 msgid "Point of Sale Mercury Configuration"
-msgstr ""
+msgstr "ចំណុចនៃការកំណត់រចនាសម្ព័ន្Mercuryលក់ "
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_mercury_mercury_transaction
 msgid "Point of Sale Mercury Transaction"
-msgstr ""
+msgstr "ចំណុចនៃប្រតិបត្តិការលក់ Mercury"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_order
@@ -434,7 +446,7 @@ msgstr "មិនគាំទ្រការប្រគល់ប្រាក់
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:549
 #, python-format
 msgid "Reversal failed, sending VoidSale..."
-msgstr ""
+msgstr "ការបញ្ច្រាសបានបរាជ័យការបញ្ជូន VoidSale ... "
 
 #. module: pos_mercury
 #. openerp-web
@@ -470,7 +482,7 @@ msgstr "លេខកាតដែលត្រូវបានប្រើសម្
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_journal__pos_mercury_config_id
 msgid "The configuration of Mercury used for this journal"
-msgstr ""
+msgstr "ការកំណត់រចនាសម្ព័ន្ធMercuryប្រើសម្រាប់ទិនានុប្បវត្តិនេះ "
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line__mercury_card_number
@@ -480,7 +492,7 @@ msgstr "លេខ 4 សន្លឹកចុងក្រោយនៃកាតត
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line__mercury_card_owner_name
 msgid "The name of the card owner"
-msgstr ""
+msgstr "ឈ្មោះម្ចាស់កាត"
 
 #. module: pos_mercury
 #. openerp-web
@@ -490,6 +502,8 @@ msgid ""
 "This can be caused by a badly executed swipe or by not having your keyboard "
 "layout set to US QWERTY (not US International)."
 msgstr ""
+"នេះអាចបណ្តាលមកពីការបញ្ឈដែលបានប្រតិបត្តិយ៉ាងធ្ងន់ធ្ងរឬដោយមិនបានដាក់ប្លង់ក្តារចុចរបស់អ្នកទៅ"
+" US QWERTY (មិនមែនអាមេរិកអន្តរជាតិ) ។"
 
 #. module: pos_mercury
 #. openerp-web
@@ -516,25 +530,29 @@ msgid ""
 "                                just like on any other payment line. Whenever the payment line is set up, a card\n"
 "                                can be swiped through the card reader device."
 msgstr ""
+"ការប្រើប្រាស់សមាហរណកម្មMercuryនៅក្នុងចំនុចនៃការលក់គឺងាយស្រួល: គ្រាន់តែចុចលេខកូដ\n"
+" វិធីសាស្ត្រទូទាត់ដែលជាប់ទាក់ទង។ បន្ទាប់ពីនោះចំនួនទឹកប្រាក់អាចត្រូវបានកែតម្រូវ (ឧទាហរណ៍សម្រាប់ប្រាក់ត្រលប់)\n"
+" ដូចនៅលើបណ្តាញបង់ប្រាក់ផ្សេងទៀតដែរ។ នៅពេលណាដែលបន្ទាត់ទូទាត់ត្រូវបានបង្កើតឡើងកាតមួយ\n"
+" អាចត្រូវបានអូសតាមរយៈឧបករណ៍អានកាត។ "
 
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.pos_config_view_form_inherit_pos_mercury
 msgid "Vantiv Accounts"
-msgstr ""
+msgstr "គណនីVantiv"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:599
 #, python-format
 msgid "VoidSale succeeded"
-msgstr ""
+msgstr "VoidSale បានទទួលជោគជ័យ"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:17
 #, python-format
 msgid "WAITING FOR SWIPE"
-msgstr ""
+msgstr "រង់ចាំសម្រាប់វាស"
 
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -542,6 +560,8 @@ msgid ""
 "We currently support the MagTek Dynamag card reader device. It can be connected\n"
 "                                directly to the Point Of Sale device or it can be connected to the IoTBox."
 msgstr ""
+"បច្ចុប្បន្នយើងគាំទ្រឧបករណ៍អានកាត MagTek Dynamag ។ វាអាចភ្ជាប់គ្នាបាន\n"
+" ដោយផ្ទាល់ទៅនឹងចំណុចនៃការលក់ឧបករណ៍ឬវាអាចត្រូវបានភ្ជាប់ទៅ IoTBox។ "
 
 #. module: pos_mercury
 #: selection:barcode.rule,type:0

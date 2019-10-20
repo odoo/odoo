@@ -21,6 +21,7 @@
 # Андрей Гусев <gaussgss@gmail.com>, 2019
 # Konstantin Korovin <korovin74@gmail.com>, 2019
 # sorin Rusu <to.rusu.sorin@gmail.com>, 2019
+# Anton Ilchenko <anton.wmt@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -28,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-08 13:35+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: sorin Rusu <to.rusu.sorin@gmail.com>, 2019\n"
+"Last-Translator: Anton Ilchenko <anton.wmt@gmail.com>, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -282,6 +283,11 @@ msgid ""
 "                                    </span>\n"
 "                                    <span>Followers of the document and</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('composition_mode', '!=', 'mass_mail')]}\">\n"
+"                                        <strong>Массовая рассылка писем</strong> по\n"
+"                                        <span>выбранным записям</span>\n"
+"                                    </span>\n"
+"                                    <span>Отслеживающих документ и</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -323,6 +329,8 @@ msgid ""
 "specific.\" aria-label=\"Values set here are company-specific.\" "
 "groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"o_form_label\">Налоги по умолчанию</span>\n"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
