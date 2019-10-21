@@ -208,6 +208,10 @@ class Toledo8217Driver(ScaleDriver):
     """Driver for the Toldedo 8217 serial scale."""
     _protocol = Toledo8217Protocol
 
+    def __init__(self, device):
+        super().__init__(device)
+        self._device_manufacturer = 'Toledo'
+
     @classmethod
     def supported(cls, device):
         """Checks whether the device, which port info is passed as argument, is supported by the driver.
@@ -245,6 +249,7 @@ class AdamEquipmentDriver(ScaleDriver):
         super().__init__(device)
         self._is_reading = False
         self._last_weight_time = 0
+        self._device_manufacturer = 'Adam'
 
     def _check_last_weight_time(self):
         """The ADAM doesn't make the difference between a value of 0 and "the same value as last time":
