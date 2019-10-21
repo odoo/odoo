@@ -35,6 +35,7 @@
                     <field name="selectable_categ_ids" invisible="1"/>
                     <field name="is_installed_account_accountant" invisible="1"/>
                     <field name="company_has_template" invisible="1"/>
+                    <field name="allowed_pricelist_ids" invisible="1"/>
                     <div class="oe_title" id="title">
                         <label for="name" class="oe_edit_only"/>
                         <h1><field name="name"/></h1>
@@ -254,7 +255,7 @@
                             <div class="o_setting_right_pane">
                                 <span class="o_form_label">Default Pricelist</span>
                                 <div class="content-group mt16">
-                                    <field name="pricelist_id" domain="[('id', 'in', available_pricelist_ids)]" options="{'no_create': True}"/>
+                                    <field name="pricelist_id" domain="[('id', 'in', allowed_pricelist_ids)]" options="{'no_create': True}"/>
                                 </div>
                                 <div>
                                     <button name="%(product.product_pricelist_action2)d" icon="fa-arrow-right" type="action" string="Pricelists" class="btn-link"/>
