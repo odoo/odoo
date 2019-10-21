@@ -374,6 +374,21 @@ body.editor_enable.editor_has_snippets {
                 position: static !important;
             }
         }
+
+        // Specific options
+        .snippet-option-background {
+            [data-background=""] {
+                color: $o-we-color-danger;
+            }
+            [data-choose-image="true"] {
+                display: flex;
+                align-items: center;
+
+                > .fa {
+                    margin-left: auto;
+                }
+            }
+        }
     }
 }
 
