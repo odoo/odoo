@@ -1219,14 +1219,14 @@
 
     <!-- Move snippets around -->
     <div data-js="SnippetMove"
-        data-selector="section">
-        <we-button data-move-snippet="prev" data-no-preview="true"><i class="fa fa-fw fa-angle-up"/></we-button>
-        <we-button data-move-snippet="next" data-no-preview="true"><i class="fa fa-fw fa-angle-down"/></we-button>
+         data-selector="section">
+        <we-button class="fa fa-fw fa-angle-up" data-move-snippet="prev" data-no-preview="true"/>
+        <we-button class="fa fa-fw fa-angle-down" data-move-snippet="next" data-no-preview="true"/>
     </div>
     <div data-js="SnippetMove"
-        data-selector=".row:not(.s_nb_column_fixed)>*">
-        <we-button data-move-snippet="prev" data-no-preview="true"><i class="fa fa-fw fa-angle-left"/></we-button>
-        <we-button data-move-snippet="next" data-no-preview="true"><i class="fa fa-fw fa-angle-right"/></we-button>
+         data-selector=".row:not(.s_col_no_resize) > div">
+        <we-button class="fa fa-fw fa-angle-left" data-move-snippet="prev" data-no-preview="true"/>
+        <we-button class="fa fa-fw fa-angle-right" data-move-snippet="next" data-no-preview="true"/>
     </div>
 
     <!--  V-ALIGN -->

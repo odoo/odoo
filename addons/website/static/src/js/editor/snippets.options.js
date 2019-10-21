@@ -1867,6 +1867,22 @@ options.registry.SectionStretch = options.Class.extend({
  */
 options.registry.SnippetMove = options.Class.extend({
 
+    /**
+     * @override
+     */
+    start: function () {
+        var $buttons = this.$el.find('we-button');
+        var $overlayArea = this.$overlay.find('.o_overlay_options');
+        $overlayArea.prepend($buttons[0]);
+        $overlayArea.append($buttons[1]);
+
+        // TODO this is kinda hack but not worth a complex system while no
+        // other use case is implemented.
+        $buttons.on('click', this._onLinkClick.bind(this));
+
+        return this._super(...arguments);
+    },
+
     //--------------------------------------------------------------------------
     // Options
     //--------------------------------------------------------------------------
