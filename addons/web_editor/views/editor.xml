@@ -47,6 +47,7 @@
     <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/widgets/media.js"/>
     <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/widgets/dialog.js"/>
     <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/widgets/alt_dialog.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/widgets/color_palette.js"/>
     <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/widgets/crop_dialog.js"/>
     <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/widgets/link_dialog.js"/>
     <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/widgets/media_dialog.js"/>
@@ -204,38 +205,41 @@
 
     Sections should contain a set of button with a data-color attribute. When selecting such a button to
     edit style, the "bg-x" class or the "text-x" will be automatically added.
+
+    If a color is no longer used you need to add the d-none class to it and not remove it from this file !!
+    Else you will no longer be able to use them.
 -->
 <template id="web_editor.colorpicker" name="Color-Picker">
     <colorpicker>
-        <div class="o_colorpicker_section" data-name="theme" data-display="Theme Colors" data-icon-class="fa fa-flask">
+        <div class="o_colorpicker_section" data-name="theme">
             <button data-color="alpha"></button>
             <button data-color="beta"></button>
             <button data-color="gamma"></button>
             <button data-color="delta"></button>
             <button data-color="epsilon"></button>
         </div>
-        <div class="o_colorpicker_section" data-name="transparent_grayscale" data-display="Transparent Colors" data-icon-class="fa fa-eye-slash">
-            <button class="o_btn_transparent"></button>
+        <div class="o_colorpicker_section" data-name="common">
+            <button data-color="black"></button>
+            <button data-color="900"></button>
+            <button data-color="800"></button>
+            <button data-color="700" class="d-none"></button>
+            <button data-color="600"></button>
+            <button data-color="500" class="d-none"></button>
+            <button data-color="400"></button>
+            <button data-color="300" class="d-none"></button>
+            <button data-color="200"></button>
+            <button data-color="100"></button>
+            <button data-color="white"></button>
+        </div>
+        <div class="o_colorpicker_section" data-name="transparent_grayscale" data-display="Opacity Filters" data-icon-class="fa fa-eye-slash">
+            <button data-color="black-15"></button>
             <button data-color="black-25"></button>
             <button data-color="black-50"></button>
             <button data-color="black-75"></button>
             <button data-color="white-25"></button>
             <button data-color="white-50"></button>
             <button data-color="white-75"></button>
-        </div>
-        <div class="o_colorpicker_section" data-name="common" data-display="Common Colors" data-icon-class="fa fa-paint-brush">
-            <button data-color="black"></button>
-            <button data-color="white"></button>
-            <div class="clearfix"/>
-            <button data-color="900"></button>
-            <button data-color="800"></button>
-            <button data-color="700"></button>
-            <button data-color="600"></button>
-            <button data-color="500"></button>
-            <button data-color="400" class="d-none"></button><!-- Hide this one to be able to use it but not display it -->
-            <button data-color="300"></button>
-            <button data-color="200"></button>
-            <button data-color="100"></button>
+            <button data-color="white-85"></button>
         </div>
     </colorpicker>
 </template>
