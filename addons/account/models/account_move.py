@@ -894,10 +894,54 @@ class AccountMoveLine(models.Model):
             credit_move = credit_moves[0]
             company_currency = debit_move.company_id.currency_id
             # We need those temporary value otherwise the computation might be wrong below
-            temp_amount_residual = min(debit_move.amount_residual, -credit_move.amount_residual)
             temp_amount_residual_currency = min(debit_move.amount_residual_currency, -credit_move.amount_residual_currency)
             dc_vals[(debit_move.id, credit_move.id)] = (debit_move, credit_move, temp_amount_residual_currency)
             amount_reconcile = min(debit_move[field], -credit_move[field])
+
+            max_date = max(debit_move.date, credit_move.date)
+
+            # If we reconcile in amount_currency, then we need to actualize those numbers to some date
+            # Then see what is their relative value in company currency
+            if field == "amount_residual_currency":
+                foreign_currency = debit_move.currency_id
+                debit_residual = foreign_currency._convert(
+                    debit_move.amount_residual_currency,
+                    company_currency,
+                    debit_move.company_id,
+                    max_date,
+                )
+
+                credit_residual = foreign_currency._convert(
+                    credit_move.amount_residual_currency,
+                    company_currency,
+                    debit_move.company_id,
+                    max_date,
+                )
+                temp_amount_residual = min(debit_residual, -credit_residual)
+            else:
+                if debit_move.currency_id:
+                    foreign_currency = debit_move.currency_id
+                    debit_residual = foreign_currency._convert(
+                        debit_move.amount_residual_currency,
+                        company_currency,
+                        debit_move.company_id,
+                        max_date,
+                    )
+                    credit_residual = credit_move.amount_residual
+                elif credit_move.currency_id:
+                    debit_residual = debit_move.amount_residual
+                    foreign_currency = credit_move.currency_id
+                    credit_residual = foreign_currency._convert(
+                        credit_move.amount_residual_currency,
+                        company_currency,
+                        debit_move.company_id,
+                        max_date,
+                    )
+                else:
+                    debit_residual = debit_move.amount_residual
+                    credit_residual = credit_move.amount_residual
+
+                temp_amount_residual = amount_reconcile = min(debit_residual, -credit_residual)
 
             #Remove from recordset the one(s) that will be totally reconciled
             # For optimization purpose, the creation of the partial_reconcile are done at the end,
