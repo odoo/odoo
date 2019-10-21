@@ -3,6 +3,7 @@ odoo.define('web_editor.snippet.editor', function (require) {
 
 var concurrency = require('web.concurrency');
 var core = require('web.core');
+var Dialog = require('web.Dialog');
 var dom = require('web.dom');
 var Widget = require('web.Widget');
 var options = require('web_editor.snippets.options');
@@ -640,6 +641,7 @@ var SnippetsMenu = Widget.extend({
     cacheSnippetTemplate: {},
     events: {
         'click we-collapse-area > we-toggler': '_onCollapseTogglerClick',
+        'click .o_install_btn': '_onInstallBtnClick',
     },
     custom_events: {
         'activate_insertion_zones': '_onActivateInsertionZones',
@@ -1306,13 +1308,11 @@ var SnippetsMenu = Widget.extend({
                 var moduleID = $snippet.data('moduleId');
                 if (moduleID) {
                     $snippet.addClass('o_snippet_install');
-                    var $installBtn = $('<a/>', {
-                        class: 'btn btn-primary o_install_btn',
-                        target: '_blank',
-                        href: '/web#id=' + moduleID + '&view_type=form&model=ir.module.module&action=base.open_module_tree',
+                    $thumbnail.append($('<button/>', {
+                        class: 'btn btn-primary o_install_btn w-100',
+                        type: 'button',
                         text: _t("Install"),
-                    });
-                    $thumbnail.append($installBtn);
+                    }));
                 }
             })
             .not('[data-module-id]');
@@ -1662,6 +1662,63 @@ var SnippetsMenu = Widget.extend({
     _onGoToParent: function (ev) {
         ev.stopPropagation();
         this._activateSnippet(ev.data.$snippet.parent());
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onInstallBtnClick: function (ev) {
+        var self = this;
+        var $snippet = $(ev.currentTarget).closest('[data-module-id]');
+        var moduleID = $snippet.data('moduleId');
+        var name = $snippet.attr('name');
+        new Dialog(this, {
+            title: _.str.sprintf(_t("Install %s"), name),
+            size: 'medium',
+            $content: $('<div/>', {text: _.str.sprintf(_t("Do you want to install the %s App?"), name)}).append(
+                $('<a/>', {
+                    target: '_blank',
+                    href: '/web#id=' + moduleID + '&view_type=form&model=ir.module.module&action=base.open_module_tree',
+                    text: _t("More info about this app."),
+                    class: 'ml4',
+                })
+            ),
+            buttons: [{
+                text: _t("Save and Install"),
+                classes: 'btn-primary',
+                click: function () {
+                    this.$footer.find('.btn').toggleClass('o_hidden');
+                    this._rpc({
+                        model: 'ir.module.module',
+                        method: 'button_immediate_install',
+                        args: [[moduleID]],
+                    }).then(() => {
+                        self.trigger_up('request_save', {
+                            reload: false,
+                            onSuccess: function () {
+                                window.location.href = window.location.origin + window.location.pathname + '?enable_editor=1';
+                            },
+                        });
+                    }).guardedCatch(reason => {
+                        reason.event.preventDefault();
+                        this.close();
+                        self.displayNotification({
+                            title: _t("Something went wrong."),
+                            message: _.str.sprintf(_t("The module <strong>%s</strong> could not be installed."), name),
+                            type: 'danger',
+                            sticky: true,
+                        });
+                    });
+                },
+            }, {
+                text: _t("Install in progress"),
+                icon: 'fa-spin fa-spinner fa-pulse mr8',
+                classes: 'btn-primary disabled o_hidden',
+            }, {
+                text: _t("Cancel"),
+                close: true,
+            }],
+        }).open();
     },
     /**
      * @private
