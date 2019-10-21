@@ -385,7 +385,7 @@
                                         <field name="product_id" required="1" attrs="{'readonly': ['|', '&amp;', ('state', '!=', 'draft'), ('additional', '=', False), ('has_move_lines', '=', True)]}"/>
                                         <field name="is_initial_demand_editable" invisible="1"/>
                                         <field name="is_quantity_done_editable" invisible="1"/>
-                                        <field name="product_uom_qty" string="Initial Demand" attrs="{'invisible': [('parent.immediate_transfer', '=', True)], 'readonly': [('is_initial_demand_editable', '=', False)]}"/>
+                                        <field name="product_uom_qty" attrs="{'invisible': [('parent.immediate_transfer', '=', True)], 'readonly': [('is_initial_demand_editable', '=', False)]}"/>
                                         <field name="reserved_availability" string="Reserved" attrs="{'invisible': (['|','|', ('parent.state','=', 'done'), ('parent.picking_type_code', '=', 'incoming'), ('parent.immediate_transfer', '=', True)])}"/>
                                         <field name="quantity_done" string="Done" attrs="{'readonly': [('is_quantity_done_editable', '=', False)]}"/>
                                         <field name="product_uom" attrs="{'readonly': [('state', '!=', 'draft'), ('additional', '=', False)]}" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
