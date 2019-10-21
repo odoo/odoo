@@ -71,14 +71,18 @@ class TestBatchPicking(TransactionCase):
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 10.0)
         self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 10.0)
 
-        # confirm batch, picking should be assigned
-        self.batch.confirm_picking()
-        self.assertEqual(self.picking_client_1.state, 'assigned', 'Picking 1 should be reserved')
-        self.assertEqual(self.picking_client_2.state, 'assigned', 'Picking 2 should be reserved')
+        # Confirm batch, pickings should not be automatically assigned.
+        self.batch.action_confirm()
+        self.assertEqual(self.picking_client_1.state, 'confirmed', 'Picking 1 should be confirmed')
+        self.assertEqual(self.picking_client_2.state, 'confirmed', 'Picking 2 should be confirmed')
+        # Ask to assign, so pickings should be assigned now.
+        self.batch.action_assign()
+        self.assertEqual(self.picking_client_1.state, 'assigned', 'Picking 1 should be ready')
+        self.assertEqual(self.picking_client_2.state, 'assigned', 'Picking 2 should be ready')
 
         self.picking_client_1.move_lines.quantity_done = 10
         self.picking_client_2.move_lines.quantity_done = 10
-        self.batch.done()
+        self.batch.action_done()
 
         self.assertEqual(self.picking_client_1.state, 'done', 'Picking 1 should be done')
         self.assertEqual(self.picking_client_2.state, 'done', 'Picking 2 should be done')
@@ -98,13 +102,17 @@ class TestBatchPicking(TransactionCase):
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 10.0)
         self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 10.0)
 
-        # confirm batch, picking should be assigned
-        self.batch.confirm_picking()
-        self.assertEqual(self.picking_client_1.state, 'assigned', 'Picking 1 should be reserved')
-        self.assertEqual(self.picking_client_2.state, 'assigned', 'Picking 2 should be reserved')
+        # Confirm batch, pickings should not be automatically assigned.
+        self.batch.action_confirm()
+        self.assertEqual(self.picking_client_1.state, 'confirmed', 'Picking 1 should be confirmed')
+        self.assertEqual(self.picking_client_2.state, 'confirmed', 'Picking 2 should be confirmed')
+        # Ask to assign, so pickings should be assigned now.
+        self.batch.action_assign()
+        self.assertEqual(self.picking_client_1.state, 'assigned', 'Picking 1 should be ready')
+        self.assertEqual(self.picking_client_2.state, 'assigned', 'Picking 2 should be ready')
 
         # There should be a wizard asking to process picking without quantity done
-        immediate_transfer_wizard_dict = self.batch.done()
+        immediate_transfer_wizard_dict = self.batch.action_done()
         self.assertTrue(immediate_transfer_wizard_dict)
         immediate_transfer_wizard = Form(self.env[(immediate_transfer_wizard_dict.get('res_model'))].with_context(immediate_transfer_wizard_dict['context'])).save()
         self.assertEqual(len(immediate_transfer_wizard.pick_ids), 2)
@@ -128,8 +136,12 @@ class TestBatchPicking(TransactionCase):
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 5.0)
         self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 10.0)
 
-        # confirm batch, picking should be assigned
-        self.batch.confirm_picking()
+        # Confirm batch, pickings should not be automatically assigned.
+        self.batch.action_confirm()
+        self.assertEqual(self.picking_client_1.state, 'confirmed', 'Picking 1 should be confirmed')
+        self.assertEqual(self.picking_client_2.state, 'confirmed', 'Picking 2 should be confirmed')
+        # Ask to assign, so pickings should be assigned now.
+        self.batch.action_assign()
         self.assertEqual(self.picking_client_1.state, 'assigned', 'Picking 1 should be ready')
         self.assertEqual(self.picking_client_2.state, 'assigned', 'Picking 2 should be ready')
 
@@ -137,7 +149,7 @@ class TestBatchPicking(TransactionCase):
         self.picking_client_2.move_lines.quantity_done = 10
 
         # There should be a wizard asking to process picking without quantity done
-        back_order_wizard_dict = self.batch.done()
+        back_order_wizard_dict = self.batch.action_done()
         self.assertTrue(back_order_wizard_dict)
         back_order_wizard = Form(self.env[(back_order_wizard_dict.get('res_model'))].with_context(back_order_wizard_dict['context'])).save()
         self.assertEqual(len(back_order_wizard.pick_ids), 1)
@@ -164,13 +176,17 @@ class TestBatchPicking(TransactionCase):
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 5.0)
         self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 10.0)
 
-        # confirm batch, picking should be assigned
-        self.batch.confirm_picking()
+        # Confirm batch, pickings should not be automatically assigned.
+        self.batch.action_confirm()
+        self.assertEqual(self.picking_client_1.state, 'confirmed', 'Picking 1 should be confirmed')
+        self.assertEqual(self.picking_client_2.state, 'confirmed', 'Picking 2 should be confirmed')
+        # Ask to assign, so pickings should be assigned now.
+        self.batch.action_assign()
         self.assertEqual(self.picking_client_1.state, 'assigned', 'Picking 1 should be ready')
         self.assertEqual(self.picking_client_2.state, 'assigned', 'Picking 2 should be ready')
 
         # There should be a wizard asking to process picking without quantity done
-        immediate_transfer_wizard_dict = self.batch.done()
+        immediate_transfer_wizard_dict = self.batch.action_done()
         self.assertTrue(immediate_transfer_wizard_dict)
         immediate_transfer_wizard = Form(self.env[(immediate_transfer_wizard_dict.get('res_model'))].with_context(immediate_transfer_wizard_dict['context'])).save()
         self.assertEqual(len(immediate_transfer_wizard.pick_ids), 2)
@@ -200,14 +216,18 @@ class TestBatchPicking(TransactionCase):
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 5.0)
         self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 10.0)
 
-        # confirm batch, picking should be assigned
-        self.batch.confirm_picking()
+        # Confirm batch, pickings should not be automatically assigned.
+        self.batch.action_confirm()
+        self.assertEqual(self.picking_client_1.state, 'confirmed', 'Picking 1 should be confirmed')
+        self.assertEqual(self.picking_client_2.state, 'confirmed', 'Picking 2 should be confirmed')
+        # Ask to assign, so pickings should be assigned now.
+        self.batch.action_assign()
         self.assertEqual(self.picking_client_1.state, 'assigned', 'Picking 1 should be ready')
         self.assertEqual(self.picking_client_2.state, 'assigned', 'Picking 2 should be ready')
 
         self.picking_client_1.move_lines.quantity_done = 5
         # There should be a wizard asking to process picking without quantity done
-        immediate_transfer_wizard_dict = self.batch.done()
+        immediate_transfer_wizard_dict = self.batch.action_done()
         self.assertTrue(immediate_transfer_wizard_dict)
         immediate_transfer_wizard = Form(self.env[(immediate_transfer_wizard_dict.get('res_model'))].with_context(immediate_transfer_wizard_dict['context'])).save()
         self.assertEqual(len(immediate_transfer_wizard.pick_ids), 1)
