@@ -12,11 +12,18 @@ RUN dpkg-reconfigure locales && \
     locale-gen C.UTF-8 && \
     /usr/sbin/update-locale LANG=C.UTF-8
 ENV LC_ALL C.UTF-8
+ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update -qq &&  \
     apt-get upgrade -qq -y && \
     apt-get install \
         adduser \
+<<<<<<< HEAD
+=======
+        node-less \
+        dh-python \
+        packaging-dev \
+>>>>>>> f7143d152f9... temp
         postgresql \
         postgresql-client \
         python3 \
