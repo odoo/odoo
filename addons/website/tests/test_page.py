@@ -165,19 +165,23 @@ class TestPage(common.TransactionCase):
     def test_cou_page_frontend(self):
         Page = self.env['website.page']
         View = self.env['ir.ui.view']
+        Website = self.env['website']
 
         # currently the view unlink of website.page can't handle views with inherited views
         self.extension_view.unlink()
 
-        self.page_1.with_context(website_id=1).unlink()
+        website_id = 1
+        self.page_1.with_context(website_id=website_id).unlink()
 
         self.assertEqual(bool(self.base_view.exists()), False)
         self.assertEqual(bool(self.page_1.exists()), False)
         # Not COU but deleting a page will delete its menu (cascade)
         self.assertEqual(bool(self.page_1_menu.exists()), False)
 
-        self.assertEqual(Page.search([('url', '=', '/page_1')]).website_id.id, 2)
-        self.assertEqual(View.search([('name', 'in', ('Base', 'Extension'))]).mapped('website_id').id, 2)
+        pages = Page.search([('url', '=', '/page_1')])
+        self.assertEqual(len(pages), Website.search_count([]) - 1, "A specific page for every website should have been created, except for the one from where we deleted the generic one.")
+        self.assertTrue(website_id not in pages.mapped('website_id').ids, "The website from which we deleted the generic page should not have a specific one.")
+        self.assertTrue(website_id not in View.search([('name', 'in', ('Base', 'Extension'))]).mapped('website_id').ids, "Same for views")
 
 
 class Crawler(HttpCase):
