@@ -319,10 +319,15 @@ var SnippetEditor = Widget.extend({
         $optionSection.append($el);
         var uiEl = $optionSection[0];
 
+        // Build group first as their internal components will be built after
+        uiEl.querySelectorAll('we-group').forEach(groupEl => {
+            options.Class.prototype.buildGroupElement(groupEl);
+        });
+
+        // Build standard components
         uiEl.querySelectorAll('we-select').forEach(selectEl => {
             options.Class.prototype.buildSelectElement(selectEl);
         });
-
         uiEl.querySelectorAll('we-checkbox').forEach(checkboxEl => {
             options.Class.prototype.buildCheckboxElement(checkboxEl);
         });
@@ -394,7 +399,12 @@ var SnippetEditor = Widget.extend({
             }
 
             var optionName = val.option;
-            var $el = val.$el.children().clone(true).addClass('snippet-option-' + optionName);
+
+            var $ui = val.$el.children().clone(true);
+            if (!$ui.length && val.string) {
+                $ui = $('<we-group/>', {string: val.string});
+            }
+            $ui.addClass('snippet-option-' + optionName);
             var option = new (options.registry[optionName] || options.Class)(
                 this,
                 val.base_target ? this.$target.find(val.base_target).eq(0) : this.$target,
@@ -411,7 +421,7 @@ var SnippetEditor = Widget.extend({
             }
             this.styles[key] = option;
             option.__order = i++;
-            return option.attachTo(this._createOptionUI($el));
+            return option.attachTo(this._createOptionUI($ui));
         });
 
         this.isTargetMovable = (this.selectorSiblings.length > 0 || this.selectorChildren.length > 0);
@@ -1264,6 +1274,7 @@ var SnippetsMenu = Widget.extend({
                 'drop-near': $style.data('drop-near') && self._computeSelectorFunctions($style.data('drop-near'), '', false, noCheck, true),
                 'drop-in': $style.data('drop-in') && self._computeSelectorFunctions($style.data('drop-in'), '', false, noCheck),
                 'data': $style.data(),
+                'string': $style.attr('string'),
             };
             self.templateOptions.push(option);
             selectors.push(option.selector);

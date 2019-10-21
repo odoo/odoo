@@ -188,6 +188,23 @@ body.editor_enable.editor_has_snippets {
             font-weight: 500;
             white-space: nowrap;
             text-align: left;
+
+            &.fa {
+                display: inline-block;
+                margin: 0 0 0 0.1em;
+                padding: 0;
+                border: none;
+                font-size: 0.9em;
+                text-align: center;
+
+                &.active {
+                    padding: 0;
+
+                    &::after {
+                        display: none;
+                    }
+                }
+            }
         }
         .o_we_checkbox_wrapper {
             padding-left: 0;
@@ -242,22 +259,6 @@ body.editor_enable.editor_has_snippets {
                     > we-customizeblock-option {
                         display: inline-block; // Ideally -> display: contents;
                     }
-                    we-button {
-                        display: inline-block;
-                        margin: 0 0 0 0.1em;
-                        padding: 0;
-                        border: none;
-                        font-size: 0.9em;
-                        text-align: center;
-
-                        &.active {
-                            padding: 0;
-
-                            &::after {
-                                display: none;
-                            }
-                        }
-                    }
                 }
             }
         }
@@ -285,6 +286,15 @@ body.editor_enable.editor_has_snippets {
             }
             we-toggler {
                 @include we-icon-button('\f107');
+            }
+
+            we-group {
+                display: block;
+
+                > we-title {
+                    display: flex;
+                    align-items: center;
+                }
             }
 
             we-collapse {
