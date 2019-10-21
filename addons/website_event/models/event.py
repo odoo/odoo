@@ -35,7 +35,7 @@ class Event(models.Model):
 
     website_menu = fields.Boolean('Dedicated Menu',
         help="Creates menus Introduction, Location and Register on the page "
-             " of the event on the website.", copy=False)
+             " of the event on the website.", copy=False, compute='_compute_from_event_type', store=True, readonly=False)
     menu_id = fields.Many2one('website.menu', 'Event Menu', copy=False)
 
     def _compute_is_participating(self):
@@ -55,11 +55,12 @@ class Event(models.Model):
             if event.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
                 event.website_url = '/event/%s' % slug(event)
 
-    @api.onchange('event_type_id')
-    def _onchange_type(self):
-        super(Event, self)._onchange_type()
-        if self.event_type_id:
-            self.website_menu = self.event_type_id.website_menu
+    @api.depends('event_type_id')
+    def _compute_from_event_type(self):
+        super(Event, self)._compute_from_event_type()
+        for record in self:
+            if record.event_type_id:
+                record.website_menu = record.event_type_id.website_menu
 
     def _get_menu_entries(self):
         """ Method returning menu entries to display on the website view of the

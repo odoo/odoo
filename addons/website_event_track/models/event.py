@@ -36,8 +36,8 @@ class Event(models.Model):
     sponsor_ids = fields.One2many('event.sponsor', 'event_id', 'Sponsors')
     sponsor_count = fields.Integer('Sponsor Count', compute='_compute_sponsor_count')
 
-    website_track = fields.Boolean('Tracks on Website')
-    website_track_proposal = fields.Boolean('Proposals on Website')
+    website_track = fields.Boolean('Tracks on Website', compute='_compute_from_event_type', store=True, readonly=False)
+    website_track_proposal = fields.Boolean('Proposals on Website', compute='_compute_from_event_type', store=True, readonly=False)
 
     track_menu_ids = fields.One2many('website.event.menu', 'event_id', string='Event Tracks Menus', domain=[('menu_type', '=', 'track')])
     track_proposal_menu_ids = fields.One2many('website.event.menu', 'event_id', string='Event Proposals Menus', domain=[('menu_type', '=', 'track_proposal')])
@@ -102,12 +102,13 @@ class Event(models.Model):
         for event in self:
             event.tracks_tag_ids = event.track_ids.mapped('tag_ids').filtered(lambda tag: tag.color != 0).ids
 
-    @api.onchange('event_type_id')
-    def _onchange_type(self):
-        super(Event, self)._onchange_type()
-        if self.event_type_id and self.website_menu:
-            self.website_track = self.event_type_id.website_track
-            self.website_track_proposal = self.event_type_id.website_track_proposal
+    @api.depends('event_type_id')
+    def _compute_from_event_type(self):
+        super(Event, self)._compute_from_event_type()
+        for record in self:
+            if record.event_type_id and record.website_menu:
+                record.website_track = record.event_type_id.website_track
+                record.website_track_proposal = record.event_type_id.website_track_proposal
 
     @api.onchange('website_menu')
     def _onchange_website_menu(self):
