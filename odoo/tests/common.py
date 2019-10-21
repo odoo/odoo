@@ -943,10 +943,14 @@ class HttpCase(TransactionCase):
             cls.browser = ChromeBrowser(cls._logger, cls.browser_size, cls.__name__)
 
     @classmethod
-    def tearDownClass(cls):
+    def terminate_browser(cls):
         if cls.browser:
             cls.browser.stop()
             cls.browser = None
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.terminate_browser()
         super(HttpCase, cls).tearDownClass()
 
     def setUp(self):
