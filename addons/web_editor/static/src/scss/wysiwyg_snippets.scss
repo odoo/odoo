@@ -217,7 +217,7 @@ body.editor_enable.editor_has_snippets {
                 display: flex;
                 align-items: center;
                 margin: 0.25rem 0;
-                padding: 0 0.5rem;
+                text-transform: uppercase;
                 font-weight: bold;
                 color: inherit !important;
 
@@ -227,10 +227,24 @@ body.editor_enable.editor_has_snippets {
                     margin-left: auto;
                     text-align: center;
 
-                    > we-button {
-                        margin-left: 0.25rem;
-                        width: 1.5rem;
-                        padding: 0.125rem;
+                    > we-customizeblock-option {
+                        display: inline-block; // Ideally -> display: contents;
+                    }
+                    we-button {
+                        display: inline-block;
+                        margin: 0 0 0 0.3em;
+                        padding: 0;
+                        border: none;
+                        font-size: 0.9em;
+                        text-align: center;
+
+                        &.active {
+                            padding: 0;
+
+                            &::after {
+                                display: none;
+                            }
+                        }
                     }
                 }
             }
