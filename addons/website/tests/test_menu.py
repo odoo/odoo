@@ -3,6 +3,9 @@ from odoo.tests import common
 
 
 class TestMenu(common.TransactionCase):
+    def setUp(self):
+        super(TestMenu, self).setUp()
+        self.nb_website = self.env['website'].search_count([])
 
     def test_menu_got_duplicated(self):
         Menu = self.env['website.menu']
@@ -17,7 +20,7 @@ class TestMenu(common.TransactionCase):
             'parent_id': self.menu_root.id,
         })
 
-        self.assertEqual(total_menu_items + 4, Menu.search_count([]), "Creating a menu without a website_id should create this menu for every website_id")
+        self.assertEqual(total_menu_items + self.nb_website * 2, Menu.search_count([]), "Creating a menu without a website_id should create this menu for every website_id")
 
     def test_menu_count(self):
         Menu = self.env['website.menu']
@@ -55,7 +58,7 @@ class TestMenu(common.TransactionCase):
             'name': 'Sub Default Menu',
             'parent_id': default_menu.id,
         })
-        self.assertEqual(total_menu_items + 3, Menu.search_count([]), "Creating a default child menu should create it as such and copy it on every website")
+        self.assertEqual(total_menu_items + 1 + self.nb_website, Menu.search_count([]), "Creating a default child menu should create it as such and copy it on every website")
 
         # Ensure new website got a top menu
         total_menus = Menu.search_count([])
@@ -68,4 +71,4 @@ class TestMenu(common.TransactionCase):
 
         default_menu = self.env.ref('website.main_menu')
         default_menu.child_id[0].unlink()
-        self.assertEqual(total_menu_items - 3, Menu.search_count([]), "Deleting a default menu item should delete its 'copies' (same URL) from website's menu trees. In this case, the default child menu and its copies on website 1 and website 2")
+        self.assertEqual(total_menu_items - 1 - self.nb_website, Menu.search_count([]), "Deleting a default menu item should delete its 'copies' (same URL) from website's menu trees. In this case, the default child menu and its copies on website 1 and website 2")
