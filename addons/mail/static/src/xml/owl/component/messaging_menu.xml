@@ -117,22 +117,12 @@
         </div>
     </li>
 
-    <button
-        class="
-            btn
-            o_MessagingMenu_newMessageButton"
-        owl="1"
-        type="button"
-        t-att-class="{
-            'btn-link': !storeProps.isMobile,
-            'btn-secondary': storeProps.isMobile,
-            'o-mobile': storeProps.isMobile,
-        }"
-        t-if="storeProps.isMobile or
-            !storeProps.isDiscussOpen"
-        t-name="mail.component.MessagingMenu.NewMessageButton"
-        t-on-click.stop="_onClickNewMessage">
-        New message
-    </button>
+    <t t-name="mail.component.MessagingMenu.NewMessageButton" owl="1">
+        <t t-if="storeProps.isMobile or !storeProps.isDiscussOpen">
+            <button t-on-click.stop="_onClickNewMessage" class="btn o_MessagingMenu_newMessageButton" t-att-class="{'btn-link': !storeProps.isMobile, 'btn-secondary': storeProps.isMobile, 'o-mobile': storeProps.isMobile}" type="button">
+                New message
+            </button>
+        </t>
+    </t>
 
 </templates>

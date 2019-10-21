@@ -2,10 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.component.PartnerImStatusIcon" owl="1">
-        <span class="o_PartnerImStatusIcon fa-stack" t-att-title="statusTitle" role="img">
-            <i class="o_PartnerImStatusIcon_outerBackground fa fa-stack-1x fa-circle text-white"/>
-            <i t-attf-class="o_PartnerImStatusIcon_icon fa fa-stack-1x {{statusClass}}"/>
-        </span>
+        <span t-attf-class="o_PartnerImStatusIcon border border-white rounded-circle {{statusClass}}" t-att-title="statusTitle" role="img"/>
     </t>
 
 </templates>

@@ -42,6 +42,8 @@ class ThreadPreview extends owl.Component {
     // Getter / Setter
     //--------------------------------------------------------------------------
 
+    // TODO SEB make those getters on the store?
+
     /**
      * @return {string}
      */
@@ -63,17 +65,18 @@ class ThreadPreview extends owl.Component {
         }
         return mailUtils.parseAndTransform(
             this.storeGetters.messagePrettyBody(this.storeProps.lastMessage.localId),
-            mailUtils.inline);
+            mailUtils.inline
+        );
     }
 
     /**
      * @return {boolean}
      */
     get isMyselfLastMessageAuthor() {
-        return (
-            this.storeProps.lastMessageAuthor &&
-            this.storeProps.lastMessageAuthor.id === this.env.session.partner_id
-        ) || false;
+        if (!this.storeProps.lastMessageAuthor) {
+            return false;
+        }
+        return this.storeProps.lastMessageAuthor.id === this.env.session.partner_id;
     }
 
     //--------------------------------------------------------------------------
