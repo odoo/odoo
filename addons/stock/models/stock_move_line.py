@@ -290,8 +290,8 @@ class StockMoveLine(models.Model):
                         ml.with_context(bypass_reservation_update=True).product_uom_qty = new_product_uom_qty
 
         # When editing a done move line, the reserved availability of a potential chained move is impacted. Take care of running again `_action_assign` on the concerned moves.
-        next_moves = self.env['stock.move']
         if updates or 'qty_done' in vals:
+            next_moves = self.env['stock.move']
             mls = self.filtered(lambda ml: ml.move_id.state == 'done' and ml.product_id.type == 'product')
             if not updates:  # we can skip those where qty_done is already good up to UoM rounding
                 mls = mls.filtered(lambda ml: not float_is_zero(ml.qty_done - vals['qty_done'], precision_rounding=ml.product_uom_id.rounding))
@@ -350,8 +350,8 @@ class StockMoveLine(models.Model):
             moves = self.filtered(lambda ml: ml.move_id.state == 'done' or ml.move_id.picking_id and ml.move_id.picking_id.immediate_transfer).mapped('move_id')
             for move in moves:
                 move.product_uom_qty = move.quantity_done
-        next_moves._do_unreserve()
-        next_moves._action_assign()
+            next_moves._do_unreserve()
+            next_moves._action_assign()
 
         if moves_to_recompute_state:
             moves_to_recompute_state._recompute_state()
