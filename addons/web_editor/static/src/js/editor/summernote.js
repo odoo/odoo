@@ -983,33 +983,15 @@ renderer.tplButtonInfo.color = function (lang, options) {
         event: 'color',
         value: '{"backColor":"#B35E9B"}'
     });
-    var foreColorItems = [
-        '<li><div class="btn-group flex-column">',
-        '<div class="note-color-palette" data-target-event="foreColor"></div>',
-        '<h6 class="note-custom-color mt8" data-event="customColor" data-value="foreColor" title="' + lang.color.custom + '">',
-        lang.color.custom + '</h6>',
-        '<div class="note-custom-color-palette" data-target-event="foreColor"></div>',
-        '</div></li>',
-    ];
-    var backColorItems = [
-        '<li><div class="btn-group flex-column">',
-        '<div class="note-color-reset" data-event="backColor" data-value="inherit" title="' + lang.color.transparent + '">',
-        lang.color.setTransparent + '</div>',
-        '<div class="note-color-palette" data-target-event="backColor"></div>',
-        '<h6 class="note-custom-color mt8" data-event="customColor" data-value="backColor" title="' + lang.color.custom + '">',
-        lang.color.custom + '</h6>',
-        '<div class="note-custom-color-palette" data-target-event="backColor"></div>',
-        '</div></li>',
-    ];
     var foreColorButton = renderer.getTemplate().button(foreColorButtonLabel, {
         className: 'note-fore-color-preview mx-1',
         title: lang.color.foreground,
-        dropdown: renderer.getTemplate().dropdown(foreColorItems)
+        dropdown: renderer.getTemplate().dropdown('<li><div data-event-name="foreColor" class="colorPalette"/></li>'),
     });
     var backColorButton = renderer.getTemplate().button(backColorButtonLabel, {
         className: 'note-back-color-preview mx-1',
         title: lang.color.background,
-        dropdown: renderer.getTemplate().dropdown(backColorItems)
+        dropdown: renderer.getTemplate().dropdown('<li><div data-event-name="backColor" class="colorPalette"/></li>'),
     });
     return recentColorButton + foreColorButton + backColorButton;
 };

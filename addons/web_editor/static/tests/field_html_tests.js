@@ -150,12 +150,20 @@ QUnit.module('web_editor', {}, function () {
             assert.strictEqual(range.sc, pText,
                 "should select the text");
 
-            await testUtils.dom.click($field.find('.note-toolbar .note-back-color-preview button:first'));
+            async function openColorpicker(selector) {
+                const $colorpicker = $field.find(selector);
+                const openingProm = new Promise(resolve => {
+                    $colorpicker.one('shown.bs.dropdown', () => resolve());
+                });
+                await testUtils.dom.click($colorpicker.find('button:first'));
+                return openingProm;
+            }
 
+            await openColorpicker('.note-toolbar .note-back-color-preview');
             assert.ok($field.find('.note-back-color-preview').hasClass('show'),
                 "should display the color picker");
 
-            await testUtils.dom.click($field.find('.note-toolbar .note-back-color-preview button[data-value="#00FFFF"]'));
+            await testUtils.dom.click($field.find('.note-toolbar .note-back-color-preview button[style="background-color:#00FFFF;"]'));
 
             assert.ok(!$field.find('.note-back-color-preview').hasClass('show'),
                 "should close the color picker");
@@ -180,8 +188,8 @@ QUnit.module('web_editor', {}, function () {
             Wysiwyg.setRange(fontContent, 5, pText, 2);
             // text is selected
 
-            await testUtils.dom.click($field.find('.note-toolbar .note-back-color-preview button:first'));
-            await testUtils.dom.click($field.find('.note-toolbar .note-back-color-preview button[data-value="bg-gamma"]'));
+            await openColorpicker('.note-toolbar .note-back-color-preview');
+            await testUtils.dom.click($field.find('.note-toolbar .note-back-color-preview button.bg-gamma'));
 
             assert.strictEqual($field.find('.note-editable').html(),
                 '<p>t<font style="background-color: rgb(0, 255, 255);">oto t</font><font style="" class="bg-gamma">oto&nbsp;</font><font class="bg-gamma" style="">to</font>to</p><p>tata</p>',
@@ -329,7 +337,7 @@ QUnit.module('web_editor', {}, function () {
             // text is selected
 
             await testUtils.dom.click($field.find('.note-toolbar .note-back-color-preview button:first'));
-            await testUtils.dom.click($field.find('.note-toolbar .note-back-color-preview button[data-value="bg-gamma"]'));
+            await testUtils.dom.click($field.find('.note-toolbar .note-back-color-preview button.bg-gamma'));
 
             await testUtils.form.clickSave(form);
 
