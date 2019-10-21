@@ -38,6 +38,15 @@ options.registry.background.include({
     /**
      * @override
      */
+    _getDefaultTextContent: function () {
+        if (this._getMediaDialogOptions().noVideos) {
+            return this._super(...arguments);
+        }
+        return _t("Choose a picture or a video");
+    },
+    /**
+     * @override
+     */
     _getEditableMedia: function () {
         if (!this._hasBgvideo()) {
             return this._super(...arguments);
