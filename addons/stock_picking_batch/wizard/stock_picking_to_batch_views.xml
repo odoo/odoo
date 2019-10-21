@@ -6,11 +6,18 @@
         <field name="name">stock.picking.to.batch.form</field>
         <field name="model">stock.picking.to.batch</field>
         <field name="arch" type="xml">
-            <form string="Add pickings to batch">
-                <separator string="Select a batch"/>
-                <field name="batch_id" class="oe_inline" required="1" options="{'no_create_edit': True, 'no_open': True}"/>
+            <form string="Add pickings to">
+                <group>
+                    <group>
+                        <label for="mode" string="Add to"/>
+                        <field name="mode" widget="radio" nolabel="1"/>
+                        <field name="batch_id" options="{'no_create_edit': True, 'no_open': True}" attrs="{'invisible': [('mode', '=', 'new')], 'required': [('mode', '=', 'existing')]}"/>
+                        <field name="user_id" options="{'no_create_edit': True}" attrs="{'invisible': [('mode', '=', 'existing')]}"/>
+                    </group>
+                </group>
+
                 <footer>
-                    <button name="attach_pickings" type="object" string="Add to Batch" class="btn-primary"/>
+                    <button name="attach_pickings" type="object" string="Confirm" class="btn-primary"/>
                     <button string="Cancel" class="btn-secondary" special="cancel"/>
                 </footer>
             </form>
