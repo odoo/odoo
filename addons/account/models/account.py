@@ -131,6 +131,10 @@ class AccountTaxReportLine(models.Model):
                 self._delete_tags_from_taxes(self.mapped('tag_ids.id'))
                 self.write({'tag_ids': [(2, tag.id, 0) for tag in self.mapped('tag_ids')]})
 
+        if 'country_id' in vals and self.tag_ids:
+            # Writing the country of a tax report line should overwrite the country of its tags
+            self.tag_ids.write({'country_id': vals['country_id']})
+
         return rslt
 
     def unlink(self):
