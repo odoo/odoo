@@ -4,10 +4,12 @@
     <!-- Add batch picking -->
     <record id="stock_picking_batch_dry_1" model="stock.picking.batch">
         <field name="state">in_progress</field>
+        <field name="picking_type_id" ref="stock.picking_type_internal"/>
         <field name="company_id" ref="base.main_company"/>
     </record>
     <record id="stock_picking_batch_freeze_1" model="stock.picking.batch">
         <field name="state">in_progress</field>
+        <field name="picking_type_id" ref="stock.picking_type_internal"/>
         <field name="company_id" ref="base.main_company"/>
     </record>
 

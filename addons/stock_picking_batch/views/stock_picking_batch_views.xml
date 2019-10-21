@@ -1,17 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="view_picking_form_inherited" model="ir.ui.view">
+        <field name="name">stock_picking_batch.picking.form</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="mode">primary</field>
+        <field name="priority" eval="1000"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="replace">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,partially_available,assigned,done"/>
+                </header>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="view_picking_move_tree_inherited" model="ir.ui.view">
+        <field name="name">stock_picking_batch.picking.move.tree</field>
+        <field name="model">stock.move</field>
+        <field name="inherit_id" ref="stock.view_picking_move_tree"/>
+        <field name="mode">primary</field>
+        <field name="priority" eval="1000"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="delete">0</attribute>
+            </xpath>
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="picking_id" required="1"
+                    attrs="{'readonly': [('id', '!=', False)]}"
+                    domain="[('id', 'in', parent.picking_ids)]"
+                    options="{'no_create_edit': True}"/>
+            </xpath>
+            <xpath expr="//field[@name='quantity_done']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_move_line_tree" model="ir.ui.view">
+        <field name="name">stock_picking_batch.move.line.tree</field>
+        <field name="model">stock.move.line</field>
+        <field name="arch" type="xml">
+            <tree editable="top" decoration-muted="state == 'cancel'" string="Move Lines" default_order="location_id">
+                <field name="tracking" invisible="1"/>
+                <field name="state" invisible="1"/>
+                <field name="product_id" required="1" attrs="{'readonly': [('id', '!=', False)]}"/>
+                <field name="picking_id" required="1" attrs="{'readonly': [('id', '!=', False)]}"
+                    options="{'no_create_edit': True}" domain="[('id', 'in', parent.picking_ids)]"/>
+                <field name="lot_id" groups="stock.group_production_lot" attrs="{'readonly': [('tracking', 'not in', ['lot', 'serial'])]}"/>
+                <field name="location_id"/>
+                <field name="location_dest_id"/>
+                <field name="product_uom_qty" readonly="1"/>
+                <field name="product_uom_id" options="{'no_create': True}"
+                    groups="uom.group_uom" readonly="1" force_save="1"/>
+                <field name="qty_done"/>
+                <field name="company_id" groups="base.group_multi_company" force_save="1"/>
+            </tree>
+        </field>
+    </record>
 
     <record id="stock_picking_batch_form" model="ir.ui.view">
         <field name="name">stock.picking.batch.form</field>
         <field name="model">stock.picking.batch</field>
         <field name="arch" type="xml">
             <form string="Stock Batch Transfer">
+                <field name="show_check_availability" invisible="1"/>
                 <header>
-                    <button name="confirm_picking" states="draft" string="Confirm" type="object" class="oe_highlight"/>
-                    <button name="print_picking" string="Print" type="object" class="oe_highlight"/>
-                    <button name="done" states="in_progress" string="Done" type="object" class="oe_highlight"/>
-                    <button name="cancel_picking" string="Cancel" type="object" states="in_progress"/>
-                    <field name="state" widget="statusbar" statusbar_visible="in_progress,done"/>
+                    <button name="action_confirm" states="draft" string="Confirm" type="object" class="oe_highlight"/>
+                    <button name="action_done" string="Validate" type="object" class="oe_highlight"
+                        attrs="{'invisible': [
+                            '|',
+                                ('state', '!=', 'in_progress'),
+                                ('show_check_availability', '=', True)]}"/>
+                    <button name="action_assign" string="Check Availability" type="object" class="oe_highlight"
+                        attrs="{'invisible': [
+                            '|',
+                                ('state', '!=', 'in_progress'),
+                                ('show_check_availability', '=', False)]}"/>
+                    <button name="action_done" string="Validate" type="object"
+                        attrs="{'invisible': [
+                            '|',
+                                ('state', '!=', 'in_progress'),
+                                ('show_check_availability', '=', False)]}"/>
+                    <button name="action_assign" string="Check Availability" type="object"
+                        attrs="{'invisible': [
+                            '|',
+                                ('state', '!=', 'draft'),
+                                ('show_check_availability', '=', False)]}"/>
+                    <button name="action_print" states="in_progress,done" string="Print" type="object"/>
+                    <button name="action_cancel" string="Cancel" type="object" states="in_progress"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,done"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
@@ -20,22 +99,31 @@
                     <group>
                         <group>
                             <field name="user_id"/>
+                            <field name="picking_type_id"/>
                             <field name="company_id" groups="base.group_multi_company" attrs="{'readonly': [('picking_ids', '!=', [])]}" force_save="1"/>
                         </group>
                     </group>
-                    <separator string="Transfers"/>
-                    <field name="picking_ids" widget="many2many" options="{'not_delete': True}">
-                        <tree>
-                            <field name="name"/>
-                            <field name="scheduled_date"/>
-                            <field name="location_id"/>
-                            <field name="backorder_id"/>
-                            <field name="origin"/>
-                            <field name="state"/>
-                            <button name="action_assign" string="Confirm picking" type="object" icon="fa-check text-success" attrs="{'invisible': [('state', 'in', ('done', 'cancel', 'confirmed', 'assigned'))]}"/>
-                            <button name="action_cancel" string="Cancel picking" type="object" icon="fa-times-circle text-danger" attrs="{'invisible': [('state', 'in', ('done', 'cancel'))]}"/>
-                        </tree>
-                    </field>
+                    <notebook>
+                        <page string="Detailed Operations" attrs="{'invisible': [('state', '=', 'draft')]}">
+                            <field name="move_line_ids" context="{'tree_view_ref': 'stock_picking_batch.view_move_line_tree'}"/>
+                        </page>
+                        <page string="Operations" attrs="{'invisible': [('state', '=', 'draft')]}">
+                            <field name="move_ids" context="{'tree_view_ref': 'stock_picking_batch.view_picking_move_tree_inherited'}"/>
+                        </page>
+                        <page string="Transfers">
+                            <field name="allowed_picking_ids" invisible="1"/>
+                            <field name="picking_ids" widget="many2many" context="{'form_view_ref': 'stock_picking_batch.view_picking_form_inherited'}">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="scheduled_date"/>
+                                    <field name="location_id"/>
+                                    <field name="backorder_id"/>
+                                    <field name="origin"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
@@ -139,7 +227,14 @@
         <field name="inherit_id" ref="stock.vpicktree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='state']" position="before">
-                <field name="batch_id" optional="show"/>
+                <field name="batch_id" optional="show"
+                    domain="[
+                        ('state', 'in', ['draft', 'in_progress']),
+                        '|',
+                            ('picking_type_id', '=', picking_type_id),
+                            ('picking_type_id', '=', False),
+                    ]"
+                    context="{'default_picking_type_id': picking_type_id}"/>
             </xpath>
         </field>
     </record>
