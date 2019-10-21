@@ -37,25 +37,6 @@ class ThreadPreviewList extends owl.Component {
     }
 
     //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * @param {string} threadLocalId
-     * @return {boolean}
-     */
-    isPreviewPartiallyVisible(threadLocalId) {
-        return this.__owl__.refs[threadLocalId].isPartiallyVisible();
-    }
-
-    /**
-     * @param {string} threadLocalId
-     */
-    scrollToPreview(threadLocalId) {
-        this.__owl__.refs[threadLocalId].scrollIntoView();
-    }
-
-    //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
