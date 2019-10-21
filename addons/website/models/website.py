@@ -171,6 +171,7 @@ class Website(models.Model):
     # Page Management
     # ----------------------------------------------------------
     def _bootstrap_homepage(self):
+        Page = self.env['website.page']
         standard_homepage = self.env.ref('website.homepage', raise_if_not_found=False)
         if not standard_homepage:
             return
@@ -183,10 +184,19 @@ class Website(models.Model):
         </t>''' % (self.id)
         standard_homepage.with_context(website_id=self.id).arch_db = new_homepage_view
 
-        self.homepage_id = self.env['website.page'].search([('website_id', '=', self.id),
-                                                            ('key', '=', standard_homepage.key)])
+        homepage_page = Page.search([
+            ('website_id', '=', self.id),
+            ('key', '=', standard_homepage.key),
+        ])
+        if not homepage_page:
+            homepage_page = Page.create({
+                'website_published': True,
+                'url': '/',
+                'view_id': self.with_context(website_id=self.id).viewref('website.homepage').id,
+            })
         # prevent /-1 as homepage URL
-        self.homepage_id.url = '/'
+        homepage_page.url = '/'
+        self.homepage_id = homepage_page
 
         # Bootstrap default menu hierarchy, create a new minimalist one if no default
         default_menu = self.env.ref('website.main_menu')
