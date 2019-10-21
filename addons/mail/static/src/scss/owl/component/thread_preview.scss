@@ -84,13 +84,6 @@
     }
 }
 
-.o_ThreadPreview_partnerImStatusIcon {
-    @include o-position-absolute($bottom: 0, $right: 0);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
 .o_ThreadPreview_sidebar {
     margin: 3px;
 }
@@ -104,8 +97,8 @@
     cursor: pointer;
     user-select: none;
 
-    .o_ThreadPreview_partnerImStatusIcon {
-        color: gray('100');
+    .o_PartnerImStatusIcon {
+        @include o-position-absolute($bottom: 0, $right: 0);
     }
 
     &:hover {
@@ -162,8 +155,4 @@
     &:not(:hover) {
         opacity: 0.8;
     }
-}
-
-.o_ThreadPreview_partnerImStatusIcon:not(.o_ThreadPreview_partnerImStatusIcon-mobile) {
-    font-size: x-small;
 }
