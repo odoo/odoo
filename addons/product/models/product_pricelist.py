@@ -205,7 +205,7 @@ class Pricelist(models.Model):
                         continue
 
                 if rule.base == 'pricelist' and rule.base_pricelist_id:
-                    price_tmp = rule.base_pricelist_id._compute_price_rule([(product, qty, partner)])[product.id][0]  # TDE: 0 = price, 1 = rule
+                    price_tmp = rule.base_pricelist_id._compute_price_rule([(product, qty, partner)], date, uom_id)[product.id][0]  # TDE: 0 = price, 1 = rule
                     price = rule.base_pricelist_id.currency_id.compute(price_tmp, self.currency_id, round=False)
                 else:
                     # if base option is public price take sale price else cost price of product
