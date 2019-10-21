@@ -48,6 +48,7 @@ class MrpProduction(models.Model):
             'account_id': account,
             'ref': wc.code,
             'unit_amount': hours,
+            'company_id': self.company_id.id,
         }
 
     def _costs_generate(self):
