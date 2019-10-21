@@ -96,7 +96,7 @@
                 <field name="name" string="Batch Transfer"/>
                 <field name="user_id"/>
                 <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]"/>
-                <filter name="in_progress" string="Running" domain="[('state', '=', 'in_progress')]" help="Batch Transfers not finished"/>
+                <filter name="in_progress" string="In Progress" domain="[('state', '=', 'in_progress')]" help="Batch Transfers not finished"/>
                 <filter name="done" string="Done" domain="[('state', '=', 'done')]"/>
                 <separator/>
                 <filter invisible="1" string="Late Activities" name="activities_overdue"
