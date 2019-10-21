@@ -539,6 +539,7 @@
                     <field name="name"/>
                     <field name="model_id"/>
                     <field name="group_id"/>
+                    <field name="active"/>
                     <field name="perm_read"/>
                     <field name="perm_write"/>
                     <field name="perm_create"/>
@@ -579,6 +580,8 @@
                     <filter string="Write Access" name="write_access" domain="[('perm_write','=',True)]"/>
                     <field name="model_id"/>
                     <field name="group_id"/>
+                    <separator/>
+                    <filter string="Archived" name="archived" domain="[('active','=',False)]"/>
                     <group expand="0" string="Group By" colspan="11" col="11" groups="base.group_no_one">
                         <filter string="Group" name="group" domain="[]" context="{'group_by':'group_id'}"/>
                         <filter string="Object" name="group_by_object" domain="[]" context="{'group_by':'model_id'}"/>
