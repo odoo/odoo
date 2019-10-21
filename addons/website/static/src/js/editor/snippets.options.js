@@ -1566,6 +1566,12 @@ options.registry.anchorName = options.Class.extend({
     /**
      * @override
      */
+    isTopOption: function () {
+        return true;
+    },
+    /**
+     * @override
+     */
     onClone: function () {
         this.$target.removeAttr('id data-anchor');
     },

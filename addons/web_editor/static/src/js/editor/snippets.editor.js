@@ -299,13 +299,10 @@ var SnippetEditor = Widget.extend({
         this._customize$Elements.forEach(($el, i) => {
             var editor = $el.data('editor');
             var styles = _.values(editor.styles);
-            $el.toggleClass('d-none', styles.length === 0);
             _.sortBy(styles, '__order').forEach(style => {
                 if (show) {
-                    style.$el.appendTo($el);
                     style.onFocus();
                 } else {
-                    style.$el.detach();
                     style.onBlur();
                 }
             });
@@ -365,6 +362,11 @@ var SnippetEditor = Widget.extend({
         var $optionsSection = $(core.qweb.render('web_editor.customize_block_options_section', {
             name: this._getName(),
         })).data('editor', this);
+        $optionsSection.find('we-button-group').contents().each((i, node) => {
+            if (node.nodeType === Node.TEXT_NODE) {
+                node.parentNode.removeChild(node);
+            }
+        });
         $optionsSection.on('mouseover', this._onOptionsSectionMouseOver.bind(this));
         $optionsSection.on('mouseleave', this._onOptionsSectionMouseLeave.bind(this));
         $optionsSection.on('click', 'we-title > span', this._onOptionsSectionClick.bind(this));
@@ -415,7 +417,17 @@ var SnippetEditor = Widget.extend({
 
         this.$el.find('[data-toggle="dropdown"]').dropdown();
 
-        return Promise.all(defs);
+        return Promise.all(defs).then(() => {
+            const options = _.sortBy(this.styles, '__order');
+            options.forEach(option => {
+                if (option.isTopOption()) {
+                    $optionsSection.find('we-button-group').first().prepend(option.$el);
+                } else {
+                    $optionsSection.append(option.$el);
+                }
+            });
+            $optionsSection.toggleClass('d-none', options.length === 0);
+        });
     },
 
     //--------------------------------------------------------------------------
