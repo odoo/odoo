@@ -894,9 +894,30 @@ registry.background = SnippetOption.extend({
      * @override
      */
     start: function () {
+        // Build option UI controls
+        var titleEl = this.el.querySelector('we-title');
+        this.removeBgEl = document.createElement('we-button');
+        this.removeBgEl.classList.add('fa', 'fa-fw', 'fa-times');
+        this.removeBgEl.dataset.background = '';
+        this.removeBgEl.dataset.noPreview = 'true';
+        titleEl.appendChild(this.removeBgEl);
+
+        const editBgEl = document.createElement('we-button');
+        editBgEl.dataset.chooseImage = 'true';
+        editBgEl.dataset.noPreview = 'true';
+        const iconEl = document.createElement('i');
+        iconEl.classList.add('fa', 'fa-fw', 'fa-pencil-square-o');
+        this.editBgTextEl = document.createElement('span');
+        editBgEl.appendChild(this.editBgTextEl);
+        editBgEl.appendChild(iconEl);
+        this.$el.find('we-group')[0].appendChild(editBgEl);
+
         var res = this._super.apply(this, arguments);
+
+        // Initialize background and events
         this.bindBackgroundEvents();
         this.__customImageSrc = this._getSrcFromCssValue();
+
         return res;
     },
 
@@ -1031,19 +1052,16 @@ registry.background = SnippetOption.extend({
     /**
      * @override
      */
-    _setActive: function () {
+    _updateUI: function () {
         this._super.apply(this, arguments);
-
         var src = this._getSrcFromCssValue();
-        this.$el.find('[data-background]')
-            .removeClass('active')
-            .filter(function () {
-                var bgOption = $(this).data('background');
-                return (bgOption === '' && src === '' || bgOption !== '' && src.indexOf(bgOption) >= 0);
-            })
-            .addClass('active');
-
-        this.$el.find('[data-choose-image]').toggleClass('active', this.$target.hasClass('oe_custom_bg'));
+        this.removeBgEl.classList.toggle('d-none', !src);
+        if (src) {
+            var split = src.split('/');
+            this.editBgTextEl.textContent = split[split.length - 1];
+        } else {
+            this.editBgTextEl.textContent = _t("Choose a picture or a video");
+        }
     },
     /**
      * Sets the given value as custom background image.
