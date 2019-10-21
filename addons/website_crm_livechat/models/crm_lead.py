@@ -7,7 +7,7 @@ from odoo import api, fields, models
 class Lead(models.Model):
     _inherit = 'crm.lead'
 
-    visitor_sessions_count = fields.Integer('# Sessions', compute="_compute_visitor_sessions_count")
+    visitor_sessions_count = fields.Integer('# Sessions', compute="_compute_visitor_sessions_count", groups="im_livechat.im_livechat_group_user")
 
     @api.depends('visitor_ids.mail_channel_ids')
     def _compute_visitor_sessions_count(self):
