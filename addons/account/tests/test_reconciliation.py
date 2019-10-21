@@ -3,7 +3,7 @@ from odoo.addons.account.tests.account_test_classes import AccountingTestCase
 from odoo.tests import tagged
 import time
 import unittest
-
+import json
 
 # TODO in master
 # The name of this class should be TestReconciliationHelpers
@@ -178,6 +178,14 @@ class TestReconciliation(AccountingTestCase):
         bank_stmt = self.make_payment(invoice_record, bank_journal, amount=-amount, amount_currency=-amount_currency, currency_id=transaction_currency_id)
         supplier_move_lines = bank_stmt.move_line_ids
         return customer_move_lines, supplier_move_lines
+
+    def _get_receivable(self, move_or_lines):
+        if move_or_lines._name == 'account.move.line':
+            line_ids = move_or_lines
+        else:
+            line_ids = move_or_lines.line_ids
+        return line_ids.filtered(
+            lambda l: l.account_id.internal_type == 'receivable')
 
 
 @tagged('post_install', '-at_install')
@@ -2672,3 +2680,281 @@ class TestReconciliationExec(TestReconciliation):
         self.assertTrue(inv1.reconciled)
 
         self.assertEquals(inv1.state, 'paid')
+
+@tagged('post_install', '-at_install')
+class TestReconciliationInvoiceWidgets(TestReconciliation):
+
+    def setUp(self):
+        super(TestReconciliationInvoiceWidgets, self).setUp()
+
+        company = self.env.ref('base.main_company')
+        self.assertEqual(company, self.env.user.company_id)
+        self.assertEqual(company.currency_id.id, self.currency_euro_id)
+
+        self.env['res.currency.rate'].search([]).unlink()
+        self.env['res.currency.rate'].create({
+            'currency_id': self.currency_euro_id,
+            'name': '2019-06-12',
+            'rate': 1.00,
+        })
+        self.env['res.currency.rate'].create({
+            'currency_id': self.currency_usd_id,
+            'name': '2019-06-12',
+            # 'rate': 19.2040,
+            'rate': 0.052072,
+        })
+        self.env['res.currency.rate'].create({
+            'currency_id': self.currency_usd_id,
+            'name': '2019-06-20',
+            # 'rate': 19.1011,
+            'rate': 0.052353,
+        })
+        self.env['res.currency.rate'].create({
+            'currency_id': self.currency_usd_id,
+            'name': '2019-06-24',
+            # 'rate': 18.9804,
+            'rate': 0.052686,
+        })
+        self.env['res.currency.rate'].create({
+            'currency_id': self.currency_usd_id,
+            'name': '2019-06-28',
+            # 'rate': 19.1442,
+            'rate': 0.052235,
+        })
+
+        self.inv1 = self._create_invoice(
+            type='out_invoice',
+            invoice_amount=839.40,
+            currency_id=self.currency_euro_id,
+            date_invoice='2019-06-20',
+            auto_validate=True
+        )
+        self.refund1 = self._create_invoice(
+            type='out_refund',
+            invoice_amount=1385.92,
+            currency_id=self.currency_euro_id,
+            date_invoice='2019-06-12',
+            auto_validate=True
+        )
+        self.inv2 = self._create_invoice(
+            type='out_invoice',
+            invoice_amount=1935.72,
+            currency_id=self.currency_usd_id,
+            date_invoice='2019-06-24',
+            auto_validate=True
+        )
+
+        self.payment1 = self.env['account.payment'].create({
+            'payment_type': 'inbound',
+            'payment_method_id': self.env.ref(
+                'account.account_payment_method_manual_in').id,
+            'partner_type': 'customer',
+            'partner_id': self.partner_agrolait_id,
+            'amount': 1907.17,
+            'currency_id': self.currency_usd_id,
+            'payment_date': '2019-06-28',
+            'journal_id': self.bank_journal_usd.id,
+        })
+        self.payment1.post()
+
+        self.payment2 = self.env['account.payment'].create({
+            'payment_type': 'inbound',
+            'payment_method_id': self.env.ref(
+                'account.account_payment_method_manual_in').id,
+            'partner_type': 'customer',
+            'partner_id': self.partner_agrolait_id,
+            'amount': 0.09,
+            'currency_id': self.currency_usd_id,
+            'payment_date': '2019-06-24',
+            'journal_id': self.bank_journal_usd.id,
+        })
+        self.payment2.post()
+
+    def _get_outstanding_or_assigned_amount(self, invoice, receivable_line, mode='outstanding'):
+        if mode == 'outstanding':
+            field = 'outstanding_credits_debits_widget'
+            line_id_field = 'id'
+        else:
+            field = 'payments_widget'
+            line_id_field = 'payment_id'
+        widget_val = json.loads(invoice[field])['content']
+        contents = [elem for elem in widget_val if elem[line_id_field] == receivable_line.id][0]
+        return contents['amount']
+
+    def test_reconcile_assign_outstanding_case_01(self):
+        inv1_rec = self._get_receivable(self.inv1.move_id)
+        inv2_rec = self._get_receivable(self.inv2.move_id)
+        refund1_rec = self._get_receivable(self.refund1.move_id)
+        pay1_rec = self._get_receivable(self.payment1.move_line_ids)
+
+        #########################################
+        # Reconcile Refund1 and Inv1            #
+        # Same Currency, no problem             #
+        #########################################
+        refund1_outstanding = self._get_outstanding_or_assigned_amount(self.refund1, inv1_rec)
+
+        self.refund1.assign_outstanding_credit(inv1_rec.id)
+        self.assertEqual(self.refund1.residual, 546.52)
+
+        self.assertEqual(self.inv1.state, 'paid')
+        self.assertEqual(inv1_rec.amount_residual, 0.00)
+        self.assertEqual(inv1_rec.amount_residual_currency, 0.00)
+
+        refund1_payment = self._get_outstanding_or_assigned_amount(self.refund1, inv1_rec, False)
+
+        # invoice 1 has been fully consumed at this point so, the amount actually reconciled
+        # should be the same as the outstanding amount
+        self.assertEqual(
+            refund1_outstanding, refund1_payment,
+            'Amount in Outstanding Widget shall be equal to amount in Payment Widget')
+
+        #########################################
+        # Reconcile Inv2 and Refund1            #
+        # Currency is problematic               #
+        #########################################
+        inv2_outstanding = self._get_outstanding_or_assigned_amount(self.inv2, refund1_rec)
+
+        self.inv2.assign_outstanding_credit(refund1_rec.id)
+        # refund is in company currency, but invoice 2 is not
+        # So, the reconciliation will happen in company currency
+        # inv2: 1935.72 / 0.052686 = 36740.69
+        # reconciliation: 36740.69 - 546.52 = 36194.17
+        # Back in inv2's currency: 36194.17 * 0.052686 = 1906.93
+        self.assertEqual(self.inv2.residual, 1906.93)
+        self.assertEqual(inv2_rec.amount_residual, 36194.17)
+        self.assertEqual(inv2_rec.amount_residual_currency, 1906.93)
+
+        inv2_payment = self._get_outstanding_or_assigned_amount(self.inv2, refund1_rec, False)
+
+        # refund 1 has been fully consumed at this point so, the amount actually reconciled
+        # should be the same as the outstanding amount
+        self.assertEqual(
+            inv2_outstanding, inv2_payment,
+            'Amount in Outstanding Widget shall be equal to amount in Payment Widget')
+
+        #########################################
+        # Reconcile Inv2 and Payment1           #
+        # Same Foreign Currency                 #
+        #########################################
+        inv2_outstanding = self._get_outstanding_or_assigned_amount(self.inv2, pay1_rec)
+        self.assertEqual(inv2_outstanding, 1907.17)
+        self.assertEqual(pay1_rec.amount_residual_currency, -inv2_outstanding)
+        self.assertEqual(pay1_rec.amount_residual, -36511.34)
+
+        self.inv2.assign_outstanding_credit(pay1_rec.id)
+
+        # Inv: 1906.93  payment: 1907.17   0.24 on payment left
+        # All in the same currency
+        self.assertEqual(self.inv2.residual, 0.00)
+        self.assertEqual(inv2_rec.amount_residual, 0.00)
+        self.assertEqual(inv2_rec.amount_residual_currency, 0.00)
+
+        self.assertEqual(pay1_rec.amount_residual_currency, -0.24)
+        self.assertEqual(pay1_rec.amount_residual, -317.17)  # 36194.17 - (1907.17 / 0.052235)
+
+        inv2_payment = self._get_outstanding_or_assigned_amount(self.inv2, pay1_rec, False)
+        self.assertEqual(inv2_payment, 1906.93)
+
+    def test_reconcile_assign_outstanding_case_02(self):
+        inv1_rec = self._get_receivable(self.inv1.move_id)
+        inv2_rec = self._get_receivable(self.inv2.move_id)
+        refund1_rec = self._get_receivable(self.refund1.move_id)
+        pay1_rec = self._get_receivable(self.payment1.move_line_ids)
+        pay2_rec = self._get_receivable(self.payment2.move_line_ids)
+
+        #########################################
+        # Reconcile Refund1 and Inv1            #
+        # Tested in case1 -- no problem         #
+        #########################################
+        self.refund1.assign_outstanding_credit(inv1_rec.id)
+        self.assertEqual(self.refund1.residual, 546.52)
+
+        #########################################
+        # Reconcile Inv2 and Payment1           #
+        # Same Foreign Currency                 #
+        #########################################
+
+        # Reconciled on their amount_currency:
+        # inv: 1935.72  payment: 1907.17
+        import pudb;pu.db
+        self.inv2.assign_outstanding_credit(pay1_rec.id)
+        self.assertEqual(self.inv2.residual, 28.55)
+        self.assertEqual(inv2_rec.amount_residual, 229.35)
+        self.assertEqual(inv2_rec.amount_residual_currency, 28.55)
+
+        #########################################
+        # Reconcile Inv2 and Refund1            #
+        # Currency is Problematic               #
+        #########################################
+        inv2_outstanding = self._get_outstanding_or_assigned_amount(self.inv2, refund1_rec)
+        # refund1 is now 546.52 in company currency
+        # which gives out 546.52 * 0.052686 = 28.79 in inv2's currency
+        self.assertEqual(inv2_outstanding, 28.46)  # or 28.45
+
+        import pudb;pu.db
+        self.inv2.assign_outstanding_credit(refund1_rec.id)
+        self.assertEqual(inv2_rec.amount_residual, 0.0)
+        self.assertEqual(self.inv2.residual, 0.09)
+        self.assertEqual(inv2_rec.amount_residual, 0.0)
+        self.assertEqual(inv2_rec.amount_residual_currency, 0.09)
+
+        self.assertEqual(self.refund1.residual, 317.17)
+
+        inv2_payment = self._get_outstanding_or_assigned_amount(self.inv2, refund1_rec, False)
+        self.assertEqual(
+            inv2_outstanding, inv2_payment,
+            'Amount in Outstanding Widget shall be equal to amount in Payment Widget for Invoice 2')
+
+        #########################################
+        # Reconcile Inv2 and payment2           #
+        # Currency is Problematic               #
+        #########################################
+        self.inv2.assign_outstanding_credit(pay2_rec.id)
+        self.assertEqual(self.inv2.residual, 0.00)
+        self.assertEqual(inv2_rec.amount_residual, 0.00)
+        self.assertEqual(inv2_rec.amount_residual_currency, 0.00)
+
+        self.assertEqual(pay2_rec.amount_residual, 0.00)
+        self.assertEqual(pay2_rec.amount_residual_currency, 0.00)
+
+    def test_reconcile_assign_outstanding_case_02_b(self):
+        """"This test is repeated to test that the widget fails for the
+        credit note too in the test_reconcile_assign_outstanding_case_02"""
+        inv1_rec = self._get_receivable(self.inv1.move_id)
+        inv2_rec = self._get_receivable(self.inv2.move_id)
+        refund1_rec = self._get_receivable(self.refund1.move_id)
+        pay1_rec = self._get_receivable(self.payment1.move_line_ids)
+        pay2_rec = self._get_receivable(self.payment2.move_line_ids)
+
+        # Reconcile From F002 document F001
+        self.refund1.assign_outstanding_credit(inv1_rec.id)
+
+        # Reconcile From F003 document P001
+        self.inv2.assign_outstanding_credit(pay1_rec.id)
+
+        # Reconcile From F003 document F002
+        refund1_outstanding = self._get_outstanding_or_assigned_amount(self.refund1, inv2_rec)
+        refund1_residual = self.refund1.residual
+
+        # There is less residual than potential payments
+        self.assertEqual(refund1_residual, 546.52)
+        self.assertEqual(refund1_outstanding, 548.28)
+
+        self.inv2.assign_outstanding_credit(refund1_rec.id)
+        self.assertTrue(self.refund1.state, 'paid')
+
+        refund1_payment = self._get_outstanding_or_assigned_amount(self.refund1, inv2_rec, False)
+
+        # There might be some inevitable rounding issues
+        self.assertAlmostEqual(refund1_residual, refund1_payment, delta=0.01)
+
+        # The refund has been assigned for 546.52 from invoice 2
+        # So: there is 548.28 - 546.52 = 1.76 left in company currency on invoice 2
+        # which amount to 1.76 / 0.052686 = 0.09 is foreign currency
+        self.assertEqual(inv2_rec.amount_residual_currency, 0.09)
+
+        # Reconcile From F003 document P002
+        self.inv2.assign_outstanding_credit(pay2_rec.id)
+        self.assertEqual(self.inv2.residual, 0.00)
+        self.assertEqual(inv2_rec.amount_residual, 0.00)
+        self.assertEqual(inv2_rec.amount_residual_currency, 0.00)
