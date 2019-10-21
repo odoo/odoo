@@ -239,7 +239,7 @@ class PosOrder(models.Model):
         inv_line.update(price_unit=line.price_unit, discount=line.discount, name=inv_name)
         return InvoiceLine.sudo().create(inv_line)
 
-    def _create_account_move_line(self, session=None, move=None):
+    def _prepare_account_move_and_lines(self, session=None, move=None):
         def _flatten_tax_and_children(taxes, group_done=None):
             children = self.env['account.tax']
             if group_done is None:
@@ -460,6 +460,17 @@ class PosOrder(models.Model):
 
         if self and order.company_id.anglo_saxon_accounting:
             add_anglosaxon_lines(grouped_data)
+
+        return {
+            'grouped_data': grouped_data,
+            'move': move,
+        }
+
+    def _create_account_move_line(self, session=None, move=None):
+        vals = self._prepare_account_move_and_lines(session, move)
+
+        grouped_data = vals['grouped_data']
+        move = vals['move']
 
         all_lines = []
         for group_key, group_data in grouped_data.items():
