@@ -1014,7 +1014,7 @@
             <t t-if='receipt.total_discount'>
                 <div>
                     Discounts
-                    <span t-esc='widget.format_currency_no_symbol(receipt.total_discount)' class="pos-receipt-right-align"/>
+                    <span t-esc='widget.format_currency(receipt.total_discount)' class="pos-receipt-right-align"/>
                 </div>
             </t>
             <t t-if='taxincluded'>
