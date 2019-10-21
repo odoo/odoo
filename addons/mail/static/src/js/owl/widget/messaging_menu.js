@@ -1,7 +1,7 @@
 odoo.define('mail.widget.MessagingMenu', function (require) {
 'use strict';
 
-const MessagingMenuComponent = require('mail.component.MessagingMenu');
+const MessagingMenu = require('mail.component.MessagingMenu');
 const EnvMixin = require('mail.widget.EnvMixin');
 
 const SystrayMenu = require('web.SystrayMenu');
@@ -10,7 +10,7 @@ const Widget = require('web.Widget');
 /**
  * Odoo Widget, necessary to instanciate a root OWL widget.
  */
-const MessagingMenu = Widget.extend(EnvMixin, {
+const MessagingMenuWidget = Widget.extend(EnvMixin, {
     DEBUG: true,
     template: 'mail.widget.MessagingMenu',
     init() {
@@ -40,7 +40,7 @@ const MessagingMenu = Widget.extend(EnvMixin, {
         this._super.apply(this, arguments);
     },
     async on_attach_callback() {
-        this.component = new MessagingMenuComponent(this.env);
+        this.component = new MessagingMenu(this.env);
         await this.component.mount(this.$el[0]);
         // unwrap
         this.el.parentNode.insertBefore(this.component.el, this.el);
@@ -55,11 +55,11 @@ const MessagingMenu = Widget.extend(EnvMixin, {
 const activityMenuIndex = SystrayMenu.Items.findIndex(SystrayMenuItem =>
     SystrayMenuItem.prototype.name === 'activity_menu');
 if (activityMenuIndex > 0) {
-    SystrayMenu.Items.splice(activityMenuIndex, 0, MessagingMenu);
+    SystrayMenu.Items.splice(activityMenuIndex, 0, MessagingMenuWidget);
 } else {
-    SystrayMenu.Items.push(MessagingMenu);
+    SystrayMenu.Items.push(MessagingMenuWidget);
 }
 
-return MessagingMenu;
+return MessagingMenuWidget;
 
 });
