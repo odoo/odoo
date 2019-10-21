@@ -522,38 +522,20 @@ class ComputeOnchangeDefault(models.Model):
     _name = 'test_new_api.compute.onchange.default'
     _description = "Compute method as an onchange with default"
 
-    def default_get(self, fields):
-        result = super(ComputeOnchangeDefault, self).default_get(fields)
-
-        if 'partner_id' not in result:
-            if result.get('template_partner_id'):
-                result['partner_id'] = result['template_partner_id']
-            else:
-                result['partner_id'] = self.env.user.partner_id.id
-            if 'email' not in result:
-                if result.get('template_partner_id'):
-                    result['email'] = self.env['res.partner'].browse(result['template_partner_id']).email_formatted
-                elif self.env.user.email:
-                    result['email'] = self.env.user.email_formatted
-        elif 'email' not in result:
-            author = self.env['res.partner'].browse(result['partner_id'])
-            if author.email:
-                result['email'] = tools.formataddr((author.name, author.email))
-
-        return result
-
     name = fields.Char()
     template_partner_id = fields.Many2one('res.partner')
-    partner_id = fields.Many2one('res.partner')
-    email = fields.Char()
+    partner_id = fields.Many2one('res.partner', compute='_compute_partner_id', compute_sudo=False, readonly=False, store=True)
+    email = fields.Char(compute='_compute_email', readonly=False, store=True)
 
-    @api.onchange('template_partner_id')
-    def _onchange_template_partner_id(self):
+    @api.depends('template_partner_id')
+    def _compute_partner_id(self):
         if self.template_partner_id:
             self.partner_id = self.template_partner_id
+        elif not self.partner_id:
+            self.partner_id = self.env.user.partner_id
 
-    @api.onchange('partner_id')
-    def _onchange_partner_id(self):
+    @api.depends('partner_id')
+    def _compute_email(self):
         if self.partner_id:
             self.email = self.partner_id.email_formatted
 

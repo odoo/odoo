@@ -27,7 +27,7 @@ class TestNewApiPerformance(TransactionCase):
     @users('__system__', 'employee')
     @warmup
     def test_create_compute_onchange_default(self):
-        with self.assertQueryCount(__system__=2, employee=2):
+        with self.assertQueryCount(__system__=4, employee=4):
             record = self.env['test_new_api.compute.onchange.default'].create({
                 'name': 'Test',
             })
@@ -37,7 +37,7 @@ class TestNewApiPerformance(TransactionCase):
     @users('__system__', 'employee')
     @warmup
     def test_create_compute_onchange_default_onchange(self):
-        with self.assertQueryCount(__system__=2, employee=2):
+        with self.assertQueryCount(__system__=3, employee=3):
             record = self.env['test_new_api.compute.onchange.default'].with_context({
                 'default_template_partner_id': self.customer.id
             }).create({
@@ -49,7 +49,7 @@ class TestNewApiPerformance(TransactionCase):
     @users('__system__', 'employee')
     @warmup
     def test_create_compute_onchange_default_specified(self):
-        with self.assertQueryCount(__system__=2, employee=2):
+        with self.assertQueryCount(__system__=3, employee=3):
             record = self.env['test_new_api.compute.onchange.default'].with_context({
                 'default_partner_id': self.customer.id
             }).create({
@@ -69,8 +69,7 @@ class TestNewApiPerformance(TransactionCase):
         self.assertEqual(record.email, self.env.user.email_formatted)
 
         with self.assertQueryCount(__system__=2, employee=2):
-            record.update({'partner_id': self.customer.id})
-            record._onchange_partner_id()
+            record.write({'partner_id': self.customer.id})
 
         self.assertEqual(record.partner_id, self.customer)
         self.assertEqual(record.email, self.customer.email_formatted)
@@ -86,9 +85,7 @@ class TestNewApiPerformance(TransactionCase):
         self.assertEqual(record.email, self.env.user.email_formatted)
 
         with self.assertQueryCount(__system__=2, employee=2):
-            record.update({'template_partner_id': self.customer.id})
-            record._onchange_template_partner_id()
-            record._onchange_partner_id()
+            record.write({'template_partner_id': self.customer.id})
 
         self.assertEqual(record.partner_id, self.customer)
         self.assertEqual(record.email, self.customer.email_formatted)
