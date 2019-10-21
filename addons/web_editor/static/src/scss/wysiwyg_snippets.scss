@@ -479,7 +479,7 @@ body.editor_enable.editor_has_snippets {
         .o_colorpicker_section {
 
             > :first-child {
-                margin: 8px 0 4px;
+                margin: 4px 0;
             }
             button {
                 position: relative;
@@ -508,11 +508,13 @@ body.editor_enable.editor_has_snippets {
                 }
             }
 
-            &[data-name="transparent_grayscale"] button {
-                @include o-alpha-button-preview;
+            &[data-name="transparent_grayscale"], &[data-name="theme"] {
+                button {
+                    @include o-alpha-button-preview;
 
-                &::before, &::after {
-                    box-shadow: inherit;
+                    &::before, &::after {
+                        box-shadow: inherit;
+                    }
                 }
             }
         }

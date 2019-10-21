@@ -18,6 +18,7 @@ var EditorMenuBar = Widget.extend({
         'click button[data-action=cancel]': '_onCancelClick',
     },
     custom_events: {
+        request_editable: '_onRequestEditable',
         request_history_undo_record: '_onHistoryUndoRecordRequest',
         request_save: '_onSaveRequest',
     },
@@ -323,6 +324,13 @@ var EditorMenuBar = Widget.extend({
     _onSaveRequest: function (ev) {
         ev.stopPropagation();
         this.save(ev.data.reload).then(ev.data.onSuccess, ev.data.onFailure);
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onRequestEditable: function (ev) {
+        ev.data.callback(this.rte.editable());
     },
 });
 
