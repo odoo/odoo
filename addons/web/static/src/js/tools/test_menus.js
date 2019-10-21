@@ -45,12 +45,12 @@
         }
     }
 
-    function clickEverywhere(){
-        setTimeout(_clickEverywhere, 1000);
+    function clickEverywhere(menu_id){
+        setTimeout(_clickEverywhere, 1000, menu_id);
     }
 
     // Main function that starts orchestration of tests
-    function _clickEverywhere(){
+    function _clickEverywhere(menu_id){
         console.log("Starting ClickEverywhere test");
         var startTime = performance.now();
         createWebClientHooks();
@@ -61,10 +61,18 @@
         var $listOfAppMenuItems;
         if (isEnterprise) {
             console.log("Odoo flavor: Enterprise");
-            $listOfAppMenuItems = $(".o_app, .o_menuitem");
+            if (menu_id !== undefined) {
+                $listOfAppMenuItems = $('a.o_app.o_menuitem[data-menu=' + menu_id + ']');
+            } else {
+                $listOfAppMenuItems = $('a.o_app.o_menuitem');
+            }
         } else {
             console.log("Odoo flavor: Community");
-            $listOfAppMenuItems = $('a.o_app');
+            if (menu_id !== undefined) {
+                $listOfAppMenuItems = $('a.o_app[data-menu-id=' + menu_id + ']');
+            } else {
+                $listOfAppMenuItems = $('a.o_app');
+            }
         }
         console.log('Found ', $listOfAppMenuItems.length, 'apps to test');
 
