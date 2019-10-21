@@ -286,13 +286,10 @@ var SnippetEditor = Widget.extend({
         this._customize$Elements.forEach(($el, i) => {
             var editor = $el.data('editor');
             var styles = _.values(editor.styles);
-            $el.toggleClass('d-none', styles.length === 0);
             _.sortBy(styles, '__order').forEach(style => {
                 if (focus) {
-                    style.$el.appendTo($el);
                     style.onFocus();
                 } else {
-                    style.$el.detach();
                     style.onBlur();
                 }
             });
@@ -428,7 +425,17 @@ var SnippetEditor = Widget.extend({
 
         this.$el.find('[data-toggle="dropdown"]').dropdown();
 
-        return Promise.all(defs);
+        return Promise.all(defs).then(() => {
+            const options = _.sortBy(this.styles, '__order');
+            options.forEach(option => {
+                if (option.isTopOption()) {
+                    $optionsSection.find('we-button-group').prepend(option.$el);
+                } else {
+                    $optionsSection.append(option.$el);
+                }
+            });
+            $optionsSection.toggleClass('d-none', options.length === 0);
+        });
     },
 
     //--------------------------------------------------------------------------

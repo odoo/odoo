@@ -53,6 +53,13 @@ var SnippetOption = Widget.extend({
         return this._super.apply(this, arguments);
     },
     /**
+     * Indicates if the option should be displayed in the button group at the
+     * top of the options panel, next to the clone/remove button.
+     */
+    isTopOption: function () {
+        return false;
+    },
+    /**
      * Called when the parent edition overlay is covering the associated snippet
      * (the first time, this follows the call to the @see start method).
      *

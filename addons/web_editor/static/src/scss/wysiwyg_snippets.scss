@@ -221,6 +221,7 @@ body.editor_enable.editor_has_snippets {
                 display: flex;
                 align-items: center;
                 margin: 0.25rem 0;
+                text-transform: uppercase;
                 font-weight: bold;
                 color: inherit !important;
 
@@ -230,12 +231,24 @@ body.editor_enable.editor_has_snippets {
                     margin-left: auto;
                     text-align: center;
 
-                    > we-button {
+                    > we-customizeblock-option {
+                        display: inline-block; // Ideally -> display: contents;
+                    }
+                    we-button {
                         display: inline-block;
-                        margin-left: 0.25rem;
-                        width: 1.5rem;
-                        padding: 0.125rem;
+                        margin: 0 0 0 0.1em;
+                        padding: 0;
+                        border: none;
+                        font-size: 0.9em;
                         text-align: center;
+
+                        &.active {
+                            padding: 0;
+
+                            &::after {
+                                display: none;
+                            }
+                        }
                     }
                 }
             }
