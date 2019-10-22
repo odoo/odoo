@@ -30,8 +30,7 @@ class ThemeView(models.Model):
     arch_fs = fields.Char(default=compute_arch_fs)
     inherit_id = fields.Reference(selection=[('ir.ui.view', 'ir.ui.view'), ('theme.ir.ui.view', 'theme.ir.ui.view')])
     copy_ids = fields.One2many('ir.ui.view', 'theme_template_id', 'Views using a copy of me', copy=False, readonly=True)
-
-    # TODO master add missing field: customize_show
+    customize_show = fields.Boolean()
 
     def _convert_to_base_model(self, website, **kwargs):
         self.ensure_one()
@@ -61,6 +60,7 @@ class ThemeView(models.Model):
             'active': self.active,
             'theme_template_id': self.id,
             'website_id': website.id,
+            'customize_show': self.customize_show,
         }
 
         if self.mode:  # if not provided, it will be computed automatically (if inherit_id or not)
