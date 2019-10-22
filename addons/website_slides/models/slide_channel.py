@@ -38,7 +38,7 @@ class ChannelUsersRelation(models.Model):
         partner_karma = dict.fromkeys(self.mapped('partner_id').ids, 0)
         for record in self:
             record.completed_slides_count = mapped_data.get(record.channel_id.id, dict()).get(record.partner_id.id, 0)
-            record.completion = round(100.0 * record.completed_slides_count / (record.channel_id.total_slides or 1))
+            record.completion = 100.0 if record.completed else round(100.0 * record.completed_slides_count / (record.channel_id.total_slides or 1))
             if not record.completed and record.completed_slides_count >= record.channel_id.total_slides:
                 record.completed = True
                 partner_karma[record.partner_id.id] += record.channel_id.karma_gen_channel_finish
@@ -265,7 +265,7 @@ class Channel(models.Model):
         for record in self:
             completed, completed_slides_count = mapped_data.get(record.id, (False, 0))
             record.completed = completed
-            record.completion = round(100.0 * completed_slides_count / (record.total_slides or 1))
+            record.completion = 100.0 if completed else round(100.0 * completed_slides_count / (record.total_slides or 1))
 
     @api.depends('upload_group_ids', 'user_id')
     @api.depends_context('uid')

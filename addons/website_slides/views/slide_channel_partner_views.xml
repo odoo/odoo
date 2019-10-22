@@ -29,7 +29,8 @@
                     <field name="partner_id" string="Contact"/>
                     <field name="partner_email"/>
                     <field name="channel_id" string="Channel" invisible="context.get('default_channel_id',False)" />
-                    <button name="unlink" class="text-danger" string="Remove" 
+                    <field name="completion" string="Progress" widget="progressbar" />
+                    <button name="unlink" class="text-danger ml-5" string="Remove"
                             icon="fa-times-circle" type="object"/>
                 </tree>
             </field>
