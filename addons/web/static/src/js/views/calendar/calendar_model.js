@@ -260,8 +260,9 @@ return AbstractModel.extend({
         // keep highlight/target_date in localtime
         this.data.highlight_date = this.data.target_date = start.clone();
         // set dates in UTC with timezone applied manually
-        this.data.start_date = this.data.end_date = start;
-        this.data.start_date.utc().add(this.getSession().getTZOffset(this.data.start_date), 'minutes');
+        var manualUtcDate = start.clone().add(this.getSession().getTZOffset(this.data.start_date), 'minutes');
+        var formattedUtcDate = manualUtcDate.format('YYYY-MM-DDTHH:mm:ss') + 'Z';
+        this.data.start_date = this.data.end_date = moment.utc(formattedUtcDate);
 
         switch (this.data.scale) {
             case 'month':
@@ -401,16 +402,22 @@ return AbstractModel.extend({
      * Return a domain from the date range
      *
      * @private
-     * @returns {Array}
+     * @returns {Array} A domain containing datetime start and stop in UTC
+     *  those datetime are formatted according to server's standards
      */
     _getRangeDomain: function () {
         // Build OpenERP Domain to filter object by this.mapping.date_start field
         // between given start, end dates.
-        var domain = [[this.mapping.date_start, '<=', dateToServer(this.data.end_date)]];
+
+        // From setDate, we learn that data.end_date, and dta.start_date are in current timezone
+        // So we need to make them in UTC
+        var date_start_utc = this.data.start_date.clone().add(-this.getSession().getTZOffset(this.data.start_date), 'minutes');
+        var date_end_utc = this.data.end_date.clone().add(-this.getSession().getTZOffset(this.data.end_date), 'minutes');
+        var domain = [[this.mapping.date_start, '<=', dateToServer(date_end_utc)]];
         if (this.mapping.date_stop) {
-            domain.push([this.mapping.date_stop, '>=', dateToServer(this.data.start_date)]);
+            domain.push([this.mapping.date_stop, '>=', dateToServer(date_start_utc)]);
         } else if (!this.mapping.date_delay) {
-            domain.push([this.mapping.date_start, '>=', dateToServer(this.data.start_date)]);
+            domain.push([this.mapping.date_start, '>=', dateToServer(date_start_utc)]);
         }
         return domain;
     },
