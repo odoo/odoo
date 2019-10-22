@@ -318,29 +318,11 @@ options.registry.carousel = options.Class.extend({
             this.$target.carousel('prev');
         }
     },
-    /**
-     * Changes the interval for autoplay.
-     *
-     * @see this.selectClass for parameters
-     */
-    interval: function (previewMode, value) {
-        this.$target.attr('data-interval', value);
-    },
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
-    /**
-     * @override
-     */
-    _setActive: function () {
-        this._super.apply(this, arguments);
-        this.$el.find('[data-interval]')
-            .removeClass('active')
-            .filter(`[data-interval=${this.$target.attr('data-interval')}]`)
-            .addClass('active');
-    },
     /**
      * Activates current slide for edition and vertical padding. Padding on the
      * carousel itself would mean the slides' backgrounds don't cover the padding.
@@ -1855,7 +1837,7 @@ options.registry.SnippetMove = options.Class.extend({
 
         // TODO this is kinda hack but not worth a complex system while no
         // other use case is implemented.
-        $buttons.on('click', this._onLinkClick.bind(this));
+        $buttons.on('click', this._onOptionSelection.bind(this));
 
         return this._super(...arguments);
     },
