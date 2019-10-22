@@ -525,6 +525,13 @@ class ModelBinary(models.Model):
     binary = fields.Binary()
     binary_related_store = fields.Binary("Binary Related Store", related='binary', store=True, readonly=False)
     binary_related_no_store = fields.Binary("Binary Related No Store", related='binary', store=False, readonly=False)
+    binary_computed = fields.Binary(compute='_compute_binary')
+
+    @api.depends('binary')
+    def _compute_binary(self):
+        # arbitrary value: 'bin_size' must have no effect
+        for record in self:
+            record.binary_computed = [(record.id, bool(record.binary))]
 
 
 class ModelImage(models.Model):
