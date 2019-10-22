@@ -234,7 +234,7 @@ class WebsiteSlides(WebsiteProfile):
     # SLIDE.CHANNEL MAIN / SEARCH
     # --------------------------------------------------
 
-    @http.route('/slides', type='http', auth="public", website=True)
+    @http.route('/slides', type='http', auth="public", website=True, sitemap=True)
     def slides_channel_home(self, **post):
         """ Home page for eLearning platform. Is mainly a container page, does not allow search / filter. """
         domain = request.website.website_domain()
@@ -279,7 +279,7 @@ class WebsiteSlides(WebsiteProfile):
 
         return request.render('website_slides.courses_home', values)
 
-    @http.route('/slides/all', type='http', auth="public", website=True)
+    @http.route('/slides/all', type='http', auth="public", website=True, sitemap=True)
     def slides_channel_all(self, slide_type=None, my=False, **post):
         """ Home page displaying a list of courses displayed according to some
         criterion and search terms.
@@ -539,7 +539,7 @@ class WebsiteSlides(WebsiteProfile):
     # SLIDE.SLIDE MAIN / SEARCH
     # --------------------------------------------------
 
-    @http.route('''/slides/slide/<model("slide.slide", "[('website_id', 'in', (False, current_website_id))]"):slide>''', type='http', auth="public", website=True)
+    @http.route('''/slides/slide/<model("slide.slide"):slide>''', type='http', auth="public", website=True, sitemap=True)
     def slide_view(self, slide, **kwargs):
         if not slide.channel_id.can_access_from_current_website() or not slide.active:
             raise werkzeug.exceptions.NotFound()

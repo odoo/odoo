@@ -65,7 +65,7 @@ class QueryURL(object):
 
 class Website(Home):
 
-    @http.route('/', type='http', auth="public", website=True)
+    @http.route('/', type='http', auth="public", website=True, sitemap=True)
     def index(self, **kw):
         homepage = request.website.homepage_id
         if homepage and (homepage.sudo().is_visible or request.env.user.has_group('base.group_user')) and homepage.url != '/':
@@ -197,7 +197,7 @@ class Website(Home):
 
         return request.make_response(content, [('Content-Type', mimetype)])
 
-    @http.route('/website/info', type='http', auth="public", website=True)
+    @http.route('/website/info', type='http', auth="public", website=True, sitemap=True)
     def website_info(self, **kwargs):
         try:
             request.website.get_template('website.website_info').name
