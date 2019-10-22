@@ -1923,7 +1923,8 @@ class Binary(Field):
                     except (TypeError, binascii.Error):
                         pass
                     try:
-                        value = human_size(len(value))
+                        if isinstance(value, (bytes, _BINARY)):
+                            value = human_size(len(value))
                     except (TypeError):
                         pass
                     cache_value = self.convert_to_cache(value, record)
