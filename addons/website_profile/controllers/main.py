@@ -168,7 +168,7 @@ class WebsiteProfile(http.Controller):
             domain = expression.AND([[('challenge_ids.category', '=', kwargs.get('badge_category'))], domain])
         return domain
 
-    @http.route('/profile/ranks_badges', type='http', auth="public", website=True)
+    @http.route('/profile/ranks_badges', type='http', auth="public", website=True, sitemap=True)
     def view_ranks_badges(self, **kwargs):
         ranks = []
         if 'badge_category' not in kwargs:
@@ -204,7 +204,7 @@ class WebsiteProfile(http.Controller):
         return user_values
 
     @http.route(['/profile/users',
-                 '/profile/users/page/<int:page>'], type='http', auth="public", website=True)
+                 '/profile/users/page/<int:page>'], type='http', auth="public", website=True, sitemap=True)
     def view_all_users_page(self, page=1, **searches):
         User = request.env['res.users']
         dom = [('karma', '>', 1), ('website_published', '=', True)]

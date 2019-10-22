@@ -156,7 +156,7 @@ class WebsiteEventController(http.Controller):
 
         return request.render("website_event.index", values)
 
-    @http.route(['''/event/<model("event.event", "[('website_id', 'in', (False, current_website_id))]"):event>/page/<path:page>'''], type='http', auth="public", website=True, sitemap=False)
+    @http.route(['''/event/<model("event.event"):event>/page/<path:page>'''], type='http', auth="public", website=True, sitemap=False)
     def event_page(self, event, page, **post):
         if not event.can_access_from_current_website():
             raise werkzeug.exceptions.NotFound()
@@ -180,7 +180,7 @@ class WebsiteEventController(http.Controller):
 
         return request.render(page, values)
 
-    @http.route(['''/event/<model("event.event", "[('website_id', 'in', (False, current_website_id))]"):event>'''], type='http', auth="public", website=True)
+    @http.route(['''/event/<model("event.event"):event>'''], type='http', auth="public", website=True, sitemap=True)
     def event(self, event, **post):
         if not event.can_access_from_current_website():
             raise werkzeug.exceptions.NotFound()
@@ -193,7 +193,7 @@ class WebsiteEventController(http.Controller):
             target_url += '?enable_editor=1'
         return request.redirect(target_url)
 
-    @http.route(['''/event/<model("event.event", "[('website_id', 'in', (False, current_website_id))]"):event>/register'''], type='http', auth="public", website=True, sitemap=False)
+    @http.route(['''/event/<model("event.event"):event>/register'''], type='http', auth="public", website=True, sitemap=False)
     def event_register(self, event, **post):
         if not event.can_access_from_current_website():
             raise werkzeug.exceptions.NotFound()
@@ -282,7 +282,7 @@ class WebsiteEventController(http.Controller):
                 registration[key] = value
         return list(registrations.values())
 
-    @http.route(['''/event/<model("event.event", "[('website_id', 'in', (False, current_website_id))]"):event>/registration/confirm'''], type='http', auth="public", methods=['POST'], website=True)
+    @http.route(['''/event/<model("event.event"):event>/registration/confirm'''], type='http', auth="public", methods=['POST'], website=True)
     def registration_confirm(self, event, **post):
         if not event.can_access_from_current_website():
             raise werkzeug.exceptions.NotFound()

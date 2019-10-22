@@ -7,7 +7,7 @@ from odoo.http import request
 
 class WebsiteLivechat(http.Controller):
 
-    @http.route('/livechat', type='http', auth="public", website=True)
+    @http.route('/livechat', type='http', auth="public", website=True, sitemap=True)
     def channel_list(self, **kw):
         # display the list of the channel
         channels = request.env['im_livechat.channel'].search([('website_published', '=', True)])
@@ -16,8 +16,7 @@ class WebsiteLivechat(http.Controller):
         }
         return request.render('website_livechat.channel_list_page', values)
 
-
-    @http.route('/livechat/channel/<model("im_livechat.channel"):channel>', type='http', auth='public', website=True)
+    @http.route('/livechat/channel/<model("im_livechat.channel"):channel>', type='http', auth='public', website=True, sitemap=True)
     def channel_rating(self, channel, **kw):
         # get the last 100 ratings and the repartition per grade
         domain = [

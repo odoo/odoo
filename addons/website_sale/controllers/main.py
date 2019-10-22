@@ -302,7 +302,7 @@ class WebsiteSale(http.Controller):
             values['main_object'] = category
         return request.render("website_sale.products", values)
 
-    @http.route(['/shop/product/<model("product.template"):product>'], type='http', auth="public", website=True)
+    @http.route(['/shop/product/<model("product.template"):product>'], type='http', auth="public", website=True, sitemap=True)
     def product(self, product, category='', search='', **kwargs):
         if not product.can_access_from_current_website():
             raise NotFound()
@@ -1000,8 +1000,7 @@ class WebsiteSale(http.Controller):
         PaymentProcessing.remove_payment_transaction(tx)
         return request.redirect('/shop/confirmation')
 
-
-    @http.route(['/shop/terms'], type='http', auth="public", website=True)
+    @http.route(['/shop/terms'], type='http', auth="public", website=True, sitemap=True)
     def terms(self, **kw):
         return request.render("website_sale.terms")
 

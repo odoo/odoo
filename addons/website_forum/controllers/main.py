@@ -39,7 +39,7 @@ class WebsiteForum(WebsiteProfile):
     # Forum
     # --------------------------------------------------
 
-    @http.route(['/forum'], type='http', auth="public", website=True)
+    @http.route(['/forum'], type='http', auth="public", website=True, sitemap=True)
     def forum(self, **kwargs):
         domain = request.website.website_domain()
         forums = request.env['forum.forum'].search(domain)
@@ -148,7 +148,7 @@ class WebsiteForum(WebsiteProfile):
         })
         return request.render("website_forum.forum_index", values)
 
-    @http.route(['''/forum/<model("forum.forum", "[('website_id', 'in', (False, current_website_id))]"):forum>/faq'''], type='http', auth="public", website=True)
+    @http.route(['''/forum/<model("forum.forum"):forum>/faq'''], type='http', auth="public", website=True, sitemap=True)
     def forum_faq(self, forum, **post):
         values = self._prepare_user_values(forum=forum, searches=dict(), header={'is_guidelines': True}, **post)
         return request.render("website_forum.faq", values)
@@ -201,7 +201,8 @@ class WebsiteForum(WebsiteProfile):
         except IOError:
             return False
 
-    @http.route(['''/forum/<model("forum.forum", "[('website_id', 'in', (False, current_website_id))]"):forum>/question/<model("forum.post", "[('forum_id','=',forum[0]),('parent_id','=',False),('can_view', '=', True)]"):question>'''], type='http', auth="public", website=True)
+    @http.route(['''/forum/<model("forum.forum"):forum>/question/<model("forum.post", "[('forum_id','=',forum[0]),('parent_id','=',False),('can_view', '=', True)]"):question>'''],
+                type='http', auth="public", website=True, sitemap=True)
     def question(self, forum, question, **post):
         if not forum.active:
             return request.render("website_forum.header", {'forum': forum})
