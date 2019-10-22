@@ -92,7 +92,7 @@ class Website(Home):
     # while portal users are redirected to the frontend by default
     # ------------------------------------------------------
 
-    @http.route(website=True, auth="public")
+    @http.route(website=True, auth="public", sitemap=False)
     def web_login(self, redirect=None, *args, **kw):
         response = super(Website, self).web_login(redirect=redirect, *args, **kw)
         if not redirect and request.params['login_success']:
@@ -129,7 +129,7 @@ class Website(Home):
     def robots(self, **kwargs):
         return request.render('website.robots', {'url_root': request.httprequest.url_root}, mimetype='text/plain')
 
-    @http.route('/sitemap.xml', type='http', auth="public", website=True, multilang=False)
+    @http.route('/sitemap.xml', type='http', auth="public", website=True, multilang=False, sitemap=False)
     def sitemap_xml_index(self, **kwargs):
         current_website = request.website
         Attachment = request.env['ir.attachment'].sudo()
