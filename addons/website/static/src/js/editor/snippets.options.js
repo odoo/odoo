@@ -1878,7 +1878,7 @@ options.registry.SnippetMove = options.Class.extend({
 
         // TODO this is kinda hack but not worth a complex system while no
         // other use case is implemented.
-        $buttons.on('click', this._onLinkClick.bind(this));
+        $buttons.on('click', this._onOptionSelection.bind(this));
 
         return this._super(...arguments);
     },

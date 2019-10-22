@@ -331,6 +331,9 @@ var SnippetEditor = Widget.extend({
         uiEl.querySelectorAll('we-checkbox').forEach(checkboxEl => {
             options.Class.prototype.buildCheckboxElement(checkboxEl);
         });
+        uiEl.querySelectorAll('we-input').forEach(inputEl => {
+            options.Class.prototype.buildInputElement(inputEl);
+        });
 
         return $optionSection;
     },
