@@ -191,18 +191,29 @@ class account_abstract_payment(models.AbstractModel):
             invoices = self.invoice_ids
 
         # Get the payment currency
-        if not currency:
-            currency = self.currency_id or self.journal_id.currency_id or self.journal_id.company_id.currency_id or invoices and invoices[0].currency_id
+        payment_currency = currency
+        if not payment_currency:
+            payment_currency = self.currency_id or self.journal_id.currency_id or self.journal_id.company_id.currency_id or invoices and invoices[0].currency_id
 
         # Avoid currency rounding issues by summing the amounts according to the company_currency_id before
         total = 0.0
+
         groups = groupby(invoices, lambda i: i.currency_id)
-        for payment_currency, payment_invoices in groups:
-            amount_total = sum([MAP_INVOICE_TYPE_PAYMENT_SIGN[i.type] * i.residual_signed for i in payment_invoices])
-            if payment_currency == currency:
+        for invoice_currency, payment_invoices in groups:
+            amount_total = 0
+            amount_total_company_currency = 0
+
+            for invoice in payment_invoices:
+                sign = MAP_INVOICE_TYPE_PAYMENT_SIGN[invoice.type]
+                amount_total += sign * invoice.residual_signed
+                amount_total_company_currency += sign * invoice.residual_company_signed
+
+            if invoice_currency == payment_currency:
                 total += amount_total
             else:
-                total += payment_currency.with_context(date=self.payment_date).compute(amount_total, currency)
+                # Here there is no chance we will reconcile on amount_currency
+                # Hence, we need to compute with the amount in company currency as the base
+                total += self.journal_id.company_id.currency_id.with_context(date=self.payment_date).compute(amount_total_company_currency, payment_currency)
         return total
 
 
