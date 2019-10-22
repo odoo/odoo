@@ -574,31 +574,35 @@ class MrpProduction(models.Model):
                 if bom_line.child_bom_id and bom_line.child_bom_id.type == 'phantom' or\
                         bom_line.product_id.type not in ['product', 'consu']:
                     continue
-                moves.append(production._get_move_raw_values(bom_line, line_data))
+                operation = bom_line.operation_id.id or line_data['parent_line'] and line_data['parent_line'].operation_id.id
+                moves.append(production._get_move_raw_values(
+                    bom_line.product_id,
+                    line_data['qty'],
+                    bom_line.product_uom_id,
+                    operation,
+                    bom_line
+                ))
         return moves
 
-    def _get_move_raw_values(self, bom_line, line_data):
-        quantity = line_data['qty']
-        # alt_op needed for the case when you explode phantom bom and all the lines will be consumed in the operation given by the parent bom line
-        alt_op = line_data['parent_line'] and line_data['parent_line'].operation_id.id or False
+    def _get_move_raw_values(self, product_id, product_uom_qty, product_uom, operation_id=False, bom_line=False):
         source_location = self.location_src_id
         data = {
-            'sequence': bom_line.sequence,
+            'sequence': bom_line.sequence if bom_line else 10,
             'name': self.name,
             'reference': self.name,
             'date': self.date_planned_start,
             'date_expected': self.date_planned_start,
-            'bom_line_id': bom_line.id,
+            'bom_line_id': bom_line.id if bom_line else False,
             'picking_type_id': self.picking_type_id.id,
-            'product_id': bom_line.product_id.id,
-            'product_uom_qty': quantity,
-            'product_uom': bom_line.product_uom_id.id,
+            'product_id': product_id.id,
+            'product_uom_qty': product_uom_qty,
+            'product_uom': product_uom.id,
             'location_id': source_location.id,
             'location_dest_id': self.product_id.with_company(self.company_id).property_stock_production.id,
             'raw_material_production_id': self.id,
             'company_id': self.company_id.id,
-            'operation_id': bom_line.operation_id.id or alt_op,
-            'price_unit': bom_line.product_id.standard_price,
+            'operation_id': operation_id,
+            'price_unit': product_id.standard_price,
             'procure_method': 'make_to_stock',
             'origin': self.name,
             'state': 'draft',
@@ -630,7 +634,14 @@ class MrpProduction(models.Model):
                 move[0].unlink()
                 return self.env['stock.move'], old_qty, quantity
         else:
-            move_values = self._get_move_raw_values(bom_line, line_data)
+            operation = bom_line.operation_id.id or line_data['parent_line'] and line_data['parent_line'].operation_id.id
+            move_values = self._get_move_raw_values(
+                bom_line.product_id,
+                line_data['qty'],
+                bom_line.product_uom_id,
+                operation,
+                bom_line
+            )
             move = self.env['stock.move'].create(move_values)
             return move, 0, quantity
 
