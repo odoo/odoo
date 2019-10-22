@@ -704,7 +704,7 @@ class Website(models.Model):
         sitemap_endpoint_done = set()
 
         for rule in router.iter_rules():
-            if 'sitemap' in rule.endpoint.routing:
+            if 'sitemap' in rule.endpoint.routing and rule.endpoint.routing['sitemap'] is not True:
                 if rule.endpoint in sitemap_endpoint_done:
                     continue
                 sitemap_endpoint_done.add(rule.endpoint)
@@ -719,6 +719,10 @@ class Website(models.Model):
             if not self.rule_is_enumerable(rule):
                 continue
 
+            if 'sitemap' not in rule.endpoint.routing:
+                logger.warning('No Sitemap value provided for controller %s (%s)' %
+                               (rule.endpoint.method, ','.join(rule.endpoint.routing['routes'])))
+
             converters = rule._converters or {}
             if query_string and not converters and (query_string not in rule.build([{}], append_unknown=False)[1]):
                 continue
@@ -730,6 +734,9 @@ class Website(models.Model):
                 key=lambda x: (hasattr(x[1], 'domain') and (x[1].domain != '[]'), rule._trace.index((True, x[0]))))
 
             for (i, (name, converter)) in enumerate(convitems):
+                if 'website_id' in self.env[converter.model]._fields and (not converter.domain or converter.domain == '[]'):
+                    converter.domain = "[('website_id', 'in', (False, current_website_id))]"
+
                 newval = []
                 for val in values:
                     query = i == len(convitems) - 1 and query_string
@@ -738,6 +745,7 @@ class Website(models.Model):
                         query = sitemap_qs2dom(query, r, self.env[converter.model]._rec_name)
                         if query == FALSE_DOMAIN:
                             continue
+
                     for value_dict in converter.generate(uid=self.env.uid, dom=query, args=val):
                         newval.append(val.copy())
                         value_dict[name] = value_dict['loc']
