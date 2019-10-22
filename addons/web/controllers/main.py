@@ -871,7 +871,7 @@ class Home(http.Controller):
     def _login_redirect(self, uid, redirect=None):
         return redirect if redirect else '/web'
 
-    @http.route('/web/login', type='http', auth="none", sitemap=False)
+    @http.route('/web/login', type='http', auth="none")
     def web_login(self, redirect=None, **kw):
         ensure_db()
         request.params['login_success'] = False
