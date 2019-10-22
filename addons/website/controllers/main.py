@@ -329,6 +329,22 @@ class Website(Home):
         xmlroot = ET.fromstring(response)
         return json.dumps([sugg[0].attrib['data'] for sugg in xmlroot if len(sugg) and sugg[0].attrib['data']])
 
+    @http.route(['/google<string(length=16):key>.html'], type='http', auth="public", website=True, sitemap=False)
+    def google_console_search(self, key, **kwargs):
+        if not request.website.google_search_console:
+            logger.warning('Google Search Console not enable')
+            raise werkzeug.exceptions.NotFound()
+
+        trusted = request.website.google_search_console.lstrip('google').rstrip('.html')
+        if key != trusted:
+            if key.startswith(trusted):
+                request.website.sudo().google_search_console = "google%s.html" % key
+            else:
+                logger.warning('Google Search Console %s not recognize' % key)
+                raise werkzeug.exceptions.NotFound()
+
+        return request.make_response("google-site-verification: %s" % request.website.google_search_console)
+
     # ------------------------------------------------------
     # Themes
     # ------------------------------------------------------
