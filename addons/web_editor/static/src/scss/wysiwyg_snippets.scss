@@ -369,6 +369,31 @@ body.editor_enable.editor_has_snippets {
                 }
             }
 
+            we-input {
+                display: flex;
+                align-items: center;
+
+                > we-title {
+                    min-width: 60%;
+                    margin-right: 5%;
+                }
+                > input {
+                    flex: 1 1 auto;
+                    width: 0;
+                    min-width: 3em;
+                    margin: 0 2px 0 0;
+                    padding: 0 2px;
+                    border: none;
+                    border-radius: 0;
+                    background-color: var(--o-we-bg-color-dark);
+                    color: var(--o-we-color);
+                    text-align: right;
+                }
+                > span {
+                    flex: 0 0 auto;
+                }
+            }
+
             .dropdown-menu {
                 // FIXME temporary fix for m2o option for example
                 position: static !important;

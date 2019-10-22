@@ -1131,14 +1131,7 @@
             <we-divider/>
             <we-button data-select-class="s_carousel_default">Default</we-button>
         </we-select>
-        <we-select string="Speed">
-            <we-button data-interval="1000">1s</we-button>
-            <we-button data-interval="2000">2s</we-button>
-            <we-button data-interval="3000">3s</we-button>
-            <we-button data-interval="5000">5s</we-button>
-            <we-button data-interval="10000">10s</we-button>
-            <we-button data-interval="0">Disable autoplay</we-button>
-        </we-select>
+        <we-input string="Speed" data-set-data-attribute="interval" data-unit="s" data-save-unit="ms" data-step="0.1"/>
     </div>
 
     <div data-js="navTabs" data-selector="section .row > div" data-target=".nav-tabs">
@@ -1303,8 +1296,8 @@
 
     <div data-selector="section .row > div"
         data-exclude=".s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .o_gallery .row > div">
-        <we-checkbox string="Border" data-toggle-class="border"/>
-        <we-checkbox string="Rounded" data-toggle-class="rounded"/>
+        <we-input string="Border" data-set-style="border-width" data-extra-class="border"/>
+        <we-input string="Rounded" data-set-style="border-radius" data-extra-class="rounded"/>
         <we-checkbox string="Shadow" data-toggle-class="shadow"/>
     </div>
 
