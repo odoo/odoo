@@ -94,8 +94,8 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
      * @override
      */
     start: function () {
-        this.ppg = this.$target.closest('[data-ppg]').data('ppg');
-        this.ppr = this.$target.closest('[data-ppr]').data('ppr');
+        this.ppg = parseInt(this.$target.closest('[data-ppg]').data('ppg'));
+        this.ppr = parseInt(this.$target.closest('[data-ppr]').data('ppr'));
         return this._super.apply(this, arguments);
     },
     /**
@@ -113,29 +113,24 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
     /**
      * @see this.selectClass for params
      */
-    choosePpg: function (previewMode, value, $opt) {
-        var self = this;
-        new Dialog(this, {
-            title: _t("Choose number of products"),
-            $content: $(qweb.render('website_sale.dialog.choosePPG', {widget: this})),
-            buttons: [
-                {text: _t("Save"), classes: 'btn-primary', click: function () {
-                    var $input = this.$('input');
-                    var def = self._setPPG($input.val());
-                    if (!def) {
-                        $input.addClass('is-invalid');
-                        return;
-                    }
-                    return def.then(this.close.bind(this));
-                }},
-                {text: _t("Discard"), close: true},
-            ],
-        }).open();
+    setPpg: function (previewMode, value, $opt) {
+        const ppg = parseInt($opt.find('input').val());
+        if (!ppg || ppg < 1) {
+            return false;
+        }
+        this.ppg = ppg;
+        return this._rpc({
+            route: '/shop/change_ppg',
+            params: {
+                'ppg': ppg,
+            },
+        }).then(() => reload());
     },
     /**
      * @see this.selectClass for params
      */
     setPpr: function (previewMode, value, $opt) {
+        this.ppr = parseInt(value);
         this._rpc({
             route: '/shop/change_ppr',
             params: {
@@ -152,33 +147,17 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
      * @override
      */
     _setActive: function () {
-        var self = this;
-        this._super.apply(this, arguments);
+        this._super(...arguments);
+
         this.$el.find('[data-set-ppr]')
-            .addBack('[data-set-ppr]')
             .removeClass('active')
-            .filter(function () {
-                var nbColumns = $(this).data('setPpr');
-                return nbColumns === self.ppr;
+            .filter((i, el) => {
+                var nbColumns = parseInt($(el).data('setPpr'));
+                return nbColumns === this.ppr;
             })
             .addClass('active');
-    },
-    /**
-     * @private
-     * @param {integer} ppg
-     * @returns {Promise|false}
-     */
-    _setPPG: function (ppg) {
-        ppg = parseInt(ppg);
-        if (!ppg || ppg < 1) {
-            return false;
-        }
-        return this._rpc({
-            route: '/shop/change_ppg',
-            params: {
-                'ppg': ppg,
-            },
-        }).then(reload);
+
+        this.$el.find('[data-set-ppg] > input').val(this.ppg);
     },
 });
 

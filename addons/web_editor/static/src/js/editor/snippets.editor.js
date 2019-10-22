@@ -353,6 +353,12 @@ var SnippetEditor = Widget.extend({
             el.parentNode.insertBefore(checkboxEl, el);
             el.parentNode.removeChild(el);
         });
+        uiEl.querySelectorAll('we-input').forEach(el => {
+            const infos = this._extraInfoFromDescriptionElement(el);
+            const inputEl = options.Class.prototype.buildInputElement(infos.title, infos.options);
+            el.parentNode.insertBefore(inputEl, el);
+            el.parentNode.removeChild(el);
+        });
 
         return $optionSection;
     },
