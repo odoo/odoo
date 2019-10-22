@@ -41,17 +41,7 @@
                         t-att-src="avatar"
                         t-att-title="hasAuthorRedirect ? 'Open chat' : ''"
                         t-on-click="_onClickAuthor"/>
-                    <PartnerImStatusIcon
-                        class="o_Message_partnerImStatusIcon"
-                        partnerLocalId="storeProps.author.localId"
-                        t-att-class="{
-                            'o-message-not-discussion': !(
-                                storeProps.message.is_discussion or
-                                storeProps.message.is_notification),
-                            'o-message-selected': props.isSelected,
-                            'o_Message_partnerImStatusIcon-mobile': storeProps.isMobile,
-                        }"
-                        t-if="storeProps.author.im_status"/>
+                    <PartnerImStatusIcon partnerLocalId="storeProps.author.localId"/>
                 </div>
             </t>
             <t t-else="">

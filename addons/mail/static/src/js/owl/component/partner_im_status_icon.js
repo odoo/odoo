@@ -16,22 +16,30 @@ class PartnerImStatusIcon extends owl.Component {
         });
     }
 
-    get statusClass() {
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    statusClass() {
         switch (this.storeProps.partner.im_status) {
             case 'online':
-                return 'bg-success';
+                return 'text-primary';
             case 'away':
-                return 'bg-warning';
+                return 'text-warning';
             case 'offline':
-                return 'bg-500';
+                return 'text-500';
             default:
-                return 'bg-500';
+                return 'text-500';
         }
     }
 
-    get statusTitle() {
+    statusTitle() {
         return _.str.sprintf(this._getStatusTitle(), _.escape(this.storeProps.partner.name));
     }
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
 
     _getStatusTitle() {
         switch (this.storeProps.partner.im_status) {

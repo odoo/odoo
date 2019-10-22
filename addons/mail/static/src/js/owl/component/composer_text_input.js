@@ -4,7 +4,10 @@ odoo.define('mail.component.ComposerTextInput', function (require) {
 const ajax = require('web.ajax');
 const utils = require('web.utils');
 
+const PartnerImStatusIcon = require('mail.component.PartnerImStatusIcon');
+
 const EMPTY_HTML = "<p></p>";
+
 
 /**
  * ComposerInput relies on a minimal HTML editor in order to support mentions.
@@ -301,6 +304,7 @@ class ComposerTextInput extends owl.Component {
         const collectionItem = {
             lookup: 'name',
             menuItemTemplate(item) {
+                const status_icon = await renderComponentToString();
                 return self.env.qweb.renderToString('mail.component.ComposerTextInput.PartnerMentionMenuItem', {
                     isMobile: self.storeProps.isMobile,
                     item,
@@ -604,6 +608,10 @@ class ComposerTextInput extends owl.Component {
         this._saveRange();
     }
 }
+
+ComposerTextInput.components = {
+    PartnerImStatusIcon,
+};
 
 ComposerTextInput.props = {
     initialHtmlContent: {

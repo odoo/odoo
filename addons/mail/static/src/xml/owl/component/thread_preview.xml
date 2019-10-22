@@ -9,7 +9,7 @@
             <div class="o_ThreadPreview_sidebar">
                 <div class="o_ThreadPreview_imageContainer o_ThreadPreview_sidebarItem">
                     <img alt="" class="o_ThreadPreview_image rounded-circle" t-att-src="image"/>
-                    <t t-if="storeProps.threadDirectPartner and storeProps.threadDirectPartner.im_status">
+                    <t t-if="storeProps.threadDirectPartner">
                         <PartnerImStatusIcon partnerLocalId="storeProps.threadDirectPartner.localId"/>
                     </t>
                 </div>

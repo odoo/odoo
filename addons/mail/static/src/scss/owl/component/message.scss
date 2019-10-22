@@ -6,6 +6,10 @@
     display: flex;
     flex: 0 0 auto;
     padding: 5px;
+
+    .o_PartnerImStatusIcon {
+        @include o-position-absolute($bottom: 0, $right: 0);
+    }
 }
 
 .o_Message_authorAvatar {
@@ -101,13 +105,6 @@
     font-size: 0.8em;
 }
 
-.o_Message_partnerImStatusIcon {
-    @include o-position-absolute($bottom: 0, $right: 0);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
 .o_Message_readMore {
     display: block;
 }
@@ -165,17 +162,9 @@
         }
     }
 
-    .o_Message_partnerImStatusIcon {
-        color: white;
-    }
-
     &.o-not-discussion {
         background-color: lighten(gray('300'), 5%);
         border-bottom: 1px solid darken(gray('300'), 5%);
-
-        .o_Message_partnerImStatusIcon {
-            color: lighten(gray('300'), 5%);
-        }
 
         &.o-selected {
             border-bottom: 1px solid darken(gray('400'), 5%);
@@ -184,10 +173,6 @@
 
     &.o-selected {
         background-color: gray('400');
-
-        .o_Message_partnerImStatusIcon {
-            color: gray('400');
-        }
     }
 
     &.o-starred {
@@ -278,10 +263,6 @@
 
 .o_Message_originThreadLink {
     font-size: 1.25em; // original size
-}
-
-.o_Message_partnerImStatusIcon:not(.o_Message_partnerImStatusIcon-mobile) {
-    font-size: x-small;
 }
 
 .o_Message_sidebarCommands {
