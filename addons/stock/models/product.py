@@ -805,10 +805,10 @@ class ProductTemplate(models.Model):
 
     def action_product_tmpl_forecast_report(self):
         action = self.env.ref('stock.report_stock_quantity_action_product').read()[0]
-        action['domain'] = [
-            ('product_id', 'in', self.product_variant_ids.ids),
-            ('warehouse_id', '!=', False),
-        ]
+        domain = [('product_id', 'in', self.product_variant_ids.ids)]
+        if not self.env.context.get('quantity_available_locations_without_warehouse'):
+            domain += [('warehouse_id', '!=', False)]
+        action['domain'] = domain
         return action
 
 class ProductCategory(models.Model):
