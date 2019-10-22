@@ -358,8 +358,34 @@ class Message(models.Model):
                     + ' - ({} {}, {} {})'.format(_('Records:'), self.ids[:6], _('User:'), self._uid)
                 )
 
+<<<<<<< HEAD
         # Read mail_message.ids to have their values
         message_values = dict((message_id, {}) for message_id in self.ids)
+=======
+            :param list messages: list of message, as get_dict result
+            :param dict message_tree: {[msg.id]: msg browse record as super user}
+        """
+        # 1. Aggregate partners (author_id and partner_ids), attachments and tracking values
+        partners = self.env['res.partner'].sudo()
+        attachments = self.env['ir.attachment']
+        message_ids = list(message_tree.keys())
+        email_notification_tree = {}
+        # By rebrowsing all the messages at once, we ensure all the messages
+        # to be on the same prefetch group, enhancing that way the performances
+        for message in self.sudo().browse(message_ids):
+            if message.author_id:
+                partners |= message.author_id
+            # find all notified partners
+            email_notification_tree[message.id] = message.notification_ids.filtered(
+                lambda n: n.notification_type == 'email' and n.res_partner_id.active and
+                (n.notification_status in ('bounce', 'exception', 'canceled') or n.res_partner_id.partner_share))
+            if message.attachment_ids:
+                attachments |= message.attachment_ids
+        partners |= self.env['mail.notification'].concat(*email_notification_tree.values()).mapped('res_partner_id')
+        # Read partners as SUPERUSER -> message being browsed as SUPERUSER it is already the case
+        partners_names = partners.name_get()
+        partner_tree = dict((partner[0], partner) for partner in partners_names)
+>>>>>>> 140332ecc89... temp
 
         self.flush(['model', 'res_id', 'author_id', 'parent_id', 'moderation_status', 'message_type', 'partner_ids', 'channel_ids'])
         self.env['mail.notification'].flush(['mail_message_id', 'res_partner_id'])
@@ -472,6 +498,7 @@ class Message(models.Model):
             author_ids = [mid for mid, message in message_values.items()
                           if not self.is_thread_message(message)]
 
+<<<<<<< HEAD
         # Moderator condition: allow to WRITE, UNLINK if moderator of a pending message
         moderator_ids = []
         if operation in ['write', 'unlink']:
@@ -480,6 +507,22 @@ class Message(models.Model):
         messages_to_check = set(messages_to_check).difference(set(author_ids), set(moderator_ids))
         if not messages_to_check:
             return
+=======
+            attachment_ids = []
+            if message.attachment_ids:
+                has_access_to_model = message.model and self.env[message.model].check_access_rights('read', raise_exception=False)
+                if message.res_id and issubclass(self.pool[message.model], self.pool['mail.thread']) and has_access_to_model:
+                    main_attachment = self.env[message.model].browse(message.res_id).message_main_attachment_id
+                for attachment in message.attachment_ids:
+                    if attachment.id in attachments_tree:
+                        attachments_tree[attachment.id]['is_main'] = main_attachment == attachment
+                        attachment_ids.append(attachments_tree[attachment.id])
+
+            tracking_value_ids = []
+            for tracking_value_id in message_to_tracking.get(message_id, list()):
+                if tracking_value_id in tracking_tree:
+                    tracking_value_ids.append(tracking_tree[tracking_value_id])
+>>>>>>> 140332ecc89... temp
 
         # Recipients condition, for read and write (partner_ids)
         # keep on top, usefull for systray notifications
