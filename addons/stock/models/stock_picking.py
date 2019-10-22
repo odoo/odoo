@@ -647,7 +647,7 @@ class Picking(models.Model):
         self.write({'is_locked': True})
         return True
 
-    def action_done(self):
+    def _action_done(self):
         """Call `_action_done` on the `stock.move` of the `stock.picking` in `self`.
         This method makes sure every `stock.move.line` is linked to a `stock.move` by either
         linking them to an existing one or a newly created one.
@@ -838,7 +838,7 @@ class Picking(models.Model):
         # Check backorder should check for other barcodes
         if self._check_backorder():
             return self.action_generate_backorder_wizard()
-        self.action_done()
+        self._action_done()
         return
 
     def action_generate_backorder_wizard(self):

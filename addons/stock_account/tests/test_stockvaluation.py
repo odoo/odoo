@@ -912,7 +912,7 @@ class TestStockValuation(SavepointCase):
         stock_return_picking_action = stock_return_picking.create_returns()
         return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
         return_pick.move_lines[0].move_line_ids[0].qty_done = 1.0
-        return_pick.action_done()
+        return_pick._action_done()
 
         self.assertEqual(self.product1.standard_price, 16)
 

@@ -518,7 +518,7 @@
                 obj().env.ref('stock.incomming_chicago_warehouse3').id]"/>
         </function>
 
-        <function model="stock.picking" name="action_done">
+        <function model="stock.picking" name="_action_done">
             <value model="stock.picking" eval="[
                 obj().env.ref('stock.outgoing_shipment_main_warehouse1').id,
                 obj().env.ref('stock.outgoing_shipment_main_warehouse4').id,

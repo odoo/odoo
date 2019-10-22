@@ -1041,7 +1041,7 @@ class TestStockValuationWithCOA(AccountingTestCase):
             .write({'quantity_done': 5.0}))
 
         picking.button_validate()
-        picking.action_done()  # Create Backorder
+        picking._action_done()  # Create Backorder
         # 5 Units received at rate 0.7 = 42.86
         self.assertAlmostEqual(product_avg.standard_price, 42.86)
 

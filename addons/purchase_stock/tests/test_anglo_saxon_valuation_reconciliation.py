@@ -118,7 +118,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCase):
         return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
         return_pick.action_assign()
         return_pick.move_lines.quantity_done = 1
-        return_pick.action_done()
+        return_pick._action_done()
         self._change_pickings_date(return_pick, '2018-01-13')
 
         # The currency rate changes again

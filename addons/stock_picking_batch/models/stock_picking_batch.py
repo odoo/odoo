@@ -82,7 +82,7 @@ class StockPickingBatch(models.Model):
             elif picking._check_backorder():
                 picking_to_backorder |= picking
             else:
-                picking.action_done()
+                picking._action_done()
         self.write({'state': 'done'})
         if picking_without_qty_done:
             view = self.env.ref('stock.view_immediate_transfer')

@@ -173,7 +173,7 @@ class TestWarehouse(TestStockCommon):
         })
         picking_out.action_confirm()
         picking_out.move_lines.quantity_done = 1
-        picking_out.action_done()
+        picking_out._action_done()
 
         quant = self.env['stock.quant'].search([('product_id', '=', productA.id), ('location_id', '=', stock_location.id)])
         self.assertEqual(len(quant), 1)
@@ -186,7 +186,7 @@ class TestWarehouse(TestStockCommon):
         return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
         return_pick.action_assign()
         return_pick.move_lines.quantity_done = 1
-        return_pick.action_done()
+        return_pick._action_done()
 
         quant = self.env['stock.quant'].search([('product_id', '=', productA.id), ('location_id', '=', stock_location.id)])
         self.assertEqual(sum(quant.mapped('quantity')), 0)
@@ -216,7 +216,7 @@ class TestWarehouse(TestStockCommon):
         })
         picking_out.action_confirm()
         picking_out.move_lines.quantity_done = 1
-        picking_out.action_done()
+        picking_out._action_done()
 
         # Make an inventory adjustment to set the quantity to 0
         inventory = self.env['stock.inventory'].create({
@@ -389,17 +389,17 @@ class TestWarehouse(TestStockCommon):
         self.assertTrue(picking_stock_transit)
         picking_stock_transit.action_assign()
         picking_stock_transit.move_lines[0].quantity_done = 1.0
-        picking_stock_transit.action_done()
+        picking_stock_transit._action_done()
 
         picking_transit_shop_namur = self.env['stock.picking'].search([('location_dest_id', '=', warehouse_shop_namur.lot_stock_id.id)])
         self.assertTrue(picking_transit_shop_namur)
         picking_transit_shop_namur.action_assign()
         picking_transit_shop_namur.move_lines[0].quantity_done = 1.0
-        picking_transit_shop_namur.action_done()
+        picking_transit_shop_namur._action_done()
 
         picking_out_namur.action_assign()
         picking_out_namur.move_lines[0].quantity_done = 1.0
-        picking_out_namur.action_done()
+        picking_out_namur._action_done()
 
         # Check that the correct quantity has been provided to customer
         self.assertEqual(self.env['stock.quant']._gather(product, customer_location).quantity, 1)
@@ -433,17 +433,17 @@ class TestWarehouse(TestStockCommon):
         self.assertTrue(picking_stock_transit)
         picking_stock_transit.action_assign()
         picking_stock_transit.move_lines[0].quantity_done = 1.0
-        picking_stock_transit.action_done()
+        picking_stock_transit._action_done()
 
         picking_transit_shop_wavre = self.env['stock.picking'].search([('location_dest_id', '=', warehouse_shop_wavre.lot_stock_id.id)])
         self.assertTrue(picking_transit_shop_wavre)
         picking_transit_shop_wavre.action_assign()
         picking_transit_shop_wavre.move_lines[0].quantity_done = 1.0
-        picking_transit_shop_wavre.action_done()
+        picking_transit_shop_wavre._action_done()
 
         picking_out_wavre.action_assign()
         picking_out_wavre.move_lines[0].quantity_done = 1.0
-        picking_out_wavre.action_done()
+        picking_out_wavre._action_done()
 
         # Check that the correct quantity has been provided to customer
         self.assertEqual(self.env['stock.quant']._gather(product, customer_location).quantity, 2)
