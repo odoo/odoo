@@ -3180,7 +3180,7 @@ class StockMove(SavepointCase):
         picking.action_confirm()
         picking.action_assign()
         move1.move_line_ids.qty_done = 10
-        picking.action_done()
+        picking._action_done()
         self.assertEqual(move1.product_uom_qty, 10.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 10.0)
         self.env['stock.move.line'].create({
@@ -4239,7 +4239,7 @@ class StockMove(SavepointCase):
         picking.action_confirm()
         picking.action_assign()
         move1.quantity_done = 10
-        picking.action_done()
+        picking._action_done()
 
         self.assertEqual(len(picking.move_lines), 1, 'One move should exist for the picking.')
         self.assertEqual(len(picking.move_line_ids), 1, 'One move line should exist for the picking.')
