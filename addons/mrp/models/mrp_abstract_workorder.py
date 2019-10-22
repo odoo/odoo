@@ -277,6 +277,10 @@ class MrpAbstractWorkorder(models.AbstractModel):
         """ Once the production is done. Modify the workorder lines into
         stock move line with the registered lot and quantity done.
         """
+        # add missing move for extra component/byproduct
+        for line in self._workorder_line_ids():
+            if not line.move_id:
+                line._set_move_id()
         # Before writting produce quantities, we ensure they respect the bom strictness
         self._strict_consumption_check()
         vals_list = []
@@ -499,6 +503,29 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
             duplicates = co_prod_wo_lines.filtered(lambda wol: wol.lot_id == self.lot_id) - self
             if duplicates:
                 raise UserError(message)
+
+    def _set_move_id(self):
+        """ Check the line has a stock_move on which on the quantity will be
+        transfered at the end of the production """
+        self.ensure_one()
+        # Find move_id that would match
+        mo = self._get_production()
+        if self[self._get_raw_workorder_inverse_name()]:
+            moves = mo.move_raw_ids
+        else:
+            moves = mo.move_finished_ids
+        move_id = moves.filtered(lambda m: m.product_id == self.product_id and m.state not in ('done', 'cancel'))
+        if not move_id:
+            # create a move to assign it to the line
+            if self[self._get_raw_workorder_inverse_name()]:
+                values = mo._get_move_raw_values(self.product_id, self.qty_done, self.product_uom_id)
+            elif self.product_id != mo.product_id:
+                values = mo._get_finished_move_value(self.product_id.id, self.qty_done, self.product_uom_id.id)
+            else:
+                # The line is neither a component nor a byproduct
+                return
+            move_id = self.env['stock.move'].create(values)
+        self.move_id = move_id.id
 
     def _unreserve_order(self):
         """ Unreserve line with lower reserved quantity first """

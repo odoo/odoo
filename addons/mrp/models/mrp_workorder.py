@@ -143,6 +143,7 @@ class MrpWorkorder(models.Model):
     finished_workorder_line_ids = fields.One2many('mrp.workorder.line',
         'finished_workorder_id', string='By-products')
     allowed_lots_domain = fields.One2many(comodel_name='stock.production.lot', compute="_compute_allowed_lots_domain")
+    is_finished_lines_editable = fields.Boolean(compute='_compute_is_finished_lines_editable')
 
     # Both `date_planned_start` and `date_planned_finished` are related fields on `leave_id`. Let's say
     # we slide a workorder on a gantt view, a single call to write is made with both
@@ -163,6 +164,14 @@ class MrpWorkorder(models.Model):
             'date_from': date_from,
             'date_to': date_to,
         })
+
+    @api.depends('state')
+    def _compute_is_finished_lines_editable(self):
+        for workorder in self:
+            if self.user_has_groups('mrp.group_mrp_byproducts') and workorder.state not in ('cancel', 'done'):
+                workorder.is_finished_lines_editable = True
+            else:
+                workorder.is_finished_lines_editable = False
 
     @api.onchange('finished_lot_id')
     def _onchange_finished_lot_id(self):
@@ -662,6 +671,18 @@ class MrpWorkorderLine(models.Model):
         ondelete='cascade')
     finished_workorder_id = fields.Many2one('mrp.workorder', 'Finished Product for Workorder',
         ondelete='cascade')
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super().create(vals_list)
+        for line in res:
+            wo = line.raw_workorder_id
+            if wo and\
+                    wo.consumption == 'strict' and\
+                    wo.state == 'progress' and\
+                    line.product_id.id not in wo.production_id.bom_id.bom_line_ids.product_id.ids:
+                raise UserError(_('You cannot consume additional component as the consumption defined on the Bill of Material is set to "strict"'))
+        return res
 
     @api.model
     def _get_raw_workorder_inverse_name(self):

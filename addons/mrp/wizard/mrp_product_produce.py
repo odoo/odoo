@@ -109,34 +109,6 @@ class MrpProductProduce(models.TransientModel):
         # Check all the product_produce line have a move id (the user can add product
         # to consume directly in the wizard)
         for line in self._workorder_line_ids():
-            if not line.move_id:
-                # Find move_id that would match
-                if line.raw_product_produce_id:
-                    moves = self.move_raw_ids
-                else:
-                    moves = self.move_finished_ids
-                move_id = moves.filtered(lambda m: m.product_id == line.product_id and m.state not in ('done', 'cancel'))
-                if not move_id:
-                    # create a move to assign it to the line
-                    if line.raw_product_produce_id:
-                        values = {
-                            'name': self.production_id.name,
-                            'reference': self.production_id.name,
-                            'product_id': line.product_id.id,
-                            'product_uom': line.product_uom_id.id,
-                            'location_id': self.production_id.location_src_id.id,
-                            'location_dest_id': line.product_id.property_stock_production.id,
-                            'raw_material_production_id': self.production_id.id,
-                            'group_id': self.production_id.procurement_group_id.id,
-                            'origin': self.production_id.name,
-                            'state': 'confirmed',
-                            'company_id': self.production_id.company_id.id,
-                        }
-                    else:
-                        values = self.production_id._get_finished_move_value(line.product_id.id, 0, line.product_uom_id.id)
-                    move_id = self.env['stock.move'].create(values)
-                line.move_id = move_id.id
-
             line._check_line_sn_uniqueness()
         # because of an ORM limitation (fields on transient models are not
         # recomputed by updates in non-transient models), the related fields on
