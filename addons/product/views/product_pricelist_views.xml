@@ -62,7 +62,7 @@
                     <field name="product_tmpl_id"
                       invisible="context.get('active_model')!='product.category'"
                       attrs="{'required': [('applied_on', '=', '1_product')]}"
-                      domain="[('categ_id', '=', context.get('default_categ_id', True))]"
+                      domain="[('categ_id', '=', context.get('default_categ_id', True)), '|', ('company_id', '=', company_id), ('company_id', '=', False)]"
                       options="{'no_create_edit':1, 'no_open': 1}"/>
                     <field name="product_id"
                       groups="product.group_product_variant"
@@ -72,7 +72,7 @@
                       domain="['|', '|',
                         ('id', '=', context.get('default_product_id', 0)),
                         ('product_tmpl_id', '=', context.get('default_product_tmpl_id', 0)),
-                        ('categ_id', '=', context.get('default_categ_id', 0)),
+                        ('categ_id', '=', context.get('default_categ_id', 0)), '|', ('company_id', '=', company_id), ('company_id', '=', False)
                       ]"
                       options="{'no_create_edit':1, 'no_open': 1}"
                       />
@@ -253,6 +253,7 @@
                                       <field name="date_end"/>
                                       <field name="base" invisible="1"/>
                                       <field name="applied_on" invisible="1"/>
+                                      <field name="company_id" invisible="1"/>
                                   </tree>
                               </field>
                             </page>
