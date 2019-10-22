@@ -42,8 +42,8 @@ class StockPicking(models.Model):
             picking._get_subcontracted_productions()._action_cancel()
         return super(StockPicking, self).action_cancel()
 
-    def action_done(self):
-        res = super(StockPicking, self).action_done()
+    def _action_done(self):
+        res = super(StockPicking, self)._action_done()
         productions = self.env['mrp.production']
         for picking in self:
             for move in picking.move_lines:

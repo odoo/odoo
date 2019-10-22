@@ -515,7 +515,7 @@ class PosOrder(models.Model):
         picking.action_assign()
         wrong_lots = self.set_pack_operation_lot(picking)
         if not wrong_lots:
-            picking.action_done()
+            picking._action_done()
 
     def set_pack_operation_lot(self, picking=None):
         """Set Serial/Lot number in pack operations to mark the pack operation done."""

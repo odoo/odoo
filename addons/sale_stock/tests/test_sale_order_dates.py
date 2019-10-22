@@ -82,7 +82,7 @@ class TestSaleExpectedDate(common.TransactionCase):
         picking = sale_order.picking_ids[0]
         for ml in picking.move_line_ids:
             ml.qty_done = ml.product_uom_qty
-        picking.action_done()
+        picking._action_done()
         self.assertEqual(picking.state, 'done', "Picking not processed correctly!")
         self.assertEqual(fields.Date.today(), sale_order.effective_date, "Wrong effective date on sale order!")
 

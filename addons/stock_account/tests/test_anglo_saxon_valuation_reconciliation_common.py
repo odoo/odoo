@@ -42,7 +42,7 @@ class ValuationReconciliationTestCase(AccountingTestCase):
         for picking in pickings:
             for ml in picking.move_line_ids:
                 ml.qty_done = quantity or ml.product_qty
-        pickings.action_done()
+        pickings._action_done()
         self._change_pickings_date(pickings, date)
 
     def _change_pickings_date(self, pickings, date):
