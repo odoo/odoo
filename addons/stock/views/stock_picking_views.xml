@@ -220,14 +220,21 @@
             <field eval="12" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Transfer">
+
+                <field name="is_locked" invisible="1"/>
+                <field name="show_mark_as_todo" invisible="1"/>
+                <field name="show_check_availability" invisible="1"/>
+                <field name="show_validate" invisible="1"/>
+                <field name="show_lots_text" invisible="1"/>
+                <field name="immediate_transfer" invisible="1"/>
+                <field name="picking_type_code" invisible="1"/>
+                <field name="show_operations" invisible="1" readonly="1"/>
+                <field name="show_reserved" invisible="1" readonly="1"/>
+                <field name="move_line_exist" invisible="1"/>
+                <field name="has_packages" invisible="1"/>
+                <field name="picking_type_entire_packs" invisible="1"/>
+
                 <header>
-                    <field name="id" invisible="1"/>
-                    <field name="is_locked" invisible="1"/>
-                    <field name="show_mark_as_todo" invisible="1"/>
-                    <field name="show_check_availability" invisible="1"/>
-                    <field name="show_validate" invisible="1"/>
-                    <field name="show_lots_text" invisible="1"/>
-                    <field name="immediate_transfer" invisible="1"/>
                     <button name="action_confirm" attrs="{'invisible': [('show_mark_as_todo', '=', False)]}" string="Mark as Todo" type="object" class="oe_highlight" groups="base.group_user"/>
                     <button name="action_assign" attrs="{'invisible': [('show_check_availability', '=', False)]}" string="Check Availability" type="object" class="oe_highlight" groups="base.group_user"/>
                     <button name="button_validate" attrs="{'invisible': ['|', ('state', 'in', ('waiting','confirmed')), ('show_validate', '=', False)]}" string="Validate" type="object" class="oe_highlight" groups="stock.group_stock_user"/>
@@ -241,16 +248,10 @@
                     <button name="do_print_picking" string="Print" groups="stock.group_stock_user" type="object" attrs="{'invisible': ['|', ('state', 'not in', ('assigned', 'partially_available')), ('is_locked', '=', False)]}"/>
                     <button name="%(action_report_delivery)d" string="Print" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('is_locked', '=', False)]}" type="action" groups="base.group_user"/>
                     <button name="%(act_stock_return_picking)d" string="Return" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('is_locked', '=', False)]}" type="action" groups="base.group_user"/>
-                    <field name="picking_type_code" invisible="1"/>
                     <button name="do_unreserve" string="Unreserve" groups="base.group_user" type="object" attrs="{'invisible': ['|', '|', '|', '|', ('picking_type_code', '=', 'incoming'), ('immediate_transfer', '=', True), ('is_locked', '=', False), '&amp;', ('state', 'not in', ('assigned', 'partially_available')), ('move_type', '!=', 'one'), '&amp;', ('state', 'not in', ('assigned', 'partially_available', 'confirmed')), ('move_type', '=', 'one')]}"/>
-                    <field name="show_operations" invisible="1" readonly="1"/>
-                    <field name="show_reserved" invisible="1" readonly="1"/>
-                    <field name="move_line_exist" invisible="1"/>
-                    <field name="has_packages" invisible="1"/>
                     <button name="button_scrap" type="object" string="Scrap" attrs="{'invisible': ['|', '|', '&amp;', ('picking_type_code', '=', 'incoming'), ('state', '!=', 'done'), '&amp;', ('picking_type_code', '=', 'outgoing'), ('state', '=', 'done'), ('is_locked', '=', False)]}"/>
                     <button name="action_toggle_is_locked" attrs="{'invisible': ['|', ('state', 'in', ('draft','cancel')), ('is_locked', '=', False)]}" string="Unlock" groups="stock.group_stock_manager" type="object" help="If the picking is unlocked you can edit initial demand (for a draft picking) or done quantities (for a done picking)."/>                    <button name="action_toggle_is_locked" attrs="{'invisible': [('is_locked', '=', True)]}" string="Lock" class="oe_highlight" groups="stock.group_stock_manager" type="object"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,partially_available,assigned,done" />
-                    <field name="picking_type_entire_packs" invisible="1"/>
                     <button name="action_cancel" attrs="{'invisible': ['|', ('state', 'not in', ('assigned', 'confirmed', 'partially_available', 'draft', 'waiting')), ('is_locked', '=', False)]}" string="Cancel" groups="base.group_user" type="object"/>
                 </header>
                 <sheet>
