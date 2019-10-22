@@ -22,8 +22,32 @@ class ProductCategory(models.Model):
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
+    def _get_default_taxes_id(self):
+        if self.company_id:
+            return self.company_id.account_sale_tax_id
+        return self.default_tax_by_allowed_companies()
+
+    def default_tax_by_allowed_companies(self, forcefully=False):
+        company_ids = self.sudo().env['res.company'].search([])
+        if self.env.context.get('allowed_company_ids') and not forcefully:
+            company_ids = company_ids.filtered(lambda c: c.id in self.env.context.get('allowed_company_ids'))
+        return company_ids.sudo().mapped('account_sale_tax_id')
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals['taxes_id'][0][2] == self.default_tax_by_allowed_companies().ids:
+                vals['taxes_id'] = [[6, 0, self.default_tax_by_allowed_companies(True).ids]]
+        templates = super(ProductTemplate, self).create(vals_list)
+        return templates
+
+    @api.onchange('company_id')
+    def _onchange_company_id(self):
+        if self.company_id:
+            self.taxes_id = self.company_id.account_sale_tax_id
+
     taxes_id = fields.Many2many('account.tax', 'product_taxes_rel', 'prod_id', 'tax_id', help="Default taxes used when selling the product.", string='Customer Taxes',
-        domain=[('type_tax_use', '=', 'sale')], default=lambda self: self.env.company.account_sale_tax_id)
+        domain=[('type_tax_use', '=', 'sale')], default=_get_default_taxes_id)
     supplier_taxes_id = fields.Many2many('account.tax', 'product_supplier_taxes_rel', 'prod_id', 'tax_id', string='Vendor Taxes', help='Default taxes used when buying the product.',
         domain=[('type_tax_use', '=', 'purchase')], default=lambda self: self.env.company.account_purchase_tax_id)
     property_account_income_id = fields.Many2one('account.account', company_dependent=True,
