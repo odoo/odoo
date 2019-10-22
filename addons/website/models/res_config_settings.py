@@ -30,6 +30,7 @@ class ResConfigSettings(models.TransientModel):
     google_analytics_key = fields.Char('Google Analytics Key', related='website_id.google_analytics_key', readonly=False)
     google_management_client_id = fields.Char('Google Client ID', related='website_id.google_management_client_id', readonly=False)
     google_management_client_secret = fields.Char('Google Client Secret', related='website_id.google_management_client_secret', readonly=False)
+    google_search_console = fields.Char('Google Search Console', related='website_id.google_search_console', readonly=False)
 
     cdn_activated = fields.Boolean(related='website_id.cdn_activated', readonly=False)
     cdn_url = fields.Char(related='website_id.cdn_url', readonly=False)
@@ -89,6 +90,10 @@ class ResConfigSettings(models.TransientModel):
     def has_google_maps(self):
         self.has_google_maps = bool(self.google_maps_api_key)
 
+    @api.depends('website_id')
+    def has_google_search_console(self):
+        self.has_google_search_console = bool(self.google_search_console)
+
     def inverse_has_google_analytics(self):
         if not self.has_google_analytics:
             self.has_google_analytics_dashboard = False
@@ -103,9 +108,14 @@ class ResConfigSettings(models.TransientModel):
             self.google_management_client_id = False
             self.google_management_client_secret = False
 
+    def inverse_has_google_search_console(self):
+        if not self.has_google_search_console:
+            self.google_search_console = False
+
     has_google_analytics = fields.Boolean("Google Analytics", compute=has_google_analytics, inverse=inverse_has_google_analytics)
     has_google_analytics_dashboard = fields.Boolean("Google Analytics Dashboard", compute=has_google_analytics_dashboard, inverse=inverse_has_google_analytics_dashboard)
     has_google_maps = fields.Boolean("Google Maps", compute=has_google_maps, inverse=inverse_has_google_maps)
+    has_google_search_console = fields.Boolean("Console Google Search", compute=has_google_search_console, inverse=inverse_has_google_search_console)
 
     @api.onchange('language_ids')
     def _onchange_language_ids(self):

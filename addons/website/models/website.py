@@ -95,6 +95,7 @@ class Website(models.Model):
     google_analytics_key = fields.Char('Google Analytics Key')
     google_management_client_id = fields.Char('Google Client ID')
     google_management_client_secret = fields.Char('Google Client Secret')
+    google_search_console = fields.Char(help='Google key, or Enable to access first reply')
 
     google_maps_api_key = fields.Char('Google Maps API Key')
 
