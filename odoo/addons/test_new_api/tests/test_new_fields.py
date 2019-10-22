@@ -1598,6 +1598,18 @@ class TestFields(common.TransactionCase):
         assertBinaryValue(record_no_bin_size, binary_value)
         assertBinaryValue(record_bin_size, binary_size)
 
+        # check computed binary field with arbitrary Python value
+        record = self.env['test_new_api.model_binary'].create({})
+        record.flush()
+        record.invalidate_cache()
+        record_no_bin_size = record.with_context(bin_size=False)
+        record_bin_size = record.with_context(bin_size=True)
+
+        expected_value = [(record.id, False)]
+        self.assertEqual(record.binary_computed, expected_value)
+        self.assertEqual(record_no_bin_size.binary_computed, expected_value)
+        self.assertEqual(record_bin_size.binary_computed, expected_value)
+
 
 class TestX2many(common.TransactionCase):
     def test_definition_many2many(self):
