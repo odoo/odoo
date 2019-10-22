@@ -11,18 +11,64 @@ var qweb = core.qweb;
 var _t = core._t;
 
 /**
+ * window.getComputedStyle cannot work properly with CSS shortcuts (like
+ * 'border-width' which is a shortcut for the top + right + bottom + left border
+ * widths. If an options wants to customize such a shortcut, it should be listed
+ * here with the non-shortcuts property it stands for, in order.
+ *
+ * @type {Object<string[]>}
+ */
+const CSS_SHORTHANDS = {
+    'border-width': ['border-top-width', 'border-right-width', 'border-bottom-width', 'border-left-width'],
+    'border-radius': ['border-top-left-radius', 'border-top-right-radius', 'border-bottom-right-radius', 'border-bottom-left-radius'],
+};
+/**
+ * Key-value mapping to list converters from an unit A to an unit B.
+ * - The key is a string in the format '$1-$2' where $1 is the CSS symbol of
+ *   unit A and $2 is the CSS symbol of unit B.
+ * - The value is a function that converts the received value (expressed in
+ *   unit A) to another value expressed in unit B. Two other parameters is
+ *   received: the css property on which the unit applies and the jQuery element
+ *   on which that css property may change.
+ */
+const CSS_UNITS_CONVERSION = {
+    's-ms': () => 1000,
+    'ms-s': () => 0.001,
+    'rem-px': () => _computePxByRem(),
+    'px-rem': () => _computePxByRem(true),
+};
+
+/**
+ * Computes the number of "px" needed to make a "rem" unit. Subsequent calls
+ * returns the cached computed value.
+ *
+ * @param {boolean} [toRem=false]
+ * @returns {float} - number of px by rem if 'toRem' is false
+ *                  - the inverse otherwise
+ */
+function _computePxByRem(toRem) {
+    if (_computePxByRem.PX_BY_REM === undefined) {
+        const htmlStyle = window.getComputedStyle(document.documentElement);
+        _computePxByRem.PX_BY_REM = parseFloat(htmlStyle['font-size']);
+    }
+    return toRem ? (1 / _computePxByRem.PX_BY_REM) : _computePxByRem.PX_BY_REM;
+}
+
+/**
  * Handles a set of options for one snippet. The registry returned by this
  * module contains the names of the specialized SnippetOption which can be
  * referenced thanks to the data-js key in the web_editor options template.
  */
 var SnippetOption = Widget.extend({
     events: {
-        'mouseenter': '_onLinkEnter',
-        'mouseenter we-button': '_onLinkEnter',
-        'click': '_onLinkClick',
-        'click we-button': '_onLinkClick',
-        'mouseleave': '_onMouseleave',
-        'mouseleave we-button': '_onMouseleave',
+        'mouseenter we-button': '_onOptionPreview',
+        'click we-button': '_onOptionSelection',
+        'mouseleave we-button': '_onOptionCancel',
+
+        'input we-input input': '_onOptionPreview',
+        'blur we-input input': '_onOptionInputBlur',
+        'click we-input': '_onOptionInputClick',
+        'keydown we-input input': '_onOptionInputKeydown',
     },
 
     /**
@@ -120,6 +166,108 @@ var SnippetOption = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Default option method which allows to handle an user input and set the
+     * appropriate data attribute on the associated snippet.
+     *
+     * @param {boolean} previewMode - never 'reset' for this method (@see this.selectClass)
+     * @param {Object} dataName - the data name to customize
+     * @param {jQuery} $opt - the related DOMElement option
+     */
+    setDataAttribute: function (previewMode, dataName, $opt) {
+        let hasUserValue = false;
+        const weInput = $opt[0];
+        const inputValue = weInput.querySelector('input').value.trim();
+        const inputUnit = weInput.dataset.unit;
+        const saveUnit = weInput.dataset.saveUnit;
+        const defaultValue = weInput.dataset.defaultValue;
+
+        let value;
+        if (inputValue) {
+            const numValue = parseFloat(inputValue);
+            if (!isNaN(numValue)) {
+                hasUserValue = true;
+                value = this._convertNumericToUnit(numValue, inputUnit, saveUnit);
+            }
+        }
+        if (value === undefined) {
+            value = this._convertValueToUnit(defaultValue, saveUnit);
+        }
+        this.$target[0].dataset[dataName] = isNaN(value) ? defaultValue : parseFloat(value.toFixed(3));
+
+        var extraClass = weInput.dataset.extraClass;
+        if (extraClass) {
+            this.$target.toggleClass(extraClass, hasUserValue);
+        }
+    },
+    /**
+     * Default option method which allows to handle an user input and set the
+     * appropriate css style on the associated snippet.
+     *
+     * @param {boolean} previewMode - never 'reset' for this method (@see this.selectClass)
+     * @param {Object} mainCssProp - the cssProp to customize
+     * @param {jQuery} $opt - the related DOMElement option
+     */
+    setStyle: function (previewMode, mainCssProp, $opt) {
+        let hasUserValue = false;
+        const cssProps = CSS_SHORTHANDS[mainCssProp] || [mainCssProp];
+
+        // Join all inputs controlling the same css property and split user
+        // input into sub-properties (note this code handles the two at the same
+        // time but should normally not be combined).
+        const $weInputs = this.$el.find(`[data-set-style=${mainCssProp}]`);
+        const subValuesByInput = _.map($weInputs, weInput => {
+            const inputValue = weInput.querySelector('input').value.trim();
+            const inputUnit = weInput.dataset.unit;
+            const saveUnit = weInput.dataset.saveUnit;
+            const defaultValue = weInput.dataset.defaultValue;
+            let convertedDefaultValue = this._convertValueToUnit(defaultValue, saveUnit, mainCssProp);
+            convertedDefaultValue = isNaN(convertedDefaultValue) ? defaultValue : (parseFloat(convertedDefaultValue.toFixed(3)) + saveUnit);
+
+            const values = inputValue.split(/\s+/g).map(v => {
+                const numValue = parseFloat(v);
+                if (isNaN(numValue)) {
+                    return convertedDefaultValue;
+                } else {
+                    hasUserValue = true;
+                    const value = this._convertNumericToUnit(numValue, inputUnit, saveUnit, mainCssProp);
+                    return parseFloat(value.toFixed(3)) + saveUnit;
+                }
+            });
+            while (values.length < cssProps.length) {
+                switch (values.length) {
+                    case 1:
+                    case 2:
+                        values.push(values[0]);
+                        break;
+                    case 3:
+                        values.push(values[1]);
+                        break;
+                    default:
+                        values.push(values[values.length - 1]);
+                }
+            }
+            return values;
+        });
+
+        for (const cssProp of cssProps) {
+            // Always reset the inline style first to not put inline style on an
+            // element which already have this style through css stylesheets.
+            this.$target[0].style.setProperty(cssProp, '');
+        }
+        const styles = window.getComputedStyle(this.$target[0]);
+        cssProps.forEach((cssProp, i) => {
+            const cssValue = subValuesByInput.map(inputSubValues => inputSubValues[i]).join(' ');
+            if (styles[cssProp] !== cssValue) {
+                this.$target[0].style.setProperty(cssProp, cssValue, 'important');
+            }
+        });
+
+        var extraClass = $opt[0].dataset.extraClass;
+        if (extraClass) {
+            this.$target.toggleClass(extraClass, hasUserValue);
+        }
+    },
+    /**
      * Default option method which allows to select one and only one class in
      * the option classes set and set it on the associated snippet. The common
      * case is having a sub-collapse with each item having a `data-select-class`
@@ -156,11 +304,11 @@ var SnippetOption = Widget.extend({
      * @see this.selectClass
      */
     toggleClass: function (previewMode, value, $opt) {
-        var $lis = this.$el.find('[data-toggle-class]');
-        var classes = $lis.map(function () {
+        const $opts = this.$el.find('[data-toggle-class]').not('[data-set-style]');
+        const classes = $opts.map(function () {
             return $(this).data('toggleClass');
         }).get().join(' ');
-        var activeClasses = $lis.filter('.active, :has(.active)').map(function () {
+        const activeClasses = $opts.filter('.active, :has(.active)').map(function () {
             return $(this).data('toggleClass');
         }).get().join(' ');
 
@@ -215,6 +363,48 @@ var SnippetOption = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Converts the given (value + unit) string to a numeric value expressed in
+     * the given css unit.
+     *
+     * e.g. fct('400ms', 's') -> 0.4
+     *
+     * @param {string} value
+     * @param {string} unitTo
+     * @param {string} [cssProp]
+     * @returns {number}
+     */
+    _convertValueToUnit: function (value, unitTo, cssProp) {
+        const m = value.trim().match(/^([0-9.]+)(\w*)$/);
+        if (!m) {
+            return NaN;
+        }
+        const numValue = parseFloat(m[1]);
+        const valueUnit = m[2];
+        return this._convertNumericToUnit(numValue, valueUnit, unitTo, cssProp);
+    },
+    /**
+     * Converts the given numeric value expressed in the given css unit into
+     * the corresponding numeric value expressed in the other given css unit.
+     *
+     * e.g. fct(400, 'ms', 's') -> 0.4
+     *
+     * @param {number} value
+     * @param {string} unitFrom
+     * @param {string} unitTo
+     * @param {string} [cssProp]
+     * @returns {number}
+     */
+    _convertNumericToUnit: function (value, unitFrom, unitTo, cssProp) {
+        if (Math.abs(value) < Number.EPSILON || unitFrom === unitTo) {
+            return value;
+        }
+        const converter = CSS_UNITS_CONVERSION[`${unitFrom}-${unitTo}`];
+        if (converter === undefined) {
+            throw new Error(`Cannot convert ${unitFrom} into ${unitTo} !`);
+        }
+        return value * converter(cssProp, this.$target);
+    },
+    /**
      * Reactivate the options that were activated before previews.
      */
     _reset: function () {
@@ -266,13 +456,16 @@ var SnippetOption = Widget.extend({
             var $el = $(data[0]);
             var methods = data[1];
 
+            const isInput = $el.is('we-input');
+
             Object.keys(methods).forEach(methodName => {
-                if (this[methodName]) {
-                    if (previewMode === true) {
-                        this.__methodNames.push(methodName);
-                    }
-                    this[methodName](previewMode, methods[methodName], $el);
+                if (!this[methodName]) {
+                    return;
                 }
+                if (previewMode === true && !isInput) {
+                    this.__methodNames.push(methodName);
+                }
+                this[methodName](previewMode, methods[methodName], $el);
             });
         });
         this.__methodNames = _.uniq(this.__methodNames);
@@ -292,6 +485,9 @@ var SnippetOption = Widget.extend({
      */
     _setActive: function () {
         var self = this;
+
+        // --- TOGGLE CLASS ---
+
         this.$el.find('[data-toggle-class]')
             .removeClass('active')
             .filter(function () {
@@ -299,6 +495,8 @@ var SnippetOption = Widget.extend({
                 return !className || self.$target.hasClass(className);
             })
             .addClass('active');
+
+        // --- SELECT CLASS ---
 
         // Get submenus which are not inside submenus
         var $submenus = this.$el.find('we-collapse-area, we-select')
@@ -330,6 +528,92 @@ var SnippetOption = Widget.extend({
                 .last()
                 .addClass('active');
         }
+
+        // --- SET DATA ATTRIBUTE --- (note: important to be done last because of active removal)
+
+        this.el.querySelectorAll('[data-set-data-attribute]').forEach(el => {
+            el.classList.remove('active');
+            const inputEl = el.querySelector('input');
+            if (inputEl === document.activeElement) {
+                return;
+            }
+
+            const inputUnit = el.dataset.unit;
+            const saveUnit = el.dataset.saveUnit;
+            const defaultValue = el.dataset.defaultValue;
+            const convertedDefaultValue = this._convertValueToUnit(defaultValue, inputUnit);
+
+            let value = this.$target[0].dataset[el.dataset.setDataAttribute];
+            let numValue = parseFloat(value);
+            if (!isNaN(numValue)) {
+                numValue = this._convertNumericToUnit(numValue, saveUnit, inputUnit);
+            }
+            if (isNaN(numValue) || Math.abs(numValue - convertedDefaultValue) < Number.EPSILON) {
+                value = '';
+            } else {
+                value = parseFloat(numValue.toFixed(3));
+            }
+            inputEl.value = value;
+        });
+
+        // --- SET STYLE --- (note: important to be done last because of active removal)
+
+        let styles;
+        const seenSetStyles = [];
+        this.el.querySelectorAll('[data-set-style]').forEach(el => {
+            const mainCssProp = el.dataset.setStyle;
+            if (seenSetStyles.includes(mainCssProp)) {
+                return;
+            }
+            seenSetStyles.push(mainCssProp);
+
+            const $els = this.$el.find(`[data-set-style="${mainCssProp}"]`);
+            $els.removeClass('active');
+            const $inputs = $els.find('> input');
+            if (_.any($inputs, input => input === document.activeElement)) {
+                return;
+            }
+
+            styles = styles || window.getComputedStyle(this.$target[0]);
+            const cssProps = CSS_SHORTHANDS[mainCssProp] || [mainCssProp];
+
+            const valuesByProp = cssProps.map(cssProp => {
+                const cssValue = styles[cssProp];
+                if (!cssValue) {
+                    return [];
+                }
+
+                return cssValue.split(/\s+/).map((v, i) => {
+                    const inputUnit = $els[i].dataset.unit;
+                    const numValue = this._convertValueToUnit(v, inputUnit, mainCssProp);
+                    return isNaN(numValue) ? v : numValue;
+                });
+            });
+            _.each($els, (el, i) => {
+                let values = valuesByProp.map(propValues => propValues[i]);
+
+                if (values.length === 4 && Math.abs(values[3] - values[1]) < Number.EPSILON) {
+                    values.pop();
+                }
+                if (values.length === 3 && Math.abs(values[2] - values[0]) < Number.EPSILON) {
+                    values.pop();
+                }
+                if (values.length === 2 && Math.abs(values[1] - values[0]) < Number.EPSILON) {
+                    values.pop();
+                }
+
+                const inputUnit = el.dataset.unit;
+                const defaultValue = el.dataset.defaultValue;
+                const convertedDefaultValue = this._convertValueToUnit(defaultValue, inputUnit, mainCssProp);
+                if (values.length === 1 && Math.abs(values[0] - convertedDefaultValue) < Number.EPSILON) {
+                    values.pop();
+                }
+
+                values = values.filter(v => isFinite(v));
+                values = values.map(v => parseFloat(v.toFixed(3)));
+                $inputs[i].value = (values.length ? values.join(' ') : '');
+            });
+        });
     },
     /**
      * @private
@@ -351,14 +635,71 @@ var SnippetOption = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Called when a option link is entered -> activates the related option in
-     * preview mode.
+     * @private
+     * @param {Event} ev
+     */
+    _onOptionInputBlur: function (ev) {
+        // Sometimes, an input is focusout for internal reason (like an undo
+        // recording) then focused again manually in the same JS stack
+        // execution. In that case, the blur should not trigger an option
+        // selection as the user did not leave the input. We thus defer the blur
+        // handling to then check that the target is indeed still blurred before
+        // executing the actual option selection.
+        setTimeout(() => {
+            if (ev.currentTarget === document.activeElement) {
+                return;
+            }
+            this._onOptionSelection(ev);
+        });
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onOptionInputClick: function (ev) {
+        const inputEl = ev.currentTarget.querySelector('input');
+        if (inputEl) {
+            inputEl.select();
+        }
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onOptionInputKeydown: function (ev) {
+        const input = ev.currentTarget;
+        let value = parseFloat(input.value || input.placeholder);
+        if (isNaN(value)) {
+            return;
+        }
+
+        let step = parseFloat(input.parentNode.dataset.step);
+        if (isNaN(step)) {
+            step = 1.0;
+        }
+        switch (ev.which) {
+            case $.ui.keyCode.UP:
+                value += step;
+                break;
+            case $.ui.keyCode.DOWN:
+                value -= step;
+                break;
+            default:
+                return;
+        }
+
+        input.value = parseFloat(value.toFixed(3));
+        $(input).trigger('input');
+    },
+    /**
+     * Called when a option link is entered or an option input content is being
+     * modified -> activates the related option in preview mode.
      *
      * @private
      * @param {Event} ev
      */
-    _onLinkEnter: function (ev) {
-        var $opt = $(ev.target).closest('we-button');
+    _onOptionPreview: function (ev) {
+        var $opt = $(ev.target).closest('we-button, we-input');
         if (!$opt.length) {
             return;
         }
@@ -371,13 +712,14 @@ var SnippetOption = Widget.extend({
         this.$target.trigger('snippet-option-preview', [this]);
     },
     /**
-     * Called when an option link is clicked -> activates the related option.
+     * Called when an option link is clicked or an option input content is
+     * validated -> activates the related option.
      *
      * @private
      * @param {Event} ev
      */
-    _onLinkClick: function (ev) {
-        var $opt = $(ev.target).closest('we-button');
+    _onOptionSelection: function (ev) {
+        var $opt = $(ev.target).closest('we-button, we-input');
         if (ev.isDefaultPrevented() || !$opt.length || !$opt.is(':hasData')) {
             return;
         }
@@ -393,7 +735,7 @@ var SnippetOption = Widget.extend({
      *
      * @private
      */
-    _onMouseleave: function () {
+    _onOptionCancel: function () {
         if (this.__click) {
             return;
         }
@@ -471,6 +813,42 @@ var SnippetOption = Widget.extend({
         }
 
         return groupEl;
+    },
+    /**
+     * Build the correct DOM for a we-input element.
+     *
+     * @static
+     * @param {string} [title]
+     * @param {Object} [options] - @see this.buildElement
+     */
+    buildInputElement: function (title, options) {
+        const inputWrapperEl = SnippetOption.prototype.buildElement('we-input', title, options);
+
+        var unit = inputWrapperEl.dataset.unit;
+        if (unit === undefined) {
+            unit = 'px';
+        }
+        inputWrapperEl.dataset.unit = unit;
+        if (inputWrapperEl.dataset.saveUnit === undefined) {
+            inputWrapperEl.dataset.saveUnit = unit;
+        }
+
+        var defaultValue = inputWrapperEl.dataset.defaultValue;
+        if (defaultValue === undefined) {
+            defaultValue = ('0' + unit);
+        }
+        inputWrapperEl.dataset.defaultValue = defaultValue;
+
+        var inputEl = document.createElement('input');
+        inputEl.setAttribute('type', 'text');
+        inputEl.setAttribute('placeholder', defaultValue.replace(unit, ''));
+        inputWrapperEl.appendChild(inputEl);
+
+        var unitEl = document.createElement('span');
+        unitEl.textContent = unit;
+        inputWrapperEl.appendChild(unitEl);
+
+        return inputWrapperEl;
     },
     /**
      * Build the correct DOM for a we-select element.
@@ -719,7 +1097,7 @@ registry.sizing = SnippetOption.extend({
         });
         _.each(this.$overlay.find(".o_handle.n, .o_handle.s"), function (handle) {
             var $handle = $(handle);
-            var direction = $handle.hasClass('n') ? 'top': 'bottom';
+            var direction = $handle.hasClass('n') ? 'top' : 'bottom';
             $handle.height(self.$target.css('padding-' + direction));
         });
         this.$target.trigger('content_changed');
@@ -1546,5 +1924,7 @@ registry.many2one = SnippetOption.extend({
 return {
     Class: SnippetOption,
     registry: registry,
+    CSS_SHORTHANDS: CSS_SHORTHANDS,
+    CSS_UNITS_CONVERSION: CSS_UNITS_CONVERSION,
 };
 });
