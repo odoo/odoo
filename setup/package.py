@@ -155,7 +155,7 @@ def gen_rpm_repo(args, file_name):
     shutil.copy(file_name, temp_path)
 
     run_cmd(['createrepo', temp_path]).check_returncode()  # creates a repodata folder in temp_path
-    shutil.copytree(os.path.join(temp_path, "repodata"), os.path.join(args.pub, 'rpm'))
+    shutil.copytree(os.path.join(temp_path, "repodata"), os.path.join(args.pub, 'rpm', 'repodata'))
 
     # Remove temp directory
     shutil.rmtree(temp_path)
