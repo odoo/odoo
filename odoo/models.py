@@ -5596,8 +5596,28 @@ Record ids: %(records)s
                     new_records = self.filtered(lambda r: not r.id)
                     real_records = self - new_records
                     records = model.browse()
-                    if real_records:
-                        records |= model.search([(key.name, 'in', real_records.ids)], order='id')
+
+                    self.env.cr.execute("SAVEPOINT modified_triggers")
+                    try:
+                        if real_records:
+                            records |= model.search([(key.name, 'in', real_records.ids)], order='id')
+                    except psycopg2.ProgrammingError as e:
+                        if e.pgcode == '42P01' and self.env.context.get('_force_unlink', False):
+                            # After a module uninstallation, we set the ir.module.module records
+                            # representing the uninstalled modules to the state 'uninstalled', this
+                            # in turn triggers a call to modified() which may or may not call
+                            # search() on tables that have been deleted from the database but still
+                            # exist in the registry. Normally, this could be avoided by reloading
+                            # the registry, however this cannot be done before setting these
+                            # ir.module.module records to state='uninstalled' otherwise the new
+                            # registry will try to load an uninstalled module. If this is the case,
+                            # we simply ignore these errors and let the uninstall go through.
+                            self.env.cr.execute("ROLLBACK TO SAVEPOINT modified_triggers")
+                        else:
+                            raise e
+                    finally:
+                        self.env.cr.execute("RELEASE SAVEPOINT modified_triggers")
+
                     if new_records:
                         cache_records = self.env.cache.get_records(model, key)
                         records |= cache_records.filtered(lambda r: set(r[key.name]._ids) & set(self._ids))
