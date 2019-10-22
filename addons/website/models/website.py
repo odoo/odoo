@@ -747,8 +747,6 @@ class Website(models.Model):
                 domain_part, url = rule.build(value, append_unknown=False)
                 if not query_string or query_string.lower() in url.lower():
                     page = {'loc': url}
-                    if url in ('/sitemap.xml',):
-                        continue
                     if url in url_set:
                         continue
                     url_set.add(url)
