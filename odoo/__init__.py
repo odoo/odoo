@@ -8,7 +8,12 @@
 # odoo must be a namespace package for odoo.addons to become one too
 # https://packaging.python.org/guides/packaging-namespace-packages/
 #----------------------------------------------------------
-__path__ = __import__('pkgutil').extend_path(__path__, __name__)
+import pkgutil
+import os.path
+__path__ = [
+    os.path.abspath(path)
+    for path in pkgutil.extend_path(__path__, __name__)
+]
 
 import sys
 assert sys.version_info > (3, 6), "Outdated python version detected, Odoo requires Python >= 3.6 to run."
