@@ -1033,14 +1033,13 @@ def trans_generate(lang, modules, cr):
     return out
 
 
-def trans_load(cr, filename, lang, verbose=True, module_name=None, create_empty_translation=False, overwrite=False):
+def trans_load(cr, filename, lang, verbose=True, create_empty_translation=False, overwrite=False):
     try:
         with file_open(filename, mode='rb') as fileobj:
             _logger.info("loading %s", filename)
             fileformat = os.path.splitext(filename)[-1][1:].lower()
             return trans_load_data(cr, fileobj, fileformat, lang,
                                    verbose=verbose,
-                                   module_name=module_name,
                                    create_empty_translation=create_empty_translation,
                                    overwrite=overwrite)
     except IOError:
@@ -1050,7 +1049,7 @@ def trans_load(cr, filename, lang, verbose=True, module_name=None, create_empty_
 
 
 def trans_load_data(cr, fileobj, fileformat, lang,
-                    verbose=True, module_name=None, create_empty_translation=False, overwrite=False):
+                    verbose=True, create_empty_translation=False, overwrite=False):
     """Populates the ir_translation table.
 
     :param fileobj: buffer open to a translation file
@@ -1058,7 +1057,6 @@ def trans_load_data(cr, fileobj, fileformat, lang,
     :param lang: language code of the translations contained in `fileobj`
                  language must be present and activated in the database
     :param verbose: increase log output
-    :param module_name: name of the module to use for created translations  # TODO move to TranslationFileReader?
     :param create_empty_translation: create an ir.translation record, even if no value
                                      is provided in the translation entry
     :param overwrite: if an ir.translation already exists for a term, replace it with
@@ -1095,9 +1093,6 @@ def trans_load_data(cr, fileobj, fileformat, lang,
             # do not import empty values
             if not create_empty_translation and not dic['value']:
                 return
-
-            if dic['type'] == 'code' and module_name:
-                dic['module'] = module_name
 
             irt_cursor.push(dic)
 

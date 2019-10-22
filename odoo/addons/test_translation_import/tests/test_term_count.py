@@ -19,7 +19,7 @@ class TestTermCount(common.TransactionCase):
         Just make sure we have as many translation entries as we wanted.
         """
         self.env['res.lang']._activate_lang('fr_FR')
-        odoo.tools.trans_load(self.cr, 'test_translation_import/i18n/fr.po', 'fr_FR', module_name='test_translation_import', verbose=False)
+        odoo.tools.trans_load(self.cr, 'test_translation_import/i18n/fr.po', 'fr_FR', verbose=False)
         translations = self.env['ir.translation'].search([
             ('lang', '=', 'fr_FR'),
             ('src', '=', '1XBUO5PUYH2RYZSA1FTLRYS8SPCNU1UYXMEYMM25ASV7JC2KTJZQESZYRV9L8CGB'),
@@ -59,10 +59,10 @@ class TestTermCount(common.TransactionCase):
         menu.name = "New Name"
         # install french and change translation content
         self.env['res.lang']._activate_lang('fr_FR')
-        odoo.tools.trans_load(self.cr, 'test_translation_import/i18n/fr.po', 'fr_FR', module_name='test_translation_import', verbose=False)
+        odoo.tools.trans_load(self.cr, 'test_translation_import/i18n/fr.po', 'fr_FR', verbose=False)
         menu.with_context(lang='fr_FR').name = "Nouveau nom"
         # reload with overwrite
-        odoo.tools.trans_load(self.cr, 'test_translation_import/i18n/fr.po', 'fr_FR', module_name='test_translation_import', verbose=False, overwrite=True)
+        odoo.tools.trans_load(self.cr, 'test_translation_import/i18n/fr.po', 'fr_FR', verbose=False, overwrite=True)
 
         # trans_load invalidates ormcache but not record cache
         menu.env.cache.invalidate()
@@ -71,8 +71,8 @@ class TestTermCount(common.TransactionCase):
 
     def test_lang_with_base(self):
         self.env['res.lang']._activate_lang('fr_BE')
-        odoo.tools.trans_load(self.cr, 'test_translation_import/i18n/fr.po', 'fr_BE', module_name='test_translation_import', verbose=False)
-        odoo.tools.trans_load(self.cr, 'test_translation_import/i18n/fr_BE.po', 'fr_BE', module_name='test_translation_import', verbose=False, overwrite=True)
+        odoo.tools.trans_load(self.cr, 'test_translation_import/i18n/fr.po', 'fr_BE', verbose=False)
+        odoo.tools.trans_load(self.cr, 'test_translation_import/i18n/fr_BE.po', 'fr_BE', verbose=False, overwrite=True)
 
         # language override base language
         translations = self.env['ir.translation'].search([
@@ -100,7 +100,7 @@ class TestTermCount(common.TransactionCase):
         Just make sure we do not create duplicated translation with 'code' type
         """
         self.env['res.lang']._activate_lang('fr_FR')
-        odoo.tools.trans_load(self.cr, 'test_translation_import/i18n/fr.po', 'fr_FR', module_name='test_translation_import', verbose=False)
+        odoo.tools.trans_load(self.cr, 'test_translation_import/i18n/fr.po', 'fr_FR', verbose=False)
         ids = self.env['ir.translation'].search([
             ('lang', '=', 'fr_FR'),
             ('src', '=', 'Test translation with two code lines'),
