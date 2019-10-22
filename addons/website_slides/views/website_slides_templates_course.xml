@@ -282,18 +282,32 @@
                     <div t-if="channel.enroll_msg" t-field="channel.enroll_msg"/>
                     <small t-if="not channel.enroll_msg">Contact website administrator.</small>
                 </div>
-                <button t-if="channel.is_member"
-                        class="d-flex align-items-center alert my-0 px-2 px-xl-3 bg-100 w-100 o_wslides_js_channel_unsubscribe"
-                        t-att-data-channel-id="channel.id"
-                        t-att-data-is-follower="channel.message_is_follower"
-                        t-att-data-enroll="channel.enroll">
-                    <t t-call="website_slides.slides_misc_user_image">
-                        <t t-set="img_class" t-value="'rounded-circle mr-1'"/>
-                        <t t-set="img_style" t-value="'width: 1.4em; height: 1.4em; object-fit: cover;'"/>
-                    </t>
-                    <h6 class="d-flex flex-grow-1 my-0">You're enrolled</h6>
-                    <i class="fa fa-check"/>
-                </button>
+                <t t-if="channel.is_member">
+                    <button class="d-flex align-items-center alert my-0 px-2 px-xl-3 bg-100 w-100 o_wslides_js_channel_unsubscribe"
+                            t-att-data-channel-id="channel.id"
+                            t-att-data-is-follower="channel.message_is_follower"
+                            t-att-data-enroll="channel.enroll">
+                        <t t-call="website_slides.slides_misc_user_image">
+                            <t t-set="img_class" t-value="'rounded-circle mr-1'"/>
+                            <t t-set="img_style" t-value="'width: 1.4em; height: 1.4em; object-fit: cover;'"/>
+                        </t>
+                        <h6 class="d-flex flex-grow-1 my-0">You're enrolled</h6>
+                        <i class="fa fa-check"/>
+                    </button>
+                    <div class="d-flex align-items-center pt-3">
+                        <t t-if="channel.completed">
+                            <span class="badge badge-pill badge-success py-1 px-2 mx-auto" style="font-size: 1em"><i class="fa fa-check"/> Completed</span>
+                        </t>
+                        <t t-else="">
+                            <div class="progress flex-grow-1 bg-black-50" style="height: 6px;">
+                                <div class="progress-bar" role="progressbar" t-attf-style="width: #{channel.completion}%" t-att-aria-valuenow="channel.completion" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <div class="ml-3 small">
+                                <span class="o_wslides_progress_percentage" t-esc="channel.completion"/> %
+                            </div>
+                        </t>
+                    </div>
+                </t>
             </div>
             <button class="btn btn-sm d-md-none bg-white ml-1 border" type="button" data-toggle="collapse" data-target="#o_wslides_sidebar_collapse" aria-expanded="false" aria-controls="o_wslides_sidebar_collapse">More info</button>
         </div>

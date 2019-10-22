@@ -44,12 +44,17 @@
                                 <span t-field="slide.channel_id.name"/>
                             </a>
                             <div t-if="not is_public_user" class="d-flex align-items-center">
-                                <div class="progress flex-grow-1 bg-black-50" style="height: 6px;">
-                                    <div class="progress-bar" role="progressbar" t-attf-style="width: #{slide.channel_id.completion}%" t-att-aria-valuenow="slide.channel_id.completion" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                                <div class="ml-3 small">
-                                    <span class="o_wslides_progress_percentage" t-esc="slide.channel_id.completion"/> %
-                                </div>
+                                <t t-if="slide.channel_id.completed">
+                                    <span class="badge badge-pill badge-success py-1 px-2" style="font-size: 1em"><i class="fa fa-check"/> Completed</span>
+                                </t>
+                                <t t-else="">
+                                    <div class="progress flex-grow-1 bg-black-50" style="height: 6px;">
+                                        <div class="progress-bar" role="progressbar" t-attf-style="width: #{slide.channel_id.completion}%" t-att-aria-valuenow="slide.channel_id.completion" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <div class="ml-3 small">
+                                        <span class="o_wslides_progress_percentage" t-esc="slide.channel_id.completion"/> %
+                                    </div>
+                                </t>
                             </div>
                         </div>
                         <ul class="mx-n3 list-unstyled my-0 pb-2 overflow-auto">
