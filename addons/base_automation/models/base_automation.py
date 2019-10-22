@@ -125,11 +125,10 @@ class BaseAutomation(models.Model):
     def _update_registry(self):
         """ Update the registry after a modification on action rules. """
         if self.env.registry.ready and not self.env.context.get('import_file'):
-            # for the sake of simplicity, simply force the registry to reload
-            self._cr.commit()
-            self.env.reset()
-            registry = Registry.new(self._cr.dbname)
-            registry.registry_invalidated = True
+            # re-install the model patches, and notify other workers
+            self._unregister_hook()
+            self._register_hook()
+            self.env.registry.registry_invalidated = True
 
     def _get_actions(self, records, triggers):
         """ Return the actions of the given triggers for records' model. The
@@ -379,6 +378,16 @@ class BaseAutomation(models.Model):
                 method = make_onchange(action_rule.id)
                 for field_name in action_rule.on_change_fields.split(","):
                     Model._onchange_methods[field_name.strip()].append(method)
+
+    def _unregister_hook(self):
+        """ Remove the patches installed by _register_hook() """
+        NAMES = ['create', 'write', '_compute_field_value', 'unlink', '_onchange_methods']
+        for Model in self.env.registry.values():
+            for name in NAMES:
+                try:
+                    delattr(Model, name)
+                except AttributeError:
+                    pass
 
     @api.model
     def _check_delay(self, action, record, record_dt):
