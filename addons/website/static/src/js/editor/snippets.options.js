@@ -1521,15 +1521,13 @@ options.registry.topMenuTransparency = options.Class.extend({
     _setActive: function () {
         this._super.apply(this, arguments);
 
-        var enabled;
         this.trigger_up('action_demand', {
             actionName: 'get_page_option',
             params: ['header_overlay'],
-            onSuccess: function (value) {
-                enabled = value;
+            onSuccess: value => {
+                this.$el.find('[data-transparent]').toggleClass('active', !!value);
             },
         });
-        this.$el.find('[data-transparent]').toggleClass('active', !!enabled);
     },
 });
 
@@ -1549,15 +1547,13 @@ options.registry.topMenuColor = options.registry.colorpicker.extend({
      * @override
      */
     onFocus: function () {
-        var enabled;
         this.trigger_up('action_demand', {
             actionName: 'get_page_option',
             params: ['header_overlay'],
-            onSuccess: function (value) {
-                enabled = value;
+            onSuccess: value => {
+                this.$el.toggleClass('d-none', !value);
             },
         });
-        this.$el.toggleClass('d-none', !enabled);
     },
 
     //--------------------------------------------------------------------------
