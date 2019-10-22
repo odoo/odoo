@@ -143,16 +143,23 @@ def get_module_path(module, downloaded=False, display_warning=True):
     module is found. If downloaded is True, return the default addons
     path if nothing else is found.
 
+    :param str module: name of module
+    :param bool downloaded: if True, search for module inside addons data dir. Default: False
+    :param bool display_warning: If True, display warning if module not found. Default: False
+    :rtype: str or False
+    :return: Absolute path to module. False if module not found.
+
     """
     initialize_sys_path()
     for adp in odoo.addons.__path__:
         files = [opj(adp, module, manifest) for manifest in MANIFEST_NAMES] +\
                 [opj(adp, module + '.zip')]
         if any(os.path.exists(f) for f in files):
-            return opj(adp, module)
+            return os.path.normcase(os.path.abspath(opj(adp, module)))
 
     if downloaded:
-        return opj(tools.config.addons_data_dir, module)
+        return os.path.normcase(
+            os.path.abspath(opj(tools.config.addons_data_dir, module)))
     if display_warning:
         _logger.warning('module %s: module not found', module)
     return False
