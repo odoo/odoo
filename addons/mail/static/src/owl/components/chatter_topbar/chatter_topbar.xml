@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.component.ChatterTopbar" owl="1">
+        <div class="o_ChatterTopbar">
+            <div class="o_ChatterTopbar_leftSection">
+                <button class="btn btn-link o_ChatterTopbar_buttonSendMessage">
+                    Send message
+                </button>
+                <button class="btn btn-link o_ChatterTopbar_buttonLogNote">
+                    Log note
+                </button>
+                <button class="btn btn-link o_ChatterTopbar_buttonScheduleActivity">
+                    <i class="fa fa-clock-o"/>
+                    Schedule activity
+                </button>
+                <button class="btn btn-link o_ChatterTopbar_buttonAttachments"
+                        t-on-click.prevent.stop="_onClickAttachments">
+                    <i class="fa fa-paperclip"/>
+                    <!-- TODO s'inspirer de threadCache pour afficher loader tant que tous les attachments sont pas fetchés -->
+                    <!-- TODO action loadThreadCache -->
+                    <span class="o_ChatterTopbar_buttonCount o_ChatterTopbar_buttonAttachmentsCount" t-esc="storeProps.attachmentsAmount"/>
+                </button>
+            </div>
+            <div class="o_ChatterTopbar_rightSection">
+                <button class="btn btn-link o_ChatterTopbar_buttonFollow">
+                    Follow
+                </button>
+                <button class="btn btn-link o_ChatterTopbar_buttonFollowers">
+                    <i class="fa fa-user"/>
+                    <span class="o_ChatterTopbar_buttonCount o_ChatterTopbar_buttonFollowersCount pl-1" t-esc="storeProps.followersAmount"/>
+                </button>
+            </div>
+        </div>
+    </t>
+
+</templates>

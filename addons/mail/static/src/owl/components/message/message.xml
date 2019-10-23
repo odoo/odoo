@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.component.Message" owl="1">
+        <div class="o_Message"
+            t-att-class="{
+                'o-clicked': state.isClicked,
+                'o-discussion': storeProps.message.is_discussion or
+                    storeProps.message.is_notification,
+                'o-mobile': storeProps.isMobile,
+                'o-not-discussion': !(storeProps.message.is_discussion or
+                    storeProps.message.is_notification),
+                'o-notification': storeProps.message.message_type === 'notification',
+                'o-selected': props.isSelected,
+                'o-squashed': props.isSquashed,
+                'o-starred': isStarred,
+            }" t-on-click="_onClick" t-att-data-message-local-id="props.messageLocalId"
+        >
+            <div class="o_Message_sidebar" t-att-class="{ 'o-message-squashed': props.isSquashed }">
+                <t t-if="!props.isSquashed">
+                    <div class="o_Message_authorAvatarContainer o_Message_sidebarItem">
+                        <img class="o_Message_authorAvatar rounded-circle" t-att-class="{ o_Message_authorRedirect: hasAuthorRedirect, o_redirect: hasAuthorRedirect }" t-att-src="avatar" t-on-click="_onClickAuthor" t-att-title="hasAuthorRedirect ? 'Open chat' : ''" alt=""/>
+                        <t t-if="storeProps.author.im_status">
+                            <PartnerImStatusIcon
+                                class="o_Message_partnerImStatusIcon"
+                                t-att-class="{
+                                    'o-message-not-discussion': !(
+                                        storeProps.message.is_discussion or
+                                        storeProps.message.is_notification),
+                                    'o-message-selected': props.isSelected,
+                                    'o_Message_partnerImStatusIcon-mobile': storeProps.isMobile,
+                                }"
+                                partnerLocalId="storeProps.author.localId"
+                            />
+                        </t>
+                    </div>
+                </t>
+                <t t-else="">
+                    <div class="o_Message_date o_Message_sidebarItem o-message-squashed" t-att-class="{ 'o-message-selected': props.isSelected }">
+                        <t t-esc="shortTime"/>
+                    </div>
+                    <div class="o_Message_commands o_Message_sidebarCommands o_Message_sidebarItem o-message-squashed" t-att-class="{ 'o-message-selected': props.isSelected, 'o-mobile': storeProps.isMobile }">
+                        <t t-if="storeProps.message.message_type !== 'notification'">
+                            <div class="o_Message_command o_Message_commandStar fa"
+                                t-att-class="{
+                                    'fa-star': isStarred,
+                                    'fa-star-o': !isStarred,
+                                    'o-message-selected': props.isSelected,
+                                    'o-message-starred': isStarred,
+                                    'o-mobile': storeProps.isMobile,
+                                }" t-on-click.stop="_onClickStar"
+                            />
+                        </t>
+                    </div>
+                </t>
+            </div>
+            <div class="o_Message_core">
+                <t t-if="!props.isSquashed">
+                    <div class="o_Message_header">
+                        <div class="o_Message_authorName" t-att-class="hasAuthorRedirect ? 'o_Message_authorRedirect o_redirect' : ''" t-on-click="_onClickAuthor" t-att-title="hasAuthorRedirect ? 'Open chat' : ''">
+                            <t t-esc="displayedAuthorName"/>
+                        </div>
+                        <div class="o_Message_date o_Message_headerDate" t-att-class="{ 'o-message-selected': props.isSelected }" t-att-title="datetime">
+                            - <t t-esc="timeElapsed"/>
+                        </div>
+                        <t t-if="hasDifferentOriginThread">
+                            <div class="o_Message_originThread" t-att-class="{ 'o-message-selected': props.isSelected }">
+                                <t t-if="storeProps.originThread._model === 'mail.channel'">
+                                    (from <a class="o_Message_originThreadLink" href="#" t-on-click="_onClickOriginThread">#<t t-esc="storeProps.originThread.name"/></a>)
+                                </t>
+                                <t t-else="">
+                                    on <a class="o_Message_originThreadLink" href="#" t-on-click="_onClickOriginThread"><t t-esc="storeProps.originThread.name"/></a>
+                                </t>
+                            </div>
+                        </t>
+                        <div class="o_Message_commands o_Message_headerCommands" t-att-class="{ 'o-mobile': storeProps.isMobile }">
+                            <t t-if="(storeProps.message.message_type !== 'notification' and storeProps.originThread and storeProps.originThread._model === 'mail.channel') or !storeProps.message.isTransient">
+                                <span class="o_Message_command o_Message_commandStar o_Message_headerCommand fa"
+                                    t-att-class="{
+                                        'fa-star': isStarred,
+                                        'fa-star-o': !isStarred,
+                                        'o-message-selected': props.isSelected,
+                                        'o-message-starred': isStarred,
+                                        'o-mobile': storeProps.isMobile,
+                                    }" t-on-click="_onClickStar" title="Mark as Todo" aria-label="Mark as Todo"
+                                />
+                            </t>
+                            <t t-if="props.hasReplyIcon">
+                                <span class="o_Message_command o_Message_commandReply o_Message_headerCommand fa fa-reply"
+                                    t-att-class="{
+                                        'o-message-selected': props.isSelected,
+                                        'o-mobile': storeProps.isMobile,
+                                    }" t-on-click.stop="_onClickReply" title="Reply" aria-label="Reply"
+                                />
+                            </t>
+                            <t t-if="props.hasMarkAsReadIcon">
+                                <span class="o_Message_command o_Message_commandMarkAsRead o_Message_headerCommand fa fa-check"
+                                    t-att-class="{
+                                        'o-message-selected': props.isSelected,
+                                        'o-mobile': storeProps.isMobile,
+                                    }" t-on-click="_onClickMarkAsRead" title="Mark as Read" aria-label="Mark as Read"
+                                />
+                            </t>
+                        </div>
+                    </div>
+                </t>
+                <div class="o_Message_content" t-ref="content">
+                    <t t-raw="storeGetters.messagePrettyBody(props.messageLocalId)"/>
+                    <t t-if="trackingValues.length > 0">
+                        <ul class="o_Message_trackingValues">
+                            <t t-foreach="trackingValues" t-as="value" t-key="value.id">
+                                <li>
+                                    <t t-esc="value.changed_field"/>:
+                                    <t t-if="value.old_value">
+                                        <span> <t t-esc="value.old_value || ((value.field_type !== 'boolean') and '')"/> </span>
+                                        <t t-if="value.old_value !== value.new_value">
+                                            <span class="fa fa-long-arrow-right" title="Changed" role="img" aria-label="Changed"/>
+                                        </t>
+                                    </t>
+                                    <t t-if="value.old_value !== value.new_value">
+                                        <span>
+                                            <t t-esc="value.new_value || ((value.field_type !== 'boolean') and '')"/>
+                                        </span>
+                                    </t>
+                                </li>
+                            </t>
+                        </ul>
+                    </t>
+                </div>
+                <t t-if="storeProps.attachmentLocalIds and storeProps.attachmentLocalIds.length > 0">
+                    <div class="o_Message_footer">
+                        <!-- TODO XDU This does not allow to preview all attachments at once, find somethind else -->
+                        <t t-if="imageAttachmentLocalIds and imageAttachmentLocalIds.length > 0">
+                            <AttachmentList
+                                class="o_Message_attachmentList"
+                                areAttachmentsDownloadable="true"
+                                areAttachmentsEditable="true"
+                                attachmentLocalIds="imageAttachmentLocalIds"
+                                attachmentsDetailsMode="props.attachmentsDetailsMode"
+                            />
+                        </t>
+                        <t t-if="nonImageAttachmentLocalIds and nonImageAttachmentLocalIds.length > 0">
+                            <AttachmentList
+                                class="o_Message_attachmentList"
+                                areAttachmentsDownloadable="true"
+                                areAttachmentsEditable="true"
+                                attachmentLocalIds="nonImageAttachmentLocalIds"
+                                attachmentsDetailsMode="props.attachmentsDetailsMode"
+                            />
+                        </t>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+
+</templates>

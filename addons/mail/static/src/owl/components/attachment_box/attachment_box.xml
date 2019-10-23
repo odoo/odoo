@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.component.AttachmentBox" owl="1">
+        <div class="o_AttachmentBox">
+            <div class="o_AttachmentBox_title">Attachments</div>
+            <div class="o_AttachmentBox_content">
+                <t t-if="isDropZoneVisible.value">
+                    <DropZone
+                        class="o_AttachmentBox_dropZone"
+                        t-on-o-dropzone-files-dropped.stop="_onDropZoneFilesDropped"
+                        t-ref="dropzone"
+                    />
+                </t>
+                <t t-if="storeProps.attachmentLocalIds.length > 0">
+                    <AttachmentList
+                        class="o_attachmentBox_attachmentList"
+                        areAttachmentsEditable="true"
+                        attachmentLocalIds="storeProps.attachmentLocalIds"
+                    />
+                </t>
+                <button class="o_AttachmentBox_buttonAdd" type="button" t-on-click.prevent.stop="_onClickAdd">
+                    <i class="fa fa-plus-square"/>
+                    Add attachments
+                </button>
+            </div>
+            <FileUploader
+                attachmentLocalIds="storeProps.attachmentLocalIds"
+                newAttachmentExtraData="newAttachmentExtraData"
+                t-ref="fileUploader"
+            />
+        </div>
+    </t>
+
+</templates>

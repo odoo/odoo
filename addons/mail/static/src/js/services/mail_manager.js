@@ -63,6 +63,8 @@ var MailManager =  AbstractService.extend({
         this._initializeInternalState();
         this._listenOnBuses();
         this._fetchMailStateFromServer();
+
+        window.mail_manager = this;
     },
 
     //--------------------------------------------------------------------------

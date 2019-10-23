@@ -1,0 +1,41 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+ .o_ThreadPreviewList {
+    display: flex;
+    flex-flow: column;
+    overflow: auto;
+
+    &.o-empty {
+        justify-content: center;
+    }
+}
+
+.o_ThreadPreviewList_noConversation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+}
+
+.o_ThreadPreviewList_preview {
+    padding: 3px;
+
+    &.o_ThreadPreviewList_preview-mobile {
+        padding: 5px;
+    }
+}
+
+.o_ThreadPreviewList_separator {
+    flex: 0 0 auto;
+    width: 100%;
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_ThreadPreviewList_separator {
+    border-bottom: 1px solid gray('400');
+}

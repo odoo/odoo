@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.component.Composer" owl="1">
+        <div class="o_Composer"
+            t-att-class="{
+                'o-has-current-partner-avatar': props.hasCurrentPartnerAvatar,
+                'o-has-footer': hasFooter,
+                'o-has-header': hasHeader,
+            }" t-att-data-local-id="localId"
+        >
+            <t t-if="isDropZoneVisible.value">
+                <DropZone
+                    class="o_Composer_dropZone"
+                    t-on-o-dropzone-files-dropped.stop="_onDropZoneFilesDropped"
+                    t-ref="dropzone"
+                />
+            </t>
+            <FileUploader
+                attachmentLocalIds="storeProps.composer.attachmentLocalIds"
+                newAttachmentExtraData="newAttachmentExtraData"
+                t-ref="fileUploader"
+            />
+            <t t-if="hasHeader">
+                <div class="o_Composer_coreHeader">
+                    <t t-if="props.hasThreadName and storeProps.thread">
+                        <span class="o_Composer_threadName">
+                            on: <b><t t-esc="storeGetters.threadName(storeProps.thread.localId)"/></b>
+                        </span>
+                    </t>
+                    <t t-if="props.hasFollowers and !props.isLog">
+                        <!-- Text for followers -->
+                        <small class="o_Composer_followers">
+                            <b class="text-muted">To: </b>
+                            <em class="text-muted">Followers of </em>
+                            <b>
+                                <t t-if="storeProps.thread">
+                                    &#32;&quot;<t t-esc="storeProps.thread.name"/>&quot;
+                                </t>
+                                <t t-else="">
+                                    this document
+                                </t>
+                            </b>
+                        </small>
+                    </t>
+                </div>
+            </t>
+            <t t-if="props.hasCurrentPartnerAvatar">
+                <div class="o_Composer_sidebarMain">
+                    <img class="o_Composer_currentPartnerAvatar rounded-circle" t-att-src="currentPartnerAvatar" alt=""/>
+                </div>
+            </t>
+            <div class="o_Composer_coreMain">
+                <TextInput
+                    class="o_Composer_textInput"
+                    t-att-class="{
+                        'o_Composer_textInput-mobile': storeProps.isMobile,
+                    }"
+                    initialHtmlContent="props.initialTextInputHtmlContent"
+                    t-on-o-discard.stop="_onDiscardInput"
+                    t-on-o-input-composer-text-input="_onInputTextInput"
+                    t-on-o-keydown-enter.stop="_onTextInputKeydownEnter"
+                    t-on-paste="_onPasteTextInput"
+                    t-ref="textInput"
+                />
+                <div class="o_Composer_buttons" t-att-class="{ 'o-mobile': storeProps.isMobile }">
+                    <div class="o_Composer_toolButtons" t-att-class="{ 'o-composer-has-current-partner-avatar': props.hasCurrentPartnerAvatar }">
+                        <div class="o_Composer_toolButtonSeparator"/>
+                        <EmojisButton
+                            class="o_Composer_button o_Composer_buttonEmojis o_Composer_toolButton"
+                            t-att-class="{ 'o-mobile': storeProps.isMobile }"
+                            t-on-o-emoji-selection.stop="_onEmojiSelection"
+                            t-ref="emojisButton"
+                        />
+                        <button class="o_Composer_button o_Composer_buttonAttachment o_Composer_toolButton btn btn-secondary fa fa-paperclip" t-att-class="{ 'o-mobile': storeProps.isMobile }" t-on-click="_onClickAddAttachment" title="Add attachment" type="button" aria-label="Add attachment"/>
+                        <t t-if="props.isExpandable">
+                            <button class="btn btn-secondary fa fa-expand o_Composer_button o_Composer_buttonFullComposer o_Composer_toolButton" t-att-class="{ 'o-mobile': storeProps.isMobile }" t-on-click="_onClickFullComposer" title="Full composer" type="button" aria-label="Full composer"/>
+                        </t>
+                    </div>
+                    <t t-if="props.hasSendButton and props.areButtonsInline">
+                        <button class="o_Composer_actionButton o_Composer_button o_Composer_buttonSend btn btn-primary" t-att-class="storeProps.isMobile ? 'fa fa-paper-plane-o' : ''" t-on-click="_onClickSend" t-att-disabled="(!state.hasTextInputContent and storeProps.composer.attachmentLocalIds.length === 0) ? 'disabled' : ''" type="button">
+                            <t t-if="!storeProps.isMobile"><t t-if="props.isLog">Log</t><t t-else="">Send</t></t>
+                        </button>
+                    </t>
+                    <t t-if="!storeProps.isMobile and props.hasDiscardButton and props.areButtonsInline">
+                        <button class="o_Composer_actionButton o_Composer_button o_Composer_buttonDiscard btn btn-secondary" t-on-click="_onClickDiscard" type="button">
+                            Discard
+                        </button>
+                    </t>
+                </div>
+            </div>
+            <t t-if="hasFooter">
+                <div class="o_Composer_coreFooter">
+                    <t t-if="storeProps.composer.attachmentLocalIds.length > 0">
+                        <AttachmentList
+                            class="o_Composer_attachmentList"
+                            areAttachmentsEditable="true"
+                            attachmentsDetailsMode="props.attachmentsDetailsMode"
+                            attachmentLocalIds="storeProps.composer.attachmentLocalIds"
+                            showAttachmentsExtensions="props.showAttachmentsExtensions"
+                            showAttachmentsFilenames="props.showAttachmentsFilenames"
+                        />
+                    </t>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

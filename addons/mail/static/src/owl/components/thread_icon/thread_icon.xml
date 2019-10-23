@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.component.ThreadIcon" owl="1">
+        <div class="o_ThreadIcon">
+            <t t-if="storeProps.thread.channel_type === 'channel'">
+                <t t-if="storeProps.thread.public === 'private'">
+                    <!-- AKU TODO: channel of type 'groups' should maybe also have lock icon -->
+                    <div class="o_ThreadIcon_channelPrivate fa fa-lock" title="Private channel"/>
+                </t>
+                <t t-else="">
+                    <div class="o_ThreadIcon_channelPublic fa fa-hashtag" title="Public channel"/>
+                </t>
+            </t>
+            <t t-elif="storeProps.thread.channel_type === 'chat' and storeProps.directPartner">
+                <t t-if="storeProps.directPartner.im_status === 'online'">
+                    <div class="o_ThreadIcon_online fa fa-circle" title="Online"/>
+                </t>
+                <t t-elif="storeProps.directPartner.im_status === 'offline'">
+                    <div class="o_ThreadIcon_offline fa fa-circle-o" title="Offline"/>
+                </t>
+                <t t-elif="storeProps.directPartner.im_status === 'away'">
+                    <div class="o_ThreadIcon_away fa fa-circle" title="Away"/>
+                </t>
+                <t t-elif="storeProps.thread.typingMemberLocalIds.includes(storeProps.thread.directPartnerLocalId)">
+                    <div class="o_ThreadIcon_typing" title="Is typing...">
+                        <span class="o_ThreadIcon_typingDot"/>
+                        <span class="o_ThreadIcon_typingDot"/>
+                        <span class="o_ThreadIcon_typingDot"/>
+                    </div>
+                </t>
+                <t t-elif="storeProps.directPartner.im_status === 'bot'">
+                    <div class="o_ThreadIcon_online fa fa-heart" title="Bot"/>
+                </t>
+                <t t-else="">
+                    <div class="fa fa-question-circle" title="No IM status available"/>
+                </t>
+            </t>
+            <t t-elif="storeProps.thread._model === 'mail.box'">
+                <t t-if="storeProps.thread.localId === 'mail.box_inbox'">
+                    <div class="o_ThreadIcon_mailboxInbox fa fa-inbox"/>
+                </t>
+                <t t-elif="storeProps.thread.localId === 'mail.box_starred'">
+                    <div class="o_ThreadIcon_mailboxStarred fa fa-star-o"/>
+                </t>
+                <t t-elif="storeProps.thread.localId === 'mail.box_history'">
+                    <div class="o_ThreadIcon_mailboxHistory fa fa-history"/>
+                </t>
+                <t t-elif="storeProps.thread.localId === 'mail.box_moderation'">
+                    <div class="o_ThreadIcon_mailboxModeration fa fa-envelope"/>
+                </t>
+            </t>
+        </div>
+    </t>
+
+</templates>

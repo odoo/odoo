@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.component.PartnerImStatusIcon" owl="1">
+        <span class="o_PartnerImStatusIcon fa-stack"
+            t-att-class="{
+                'o-away': storeProps.partner.im_status === 'away',
+                'o-offline': storeProps.partner.im_status === 'offline',
+                'o-online': storeProps.partner.im_status === 'online',
+            }" t-att-data-partner-local-id="storeProps.partner.localId">
+            <i class="o_PartnerImStatusIcon_outerBackground fa fa-circle fa-stack-1x"/>
+            <i class="o_PartnerImStatusIcon_innerBackground fa fa-circle fa-stack-1x"/>
+            <t t-if="storeProps.partner.im_status === 'online'">
+                <i class="o_PartnerImStatusIcon_icon o-online fa fa-circle fa-stack-1x" title="Online" role="img" aria-label="User is online"/>
+            </t>
+            <t t-if="storeProps.partner.im_status === 'away'">
+                <i class="o_PartnerImStatusIcon_icon o-away fa fa-circle fa-stack-1x" title="Idle" role="img" aria-label="User is idle"/>
+            </t>
+            <t t-if="storeProps.partner.im_status === 'offline'">
+                <i class="o_PartnerImStatusIcon_icon o-offline fa fa-circle-o fa-stack-1x" title="Offline" role="img" aria-label="User is offline"/>
+            </t>
+        </span>
+    </t>
+
+</templates>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.component.ChatWindowManager" owl="1">
+        <div class="o_ChatWindowManager">
+            <!-- Note: DOM elements are ordered from left to right -->
+            <t t-if="storeProps.computed.hidden.isVisible">
+                <HiddenMenu
+                    class="o_ChatWindowManager_hiddenMenu"
+                    chatWindowLocalIds="storeProps.computed.hidden.chatWindowLocalIds"
+                    direction="direction"
+                    offset="storeProps.computed.hidden.offset"
+                    t-on-o-close-chat-window.stop="_onCloseChatWindow"
+                    t-on-o-select-chat-window.stop="_onSelectChatWindow"
+                />
+            </t>
+            <t t-set="visibleAmount" t-value="storeProps.computed.visible.length"/>
+            <t t-foreach="orderedVisible" t-as="data" t-key="data.chatWindowLocalId">
+                <ChatWindow
+                    chatWindowLocalId="data.chatWindowLocalId"
+                    dockDirection="direction"
+                    dockOffset="data.offset"
+                    hasCloseAsBackButton="storeProps.isMobile"
+                    hasShiftLeft="!storeProps.isMobile and data_index !== 0"
+                    hasShiftRight="!storeProps.isMobile and chatWindowShiftRight(data_index)"
+                    isDocked="!storeProps.isMobile"
+                    isExpandable="!storeProps.isMobile and data.chatWindowLocalId !== 'new_message'"
+                    isFullscreen="storeProps.isMobile"
+                    threadInitialScrollTop="storeProps.chatWindowInitialScrollTops[data.chatWindowLocalId]"
+                    t-on-o-focus-next-chat-window="_onFocusNextChatWindow"
+                    t-on-o-select-thread.stop="_onSelectThreadChatWindow"
+                    t-on-o-redirect="_onRedirect"
+                    t-ref="chatWindow_{{ data.chatWindowLocalId }}"
+                />
+            </t>
+        </div>
+    </t>
+
+</templates>

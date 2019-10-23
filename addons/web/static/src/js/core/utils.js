@@ -246,6 +246,26 @@ var utils = {
         return Math.max(min, Math.min(max, val));
     },
     /**
+     * Returns a shallow copy of the given object with the elements not matching
+     * the predicate removed.
+     *
+     * @param {Object} object
+     * @param {function} predicate function that will be called with each
+     *  element of the given object as sole argument, and it must return a
+     *  boolean indicating whether the element has to be copied in the result.
+     * @returns {Object}
+     */
+    filterObject(object, predicate) {
+        const result = {};
+        for (const key in object) {
+            const element = object[key];
+            if (predicate(element)) {
+                result[key] = element;
+            }
+        }
+        return result;
+    },
+    /**
      * @param {number} value
      * @param {integer} decimals
      * @returns {boolean}
