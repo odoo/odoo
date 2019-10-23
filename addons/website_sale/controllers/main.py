@@ -797,7 +797,7 @@ class WebsiteSale(http.Controller):
 
         return values
 
-    @http.route(['/shop/payment'], type='http', auth="public", website=True)
+    @http.route(['/shop/payment'], type='http', auth="public", website=True, sitemap=False)
     def payment(self, **post):
         """ Payment step. This page proposes several payment means based on available
         payment.acquirer. State at this point :
