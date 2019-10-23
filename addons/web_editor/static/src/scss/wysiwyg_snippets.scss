@@ -414,6 +414,24 @@ body.editor_enable.editor_has_snippets {
                 }
             }
         }
+
+        .o_we_so_color_palette {
+            we-title + span {
+                @include o-alpha-button-preview;
+                display: block;
+                flex: 0 0 auto;
+                width: 1em;
+                height: 1em;
+                margin-left: auto;
+                border: 1px solid white;
+            }
+            we-toggler {
+                display: none;
+            }
+            we-select-menu {
+                border-top-style: solid;
+            }
+        }
     }
 }
 
@@ -473,7 +491,7 @@ body.editor_enable.editor_has_snippets {
             padding-top: percentage(1 / 8);
             margin: 0;
             border: none;
-            box-shadow: inset 0 0 0 1px var(--o-we-snippets-bg-color);
+            box-shadow: inset 0 0 0 1px var(--o-we-bg-color-dark);
         }
 
         .o_colorpicker_section {
@@ -486,11 +504,6 @@ body.editor_enable.editor_has_snippets {
 
                 &.o_small {
                     border-radius: 50%;
-                }
-
-                &:hover,
-                &.selected {
-                    box-shadow: inset 0 0 1px 1px var(--o-we-snippets-bg-color);
                 }
 
                 &.selected::before {

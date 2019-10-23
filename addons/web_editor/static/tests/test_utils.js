@@ -78,12 +78,7 @@ MockServer.include({
                         '    <div data-js="content" data-selector=".s_hr, .test_option_all" ' +
                         'data-drop-in=".note-editable" data-drop-near="p, h1, h2, h3, blockquote, .s_hr"></div>' +
                         '    <div data-js="sizing_y" data-selector=".s_hr, .test_option_all"></div>' +
-                        '    <div data-js="colorpicker" data-selector=".test_option_all">' +
-                        '       <we-collapse-area>' +
-                        '           <we-toggler>Background Color</we-toggler>' +
-                        '           <we-collapse/>' +
-                        '       </we-collapse-area>' +
-                        '    </div>' +
+                        '    <div data-js="colorpicker" string="Background Color" data-selector=".test_option_all"></div>' +
                         '    <div data-js="background" data-selector=".test_option_all">' +
                         '       <we-button data-choose-image="true" data-no-preview="true"><i class="fa fa-picture-o"/> Background Image</we-button>' +
                         '    </div>' +
@@ -250,12 +245,7 @@ function wysiwygData(data) {
                         '    <div data-js="content" data-selector=".s_hr, .test_option_all" ' +
                         'data-drop-in=".note-editable" data-drop-near="p, h1, h2, h3, blockquote, .s_hr"></div>' +
                         '    <div data-js="sizing_y" data-selector=".s_hr, .test_option_all"></div>' +
-                        '    <div data-js="colorpicker" data-selector=".test_option_all">' +
-                        '       <we-collapse-area>' +
-                        '           <we-toggler>Background Color</we-toggler>' +
-                        '           <we-collapse/>' +
-                        '       </we-collapse-area>' +
-                        '    </div>' +
+                        '    <div data-js="colorpicker" string="Background Color" data-selector=".test_option_all"></div>' +
                         '    <div data-js="background" data-selector=".test_option_all">' +
                         '       <we-button data-choose-image="true" data-no-preview="true"><i class="fa fa-picture-o"/> Background Image</we-button>' +
                         '    </div>' +

@@ -4,7 +4,6 @@ odoo.define('web_editor.snippets.options', function (require) {
 var core = require('web.core');
 var ColorPaletteWidget = require('web_editor.ColorPalette').ColorPaletteWidget;
 var Dialog = require('web.Dialog');
-var rte = require('web_editor.rte');
 var Widget = require('web.Widget');
 var weWidgets = require('wysiwyg.widgets');
 
@@ -858,10 +857,15 @@ var SnippetOption = Widget.extend({
      * @param {string} [title]
      * @param {Object} [options] - @see this.buildElement
      * @param {HTMLElement[]} [options.childNodes]
+     * @param {HTMLElement} [options.valueEl]
      * @returns {HTMLElement}
      */
     buildSelectElement: function (title, options) {
         const selectEl = SnippetOption.prototype.buildElement('we-select', title, options);
+
+        if (options && options.valueEl) {
+            selectEl.appendChild(options.valueEl);
+        }
 
         const menuTogglerEl = document.createElement('we-toggler');
         selectEl.appendChild(menuTogglerEl);
@@ -1148,22 +1152,25 @@ registry['sizing_y'] = registry.sizing.extend({
 registry.colorpicker = SnippetOption.extend({
     xmlDependencies: ['/web_editor/static/src/xml/snippets.xml'],
     custom_events: {
-        color_picked: '_onColorPicked',
-        custom_color_picked: '_onCustomColor',
-        color_hover: '_onColorHovered',
-        color_leave: '_onColorLeft',
-        color_reset: '_onColorReset',
+        'color_picked': '_onColorPicked',
+        'custom_color_picked': '_onCustomColor',
+        'color_hover': '_onColorHovered',
+        'color_leave': '_onColorLeft',
+        'color_reset': '_onColorReset',
     },
 
     /**
      * @override
      */
-    start: function () {
+    start: async function () {
+        const _super = this._super.bind(this);
+        const args = arguments;
+
+        // Pre-instanciate the color palette widget
         const options = {
             selectedColor: this.$target.css('background-color'),
             targetClasses: [...this.$target[0].classList],
         };
-        const proms = [this._super(...arguments)];
         if (this.data.paletteExclude) {
             options.excluded = this.data.paletteExclude.replace(/ /g, '').split(',');
         }
@@ -1171,11 +1178,23 @@ registry.colorpicker = SnippetOption.extend({
             options.colorPrefix = this.data.colorPrefix;
         }
         this.colorPalette = new ColorPaletteWidget(this, options);
-        proms.push(this.colorPalette.appendTo(this.$el.find('we-collapse')));
+        await this.colorPalette.appendTo(document.createDocumentFragment());
 
-        return Promise.all(proms);
+        // Build the select element with a custom span to hold the color preview
+        this.colorPreviewEl = document.createElement('span');
+        const selectEl = this.buildSelectElement(this.data.string, {
+            classes: ['o_we_so_color_palette'],
+            childNodes: [this.colorPalette.el],
+            valueEl: this.colorPreviewEl,
+        });
+
+        // Replace the colorpicker UI with the select element
+        this.$el.empty().append(selectEl);
+        return _super(...args);
     },
-
+    /**
+     * @override
+     */
     onFocus: function () {
         this.colorPalette.reloadColorPalette();
     },
@@ -1199,6 +1218,13 @@ registry.colorpicker = SnippetOption.extend({
             this.$target.css('background-color', cssColor);
         }
     },
+    /**
+     * @override
+     */
+    _updateUI: function () {
+        this._super.apply(this, arguments);
+        this.colorPreviewEl.style.backgroundColor = this.$target.css('background-color');
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -1211,6 +1237,7 @@ registry.colorpicker = SnippetOption.extend({
      * @param {Event} ev
      */
     _onColorPicked: function () {
+        this._updateUI();
         this.$target.closest('.o_editable').trigger('content_changed');
         this.$target.trigger('background-color-event', false);
     },
@@ -1249,7 +1276,8 @@ registry.colorpicker = SnippetOption.extend({
      * @private
      */
     _onColorReset: function () {
-        this._targetColorChange('');
+        this._changeTargetColor('');
+        this._updateUI();
         this.$target.trigger('content_changed');
     },
 });

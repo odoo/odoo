@@ -982,46 +982,25 @@
     <t t-call="web_editor.snippet_options"/>
 
     <!-- COLOR | .s_three_columns | .s_comparisons -->
-    <div data-js="colorpicker"
+    <div data-js="colorpicker" string="Color"
         data-selector=".s_three_columns .row > div, .s_comparisons .row > div, .s_tabs .row > div"
-        data-target=".card">
-        <we-collapse-area>
-            <we-toggler>Color</we-toggler>
-            <we-collapse/>
-        </we-collapse-area>
-    </div>
+        data-target=".card"/>
 
     <!-- COLOR | .s_hr -->
-    <div data-js="colorpicker"
+    <div data-js="colorpicker" string="Color"
         data-selector=".s_hr"
         data-target="hr"
         data-color-prefix="border-"
-        data-palette-exclude="transparent_grayscale, common, custom">
-        <we-collapse-area>
-            <we-toggler>Color</we-toggler>
-            <we-collapse/>
-        </we-collapse-area>
-    </div>
+        data-palette-exclude="transparent_grayscale, common, custom"/>
 
     <!-- COLOR | .s_cards -->
-    <div data-js="colorpicker"
-        data-selector=".s_card, .accordion .card">
-        <we-collapse-area>
-            <we-toggler>Color</we-toggler>
-            <we-collapse/>
-        </we-collapse-area>
-    </div>
+    <div data-js="colorpicker" string="Color"
+        data-selector=".s_card, .accordion .card"/>
 
     <!-- COLOR | .s_alert -->
-    <div data-js="colorpicker"
+    <div data-js="colorpicker" string="Color"
         data-selector=".s_alert"
-        data-color-prefix="alert-">
-        <we-collapse-area>
-            <we-toggler>Color</we-toggler>
-            <we-collapse/>
-        </we-collapse-area>
-    </div>
-
+        data-color-prefix="alert-"/>
 
     <!-- STYLES | .s_title -->
     <div data-selector=".s_title" data-target="[class*='s_title_']">
@@ -1263,36 +1242,21 @@
     </div>
 
     <!-- Color | Section -->
-    <div id="so_main_colorpicker"
+    <div id="so_main_colorpicker" string="Background Color"
         data-js="colorpicker"
         data-selector="section, .carousel-item"
-        data-exclude=".parallax, .o_gallery .carousel-item">
-        <we-collapse-area>
-            <we-toggler>Background Color</we-toggler>
-            <we-collapse/>
-        </we-collapse-area>
-    </div>
+        data-exclude=".parallax, .o_gallery .carousel-item"/>
 
     <!-- FILTER | .s_parallax -->
-    <div data-js="colorpicker"
+    <div data-js="colorpicker" string="Filter"
         data-selector=".parallax"
         data-palette-exclude="common, theme, custom"
-        data-palette-default="transparent_grayscale">
-        <we-collapse-area>
-            <we-toggler>Filter</we-toggler>
-            <we-collapse/>
-        </we-collapse-area>
-    </div>
+        data-palette-default="transparent_grayscale"/>
 
     <!-- Color | Columns -->
-    <div data-js="colorpicker"
+    <div data-js="colorpicker" string="Background Color"
         data-selector="section .row > div"
-        data-exclude=".s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .o_gallery .row > div">
-        <we-collapse-area>
-            <we-toggler>Background Color</we-toggler>
-            <we-collapse/>
-        </we-collapse-area>
-    </div>
+        data-exclude=".s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .o_gallery .row > div"/>
 
     <div data-selector="section .row > div"
         data-exclude=".s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .o_gallery .row > div">
@@ -1340,15 +1304,11 @@
         <we-checkbox string="Transparent" data-transparent="true" data-no-preview="true"/>
     </div>
 
-    <div data-js="topMenuColor"
+    <div data-js="topMenuColor" string="Background Color"
         data-selector="[data-main-object^='website.page('] #wrapwrap > header"
         data-palette-exclude="theme,common, custom"
         data-palette-default="transparent_grayscale"
         data-no-check="true">
-        <we-collapse-area>
-            <we-toggler>Background Color</we-toggler>
-            <div class="dropdown-menu"/>
-        </we-collapse-area>
     </div>
 
     <!-- Anchor Name -->
