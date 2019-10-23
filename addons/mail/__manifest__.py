@@ -55,6 +55,7 @@
         'static/src/xml/discuss.xml',
         'static/src/xml/followers.xml',
         'static/src/xml/systray.xml',
+        'static/src/xml/out_of_office.xml',
         'static/src/xml/thread.xml',
         'static/src/xml/abstract_thread_window.xml',
         'static/src/xml/thread_window.xml',
