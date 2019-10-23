@@ -128,8 +128,15 @@ In order to print PDF reports, you must install wkhtmltopdf_ yourself:
 the version of wkhtmltopdf_ available in Debian repositories does
 not support headers and footers so it is not used as a direct dependency.
 The recommended version is 0.12.5 and is available on
-`the wkhtmltopdf download page`_, in the archive section. Previously
-recommended version 0.12.1 is a good alternative.
+`the wkhtmltopdf download page`_, in the archive section. 
+
+.. code-block:: console
+
+  # sudo apt install -y xfonts-75dpi
+  # wget https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.bionic_amd64.deb -O wkhtmltopdf.deb
+  # sudo dpkg -i wkhtmltopdf.deb 
+
+Previously recommended version 0.12.1 is a good alternative.
 More details on the various versions and their respective quirks can be
 found in our `wiki <https://github.com/odoo/odoo/wiki/Wkhtmltopdf>`_.
 
