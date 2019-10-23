@@ -522,39 +522,26 @@
 
 <!-- Event - Registration -->
 <template id="registration_template">
-    <t t-set="tickets_available" t-value="event.seats_available or event.seats_availability == 'unlimited'"/>
-    <t t-set="buy" t-value="tickets_available and event.state == 'confirm'"/>
-    <form t-if="buy" id="registration_form" t-attf-action="/event/#{slug(event)}/registration/new" method="post" itemscope="itemscope" itemprop="offers" itemtype="http://schema.org/AggregateOffer" class="mb-5">
+    <form t-if="event.event_registrations_open" id="registration_form" t-attf-action="/event/#{slug(event)}/registration/new" method="post" itemscope="itemscope" itemprop="offers" itemtype="http://schema.org/AggregateOffer" class="mb-5">
         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
         <div id="o_wevent_tickets" class="bg-white rounded shadow-sm">
+            <t t-set="quantity">
+                <select name="nb_register-0" class="custom-select w-auto">
+                    <t t-foreach="range(0, (event.seats_availability == 'unlimited' or event.seats_available &gt; 9) and 10 or event.seats_available+1)" t-as="nb">
+                        <option t-esc="nb" t-att-selected="nb == 1 and 'selected'"/>
+                    </t>
+                </select>
+            </t>
             <t t-id="tickets" t-call="website_event.ticket">
                 <t t-set="name">Registration</t>
                 <t t-set="price">
                     <span content="0" itemprop="price" class="font-weight-bold text-uppercase">Free</span>
                 </t>
-                <t t-if="event.date_begin">
-                    <t t-set="registration_end">
-                        End on <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'date_only': 'true', 'format': 'medium'}"/>
-                    </t>
-                </t>
-                <t t-set="quantity">
-                    <select name="nb_register-0" class="custom-select w-auto">
-                        <t t-foreach="range(0, (event.seats_availability == 'unlimited' or event.seats_available &gt; 9) and 10 or event.seats_available+1)" t-as="nb">
-                            <option t-esc="nb" t-att-selected="nb == 1 and 'selected'"/>
-                        </t>
-                    </select>
-                </t>
             </t>
         </div>
     </form>
-    <div t-if="not buy" class="alert alert-info mb-5" role="status">
-        <span t-if="event.state == 'draft'" itemprop="availability" content="http://schema.org/OutOfStock">
-            <b>Event registration not yet started.</b>
-        </span>
-        <span t-if="event.state != 'draft'" itemprop="availability" content="http://schema.org/Discontinued">
-            <b>Event registration is closed.</b>
-        </span>
-        <a t-if="request.env.user.has_group('event.group_event_manager')" t-attf-href="/web#id=#{event.id}&amp;view_type=form&amp;model=event.event" class="float-right">
+    <div t-elif="request.env.user.has_group('event.group_event_manager')" class="alert alert-info mb-5 o_website_event_configuration" role="status">
+        <a t-attf-href="/web#id=#{event.id}&amp;view_type=form&amp;model=event.event">
             <i class="fa fa-pencil mr-2" role="img" aria-label="Create" title="Create"/><em>Configure Event Registration</em>
         </a>
     </div>
@@ -567,7 +554,7 @@
             <div class="border-left border-right px-3"><t t-raw="price"/></div>
             <small t-raw="registration_end" class="text-muted ml-3" itemprop="availabilityEnds"/>
             <div class="ml-auto">
-                <t t-if="tickets_available">
+                <t t-if="event.event_registrations_open">
                     <span class="font-weight-bold align-middle pr-2">Qty</span>
                     <link itemprop="availability" content="http://schema.org/InStock"/>
                     <t t-raw="quantity"/>

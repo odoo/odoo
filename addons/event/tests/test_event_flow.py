@@ -27,7 +27,6 @@ class TestEventFlow(TestEventCommon):
             'seats_max': 2,
             'seats_availability': 'limited',
         })
-        self.assertEqual(test_event.state, 'confirm', 'Event: auto_confirmation of event failed')
 
         # EventUser create registrations for this event
         test_reg1 = self.env['event.registration'].with_user(self.user_eventuser).create({
@@ -58,13 +57,6 @@ class TestEventFlow(TestEventCommon):
         self.assertEqual(test_reg1.state, 'done', 'Event: wrong state of attended registration')
         self.assertEqual(test_event.seats_used, 2, 'Event: incorrect number of attendees after closing registration')
 
-        # EventUser closes the event
-        test_event.button_done()
-
-        # EventUser cancels -> not possible when having attendees
-        with self.assertRaises(UserError):
-            test_event.button_cancel()
-
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_10_advanced_event_flow(self):
         """ Avanced event flow: no auto confirmation, manage minimum / maximum
@@ -76,9 +68,6 @@ class TestEventFlow(TestEventCommon):
             'date_end': datetime.datetime.now() + relativedelta(days=1),
             'seats_max': 10,
         })
-        self.assertEqual(
-            test_event.state, 'draft',
-            'Event: new event should be in draft state, no auto confirmation')
 
         # EventUser create registrations for this event -> no auto confirmation
         test_reg1 = self.env['event.registration'].with_user(self.user_eventuser).create({

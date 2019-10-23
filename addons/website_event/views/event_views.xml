@@ -41,15 +41,9 @@
                 <field name="website_menu"/>
                 <label for="website_menu" string="Website Menu"/>
             </label>
-            <xpath expr="//button[@name='button_done']" position="before">
+            <xpath expr="//header" position="inside">
                 <button name="action_open_badge_editor"
                     type="object"
-                    states="confirm"
-                    string="Preview Badges"
-                    class="oe_highlight"/>
-                <button name="action_open_badge_editor"
-                    type="object"
-                    states="done"
                     string="Preview Badges"/>
             </xpath>
         </field>

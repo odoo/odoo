@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import datetime
+
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError
 
@@ -41,6 +43,17 @@ class Event(models.Model):
         'event.event.ticket', 'event_id', string='Event Ticket',
         copy=True)
 
+    sale_order_lines_ids = fields.One2many(
+        'sale.order.line', 'event_id',
+        string='All sale order lines pointing to this event')
+
+    sales_total_price = fields.Monetary(compute='_compute_sales_total_price')
+    currency_id = fields.Many2one(
+        'res.currency', string='Currency',
+        default=lambda self: self.env.company.currency_id.id, readonly=True)
+
+    start_sale_date = fields.Date('Start sale date', compute='_compute_start_sale_date')
+
     @api.onchange('event_type_id')
     def _onchange_type(self):
         super(Event, self)._onchange_type()
@@ -53,12 +66,29 @@ class Event(models.Model):
                 })
                 for ticket in self.event_type_id.event_ticket_ids]
 
-    def _is_event_registrable(self):
-        if super(Event, self)._is_event_registrable():
-            self.ensure_one()
-            return all(self.event_ticket_ids.with_context(active_test=False).mapped(lambda t: t.product_id.active))
-        else:
-            return False
+    @api.depends('event_ticket_ids.start_sale_date')
+    def _compute_start_sale_date(self):
+        for event in self:
+            start_dates = [ticket.start_sale_date for ticket in event.event_ticket_ids if ticket.start_sale_date]
+            event.start_sale_date = min(start_dates) if start_dates else False
+
+    @api.depends('sale_order_lines_ids')
+    def _compute_sales_total_price(self):
+        for event in self:
+            event.sales_total_price = sum([
+                event.currency_id._convert(
+                    sale_order_line_id.price_reduce_taxexcl,
+                    sale_order_line_id.currency_id,
+                    sale_order_line_id.company_id,
+                    sale_order_line_id.order_id.date_order)
+                for sale_order_line_id in event.sale_order_lines_ids
+            ])
+
+    @api.depends('event_ticket_ids.sale_available')
+    def _compute_event_registrations_open(self):
+        non_open_events = self.filtered(lambda event: not any(event.event_ticket_ids.mapped('sale_available')))
+        non_open_events.event_registrations_open = False
+        super(Event, self - non_open_events)._compute_event_registrations_open()
 
 
 class EventTicket(models.Model):
@@ -77,8 +107,10 @@ class EventTicket(models.Model):
         default=_default_product_id)
     registration_ids = fields.One2many('event.registration', 'event_ticket_id', string='Registrations')
     price = fields.Float(string='Price', digits='Product Price')
-    deadline = fields.Date(string="Sales End")
+    start_sale_date = fields.Date(string="Sales Start")
+    end_sale_date = fields.Date(string="Sales End")
     is_expired = fields.Boolean(string='Is Expired', compute='_compute_is_expired')
+    sale_available = fields.Boolean(string='Is Available', compute='_compute_sale_available')
 
     price_reduce = fields.Float(string="Price Reduce", compute="_compute_price_reduce", digits='Product Price')
     price_reduce_taxinc = fields.Float(compute='_get_price_reduce_tax', string='Price Reduce Tax inc')
@@ -94,12 +126,25 @@ class EventTicket(models.Model):
     seats_used = fields.Integer(compute='_compute_seats', store=True)
 
     def _compute_is_expired(self):
-        for record in self:
-            if record.deadline:
-                current_date = fields.Date.context_today(record.with_context(tz=record.event_id.date_tz))
-                record.is_expired = record.deadline < current_date
+        for ticket in self:
+            if ticket.end_sale_date:
+                current_date = fields.Date.context_today(ticket.with_context(tz=ticket.event_id.date_tz))
+                ticket.is_expired = ticket.end_sale_date < current_date
             else:
-                record.is_expired = False
+                ticket.is_expired = False
+
+    @api.depends('product_id.active', 'start_sale_date', 'end_sale_date')
+    def _compute_sale_available(self):
+        for ticket in self:
+            current_date = fields.Date.context_today(ticket.with_context(tz=ticket.event_id.date_tz))
+            if not ticket.product_id.active:
+                ticket.sale_available = False
+            elif ticket.start_sale_date and ticket.start_sale_date > current_date:
+                ticket.sale_available = False
+            elif ticket.end_sale_date and ticket.end_sale_date < current_date:
+                ticket.sale_available = False
+            else:
+                ticket.sale_available = True
 
     def _compute_price_reduce(self):
         for record in self:
@@ -178,6 +223,12 @@ class EventTicket(models.Model):
 
         return name
 
+    @api.constrains('start_sale_date', 'end_sale_date')
+    def _check_start_sale_date_and_end_sale_date(self):
+        for ticket in self:
+            if ticket.start_sale_date and ticket.end_sale_date and ticket.start_sale_date > ticket.end_sale_date:
+                raise UserError(_('The stop date cannot be earlier than the start date.'))
+
 
 class EventRegistration(models.Model):
     _inherit = 'event.registration'
@@ -228,9 +279,8 @@ class EventRegistration(models.Model):
         if line_id:
             registration.setdefault('partner_id', line_id.order_id.partner_id)
         att_data = super(EventRegistration, self)._prepare_attendee_values(registration)
-        if line_id:
+        if line_id and line_id.event_ticket_id.sale_available:
             att_data.update({
-                'event_id': line_id.event_id.id,
                 'event_id': line_id.event_id.id,
                 'event_ticket_id': line_id.event_ticket_id.id,
                 'origin': line_id.order_id.name,

@@ -95,19 +95,23 @@ class EventEvent(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'date_begin'
 
+    def _get_default_stage_id(self):
+        event_stages = self.env['event.stage'].search([])
+        return event_stages[0] if event_stages else False
+
     name = fields.Char(
         string='Event', translate=True, required=True,
-        readonly=False, states={'done': [('readonly', True)]})
+        readonly=False)
     active = fields.Boolean(default=True)
     user_id = fields.Many2one(
         'res.users', string='Responsible',
         default=lambda self: self.env.user,
         tracking=True,
-        readonly=False, states={'done': [('readonly', True)]})
+        readonly=False)
     company_id = fields.Many2one(
         'res.company', string='Company', change_default=True,
         default=lambda self: self.env.company,
-        required=False, readonly=False, states={'done': [('readonly', True)]})
+        required=False, readonly=False)
     organizer_id = fields.Many2one(
         'res.partner', string='Organizer',
         tracking=True,
@@ -115,14 +119,22 @@ class EventEvent(models.Model):
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     event_type_id = fields.Many2one(
         'event.type', string='Category',
-        readonly=False, states={'done': [('readonly', True)]})
+        readonly=False)
     color = fields.Integer('Kanban Color Index')
     event_mail_ids = fields.One2many('event.mail', 'event_id', string='Mail Schedule', copy=True)
-
+    # Kanban fields
+    kanban_state = fields.Selection([('normal', 'In Progress'), ('done', 'Done'), ('blocked', 'Blocked')])
+    kanban_state_label = fields.Char(compute='_compute_kanban_state_label', string='Kanban State Label', tracking=True, store=True)
+    stage_id = fields.Many2one(
+        'event.stage', ondelete='restrict', default=_get_default_stage_id,
+        group_expand='_read_group_stage_ids', tracking=True)
+    legend_blocked = fields.Char(related='stage_id.legend_blocked', string='Kanban Blocked Explanation', readonly=True)
+    legend_done = fields.Char(related='stage_id.legend_done', string='Kanban Valid Explanation', readonly=True)
+    legend_normal = fields.Char(related='stage_id.legend_normal', string='Kanban Ongoing Explanation', readonly=True)
     # Seats and computation
     seats_max = fields.Integer(
         string='Maximum Attendees Number',
-        readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
+        readonly=True,
         help="For each event you can define a maximum registration of seats(number of attendees), above this numbers the registrations are not accepted.")
     seats_availability = fields.Selection(
         [('limited', 'Limited'), ('unlimited', 'Unlimited')],
@@ -145,41 +157,35 @@ class EventEvent(models.Model):
     seats_expected = fields.Integer(
         string='Number of Expected Attendees',
         compute_sudo=True, readonly=True, compute='_compute_seats')
-
     # Registration fields
     registration_ids = fields.One2many(
         'event.registration', 'event_id', string='Attendees',
-        readonly=False, states={'done': [('readonly', True)]})
+        readonly=False)
+    event_registrations_open = fields.Boolean('Registration open', compute='_compute_event_registrations_open')
     # Date fields
     date_tz = fields.Selection('_tz_get', string='Timezone', required=True, default=lambda self: self.env.user.tz or 'UTC')
     date_begin = fields.Datetime(
         string='Start Date', required=True,
-        tracking=True, states={'done': [('readonly', True)]})
+        tracking=True)
     date_end = fields.Datetime(
         string='End Date', required=True,
-        tracking=True, states={'done': [('readonly', True)]})
+        tracking=True)
     date_begin_located = fields.Char(string='Start Date Located', compute='_compute_date_begin_tz')
     date_end_located = fields.Char(string='End Date Located', compute='_compute_date_end_tz')
     is_one_day = fields.Boolean(compute='_compute_field_is_one_day')
-
-    state = fields.Selection([
-        ('draft', 'Unconfirmed'), ('cancel', 'Cancelled'),
-        ('confirm', 'Confirmed'), ('done', 'Done')],
-        string='Status', default='draft', readonly=True, required=True, copy=False,
-        help="If event is created, the status is 'Draft'. If event is confirmed for the particular dates the status is set to 'Confirmed'. If the event is over, the status is set to 'Done'. If event is cancelled the status is set to 'Cancelled'.")
     auto_confirm = fields.Boolean(string='Autoconfirm Registrations')
     is_online = fields.Boolean('Online Event')
     address_id = fields.Many2one(
         'res.partner', string='Location',
         default=lambda self: self.env.company.partner_id,
-        readonly=False, states={'done': [('readonly', True)]},
+        readonly=False,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         tracking=True)
     country_id = fields.Many2one('res.country', 'Country',  related='address_id.country_id', store=True, readonly=False)
     twitter_hashtag = fields.Char('Twitter Hashtag')
     description = fields.Html(
         string='Description', translate=html_translate, sanitize_attributes=False,
-        readonly=False, states={'done': [('readonly', True)]})
+        readonly=False)
     # badge fields
     badge_front = fields.Html(string='Badge Front')
     badge_back = fields.Html(string='Badge Back')
@@ -215,6 +221,21 @@ class EventEvent(models.Model):
             if event.seats_max > 0:
                 event.seats_available = event.seats_max - (event.seats_reserved + event.seats_used)
             event.seats_expected = event.seats_unconfirmed + event.seats_reserved + event.seats_used
+
+    @api.depends('date_end', 'seats_available', 'seats_availability')
+    def _compute_event_registrations_open(self):
+        for event in self:
+            event.event_registrations_open = event.date_end > fields.Datetime.now() and (event.seats_available or event.seats_availability == 'unlimited')
+
+    @api.depends('stage_id', 'kanban_state')
+    def _compute_kanban_state_label(self):
+        for event in self:
+            if event.kanban_state == 'normal':
+                event.kanban_state_label = event.stage_id.legend_normal
+            elif event.kanban_state == 'blocked':
+                event.kanban_state_label = event.stage_id.legend_blocked
+            else:
+                event.kanban_state_label = event.stage_id.legend_done
 
     @api.model
     def _tz_get(self):
@@ -308,12 +329,14 @@ class EventEvent(models.Model):
         return result
 
     @api.model
+    def _read_group_stage_ids(self, stages, domain, order):
+        return self.env['event.stage'].search([])
+
+    @api.model
     def create(self, vals):
         res = super(EventEvent, self).create(vals)
         if res.organizer_id:
             res.message_subscribe([res.organizer_id.id])
-        if res.auto_confirm:
-            res.button_confirm()
         return res
 
     def write(self, vals):
@@ -328,28 +351,20 @@ class EventEvent(models.Model):
         default = dict(default or {}, name=_("%s (copy)") % (self.name))
         return super(EventEvent, self).copy(default)
 
-    def button_draft(self):
-        self.write({'state': 'draft'})
-
-    def button_cancel(self):
-        if any('done' in event.mapped('registration_ids.state') for event in self):
-            raise UserError(_("There are already attendees who attended this event. Please reset it to draft if you want to cancel this event."))
-        self.registration_ids.write({'state': 'cancel'})
-        self.state = 'cancel'
-
-    def button_done(self):
-        self.write({'state': 'done'})
-
-    def button_confirm(self):
-        self.write({'state': 'confirm'})
+    def action_set_done(self):
+        """
+        Action which will move the events
+        into the first next (by sequence) stage defined as "Ended"
+        (if they are not already in an ended stage)
+        """
+        first_ended_stage = self.env['event.stage'].search([('pipe_end', '=', True)], order='sequence')
+        if first_ended_stage:
+            self.write({'stage_id': first_ended_stage[0].id})
 
     def mail_attendees(self, template_id, force_send=False, filter_func=lambda self: self.state != 'cancel'):
         for event in self:
             for attendee in event.registration_ids.filtered(filter_func):
                 self.env['mail.template'].browse(template_id).send_mail(attendee.id, force_send=force_send)
-
-    def _is_event_registrable(self):
-        return self.date_end > fields.Datetime.now()
 
     def _get_ics_file(self):
         """ Returns iCalendar file for the event invitation.
@@ -417,8 +432,7 @@ class EventRegistration(models.Model):
     def _check_auto_confirmation(self):
         if self._context.get('registration_force_draft'):
             return False
-        if any(registration.event_id.state != 'confirm' or
-               not registration.event_id.auto_confirm or
+        if any(not registration.event_id.auto_confirm or
                (not registration.event_id.seats_available and registration.event_id.seats_availability == 'limited') for registration in self):
             return False
         return True
@@ -463,13 +477,7 @@ class EventRegistration(models.Model):
     def button_reg_close(self):
         """ Close Registration """
         for registration in self:
-            today = fields.Datetime.now()
-            if registration.event_id.date_begin <= today and registration.event_id.state == 'confirm':
-                registration.write({'state': 'done', 'date_closed': today})
-            elif registration.event_id.state == 'draft':
-                raise UserError(_("You must wait the event confirmation before doing this action."))
-            else:
-                raise UserError(_("You must wait the event starting day before doing this action."))
+            registration.write({'state': 'done', 'date_closed': fields.Datetime.now()})
 
     def button_reg_cancel(self):
         self.write({'state': 'cancel'})
