@@ -109,7 +109,6 @@ class HrExpense(models.Model):
             taxes = expense.tax_ids.compute_all(expense.unit_amount, expense.currency_id, expense.quantity, expense.product_id, expense.employee_id.user_id.partner_id)
             expense.total_amount = taxes.get('total_included')
 
-
     @api.depends('date', 'total_amount', 'company_currency_id')
     def _compute_total_amount_company(self):
         for expense in self:

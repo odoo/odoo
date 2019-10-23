@@ -508,9 +508,10 @@
                      <notebook>
                         <page name="expenses" string="Expense">
                         <field name="expense_line_ids" nolabel="1" widget="many2many" domain="[('state', '=', 'draft'), ('employee_id', '=', employee_id), ('company_id', '=', company_id)]" options="{'reload_on_button': True}" context="{'form_view_ref' : 'hr_expense.hr_expense_view_form_without_header'}">
-                            <tree decoration-danger="is_refused">
+                            <tree decoration-danger="is_refused" editable="bottom">
                                 <field name="date" optional="show"/>
                                 <field name="name"/>
+                                <field name="company_id" invisible="1"/>
                                 <field name="state" invisible="1"/>
                                 <field name="reference" optional="hide"/>
                                 <field name="analytic_account_id" optional="show" domain="['|', ('company_id', '=', parent.company_id), ('company_id', '=', False)]" groups="analytic.group_analytic_accounting"/>
