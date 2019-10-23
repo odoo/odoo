@@ -1563,4 +1563,10 @@
     </div>
 </t>
 
+<t t-name="SignButton">
+    <button t-attf-class="btn o_sign_button #{widget.node.attrs.highlight?'btn-primary':'btn-secondary'}">
+        <span class="o_sign_label"><t t-esc="widget.node.attrs.string"/></span>
+    </button>
+</t>
+
 </templates>

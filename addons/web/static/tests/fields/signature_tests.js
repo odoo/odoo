@@ -113,6 +113,105 @@ QUnit.module('signature', {
         form.destroy();
     });
 
+    QUnit.module('Signature Widget');
+
+    QUnit.test('Signature widget renders a Sign button', async function (assert) {
+        assert.expect(3);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            res_id: 1,
+            data: this.data,
+            arch: '<form>' +
+                    '<header>' +
+                        '<widget name="signature" string="Sign"/>' +
+                    '</header>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (route === '/web/sign/get_fonts/') {
+                    return Promise.resolve();
+                }
+                return this._super(route, args);
+            },
+        });
+
+        assert.containsOnce(form, 'button.o_sign_button.o_widget',
+            "Should have a signature widget button");
+        assert.strictEqual($('.modal-dialog').length, 0,
+            "Should not have any modal");
+        // Clicks on the sign button to open the sign modal.
+        await testUtils.dom.click(form.$('span.o_sign_label'));
+        assert.strictEqual($('.modal-dialog').length, 1,
+            "Should have one modal opened");
+
+        form.destroy();
+    });
+
+    QUnit.test('Signature widget: full_name option', async function (assert) {
+        assert.expect(2);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            res_id: 1,
+            data: this.data,
+            arch: '<form>' +
+                    '<header>' +
+                        '<widget name="signature" string="Sign" full_name="display_name"/>' +
+                    '</header>' +
+                    '<field name="display_name"/>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (route === '/web/sign/get_fonts/') {
+                    return Promise.resolve();
+                }
+                return this._super(route, args);
+            },
+        });
+
+        // Clicks on the sign button to open the sign modal.
+        await testUtils.dom.click(form.$('span.o_sign_label'));
+        assert.strictEqual($('.modal .modal-body a.o_web_sign_auto_button').length, 1,
+            "Should open a modal with \"Auto\" button");
+        assert.strictEqual($('.modal .modal-body .o_web_sign_name_input').val(), "Pop's Chock'lit",
+            "Correct Value should be set in the input for auto drawing the signature");
+
+        form.destroy();
+    });
+
+    QUnit.test('Signature widget: highlight option', async function (assert) {
+        assert.expect(3);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            res_id: 1,
+            data: this.data,
+            arch: '<form>' +
+                    '<header>' +
+                        '<widget name="signature" string="Sign" highlight="1"/>' +
+                    '</header>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (route === '/web/sign/get_fonts/') {
+                    return Promise.resolve();
+                }
+                return this._super(route, args);
+            },
+        });
+
+        assert.hasClass(form.$('button.o_sign_button.o_widget'), 'btn-primary',
+            "The button must have the 'btn-primary' class as \"highlight=1\"");
+        // Clicks on the sign button to open the sign modal.
+        await testUtils.dom.click(form.$('span.o_sign_label'));
+        assert.isNotVisible($('.modal .modal-body a.o_web_sign_auto_button'),
+            "\"Auto\" button must be invisible");
+        assert.strictEqual($('.modal .modal-body .o_web_sign_name_input').val(), '',
+            "No value should be set in the input for auto drawing the signature");
+
+        form.destroy();
+    });
 });
 });
 });
