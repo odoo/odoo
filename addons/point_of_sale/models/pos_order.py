@@ -614,19 +614,23 @@ class PosOrder(models.Model):
             'target': 'current',
         }
 
-    @api.model
-    def action_receipt_to_customer(self, name, client, ticket, order_ids=False):
-        template_obj = self.env['mail.mail']
-        message = "<p>Dear %s,<br/>Here is your electronic ticket from the %s. </p>" % (client['name'], name)
-        template_data = {
-            'subject': 'Receipt %s' % name,
+    def action_receipt_to_customer(self, name, client, ticket):
+        if not self:
+            return False
+        if not client.get('email'):
+            return False
+
+        message = _("<p>Dear %s,<br/>Here is your electronic ticket for the %s. </p>") % (client['name'], name)
+        mail_values = {
+            'subject': _('Receipt %s') % name,
             'body_html': message + '<img src="data:image/jpeg;base64,%s"/>' % ticket,
-            'email_from': self.env.company.email,
+            'author_id': self.env.user.partner_id.id,
+            'email_from': self.env.company.email or self.env.user.email_formatted,
             'email_to': client['email']
         }
 
-        if order_ids and self.env['pos.order'].browse(order_ids[0]).account_move:
-            report = self.env.ref('point_of_sale.pos_invoice_report').render_qweb_pdf(order_ids[0])
+        if self.mapped('account_move'):
+            report = self.env.ref('point_of_sale.pos_invoice_report').render_qweb_pdf(self.ids[0])
             filename = name + '.pdf'
             attachment = self.env['ir.attachment'].create({
                 'name': filename,
@@ -635,13 +639,13 @@ class PosOrder(models.Model):
                 'datas_fname': filename,
                 'store_fname': filename,
                 'res_model': 'account.move',
-                'res_id': order_ids[0],
+                'res_id': self.ids[0],
                 'mimetype': 'application/x-pdf'
             })
-            template_data['attachment_ids'] = attachment
+            mail_values['attachment_ids'] = attachment
 
-        template_id = template_obj.create(template_data)
-        template_obj.send(template_id)
+        mail = self.env['mail.mail'].create(mail_values)
+        mail.send()
 
     @api.model
     def remove_from_ui(self, server_ids):
