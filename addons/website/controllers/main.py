@@ -187,7 +187,7 @@ class Website(Home):
 
         return request.make_response(content, [('Content-Type', mimetype)])
 
-    @http.route('/website/info', type='http', auth="public", website=True)
+    @http.route('/website/info', type='http', auth="public", website=True, sitemap=False)
     def website_info(self):
         try:
             request.website.get_template('website.website_info').name
@@ -444,7 +444,7 @@ class WebsiteBinary(http.Controller):
                 kw['unique'] = unique
         return Binary().content_image(**kw)
 
-    @http.route(['/favicon.ico'], type='http', auth='public', website=True)
+    @http.route(['/favicon.ico'], type='http', auth='public', website=True, sitemap=False)
     def favicon(self, **kw):
         # when opening a pdf in chrome, chrome tries to open the default favicon url
         return self.content_image(model='website', id=str(request.website.id), field='favicon', **kw)
