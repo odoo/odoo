@@ -1148,6 +1148,10 @@ class Field(MetaField('DummyField', (object,), {})):
             with records.env.protecting(fields, records):
                 records._compute_field_value(self)
         except Exception:
+            # We have tried to compute the field `self` with no success,
+            # adding that back in the compute list leads to infinite loop.
+            if self in fields:
+                fields.remove(self)
             for field in fields:
                 env.add_to_compute(field, records)
             raise
