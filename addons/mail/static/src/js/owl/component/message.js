@@ -441,13 +441,31 @@ Message.defaultProps = {
 };
 
 Message.props = {
-    hasAuthorRedirect: Boolean,
-    hasMarkAsReadIcon: Boolean,
-    hasReplyIcon: Boolean,
-    isSelected: Boolean,
-    isSquashed: Boolean,
+    hasAuthorRedirect: {
+        type: Boolean,
+        optional: true,
+    },
+    hasMarkAsReadIcon: {
+        type: Boolean,
+        optional: true,
+    },
+    hasReplyIcon: {
+        type: Boolean,
+        optional: true,
+    },
+    isSelected: {
+        type: Boolean,
+        optional: true,
+    },
+    isSquashed: {
+        type: Boolean,
+        optional: true,
+    },
     messageLocalId: String,
-    threadLocalId: String,
+    threadLocalId: {
+        type: String,
+        optional: true,
+    },
 };
 
 Message.template = 'mail.component.Message';

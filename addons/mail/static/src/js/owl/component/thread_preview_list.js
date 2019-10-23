@@ -92,7 +92,10 @@ ThreadPreviewList.defaultProps = {
 };
 
 ThreadPreviewList.props = {
-    filter: String, // ['all', 'mailbox', 'channel', 'chat']
+    filter: {
+        type: String, // ['all', 'mailbox', 'channel', 'chat']
+        optional: true,
+    },
     targetThreadLocalId: {
         type: String,
         optional: true,

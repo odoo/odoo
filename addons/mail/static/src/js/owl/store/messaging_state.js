@@ -139,7 +139,7 @@ function init(alteration) {
             /**
              * Current thread set on discuss app
              */
-            activeThreadLocalId: null,
+            activeThreadLocalId: undefined,
             /**
              * Domain of the messages in the thread. Determine the thread cache
              * to use with provided thread local Id.

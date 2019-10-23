@@ -271,14 +271,38 @@ ChatWindow.props = {
         type: String,
         optional: true,
     },
-    dockDirection: String,
-    dockOffset: Number,
-    hasCloseAsBackButton: Boolean,
-    hasShiftLeft: Boolean,
-    hasShiftRight: Boolean,
-    isDocked: Boolean,
-    isExpandable: Boolean,
-    isFullscreen: Boolean,
+    dockDirection: {
+        type: String,
+        optional: true,
+    },
+    dockOffset: {
+        type: Number,
+        optional: true,
+    },
+    hasCloseAsBackButton: {
+        type: Boolean,
+        optional: true,
+    },
+    hasShiftLeft: {
+        type: Boolean,
+        optional: true,
+    },
+    hasShiftRight: {
+        type: Boolean,
+        optional: true,
+    },
+    isDocked: {
+        type: Boolean,
+        optional: true,
+    },
+    isExpandable: {
+        type: Boolean,
+        optional: true,
+    },
+    isFullscreen: {
+        type: Boolean,
+        optional: true,
+    },
     threadInitialScrollTop: {
         type: Number,
         optional: true,

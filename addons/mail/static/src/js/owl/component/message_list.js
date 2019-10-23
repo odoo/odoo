@@ -421,12 +421,30 @@ MessageList.defaultProps = {
 };
 
 MessageList.props = {
-    domain: Array,
-    hasSquashCloseMessages: Boolean,
-    haveMessagesAuthorRedirect: Boolean,
-    haveMessagesMarkAsReadIcon: Boolean,
-    haveMessagesReplyIcon: Boolean,
-    order: String, // ['asc', 'desc']
+    domain: {
+        type: Array,
+        optional: true,
+    },
+    hasSquashCloseMessages: {
+        type: Boolean,
+        optional: true,
+    },
+    haveMessagesAuthorRedirect: {
+        type: Boolean,
+        optional: true,
+    },
+    haveMessagesMarkAsReadIcon: {
+        type: Boolean,
+        optional: true,
+    },
+    haveMessagesReplyIcon: {
+        type: Boolean,
+        optional: true,
+    },
+    order: {
+        type: String, // ['asc', 'desc']
+        optional: true,
+    },
     selectedMessageLocalId: {
         type: String,
         optional: true,

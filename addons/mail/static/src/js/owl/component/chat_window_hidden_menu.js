@@ -147,12 +147,11 @@ HiddenMenu.props = {
         type: Array,
         element: String,
     },
-    direction: String,
-    offset: Number,
-    threads: {
-        type: Array,
-        element: Object, // {mail.store.model.Thread}
+    direction: {
+        type: String,
+        optional: true,
     },
+    offset: Number,
 };
 
 HiddenMenu.template = 'mail.component.ChatWindowHiddenMenu';

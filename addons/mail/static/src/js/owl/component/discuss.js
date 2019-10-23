@@ -24,8 +24,8 @@ class Discuss extends owl.Component {
             isAddingChat: false,
             isReplyingToMessage: false,
             replyingToMessageCounter: 0,
-            replyingToMessageMessageLocalId: null,
-            replyingToMessageThreadLocalId: null,
+            replyingToMessageMessageLocalId: undefined,
+            replyingToMessageThreadLocalId: undefined,
             threadCachesStoredScrollTop: {}, // key: threadCachelocalId, value: { value } (obj. to prevent 0 being falsy)
         });
         this.storeDispatch = owl.hooks.useDispatch();
@@ -253,8 +253,8 @@ class Discuss extends owl.Component {
     _cancelReplyingToMessage() {
         this.state.isReplyingToMessage = false;
         this.state.replyingToMessageCounter = 0;
-        this.state.replyingToMessageMessageLocalId = null;
-        this.state.replyingToMessageThreadLocalId = null;
+        this.state.replyingToMessageMessageLocalId = undefined;
+        this.state.replyingToMessageThreadLocalId = undefined;
     }
 
     /**

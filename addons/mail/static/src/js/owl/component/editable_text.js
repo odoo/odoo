@@ -64,17 +64,20 @@ class EditableText extends owl.Component {
     }
 }
 
-/**
- * Props validation
- */
-EditableText.props = {
-    placeholder: String,
-    value: String,
-};
-
 EditableText.defaultProps = {
     placeholder: "",
     value: "",
+};
+
+EditableText.props = {
+    placeholder: {
+        type: String,
+        optional: true,
+    },
+    value: {
+        type: String,
+        optional: true,
+    },
 };
 
 EditableText.template = 'mail.component.EditableText';

@@ -19,15 +19,30 @@ AttachmentList.defaultProps = {
 };
 
 AttachmentList.props = {
-    areAttachmentsDownloadable: Boolean,
-    areAttachmentsEditable: Boolean,
+    areAttachmentsDownloadable: {
+        type: Boolean,
+        optional: true,
+    },
+    areAttachmentsEditable: {
+        type: Boolean,
+        optional: true,
+    },
     attachmentLocalIds: {
         type: Array,
         element: String,
     },
-    attachmentsImageSizeForBasicLayout: String, // ['small', 'medium', 'large']
-    attachmentsLayout: String, // ['basic', 'card']
-    haveAttachmentsLabelForCardLayout: Boolean,
+    attachmentsImageSizeForBasicLayout: {
+        type: String, // ['small', 'medium', 'large']
+        optional: true,
+    },
+    attachmentsLayout: {
+        type: String, // ['basic', 'card']
+        optional: true,
+    },
+    haveAttachmentsLabelForCardLayout: {
+        type: Boolean,
+        optional: true,
+    },
 };
 
 AttachmentList.template = 'mail.component.AttachmentList';

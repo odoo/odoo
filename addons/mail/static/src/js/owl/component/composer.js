@@ -515,17 +515,43 @@ Composer.defaultProps = {
 };
 
 Composer.props = {
-    areButtonsInline: Boolean,
+    areButtonsInline: {
+        type: Boolean,
+        optional: true,
+    },
+    attachmentLocalIds: {
+        type: Array,
+        element: String,
+        optional: true,
+    },
     attachmentsLayout: {
         type: String,
         optional: true,
     },
-    focusCounter: Number,
-    hasCurrentPartnerAvatar: Boolean,
-    hasDiscardButton: Boolean,
-    hasFollowers: Boolean,
-    hasSendButton: Boolean,
-    hasThreadName: Boolean,
+    focusCounter: {
+        type: Number,
+        optional: true,
+    },
+    hasCurrentPartnerAvatar: {
+        type: Boolean,
+        optional: true,
+    },
+    hasDiscardButton: {
+        type: Boolean,
+        optional: true,
+    },
+    hasFollowers: {
+        type: Boolean,
+        optional: true,
+    },
+    hasSendButton: {
+        type: Boolean,
+        optional: true,
+    },
+    hasThreadName: {
+        type: Boolean,
+        optional: true,
+    },
     haveAttachmentsLabelForCardLayout: {
         type: Boolean,
         optional: true,
@@ -540,10 +566,22 @@ Composer.props = {
         type: String,
         optional: true,
     },
-    isDiscardOnClickAway: Boolean,
-    isExpandable: Boolean,
-    isFocusOnMount: Boolean,
-    isLog: Boolean,
+    isDiscardOnClickAway: {
+        type: Boolean,
+        optional: true,
+    },
+    isExpandable: {
+        type: Boolean,
+        optional: true,
+    },
+    isFocusOnMount: {
+        type: Boolean,
+        optional: true,
+    },
+    isLog: {
+        type: Boolean,
+        optional: true,
+    },
     threadCacheLocalId: {
         type: String,
         optional: true,

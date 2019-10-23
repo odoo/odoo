@@ -114,10 +114,22 @@ ChatWindowHeader.defaultProps = {
 
 ChatWindowHeader.props = {
     chatWindowLocalId: String,
-    hasCloseAsBackButton: Boolean,
-    hasShiftLeft: Boolean,
-    hasShiftRight: Boolean,
-    isExpandable: Boolean,
+    hasCloseAsBackButton: {
+        type: Boolean,
+        optional: true,
+    },
+    hasShiftLeft: {
+        type: Boolean,
+        optional: true,
+    },
+    hasShiftRight: {
+        type: Boolean,
+        optional: true,
+    },
+    isExpandable: {
+        type: Boolean,
+        optional: true,
+    },
 };
 
 ChatWindowHeader.template = 'mail.component.ChatWindowHeader';
