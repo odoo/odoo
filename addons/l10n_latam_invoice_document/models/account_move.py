@@ -157,15 +157,26 @@ class AccountMove(models.Model):
             rec.l10n_latam_document_type_id = document_types and document_types[0].id
 
     def _compute_invoice_taxes_by_group(self):
+        report_or_portal_view = 'commit_assetsbundle' in self.env.context or \
+            not self.env.context.get('params', {}).get('view_type') == 'form'
+        if not report_or_portal_view:
+            return super()._compute_invoice_taxes_by_group()
+
         move_with_doc_type = self.filtered('l10n_latam_document_type_id')
         for move in move_with_doc_type:
             lang_env = move.with_context(lang=move.partner_id.lang).env
             tax_lines = move.l10n_latam_tax_ids
             res = {}
+            # There are as many tax line as there are repartition lines
+            done_taxes = set()
             for line in tax_lines:
                 res.setdefault(line.tax_line_id.tax_group_id, {'base': 0.0, 'amount': 0.0})
                 res[line.tax_line_id.tax_group_id]['amount'] += line.price_subtotal
-                res[line.tax_line_id.tax_group_id]['base'] += line.tax_base_amount
+                tax_key_add_base = tuple(move._get_tax_key_for_group_add_base(line))
+                if tax_key_add_base not in done_taxes:
+                    # The base should be added ONCE
+                    res[line.tax_line_id.tax_group_id]['base'] += line.tax_base_amount
+                    done_taxes.add(tax_key_add_base)
             res = sorted(res.items(), key=lambda l: l[0].sequence)
             move.amount_by_group = [(
                 group.name, amounts['amount'],
@@ -173,6 +184,7 @@ class AccountMove(models.Model):
                 formatLang(lang_env, amounts['amount'], currency_obj=move.currency_id),
                 formatLang(lang_env, amounts['base'], currency_obj=move.currency_id),
                 len(res),
+                group.id,
             ) for group, amounts in res]
         super(AccountMove, self - move_with_doc_type)._compute_invoice_taxes_by_group()
 
