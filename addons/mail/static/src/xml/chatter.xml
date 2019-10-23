@@ -38,6 +38,38 @@
     </div>
 
     <!--
+        Chatter Suggested Partners
+    -->
+    <t t-name="mail.chatter.ComposerSuggestedPartners">
+        <!-- List of followers -->
+        <div class="o_composer_suggested_partners">
+            <t t-foreach='widget.suggestedPartners' t-as='recipient'>
+                <div t-attf-title="Add as recipient and follower (reason: {{recipient.reason}})" t-att-class="recipient_index > 2 ? 'o_suggested_toggle o_hidden' : ''">
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox"
+                                class="custom-control-input"
+                                t-attf-id="o_composer_suggested_partners_p{{recipient_index}}"
+                                t-att-checked="recipient.checked ? 'checked' : undefined"
+                                t-att-data-fullname="recipient.full_name"/>
+                        <label t-attf-for="o_composer_suggested_partners_p{{recipient_index}}" class="custom-control-label">
+                            <t t-esc="recipient.name"/>
+                            <t t-if="recipient.email_address">(<t t-esc="recipient.email_address"/>)</t>
+                        </label>
+                    </div>
+                </div>
+            </t>
+            <t t-if='widget.suggestedPartners.length > 3'>
+                <a href="#" class='o_suggested_show_more_less o_suggested_toggle'>
+                    Show <t t-esc="widget.suggestedPartners.length - 3"/> more
+                </a>
+                <a href="#" class='o_suggested_show_more_less o_suggested_toggle o_hidden'>
+                    Show <t t-esc="widget.suggestedPartners.length - 3"/> less
+                </a>
+            </t>
+        </div>
+    </t>
+
+    <!--
         Chatter composer
 
         @param {mail.composer.Chatter} widget
@@ -61,32 +93,7 @@
                         </t>
                     </b>
                 </small>
-                <!-- List of followers -->
-                <div class="o_composer_suggested_partners">
-                    <t t-foreach='widget.suggestedPartners' t-as='recipient'>
-                        <div t-attf-title="Add as recipient and follower (reason: #{recipient.reason})" t-att-class="recipient_index > 2 ? 'o_suggested_toggle o_hidden' : ''">
-                            <div class="custom-control custom-checkbox">
-                                <input type="checkbox"
-                                       class="custom-control-input"
-                                       t-attf-id="o_composer_suggested_partners_p#{recipient_index}"
-                                       t-att-checked="recipient.checked ? 'checked' : undefined"
-                                       t-att-data-fullname="recipient.full_name"/>
-                                <label t-attf-for="o_composer_suggested_partners_p#{recipient_index}" class="custom-control-label">
-                                    <t t-esc="recipient.name"/>
-                                    <t t-if="recipient.email_address">(<t t-esc="recipient.email_address"/>)</t>
-                                </label>
-                            </div>
-                        </div>
-                    </t>
-                    <t t-if='widget.suggestedPartners.length > 3'>
-                        <a href="#" class='o_suggested_show_more_less o_suggested_toggle'>
-                            Show <t t-esc="widget.suggestedPartners.length - 3"/> more
-                        </a>
-                        <a href="#" class='o_suggested_show_more_less o_suggested_toggle o_hidden'>
-                            Show <t t-esc="widget.suggestedPartners.length - 3"/> less
-                        </a>
-                    </t>
-                </div>
+                <t t-call="mail.chatter.ComposerSuggestedPartners"/>
             </t>
         </t>
 

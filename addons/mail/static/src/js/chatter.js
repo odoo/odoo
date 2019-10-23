@@ -63,12 +63,17 @@ var Chatter = Widget.extend({
         this._disableAttachmentBox = !!options.disable_attachment_box;
         this._dp = new concurrency.DropPrevious();
         this._isAttachmentBoxOpen = false;
+        this._isComposerOpen = false;
         // mention: get the prefetched partners and use them as mention suggestions
         // if there is a follower widget, the followers will be added to the
         // suggestions as well once fetched
         this._mentionPartnerSuggestions = this.call('mail_service', 'getMentionPartnerSuggestions');
         this._mentionSuggestions = this._mentionPartnerSuggestions;
-        this._suggestedPartnersProm = undefined;
+        /**
+         * List of fetched suggested partners. This is lazy-loaded on opening
+         * composer. `undefined` means it should be fetched again.
+         */
+        this._suggestedPartners = undefined;
 
         if (mailFields.mail_activity) {
             this.fields.activity = new Activity(this, mailFields.mail_activity, record, options);
@@ -158,6 +163,13 @@ var Chatter = Widget.extend({
         });
         this._updateAttachmentCounter();
     },
+    async updateSuggestedPartners() {
+        this._suggestedPartners = undefined;
+        if (this._composer && this._isComposerOpen) {
+            const suggestedPartners = await this._getSuggestedPartners();
+            this._composer.updateSuggestedPartners(suggestedPartners);
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -183,6 +195,7 @@ var Chatter = Widget.extend({
             this.$('.o_chatter_button_new_message, .o_chatter_button_log_note').removeClass('o_active');
             this._composer.do_hide();
             this._composer.clearComposer();
+            this._isComposerOpen = false;
         }
     },
     /**
@@ -265,6 +278,36 @@ var Chatter = Widget.extend({
     /**
      * @private
      */
+    async _getSuggestedPartners() {
+        if (this._suggestedPartners) {
+            return this._suggestedPartners;
+        }
+        const result = await this._rpc({
+            route: '/mail/get_suggested_recipients',
+            params: {
+                model: this.record.model,
+                res_ids: [this.context.default_res_id],
+            },
+        });
+        const suggestedPartners = [];
+        const threadRecipients = result[this.context.default_res_id] || [];
+        for (const recipient of threadRecipients) {
+            const parsedEmail = recipient[1] && mailUtils.parseEmail(recipient[1]);
+            suggestedPartners.push({
+                checked: true,
+                partner_id: recipient[0],
+                full_name: recipient[1],
+                name: parsedEmail[0],
+                email_address: parsedEmail[1],
+                reason: recipient[2],
+            });
+        }
+        this._suggestedPartners = suggestedPartners;
+        return this._suggestedPartners;
+    },
+    /**
+     * @private
+     */
     _openAttachmentBox: function () {
         if (this.fields.attachments) {
             this._closeAttachments();
@@ -285,14 +328,14 @@ var Chatter = Widget.extend({
     /**
      * @private
      * @param {Object} options
-     * @param {Object[]} [options.suggested_partners=[]]
+     * @param {Object[]} [options.suggestedPartners=[]]
      * @param {boolean} [options.isLog]
      */
     _openComposer: function (options) {
         var self = this;
         var oldComposer = this._composer;
         // create the new composer
-        this._composer = new ChatterComposer(this, this.record.model, options.suggested_partners || [], {
+        this._composer = new ChatterComposer(this, this.record.model, options.suggestedPartners || [], {
             commandsEnabled: false,
             context: this.context,
             inputMinHeight: 50,
@@ -330,6 +373,7 @@ var Chatter = Widget.extend({
             self._composer.on('need_refresh', self, self.trigger_up.bind(self, 'reload'));
             self._composer.on('close_composer', null, self._closeComposer.bind(self, true));
 
+            self._isComposerOpen = true;
             self.$el.addClass('o_chatter_composer_active');
             self.$('.o_chatter_button_new_message, .o_chatter_button_log_note').removeClass('o_active');
             self.$('.o_chatter_button_new_message').toggleClass('o_active', !self._composer.options.isLog);
@@ -406,12 +450,6 @@ var Chatter = Widget.extend({
             }
         }).then(always).guardedCatch(always);
     },
-    /**
-     * @private
-     */
-    _resetSuggestedPartners() {
-        this._suggestedPartnersProm = undefined;
-    },
     _renderButtons: function () {
         return QWeb.render('mail.chatter.Buttons', {
             newMessageButton: !!this.fields.thread,
@@ -439,9 +477,9 @@ var Chatter = Widget.extend({
                 default_res_id: record.res_id || false,
                 default_model: record.model || false,
             };
-            // reset the _suggestedPartnersProm to ensure a reload of the
-            // suggested partners when opening the composer on another record
-            this._resetSuggestedPartners();
+            // ensure a reload of the suggested partners when
+            // opening the composer on another record
+            this._suggestedPartners = undefined;
         }
         this.record = record;
         this.recordName = record.data.display_name;
@@ -553,39 +591,11 @@ var Chatter = Widget.extend({
     _onDiscardRecordChanges: function (ev) {
         this._discardChanges().then(ev.data.proceed);
     },
-    _onOpenComposerMessage: function () {
-        var self = this;
-        if (!this._suggestedPartnersProm) {
-            this._suggestedPartnersProm = new Promise(function (resolve, reject) {
-                self._rpc({
-                    route: '/mail/get_suggested_recipients',
-                    params: {
-                        model: self.record.model,
-                        res_ids: [self.context.default_res_id],
-                    },
-                }).then(function (result) {
-                    if (!self._suggestedPartnersProm) {
-                        return; // widget has been reset (e.g. we just switched to another record)
-                    }
-                    var suggested_partners = [];
-                    var thread_recipients = result[self.context.default_res_id];
-                    _.each(thread_recipients, function (recipient) {
-                        var parsed_email = recipient[1] && mailUtils.parseEmail(recipient[1]);
-                        suggested_partners.push({
-                            checked: true,
-                            partner_id: recipient[0],
-                            full_name: recipient[1],
-                            name: parsed_email[0],
-                            email_address: parsed_email[1],
-                            reason: recipient[2],
-                        });
-                    });
-                    resolve(suggested_partners);
-                });
-            });
-        }
-        this._suggestedPartnersProm.then(function (suggested_partners) {
-            self._openComposer({ isLog: false, suggested_partners: suggested_partners });
+    async _onOpenComposerMessage() {
+        const suggestedPartners = await this._getSuggestedPartners();
+        this._openComposer({
+            isLog: false,
+            suggestedPartners,
         });
     },
     /**
@@ -634,7 +644,7 @@ var Chatter = Widget.extend({
      */
     _onResetSuggestedPartners(ev) {
         ev.stopPropagation();
-        this._resetSuggestedPartners();
+        this._suggestedPartners = undefined;
     },
     /**
      * @private

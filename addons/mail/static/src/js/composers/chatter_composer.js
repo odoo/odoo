@@ -9,6 +9,7 @@ var core = require('web.core');
 var viewDialogs = require('web.view_dialogs');
 
 var _t = core._t;
+const Qweb = core.qweb;
 
 /**
  * Chat Composer for the Chatter
@@ -48,6 +49,20 @@ var ChatterComposer = BasicComposer.extend({
      * @override
      */
     _clearComposerOnSend: function () {},
+    /**
+     * Updates suggested partners in DOM
+     *
+     * @param {Array} suggestedPartners list of 'recipient' partners
+     */
+    updateSuggestedPartners(suggestedPartners) {
+        this.suggestedPartners = suggestedPartners;
+        if (!this.options.isLog) {
+            const $suggestedPartners = $(Qweb.render('mail.chatter.ComposerSuggestedPartners', {
+                widget: this,
+            }));
+            this.$('.o_composer_suggested_partners').replaceWith($suggestedPartners);
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Private
