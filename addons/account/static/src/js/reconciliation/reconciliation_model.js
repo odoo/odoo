@@ -438,7 +438,9 @@ var StatementModel = BasicModel.extend({
             domainReconcile.push(['company_id', 'in', self.context.company_ids]);
         }
         if (self.context && self.context.active_model === 'account.journal' && self.context.active_ids) {
-            domainReconcile.push(['match_journal_ids', 'in', [false].concat(self.context.active_ids)]);
+            domainReconcile.push('|');
+            domainReconcile.push(['match_journal_ids', '=', false]);
+            domainReconcile.push(['match_journal_ids', 'in', self.context.active_ids]);
         }
         var def_reconcileModel = this._loadReconciliationModel({domainReconcile: domainReconcile});
         var def_account = this._rpc({
