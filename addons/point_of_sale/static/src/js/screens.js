@@ -2457,7 +2457,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
                 rpc.query({
                     model: 'pos.order',
                     method: 'action_receipt_to_customer',
-                    args: [order.get_name(), order.get_client(), ticket, order_server_ids],
+                    args: [order_server_ids, order.get_name(), order.get_client(), ticket],
                 }).then(function() {
                   resolve();
                 }).catch(function () {
