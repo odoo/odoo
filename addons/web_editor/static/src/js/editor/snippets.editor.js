@@ -1039,23 +1039,34 @@ var SnippetsMenu = Widget.extend({
      */
     _activateSnippet: function ($snippet, previewMode) {
         return this._activateSnippetMutex.exec(() => {
-            // First disable all editors if necessary
-            this.snippetEditors.forEach(editor => {
-                editor.toggleFocus(false, previewMode);
-            });
-            // Take the first parent of the provided DOM (or itself) which
-            // should have an associated snippet editor and create + enable it.
-            if ($snippet && $snippet.length) {
-                $snippet = globalSelector.closest($snippet);
-                if (!$snippet.length) {
-                    return Promise.resolve(null);
+            return new Promise(resolve => {
+                // Take the first parent of the provided DOM (or itself) which
+                // should have an associated snippet editor and create + enable it.
+                if ($snippet && $snippet.length) {
+                    $snippet = globalSelector.closest($snippet);
+                    if ($snippet.length) {
+                        return this._createSnippetEditor($snippet).then(resolve);
+                    }
                 }
-                return this._createSnippetEditor($snippet).then(editor => {
-                    editor.toggleFocus(true, previewMode);
-                    return editor;
+                resolve(null);
+            }).then(editorToEnable => {
+                // First disable all editors...
+                this.snippetEditors.forEach(editor => {
+                    if (editor === editorToEnable) {
+                        // Avoid disable -> enable of an editor (the toggleFocus
+                        // method is in charge of doing nothing is nothing has
+                        // to be done but if we explicitly ask for disable then
+                        // enable... it will disable then enable).
+                        return;
+                    }
+                    editor.toggleFocus(false, previewMode);
                 });
-            }
-            return Promise.resolve(null);
+                // ... then enable the right editor
+                if (editorToEnable) {
+                    editorToEnable.toggleFocus(true, previewMode);
+                }
+                return editorToEnable;
+            });
         });
     },
     /**
