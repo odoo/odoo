@@ -188,12 +188,7 @@
             <field name="arch" type="xml">
                 <form string="Events">
                     <header>
-                        <button string="Confirm Event" name="button_confirm" states="draft" type="object" class="oe_highlight" groups="base.group_user"/>
-                        <button string="Finish Event" name="button_done" states="confirm" type="object" class="oe_highlight" groups="base.group_user"/>
-                        <button string="Set To Draft" name="button_draft" states="cancel,done" type="object" groups="base.group_user"/>
-                        <button string="Cancel Event" name="button_cancel" states="draft,confirm" type="object" groups="base.group_user" attrs="{'invisible': ['|', ('seats_expected', '!=', 0)]}"/>
-                        <button string="Cancel Event" name="button_cancel" states="draft,confirm" type="object" groups="base.group_user" confirm="Are you sure you want to cancel this event? All the linked attendees will be cancelled as well." attrs="{'invisible': ['|', ('seats_expected', '=', 0)]}"/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done"/>
+                        <field name="stage_id" widget="statusbar" options="{'clickable': '1'}"/>
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box" groups="base.group_user">
@@ -205,7 +200,11 @@
                                 <field name="seats_expected" widget="statinfo" string="Attendees"/>
                             </button>
                         </div>
-                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <field name="legend_blocked" invisible="1"/>
+                        <field name="legend_normal" invisible="1"/>
+                        <field name="legend_done" invisible="1"/>
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <field name="kanban_state" widget="state_selection" class="ml-auto"/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name" placeholder="Event Name"/></h1>
@@ -282,7 +281,7 @@
             <field name="name">event.event.tree</field>
             <field name="model">event.event</field>
             <field name="arch" type="xml">
-                <tree string="Events" decoration-bf="message_needaction==True" decoration-danger="(seats_min and seats_min&gt;seats_reserved) or (seats_max and seats_max&lt;seats_reserved)" decoration-muted="state=='cancel'">
+                <tree string="Events" decoration-bf="message_needaction==True" decoration-danger="(seats_min and seats_min&gt;seats_reserved) or (seats_max and seats_max&lt;seats_reserved)">
                     <field name="name"/>
                     <field name="event_type_id"/>
                     <field name="date_begin"/>
@@ -291,7 +290,6 @@
                     <field name="seats_min"/>
                     <field name="seats_max" invisible="1"/>
                     <field name="user_id"/>
-                    <field name="state"/>
                     <field name="message_needaction" invisible="1"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
@@ -303,8 +301,9 @@
             <field name="name">event.event.kanban</field>
             <field name="model">event.event</field>
             <field name="arch" type="xml">
-                <kanban class="o_event_kanban_view">
+                <kanban class="o_event_kanban_view" default_group_by="stage_id">
                     <field name="user_id"/>
+                    <field name="stage_id" options='{"group_by_tooltip": {"description": "Description"}}'/>
                     <field name="country_id"/>
                     <field name="date_begin"/>
                     <field name="date_end"/>
@@ -313,6 +312,9 @@
                     <field name="seats_used"/>
                     <field name="seats_expected"/>
                     <field name="color"/>
+                    <field name="legend_blocked"/>
+                    <field name="legend_normal"/>
+                    <field name="legend_done"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) : ''}} oe_kanban_card oe_kanban_global_click">
@@ -354,6 +356,10 @@
                                         </t>
                                     </h4>
                                 </div>
+                                <div class="o_event_bottom_right">
+                                    <field name="kanban_state" widget="state_selection" groups="base.group_user"/>
+                                    <img t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value"/>
+                                </div>
                             </div>
                         </t>
                     </templates>
@@ -368,7 +374,6 @@
             <field name="arch" type="xml">
                 <calendar date_start="date_begin" date_stop="date_end" string="Event Organization" mode="month" color="event_type_id" event_limit="5">
                     <field name="user_id" avatar_field="image_128"/>
-                    <field name="state"/>
                     <field name="seats_expected"/>
                     <field name="seats_reserved"/>
                     <field name="seats_used"/>
@@ -385,14 +390,13 @@
                     <field name="name" string="Event"/>
                     <field name="event_type_id"/>
                     <field name="user_id"/>
+                    <field name="stage_id"/>
                     <filter string="My Events" name="myevents" help="My Events" domain="[('user_id', '=', uid)]"/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]"/>
                     <separator/>
-                    <filter string="Confirmed" name="confirm" domain="[('state', '=', 'confirm')]" help="Confirmed events"/>
-                    <filter string="Unconfirmed" name="draft" domain="[('state', '=', 'draft')]" help="Events in New state"/>
                     <separator/>
                     <filter string="Upcoming/Running" name="upcoming"
-                        domain="['&amp;', ('state', '!=', 'cancel'), ('date_end', '&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]" help="Upcoming events from today" />
+                        domain="[('date_end', '&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]" help="Upcoming events from today" />
                     <filter string="Online Events" name="online_events" help="Online Events" domain="[('is_online', '=', True)]"/>
                     <separator/>
                     <filter string="Start Date" name="start_date" date="date_begin"/>
@@ -409,7 +413,7 @@
                     <group expand="0" string="Group By">
                         <filter string="Responsible" name="responsible" context="{'group_by': 'user_id'}"/>
                         <filter string="Event Category" name="event_type_id" context="{'group_by': 'event_type_id'}"/>
-                        <filter string="Status" name="status" context="{'group_by': 'state'}"/>
+                        <filter string="Stage" name="stage_id" context="{'group_by': 'stage_id'}"/>
                         <filter string="Start Date" name="date_begin" domain="[]" context="{'group_by': 'date_begin'}"/>
                     </group>
                 </search>

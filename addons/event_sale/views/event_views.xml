@@ -94,7 +94,8 @@
                             <tree string="Tickets" editable="bottom">
                                 <field name="name"/>
                                 <field name="product_id" context="{'default_event_ok':1}"/>
-                                <field name="deadline"/>
+                                <field name="start_sale_date"/>
+                                <field name="end_sale_date"/>
                                 <field name="price"/>
                                 <field name="seats_max"/>
                                 <field name="seats_reserved" readonly="1"/>
@@ -129,7 +130,7 @@
                                     <group>
                                         <field name="name"/>
                                         <field name="product_id" context="{'default_event_ok':1}"/>
-                                        <field name="deadline"/>
+                                        <field name="end_sale_date"/>
                                         <field name="price"/>
                                     </group><group>
                                         <field name="seats_max"/>
@@ -158,7 +159,7 @@
                             <field name="event_id"/>
                             <field name="seats_availability"/>
                             <field name="seats_available"/>
-                            <field name="deadline"/>
+                            <field name="end_sale_date"/>
                             <field name="price"/>
                             <field name="price_reduce" groups="base.group_no_one"/>
                         </group>
