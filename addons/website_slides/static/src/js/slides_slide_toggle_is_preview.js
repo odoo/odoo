@@ -2,20 +2,16 @@ odoo.define('website_slides.slide.preview', function (require) {
     'use strict';
 
     var publicWidget = require('web.public.widget');
+    var ajax = require('web.ajax');
 
     publicWidget.registry.websiteSlidesSlideToggleIsPreview = publicWidget.Widget.extend({
-        selector: '.o_wslides_js_slide_toggle_is_preview',
-        xmlDependencies: ['/website_slides/static/src/xml/slide_management.xml'],
         events: {
             'click': '_onPreviewSlideClick',
         },
 
-        _toggleSlidePreview: function($slideTarget) {
-            this._rpc({
-                route: '/slides/slide/toggle_is_preview',
-                params: {
-                    slide_id: $slideTarget.data('slideId')
-                },
+        _toggleSlidePreview: function ($slideTarget) {
+            ajax.jsonRpc('/slides/slide/toggle_is_preview', 'call', {
+                slide_id: $slideTarget.data('slideId')
             }).then(function (isPreview) {
                 if (isPreview) {
                     $slideTarget.removeClass('badge-light badge-hide border');

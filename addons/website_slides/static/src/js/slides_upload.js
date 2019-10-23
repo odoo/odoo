@@ -5,7 +5,7 @@ var core = require('web.core');
 var Dialog = require('web.Dialog');
 var publicWidget = require('web.public.widget');
 var utils = require('web.utils');
-
+var ajax = require('web.ajax');
 var QWeb = core.qweb;
 var _t = core._t;
 
@@ -34,9 +34,12 @@ var SlideUploadDialog = Dialog.extend({
         this._setup();
 
         this.channelID = parseInt(options.channelId, 10);
+        this.channelType = options.channelType;
         this.defaultCategoryID = parseInt(options.categoryId,10);
-        this.canUpload = options.canUpload === 'True';
-        this.canPublish = options.canPublish === 'True';
+        options.canUpload = options.canUpload || false;
+        options.canPublish = options.canPublish || false;
+        this.canUpload = options.canUpload.toString().toLowerCase() === 'true';
+        this.canPublish = options.canPublish.toString().toLowerCase() === 'true';
         this.modulesToInstall = options.modulesToInstall ? JSON.parse(options.modulesToInstall.replace(/'/g, '"')) : null;
         this.modulesToInstallStatus = null;
 
@@ -82,32 +85,23 @@ var SlideUploadDialog = Dialog.extend({
         var self = this;
         this.$('#category_id').select2(this._select2Wrapper(_t('Section'), false,
             function () {
-                return self._rpc({
-                    route: '/slides/category/search_read',
-                    params: {
-                        fields: ['name'],
-                        domain: [['channel_id', '=', self.channelID]],
-                    }
+                return ajax.jsonRpc('/slides/category/search_read', 'call', {
+                    fields: ['name'],
+                    domain: [['channel_id', '=', self.channelID]],
                 });
             })
         );
         this.$('#tag_ids').select2(this._select2Wrapper(_t('Tags'), true, function () {
-            return self._rpc({
-                route: '/slides/tag/search_read',
-                params: {
-                    fields: ['name'],
-                    domain: [],
-                }
+            return ajax.jsonRpc('/slides/tag/search_read', 'call', {
+                fields: ['name'],
+                domain: [],
             });
         }));
     },
     _fetchUrlPreview: function (url) {
-        return this._rpc({
-            route: '/slides/prepare_preview/',
-            params: {
-                'url': url,
-                'channel_id': this.channelID
-            },
+        return ajax.jsonRpc('/slides/prepare_preview/', 'call', {
+            'url': url,
+            'channel_id': this.channelID
         });
     },
     _formSetFieldValue: function (fieldId, value) {
@@ -178,7 +172,6 @@ var SlideUploadDialog = Dialog.extend({
         control.replaceWith(control = control.clone(true));
         this.file.name = false;
     },
-
     _getModalButtons: function () {
         var btnList = [];
         var state = this.get('state');
@@ -237,6 +230,7 @@ var SlideUploadDialog = Dialog.extend({
         }
         return result;
     },
+
     /**
      * Reset the footer buttons, according to current state of modal
      *
@@ -573,7 +567,7 @@ var SlideUploadDialog = Dialog.extend({
         $el.text(_.str.sprintf(_t('Installing "%s".'), this.modulesToInstallStatus.name));
         this.modulesToInstallStatus.installing = true;
         this._resetModalButton();
-        this._rpc({
+        ajax.jsonRpc('/web/dataset/call', 'call', {
             model: 'ir.module.module',
             method: 'button_immediate_install',
             args: [[this.modulesToInstallStatus.id]],
@@ -602,10 +596,7 @@ var SlideUploadDialog = Dialog.extend({
             var values = this._formValidateGetValues($btn.hasClass('o_w_slide_upload_published')); // get info before changing state
             var oldType = this.get('state');
             this.set('state', '_upload');
-            return this._rpc({
-                route: '/slides/add_slide',
-                params: values,
-            }).then(function (data) {
+            return ajax.jsonRpc('/slides/add_slide', 'call', values).then(function (data) {
                 self._onFormSubmitDone(data, oldType);
             });
         }
@@ -616,11 +607,18 @@ var SlideUploadDialog = Dialog.extend({
             this.set('state', oldType);
             this._alertDisplay(data.error);
         } else {
-            window.location = data.url;
+            if (this.channelType !== 'documentation') {
+                data.modulesToInstallString = this.modulesToInstall ? JSON.stringify(this.modulesToInstall).replace(/"/g, "'") : "";
+                data.onSuccess = this.close.bind(this);
+                this.trigger_up('append_new_content', data);
+            } else {
+                window.location.href = data.url;
+            }
         }
     },
 
     _onClickSlideTypeIcon: function (ev) {
+        ev.preventDefault();
         var $elem = this.$(ev.currentTarget);
         var slideType = $elem.data('slideType');
         this.set('state', slideType);
@@ -630,7 +628,6 @@ var SlideUploadDialog = Dialog.extend({
 });
 
 publicWidget.registry.websiteSlidesUpload = publicWidget.Widget.extend({
-    selector: '.o_wslides_js_slide_upload',
     xmlDependencies: ['/website_slides/static/src/xml/website_slides_upload.xml'],
     events: {
         'click': '_onUploadClick',

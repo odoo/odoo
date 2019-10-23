@@ -2,6 +2,7 @@ odoo.define('website_slides.slide.archive', function (require) {
 'use strict';
 
 var publicWidget = require('web.public.widget');
+var ajax = require('web.ajax');
 var Dialog = require('web.Dialog');
 var core = require('web.core');
 var _t = core._t;
@@ -26,25 +27,9 @@ var SlideArchiveDialog = Dialog.extend({
             }]
         });
 
-        this.$slideTarget = options.slideTarget;
-        this.slideId = this.$slideTarget.data('slideId');
+        this.slideId = options.slideId;
         this._super(parent, options);
     },
-    _checkForEmptySections: function (){
-        $('.o_wslides_slide_list_category').each(function (){
-            var $categoryHeader = $(this).find('.o_wslides_slide_list_category_header');
-            var categorySlideCount = $(this).find('.o_wslides_slides_list_slide:not(.o_not_editable)').length;
-            var $emptyFlagContainer = $categoryHeader.find('.o_wslides_slides_list_drag').first();
-            var $emptyFlag = $emptyFlagContainer.find('small');
-            if (categorySlideCount === 0 && $emptyFlag.length === 0){
-                $emptyFlagContainer.append($('<small>', {
-                    'class': "ml-1 text-muted font-weight-bold",
-                    text: _t("(empty)")
-                }));
-            }
-        });
-    },
-
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -54,24 +39,17 @@ var SlideArchiveDialog = Dialog.extend({
      */
     _onClickArchive: function () {
         var self = this;
-
-        this._rpc({
-            route: '/slides/slide/archive',
-            params: {
-                slide_id: this.slideId
-            },
-        }).then(function (isArchived) {
-            if (isArchived){
-                self.$slideTarget.closest('.o_wslides_slides_list_slide').remove();
-                self._checkForEmptySections();
+        ajax.jsonRpc('/slides/slide/archive', 'call', {
+            slide_id: this.slideId
+        }).then(function (res) {
+            if (!res.error) {
+                self.trigger_up('archive_content', {slideId: self.slideId, onSuccess: self.close.bind(self)});
             }
-            self.close();
         });
     }
 });
 
 publicWidget.registry.websiteSlidesSlideArchive = publicWidget.Widget.extend({
-    selector: '.o_wslides_js_slide_archive',
     xmlDependencies: ['/website_slides/static/src/xml/slide_management.xml'],
     events: {
         'click': '_onArchiveSlideClick',
@@ -82,7 +60,7 @@ publicWidget.registry.websiteSlidesSlideArchive = publicWidget.Widget.extend({
     //--------------------------------------------------------------------------
 
     _openDialog: function ($slideTarget) {
-        new SlideArchiveDialog(this, {slideTarget: $slideTarget}).open();
+        new SlideArchiveDialog(this, {slideId: $slideTarget.data('slideId')}).open();
     },
 
     //--------------------------------------------------------------------------

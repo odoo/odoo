@@ -4,6 +4,7 @@ odoo.define('website_slides_survey.upload_modal', function (require) {
 var core = require('web.core');
 var _t = core._t;
 var sessionStorage = window.sessionStorage;
+var ajax = require('web.ajax');
 var SlidesUpload = require('website_slides.upload_modal');
 
 /**
@@ -54,14 +55,10 @@ SlidesUpload.SlideUploadDialog.include({
     _bindSelect2Dropdown: function () {
         this._super.apply(this, arguments);
 
-        var self = this;
         this.$('#certification_id').select2(this._select2Wrapper(_t('Certification'), false,
             function () {
-                return self._rpc({
-                    route: '/slides_survey/certification/search_read',
-                    params: {
-                        fields: ['title'],
-                    }
+                return ajax.jsonRpc('/slides_survey/certification/search_read', 'call', {
+                        fields: ['title']
                 });
             }, 'title')
         );

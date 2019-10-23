@@ -27,6 +27,7 @@ var CategoryAddDialog = Dialog.extend({
         });
 
         this.channelId = options.channelId;
+        this.modulesToInstall = options.modulesToInstall;
         this._super(parent, options);
     },
 
@@ -41,14 +42,26 @@ var CategoryAddDialog = Dialog.extend({
 
     _onClickFormSubmit: function (ev) {
         var $form = this.$('#slide_category_add_form');
+        var self = this;
         if (this._formValidate($form)) {
-            $form.submit();
+            this._rpc({
+                route : '/slides/category/add',
+                params: {
+                    channel_id: self.channelId,
+                    name: $form[0].name.value
+                }
+            }).then(function (data) {
+                if (!data.error) {
+                    data.modulesToInstallString = self.modulesToInstall;
+                    data.onSuccess = self.close.bind(self);
+                    self.trigger_up('append_new_content', data);
+                }
+            });
         }
     },
 });
 
 publicWidget.registry.websiteSlidesCategoryAdd = publicWidget.Widget.extend({
-    selector: '.o_wslides_js_slide_section_add',
     xmlDependencies: ['/website_slides/static/src/xml/slide_management.xml'],
     events: {
         'click': '_onAddSectionClick',
@@ -58,8 +71,8 @@ publicWidget.registry.websiteSlidesCategoryAdd = publicWidget.Widget.extend({
     // Private
     //--------------------------------------------------------------------------
 
-    _openDialog: function (channelId) {
-        new CategoryAddDialog(this, {channelId: channelId}).open();
+    _openDialog: function () {
+        new CategoryAddDialog(this, {channelId: this.channelId, modulesToInstall: this.modulesToInstall}).open();
     },
 
     //--------------------------------------------------------------------------
@@ -72,7 +85,9 @@ publicWidget.registry.websiteSlidesCategoryAdd = publicWidget.Widget.extend({
      */
     _onAddSectionClick: function (ev) {
         ev.preventDefault();
-        this._openDialog($(ev.currentTarget).attr('channel_id'));
+        this.channelId = $(ev.currentTarget).data('channelId'),
+        this.modulesToInstall = $(ev.currentTarget).data('modulesToInstall');
+        this._openDialog();
     },
 });
 

@@ -350,6 +350,25 @@ $o-wslides-fs-side-width: 300px;
             }
         }
 
+        .o_wslides_slide_pulse {
+            animation: slidePulse .6s linear normal;
+        }
+
+        @keyframes slidePulse {
+            0%{
+                box-shadow: 0 0 0 0 rgba(23, 162, 184, .5), 0 0 0 0 rgba(23, 162, 184, .5);
+            }
+            40%{
+                box-shadow: 0 0 0 10px rgba(23, 162, 184, 0), 0 0 0 6px rgba(23, 162, 184, .5);
+            }
+            80%{
+                box-shadow: 0 0 0 10px rgba(23, 162, 184, 0), 0 0 0 6px rgba(23, 162, 184, 0);
+            }
+            100%{
+                box-shadow: 0 0 0 0 rgba(23, 162, 184, 0), 0 0 0 6px rgba(23, 162, 184, 0);
+            }
+        }
+
         .o_text_link {
             text-decoration: none!important;
 

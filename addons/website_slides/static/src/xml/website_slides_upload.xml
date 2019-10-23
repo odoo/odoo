@@ -208,4 +208,84 @@
             </div>
         </div>
     </t>
+
+    <t t-name="website.slide.list.category.item">
+        <li class="o_wslides_slide_list_category o_wslides_js_list_item mb-2" t-att-data-slide-id="widget.category.id" t-att-data-category-id="widget.category.id">
+            <div t-att-data-category-id="widget.category.id"
+                    class="o_wslides_slide_list_category_header position-relative d-flex justify-content-between align-items-center mt8 o_wslides_js_category bg-white shadow-sm border-bottom-0">
+                <div class="d-flex align-items-center pl-3 o_wslides_slides_list_drag">
+                    <div class="o_wslides_slides_list_drag py-2 pr-3">
+                        <i class="fa fa-bars"/>
+                    </div>
+                    <span  t-field="widget.category.name" t-esc="widget.category.name"/>
+                    <small t-if="widget.category.slides" class="ml-1 text-muted category-empty" t-att-data-category-id="widget.category.id"><b>(empty)</b></small>
+                </div>
+                <div t-if="widget.channel.can_upload" class="o_text_link d-flex border-left">
+                    <a  class="o_wslides_js_slide_upload created-category px-3 py-2"
+                        role="button"
+                        aria-label="Upload Presentation"
+                        href="#"
+                        t-att-data-modules-to-install="widget.modulesToInstallString"
+                        t-att-data-channel-id="widget.channel.id"
+                        t-att-data-category-id="widget.category.id"
+                        t-att-data-can-upload="widget.channel.can_upload"
+                        t-att-data-can-publish="widget.channel.can_publish">
+                        <i class="fa fa-plus mr-1"/> <span class="d-none d-md-inline-block">Add Content</span>
+                    </a>
+                </div>
+            </div>
+            <ul t-att-data-category-id="widget.category.id" class="o_wslides_slide_list list-unstyled pb-1 border-top">
+                <li class="o_wslides_slides_list_slide o_not_editable border-0"/>
+                <li class="o_wslides_js_slides_list_empty border-0"/>
+
+                <t t-foreach="widget.category.slides" t-as="slide">
+                    <t t-call="website.slide.list.slide.item" />
+                </t>
+            </ul>
+        </li>
+    </t>
+
+    <t t-name="website.slide.list.slide.item">
+        <li t-att-data-slide-id="widget.slide.id" t-att-data-category-id="widget.slide.category_id" class="o_wslides_slides_list_slide o_wslides_js_list_item o_wslides_slide_pulse  bg-white-50 border-top-0 d-flex align-items-center pl-2">
+            <div class=" o_wslides_slides_list_drag border-right p-2">
+                <i class="fa fa-bars mr-2"></i>
+            </div>
+            <t t-call="website.slide.icon">
+                <t t-set="slide" t-value="widget.slide"/>
+            </t>
+            <div class="text-truncate mr-auto">
+                <a class="o_wslides_js_slides_list_slide_link" t-att-href="'/slides/slide/' + widget.slide.slug +'?fullscreen=1'">
+                    <span t-esc="widget.slide.name"/>
+                </a>
+            </div>
+
+            <div class="d-flex flex-row">
+                <a href="#">
+                    <span t-att-data-slide-id="widget.slide.id" class="o_wslides_js_slide_toggle_is_preview created-slide badge font-weight-normal px-2 py-1 m-1 badge-light badge-hide border">Free preview</span>
+                </a>
+                <a name="o_wslides_list_slide_add_quizz" t-att-href="'/slides/slide/' + widget.slide.slug + '?quiz_quick_create'">
+                    <span class="badge badge-light badge-hide border font-weight-normal px-2 py-1 m-1"><i class="fa fa-plus mr-1"/>Add Quiz</span>
+                </a>
+                <span class="badge badge-info badge-arrow-right font-weight-normal px-2 py-1 m-1">New</span>
+            </div>
+
+            <div class="pt-2 pb-2 border-left ml-2 mr-2 pl-2 d-flex flex-row align-items-center o_wslides_slides_list_slide_controls">
+                <i class="check-done fa fa-circle-o text-500 px-2"></i>
+                <span class="d-none d-md-flex">
+                    <a class="px-2 o_text_link text-primary" target="_blank" t-att-href="widget.slide.edit_link"><span class="fa fa-pencil"/></a>
+                    <a href="#" t-att-data-slide-id="widget.slide.id" class="o_text_link text-danger px-2 o_wslides_js_slide_archive created-slide"><span class="fa fa-trash"/></a>
+                </span>
+            </div>
+        </li>
+    </t>
+
+    <t t-name="website.slide.icon">
+        <i t-if="slide.slide_type == 'document'" class="fa fa-file-pdf-o py-2 mx-2"></i>
+        <i t-if="slide.slide_type == 'presentation'" class="fa fa-file-pdf-o py-2 mx-2"></i>
+        <i t-if="slide.slide_type == 'infographic'" class="fa fa-file-picture-o py-2 mx-2"></i>
+        <i t-if="slide.slide_type == 'video'" class="fa fa-play-circle py-2 mx-2"></i>
+        <i t-if="slide.slide_type == 'link'" class="fa fa-file-code-o py-2 mx-2"></i>
+        <i t-if="slide.slide_type == 'webpage'" class="fa fa-file-text py-2 mx-2"></i>
+        <i t-if="slide.slide_type == 'quiz'" class="fa fa-question-circle py-2 mx-2"></i>
+    </t>
 </templates>

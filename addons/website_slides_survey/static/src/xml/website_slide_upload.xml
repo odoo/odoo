@@ -28,4 +28,10 @@
             </form>
         </div>
     </t>
+
+    <t t-extend="website.slide.icon">
+        <t t-jquery=".fa-question-circle" t-operation="after">
+            <i t-if="slide.slide_type == 'certification'" class="fa fa-trophy py-2 mx-2"></i>
+        </t>
+    </t>
 </template>

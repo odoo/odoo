@@ -967,17 +967,21 @@ class WebsiteSlides(WebsiteProfile):
             'can_create': can_create,
         }
 
-    @http.route('/slides/category/add', type="http", website=True, auth="user")
+    @http.route('/slides/category/add', type="json", website=True, auth="user")
     def slide_category_add(self, channel_id, name):
         """ Adds a category to the specified channel. Slide is added at the end
         of slide list based on sequence. """
-        channel = request.env['slide.channel'].browse(int(channel_id))
-        if not channel.can_upload or not channel.can_publish:
-            raise werkzeug.exceptions.NotFound()
-
-        request.env['slide.slide'].create(self._get_new_slide_category_values(channel, name))
-
-        return werkzeug.utils.redirect("/slides/%s" % (slug(channel)))
+        channel = self._check_channel_rights(int(channel_id))
+        res = {
+            'channel': {
+                'id': channel.id,
+                'channel_type': channel.channel_type,
+                'can_publish': channel.can_publish,
+                'can_upload': channel.can_upload
+            },
+        }
+        res.update(self._fetch_or_create_slide_category(channel, name=name))
+        return res
 
     # --------------------------------------------------
     # SLIDE.UPLOAD
@@ -1009,39 +1013,96 @@ class WebsiteSlides(WebsiteProfile):
             if (file_size / 1024.0 / 1024.0) > 25:
                 return {'error': _('File is too big. File size cannot exceed 25MB')}
 
-        values = dict((fname, post[fname]) for fname in self._get_valid_slide_post_values() if post.get(fname))
+        values = self._set_slide_create_values(post)
 
-        # handle exception during creation of slide and sent error notification to the client
+        channel = self._check_channel_rights(values['channel_id'])
+
+        category_id = None
+        category_name = None
+        if post.get('category_id'):
+            category_id = post.get('category_id')[0]
+            category_name = post['category_id'][1]['name'] if category_id == 0 else None
+
+        # handle creation of new categories on the fly
+        category_data = self._fetch_or_create_slide_category(channel, category_id, category_name)
+
+        # create slide itself
+        slide = self._create_slide(values, channel.can_publish)
+
+        # In case of a training channel, the javascript uses the dom order to call the /dataset/resequence method.
+        # Considering the differences in display and ordering between channels of types training and documentation,
+        # it was decided to keep using the custom server-side resenquencing for documentation channel to prevent having over-complicated bloated JS.
+        # Hence why we do the following:
+        if channel.channel_type == 'documentation':
+            channel._resequence_slides(slide, category_data['category']['id'])
+
+        action_id = request.env.ref('website_slides.slide_slide_action').id
+
+        res = {
+            'url': self._get_slide_redirect_url(slide, channel, action_id),
+            'channel': {
+                'id': channel.id,
+                'channel_type': channel.channel_type,
+                'can_publish': channel.can_publish,
+                'can_upload': channel.can_upload
+            },
+            'slide': {
+                'id': slide.id,
+                'category_id': category_data['category']['id'],
+                'name': slide.name,
+                'slide_type': slide.slide_type,
+                'slug': slug(slide),
+                'is_preview': slide.is_preview,
+                'website_published': slide.website_published,
+                'action': action_id,
+                'edit_link': '/web#id=%s&action=%s&model=slide.slide&view_type=form' % (slide.id, action_id)
+            },
+        }
+
+        res.update(category_data)
+
+        return res
+
+    def _check_channel_rights(self, channel_id):
+        # Handle exception during creation of slide and sent error notification to the client
         # otherwise client slide create dialog box continue processing even server fail to create a slide
         try:
-            channel = request.env['slide.channel'].browse(values['channel_id'])
-            can_upload = channel.can_upload
-            can_publish = channel.can_publish
+            channel = request.env['slide.channel'].browse(channel_id)
         except UserError as e:
             _logger.error(e)
             return {'error': e.args[0]}
         else:
-            if not can_upload:
+            if not channel.can_upload:
                 return {'error': _('You cannot upload on this channel.')}
+            else:
+                return channel
+
+    def _set_slide_create_values(self, post):
+        values = dict((fname, post[fname]) for fname in self._get_valid_slide_post_values() if post.get(fname))
 
         if post.get('duration'):
             # minutes to hours conversion
             values['completion_time'] = int(post['duration']) / 60
 
-        category = False
-        # handle creation of new categories on the fly
-        if post.get('category_id'):
-            category_id = post['category_id'][0]
-            if category_id == 0:
-                category = request.env['slide.slide'].create(self._get_new_slide_category_values(channel, post['category_id'][1]['name']))
-                values['sequence'] = category.sequence + 1
-            else:
-                category = request.env['slide.slide'].browse(category_id)
-                values.update({
-                    'sequence': request.env['slide.slide'].browse(post['category_id'][0]).sequence + 1
-                })
+        return values
 
-        # create slide itself
+    def _fetch_or_create_slide_category(self, channel, category_id=0, name=None):
+        category = request.env['slide.slide']
+        category_created = False
+        if category_id and not category_id == 0:
+            category = request.env['slide.slide'].browse(category_id)
+        elif category_id == 0:
+            category = request.env['slide.slide'].create(self._get_new_slide_category_values(channel, name))
+            category_created = True
+        return {
+            'category_created': category_created,
+            'category': {
+                'id': category.id,
+                'name': category.name
+            }
+        }
+
+    def _create_slide(self, values, can_publish):
         try:
             values['user_id'] = request.env.uid
             values['is_published'] = values.get('is_published', False) and can_publish
@@ -1052,21 +1113,17 @@ class WebsiteSlides(WebsiteProfile):
         except Exception as e:
             _logger.error(e)
             return {'error': _('Internal server error, please try again later or contact administrator.\nHere is the error message: %s') % e}
+        return slide
 
-        # ensure correct ordering by re sequencing slides in front-end (backend should be ok thanks to list view)
-        channel._resequence_slides(slide, force_category=category)
-
+    def _get_slide_redirect_url(self, slide, channel, action_id):
         redirect_url = "/slides/slide/%s" % (slide.id)
         if channel.channel_type == "training" and not slide.slide_type == "webpage":
             redirect_url = "/slides/%s" % (slug(channel))
         if slide.slide_type == 'webpage':
             redirect_url += "?enable_editor=1"
-        return {
-            'url': redirect_url,
-            'channel_type': channel.channel_type,
-            'slide_id': slide.id,
-            'category_id': slide.category_id
-        }
+        if slide.slide_type == "quiz":
+            redirect_url = '/web#id=%s&action=%s&model=slide.slide&view_type=form' % (slide.id, action_id)
+        return redirect_url
 
     def _get_valid_slide_post_values(self):
         return ['name', 'url', 'tag_ids', 'slide_type', 'channel_id', 'is_preview',
