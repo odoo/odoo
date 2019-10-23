@@ -483,7 +483,16 @@ Some conversions don't match the pattern:
 The default configuration file is :file:`{$HOME}/.odoorc` which
 can be overridden using :option:`--config <odoo-bin -c>`. Specifying
 :option:`--save <odoo-bin -s>` will save the current configuration state back
-to that file.
+to that file. The configuration items relative to the command-line are to be
+specified in the section ``[options]``.
+
+Here is a sample file:
+
+.. code-block:: ini
+
+   [options]
+   db_user=odoo
+   dbfilter=odoo
 
 .. _jinja2: http://jinja.pocoo.org
 .. _regular expression: https://docs.python.org/3/library/re.html
