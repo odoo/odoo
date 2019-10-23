@@ -6,7 +6,6 @@ var core = require('web.core');
 var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
 var weWidgets = require('wysiwyg.widgets');
-var websiteNavbarData = require('website.navbar');
 var ColorPaletteDialog = require('web_editor.ColorPalette').ColorPaletteDialog;
 const ColorpickerDialog = require('web.ColorpickerDialog');
 
@@ -107,11 +106,10 @@ var QuickEdit = Widget.extend({
     },
 });
 
-var ThemeCustomizeDialog = Dialog.extend({
-    xmlDependencies: (Dialog.prototype.xmlDependencies || [])
-        .concat(['/website/static/src/xml/website.editor.xml']),
+var ThemeCustomizationMenu = Widget.extend({
+    xmlDependencies: ['/website/static/src/xml/website.editor.xml'],
 
-    template: 'website.theme_customize',
+    className: 'd-flex flex-column align-items-start o_theme_customization_menu p-2',
     events: {
         'change .o_theme_customize_option_input': '_onChange',
         'click .checked .o_theme_customize_option_input[type="radio"]': '_onChange',
@@ -124,14 +122,8 @@ var ThemeCustomizeDialog = Dialog.extend({
     /**
      * @constructor
      */
-    init: function (parent, options) {
-        options = options || {};
-        this._super(parent, _.extend({
-            title: _t("Customize Theme"),
-            buttons: [],
-        }, options));
-
-        this.defaultTab = options.tab || 0;
+    init: function (parent) {
+        this._super(...arguments);
         this.fontVariables = [];
     },
     /**
@@ -156,69 +148,19 @@ var ThemeCustomizeDialog = Dialog.extend({
      * @override
      */
     start: function () {
-        var self = this;
-
         this.PX_BY_REM = parseFloat($(document.documentElement).css('font-size'));
-
-        this.$modal.addClass('o_theme_customize_modal');
-        this.$modal.find('.modal-footer').append($('<a/>', {
-            href: '/web#action=website.theme_install_kanban_action',
-            text: _t("Choose another theme..."),
-        }));
 
         this.style = window.getComputedStyle(document.documentElement);
         this.nbFonts = parseInt(this.style.getPropertyValue('--number-of-fonts'));
         var googleFontsProperty = this.style.getPropertyValue('--google-fonts').trim();
         this.googleFonts = googleFontsProperty ? googleFontsProperty.split(/\s*,\s*/g) : [];
 
-        var $tabs;
-        var loadDef = this._loadViews().then(function (data) {
-            self._generateDialogHTML(data);
-            $tabs = self.$('[data-toggle="tab"]');
-
-            // Hide the tab navigation if only one tab
-            if ($tabs.length <= 1) {
-                $tabs.closest('.nav').addClass('d-none');
-            }
+        var loadDef = this._loadViews().then(data => {
+            this._generateDialogHTML(data);
+            this._removeDuplicateColors();
         });
 
-        // Enable the first option tab or the given default tab
-        this.opened().then(function () {
-            $tabs.eq(self.defaultTab).tab('show');
-
-            // Hack to hide primary/secondary if they are equal to alpha/beta
-            // (this is the case with default values but not in some themes).
-            var $primary = self.$('.o_theme_customize_color[data-color="primary"]');
-            var $alpha = self.$('.o_theme_customize_color[data-color="alpha"]');
-            var $secondary = self.$('.o_theme_customize_color[data-color="secondary"]');
-            var $beta = self.$('.o_theme_customize_color[data-color="beta"]');
-
-            var sameAlphaPrimary = $primary.css('background-color') === $alpha.css('background-color');
-            var sameBetaSecondary = $secondary.css('background-color') === $beta.css('background-color');
-
-            if (!sameAlphaPrimary) {
-                $alpha.prev().text(_t("Extra Color"));
-            }
-            if (!sameBetaSecondary) {
-                $beta.prev().text(_t("Extra Color"));
-            }
-
-            $primary = $primary.closest('.o_theme_customize_option');
-            $alpha = $alpha.closest('.o_theme_customize_option');
-            $secondary = $secondary.closest('.o_theme_customize_option');
-            $beta = $beta.closest('.o_theme_customize_option');
-
-            $primary.toggleClass('d-none', sameAlphaPrimary);
-            $secondary.toggleClass('d-none', sameBetaSecondary);
-
-            if (!sameAlphaPrimary && sameBetaSecondary) {
-                $beta.insertBefore($alpha);
-            } else if (sameAlphaPrimary && !sameBetaSecondary) {
-                $secondary.insertAfter($alpha);
-            }
-        });
-
-        return Promise.all([this._super.apply(this, arguments), loadDef]);
+        return Promise.all([this._super(...arguments), loadDef]);
     },
 
     //--------------------------------------------------------------------------
@@ -270,38 +212,21 @@ var ThemeCustomizeDialog = Dialog.extend({
      */
     _generateDialogHTML: function (data) {
         var self = this;
-        var $contents = this.$el.children('content');
+        var $contents = $(core.qweb.render('website.theme_customize')).children('content');
         if ($contents.length === 0) {
             return;
         }
 
-        $contents.remove();
-        this.$el.append(core.qweb.render('website.theme_customize_modal_layout'));
-        var $navLinksContainer = this.$('.nav');
-        var $navContents = this.$('.tab-content');
-
         _.each($contents, function (content) {
-            var $content = $(content);
+            const $content = $(content);
+            const contentID = _.uniqueId('content-');
 
-            var contentID = _.uniqueId('content-');
-
-            // Build the nav tab for the content
-            $navLinksContainer.append($('<li/>', {
-                class: 'nav-item mb-1',
-            }).append($('<a/>', {
-                href: '#' + contentID,
-                class: 'nav-link',
-                'data-toggle': 'tab',
-                text: $content.attr('string'),
-            })));
-
-            // Build the tab pane for the content
-            var $navContent = $(core.qweb.render('website.theme_customize_modal_content', {
+            const $menuSection = $(core.qweb.render('website.theme_customize_section', {
                 id: contentID,
-                title: $content.attr('title'),
+                title: $content.attr('string'),
             }));
-            $navContents.append($navContent);
-            var $optionsContainer = $navContent.find('.o_options_container');
+            self.$el.append($menuSection);
+            var $optionsContainer = $menuSection.find('.o_options_container');
 
             // Process content items
             _processItems($content.children(), $optionsContainer, false);
@@ -350,7 +275,7 @@ var ThemeCustomizeDialog = Dialog.extend({
                         }
 
                         // Build the options template
-                        $element = $(core.qweb.render('website.theme_customize_modal_option', _.extend({
+                        $element = $(core.qweb.render('website.theme_customize_menu_option', _.extend({
                             alone: alone,
                             name: xmlid === undefined && widgetName !== 'auto' ? _.uniqueId('option-') : optionsName,
                             id: $item.attr('id') || _.uniqueId('o_theme_customize_input_id_'),
@@ -380,7 +305,7 @@ var ThemeCustomizeDialog = Dialog.extend({
                         break;
 
                     case 'LIST':
-                        $element = $('<div/>', {class: 'py-1 px-2 o_theme_customize_option_list'});
+                        $element = $('<div/>', {class: 'py-1 o_theme_customize_option_list'});
                         _processItems($item.children(), $element, false);
                         break;
 
@@ -418,6 +343,21 @@ var ThemeCustomizeDialog = Dialog.extend({
                         })));
                         break;
 
+                    case 'A':
+                        $element = $item.clone();
+                        $element.on('click', (ev) => {
+                            ev.preventDefault();
+                            Dialog.confirm(self, _t("Switching theme cannot be done directly from edit mode, click ok to save your current changes and go to the theme selection page."), {
+                                confirm_callback: () => self.trigger_up('request_save', {
+                                    reload: false,
+                                    onSuccess: function () {
+                                        window.location.href = ev.target.href;
+                                    },
+                                }),
+                            });
+                        });
+                        break;
+
                     default:
                         _processItems($item.children(), $container, false);
                         return;
@@ -425,7 +365,7 @@ var ThemeCustomizeDialog = Dialog.extend({
 
                 if ($container.hasClass('form-row')) {
                     var $col = $('<div/>', {
-                        class: _.str.sprintf('col-%s', $item.data('col') || 6),
+                        class: _.str.sprintf('col-%s', $item.data('col') || 12),
                     });
 
                     if (item.tagName === 'LIST') {
@@ -621,6 +561,42 @@ var ThemeCustomizeDialog = Dialog.extend({
         });
     },
     /**
+     * Hides primary/secondary if they are equal to alpha/beta
+     * (this is the case with default values but not in some themes).
+     *
+     * @private
+     */
+    _removeDuplicateColors: function () {
+        var $primary = this.$el.find('.o_theme_customize_color[data-color="primary"]');
+        var $alpha = this.$el.find('.o_theme_customize_color[data-color="alpha"]');
+        var $secondary = this.$el.find('.o_theme_customize_color[data-color="secondary"]');
+        var $beta = this.$el.find('.o_theme_customize_color[data-color="beta"]');
+
+        var sameAlphaPrimary = $primary.css('background-color') === $alpha.css('background-color');
+        var sameBetaSecondary = $secondary.css('background-color') === $beta.css('background-color');
+
+        if (!sameAlphaPrimary) {
+            $alpha.prev().text(_t("Extra Color"));
+        }
+        if (!sameBetaSecondary) {
+            $beta.prev().text(_t("Extra Color"));
+        }
+
+        $primary = $primary.closest('.o_theme_customize_option');
+        $alpha = $alpha.closest('.o_theme_customize_option');
+        $secondary = $secondary.closest('.o_theme_customize_option');
+        $beta = $beta.closest('.o_theme_customize_option');
+
+        $primary.toggleClass('d-none', sameAlphaPrimary);
+        $secondary.toggleClass('d-none', sameBetaSecondary);
+
+        if (!sameAlphaPrimary && sameBetaSecondary) {
+            $beta.insertBefore($alpha);
+        } else if (sameAlphaPrimary && !sameBetaSecondary) {
+            $secondary.insertAfter($alpha);
+        }
+    },
+    /**
      * @private
      */
     _setAuto: function ($autoData) {
@@ -711,17 +687,37 @@ var ThemeCustomizeDialog = Dialog.extend({
     _updateStyle: function (enable, disable, reload) {
         var self = this;
 
-        var $loading = $('<i/>', {class: 'fa fa-refresh fa-spin'});
-        this.$modal.find('.modal-title').append($loading);
-
         if (reload || config.isDebug('assets')) {
-            window.location.href = $.param.querystring('/website/theme_customize_reload', {
-                href: window.location.href,
-                enable: (enable || []).join(','),
-                disable: (disable || []).join(','),
-                tab: this.$('.nav-link.active').parent().index(),
+            return new Promise(resolve => {
+                const confirm = Dialog.confirm(self, _t("This change needs to reload the page, this will save all your changes and reload the page, are you sure you want to proceed?") +
+                    (config.isDebug('assets') ? _t(" It appears you are in debug=assets mode, all theme customization options require a page reload in this mode.") : ''), {
+                    confirm_callback: () => resolve(true),
+                });
+                confirm.on('closed', self, () => resolve(false));
+            }).then(save => {
+                if (!save) {
+                    if (this.$lastToggled.attr('type') === 'checkbox') {
+                        this.$lastToggled.prop('checked', !this.$lastToggled.prop('checked'));
+                    }
+                    return;
+                }
+                self.trigger_up('request_save', {
+                    reload: false,
+                    onSuccess: () => {
+                        this._rpc({
+                            route: '/website/theme_customize',
+                            params: {
+                                'enable': enable,
+                                'disable': disable,
+                                'get_bundle': true,
+                            },
+                        }).then(() => {
+                            window.location.href = window.location.origin + window.location.pathname + '?enable_editor=1';
+                        });
+                    },
+                });
+                return new Promise(resolve => {});
             });
-            return Promise.resolve();
         }
 
         return this._rpc({
@@ -762,10 +758,8 @@ var ThemeCustomizeDialog = Dialog.extend({
                 return linksLoaded;
             });
             return Promise.all(defs).then(function () {
-                $loading.remove();
                 $allLinks.remove();
             }).guardedCatch(function () {
-                $loading.remove();
                 $allLinks.remove();
             });
         }).then(function () {
@@ -838,6 +832,7 @@ var ThemeCustomizeDialog = Dialog.extend({
      * @param {Event} ev
      */
     _onChange: function (ev) {
+        this.$lastToggled = $(ev.target);
         var self = this;
 
         // Checkout the option that changed
@@ -957,43 +952,5 @@ var ThemeCustomizeDialog = Dialog.extend({
     },
 });
 
-var ThemeCustomizeMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
-    actions: _.extend({}, websiteNavbarData.WebsiteNavbarActionWidget.prototype.actions || {}, {
-        'customize_theme': '_openThemeCustomizeDialog',
-    }),
-
-    /**
-     * Automatically opens the theme customization dialog if the corresponding
-     * hash is in the page URL.
-     *
-     * @override
-     */
-    start: function () {
-        if ((window.location.hash || '').indexOf('theme=true') > 0) {
-            var tab = window.location.hash.match(/tab=(\d+)/);
-            this._openThemeCustomizeDialog(tab ? tab[1] : false);
-            window.location.hash = '';
-        }
-        return this._super.apply(this, arguments);
-    },
-
-    //--------------------------------------------------------------------------
-    // Actions
-    //--------------------------------------------------------------------------
-
-    /**
-     * Instantiates and opens the theme customization dialog.
-     *
-     * @private
-     * @param {string} tab
-     * @returns {Promise}
-     */
-    _openThemeCustomizeDialog: function (tab) {
-        return new ThemeCustomizeDialog(this, {tab: tab}).open();
-    },
-});
-
-websiteNavbarData.websiteNavbarRegistry.add(ThemeCustomizeMenu, '#theme_customize');
-
-return ThemeCustomizeDialog;
+return ThemeCustomizationMenu;
 });

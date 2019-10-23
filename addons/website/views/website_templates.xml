@@ -412,6 +412,9 @@
         -> data-col (optional, default 6) = bootstrap column size for the option
                 (ignored for options in a <list/>)
 
+    <a>: Declares a link, because this leaves the page, it will prompt the user
+            to confirm that they're leaving.
+
     Other elements will be ignored and their children will be processed as if
     that element was omitted, except that those children will be considered as
     in a new set of option. That allows to wrap an option in a fake element to
@@ -422,8 +425,12 @@
 -->
 <template id="theme_customize">
     <div>
+        <!-- Switch theme button -->
+        <content id="theme_customize_content_switch_theme">
+             <a class="btn btn-primary" href="/web#action=website_theme_install.theme_install_kanban_action">Switch theme</a>
+        </content>
         <!-- Color options -->
-        <content id="theme_customize_content_colors" string="Colors" title="Choose the theme colors">
+        <content id="theme_customize_content_colors" string="Colors">
             <list string="Main">
                 <opt data-widget="color" data-color-type="theme" data-color="primary" string="Primary"/>
                 <opt data-widget="color" data-color-type="theme" data-color="secondary" string="Secondary"/>
@@ -456,7 +463,7 @@
         </content>
 
         <!-- Menu options -->
-        <content id="theme_customize_content_navbar" string="Navbar" title="Choose your navbar">
+        <content id="theme_customize_content_navbar" string="Navbar">
             <list string="Main Layout">
                 <checkbox><opt data-xmlid="website.affix_top_menu" data-reload="/"/></checkbox>
                 <checkbox><opt data-xmlid="portal.portal_show_sign_in" data-reload="/"/></checkbox>
@@ -469,7 +476,7 @@
         </content>
 
         <!-- Layout Options -->
-        <content id="theme_customize_content_layout" string="Layout" title="Choose your layout">
+        <content id="theme_customize_content_layout" string="Layout">
             <list string="Body">
                 <opt string="Full" data-xmlid="" data-icon="/website/static/src/img/options/layout-full.png"/>
                 <opt id="option_layout_boxed" string="Boxed" data-xmlid="website.option_layout_boxed_variables" data-icon="/website/static/src/img/options/layout-boxed.png"/>
@@ -482,7 +489,7 @@
         </content>
 
         <!-- Font options -->
-        <content id="theme_customize_content_fonts" string="Fonts" title="Choose your fonts">
+        <content id="theme_customize_content_fonts" string="Fonts">
             <list string="Title">
                 <fontselection data-variable="headings-font-number"/>
             </list>

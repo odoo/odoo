@@ -4,48 +4,7 @@
     }
 }
 
-.modal.o_theme_customize_modal {
-    .modal-dialog {
-        @include o-position-absolute(0, 2%);
-        width: 96%;
-        max-width: 550px;
-    }
-    .modal-header {
-        background-color: $o-brand-odoo;
-        color: white;
-        border-radius: 0;
-
-        * {
-            color: inherit;
-        }
-    }
-
-    .close:hover, .close:focus {
-        color: white;
-    }
-
-    .nav {
-        padding: 0;
-
-        .nav-item {
-            background-color: $o-brand-lightsecondary;
-
-            .nav-link {
-                color: $o-main-text-color;
-
-                &.active {
-                    font-weight: bold;
-                    background-color: white;
-                    border: 1px solid #d9d7d7;
-                    border-left: 1px solid #333333;
-                }
-                &:hover, &:focus {
-                    text-decoration: none;
-                }
-            }
-        }
-    }
-
+.o_theme_customization_menu {
     .dropdown-menu {
         position: static !important;
         transform: none !important;
@@ -73,7 +32,6 @@
             width: 100%;
             min-height: 24px;
             margin: 0;
-            padding: 8px;
             text-align: center;
             font-size: 14px;
             line-height: 1;
@@ -90,14 +48,9 @@
                 justify-content: flex-start;
             }
         }
-        &:not(.dropdown-item) label {
-            border: 2px solid transparent;
-            background-color: $o-brand-lightsecondary;
-
-            &.checked {
-                border-color: $o-brand-odoo;
-                color: $o-brand-odoo;
-            }
+        &:not(.dropdown-item) label.checked {
+            border: 2px solid $o-brand-odoo;
+            color: $o-brand-odoo;
         }
 
         &.o_theme_customize_with_widget {
@@ -115,10 +68,9 @@
 
     .o_theme_customize_color {
         position: relative;
-        width: 30px;
-        height: 20px;
+        width: 1rem;
+        height: 1rem;
         margin-left: auto;
-        border: 1px solid black;
 
         &::before, &::after {
             content: "";
@@ -169,10 +121,6 @@
         position: absolute;
         clip: rect(0, 0, 0, 0);
         pointer-events: none;
-    }
-
-    .o_theme_customize_option_list {
-        box-shadow: 0 0 40px 0 rgba(0, 0, 0, 0.05);
     }
 
     .o_theme_customize_dropdown_btn {
