@@ -420,7 +420,7 @@ class Channel(models.Model):
             create_values = {
                 'body_html': view.render({'channel': self, 'partner': partner}, engine='ir.qweb', minimal_qcontext=True),
                 'subject': _("Guidelines of channel %s") % self.name,
-                'email_from': partner.company_id.catchall or partner.company_id.email,
+                'email_from': partner.company_id.catchall_formatted or partner.company_id.email,
                 'recipient_ids': [(4, partner.id)]
             }
             mail = self.env['mail.mail'].create(create_values)
