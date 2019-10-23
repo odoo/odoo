@@ -655,10 +655,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         """ Deprecated method to initialize the model. """
         pass
 
-    @api.model
-    @ormcache()
     def _is_an_ordinary_table(self):
-        return tools.table_kind(self.env.cr, self._table) == 'r'
+        return self.pool.is_an_ordinary_table(self)
 
     def __ensure_xml_id(self, skip=False):
         """ Create missing external ids for records in ``self``, and return an

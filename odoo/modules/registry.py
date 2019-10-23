@@ -109,6 +109,7 @@ class Registry(Mapping):
         self._init = True
         self._assertion_report = assertion_report.assertion_report()
         self._fields_by_model = None
+        self._ordinary_tables = None
         self._post_init_queue = deque()
 
         # modules fully loaded (maintained during init phase by `loading` module)
@@ -315,6 +316,8 @@ class Registry(Mapping):
             model._auto_init()
             model.init()
 
+        self._ordinary_tables = None
+
         while self._post_init_queue:
             func = self._post_init_queue.popleft()
             func()
@@ -362,6 +365,24 @@ class Registry(Mapping):
         """
         for model in self.models.values():
             model.clear_caches()
+
+    def is_an_ordinary_table(self, model):
+        """ Return whether the given model has an ordinary table. """
+        if self._ordinary_tables is None:
+            cr = model.env.cr
+            query = """
+                SELECT c.relname
+                  FROM pg_class c
+                  JOIN pg_namespace n ON (n.oid = c.relnamespace)
+                 WHERE c.relname IN %s
+                   AND c.relkind = 'r'
+                   AND n.nspname = 'public'
+            """
+            tables = tuple(m._table for m in self.models.values())
+            cr.execute(query, [tables])
+            self._ordinary_tables = {row[0] for row in cr.fetchall()}
+
+        return model._table in self._ordinary_tables
 
     def setup_signaling(self):
         """ Setup the inter-process signaling on this registry. """
