@@ -119,6 +119,12 @@ var AbstractThread = Class.extend(Mixins.EventDispatcherMixin, {
         return !_.isEmpty(this.getMessages());
     },
     /**
+     * @return {boolean}
+     */
+    hasOutOfOffice() {
+        return !!(this.getOutOfOfficeMessage() || this.getOutOfOfficeInfo());
+    },
+    /**
      * States whether this thread is compatible with the 'seen' feature.
      * By default, threads do not have thsi feature active.
      * @see {mail.model.ThreadSeenMixin} to enable this feature on a thread.

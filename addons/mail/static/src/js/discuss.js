@@ -940,6 +940,7 @@ var Discuss = AbstractAction.extend({
     _setThread: function (threadID) {
         var self = this;
 
+        this.$('.o_out_of_office').remove();
         // Store scroll position and composer state of the previous thread
         this._storeThreadState();
 
@@ -977,6 +978,13 @@ var Discuss = AbstractAction.extend({
             // selected message to prevent sending messages as reply to that
             // message
             self._unselectMessage();
+
+            if (self._thread.hasOutOfOffice()) {
+                const $outOfOffice = $(QWeb.render('mail.thread.OutOfOffice', {
+                    thread: self._thread
+                }));
+                $outOfOffice.prependTo(self.$('.o_mail_discuss_content'));
+            }
 
             self.action_manager.do_push_state({
                 action: self.action.id,
