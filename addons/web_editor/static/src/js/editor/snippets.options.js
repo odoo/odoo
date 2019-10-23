@@ -1140,11 +1140,25 @@ registry.colorpicker = SnippetOption.extend({
         color_leave: '_onColorLeft',
         color_reset: '_onColorReset',
     },
+    events: {
+        'click we-select, we-button': '_onToggleColorPalette',
+    },
 
     /**
      * @override
      */
     start: function () {
+        // Build option UI controls
+        const groupEl = this.el.querySelector('we-group');
+        this.colorBtnEl = document.createElement('we-button');
+        this.el.querySelector('we-title').appendChild(this.colorBtnEl);
+        const selectEl = document.createElement('we-select');
+        this.selectMenuEl = document.createElement('we-select-menu');
+        selectEl.appendChild(this.selectMenuEl);
+        groupEl.classList.add('snippet_color_palette');
+        groupEl.appendChild(selectEl);
+
+        // Initialise color palette
         const options = {
             $target: this.$target,
         };
@@ -1156,12 +1170,15 @@ registry.colorpicker = SnippetOption.extend({
             options.colorPrefix = this.data.colorPrefix;
         }
         this.colorPalette = new ColorPaletteWidget(this, options);
-        proms.push(this.colorPalette.appendTo(this.$el.find('we-collapse')));
+        proms.push(this.colorPalette.appendTo($(this.selectMenuEl)));
 
         return Promise.all(proms);
     },
-
+    /**
+     * @override
+     */
     onFocus: function () {
+        this._toggleColorPalette(false);
         this.colorPalette.reloadColorPalette();
     },
 
@@ -1184,11 +1201,41 @@ registry.colorpicker = SnippetOption.extend({
             this.$target.css('background-color', cssColor);
         }
     },
+    /**
+     * @override
+     */
+    _updateUI: function () {
+        this._super.apply(this, arguments);
+        this.colorBtnEl.style.backgroundColor = this.$target.css('background-color');
+    },
+    /**
+     * Display/Hide the color palette.
+     * @private
+     */
+    _toggleColorPalette: function (force) {
+        let display;
+        if (force === undefined) {
+            display = this.selectMenuEl.style.display === '' ? 'block' : '';
+        } else {
+            display = force ? 'block' : '';
+        }
+        this.selectMenuEl.style.display = display;
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * Called when the colorPalette needs to be shown/hidden
+     *
+     * @private
+     */
+    _onToggleColorPalette: function (ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        this._toggleColorPalette();
+    },
     /**
      * Called when a color button is clicked -> confirm the preview.
      *
@@ -1196,6 +1243,7 @@ registry.colorpicker = SnippetOption.extend({
      * @param {Event} ev
      */
     _onColorPicked: function () {
+        this._updateUI();
         this.$target.closest('.o_editable').trigger('content_changed');
         this.$target.trigger('background-color-event', false);
     },
@@ -1206,6 +1254,7 @@ registry.colorpicker = SnippetOption.extend({
     _onCustomColor: function (ev) {
         this._changeTargetColor(ev.data.cssColor);
         this._onColorPicked();
+        this._toggleColorPalette();
     },
     /**
      * Called when a color button is entered -> preview the background color.
@@ -1234,7 +1283,8 @@ registry.colorpicker = SnippetOption.extend({
      * @private
      */
     _onColorReset: function () {
-        this._targetColorChange('');
+        this._changeTargetColor('');
+        this._updateUI();
         this.$target.trigger('content_changed');
     },
 });

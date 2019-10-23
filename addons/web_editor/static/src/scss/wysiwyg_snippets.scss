@@ -403,6 +403,18 @@ body.editor_enable.editor_has_snippets {
                 }
             }
         }
+
+        .snippet_color_palette {
+            we-button {
+                @include o-alpha-button-preview;
+                min-height: 15px;
+                margin-left: auto;
+            }
+            we-select-menu {
+                background-color: var(--o-we-snippets-bg-color);
+                border: none;
+            }
+        }
     }
 }
 
