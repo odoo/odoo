@@ -1308,8 +1308,12 @@ QUnit.module('account', {
             mockRPC: function (route, args) {
                 if (args.model === 'account.reconcile.model' && args.method === 'search_read') {
                     assert.deepEqual(
-                        args.kwargs.domain,
-                        [['company_id', 'in', [3,4]], ['match_journal_ids', 'in', [false, 1, 2]]],
+                        args.kwargs.domain, [
+                            ['company_id', 'in', [3,4]],
+                            '|',
+                            ['match_journal_ids', '=', false],
+                            ['match_journal_ids', 'in', [1, 2]],
+                        ],
                         'The domain to get reconcile models should contain the right fields and values'
                     );
                 }

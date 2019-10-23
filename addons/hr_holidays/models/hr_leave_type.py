@@ -272,8 +272,11 @@ class HolidaysType(models.Model):
         """ Override _search to order the results, according to some employee.
         The order is the following
 
-         - allocation fixed first, then allowing allocation, then free allocation
-         - virtual remaining leaves (higher the better, so using reverse on sorted)
+         - allocation fixed (with remaining leaves),
+         - allowing allocation (with remaining leaves),
+         - no allocation,
+         - allocation fixed (without remaining leaves),
+         - allowing allocation (without remaining leaves).
 
         This override is necessary because those fields are not stored and depends
         on an employee_id given in context. This sort will be done when there
@@ -281,11 +284,18 @@ class HolidaysType(models.Model):
         to the method.
         """
         employee_id = self._get_contextual_employee_id()
-        leave_ids = super(HolidaysType, self)._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
-        if not count and not order and employee_id:
-            leaves = self.browse(leave_ids)
-            sort_key = lambda l: (l.allocation_type == 'fixed', l.allocation_type == 'fixed_allocation', l.virtual_remaining_leaves)
-            return leaves.sorted(key=sort_key, reverse=True).ids
+        post_sort = (not count and not order and employee_id)
+        leave_ids = super(HolidaysType, self)._search(args, offset=offset, limit=(None if post_sort else limit), order=order, count=count, access_rights_uid=access_rights_uid)
+        leaves = self.browse(leave_ids)
+        if post_sort:
+            sort_key = lambda l: (
+                l.allocation_type == 'fixed' and l.virtual_remaining_leaves > 0 and l.max_leaves > 0,
+                l.allocation_type == 'fixed_allocation' and l.virtual_remaining_leaves > 0 and l.max_leaves > 0,
+                l.allocation_type == 'no',
+                l.allocation_type == 'fixed',
+                l.allocation_type == 'fixed_allocation'
+            )
+            return leaves.sorted(key=sort_key, reverse=True).ids[:limit]
         return leave_ids
 
     @api.multi
