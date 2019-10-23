@@ -24,7 +24,7 @@ class WebsitePayment(http.Controller):
         }
         return request.render("payment.pay_methods", values)
 
-    @http.route(['/website_payment/pay'], type='http', auth='public', website=True)
+    @http.route(['/website_payment/pay'], type='http', auth='public', website=True, sitemap=False)
     def pay(self, reference='', amount=False, currency_id=None, acquirer_id=None, **kw):
         env = request.env
         user = env.user.sudo()
@@ -172,7 +172,7 @@ class WebsitePayment(http.Controller):
         }
 
 
-    @http.route(['/website_payment/confirm'], type='http', auth='public', website=True)
+    @http.route(['/website_payment/confirm'], type='http', auth='public', website=True, sitemap=False)
     def confirm(self, **kw):
         tx_id = int(kw.get('tx_id', 0)) or request.session.pop('website_payment_tx_id', 0)
         if tx_id:
