@@ -7,6 +7,9 @@ import logging
 import werkzeug
 import math
 
+from ast import literal_eval
+from collections import defaultdict
+
 from odoo import http, tools, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.website_profile.controllers.main import WebsiteProfile
@@ -195,22 +198,18 @@ class WebsiteSlides(WebsiteProfile):
 
     def _extract_channel_tag_search(self, **post):
         tags = request.env['slide.channel.tag']
-        for key in (_key for _key in post if _key.startswith('channel_tag_group_id_')):
-            group_id, tag_id = False, False
+        if post.get('tags'):
             try:
-                group_id = int(key.lstrip('channel_tag_group_id_'))
-                tag_id = int(post[key])
+                tag_ids = literal_eval(post['tags'])
             except:
                 pass
             else:
-                search_tag = request.env['slide.channel.tag'].search([('id', '=', tag_id), ('group_id', '=', group_id)]).exists()
-                if search_tag:
-                    tags |= search_tag
+                # perform a search to filter on existing / valid tags implicitely
+                tags = request.env['slide.channel.tag'].search([('id', 'in', tag_ids)])
         return tags
 
     def _build_channel_domain(self, base_domain, slide_type=None, my=False, **post):
         search_term = post.get('search')
-        channel_tag_id = post.get('channel_tag_id')
         tags = self._extract_channel_tag_search(**post)
 
         domain = base_domain
@@ -218,10 +217,19 @@ class WebsiteSlides(WebsiteProfile):
             domain = expression.AND([
                 domain,
                 ['|', ('name', 'ilike', search_term), ('description', 'ilike', search_term)]])
-        if channel_tag_id:
-            domain = expression.AND([domain, [('tag_ids', 'in', [channel_tag_id])]])
-        elif tags:
-            domain = expression.AND([domain, [('tag_ids', 'in', tags.ids)]])
+
+        if tags:
+            # Group by group_id
+            grouped_tags = defaultdict(list)
+            for tag in tags:
+                grouped_tags[tag.group_id].append(tag)
+
+            # OR inside a group, AND between groups.
+            group_domain_list = []
+            for group in grouped_tags:
+                group_domain_list.append([('tag_ids', 'in', [tag.id for tag in grouped_tags[group]])])
+
+            domain = expression.AND([domain, *group_domain_list])
 
         if slide_type and 'nbr_%s' % slide_type in request.env['slide.channel']:
             domain = expression.AND([domain, [('nbr_%s' % slide_type, '>', 0)]])
@@ -276,6 +284,7 @@ class WebsiteSlides(WebsiteProfile):
             'top3_users': self._get_top3_users(),
             'challenges': challenges,
             'challenges_done': challenges_done,
+            'search_tags': request.env['slide.channel.tag']
         })
 
         return request.render('website_slides.courses_home', values)
@@ -305,7 +314,8 @@ class WebsiteSlides(WebsiteProfile):
         channels = request.env['slide.channel'].search(domain, order=order)
         # channels_layouted = list(itertools.zip_longest(*[iter(channels)] * 4, fillvalue=None))
 
-        tag_groups = request.env['slide.channel.tag.group'].search(['&', ('tag_ids', '!=', False), ('website_published', '=', True)])
+        tag_groups = request.env['slide.channel.tag.group'].search(
+            ['&', ('tag_ids', '!=', False), ('website_published', '=', True)])
         search_tags = self._extract_channel_tag_search(**post)
 
         values = self._prepare_user_values(**post)
@@ -351,7 +361,7 @@ class WebsiteSlides(WebsiteProfile):
 
         if search:
             domain += [
-                '|', '|', '|',
+                '|', '|',
                 ('name', 'ilike', search),
                 ('description', 'ilike', search),
                 ('html_content', 'ilike', search)]
