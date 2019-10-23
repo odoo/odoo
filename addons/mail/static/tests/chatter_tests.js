@@ -3325,6 +3325,62 @@ QUnit.test('chatter: display suggested partners only once', async function (asse
     form.destroy();
 });
 
+QUnit.test('chatter: suggested recipients reflect saved changes', async function (assert) {
+    assert.expect(6);
+
+    this.data.partner.records[0].foo = "Marc";
+
+    let suggestedRecipients = { 2: [[2, "Marc"]] };
+
+    const form = await createView({
+        View: FormView,
+        model: 'partner',
+        res_id: 2,
+        data: this.data,
+        services: this.services,
+        arch: `
+            <form string="Partners">
+                <sheet>
+                    <field name="foo"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>`,
+        viewOptions: { mode: 'edit' },
+        async mockRPC(route, args) {
+            if (args.model === 'partner' && args.method === 'write') {
+                const partnerName = args.args[1].foo;
+                suggestedRecipients = { 2: [[2, partnerName]] };
+            }
+            if (route === '/mail/get_suggested_recipients') {
+                assert.step('get_suggested_recipients');
+                return Promise.resolve(suggestedRecipients);
+            }
+            return this._super(route, args);
+        },
+    });
+
+    await testUtils.dom.click(form.$('.o_chatter_button_new_message'));
+    assert.strictEqual(
+        form.$('div.o_composer_suggested_partners label').text().replace(/\s+/g, ''),
+        "Marc",
+        "should have the correct original recipient name");
+    assert.verifySteps(['get_suggested_recipients'],
+        'get_suggested_recipients route should be called');
+
+    await testUtils.fields.editInput(form.$('.o_field_char'), 'Bob');
+    await testUtils.dom.click(form.$('.o_form_button_save'));
+    assert.verifySteps(['get_suggested_recipients'],
+        'get_suggested_recipients route should be called');
+    assert.strictEqual(
+        form.$('div.o_composer_suggested_partners label').text().replace(/\s+/g, ''),
+        "Bob",
+        "should have the correct modified recipient name");
+
+    form.destroy();
+});
+
 QUnit.module('FieldMany2ManyTagsEmail', {
     beforeEach: function () {
         this.data = {
