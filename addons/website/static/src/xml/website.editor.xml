@@ -28,15 +28,11 @@
         </label>
     </t>
 
-    <div t-name="website.theme_customize_modal_layout" class="d-flex align-items-start">
-        <ul class="nav flex-column flex-shrink-0 w-25"/>
-        <div class="tab-content pl-3 pb-2 flex-grow-1"/>
-    </div>
-    <div t-name="website.theme_customize_modal_content" t-att-id="id" class="tab-pane">
+    <div t-name="website.theme_customize_section" t-att-id="id">
         <h5 class="mt-0"><t t-esc="title"/></h5>
         <div class="form-row justify-content-between o_options_container"/>
     </div>
-    <t t-name="website.theme_customize_modal_option">
+    <t t-name="website.theme_customize_menu_option">
         <div t-attf-class="o_theme_customize_option my-1 flex-grow-0 #{font ? 'o_theme_customize_option_font_' + font : ''} #{widget and widget != 'auto' ? 'o_theme_customize_with_widget' : ''}">
             <img t-if="icon" t-att-src="icon"/>
 

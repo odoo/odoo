@@ -384,11 +384,6 @@ class Website(Home):
 
         return True
 
-    @http.route(['/website/theme_customize_reload'], type='http', auth="public", website=True)
-    def theme_customize_reload(self, href, enable, disable, tab=0, **kwargs):
-        self.theme_customize(enable and enable.split(",") or [], disable and disable.split(",") or [])
-        return request.redirect(href + ("&theme=true" if "#" in href else "#theme=true") + ("&tab=" + tab))
-
     @http.route(['/website/make_scss_custo'], type='json', auth='user', website=True)
     def make_scss_custo(self, url, values):
         """
