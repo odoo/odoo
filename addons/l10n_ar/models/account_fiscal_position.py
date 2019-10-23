@@ -13,7 +13,7 @@ class AccountFiscalPosition(models.Model):
 
     def get_fiscal_position(self, partner_id, delivery_id=None):
         """ Take into account the partner afip responsibility in order to auto-detect the fiscal position """
-        company = self.env['res.company'].browse(self._context.get('force_company', self.env.company_id.id))
+        company = self.env['res.company'].browse(self._context.get('force_company', self.env.company.id))
         if company.country_id == self.env.ref('base.ar'):
             domain = [
                 ('auto_apply', '=', True),
