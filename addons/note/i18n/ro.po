@@ -3,15 +3,16 @@
 # * note
 # 
 # Translators:
-# Martin Trigaux, 2018
+# Martin Trigaux, 2019
+# Dorin Hongu <dhongu@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:31+0000\n"
+"POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:21+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2019\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -63,26 +64,26 @@ msgstr "Tip activitate"
 #. module: note
 #: model_terms:ir.actions.act_window,help:note.action_note_note
 msgid "Add a new personal note"
-msgstr ""
+msgstr "Adăugați o notă personală nouă"
 
 #. module: note
 #: model_terms:ir.actions.act_window,help:note.note_tag_action
 msgid "Add a new tag"
-msgstr ""
+msgstr "Adaugă o nouă etichetă"
 
 #. module: note
 #. openerp-web
 #: code:addons/note/static/src/xml/systray.xml:14
 #, python-format
 msgid "Add a note"
-msgstr ""
+msgstr "Adaugă o notă"
 
 #. module: note
 #. openerp-web
 #: code:addons/note/static/src/xml/systray.xml:6
 #, python-format
 msgid "Add new note"
-msgstr ""
+msgstr "Adaugă notă"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
@@ -92,7 +93,7 @@ msgstr "Arhivează"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Număr atașamente"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
@@ -103,6 +104,8 @@ msgstr "Dupa Categoria nota adeziva"
 #: model:ir.model.fields,help:note.field_mail_activity_type__category
 msgid "Categories may trigger specific behavior like opening calendar view"
 msgstr ""
+"Categoriile pot declanșa un comportament specific cum ar fi deschiderea "
+"vizualizării calendarului"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_mail_activity_type__category
@@ -181,12 +184,12 @@ msgstr "Persoane interesate"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Urmăritori (Canale)"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Urmăritori (Parteneri)"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
@@ -218,7 +221,7 @@ msgstr "Dacă este selectat, mesajele noi necesită atenția dumneavoastră."
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Dacă este bifată, unele mesaje au o eroare de livrare."
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_is_follower
@@ -264,7 +267,7 @@ msgstr "Întâlnire"
 #. module: note
 #: model:note.stage,name:note.note_stage_01
 msgid "Meeting Minutes"
-msgstr ""
+msgstr "Minută sedință"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_has_error
@@ -363,7 +366,7 @@ msgstr "Număr de mesaje ce necesită intervenție"
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Numărul de mesaje cu eroare de livrare"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_unread_counter
@@ -406,13 +409,13 @@ msgstr ""
 #: code:addons/note/static/src/xml/systray.xml:23
 #, python-format
 msgid "Remember..."
-msgstr ""
+msgstr "Ține minte ..."
 
 #. module: note
 #: selection:mail.activity.type,category:0
 #: model:mail.activity.type,name:note.mail_activity_data_reminder
 msgid "Reminder"
-msgstr ""
+msgstr "Memento"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_user_id
@@ -424,7 +427,7 @@ msgstr "Utilizator responsabil"
 #: code:addons/note/static/src/xml/systray.xml:25
 #, python-format
 msgid "SAVE"
-msgstr ""
+msgstr "Salvează"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__sequence
@@ -486,6 +489,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Stare bazată pe activități\n"
+"Întârziată: data scadentă este deja trecută\n"
+"Astăzi: activității pentru astăzi\n"
+"Planificate: activități viitoare."
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_tag__name
@@ -544,3 +551,13 @@ msgstr "Utilizat pentru a ordona etapele notei"
 #: model:ir.model,name:note.model_res_users
 msgid "Users"
 msgstr "Utilizatori"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__website_message_ids
+msgid "Website Messages"
+msgstr "Mesaje Website"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__website_message_ids
+msgid "Website communication history"
+msgstr "Istoric comunicare website"

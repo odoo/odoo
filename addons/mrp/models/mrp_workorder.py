@@ -63,6 +63,9 @@ class MrpWorkorder(models.Model):
     is_produced = fields.Boolean(string="Has Been Produced",
         compute='_compute_is_produced')
 
+    is_first_wo = fields.Boolean(string="Is the first WO to produce",
+        compute='_compute_is_first_wo')
+
     state = fields.Selection([
         ('pending', 'Pending'),
         ('ready', 'Ready'),
@@ -140,6 +143,11 @@ class MrpWorkorder(models.Model):
         rounding = self.production_id.product_uom_id.rounding
         self.is_produced = float_compare(self.qty_produced, self.production_id.product_qty, precision_rounding=rounding) >= 0
 
+    @api.multi
+    def _compute_is_first_wo(self):
+        for wo in self:
+            wo.is_first_wo = (wo.production_id.workorder_ids[0] == wo)
+
     @api.one
     @api.depends('time_ids.duration', 'qty_produced')
     def _compute_duration(self):
@@ -173,11 +181,18 @@ class MrpWorkorder(models.Model):
     @api.multi
     @api.depends('date_planned_finished', 'production_id.date_planned_finished')
     def _compute_color(self):
-        late_orders = self.filtered(lambda x: x.production_id.date_planned_finished and x.date_planned_finished > x.production_id.date_planned_finished)
+        late_orders = self.filtered(lambda x: x.production_id.date_planned_finished
+                                              and x.date_planned_finished
+                                              and x.date_planned_finished > x.production_id.date_planned_finished)
         for order in late_orders:
             order.color = 4
         for order in (self - late_orders):
             order.color = 2
+
+    @api.onchange('date_planned_start', 'duration_expected')
+    def _onchange_date_planned_finished(self):
+        if self.date_planned_start and self.duration_expected:
+            self.date_planned_finished = self.date_planned_start  + relativedelta(minutes=self.duration_expected)
 
     @api.onchange('qty_producing')
     def _onchange_qty_producing(self):
@@ -230,7 +245,7 @@ class MrpWorkorder(models.Model):
 
     @api.multi
     def write(self, values):
-        if ('date_planned_start' in values or 'date_planned_finished' in values) and any(workorder.state == 'done' for workorder in self):
+        if list(values.keys()) != ['time_ids'] and any(workorder.state == 'done' for workorder in self):
             raise UserError(_('You can not change the finished work order.'))
         return super(MrpWorkorder, self).write(values)
 
@@ -337,10 +352,6 @@ class MrpWorkorder(models.Model):
                 move_line.lot_produced_id = self.final_lot_id.id
                 move_line.done_wo = True
 
-        # One a piece is produced, you can launch the next work order
-        if self.next_work_order_id.state == 'pending':
-            self.next_work_order_id.state = 'ready'
-
         self.move_line_ids.filtered(
             lambda move_line: not move_line.done_move and not move_line.lot_produced_id and move_line.qty_done > 0
         ).write({
@@ -359,6 +370,7 @@ class MrpWorkorder(models.Model):
                     move_line.product_uom_qty += self.qty_producing
                     move_line.qty_done += self.qty_producing
                 else:
+                    location_dest_id = production_move.location_dest_id.get_putaway_strategy(self.product_id).id or production_move.location_dest_id.id
                     move_line.create({'move_id': production_move.id,
                              'product_id': production_move.product_id.id,
                              'lot_id': self.final_lot_id.id,
@@ -367,21 +379,21 @@ class MrpWorkorder(models.Model):
                              'qty_done': self.qty_producing,
                              'workorder_id': self.id,
                              'location_id': production_move.location_id.id,
-                             'location_dest_id': production_move.location_dest_id.id,
+                             'location_dest_id': location_dest_id,
                     })
             else:
-                production_move.quantity_done += self.qty_producing
+                production_move._set_quantity_done(self.qty_producing)
 
         if not self.next_work_order_id:
-            for by_product_move in self.production_id.move_finished_ids.filtered(lambda x: (x.product_id.id != self.production_id.product_id.id) and (x.state not in ('done', 'cancel'))):
-                if by_product_move.has_tracking != 'serial':
-                    values = self._get_byproduct_move_line(by_product_move, self.qty_producing * by_product_move.unit_factor)
-                    self.env['stock.move.line'].create(values)
-                elif by_product_move.has_tracking == 'serial':
-                    qty_todo = by_product_move.product_uom._compute_quantity(self.qty_producing * by_product_move.unit_factor, by_product_move.product_id.uom_id)
-                    for i in range(0, int(float_round(qty_todo, precision_digits=0))):
-                        values = self._get_byproduct_move_line(by_product_move, 1)
+            for by_product_move in self._get_byproduct_move_to_update():
+                    if by_product_move.has_tracking != 'serial':
+                        values = self._get_byproduct_move_line(by_product_move, self.qty_producing * by_product_move.unit_factor)
                         self.env['stock.move.line'].create(values)
+                    elif by_product_move.has_tracking == 'serial':
+                        qty_todo = by_product_move.product_uom._compute_quantity(self.qty_producing * by_product_move.unit_factor, by_product_move.product_id.uom_id)
+                        for i in range(0, int(float_round(qty_todo, precision_digits=0))):
+                            values = self._get_byproduct_move_line(by_product_move, 1)
+                            self.env['stock.move.line'].create(values)
 
         # Update workorder quantity produced
         self.qty_produced += self.qty_producing
@@ -389,6 +401,9 @@ class MrpWorkorder(models.Model):
         if self.final_lot_id:
             self.final_lot_id.use_next_on_work_order_id = self.next_work_order_id
             self.final_lot_id = False
+
+        # One a piece is produced, you can launch the next work order
+        self._start_nextworkorder()
 
         # Set a qty producing
         rounding = self.production_id.product_uom_id.rounding
@@ -402,12 +417,25 @@ class MrpWorkorder(models.Model):
             self.qty_producing = float_round(self.production_id.product_qty - self.qty_produced, precision_rounding=rounding)
             self._generate_lot_ids()
 
-        if self.next_work_order_id and self.production_id.product_id.tracking != 'none':
+        if self.next_work_order_id and self.next_work_order_id.state not in ['done', 'cancel'] and self.production_id.product_id.tracking != 'none':
             self.next_work_order_id._assign_default_final_lot_id()
 
         if float_compare(self.qty_produced, self.production_id.product_qty, precision_rounding=rounding) >= 0:
             self.button_finish()
         return True
+
+    def _get_byproduct_move_to_update(self):
+        return self.production_id.move_finished_ids.filtered(lambda x: (x.product_id.id != self.production_id.product_id.id) and (x.state not in ('done', 'cancel')))
+
+    @api.multi
+    def _start_nextworkorder(self):
+        rounding = self.product_id.uom_id.rounding
+        if self.next_work_order_id.state == 'pending' and (
+                (self.operation_id.batch == 'no' and
+                 float_compare(self.qty_production, self.qty_produced, precision_rounding=rounding) <= 0) or
+                (self.operation_id.batch == 'yes' and
+                 float_compare(self.operation_id.batch_size, self.qty_produced, precision_rounding=rounding) <= 0)):
+            self.next_work_order_id.state = 'ready'
 
     @api.multi
     def button_start(self):

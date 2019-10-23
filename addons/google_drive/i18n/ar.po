@@ -3,24 +3,23 @@
 # * google_drive
 # 
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2018
 # Mosaab Alzoubi <moceap@hotmail.com>, 2018
 # amrnegm <amrnegm.01@gmail.com>, 2018
 # Martin Trigaux, 2018
-# Osoul <baruni@osoul.ly>, 2018
-# Ghaith Gammar <g.gammar@saharaifs.net>, 2018
 # Osama Ahmaro <osamaahmaro@gmail.com>, 2018
 # Zuhair Hammadi <zuhair12@gmail.com>, 2018
 # Shaima Safar <shaima.safar@open-inside.com>, 2018
 # Yihya Hugirat <hugirat@gmail.com>, 2018
 # Ali Alrehawi <alrehawi@hotmail.com>, 2018
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
-"Last-Translator: Ali Alrehawi <alrehawi@hotmail.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:18+0000\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,21 +37,27 @@ msgid ""
 "                                - If you don't select \"Share with all users\", link of google document in \"More\" options will not appear for other users in opportunities of Sales Department.<br/>\n"
 "                                - If filter is not specified, link of google document will appear in \"More\" option for all users for all opportunities."
 msgstr ""
+"<b> لإنشاء فلتر جديد: </b> <br/>\n"
+"                                - افتح مستند أودو الذي تريد تطبيق الفلتر عليه. مثلًا: انتقل إلى الفرص وابحث في قسم المبيعات.<br/>\n"
+"                                - في واجهة العرض \"بحث\"، اختر الخيار \"حفظ الفلتر الحالي\"، وأدخل اسمًا (مثلًا: قسم المبيعات)<br/>\n"
+"                                - إذا اخترت \"مشاركة مع كافة المستخدمين\"، سيظهر رابط مستند جوجل في خيارات \"المزيد\" لكافة المستخدمين في فرص قسم المبيعات.<br/>\n"
+"                                - إذا لم تختر \"مشاركة مع كافة المستخدمين\"، فلن يظهر رابط مستند جوجل في خيارات \"المزيد\" للمستخدمين الآخرين في فرص قسم المبيعات.<br/>\n"
+"                                - إذا لم يتم تحديد الفلتر، سيظهر رابط مستند جوجل خيار \"المزيد\" لكافة المستخدمين بكافة الفرص."
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_kanban
 msgid "<strong>Active</strong>"
-msgstr ""
+msgstr "<strong>نشط</strong>"
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_kanban
 msgid "<strong>Model</strong>"
-msgstr ""
+msgstr "<strong>كائن</strong>"
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_kanban
 msgid "<strong>Template</strong>"
-msgstr ""
+msgstr "<strong>قالب</strong>"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__active
@@ -62,13 +67,13 @@ msgstr "نشط"
 #. module: google_drive
 #: model_terms:ir.actions.act_window,help:google_drive.action_google_drive_users_config
 msgid "Add a new template"
-msgstr ""
+msgstr "إضافة قالب جديد"
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:42
 #, python-format
 msgid "At least one key cannot be found in your Google Drive name pattern."
-msgstr ""
+msgstr "تعذّر العثور علي مفتاح واحد علي الأقل في نمط اسم جوجل درايف."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_res_config_settings__google_drive_authorization_code
@@ -81,6 +86,7 @@ msgid ""
 "Choose how the new google drive will be named, on google side. Eg. "
 "gdoc_%(field_name)s"
 msgstr ""
+"اختر كيفية تسمية جوجل درايف الجديد، من ناحية جوجل. مثال: gdoc_%(field_name)s"
 
 #. module: google_drive
 #: model:ir.model,name:google_drive.model_res_config_settings
@@ -101,7 +107,7 @@ msgstr "أنشئ في"
 #: code:addons/google_drive/models/google_drive.py:161
 #, python-format
 msgid "Creating google drive may only be done by one at a time."
-msgstr ""
+msgstr "يتم إنشاء جوجل درايف مرة واحدة فقط."
 
 #. module: google_drive
 #: model:ir.filters,name:google_drive.filter_partner
@@ -111,12 +117,12 @@ msgstr "العميل"
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__display_name
 msgid "Display Name"
-msgstr "اسم العرض"
+msgstr "الاسم المعروض"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__filter_id
 msgid "Filter"
-msgstr "الفرز"
+msgstr "فلتر"
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:61
@@ -128,30 +134,30 @@ msgstr "انتقل إلى لوحة الإعدادات"
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__google_drive_client_id
 msgid "Google Client"
-msgstr "عميل غوغل"
+msgstr "عميل جوجل"
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
 #: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_tree
 msgid "Google Drive Configuration"
-msgstr " اعدادات سواقة غوغل"
+msgstr "إعدادات جوجل درايف"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__name_template
 msgid "Google Drive Name Pattern"
-msgstr ""
+msgstr "نمط اسم جوجل درايف"
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
 msgid "Google Drive Templates"
-msgstr ""
+msgstr "قوالب جوجل درايف"
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:63
 #: code:addons/google_drive/models/google_drive.py:84
 #, python-format
 msgid "Google Drive is not yet configured. Please contact your administrator."
-msgstr ""
+msgstr "لم يتم إعداد جوجل درايف بعد. برجاء التوصل مع مشرفك."
 
 #. module: google_drive
 #: model:ir.model,name:google_drive.model_google_drive_config
@@ -187,6 +193,10 @@ msgid ""
 "checklist for each order in a foreign country, ... Its very easy to manage "
 "them, link them to Odoo and use them to collaborate with your employees."
 msgstr ""
+"اربط قوالب جوجل درايف الخاصة بك بأي سجل في أودو. إذا كان لديك مستندات معينة "
+"تريد أن يملأها المتعاون، مثلًا: استخدم الجداول الممتدة للتحكم في جودة منتجك "
+"أو لمراجعة قوائم الفحص لكل الأوامر الصادرة من دول أجنبية، من السهل إدارتهم، "
+"وربطهم بأودو واستخدامهم للتعاون مع موظفيك."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__model_id
@@ -197,12 +207,12 @@ msgstr "النموذج"
 #: code:addons/google_drive/models/google_drive.py:203
 #, python-format
 msgid "Please enter a valid Google Document URL."
-msgstr ""
+msgstr "برجاء إدخال رابط صالح لمستند جوجل."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__model
 msgid "Related Model"
-msgstr ""
+msgstr "الكائن ذو الصلة"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__google_drive_resource_id
@@ -215,7 +225,7 @@ msgstr "هوية المصدر"
 msgid ""
 "Something went wrong during the token generation. Please request again an "
 "authorization code ."
-msgstr ""
+msgstr "حدث خطأ أثناء إنشاء كلمة السر. الرجاء طلب رمز ترخيص مرة أخرى."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__name
@@ -236,12 +246,12 @@ msgstr "قوالب"
 #: code:addons/google_drive/models/google_drive.py:99
 #, python-format
 msgid "The Google Template cannot be found. Maybe it has been deleted."
-msgstr "قالب غوغل لم يوجد. لربما حذف."
+msgstr "تعذّر إيجاد قالب جوجل. ربما يكون حُذف."
 
 #. module: google_drive
 #: model:ir.model.fields,help:google_drive.field_res_config_settings__google_drive_uri
 msgid "The URL to generate the authorization code from Google"
-msgstr ""
+msgstr "الرابط المستخدم في إنشاء كود الترخيص من جوجل"
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
@@ -251,6 +261,10 @@ msgid ""
 "                                in the Google Drive name field, the document in your Google Drive and in Odoo attachment will be named\n"
 "                                'Deco_Addict_SO0001_Sales'."
 msgstr ""
+"يمكن لاسم المستند المرفق استخدام بيانات ثابتة أو متغيرة. للتمييز بين المستندات في\n"
+"                                جوجل درايف، استخدم الكلمات والحقول الثابتة. فمثلًا، في المثال أعلاه، إذا كتبت Deco_Addict_%(name)s_Sales\n"
+"                                في حقل اسم جوجل درايف، سيكون اسم المستند في جوجل درايف وفي مرفق أودو\n"
+"                                'Deco_Addict_SO0001_Sales'."
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:135
@@ -258,7 +272,7 @@ msgstr ""
 msgid ""
 "The permission 'reader' for 'anyone with the link' has not been written on "
 "the document"
-msgstr ""
+msgstr "لم يُمنح الإذن 'قارئ' لـ'أي شخص يملك الرابط' بهذا المستند"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_res_config_settings__google_drive_uri
@@ -272,6 +286,7 @@ msgid ""
 "You haven't configured 'Authorization Code' generated from google, Please "
 "generate and configure it ."
 msgstr ""
+"لم تقم بإعداد 'رمز الترخيص' الذي تم إنشاؤه من جوجل، الرجاء إنشاءه وإعداده."
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_form

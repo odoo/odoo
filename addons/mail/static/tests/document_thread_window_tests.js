@@ -48,7 +48,7 @@ QUnit.module('Document Thread', {
                 },
                 records: [{
                     id: 1,
-                    author_id: [1, 'Me'],
+                    author_id: [partnerID, 'Me'],
                     body: '<p>Some Message on a document</p>',
                     channel_ids: [],
                     model: 'some.res.model',
@@ -201,7 +201,7 @@ QUnit.test('post messages in a document thread window', function (assert) {
     testUtils.intercept(messagingMenu, 'call_service', function (ev) {
         if (ev.data.service === 'local_storage' && ev.data.method === 'setItem' &&
             ev.data.args[0] === 'mail.document_threads_last_message') {
-            assert.deepEqual(ev.data.args[1], newMessage,
+            assert.deepEqual(ev.data.args[1].messageData, newMessage,
                 "should write sent message in local storage, to share info with other tabs");
         }
     }, true);
@@ -229,7 +229,7 @@ QUnit.test('post messages in a document thread window', function (assert) {
 });
 
 QUnit.test('open, fold, unfold and close a document thread window', function (assert) {
-    assert.expect(8);
+    assert.expect(24);
 
     var messagingMenu = new MessagingMenu();
     testUtils.addMockEnvironment(messagingMenu, {
@@ -239,7 +239,13 @@ QUnit.test('open, fold, unfold and close a document thread window', function (as
     });
     testUtils.intercept(messagingMenu, 'call_service', function (ev) {
         if (ev.data.service === 'local_storage' && ev.data.method === 'setItem') {
-            assert.step(ev.data.args);
+            const key = ev.data.args[0];
+            const state = ev.data.args[1].state;
+            assert.strictEqual(key, 'mail.document_threads_state/some.res.model_1');
+            assert.ok(state);
+            assert.ok(state.name);
+            assert.ok(state.windowState);
+            assert.step(`${key}: { name: "${state.name}", windowState: '${state.windowState}' }`);
         }
     }, true);
     messagingMenu.appendTo($('#qunit-fixture'));
@@ -262,10 +268,10 @@ QUnit.test('open, fold, unfold and close a document thread window', function (as
     $('.o_thread_window .o_thread_window_close').click();
 
     assert.verifySteps([
-        ['mail.document_threads_state', {"some.res.model_1": {"name": "Some Record", "windowState": "open"}}],
-        ['mail.document_threads_state', {"some.res.model_1": {"name": "Some Record", "windowState": "folded"}}],
-        ['mail.document_threads_state', {"some.res.model_1": {"name": "Some Record", "windowState": "open"}}],
-        ['mail.document_threads_state', {"some.res.model_1": {"name": "Some Record", "windowState": "closed"}}],
+        `mail.document_threads_state/some.res.model_1: { name: "Some Record", windowState: 'open' }`,
+        `mail.document_threads_state/some.res.model_1: { name: "Some Record", windowState: 'folded' }`,
+        `mail.document_threads_state/some.res.model_1: { name: "Some Record", windowState: 'open' }`,
+        `mail.document_threads_state/some.res.model_1: { name: "Some Record", windowState: 'closed' }`,
     ]);
 
     messagingMenu.destroy();

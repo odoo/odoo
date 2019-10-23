@@ -149,3 +149,9 @@ class HrEmployee(models.Model):
                 query = 'UPDATE "%s" SET "%s"=%%s WHERE id = %s' % (
                     self._table, column_name, employee_id[0])
                 self.env.cr.execute(query, (default_value,))
+
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        if 'pin' in groupby or 'pin' in self.env.context.get('group_by', '') or self.env.context.get('no_group_by'):
+            raise exceptions.UserError(_('Such grouping is not allowed.'))
+        return super(HrEmployee, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)

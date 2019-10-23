@@ -151,4 +151,32 @@
             </form>
         </field>
     </record>
+
+    <record id="o2m_recursive_relation_view" model="ir.ui.view">
+        <field name="name">Recursive Relation Test View</field>
+        <field name="model">test_testing_utilities.recursive</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <field name="one_to_many_id"/>
+                    <field name="many_to_one_ids"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="o2m_modifier" model="ir.ui.view">
+        <field name="name">Modifier check</field>
+        <field name="model">test_testing_utilities.parent</field>
+        <field name="inherit_id" ref="o2m_parent"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <field name="subs" position="inside">
+                <form>
+                    <field name="value" attrs="{'readonly': [('v', '!=', False)]}"/>
+                    <field name="v"/>
+                </form>
+            </field>
+        </field>
+    </record>
 </odoo>

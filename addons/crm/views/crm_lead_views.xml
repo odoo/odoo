@@ -81,7 +81,7 @@
                                 <field name="zip" placeholder="ZIP" class="o_address_zip"/>
                                 <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
                             </div>
-                            <field name="website" widget="url" placeholder="e.g. www.odoo.com"/>
+                            <field name="website" widget="url" placeholder="e.g. https://www.odoo.com"/>
                         </group>
                         <group>
                             <label for="contact_name"/>
@@ -339,7 +339,7 @@
                             <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click">
                                 <div class="o_dropdown_kanban dropdown">
 
-                                    <a class="dropdown-toggle o-no-caret btn" role="button" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                    <a class="dropdown-toggle o-no-caret btn" role="button" data-toggle="dropdown" data-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                         <span class="fa fa-ellipsis-v"/>
                                     </a>
                                     <div class="dropdown-menu" role="menu">
@@ -581,7 +581,7 @@
                                         <field name="zip" placeholder="ZIP" class="o_address_zip"/>
                                         <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
                                     </div>
-                                    <field name="website" widget="url" placeholder="e.g. www.odoo.com"/>
+                                    <field name="website" widget="url" placeholder="e.g. https://www.odoo.com"/>
                                 </group>
 
                                 <group class="mt48">
@@ -711,6 +711,9 @@
                         help="Opportunities that are assigned to me"/>
                     <filter string="Unassigned" name="unassigned"
                         domain="[('user_id','=', False)]" help="No salesperson"/>
+                    <filter string="Open Opportunities" name="open_opportunities"
+                            domain="[('probability', '&lt;', 100), ('type', '=', 'opportunity')]"
+                            help="Open Opportunities"/>
                     <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <separator/>

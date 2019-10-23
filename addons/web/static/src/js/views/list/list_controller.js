@@ -373,8 +373,9 @@ var ListController = BasicController.extend({
      * @returns {Deferred}
      */
     _update: function () {
-        this._toggleSidebar();
-        return this._super.apply(this, arguments);
+        return this._super.apply(this, arguments)
+            .then(this._toggleSidebar.bind(this))
+            .then(this._updateButtons.bind(this, 'readonly'));
     },
     /**
      * This helper simply makes sure that the control panel buttons matches the
@@ -578,6 +579,7 @@ var ListController = BasicController.extend({
      * @param {OdooEvent} event
      */
     _onToggleGroup: function (event) {
+        event.stopPropagation();
         this.model
             .toggleGroup(event.data.group.id)
             .then(this.update.bind(this, {}, {keepSelection: true, reload: false}));

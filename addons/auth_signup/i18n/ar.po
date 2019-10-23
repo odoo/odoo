@@ -3,7 +3,6 @@
 # * auth_signup
 # 
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2018
 # Akram Alfusayal <akram_ma@hotmail.com>, 2018
 # amrnegm <amrnegm.01@gmail.com>, 2018
 # Martin Trigaux, 2018
@@ -12,13 +11,15 @@
 # Osoul <baruni@osoul.ly>, 2018
 # Shaima Safar <shaima.safar@open-inside.com>, 2018
 # Ali Alrehawi <alrehawi@hotmail.com>, 2018
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Ali Alrehawi <alrehawi@hotmail.com>, 2018\n"
+"POT-Creation-Date: 2019-03-29 10:09+0000\n"
+"PO-Revision-Date: 2018-08-24 09:16+0000\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,12 +33,14 @@ msgid ""
 "${object.create_uid.name} from ${object.company_id.name} invites you to "
 "connect to Odoo"
 msgstr ""
+"${object.create_uid.name} من ${object.company_id.name} يدعوك للاشتراك في "
+"أودو"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:126
 #, python-format
 msgid "%s connected"
-msgstr ""
+msgstr "%s متصل"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
@@ -55,7 +58,7 @@ msgid ""
 "been sent:</strong>"
 msgstr ""
 "<strong>تم إرسال دعوة عبر البريد الإلكتروني تحتوي على رابط الاشتراك "
-"التالية:</strong>"
+"التالي:</strong>"
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.set_password_email
@@ -97,7 +100,7 @@ msgid ""
 "                        % set website_url = object.env['ir.config_parameter'].sudo().get_param('web.base.url')\n"
 "                        Your Odoo domain is: <b><a href=\"${website_url}\">${website_url}</a></b><br/>\n"
 "                        Your sign in email is: <b><a href=\"/web/login?login=${object.email}\" target=\"_blank\">${object.email}</a></b><br/><br/>\n"
-"                        Never heard of Odoo? It’s a all-in-one business software loved by 3+ million users. It will considerably improve your experience at work and increase your productivity.\n"
+"                        Never heard of Odoo? It’s an all-in-one business software loved by 3+ million users. It will considerably improve your experience at work and increase your productivity.\n"
 "                        <br/><br/>\n"
 "                        Have a look at the <a href=\"https://www.odoo.com/page/tour?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Odoo Tour</a> to discover the tool.\n"
 "                        <br/><br/>\n"
@@ -230,6 +233,87 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">حسابك</span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        ${object.name}\n"
+"                    </span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img src=\"/logo.png?company=${object.company_id.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${object.company_id.name}\"/>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        عميلنا العزيز ${object.name}،<br/><br/>\n"
+"                        لقد وصلنا طلب تغيير كلمة المرور لحساب أودو المرتبط بهذا البريد الإلكتروني.\n"
+"                        يمكنك تغيير كلمة المرور الخاصة بك من خلال الرابط التالي، سيظل الرابط صالحًا لمدة 24 ساعة:\n"
+"<br/>\n"
+"                        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"                            <a href=\"${object.signup_url}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                                تغيير كلمة المرور\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        إذا كنت لم تقم بهذا الطلب، يمكنك تجاهل هذه الرسالة.<br/><br/>\n"
+"                        شكرًا لك<br/>\n"
+"                        ${user.signature | safe}<br/>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    ${object.company_id.name}\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                    ${object.company_id.phone}\n"
+"                    % if object.company_id.email\n"
+"                        | <a href=\"'mailto:%s' % ${object.company_id.email}\" style=\"text-decoration:none; color: #454748;\">${object.company_id.email}</a>\n"
+"                    % endif\n"
+"                    % if object.company_id.website\n"
+"                        | <a href=\"'%s' % ${object.company_id.website}\" style=\"text-decoration:none; color: #454748;\">\n"
+"                        ${object.company_id.website}\n"
+"                    </a>\n"
+"                    % endif\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        يعمل على <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">أودو</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.mail_template_user_signup_account_created
@@ -314,17 +398,98 @@ msgid ""
 "</td></tr>\n"
 "</table>"
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">حسابك</span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        ${object.name}\n"
+"                    </span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img src=\"/logo.png?company=${object.company_id.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${object.company_id.name}\"/>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        عميلنا العزيز ${object.name}،<br/><br/>\n"
+"                        تم إنشاء حسابك بنجاح!<br/>\n"
+"                        اسم المستخدم الخاص بك <strong>${object.email}</strong><br/>\n"
+"                        يمكنك استخدام الرابط التالي للوصول لحسابك:\n"
+"                        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"                            <a href=\"/web/login?${ctx['auth_login']}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                                الذهاب لحسابي\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        شكرًا لك،<br/><br/>\n"
+"                        ${user.signature | safe}<br/>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    ${object.company_id.name}\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                    ${object.company_id.phone}\n"
+"                    % if object.company_id.email\n"
+"                        | <a href=\"'mailto:%s' % ${object.company_id.email}\" style=\"text-decoration:none; color: #454748;\">${object.company_id.email}</a>\n"
+"                    % endif\n"
+"                    % if object.company_id.website\n"
+"                        | <a href=\"'%s' % ${object.company_id.website}\" style=\"text-decoration:none; color: #454748;\">\n"
+"                        ${object.company_id.website}\n"
+"                    </a>\n"
+"                    % endif\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        يعمل على <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">أودو</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
 msgid "Already have an account?"
-msgstr ""
+msgstr "ألديك حساب بالفعل؟"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:80
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
-msgstr "تم إرسالة بريد بالبيانات اللازمة لإعادة تعيين كلمة المرور الخاصة بك."
+msgstr ""
+"تم إرسالة رسالة بريد إلكتروني بالبيانات اللازمة لإعادة تعيين كلمة المرور "
+"الخاصة بك"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:52
@@ -341,15 +506,14 @@ msgstr "فشل المصادقة."
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password
 msgid "Back to Login"
-msgstr "العودة للدخول"
+msgstr "العودة لتسجيل الدخول"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:199
 #, python-format
 msgid "Cannot send email: user %s has no email address."
 msgstr ""
-"لا يمكن إرسال البريد الإلكتروني: المستخدم %sلا يوجد لديه عنوان البريد "
-"الإلكتروني"
+"لا يمكن إرسال البريد الإلكتروني: المستخدم %s لا يملك عنوان بريد إلكتروني."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
@@ -369,7 +533,7 @@ msgstr "تأكيد"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
 msgid "Confirm Password"
-msgstr "أكّد كلمة المرور"
+msgstr "تأكيد كلمة المرور"
 
 #. module: auth_signup
 #: selection:res.users,state:0
@@ -385,7 +549,7 @@ msgstr "جهة الاتصال"
 #: code:addons/auth_signup/controllers/main.py:55
 #, python-format
 msgid "Could not create a new account."
-msgstr "لا يمكن انشاء حساب جديد."
+msgstr "لا يمكن إنشاء حساب جديد."
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:84
@@ -396,17 +560,17 @@ msgstr "لم يمكن إعادة تعيين كلمة مرورك"
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_uninvited
 msgid "Customer Account"
-msgstr ""
+msgstr "حساب العميل"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Default Access Rights"
-msgstr ""
+msgstr "صلاحيات الوصول الافتراضية"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.login
 msgid "Don't have an account?"
-msgstr ""
+msgstr "لا تملك حسابًا؟"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_reset_password
@@ -417,29 +581,29 @@ msgstr "السماح باسترداد كلمة المرور في صفحة تسج
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "مسار HTTP"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:115
 #, python-format
 msgid "Invalid signup token"
-msgstr "رمز التفعيل غير صالح"
+msgstr "كلمة سر التسجيل غير صالحة"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Let your customers log in to see their documents"
-msgstr ""
+msgstr "السماح لعملائك بتسجيل الدخول لرؤية مستنداتهم"
 
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Never Connected"
-msgstr "لم يسجل الدخول أبداً"
+msgstr "لم يسجل الدخول أبدًا"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:75
 #, python-format
 msgid "No login provided."
-msgstr ""
+msgstr "لم يتم تسجيل الدخول."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
@@ -449,7 +613,7 @@ msgstr "كلمة المرور"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Password Reset"
-msgstr ""
+msgstr "إعادة تعيين كلمة المرور"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.reset_password_email
@@ -460,7 +624,7 @@ msgstr "استعادة كلمة المرور"
 #: code:addons/auth_signup/controllers/main.py:125
 #, python-format
 msgid "Passwords do not match; please retype them."
-msgstr ""
+msgstr "خانتي كلمة المرور غير متطابقتين، يُرجى إعادة ملأهما."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.login
@@ -498,19 +662,19 @@ msgstr "انتهاء صلاحية التسجيل"
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_token
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_token
 msgid "Signup Token"
-msgstr "رمز التسجيل"
+msgstr "كلمة سر التسجيل"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_type
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_type
 msgid "Signup Token Type"
-msgstr "نوع رمز التسجيل"
+msgstr "نوع كلمة سر التسجيل"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_valid
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_valid
 msgid "Signup Token is Valid"
-msgstr "رمز التسجيل صالح"
+msgstr "كلمة سر التسجيل صالحة"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_url
@@ -522,37 +686,37 @@ msgstr "رابط التسجيل"
 #: code:addons/auth_signup/models/res_users.py:117
 #, python-format
 msgid "Signup is not allowed for uninvited users"
-msgstr ""
+msgstr "لا يسمح بإنشاء حساب للمستخدمين غير المدعوين"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_partner.py:149
 #, python-format
 msgid "Signup token '%s' is no longer valid"
-msgstr ""
+msgstr "لم تعد كلمة سر التسجيل '%s' صالحة"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_partner.py:145
 #, python-format
 msgid "Signup token '%s' is not valid"
-msgstr ""
+msgstr "كلمة السر '%s' غير صالحة"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:138
 #, python-format
 msgid "Signup: invalid template user"
-msgstr ""
+msgstr "التسجيل: مستخدم القالب خطأ"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:141
 #, python-format
 msgid "Signup: no login given for new user"
-msgstr ""
+msgstr "التسجيل: لم نجد بيانات تسجيل دخول للمستخدم الجديد"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:143
 #, python-format
 msgid "Signup: no name or partner given for new user"
-msgstr ""
+msgstr "التسجيل: لم يُعطَ اسم أو شريك للمستخدم الجديد"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__state
@@ -568,13 +732,13 @@ msgstr "قالب المستخدم عندما يقوم أحدهم بالتسجي�
 #: code:addons/auth_signup/controllers/main.py:123
 #, python-format
 msgid "The form was not properly filled in."
-msgstr ""
+msgstr "لم يتم ملأ النموذج بشكل صحيح."
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:127
 #, python-format
 msgid "This is his first connection. Wish him welcome"
-msgstr ""
+msgstr "إنه أول اتصال له. رحب به"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
@@ -583,6 +747,9 @@ msgid ""
 "list view and click on 'Portal Access Management' option in the dropdown "
 "menu *Action*."
 msgstr ""
+"لإرسال دعوات في حالة التبادل بين مؤسسة وأخرى، قم بفتح جهة اتصال أو اختر عدة "
+"جهات اتصال في قائمة واضغط على خيار 'إدارة الوصول لبوابة العملاء' من القائمة "
+"المنسدلة."
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_users
@@ -592,7 +759,7 @@ msgstr "المستخدمون"
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_user_signup_account_created
 msgid "Welcome to ${object.company_id.name}!"
-msgstr ""
+msgstr "مرحبًا في ${object.company_id.name}!"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields

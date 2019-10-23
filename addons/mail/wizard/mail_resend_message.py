@@ -48,7 +48,7 @@ class MailResendMessage(models.TransientModel):
             rec['mail_message_id'] = mail_message_id.id
             rec['partner_ids'] = partner_ids
         else:
-            raise UserError('No message_id found in context')
+            raise UserError(_('No message_id found in context'))
         return rec
 
     @api.multi

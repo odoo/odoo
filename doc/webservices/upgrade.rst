@@ -55,7 +55,7 @@ The ``create`` method
 
     :param str contract: (required) your enterprise contract reference
     :param str email: (required) your email address
-    :param str target: (required) the Odoo version you want to upgrade to. Valid choices: 6.0, 6.1, 7.0, 8.0
+    :param str target: (required) the Odoo version you want to upgrade to. Valid choices: 10.0, 11.0, 12.0
     :param str aim: (required) the purpose of your upgrade database request. Valid choices: test, production.
     :param str filename: (required) a purely informative name for you database dump file
     :param str timezone: (optional) the timezone used by your server. Only for Odoo source version < 6.1
@@ -96,10 +96,9 @@ See a sample output aside.
               "failures": [
                 {
                   "expected": [
-                    "6.0",
-                    "6.1",
-                    "7.0",
-                    "8.0",
+                    "10.0",
+                    "11.0",
+                    "12.0",
                   ],
                   "message": "Invalid value \"5.0\"",
                   "reason": "TARGET:INVALID",
@@ -135,8 +134,8 @@ Sample script
 
 Here are 2 examples of database upgrade request creation using:
 
-* one in the python programming language using the pycurl library
-* one in the bash programming language using `curl <http://curl.haxx.se>`_ (tool
+* one in the python programming language using the requests library
+* one in the bash programming language using `curl <https://curl.haxx.se>`_ (tool
   for transfering data using http) and `jq <https://stedolan.github.io/jq>`_ (JSON processor):
 
 .. rst-class:: setup doc-aside
@@ -145,15 +144,12 @@ Here are 2 examples of database upgrade request creation using:
 
     .. code-block:: python
 
-        from urllib import urlencode
-        from io import BytesIO
-        import pycurl
-        import json
+        import requests
 
         CREATE_URL = "https://upgrade.odoo.com/database/v1/create"
         CONTRACT = "M123456-abcdef"
         AIM = "test"
-        TARGET = "8.0"
+        TARGET = "12.0"
         EMAIL = "john.doe@example.com"
         FILENAME = "db_name.dump"
 
@@ -164,27 +160,15 @@ Here are 2 examples of database upgrade request creation using:
             ('contract', CONTRACT),
             ('target', TARGET),
         ])
-        postfields = urlencode(fields)
 
-        c = pycurl.Curl()
-        c.setopt(pycurl.URL, CREATE_URL)
-        c.setopt(c.POSTFIELDS, postfields)
-        data = BytesIO()
-        c.setopt(c.WRITEFUNCTION, data.write)
-        c.perform()
-
-        # transform output into a dict:
-        response = json.loads(data.getvalue())
-
-        # get http status:
-        http_code = c.getinfo(pycurl.HTTP_CODE)
-        c.close()
+        r = requests.get(CREATE_URL, data=fields)
+        print(r.text)
 
     .. code-block:: bash
 
         CONTRACT=M123456-abcdef
         AIM=test
-        TARGET=8.0
+        TARGET=12.0
         EMAIL=john.doe@example.com
         FILENAME=db_name.dump
         CREATE_URL="https://upgrade.odoo.com/database/v1/create"
@@ -235,33 +219,19 @@ should be empty if everything went fine.
 
     .. code-block:: python
 
-        import os
-        import pycurl
-        from urllib import urlencode
+        import requests
 
         UPLOAD_URL = "https://upgrade.odoo.com/database/v1/upload"
-        DUMPFILE = "openchs.70.cdump"
+        DUMPFILE = "/tmp/dump.sql"
 
         fields = dict([
             ('request', '10534'),
             ('key', 'Aw7pItGVKFuZ_FOR3U8VFQ=='),
         ])
         headers = {"Content-Type": "application/octet-stream"}
-        postfields = urlencode(fields)
 
-        c = pycurl.Curl()
-        c.setopt(pycurl.URL, UPLOAD_URL+"?"+postfields)
-        c.setopt(pycurl.POST, 1)
-        filesize = os.path.getsize(DUMPFILE)
-        c.setopt(pycurl.POSTFIELDSIZE, filesize)
-        fp = open(DUMPFILE, 'rb')
-        c.setopt(pycurl.READFUNCTION, fp.read)
-        c.setopt(
-            pycurl.HTTPHEADER,
-            ['%s: %s' % (k, headers[k]) for k in headers])
-
-        c.perform()
-        c.close()
+        with open(DUMPFILE, 'rb') as f:
+            requests.post(UPLOAD_URL, data=f, params=fields, headers=headers)
 
     .. code-block:: bash
 
@@ -311,29 +281,20 @@ The ``request_sftp_access`` method returns a JSON dictionary containing the foll
 
     .. code-block:: python
 
-        import os
-        import pycurl
-        from urllib import urlencode
+        import requests
 
         UPLOAD_URL = "https://upgrade.odoo.com/database/v1/request_sftp_access"
-        SSH_KEYS="/path/to/your/authorized_keys"
+        SSH_KEY = "$HOME/.ssh/id_rsa.pub"
+        SSH_KEY_CONTENT = open(SSH_KEY,'r').read()
 
         fields = dict([
             ('request', '10534'),
             ('key', 'Aw7pItGVKFuZ_FOR3U8VFQ=='),
+            ('ssh_keys', SSH_KEY_CONTENT)
         ])
-        postfields = urlencode(fields)
 
-        c = pycurl.Curl()
-        c.setopt(pycurl.URL, UPLOAD_URL+"?"+postfields)
-        c.setopt(pycurl.POST, 1)
-        c.setopt(c.HTTPPOST,[("ssh_keys",
-                                (c.FORM_FILE, SSH_KEYS,
-                                c.FORM_CONTENTTYPE, "text/plain"))
-                            ])
-
-        c.perform()
-        c.close()
+        r = requests.post(UPLOAD_URL, params=fields)
+        print(r.text)
 
     .. code-block:: bash
 
@@ -442,10 +403,7 @@ should be empty if everything went fine.
 
     .. code-block:: python
 
-        from urllib import urlencode
-        from io import BytesIO
-        import pycurl
-        import json
+        import requests
 
         PROCESS_URL = "https://upgrade.odoo.com/database/v1/process"
 
@@ -453,25 +411,66 @@ should be empty if everything went fine.
             ('request', '10534'),
             ('key', 'Aw7pItGVKFuZ_FOR3U8VFQ=='),
         ])
-        postfields = urlencode(fields)
 
-        c = pycurl.Curl()
-        c.setopt(pycurl.URL, PROCESS_URL)
-        c.setopt(c.POSTFIELDS, postfields)
-        data = BytesIO()
-        c.setopt(c.WRITEFUNCTION, data.write)
-        c.perform()
-
-        # transform output into a dict:
-        response = json.loads(data.getvalue())
-
-        # get http status:
-        http_code = c.getinfo(pycurl.HTTP_CODE)
-        c.close()
+        r = requests.get(PROCESS_URL, data=fields)
+        print(r.text)
 
     .. code-block:: bash
 
         PROCESS_URL="https://upgrade.odoo.com/database/v1/process"
+        KEY="Aw7pItGVKFuZ_FOR3U8VFQ=="
+        REQUEST_ID="10534"
+        URL_PARAMS="key=${KEY}&request=${REQUEST_ID}"
+        curl -sS "${PROCESS_URL}?${URL_PARAMS}"
+
+.. _upgrade-api-skip-tests:
+
+
+Asking to skip the tests 
+=========================
+
+This action asks the Upgrade Platform to skip the tests for your request.
+If you don't want Odoo to test and validate the migration, you can bypass the testing stage and directly get the migrated dump.
+
+The ``skip_test`` method
+------------------------
+
+.. py:function:: https://upgrade.odoo.com/database/v1/skip_test
+
+    Skip the tests, deliver the upgraded dump, and set the state to 'delivered'
+
+    :param str key: (required) your private key
+    :param str request: (required) your request id
+    :return: request result
+    :rtype: JSON dictionary
+
+The request id and the private key are obtained using the :ref:`create method
+<upgrade-api-create-method>`
+
+The result is a JSON dictionary containing the list of ``failures``, which
+should be empty if everything went fine.
+
+.. rst-class:: setup doc-aside
+
+.. switcher::
+
+    .. code-block:: python
+
+        import requests
+
+        PROCESS_URL = "https://upgrade.odoo.com/database/v1/skip_test"
+
+        fields = dict([
+            ('request', '10534'),
+            ('key', 'Aw7pItGVKFuZ_FOR3U8VFQ=='),
+        ])
+
+        r = requests.get(PROCESS_URL, data=fields)
+        print(r.text)
+
+    .. code-block:: bash
+
+        PROCESS_URL="https://upgrade.odoo.com/database/v1/skip_test"
         KEY="Aw7pItGVKFuZ_FOR3U8VFQ=="
         REQUEST_ID="10534"
         URL_PARAMS="key=${KEY}&request=${REQUEST_ID}"
@@ -508,30 +507,17 @@ database upgrade request.
 
     .. code-block:: python
 
-        from urllib import urlencode
-        from io import BytesIO
-        import pycurl
-        import json
+        import requests
 
-        STATUS_URL = "https://upgrade.odoo.com/database/v1/status"
+        PROCESS_URL = "https://upgrade.odoo.com/database/v1/status"
 
         fields = dict([
             ('request', '10534'),
             ('key', 'Aw7pItGVKFuZ_FOR3U8VFQ=='),
         ])
-        postfields = urlencode(fields)
 
-        c = pycurl.Curl()
-        c.setopt(pycurl.URL, PROCESS_URL)
-        c.setopt(c.POSTFIELDS, postfields)
-        data = BytesIO()
-        c.setopt(c.WRITEFUNCTION, data.write)
-        c.perform()
-
-        # transform output into a dict:
-        response = json.loads(data.getvalue())
-
-        c.close()
+        r = requests.get(PROCESS_URL, data=fields)
+        print(r.text)
 
     .. code-block:: bash
 
@@ -615,7 +601,7 @@ The ``request`` key contains various useful information about your request:
             "id": 10534,
             "key": "Aw7pItGVKFuZ_FOR3U8VFQ==",
             "email": "john.doe@example.com",
-            "target": "8.0",
+            "target": "12.0",
             "aim": "test",
             "filename": "db_name.dump",
             "timezone": null,
@@ -631,7 +617,7 @@ The ``request`` key contains various useful information about your request:
             "modules_url": "https://upgrade.odoo.com/database/eu1/10534/Aw7pItGVKFuZ_FOR3U8VFQ==/modules/archive",
             "filesize": "912.99 Kb",
             "database_uuid": null,
-            "created_at": "2015-09-09 07:13:49",
+            "created_at": "2018-09-09 07:13:49",
             "estimated_time": null,
             "processed_at": null,
             "elapsed": "00:00",

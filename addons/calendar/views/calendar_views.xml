@@ -122,8 +122,8 @@
                                     <field name="stop" attrs="{'invisible': True}"/>
                                     <field name="id" attrs="{'invisible': True}"/>
 
-                                    <field name="start_date" string="Starting at" attrs="{'required': [('allday','=',True)], 'invisible': [('allday','=',False)], 'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
-                                    <field name="stop_date" string="Ending at" attrs="{'required': [('allday','=',True)],'invisible': [('allday','=',False)], 'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
+                                    <field name="start_date" string="Starting at" attrs="{'required': [('allday','=',True)], 'invisible': [('allday','=',False)], 'readonly': [('id', '!=', False), ('recurrency','=',True)]}" force_save="1"/>
+                                    <field name="stop_date" string="Ending at" attrs="{'required': [('allday','=',True)],'invisible': [('allday','=',False)], 'readonly': [('id', '!=', False), ('recurrency','=',True)]}" force_save="1"/>
 
                                     <field name="start_datetime" string="Starting at" attrs="{'required': [('allday','=',False)], 'invisible': [('allday','=',True)], 'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
                                     <field name="stop_datetime" invisible="1"/>
@@ -132,7 +132,7 @@
                                         <field name="duration" widget="float_time" string="Duration" class="oe_inline" attrs="{'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
                                         <span> hours</span>
                                     </div>
-                                    <field name="allday" attrs="{'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
+                                    <field name="allday" attrs="{'readonly': [('id', '!=', False), ('recurrency','=',True)]}" force_save="1"/>
                                 </group>
                                 <group>
                                     <field name="categ_ids" widget="many2many_tags" options="
@@ -162,7 +162,7 @@
                                             <div class="o_row">
                                                 <field name="end_type" attrs="{'required': [('recurrency', '=', True)]}"/>
                                                 <field name="count" attrs="{'invisible': [('end_type', '!=', 'count')], 'required': [('recurrency', '=', True)]}"/>
-                                                <field name="final_date" attrs="{'invisible': [('end_type', '!=', 'end_date')], 'required': [('end_type', '=', 'end_date')]}"/>
+                                                <field name="final_date" attrs="{'invisible': [('end_type', '!=', 'end_date')], 'required': [('end_type', '=', 'end_date'), ('recurrency', '=', True)]}"/>
                                             </div>
                                         </group>
                                         <group attrs="{'invisible': [('rrule_type', '!=', 'weekly')]}" name="weekdays">
@@ -182,10 +182,10 @@
                                                     attrs="{'required': [('month_by', '=', 'date'), ('rrule_type', '=', 'monthly')],
                                                             'invisible': [('month_by', '!=', 'date')]}"/>
                                                 <field name="byday" string="The"
-                                                    attrs="{'required': [('month_by', '=', 'day'), ('rrule_type', '=', 'monthly')],
+                                                    attrs="{'required': [('recurrency', '=', True), ('month_by', '=', 'day'), ('rrule_type', '=', 'monthly')],
                                                             'invisible': [('month_by', '!=', 'day')]}"/>
                                                 <field name="week_list" nolabel="1"
-                                                    attrs="{'required': [('month_by', '=', 'day'), ('rrule_type', '=', 'monthly')],
+                                                    attrs="{'required': [('recurrency', '=', True), ('month_by', '=', 'day'), ('rrule_type', '=', 'monthly')],
                                                             'invisible': [('month_by', '!=', 'day')]}"/>
                                             </div>
                                         </group>

@@ -4,9 +4,7 @@
 # 
 # Translators:
 # Eloïse Stilmant <est@odoo.com>, 2018
-# Martin Trigaux, 2018
 # Laura Piraux <lap@odoo.com>, 2018
-# Nathan Grognet <ngr@odoo.com>, 2018
 # Marie Willemyns <mwi@odoo.com>, 2018
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2018
 # Fabien Pinckaers <fp@openerp.com>, 2018
@@ -15,14 +13,19 @@
 # Martin Malorni <mmalorni@gmail.com>, 2018
 # Xavier Symons <xsy@openerp.com>, 2018
 # Lucas Deliege <lud@odoo.com>, 2018
+# Martin Trigaux, 2019
+# Nathan Grognet <ngr@odoo.com>, 2019
+# Rémi CAZENAVE <remi@le-filament.com>, 2019
+# Nicolas Roussey <nro@odoo.com>, 2019
+# Cécile Collart <cco@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:31+0000\n"
+"POT-Creation-Date: 2019-04-12 12:19+0000\n"
 "PO-Revision-Date: 2018-08-24 09:18+0000\n"
-"Last-Translator: Lucas Deliege <lud@odoo.com>, 2018\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,7 +47,7 @@ msgstr "&amp;nbsp;"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -90,6 +93,9 @@ msgid ""
 "specific.\" role=\"img\" aria-label=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" role=\"img\" aria-label=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -230,7 +236,10 @@ msgid "Additional Note"
 msgstr "Note additionnelle"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_crm_team__alias_contact
 #: model:ir.model.fields,field_description:hr.field_mail_alias__alias_contact
+#: model:ir.model.fields,field_description:hr.field_mail_alias_mixin__alias_contact
+#: model:ir.model.fields,field_description:hr.field_mail_channel__alias_contact
 msgid "Alias Contact Security"
 msgstr "Sécurité d'alias de contact"
 
@@ -266,12 +275,12 @@ msgstr "Partenaires authentifiés"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.mail_channel_view_form_
 msgid "Auto Subscribe Departments"
-msgstr ""
+msgstr "Abonnement automatique des département"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_mail_channel__subscription_department_ids
 msgid "Automatically subscribe members of those departments to the channel."
-msgstr ""
+msgstr "Abonnez automatiquement les membres de ces départements à ces canaux."
 
 #. module: hr
 #: selection:hr.employee,certificate:0
@@ -510,7 +519,7 @@ msgstr "Départements"
 
 #. module: hr
 #: model:ir.model,name:hr.model_mail_channel
-msgid "Discussion channel"
+msgid "Discussion Channel"
 msgstr "Canal de discussion"
 
 #. module: hr
@@ -687,6 +696,11 @@ msgid "Followers only"
 msgstr "Abonnés seulement"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Future Activities"
+msgstr "Activités futures"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__gender
 msgid "Gender"
 msgstr "Genre"
@@ -745,7 +759,7 @@ msgstr "Département RH"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_channel__subscription_department_ids
 msgid "HR Departments"
-msgstr ""
+msgstr "Départements RH"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -938,6 +952,11 @@ msgstr "Dernière mise à jour par"
 #: model:ir.model.fields,field_description:hr.field_hr_job__write_date
 msgid "Last Updated on"
 msgstr "Dernière mise à jour le"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Late Activities"
+msgstr "Activités en retard"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_marketing
@@ -1250,7 +1269,10 @@ msgid "Planned"
 msgstr "Planifié"
 
 #. module: hr
+#: model:ir.model.fields,help:hr.field_crm_team__alias_contact
 #: model:ir.model.fields,help:hr.field_mail_alias__alias_contact
+#: model:ir.model.fields,help:hr.field_mail_alias_mixin__alias_contact
+#: model:ir.model.fields,help:hr.field_mail_channel__alias_contact
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
@@ -1582,6 +1604,11 @@ msgid "Today"
 msgstr "Aujourd'hui"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Today Activities"
+msgstr "Activités du jour"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__expected_employees
 msgid "Total Forecasted Employees"
 msgstr "Nombre total d'employés prévu"
@@ -1704,6 +1731,20 @@ msgstr ""
 "créer des produits que les gens adorent utilisés. Nous avons besoin de "
 "quelqu'un qui est ambitieux, passionné, et ..... qui n'a pas peur de débuter"
 " des nouvelles choses, beaucoup de nouvelles choses et les faire croître."
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__website_message_ids
+#: model:ir.model.fields,field_description:hr.field_hr_employee__website_message_ids
+#: model:ir.model.fields,field_description:hr.field_hr_job__website_message_ids
+msgid "Website Messages"
+msgstr "Messages du site web"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_department__website_message_ids
+#: model:ir.model.fields,help:hr.field_hr_employee__website_message_ids
+#: model:ir.model.fields,help:hr.field_hr_job__website_message_ids
+msgid "Website communication history"
+msgstr "Historique de communication du site web"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo

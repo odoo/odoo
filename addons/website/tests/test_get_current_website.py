@@ -50,7 +50,7 @@ class TestGetCurrentWebsite(TransactionCase):
         self.assertEqual(Website._get_current_website_id('', country3.id), website2.id)
 
         # CASE: no domain, wrong country: get first
-        self.assertEqual(Website._get_current_website_id('', country4.id), website1.id)
+        self.assertEqual(Website._get_current_website_id('', country4.id), Website.search([]).sorted('country_group_ids')[0].id)
 
         # CASE: no domain, multiple country: get first
         self.assertEqual(Website._get_current_website_id('', country5.id), website1.id)
@@ -112,3 +112,10 @@ class TestGetCurrentWebsite(TransactionCase):
         self.assertEqual(Website._get_current_website_id('site-1.com:81', False), website2.id)
         self.assertEqual(Website._get_current_website_id('site-1.com:82', False), website1.id)
         self.assertEqual(Website._get_current_website_id('site-1.com', False), website1.id)
+
+    def test_02_signup_user_website_id(self):
+        website = self.env['website'].browse(1)
+        website.specific_user_account = True
+
+        user = self.env['res.users'].create({'website_id': website.id, 'login': 'sad@mail.com', 'name': 'Hope Fully'})
+        self.assertTrue(user.website_id == user.partner_id.website_id == website)

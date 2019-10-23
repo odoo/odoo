@@ -185,6 +185,27 @@ class TestPickShip(TestStockCommon):
         # the client picking should not be assigned anymore, as we returned partially what we took
         self.assertEqual(picking_client.state, 'confirmed')
 
+    def test_mto_moves_extra_qty(self):
+        """ Ensure that a move in MTO will support an extra quantity. The extra
+        move should be created in MTS and should not be merged in the initial
+        move if it's in MTO. It should also avoid to trigger the rules.
+        """
+        picking_pick, picking_client = self.create_pick_ship()
+        stock_location = self.env['stock.location'].browse(self.stock_location)
+        self.productA.write({'route_ids': [(4, self.env.ref('stock.route_warehouse0_mto').id)]})
+        self.env['stock.quant']._update_available_quantity(self.productA, stock_location, 10.0)
+        picking_pick.action_assign()
+        picking_pick.move_lines[0].move_line_ids[0].qty_done = 15.0
+        picking_pick.action_done()
+        self.assertEqual(picking_pick.state, 'done')
+        self.assertEqual(picking_client.state, 'assigned')
+
+        picking_client.move_lines[0].move_line_ids[0].qty_done = 15.0
+        picking_client.move_lines._action_done()
+        self.assertEqual(len(picking_client.move_lines), 2)
+        self.assertEqual(picking_client.move_lines.mapped('procure_method'), ['make_to_order', 'make_to_stock'])
+        self.assertEqual(picking_client.move_lines.mapped('product_uom_qty'), [10.0, 5.0])
+
     def test_mto_moves_return_extra(self):
         picking_pick, picking_client = self.create_pick_ship()
         stock_location = self.env['stock.location'].browse(self.stock_location)

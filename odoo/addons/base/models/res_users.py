@@ -394,9 +394,42 @@ class Users(models.Model):
     @api.multi
     @api.constrains('groups_id')
     def _check_one_user_type(self):
-        for user in self:
-            if len(user.groups_id.filtered(lambda x: x.category_id.xml_id == 'base.module_category_user_type')) > 1:
+        """We check that no users are both portal and users (same with public).
+           This could typically happen because of implied groups.
+        """
+        user_types_category = self.env.ref('base.module_category_user_type', raise_if_not_found=False)
+        user_types_groups = self.env['res.groups'].search(
+            [('category_id', '=', user_types_category.id)]) if user_types_category else False
+        if user_types_groups:  # needed at install
+            if self._has_multiple_groups(user_types_groups.ids):
                 raise ValidationError(_('The user cannot have more than one user types.'))
+
+    @api.multi
+    def _has_multiple_groups(self, group_ids):
+        """The method is not fast if the list of ids is very long;
+           so we rather check all users than limit to the size of the group
+        :param group_ids: list of group ids
+        :return: boolean: is there at least a user in at least 2 of the provided groups
+        """
+        if group_ids:
+            args = [tuple(group_ids)]
+            if len(self.ids) == 1:
+                where_clause = "AND r.uid = %s"
+                args.append(self.id)
+            else:
+                where_clause = ""  # default; we check ALL users (actually pretty efficient)
+            query = """
+                    SELECT 1 FROM res_groups_users_rel WHERE EXISTS(
+                        SELECT r.uid
+                        FROM res_groups_users_rel r
+                        WHERE r.gid IN %s""" + where_clause + """
+                        GROUP BY r.uid HAVING COUNT(r.gid) > 1
+                    )
+            """
+            self.env.cr.execute(query, args)
+            return bool(self.env.cr.fetchall())
+        else:
+            return False
 
     @api.multi
     def toggle_active(self):
@@ -834,7 +867,7 @@ class Users(models.Model):
         cfg = self.env['ir.config_parameter'].sudo()
         min_failures = int(cfg.get_param('base.login_cooldown_after', 5))
         if min_failures == 0:
-            return True
+            return False
 
         delay = int(cfg.get_param('base.login_cooldown_duration', 60))
         return failures >= min_failures and (datetime.datetime.now() - previous) < datetime.timedelta(seconds=delay)
@@ -902,6 +935,7 @@ class GroupsImplied(models.Model):
                            JOIN group_imply i ON (r.gid = i.hid)
                           WHERE i.gid = %(gid)s
                 """, dict(gid=group.id))
+            self._check_one_user_type()
         return res
 
 class UsersImplied(models.Model):
@@ -913,24 +947,20 @@ class UsersImplied(models.Model):
             if 'groups_id' in values:
                 # complete 'groups_id' with implied groups
                 user = self.new(values)
-                group_public = self.env.ref('base.group_public', raise_if_not_found=False)
-                group_portal = self.env.ref('base.group_portal', raise_if_not_found=False)
-                if group_public and group_public in user.groups_id:
-                    gs = self.env.ref('base.group_public') | self.env.ref('base.group_public').trans_implied_ids
-                elif group_portal and group_portal in user.groups_id:
-                    gs = self.env.ref('base.group_portal') | self.env.ref('base.group_portal').trans_implied_ids
-                else:
-                    gs = user.groups_id | user.groups_id.mapped('trans_implied_ids')
+                gs = user.groups_id | user.groups_id.mapped('trans_implied_ids')
                 values['groups_id'] = type(self).groups_id.convert_to_write(gs, user.groups_id)
         return super(UsersImplied, self).create(vals_list)
 
     @api.multi
     def write(self, values):
+        users_before = self.filtered(lambda u: u.has_group('base.group_user'))
         res = super(UsersImplied, self).write(values)
         if values.get('groups_id'):
             # add implied groups for all users
             for user in self.with_context({}):
-                if not user.has_group('base.group_user'):
+                if not user.has_group('base.group_user') and user in users_before:
+                    # if we demoted a user, we strip him of all its previous privileges
+                    # (but we should not do it if we are simply adding a technical group to a portal user)
                     vals = {'groups_id': [(5, 0, 0)] + values['groups_id']}
                     super(UsersImplied, user).write(vals)
                 gs = set(concat(g.trans_implied_ids for g in user.groups_id))
@@ -992,10 +1022,9 @@ class GroupsView(models.Model):
         """ Modify the view with xmlid ``base.user_groups_view``, which inherits
             the user form view, and introduces the reified group fields.
         """
-        if self._context.get('install_mode'):
-            # use installation/admin language for translatable names in the view
-            user_context = self.env['res.users'].context_get()
-            self = self.with_context(**user_context)
+
+        # remove the language to avoid translations, it will be handled at the view level
+        self = self.with_context(lang=None)
 
         # We have to try-catch this, because at first init the view does not
         # exist but we are already creating some basic groups.
@@ -1004,11 +1033,14 @@ class GroupsView(models.Model):
             group_no_one = view.env.ref('base.group_no_one')
             group_employee = view.env.ref('base.group_user')
             xml1, xml2, xml3 = [], [], []
-            xml1.append(E.separator(string=_('User Type'), colspan="2", groups='base.group_no_one'))
-            xml2.append(E.separator(string=_('Application Accesses'), colspan="2"))
+            xml1.append(E.separator(string='User Type', colspan="2", groups='base.group_no_one'))
+            xml2.append(E.separator(string='Application Accesses', colspan="2"))
 
             user_type_field_name = ''
-            for app, kind, gs in self.get_groups_by_application():
+            user_type_readonly = str({})
+            sorted_triples = sorted(self.get_groups_by_application(),
+                                    key=lambda t: t[0].xml_id != 'base.module_category_user_type')
+            for app, kind, gs in sorted_triples:  # we process the user type first
                 attrs = {}
                 # hide groups in categories 'Hidden' and 'Extra' (except for group_no_one)
                 if app.xml_id in ('base.module_category_hidden', 'base.module_category_extra', 'base.module_category_usability'):
@@ -1020,6 +1052,7 @@ class GroupsView(models.Model):
                     # application name with a selection field
                     field_name = name_selection_groups(gs.ids)
                     user_type_field_name = field_name
+                    user_type_readonly = str({'readonly': [(user_type_field_name, '!=', group_employee.id)]})
                     attrs['widget'] = 'radio'
                     attrs['groups'] = 'base.group_no_one'
                     xml1.append(E.field(name=field_name, **attrs))
@@ -1028,12 +1061,14 @@ class GroupsView(models.Model):
                 elif kind == 'selection':
                     # application name with a selection field
                     field_name = name_selection_groups(gs.ids)
+                    attrs['attrs'] = user_type_readonly
                     xml2.append(E.field(name=field_name, **attrs))
                     xml2.append(E.newline())
                 else:
                     # application separator with boolean fields
-                    app_name = app.name or _('Other')
+                    app_name = app.name or 'Other'
                     xml3.append(E.separator(string=app_name, colspan="4", **attrs))
+                    attrs['attrs'] = user_type_readonly
                     for g in gs:
                         field_name = name_boolean_group(g.id)
                         if g == group_no_one:
@@ -1103,6 +1138,23 @@ class GroupsView(models.Model):
         return res
 
 
+class ModuleCategory(models.Model):
+    _inherit = "ir.module.category"
+
+    @api.multi
+    def write(self, values):
+        res = super().write(values)
+        if "name" in values:
+            self.env["res.groups"]._update_user_groups_view()
+        return res
+
+    @api.multi
+    def unlink(self):
+        res = super().unlink()
+        self.env["res.groups"]._update_user_groups_view()
+        return res
+
+
 class UsersView(models.Model):
     _inherit = 'res.users'
 
@@ -1113,9 +1165,9 @@ class UsersView(models.Model):
         group_multi_company = self.env.ref('base.group_multi_company', False)
         if group_multi_company and 'company_ids' in values:
             if len(user.company_ids) <= 1 and user.id in group_multi_company.users.ids:
-                group_multi_company.write({'users': [(3, user.id)]})
+                user.write({'groups_id': [(3, group_multi_company.id)]})
             elif len(user.company_ids) > 1 and user.id not in group_multi_company.users.ids:
-                group_multi_company.write({'users': [(4, user.id)]})
+                user.write({'groups_id': [(4, group_multi_company.id)]})
         return user
 
     @api.multi
@@ -1126,9 +1178,9 @@ class UsersView(models.Model):
         if group_multi_company and 'company_ids' in values:
             for user in self:
                 if len(user.company_ids) <= 1 and user.id in group_multi_company.users.ids:
-                    group_multi_company.write({'users': [(3, user.id)]})
+                    user.write({'groups_id': [(3, group_multi_company.id)]})
                 elif len(user.company_ids) > 1 and user.id not in group_multi_company.users.ids:
-                    group_multi_company.write({'users': [(4, user.id)]})
+                    user.write({'groups_id': [(4, group_multi_company.id)]})
         return res
 
     def _remove_reified_groups(self, values):

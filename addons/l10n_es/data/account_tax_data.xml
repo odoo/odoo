@@ -225,6 +225,7 @@
         <field name="amount_type">group</field>
         <field name="amount" eval="100"/>
         <field name="children_tax_ids" eval="[(6, 0, [ref('account_tax_template_p_iva21_sp_in_1'), ref('account_tax_template_p_iva21_sp_in_2')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_10_11'), ref('mod_303_14_15_purchase'), ref('mod_303_36_37'), ref('mod_303_40_41')])]"/>
         <field name="tax_group_id" ref="tax_group_iva_21"/>
     </record>
     <record id="account_tax_template_p_iva21_ic_bc_1" model="account.tax.template">
@@ -257,7 +258,8 @@
         <field name="description">P_IVA21_IC_BC</field>
         <field name="amount_type">group</field>
         <field name="amount" eval="100"/>
-        <field name="children_tax_ids" eval="[(6, 0, [ref('account_tax_template_p_iva21_ic_bc_1'), ref('account_tax_template_p_iva21_ic_bc_2')])]"/>
+        <field name="children_tax_ids" eval="[(6, 0, [ref('account_tax_template_p_iva21_ic_bc_1'), ref('account_tax_template_p_iva21_ic_bc_2'), ])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_36_37'), ref('mod_303_40_41'), ref('mod_303_10_11'), ref('mod_303_14_15_purchase')])]"/>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="type_tax_use">purchase</field>
         <field name="name">IVA 21% Adquisición Intracomunitaria. Bienes corrientes</field>
@@ -296,6 +298,7 @@
         <field name="amount_type">group</field>
         <field name="amount" eval="100"/>
         <field name="children_tax_ids" eval="[(6, 0, [ref('account_tax_template_p_iva21_ic_bi_1'), ref('account_tax_template_p_iva21_ic_bi_2')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_38_39'), ref('mod_303_40_41'), ref('mod_303_10_11'), ref('mod_303_14_15_purchase')])]"/>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="tax_group_id" ref="tax_group_iva_21"/>
     </record>
@@ -368,6 +371,7 @@
         <field name="amount_type">group</field>
         <field name="type_tax_use">purchase</field>
         <field name="children_tax_ids" eval="[(6, 0, [ref('account_tax_template_p_iva4_sp_ex_1'), ref('account_tax_template_p_iva4_sp_ex_2')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_12_13'), ref('mod_303_14_15_purchase'), ref('mod_303_28_29'), ref('mod_303_40_41')])]"/>
         <field name="name">IVA 4% Adquisición de servicios extracomunitarios</field>
         <field name="tax_group_id" ref="tax_group_iva_4"/>
     </record>
@@ -403,6 +407,7 @@
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount_type">group</field>
         <field name="children_tax_ids" eval="[(6, 0, [ref('account_tax_template_p_iva10_sp_ex_1'), ref('account_tax_template_p_iva10_sp_ex_2')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_12_13'), ref('mod_303_14_15_purchase'), ref('mod_303_28_29'), ref('mod_303_40_41')])]"/>
         <field name="type_tax_use">purchase</field>
         <field name="name">IVA 10% Adquisición de servicios extracomunitarios</field>
         <field name="tax_group_id" ref="tax_group_iva_10"/>
@@ -441,6 +446,7 @@
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount_type">group</field>
         <field name="children_tax_ids" eval="[(6, 0, [ref('account_tax_template_p_iva21_sp_ex_1'), ref('account_tax_template_p_iva21_sp_ex_2')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_12_13'), ref('mod_303_14_15_purchase'), ref('mod_303_28_29'), ref('mod_303_40_41')])]"/>
         <field name="tax_group_id" ref="tax_group_iva_21"/>
     </record>
     <record id="account_tax_template_p_iva4_ic_bc_1" model="account.tax.template">
@@ -477,6 +483,7 @@
         <field name="type_tax_use">purchase</field>
         <field name="name">IVA 4% Adquisición Intracomunitario. Bienes corrientes</field>
         <field name="children_tax_ids" eval="[(6, 0, [ref('account_tax_template_p_iva4_ic_bc_1'), ref('account_tax_template_p_iva4_ic_bc_2')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_36_37'), ref('mod_303_40_41'), ref('mod_303_10_11'), ref('mod_303_14_15_purchase')])]"/>
         <field name="tax_group_id" ref="tax_group_iva_4"/>
     </record>
     <record id="account_tax_template_p_iva4_ic_bi_1" model="account.tax.template">
@@ -514,6 +521,7 @@
         <field name="type_tax_use">purchase</field>
         <field name="name">IVA 4% Adquisición Intracomunitario. Bienes de inversión</field>
         <field name="children_tax_ids" eval="[(6, 0, [ref('account_tax_template_p_iva4_ic_bi_1'), ref('account_tax_template_p_iva4_ic_bi_2')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_38_39'), ref('mod_303_40_41'), ref('mod_303_10_11'), ref('mod_303_14_15_purchase')])]"/>
         <field name="tax_group_id" ref="tax_group_iva_4"/>
     </record>
     <record id="account_tax_template_p_iva10_ic_bc_1" model="account.tax.template">
@@ -550,6 +558,7 @@
         <field name="type_tax_use">purchase</field>
         <field name="name">IVA 10% Adquisición Intracomunitario. Bienes corrientes</field>
         <field name="children_tax_ids" eval="[(6, 0, [ref('account_tax_template_p_iva10_ic_bc_1'), ref('account_tax_template_p_iva10_ic_bc_2')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_36_37'), ref('mod_303_40_41'), ref('mod_303_10_11'), ref('mod_303_14_15_purchase')])]"/>
         <field name="tax_group_id" ref="tax_group_iva_10"/>
     </record>
     <record id="account_tax_template_p_iva10_ic_bi_1" model="account.tax.template">
@@ -586,6 +595,7 @@
         <field name="type_tax_use">purchase</field>
         <field name="name">IVA 10% Adquisición Intracomunitario. Bienes de inversión</field>
         <field name="children_tax_ids" eval="[(6, 0, [ref('account_tax_template_p_iva10_ic_bi_1'), ref('account_tax_template_p_iva10_ic_bi_2')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_38_39'), ref('mod_303_40_41'), ref('mod_303_10_11'), ref('mod_303_14_15_purchase')])]"/>
         <field name="tax_group_id" ref="tax_group_iva_10"/>
     </record>
     <record id="account_tax_template_s_iva0_sp_i" model="account.tax.template">
@@ -1248,6 +1258,7 @@
         <field name="type_tax_use">purchase</field>
         <field name="name">IVA 10% Adquisición de servicios intracomunitarios</field>
         <field name="children_tax_ids" eval="[(6, 0, [ref('account_tax_template_p_iva10_sp_in_1'), ref('account_tax_template_p_iva10_sp_in_2')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_10_11'), ref('mod_303_14_15_purchase'), ref('mod_303_36_37'), ref('mod_303_40_41')])]"/>
         <field name="tax_group_id" ref="tax_group_iva_10"/>
     </record>
     <record id="account_tax_template_p_iva4_sp_in_1" model="account.tax.template">
@@ -1284,6 +1295,7 @@
         <field name="type_tax_use">purchase</field>
         <field name="name">IVA 4% Adquisición de servicios intracomunitarios</field>
         <field name="children_tax_ids" eval="[(6, 0, [ref('account_tax_template_p_iva4_sp_in_1'), ref('account_tax_template_p_iva4_sp_in_2')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_10_11'), ref('mod_303_14_15_purchase'), ref('mod_303_36_37'), ref('mod_303_40_41')])]"/>
         <field name="tax_group_id" ref="tax_group_iva_4"/>
     </record>
     <record id="account_tax_template_p_irpf21te" model="account.tax.template">
@@ -1390,6 +1402,7 @@
         <field name="amount_type">group</field>
         <field name="amount" eval="100"/>
         <field name="children_tax_ids" eval="[(6, 0, [ref('account_tax_template_p_iva4_isp_1'), ref('account_tax_template_p_iva4_isp_2')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_28_29'), ref('mod_303_40_41'), ref('mod_303_12_13'), ref('mod_303_14_15_purchase')])]"/>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="tax_group_id" ref="tax_group_iva_4"/>
     </record>
@@ -1426,6 +1439,7 @@
         <field name="amount_type">group</field>
         <field name="amount" eval="100"/>
         <field name="children_tax_ids" eval="[(6, 0, [ref('account_tax_template_p_iva10_isp_1'), ref('account_tax_template_p_iva10_isp_2')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_28_29'), ref('mod_303_40_41'), ref('mod_303_12_13'), ref('mod_303_14_15_purchase')])]"/>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="tax_group_id" ref="tax_group_iva_10"/>
     </record>
@@ -1462,6 +1476,7 @@
         <field name="amount_type">group</field>
         <field name="amount" eval="100"/>
         <field name="children_tax_ids" eval="[(6, 0, [ref('account_tax_template_p_iva21_isp_1'), ref('account_tax_template_p_iva21_isp_2')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_28_29'), ref('mod_303_40_41'), ref('mod_303_12_13'), ref('mod_303_14_15_purchase')])]"/>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="tax_group_id" ref="tax_group_iva_21"/>
     </record>

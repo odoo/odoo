@@ -7,15 +7,17 @@
 # Jussi Lehto <jussi@gulfeo.com>, 2018
 # Mikko Salmela <salmemik@gmail.com>, 2018
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2018
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2018
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2018
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2019
+# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-09-21 13:18+0000\n"
-"Last-Translator: Veikko Väätäjä <veikko.vaataja@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-03-29 10:10+0000\n"
+"PO-Revision-Date: 2018-08-24 09:34+0000\n"
+"Last-Translator: Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2019\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,6 +41,22 @@ msgid "<span>left</span>"
 msgstr "<span>jäljellä</span>"
 
 #. module: website_event_sale
+#: code:addons/website_event_sale/models/product_pricelist.py:16
+#, python-format
+msgid ""
+"A pricelist item with a positive min. quantity cannot be applied to this "
+"event tickets product."
+msgstr ""
+
+#. module: website_event_sale
+#: code:addons/website_event_sale/models/product_pricelist.py:13
+#, python-format
+msgid ""
+"A pricelist item with a positive min. quantity will not be applied to the "
+"event tickets products."
+msgstr ""
+
+#. module: website_event_sale
 #: model:ir.model.fields,field_description:website_event_sale.field_product_product__event_ticket_ids
 msgid "Event Tickets"
 msgstr "Tapahtuman liput"
@@ -54,12 +72,17 @@ msgid "Only"
 msgstr "Vain"
 
 #. module: website_event_sale
+#: model:ir.model,name:website_event_sale.model_product_pricelist_item
+msgid "Pricelist Item"
+msgstr "Hinnasto Tuote"
+
+#. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_product_product
 msgid "Product"
 msgstr "Tuote"
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/controllers/main.py:59
+#: code:addons/website_event_sale/controllers/main.py:63
 #, python-format
 msgid "Registration"
 msgstr "Rekisteröinti"
@@ -111,6 +134,12 @@ msgstr "Tiketti ei vastaa tätä tuotetta"
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_complete_inherit_website_event_sale
 msgid "Ticket"
 msgstr "Tiketti"
+
+#. module: website_event_sale
+#: code:addons/website_event_sale/models/product_pricelist.py:20
+#, python-format
+msgid "Warning"
+msgstr "Varoitus"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_website

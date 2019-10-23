@@ -25,6 +25,7 @@ class PaymentAcquirerAuthorize(models.Model):
     provider = fields.Selection(selection_add=[('authorize', 'Authorize.Net')])
     authorize_login = fields.Char(string='API Login Id', required_if_provider='authorize', groups='base.group_user')
     authorize_transaction_key = fields.Char(string='API Transaction Key', required_if_provider='authorize', groups='base.group_user')
+    authorize_signature_key = fields.Char(string='API Signature Key', groups='base.group_user', compute="_compute_auth_signature_key", inverse="_inverse_auth_signature_key")
 
     def _get_feature_support(self):
         """Get advanced feature support by provider.
@@ -42,6 +43,16 @@ class PaymentAcquirerAuthorize(models.Model):
         res['tokenize'].append('authorize')
         return res
 
+    def _compute_auth_signature_key(self):
+        ICP = self.env['ir.config_parameter'].sudo()
+        for acquirer in self.filtered(lambda a: a.provider == 'authorize'):
+            acquirer.authorize_signature_key = ICP.get_param('payment_authorize.signature_key_%s' % acquirer.id)
+
+    def _inverse_auth_signature_key(self):
+        ICP = self.env['ir.config_parameter'].sudo()
+        for acquirer in self.filtered(lambda a: a.provider == 'authorize'):
+            ICP.set_param('payment_authorize.signature_key_%s' % acquirer.id, acquirer.authorize_signature_key)
+
     def _get_authorize_urls(self, environment):
         """ Authorize URLs """
         if environment == 'prod':
@@ -57,12 +68,22 @@ class PaymentAcquirerAuthorize(models.Model):
             values['x_amount'],
             values['x_currency_code']]).encode('utf-8')
 
-        # [BACKWARD COMPATIBILITY] Check that the merchant did update his transaction
-        # key to signature key (end of MD5 support from Authorize.net)
+        # [BACKWARD COMPATIBILITY, 2nd edition]
         # The signature key is now '128-character hexadecimal format', while the
         # transaction key was only 16-character.
-        if len(values['x_trans_key']) == 128:
-            return hmac.new(values['x_trans_key'].decode("hex").encode('utf-8'), data, hashlib.sha512).hexdigest().upper()
+        # One of 2 things should have happened:
+        # 1/ the Transaction Key has been replaced with the Signature Key value (patch from March 2019)
+        #       => Use that to sign, but server-to-server won't work since it uses transaction key
+        #          as its credentials
+        # 2/ the Signature key is a new field (patch from July 2019)
+        #       => Use that field for the signature
+
+        # FORWARD-PORT NOTE: forward part to saas-12.4 but no further
+        if len(values['x_trans_key']) == 128 and not self.authorize_signature_key:
+            self.authorize_signature_key = values['x_trans_key'] # store in the correct field
+            return hmac.new(bytes.fromhex(values['x_trans_key']), data, hashlib.sha512).hexdigest().upper()
+        elif self.authorize_signature_key:
+            return hmac.new(bytes.fromhex(self.authorize_signature_key), data, hashlib.sha512).hexdigest().upper()
         else:
             return hmac.new(values['x_trans_key'].encode('utf-8'), data, hashlib.md5).hexdigest()
 
@@ -228,17 +249,18 @@ class TxAuthorize(models.Model):
                (self.type == 'form_save' or self.acquirer_id.save_token == 'always'):
                 transaction = AuthorizeAPI(self.acquirer_id)
                 res = transaction.create_customer_profile_from_tx(self.partner_id, self.acquirer_reference)
-                token_id = self.env['payment.token'].create({
-                    'authorize_profile': res.get('profile_id'),
-                    'name': res.get('name'),
-                    'acquirer_ref': res.get('payment_profile_id'),
-                    'acquirer_id': self.acquirer_id.id,
-                    'partner_id': self.partner_id.id,
-                })
-                self.payment_token_id = token_id
+                if res:
+                    token_id = self.env['payment.token'].create({
+                        'authorize_profile': res.get('profile_id'),
+                        'name': res.get('name'),
+                        'acquirer_ref': res.get('payment_profile_id'),
+                        'acquirer_id': self.acquirer_id.id,
+                        'partner_id': self.partner_id.id,
+                    })
+                    self.payment_token_id = token_id
 
-            if self.payment_token_id:
-                self.payment_token_id.verified = True
+                    if self.payment_token_id:
+                        self.payment_token_id.verified = True
             return True
         elif status_code == self._authorize_pending_tx_status:
             self.write({'acquirer_reference': data.get('x_trans_id')})
@@ -314,13 +336,14 @@ class TxAuthorize(models.Model):
                     'acquirer_reference': tree.get('x_trans_id'),
                     'date': fields.Datetime.now(),
                 })
-                if init_state != 'authorized':
-                    self.execute_callback()
 
                 if self.payment_token_id:
                     self.payment_token_id.verified = True
 
                 self._set_transaction_done()
+
+                if init_state != 'authorized':
+                    self.execute_callback()
             if tree.get('x_type').lower() == 'auth_only':
                 self.write({'acquirer_reference': tree.get('x_trans_id')})
                 self._set_transaction_authorized()

@@ -5,13 +5,15 @@
 # Translators:
 # Sengtha Chay <sengtha@gmail.com>, 2018
 # AN Souphorn <ansouphorn@gmail.com>, 2018
+# Lux Sok <sok.lux@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: AN Souphorn <ansouphorn@gmail.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:22+0000\n"
+"Last-Translator: Lux Sok <sok.lux@gmail.com>, 2019\n"
 "Language-Team: Khmer (https://www.transifex.com/odoo/teams/41243/km/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +26,7 @@ msgstr ""
 #: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:9
 #, python-format
 msgid "&times;"
-msgstr ""
+msgstr "និងក្រុម"
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__stripe_image_url
@@ -33,41 +35,44 @@ msgid ""
 "product. As defined in your Stripe profile. See: "
 "https://stripe.com/docs/checkout"
 msgstr ""
+"URL ដែលទាក់ទងឬដាច់ខាតចង្អុលទៅរូបភាពការ៉េនៃម៉ាកឬផលិតផលរបស់អ្នក។ "
+"ដូចដែលបានកំណត់ក្នុងប្រវត្តិរូបរបស់អ្នក។ មើល៖ "
+"https://stripe.com/docs/checkout"
 
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0
 msgid "Adyen"
-msgstr ""
+msgstr "Adyen "
 
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0
 msgid "Authorize.Net"
-msgstr ""
+msgstr "ផ្តល់សិទ្ធិ.សុទ្ធ"
 
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0
 msgid "Buckaroo"
-msgstr ""
+msgstr "Buckaroo"
 
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
 msgid "CVC"
-msgstr ""
+msgstr "ស៊ីវីស៊ី"
 
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
 msgid "Card number"
-msgstr ""
+msgstr "លេខ​កាត "
 
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
 msgid "Cardholder name"
-msgstr ""
+msgstr "ឈ្មោះ​អ្នក​កាន់​ប័ណ្ណ "
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_image_url
 msgid "Checkout Image URL"
-msgstr ""
+msgstr "ពិនិត្យរូបភាព URL "
 
 #. module: payment_stripe
 #. openerp-web
@@ -86,56 +91,56 @@ msgstr "កំហុស"
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
 msgid "Expires (MM / YY)"
-msgstr ""
+msgstr "ផុតកំណត់ (ខែ / ឆ្នាំ) "
 
 #. module: payment_stripe
 #. openerp-web
 #: code:addons/payment_stripe/static/src/js/stripe.js:33
 #, python-format
 msgid "Just one more second, confirming your payment..."
-msgstr ""
+msgstr "តែមួយវិនាទីទៀតទេ បញ្ជាក់ពីការបង់ប្រាក់របស់អ្នក ..."
 
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0
 msgid "Manual Configuration"
-msgstr ""
+msgstr "ការកំណត់រចនាសម្ព័ន្ធដោយដៃ "
 
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0
 msgid "Ogone"
-msgstr ""
+msgstr "Ogone "
 
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0
 msgid "PayUmoney"
-msgstr ""
+msgstr "PayUmoney "
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr ""
+msgstr "ការបង់ថ្លៃទំនិញ"
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_token
 msgid "Payment Token"
-msgstr ""
+msgstr "ការទូទាត់ Token"
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
+msgstr "ការបង់ប្រាក់សំរាប់ប្រតិបត្តិការ"
 
 #. module: payment_stripe
 #. openerp-web
 #: code:addons/payment_stripe/static/src/js/stripe.js:59
 #, python-format
 msgid "Payment error"
-msgstr ""
+msgstr "មានកំហុសក្នុងការទូទាត់"
 
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0
 msgid "Paypal"
-msgstr ""
+msgstr "Paypal"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:174
@@ -144,57 +149,66 @@ msgid ""
 "Perhaps the problem can be solved by double-checking your credit card "
 "details, or contacting your bank?"
 msgstr ""
+"ប្រហែលជាបញ្ហាអាចត្រូវបានដោះស្រាយដោយការត្រួតពិនិត្យព័ត៌មានលំអិតកាតឥណទានរបស់អ្នកម្តងទៀតឬទាក់ទងធនាគាររបស់អ្នក?"
+" "
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__provider
 msgid "Provider"
-msgstr ""
+msgstr "ការផ្តល់ជូន"
 
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0
 msgid "Sips"
-msgstr ""
+msgstr "Sips"
 
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0
 msgid "Stripe"
-msgstr ""
+msgstr "ឆ្នូត"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_publishable_key
 msgid "Stripe Publishable Key"
-msgstr ""
+msgstr "កូដបោះពុម្ពឆ្នូត"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_secret_key
 msgid "Stripe Secret Key"
-msgstr ""
+msgstr "កូដគន្លឹះសម្ងាត់ "
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:172
 #, python-format
 msgid "Stripe gave us the following info about the problem: '%s'"
-msgstr ""
+msgstr "កូដក៏បានផ្តល់ឱ្យយើងនូវព័ត៌មានដូចខាងក្រោមអំពីបញ្ហានេះ':%s'"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:184
 #, python-format
 msgid "Stripe: %s orders found for reference %s"
-msgstr ""
+msgstr "ឆ្នូត៖ %sការបញ្ជាទិញត្រូវបានរកឃើញសម្រាប់ជាឯកសារយោង%s"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:180
 #, python-format
 msgid "Stripe: no order found for reference %s"
+msgstr "ឆ្នូត៖ មិនមានរកឃើញការបញ្ជាទិញទេ%s "
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment.py:260
+#, python-format
+msgid "Stripe: no payment token was provided or the token creation failed."
 msgstr ""
+"ឆ្នូត៖គ្មានការបង់ប្រាក់ដែលយក គឺបានផ្តល់ឲ្យ ឫការយកការបង្កើតត្រូវបានបរាជ័យ"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:170
 #, python-format
 msgid "We're sorry to report that the transaction has failed."
-msgstr ""
+msgstr "យើងសូមអភ័យទោសក្នុងការរាយការណ៍ថាប្រតិបត្តិការបានបរាជ័យ។"
 
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0
 msgid "Wire Transfer"
-msgstr ""
+msgstr "ខ្សែ​បញ្ជូន "

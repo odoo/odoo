@@ -5,15 +5,14 @@
 # Translators:
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
 # Martin Trigaux, 2018
-# Simone Bernini <simone@aperturelabs.it>, 2018
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2018
 # Sebastiano Pistore <SebastianoPistore.info@protonmail.ch>, 2018
 # Pietro Della Notte <pdellanotte@gmail.com>, 2018
 # Paolo Valier, 2018
-# Sergio Zanchetta <primes2h@gmail.com>, 2018
 # Petra <bop@odoo.com>, 2018
 # David Minneci <david@numeko.it>, 2018
 # Léonie Bouchat <lbo@odoo.com>, 2019
+# Sergio Zanchetta <primes2h@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -21,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-02 10:05+0000\n"
 "PO-Revision-Date: 2018-08-24 09:16+0000\n"
-"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2019\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,14 +33,14 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import_action.js:612
 #, python-format
 msgid "%d records were successfully imported"
-msgstr "%dI record sono stati importati con successo"
+msgstr "Sono stati importati con successo %d record"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:647
 #, python-format
 msgid "(%d more)"
-msgstr "(%d altri)"
+msgstr "(altri %d)"
 
 #. module: base_import
 #. openerp-web
@@ -51,8 +50,8 @@ msgid ""
 "A single column was found in the file, this often means the file separator "
 "is incorrect"
 msgstr ""
-"È stata trovata una sola colonna nel file. Questo solitamente significa che "
-"il separatore delle colonne è errato."
+"Nel file è stata trovata una sola colonna. Di solito questo significa che il"
+" separatore del file non è corretto"
 
 #. module: base_import
 #. openerp-web
@@ -66,9 +65,9 @@ msgid ""
 msgstr ""
 "Si è verificato un problema sconosciuto durante l'importazione (possibile "
 "perdita della connessione, superamento del limite di dati o superamento dei "
-"limiti di memoria). Si prega di riprovare in caso il problema persista. Se "
-"il problema si verifica ancora, provare a dividere il file anziché "
-"importarlo in una sola volta."
+"limiti di memoria). Riprovare in caso di problema transitorio. Se il "
+"problema persiste, provare a dividere il file invece di importarlo in una "
+"sola volta."
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base
@@ -309,9 +308,7 @@ msgstr "Sembra tutto corretto."
 #: code:addons/base_import/static/src/xml/base_import.xml:82
 #, python-format
 msgid "Excel files are recommended as fields formatting is automatic."
-msgstr ""
-"File Excel sono raccomandati dato che la formattazione dei campi è "
-"automatica."
+msgstr "Sono consigliati file Excel, la formattazione dei campi è automatica."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:169
@@ -380,7 +377,7 @@ msgstr "Ottieni tutti i valori possibili"
 #: code:addons/base_import/static/src/js/import_action.js:658
 #, python-format
 msgid "Here are the possible values:"
-msgstr "Ecco i possibili valori:"
+msgstr "Questi sono i possibili valori:"
 
 #. module: base_import
 #. openerp-web
@@ -570,7 +567,7 @@ msgstr "Ultimo aggiornamento il"
 #: code:addons/base_import/static/src/xml/base_import.xml:101
 #, python-format
 msgid "Load File"
-msgstr "Carica File"
+msgstr "Carica file"
 
 #. module: base_import
 #. openerp-web
@@ -644,14 +641,14 @@ msgstr "Ricarica File"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__res_model
 msgid "Res Model"
-msgstr "Res Model"
+msgstr "Modello res"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:79
 #, python-format
 msgid "Select a CSV or Excel file to import."
-msgstr "Selezionare un file CSV o Excel da importare."
+msgstr "Seleziona un file CSV o Excel da importare."
 
 #. module: base_import
 #. openerp-web

@@ -14,6 +14,7 @@ from odoo.exceptions import ValidationError
 from odoo import api, SUPERUSER_ID
 from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.misc import formatLang
+from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
@@ -211,6 +212,19 @@ class PaymentAcquirer(models.Model):
         (_check_required_if_provider, 'Required fields not filled', []),
     ]
 
+    def get_base_url(self):
+        self.ensure_one()
+        # priority is always given to url_root
+        # from the request
+        url = ''
+        if request:
+            url = request.httprequest.url_root
+
+        if not url and 'website_id' in self and self.website_id:
+            url = self.website_id._get_http_domain()
+
+        return url or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+
     def _get_feature_support(self):
         """Get advanced feature support by provider.
 
@@ -356,6 +370,7 @@ class PaymentAcquirer(models.Model):
         if values is None:
             values = {}
 
+        values.setdefault('return_url', '/payment/process')
         # reference and amount
         values.setdefault('reference', reference)
         amount = float_round(amount, 2)
@@ -447,7 +462,6 @@ class PaymentAcquirer(models.Model):
             'context': self._context,
             'type': values.get('type') or 'form',
         })
-        values.setdefault('return_url', False)
 
         _logger.info('payment.acquirer.render: <%s> values rendered for form payment:\n%s', self.provider, pprint.pformat(values))
         return self.view_template_id.render(values, engine='ir.qweb')
@@ -644,6 +658,10 @@ class PaymentTransaction(models.Model):
         transactions = self.filtered(lambda t: t.state != 'draft')
         return transactions and transactions[0] or transactions
 
+    def _get_processing_info(self):
+        """ Extensible method for providers if they need specific fields/info regarding a tx in the payment processing page. """
+        return dict()
+
     @api.multi
     def _get_payment_transaction_sent_message(self):
         self.ensure_one()
@@ -785,10 +803,13 @@ class PaymentTransaction(models.Model):
     def _cron_post_process_after_done(self):
         if not self:
             ten_minutes_ago = datetime.now() - relativedelta.relativedelta(minutes=10)
+            # we don't want to forever try to process a transaction that doesn't go through
+            retry_limit_date = datetime.now() - relativedelta.relativedelta(days=2)
             # we retrieve all the payment tx that need to be post processed
             self = self.search([('state', '=', 'done'),
                                 ('is_processed', '=', False),
                                 ('date', '<=', ten_minutes_ago),
+                                ('date', '>=', retry_limit_date),
                             ])
         for tx in self:
             try:
@@ -855,7 +876,11 @@ class PaymentTransaction(models.Model):
             invoice = invoice_ids[0]
             action['res_id'] = invoice
             action['view_mode'] = 'form'
-            action['views'] = [(self.env.ref('account.invoice_form').id, 'form')]
+            form_view = [(self.env.ref('account.invoice_form').id, 'form')]
+            if 'views' in action:
+                action['views'] = form_view + [(state,view) for state,view in action['views'] if view != 'form']
+            else:
+                action['views'] = form_view
         else:
             action['view_mode'] = 'tree,form'
             action['domain'] = [('id', 'in', invoice_ids)]
@@ -876,7 +901,7 @@ class PaymentTransaction(models.Model):
 
             values.update({
                 'partner_name': partner.name,
-                'partner_lang': partner.lang or 'en_US',
+                'partner_lang': partner.lang or self.env.user.lang,
                 'partner_email': partner.email,
                 'partner_zip': partner.zip,
                 'partner_address': _partner_format_address(partner.street or '', partner.street2 or ''),
@@ -894,7 +919,7 @@ class PaymentTransaction(models.Model):
 
         # custom create
         custom_method_name = '%s_create' % acquirer.provider
-        if hasattr(acquirer, custom_method_name):
+        if hasattr(self, custom_method_name):
             values.update(getattr(self, custom_method_name)(values))
 
         if not values.get('reference'):

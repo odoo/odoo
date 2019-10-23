@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Yaroslav Molochko <onorua@gmail.com>, 2018
-# Martin Trigaux, 2018
 # Bohdan Lisnenko, 2018
+# Martin Trigaux, 2019
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"POT-Creation-Date: 2019-03-29 10:10+0000\n"
 "PO-Revision-Date: 2018-08-24 09:18+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
@@ -1111,6 +1111,11 @@ msgid "Km"
 msgstr "Км"
 
 #. module: fleet
+#: selection:fleet.vehicle,fuel_type:0
+msgid "LPG"
+msgstr "LPG"
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_service_type____last_update
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle____last_update
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_assignation_log____last_update
@@ -1271,7 +1276,7 @@ msgstr ""
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_11
 msgid "Management Fee"
-msgstr "Управлінський збір"
+msgstr "Комісія за обслуговування"
 
 #. module: fleet
 #: model:res.groups,name:fleet.fleet_group_manager
@@ -1365,7 +1370,7 @@ msgstr "Моделі"
 #. module: fleet
 #: selection:fleet.vehicle.log.contract,cost_frequency:0
 msgid "Monthly"
-msgstr "Щомісячно"
+msgstr "Щомісяця"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_service_type__name
@@ -2043,7 +2048,7 @@ msgstr ""
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_18
 msgid "Touring Assistance"
-msgstr "Допомога туризму"
+msgstr "Допомога огляду"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_services_action
@@ -2300,6 +2305,18 @@ msgid "Water Pump Replacement"
 msgstr "Заміна водонасоса"
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__website_message_ids
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__website_message_ids
+msgid "Website Messages"
+msgstr "Повідомлення з веб-сайту"
+
+#. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__website_message_ids
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__website_message_ids
+msgid "Website communication history"
+msgstr "Історія бесіди на сайті"
+
+#. module: fleet
 #: selection:fleet.vehicle.log.contract,cost_frequency:0
 msgid "Weekly"
 msgstr "Щотижня"
@@ -2317,7 +2334,7 @@ msgstr "Заміна підшипника коліс"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_53
 msgid "Windshield Wiper(s) Replacement"
-msgstr "Заміна двірниками"
+msgstr "Заміна двірників"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form

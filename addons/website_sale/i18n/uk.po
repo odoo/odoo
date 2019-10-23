@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:31+0000\n"
+"POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:35+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
@@ -119,7 +119,7 @@ msgid ""
 "                        <hr/>\n"
 "                    % endif\n"
 "                    <div style=\"text-align: center; margin: 16px 0px 16px 0px; font-size: 14px;\">\n"
-"                        <a href=\"/shop/cart?access_token=${object.access_token}\" target=\"_blank\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                        <a href=\"${object.get_base_url()}/shop/cart?access_token=${object.access_token}\" target=\"_blank\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
 "                            Resume order\n"
 "                        </a>\n"
 "                    </div>\n"
@@ -192,7 +192,7 @@ msgstr ""
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"                    <h1 style=\"color:#A9A9A9;\">У ВАШОМУ КОШИКУ ЩОСЬ Є.</h1>\n"
+"                    <h1 style=\"color:#A9A9A9;\">У ВАШОМУ КОШИКУ ДЕЩО Є.</h1>\n"
 "                    Хочете завершити вашу купівлю?<br/><br/>\n"
 "                    % if object.order_line:\n"
 "                        % for line in object.order_line:\n"
@@ -214,11 +214,11 @@ msgstr ""
 "                        <hr/>\n"
 "                    % endif\n"
 "                    <div style=\"text-align: center; margin: 16px 0px 16px 0px; font-size: 14px;\">\n"
-"                        <a href=\"/shop/cart?access_token=${object.access_token}\" target=\"_blank\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                        <a href=\"${object.get_base_url()}/shop/cart?access_token=${object.access_token}\" target=\"_blank\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
 "                            Підсумок замовлення\n"
 "                        </a>\n"
 "                    </div>\n"
-"                    <div style=\"text-align: center;\"><strong>TДякуємо за покупки з ${user.company_id.name}!</strong></div>\n"
+"                    <div style=\"text-align: center;\"><strong>Дякуємо за купівлі з ${user.company_id.name}!</strong></div>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"text-align:center;\">\n"
 "                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
@@ -360,7 +360,7 @@ msgid ""
 "<span class=\"\">Process Checkout</span>\n"
 "                                        <span class=\"fa fa-chevron-right\"/>"
 msgstr ""
-"<span class=\"\">Процес перевірки</span>\n"
+"<span class=\"\">Оформити замовлення</span>\n"
 "                                        <span class=\"fa fa-chevron-right\"/>"
 
 #. module: website_sale
@@ -369,7 +369,7 @@ msgid ""
 "<span class=\"\">Process Checkout</span>\n"
 "                                    <span class=\"fa fa-chevron-right\"/>"
 msgstr ""
-"<span class=\"\">Процес перевірки</span>\n"
+"<span class=\"\">Оформити замовлення</span>\n"
 "                                    <span class=\"fa fa-chevron-right\"/>"
 
 #. module: website_sale
@@ -474,12 +474,17 @@ msgstr "<span>Замовлення</span>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.short_cart_summary
 msgid "<span>Process Checkout</span>"
-msgstr "<span>Процес перевірки</span>"
+msgstr "<span>Оформити замовлення</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
 msgid "<span>Sort by</span>"
 msgstr "<span>Сортувати за</span>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
+msgid "<span>Your payment has been authorized.</span>"
+msgstr "<span>Ваш платіж було авторизовано.</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.suggested_products_list
@@ -611,6 +616,7 @@ msgstr ""
 "свої контактні дані."
 
 #. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_product_product__accessory_product_ids
 #: model:ir.model.fields,help:website_sale.field_product_template__accessory_product_ids
 msgid ""
 "Accessories show up when the customerreviews the cart before payment (cross-"
@@ -620,6 +626,7 @@ msgstr ""
 "перехресного продажу)."
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product__accessory_product_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template__accessory_product_ids
 msgid "Accessory Products"
 msgstr "Аксесуари"
@@ -638,7 +645,7 @@ msgstr "Додати один"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "Add to Cart"
-msgstr "Додати"
+msgstr "Додати до кошика"
 
 #. module: website_sale
 #. openerp-web
@@ -666,14 +673,10 @@ msgstr "Дозвольте покупцям порівнювати товари 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_pricelist__selectable
 msgid "Allow the end user to choose this price list"
-msgstr "Дозволити кінцевому користувачу обирати прайслист"
+msgstr "Дозволити кінцевому користувачу обирати прайс-лист"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.website_sale_pricelist_form_view
-msgid "Allow to use on"
-msgstr "Дозволити використовувати на"
-
-#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product__alternative_product_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template__alternative_product_ids
 msgid "Alternative Products"
 msgstr "Альтернативні товари"
@@ -940,7 +943,7 @@ msgstr "Компоненти"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping cost and ship with Easypost"
-msgstr "Обчислити вартість доставки та відправити її з компанією Easypost"
+msgstr "Обчислюйте вартість доставки та відправляйте з Easypost"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1121,6 +1124,7 @@ msgstr ""
 "доставку"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product__website_description
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_description
 msgid "Description for the website"
 msgstr "Опис для веб-сайту"
@@ -1131,6 +1135,7 @@ msgid "Desks"
 msgstr "Столи"
 
 #. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_product_product__website_sequence
 #: model:ir.model.fields,help:website_sale.field_product_template__website_sequence
 msgid "Determine the display order in the Website E-commerce"
 msgstr "Визначте порядок відображення в інтернет-магазині"
@@ -1184,7 +1189,7 @@ msgstr "Перетягніть блок сайту на свою сторінк�
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_drawers
 msgid "Drawers"
-msgstr "Шуляди"
+msgstr "Шухляди"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_pricelist__code
@@ -1370,6 +1375,7 @@ msgid "Image Name"
 msgstr "Назва зображення"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product__product_image_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template__product_image_ids
 msgid "Images"
 msgstr "Зображення"
@@ -1444,6 +1450,7 @@ msgstr "Остання модифікація"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_partner__last_website_so_id
+#: model:ir.model.fields,field_description:website_sale.field_res_users__last_website_so_id
 msgid "Last Online Sales Order"
 msgstr "Останнє замовлення на продаж онлайн"
 
@@ -1602,11 +1609,6 @@ msgstr "Не знайдено результатів для \""
 #: selection:res.config.settings,sale_delivery_settings:0
 msgid "No shipping management on website"
 msgstr "Немає управління відправленням на веб-сайті"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.website_sale_pricelist_form_view
-msgid "None website"
-msgstr "Жодного веб-сайту"
 
 #. module: website_sale
 #: selection:res.company,website_sale_onboarding_payment_acquirer_state:0
@@ -1912,7 +1914,7 @@ msgstr "Друк"
 #: code:addons/website_sale/static/src/js/website_sale_options.js:86
 #, python-format
 msgid "Proceed to Checkout"
-msgstr "Перейти до перевірки"
+msgstr "Перейти до замовлення"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_unpaid_orders_ecommerce
@@ -2067,7 +2069,7 @@ msgstr "Відправлено електронний лист для відно
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Recovery Email to Send"
-msgstr "Відновлення електронної пошти для відправки"
+msgstr "Електронний лист відновлення до відправки"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__product_tmpl_id
@@ -2334,11 +2336,13 @@ msgid "Size"
 msgstr "Розмір"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product__website_size_x
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_size_x
 msgid "Size X"
 msgstr "Розмір X"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product__website_size_y
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_size_y
 msgid "Size Y"
 msgstr "Розмір Y"
@@ -2391,7 +2395,7 @@ msgstr "Область"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "State / Province..."
-msgstr "Область..."
+msgstr "Область/район"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_company__website_sale_onboarding_payment_acquirer_state
@@ -2429,6 +2433,7 @@ msgid "Style Name"
 msgstr "Назва стилю"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product__website_style_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_style_ids
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale
 msgid "Styles"
@@ -2440,6 +2445,7 @@ msgid "Subtotal:"
 msgstr "Підсумок:"
 
 #. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_product_product__alternative_product_ids
 #: model:ir.model.fields,help:website_sale.field_product_template__alternative_product_ids
 msgid ""
 "Suggest alternatives to your customer(upsell strategy).Those product show up"
@@ -2456,7 +2462,7 @@ msgstr "Запропоновані аксесуари:"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
 msgid "TIN / VAT"
-msgstr "TIN / VAT"
+msgstr "ІПН/ПДВ"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.total
@@ -2512,6 +2518,7 @@ msgstr ""
 "якого нового товару, але не існуючого."
 
 #. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_product_product__public_categ_ids
 #: model:ir.model.fields,help:website_sale.field_product_template__public_categ_ids
 msgid ""
 "The product will be available in each mentioned e-commerce category. Go "
@@ -2526,7 +2533,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:website_sale.action_abandoned_orders_ecommerce
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_abandoned_tree
 msgid "The time to mark a cart as abandoned can be changed in the settings."
-msgstr "Час відмічення кошика можна змінити в налаштуваннях."
+msgstr "Час позначення кошика як залишений можна змінити в налаштуваннях."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_orders_ecommerce
@@ -2674,6 +2681,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website
 #: model:ir.model.fields,field_description:website_sale.field_account_invoice__website_id
+#: model:ir.model.fields,field_description:website_sale.field_product_pricelist__website_id
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_id
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_id
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__website_id
@@ -2684,6 +2692,7 @@ msgstr "Веб-сайт"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_public_category
+#: model:ir.model.fields,field_description:website_sale.field_product_product__public_categ_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template__public_categ_ids
 msgid "Website Product Category"
 msgstr "Категорія товару на сайті"
@@ -2694,6 +2703,7 @@ msgid "Website Public Categories"
 msgstr "Загальні категорії веб-сайту"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product__website_sequence
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_sequence
 msgid "Website Sequence"
 msgstr "Послідовність веб-сайту"
@@ -2775,7 +2785,7 @@ msgid ""
 msgstr ""
 "За допомогою першого режиму ви можете встановити кілька цін у формі "
 "налаштування товару (на вкладці Продажі). З другим, ви встановлюєте ціни та "
-"правила обчислень з прайслистів."
+"правила обчислень з прайс-листів."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -2837,11 +2847,6 @@ msgstr "Ваша довідка"
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
 msgid "Your cart is empty!"
 msgstr "Ваш кошик пустий!"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
-msgid "Your payment has been authorized."
-msgstr "Вашу оплату було авторизовано."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -2939,17 +2944,12 @@ msgstr "o_website_sale_search"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_sale_note
 msgid "terms &amp; conditions"
-msgstr "умови та обставини"
+msgstr "терміни та умови"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "to follow your order."
-msgstr "Щоб слідкувати за вашим замовленням."
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_pricelist__website_id
-msgid "website"
-msgstr "веб-сайт"
+msgstr "щоб слідкувати за вашим замовленням."
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_sale_payment_acquirer_onboarding_wizard

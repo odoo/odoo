@@ -92,5 +92,30 @@
             <field name="account_dest_id" ref="8022" />
         </record>
 
+        <!-- Installatie / afstandsverkopen -->
+        <record
+            id="fiscal_position_account_installatie_afstand_1"
+            model="account.fiscal.position.account.template">
+            <field name="position_id"     ref="fiscal_position_template_eu_no_taxes_report" />
+            <field name="account_src_id"  ref="8001" />
+            <field name="account_dest_id" ref="8110" />
+        </record>
+
+        <record
+            id="fiscal_position_account_installatie_afstand_2"
+            model="account.fiscal.position.account.template">
+            <field name="position_id"     ref="fiscal_position_template_eu_no_taxes_report" />
+            <field name="account_src_id"  ref="8011" />
+            <field name="account_dest_id" ref="8120" />
+        </record>
+
+        <record
+            id="fiscal_position_account_installatie_afstand_3"
+            model="account.fiscal.position.account.template">
+            <field name="position_id"     ref="fiscal_position_template_eu_no_taxes_report" />
+            <field name="account_src_id"  ref="8021" />
+            <field name="account_dest_id" ref="8130" />
+        </record>
+
     </data>
 </openerp>

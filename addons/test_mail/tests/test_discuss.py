@@ -96,6 +96,20 @@ class TestNotifications(BaseFunctionalTest, MockEmails):
                 body='Test', message_type='comment', subtype='mail.mt_comment',
                 partner_ids=[self.user_employee.partner_id.id])
 
+    def test_inactive_follower(self):
+        # In some case odoobot is follower of a record.
+        # Even if it shouldn't be the case, we want to be sure that odoobot is not notified
+        self.test_record._message_subscribe(self.user_employee.partner_id.ids)
+        with self.assertNotifications(partner_employee=(1, 'inbox', 'unread')):
+            self.test_record.message_post(
+                body='Test', message_type='comment', subtype='mail.mt_comment')
+        self.user_employee.active = False
+        # at this point, partner is still active and would receive an email notification
+        self.user_employee.partner_id._write({'active': False})
+        with self.assertNotifications(partner_employee=(0, '', '')):
+            self.test_record.message_post(
+                body='Test', message_type='comment', subtype='mail.mt_comment')
+
     def test_set_message_done_user(self):
         with self.assertNotifications(partner_employee=(0, '', '')):
             message = self.test_record.message_post(

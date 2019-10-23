@@ -3,16 +3,18 @@
 # * mrp_byproduct
 # 
 # Translators:
-# thanh nguyen <thanhnguyen.icsc@gmail.com>, 2018
 # fanha99 <fanha99@hotmail.com>, 2018
 # Duy BQ <duybq86@gmail.com>, 2018
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
+# Chinh Chinh <trinhttp@trobz.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Duy BQ <duybq86@gmail.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:21+0000\n"
+"Last-Translator: Chinh Chinh <trinhttp@trobz.com>, 2019\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,7 +46,7 @@ msgstr "Phụ phẩm"
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_change_production_qty
 msgid "Change Production Qty"
-msgstr ""
+msgstr "Đổi số lượng sản xuất"
 
 #. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct__create_uid
@@ -129,6 +131,8 @@ msgid ""
 "The unit of measure you chose is in a different category than the product "
 "unit of measure."
 msgstr ""
+"Đơn vị đo mà bạn chọn nằm trong một danh mục khác với đơn vị đo lường sản "
+"phẩm."
 
 #. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct__product_uom_id
@@ -140,3 +144,9 @@ msgstr "Đơn vị tính"
 #, python-format
 msgid "Warning"
 msgstr "Cảnh báo"
+
+#. module: mrp_byproduct
+#: code:addons/mrp_byproduct/models/mrp_production.py:48
+#, python-format
+msgid "You cannot have %s  as the finished product and in the Byproducts"
+msgstr "Bạn không thể có %s sản phẩm hoàn chỉnh và trong sản phẩm phụ"

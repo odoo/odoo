@@ -22,12 +22,8 @@ class WebsiteForum(http.Controller):
     _user_per_page = 30
 
     def _get_notifications(self):
-        badge_subtype = request.env.ref('gamification.mt_badge_granted')
-        if badge_subtype:
-            msg = request.env['mail.message'].search([('subtype_id', '=', badge_subtype.id), ('needaction', '=', True)])
-        else:
-            msg = list()
-        return msg
+        """Deprecated"""
+        return list()
 
     def _prepare_forum_values(self, forum=None, **kwargs):
         values = {

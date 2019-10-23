@@ -7,18 +7,18 @@
 # José Gomes <jg@opencloud.pro>, 2018
 # Joao Felix <jrmfelix@gmail.com>, 2018
 # Martin Trigaux, 2018
-# Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2018
 # MS <manuelarodsilva@gmail.com>, 2018
-# Nuno Silva <nuno.silva@arxi.pt>, 2018
 # Diogo Fonseca <dsf@thinkopensolutions.pt>, 2018
+# Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2019
+# Nuno Silva <nuno.silva@arxi.pt>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:31+0000\n"
+"POT-Creation-Date: 2019-04-12 12:19+0000\n"
 "PO-Revision-Date: 2018-08-24 09:18+0000\n"
-"Last-Translator: Diogo Fonseca <dsf@thinkopensolutions.pt>, 2018\n"
+"Last-Translator: Nuno Silva <nuno.silva@arxi.pt>, 2019\n"
 "Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -200,7 +200,10 @@ msgid "Additional Note"
 msgstr "Nota Adicional"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_crm_team__alias_contact
 #: model:ir.model.fields,field_description:hr.field_mail_alias__alias_contact
+#: model:ir.model.fields,field_description:hr.field_mail_alias_mixin__alias_contact
+#: model:ir.model.fields,field_description:hr.field_mail_channel__alias_contact
 msgid "Alias Contact Security"
 msgstr "Segurança de Contacto do Alias"
 
@@ -479,8 +482,8 @@ msgstr "Departamentos"
 
 #. module: hr
 #: model:ir.model,name:hr.model_mail_channel
-msgid "Discussion channel"
-msgstr "Canal de discussão"
+msgid "Discussion Channel"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__display_name
@@ -652,6 +655,11 @@ msgstr "Seguidores (Parceiros)"
 #: selection:mail.alias,alias_contact:0
 msgid "Followers only"
 msgstr "Seguidores apenas"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Future Activities"
+msgstr "Atividades Futuras"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__gender
@@ -905,6 +913,11 @@ msgstr "Última Atualização por"
 #: model:ir.model.fields,field_description:hr.field_hr_job__write_date
 msgid "Last Updated on"
 msgstr "Última Atualização em"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Late Activities"
+msgstr "Atividades em Atraso"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_marketing
@@ -1214,7 +1227,10 @@ msgid "Planned"
 msgstr "Planeado "
 
 #. module: hr
+#: model:ir.model.fields,help:hr.field_crm_team__alias_contact
 #: model:ir.model.fields,help:hr.field_mail_alias__alias_contact
+#: model:ir.model.fields,help:hr.field_mail_alias_mixin__alias_contact
+#: model:ir.model.fields,help:hr.field_mail_channel__alias_contact
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
@@ -1536,6 +1552,11 @@ msgid "Today"
 msgstr "Hoje"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Today Activities"
+msgstr "Atividades do Dia"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__expected_employees
 msgid "Total Forecasted Employees"
 msgstr "Total de empregados previsto"
@@ -1655,6 +1676,20 @@ msgstr ""
 " criar artigos que as pessoas gostam de utilizar. Nós precisamos de alguém "
 "que é ambicioso, impulsivo, e ..... não tenha medo de começar coisas novas, "
 "um monte de coisas novas e escalá-las."
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__website_message_ids
+#: model:ir.model.fields,field_description:hr.field_hr_employee__website_message_ids
+#: model:ir.model.fields,field_description:hr.field_hr_job__website_message_ids
+msgid "Website Messages"
+msgstr "Mensagens do Website"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_department__website_message_ids
+#: model:ir.model.fields,help:hr.field_hr_employee__website_message_ids
+#: model:ir.model.fields,help:hr.field_hr_job__website_message_ids
+msgid "Website communication history"
+msgstr "Histórico de Comunicação do Website"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo

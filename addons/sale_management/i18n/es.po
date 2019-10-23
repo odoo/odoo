@@ -3,24 +3,26 @@
 # * sale_management
 # 
 # Translators:
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2018
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2018
-# e2f_EPV Translator <e2f_EPV@outlook.com>, 2018
-# e2f_es_ t7 <e2f_es_t7@outlook.com>, 2018
-# e2f_es_ t8 <e2f_es_t8@outlook.com>, 2018
+# 966ff43e6966712895a590e7320ca288, 2018
+# 36700cd705c35e1852bdffcd0b296648, 2018
+# 715cd7e95e9ee8a7f9785bf3e53bc76f, 2018
 # renodoo <ren@odoo.com>, 2018
 # Cristopher Cravioto <ccr@odoo.com>, 2018
 # Martin Trigaux, 2018
 # Cristian Salamea <ovnicraft@gmail.com>, 2018
 # Gabriel Umana <gabriel.umana@delfixcr.com>, 2019
+# Rick Hunter <rick_hunter_ec@yahoo.com>, 2019
+# Miguel Orueta <mo@landoo.es>, 2019
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:31+0000\n"
+"POT-Creation-Date: 2019-08-08 13:50+0000\n"
 "PO-Revision-Date: 2018-08-24 09:24+0000\n"
-"Last-Translator: Gabriel Umana <gabriel.umana@delfixcr.com>, 2019\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -106,6 +108,14 @@ msgid "Attributes"
 msgstr "Atributos"
 
 #. module: sale_management
+#: code:addons/sale_management/models/sale_order_template.py:39
+#, python-format
+msgid ""
+"Before archiving \"%s\" please select another default template in the "
+"settings."
+msgstr ""
+
+#. module: sale_management
 #: model:ir.model,name:sale_management.model_res_config_settings
 msgid "Config Settings"
 msgstr "Opciones de Configuración"
@@ -128,7 +138,7 @@ msgstr "Crear Factura"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
 msgid "Create standardized offers with default products"
-msgstr ""
+msgstr "Crear plantillas de ofertas con productos predeterminados"
 
 #. module: sale_management
 #: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action
@@ -171,6 +181,9 @@ msgid ""
 "Design your quotation templates using building blocks<br/>\n"
 "                            <em attrs=\"{'invisible': [('module_sale_quotation_builder','=',False)]}\">Warning: this option will install the Website app.</em>"
 msgstr ""
+"Diseñe sus plantillas de ofertas utilizando bloques de diseño<br/>\n"
+"<em attrs=\"{'invisible': [('module_sale_quotation_builder','=',False)]}\">Aviso: esta opción instalará el módulo de sitio web.</em>\n"
+" "
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_digest_digest
@@ -414,7 +427,7 @@ msgstr "Eliminar"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
 msgid "Remove one"
-msgstr ""
+msgstr "Quitar uno"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__require_signature
@@ -428,7 +441,7 @@ msgstr ""
 msgid ""
 "Request an online payment to the customer in order to confirm orders "
 "automatically."
-msgstr ""
+msgstr "Solicitar pago en línea para confirmar pedidos"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_option
@@ -534,10 +547,18 @@ msgid ""
 msgstr ""
 
 #. module: sale_management
-#: code:addons/sale_management/models/sale_order.py:178
+#: code:addons/sale_management/models/sale_order.py:198
 #, python-format
 msgid "You cannot add options to a confirmed order."
 msgstr "No puede añadir opciones a un pedido confirmado."
+
+#. module: sale_management
+#: code:addons/sale_management/models/sale_order_template.py:90
+#, python-format
+msgid ""
+"You cannot change the type of a sale quote line. Instead you should delete "
+"the current line and create a new line of the proper type."
+msgstr ""
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form

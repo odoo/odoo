@@ -1,17 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-import unittest
-
 from odoo.tools import pycompat
 from odoo.tools import mute_logger
 from odoo.tools.translate import quote, unquote, xml_translate, html_translate
-from odoo.tests.common import TransactionCase, tagged
+from odoo.tests.common import TransactionCase, BaseCase
 from psycopg2 import IntegrityError
 
 
-@tagged('standard', 'at_install')
-class TranslationToolsTestCase(unittest.TestCase):
+class TranslationToolsTestCase(BaseCase):
     def assertItemsEqual(self, a, b, msg=None):
         self.assertEqual(sorted(a), sorted(b), msg)
 
@@ -130,6 +126,19 @@ class TranslationToolsTestCase(unittest.TestCase):
         self.assertEquals(result, source)
         self.assertItemsEqual(terms,
             ['Form stuff', '<span class="fa fa-globe" title="Title stuff"/>'])
+
+    def test_translate_xml_inline5(self):
+        """ Test xml_translate() with inline elements with empty translated attrs only. """
+        terms = []
+        source = """<form string="Form stuff">
+                        <div>
+                            <label for="stuff"/>
+                            <span class="fa fa-globe" title=""/>
+                        </div>
+                    </form>"""
+        result = xml_translate(terms.append, source)
+        self.assertEquals(result, source)
+        self.assertItemsEqual(terms, ['Form stuff'])
 
     def test_translate_xml_t(self):
         """ Test xml_translate() with t-* attributes. """

@@ -7,16 +7,16 @@
 # Radoslav Sloboda <rado.sloboda@gmail.com>, 2018
 # Matus Krnac <matus.krnac@gmail.com>, 2018
 # Martin Trigaux, 2018
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
 # Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2018
 # gebri <gebri@inmail.sk>, 2019
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2019
 # Jan Prokop, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:38+0000\n"
+"POT-Creation-Date: 2019-05-22 11:56+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
 "Last-Translator: Jan Prokop, 2019\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
@@ -5434,10 +5434,10 @@ msgstr ""
 "------------------------------- \n"
 "- koniec životnosti\n"
 "- dátum spotreby\n"
-"- dátum odstránenia\n"
+"- dátum vyradenia\n"
 "- dátum upozornenia\n"
 "\n"
-"Tiež implementuje stratégiu odstránenia, First Expiry First Out (FEFO) široko používanú napríklad v potravinárskom priemysle.\n"
+"Tiež implementuje stratégiu vyradenia, First Expiry First Out (FEFO) široko používanú napríklad v potravinárskom priemysle.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_transifex
@@ -6107,6 +6107,9 @@ msgid ""
 "<span class=\"o_form_label\">The selected language has been successfully installed.\n"
 "You must change the preferences of the user to view the changes.</span>"
 msgstr ""
+"<span class=\"o_form_label\">Vybraný jazyk bol úspešne nainštalovaný. Musíte"
+" zmeniť predvoľby používateľa a otvoriť nové menu aby ste videli "
+"zmeny.</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade_install
@@ -6114,6 +6117,8 @@ msgid ""
 "<span class=\"o_form_label\">The selected modules have been updated / "
 "installed !</span>"
 msgstr ""
+"<span class=\"o_form_label\">TVybrané moduly boli aktualizované / "
+"nainštalované !</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade_install
@@ -6128,6 +6133,8 @@ msgid ""
 "<span class=\"searchIcon\"><i class=\"fa fa-search\" role=\"img\" aria-"
 "label=\"Search\" title=\"Search\"/></span>"
 msgstr ""
+"<span class=\"searchIcon\"><i class=\"fa fa-search\" role=\"img\" aria-"
+"label=\"Search\" title=\"Hľadať\"/></span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
@@ -7539,9 +7546,7 @@ msgid "Application"
 msgstr "Aplikácia"
 
 #. module: base
-#: code:addons/base/models/res_users.py:968
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
-#, python-format
 msgid "Application Accesses"
 msgstr "Prístup k Aplikácii"
 
@@ -8051,6 +8056,12 @@ msgid "Barcode scan in Mobile"
 msgstr ""
 
 #. module: base
+#: code:addons/base/models/ir_qweb_fields.py:607
+#, python-format
+msgid "Barcode symbology"
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/ir_qweb_fields.py:603
 #, python-format
 msgid "Barcode type"
@@ -8406,7 +8417,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_quotation_builder
 msgid "Build great quotation templates"
-msgstr ""
+msgstr "Vytvorte skvelé šablóny cenovej ponuky"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_board
@@ -8585,6 +8596,12 @@ msgstr "Zrušiť Aktualizáciu"
 #: code:addons/models.py:2118
 #, python-format
 msgid "Cannot aggregate field %r."
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/ir_translation.py:256
+#, python-format
+msgid "Cannot be translated; record not accessible."
 msgstr ""
 
 #. module: base
@@ -8895,7 +8912,7 @@ msgstr "Mesto"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_address_city
 msgid "City Addresses"
-msgstr ""
+msgstr "Adresy miest"
 
 #. module: base
 #: selection:ir.logging,type:0
@@ -9530,7 +9547,7 @@ msgstr "Názov Štátu"
 #. module: base
 #: model:ir.model,name:base.model_res_country_state
 msgid "Country state"
-msgstr "Štátny štát"
+msgstr "Spolková krajina"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_coupon
@@ -9560,7 +9577,7 @@ msgstr "Dátum Vytvorenia"
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_reveal
 msgid "Create Leads/Opportunities from your website's traffic"
-msgstr ""
+msgstr "Vytvoriť iniciatívy/príležitosti z prevádzky vašej webovej stránky"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.act_menu_create
@@ -9606,7 +9623,7 @@ msgstr "Vytvoriť nový Záznam"
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_res_bank_form
 msgid "Create a new bank"
-msgstr ""
+msgstr "Vytvoriť novú banku"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_res_company_form
@@ -9616,13 +9633,13 @@ msgstr "Vytvoriť novú spoločnosť"
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_category_form
 msgid "Create a new contact tag"
-msgstr ""
+msgstr "Vytvoriť nový štítok kontaktu"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_customer_form
 #: model_terms:ir.actions.act_window,help:base.action_partner_form
 msgid "Create a new customer in your address book"
-msgstr ""
+msgstr "Vytvorte nového zákazníka v adresári"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_attachment
@@ -9637,7 +9654,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_supplier_form
 msgid "Create a new vendor in your address book"
-msgstr ""
+msgstr "Vytvorte nového dodávateľa v adresári"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_web_studio
@@ -10007,7 +10024,7 @@ msgstr "Vlastné Skratky"
 #. module: base
 #: model:ir.model,name:base.model_ir_ui_view_custom
 msgid "Custom View"
-msgstr ""
+msgstr "Vlastné zobrazenie"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:406
@@ -10174,13 +10191,14 @@ msgstr "Formát Dátumu"
 #: code:addons/base/models/ir_qweb_fields.py:206
 #, python-format
 msgid "Date format"
-msgstr ""
+msgstr "Formát dátumu"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:567
 #, python-format
 msgid "Date to compare with the field value, by default use the current date."
 msgstr ""
+"Dátum porovnávaný s hodnotou poľa, štandardne sa použije dnešný dátum."
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:511
@@ -10283,7 +10301,7 @@ msgstr "Predvolený formát papiera ?"
 #. module: base
 #: model:ir.module.module,description:base.module_theme_default
 msgid "Default website theme"
-msgstr ""
+msgstr "Predvolená téma webovej stránky"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_deferred_revenue
@@ -10432,6 +10450,8 @@ msgid ""
 "Design great quotation templates with building blocks to significantly boost"
 " your success rate."
 msgstr ""
+"Navrhnite svoje šablóny ponúk pomocou stavebných blokov pre zvýšenie svojej "
+"úspešnosti"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mass_mailing
@@ -10670,7 +10690,7 @@ msgstr ""
 #: code:addons/base/models/ir_qweb_fields.py:394
 #, python-format
 msgid "Display currency"
-msgstr ""
+msgstr "Zobraziť menu"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country__address_format
@@ -10695,7 +10715,7 @@ msgstr ""
 #: code:addons/base/models/ir_qweb_fields.py:225
 #, python-format
 msgid "Display only the time"
-msgstr ""
+msgstr "Zobraziť len čas"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:634
@@ -10713,13 +10733,13 @@ msgstr ""
 #: code:addons/base/models/ir_qweb_fields.py:634
 #, python-format
 msgid "Displayed contry image"
-msgstr ""
+msgstr "Zobrazený obrázok krajiny"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:629
 #, python-format
 msgid "Displayed fields"
-msgstr ""
+msgstr "Zobrazené polia"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:633
@@ -10920,7 +10940,7 @@ msgstr ""
 #: code:addons/base/models/ir_attachment.py:584
 #, python-format
 msgid "ERROR: the file must be a PDF"
-msgstr ""
+msgstr "CHYBA: súbor musí byť PDF"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_escpos
@@ -11285,17 +11305,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_module_module__exclusion_ids
 #: model_terms:ir.ui.view,arch_db:base.module_form
 msgid "Exclusions"
-msgstr ""
+msgstr "Výnimky"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_category__exclusive
 msgid "Exclusive"
-msgstr ""
+msgstr "Výhradne"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_view_form
 msgid "Execute Every"
-msgstr ""
+msgstr "Vykonať každých"
 
 #. module: base
 #: selection:ir.actions.server,state:0
@@ -11386,12 +11406,12 @@ msgstr "Export platby ako súbory SEPA Kreditný Prevod"
 #. module: base
 #: model:ir.model,name:base.model_ir_exports
 msgid "Exports"
-msgstr ""
+msgstr "Exporty"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_exports_line
 msgid "Exports Line"
-msgstr ""
+msgstr "Riadok exportu"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_server_object_lines__value
@@ -11673,12 +11693,12 @@ msgstr "Fax"
 #: model:ir.model.fields,field_description:base.field_res_bank__state
 #: model:ir.model.fields,field_description:base.field_res_company__state_id
 msgid "Fed. State"
-msgstr "Fed. Štát"
+msgstr "Fed. štát"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_country_state
 msgid "Fed. States"
-msgstr "Fed. Štáty"
+msgstr "Fed. štáty"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_fedex
@@ -11960,7 +11980,7 @@ msgstr "Fínsko"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__week_start
 msgid "First Day of Week"
-msgstr ""
+msgstr "Prvý deň v týždni"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_fleet
@@ -12185,7 +12205,7 @@ msgstr "Od"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_management
 msgid "From quotations to invoices"
-msgstr ""
+msgstr "Od cenových ponúk po fakturáciu"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_access_view_search
@@ -12876,7 +12896,7 @@ msgstr "Pomáha vám spravovať časové rozvrhy."
 #. module: base
 #: model:ir.module.category,description:base.module_category_user_type
 msgid "Helps you manage users."
-msgstr ""
+msgstr "Pomáha vám spravovať užívateľov."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_event_management
@@ -12891,7 +12911,7 @@ msgstr "Pomáha vám spravovať vaše odhady."
 #. module: base
 #: model:ir.module.category,description:base.module_category_hr_contract
 msgid "Helps you manage your contracts."
-msgstr ""
+msgstr "Pomáha vám spravovať vaše zmluvy."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_human_resources
@@ -12971,7 +12991,7 @@ msgstr "Pomáha vám spravovať prieskum na kontrolu rôznych používateľov."
 #. module: base
 #: model:ir.module.category,description:base.module_category_sign
 msgid "Helps you sign and complete your documents easily."
-msgstr ""
+msgstr "Pomôže vám podpísať a skompletizovať vaše dokumenty."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
@@ -12988,7 +13008,7 @@ msgstr ""
 #: code:addons/base/models/ir_qweb_fields.py:226
 #, python-format
 msgid "Hide seconds"
-msgstr ""
+msgstr "Skryť sekundy"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_form
@@ -13068,13 +13088,13 @@ msgstr "Ľz Formuláre na Prijímanie do Zamestnania"
 #. module: base
 #: model:ir.module.category,name:base.module_category_human__resources
 msgid "Human  Resources"
-msgstr ""
+msgstr "Ľudské zdroje"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:606
 #, python-format
 msgid "Human Readable"
-msgstr ""
+msgstr "Čitateľné"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resource
@@ -13497,7 +13517,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import_csv
 msgid "Import CSV Bank Statement"
-msgstr ""
+msgstr "Import bankových výpisov CSV"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import_ofx
@@ -13513,7 +13533,7 @@ msgstr "Import QIF bankového výpisu"
 #: code:addons/base/models/res_partner.py:855
 #, python-format
 msgid "Import Template for Customers"
-msgstr ""
+msgstr "Import šablóny zákazníkov"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_import_language
@@ -13552,7 +13572,7 @@ msgstr "Neaktívne"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_search
 msgid "Inactive Users"
-msgstr "Nektívny Používatelia"
+msgstr "Neaktívni používatelia"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__index
@@ -13613,7 +13633,7 @@ msgstr "Individuálne"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_partner_filter
 msgid "Individuals"
-msgstr ""
+msgstr "Jednotlivci"
 
 #. module: base
 #: model:res.country,name:base.id
@@ -13869,7 +13889,7 @@ msgstr "Neplatný 'group by' parameter"
 #: code:addons/models.py:2120
 #, python-format
 msgid "Invalid aggregation function %r."
-msgstr ""
+msgstr "Neplatná agregačná funkcia %r."
 
 #. module: base
 #: code:addons/base/models/ir_fields.py:330
@@ -13891,13 +13911,13 @@ msgstr ""
 #: code:addons/base/models/ir_default.py:69
 #, python-format
 msgid "Invalid field %s.%s"
-msgstr ""
+msgstr "Neplatné pole %s.%s"
 
 #. module: base
 #: code:addons/models.py:2110
 #, python-format
 msgid "Invalid field specification %r."
-msgstr ""
+msgstr "Neplatná špecifikácia poľa %r."
 
 #. module: base
 #: sql_constraint:ir.ui.view:0
@@ -13911,7 +13931,7 @@ msgstr ""
 #. module: base
 #: sql_constraint:ir.ui.view:0
 msgid "Invalid key: QWeb view should have a key"
-msgstr ""
+msgstr "Neplatný kľúč: pohľad QWeb musí mať kľúč"
 
 #. module: base
 #: code:addons/base/models/ir_actions.py:140
@@ -13936,7 +13956,7 @@ msgstr "Neplatná ppredpona alebo prípona pre sekvenciu '%s'"
 #: code:addons/base/models/res_users.py:419
 #, python-format
 msgid "Invalid search criterion"
-msgstr ""
+msgstr "Neplatné kritérium hľadania"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:612
@@ -13954,7 +13974,7 @@ msgstr "Neplatný typ"
 #: code:addons/base/models/ir_default.py:71
 #, python-format
 msgid "Invalid value for %s.%s: %s"
-msgstr ""
+msgstr "Neplatná hodnota pre %s.%s: %s"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:353
@@ -13995,7 +14015,7 @@ msgstr "Fakturačná adresa"
 #. module: base
 #: model:ir.module.module,summary:base.module_account
 msgid "Invoices & Payments"
-msgstr ""
+msgstr "Faktúry & platby"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_account
@@ -14015,7 +14035,7 @@ msgstr "Fakturácia & platby"
 #. module: base
 #: model:ir.module.category,name:base.module_category_invoicing_management
 msgid "Invoicing Management"
-msgstr ""
+msgstr "Správa fakturácie "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_posbox_homepage
@@ -14265,7 +14285,7 @@ msgstr "Jazyk"
 #. module: base
 #: model:ir.model,name:base.model_base_language_export
 msgid "Language Export"
-msgstr ""
+msgstr "Export jazyka"
 
 #. module: base
 #: model:ir.model,name:base.model_base_language_import
@@ -14601,7 +14621,7 @@ msgstr "Kampane"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_reveal
 msgid "Lead Generation"
-msgstr ""
+msgstr "Generovanie iniciatívy"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_crm_score
@@ -14611,12 +14631,12 @@ msgstr "Vyhodnocovanie iniciatívy"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_project
 msgid "Lead to Tasks"
-msgstr ""
+msgstr "Iniciatíva na úlohy"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
 msgid "Learn More"
-msgstr ""
+msgstr "Zistiť viac"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hr_holidays
@@ -14965,7 +14985,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_mail_server
 msgid "Mail Server"
-msgstr ""
+msgstr "Mailový server"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_mail
@@ -15117,6 +15137,7 @@ msgid ""
 "Manage contact tags to better classify them for tracking and analysis "
 "purposes."
 msgstr ""
+"Spravujte štítky kontaktu pre lepšiu klasifikáciu pri sledovaní a analýze. "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_plm
@@ -15564,7 +15585,7 @@ msgstr "Model"
 #: code:addons/base/models/ir_model.py:504
 #, python-format
 msgid "Model %s does not exist"
-msgstr ""
+msgstr "Model %s neexistuje"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:668
@@ -15717,12 +15738,12 @@ msgstr "Aktualizácia modulu"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
 msgid "Module Update Result"
-msgstr "Výsledok aktualizácie modulu"
+msgstr "Výsledok aktualizácie modulov"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_module_upgrade_install
 msgid "Module Upgrade Install"
-msgstr "Inštalácia vylepšenia modulu"
+msgstr "Inštalácia aktualizácie modulu"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_module_module_dependency
@@ -17816,8 +17837,7 @@ msgid "Original currency"
 msgstr "Pôvodná mena"
 
 #. module: base
-#: code:addons/base/models/res_users.py:995
-#: code:addons/base/models/res_users.py:1178
+#: code:addons/base/models/res_users.py:1222
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 #, python-format
 msgid "Other"
@@ -18883,7 +18903,7 @@ msgstr "Nástroj na tvorbu cenových ponúk"
 #: model:ir.module.module,summary:base.module_sale_expense
 #: model:ir.module.module,summary:base.module_sale_stock
 msgid "Quotation, Sales Orders, Delivery & Invoicing Control"
-msgstr ""
+msgstr "Cenové ponuky, objednávky predaja, dodanie & kontrola fakturácie"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb
@@ -19034,7 +19054,7 @@ msgstr "Iba na čítanie"
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_L
 msgid "Real Estate"
-msgstr ""
+msgstr "Nehnuteľnosť"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_server_object_lines__resource_ref
@@ -19924,6 +19944,7 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_sign
 msgid "Send documents to sign online and handle filled copies"
 msgstr ""
+"Odosielanie dokumentov na podpis on-line a spracovanie vyplnených kópii"
 
 #. module: base
 #: model:ir.module.module,description:base.module_calendar_sms
@@ -20476,7 +20497,7 @@ msgstr "Spustiť konfiguráciu"
 #: model_terms:ir.ui.view,arch_db:base.view_partner_short_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "State"
-msgstr "Stav"
+msgstr "Štát"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state__code
@@ -20486,7 +20507,7 @@ msgstr "Kód štátu"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state__name
 msgid "State Name"
-msgstr "Meno štátu"
+msgstr "Názov štátu"
 
 #. module: base
 #: model:res.country,name:base.ps
@@ -20501,7 +20522,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__state_ids
 msgid "States"
-msgstr "Stavy"
+msgstr "Štáty"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_install__state
@@ -21460,6 +21481,7 @@ msgstr "Technický názov"
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
 #: model:ir.module.category,name:base.module_category_technical_settings
+#: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Technical Settings"
 msgstr "Technické nastavenia"
 
@@ -22964,7 +22986,7 @@ msgstr "Aktualizácie"
 #: model_terms:ir.ui.view,arch_db:base.module_form
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
 msgid "Upgrade"
-msgstr "Vylepšenie"
+msgstr "Aktualizácia"
 
 #. module: base
 #: model:ir.model,name:base.model_base_module_upgrade
@@ -23124,9 +23146,7 @@ msgid "User Login"
 msgstr "Prihlásenia používateľa"
 
 #. module: base
-#: code:addons/base/models/res_users.py:967
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
-#, python-format
 msgid "User Type"
 msgstr "Typ užívateľa"
 
@@ -23878,7 +23898,7 @@ msgstr "Nemôžete vytvoriť rekurzívne menovky."
 #. module: base
 #: sql_constraint:res.users:0
 msgid "You can not have two users with the same login !"
-msgstr "Nemôžte mať dvoch používateľov s rovnakým pristúpovým menom!"
+msgstr "Nemôžte mať dvoch používateľov s rovnakým prihlasovacím menom!"
 
 #. module: base
 #: code:addons/base/models/res_users.py:482
@@ -24189,8 +24209,8 @@ msgstr "napr. en_US"
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_address_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
-msgid "e.g. www.odoo.com"
-msgstr "napr. www.odoo.com"
+msgid "e.g. https://www.odoo.com"
+msgstr "napr. https://www.odoo.com"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_ebay

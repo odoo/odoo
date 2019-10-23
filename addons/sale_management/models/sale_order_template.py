@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
 
@@ -18,7 +18,7 @@ class SaleOrderTemplate(models.Model):
 
     name = fields.Char('Quotation Template', required=True)
     sale_order_template_line_ids = fields.One2many('sale.order.template.line', 'sale_order_template_id', 'Lines', copy=True)
-    note = fields.Text('Terms and conditions')
+    note = fields.Text('Terms and conditions', translate=True)
     sale_order_template_option_ids = fields.One2many('sale.order.template.option', 'sale_order_template_id', 'Optional Products', copy=True)
     number_of_days = fields.Integer('Quotation Duration',
         help='Number of days for the validity date computation of the quotation')
@@ -36,7 +36,7 @@ class SaleOrderTemplate(models.Model):
             template_id = self.env['ir.default'].get('sale.order', 'sale_order_template_id')
             for template in self:
                 if template_id and template_id == template.id:
-                    raise UserError('Before archiving "%s" please select another default template in the settings.' % template.name)
+                    raise UserError(_('Before archiving "%s" please select another default template in the settings.') % template.name)
         return super(SaleOrderTemplate, self).write(vals)
 
 
@@ -87,7 +87,7 @@ class SaleOrderTemplateLine(models.Model):
     @api.multi
     def write(self, values):
         if 'display_type' in values and self.filtered(lambda line: line.display_type != values.get('display_type')):
-            raise UserError("You cannot change the type of a sale quote line. Instead you should delete the current line and create a new line of the proper type.")
+            raise UserError(_("You cannot change the type of a sale quote line. Instead you should delete the current line and create a new line of the proper type."))
         return super(SaleOrderTemplateLine, self).write(values)
 
     _sql_constraints = [

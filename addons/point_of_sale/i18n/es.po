@@ -5,18 +5,23 @@
 # Translators:
 # AleEscandon <alejandra.escandon@jarsa.com.mx>, 2018
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2018
-# Martin Trigaux, 2018
 # Christopher Ormaza <chris.ormaza@gmail.com>, 2018
 # Cristopher Cravioto <ccr@odoo.com>, 2018
+# Martin Trigaux, 2018
 # David Vidal <david.vidal@trespinos.es>, 2019
+# Luis Guzman <ark@switnet.org>, 2019
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2019
+# Mariana Santos Romo <msn@odoo.com>, 2019
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2019
+# Jon Perez <jop@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-04 08:39+0000\n"
+"POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:22+0000\n"
-"Last-Translator: David Vidal <david.vidal@trespinos.es>, 2019\n"
+"Last-Translator: Jon Perez <jop@odoo.com>, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -94,7 +99,7 @@ msgstr "<b>Establecer imagen personalizada...</b>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.customer_facing_display_snippets
@@ -114,11 +119,13 @@ msgid ""
 "<i class=\"fa fa-fw fa-shopping-bag\" role=\"img\" aria-label=\"Shopping "
 "cart\" title=\"Shopping cart\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-shopping-bag\" role=\"img\" aria-label=\"Shopping "
+"cart\" title=\"Shopping cart\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_kanban
 msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Amount\" title=\"Amount\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Importe\" title=\"Importe\"/>"
 
 #. module: point_of_sale
 #. openerp-web
@@ -196,7 +203,7 @@ msgstr "<span class=\"oe_inline\"><b/></span>"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
 #: model_terms:pos.config,customer_facing_display_html:point_of_sale.pos_config_main
 msgid "<span class=\"pos-change_amount\">$ 0.86</span>"
-msgstr "<span class=\"pos-change_amount\"/>"
+msgstr "<span class=\"pos-change_amount\">$ 0.86</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
@@ -208,13 +215,13 @@ msgstr "<span class=\"pos-change_title\"/>"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
 #: model_terms:pos.config,customer_facing_display_html:point_of_sale.pos_config_main
 msgid "<span class=\"total-amount-formatting\">TOTAL</span>"
-msgstr "<span class=\"total-amount-formatting\"/>"
+msgstr "<span class=\"total-amount-formatting\">TOTAL</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
 #: model_terms:pos.config,customer_facing_display_html:point_of_sale.pos_config_main
 msgid "<span id=\"total-amount\" class=\"pos_total-amount\">$ 469.14</span>"
-msgstr "<span class=\"pos_total-amount\" id=\"total-amount\"/>"
+msgstr "<span id=\"total-amount\" class=\"pos_total-amount\">$ 469.14</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
@@ -241,7 +248,7 @@ msgstr "<span>Última Fecha de Cierre</span>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "<span>Reporting</span>"
-msgstr "<span>Reportería</span>"
+msgstr "<span>Informes</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -904,7 +911,7 @@ msgid ""
 "Choose a specific tax regime at the order depending on the kind of customer "
 "(tax exempt, onsite vs. takeaway, etc.)."
 msgstr ""
-"Escoja un régimen fiscal específico en el pedido dependiendo del tipo de "
+"Escoja una posición fiscal específica en el pedido dependiendo del tipo de "
 "cliente (exento de impuestos, presencial o a distancia, etc.)."
 
 #. module: point_of_sale
@@ -1020,11 +1027,19 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:829
+#: code:addons/point_of_sale/static/src/js/chrome.js:832
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1059
 #, python-format
 msgid "Confirm"
 msgstr "Confirmar"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+msgid ""
+"Connect devices to your PoS (ticket printer, barcode scanner, scale, etc.)"
+msgstr ""
+"Conecte los dispositivos a su punto de venta (impresora de tickets, escáner "
+"de código de barras, balanza, etc.)"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1649,7 +1664,7 @@ msgstr "Posición fiscal"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Fiscal Position per Order"
-msgstr "Situación fiscal por pedido"
+msgstr "Posición fiscal por pedido"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__fiscal_position_ids
@@ -1911,11 +1926,6 @@ msgstr "Facturación"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "IoT Box"
 msgstr "IoT Box"
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
-msgid "IotBox / Hardware Proxy"
-msgstr "IoT Box / Proxy de Hardware"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_restaurant
@@ -2785,7 +2795,7 @@ msgstr "Porfavor Confirme Cantidad Grande"
 #: code:addons/point_of_sale/static/src/js/models.js:1892
 #, python-format
 msgid "Please configure a payment method in your POS."
-msgstr ""
+msgstr "Configure un método de pago en su PdV."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:374
@@ -3132,7 +3142,7 @@ msgstr "Error de impresión: "
 #: code:addons/point_of_sale/static/src/js/screens.js:1580
 #, python-format
 msgid "Printing is not supported on some android browsers"
-msgstr ""
+msgstr "La impresión no está soportada es algunos navegadores android"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3143,6 +3153,9 @@ msgid ""
 "printing protocol is available. It is possible to print your tickets by "
 "making use of an IoT Box."
 msgstr ""
+"Printing no está soportado en algunos navegadores android debido a que no "
+"cuentan con un protocolo de impresión definido por omisión. Es posible "
+"imprimir sus tickets haciendo uso de un IoT Box."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_product
@@ -3912,12 +3925,12 @@ msgstr "NIF"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__tax_regime
 msgid "Tax Regime"
-msgstr "Régimen fiscal"
+msgstr "Posición fiscal"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__tax_regime_selection
 msgid "Tax Regime Selection value"
-msgstr "Valor de la selección del régimen fiscal"
+msgstr "Valor de la selección de la posición fiscal"
 
 #. module: point_of_sale
 #: selection:pos.config,iface_tax_included:0
@@ -4576,7 +4589,7 @@ msgstr "Utilizar números de Lotes/Serie existentes"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Use a default specific tax regime"
-msgstr "Utilizar un régimen fiscal específico por defecto"
+msgstr "Utilizar una posición fiscal específica por defecto"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__use_pricelist
@@ -4587,11 +4600,6 @@ msgstr "Utilizar una lista de precios."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Use a virtual keyboard for touchscreens"
 msgstr "Utilizar un teclado virtual para pantallas táctiles"
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
-msgid "Use an integrated hardware setup like"
-msgstr "Utilizar una configuración de hardware integrado como"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_journal__journal_user

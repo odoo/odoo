@@ -22,7 +22,7 @@ class MassMailController(http.Controller):
         model_display = mailing.mailing_model_id.display_name
         blacklist_entry._message_log(description + " ({})".format(model_display))
 
-    @http.route(['/unsubscribe_from_list'], type='http', website=True, multilang=False, auth='public')
+    @http.route(['/unsubscribe_from_list'], type='http', website=True, multilang=False, auth='public', sitemap=False)
     def unsubscribe_placeholder_link(self, **post):
         """Dummy route so placeholder is not prefixed by language, MUST have multilang=False"""
         raise werkzeug.exceptions.NotFound()

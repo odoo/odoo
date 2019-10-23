@@ -136,7 +136,8 @@
                             </t>
                         </tbody>
                     </table>
-                    <t t-set="has_product_reserved" t-value="o.move_raw_ids.filtered(lambda x: x.product_uom_qty != x.reserved_availability)"/>
+                    <t t-set="decimal_precision" t-value="o.env['decimal.precision'].precision_get('Product Unit of Measure')"/>
+                    <t t-set="has_product_reserved" t-value="o.move_raw_ids.filtered(lambda x: round(x.product_uom_qty, decimal_precision) != round(x.reserved_availability, decimal_precision))"/>
                     <p t-if="o.state !='done' and (not has_product_available or has_product_reserved)" class="fa fa-exclamation-triangle">
                         All components could not be reserved. Click on the "Check Availability button" to try to reserve components.
                     </p>

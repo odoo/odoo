@@ -5,15 +5,15 @@
 # Translators:
 # Cozmin Candea <office@terrabit.ro>, 2018
 # Martin Trigaux, 2018
-# Dorin Hongu <dhongu@gmail.com>, 2018
+# Dorin Hongu <dhongu@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:31+0000\n"
+"POT-Creation-Date: 2019-08-08 13:50+0000\n"
 "PO-Revision-Date: 2018-08-24 09:24+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2018\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2019\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,18 +50,18 @@ msgstr "Activ(a)"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Add a note"
-msgstr ""
+msgstr "Adaugă o notă"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Add a product"
-msgstr ""
+msgstr "Adăugați un produs"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Add a section"
-msgstr ""
+msgstr "Adaugă o secțiune"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
@@ -71,7 +71,7 @@ msgstr ""
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
 msgid "Add to cart"
-msgstr ""
+msgstr "Adaugă în coș"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
@@ -99,9 +99,17 @@ msgid "Attributes"
 msgstr "Atribute"
 
 #. module: sale_management
+#: code:addons/sale_management/models/sale_order_template.py:39
+#, python-format
+msgid ""
+"Before archiving \"%s\" please select another default template in the "
+"settings."
+msgstr ""
+
+#. module: sale_management
 #: model:ir.model,name:sale_management.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Setări de configurare"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -168,7 +176,7 @@ msgstr ""
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_digest_digest
 msgid "Digest"
-msgstr ""
+msgstr "Rezumat"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__discount
@@ -297,7 +305,7 @@ msgstr ""
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__require_signature
 msgid "Online Signature"
-msgstr ""
+msgstr "Semnătura online"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__sale_order_template_option_ids
@@ -395,7 +403,7 @@ msgstr ""
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
 msgid "Remove"
-msgstr "Elimina"
+msgstr "Elimină"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
@@ -408,6 +416,8 @@ msgid ""
 "Request a online signature to the customer in order to confirm orders "
 "automatically."
 msgstr ""
+"Solicitați o semnătură online clientului pentru a confirma automat "
+"comenzile."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__require_payment
@@ -513,11 +523,22 @@ msgid ""
 "                Send these quotes by email and let your customers sign online.\n"
 "                Use cross-selling and discounts to push and boost your sales."
 msgstr ""
+"Utilizați șabloane pentru a crea oferte profesional lustruite în câteva minute.\n"
+"Trimiteți aceste oferte prin e-mail și permiteți clienților dvs. să se conecteze online.\n"
+" Utilizați cross-selling și reduceri pentru a împinge și a crește vânzările."
 
 #. module: sale_management
-#: code:addons/sale_management/models/sale_order.py:178
+#: code:addons/sale_management/models/sale_order.py:198
 #, python-format
 msgid "You cannot add options to a confirmed order."
+msgstr ""
+
+#. module: sale_management
+#: code:addons/sale_management/models/sale_order_template.py:90
+#, python-format
+msgid ""
+"You cannot change the type of a sale quote line. Instead you should delete "
+"the current line and create a new line of the proper type."
 msgstr ""
 
 #. module: sale_management

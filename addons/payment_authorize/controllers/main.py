@@ -55,14 +55,14 @@ class AuthorizeController(http.Controller):
         except ValidationError as e:
             message = e.args[0]
             if isinstance(message, dict) and 'missing_fields' in message:
-                msg = _("The transaction cannot be processed because some contact details are missing or invalid: ")
-                message = msg + ', '.join(message['missing_fields']) + '. '
                 if request.env.user._is_public():
-                    message += _("Please sign in to complete your profile.")
+                    message = _("Please sign in to complete the payment.")
                     # update message if portal mode = b2b
                     if request.env['ir.config_parameter'].sudo().get_param('auth_signup.allow_uninvited', 'False').lower() == 'false':
-                        message += _("If you don't have any account, please ask your salesperson to update your profile. ")
+                        message += _(" If you don't have any account, ask your salesperson to grant you a portal access. ")
                 else:
+                    msg = _("The transaction cannot be processed because some contact details are missing or invalid: ")
+                    message = msg + ', '.join(message['missing_fields']) + '. '
                     message += _("Please complete your profile. ")
 
             return {

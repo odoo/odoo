@@ -8,6 +8,8 @@ import unittest
 
 from odoo import api, registry, SUPERUSER_ID
 from odoo.tests import common
+from odoo.tests.common import BaseCase
+
 from odoo.modules.registry import Registry
 
 
@@ -25,8 +27,7 @@ MODULE = 'test_uninstall'
 MODEL = 'test_uninstall.model'
 
 
-@common.tagged('standard', 'at_install')
-class TestUninstall(unittest.TestCase):
+class TestUninstall(BaseCase):
     """
     Test the install/uninstall of a test module. The module is available in
     `odoo.tests` which should be present in the addons-path.

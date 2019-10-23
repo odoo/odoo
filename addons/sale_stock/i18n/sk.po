@@ -7,7 +7,7 @@
 # Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2018
 # Stefan Stieranka <stieranka@itec.sk>, 2018
 # gebri <gebri@inmail.sk>, 2018
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2019
 # Jan Prokop, 2019
 # 
 msgid ""
@@ -206,6 +206,13 @@ msgstr "Zobrazenie Incoterms na objednávke predaja a súvisiace faktúry"
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Display incoterms on orders &amp; invoices"
 msgstr "Na objednávkach &amp;  faktúrach zobraziť INCOTERMS"
+
+#. module: sale_stock
+#: code:addons/sale_stock/models/sale_order.py:101
+#, python-format
+msgid ""
+"Do not forget to change the partner on the following delivery orders: %s"
+msgstr "Nezabudni zmeniť partnera na nasledovných dodacích objednávkach: %s"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__effective_date
@@ -574,6 +581,12 @@ msgstr "Sklad"
 #, python-format
 msgid "Warning"
 msgstr "Varovanie"
+
+#. module: sale_stock
+#: code:addons/sale_stock/models/sale_order.py:100
+#, python-format
+msgid "Warning!"
+msgstr "Varovanie!"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock

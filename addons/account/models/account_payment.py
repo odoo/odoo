@@ -87,6 +87,16 @@ class account_abstract_payment(models.AbstractModel):
         # Check all invoices have the same currency
         if any(inv.currency_id != invoices[0].currency_id for inv in invoices):
             raise UserError(_("In order to pay multiple invoices at once, they must use the same currency."))
+        # Check if, in batch payments, there are not negative invoices and positive invoices
+        dtype = invoices[0].type
+        for inv in invoices[1:]:
+            if inv.type != dtype:
+                if ((dtype == 'in_refund' and inv.type == 'in_invoice') or
+                        (dtype == 'in_invoice' and inv.type == 'in_refund')):
+                    raise UserError(_("You cannot register payments for vendor bills and supplier refunds at the same time."))
+                if ((dtype == 'out_refund' and inv.type == 'out_invoice') or
+                        (dtype == 'out_invoice' and inv.type == 'out_refund')):
+                    raise UserError(_("You cannot register payments for customer invoices and credit notes at the same time."))
 
         # Look if we are mixin multiple commercial_partner or customer invoices with vendor bills
         multi = any(inv.commercial_partner_id != invoices[0].commercial_partner_id
@@ -105,7 +115,7 @@ class account_abstract_payment(models.AbstractModel):
             'payment_type': total_amount > 0 and 'inbound' or 'outbound',
             'partner_id': False if multi else invoices[0].commercial_partner_id.id,
             'partner_type': False if multi else MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type],
-            'communication': ' '.join([ref for ref in invoices.mapped('reference') if ref]),
+            'communication': ' '.join([ref for ref in invoices.mapped('reference') if ref])[:2000],
             'invoice_ids': [(6, 0, invoices.ids)],
             'multi': multi,
         })
@@ -185,7 +195,7 @@ class account_abstract_payment(models.AbstractModel):
     def _compute_journal_domain_and_types(self):
         journal_type = ['bank', 'cash']
         domain = []
-        if self.currency_id.is_zero(self.amount) and self.has_invoices:
+        if self.currency_id.is_zero(self.amount) and hasattr(self, "has_invoices") and self.has_invoices:
             # In case of payment with 0 amount, allow to select a journal of type 'general' like
             # 'Miscellaneous Operations' and set this journal by default.
             journal_type = ['general']
@@ -307,7 +317,10 @@ class account_register_payments(models.TransientModel):
         results = {}
         # Create a dict dispatching invoices according to their commercial_partner_id, account_id, invoice_type and partner_bank_id
         for inv in self.invoice_ids:
-            partner_id = inv.commercial_partner_id.id
+            if inv.partner_id.type == 'invoice':
+                partner_id = inv.partner_id.id
+            else:
+                partner_id = inv.commercial_partner_id.id
             account_id = inv.account_id.id
             invoice_type = MAP_INVOICE_TYPE_PARTNER_TYPE[inv.type]
             recipient_account =  inv.partner_bank_id
@@ -330,6 +343,12 @@ class account_register_payments(models.TransientModel):
         pmt_communication = self.show_communication_field and self.communication \
                             or self.group_invoices and ' '.join([inv.reference or inv.number for inv in invoices]) \
                             or invoices[0].reference # in this case, invoices contains only one element, since group_invoices is False
+
+        if invoices[0].partner_id.type == 'invoice':
+            partner_id = invoices[0].partner_id
+        else:
+            partner_id = invoices[0].commercial_partner_id
+
         values = {
             'journal_id': self.journal_id.id,
             'payment_method_id': self.payment_method_id.id,
@@ -339,7 +358,7 @@ class account_register_payments(models.TransientModel):
             'payment_type': payment_type,
             'amount': abs(amount),
             'currency_id': self.currency_id.id,
-            'partner_id': invoices[0].commercial_partner_id.id,
+            'partner_id': partner_id.id,
             'partner_type': MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type],
             'partner_bank_account_id': bank_account.id,
             'multi': False,
@@ -397,6 +416,10 @@ class account_payment(models.Model):
     _inherit = ['mail.thread', 'account.abstract.payment']
     _description = "Payments"
     _order = "payment_date desc, name desc"
+
+    @api.model
+    def _get_move_name_transfer_separator(self):
+        return '§§'
 
     @api.multi
     @api.depends('move_line_ids.reconciled')
@@ -550,20 +573,25 @@ class account_payment(models.Model):
 
     @api.multi
     def button_invoices(self):
-        if self.partner_type == 'supplier':
-            views = [(self.env.ref('account.invoice_supplier_tree').id, 'tree'), (self.env.ref('account.invoice_supplier_form').id, 'form')]
-        else:
-            views = [(self.env.ref('account.invoice_tree').id, 'tree'), (self.env.ref('account.invoice_form').id, 'form')]
-        return {
+        action = {
             'name': _('Paid Invoices'),
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'account.invoice',
             'view_id': False,
-            'views': views,
             'type': 'ir.actions.act_window',
             'domain': [('id', 'in', [x.id for x in self.reconciled_invoice_ids])],
         }
+        if self.partner_type == 'supplier':
+            action['views'] = [(self.env.ref('account.invoice_supplier_tree').id, 'tree'), (self.env.ref('account.invoice_supplier_form').id, 'form')]
+            action['context'] = {
+                'journal_type': 'purchase',
+                'type': 'in_invoice',
+                'default_type': 'in_invoice',
+            }
+        else:
+            action['views'] = [(self.env.ref('account.invoice_tree').id, 'tree'), (self.env.ref('account.invoice_form').id, 'form')]
+        return action
 
     @api.multi
     def button_dummy(self):
@@ -586,9 +614,12 @@ class account_payment(models.Model):
             for move in rec.move_line_ids.mapped('move_id'):
                 if rec.invoice_ids:
                     move.line_ids.remove_move_reconcile()
-                move.button_cancel()
+                if move.state != 'draft':
+                    move.button_cancel()
                 move.unlink()
-            rec.state = 'cancelled'
+            rec.write({
+                'state': 'cancelled',
+            })
 
     @api.multi
     def unlink(self):
@@ -637,6 +668,7 @@ class account_payment(models.Model):
             # Create the journal entry
             amount = rec.amount * (rec.payment_type in ('outbound', 'transfer') and 1 or -1)
             move = rec._create_payment_entry(amount)
+            persist_move_name = move.name
 
             # In case of a transfer, the first journal entry created debited the source liquidity account and credited
             # the transfer account. Now we debit the transfer account and credit the destination liquidity account.
@@ -644,8 +676,9 @@ class account_payment(models.Model):
                 transfer_credit_aml = move.line_ids.filtered(lambda r: r.account_id == rec.company_id.transfer_account_id)
                 transfer_debit_aml = rec._create_transfer_entry(amount)
                 (transfer_credit_aml + transfer_debit_aml).reconcile()
+                persist_move_name += self._get_move_name_transfer_separator() + transfer_debit_aml.move_id.name
 
-            rec.write({'state': 'posted', 'move_name': move.name})
+            rec.write({'state': 'posted', 'move_name': persist_move_name})
         return True
 
     @api.multi
@@ -661,9 +694,7 @@ class account_payment(models.Model):
         if any(len(record.invoice_ids) != 1 for record in self):
             # For multiple invoices, there is account.register.payments wizard
             raise UserError(_("This method should only be called to process a single invoice's payment."))
-        res = self.post()
-        self.mapped('payment_transaction_id').filtered(lambda x: x.state == 'done' and not x.is_processed)._post_process_after_done()
-        return res
+        return self.post()
 
     def _create_payment_entry(self, amount):
         """ Create a journal entry corresponding to a payment, if the payment references invoice(s) they are reconciled.
@@ -751,14 +782,30 @@ class account_payment(models.Model):
         """ Return dict to create the payment move
         """
         journal = journal or self.journal_id
+
         move_vals = {
             'date': self.payment_date,
             'ref': self.communication or '',
             'company_id': self.company_id.id,
             'journal_id': journal.id,
         }
+
+        name = False
         if self.move_name:
-            move_vals['name'] = self.move_name
+            names = self.move_name.split(self._get_move_name_transfer_separator())
+            if self.payment_type == 'transfer':
+                if journal == self.destination_journal_id and len(names) == 2:
+                    name = names[1]
+                elif journal == self.destination_journal_id and len(names) != 2:
+                    # We are probably transforming a classical payment into a transfer
+                    name = False
+                else:
+                    name = names[0]
+            else:
+                name = names[0]
+
+        if name:
+            move_vals['name'] = name
         return move_vals
 
     def _get_shared_move_line_vals(self, debit, credit, amount_currency, move_id, invoice_id=False):
@@ -823,3 +870,17 @@ class account_payment(models.Model):
             })
 
         return vals
+
+    def _get_invoice_payment_amount(self, inv):
+        """
+        Computes the amount covered by the current payment in the given invoice.
+
+        :param inv: an invoice object
+        :returns: the amount covered by the payment in the invoice
+        """
+        self.ensure_one()
+        return sum([
+            data['amount']
+            for data in inv._get_payments_vals()
+            if data['account_payment_id'] == self.id
+        ])

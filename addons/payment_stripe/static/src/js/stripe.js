@@ -21,9 +21,13 @@ odoo.define('payment_stripe.stripe', function(require) {
         $.blockUI.defaults.css["background-color"] = '';
         $.blockUI.defaults.overlayCSS["opacity"] = '0.9';
     }
+    var stripeHandler;
     function getStripeHandler()
     {
-        var handler = StripeCheckout.configure({
+        if (stripeHandler) {
+            return stripeHandler;
+        }
+        var handler = stripeHandler = StripeCheckout.configure({
             key: $("input[name='stripe_key']").val(),
             image: $("input[name='stripe_image']").val(),
             locale: 'auto',
@@ -101,9 +105,17 @@ odoo.define('payment_stripe.stripe', function(require) {
         var invoice_num = get_input_value("invoice_num");
         var merchant = get_input_value("merchant");
 
+        // Search if the user wants to save the credit card information
+        var form_save_token = false;
+        var acquirer_form = $('#o_payment_form_acq_' + acquirer_id);
+        if (acquirer_form.length) {
+            form_save_token = acquirer_form.find('input[name="o_payment_form_save_token"]').prop('checked');
+        }
+
         ajax.jsonRpc(payment_tx_url, 'call', {
             acquirer_id: acquirer_id,
             access_token: access_token,
+            save_token: form_save_token,
         }).then(function(data) {
             var $pay_stripe = $('#pay_stripe').detach();
             try { provider_form[0].innerHTML = data; } catch (e) {}

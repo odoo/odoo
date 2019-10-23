@@ -4,19 +4,29 @@
 # 
 # Translators:
 # Sengtha Chay <sengtha@gmail.com>, 2018
+# Lux Sok <sok.lux@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Sengtha Chay <sengtha@gmail.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:21+0000\n"
+"Last-Translator: Lux Sok <sok.lux@gmail.com>, 2019\n"
 "Language-Team: Khmer (https://www.transifex.com/odoo/teams/41243/km/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: km\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/controllers/main.py:62
+#, python-format
+msgid ""
+" If you don't have any account, ask your salesperson to grant you a portal "
+"access. "
+msgstr "ប្រសិនបើអ្នកមិនមានគណនី សូមសួរអ្នកលក់របស់ដើម្បីឱ្យអ្នកចូលប្រើផតថល។"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_login
@@ -26,22 +36,22 @@ msgstr "API Id សំរាប់ពិនិត្យចូល"
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_transaction_key
 msgid "API Transaction Key"
-msgstr ""
+msgstr "កូដប្រតិបត្តិការ API"
 
 #. module: payment_authorize
 #: selection:payment.acquirer,provider:0
 msgid "Adyen"
-msgstr ""
+msgstr "Adyen"
 
 #. module: payment_authorize
 #: selection:payment.acquirer,provider:0
 msgid "Authorize.Net"
-msgstr ""
+msgstr "ផ្តល់សិទ្ធិ.សុទ្ធ"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token__authorize_profile
 msgid "Authorize.net Profile ID"
-msgstr ""
+msgstr "លេខសម្គាល់ប្រវត្តិរូប ផ្តល់សិទ្ធិ.សុទ្ធ"
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment.py:177
@@ -50,36 +60,38 @@ msgid ""
 "Authorize: received data with missing reference (%s) or trans_id (%s) or "
 "fingerprint (%s)"
 msgstr ""
+"ផ្តល់សិទ្ធិៈទទួលបានទិន្នន័យជាមួយនឹងឯកសារយោងដែលបាត់ (%s) ឬ trans_id (%s) "
+"ឬស្នាមម្រាមដៃ (%s) "
 
 #. module: payment_authorize
 #: selection:payment.acquirer,provider:0
 msgid "Buckaroo"
-msgstr ""
+msgstr "Buckaroo"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
 msgid "CVC"
-msgstr ""
+msgstr "ស៊ីវីស៊ី"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
 msgid "Card number"
-msgstr ""
+msgstr "លេខ​កាត "
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
 msgid "Cardholder name"
-msgstr ""
+msgstr "ឈ្មោះ​អ្នក​កាន់​ប័ណ្ណ "
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
 msgid "Expires (MM / YY)"
-msgstr ""
+msgstr "ផុតកំណត់ (ខែ / ឆ្នាំ) "
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.acquirer_form_authorize
 msgid "How to get paid with Authorize.Net"
-msgstr ""
+msgstr "របៀបបង់លុយជាមួយ Authorize.Net "
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/controllers/main.py:64
@@ -88,6 +100,8 @@ msgid ""
 "If you don't have any account, please ask your salesperson to update your "
 "profile. "
 msgstr ""
+"ប្រសិនបើអ្នកមិនមានគណនី  "
+"សូមសួរអ្នកលក់របស់អ្នកឱ្យធ្វើបច្ចុប្បន្នភាពប្រវត្តិរូបរបស់អ្នក។"
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment.py:261
@@ -96,80 +110,82 @@ msgid ""
 "Invalid token found: the Authorize profile is missing.Please make sure the "
 "token has a valid acquirer reference."
 msgstr ""
+"រកឃើញថូខឹនមិនត្រឹមត្រូវ៖ បាត់ព័ត៌មានផ្ទាល់ខ្លួន។ "
+"សូមប្រាកដថាថូខឹនមានឯកសារយោងត្រឹមត្រូវ។"
 
 #. module: payment_authorize
 #: selection:payment.acquirer,provider:0
 msgid "Manual Configuration"
-msgstr ""
+msgstr "ការកំណត់រចនាសម្ព័ន្ធដោយដៃ "
 
 #. module: payment_authorize
 #: selection:payment.acquirer,provider:0
 msgid "Ogone"
-msgstr ""
+msgstr "Ogone "
 
 #. module: payment_authorize
 #: selection:payment.acquirer,provider:0
 msgid "PayUmoney"
-msgstr ""
+msgstr "PayUmoney "
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr ""
+msgstr "ការបង់ថ្លៃទំនិញ"
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_token
 msgid "Payment Token"
-msgstr ""
+msgstr "ការទូទាត់ Token"
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
+msgstr "ការបង់ប្រាក់សំរាប់ប្រតិបត្តិការ"
 
 #. module: payment_authorize
 #: selection:payment.acquirer,provider:0
 msgid "Paypal"
-msgstr ""
+msgstr "Paypal"
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/controllers/main.py:66
 #, python-format
 msgid "Please complete your profile. "
-msgstr ""
+msgstr "សូមបំពេញទម្រង់របស់អ្នក។"
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/controllers/main.py:61
 #, python-format
-msgid "Please sign in to complete your profile."
-msgstr ""
+msgid "Please sign in to complete the payment."
+msgstr "សូមចូលដើម្បីបញ្ចប់ការទូទាត់។"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__provider
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token__provider
 msgid "Provider"
-msgstr ""
+msgstr "ការផ្តល់ជូន"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token__save_token
 msgid "Save Cards"
-msgstr ""
+msgstr "រក្សាទុកកាត"
 
 #. module: payment_authorize
 #: selection:payment.acquirer,provider:0
 msgid "Sips"
-msgstr ""
+msgstr "Sips"
 
 #. module: payment_authorize
 #: selection:payment.acquirer,provider:0
 msgid "Stripe"
-msgstr ""
+msgstr "ឆ្នូត"
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment.py:365
 #, python-format
 msgid "The Customer Profile creation in Authorize.NET failed."
-msgstr ""
+msgstr "ការបង្កើតប្រវត្តិរូបអតិថិជននៅក្នុង Authorize.NET បានបរាជ័យ។"
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/controllers/main.py:58
@@ -178,6 +194,7 @@ msgid ""
 "The transaction cannot be processed because some contact details are missing"
 " or invalid: "
 msgstr ""
+"ប្រតិបត្តិការមិនអាចដំណើរការបានទេពីព្រោះព័ត៌មានលំអិតទំនាក់ទំនងមួយចំនួនត្រូវបានបាត់ឬមិនត្រឹមត្រូវ។"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token__authorize_profile
@@ -185,6 +202,8 @@ msgid ""
 "This contains the unique reference for this partner/payment token "
 "combination in the Authorize.net backend"
 msgstr ""
+"នេះមានឯកសារយោងតែមួយគត់សម្រាប់ការរួមបញ្ចូលគ្នានៃនិមិត្តសញ្ញា / "
+"ការទូទាត់នៅក្នុងកម្មវិធីខាងក្រោយ Authorize.net ។"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token__save_token
@@ -194,8 +213,11 @@ msgid ""
 " invoicing), you need it to automatically charge the customer when you issue"
 " an invoice."
 msgstr ""
+"ជម្រើសនេះអនុញ្ញាតឱ្យអតិថិជនរក្សាទុកកាតឥណទានរបស់ពួកគេជានិមិត្តសញ្ញាទូទាត់និងប្រើវាឡើងវិញសម្រាប់ការទិញនៅពេលក្រោយ។"
+" ប្រសិនបើអ្នកគ្រប់គ្រងការជាវ (វិក្កយបត្រកើតឡើង) "
+"អ្នកត្រូវគិតថ្លៃអតិថិជនដោយស្វ័យប្រវត្តិនៅពេលអ្នកចេញវិក្កយបត្រ។"
 
 #. module: payment_authorize
 #: selection:payment.acquirer,provider:0
 msgid "Wire Transfer"
-msgstr ""
+msgstr "ខ្សែ​បញ្ជូន "

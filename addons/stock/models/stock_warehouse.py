@@ -441,39 +441,47 @@ class Warehouse(models.Model):
         delivery_steps = vals.get('delivery_steps', def_values['delivery_steps'])
         code = vals.get('code') or self.code
         code = code.replace(' ', '').upper()
+        company_id = vals.get('company_id', self.default_get(['company_id'])['company_id'])
         sub_locations = {
             'lot_stock_id': {
                 'name': _('Stock'),
                 'active': True,
                 'usage': 'internal',
-                'barcode': code + '-STOCK'
+                'barcode': self._valid_barcode(code + '-STOCK', company_id)
             },
             'wh_input_stock_loc_id': {
                 'name': _('Input'),
                 'active': reception_steps != 'one_step',
                 'usage': 'internal',
-                'barcode': code + '-INPUT'
+                'barcode': self._valid_barcode(code + '-INPUT', company_id)
             },
             'wh_qc_stock_loc_id': {
                 'name': _('Quality Control'),
                 'active': reception_steps == 'three_steps',
                 'usage': 'internal',
-                'barcode': code + '-QUALITY'
+                'barcode': self._valid_barcode(code + '-QUALITY', company_id)
             },
             'wh_output_stock_loc_id': {
                 'name': _('Output'),
                 'active': delivery_steps != 'ship_only',
                 'usage': 'internal',
-                'barcode': code + '-OUTPUT'
+                'barcode': self._valid_barcode(code + '-OUTPUT', company_id)
             },
             'wh_pack_stock_loc_id': {
                 'name': _('Packing Zone'),
                 'active': delivery_steps == 'pick_pack_ship',
                 'usage': 'internal',
-                'barcode': code + '-PACKING'
+                'barcode': self._valid_barcode(code + '-PACKING', company_id)
             },
         }
         return sub_locations
+
+    def _valid_barcode(self, barcode, company_id):
+        location = self.env['stock.location'].with_context(active_test=False).search([
+            ('barcode', '=', barcode),
+            ('company_id', '=', company_id)
+        ])
+        return not location and barcode
 
     def _create_missing_locations(self, vals):
         """ It could happen that the user delete a mandatory location or a
@@ -481,13 +489,14 @@ class Warehouse(models.Model):
         In this case, this function will create missing locations in order to
         avoid mistakes during picking types and rules creation.
         """
-        sub_locations = self._get_locations_values(vals)
         for warehouse in self:
+            company_id = vals.get('company_id', warehouse.company_id.id)
+            sub_locations = warehouse._get_locations_values(dict(vals, company_id=company_id))
             missing_location = {}
             for location, location_values in sub_locations.items():
                 if not warehouse[location] and location not in vals:
                     location_values['location_id'] = vals.get('view_location_id', warehouse.view_location_id.id)
-                    location_values['company_id'] = vals.get('company_id', warehouse.company_id.id)
+                    location_values['company_id'] = company_id
                     missing_location[location] = self.env['stock.location'].create(location_values).id
             if missing_location:
                 warehouse.write(missing_location)
@@ -647,7 +656,10 @@ class Warehouse(models.Model):
         if not change_to_multiple:
             # If single delivery we should create the necessary MTO rules for the resupply
             routings = [self.Routing(self.lot_stock_id, location, self.out_type_id, 'pull') for location in rules.mapped('location_id')]
-            mto_rule_vals = self._get_rule_values(routings)
+            mto_vals = self._get_global_route_rules_values().get('mto_pull_id')
+            values = mto_vals['create_values']
+            mto_rule_vals = self._get_rule_values(routings, values, name_suffix='MTO')
+
             for mto_rule_val in mto_rule_vals:
                 Rule.create(mto_rule_val)
         else:
@@ -842,7 +854,6 @@ class Warehouse(models.Model):
 
     @api.returns('self')
     def _get_all_routes(self):
-        # TDE FIXME: check overrides
         routes = self.mapped('route_ids') | self.mapped('mto_pull_id').mapped('route_id')
         routes |= self.env["stock.location.route"].search([('supplied_wh_id', 'in', self.ids)])
         return routes

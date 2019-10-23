@@ -7,7 +7,7 @@ import uuid
 import werkzeug.urls
 import requests
 
-from odoo import api, fields, models, exceptions
+from odoo import api, fields, models, exceptions, _
 from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
@@ -68,7 +68,9 @@ def jsonrpc(url, method='call', params=None, timeout=15):
             raise e
         return response.get('result')
     except (ValueError, requests.exceptions.ConnectionError, requests.exceptions.MissingSchema, requests.exceptions.Timeout, requests.exceptions.HTTPError) as e:
-        raise exceptions.AccessError('The url that this service requested returned an error. Please contact the author the app. The url it tried to contact was ' + url)
+        raise exceptions.AccessError(
+            _('The url that this service requested returned an error. Please contact the author the app. The url it tried to contact was %s') % url
+        )
 
 #----------------------------------------------------------
 # Helpers for proxy
@@ -162,7 +164,7 @@ class IapAccount(models.Model):
 
     @api.model
     def get(self, service_name, force_create=True):
-        account = self.search([('service_name', '=', service_name), ('company_id', 'in', [self.env.user.company_id.id, False])])
+        account = self.search([('service_name', '=', service_name), ('company_id', 'in', [self.env.user.company_id.id, False])], limit=1, order='company_id desc, id desc')
         if not account and force_create:
             account = self.create({'service_name': service_name})
             # Since the account did not exist yet, we will encounter a NoCreditError,

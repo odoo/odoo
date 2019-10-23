@@ -3,8 +3,8 @@
 # * sale_stock
 # 
 # Translators:
-# Martin Trigaux, 2018
 # Bohdan Lisnenko, 2018
+# Martin Trigaux, 2019
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
 # 
 msgid ""
@@ -30,7 +30,7 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"У наявності %s %s є на всіх складах.\n"
+"В наявності %s %s на всіх складах.\n"
 "\n"
 
 #. module: sale_stock
@@ -213,6 +213,13 @@ msgid "Display incoterms on orders &amp; invoices"
 msgstr "Відображати інкотерми на замовленнях та рахунках-фактури"
 
 #. module: sale_stock
+#: code:addons/sale_stock/models/sale_order.py:101
+#, python-format
+msgid ""
+"Do not forget to change the partner on the following delivery orders: %s"
+msgstr "Не забудьте змінити партнера на наступному замовленні на доставку: %s"
+
+#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__effective_date
 msgid "Effective Date"
 msgstr "Дата набрання чинності"
@@ -368,7 +375,7 @@ msgstr "Не достатньо запасів!"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__group_route_so_lines
 msgid "Order-Specific Routes"
-msgstr "Спеціально-замовлені маршрути"
+msgstr "Спеціальні маршрути на замовленні"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:294
@@ -411,8 +418,8 @@ msgid ""
 "every 24 hours."
 msgstr ""
 "Бронюючи товари вручну в замовленнях на доставку або керуючи планувальником,"
-" рекомендується краще керувати пріоритетами у випадку довгострокового "
-"обслуговування клієнтів та/або частого вилучення запасів. За замовчуванням, "
+" рекомендується краще керувати пріоритетами у випадку довгого терміну "
+"обслуговування клієнтів та/або частого вилучення запасів. За замовчуванням "
 "планувальник запускається автоматично кожні 24 години."
 
 #. module: sale_stock
@@ -583,6 +590,12 @@ msgstr "Склад"
 #, python-format
 msgid "Warning"
 msgstr "Попередження"
+
+#. module: sale_stock
+#: code:addons/sale_stock/models/sale_order.py:100
+#, python-format
+msgid "Warning!"
+msgstr "Увага!"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock

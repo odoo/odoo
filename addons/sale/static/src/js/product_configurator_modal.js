@@ -13,19 +13,11 @@ var optionalProductsMap = {};
 var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixin, {
     events:  _.extend({}, Dialog.prototype.events, ProductConfiguratorMixin.events, {
         'click a.js_add, a.js_remove': '_onAddOrRemoveOption',
-        'change .in_cart.main_product input.js_quantity': '_onChangeQuantity'
+        'click button.js_add_cart_json': 'onClickAddCartJSON',
+        'change .in_cart.main_product input.js_quantity': '_onChangeQuantity',
     }),
     /**
      * Initializes the optional products modal
-     *
-     * If the "isWebsite" param is true, will also disable the following events:
-     * - change [data-attribute_exclusions]
-     * - click button.js_add_cart_json
-     *
-     * This has to be done because those events are already registered at the "website_sale"
-     * component level.
-     * This modal is part of the form that has these events registered and we
-     * want to avoid duplicates.
      *
      * @override
      * @param {$.Element} parent The parent container
@@ -67,10 +59,6 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixi
         this.pricelistId = params.pricelistId;
         this.isWebsite = params.isWebsite;
         this.dialogClass = 'oe_optional_products_modal' + (params.isWebsite ? ' oe_website_sale' : '');
-
-        if (this.isWebsite) {
-            delete this.events['click button.js_add_cart_json'];
-        }
         this._productImageField = 'image_medium';
     },
      /**
@@ -156,6 +144,25 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixi
     // Public
     //--------------------------------------------------------------------------
 
+    /**
+     * Computes and updates the total price, useful when a product is added or
+     * when the quantity is changed.
+     * TODO awa: add a container context to avoid global selectors ?
+     */
+    computePriceTotal: function () {
+        if ($('.js_price_total').length) {
+            var price = 0;
+            $('.js_product.in_cart').each(function () {
+                var quantity = parseInt($('input[name="add_qty"]').first().val());
+                price += parseFloat($(this).find('.js_raw_price').html()) * quantity;
+            });
+
+            $('.js_price_total .oe_currency_value').html(
+                this._priceToStr(parseFloat(price))
+            );
+        }
+        ProductConfiguratorMixin.computePriceTotal.apply(this, arguments);
+    },
     /**
      * Returns the list of selected products.
      * The root product is added on top of the list.
@@ -450,6 +457,8 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixi
             .text(combination.display_name);
 
         ProductConfiguratorMixin._onChangeCombination.apply(this, arguments);
+
+        this.computePriceTotal();
     },
     /**
      * When the quantity of the root product is updated, we need to update

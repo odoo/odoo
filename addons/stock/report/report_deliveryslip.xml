@@ -4,7 +4,7 @@
     <template id="report_delivery_document">
         <t t-call="web.html_container">
             <t t-call="web.external_layout">
-                <t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})" />
+                <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)" />
                 <t t-set="partner" t-value="o.partner_id or (o.move_lines and o.move_lines[0].partner_id) or False"/>
                 <t t-if="partner" name="partner_header">
                     <t t-set="address">
@@ -93,7 +93,7 @@
                                 <td t-if="has_serial_number and move_line.lot_name" groups="stock.group_lot_on_delivery_slip">
                                     <span t-field="move_line.lot_name"/>
                                 </td>
-                                <td t-else="" groups="stock.group_lot_on_delivery_slip">
+                                <td t-elif="has_serial_number" groups="stock.group_lot_on_delivery_slip">
                                     <span t-field="move_line.lot_id.name"/>
                                 </td>
                                 <td class="text-center">

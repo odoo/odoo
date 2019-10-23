@@ -1,8 +1,11 @@
 odoo.define('web.search_view_tests', function (require) {
 "use strict";
 
+var AbstractStorageService = require('web.AbstractStorageService');
 var FormView = require('web.FormView');
+var RamStorage = require('web.RamStorage');
 var testUtils = require('web.test_utils');
+var testUtilsDom = require('web.test_utils_dom');
 var createActionManager = testUtils.createActionManager;
 var patchDate = testUtils.patchDate;
 var createView = testUtils.createView;
@@ -539,6 +542,9 @@ QUnit.module('Search View', {
         $autocomplete = $('.o_searchview_input');
         stringToEvent($autocomplete, '07/15/1983 00:00:00');
 
+        $autocomplete.trigger($.Event('keydown', {
+            which: $.ui.keyCode.DOWN,
+        }));
         $autocomplete.trigger($.Event('keyup', {
             which: $.ui.keyCode.ENTER,
             keyCode: $.ui.keyCode.ENTER,
@@ -647,6 +653,152 @@ QUnit.module('Search View', {
 
         actionManager.destroy();
         window.Date = RealDate;
+    });
+
+    QUnit.test('Filter with JSON-parsable domain works', function (assert) {
+        assert.expect(1);
+
+        var domain = [['foo' ,'=', 'Gently Weeps']];
+        var xml_domain = JSON.stringify(domain);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/search_read') {
+                    assert.deepEqual(args.domain, domain,
+                        'A JSON parsable xml domain should be handled just like any other');
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+
+        this.archs['partner,5,search'] =
+            '<search>'+
+                '<filter string="Foo" name="gently_weeps" domain="' + _.escape(xml_domain) + '" />' +
+            '</search>';
+        this.actions[0].search_view_id = [5, 'search'];
+        this.actions[0].context = {search_default_gently_weeps: true};
+
+        actionManager.doAction(1);
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('Custom Filter datetime with equal operator, operator has been changed', function (assert) {
+        assert.expect(5);
+
+        this.data.partner.fields.date_time_field = {string: "DateTime", type: "datetime", store: true, searchable: true};
+
+        var searchReadCount = 0;
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            session: {
+                getTZOffset: function () {
+                    return -240;
+                },
+            },
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/search_read') {
+                    if (searchReadCount === 1) {
+                        assert.deepEqual(args.domain,
+                            [['date_time_field', '=', '2017-02-22 15:00:00']], // In UTC
+                            'domain is correct'
+                        );
+                    }
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        // List view
+        actionManager.doAction(2);
+
+        testUtilsDom.click($('button:contains(Filters)'));
+        testUtilsDom.click($('.o_dropdown_menu .o_add_custom_filter'));
+        assert.strictEqual($('.o_dropdown_menu select.o_searchview_extended_prop_field').val(), 'date_time_field',
+            'the date_time_field should be selected in the custom filter');
+
+        assert.strictEqual($('.o_dropdown_menu select.o_searchview_extended_prop_op').val(), '=',
+            'The equal operator is selected');
+
+        // Change operator, and back
+        $('.o_dropdown_menu select.o_searchview_extended_prop_op').val('between').trigger('change');
+
+        assert.strictEqual($('.o_dropdown_menu select.o_searchview_extended_prop_op').val(), 'between',
+            'The between operator is selected');
+
+        $('.o_dropdown_menu select.o_searchview_extended_prop_op').val('=').trigger('change');
+
+        $('.o_searchview_extended_prop_value input').val('02/22/2017 11:00:00').trigger('change'); // in TZ
+
+        searchReadCount = 1;
+        testUtilsDom.click($('.o_dropdown_menu .o_apply_filter'))
+
+        assert.strictEqual($('.o_dropdown_menu .dropdown-item.selected').text().trim(), 'DateTime is equal to "02/22/2017 11:00:00"',
+            'Label of Filter is correct')
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('Custom Filter datetime between operator', function (assert) {
+        assert.expect(5);
+
+        this.data.partner.fields.date_time_field = {string: "DateTime", type: "datetime", store: true, searchable: true};
+
+        var searchReadCount = 0;
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            session: {
+                getTZOffset: function () {
+                    return -240;
+                },
+            },
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/search_read') {
+                    if (searchReadCount === 1) {
+                        assert.deepEqual(args.domain,
+                            [
+                                '&', ['date_time_field', '>=', '2017-02-22 15:00:00'], ['date_time_field', '<=', '2017-02-22 21:00:00']  // In UTC
+                            ],
+                            'domain is correct'
+                        );
+                    }
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        // List view
+        actionManager.doAction(2);
+
+        testUtilsDom.click($('button:contains(Filters)'));
+        testUtilsDom.click($('.o_dropdown_menu .o_add_custom_filter'));
+        assert.strictEqual($('.o_dropdown_menu select.o_searchview_extended_prop_field').val(), 'date_time_field',
+            'the date_time_field should be selected in the custom filter');
+
+        assert.strictEqual($('.o_dropdown_menu select.o_searchview_extended_prop_op').val(), '=',
+            'The equal operator is selected');
+
+        // Change operator
+        $('.o_dropdown_menu select.o_searchview_extended_prop_op').val('between').trigger('change');
+
+        assert.strictEqual($('.o_dropdown_menu select.o_searchview_extended_prop_op').val(), 'between',
+            'The between operator is selected');
+
+        $('.o_searchview_extended_prop_value input:first').val('02/22/2017 11:00:00').trigger('change'); // in TZ
+        $('.o_searchview_extended_prop_value input:last').val('02/22/2017 17:00:00').trigger('change'); // in TZ
+
+        searchReadCount = 1;
+        testUtilsDom.click($('.o_dropdown_menu .o_apply_filter'))
+
+        assert.strictEqual($('.o_dropdown_menu .dropdown-item.selected').text().trim(), 'DateTime is between "02/22/2017 11:00:00 and 02/22/2017 17:00:00"',
+            'Label of Filter is correct')
+
+        actionManager.destroy();
     });
 
     QUnit.module('Favorites Menu');
@@ -976,7 +1128,7 @@ QUnit.module('Search View', {
     });
 
     QUnit.test('Customizing filter does not close the filter dropdown', function (assert) {
-        assert.expect(4);
+        assert.expect(6);
         var self = this;
 
         _.each(this.data.partner.records.slice(), function (rec) {
@@ -1000,6 +1152,13 @@ QUnit.module('Search View', {
                 'partner,false,search': '<search><field name="date_field"/></search>',
             },
             res_id: 1,
+            intercepts: {
+                create_filter: function (ev) {
+                    var data = ev.data;
+                    assert.strictEqual(data.filter.name, 'Fire on the bayou');
+                    assert.strictEqual(data.filter.is_default, true);
+                },
+            },
         });
 
         form.$('.o_input').click();
@@ -1030,11 +1189,63 @@ QUnit.module('Search View', {
             $input.click();
             $input.click();
         });
-
         assert.ok($filterDropDown.is(':visible'));
+
+        // Favorites Menu
+        testUtilsDom.click($modal.find('.o_search_options button:contains(Favorites)'));
+        testUtilsDom.click($modal.find('.o_favorites_menu a:contains(Save current search)'));
+        $modal.find('.o_search_options .dropdown-menu').one('click', function (ev) {
+            // This handler is on the webClient
+            // But since the test suite doesn't have one
+            // We manually set it here
+            ev.stopPropagation();
+        });
+        $modal.find('.o_save_name:first input').val('Fire on the bayou');
+        testUtilsDom.click($modal.find('.o_save_name label:contains(Use by default)'));
+        testUtilsDom.click($modal.find('.o_save_name button:contains(Save)'));
 
         form.destroy();
     });
 
+    QUnit.module('Misc');
+
+    QUnit.test('search buttons visibility is stored in/retrieved from local storage', async function (assert) {
+        assert.expect(9);
+
+        var RamStorageService = AbstractStorageService.extend({
+            storage: new RamStorage(),
+        });
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            services: {
+                local_storage: RamStorageService,
+            },
+        });
+
+       testUtils.intercept(actionManager, 'call_service', function (ev) {
+            if (ev.data.service === 'local_storage' && ev.data.args[0] === 'visible_search_menu') {
+                assert.step(`${ev.data.method} ${ev.data.args.length > 1 ? ev.data.args[1] : ''}`);
+            }
+        }, true);
+
+        await actionManager.doAction(1);
+
+        assert.isVisible($('.o_search_options .o_dropdown_toggler_btn:first'));
+
+        await testUtils.dom.click($('.o_searchview_more'));
+
+        assert.isNotVisible($('.o_search_options .o_dropdown_toggler_btn:first'));
+        assert.verifySteps(['getItem ', 'getItem ', 'setItem false']);
+
+        await actionManager.doAction(2);
+
+        assert.isNotVisible($('.o_search_options .o_dropdown_toggler_btn:first'));
+        assert.verifySteps(['getItem ', 'getItem ', 'setItem false', 'getItem ']);
+
+        actionManager.destroy();
+    });
 });
 });

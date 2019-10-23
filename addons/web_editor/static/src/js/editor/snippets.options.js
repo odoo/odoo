@@ -127,7 +127,7 @@ var SnippetOption = Widget.extend({
      * @param {jQuery} $opt - the related DOMElement option
      */
     selectClass: function (previewMode, value, $opt) {
-        var $group = $opt && $opt.closest('.dropdown-submenu');
+        var $group = $opt && $opt.parents('.dropdown-submenu').last();
         if (!$group || !$group.length) {
             $group = this.$el;
         }
@@ -289,13 +289,29 @@ var SnippetOption = Widget.extend({
             })
             .addClass('active');
 
-        _processSelectClassElements(this.$el);
+        // Get submenus which are not inside submenus
+        var $submenus = this.$el.find('.dropdown-submenu')
+            .addBack('.dropdown-submenu')
+            .not('.dropdown-submenu .dropdown-submenu');
 
-        function _processSelectClassElements($el) {
+        // Add unique active class for each submenu active item
+        _.each($submenus, function (submenu) {
+            var $elements = _getSelectClassElements($(submenu));
+            _processSelectClassElements($elements);
+        });
+
+        // Add unique active class for out-of-submenu active item
+        var $externalElements = _getSelectClassElements(this.$el)
+            .not('.dropdown-submenu *, .dropdown-submenu');
+        _processSelectClassElements($externalElements);
+
+        function _getSelectClassElements($el) {
+            return $el.find('[data-select-class]')
+                .addBack('[data-select-class]');
+        }
+        function _processSelectClassElements($elements) {
             var maxNbClasses = -1;
-            $el.find('[data-select-class]')
-                .addBack('[data-select-class]')
-                .removeClass('active')
+            $elements.removeClass('active')
                 .filter(function () {
                     var className = $(this).data('selectClass');
                     var nbClasses = className ? className.split(' ').length : 0;
@@ -687,6 +703,16 @@ registry.colorpicker = SnippetOption.extend({
             this.$el.find('.dropdown-menu').append($pt);
         }
 
+        // TODO refactor in master
+        // The primary and secondary are hardcoded here (but marked as hidden)
+        // so they can be removed from snippets when selecting another color.
+        // Normally, the chosable colors do not contain them, which prevents
+        // them to be removed. Indeed, normally, the 'alpha' and 'beta' colors
+        // (which are the same) are displayed instead... but not for all themes.
+        var $colorpicker = this.$el.find('.colorpicker');
+        $colorpicker.append($('<button/>', {'class': 'd-none', 'data-color': 'primary'}));
+        $colorpicker.append($('<button/>', {'class': 'd-none', 'data-color': 'secondary'}));
+
         var classes = [];
         this.$el.find('.colorpicker button').each(function () {
             var $color = $(this);
@@ -754,7 +780,7 @@ registry.colorpicker = SnippetOption.extend({
         if ($selected.length) {
             if ($selected.data('color')) {
                 this.$target.addClass(this.colorPrefix + $selected.data('color'));
-            } else {
+            } else if ($selected.hasClass('o_custom_color')) {
                 this.$target.css('background-color', $selected.css('background-color'));
             }
         }

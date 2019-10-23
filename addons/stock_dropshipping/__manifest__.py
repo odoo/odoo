@@ -21,7 +21,7 @@ internal transfer document is needed.
 
 """,
     'depends': ['sale_purchase', 'sale_stock'],
-    'data': ['data/stock_data.xml'],
+    'data': ['data/stock_data.xml', 'views/sale_order_views.xml'],
     'installable': True,
     'auto_install': False,
 }

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- TODO the inherit for
+         point_of_sale.res_config_settings_view_form in this module
+         uses the pos_config_view_form_inherit_pos_mercury xml id
+         already. It should be renamed to
+         res_config_settings_view_form_inherit_pos_mercury. -->
+    <record id="pos_config_view_form_inherit_pos_mercury_2" model="ir.ui.view">
+        <field name="name">pos.config.form.view.inherit.mercury</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+        <field name="arch" type="xml">
+            <label for="iface_scan_via_proxy" position="attributes">
+                <attribute name="string">Barcode Scanner/Card Reader</attribute>
+            </label>
+        </field>
+    </record>
+</odoo>

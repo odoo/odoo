@@ -8,6 +8,7 @@ import re
 from dateutil.relativedelta import relativedelta
 from math import floor, log10
 
+import odoo
 from odoo import api, fields, models, tools, _
 from odoo.addons.iap import jsonrpc
 from odoo.addons.crm.models import crm_stage
@@ -73,8 +74,17 @@ class CRMRevealRule(models.Model):
             raise ValidationError(_('Enter Valid Regex.'))
 
     @api.model
+    def _assert_geoip(self):
+        if not odoo._geoip_resolver:
+            message = _('Lead Generation requires a GeoIP resolver which could not be found on your system. Please consult https://pypi.org/project/GeoIP/.')
+            self.env['bus.bus'].sendone(
+                (self._cr.dbname, 'res.partner', self.env.user.partner_id.id),
+                {'type': 'simple_notification', 'title': _('Missing Library'), 'message': message, 'sticky': True, 'warning': True})
+
+    @api.model
     def create(self, vals):
         self.clear_caches() # Clear the cache in order to recompute _get_active_rules
+        self._assert_geoip()
         return super(CRMRevealRule, self).create(vals)
 
     def write(self, vals):
@@ -83,6 +93,7 @@ class CRMRevealRule(models.Model):
         }
         if set(vals.keys()) & fields_set:
             self.clear_caches() # Clear the cache in order to recompute _get_active_rules
+        self._assert_geoip()
         return super(CRMRevealRule, self).write(vals)
 
     def unlink(self):

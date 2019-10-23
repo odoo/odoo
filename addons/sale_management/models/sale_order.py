@@ -31,7 +31,8 @@ class SaleOrder(models.Model):
     @api.onchange('partner_id')
     def onchange_partner_id(self):
         super(SaleOrder, self).onchange_partner_id()
-        self.note = self.sale_order_template_id.note or self.note
+        template = self.sale_order_template_id.with_context(lang=self.partner_id.lang)
+        self.note = template.note or self.note
 
     def _compute_line_data_for_template_change(self, line):
         return {
@@ -71,7 +72,11 @@ class SaleOrder(models.Model):
                     price = self.pricelist_id.with_context(uom=line.product_uom_id.id).get_product_price(line.product_id, 1, False)
                     if self.pricelist_id.discount_policy == 'without_discount' and line.price_unit:
                         discount = (line.price_unit - price) / line.price_unit * 100
-                        price = line.price_unit
+                        # negative discounts (= surcharge) are included in the display price
+                        if discount < 0:
+                            discount = 0
+                        else:
+                            price = line.price_unit
 
                 else:
                     price = line.price_unit

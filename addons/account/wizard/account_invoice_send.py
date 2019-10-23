@@ -11,6 +11,7 @@ class AccountInvoiceSend(models.TransientModel):
     _description = 'Account Invoice Send'
 
     is_email = fields.Boolean('Email', default=lambda self: self.env.user.company_id.invoice_is_email)
+    invoice_without_email = fields.Text(compute='_compute_invoice_without_email', string='invoice(s) that will not be sent')
     is_print = fields.Boolean('Print', default=lambda self: self.env.user.company_id.invoice_is_print)
     printed = fields.Boolean('Is Printed', default=False)
     invoice_ids = fields.Many2many('account.invoice', 'account_invoice_account_invoice_send_rel', string='Invoices')
@@ -45,6 +46,22 @@ class AccountInvoiceSend(models.TransientModel):
             self.composer_id.template_id = self.template_id.id
             self.composer_id.onchange_template_id_wrapper()
 
+    @api.onchange('is_email')
+    def _compute_invoice_without_email(self):
+        for wizard in self:
+            if wizard.is_email and len(wizard.invoice_ids) > 1:
+                invoices = self.env['account.invoice'].search([
+                    ('id', 'in', self.env.context.get('active_ids')),
+                    ('partner_id.email', '=', False)
+                ])
+                if invoices:
+                    wizard.invoice_without_email = "%s\n%s" % (
+                        _("The following invoice(s) will not be sent by email, because the customers don't have email address."),
+                        "\n".join([i.reference for i in invoices])
+                        )
+                else:
+                    wizard.invoice_without_email = False
+
     @api.multi
     def _send_email(self):
         if self.is_email:
@@ -63,7 +80,22 @@ class AccountInvoiceSend(models.TransientModel):
     @api.multi
     def send_and_print_action(self):
         self.ensure_one()
-        self._send_email()
+        # Send the mails in the correct language by splitting the ids per lang.
+        # This should ideally be fixed in mail_compose_message, so when a fix is made there this whole commit should be reverted.
+        # basically self.body (which could be manually edited) extracts self.template_id,
+        # which is then not translated for each customer.
+        if self.composition_mode == 'mass_mail' and self.template_id:
+            active_ids = self.env.context.get('active_ids', self.res_id)
+            active_records = self.env[self.model].browse(active_ids)
+            langs = active_records.mapped('partner_id.lang')
+            default_lang = self.env.context.get('lang', 'en_US')
+            for lang in (set(langs) or [default_lang]):
+                active_ids_lang = active_records.filtered(lambda r: r.partner_id.lang == lang).ids
+                self_lang = self.with_context(active_ids=active_ids_lang, lang=lang)
+                self_lang.onchange_template_id()
+                self_lang._send_email()
+        else:
+            self._send_email()
         if self.is_print:
             return self._print_document()
         return {'type': 'ir.actions.act_window_close'}

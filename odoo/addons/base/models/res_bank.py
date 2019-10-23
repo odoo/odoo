@@ -67,7 +67,7 @@ class ResPartnerBank(models.Model):
     _name = 'res.partner.bank'
     _rec_name = 'acc_number'
     _description = 'Bank Accounts'
-    _order = 'sequence'
+    _order = 'sequence, id'
 
     @api.model
     def get_supported_account_types(self):
@@ -85,7 +85,7 @@ class ResPartnerBank(models.Model):
     bank_id = fields.Many2one('res.bank', string='Bank')
     bank_name = fields.Char(related='bank_id.name', readonly=False)
     bank_bic = fields.Char(related='bank_id.bic', readonly=False)
-    sequence = fields.Integer()
+    sequence = fields.Integer(default=10)
     currency_id = fields.Many2one('res.currency', string='Currency')
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.user.company_id, ondelete='cascade')
     qr_code_valid = fields.Boolean(string="Has all required arguments", compute="_validate_qr_code_arguments")
@@ -139,11 +139,6 @@ class ResPartnerBank(models.Model):
     @api.multi
     def _validate_qr_code_arguments(self):
         for bank in self:
-            if bank.currency_id.name == False:
-                currency = bank.company_id.currency_id
-            else:
-                currency = bank.currency_id
             bank.qr_code_valid = (bank.bank_bic
                                             and bank.company_id.name
-                                            and bank.acc_number
-                                            and (currency.name == 'EUR'))
+                                            and bank.acc_number)

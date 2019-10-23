@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import unittest
 
-from odoo.tests.common import tagged
+from unittest.mock import patch
+
+from odoo.tests.common import BaseCase
+from odoo.tests.common import SavepointCase
 from odoo.tools import html_sanitize, append_content_to_html, plaintext2html, email_split, misc
+
 from . import test_mail_examples
 
 
-@tagged('standard', 'at_install')
-class TestSanitizer(unittest.TestCase):
+class TestSanitizer(BaseCase):
     """ Test the html sanitizer that filters html to remove unwanted attributes """
 
     def test_basic_sanitizer(self):
@@ -295,8 +297,7 @@ class TestSanitizer(unittest.TestCase):
     #         self.assertNotIn(ext, new_html)
 
 
-@tagged('standard', 'at_install')
-class TestHtmlTools(unittest.TestCase):
+class TestHtmlTools(BaseCase):
     """ Test some of our generic utility functions about html """
 
     def test_plaintext2html(self):
@@ -323,8 +324,7 @@ class TestHtmlTools(unittest.TestCase):
             self.assertEqual(append_content_to_html(html, content, plaintext_flag, preserve_flag, container_tag), expected, 'append_content_to_html is broken')
 
 
-@tagged('standard', 'at_install')
-class TestEmailTools(unittest.TestCase):
+class TestEmailTools(BaseCase):
     """ Test some of our generic utility functions for emails """
 
     def test_email_split(self):
@@ -337,3 +337,25 @@ class TestEmailTools(unittest.TestCase):
         ]
         for text, expected in cases:
             self.assertEqual(email_split(text), expected, 'email_split is broken')
+
+
+class EmailConfigCase(SavepointCase):
+    @patch.dict("odoo.tools.config.options", {"email_from": "settings@example.com"})
+    def test_default_email_from(self, *args):
+        """Email from setting is respected."""
+        # ICP setting is more important
+        ICP = self.env["ir.config_parameter"].sudo()
+        ICP.set_param("mail.catchall.domain", "example.org")
+        ICP.set_param("mail.default.from", "icp")
+        message = self.env["ir.mail_server"].build_email(
+            False, "recipient@example.com", "Subject",
+            "The body of an email",
+        )
+        self.assertEqual(message["From"], "icp@example.org")
+        # Without ICP, the config file/CLI setting is used
+        ICP.set_param("mail.default.from", False)
+        message = self.env["ir.mail_server"].build_email(
+            False, "recipient@example.com", "Subject",
+            "The body of an email",
+        )
+        self.assertEqual(message["From"], "settings@example.com")

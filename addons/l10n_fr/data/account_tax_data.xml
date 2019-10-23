@@ -864,7 +864,7 @@
       <field name="account_id" ref="pcg_44566"/>
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
-      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_08'),ref('l10n_fr.tag_fr_17')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_27'),ref('l10n_fr.tag_fr_36')])]"/>
       <field name="tax_group_id" ref="tax_group_tva_55"/>
     </record>
 
@@ -1024,7 +1024,7 @@
       <field name="account_id" ref="pcg_445203"/>
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
-      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_73'),ref('l10n_fr.tag_fr_82')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_73'),ref('l10n_fr.tag_fr_64')])]"/>
       <field name="tax_group_id" ref="tax_group_intra_21"/>
     </record>
 
@@ -1119,7 +1119,7 @@
     <record model="account.tax.template" id="tva_export_0">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA 0% export (vente)</field>
-      <field name="description">TVA 0% Import</field>
+      <field name="description">TVA 0% Export</field>
       <field name="amount" eval="0.00"/>
       <field name="amount_type">percent</field>
       <field name="refund_account_id" eval="False"/>

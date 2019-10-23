@@ -19,7 +19,7 @@ class SaleOrderLine(models.Model):
                 bom = self.env['mrp.bom']._bom_find(product=line.product_id, company_id=line.company_id.id)
                 if bom and bom.type == 'phantom':
                     moves = line.move_ids.filtered(lambda m: m.picking_id and m.picking_id.state != 'cancel')
-                    bom_delivered = all([move.state == 'done' for move in moves])
+                    bom_delivered = moves and all([move.state == 'done' for move in moves])
                     if bom_delivered:
                         line.qty_delivered = line.product_uom_qty
                     else:
@@ -59,6 +59,19 @@ class SaleOrderLine(models.Model):
         if bom and bom.type == 'phantom' and 'previous_product_uom_qty' in self.env.context:
             return self.env.context['previous_product_uom_qty'].get(self.id, 0.0)
         return super(SaleOrderLine, self)._get_qty_procurement()
+
+    @api.multi
+    @api.depends('product_id', 'move_ids.state')
+    def _compute_qty_delivered_method(self):
+        lines = self.env['sale.order.line']
+        for line in self:
+            bom = self.env['mrp.bom']._bom_find(product=line.product_id, company_id=line.company_id.id)
+            if bom and bom.type == 'phantom' and line.order_id.state == 'sale':
+                bom_delivered = all([move.state == 'done' for move in line.move_ids])
+                if not bom_delivered:
+                    line.qty_delivered_method = 'manual'
+                    lines |= line
+        super(SaleOrderLine, self - lines)._compute_qty_delivered_method()
 
 
 class AccountInvoiceLine(models.Model):

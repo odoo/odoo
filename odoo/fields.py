@@ -116,8 +116,8 @@ class Field(MetaField('DummyField', (object,), {})):
         :param required: whether the value of the field is required (boolean, by
             default ``False``)
 
-        :param index: whether the field is indexed in database (boolean, by
-            default ``False``)
+        :param index: whether the field is indexed in database. Note: no effect
+            on non-stored and virtual fields. (boolean, by default ``False``)
 
         :param default: the default value for the field; this is either a static
             value, or a function taking a recordset and returning a value; use
@@ -238,6 +238,11 @@ class Field(MetaField('DummyField', (object,), {})):
         Formerly known as 'property' fields, the value of those fields depends
         on the company. In other words, users that belong to different companies
         may see different values for the field on a given record.
+
+        .. warning::
+
+            Company-dependent fields aren't stored in the table of the model they're defined on,
+            instead, they are stored in the ``ir.property`` model's table.
 
         :param company_dependent: whether the field is company-dependent (boolean)
 
@@ -490,6 +495,10 @@ class Field(MetaField('DummyField', (object,), {})):
 
     def _setup_regular_base(self, model):
         """ Setup the attributes of a non-related field. """
+        pass
+
+    def _setup_regular_full(self, model):
+        """ Determine the dependencies and inverse field(s) of ``self``. """
         if self.depends is not None:
             return
 
@@ -506,10 +515,6 @@ class Field(MetaField('DummyField', (object,), {})):
             )
         else:
             self.depends = tuple(get_depends(self.compute))
-
-    def _setup_regular_full(self, model):
-        """ Setup the inverse field(s) of ``self``. """
-        pass
 
     #
     # Setup of related fields
@@ -630,6 +635,7 @@ class Field(MetaField('DummyField', (object,), {})):
     _related_help = property(attrgetter('help'))
     _related_groups = property(attrgetter('groups'))
     _related_group_operator = property(attrgetter('group_operator'))
+    _related_context_dependent = property(attrgetter('context_dependent'))
 
     @property
     def base_field(self):
@@ -723,7 +729,10 @@ class Field(MetaField('DummyField', (object,), {})):
         """ Add the necessary triggers to invalidate/recompute ``self``. """
         for model, field, path in self.resolve_deps(model):
             if self.store and not field.store:
-                _logger.info("Field %s depends on non-stored field %s", self, field)
+                _logger.debug(
+                    "Field %s depends on non-stored field %s, this operation is sub-optimal"
+                    % (self, field)
+                )
             if field is not self:
                 path_str = None if path is None else ('.'.join(path) or 'id')
                 model._field_triggers.add(field, (self, path_str))
@@ -929,7 +938,11 @@ class Field(MetaField('DummyField', (object,), {})):
         """
         indexname = '%s_%s_index' % (model._table, self.name)
         if self.index:
-            sql.create_index(model._cr, indexname, model._table, ['"%s"' % self.name])
+            try:
+                with model._cr.savepoint():
+                    sql.create_index(model._cr, indexname, model._table, ['"%s"' % self.name])
+            except psycopg2.OperationalError:
+                _schema.error("Unable to add index for %s", self)
         else:
             sql.drop_index(model._cr, indexname, model._table)
 
@@ -1064,6 +1077,8 @@ class Field(MetaField('DummyField', (object,), {})):
                 recs = record._recompute_check(self)
                 if recs:
                     # recompute the value (only in cache)
+                    if self.recursive:
+                        recs = record
                     self.compute_value(recs)
                     # HACK: if result is in the wrong cache, copy values
                     if recs.env != env:
@@ -2103,6 +2118,9 @@ class Many2one(_Relational):
 
     def update_db_foreign_key(self, model, column):
         comodel = model.env[self.comodel_name]
+        # foreign keys do not work on views, and users can define custom models on sql views.
+        if not model._is_an_ordinary_table() or not comodel._is_an_ordinary_table():
+            return
         # ir_actions is inherited, so foreign key doesn't work on it
         if not comodel._auto or comodel._table == 'ir_actions':
             return
@@ -2231,8 +2249,8 @@ class _RelationalMulti(_Relational):
         elif isinstance(value, (list, tuple)):
             # value is a list/tuple of commands, dicts or record ids
             comodel = record.env[self.comodel_name]
-            # determine the value ids; by convention empty on new records
-            ids = OrderedSet(record[self.name].ids if record.id else ())
+            # determine the value ids
+            ids = OrderedSet(record[self.name]._ids)
             # modify ids with the commands
             for command in value:
                 if isinstance(command, (tuple, list)):
@@ -2327,8 +2345,8 @@ class _RelationalMulti(_Relational):
             for record in records:
                 record[self.name] = record[self.name].filtered(accessible)
 
-    def _setup_regular_base(self, model):
-        super(_RelationalMulti, self)._setup_regular_base(model)
+    def _setup_regular_full(self, model):
+        super(_RelationalMulti, self)._setup_regular_full(model)
         if isinstance(self.domain, list):
             self.depends += tuple(
                 self.name + '.' + arg[0]
@@ -2438,7 +2456,7 @@ class One2many(_RelationalMulti):
                 vals_list.clear()
 
         def drop(lines):
-            if comodel._fields[inverse].ondelete == 'cascade':
+            if getattr(comodel._fields[inverse], 'ondelete', False) == 'cascade':
                 lines.unlink()
             else:
                 lines.write({inverse: False})
@@ -2484,7 +2502,7 @@ class One2many(_RelationalMulti):
                 vals_list.clear()
 
         def drop(lines):
-            if comodel._fields[inverse].ondelete == 'cascade':
+            if getattr(comodel._fields[inverse], 'ondelete', False) == 'cascade':
                 lines.unlink()
             else:
                 lines.write({inverse: False})

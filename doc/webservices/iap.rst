@@ -75,7 +75,7 @@ Overview
       service directly, or you can delegate the actual service acting as a
       bridge/translator between an Odoo system and the actual service.
 
-    
+
 .. figure:: images/credits.jpg
     :align: center
 
@@ -94,7 +94,7 @@ Overview
     * for a postage service: 1 credit = 1 post stamp.
 
     A credit can also simply be associated with a fixed amount of money
-    to palliate the variations of price (e.g. the prices of sms and stamps 
+    to palliate the variations of price (e.g. the prices of sms and stamps
     may vary following the countries).
 
     The value of the credits is fixed with the help of prepaid credit packs
@@ -158,15 +158,15 @@ Register the service on Odoo
 
 .. todo:: complete this part with screenshots
 
-The first step is to register your service on the IAP endpoint (production 
+The first step is to register your service on the IAP endpoint (production
 and/or test) before you can actually query user accounts. To create a service,
 go to your *Portal Account* on the IAP endpoint (https://iap.odoo.com for
 production, https://iap-sandbox.odoo.com for testing, the endpoints are
 *independent* and *not synchronized*). Alternatively, you can go to your portal
 on Odoo (https://iap.odoo.com/my/home) and select *In-App Services*.
 
-.. note:: 
-    
+.. note::
+
     On production, there is a manual validation step before the service
     can be used to manage real transactions. This step is automatically passed when
     on sandbox to ease the tests.
@@ -186,7 +186,7 @@ The service has *seven* important fields:
   client.
 
 .. warning::
-   Both the :class:`ServiceName` and :class:`Label` are unique. As good practice, the 
+   Both the :class:`ServiceName` and :class:`Label` are unique. As good practice, the
    :class:`ServiceName` should usually match the name of your Odoo Client App.
 
 * :samp:`icon` - :class:`Icon`: A generic icon that will serve as default for your
@@ -240,8 +240,8 @@ A credit pack is essentially a product with five characteristics:
 * Amount: amount of credits the client is entitled to when buying the pack,
 * Price: price in EUR (for the time being, USD support is planned).
 
-.. note:: 
-    
+.. note::
+
     Odoo takes a 25% commission on all pack sales. Adjust your selling price accordingly.
 
 
@@ -299,7 +299,7 @@ In that call, we will need to provide:
 * the :class:`token <UserToken>` of the current client that is provided by
   the ``iap.account`` model's ``account_token`` field. You can retrieve the
   account for your service by calling :samp:`env['iap.account'].get({service_name})`
-  where :class:`service_name <ServiceName>` is the name of the service registered 
+  where :class:`service_name <ServiceName>` is the name of the service registered
   on IAP endpoint.
 
 .. patch::
@@ -352,7 +352,7 @@ The :class:`~odoo.addons.iap.models.iap.charge` helper will:
    if the account does not have enough credits it will raise the relevant
    error
 2. execute the body of the ``with`` statement
-3. if the body of the ``with`` executes succesfully, update the price 
+3. if the body of the ``with`` executes succesfully, update the price
    of the transaction if needed
 4. capture (confirm) the transaction
 5. otherwise, if an error is raised from the body of the ``with``, cancel the
@@ -464,7 +464,7 @@ Capture
 
 .. code-block:: python
   :emphasize-lines: 8
-   
+
     r2 = requests.post(ODOO + '/iap/1/capture', json={
         'jsonrpc': '2.0',
         'id': None,
@@ -549,6 +549,7 @@ care how they are implemented.
     pending transactions/existing holds).
 
 .. exception:: odoo.exceptions.AccessError
+    :noindex:
 
     Raised by:
 
@@ -556,8 +557,9 @@ care how they are implemented.
     * any failure in an inter-server call. (typically, in :func:`~odoo.addons.iap.jsonrpc`).
 
 .. exception:: odoo.exceptions.UserError
+    :noindex:
 
-    Raised by any unexpeted behaviour at the discretion of the App developer (*you*).
+    Raised by any unexpected behaviour at the discretion of the App developer (*you*).
 
 
 Test the API
@@ -686,7 +688,7 @@ Cancel
 ------
 
 .. class:: odoo.addons.iap.models.iap.cancel(env, transaction_token, key)
-    
+
     Will cancel an authorized transaction.
 
     :param odoo.api.Environment env: used to retrieve the ``iap.endpoint``
@@ -760,5 +762,5 @@ Capture
             capture(env,transaction_token, key, min(credits, 2))
 
 
-.. _JSON-RPC2: http://www.jsonrpc.org/specification
+.. _JSON-RPC2: https://www.jsonrpc.org/specification
 .. _Odoo App: https://www.odoo.com/apps

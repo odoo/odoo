@@ -6,14 +6,16 @@
 # Collex100, 2018
 # Martin Trigaux, 2018
 # Vasiliy Korobatov <korobatov@gmail.com>, 2019
+# Oleg Kuryan <oleg@ventor.tech>, 2019
+# Konstantin Korovin <korovin74@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:32+0000\n"
+"POT-Creation-Date: 2019-08-08 13:50+0000\n"
 "PO-Revision-Date: 2018-08-24 09:22+0000\n"
-"Last-Translator: Vasiliy Korobatov <korobatov@gmail.com>, 2019\n"
+"Last-Translator: Konstantin Korovin <korovin74@gmail.com>, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,6 +28,12 @@ msgstr ""
 #: code:addons/portal/static/src/js/portal_sidebar.js:43
 #, python-format
 msgid "%d days overdue"
+msgstr ""
+
+#. module: portal
+#: code:addons/portal/controllers/portal.py:277
+#, python-format
+msgid "%s is not the reference of a report"
 msgstr ""
 
 #. module: portal
@@ -163,6 +171,13 @@ msgid ""
 msgstr ""
 
 #. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_signature.xml:19
+#, python-format
+msgid "Accept & Sign"
+msgstr ""
+
+#. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_warning
 #: model:ir.model.fields,field_description:portal.field_portal_share__access_warning
 msgid "Access warning"
@@ -171,7 +186,7 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 msgid "Add a note"
-msgstr ""
+msgstr "Добавить заметку"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
@@ -216,6 +231,13 @@ msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+msgid ""
+"Changing company name is not allowed once document(s) have been issued for "
+"your account. Please contact us directly for this operation."
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "City"
 msgstr "Город"
 
@@ -231,7 +253,7 @@ msgstr "Очистить"
 #: code:addons/portal/static/src/xml/portal_signature.xml:27
 #, python-format
 msgid "Click here to see your document."
-msgstr ""
+msgstr "Нажмите для просмотра своих документов"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
@@ -250,6 +272,8 @@ msgid ""
 "Confirm\n"
 "                                <span class=\"fa fa-long-arrow-right\"/>"
 msgstr ""
+"Подтвердить\n"
+"                                <span class=\"fa fa-long-arrow-right\"/>"
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_partner
@@ -289,7 +313,7 @@ msgstr "Создан"
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_mixin__access_url
 msgid "Customer Portal URL"
-msgstr ""
+msgstr "Ссылка на портал клиента"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
@@ -309,7 +333,7 @@ msgstr "Отображаемое Имя"
 #: code:addons/portal/static/src/xml/portal_signature.xml:14
 #, python-format
 msgid "Draw your signature"
-msgstr ""
+msgstr "Нарисуйте вашу подпись"
 
 #. module: portal
 #. openerp-web
@@ -372,6 +396,12 @@ msgstr "В портале"
 msgid "Invalid Email! Please enter a valid email address."
 msgstr ""
 "Неверный email! Пожалуйста, введите корректный адрес электронной почты."
+
+#. module: portal
+#: code:addons/portal/controllers/portal.py:272
+#, python-format
+msgid "Invalid report type: %s"
+msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__welcome_message
@@ -461,6 +491,8 @@ msgstr "Логотип Odoo"
 #, python-format
 msgid "Oops! Something went wrong. Try to reload the page and log in."
 msgstr ""
+"Опаньки! Что-то пошло не так. Попробуйте перегрузить страницу и "
+"авторизоваться."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -470,7 +502,7 @@ msgstr "Телефон"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_url
 msgid "Portal Access URL"
-msgstr ""
+msgstr "Ссылка для доступа в портал"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_mixin
@@ -510,7 +542,7 @@ msgstr "Предыдущий"
 #: code:addons/portal/static/src/js/portal_chatter.js:109
 #, python-format
 msgid "Published on %s"
-msgstr ""
+msgstr "Опубликовано %s"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__partner_ids
@@ -610,6 +642,12 @@ msgstr "Спасибо Вам!"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:12
 #, python-format
 msgid "There are no comments for now."
+msgstr "Пока нет ни одного комментария"
+
+#. module: portal
+#: code:addons/portal/controllers/portal.py:237
+#, python-format
+msgid "This document does not exist."
 msgstr ""
 
 #. module: portal
@@ -659,7 +697,7 @@ msgstr "Номер НДС"
 #: code:addons/portal/models/portal_mixin.py:83
 #, python-format
 msgid "View %s"
-msgstr ""
+msgstr "Посмотреть %s"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_account_analytic_account__website_message_ids
@@ -752,7 +790,7 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Your Contact Details"
-msgstr ""
+msgstr "Ваши контактные данные"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
@@ -764,7 +802,7 @@ msgstr "Ваше подробности"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_home
 msgid "Your Documents"
-msgstr ""
+msgstr "Ваши документы"
 
 #. module: portal
 #. openerp-web

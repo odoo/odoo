@@ -160,7 +160,7 @@
         margin-bottom: 8px;
         .o_or_filter { // or between conditions
             display: none;  // hidden for the first condition
-            @include o-position-absolute($top: 7px, $left: -18px);
+            @include o-position-absolute($top: 3px, $left: 4px);
         }
     }
     .o_filter_condition + .o_filter_condition {
@@ -178,7 +178,7 @@
         }
     }
     .o_searchview_extended_delete_prop { // delete condition button position
-        @include o-position-absolute(3px, -18px);
+        @include o-position-absolute($top: 6px, $right: 4px);
         cursor: pointer;
     }
     .o_add_filter_menu { // apply and add buttons

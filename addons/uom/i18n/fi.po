@@ -10,13 +10,16 @@
 # Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2018
 # Marko Happonen <marko.happonen@sprintit.fi>, 2018
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2018
+# Jussi Heikkilä <jussi.heikkila@panimo.com>, 2019
+# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Veikko Väätäjä <veikko.vaataja@gmail.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:33+0000\n"
+"Last-Translator: Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2019\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,17 +35,17 @@ msgstr "Aktiivinen"
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_form_action
 msgid "Add a new unit of measure"
-msgstr ""
+msgstr "Lisää uusi mittayksikkö"
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_categ_form_action
 msgid "Add a new unit of measure category"
-msgstr ""
+msgstr "Lisää uusi mittayksikkö kategoria"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor_inv
 msgid "Bigger Ratio"
-msgstr ""
+msgstr "Suurempi suhde"
 
 #. module: uom
 #: selection:uom.uom,uom_type:0
@@ -102,6 +105,8 @@ msgid ""
 "How many times this Unit of Measure is bigger than the reference Unit of "
 "Measure in this category: 1 * (this unit) = ratio * (reference unit)"
 msgstr ""
+"Kuinka monta kertaa tämä mittayksikkö on suurempi kuin tässä luokassa oleva "
+"mittayksikkö: 1 * (tämä yksikkö) = suhde * (vertailuyksikkö)"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__factor
@@ -109,6 +114,8 @@ msgid ""
 "How much bigger or smaller this unit is compared to the reference Unit of "
 "Measure for this category: 1 * (reference unit) = ratio * (this unit)"
 msgstr ""
+"Kuinka paljon suurempi tai pienempi tämä yksikkö verrattuna tämän luokan "
+"mittayksikköön: 1 * (vertailuyksikkö) = suhde * (tämä yksikkö)"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__id
@@ -162,7 +169,7 @@ msgstr "Tuotteen yksikkö"
 #. module: uom
 #: model:ir.model,name:uom.model_uom_category
 msgid "Product UoM Categories"
-msgstr ""
+msgstr "Tuote UoM Kategoriat"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor
@@ -201,12 +208,12 @@ msgstr "Muuntokerroin mittayksikölle ei voi olla 0 !"
 #. module: uom
 #: sql_constraint:uom.uom:0
 msgid "The reference unit must have a conversion factor equal to 1."
-msgstr ""
+msgstr "Vertailuyksikön muuntokerroin on oltava 1."
 
 #. module: uom
 #: sql_constraint:uom.uom:0
 msgid "The rounding precision must be strictly positive."
-msgstr ""
+msgstr "Pyöristystarkkuuden on oltava ehdottomasti positiivinen."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:152
@@ -217,6 +224,9 @@ msgid ""
 "the unit of measure defined on the order line or on the product, they should"
 " belong to the same category."
 msgstr ""
+"Tilausrivillä määritetty mittayksikkö% s ei kuulu samaan kategoriaan kuin "
+"tuotteessa määritetty mittayksikkö% s. Korjaa tilausrivillä tai tuotteella "
+"määritelty mittayksikkö, ne kuuluvat samaan kategoriaan."
 
 #. module: uom
 #: selection:uom.category,measure_type:0
@@ -231,18 +241,20 @@ msgstr "Tyyppi"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__measure_type
 msgid "Type of Measure"
-msgstr ""
+msgstr "Toimenpiteen tyyppi"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__measure_type
 msgid "Type of measurement category"
-msgstr ""
+msgstr "Mittaustyypin kategoria"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__active
 msgid ""
 "Uncheck the active field to disable a unit of measure without deleting it."
 msgstr ""
+"Poista aktiivinen kenttä ottaaksesi pois käytöstä mittayksikön poistamatta "
+"sitä."
 
 #. module: uom
 #: model:uom.category,name:uom.product_uom_categ_unit
@@ -262,7 +274,7 @@ msgstr "Mittayksiköiden ryhmät"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__name
 msgid "Unit of Measure Category"
-msgstr ""
+msgstr "Mittayksiköiden ryhmä"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_unit
@@ -272,7 +284,7 @@ msgstr "Kpl"
 #. module: uom
 #: selection:uom.category,measure_type:0
 msgid "Units"
-msgstr ""
+msgstr "Yksiköt"
 
 #. module: uom
 #: model:ir.actions.act_window,name:uom.product_uom_form_action
@@ -294,6 +306,10 @@ msgid ""
 "            <i>'Time'</i>, you will have the following units of measure:\n"
 "            Hours, Days."
 msgstr ""
+"Samaan luokkaan kuuluvat mittayksiköt voidaan\n"
+"             muuntaa keskenään. Esimerkiksi luokassa\n"
+"             <i> 'Aika' </i>, sinulla on seuraavat mittayksiköt:\n"
+"             Tunnit, päivät."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:93
@@ -302,12 +318,14 @@ msgid ""
 "UoM category %s should have a reference unit of measure. If you just created"
 " a new category, please record the 'reference' unit first."
 msgstr ""
+"UoM-luokassa% s tulisi olla vertailumittayksikkö. Jos olet juuri luonut "
+"uuden kategorian, tallenna ensin viiteyksikkö."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:95
 #, python-format
 msgid "UoM category %s should only have one reference unit of measure."
-msgstr ""
+msgstr "UoM-luokassa% s tulisi olla vain yksi mittayksikkö."
 
 #. module: uom
 #: selection:uom.category,measure_type:0
@@ -329,13 +347,13 @@ msgstr "Työaika"
 #. module: uom
 #: sql_constraint:uom.category:0
 msgid "You can have only one category per measurement type."
-msgstr ""
+msgstr "Voit käyttää vain yhtä kategoriaa mittaustyyppiä kohti."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:28
 #, python-format
 msgid "You cannot delete this UoM Category as it is used by the system."
-msgstr ""
+msgstr "Et voi poistaa tätä UoM-luokkaa, koska järjestelmä käyttää sitä."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:115
@@ -344,6 +362,8 @@ msgid ""
 "You cannot delete this UoM as it is used by the system. You should rather "
 "archive it."
 msgstr ""
+"Et voi poistaa tätä UoM:ää, koska järjestelmä käyttää sitä. Sinun pitäisi "
+"mieluummin arkistoida se."
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_form_action
@@ -351,6 +371,8 @@ msgid ""
 "You must define a conversion rate between several Units of\n"
 "            Measure within the same category."
 msgstr ""
+"Sinun on määritettävä muuntokurssi useiden yksiköiden välillä\n"
+"              samaan kategoriaan."
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cm

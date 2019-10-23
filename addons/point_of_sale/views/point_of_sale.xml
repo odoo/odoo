@@ -6,9 +6,7 @@
             <link rel="stylesheet" href="/point_of_sale/static/src/css/pos.css" id="pos-stylesheet"/>
             <link rel="stylesheet" href="/point_of_sale/static/src/css/keyboard.css"/>
 
-            <t t-if="request and request.env['res.lang'].search([('code', '=', request.env.lang)]).direction == 'rtl'">
-                <link rel="stylesheet" type="text/less" href="/web/static/src/scss/fontawesome_overriden.scss"/>
-            </t>
+            <link rel="stylesheet" type="text/less" href="/web/static/src/scss/fontawesome_overriden.scss"/>
 
             <script type="text/javascript" src="/point_of_sale/static/lib/waitfont.js"></script>
             <script type="text/javascript" src="/point_of_sale/static/src/js/main.js"></script>

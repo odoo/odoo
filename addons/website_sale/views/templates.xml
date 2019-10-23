@@ -269,7 +269,7 @@
                 </a>
                 <div class="dropdown-menu" role="menu">
                     <t t-foreach="website_sale_sortable" t-as="sortby">
-                        <a role="menuitem" t-att-href="keep('/shop', order=sortby[1])" class="dropdown-item">
+                        <a role="menuitem" rel="noindex,nofollow" t-att-href="keep('/shop', order=sortby[1])" class="dropdown-item">
                             <span t-raw="sortby[0]"/>
                         </a>
                     </t>
@@ -346,6 +346,7 @@
     <template id="products_attributes" inherit_id="website_sale.products" active="False" customize_show="True" name="Product Attribute's Filters">
         <xpath expr="//div[@id='products_grid_before']" position="inside">
             <form class="js_attributes" method="get">
+                <input t-if="category" type="hidden" name="category" t-att-value="category.id" />
                 <input type="hidden" name="search" t-att-value="search" />
                 <ul class="nav nav-pills flex-column mt16">
                     <t t-foreach="attributes" t-as="a">
@@ -438,7 +439,9 @@
                         </div>
                         <div class="col-md-8">
                             <div class="form-inline justify-content-end">
-                                <t t-call="website_sale.search"/>
+                                <t t-call="website_sale.search">
+                                    <t t-set="search" t-value="False"/>
+                                </t>
                                 <t t-call="website_sale.pricelist_list">
                                     <t t-set="_classes">ml-2</t>
                                 </t>
@@ -452,10 +455,10 @@
                             <div id="o-carousel-product" class="carousel slide" data-ride="carousel" data-interval="0">
                               <div class="carousel-outer">
                                 <div class="carousel-inner">
-                                    <div t-if="variant_img" class="carousel-item active" itemprop="image" t-field="product_variant.image" t-options="{'widget': 'image', 'class': 'product_detail_img js_variant_img', 'alt-field': 'name', 'zoom': 'image', 'unique': str(product['__last_update']) + (str(product_variant['__last_update']) or '')}"/>
-                                    <div t-attf-class="carousel-item#{'' if variant_img else ' active'}" itemprop="image" t-field="product.image" t-options="{'widget': 'image', 'class': 'product_detail_img', 'alt-field': 'name', 'zoom': 'image', 'unique': product['__last_update']}"/>
+                                    <div t-if="variant_img" class="carousel-item active" t-field="product_variant.image" t-options="{'widget': 'image', 'class': 'product_detail_img js_variant_img', 'alt-field': 'name', 'zoom': 'image', 'unique': str(product['__last_update']) + (str(product_variant['__last_update']) or ''), 'itemprop': 'image'}"/>
+                                    <div t-attf-class="carousel-item#{'' if variant_img else ' active'}" t-field="product.image" t-options="{'widget': 'image', 'class': 'product_detail_img', 'alt-field': 'name', 'zoom': 'image', 'unique': product['__last_update'], 'itemprop': 'image'}"/>
                                     <t t-if="len(image_ids)" t-foreach="image_ids" t-as="pimg">
-                                        <div class="carousel-item" t-field="pimg.image" t-options='{"widget": "image", "class": "product_detail_img", "alt-field": "name", "zoom": "image" }'/>
+                                        <div class="carousel-item" t-field="pimg.image" t-options='{"widget": "image", "class": "product_detail_img", "alt-field": "name", "zoom": "image", "itemprop": "image"}'/>
                                     </t>
                                 </div>
 
@@ -624,7 +627,7 @@
               <span itemprop="price" style="display:none;" t-esc="combination_info['price']"/>
               <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name"/>
           </h4>
-          <h4 class="css_non_editable_mode_hidden decimal_precision" t-att-data-precision="str(product.currency_id.decimal_places)">
+          <h4 class="css_non_editable_mode_hidden decimal_precision" t-att-data-precision="str(website.currency_id.decimal_places)">
             <span t-field="product.list_price"
                 t-options='{
                    "widget": "monetary",
@@ -1286,7 +1289,7 @@
             <t t-if="mode == ('new', 'billing') or (mode == ('edit', 'billing') and (can_edit_vat or 'vat' in checkout and checkout['vat']))">
                 <div t-attf-class="form-group #{error.get('company_name') and 'o_has_error' or ''} col-lg-6">
                     <label class="col-form-label font-weight-normal label-optional" for="company_name">Company Name</label>
-                    <input type="text" name="company_name" t-attf-class="form-control #{error.get('company_name') and 'is-invalid' or ''}" t-att-value="'company_name' in checkout and checkout['company_name']" t-att-readonly="'1' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" t-att-title="'Changing company name is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" />
+                    <input type="text" name="company_name" t-attf-class="form-control #{error.get('company_name') and 'is-invalid' or ''}" t-att-value="'commercial_company_name' in checkout and checkout['commercial_company_name'] or 'company_name' in checkout and checkout['company_name']" t-att-readonly="'1' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" t-att-title="'Changing company name is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" />
                 </div>
                 <div t-attf-class="form-group #{error.get('vat') and 'o_has_error' or ''} col-lg-6 div_vat">
                     <label class="col-form-label font-weight-normal label-optional" for="vat">TIN / VAT </label>
@@ -1364,7 +1367,7 @@
                             <div class="js_payment mt-3" t-if="not website_sale_order.amount_total" id="payment_method">
                                 <form target="_self" action="/shop/payment/validate" method="post" class="float-right">
                                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
-                                    <a role="button" class="btn btn-primary a-submit">
+                                    <a role="button" class="btn btn-primary a-submit" href="#">
                                         <span t-if="order.amount_total &gt; 0">Pay Now <span class="fa fa-chevron-right"></span></span>
                                         <span t-if="order.amount_total == 0">Confirm Order <span class="fa fa-chevron-right"></span></span>
                                     </a>
@@ -1604,8 +1607,7 @@
                         <span t-else="">An error occured while processing your payment. Please try again or contact your administrator.</span>
                     </t>
                     <t t-if="payment_tx_id.state == 'authorized'">
-                        <span t-if="payment_tx_id.acquirer_id.auth_msg" t-raw="payment_tx_id.acquirer_id.auth_msg"/>
-                        <span t-else="">Your payment has been authorized.</span>
+                        <span>Your payment has been authorized.</span>
                     </t>
                 </div>
                 <div t-if="payment_tx_id.acquirer_id.post_msg" t-att-class="'card-body %s' % (
@@ -1618,7 +1620,7 @@
                         <b>Communication: </b><span t-esc='order.reference'/>
                     </div>
                 </div>
-                <div t-if="(payment_tx_id.acquirer_id.qr_code == True) and (payment_tx_id.acquirer_id.provider == 'transfer') and (payment_tx_id.partner_id.country_id.code in ['BE', 'AT', 'DE', 'FI', 'NL']) and (payment_tx_id.currency_id.name == 'EUR')">
+                <div t-if="(payment_tx_id.acquirer_id.qr_code == True) and (payment_tx_id.acquirer_id.provider == 'transfer') and (payment_tx_id.currency_id.name == 'EUR')">
                     <div class="card-body" t-if="payment_tx_id.acquirer_id.journal_id.bank_account_id.qr_code_valid">
                         <h3>Or scan me with your banking app.</h3>
                         <img class="border border-dark rounded" t-att-src="payment_tx_id.acquirer_id.journal_id.bank_account_id.build_qr_code_url(order.amount_total,payment_tx_id.reference)"/>
@@ -1708,10 +1710,10 @@
         <div id="o-carousel-product" class="carousel slide" data-ride="carousel" data-interval="0">
             <div class="carousel-outer">
                 <div class="carousel-inner">
-                    <div t-if="variant_img" class="carousel-item active" itemprop="image" t-field="product_variant.image" t-options="{'widget': 'image', 'class': 'product_detail_img js_variant_img', 'alt-field': 'name', 'zoom': 'image', 'unique': str(product['__last_update']) + (str(product_variant['__last_update']) or '')}"/>
-                    <div t-attf-class="carousel-item#{'' if variant_img else ' active'}" itemprop="image" t-field="product.image" t-options="{'widget': 'image', 'class': 'product_detail_img', 'alt-field': 'name', 'zoom': 'image', 'unique': product['__last_update']}"/>
+                    <div t-if="variant_img" class="carousel-item active" t-field="product_variant.image" t-options="{'widget': 'image', 'class': 'product_detail_img js_variant_img', 'alt-field': 'name', 'zoom': 'image', 'unique': str(product['__last_update']) + (str(product_variant['__last_update']) or ''), 'itemprop': 'image'}"/>
+                    <div t-attf-class="carousel-item#{'' if variant_img else ' active'}" t-field="product.image" t-options="{'widget': 'image', 'class': 'product_detail_img', 'alt-field': 'name', 'zoom': 'image', 'unique': product['__last_update'], 'itemprop': 'image'}"/>
                     <t t-if="len(image_ids)" t-foreach="image_ids" t-as="pimg">
-                        <div class="carousel-item" t-field="pimg.image" t-options='{"widget": "image", "class": "product_detail_img", "alt-field": "name", "zoom": "image" }'/>
+                        <div class="carousel-item" t-field="pimg.image" t-options='{"widget": "image", "class": "product_detail_img", "alt-field": "name", "zoom": "image", "itemprop": "image"}'/>
                     </t>
                 </div>
 

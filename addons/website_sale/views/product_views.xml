@@ -98,7 +98,7 @@
                             <field name="website_url" invisible="1"/>
                             <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
                             <field name="public_categ_ids" widget="many2many_tags" string="Categories"/>
-                            <field name="alternative_product_ids" widget="many2many_tags"/>
+                            <field name="alternative_product_ids" widget="many2many_tags" domain="[('id', '!=', active_id)]"/>
                             <field name="accessory_product_ids" widget="many2many_tags"/>
                             <field name="website_style_ids" widget="many2many_tags" groups="base.group_no_one"/>
                         </group>
@@ -200,7 +200,7 @@
         <field name="arch" type="xml">
             <field name='currency_id' position='after'>
                 <field name="selectable"/>
-                <field name="website_id" options="{'no_create': True}" string="Allow to use on " placeholder="None website"/>
+                <field name="website_id" options="{'no_create': True}" />
             </field>
         </field>
     </record>

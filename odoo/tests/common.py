@@ -190,8 +190,9 @@ class MetaCase(type):
         super(MetaCase, cls).__init__(name, bases, attrs)
         # assign default test tags
         if cls.__module__.startswith('odoo.addons.'):
-            module = cls.__module__.split('.')[2]
-            cls.test_tags = {'standard', 'at_install', module}
+            cls.test_tags = {'standard', 'at_install'}
+            cls.test_module = cls.__module__.split('.')[2]
+            cls.test_class = cls.__name__
 
 
 class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
@@ -245,7 +246,10 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
     def _assertRaises(self, exception):
         """ Context manager that clears the environment upon failure. """
         with super(BaseCase, self).assertRaises(exception) as cm:
-            with self.env.clear_upon_failure():
+            if hasattr(self, 'env'):
+                with self.env.clear_upon_failure():
+                    yield cm
+            else:
                 yield cm
 
     def assertRaises(self, exception, func=None, *args, **kwargs):
@@ -334,9 +338,23 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
                     return False
             return True
 
+        def _repr_field_value(record, field_name):
+            record_value = record[field_name]
+            field_type = record._fields[field_name].type
+            if field_type == 'monetary':
+                currency_field_name = record._fields[field_name].currency_field
+                record_currency = record[currency_field_name]
+                return record_currency and record_currency.round(record_value) or record_value
+            elif field_type in ('one2many', 'many2many'):
+                return set(record_value.ids)
+            elif field_type == 'many2one':
+                return record_value.id
+            else:
+                return record_value
+
         def _format_message(records, expected_values):
             ''' Return a formatted representation of records/expected_values. '''
-            all_records_values = records.read(list(expected_values[0].keys()), load=False)
+            all_records_values = [{key: _repr_field_value(record, key) for key in expected_values[0]} for record in records]
             msg1 = '\n'.join(pprint.pformat(dic) for dic in all_records_values)
             msg2 = '\n'.join(pprint.pformat(dic) for dic in expected_values)
             return 'Current values:\n\n%s\n\nExpected values:\n\n%s' % (msg1, msg2)
@@ -488,7 +506,7 @@ class ChromeBrowser():
                 self.chrome_process.wait()
         if self.user_data_dir and os.path.isdir(self.user_data_dir) and self.user_data_dir != '/':
             self._logger.info('Removing chrome user profile "%s"', self.user_data_dir)
-            shutil.rmtree(self.user_data_dir)
+            shutil.rmtree(self.user_data_dir, ignore_errors=True)
         # Restore previous signal handler
         if self.sigxcpu_handler and os.name == 'posix':
             signal.signal(signal.SIGXCPU, self.sigxcpu_handler)
@@ -690,7 +708,8 @@ class ChromeBrowser():
 
     def set_cookie(self, name, value, path, domain):
         params = {'name': name, 'value': value, 'path': path, 'domain': domain}
-        self._websocket_send('Network.setCookie', params=params)
+        _id = self._websocket_send('Network.setCookie', params=params)
+        return self._websocket_wait_id(_id)
 
     def _wait_ready(self, ready_code, timeout=60):
         self._logger.info('Evaluate ready code "%s"', ready_code)
@@ -707,6 +726,8 @@ class ChromeBrowser():
                 res = None
             if res and res.get('id') == ready_id:
                 if res.get('result') == awaited_result:
+                    if has_exceeded:
+                        self._logger.info('The ready code tooks too much time : %s', tdiff)
                     return True
                 else:
                     last_bad_res = res
@@ -714,7 +735,6 @@ class ChromeBrowser():
             tdiff = time.time() - start_time
             if tdiff >= 2 and not has_exceeded:
                 has_exceeded = True
-                self._logger.warning('The ready code takes too much time : %s', tdiff)
 
         self.take_screenshot(prefix='failed_ready')
         self._logger.info('Ready code last try result: %s', last_bad_res or res)
@@ -1101,44 +1121,6 @@ class Form(object):
         fvg['tree'] = etree.fromstring(fvg['arch'])
 
         object.__setattr__(self, '_view', fvg)
-        # TODO: make this less crappy?
-        # look up edition view for the O2M
-        for f, descr in fvg['fields'].items():
-            if descr['type'] != 'one2many':
-                continue
-
-            node = self._get_node(f)
-            default_view = next(
-                (m for m in node.get('mode', 'tree').split(',') if m != 'form'),
-                'tree'
-            )
-
-            refs = {
-                m.group('view_type'): m.group('view_id')
-                for m in ref_re.finditer(node.get('context', ''))
-            }
-            # always fetch for simplicity, ensure we always have a tree and
-            # a form view
-            submodel = env[descr['relation']]
-            views = submodel.with_context(**refs) \
-                .load_views([(False, 'tree'), (False, 'form')])['fields_views']
-            # embedded views should take the priority on externals
-            views.update(descr['views'])
-            # re-set all resolved views on the descriptor
-            descr['views'] = views
-
-            # if the default view is a kanban or a non-editable list, the
-            # "edition controller" is the form view
-            edition = views['form']
-            edition['tree'] = etree.fromstring(edition['arch'])
-            if default_view == 'tree':
-                subarch = etree.fromstring(views['tree']['arch'])
-                if subarch.get('editable'):
-                    edition = views['tree']
-                    edition['tree'] = subarch
-
-            self._process_fvg(submodel, edition)
-            descr['views']['edition'] = edition
 
         self._process_fvg(recordp, fvg)
 
@@ -1155,13 +1137,37 @@ class Form(object):
         else:
             self._init_from_defaults(self._model)
 
-    def _get_node(self, f):
-        """ Find etree node for the field ``f`` in the current arch
-        """
-        return next(
-            n for n in self._view['tree'].iter('field')
-            if n.get('name') == f
+    def _o2m_set_edition_view(self, descr, node, level):
+        default_view = next(
+            (m for m in node.get('mode', 'tree').split(',') if m != 'form'),
+            'tree'
         )
+        refs = {
+            m.group('view_type'): m.group('view_id')
+            for m in ref_re.finditer(node.get('context', ''))
+        }
+        # always fetch for simplicity, ensure we always have a tree and
+        # a form view
+        submodel = self._env[descr['relation']]
+        views = submodel.with_context(**refs) \
+            .load_views([(False, 'tree'), (False, 'form')])['fields_views']
+        # embedded views should take the priority on externals
+        views.update(descr['views'])
+        # re-set all resolved views on the descriptor
+        descr['views'] = views
+        # if the default view is a kanban or a non-editable list, the
+        # "edition controller" is the form view
+        edition = views['form']
+        edition['tree'] = etree.fromstring(edition['arch'])
+        if default_view == 'tree':
+            subarch = etree.fromstring(views['tree']['arch'])
+            if subarch.get('editable'):
+                edition = views['tree']
+                edition['tree'] = subarch
+
+        # don't recursively process o2ms in o2ms
+        self._process_fvg(submodel, edition, level=level-1)
+        descr['views']['edition'] = edition
 
     def __str__(self):
         return "<%s %s(%s)>" % (
@@ -1170,19 +1176,22 @@ class Form(object):
             self._values.get('id', False),
         )
 
-    def _process_fvg(self, model, fvg):
+    def _process_fvg(self, model, fvg, level=2):
         """ Post-processes to augment the fields_view_get with:
 
         * an id field (may not be present if not in the view but needed)
         * pre-processed modifiers (map of modifier name to json-loaded domain)
         * pre-processed onchanges list
         """
-        fvg['fields']['id'] = {'type': 'id'}
+        fvg['fields'].setdefault('id', {'type': 'id'})
         # pre-resolve modifiers & bind to arch toplevel
-        modifiers = fvg['modifiers'] = {}
+        modifiers = fvg['modifiers'] = {'id': {'required': False, 'readonly': True}}
         contexts = fvg['contexts'] = {}
-        for f in fvg['tree'].iter('field'):
+        order = fvg['fields_ordered'] = []
+        for f in fvg['tree'].xpath('//field[not(ancestor::field)]'):
             fname = f.get('name')
+            order.append(fname)
+
             modifiers[fname] = {
                 modifier: domain if isinstance(domain, bool) else normalize_domain(domain)
                 for modifier, domain in json.loads(f.get('modifiers', '{}')).items()
@@ -1190,7 +1199,11 @@ class Form(object):
             ctx = f.get('context')
             if ctx:
                 contexts[fname] = ctx
-        fvg['modifiers']['id'] = {'required': False, 'readonly': True}
+
+            descr = fvg['fields'].get(fname) or {'type': None}
+            if level and descr['type'] == 'one2many':
+                self._o2m_set_edition_view(descr, f, level)
+
         fvg['onchange'] = model._onchange_spec(fvg)
 
     def _init_from_defaults(self, model):
@@ -1225,7 +1238,8 @@ class Form(object):
 
         # on creation, every field is considered changed by the client
         # apparently
-        self._perform_onchange(list(vals.keys() - {'id'}))
+        # and fields should be sent in view order, not whatever fields_view_get['fields'].keys() is
+        self._perform_onchange(self._view['fields_ordered'])
 
     def _init_from_values(self, values):
         self._values.update(
@@ -1247,12 +1261,13 @@ class Form(object):
             return O2MProxy(self, field)
         return v
 
-    def _get_modifier(self, field, modifier, default=False):
-        d = self._view['modifiers'][field].get(modifier, default)
+    def _get_modifier(self, field, modifier, default=False, modmap=None, vals=None):
+        d = (modmap or self._view['modifiers'])[field].get(modifier, default)
         if isinstance(d, bool):
             return d
 
-        vals = self._values
+        if vals is None:
+            vals = self._values
         stack = []
         for it in reversed(d):
             if it == '!':
@@ -1267,7 +1282,9 @@ class Form(object):
                 stack.append(e1 or e2)
             elif isinstance(it, list):
                 f, op, val = it
-                field_val = vals[f]
+                # hack-ish handling of parent.<field> modifiers
+                f, n = re.subn(r'^parent\.', '', f, 1)
+                field_val = (vals['•parent•'] if n else vals)[f]
                 stack.append(self._OPS[op](field_val, val))
             else:
                 raise ValueError("Unknown domain element %s" % it)
@@ -1366,9 +1383,11 @@ class Form(object):
         load/save
         """
         values = {}
-        for f in self._view['fields']:
+        fields = self._view['fields']
+        for f in fields:
+            descr = fields[f]
             v = self._values[f]
-            if self._get_modifier(f, 'required'):
+            if self._get_modifier(f, 'required') and not descr['type'] == 'boolean':
                 assert v is not False, "{} is a required field".format(f)
 
             # skip unmodified fields
@@ -1376,9 +1395,47 @@ class Form(object):
                 continue
 
             if self._get_modifier(f, 'readonly'):
-                node = self._get_node(f)
+                node = _get_node(self._view, f)
                 if not node.get('force_save'):
                     continue
+
+            if descr['type'] == 'one2many':
+                view = descr['views']['edition']
+                modifiers = view['modifiers']
+                oldvals = v
+                v = []
+
+                nodes = {
+                    n.get('name'): n
+                    for n in view['tree'].iter('field')
+                }
+                nodes['id'] = etree.Element('field', attrib={'name': 'id'})
+
+                for (c, rid, vs) in oldvals:
+                    if c in (0, 1):
+                        items = list(getattr(vs, 'changed_items', vs.items)())
+                        fields_ = view['fields']
+                        missing = fields_.keys() - vs.keys()
+                        if missing:
+                            Model = self._env[descr['relation']]
+                            if c == 0:
+                                vs.update(dict.fromkeys(missing, False))
+                                vs.update(
+                                    (k, _cleanup_from_default(fields_[k], v))
+                                    for k, v in Model.default_get(list(missing)).items()
+                                )
+                            else:
+                                vs.update(record_to_values(
+                                    {k: v for k, v in fields_.items() if k not in vs},
+                                    Model.browse(rid)
+                                ))
+                        vs.setdefault('id', False)
+                        vs['•parent•'] = self._values
+                        vs = {
+                            k: v for k, v in items
+                            if nodes[k].get('force_save') or not self._get_modifier(k, 'readonly', modmap=modifiers, vals=vs)
+                        }
+                    v.append((c, rid, vs))
 
             values[f] = v
         return values
@@ -1394,7 +1451,8 @@ class Form(object):
         if not any(spec[f] for f in fields):
             return
 
-        result = self._model.onchange(self._onchange_values(), fields, spec)
+        record = self._model.browse(self._values.get('id'))
+        result = record.onchange(self._onchange_values(), fields, spec)
         if result.get('warning'):
             _logger.getChild('onchange').warn("%(title)s %(message)s" % result.get('warning'))
         values = result.get('value', {})
@@ -1414,11 +1472,15 @@ class Form(object):
         values = {}
         for k, v in self._values.items():
             if f[k]['type'] == 'one2many':
-                # web client sends a 4 for unmodified o2m rows
-                values[k] = [
-                    (4, rid, False) if (c == 1 and not vs) else (c, rid, vs)
-                    for (c, rid, vs) in v
-                ]
+                it = values[k] = []
+                for (c, rid, vs) in v:
+                    if c == 1 and not vs:
+                        # web client sends a 4 for unmodified o2m rows
+                        it.append((4, rid, False))
+                    elif c == 1 and isinstance(vs, UpdateDict):
+                        it.append((1, rid, dict(vs.changed_items())))
+                    else:
+                        it.append((c, rid, vs))
             else:
                 values[k] = v
         return values
@@ -1435,12 +1497,13 @@ class Form(object):
                 return []
 
             v = []
-            c = {t[1]: t[2] for t in current if t[0] in (1, 2)} if current else {}
+            c = {t[1] for t in current if t[0] in (1, 2)} if current else set()
             # which view should this be???
             subfields = descr['views']['edition']['fields']
+            # TODO: simplistic, unlikely to work if e.g. there's a 5 inbetween other commands
             for command in value:
                 if command[0] in (0, 1):
-                    c.pop(command[1], None) # remove record from currents
+                    c.discard(command[1])
                     v.append((command[0], command[1], {
                         k: self._cleanup_onchange(
                             subfields[k], v, None
@@ -1449,9 +1512,11 @@ class Form(object):
                         if k in subfields
                     }))
                 elif command[0] == 2:
+                    c.discard(command[1])
                     v.append((2, command[1], False))
                 elif command[0] == 4:
-                    v.append((1, command[1], c.pop(command[1], {})))
+                    c.discard(command[1])
+                    v.append((1, command[1], {}))
                 elif command[0] == 5:
                     v = []
             # explicitly mark all non-relinked (or modified) records as deleted
@@ -1502,6 +1567,12 @@ class O2MForm(Form):
         else:
             self._values.update(proxy._records[index])
 
+    def _get_modifier(self, field, modifier, default=False, modmap=None, vals=None):
+        if vals is None:
+            vals = {**self._values, '•parent•': self._proxy._parent._values}
+
+        return super()._get_modifier(field, modifier, default=default, modmap=modmap, vals=vals)
+
     def _onchange_values(self):
         values = super(O2MForm, self)._onchange_values()
         # computed o2m may not have a relation_field(?)
@@ -1517,9 +1588,16 @@ class O2MForm(Form):
         if self._index is None:
             commands.append((0, 0, values))
         else:
-            (c, _, vs) = commands[proxy._command_index(self._index)]
-            assert c in (0, 1)
-            vs.update(values)
+            index = proxy._command_index(self._index)
+            (c, id_, vs) = commands[index]
+            if c == 0:
+                vs.update(values)
+            elif c == 1:
+                vs = UpdateDict(vs)
+                vs.update(values)
+                commands[index] = (1, id_, vs)
+            else:
+                raise AssertionError("Expected command type 0 or 1, found %s" % c)
 
         # FIXME: should be called when performing on change => value needs to be serialised into parent every time?
         proxy._parent._perform_onchange([proxy._field])
@@ -1528,19 +1606,30 @@ class O2MForm(Form):
         """ Validates values and returns only fields modified since
         load/save
         """
-        values = {}
-        for f in self._view['fields']:
-            v = self._values[f]
-            if self._get_modifier(f, 'required'):
-                assert v is not False, "{} is a required field".format(f)
+        values = UpdateDict(self._values)
+        values._changed.update(self._changed)
 
-            # skip unmodified fields
-            if f not in self._changed:
-                continue
-            # if self._get_modifier(f, 'readonly'):
-            #     continue
-            values[f] = v
+        for f in self._view['fields']:
+            if self._get_modifier(f, 'required'):
+                assert self._values[f] is not False, "{} is a required field".format(f)
+
         return values
+
+class UpdateDict(dict):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._changed = set()
+
+    def changed_items(self):
+        return (
+            (k, v) for k, v in self.items()
+            if k in self._changed
+        )
+
+    def update(self, *args, **kw):
+        super().update(*args, **kw)
+        if args and isinstance(args[0], UpdateDict):
+            self._changed.update(args[0]._changed)
 
 class X2MProxy(object):
     _parent = None
@@ -1743,10 +1832,34 @@ def record_to_values(fields, record):
         r[f] = v
     return r
 
+def _cleanup_from_default(type_, value):
+    if not value:
+        if type_ == 'many2many':
+            return [(6, False, [])]
+        elif type_ == 'one2many':
+            return []
+        elif type_ in ('integer', 'float'):
+            return 0
+        return value
+
+    if type_ == 'one2many':
+        return [c for c in value if c[0] != 6]
+    elif type_ == 'datetime' and isinstance(value, datetime):
+        return odoo.fields.Datetime.to_string(value)
+    elif type_ == 'date' and isinstance(value, date):
+        return odoo.fields.Date.to_string(value)
+
+def _get_node(view, f, *arg):
+    """ Find etree node for the field ``f`` in the view's arch
+    """
+    return next((
+        n for n in view['tree'].iter('field')
+        if n.get('name') == f
+    ), *arg)
 
 def tagged(*tags):
     """
-    A decorator to tag TestCase objects
+    A decorator to tag BaseCase objects
     Tags are stored in a set that can be accessed from a 'test_tags' attribute
     A tag prefixed by '-' will remove the tag e.g. to remove the 'standard' tag
     By default, all Test classes from odoo.tests.common have a test_tags
@@ -1756,33 +1869,75 @@ def tagged(*tags):
     def tags_decorator(obj):
         include = {t for t in tags if not t.startswith('-')}
         exclude = {t[1:] for t in tags if t.startswith('-')}
-        obj.test_tags = (getattr(obj, 'test_tags', set()) | include) - exclude
+        obj.test_tags = (getattr(obj, 'test_tags', set()) | include) - exclude # todo remove getattr in master since we want to limmit tagged to BaseCase and always have +standard tag
         return obj
     return tags_decorator
 
 
 class TagsSelector(object):
     """ Test selector based on tags. """
+    filter_spec_re = re.compile(r'^([+-]?)(\*|\w*)(?:/(\w*))?(?::(\w*))?(?:\.(\w*))?$')  # [-][tag][/module][:class][.method]
 
     def __init__(self, spec):
         """ Parse the spec to determine tags to include and exclude. """
-        clean_tags = {t.strip() for t in spec.split(',') if t.strip() != ''}
-        self.exclude = {t[1:] for t in clean_tags if t.startswith('-')}
-        self.include = {t.replace('+', '') for t in clean_tags if not t.startswith('-')}
+        filter_specs = {t.strip() for t in spec.split(',') if t.strip()}
+        self.exclude = set()
+        self.include = set()
 
-    def check(self, arg):
+        for filter_spec in filter_specs:
+            match = self.filter_spec_re.match(filter_spec)
+            if not match:
+                _logger.error('Invalid tag %s', filter_spec)
+                continue
+
+            sign, tag, module, klass, method = match.groups()
+            is_include = sign != '-'
+
+            if not tag and is_include:
+                # including /module:class.method implicitly requires 'standard'
+                tag = 'standard'
+            elif not tag or tag == '*':
+                # '*' indicates all tests (instead of 'standard' tests only)
+                tag = None
+            test_filter = (tag, module, klass, method)
+
+            if is_include:
+                self.include.add(test_filter)
+            else:
+                self.exclude.add(test_filter)
+
+        if self.exclude and not self.include:
+            self.include.add(('standard', None, None, None))
+
+    def check(self, test):
         """ Return whether ``arg`` matches the specification: it must have at
-            least one tag in ``self.include`` and none in ``self.exclude``.
+            least one tag in ``self.include`` and none in ``self.exclude`` for each tag category.
         """
-        # handle the case where the Test does not inherit from TransactionCase
-        tags = getattr(arg, 'test_tags', set())
-        inter_no_test = self.exclude.intersection(tags)
-        if inter_no_test:
-            _logger.debug("Test '%s' not selected because it is tagged with : %s (exclusions: %s)", arg, inter_no_test, self.exclude)
+        if not hasattr(test, 'test_tags'): # handle the case where the Test does not inherit from BaseCase and has no test_tags
+            _logger.debug("Skipping test '%s' because no test_tag found.", test)
             return False
-        inter_to_test = self.include.intersection(tags)
-        if not inter_to_test:
-            _logger.debug("Test '%s' not selected because it was not tagged with %s", arg, self.include)
+
+        test_module = getattr(test, 'test_module', None)
+        test_class = getattr(test, 'test_class', None)
+        test_tags = test.test_tags | {test_module}  # module as test_tags deprecated, keep for retrocompatibility, 
+        test_method = getattr(test, '_testMethodName', None)
+
+        def _is_matching(test_filter):
+            (tag, module, klass, method) = test_filter
+            if tag and tag not in test_tags:
+                return False
+            elif module and module != test_module:
+                return False
+            elif klass and klass != test_class:
+                return False
+            elif method and test_method and method != test_method:
+                return False
+            return True
+
+        if any(_is_matching(test_filter) for test_filter in self.exclude):
             return False
-        _logger.debug("Test '%s' selected: tagged with %s, exclusions: %s, inclusions: %s", arg, tags, self.exclude, self.include)
-        return True
+
+        if any(_is_matching(test_filter) for test_filter in self.include):
+            return True
+
+        return False

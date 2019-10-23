@@ -6,22 +6,23 @@
 # Haojun Zou <apollo_zhj@msn.com>, 2019
 # Patrik Lermon <patrik.lermon@gmail.com>, 2019
 # Kristoffer Grundström <hamnisdude@gmail.com>, 2019
-# Martin Trigaux, 2019
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2019
 # Daniel Forslund <daniel.forslund@gmail.com>, 2019
 # Martin Wilderoth <martin.wilderoth@linserv.se>, 2019
-# Lord Cobol, 2019
+# 03992e16f8df6e39b9d1cc0ff635887e, 2019
 # Robert Frykelius <robert.frykelius@linserv.se>, 2019
-# Chrille Hedberg <hedberg.chrille@gmail.com>, 2019
 # Kim Asplund <kim.asplund@gmail.com>, 2019
+# Martin Trigaux, 2019
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2019
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2019
+# Daniel Osser <danielosser@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-15 10:48+0000\n"
+"POT-Creation-Date: 2019-03-15 10:04+0000\n"
 "PO-Revision-Date: 2018-08-24 09:20+0000\n"
-"Last-Translator: Kim Asplund <kim.asplund@gmail.com>, 2019\n"
+"Last-Translator: Daniel Osser <danielosser@gmail.com>, 2019\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,7 +66,7 @@ msgstr "%s (kopia)"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_header_social
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_header_text_social
 msgid "&amp;nbsp;"
-msgstr ""
+msgstr "&amp;nbsp;"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_steps
@@ -275,7 +276,7 @@ msgstr "Aktiv"
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.mass_mailing_tag_action
 msgid "Add a new tag"
-msgstr ""
+msgstr "Lätt till ny etikett"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign__unique_ab_testing
@@ -351,7 +352,7 @@ msgstr "Bifoga en fil"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Antal bilagor"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__attachment_ids
@@ -585,7 +586,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_contacts
 msgid "Create a contact in your address book"
-msgstr ""
+msgstr "Skapa kontakt i adressboken"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_create_ab_mass_mailings_from_campaign
@@ -821,6 +822,11 @@ msgstr ""
 #: model:ir.model,name:mass_mailing.model_mail_mail_statistics
 msgid "Email Statistics"
 msgstr ""
+
+#. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_mail_template
+msgid "Email Templates"
+msgstr "E-postmallar"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_thread
@@ -2241,9 +2247,14 @@ msgid "Unsubscription Date"
 msgstr ""
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:806
+#: code:addons/mass_mailing/models/mass_mailing.py:880
 #, python-format
-msgid "Unsupported mass mailing model %r"
+msgid "Unsupported mass mailing model %s"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe
+msgid "Update my subscriptions"
 msgstr ""
 
 #. module: mass_mailing
@@ -2373,9 +2384,9 @@ msgstr ""
 
 #. module: mass_mailing
 #. openerp-web
-#: code:addons/mass_mailing/static/src/js/unsubscribe.js:49
+#: code:addons/mass_mailing/static/src/js/unsubscribe.js:50
 #, python-format
-msgid "You have been <strong>successfully unsubscribed from </strong>."
+msgid "You have been <strong>successfully unsubscribed from %s</strong>."
 msgstr ""
 
 #. module: mass_mailing

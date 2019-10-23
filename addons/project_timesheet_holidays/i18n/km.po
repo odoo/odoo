@@ -4,13 +4,15 @@
 # 
 # Translators:
 # Sengtha Chay <sengtha@gmail.com>, 2018
+# Lux Sok <sok.lux@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Sengtha Chay <sengtha@gmail.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:23+0000\n"
+"Last-Translator: Lux Sok <sok.lux@gmail.com>, 2019\n"
 "Language-Team: Khmer (https://www.transifex.com/odoo/teams/41243/km/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,12 +23,12 @@ msgstr ""
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_account_analytic_line
 msgid "Analytic Line"
-msgstr ""
+msgstr "វិភាគដែនកំណត់"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave__timesheet_ids
 msgid "Analytic Lines"
-msgstr ""
+msgstr "វិភាគដែនកំណត់"
 
 #. module: project_timesheet_holidays
 #: code:addons/project_timesheet_holidays/models/hr_holidays.py:38
@@ -35,6 +37,7 @@ msgid ""
 "Both the internal project and task are required to generate timesheet for "
 "the leaves."
 msgstr ""
+"ទាំងគម្រោងផ្ទៃក្នុងនិងភារកិច្ចត្រូវបានទាមទារដើម្បីបង្កើតសន្លឹកពេលវេលា។"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_res_company
@@ -44,18 +47,18 @@ msgstr "ក្រុមហ៊ុន"
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "កំណត់រចនាសម្ព័ន្ធ"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_company__leave_timesheet_project_id
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__leave_timesheet_project_id
 msgid "Default project value for timesheet generated from leave type."
-msgstr ""
+msgstr "តម្លៃគម្រោងលំនាំដើមសម្រាប់ពេលវេលាដែលបានបង្កើតពីប្រភេទពេលឈប់សម្រាក។"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave_type__timesheet_generate
 msgid "Generate Timesheet"
-msgstr ""
+msgstr "បង្កើត Timesheet "
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_hr_leave_type__timesheet_generate
@@ -63,6 +66,7 @@ msgid ""
 "If checked, when validating a leave, timesheet will be generated in the "
 "Vacation Project of the company."
 msgstr ""
+"ប្រសិនបើបានត្រួតពិនិត្យនៅពេលដែលមានសុពលភាពការឈប់សម្រាកតារាងពេលវេលានឹងត្រូវបានបង្កើតឡើងនៅក្នុងគម្រោងវិស្សមកាលរបស់ក្រុមហ៊ុន។"
 
 #. module: project_timesheet_holidays
 #: code:addons/project_timesheet_holidays/models/res_company.py:30
@@ -71,39 +75,39 @@ msgstr ""
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__leave_timesheet_project_id
 #, python-format
 msgid "Internal Project"
-msgstr ""
+msgstr "គម្រោងផ្ទៃក្នុង "
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave_type__timesheet_task_id
 msgid "Internal Task for timesheet"
-msgstr ""
+msgstr "កិច្ចការផ្ទៃក្នុងសម្រាប់សន្លឹកកិច្ចការ"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_hr_leave
 msgid "Leave"
-msgstr ""
+msgstr "សម្រាក"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__holiday_id
 msgid "Leave Request"
-msgstr ""
+msgstr "ការស្នើរសុំសម្រាក"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company__leave_timesheet_task_id
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
 msgid "Leave Task"
-msgstr ""
+msgstr "ចាកចេញពីភារកិច្ច "
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_hr_leave_type
 msgid "Leave Type"
-msgstr ""
+msgstr "ប្រភេទសម្រាក"
 
 #. module: project_timesheet_holidays
 #: code:addons/project_timesheet_holidays/models/res_company.py:40
 #, python-format
 msgid "Leaves"
-msgstr ""
+msgstr "ស្លឹក"
 
 #. module: project_timesheet_holidays
 #: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.res_config_settings_view_form
@@ -119,7 +123,7 @@ msgstr "កិច្ចការ"
 #: model:ir.model.fields,help:project_timesheet_holidays.field_hr_leave_type__timesheet_project_id
 msgid ""
 "The project will contain the timesheet generated when a leave is validated."
-msgstr ""
+msgstr "គម្រោងនេះនឹងមានតារាងពេលវេលាដែលបានបង្កើតនៅពេលការឈប់សម្រាកមានសុពលភាព។ "
 
 #. module: project_timesheet_holidays
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:16
@@ -128,3 +132,5 @@ msgid ""
 "You cannot delete timesheet lines attached to a leaves. Please cancel the "
 "leaves instead."
 msgstr ""
+"អ្នកមិនអាចលុបបន្ទាត់ពេលវេលាដែលភ្ជាប់នឹងស្លឹកបានទេ។ សូមបោះបង់ស្លឹកឈើជំនួសវិញ។"
+" "

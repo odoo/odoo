@@ -49,7 +49,7 @@ class StockRule(models.Model):
         default='make_to_stock', required=True,
         help="""Create Procurement: A procurement will be created in the source location and the system will try to find a rule to resolve it. The available stock will be ignored.
              Take from Stock: The products will be taken from the available stock.""")
-    route_sequence = fields.Integer('Route Sequence', related='route_id.sequence', store=True, readonly=False)
+    route_sequence = fields.Integer('Route Sequence', related='route_id.sequence', store=True, readonly=False, compute_sudo=True)
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type',
         required=True)
@@ -149,18 +149,21 @@ class StockRule(models.Model):
                 move._push_apply()
         else:
             new_move_vals = self._push_prepare_move_copy_values(move, new_date)
-            new_move = move.copy(new_move_vals)
+            new_move = move.sudo().copy(new_move_vals)
             move.write({'move_dest_ids': [(4, new_move.id)]})
             new_move._action_confirm()
 
     def _push_prepare_move_copy_values(self, move_to_copy, new_date):
+        company_id = self.company_id.id
+        if not company_id:
+            company_id = self.sudo().warehouse_id and self.sudo().warehouse_id.company_id.id or self.sudo().picking_type_id.warehouse_id.company_id.id
         new_move_vals = {
             'origin': move_to_copy.origin or move_to_copy.picking_id.name or "/",
             'location_id': move_to_copy.location_dest_id.id,
             'location_dest_id': self.location_id.id,
             'date': new_date,
             'date_expected': new_date,
-            'company_id': self.company_id.id,
+            'company_id': company_id,
             'picking_id': False,
             'picking_type_id': self.picking_type_id.id,
             'propagate': self.propagate,
@@ -357,14 +360,21 @@ class ProcurementGroup(models.Model):
             ('product_id', '=', values['product_id'].id)]
 
     @api.model
+    def _get_moves_to_assign_domain(self):
+        return expression.AND([
+            [('state', 'in', ['confirmed', 'partially_available'])],
+            [('product_uom_qty', '!=', 0.0)]
+        ])
+
+    @api.model
     def _run_scheduler_tasks(self, use_new_cursor=False, company_id=False):
         # Minimum stock rules
         self.sudo()._procure_orderpoint_confirm(use_new_cursor=use_new_cursor, company_id=company_id)
 
         # Search all confirmed stock_moves and try to assign them
-        moves_to_assign = self.env['stock.move'].search([
-            ('state', 'in', ['confirmed', 'partially_available']), ('product_uom_qty', '!=', 0.0)
-        ], limit=None, order='priority desc, date_expected asc')
+        domain = self._get_moves_to_assign_domain()
+        moves_to_assign = self.env['stock.move'].search(domain, limit=None,
+            order='priority desc, date_expected asc')
         for moves_chunk in split_every(100, moves_to_assign.ids):
             self.env['stock.move'].browse(moves_chunk)._action_assign()
             if use_new_cursor:

@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
 "Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -74,11 +74,6 @@ msgstr "歸檔"
 #: selection:product.category,property_valuation:0
 msgid "Automated"
 msgstr "自動"
-
-#. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
-msgid "Available Products"
-msgstr "可用的產品"
 
 #. module: stock_account
 #: selection:product.category,property_cost_method:0
@@ -213,11 +208,6 @@ msgid "Display Name"
 msgstr "顯示名稱"
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
-msgid "Exhausted Stock"
-msgstr "耗盡的庫存"
-
-#. module: stock_account
 #: selection:product.category,property_cost_method:0
 #: selection:product.template,property_cost_method:0
 msgid "First In First Out (FIFO)"
@@ -332,12 +322,7 @@ msgstr ""
 "自動化：當產品進入或離開公司時，自動創建一個會計輸入來評估庫存。"
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
-msgid "Negative Stock"
-msgstr "負數庫存"
-
-#. module: stock_account
-#: code:addons/stock_account/models/product.py:128
+#: code:addons/stock_account/models/product.py:129
 #, python-format
 msgid "No difference between the standard price and the new price."
 msgstr "標準價格和新價格沒有差別。"
@@ -364,6 +349,7 @@ msgstr "補貨組"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_product
+#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Product"
 msgstr "產品"
 
@@ -515,7 +501,12 @@ msgid "Stock Valuation Account (Outgoing)"
 msgstr "庫存計價科目（出向）"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:536
+#: model:ir.model.fields,field_description:stock_account.field_product_product__stock_value_currency_id
+msgid "Stock Value Currency"
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/models/stock.py:540
 #, python-format
 msgid ""
 "The cost of %s is currently equal to 0. Change the cost or the configuration"
@@ -523,7 +514,7 @@ msgid ""
 msgstr "%s的成本目前等於0。更改您產品的成本或配置以避免錯誤的評估。"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:358
+#: code:addons/stock_account/models/stock.py:364
 #, python-format
 msgid ""
 "The move lines are not in a consistent state: some are entering and other "
@@ -531,7 +522,7 @@ msgid ""
 msgstr "移動明細的狀態不一致: 有些正在進貨, 其他的則在出貨。"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:369
+#: code:addons/stock_account/models/stock.py:375
 #, python-format
 msgid ""
 "The move lines are not in a consistent states: they are doing an "
@@ -540,7 +531,7 @@ msgid ""
 msgstr "移動線處於不一致的狀態：他們在一個單一的步驟中作為一個公司的內部公司，而他們應該通過公司間中轉地點。"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:367
+#: code:addons/stock_account/models/stock.py:373
 #, python-format
 msgid ""
 "The move lines are not in a consistent states: they do not share the same "

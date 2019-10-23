@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:31+0000\n"
+"POT-Creation-Date: 2019-04-12 12:19+0000\n"
 "PO-Revision-Date: 2018-08-24 09:18+0000\n"
 "Last-Translator: Alagappan Karthikeyan <me@karthik.sg>, 2019\n"
 "Language-Team: Tamil (https://www.transifex.com/odoo/teams/41243/ta/)\n"
@@ -176,7 +176,7 @@ msgstr "நடவடிக்கைகள்"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_state
 msgid "Activity State"
-msgstr ""
+msgstr "செயல்பாட்டு மாநிலம்"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.act_employee_from_department
@@ -190,7 +190,10 @@ msgid "Additional Note"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_crm_team__alias_contact
 #: model:ir.model.fields,field_description:hr.field_mail_alias__alias_contact
+#: model:ir.model.fields,field_description:hr.field_mail_alias_mixin__alias_contact
+#: model:ir.model.fields,field_description:hr.field_mail_channel__alias_contact
 msgid "Alias Contact Security"
 msgstr ""
 
@@ -457,7 +460,7 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model,name:hr.model_mail_channel
-msgid "Discussion channel"
+msgid "Discussion Channel"
 msgstr ""
 
 #. module: hr
@@ -502,7 +505,7 @@ msgstr ""
 #: model:ir.model,name:hr.model_hr_employee
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Employee"
-msgstr ""
+msgstr "பணியாளர்"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee_category
@@ -572,7 +575,7 @@ msgstr ""
 #. module: hr
 #: selection:mail.alias,alias_contact:0
 msgid "Everyone"
-msgstr ""
+msgstr "அனைவரும்"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__no_of_recruitment
@@ -630,6 +633,11 @@ msgstr "பின்பற்றுபவர்கள் (பங்குதா�
 #: selection:mail.alias,alias_contact:0
 msgid "Followers only"
 msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Future Activities"
+msgstr "எதிர்கால செயல்பாடுகள்"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__gender
@@ -835,7 +843,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__job_id
 #: model:ir.model.fields,field_description:hr.field_hr_job__name
 msgid "Job Position"
-msgstr ""
+msgstr "வேலை நிலை"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_job
@@ -881,6 +889,11 @@ msgstr "கடைசியாக புதுப்பிக்கப்பட�
 #: model:ir.model.fields,field_description:hr.field_hr_job__write_date
 msgid "Last Updated on"
 msgstr "கடைசியாக புதுப்பிக்கப்பட்டது"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Late Activities"
+msgstr "தாமதமான செயல்பாடுகள்"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_marketing
@@ -1010,17 +1023,17 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "அடுத்த செயல்பாட்டுக் காலக்கட்டம்"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_summary
 msgid "Next Activity Summary"
-msgstr ""
+msgstr "அடுத்த செயல்பாடு சுருக்கம்"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "அடுத்த செயல்பாடு வகை"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1120,7 +1133,7 @@ msgstr ""
 #. module: hr
 #: selection:hr.employee,certificate:0 selection:hr.employee,gender:0
 msgid "Other"
-msgstr ""
+msgstr "மற்ற"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -1141,7 +1154,7 @@ msgstr ""
 #. module: hr
 #: selection:hr.employee,activity_state:0
 msgid "Overdue"
-msgstr ""
+msgstr "தாமதம்"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__parent_id
@@ -1182,10 +1195,13 @@ msgstr ""
 #. module: hr
 #: selection:hr.employee,activity_state:0
 msgid "Planned"
-msgstr ""
+msgstr "திட்டமிட்ட"
 
 #. module: hr
+#: model:ir.model.fields,help:hr.field_crm_team__alias_contact
 #: model:ir.model.fields,help:hr.field_mail_alias__alias_contact
+#: model:ir.model.fields,help:hr.field_mail_alias_mixin__alias_contact
+#: model:ir.model.fields,help:hr.field_mail_channel__alias_contact
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
@@ -1263,7 +1279,7 @@ msgstr "அறிக்கையிடல்"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__requirements
 msgid "Requirements"
-msgstr ""
+msgstr "தேவைகள்"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__resource_id
@@ -1284,7 +1300,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_user_id
 msgid "Responsible User"
-msgstr ""
+msgstr "பொறுப்பு பயனர்"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__sinid
@@ -1326,7 +1342,7 @@ msgstr ""
 #: model:ir.ui.menu,name:hr.hr_menu_configuration
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "Settings"
-msgstr ""
+msgstr "அமைப்புகள்"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_org_chart
@@ -1412,6 +1428,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"செயல்பாடுகள்\n"
+"காலதாமதம்: காரணமாக தேதி ஏற்கனவே கடந்துவிட்டது\n"
+"இன்று: செயல்பாடு தேதி இன்று\n"
+"திட்டமிடப்பட்டுள்ளது: எதிர்கால நடவடிக்கைகள்."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
@@ -1431,7 +1451,7 @@ msgstr ""
 #. module: hr
 #: sql_constraint:hr.employee.category:0
 msgid "Tag name already exists !"
-msgstr ""
+msgstr "Tag name already exists !"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__category_ids
@@ -1493,6 +1513,11 @@ msgstr ""
 #: selection:hr.employee,activity_state:0
 msgid "Today"
 msgstr "இன்று"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Today Activities"
+msgstr "இன்று செயல்பாடுகள்"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__expected_employees
@@ -1594,6 +1619,20 @@ msgid ""
 "people love to use. We need someone who is ambitious, passionated, and ....."
 " not afraid to start new things, a lot of new things and scale them."
 msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__website_message_ids
+#: model:ir.model.fields,field_description:hr.field_hr_employee__website_message_ids
+#: model:ir.model.fields,field_description:hr.field_hr_job__website_message_ids
+msgid "Website Messages"
+msgstr "இணைய செய்திகள்"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_department__website_message_ids
+#: model:ir.model.fields,help:hr.field_hr_employee__website_message_ids
+#: model:ir.model.fields,help:hr.field_hr_job__website_message_ids
+msgid "Website communication history"
+msgstr "வலைத்தள தகவல்தொடர்பு வரலாறு"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo

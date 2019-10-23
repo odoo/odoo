@@ -3,17 +3,17 @@
 # * payment_paypal
 # 
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2018
 # Mustafa J. Kadhem <safi2266@gmail.com>, 2018
 # Osama Ahmaro <osamaahmaro@gmail.com>, 2018
-# Shaima Safar <shaima.safar@open-inside.com>, 2018
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Shaima Safar <shaima.safar@open-inside.com>, 2018\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-08-24 09:22+0000\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,62 +24,62 @@ msgstr ""
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_api_access_token
 msgid "Access Token"
-msgstr "رمز الوصول"
+msgstr "كلمة السر"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_api_access_token_validity
 msgid "Access Token Validity"
-msgstr "صلاحية رمز الوصول"
+msgstr "صلاحية كلمة السر"
 
 #. module: payment_paypal
 #: selection:payment.acquirer,provider:0
 msgid "Adyen"
-msgstr ""
+msgstr "Adyen"
 
 #. module: payment_paypal
 #: selection:payment.acquirer,provider:0
 msgid "Authorize.Net"
-msgstr ""
+msgstr "Authorize.Net"
 
 #. module: payment_paypal
 #: selection:payment.acquirer,provider:0
 msgid "Buckaroo"
-msgstr ""
+msgstr "Buckaroo"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_dom_fixed
 msgid "Fixed domestic fees"
-msgstr ""
+msgstr "الرسوم المحلية الثابتة"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_int_fixed
 msgid "Fixed international fees"
-msgstr ""
+msgstr "الرسوم الدولية الثابتة"
 
 #. module: payment_paypal
 #: model_terms:ir.ui.view,arch_db:payment_paypal.acquirer_form_paypal
 msgid "How to configure your paypal account?"
-msgstr "كيف يتم اعداد paypal حساب الخاص بك ؟"
+msgstr "كيف تقوم بإعداد حسابك على paypal؟"
 
 #. module: payment_paypal
 #: selection:payment.acquirer,provider:0
 msgid "Manual Configuration"
-msgstr ""
+msgstr "الإعدادات اليدوية"
 
 #. module: payment_paypal
 #: selection:payment.acquirer,provider:0
 msgid "Ogone"
-msgstr ""
+msgstr "Ogone"
 
 #. module: payment_paypal
 #: selection:payment.acquirer,provider:0
 msgid "PayUmoney"
-msgstr ""
+msgstr "PayUmoney"
 
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "طريقة السداد الإلكتروني"
+msgstr "معالج السداد"
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_pdt_token
@@ -87,6 +87,8 @@ msgid ""
 "Payment Data Transfer allows you to receive notification of successful "
 "payments as they are made."
 msgstr ""
+"تحويل بيانات عمليات السداد يسمح لك بتلقي إشعارات بالدفعات الناجحة عند "
+"إجراءها."
 
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_transaction
@@ -96,12 +98,12 @@ msgstr "معاملة السداد"
 #. module: payment_paypal
 #: selection:payment.acquirer,provider:0
 msgid "Paypal"
-msgstr "المستحق"
+msgstr "Paypal"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_email_account
 msgid "Paypal Email ID"
-msgstr "معرف البريد الالكتروني لـ PayPal"
+msgstr "مُعرف البريد الإلكتروني لـPayPal"
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_use_ipn
@@ -116,13 +118,13 @@ msgstr "معرف التاجر لدى PayPal"
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_pdt_token
 msgid "Paypal PDT Token"
-msgstr ""
+msgstr "كلمة سر Paypal PDT"
 
 #. module: payment_paypal
 #: code:addons/payment_paypal/models/payment.py:138
 #, python-format
 msgid "Paypal: received data with missing reference (%s) or txn_id (%s)"
-msgstr "حساب Paypal: استلم بيانات بمرجع مفقود (%s) أو txn_id (%s)"
+msgstr "Paypal: البيانات المستلمة ينقصها رقم إشارة (%s) أو txn_id (%s)"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__provider
@@ -142,12 +144,12 @@ msgstr "إعادة تعيين إسم المستخدم لواجهة برمجة ا
 #. module: payment_paypal
 #: selection:payment.acquirer,provider:0
 msgid "Sips"
-msgstr ""
+msgstr "Sips"
 
 #. module: payment_paypal
 #: selection:payment.acquirer,provider:0
 msgid "Stripe"
-msgstr ""
+msgstr "Stripe"
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_seller_account
@@ -155,8 +157,7 @@ msgid ""
 "The Merchant ID is used to ensure communications coming from Paypal are "
 "valid and secured."
 msgstr ""
-"معرف التاجر يستخدم للتأكد من أن الاتصالات القادمة من PayPal تكون صالحة "
-"ومؤمنة."
+"يستخدم معرف التاجر للتأكد من الاتصالات القادمة من PayPal تكون صالحة ومؤمنة."
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__paypal_txn_type
@@ -166,24 +167,24 @@ msgstr "نوع المعاملة"
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_use_ipn
 msgid "Use IPN"
-msgstr "إستخدام تنبيهات الدفع الفورية"
+msgstr "استخدام تنبيهات الدفع الفورية"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_api_enabled
 msgid "Use Rest API"
-msgstr "إستخدم إعادة تعيين واجهة برمجة التطبيق"
+msgstr "استخدم إعادة تعيين واجهة برمجة التطبيق"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_dom_var
 msgid "Variable domestic fees (in percents)"
-msgstr ""
+msgstr "رسوم محلية متغيرة (كنسبة مئوية)"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_int_var
 msgid "Variable international fees (in percents)"
-msgstr ""
+msgstr "رسوم دولية متغيرة (كنسبة مئوية)"
 
 #. module: payment_paypal
 #: selection:payment.acquirer,provider:0
 msgid "Wire Transfer"
-msgstr ""
+msgstr "تحويل بنكي"

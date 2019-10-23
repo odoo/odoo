@@ -30,6 +30,7 @@ class ResPartner(models.Model):
                 partner = partner.parent_id
 
     def can_edit_vat(self):
+        ''' Can't edit `vat` if there is (non draft) issued SO. '''
         can_edit_vat = super(ResPartner, self).can_edit_vat()
         if not can_edit_vat:
             return can_edit_vat

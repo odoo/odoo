@@ -81,6 +81,7 @@ var Chatter = Widget.extend({
             var nodeOptions = fieldsInfo[mailFields.mail_thread].options || {};
             this.hasLogButton = options.display_log_button || nodeOptions.display_log_button;
             this.postRefresh = nodeOptions.post_refresh || 'never';
+            this.reloadOnUploadAttachment = this.postRefresh === 'always';
         }
     },
     /**
@@ -95,12 +96,7 @@ var Chatter = Widget.extend({
             }));
         }
         // render and append the buttons
-        this._$topbar.prepend(QWeb.render('mail.chatter.Buttons', {
-            newMessageButton: !!this.fields.thread,
-            logNoteButton: this.hasLogButton,
-            scheduleActivityButton: !!this.fields.activity,
-            isMobile: config.device.isMobile,
-        }));
+        this._$topbar.prepend(this._renderButtons());
         // start and append the widgets
         var fieldDefs = _.invoke(this.fields, 'appendTo', $('<div>'));
         var def = this._dp.add($.when.apply($, fieldDefs));
@@ -138,7 +134,7 @@ var Chatter = Widget.extend({
         if (this.fields.activity) {
             this.fields.activity.$el.detach();
         }
-        if (this.fields.thread) {
+        if (this.fields.thread && this.fields.thread.$el ) {
             this.fields.thread.$el.detach();
         }
 
@@ -364,7 +360,7 @@ var Chatter = Widget.extend({
             this._fetchAttachments().then(this._openAttachmentBox.bind(this));
         }
         if (this.fields.thread) {
-            this.trigger_up('reload', { fieldNames: ['message_attachment_count'] });
+            this.trigger_up('reload', { fieldNames: ['message_attachment_count'], keepChanges: true });
         }
     },
     /**
@@ -397,13 +393,21 @@ var Chatter = Widget.extend({
                     self.fields.followers.$el.insertBefore(self.$('.o_chatter_button_attachment'));
                 }
             }
-            if (self.fields.thread) {
+            if (self.fields.thread && self.fields.thread.$el) {
                 self.fields.thread.$el.appendTo(self.$el);
             }
         }).always(function () {
             // disable widgets in create mode, otherwise enable
             self._isCreateMode ? self._disableChatter() : self._enableChatter();
             $spinner.remove();
+        });
+    },
+    _renderButtons: function () {
+        return QWeb.render('mail.chatter.Buttons', {
+            newMessageButton: !!this.fields.thread,
+            logNoteButton: this.hasLogButton,
+            scheduleActivityButton: !!this.fields.activity,
+            isMobile: config.device.isMobile,
         });
     },
     /**
@@ -434,7 +438,11 @@ var Chatter = Widget.extend({
      */
      _updateAttachmentCounter: function () {
         var count = this.record.data.message_attachment_count || 0;
-        this.$('.o_chatter_attachment_button_count').html(count);
+        var $element = this.$('.o_chatter_attachment_button_count');
+        if (Number($element.html()) !== count) {
+            this._areAttachmentsLoaded = false;
+            $element.html(count);
+        }
      },
     /**
      * @private
@@ -572,6 +580,9 @@ var Chatter = Widget.extend({
      * @private
      */
     _onReloadAttachmentBox: function () {
+        if (this.reloadOnUploadAttachment) {
+            this.trigger_up('reload');
+        }
         this._reloadAttachmentBox();
     },
     /**

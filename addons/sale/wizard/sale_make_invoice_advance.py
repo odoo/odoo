@@ -30,7 +30,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
     @api.model
     def _default_product_id(self):
         product_id = self.env['ir.config_parameter'].sudo().get_param('sale.default_deposit_product_id')
-        return self.env['product.product'].browse(int(product_id))
+        return self.env['product.product'].browse(int(product_id)).exists()
 
     @api.model
     def _default_deposit_account_id(self):
@@ -67,7 +67,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
         account_id = False
         if self.product_id.id:
-            account_id = self.product_id.property_account_income_id.id or self.product_id.categ_id.property_account_income_categ_id.id
+            account_id = order.fiscal_position_id.map_account(self.product_id.property_account_income_id or self.product_id.categ_id.property_account_income_categ_id).id
         if not account_id:
             inc_acc = ir_property_obj.get('property_account_income_categ_id', 'product.category')
             account_id = order.fiscal_position_id.map_account(inc_acc).id if inc_acc else False

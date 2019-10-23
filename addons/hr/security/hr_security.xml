@@ -35,5 +35,12 @@
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
+    <record id="hr_employee_comp_rule" model="ir.rule">
+        <field name="name">Employee multi company rule</field>
+        <field name="model_id" ref="model_hr_employee"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
 </data>
 </odoo>

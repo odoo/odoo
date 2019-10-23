@@ -98,6 +98,9 @@
                     <filter string="Category" name="categ_id" context="{'group_by':'categ_id'}"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                    <separator/>
+                    <filter string="Periodic (manual)" name="manual_periodic" domain="[('valuation', '=', 'manual_periodic')]"/>
+                    <filter string="Perpetual (automated)" name="real_time" domain="[('valuation', '=', 'real_time')]"/>
                 </search>
             </field>
         </record>

@@ -3,18 +3,20 @@
 # * purchase
 # 
 # Translators:
-# Martin Trigaux, 2018
 # nasaaskii <nasaaskii@gmail.com>, 2018
 # Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2018
+# Martin Trigaux, 2019
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
+# Minj P <pminj322@gmail.com>, 2019
+# nurbakhit nurka <nurbakhit@bumanit.mn>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:31+0000\n"
+"POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:23+0000\n"
-"Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019\n"
+"Last-Translator: nurbakhit nurka <nurbakhit@bumanit.mn>, 2019\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -112,11 +114,7 @@ msgid ""
 "        <br/><br/>\n"
 "        Best regards,\n"
 "    </p>\n"
-"</div><p style=\"color:#888888;\">\n"
-"% if object.sudo().create_uid and object.sudo().create_uid.signature:\n"
-"    ${object.sudo().create_uid.signature | safe}\n"
-"% endif\n"
-"</p>\n"
+"</div>"
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
@@ -125,21 +123,17 @@ msgstr ""
 "            (${object.partner_id.parent_id.name})\n"
 "        % endif\n"
 "        <br/><br/>\n"
-"        Хавсралтаар <strong>${object.name}</strong>захиалгын үнийн саналын баримт хүргүүлж байна.\n"
+"        Бид танд хавсралтаар <strong>${object.name}</strong>үнийн санал илгээж байна.\n"
 "        % if object.partner_ref:\n"
-"            Харилцагч талын дугаар: ${object.partner_ref}\n"
+"            Харилцагчийн дугаар: ${object.partner_ref}\n"
 "        % endif\n"
-"        Захиалагч компани: ${object.company_id.name}.\n"
+"        Компани: ${object.company_id.name}.\n"
 "        <br/><br/>\n"
-"        Хэрэв танд ямар нэг асуулт байвал эргэлзэх зүйлгүйгээр бидэнд мэдэгдэнэ үү.\n"
+"        Хэрэв танд ямар нэг асуулт байвал эргэлзэлгүй бидэнтэй шууд холбогдоно уу.\n"
 "        <br/><br/>\n"
-"        Хүндэтгэсэн,\n"
+"        Гүнээ хүндэтгэв,\n"
 "    </p>\n"
-"</div><p style=\"color:#888888;\">\n"
-"% if object.sudo().create_uid and object.sudo().create_uid.signature:\n"
-"    ${object.sudo().create_uid.signature | safe}\n"
-"% endif\n"
-"</p>\n"
+"</div>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -156,6 +150,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-shopping-cart\" role=\"img\" aria-label=\"Shopping "
 "cart\" title=\"Shopping cart\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-shopping-cart\" role=\"img\" aria-label=\"Shopping "
+"cart\" title=\"Shopping cart\"/>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -966,8 +962,8 @@ msgstr "Нийлүүлэгчийн үнийн бүртгэл"
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Manage your purchase agreements (call for tenders, blanket orders)"
 msgstr ""
-"Худалдан авалтын сонгон шалгаруулалтыг удирдан зохион байгуулах (тендерийн "
-"сонгон шалгаруулалт, цуврал худалдан авалтын гэрээ)"
+"Худалдан авалтын гэрээг удирдан зохион байгуулах (тендерийн сонгон "
+"шалгаруулалт, бланкет худалдан авалтын гэрээ)"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_manager
@@ -1353,7 +1349,7 @@ msgstr "Худалдан авалт"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_purchase_requisition
 msgid "Purchase Agreements"
-msgstr "Худалдан авалтын сонгон шалгаруулалт"
+msgstr "Худалдан авалтын гэрээ"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
@@ -1825,6 +1821,11 @@ msgstr "Дэд дүн"
 #: model:ir.model.fields,field_description:purchase.field_res_users__property_purchase_currency_id
 msgid "Supplier Currency"
 msgstr "Нийлүүлэгчийн валют"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_product_supplierinfo
+msgid "Supplier Pricelist"
+msgstr "Нийлүүлэлтийн үнийн хүснэгт"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_tax

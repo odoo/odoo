@@ -83,6 +83,9 @@ class Employee(models.Model):
     show_leaves = fields.Boolean('Able to see Remaining Leaves', compute='_compute_show_leaves')
     is_absent_totay = fields.Boolean('Absent Today', compute='_compute_absent_employee', search='_search_absent_employee')
 
+    def _get_date_start_work(self):
+        return self.create_date
+
     def _get_remaining_leaves(self):
         """ Helper to compute the remaining leaves for the current employees
             :returns dict where the key is the employee id, and the value is the remain leaves
@@ -96,7 +99,7 @@ class Employee(models.Model):
                     SELECT holiday_status_id, number_of_days,
                         state, employee_id
                     FROM hr_leave_allocation
-                    UNION
+                    UNION ALL
                     SELECT holiday_status_id, (number_of_days * -1) as number_of_days,
                         state, employee_id
                     FROM hr_leave
@@ -143,6 +146,7 @@ class Employee(models.Model):
         all_leaves = self.env['hr.leave.report'].read_group([
             ('employee_id', 'in', self.ids),
             ('holiday_status_id.allocation_type', '!=', 'no'),
+            ('holiday_status_id.active', '=', 'True'),
             ('state', '=', 'validate')
         ], fields=['number_of_days', 'employee_id'], groupby=['employee_id'])
         mapping = dict([(leave['employee_id'][0], leave['number_of_days']) for leave in all_leaves])
@@ -197,8 +201,8 @@ class Employee(models.Model):
                 hr_vals['manager_id'] = values['parent_id']
             if values.get('department_id') is not None:
                 hr_vals['department_id'] = values['department_id']
-            holidays = self.env['hr.leave'].search([('state', 'in', ['draft', 'confirm']), ('employee_id', 'in', self.ids)])
+            holidays = self.env['hr.leave'].sudo().search([('state', 'in', ['draft', 'confirm']), ('employee_id', 'in', self.ids)])
             holidays.write(hr_vals)
-            allocations = self.env['hr.leave.allocation'].search([('state', 'in', ['draft', 'confirm']), ('employee_id', 'in', self.ids)])
+            allocations = self.env['hr.leave.allocation'].sudo().search([('state', 'in', ['draft', 'confirm']), ('employee_id', 'in', self.ids)])
             allocations.write(hr_vals)
         return res

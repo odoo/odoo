@@ -172,18 +172,19 @@ class StockWarehouse(models.Model):
         manufacture_steps = vals.get('manufacture_steps', def_values['manufacture_steps'])
         code = vals.get('code') or self.code
         code = code.replace(' ', '').upper()
+        company_id = vals.get('company_id', self.company_id.id)
         values.update({
             'pbm_loc_id': {
                 'name': _('Pre-Production'),
                 'active': manufacture_steps in ('pbm', 'pbm_sam'),
                 'usage': 'internal',
-                'barcode': code + '-PREPRODUCTION'
+                'barcode': self._valid_barcode(code + '-PREPRODUCTION', company_id)
             },
             'sam_loc_id': {
                 'name': _('Post-Production'),
                 'active': manufacture_steps == 'pbm_sam',
                 'usage': 'internal',
-                'barcode': code + '-POSTPRODUCTION'
+                'barcode': self._valid_barcode(code + '-POSTPRODUCTION', company_id)
             },
         })
         return values
@@ -250,7 +251,7 @@ class StockWarehouse(models.Model):
 
     @api.multi
     def _get_all_routes(self):
-        routes = super(StockWarehouse, self).get_all_routes_for_wh()
+        routes = super(StockWarehouse, self)._get_all_routes()
         routes |= self.filtered(lambda self: self.manufacture_to_resupply and self.manufacture_pull_id and self.manufacture_pull_id.route_id).mapped('manufacture_pull_id').mapped('route_id')
         return routes
 

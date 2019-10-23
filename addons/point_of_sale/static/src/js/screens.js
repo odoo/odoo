@@ -102,7 +102,10 @@ var ScreenWidget = PosBaseWidget.extend({
     barcode_client_action: function(code){
         var partner = this.pos.db.get_partner_by_barcode(code.code);
         if(partner){
-            this.pos.get_order().set_client(partner);
+            if (this.pos.get_order().get_client() !== partner) {
+                this.pos.get_order().set_client(partner);
+                this.pos.get_order().set_pricelist(_.findWhere(this.pos.pricelists, {'id': partner.property_product_pricelist[0]}) || this.pos.default_pricelist);
+            }
             return true;
         }
         this.barcode_error_action(code);
@@ -176,6 +179,61 @@ var ScreenWidget = PosBaseWidget.extend({
             if(this.$el){
                 this.$el.addClass('oe_hidden');
             }
+        }
+    },
+    /**
+     * Handles the error response from the server when we push
+     * an invoiceable order
+     * Displays appropriates warnings and errors and
+     * proposes subsequent actions
+     *
+     * @private
+     * @param {PosModel} order: the order to consider, defaults to current order
+     * @param {Boolean} refresh_screens: whether or not displayed screens should refresh
+     * @param {Object} error: the error provided by Ajax
+     */
+    _handleFailedPushForInvoice: function (order, refresh_screen, error) {
+        var self = this;
+        order = order || this.pos.get_order();
+        this.invoicing = false;
+        order.finalized = false;
+        if (error.message === 'Missing Customer') {
+            this.gui.show_popup('confirm',{
+                'title': _t('Please select the Customer'),
+                'body': _t('You need to select the customer before you can invoice an order.'),
+                confirm: function(){
+                    self.gui.show_screen('clientlist', null, refresh_screen);
+                },
+            });
+        } else if (error.message === 'Backend Invoice') {
+            this.gui.show_popup('confirm',{
+                'title': _t('Please print the invoice from the backend'),
+                'body': _t('The order has been synchronized earlier. Please make the invoice from the backend for the order: ') + error.data.order.name,
+                confirm: function () {
+                    this.gui.show_screen('receipt', null, refresh_screen);
+                },
+                cancel: function () {
+                    this.gui.show_screen('receipt', null, refresh_screen);
+                },
+            });
+        } else if (error.code < 0) {        // XmlHttpRequest Errors
+            this.gui.show_popup('error',{
+                'title': _t('The order could not be sent'),
+                'body': _t('Check your internet connection and try again.'),
+                cancel: function () {
+                    this.gui.show_screen('receipt', {button_print_invoice: true}, refresh_screen); // refresh if necessary
+                },
+            });
+        } else if (error.code === 200) {    // OpenERP Server Errors
+            this.gui.show_popup('error-traceback',{
+                'title': error.data.message || _t("Server Error"),
+                'body': error.data.debug || _t('The server encountered an error while receiving your order.'),
+            });
+        } else {                            // ???
+            this.gui.show_popup('error',{
+                'title': _t("Unknown Error"),
+                'body':  _t("The order could not be sent to the server due to an unknown error"),
+            });
         }
     },
 });
@@ -1547,7 +1605,9 @@ var ReceiptScreenWidget = ScreenWidget.extend({
         return this.pos.config.iface_print_auto && !this.pos.get_order()._printed;
     },
     should_close_immediately: function() {
-        return this.pos.config.iface_print_via_proxy && this.pos.config.iface_print_skip_screen;
+        var order = this.pos.get_order();
+        var invoiced_finalized = order.is_to_invoice() ? order.finalized : true;
+        return this.pos.config.iface_print_via_proxy && this.pos.config.iface_print_skip_screen && invoiced_finalized;
     },
     lock_screen: function(locked) {
         this._locked = locked;
@@ -1651,9 +1711,32 @@ var ReceiptScreenWidget = ScreenWidget.extend({
                 self.print();
             }
         });
+        var button_print_invoice = this.$('.button.print_invoice');
+        button_print_invoice.click(function () {
+            var order = self.pos.get_order();
+            var invoiced = self.pos.push_and_invoice_order(order);
+            self.invoicing = true;
+
+            invoiced.fail(self._handleFailedPushForInvoice.bind(self, order, true)); // refresh
+
+            invoiced.done(function(){
+                self.invoicing = false;
+                self.gui.show_screen('receipt', {button_print_invoice: false}, true); // refresh
+            });
+        });
+
     },
     render_change: function() {
+        var self = this;
         this.$('.change-value').html(this.format_currency(this.pos.get_order().get_change()));
+        var order = this.pos.get_order();
+        var order_screen_params = order.get_screen_data('params');
+        var button_print_invoice = this.$('.button.print_invoice');
+        if (order_screen_params && order_screen_params.button_print_invoice) {
+            button_print_invoice.show();
+        } else {
+            button_print_invoice.hide();
+        }
     },
     render_receipt: function() {
         this.$('.pos-receipt-container').html(QWeb.render('PosTicket', this.get_receipt_render_env()));
@@ -2078,45 +2161,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
             var invoiced = this.pos.push_and_invoice_order(order);
             this.invoicing = true;
 
-            invoiced.fail(function(error){
-                self.invoicing = false;
-                order.finalized = false;
-                if (error.message === 'Missing Customer') {
-                    self.gui.show_popup('confirm',{
-                        'title': _t('Please select the Customer'),
-                        'body': _t('You need to select the customer before you can invoice an order.'),
-                        confirm: function(){
-                            self.gui.show_screen('clientlist');
-                        },
-                    });
-                } else if (error.message === 'Backend Invoice') {
-                    self.gui.show_popup('confirm',{
-                        'title': _t('Please print the invoice from the backend'),
-                        'body': _t('The order has been synchronized earlier. Please make the invoice from the backend for the order: ') + error.data.order.name,
-                        confirm: function () {
-                            this.gui.show_screen('receipt');
-                        },
-                        cancel: function () {
-                            this.gui.show_screen('receipt');
-                        },
-                    });
-                } else if (error.code < 0) {        // XmlHttpRequest Errors
-                    self.gui.show_popup('error',{
-                        'title': _t('The order could not be sent'),
-                        'body': _t('Check your internet connection and try again.'),
-                    });
-                } else if (error.code === 200) {    // OpenERP Server Errors
-                    self.gui.show_popup('error-traceback',{
-                        'title': error.data.message || _t("Server Error"),
-                        'body': error.data.debug || _t('The server encountered an error while receiving your order.'),
-                    });
-                } else {                            // ???
-                    self.gui.show_popup('error',{
-                        'title': _t("Unknown Error"),
-                        'body':  _t("The order could not be sent to the server due to an unknown error"),
-                    });
-                }
-            });
+            invoiced.fail(this._handleFailedPushForInvoice.bind(this, order, false));
 
             invoiced.done(function(){
                 self.invoicing = false;

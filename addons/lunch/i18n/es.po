@@ -4,8 +4,11 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
-# Gabriel Umana <gabriel.umana@delfixcr.com>, 2019
 # Luis Marin <marin.guadarrama@gmail.com>, 2019
+# Rick Hunter <rick.hunter.ec@gmail.com>, 2019
+# Jon Perez <jop@odoo.com>, 2019
+# VivianMontana23 <vivianpvm@gmail.com>, 2019
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -13,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:32+0000\n"
 "PO-Revision-Date: 2018-08-24 09:20+0000\n"
-"Last-Translator: Luis Marin <marin.guadarrama@gmail.com>, 2019\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,22 +30,24 @@ msgid ""
 "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Receive button\" "
 "title=\"Receive button\"/>"
 msgstr ""
+"<i class=\"fa fa-check\" role=\"img\" aria-label=\"Botón de recibir\" "
+"title=\"Botón de recibir\"/>"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_kanban
 #: model_terms:ir.ui.view,arch_db:lunch.view_lunch_cashmove_kanban
 msgid "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
-msgstr "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Fecha\" title=\"Fecha\"/>"
+msgstr "<i class=\"fa fa-clock-o\" aria-label=\"Periodo\" role=\"img\" title=\"Periodo\"/>"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.view_lunch_cashmove_kanban
 msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Amount\" title=\"Amount\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Importe\" title=\"Importe\"/>"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_kanban
 msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Money\" title=\"Money\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Dinero\" title=\"Dinero\"/>"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_kanban
@@ -50,6 +55,8 @@ msgid ""
 "<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Order button\" "
 "title=\"Order button\"/>"
 msgstr ""
+"<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Botón de pedido\" "
+"title=\"Botón de pedido\"/>"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_kanban
@@ -57,6 +64,8 @@ msgid ""
 "<i class=\"fa fa-times\" role=\"img\" aria-label=\"Cancel button\" "
 "title=\"Cancel button\"/>"
 msgstr ""
+"<i class=\"fa fa-times\" role=\"img\" aria-label=\"Botón de cancelación\" "
+"title=\"Botón de cancelación\"/>"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
@@ -372,12 +381,12 @@ msgstr ""
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_action_control_accounts
 msgid "Create a new payment"
-msgstr ""
+msgstr "Crea un nuevo pago"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_action
 msgid "Create a new product for lunch"
-msgstr ""
+msgstr "Crea un nuevo producto para el almuerzo"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__create_uid
@@ -644,7 +653,7 @@ msgstr ""
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_product
 msgid "Lunch Product"
-msgstr ""
+msgstr "Producto de Almuerzo"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_product_category
@@ -727,12 +736,12 @@ msgstr "Nuevo pedido"
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_action_account
 msgid "No cash move yet"
-msgstr ""
+msgstr "No hay movimiento de efectivo todavía"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_line_action_control_suppliers
 msgid "No lunch order yet"
-msgstr ""
+msgstr "No hay orden de almuerzo todavía"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_line_action
@@ -758,7 +767,7 @@ msgstr "Nota"
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
 msgid "Nothing to order today"
-msgstr ""
+msgstr "No hay nada que ordenar hoy"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:318
@@ -823,7 +832,7 @@ msgstr "Pedidos por proveedor"
 #. module: lunch
 #: model:mail.template,subject:lunch.lunch_order_mail_supplier
 msgid "Orders for ${ctx['order']['company_name']}"
-msgstr ""
+msgstr "Ordenes para ${ctx['order']['company_name']}"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
@@ -837,6 +846,9 @@ msgid ""
 "Payments are used to register liquidity movements. You can process those "
 "payments by your own means or by using installed facilities."
 msgstr ""
+"Los pagos se utilizan para registrar movimientos de liquidez. Puede procesar"
+" esos pagos por sus propios medios o utilizando las instalaciones "
+"instaladas."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__previous_order_ids
@@ -1116,7 +1128,7 @@ msgstr "Proveedor"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
 msgid "Vendor Orders by Date"
-msgstr ""
+msgstr "Pedidos de Proveedor por Fecha"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:192

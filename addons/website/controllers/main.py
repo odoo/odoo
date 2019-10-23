@@ -76,7 +76,7 @@ class Website(Home):
         else:
             top_menu = request.website.menu_id
             first_menu = top_menu and top_menu.child_id and top_menu.child_id.filtered(lambda menu: menu.is_visible)
-            if first_menu and first_menu[0].url not in ('/', '') and (not (first_menu[0].url.startswith(('/?', '/#', ' ')))):
+            if first_menu and first_menu[0].url not in ('/', '', '#') and (not (first_menu[0].url.startswith(('/?', '/#', ' ')))):
                 return request.redirect(first_menu[0].url)
 
         raise request.not_found()
@@ -98,7 +98,7 @@ class Website(Home):
             if request.env['res.users'].browse(request.uid).has_group('base.group_user'):
                 redirect = b'/web?' + request.httprequest.query_string
             else:
-                redirect = '/'
+                redirect = '/my'
             return http.redirect_with_hash(redirect)
         return response
 
@@ -469,3 +469,8 @@ class WebsiteBinary(http.Controller):
             if unique:
                 kw['unique'] = unique
         return Binary().content_image(**kw)
+
+    @http.route(['/favicon.ico'], type='http', auth='public', website=True, sitemap=False)
+    def favicon(self, **kw):
+        # when opening a pdf in chrome, chrome tries to open the default favicon url
+        return self.content_image(model='website', id=str(request.website.id), field='favicon', **kw)

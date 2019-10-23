@@ -42,11 +42,11 @@ class SaleOrderLine(models.Model):
         registrations linked to this line. This method update existing registrations
         and create new one for missing one. """
         Registration = self.env['event.registration'].sudo()
-        registrations = Registration.search([('sale_order_line_id', 'in', self.ids), ('state', '!=', 'cancel')])
+        registrations = Registration.search([('sale_order_line_id', 'in', self.ids)])
         for so_line in self.filtered('event_id'):
             existing_registrations = registrations.filtered(lambda self: self.sale_order_line_id.id == so_line.id)
             if confirm:
-                existing_registrations.filtered(lambda self: self.state != 'open').confirm_registration()
+                existing_registrations.filtered(lambda self: self.state not in ['open', 'cancel']).confirm_registration()
             if cancel_to_draft:
                 existing_registrations.filtered(lambda self: self.state == 'cancel').do_draft()
 
@@ -81,9 +81,11 @@ class SaleOrderLine(models.Model):
     @api.onchange('event_ticket_id')
     def _onchange_event_ticket_id(self):
         company = self.event_id.company_id or self.env.user.company_id
-        currency = company.currency_id
+        currency = company.currency_id or self.env.user.company_id.currency_id
         self.price_unit = currency._convert(
-            self.event_ticket_id.price, self.order_id.currency_id, self.order_id.company_id, self.order_id.date_order or fields.Date.today())
+            self.event_ticket_id.price, self.order_id.currency_id,
+            self.order_id.company_id or self.env.user.company_id,
+            self.order_id.date_order or fields.Date.today())
 
         # we call this to force update the default name
         self.product_id_change()

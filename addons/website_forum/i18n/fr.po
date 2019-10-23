@@ -9,10 +9,9 @@
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2018
 # Lucas Deliege <lud@odoo.com>, 2018
 # Magali <mch@openerp.com>, 2018
-# Léonie Bouchat <lbo@odoo.com>, 2018
 # e2f <projects@e2f.com>, 2018
-# fr trans <e2ftrans1@yahoo.com>, 2018
-# fr rev <e2ffr02@hotmail.com>, 2018
+# 6534c450c77b2549e41c52e2051f5839, 2018
+# bb76cd9ac0cb7e20167a14728edb858b, 2018
 # Olivier Dony <odo@odoo.com>, 2018
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2018
 # Fabien Pinckaers <fp@openerp.com>, 2018
@@ -30,16 +29,19 @@
 # Laura Piraux <lap@odoo.com>, 2018
 # Nathan Grognet <ngr@odoo.com>, 2018
 # Martin Trigaux, 2018
+# Léonie Bouchat <lbo@odoo.com>, 2018
 # Eloïse Stilmant <est@odoo.com>, 2018
 # William Olhasque <william.olhasque@scopea.fr>, 2019
+# Alex T <alt@odoo.com>, 2019
+# Cécile Collart <cco@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:32+0000\n"
+"POT-Creation-Date: 2019-03-29 10:10+0000\n"
 "PO-Revision-Date: 2018-08-24 09:34+0000\n"
-"Last-Translator: William Olhasque <william.olhasque@scopea.fr>, 2019\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -325,6 +327,8 @@ msgid ""
 "<i class=\"fa fa-cog\" role=\"img\" aria-label=\"Dropdown menu\" "
 "title=\"Dropdown menu\"/>"
 msgstr ""
+"<i class=\"fa fa-cog\" role=\"img\" aria-label=\"Menu déroulant\" "
+"title=\"Menu déroulant\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
@@ -787,7 +791,7 @@ msgstr "Réponse inappropriée"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_answer
 msgid "Answer questions"
-msgstr "Questions répondues"
+msgstr "Répondre aux questions"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_answer_upvote
@@ -1226,7 +1230,7 @@ msgstr "Commenter les messages"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_comment_own
 msgid "Comment own posts"
-msgstr "Commentez ses propres messages"
+msgstr "Commenter ses propres messages"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_comment
@@ -1407,7 +1411,7 @@ msgstr "Supprimer n'importe quel message"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_unlink_own
 msgid "Delete own posts"
-msgstr "Supprimer ses propres questions"
+msgstr "Supprimer ses propres messages"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_23
@@ -1466,7 +1470,7 @@ msgstr "Afficher la biographie détaillée de l'utilisateur"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_downvote
 msgid "Downvote"
-msgstr "Vote négatif"
+msgstr "Voter négativement"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
@@ -1494,7 +1498,7 @@ msgstr "Modifier n'importe quel message"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_edit_own
 msgid "Edit own posts"
-msgstr "Modifiez ses propres questions"
+msgstr "Modifier ses propres questions"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
@@ -1634,7 +1638,7 @@ msgstr "Signaler"
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_flag
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__karma_flag
 msgid "Flag a post as offensive"
-msgstr "Marquer un message comme offensif"
+msgstr "Marquer un message comme offensant"
 
 #. module: website_forum
 #: selection:forum.post,state:0
@@ -2156,7 +2160,7 @@ msgstr "Messages"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_moderate
 msgid "Moderate posts"
-msgstr "Messages modérés"
+msgstr "Modérer les messages"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
@@ -3067,9 +3071,15 @@ msgstr ""
 "partenaires et programmateurs. Vous pouvez poser vos questions sur:"
 
 #. module: website_forum
+#: model_terms:forum.forum,welcome_message:website_forum.forum_help
+msgid ""
+"This community is for professionals and enthusiasts of our products and services.\n"
+"                                        <br>Share and discuss the best content and new marketing ideas, build your professional profile and become a better marketer together."
+msgstr ""
+
+#. module: website_forum
 #: code:addons/website_forum/models/forum.py:51
 #: model:forum.forum,description:website_forum.forum_help
-#: model_terms:forum.forum,welcome_message:website_forum.forum_help
 #, python-format
 msgid ""
 "This community is for professionals and enthusiasts of our products and "
@@ -3212,12 +3222,12 @@ msgstr "Sans réponse"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_comment_unlink_all
 msgid "Unlink all comments"
-msgstr "Déliez tous les commentaires"
+msgstr "Délier tous les commentaires"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_comment_unlink_own
 msgid "Unlink own comments"
-msgstr "Déliés vos propres commentaires"
+msgstr "Délier vos propres commentaires"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_unread

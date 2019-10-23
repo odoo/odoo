@@ -43,7 +43,7 @@ class MaintenanceEquipmentCategory(models.Model):
     alias_id = fields.Many2one(
         'mail.alias', 'Alias', ondelete='restrict', required=True,
         help="Email alias for this equipment category. New emails will automatically "
-        "create new maintenance request for this equipment category.")
+        "create a new equipment under this category.")
     fold = fields.Boolean(string='Folded in Maintenance Pipe', compute='_compute_fold', store=True)
 
     @api.multi

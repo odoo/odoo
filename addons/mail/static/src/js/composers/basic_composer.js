@@ -375,6 +375,7 @@ var BasicComposer = Widget.extend({
             attachment_ids: _.pluck(this.get('attachment_ids'), 'id'),
             partner_ids: _.uniq(_.pluck(this._mentionManager.getListenerSelection('@'), 'id')),
             canned_response_ids: _.uniq(_.pluck(this._mentionManager.getListenerSelections()[':'], 'id')),
+            channel_ids: _.uniq(_.pluck(this._mentionManager.getListenerSelection('#'), 'id')),
             command: commands.length > 0 ? commands[0].name : undefined,
         });
     },
@@ -447,6 +448,7 @@ var BasicComposer = Widget.extend({
         });
         attachments = attachments.concat(uploadAttachments);
         this.set('attachment_ids', attachments);
+        ev.target.value = "";
     },
     /**
      * @private

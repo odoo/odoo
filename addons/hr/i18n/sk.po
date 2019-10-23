@@ -4,17 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
-# Robert Kirschner <robertkirschner@yahoo.com>, 2018
 # Matus Krnac <matus.krnac@gmail.com>, 2018
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
-# gebri <gebri@inmail.sk>, 2018
+# gebri <gebri@inmail.sk>, 2019
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2019
 # Jan Prokop, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:31+0000\n"
+"POT-Creation-Date: 2019-04-12 12:19+0000\n"
 "PO-Revision-Date: 2018-08-24 09:18+0000\n"
 "Last-Translator: Jan Prokop, 2019\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
@@ -224,7 +223,10 @@ msgid "Additional Note"
 msgstr "Dodatočná poznámka"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_crm_team__alias_contact
 #: model:ir.model.fields,field_description:hr.field_mail_alias__alias_contact
+#: model:ir.model.fields,field_description:hr.field_mail_alias_mixin__alias_contact
+#: model:ir.model.fields,field_description:hr.field_mail_channel__alias_contact
 msgid "Alias Contact Security"
 msgstr "Alias kontakt bezpečnosti"
 
@@ -323,7 +325,7 @@ msgstr "Narodenie"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__certificate
 msgid "Certificate Level"
-msgstr "Certifikát úrovne"
+msgstr "Úroveň diplomu"
 
 #. module: hr
 #: model:hr.job,name:hr.job_ceo
@@ -501,7 +503,7 @@ msgstr "Oddelenia"
 
 #. module: hr
 #: model:ir.model,name:hr.model_mail_channel
-msgid "Discussion channel"
+msgid "Discussion Channel"
 msgstr "Diskusný kanál"
 
 #. module: hr
@@ -675,6 +677,11 @@ msgstr "Odberatelia (Partneri)"
 #: selection:mail.alias,alias_contact:0
 msgid "Followers only"
 msgstr "Iba odberatelia"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Future Activities"
+msgstr "Budúce aktivity"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__gender
@@ -930,6 +937,11 @@ msgid "Last Updated on"
 msgstr "Naposledy upravované"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Late Activities"
+msgstr "Neskoršie aktivity"
+
+#. module: hr
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "Launch new marketing campaigns and offers"
 msgstr "Spustite nové marketingové kampane a ponuky"
@@ -992,7 +1004,7 @@ msgstr "Ženatý"
 #. module: hr
 #: selection:hr.employee,certificate:0
 msgid "Master"
-msgstr "Hlavné"
+msgstr "Magister, inžinier"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -1202,7 +1214,7 @@ msgstr "Oneskorené"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__parent_id
 msgid "Parent Department"
-msgstr "Rodičovské oddelenie"
+msgstr "Nadradené oddelenie"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
@@ -1241,7 +1253,10 @@ msgid "Planned"
 msgstr "Plánované"
 
 #. module: hr
+#: model:ir.model.fields,help:hr.field_crm_team__alias_contact
 #: model:ir.model.fields,help:hr.field_mail_alias__alias_contact
+#: model:ir.model.fields,help:hr.field_mail_alias_mixin__alias_contact
+#: model:ir.model.fields,help:hr.field_mail_channel__alias_contact
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
@@ -1570,6 +1585,11 @@ msgid "Today"
 msgstr "Dnes"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Today Activities"
+msgstr "Dnešné aktivity"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__expected_employees
 msgid "Total Forecasted Employees"
 msgstr "Celkovo očakávaných zamestnancov"
@@ -1690,6 +1710,20 @@ msgstr ""
 "..... nebojí sa začať nové veci, veľa nových vecí a zväčšiť ich."
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__website_message_ids
+#: model:ir.model.fields,field_description:hr.field_hr_employee__website_message_ids
+#: model:ir.model.fields,field_description:hr.field_hr_job__website_message_ids
+msgid "Website Messages"
+msgstr "Správy Webových stránok"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_department__website_message_ids
+#: model:ir.model.fields,help:hr.field_hr_employee__website_message_ids
+#: model:ir.model.fields,help:hr.field_hr_job__website_message_ids
+msgid "Website communication history"
+msgstr "História komunikácie webových stránok"
+
+#. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -1729,8 +1763,8 @@ msgid ""
 "                can easily find all the information you need for each person;\n"
 "                contact data, job position, availability, etc."
 msgstr ""
-"Pri letmom pohľade na Odoo zamestnanckú obrazovku, vy\n"
-"môžet ľahko nájsť všetky informácie, ktoré potrebujete pre každú osobu;\n"
+"Pri letmom pohľade na prehľad zamestnancov Odoo,\n"
+"môžete ľahko nájsť všetky informácie, ktoré potrebujete pre každú osobu;\n"
 "kontaktné údaje, pracovná pozícia, dostupnosť, atď."
 
 #. module: hr

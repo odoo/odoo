@@ -62,6 +62,42 @@ import time
 if hasattr(time, 'tzset'):
     time.tzset()
 
+# ----------------------------------------------------------
+# module babel hack
+# make sure unicode [world] territory is "001"
+# whereas "unitag" notation is "AA"
+# http://www.unicode.org/reports/tr35/#unicode_region_subtag
+# http://www.unicode.org/reports/tr35/#unicode_region_subtag_validity
+# BCP47: https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry
+# ----------------------------------------------------------
+import babel
+_babelCoreParseLocale = babel.core.parse_locale
+def _babelCoreParseLocale_unitag(identifier, sep='_'):
+    lang, territory, script, variant = _babelCoreParseLocale(identifier, sep)
+    territory = '001' if territory == 'AA' else territory
+    return lang, territory, script, variant
+
+babel.core.parse_locale = _babelCoreParseLocale_unitag
+
+# ----------------------------------------------------------
+# PyPDF2 hack
+# ensure that zlib does not throw error -5 when decompressing
+# because some pdf won't fit into allocated memory
+# https://docs.python.org/3/library/zlib.html#zlib.decompressobj
+# ----------------------------------------------------------
+import PyPDF2
+
+try:
+    import zlib
+
+    def _decompress(data):
+        zobj = zlib.decompressobj()
+        return zobj.decompress(data)
+
+    PyPDF2.filters.decompress = _decompress
+except ImportError:
+    pass # no fix required
+
 #----------------------------------------------------------
 # Shortcuts
 #----------------------------------------------------------

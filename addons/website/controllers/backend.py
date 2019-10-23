@@ -3,6 +3,7 @@
 
 from odoo import http
 from odoo.http import request
+from odoo.tools import pycompat
 from odoo.tools.translate import _
 
 
@@ -26,8 +27,10 @@ class WebsiteBackend(http.Controller):
 
         current_website = website_id and Website.browse(website_id) or Website.get_current_website()
         multi_website = request.env.user.has_group('website.group_multi_website')
-        dashboard_data['websites'] = (multi_website and request.env['website'].search([]) or current_website).read(['id', 'name'])
-        for website in dashboard_data['websites']:
+        websites = multi_website and request.env['website'].search([]) or current_website
+        dashboard_data['websites'] = websites.read(['id', 'name'])
+        for rec, website in pycompat.izip(websites, dashboard_data['websites']):
+            website['domain'] = rec._get_http_domain()
             if website['id'] == current_website.id:
                 website['selected'] = True
 

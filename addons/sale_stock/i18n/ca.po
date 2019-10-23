@@ -3,12 +3,14 @@
 # * sale_stock
 # 
 # Translators:
-# Martin Trigaux, 2018
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2018
 # Carles Antoli <carlesantoli@hotmail.com>, 2018
 # RGB Consulting <odoo@rgbconsulting.com>, 2018
 # Quim - eccit <quim@eccit.com>, 2018
 # Manel Fernandez <manelfera@outlook.com>, 2018
+# Martin Trigaux, 2019
+# M Palau <mpalau@tda.ad>, 2019
+# Arnau Ros, 2019
 # 
 msgid ""
 msgstr ""
@@ -16,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:32+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: Manel Fernandez <manelfera@outlook.com>, 2018\n"
+"Last-Translator: Arnau Ros, 2019\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,6 +34,9 @@ msgid ""
 "There are %s %s available across all warehouses.\n"
 "\n"
 msgstr ""
+"\n"
+"Hi ha %s %s disponibles en tots els magatzems.\n"
+"\n"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -39,6 +44,8 @@ msgid ""
 ".\n"
 "                Manual actions may be needed."
 msgstr ""
+".\n"
+"                Accions manuals poden ser necessàries."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -46,6 +53,8 @@ msgid ""
 "<span class=\"badge badge-danger label-text-align\"><i class=\"fa fa-fw fa-"
 "times\"/> Cancelled</span>"
 msgstr ""
+"<span class=\"badge badge-danger label-text-align\"><i class=\"fa fa-fw fa-"
+"times\"/> Cancel·lat</span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -53,6 +62,8 @@ msgid ""
 "<span class=\"badge badge-info label-text-align\"><i class=\"fa fa-fw fa-"
 "clock-o\"/> Preparation</span>"
 msgstr ""
+"<span class=\"badge badge-info label-text-align\"><i class=\"fa fa-fw fa-"
+"clock-o\"/> Preparació</span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -60,6 +71,8 @@ msgid ""
 "<span class=\"badge badge-success label-text-align\"><i class=\"fa fa-fw fa-"
 "truck\"/> Shipped</span>"
 msgstr ""
+"<span class=\"badge badge-success label-text-align\"><i class=\"fa fa-fw fa-"
+"truck\"/> Enviat</span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -67,6 +80,8 @@ msgid ""
 "<span class=\"badge badge-warning label-text-align\"><i class=\"fa fa-fw fa-"
 "clock-o\"/> Partially Available</span>"
 msgstr ""
+"<span class=\"badge badge-warning label-text-align\"><i class=\"fa fa-fw fa-"
+"clock-o\"/> Parcialment disponible</span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -74,6 +89,8 @@ msgid ""
 "<span class=\"fa fa-download\" role=\"img\" aria-label=\"Download\" "
 "title=\"Download\"/>"
 msgstr ""
+"<span class=\"fa fa-download\" role=\"img\" aria-label=\"Download\" "
+"title=\"Download\"/>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -82,16 +99,19 @@ msgid ""
 "specific.\" role=\"img\" aria-label=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" role=\"img\" aria-label=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
 msgid "<span class=\"o_stat_text\">Sale Orders</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Comandes de venda</span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.product_template_view_form_inherit_stock
 msgid "<span class=\"o_stat_text\">Sold</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Venut</span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
@@ -118,6 +138,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"D'acord a la configuració del producte, la quantitat entregada pot ser automàticament informatitzada per un mecanisme:\n"
+"- Manual: La quantitat és establerta manualment en la línia\n"
+"- Analític de despeses: La quantitat és la suma de les despeses publicades\n"
+"- Full de temps: La quantitat és la suma d'hores registrades en tasques enllaçades a la línia de vendes\n"
+"- Moviments d'estoc: La quantitat prové de recollides confirmades\n"
 
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_aftersale
@@ -127,22 +152,22 @@ msgstr "Post-venda "
 #. module: sale_stock
 #: selection:sale.order.line,qty_delivered_method:0
 msgid "Analytic From Expenses"
-msgstr ""
+msgstr "Analítiques de les despeses"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Apply special routes from orders (e.g. dropshipping, MTO)"
-msgstr ""
+msgstr "Aplicar rutes especial des d'ordres (per exemple, dropshipping, MTO)"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__so_route_ids
 msgid "Apply specific rotues"
-msgstr ""
+msgstr "Aplicar rutes específiques "
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
 msgid "Choose to apply SO lines specific routes."
-msgstr ""
+msgstr "Escull aplicar rutes específiques a línies SO."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
@@ -152,12 +177,12 @@ msgstr "Empreses"
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__effective_date
 msgid "Completion date of the first delivery order."
-msgstr ""
+msgstr "Data de finalització de la primera ordre de lliurament"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Configuració"
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
@@ -187,7 +212,15 @@ msgstr "Mostrar Incoterms en comades de venda i factures relacionades"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Display incoterms on orders &amp; invoices"
+msgstr "Mostrar incoterms en comandes; factures"
+
+#. module: sale_stock
+#: code:addons/sale_stock/models/sale_order.py:101
+#, python-format
+msgid ""
+"Do not forget to change the partner on the following delivery orders: %s"
 msgstr ""
+"No oblidis canviar el partner en les següents ordres de lliurament: %s"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__effective_date
@@ -202,18 +235,18 @@ msgstr "Habilitar rutes en les línies de les comandes de venda"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 msgid "Exception(s) occurred on the picking:"
-msgstr ""
+msgstr "Excepció(ns) ocorregudes en la recollida:"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Exception(s) occurred on the sale order(s):"
-msgstr ""
+msgstr "Excepció(ns) ocorregudes en les ordre(s) de venda:"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Exception(s):"
-msgstr ""
+msgstr "Excepció(ns):"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__picking_policy
@@ -222,11 +255,14 @@ msgid ""
 "based on the greatest product lead time. Otherwise, it will be based on the "
 "shortest."
 msgstr ""
+"Si s'entreguen tots els productes alhora, l'entrega serà programada en base "
+"a l'entrega del termini més gran d'un dels productes. En cas contrari, es "
+"basarà en el més curt. "
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Impacted Transfer(s):"
-msgstr ""
+msgstr "Transferències afectades:"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_account_invoice__incoterms_id
@@ -295,7 +331,7 @@ msgstr "Manual"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Manual actions may be needed."
-msgstr ""
+msgstr "Accions manuals poden ser requerides."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_config_settings__use_security_lead
@@ -304,6 +340,9 @@ msgid ""
 "for delivery that many days earlier than the actual promised date, to cope "
 "with unexpected delays in the supply chain."
 msgstr ""
+"El marge d'error per les dates promeses als clients. L'entrega dels "
+"productes serà programada per dies abans de la data promesa, per fer front a"
+" retards inesperats en la cadena de subministrament. "
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_company__security_lead
@@ -321,12 +360,12 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_delivered_method
 msgid "Method to update delivered qty"
-msgstr ""
+msgstr "Mètode d'actualització de la quantitat entregada"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Move forward expected delivery dates by"
-msgstr ""
+msgstr "Avançar la data d'entrega prevista"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:280
@@ -337,7 +376,7 @@ msgstr "No hi ha suficient inventari!"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__group_route_so_lines
 msgid "Order-Specific Routes"
-msgstr ""
+msgstr "Rutes específiques de la comanda"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:294
@@ -353,7 +392,7 @@ msgstr "Paquet"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__default_picking_policy
 msgid "Picking Policy"
-msgstr ""
+msgstr "Política de recollida"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_ids
@@ -379,6 +418,10 @@ msgid ""
 "or/and frequent stock-outs. By default, the scheduler runs automatically "
 "every 24 hours."
 msgstr ""
+"Es recomana la reserva de productes de forma manual en comandes de "
+"lliurament o executant el planificador per gestionar millor les prioritats "
+"en cas de temps de durada dels clients i/oi freqüents esgotament d'estoc. "
+"Per defecte, el planificador s’executa automàticament cada 24 hores."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__route_id
@@ -388,7 +431,7 @@ msgstr "Ruta"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Routes for Sales Order Lines"
-msgstr ""
+msgstr "Rutes per a les línies de comandes de vendes"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_move__sale_line_id
@@ -409,7 +452,7 @@ msgstr "Comandes de venda"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_production_lot__sale_order_count
 msgid "Sale order count"
-msgstr ""
+msgstr "Comptador d'ordres de venda "
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
@@ -444,17 +487,17 @@ msgstr "Dies segurs per a vendes"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Schedule deliveries earlier to avoid delays"
-msgstr ""
+msgstr "Programa entregues abans per evitar retards"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__security_lead
 msgid "Security Lead Time"
-msgstr ""
+msgstr "Temps de termini de seguretat"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__use_security_lead
 msgid "Security Lead Time for Sales"
-msgstr ""
+msgstr "Temps de termini de seguretat per vendes"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_location_route__sale_selectable
@@ -464,12 +507,12 @@ msgstr "Seleccionable en les línies de les comandes de venda"
 #. module: sale_stock
 #: selection:res.config.settings,default_picking_policy:0
 msgid "Ship all products at once"
-msgstr ""
+msgstr "Envieu tots els productes alhora"
 
 #. module: sale_stock
 #: selection:res.config.settings,default_picking_policy:0
 msgid "Ship products as soon as available, with back orders"
-msgstr ""
+msgstr "Envia productes tan aviat com puguis, amb comandes endarrerides"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_policy
@@ -479,7 +522,7 @@ msgstr "Política de facturació"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.product_template_view_form_inherit_stock
 msgid "Sold in the last 365 days"
-msgstr ""
+msgstr "Venut en els darrers 365 dies "
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
@@ -495,17 +538,17 @@ msgstr "Moviments d'estoc"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rule
 msgid "Stock Rule"
-msgstr ""
+msgstr "Regla d'estoc"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rules_report
 msgid "Stock Rules report"
-msgstr ""
+msgstr "Informe de norma d'estoc"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
-msgstr ""
+msgstr "Informe de norma d'estoc"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
@@ -515,6 +558,10 @@ msgid ""
 "available in sales orders, routes must have 'Sales Order Line' option "
 "checked in their setup form."
 msgstr ""
+"Permet aplicar una ruta especial en línies d'ordre de venda (per exemple, "
+"dropshipping, fer a la comanda) en cas d'escenari de comanda poc habitual. "
+"Per estar disponible en ordres de venda, les rutes han de tenir l'opció de "
+"\"Línia d'ordre de venda\" seleccionada en el seu formulari de configuració."
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:397
@@ -545,14 +592,20 @@ msgid "Warning"
 msgstr "Avís"
 
 #. module: sale_stock
+#: code:addons/sale_stock/models/sale_order.py:100
+#, python-format
+msgid "Warning!"
+msgstr "Avís!"
+
+#. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "When to reserve sold products"
-msgstr ""
+msgstr "Quan reservar productes venuts"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "When to start shipping"
-msgstr ""
+msgstr "Quan començar a enviar"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:295
@@ -571,6 +624,8 @@ msgid ""
 "You cannot decrease the ordered quantity below the delivered quantity.\n"
 "Create a return first."
 msgstr ""
+"No pots disminuir la quantitat encomanda per sota de la quantitat entregada.\n"
+"Crear primer una devolució"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:269
@@ -579,11 +634,13 @@ msgid ""
 "You plan to sell %s %s of %s but you only have %s %s available in %s "
 "warehouse."
 msgstr ""
+"Tens pensat vendre %s %s de%s però només tens %s %s disponible en el %s "
+"magatzem. "
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "cancelled"
-msgstr ""
+msgstr "cancel·lat"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -599,9 +656,9 @@ msgstr "de"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "ordered instead of"
-msgstr ""
+msgstr "Encomanat en lloc de"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 msgid "processed instead of"
-msgstr ""
+msgstr "Processar en lloc de"

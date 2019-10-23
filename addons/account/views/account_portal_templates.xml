@@ -83,7 +83,7 @@
             <div class="row mt16 o_portal_invoice_sidebar">
                 <!-- Sidebar -->
                 <t t-call="portal.portal_record_sidebar">
-                    <t t-set="classes" t-value="'col-12 col-lg flex-lg-grow-0 d-print-none'"/>
+                    <t t-set="classes" t-value="'col-lg-auto d-print-none'"/>
                     <t t-set="title">
                         <h2 class="mb-0">
                             <b t-if="invoice.residual > 0" t-field="invoice.residual"/>

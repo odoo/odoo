@@ -106,7 +106,8 @@
                     <filter string="Payment Method" name="paymentmethod" domain="[]" context="{'group_by': 'payment_method_id'}"/>
                     <filter string="State" name="state" domain="[]" context="{'group_by': 'state'}"/>
                     <filter string="Currency" name="currency" domain="[]" context="{'group_by': 'currency_id'}" groups="base.group_multi_currency"/>
-                    <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                    <!-- company_id is not stored (cdca5d4751a979f6b694f02d88160843f81a77f5). But we can't break structure-->
+                    <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company" invisible="1" />
                 </search>
             </field>
         </record>

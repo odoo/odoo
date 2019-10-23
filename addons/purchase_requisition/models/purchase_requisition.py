@@ -326,7 +326,7 @@ class PurchaseOrder(models.Model):
             else:
                 self.origin = requisition.name
         self.notes = requisition.description
-        self.date_order = requisition.date_end or fields.Datetime.now()
+        self.date_order = fields.Datetime.now()
         self.picking_type_id = requisition.picking_type_id.id
 
         if requisition.type_id.line_copy != 'copy':
@@ -406,14 +406,13 @@ class PurchaseOrderLine(models.Model):
     def _onchange_quantity(self):
         res = super(PurchaseOrderLine, self)._onchange_quantity()
         if self.order_id.requisition_id:
-            for line in self.order_id.requisition_id.line_ids:
-                if line.product_id == self.product_id:
-                    if line.product_uom_id != self.product_uom:
-                        self.price_unit = line.product_uom_id._compute_price(
-                            line.price_unit, self.product_uom)
-                    else:
-                        self.price_unit = line.price_unit
-                    break
+            for line in self.order_id.requisition_id.line_ids.filtered(lambda l: l.product_id == self.product_id):
+                if line.product_uom_id != self.product_uom:
+                    self.price_unit = line.product_uom_id._compute_price(
+                        line.price_unit, self.product_uom)
+                else:
+                    self.price_unit = line.price_unit
+                break
         return res
 
 
@@ -421,10 +420,11 @@ class ProductProduct(models.Model):
     _inherit = 'product.product'
 
     def _prepare_sellers(self, params):
+        sellers = super(ProductProduct, self)._prepare_sellers(params)
         if params and params.get('order_id'):
-            return self.seller_ids.filtered(lambda s: not s.purchase_requisition_id or s.purchase_requisition_id == params['order_id'].requisition_id)
+            return sellers.filtered(lambda s: not s.purchase_requisition_id or s.purchase_requisition_id == params['order_id'].requisition_id)
         else:
-            return self.seller_ids
+            return sellers
 
 
 class ProductTemplate(models.Model):

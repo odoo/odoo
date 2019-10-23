@@ -7,15 +7,18 @@
 # Vida Potočnik <vida.potocnik@mentis.si>, 2019
 # laznikd <laznik@mentis.si>, 2019
 # matjaz k <matjaz@mentis.si>, 2019
-# Matjaž Mozetič <m.mozetic@matmoz.si>, 2019
+# Boris Kodelja <boris@hbs.si>, 2019
+# Jasmina Macur <jasmina@hbs.si>, 2019
+# Matjaz Mozetic <m.mozetic@matmoz.si>, 2019
+# Tadej Lupšina <tadej@hbs.si>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: Matjaž Mozetič <m.mozetic@matmoz.si>, 2019\n"
+"Last-Translator: Tadej Lupšina <tadej@hbs.si>, 2019\n"
 "Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -67,6 +70,8 @@ msgid ""
 "Affect landed costs on reception operations and split them among products to"
 " update their cost price."
 msgstr ""
+"Operacije prejema naj vplivajo na stroške dostave. Stroški dostave naj se "
+"razdelijo med proizvode in posodobijo njihovo lastno ceno."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
@@ -77,11 +82,6 @@ msgstr "Arhivirano"
 #: selection:product.category,property_valuation:0
 msgid "Automated"
 msgstr ""
-
-#. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
-msgid "Available Products"
-msgstr "Razpoložljivi proizvodi"
 
 #. module: stock_account
 #: selection:product.category,property_cost_method:0
@@ -136,6 +136,8 @@ msgid ""
 "Changing your cost method is an important change that will impact your "
 "inventory valuation. Are you sure you want to make that change?"
 msgstr ""
+"Spreminjanje stroškovne metode je pomembna sprememba, ki bo vplivala na "
+"vrednotenje zalog. Ali ste prepričani, da želite to spremeniti?"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quantity_history
@@ -145,7 +147,7 @@ msgstr "Izbira datuma"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Uredi nastavitve"
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock.py:587
@@ -216,11 +218,6 @@ msgid "Display Name"
 msgstr "Prikazni naziv"
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
-msgid "Exhausted Stock"
-msgstr "Izčrpana zaloga"
-
-#. module: stock_account
 #: selection:product.category,property_cost_method:0
 #: selection:product.template,property_cost_method:0
 msgid "First In First Out (FIFO)"
@@ -248,7 +245,7 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid "Include landed costs in product cost"
-msgstr ""
+msgstr "Stroški dostave vključeni v ceni"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory
@@ -292,7 +289,7 @@ msgstr "Dnevniki"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__module_stock_landed_costs
 msgid "Landed Costs"
-msgstr "Stroški iztovarjanja"
+msgstr "Stroški dostave"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price____last_update
@@ -331,12 +328,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
-msgid "Negative Stock"
-msgstr "Negativna zaloga"
-
-#. module: stock_account
-#: code:addons/stock_account/models/product.py:128
+#: code:addons/stock_account/models/product.py:129
 #, python-format
 msgid "No difference between the standard price and the new price."
 msgstr ""
@@ -363,6 +355,7 @@ msgstr "Oskrbovalna skupina"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_product
+#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Product"
 msgstr "Izdelek"
 
@@ -405,7 +398,7 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quantity_history
 msgid "Retrieve the inventory valuation"
-msgstr ""
+msgstr "Pridobi vrednotenje zaloge"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking
@@ -490,7 +483,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_product_tree2
 #: model_terms:ir.ui.view,arch_db:stock_account.view_template_property_form
 msgid "Stock Valuation"
-msgstr ""
+msgstr "Vrednotenje zalog"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_valuation_account_id
@@ -508,7 +501,12 @@ msgid "Stock Valuation Account (Outgoing)"
 msgstr "Konto vrednotenja zalog (Izhodni)"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:536
+#: model:ir.model.fields,field_description:stock_account.field_product_product__stock_value_currency_id
+msgid "Stock Value Currency"
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/models/stock.py:540
 #, python-format
 msgid ""
 "The cost of %s is currently equal to 0. Change the cost or the configuration"
@@ -516,7 +514,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:358
+#: code:addons/stock_account/models/stock.py:364
 #, python-format
 msgid ""
 "The move lines are not in a consistent state: some are entering and other "
@@ -524,7 +522,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:369
+#: code:addons/stock_account/models/stock.py:375
 #, python-format
 msgid ""
 "The move lines are not in a consistent states: they are doing an "
@@ -533,7 +531,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:367
+#: code:addons/stock_account/models/stock.py:373
 #, python-format
 msgid ""
 "The move lines are not in a consistent states: they do not share the same "
@@ -544,7 +542,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__to_refund
 #: model:ir.model.fields,field_description:stock_account.field_stock_return_picking_line__to_refund
 msgid "To Refund (update SO/PO)"
-msgstr ""
+msgstr "Za vračilo (posodobi SO/PO)"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_move__to_refund
@@ -603,7 +601,7 @@ msgstr ""
 #: code:addons/stock_account/models/product.py:246
 #, python-format
 msgid "Valuation at date"
-msgstr ""
+msgstr "Vrednotenje na datum"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__stock_value

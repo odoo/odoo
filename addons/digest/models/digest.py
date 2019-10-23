@@ -133,7 +133,7 @@ class Digest(models.Model):
         tip = self.env['digest.tip'].search([('user_ids', '!=', user.id), '|', ('group_id', 'in', user.groups_id.ids), ('group_id', '=', False)], limit=1)
         if not tip:
             return False
-        tip.user_ids = [4, user.id]
+        tip.user_ids += user
         body = tools.html_sanitize(tip.tip_description)
         tip_description = self.env['mail.template']._render_template(body, 'digest.tip', self.id)
         return tip_description

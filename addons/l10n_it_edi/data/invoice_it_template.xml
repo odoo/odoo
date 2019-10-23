@@ -112,6 +112,7 @@
                                 <IdCodice t-esc="get_vat_number(record.commercial_partner_id.vat)"/>
                             </IdFiscaleIVA>
                             <CodiceFiscale t-if="not record.commercial_partner_id.vat" t-esc="record.commercial_partner_id.l10n_it_codice_fiscale"/>
+                            <CodiceFiscale t-if="not record.commercial_partner_id.vat and not record.commercial_partner_id.l10n_it_codice_fiscale" t-esc="99999999999"/>
                             <Anagrafica>
                                 <Denominazione t-if="record.commercial_partner_id.is_company" t-esc="record.commercial_partner_id.display_name"/>
                                 <Nome t-if="not record.commercial_partner_id.is_company" t-esc="record.commercial_partner_id.name"/>

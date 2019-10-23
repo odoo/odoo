@@ -162,20 +162,32 @@ class HolidaysType(models.Model):
 
         for request in requests:
             status_dict = result[request.holiday_status_id.id]
-            status_dict['virtual_remaining_leaves'] -= request.number_of_days
+            status_dict['virtual_remaining_leaves'] -= (request.number_of_hours_display
+                                                    if request.leave_type_request_unit == 'hour'
+                                                    else request.number_of_days)
             if request.state == 'validate':
-                status_dict['leaves_taken'] += request.number_of_days
-                status_dict['remaining_leaves'] -= request.number_of_days
+                status_dict['leaves_taken'] += (request.number_of_hours_display
+                                            if request.leave_type_request_unit == 'hour'
+                                            else request.number_of_days)
+                status_dict['remaining_leaves'] -= (request.number_of_hours_display
+                                                if request.leave_type_request_unit == 'hour'
+                                                else request.number_of_days)
 
-        for allocation in allocations:
+        for allocation in allocations.sudo():
             status_dict = result[allocation.holiday_status_id.id]
             if allocation.state == 'validate':
                 # note: add only validated allocation even for the virtual
                 # count; otherwise pending then refused allocation allow
                 # the employee to create more leaves than possible
-                status_dict['virtual_remaining_leaves'] += allocation.number_of_days
-                status_dict['max_leaves'] += allocation.number_of_days
-                status_dict['remaining_leaves'] += allocation.number_of_days
+                status_dict['virtual_remaining_leaves'] += (allocation.number_of_hours_display
+                                                          if allocation.type_request_unit == 'hour'
+                                                          else allocation.number_of_days)
+                status_dict['max_leaves'] += (allocation.number_of_hours_display
+                                            if allocation.type_request_unit == 'hour'
+                                            else allocation.number_of_days)
+                status_dict['remaining_leaves'] += (allocation.number_of_hours_display
+                                                  if allocation.type_request_unit == 'hour'
+                                                  else allocation.number_of_days)
 
         return result
 
@@ -250,7 +262,7 @@ class HolidaysType(models.Model):
                     'count': _('%g remaining out of %g') % (
                         float_round(record.virtual_remaining_leaves, precision_digits=2) or 0.0,
                         float_round(record.max_leaves, precision_digits=2) or 0.0,
-                    )
+                    ) + (_(' hours') if record.request_unit == 'hour' else _(' days'))
                 }
             res.append((record.id, name))
         return res
@@ -260,8 +272,11 @@ class HolidaysType(models.Model):
         """ Override _search to order the results, according to some employee.
         The order is the following
 
-         - allocation fixed first, then allowing allocation, then free allocation
-         - virtual remaining leaves (higher the better, so using reverse on sorted)
+         - allocation fixed (with remaining leaves),
+         - allowing allocation (with remaining leaves),
+         - no allocation,
+         - allocation fixed (without remaining leaves),
+         - allowing allocation (without remaining leaves).
 
         This override is necessary because those fields are not stored and depends
         on an employee_id given in context. This sort will be done when there
@@ -269,11 +284,18 @@ class HolidaysType(models.Model):
         to the method.
         """
         employee_id = self._get_contextual_employee_id()
-        leave_ids = super(HolidaysType, self)._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
-        if not count and not order and employee_id:
-            leaves = self.browse(leave_ids)
-            sort_key = lambda l: (l.allocation_type == 'fixed', l.allocation_type == 'fixed_allocation', l.virtual_remaining_leaves)
-            return leaves.sorted(key=sort_key, reverse=True).ids
+        post_sort = (not count and not order and employee_id)
+        leave_ids = super(HolidaysType, self)._search(args, offset=offset, limit=(None if post_sort else limit), order=order, count=count, access_rights_uid=access_rights_uid)
+        leaves = self.browse(leave_ids)
+        if post_sort:
+            sort_key = lambda l: (
+                l.allocation_type == 'fixed' and l.virtual_remaining_leaves > 0 and l.max_leaves > 0,
+                l.allocation_type == 'fixed_allocation' and l.virtual_remaining_leaves > 0 and l.max_leaves > 0,
+                l.allocation_type == 'no',
+                l.allocation_type == 'fixed',
+                l.allocation_type == 'fixed_allocation'
+            )
+            return leaves.sorted(key=sort_key, reverse=True).ids[:limit]
         return leave_ids
 
     @api.multi

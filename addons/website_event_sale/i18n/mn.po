@@ -3,16 +3,18 @@
 # * website_event_sale
 # 
 # Translators:
-# Martin Trigaux, 2018
 # Otgonbayar.A <gobi.mn@gmail.com>, 2018
 # Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2018
+# Martin Trigaux, 2019
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-09-21 13:18+0000\n"
-"Last-Translator: Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2018\n"
+"POT-Creation-Date: 2019-03-29 10:10+0000\n"
+"PO-Revision-Date: 2018-08-24 09:34+0000\n"
+"Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,6 +38,26 @@ msgid "<span>left</span>"
 msgstr "<span>үлдсэн</span>"
 
 #. module: website_event_sale
+#: code:addons/website_event_sale/models/product_pricelist.py:16
+#, python-format
+msgid ""
+"A pricelist item with a positive min. quantity cannot be applied to this "
+"event tickets product."
+msgstr ""
+"Үнийн хүснэгтийн дүрмийн хамгийн бага тоо хэмжээ нь нэмэх тэмдэгтэй тоо "
+"байна. Энэхүү үйл ажиллагааны тасалбарт тоо хэмжээ оруулах боломжгүй."
+
+#. module: website_event_sale
+#: code:addons/website_event_sale/models/product_pricelist.py:13
+#, python-format
+msgid ""
+"A pricelist item with a positive min. quantity will not be applied to the "
+"event tickets products."
+msgstr ""
+"Үнийн хүснэгтийн дүрмийн хамгийн бага тоо хэмжээ нь нэмэх тэмдэгтэй тоо "
+"байна. Энэхүү үйл ажиллагааны тасалбарт тоо хэмжээ оруулах боломжгүй."
+
+#. module: website_event_sale
 #: model:ir.model.fields,field_description:website_event_sale.field_product_product__event_ticket_ids
 msgid "Event Tickets"
 msgstr "Арга хэмжээний тасалбарууд"
@@ -51,12 +73,17 @@ msgid "Only"
 msgstr "Зөвхөн"
 
 #. module: website_event_sale
+#: model:ir.model,name:website_event_sale.model_product_pricelist_item
+msgid "Pricelist Item"
+msgstr "Үнийн хүснэгтийн дүрэм"
+
+#. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_product_product
 msgid "Product"
 msgstr "Бараа"
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/controllers/main.py:59
+#: code:addons/website_event_sale/controllers/main.py:63
 #, python-format
 msgid "Registration"
 msgstr "Бүртгэл"
@@ -69,17 +96,17 @@ msgstr "Үлдэгдэл"
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_sale_order
 msgid "Sale Order"
-msgstr "Борлуулах захиалга"
+msgstr "Борлуулалтын захиалга"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Борлуулалтын Захиалгын Мөр"
+msgstr "Борлуулалтын захиалгын мөр"
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.index
 msgid "Sold Out"
-msgstr "Зарагдаж Дууссан"
+msgstr "Зарагдаж дууссан"
 
 #. module: website_event_sale
 #: code:addons/website_event_sale/models/sale_order.py:71
@@ -109,6 +136,12 @@ msgstr "Тасалбар нь энэ бараатай тохирохгүй ба�
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_complete_inherit_website_event_sale
 msgid "Ticket"
 msgstr "Тасалбар"
+
+#. module: website_event_sale
+#: code:addons/website_event_sale/models/product_pricelist.py:20
+#, python-format
+msgid "Warning"
+msgstr "Анхааруулга"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_website

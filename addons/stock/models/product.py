@@ -162,9 +162,23 @@ class Product(models.Model):
             company_id = self.env.user.company_id.id
             return (
                 [('location_id.company_id', '=', company_id), ('location_id.usage', 'in', ['internal', 'transit'])],
-                [('location_id.company_id', '=', False), ('location_dest_id.company_id', '=', company_id)],
-                [('location_id.company_id', '=', company_id), ('location_dest_id.company_id', '=', False),
-            ])
+                ['&',
+                     ('location_dest_id.company_id', '=', company_id),
+                     '|',
+                         ('location_id.company_id', '=', False),
+                         '&',
+                             ('location_id.usage', 'in', ['inventory', 'production']),
+                             ('location_id.company_id', '=', company_id),
+                 ],
+                ['&',
+                     ('location_id.company_id', '=', company_id),
+                     '|',
+                         ('location_dest_id.company_id', '=', False),
+                         '&',
+                             ('location_dest_id.usage', 'in', ['inventory', 'production']),
+                             ('location_dest_id.company_id', '=', company_id),
+                 ]
+            )
         location_ids = []
         if self.env.context.get('location', False):
             if isinstance(self.env.context['location'], pycompat.integer_types):
@@ -364,6 +378,15 @@ class Product(models.Model):
         action['domain'] = [('product_id', '=', self.id)]
         return action
 
+    # Be aware that the exact same function exists in product.template
+    def action_open_quants(self):
+        self.env['stock.quant']._merge_quants()
+        self.env['stock.quant']._unlink_zero_quants()
+        action = self.env.ref('stock.product_open_quants').read()[0]
+        action['domain'] = [('product_id', '=', self.id)]
+        action['context'] = {'search_default_internal_loc': 1}
+        return action
+
     def action_open_product_lot(self):
         self.ensure_one()
         action = self.env.ref('stock.action_production_lot_form').read()[0]
@@ -437,11 +460,10 @@ class ProductTemplate(models.Model):
     outgoing_qty = fields.Float(
         'Outgoing', compute='_compute_quantities', search='_search_outgoing_qty',
         digits=dp.get_precision('Product Unit of Measure'))
-    # The goal of these fields is not to be able to search a location_id/warehouse_id but
-    # to properly make these fields "dummy": only used to put some keys in context from
-    # the search view in order to influence computed field
-    location_id = fields.Many2one('stock.location', 'Location', store=False, search=lambda operator, operand, vals: [])
-    warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', store=False, search=lambda operator, operand, vals: [])
+    # The goal of these fields is to be able to put some keys in context from search view in order
+    # to influence computed field.
+    location_id = fields.Many2one('stock.location', 'Location', store=False)
+    warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', store=False)
     route_ids = fields.Many2many(
         'stock.location.route', 'stock_route_product', 'product_id', 'route_id', 'Routes',
         domain=[('product_selectable', '=', True)],
@@ -458,6 +480,11 @@ class ProductTemplate(models.Model):
     def _is_cost_method_standard(self):
         return True
 
+    @api.depends(
+        'product_variant_ids',
+        'product_variant_ids.stock_move_ids.product_qty',
+        'product_variant_ids.stock_move_ids.state',
+    )
     def _compute_quantities(self):
         res = self._compute_quantities_dict()
         for template in self:
@@ -571,7 +598,10 @@ class ProductTemplate(models.Model):
                     'context': {'default_product_id': self.env.context.get('default_product_id')}
                 }
 
+    # Be aware that the exact same function exists in product.product
     def action_open_quants(self):
+        self.env['stock.quant']._merge_quants()
+        self.env['stock.quant']._unlink_zero_quants()
         products = self.mapped('product_variant_ids')
         action = self.env.ref('stock.product_open_quants').read()[0]
         action['domain'] = [('product_id', 'in', products.ids)]

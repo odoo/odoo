@@ -7,7 +7,7 @@ import time
 from datetime import date
 
 from itertools import groupby
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, SUPERUSER_ID
 from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
@@ -486,8 +486,8 @@ class Picking(models.Model):
         # TDE FIXME: what ?
         # As the on_change in one2many list is WIP, we will overwrite the locations on the stock moves here
         # As it is a create the format will be a list of (0, 0, dict)
-        if vals.get('move_lines') and vals.get('location_id') and vals.get('location_dest_id'):
-            for move in vals['move_lines']:
+        if vals.get('location_id') and vals.get('location_dest_id'):
+            for move in vals.get('move_lines', []) + vals.get('move_ids_without_package', []):
                 if len(move) == 3 and move[0] == 0:
                     move[2]['location_id'] = vals['location_id']
                     move[2]['location_dest_id'] = vals['location_dest_id']
@@ -927,11 +927,14 @@ class Picking(models.Model):
         """
         for (parent, responsible), rendering_context in documents.items():
             note = render_method(rendering_context)
+            # FIXME workaround for purchase_requistion not inheriting from mail.activity.mixin
+            if not hasattr(parent, 'activity_schedule'):
+                continue
             parent.activity_schedule(
                 'mail.mail_activity_data_warning',
                 date.today(),
                 note=note,
-                user_id=responsible.id
+                user_id=responsible.id or SUPERUSER_ID
             )
 
     def _log_less_quantities_than_expected(self, moves):
@@ -1094,4 +1097,13 @@ class Picking(models.Model):
         packages = self.move_line_ids.mapped('result_package_id')
         action['domain'] = [('id', 'in', packages.ids)]
         action['context'] = {'picking_id': self.id}
+        return action
+
+    def action_picking_move_tree(self):
+        action = self.env.ref('stock.stock_move_action').read()[0]
+        action['views'] = [
+            (self.env.ref('stock.view_picking_move_tree').id, 'tree'),
+        ]
+        action['context'] = self.env.context
+        action['domain'] = [('picking_id', 'in', self.ids)]
         return action

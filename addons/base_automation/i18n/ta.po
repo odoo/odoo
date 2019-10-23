@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:31+0000\n"
+"POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:16+0000\n"
 "Last-Translator: Alagappan Karthikeyan <me@karthik.sg>, 2019\n"
 "Language-Team: Tamil (https://www.transifex.com/odoo/teams/41243/ta/)\n"
@@ -20,6 +20,24 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: ta\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: base_automation
+#: model:mail.template,body_html:base_automation.test_mail_template_automation
+msgid "<div>Email automation</div>"
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__website_published
+msgid ""
+"A code server action can be executed from the website, using a dedicated "
+"controller. The address is <base>/website/action/<website_path>. Set this "
+"field as True to allow users to run this action. If it is set to False the "
+"action cannot be run through the website."
+msgstr ""
+"ஒரு சர்வர் செயல்திறன் ஒரு பிரத்யேக கட்டுப்படுத்தி பயன்படுத்தி, வலைத்தளத்தில்"
+" இருந்து செயல்படுத்த முடியும். முகவரி / இணையதளம் / செயல் / ஆகும். பயனர்கள் "
+"இந்தச் செயலை இயக்க அனுமதிக்க உண்மை என இந்த அமைவை அமைக்கவும். இது தவறாக "
+"அமைக்கப்பட்டிருந்தால், வலைத்தளத்தின் மூலம் இயங்காது."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__help
@@ -105,6 +123,11 @@ msgid "Automation"
 msgstr "ஆட்டோமேஷன்"
 
 #. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_published
+msgid "Available on the Website"
+msgstr "இணையத்தளத்தில் கிடைக்கும்"
+
+#. module: base_automation
 #: model:ir.actions.server,name:base_automation.ir_cron_data_base_automation_check_ir_actions_server
 #: model:ir.cron,cron_name:base_automation.ir_cron_data_base_automation_check
 #: model:ir.cron,name:base_automation.ir_cron_data_base_automation_check
@@ -146,6 +169,12 @@ msgstr "அடிப்படை தன்னியக்கவாக்கம�
 #: model:ir.actions.server,name:base_automation.test_rule_on_write_check_context_ir_actions_server
 msgid "Base Automation: test rule on write check context"
 msgstr "பேஸ் ஆட்டோமேஷன்: சோதனை காசோலை சூழலில் சோதனை விதி"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_write_recompute_send_email
+#: model:ir.actions.server,name:base_automation.test_rule_on_write_recompute_send_email_ir_actions_server
+msgid "Base Automation: test send an email"
+msgstr ""
 
 #. module: base_automation
 #: selection:base.automation,trigger:0
@@ -305,6 +334,11 @@ msgid "ID"
 msgstr "ID"
 
 #. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__xml_id
+msgid "ID of the action if defined in a XML file"
+msgstr ""
+
+#. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_domain
 msgid ""
 "If present, this condition must be satisfied before executing the action "
@@ -387,11 +421,6 @@ msgstr "நிமிடங்கள்"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__model_id
 msgid "Model"
 msgstr "மாதிரி"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_name
-msgid "Model Description"
-msgstr "மாதிரி விளக்கம்"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__model_name
@@ -496,16 +525,6 @@ msgid "Python Code"
 msgstr "பைதான் குறியீடு"
 
 #. module: base_automation
-#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
-msgid "Remove Action"
-msgstr "அதிரவை நீக்கவும்"
-
-#. module: base_automation
-#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
-msgid "Remove the contextual action related to this server action"
-msgstr "இந்த சேவையக நடவடிக்கை தொடர்பான சூழ்நிலை நடவடிக்கைகளை அகற்றுக"
-
-#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_id
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__user_id
 msgid "Responsible"
@@ -562,6 +581,11 @@ msgid "Summary"
 msgstr "சுருக்கம்"
 
 #. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_name
+msgid "Target Model"
+msgstr ""
+
+#. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__activity_user_field_name
 msgid "Technical name of the user on the record"
 msgstr "பதிவின் பயனரின் தொழில்நுட்ப பெயர்"
@@ -573,6 +597,11 @@ msgid ""
 "The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
 "\"%(state_value)s\" action type"
 msgstr "\"\" \"\" \"\" வகை வகை மட்டுமே பயன்படுத்த முடியும்"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__website_url
+msgid "The full URL to access the server action through the website."
+msgstr "வலைத்தளத்தின் மூலம் சேவையக செயலை அணுக முழு URL."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
@@ -660,6 +689,16 @@ msgstr "மதிப்பு வரைபடம்"
 #, python-format
 msgid "Warning"
 msgstr "எச்சரிக்கை"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_path
+msgid "Website Path"
+msgstr "இணையத்தளம் பாதை"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_url
+msgid "Website Url"
+msgstr "வலைத்தள ஊர்"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_calendar_id

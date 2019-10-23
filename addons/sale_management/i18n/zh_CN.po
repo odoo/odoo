@@ -7,26 +7,26 @@
 # v2exerer <9010446@qq.com>, 2018
 # fausthuang, 2018
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
-# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
-# inspur qiuguodong <qiuguodong@inspur.com>, 2018
-# Felix Yuen <fyu@odoo.com>, 2018
+# bf2549c5415a9287249cba2b8a5823c7, 2018
 # ChinaMaker <liuct@chinamaker.net>, 2018
 # Martin Trigaux, 2018
 # diaojiaolou <124412206@qq.com>, 2018
-# liAnGjiA <liangjia@qq.com>, 2018
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
 # keecome <7017511@qq.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2018
 # Ryan Zhang <so_happy_boy@hotmail.com>, 2018
 # snow wang <147156565@qq.com>, 2018
+# inspur qiuguodong <qiuguodong@inspur.com>, 2018
 # 黎伟杰 <674416404@qq.com>, 2019
+# Jeffery CHEN <jeffery9@gmail.com>, 2019
+# Felix Yuen <fyu@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:31+0000\n"
+"POT-Creation-Date: 2019-08-08 13:50+0000\n"
 "PO-Revision-Date: 2018-08-24 09:24+0000\n"
-"Last-Translator: 黎伟杰 <674416404@qq.com>, 2019\n"
+"Last-Translator: Felix Yuen <fyu@odoo.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -110,6 +110,14 @@ msgstr "属性值"
 #: model:ir.ui.menu,name:sale_management.menu_product_attribute_action
 msgid "Attributes"
 msgstr "属性"
+
+#. module: sale_management
+#: code:addons/sale_management/models/sale_order_template.py:39
+#, python-format
+msgid ""
+"Before archiving \"%s\" please select another default template in the "
+"settings."
+msgstr "在归档“%s”之前，请在设置中选择另一个默认模板。"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_res_config_settings
@@ -415,7 +423,7 @@ msgstr "移除"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
 msgid "Remove one"
-msgstr "删除一行"
+msgstr "移除一行"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__require_signature
@@ -530,10 +538,18 @@ msgid ""
 msgstr "使用模板在几分钟内创建精美的专业报价。通过EMail发送这些报价，让您的客户在线签名。使用交叉销售和折扣来推动和提高销售额。"
 
 #. module: sale_management
-#: code:addons/sale_management/models/sale_order.py:178
+#: code:addons/sale_management/models/sale_order.py:198
 #, python-format
 msgid "You cannot add options to a confirmed order."
 msgstr "你不能添加选项到已确认的订单。"
+
+#. module: sale_management
+#: code:addons/sale_management/models/sale_order_template.py:90
+#, python-format
+msgid ""
+"You cannot change the type of a sale quote line. Instead you should delete "
+"the current line and create a new line of the proper type."
+msgstr "你无法更改销售报价单的类型。相反，你应删除当前行并创建正确类型的新行。"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form

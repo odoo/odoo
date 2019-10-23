@@ -70,13 +70,21 @@ class ResPartnerBank(models.Model):
     @api.model
     def create(self, vals):
         if vals.get('acc_number'):
-            vals['acc_number'] = pretty_iban(normalize_iban(vals['acc_number']))
+            try:
+                validate_iban(vals['acc_number'])
+                vals['acc_number'] = pretty_iban(normalize_iban(vals['acc_number']))
+            except ValidationError:
+                pass
         return super(ResPartnerBank, self).create(vals)
 
     @api.multi
     def write(self, vals):
         if vals.get('acc_number'):
-            vals['acc_number'] = pretty_iban(normalize_iban(vals['acc_number']))
+            try:
+                validate_iban(vals['acc_number'])
+                vals['acc_number'] = pretty_iban(normalize_iban(vals['acc_number']))
+            except ValidationError:
+                pass
         return super(ResPartnerBank, self).write(vals)
 
     @api.one
@@ -155,6 +163,7 @@ _map_iban_template = {
     'sm': 'SMkk KBBB BBSS SSSC CCCC CCCC CCC',  # San Marino
     'tn': 'TNkk BBSS SCCC CCCC CCCC CCCC',  # Tunisia
     'tr': 'TRkk BBBB BRCC CCCC CCCC CCCC CC',  # Turkey
+    'ua': 'UAkk BBBB BBCC CCCC CCCC CCCC CCCC C',  # Ukraine
     'vg': 'VGkk BBBB CCCC CCCC CCCC CCCC',  # Virgin Islands
     'xk': 'XKkk BBBB CCCC CCCC CCCC',  # Kosovo
 }

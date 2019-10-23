@@ -13,7 +13,8 @@
                         <button type="action" class="oe_stat_button"
                                 icon="fa-credit-card"
                                 name="%(payment.payment_token_action)d"
-                                context="{'search_default_partner_id': active_id}">
+                                context="{'search_default_partner_id': active_id}"
+                                attrs="{'invisible': [('payment_token_count', '=', 0)]}">
                             <div class="o_form_field o_stat_info">
                                 <span class="o_stat_value">
                                     <field name="payment_token_count" widget="statinfo" nolabel="1"/>

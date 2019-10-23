@@ -3,9 +3,9 @@
 # * sale_stock
 # 
 # Translators:
-# Martin Trigaux, 2018
 # Seksan Poltree <seksan.poltree@gmail.com>, 2018
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2018
+# Martin Trigaux, 2019
 # Pornvibool Tippayawat <pornvibool.t@gmail.com>, 2019
 # 
 msgid ""
@@ -160,12 +160,12 @@ msgstr ""
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver all products at once"
-msgstr ""
+msgstr "จัดส่งสินค้าทั้งหมดพร้อมกัน"
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver each product when available"
-msgstr ""
+msgstr "ส่งสิ้นค้าแต่ละชิ้นเมื่อพร้อม"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
@@ -185,6 +185,13 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Display incoterms on orders &amp; invoices"
+msgstr ""
+
+#. module: sale_stock
+#: code:addons/sale_stock/models/sale_order.py:101
+#, python-format
+msgid ""
+"Do not forget to change the partner on the following delivery orders: %s"
 msgstr ""
 
 #. module: sale_stock
@@ -533,6 +540,12 @@ msgstr "คลังสินค้า"
 #, python-format
 msgid "Warning"
 msgstr "คำเตือน"
+
+#. module: sale_stock
+#: code:addons/sale_stock/models/sale_order.py:100
+#, python-format
+msgid "Warning!"
+msgstr "คำเตือน!"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock

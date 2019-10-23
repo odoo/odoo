@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import codecs
 import collections
 import unicodedata
 
@@ -32,6 +33,12 @@ DEFAULT_IMAGE_REGEX = r"(?:http|https)://.*(?:png|jpe?g|tiff?|gif|bmp)"
 DEFAULT_IMAGE_CHUNK_SIZE = 32768
 IMAGE_FIELDS = ["icon", "image", "logo", "picture"]
 _logger = logging.getLogger(__name__)
+BOM_MAP = {
+    'utf-16le': codecs.BOM_UTF16_LE,
+    'utf-16be': codecs.BOM_UTF16_BE,
+    'utf-32le': codecs.BOM_UTF32_LE,
+    'utf-32be': codecs.BOM_UTF32_BE,
+}
 
 try:
     import xlrd
@@ -321,6 +328,13 @@ class Import(models.TransientModel):
         encoding = options.get('encoding')
         if not encoding:
             encoding = options['encoding'] = chardet.detect(csv_data)['encoding'].lower()
+            # some versions of chardet (e.g. 2.3.0 but not 3.x) will return
+            # utf-(16|32)(le|be), which for python means "ignore / don't strip
+            # BOM". We don't want that, so rectify the encoding to non-marked
+            # IFF the guessed encoding is LE/BE and csv_data starts with a BOM
+            bom = BOM_MAP.get(encoding)
+            if bom and csv_data.startswith(bom):
+                encoding = options['encoding'] = encoding[:-2]
 
         if encoding != 'utf-8':
             csv_data = csv_data.decode(encoding).encode('utf-8')
@@ -430,6 +444,13 @@ class Import(models.TransientModel):
         # Or a date/datetime if it matches the pattern
         date_patterns = [options['date_format']] if options.get(
             'date_format') else []
+        user_date_format = self.env['res.lang']._lang_get(self.env.user.lang).date_format
+        if user_date_format:
+            try:
+                to_re(user_date_format)
+                date_patterns.append(user_date_format)
+            except KeyError:
+                pass
         date_patterns.extend(DATE_PATTERNS)
         match = check_patterns(date_patterns, preview_values)
         if match:
@@ -748,7 +769,8 @@ class Import(models.TransientModel):
                 # We should be able to manage both case
                 index = import_fields.index(name)
                 self._parse_float_from_data(data, index, name, options)
-            elif field['type'] == 'binary' and field.get('attachment') and any(f in name for f in IMAGE_FIELDS) and name in import_fields:
+            # DON'T Forward port in >= saas-12.2
+            elif field['type'] == 'binary' and (field.get('attachment') or field.get('manual')) and any(f in name for f in IMAGE_FIELDS) and name in import_fields:
                 index = import_fields.index(name)
 
                 with requests.Session() as session:
@@ -886,6 +908,7 @@ class Import(models.TransientModel):
             if dryrun:
                 self._cr.execute('ROLLBACK TO SAVEPOINT import')
                 # cancel all changes done to the registry/ormcache
+                self.pool.clear_caches()
                 self.pool.reset_changes()
             else:
                 self._cr.execute('RELEASE SAVEPOINT import')

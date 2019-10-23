@@ -103,7 +103,7 @@
                       <img t-att-src="image_data_uri(resize_to_48(ol.product_id.image))" alt="Product"/>
                   </div>
                   <div id='product_name' class="col-lg-5">
-                    <span t-esc="ol.product_id.name"/>
+                    <span t-esc="ol.name"/>
                   </div>
                   <div class="col-lg-2 text-right">
                     <span t-field="ol.price_unit" t-options='{"widget": "monetary", "display_currency": order.currency_id}'/>

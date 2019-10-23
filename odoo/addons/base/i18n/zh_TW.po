@@ -4,17 +4,17 @@
 # 
 # Translators:
 # Bill Hsu <hcm86@icloud.com>, 2018
-# Jason Au Yeung <auyeung112002@gmail.com>, 2018
 # amos lin <seeing@edirect168.com>, 2018
 # Martin Trigaux, 2018
 # sejun huang <sejun.huang@gmail.com>, 2019
+# Jason Au Yeung <auyeung112002@gmail.com>, 2019
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:38+0000\n"
+"POT-Creation-Date: 2019-05-22 11:56+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
 "Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -241,8 +241,6 @@ msgid ""
 "\n"
 "This addon is already installed on your system"
 msgstr ""
-"\n"
-"\n"
 "\n"
 "\n"
 "該模組已經安裝到您的系統中了。"
@@ -9195,9 +9193,7 @@ msgid "Application"
 msgstr "應用"
 
 #. module: base
-#: code:addons/base/models/res_users.py:968
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
-#, python-format
 msgid "Application Accesses"
 msgstr "應用程序訪問"
 
@@ -9706,6 +9702,12 @@ msgid "Barcode scan in Mobile"
 msgstr "移動應用中的條碼掃瞄"
 
 #. module: base
+#: code:addons/base/models/ir_qweb_fields.py:607
+#, python-format
+msgid "Barcode symbology"
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/ir_qweb_fields.py:603
 #, python-format
 msgid "Barcode type"
@@ -10107,7 +10109,7 @@ msgstr "C5E 24 163 x 229 公釐"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm
 msgid "CRM"
-msgstr "客戶關係管理"
+msgstr "CRM"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_gamification_sale_crm
@@ -10239,6 +10241,12 @@ msgstr "取消升級"
 #, python-format
 msgid "Cannot aggregate field %r."
 msgstr "無法聚合字段 %r."
+
+#. module: base
+#: code:addons/base/models/ir_translation.py:256
+#, python-format
+msgid "Cannot be translated; record not accessible."
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/res_lang.py:228
@@ -15307,7 +15315,7 @@ msgstr "印度尼西亞"
 #: model_terms:ir.ui.view,arch_db:base.res_partner_industry_view_form
 #: model_terms:ir.ui.view,arch_db:base.res_partner_industry_view_tree
 msgid "Industry"
-msgstr "工業"
+msgstr "行業/產業"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model__info
@@ -15805,7 +15813,7 @@ msgstr "澤西島"
 #: model:ir.model.fields,field_description:base.field_res_partner__function
 #: model:ir.model.fields,field_description:base.field_res_users__function
 msgid "Job Position"
-msgstr "工作職缺"
+msgstr "工作職稱"
 
 #. module: base
 #: model:res.country,name:base.jo
@@ -17240,7 +17248,7 @@ msgstr "先生"
 #: model:ir.module.module,shortdesc:base.module_web_mobile
 #: model_terms:ir.ui.view,arch_db:base.contact
 msgid "Mobile"
-msgstr "移動"
+msgstr "手機"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -20629,8 +20637,7 @@ msgid "Original currency"
 msgstr "原始貨幣"
 
 #. module: base
-#: code:addons/base/models/res_users.py:995
-#: code:addons/base/models/res_users.py:1178
+#: code:addons/base/models/res_users.py:1222
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 #, python-format
 msgid "Other"
@@ -24211,7 +24218,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner__vat
 #: model:ir.model.fields,field_description:base.field_res_users__vat
 msgid "Tax ID"
-msgstr "稅ID"
+msgstr "統一編號"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_taxcloud_delivery
@@ -24247,6 +24254,7 @@ msgstr "技術名稱"
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
 #: model:ir.module.category,name:base.module_category_technical_settings
+#: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Technical Settings"
 msgstr "技術設定"
 
@@ -24395,7 +24403,7 @@ msgstr ""
 msgid ""
 "The Tax Identification Number. Complete it if the contact is subjected to "
 "government taxes. Used in some legal statements."
-msgstr "稅號。 如果聯繫人需繳納稅款，請填寫。 用於某些法律聲明。"
+msgstr "統一編號。 如果聯繫人需繳納稅款，請填寫。 用於某些法律聲明。"
 
 #. module: base
 #: code:addons/base/models/ir_module.py:753
@@ -24650,8 +24658,9 @@ msgid ""
 "- deletion: you may be trying to delete a record while other records still reference it\n"
 "- creation/update: a mandatory field is not correctly set"
 msgstr ""
-"該操作無法完成，可能是由於以下原因：\\n - 刪除：您可能正試圖刪除一個記錄，但是仍有其它記錄引用到它 \\n - "
-"創建/更新：一個強制字段沒有正確設定"
+"該操作無法完成，可能是由於以下原因：\n"
+"- 刪除：您可能正試圖刪除一個記錄，但是仍有其它記錄引用到它\n"
+"- 創建/更新：一個強制字段沒有正確設定"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__domain
@@ -25879,9 +25888,7 @@ msgid "User Login"
 msgstr "使用者登錄"
 
 #. module: base
-#: code:addons/base/models/res_users.py:967
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
-#, python-format
 msgid "User Type"
 msgstr "使用者類型"
 
@@ -26904,8 +26911,8 @@ msgstr "例如：en_US"
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_address_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
-msgid "e.g. www.odoo.com"
-msgstr "例如：www.odoo.com"
+msgid "e.g. https://www.odoo.com"
+msgstr "例如：https://www.odoo.com"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_ebay

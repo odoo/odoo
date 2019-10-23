@@ -3,25 +3,26 @@
 # * event_sale
 # 
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2018
 # amrnegm <amrnegm.01@gmail.com>, 2018
-# Martin Trigaux, 2018
-# hoxhe Aits <hoxhe0@gmail.com>, 2018
 # Osoul <baruni@osoul.ly>, 2018
 # Mohammed Albasha <m.albasha.ma@gmail.com>, 2018
 # Ghaith Gammar <g.gammar@saharaifs.net>, 2018
 # Osama Ahmaro <osamaahmaro@gmail.com>, 2018
 # Mahmood Al Halwachi <mahmood.alhalwachi@gmail.com>, 2018
-# Shaima Safar <shaima.safar@open-inside.com>, 2018
 # Keen See <liquid40@live.com>, 2018
 # Husam Migdadi <samwatson18@gmail.com>, 2018
+# Martin Trigaux, 2018
+# hoxhe Aits <hoxhe0@gmail.com>, 2018
+# Shaima Safar <shaima.safar@open-inside.com>, 2018
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
-"Last-Translator: Husam Migdadi <samwatson18@gmail.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:17+0000\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,7 +38,7 @@ msgstr "تطبيق"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__seats_availability
 msgid "Available Seat"
-msgstr ""
+msgstr "المقاعد المتوفرة"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__seats_available
@@ -54,14 +55,14 @@ msgstr "قبل التأكيد"
 msgid ""
 "Choose an event and it will automatically create a registration for this "
 "event."
-msgstr "اختر حدث وسيتم إنشاء تسجيل لهذا الحدث تلقائيا."
+msgstr "اختر فعالية وسيتم إنشاء تسجيل لها تلقائيًا."
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_sale_order_line__event_ticket_id
 msgid ""
 "Choose an event ticket and it will automatically create a registration for "
 "this event ticket."
-msgstr "اختر تذكرة حدث وسيتم إنشاء تسجيل لتذكرة هذا الحدث تلقائيا."
+msgstr "اختر تذكرة فعالية وسيتم إنشاء تسجيل لها تلقائيًا."
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__create_uid
@@ -84,23 +85,25 @@ msgid ""
 "you will not be able to sell tickets anymore. Set 0 to ignore this rule set "
 "as unlimited."
 msgstr ""
+"حدد عدد التذاكر المتوفرة. في حال وجود عدد كبير من التسجيلات لن تتمكن من بيع "
+"التذاكر. اجعل هذه القيمة 0 لتجاهل هذه القاعدة وتعيين عدد غير محدود للتذاكر."
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__display_name
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__display_name
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__display_name
 msgid "Display Name"
-msgstr "اسم العرض"
+msgstr "الاسم المعروض"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_registration_editor
 msgid "Edit Attendee Details on Sales Confirmation"
-msgstr ""
+msgstr "تحرير بيانات الحاضر عند تأكيد عملية البيع"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_registration_editor_line
 msgid "Edit Attendee Line on Sales Confirmation"
-msgstr ""
+msgstr "تحرير بند الحاضر عند تأكيد عملية البيع"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__editor_id
@@ -118,18 +121,18 @@ msgstr "البريد الإلكتروني"
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__event_id
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_id
 msgid "Event"
-msgstr "الحدث"
+msgstr "الفعالية"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_type
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__event_type_id
 msgid "Event Category"
-msgstr "فئة الحدث"
+msgstr "فئة الفعالية"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_ticket_form_view
 msgid "Event Name"
-msgstr "اسم الحدث"
+msgstr "اسم الفعالية"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_registration
@@ -141,7 +144,7 @@ msgstr "تسجيل التنفيذ"
 #. module: event_sale
 #: model:ir.actions.act_window,name:event_sale.action_sale_order_event_registration
 msgid "Event Registrations"
-msgstr ""
+msgstr "تسجيلات الفعالية"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_event_ticket
@@ -150,17 +153,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__event_ticket_id
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_ticket_id
 msgid "Event Ticket"
-msgstr "تذكرة الحدث"
+msgstr "تذكرة الفعالية"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_product_product__event_ticket_ids
 msgid "Event Tickets"
-msgstr "تذاكر الحدث"
+msgstr "تذاكر الفعالية"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_ticket_form_view
 msgid "Event's Ticket"
-msgstr ""
+msgstr "تذكرة الفعالية"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_product_template_form
@@ -172,7 +175,7 @@ msgstr "المناسبات"
 #: code:addons/event_sale/models/event.py:254
 #, python-format
 msgid "Free"
-msgstr "حرّ"
+msgstr "مجاني"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__id
@@ -188,6 +191,8 @@ msgid ""
 "If checked this product automatically creates an event registration at the "
 "sales order confirmation."
 msgstr ""
+"إذا كان هذا الخيار محددًا، ينشئ هذا المنتج تسجيلًا تلقائيًا بالفعالية عند "
+"تأكيد عملية البيع."
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_account_invoice
@@ -203,7 +208,7 @@ msgstr "هو منتهي"
 #: model:ir.model.fields,field_description:event_sale.field_product_template__event_ok
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_ok
 msgid "Is an Event Ticket"
-msgstr ""
+msgstr "هي تذكرة فعالية"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket____last_update
@@ -229,7 +234,7 @@ msgstr "آخر تحديث في"
 #. module: event_sale
 #: selection:event.event.ticket,seats_availability:0
 msgid "Limited"
-msgstr ""
+msgstr "محدود"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__seats_max
@@ -248,13 +253,13 @@ msgstr "الاسم"
 #: code:addons/event_sale/models/event.py:205
 #, python-format
 msgid "No more available seats for this ticket"
-msgstr ""
+msgstr "لا توجد مقاعد متاحة لهذه التذكرة"
 
 #. module: event_sale
 #: code:addons/event_sale/models/event.py:152
 #, python-format
 msgid "No more available seats for this ticket type."
-msgstr ""
+msgstr "لا توجد مقاعد متاحة لهذا النوع من التذاكر."
 
 #. module: event_sale
 #: code:addons/event_sale/models/event.py:250
@@ -270,7 +275,7 @@ msgstr "المصدر"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__registration_id
 msgid "Original Registration"
-msgstr ""
+msgstr "التسجيل الأصلي"
 
 #. module: event_sale
 #: code:addons/event_sale/models/event.py:259
@@ -302,7 +307,7 @@ msgstr "تخفيض السعر"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price_reduce_taxinc
 msgid "Price Reduce Tax inc"
-msgstr ""
+msgstr "الخصم بإضافة الضريبة"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_product_product
@@ -328,7 +333,7 @@ msgstr "التسجيل"
 #: code:addons/event_sale/models/event.py:51
 #, python-format
 msgid "Registration for %s"
-msgstr ""
+msgstr "تسجيل لـ%s"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__registration_ids
@@ -338,7 +343,7 @@ msgstr "التسجيلات"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__event_registration_ids
 msgid "Registrations to Edit"
-msgstr ""
+msgstr "التسجيلات المراد تحريرها"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__seats_reserved
@@ -370,12 +375,12 @@ msgstr "سطر أمر المبيعات"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__seats_used
 msgid "Seats Used"
-msgstr ""
+msgstr "المقاعد المستخدمة"
 
 #. module: event_sale
 #: model:event.type,name:event_sale.event_type_data_sale
 msgid "Sell Online"
-msgstr ""
+msgstr "بع أونلاين"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
@@ -385,7 +390,7 @@ msgstr "تجاوز"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__sale_order_id
 msgid "Source Sales Order"
-msgstr ""
+msgstr "أمر البيع المصدر"
 
 #. module: event_sale
 #: model:event.event.ticket,name:event_sale.event_0_ticket_1
@@ -397,13 +402,13 @@ msgstr "قياسي"
 #: code:addons/event_sale/models/event.py:257
 #, python-format
 msgid "The registration must be paid"
-msgstr ""
+msgstr "يجب سداد قيمة التسجيل"
 
 #. module: event_sale
 #: code:addons/event_sale/models/event.py:250
 #, python-format
 msgid "Ticket"
-msgstr ""
+msgstr "التذكرة"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_event_report_template_badge
@@ -415,12 +420,12 @@ msgstr "نوع التذكرة"
 #: code:addons/event_sale/models/event.py:157
 #, python-format
 msgid "Ticket cannot belong to both the event category and the event itself."
-msgstr ""
+msgstr "لا يمكن أن تنتمي التذكرة لفئة الفعالية وللفعالية نفسها."
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_type__use_ticketing
 msgid "Ticketing"
-msgstr ""
+msgstr "بيع التذاكر"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_type__event_ticket_ids
@@ -444,7 +449,7 @@ msgstr "الحجوزات غير المؤكدة"
 #: model:product.product,uom_name:event_sale.product_product_event
 #: model:product.template,uom_name:event_sale.product_product_event_product_template
 msgid "Unit(s)"
-msgstr "وحدة(ات)"
+msgstr "وحدة"
 
 #. module: event_sale
 #: selection:event.event.ticket,seats_availability:0
@@ -466,14 +471,14 @@ msgstr "كجم"
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "please give details about the registrations"
-msgstr ""
+msgstr "برجاء توفير تفاصيل عن التسجيلات"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
 msgid "reserved +"
-msgstr ""
+msgstr "محجوز +"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
 msgid "unconfirmed"
-msgstr ""
+msgstr "غير مؤكد"

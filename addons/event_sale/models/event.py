@@ -96,7 +96,7 @@ class EventTicket(models.Model):
     def _compute_is_expired(self):
         for record in self:
             if record.deadline:
-                current_date = fields.Date.context_today(record.with_context({'tz': record.event_id.date_tz}))
+                current_date = fields.Date.context_today(record.with_context(tz=record.event_id.date_tz))
                 record.is_expired = record.deadline < current_date
             else:
                 record.is_expired = False

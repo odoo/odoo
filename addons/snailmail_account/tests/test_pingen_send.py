@@ -25,7 +25,7 @@ class TestPingenSend(AccountingTestCase):
         self.data = {
             'data': json.dumps({
                 'speed': 1,
-                'color': 2,
+                'color': 1,
                 'duplex': 0,
                 'send': True,
             })

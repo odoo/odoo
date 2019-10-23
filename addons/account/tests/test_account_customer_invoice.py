@@ -282,30 +282,30 @@ class TestAccountCustomerInvoice(AccountTestUsers):
         dashboard_data = journal.get_journal_dashboard_datas()
 
         self.assertEquals(dashboard_data['number_draft'], 2)
-        self.assertEquals(dashboard_data['sum_draft'], '$ 68.42')
+        self.assertIn('68.42', dashboard_data['sum_draft'])
 
         self.assertEquals(dashboard_data['number_waiting'], 0)
-        self.assertEquals(dashboard_data['sum_waiting'], '$ 0.00')
+        self.assertIn('0.00', dashboard_data['sum_waiting'])
 
         # Check Both
         invoice.action_invoice_open()
 
         dashboard_data = journal.get_journal_dashboard_datas()
         self.assertEquals(dashboard_data['number_draft'], 1)
-        self.assertEquals(dashboard_data['sum_draft'], '$ -13.30')
+        self.assertIn('-13.30', dashboard_data['sum_draft'])
 
         self.assertEquals(dashboard_data['number_waiting'], 1)
-        self.assertEquals(dashboard_data['sum_waiting'], '$ 81.72')
+        self.assertIn('81.72', dashboard_data['sum_waiting'])
 
         # Check waiting payment
         refund.action_invoice_open()
 
         dashboard_data = journal.get_journal_dashboard_datas()
         self.assertEquals(dashboard_data['number_draft'], 0)
-        self.assertEquals(dashboard_data['sum_draft'], '$ 0.00')
+        self.assertIn('0.00', dashboard_data['sum_draft'])
 
         self.assertEquals(dashboard_data['number_waiting'], 2)
-        self.assertEquals(dashboard_data['sum_waiting'], '$ 68.42')
+        self.assertIn('68.42', dashboard_data['sum_waiting'])
 
         # Check partial
         receivable_account = refund.move_id.line_ids.mapped('account_id').filtered(lambda a: a.internal_type == 'receivable')
@@ -329,12 +329,12 @@ class TestAccountCustomerInvoice(AccountTestUsers):
 
         dashboard_data = journal.get_journal_dashboard_datas()
         self.assertEquals(dashboard_data['number_draft'], 0)
-        self.assertEquals(dashboard_data['sum_draft'], '$ 0.00')
+        self.assertIn('0.00', dashboard_data['sum_draft'])
 
         self.assertEquals(dashboard_data['number_waiting'], 2)
-        self.assertEquals(dashboard_data['sum_waiting'], '$ 78.42')
+        self.assertIn('78.42', dashboard_data['sum_waiting'])
 
         with patch('odoo.fields.Date.today', patched_today):
             dashboard_data = journal.get_journal_dashboard_datas()
             self.assertEquals(dashboard_data['number_late'], 2)
-            self.assertEquals(dashboard_data['sum_late'], '$ 78.42')
+            self.assertIn('78.42', dashboard_data['sum_late'])

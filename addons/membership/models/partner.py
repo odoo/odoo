@@ -44,11 +44,18 @@ class Partner(models.Model):
                  'member_lines.account_invoice_line.invoice_id.partner_id',
                  'free_member',
                  'member_lines.date_to', 'member_lines.date_from',
-                 'associate_member.membership_state')
+                 'associate_member')
     def _compute_membership_state(self):
         values = self._membership_state()
         for partner in self:
             partner.membership_state = values[partner.id]
+
+        # Do not depend directly on "associate_member.membership_state" or we might end up in an
+        # infinite loop. Since we still need this dependency somehow, we explicitly search for the
+        # "parent members" and trigger a recompute.
+        parent_members = self.search([('associate_member', 'in', self.ids)]) - self
+        if parent_members:
+            parent_members._recompute_todo(self._fields['membership_state'])
 
     @api.depends('member_lines.account_invoice_line.invoice_id.state',
                  'member_lines.account_invoice_line.invoice_id.invoice_line_ids',
@@ -87,12 +94,9 @@ class Partner(models.Model):
                  'associate_member.membership_state')
     def _compute_membership_cancel(self):
         for partner in self:
-            if partner.membership_state == 'canceled':
-                partner.membership_cancel = self.env['membership.membership_line'].search([
-                    ('partner', '=', partner.id)
-                ], limit=1, order='date_cancel').date_cancel
-            else:
-                partner.membership_cancel = False
+            partner.membership_cancel = self.env['membership.membership_line'].search([
+                ('partner', '=', partner.id)
+            ], limit=1, order='date_cancel desc').date_cancel
 
     def _membership_state(self):
         """This Function return Membership State For Given Partner. """

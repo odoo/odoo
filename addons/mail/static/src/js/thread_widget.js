@@ -10,14 +10,15 @@ var Widget = require('web.Widget');
 
 var QWeb = core.qweb;
 var _t = core._t;
+var _lt = core._lt;
 
 var ORDER = {
     ASC: 1, // visually, ascending order of message IDs (from top to bottom)
     DESC: -1, // visually, descending order of message IDs (from top to bottom)
 };
 
-var READ_MORE = _t("read more");
-var READ_LESS = _t("read less");
+var READ_MORE = _lt("read more");
+var READ_LESS = _lt("read less");
 
 /**
  * This is a generic widget to render a thread.
@@ -57,6 +58,7 @@ var ThreadWidget = Widget.extend({
         // options when the thread is enabled (e.g. can send message,
         // interact on messages, etc.)
         this._enabledOptions = _.defaults(options || {}, {
+            areMessageAttachmentsDeletable: true,
             displayOrder: ORDER.ASC,
             displayMarkAsRead: true,
             displayModerationCommands: false,
@@ -70,6 +72,7 @@ var ThreadWidget = Widget.extend({
         });
         // options when the thread is disabled
         this._disabledOptions = {
+            areMessageAttachmentsDeletable: false,
             displayOrder: this._enabledOptions.displayOrder,
             displayMarkAsRead: false,
             displayModerationCommands: false,

@@ -34,6 +34,8 @@ class TestPayment(AccountingTestCase):
         self.bank_journal_euro = self.env['account.journal'].create({'name': 'Bank', 'type': 'bank', 'code': 'BNK67'})
         self.account_eur = self.bank_journal_euro.default_debit_account_id
 
+        self.cash_journal_euro = self.env['account.journal'].create({'name': 'Cash', 'type': 'cash', 'code': 'CASH'})
+
         self.bank_journal_usd = self.env['account.journal'].create({'name': 'Bank US', 'type': 'bank', 'code': 'BNK68', 'currency_id': self.currency_usd_id})
         self.account_usd = self.bank_journal_usd.default_debit_account_id
 
@@ -629,3 +631,119 @@ class TestPayment(AccountingTestCase):
         )
         write_off_line = payment_id.move_line_ids.filtered(lambda l: l.account_id == payment_id.writeoff_account_id)
         self.assertEqual(write_off_line.debit, 10)
+
+    def test_payment_cancel_keep_name(self):
+        self.bank_journal_euro.update_posted = True
+
+        payment = self.payment_model.create({
+            'payment_type': 'inbound',
+            'payment_method_id': self.payment_method_manual_in.id,
+            'partner_type': 'customer',
+            'partner_id': self.partner_agrolait.id,
+            'amount': 90,
+            'payment_date': time.strftime('%Y') + '-07-15',
+            'payment_difference_handling': 'reconcile',
+            'journal_id': self.bank_journal_euro.id,
+        })
+
+        payment.post()
+        self.assertEqual(len(payment.move_line_ids.mapped('move_id')), 1)
+        name = payment.move_line_ids.mapped('move_id').name
+        self.assertTrue(name)
+
+        payment.cancel()
+        self.assertFalse(payment.move_line_ids.mapped('move_id'))
+        payment.action_draft()
+
+        payment.post()
+        self.assertEqual(len(payment.move_line_ids.mapped('move_id')), 1)
+        self.assertEqual(name, payment.move_line_ids.mapped('move_id').name)
+
+    def test_payment_transfer_cancel_keep_names(self):
+        self.bank_journal_euro.update_posted = True
+        self.cash_journal_euro.update_posted = True
+
+        payment = self.payment_model.create({
+            'payment_type': 'transfer',
+            'payment_method_id': self.payment_method_manual_out.id,
+            'amount': 90,
+            'payment_date': time.strftime('%Y') + '-07-15',
+            'journal_id': self.bank_journal_euro.id,
+            'destination_journal_id': self.cash_journal_euro.id,
+        })
+
+        payment.post()
+        self.assertEqual(len(payment.move_line_ids.mapped('move_id')), 2)
+
+        all_moves = payment.move_line_ids.mapped('move_id')
+        move = all_moves.filtered(lambda m: m.journal_id == self.bank_journal_euro)
+        transfer_move = all_moves - move
+        self.assertEqual(transfer_move.journal_id, self.cash_journal_euro)
+
+        name = move.name
+        transfer_name = transfer_move.name
+        self.assertTrue(name)
+        self.assertTrue(transfer_name)
+        self.assertNotEqual(name, transfer_name)
+
+        reconciled_lines = payment.move_line_ids.filtered(lambda l: l.reconciled)
+        self.assertEqual(len(reconciled_lines), 2)
+        self.assertEqual(reconciled_lines.mapped('move_id'), all_moves)
+
+        reconciled_lines.remove_move_reconcile()
+        payment.cancel()
+        self.assertFalse(payment.move_line_ids.mapped('move_id'))
+        payment.action_draft()
+
+        payment.post()
+        self.assertEqual(len(payment.move_line_ids.mapped('move_id')), 2)
+
+        all_moves = payment.move_line_ids.mapped('move_id')
+        move = all_moves.filtered(lambda m: m.journal_id == self.bank_journal_euro)
+        transfer_move = all_moves - move
+        self.assertEqual(transfer_move.journal_id, self.cash_journal_euro)
+
+        self.assertEqual(name, move.name)
+        self.assertEqual(transfer_name, transfer_move.name)
+
+    def test_payment_cancel_to_transfer(self):
+        self.bank_journal_euro.update_posted = True
+
+        payment = self.payment_model.create({
+            'payment_type': 'inbound',
+            'payment_method_id': self.payment_method_manual_in.id,
+            'partner_type': 'customer',
+            'partner_id': self.partner_agrolait.id,
+            'amount': 90,
+            'payment_date': time.strftime('%Y') + '-07-15',
+            'payment_difference_handling': 'reconcile',
+            'journal_id': self.bank_journal_euro.id,
+        })
+
+        payment.post()
+        self.assertEqual(len(payment.move_line_ids.mapped('move_id')), 1)
+        name = payment.move_line_ids.mapped('move_id').name
+        self.assertTrue(name)
+
+        payment.cancel()
+        self.assertFalse(payment.move_line_ids.mapped('move_id'))
+        payment.action_draft()
+
+        payment.write({
+            'payment_type': 'transfer',
+            'payment_method_id': self.payment_method_manual_out.id,
+            'partner_id': False,
+            'destination_journal_id': self.cash_journal_euro.id,
+        })
+
+        payment.post()
+        self.assertEqual(len(payment.move_line_ids.mapped('move_id')), 2)
+
+        all_moves = payment.move_line_ids.mapped('move_id')
+        move = all_moves.filtered(lambda m: m.journal_id == self.bank_journal_euro)
+        transfer_move = all_moves - move
+        self.assertEqual(transfer_move.journal_id, self.cash_journal_euro)
+
+        self.assertEqual(name, move.name)
+        self.assertTrue(transfer_move.name)
+        self.assertNotEqual(name, transfer_move.name)

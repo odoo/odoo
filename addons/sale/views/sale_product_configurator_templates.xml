@@ -152,7 +152,7 @@
     <template id="optional_product_items">
         <t t-foreach="product.optional_product_ids" t-as="product">
             <t t-set="first_possible_combination" t-value="product._get_first_possible_combination(parent_combination)"/>
-            <t t-if="product._is_add_to_cart_possible()">
+            <t t-if="product._is_add_to_cart_possible(parent_combination)">
 
                 <t t-set="combination_info" t-value="product._get_combination_info(first_possible_combination, add_qty=add_qty or 1, pricelist=pricelist)"/>
                 <t t-set="product_variant" t-value="product.env['product.product'].browse(combination_info['product_id'])"/>

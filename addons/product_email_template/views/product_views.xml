@@ -10,7 +10,7 @@
                     <attribute name="invisible">0</attribute>
                 </xpath>
                 <xpath expr="//group[@name='email_template_and_project']" position="inside">
-                    <field name="email_template_id" string="Email Template" help="Send a product-specific email once the invoice is paid"
+                    <field name="email_template_id" string="Email Template" help="Send a product-specific email once the invoice is validated"
                         domain="[('model','=','product.template')]"
                         context="{
                             'form_view_ref':'product_email_template.email_template_form_simplified',

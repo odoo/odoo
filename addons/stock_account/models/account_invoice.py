@@ -69,9 +69,9 @@ class AccountInvoice(models.Model):
                 stock_moves = invoice._get_last_step_stock_moves()
                 product_set = product or invoice._get_products_set()
                 for prod in product_set:
-                    if prod.valuation == 'real_time' and stock_moves:
+                    product_interim_account = invoice._get_anglosaxon_interim_account(prod)
+                    if prod.valuation == 'real_time' and stock_moves and product_interim_account.reconcile:
                         # We first get the invoices move lines (taking the invoice and the previous ones into account)...
-                        product_interim_account = invoice._get_anglosaxon_interim_account(prod)
                         to_reconcile = self.env['account.move.line'].search([
                             ('move_id', '=', invoice.move_id.id),
                             ('product_id', '=', prod.id),
