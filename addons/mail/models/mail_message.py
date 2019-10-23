@@ -836,7 +836,7 @@ class Message(models.Model):
             if self.env.user.partner_id.email:
                 email_from = tools.formataddr((self.env.user.partner_id.name, self.env.user.partner_id.email))
             else:
-                email_from = self.env.company.catchall
+                email_from = self.env.company.catchall_formatted
 
             body_html = tools.append_content_to_html('<div>%s</div>' % tools.ustr(comment), msg.body, plaintext=False)
             vals = {
@@ -924,7 +924,7 @@ class Message(models.Model):
                 partner_ids=moderator.partner_id.ids,
                 subject=_('Message are pending moderation'),  # tocheck: target language
                 body=template.render({'record': moderator.partner_id}, engine='ir.qweb', minimal_qcontext=True),
-                email_from=moderator.company_id.catchall or moderator.company_id.email,
+                email_from=moderator.company_id.catchall_formatted or moderator.company_id.email,
             )
 
     # ------------------------------------------------------
