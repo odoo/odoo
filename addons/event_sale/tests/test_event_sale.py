@@ -71,32 +71,40 @@ class EventSaleTest(common.TransactionCase):
         self.assertTrue(registrations, "The registration is not created.")
 
     def test_event_is_registrable(self):
-        self.patcher = patch('odoo.addons.event.models.event.fields.Datetime', wraps=Datetime)
-        self.mock_datetime = self.patcher.start()
-
+        """Test if `_compute_event_registrations_open` works properly."""
         test_event = self.env['event.event'].create({
             'name': 'TestEvent',
-            'date_begin': datetime.datetime(2019, 6, 8, 12, 0),
-            'date_end': datetime.datetime(2019, 6, 12, 12, 0),
+            'date_begin': datetime.datetime.now() - datetime.timedelta(days=5),
+            'date_end': datetime.datetime.now() + datetime.timedelta(days=5),
+        })
+        test_event_ticket = self.env['event.event.ticket'].create({
+            'name': 'TestTicket',
+            'event_id': test_event.id,
+            'product_id': self.env['product.product'].search([], limit=1).id,
         })
 
-        self.mock_datetime.now.return_value = datetime.datetime(2019, 6, 9, 12, 0)
-        self.assertEqual(test_event._is_event_registrable(), True)
+        self.assertEqual(test_event.event_registrations_open, True)
 
-        self.mock_datetime.now.return_value = datetime.datetime(2019, 6, 13, 12, 0)
-        self.assertEqual(test_event._is_event_registrable(), False)
+        test_event.write({
+            'date_begin': datetime.datetime.now() - datetime.timedelta(days=5),
+            'date_end': datetime.datetime.now() - datetime.timedelta(days=1),
+        })
 
-        self.mock_datetime.now.return_value = datetime.datetime(2019, 6, 10, 12, 0)
+        test_event.date_end = datetime.datetime.now() - datetime.timedelta(days=1)
+        self.assertEqual(test_event.event_registrations_open, False)
+
+        test_event.write({
+            'date_begin': datetime.datetime.now() - datetime.timedelta(days=1),
+            'date_end': datetime.datetime.now() + datetime.timedelta(days=5),
+        })
+
         test_event.write({'event_ticket_ids': [(6, 0, [])]})
-        self.assertEqual(test_event._is_event_registrable(), True)
+        self.assertEqual(test_event.event_registrations_open, False, 'cannot register if no tickets')
 
         test_event_ticket = self.env['event.event.ticket'].create({
             'name': 'TestTicket',
             'event_id': test_event.id,
             'product_id': self.env['product.product'].search([], limit=1).id,
         })
-        test_event_ticket.copy()
         test_event_ticket.product_id.active = False
-        self.assertEqual(test_event._is_event_registrable(), False)
-
-        self.patcher.stop()
+        self.assertEqual(test_event.event_registrations_open, False, 'cannot register if product linked to the tickets are all archived')

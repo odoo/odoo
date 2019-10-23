@@ -5,7 +5,7 @@
         <field name="model">event.event</field>
         <field name="inherit_id" ref="event.view_event_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//button[@name='button_cancel']" position="after">
+            <xpath expr="//header" position="inside">
                 <button name="action_mass_mailing_attendees" string="Contact Attendees" type="object" attrs="{'invisible': [('seats_expected', '=', 0)]}"/>
             </xpath>
         </field>

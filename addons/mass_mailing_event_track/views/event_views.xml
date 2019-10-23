@@ -5,7 +5,7 @@
         <field name="model">event.event</field>
         <field name="inherit_id" ref="website_event_track.view_event_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//button[@name='button_cancel']" position="after">
+            <xpath expr="//header" position="inside">
                 <button name="action_mass_mailing_track_speakers" string="Contact Track Speakers" type="object" attrs="{'invisible': [('track_count', '=', 0)]}"/>
             </xpath>
         </field>
