@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <div
+        class="o_EmojisPopover"
+        owl="1"
+        t-name="mail.component.EmojisPopover">
+        <t t-foreach="emojis" t-as="emoji">
+            <span
+                class="o_EmojisPopover_emoji"
+                t-att-aria-label="emoji.description"
+                t-att-data-source="emoji.sources[0]"
+                t-att-data-unicode="emoji.unicode"
+                t-att-title="emoji.description"
+                t-key="emoji.unicode"
+                t-on-click="_onClickEmoji">
+                <t t-esc="emoji.unicode"/>
+            </span>
+        </t>
+    </div>
+
+</templates>

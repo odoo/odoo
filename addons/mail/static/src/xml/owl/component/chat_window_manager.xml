@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <div
+        class="o_ChatWindowManager"
+        owl="1"
+        t-name="mail.component.ChatWindowManager">
+        <!-- Note: DOM elements are ordered from left to right -->
+        <HiddenMenu
+            chatWindowLocalIds="storeProps.computed.hidden.chatWindowLocalIds"
+            class="o_ChatWindowManager_hiddenMenu"
+            direction="direction"
+            offset="storeProps.computed.hidden.offset"
+            t-if="storeProps.computed.hidden.isVisible"
+            t-on-o-close-chat-window.stop="_onCloseChatWindow"
+            t-on-o-select-chat-window.stop="_onSelectChatWindow"/>
+        <t
+            t-set="visibleAmount"
+            t-value="storeProps.computed.visible.length"/>
+        <t
+            t-as="data"
+            t-foreach="orderedVisible">
+            <ChatWindow
+                chatWindowLocalId="data.chatWindowLocalId"
+                composerInitialAttachmentLocalIds="
+                    storeProps.storedChatWindowStates[data.chatWindowLocalId] and
+                    storeProps.storedChatWindowStates[data.chatWindowLocalId].composerAttachmentLocalIds"
+                composerInitialTextInputHtmlContent="
+                    storeProps.storedChatWindowStates[data.chatWindowLocalId] and
+                    storeProps.storedChatWindowStates[data.chatWindowLocalId].composerTextInputHtmlContent"
+                dockDirection="direction"
+                dockOffset="data.offset"
+                isFullscreen="storeProps.isMobile"
+                hasCloseAsBackButton="storeProps.isMobile"
+                hasShiftLeft="!storeProps.isMobile and
+                    data_index !== 0"
+                hasShiftRight="!storeProps.isMobile and
+                    chatWindowShiftRight(data_index)"
+                isDocked="!storeProps.isMobile"
+                isExpandable="!storeProps.isMobile and
+                    data.chatWindowLocalId !== 'new_message'"
+                threadInitialScrollTop="
+                    storeProps.storedChatWindowStates[data.chatWindowLocalId] and
+                    storeProps.storedChatWindowStates[data.chatWindowLocalId].scrollTop"
+                t-key="data.chatWindowLocalId"
+                t-on-o-focus-next-chat-window="_onFocusNextChatWindow"
+                t-on-o-select-thread.stop="_onSelectThreadChatWindow"
+                t-on-o-redirect="_onRedirect"
+                t-ref="chatWindow_{{ data.chatWindowLocalId }}"/>
+        </t>
+    </div>
+
+</templates>

@@ -202,10 +202,27 @@
             }&quot;"/>
         </record>
 
+    <record id="action_owl_discuss" model="ir.actions.client">
+        <field name="name">(owl)Discuss</field>
+        <field name="tag">mail.widget.discuss</field>
+        <field name="res_model">mail.channel</field>
+        <field name="params" eval="&quot;{
+            'default_active_id': 'mail.box_inbox'
+        }&quot;"/>
+    </record>
+
     <menuitem
         id="mail.menu_root_discuss"
         name="Discuss"
         action="action_discuss"
+        web_icon="mail,static/description/icon.png"
+        groups="base.group_user"
+        sequence="1"/>
+
+    <menuitem
+        id="mail.menu_discuss"
+        name="(owl)Discuss"
+        action="action_owl_discuss"
         web_icon="mail,static/description/icon.png"
         groups="base.group_user"
         sequence="1"/>

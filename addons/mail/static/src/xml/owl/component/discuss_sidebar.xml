@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <div
+        class="o_DiscussSidebar"
+        owl="1"
+        t-name="mail.component.DiscussSidebar">
+        <div
+            class="
+                o_DiscussSidebar_group
+                o_DiscussSidebar_groupMailbox"
+            t-key="'mailbox'">
+            <t t-foreach="storeProps.pinnedMailboxList" t-as="mailbox">
+                <SidebarItem
+                   class="o_DiscussSidebar_item"
+                   isActive="props.activeThreadLocalId === mailbox.localId"
+                   threadLocalId="mailbox.localId"
+                   t-key="mailbox.localId"
+                   t-on-o-clicked="_onClickedItem"
+                   t-ref="{{ mailbox.localId }}"/>
+            </t>
+        </div>
+        <hr
+            class="o_DiscussSidebar_separator"
+            t-key="'separator'"/>
+        <input
+            class="o_DiscussSidebar_quickSearch"
+            placeholder="Quick search..."
+            t-if="storeProps.pinnedMailChannelAmount > 19"
+            t-key="'quickSearch'"
+            t-on-input.stop="_onInputQuickSearch"
+            t-ref="quickSearch"/>
+        <div
+            class="
+                o_DiscussSidebar_group
+                o_DiscussSidebar_groupChannel"
+            t-key="'channel'">
+            <div
+                class="o_DiscussSidebar_groupHeader">
+                <div
+                    class="
+                        o_clickable
+                        o_DiscussSidebar_groupHeaderItem
+                        o_DiscussSidebar_groupTitle"
+                    t-on-click.stop="_onClickChannelTitle">
+                    Channels
+                </div>
+                <div class="o-autogrow"/>
+                <div
+                    class="
+                        fa
+                        fa-plus
+                        o_DiscussSidebar_groupHeaderItem
+                        o_DiscussSidebar_groupHeaderItemAdd"
+                    title="Add or join a channel"
+                    t-on-click.stop="_onClickChannelAdd"/>
+            </div>
+            <div
+                class="o_DiscussSidebar_list">
+                <div
+                    class="
+                        o_DiscussSidebar_item
+                        o_DiscussSidebar_itemNew"
+                    t-if="props.isAddingChannel"
+                    t-key="'add_item_channel'">
+                    <AutocompleteInput
+                        class="o_DiscussSidebar_itemNewInput"
+                        isFocusOnMount="true"
+                        isHtml="true"
+                        placeholder="props.addItemChannelInputPlaceholder"
+                        select="props.onAddChannelAutocompleteSelect"
+                        source="props.onAddChannelAutocompleteSource"
+                        t-on-o-hide.stop="_onHideAddingItem"/>
+                </div>
+                <t t-foreach="quickSearchChannelList" t-as="channel">
+                    <SidebarItem
+                        class="o_DiscussSidebar_item"
+                        isActive="props.activeThreadLocalId === channel.localId"
+                        threadLocalId="channel.localId"
+                        t-on-o-clicked="_onClickedItem"
+                        t-key="channel.localId"
+                        t-ref="{{ channel.localId }}"/>
+                </t>
+            </div>
+        </div>
+        <div
+            class="
+                o_DiscussSidebar_group
+                o_DiscussSidebar_groupChat"
+            t-key="'chat'">
+            <div
+                class="o_DiscussSidebar_groupHeader">
+                <div
+                    class="
+                        o_DiscussSidebar_groupHeaderItem
+                        o_DiscussSidebar_groupTitle">
+                    Direct Messages
+                </div>
+                <div
+                    class="o-autogrow"/>
+                <div
+                    class="
+                        fa
+                        fa-plus
+                        o_DiscussSidebar_groupHeaderItem
+                        o_DiscussSidebar_groupHeaderItemAdd"
+                    title="Start a conversation"
+                    t-on-click.stop="_onClickChatAdd"/>
+            </div>
+            <div
+                class="o_DiscussSidebar_list">
+                <div
+                    class="
+                        o_DiscussSidebar_item
+                        o_DiscussSidebar_itemNew"
+                    t-if="props.isAddingChat"
+                    t-key="'add_item_chat'">
+                    <AutocompleteInput
+                       class="o_DiscussSidebar_itemNewInput"
+                       isFocusOnMount="true"
+                       placeholder="props.addItemChatInputPlaceholder"
+                       select="props.onAddChatAutocompleteSelect"
+                       source="props.onAddChatAutocompleteSource"
+                       t-on-o-hide.stop="_onHideAddingItem"/>
+                </div>
+                <t t-foreach="quickSearchChatList" t-as="chat">
+                    <SidebarItem
+                       class="o_DiscussSidebar_item"
+                       isActive="props.activeThreadLocalId === chat.localId"
+                       threadLocalId="chat.localId"
+                       t-on-o-clicked="_onClickedItem"
+                       t-key="chat.localId"
+                       t-ref="{{ chat.localId }}"/>
+                </t>
+            </div>
+        </div>
+    </div>
+
+</templates>

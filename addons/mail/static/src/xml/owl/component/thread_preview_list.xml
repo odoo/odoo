@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <div
+        class="o_ThreadPreviewList"
+        owl="1"
+        t-att-class="{
+            'o-empty': storeProps.threadLocalIds.length === 0,
+        }"
+        t-name="mail.component.ThreadPreviewList">
+        <div
+            class="o_ThreadPreviewList_noConversation"
+            t-if="storeProps.threadLocalIds.length === 0">
+            No conversation yet...
+        </div>
+        <t t-else="">
+            <t t-foreach="storeProps.threadLocalIds" t-as="threadLocalId">
+                <ThreadPreview
+                    class="o_ThreadPreviewList_preview"
+                    threadLocalId="threadLocalId"
+                    t-att-class="{
+                        'o-targeted': props.targetThreadLocalId and
+                            props.targetThreadLocalId === threadLocalId,
+                        'o_ThreadPreviewList_preview-mobile': storeProps.isMobile,
+                    }"
+                    t-key="threadLocalId"
+                    t-on-o-clicked="_onClickedPreview"
+                    t-ref="{{ threadLocalId }}"/>
+                <div
+                    class="o_ThreadPreviewList_separator"
+                    t-if="!threadLocalId_last"/>
+            </t>
+        </t>
+    </div>
+
+</templates>

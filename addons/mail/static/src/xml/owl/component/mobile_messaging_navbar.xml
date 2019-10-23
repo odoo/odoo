@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <div
+        class="o_MobileMessagingNavbar"
+        owl="1"
+        t-name="mail.component.MobileMessagingNavbar">
+        <div
+            class="o_MobileMessagingNavbar_tab"
+            t-as="tab"
+            t-att-class="{
+                'o-active': props.activeTabId === tab.id,
+            }"
+            t-att-data-tab-id="tab.id"
+            t-foreach="props.tabs"
+            t-key="tab.id"
+            t-on-click="_onClick">
+            <span
+                class="o_MobileMessagingNavbar_tabIcon"
+                t-att-class="tab.icon"
+                t-if="tab.icon"/>
+            <span class="o_MobileMessagingNavbar_tabLabel"><t t-esc="tab.label"/></span>
+        </div>
+    </div>
+
+</templates>

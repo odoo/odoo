@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <span
+        class="o_MessageAuthorPrefix"
+        owl="1"
+        t-name="mail.component.MessageAuthorPrefix">
+        <t t-if="
+            storeProps.author and
+            storeProps.author.localId === storeProps.currentPartnerLocalId">
+            <i
+                class="
+                    fa
+                    fa-mail-reply
+                    o_MessageAuthorPrefixIcon"/>You:
+        </t>
+        <t t-elif="
+            storeProps.thread and
+            storeProps.thread.channel_type === 'channel'">
+            <t t-esc="storeProps.authorName"/>:
+        </t>
+    </span>
+
+</templates>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <div
+        class="o_ChatWindowHeader"
+        owl="1"
+        t-att-chat-window-local-id="props.chatWindowLocalId"
+        t-att-class="{
+            'o-mobile': storeProps.isMobile,
+        }"
+        t-name="mail.component.ChatWindowHeader"
+        t-on-click="_onClick">
+        <div
+            aria-label="Close conversation"
+            class="
+                o_ChatWindowHeader_command
+                o_ChatWindowHeader_commandBack
+                o_ChatWindowHeader_commandClose"
+            title="Close conversation"
+            t-att-class="{
+                'o-mobile': storeProps.isMobile,
+            }"
+            t-if="props.hasCloseAsBackButton"
+            t-on-click.stop="_onClickClose">
+            <i
+                class="
+                    fa
+                    fa-arrow-left"/>
+        </div>
+        <Icon
+            class="
+                o_ChatWindowHeader_icon
+                o_ChatWindowHeader_item"
+            threadLocalId="props.chatWindowLocalId"
+            t-if="storeProps.thread"/>
+        <div
+            class="
+                o_ChatWindowHeader_item
+                o_ChatWindowHeader_name"
+            t-att-title="name"
+            t-key="'name'">
+            <t t-esc="name"/>
+        </div>
+        <div
+            class="
+                o_ChatWindowHeader_counter
+                o_ChatWindowHeader_item"
+            t-if="
+                storeProps.thread and
+                storeProps.thread.message_unread_counter > 0"
+            t-key="'counter'">
+            (<t t-esc="storeProps.thread.message_unread_counter"/>)
+        </div>
+        <div class="o-autogrow"/>
+        <div
+            class="
+                o_ChatWindowHeader_item
+                o_ChatWindowHeader_rightArea">
+            <div
+                aria-label="Shift left"
+                class="
+                    o_ChatWindowHeader_command
+                    o_ChatWindowHeader_commandShiftLeft"
+                title="Shift left"
+                t-att-class="{
+                    'o-mobile': storeProps.isMobile,
+                }"
+                t-if="props.hasShiftLeft"
+                t-key="'shift_left'"
+                t-on-click.stop="_onClickShiftLeft">
+                <i
+                    class="
+                        fa
+                        fa-angle-left"/>
+            </div>
+            <div
+                aria-label="Shift right"
+                class="
+                    o_ChatWindowHeader_command
+                    o_ChatWindowHeader_commandShiftRight"
+                title="Shift right"
+                t-att-class="{
+                    'o-mobile': storeProps.isMobile,
+                }"
+                t-if="props.hasShiftRight"
+                t-key="'shift_right'"
+                t-on-click.stop="_onClickShiftRight">
+                <i
+                    class="
+                        fa
+                        fa-angle-right"/>
+            </div>
+            <div
+                aria-label="Open in Discuss"
+                class="
+                    o_ChatWindowHeader_command
+                    o_ChatWindowHeader_commandExpand"
+                title="Open in Discuss"
+                t-att-class="{
+                    'o-mobile': storeProps.isMobile,
+                }"
+                t-if="props.isExpandable"
+                t-key="'expand'"
+                t-on-click.stop="_onClickExpand">
+                <i
+                    class="
+                        fa
+                        fa-expand"/>
+            </div>
+            <div
+                aria-label="Close chat window"
+                class="
+                    o_ChatWindowHeader_command
+                    o_ChatWindowHeader_commandClose"
+                title="Close chat window"
+                t-att-class="{
+                    'o-mobile': storeProps.isMobile,
+                }"
+                t-if="!props.hasCloseAsBackButton"
+                t-on-click.stop="_onClickClose">
+                <i
+                    class="
+                        fa
+                        fa-close"/>
+            </div>
+        </div>
+    </div>
+
+</templates>

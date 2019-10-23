@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <div
+        class="o_MessageList"
+        owl="1"
+        t-att-class="{
+            'o-empty': storeProps.messages.length === 0,
+            'o-has-message-selection': props.selectedMessageLocalId,
+        }"
+        t-name="mail.component.MessageList"
+        t-on-scroll="_onScroll">
+        <div
+            class="o_MessageList_empty"
+            t-if="storeProps.messages.length === 0"
+            t-key="'empty'">
+            <t t-if="storeProps.thread.localId === 'mail.box_inbox'">
+                <div class="o_MessageList_emptyTitle">
+                    Congratulations, your inbox is empty
+                </div>
+                New messages appear here.
+            </t>
+            <t t-elif="storeProps.thread.localId === 'mail.box_starred'">
+                <div class="o_MessageList_emptyTitle">
+                    No starred messages
+                </div>
+                You can mark any message as 'starred', and it shows up in this mailbox.
+            </t>
+            <t t-elif="storeProps.thread.localId === 'mail.box_history'">
+                <div class="o_MessageList_emptyTitle o-neutral-face-icon">
+                    No history messages
+                </div>
+                Messages marked as read will appear in the history.
+            </t>
+            <t t-else="">
+                There are no messages in this conversation.
+            </t>
+        </div>
+        <div
+            class="o_MessageList_isLoadingMore"
+            t-elif="storeProps.threadCache.isLoadingMore"
+            t-key="'isLoadingMore'">
+            <i
+                class="
+                    fa
+                    fa-spin
+                    fa-spinner
+                    o_MessageList_isLoadingMoreIcon"/>Loading...
+        </div>
+        <a
+            class="o_MessageList_loadMore"
+            href="#"
+            t-elif="!storeProps.threadCache.isAllHistoryLoaded"
+            t-key="'load_more'"
+            t-on-click="_onClickLoadMore"
+            t-ref="loadMore">
+            Load more
+        </a>
+        <t t-set="current_day" t-value="0"/>
+        <t t-set="prev_message" t-value="0"/>
+        <div
+            class="
+                o_MessageList_separator
+                o_MessageList_separatorNewMessages"
+            t-att-class="{
+                'o-test-env': env.isTestEnv,
+            }"
+            t-if="
+                storeProps.thread._model === 'mail.channel' and
+                storeProps.thread.message_unread_counter > 0 and
+                !storeProps.thread.seen_message_id"
+            t-key="'new_message_separator'"
+            t-transition="fade">
+            <hr class="
+                o_MessageList_separatorLine
+                o_MessageList_separatorLineNewMessages"
+            /><span class="
+                o_MessageList_separatorLabel
+                o_MessageList_separatorLabelNewMessages">New messages</span>
+        </div>
+        <t t-foreach="messages" t-as="message">
+            <t t-set="message_day" t-value="getDateDay(message)"/>
+            <div
+                class="
+                    o_MessageList_separator
+                    o_MessageList_separatorDate"
+                t-if="current_day !== message_day"
+                t-key="'date_separator' + message_day">
+                <hr class="o_MessageList_separatorLine"
+                /><span class="
+                    o_MessageList_separatorLabel
+                    o_MessageList_separatorLabelDate"><t t-esc="message_day"/></span><hr class="o_MessageList_separatorLine"/>
+                <t t-set="current_day" t-value="message_day"/>
+                <t t-set="isMessageSquashed" t-value="false"/>
+            </div>
+            <t t-else="">
+                <t t-set="isMessageSquashed" t-value="shouldMessageBeSquashed(prev_message, message)"/>
+            </t>
+            <Message
+                class="o_MessageList_message"
+                hasAuthorRedirect="props.haveMessagesAuthorRedirect"
+                hasMarkAsReadIcon="props.haveMessagesMarkAsReadIcon"
+                hasReplyIcon="props.haveMessagesReplyIcon"
+                isSelected="props.selectedMessageLocalId === message.localId"
+                isSquashed="isMessageSquashed"
+                messageLocalId="message.localId"
+                threadLocalId="props.threadLocalId"
+                t-att-class="{
+                    'o-has-message-selection': props.selectedMessageLocalId,
+                }"
+                t-key="message.localId"
+                t-ref="{{ message.localId }}"/>
+            <t  t-set="prev_message" t-value="message"/>
+            <div
+                class="
+                    o_MessageList_separator
+                    o_MessageList_separatorNewMessages"
+                t-att-class="{
+                    'o-test-env': env.isTestEnv,
+                }"
+                t-key="'new_message_separator'"
+                t-if="
+                    storeProps.thread._model === 'mail.channel' and
+                    storeProps.thread.message_unread_counter > 0 and
+                    storeProps.thread.seen_message_id === message.id"
+                t-transition="fade">
+                <hr class="
+                    o_MessageList_separatorLine
+                    o_MessageList_separatorLineNewMessages"
+                /><span class="
+                    o_MessageList_separatorLabel
+                    o_MessageList_separatorLabelNewMessages">New messages</span>
+            </div>
+        </t>
+    </div>
+
+</templates>
