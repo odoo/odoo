@@ -206,6 +206,7 @@
             <section class="s_banner bg-900" style="background-image: url(&quot;/website_slides/static/src/img/banner_default_all.svg&quot;); background-size: cover; background-position: 80% 20%">
                 <div class="container py-5">
                     <h1 t-if="search_my" class="display-3 mb-0">My Courses</h1>
+                    <h1 t-elif="search_slide_type=='certification'" class="display-3 mb-0">Certifications</h1>
                     <h1 t-else="" class="display-3 mb-0">All Courses</h1>
                 </div>
             </section>
@@ -227,6 +228,9 @@
                             <input type="search" name="search" class="form-control"
                                 placeholder="Search courses" aria-label="Search"
                                 t-att-value="search_term"/>
+                            <input t-if="search_tags" type="hidden" name="tags" t-att-value="str(search_tags.ids)"/>
+                            <input t-if="search_my" type="hidden" name="my" t-att-value="1"/>
+                            <input t-if="search_slide_type" type="hidden" name="slide_type" t-att-value="search_slide_type" />
                             <div class="input-group-append">
                                 <button class="btn border border-left-0 oe_search_button" type="submit" aria-label="Search" title="Search">
                                     <i class="fa fa-search"/>
@@ -253,7 +257,7 @@
                                     <div class="dropdown-menu" t-att-id="'navToogleTagGroup%s' % tag_group.id">
                                         <t t-foreach="tag_group.tag_ids" t-as="tag">
                                             <a rel="nofollow" t-att-class="'dropdown-item %s' % ('active' if tag in search_tags else '')"
-                                                t-att-href="'/slides/all?%s' % keep_query('*', **{'channel_tag_group_id_%s' % tag_group.id: tag.id if tag not in search_tags else False})"
+                                                t-att-href="'/slides/all?%s' % keep_query('*', tags=str((search_tags - tag).ids if tag in search_tags else (tag | search_tags).ids))"
                                                 t-esc="tag.name"/>
                                         </t>
                                     </div>
@@ -272,6 +276,9 @@
                                 <input type="search" name="search" class="form-control"
                                     placeholder="Search courses" aria-label="Search"
                                     t-att-value="search_term"/>
+                                <input t-if="search_tags" type="hidden" name="tags" t-att-value="str(search_tags.ids)"/>
+                                <input t-if="search_my" type="hidden" name="my" t-att-value="1"/>
+                                <input t-if="search_slide_type" type="hidden" name="slide_type" t-att-value="search_slide_type" />
                                 <div class="input-group-append">
                                     <button class="btn border border-left-0 oe_search_button" type="submit" aria-label="Search" title="Search">
                                         <i class="fa fa-search"/>
@@ -288,6 +295,28 @@
                         <t t-set="additional_validated_email_message" t-value="' You may now participate to our eLearning.'"/>
                     </t>
                 </div>
+                <!-- Display tags -->
+                <t t-if="search_my">
+                      <span class="align-items-baseline border d-inline-flex pl-2 rounded mb-2">
+                      <i class="fa fa-tag mr-2 text-muted"/>
+                      My Courses
+                      <a t-att-href="'/slides/all?%s' % keep_query('*', my=None)" class="btn border-0 py-1">&#215;</a>
+                    </span>
+                </t>
+                <t t-if="search_term">
+                      <span class="align-items-baseline border d-inline-flex pl-2 rounded mb-2">
+                      <i class="fa fa-tag mr-2 text-muted"/>
+                      <t t-esc="search_term"/>
+                      <a t-att-href="'/slides/all?%s' % keep_query('*', search=None)" class="btn border-0 py-1">&#215;</a>
+                    </span>
+                </t>
+                <t t-foreach="search_tags" t-as="tag">
+                    <span class="align-items-baseline border d-inline-flex pl-2 rounded mb-2">
+                        <i class="fa fa-tag mr-2 text-muted"/>
+                        <t t-esc="tag.display_name"/>
+                        <a t-att-href="'/slides/all?%s' % keep_query('*', tags=str((search_tags - tag).ids))" class="btn border-0 py-1">&#215;</a>
+                    </span>
+                </t>
             </div>
             <div class="container o_wslides_home_main pb-5">
                 <div t-if="not channels and not search_term and not search_slide_type and not search_my and not search_tags and not search_channel_tag_id">
@@ -331,7 +360,7 @@
                 <div class="font-weight-light o_wslides_desc_truncate_3" t-field="channel.description_short"/>
                 <div t-if="channel.tag_ids" class="mt-2 pt-1 o_wslides_desc_truncate_2">
                     <t t-foreach="channel.tag_ids" t-as="tag">
-                        <a t-att-href="'/slides/all?channel_tag_id=%s' % tag.id" class="badge badge-light" t-esc="tag.name"/>
+                        <a t-att-href="'/slides/all?%s' % keep_query('*', tags=str((tag | search_tags).ids))" t-attf-class="badge #{'badge-primary' if tag in search_tags else 'badge-light'}" t-esc="tag.name"/>
                     </t>
                 </div>
             </div>
