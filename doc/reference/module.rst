@@ -52,6 +52,18 @@ Available manifest fields are:
     website URL for the module author
 ``license`` (``str``, defaults: ``LGPL-3``)
     distribution license for the module
+
+    Possible values:
+    * `GPL-2` GPL Version 2
+    * `GPL-2 or any later version` GPL-2 or later version
+    * `GPL-3` GPL Version 3
+    * `GPL-3 or any later version` GPL-3 or later version
+    * `AGPL-3` Affero GPL-3
+    * `LGPL-3` LGPL Version 3
+    * `Other OSI approved licence` Other OSI Approved License
+    * `OEEL-1` Odoo Enterprise Edition License v1.0
+    * `OPL-1` Odoo Proprietary License v1.0
+    * `Other proprietary` Other Proprietary
 ``category`` (``str``, default: ``Uncategorized``)
     classification category within Odoo, rough business domain for the module.
 
