@@ -1,0 +1,55 @@
+/*!
+ * Custom odoo style of tribute js lib popover
+ *
+ * Tribute v3.7.1 (https://github.com/zurb/tribute)
+ */
+
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.tribute-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: auto;
+    max-height: 500px;
+    max-width: 250px;
+    overflow: auto;
+    display: flex;
+    margin-bottom: 5px;
+
+    > ul {
+        padding: 0;
+        margin: 0;
+
+        > li {
+            padding: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+    }
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.tribute-container {
+    box-shadow: 2px 2px 2px 2px gray('300');
+
+    > ul {
+        background-color: white;
+        list-style: none;
+
+        > li {
+            text-overflow: ellipsis;
+            cursor: pointer;
+
+            &.highlight {
+                background-color: gray('300');
+                font-weight: bold;
+            }
+        }
+    }
+}

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.component.Thread" owl="1">
+        <div class="o_Thread" t-att-data-thread-local-id="props.threadLocalId">
+            <t t-if="!storeProps.threadCache or (storeProps.threadCache and (storeProps.threadCache.isLoading or !storeProps.threadCache.isLoaded))">
+                <div class="o_Thread_loading">
+                    <span><i class="o_Thread_loadingIcon fa fa-spinner fa-spin" title="Loading..." role="img" aria-label="Loading..."/>Loading...</span>
+                </div>
+            </t>
+            <t t-else="">
+                <MessageList
+                    class="o_Thread_messageList"
+                    domain="props.domain"
+                    hasSquashCloseMessages="props.hasSquashCloseMessages"
+                    haveMessagesAuthorRedirect="props.haveMessagesAuthorRedirect"
+                    haveMessagesMarkAsReadIcon="props.haveMessagesMarkAsReadIcon"
+                    haveMessagesReplyIcon="props.haveMessagesReplyIcon"
+                    order="props.order"
+                    selectedMessageLocalId="props.selectedMessageLocalId"
+                    threadCacheLocalId="storeProps.threadCacheLocalId"
+                    threadLocalId="props.threadLocalId"
+                    t-ref="messageList"
+                />
+            </t>
+            <t t-if="props.hasComposer and storeProps.thread.composerLocalId">
+                <Composer
+                    class="o_Thread_composer"
+                    attachmentsDetailsMode="props.composerAttachmentsDetailsMode"
+                    composerLocalId="storeProps.thread.composerLocalId"
+                    hasCurrentPartnerAvatar="props.hasComposerCurrentPartnerAvatar"
+                    hasSendButton="props.hasComposerSendButton"
+                    isFocusOnMount="!storeProps.isMobile"
+                    showAttachmentsExtensions="props.showComposerAttachmentsExtensions"
+                    showAttachmentsFilenames="props.showComposerAttachmentsFilenames"
+                    t-ref="composer"
+                />
+            </t>
+        </div>
+    </t>
+
+</templates>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.component.DiscussSidebarItem" owl="1">
+        <div class="o_DiscussSidebarItem"
+            t-att-class="{
+                'o-active': props.isActive,
+                'o-starred-box': props.threadLocalId === 'mail.box_starred',
+                'o-unread': storeProps.thread.message_unread_counter > 0,
+            }" t-on-click="_onClick" t-att-data-thread-local-id="props.threadLocalId" t-att-data-thread-name="storeProps.threadName"
+        >
+            <div class=" o_DiscussSidebarItem_activeIndicator o_DiscussSidebarItem_item" t-att-class="{ 'o-item-active': props.isActive }"/>
+            <Icon class="o_DiscussSidebarItem_item" threadLocalId="props.threadLocalId"/>
+            <t t-if="storeProps.thread.channel_type === 'chat' and state.isRenaming">
+                <div class="o_DiscussSidebarItem_item o_DiscussSidebarItem_name o-editable">
+                    <EditableText
+                        class="o_DiscussSidebarItem_nameInput"
+                        placeholder="storeProps.directPartner.name"
+                        value="storeProps.threadName"
+                        t-on-o-cancel="_onCancelRenaming"
+                        t-on-o-clicked="_onClickedEditableText"
+                        t-on-o-validate.stop="_onRename"
+                    />
+                </div>
+            </t>
+            <t t-else="">
+                <div class="o_DiscussSidebarItem_item o_DiscussSidebarItem_name" t-att-class="{ 'o-item-unread': storeProps.thread.message_unread_counter > 0 }">
+                    <t t-esc="storeProps.threadName"/>
+                </div>
+            </t>
+            <div class="o-autogrow o_DiscussSidebarItem_item"/>
+            <t t-if="storeProps.thread._model !== 'mail.box'">
+                <div class="o_DiscussSidebarItem_commands o_DiscussSidebarItem_item">
+                    <t t-if="storeProps.thread.channel_type === 'channel'">
+                        <div class="fa fa-cog o_DiscussSidebarItem_command o_DiscussSidebarItem_commandSettings" t-on-click.stop="_onClickSettings" title="Channel settings" role="img" aria-label="Channel settings"/>
+                        <t t-if="!storeProps.thread.message_needaction_counter and !storeProps.thread.group_based_subscription">
+                            <div class="o_DiscussSidebarItem_command o_DiscussSidebarItem_commandLeave fa fa-times" t-on-click.stop="_onClickLeave" title="Leave this channel" role="img" aria-label="Leave this channel"/>
+                        </t>
+                    </t>
+                    <t t-elif="storeProps.thread.channel_type === 'chat'">
+                        <div class="o_DiscussSidebarItem_command o_DiscussSidebarItem_commandRename fa fa-cog" t-on-click.stop="_onClickRename" title="Rename conversation" role="img" aria-label="Rename conversation"/>
+                        <t t-if="!storeProps.thread.message_unread_counter">
+                            <div class="fa fa-times o_DiscussSidebarItem_command o_DiscussSidebarItem_commandUnpin" t-on-click.stop="_onClickUnpin" title="Unpin conversation" role="img" aria-label="Unpin conversation"/>
+                        </t>
+                    </t>
+                </div>
+            </t>
+            <t t-if="counter > 0">
+                <div class="o_DiscussSidebarItem_counter o_DiscussSidebarItem_item badge badge-pill">
+                    <t t-esc="counter"/>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

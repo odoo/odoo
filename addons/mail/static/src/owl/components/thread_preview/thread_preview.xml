@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.component.ThreadPreview" owl="1">
+
+        <!--
+            The preview template is used by the discuss in mobile, and by the systray
+            menu in order to show preview of threads.
+        -->
+        <div class="o_ThreadPreview" t-att-class="{ 'o-unread': storeProps.thread.message_unread_counter > 0 }" t-on-click="_onClick" t-att-data-thread-local-id="props.threadLocalId">
+            <div class="o_ThreadPreview_sidebar">
+                <div class="o_ThreadPreview_imageContainer o_ThreadPreview_sidebarItem">
+                    <img class="o_ThreadPreview_image rounded-circle" t-att-src="image" alt=""/>
+                    <t t-if="storeProps.threadDirectPartner and storeProps.threadDirectPartner.im_status">
+                        <PartnerImStatusIcon
+                            class="o_ThreadPreview_partnerImStatusIcon"
+                            t-att-class="{
+                                'o_ThreadPreview_partnerImStatusIcon-mobile': storeProps.isMobile,
+                            }"
+                            partnerLocalId="storeProps.threadDirectPartner.localId"
+                        />
+                    </t>
+                </div>
+            </div>
+            <div class="o_ThreadPreview_content">
+                <div class="o_ThreadPreview_header">
+                    <span class="o_ThreadPreview_name" t-att-class="{ 'o-mobile': storeProps.isMobile }">
+                        <t t-esc="storeProps.threadName"/>
+                    </span>
+                    <t t-if="storeProps.thread.message_unread_counter > 0">
+                        <span class="o_ThreadPreview_counter">
+                            (<t t-esc="storeProps.thread.message_unread_counter"/>)
+                        </span>
+                    </t>
+                    <span class="o-autogrow"/>
+                    <t t-if="storeProps.lastMessage">
+                        <span class="o_ThreadPreview_date">
+                            <t t-esc="storeProps.lastMessage.date.fromNow()"/>
+                        </span>
+                    </t>
+                </div>
+                <div class="o_ThreadPreview_core">
+                    <span class="o_ThreadPreview_coreItem o_ThreadPreview_inlineText" t-att-class="{ 'o-empty': inlineLastMessageBody.length === 0 }">
+                        <t t-if="storeProps.lastMessageAuthor">
+                            <MessageAuthorPrefix
+                                messageLocalId="storeProps.lastMessage.localId"
+                                threadLocalId="props.threadLocalId"
+                            />
+                        </t>
+                        <t t-raw="inlineLastMessageBody"/>
+                    </span>
+                    <span class="o-autogrow"/>
+                    <t t-if="storeProps.thread.message_unread_counter > 0">
+                        <span class="o_ThreadPreview_coreItem o_ThreadPreview_markAsRead fa fa-check" title="Mark as Read" t-on-click.stop="_onClickMarkAsRead"/>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

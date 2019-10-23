@@ -1,0 +1,169 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_ThreadPreview {
+    display: flex;
+    align-items: center;
+
+    &:hover .o_ThreadPreview_markAsRead {
+        display: flex;
+    }
+}
+
+.o_ThreadPreview_content {
+    display: flex;
+    flex-flow: column;
+    flex: 1 1 auto;
+    align-self: flex-start;
+    min-width: 0;
+    margin: 3px;
+}
+
+.o_ThreadPreview_core {
+    display: flex;
+}
+
+.o_ThreadPreview_coreItem {
+    margin: 0 3px;
+
+    &:first-child {
+        margin-left: 0px;
+    }
+
+    &:last-child {
+        margin-right: 0px;
+    }
+}
+
+.o_ThreadPreview_counter {
+    margin: 0 3px;
+}
+
+.o_ThreadPreview_date {
+    flex: 0 0 auto;
+}
+
+.o_ThreadPreview_header {
+    display: flex;
+    margin-bottom: 5px;
+}
+
+.o_ThreadPreview_image {
+    width: 100%;
+    height: 100%;
+}
+
+.o_ThreadPreview_imageContainer {
+    position: relative;
+    width: 40px;
+    height: 40px;
+}
+
+.o_ThreadPreview_inlineText {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    &.o-empty::before {
+        content: '\00a0'; // keep line-height as if it had content
+    }
+}
+
+.o_ThreadPreview_markAsRead {
+    display: none;
+    flex: 0 0 auto;
+}
+
+.o_ThreadPreview_name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    &.o-mobile {
+        font-size: 1.1em;
+    }
+}
+
+.o_ThreadPreview_partnerImStatusIcon {
+    @include o-position-absolute($bottom: 0, $right: 0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.o_ThreadPreview_sidebar {
+    margin: 3px;
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_ThreadPreview {
+    background-color: gray('100');
+    cursor: pointer;
+    user-select: none;
+
+    .o_ThreadPreview_partnerImStatusIcon {
+        color: gray('100');
+    }
+
+    &:hover {
+        background-color: darken(gray('100'), 7%);
+
+        .o_ThreadPreview_partnerImStatusIcon {
+            color: darken(gray('100'), 7%);
+        }
+    }
+
+    &.o-unread {
+        background-color: white;
+
+        .o_ThreadPreview_partnerImStatusIcon {
+            color: white;
+        }
+
+        &:hover {
+            background-color: darken(white, 7%);
+
+            .o_ThreadPreview_partnerImStatusIcon {
+                color: darken(white, 7%);
+            }
+        }
+
+        .o_ThreadPreview_counter,
+        .o_ThreadPreview_date,
+        .o_ThreadPreview_name {
+            font-weight: bold;
+        }
+
+        .o_ThreadPreview_date {
+            color: $o-brand-primary,
+        }
+    }
+}
+
+.o_ThreadPreview_core {
+    color: gray('500');
+}
+
+.o_ThreadPreview_date {
+    font-size: x-small;
+    color: gray('500');
+}
+
+.o_ThreadPreview_markAsRead {
+
+    &:hover {
+        opacity: 1;
+        color: gray('600');
+    }
+
+    &:not(:hover) {
+        opacity: 0.8;
+    }
+}
+
+.o_ThreadPreview_partnerImStatusIcon:not(.o_ThreadPreview_partnerImStatusIcon-mobile) {
+    font-size: x-small;
+}

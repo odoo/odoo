@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.component.Chatter" owl="1">
+        <div class="o_Chatter">
+            <t t-if="storeProps.threadLocalId">
+                <ChatterTopbar
+                    class="o_Chatter_chatterTopbar"
+                    threadLocalId="storeProps.threadLocalId"
+                    t-on-o-chatter-topbar-select-attachment="_onTopbarSelectAttachment"
+                />
+            </t>
+            <t t-if="storeProps.threadLocalId and state.isAttachmentBoxVisible">
+                <AttachmentBox
+                    class="o_Chatter_attachmentBox"
+                    threadLocalId="storeProps.threadLocalId"
+                />
+            </t>
+            <t t-if="storeProps.threadLocalId" t-key="storeProps.threadLocalId">
+                <Thread
+                    class="o_Chatter_thread"
+                    domain="storeProps.domain"
+                    hasComposer="false"
+                    haveMessagesAuthorRedirect="true"
+                    threadLocalId="storeProps.threadLocalId"
+                    t-ref="thread"
+                />
+            </t>
+        </div>
+    </t>
+
+</templates>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.component.AttachmentViewer" owl="1">
+        <div class="o_AttachmentViewer" t-on-click="_onClick" t-on-keydown="_onKeydown" tabindex="0" t-att-data-dialog-id="props.dialogId">
+            <div class="o_AttachmentViewer_header" t-on-click="_onClickHeader">
+                <t t-if="storeGetters.attachmentFileType(props.info.attachmentLocalId)">
+                    <div class="o_AttachmentViewer_headerItem o_AttachmentViewer_icon">
+                        <t t-if="storeGetters.attachmentFileType(props.info.attachmentLocalId) === 'image'">
+                            <i class="fa fa-picture-o" role="img" title="Image" aria-label="Image"/>
+                        </t>
+                        <t t-if="storeGetters.attachmentFileType(props.info.attachmentLocalId) === 'application/pdf'">
+                            <i class="fa fa-file-text" role="img" title="PDF file" aria-label="PDF file"/>
+                        </t>
+                        <t t-if="storeGetters.isAttachmentTextFile(props.info.attachmentLocalId)">
+                            <i class="fa fa-file-text" role="img" title="Text file" aria-label="Text file"/>
+                        </t>
+                        <t t-if="storeGetters.attachmentFileType(props.info.attachmentLocalId) === 'video'">
+                            <i class="fa fa-video-camera" role="img" title="Video" aria-label="Video"/>
+                        </t>
+                    </div>
+                </t>
+                <div class="o_AttachmentViewer_headerItem o_AttachmentViewer_name">
+                    <t t-esc="storeGetters.attachmentDisplayName(props.info.attachmentLocalId)"/>
+                </div>
+                <div class="o_AttachmentViewer_buttonDownload o_AttachmentViewer_headerItem o_AttachmentViewer_headerItemButton" t-on-click.stop="_onClickDownload" role="button" title="Download">
+                    <i aria-label="Download" class="fa fa-download fa-fw" role="img"/>
+                </div>
+                <div class="o-autogrow"/>
+                <div class="o_AttachmentViewer_headerItem o_AttachmentViewer_headerItemButton o_AttachmentViewer_headerItemButtonClose" t-on-click="_onClickClose" role="button" title="Close (Esc)" aria-label="Close">
+                    <i class="fa fa-fw fa-times" role="img" aria-label="Close"/>
+                </div>
+            </div>
+            <div class="o_AttachmentViewer_main" t-att-class="{ o_with_img: storeGetters.attachmentFileType(props.info.attachmentLocalId) === 'image' }" t-on-mousemove="_onMousemoveView">
+                <t t-if="storeGetters.attachmentFileType(props.info.attachmentLocalId) === 'image'">
+                    <div class="o_AttachmentViewer_zoomer" t-ref="zoomer">
+                        <t t-if="state.imageLoading">
+                            <div class="o_AttachmentViewer_loading">
+                                <i class="fa fa-3x fa-circle-o-notch fa-fw fa-spin" role="img" title="Loading" aria-label="Loading"/>
+                            </div>
+                        </t>
+                        <img class="o_AttachmentViewer_view o_AttachmentViewer_viewImage" t-on-click="_onClickImage" t-on-mousedown="_onMousedownImage" t-on-wheel.stop="_onWheelImage" t-att-src="storeGetters.attachmentDefaultSource(props.info.attachmentLocalId)" t-att-style="imageStyle" draggable="false" alt="Viewer" t-ref="image"/>
+                    </div>
+                </t>
+                <t t-if="storeGetters.attachmentFileType(props.info.attachmentLocalId) === 'application/pdf'">
+                    <iframe class="o_AttachmentViewer_view o_AttachmentViewer_viewIframe o_AttachmentViewer_viewPdf" t-att-src="storeGetters.attachmentDefaultSource(props.info.attachmentLocalId)"/>
+                </t>
+                <t t-if="storeGetters.isAttachmentTextFile(props.info.attachmentLocalId)">
+                    <iframe class="o_AttachmentViewer_view o_AttachmentViewer_viewIframe o_text" t-att-src="storeGetters.attachmentDefaultSource(props.info.attachmentLocalId)"/>
+                </t>
+                <t t-if="storeGetters.attachmentFileType(props.info.attachmentLocalId) === 'youtu'">
+                    <iframe allow="autoplay; encrypted-media" class="o_AttachmentViewer_view o_AttachmentViewer_viewIframe o_AttachmentViewer_youtube" t-att-src="storeGetters.attachmentDefaultSource(props.info.attachmentLocalId)" height="315" width="560"/>
+                </t>
+                <t t-if="storeGetters.attachmentFileType(props.info.attachmentLocalId) === 'video'">
+                    <video class="o_AttachmentViewer_view o_AttachmentViewer_viewVideo" t-on-click="_onClickVideo" controls="controls">
+                        <source t-att-data-type="props.attachment.mimetype" t-att-src="storeGetters.attachmentDefaultSource(props.info.attachmentLocalId)"/>
+                    </video>
+                </t>
+            </div>
+            <t t-if="storeGetters.attachmentFileType(props.info.attachmentLocalId) === 'image'">
+                <div class="o_AttachmentViewer_toolbar" role="toolbar">
+                    <div class="o_AttachmentViewer_toolbarButton" t-on-click.stop="_onClickZoomIn" title="Zoom In (+)" role="button">
+                        <i class="fa fa-fw fa-plus" role="img" aria-label="Zoom In"/>
+                    </div>
+                    <div class="o_AttachmentViewer_toolbarButton" t-att-class="{ o_disabled: state.scale === 1 }" t-on-click.stop="_onClickZoomReset" role="button" title="Reset Zoom (0)">
+                        <i aria-label="Reset Zoom" class="fa fa-fw fa-search" role="img"/>
+                    </div>
+                    <div class="o_AttachmentViewer_toolbarButton" t-att-class="{ o_disabled: state.scale === MIN_SCALE }" t-on-click.stop="_onClickZoomOut" title="Zoom Out (-)" role="button">
+                        <i class="fafa-fw fa-minus" role="img" aria-label="Zoom Out"/>
+                    </div>
+                    <div class="o_AttachmentViewer_toolbarButton" t-on-click.stop="_onClickRotate" title="Rotate (r)" role="button">
+                        <i class="fa fa-fw fa-repeat" aria-label="Rotate" role="img"/>
+                    </div>
+                    <div class="o_AttachmentViewer_toolbarButton" t-on-click.stop="_onClickPrint" title="Print" role="button">
+                        <i class="fa fa-fw fa-print" role="img" aria-label="Print"/>
+                    </div>
+                    <div class="o_AttachmentViewer_buttonDownload o_AttachmentViewer_toolbarButton" t-on-click.stop="_onClickDownload" title="Download" role="button">
+                        <i class="fa fa-download fa-fw" role="img" aria-label="Download"/>
+                    </div>
+                </div>
+            </t>
+            <t t-if="props.info.attachmentLocalIds.length > 1">
+                <div class="o_AttachmentViewer_buttonNavigation o_AttachmentViewer_buttonNavigationPrevious" t-on-click.stop="_onClickPrevious" title="Previous (Left-Arrow)" role="button">
+                    <span class="fa fa-chevron-left" role="img" aria-label="Previous"/>
+                </div>
+                <div class="o_AttachmentViewer_buttonNavigation o_AttachmentViewer_buttonNavigationNext" t-on-click.stop="_onClickNext" title="Next (Right-Arrow)" role="button">
+                    <span class="fa fa-chevron-right" role="img" aria-label="Next"/>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

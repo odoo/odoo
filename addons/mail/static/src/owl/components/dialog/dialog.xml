@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+   <t t-name="mail.component.Dialog" owl="1">
+      <div class="o_Dialog">
+         <t
+            t-component="props.Component"
+            class="o_Dialog_component"
+            dialogId="props.id"
+            info="props.info"
+            t-on-o-close.stop="_onClose"
+            t-ref="component"
+         />
+      </div>
+   </t>
+
+</templates>

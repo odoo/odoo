@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.component.ChatWindowHiddenMenu" owl="1">
+        <div class="dropup o_ChatWindowHiddenMenu">
+            <div class="dropdown-toggle o_ChatWindowHiddenMenu_dropdownToggle" t-att-class="{ show: state.isOpen }" t-on-click.stop="_onClickToggle">
+                <div class="fa fa-comments-o o_ChatWindowHiddenMenu_dropdownToggleIcon o_ChatWindowHiddenMenu_dropdownToggleItem"/>
+                <div class="o_ChatWindowHiddenMenu_dropdownToggleItem o_ChatWindowHiddenMenu_windowCounter">
+                    <t t-esc="props.chatWindowLocalIds.length"/>
+                </div>
+            </div>
+            <ul class="dropdown-menu dropdown-menu-right o_ChatWindowHiddenMenu_list" t-att-class="{ show: state.isOpen }" role="menu" t-ref="list">
+                <t t-foreach="props.chatWindowLocalIds" t-as="chatWindowLocalId" t-key="chatWindowLocalId">
+                    <li class="o_ChatWindowHiddenMenu_listItem" role="menuitem">
+                        <ChatWindowHeader
+                            class="o_ChatWindowHiddenMenu_chatWindowHeader"
+                            t-on-o-clicked="_onClickedChatWindow"
+                            t-on-o-close="_onCloseChatWindow"
+                            chatWindowLocalId="chatWindowLocalId"
+                        />
+                    </li>
+                </t>
+            </ul>
+            <t t-if="unreadCounter > 0">
+                <div class="badge badge-pill o_ChatWindowHiddenMenu_unreadCounter">
+                    <t t-esc="unreadCounter"/>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

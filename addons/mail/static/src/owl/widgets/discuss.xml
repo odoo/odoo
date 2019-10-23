@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!--
+        @param {mail.widget.Discuss} widget
+    -->
+    <t t-name="mail.widget.Discuss">
+        <div class="o_widget_Discuss"/>
+    </t>
+
+    <!-- @param {boolean} isMobile -->
+    <t t-name="mail.widget.DiscussControlButtons">
+        <div>
+            <button class="o_widget_Discuss_controlPanelButtonInvite o_invite o_hidden btn btn-primary" type="button" title="Invite people">Invite</button>
+            <button class="o_widget_Discuss_controlPanelButtonMarkAllRead o_hidden o_mark_all_read btn btn-secondary" type="button" title="Mark all as read">Mark all read</button>
+            <button class="o_widget_Discuss_controlPanelButtonUnstarAll o_unstar_all o_hidden btn btn-secondary" type="button" title="Unstar all messages">Unstar all</button>
+            <button class="o_widget_Discuss_controlPanelButtonMobileNewMessage o_mobile_new_message o_hidden btn btn-secondary" type="button" title="New Message">New Message</button>
+            <button class="o_widget_Discuss_controlPanelButtonMobileNewChannel o_mobile_new_channel o_hidden btn btn-secondary" title="New Channel" type="button">New Channel</button>
+        </div>
+    </t>
+
+</templates>

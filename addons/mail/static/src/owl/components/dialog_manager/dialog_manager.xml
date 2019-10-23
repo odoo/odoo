@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+   <t t-name="mail.component.DialogManager" owl="1">
+      <div class="o_DialogManager">
+         <t t-foreach="storeProps.dialogs" t-as="dialog" t-key="dialog.id">
+            <Dialog
+               class="o_DialogManager_dialog"
+               Component="dialog.Component"
+               id="dialog.id"
+               info="dialog.info"
+            />
+         </t>
+      </div>
+   </t>
+
+</templates>
