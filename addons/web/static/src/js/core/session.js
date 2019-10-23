@@ -10,6 +10,7 @@ var utils = require('web.utils');
 
 var _t = core._t;
 var qweb = core.qweb;
+const qwebOwl = core.qwebOwl;
 
 // To do: refactor session. Session accomplishes several concerns (rpc,
 // configuration, currencies (wtf?), user permissions...). They should be
@@ -240,6 +241,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
             return $.get(route).then(function (doc) {
                 if (!doc) { return; }
                 qweb.add_template(doc);
+                qwebOwl.addTemplates(doc);
             });
         });
         return lock;
