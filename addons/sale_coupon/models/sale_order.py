@@ -371,9 +371,11 @@ class SaleOrder(models.Model):
         coupons_to_remove.write({'state': 'new'})
 
         # Unbind promotion and coupon programs which requirements are not met anymore
-        order.no_code_promo_program_ids -= programs_to_remove
-        order.code_promo_program_id -= programs_to_remove
-        order.applied_coupon_ids -= coupons_to_remove
+        if programs_to_remove:
+            order.no_code_promo_program_ids -= programs_to_remove
+            order.code_promo_program_id -= programs_to_remove
+        if coupons_to_remove:
+            order.applied_coupon_ids -= coupons_to_remove
 
         # Remove their reward lines
         invalid_lines |= order.order_line.filtered(lambda line: line.product_id.id in products_to_remove.ids)
