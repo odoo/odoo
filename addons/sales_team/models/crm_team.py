@@ -94,7 +94,7 @@ class CrmTeam(models.Model):
                 team.dashboard_graph_type = 'bar'
             else:
                 team.dashboard_graph_type = 'line'
-            team.dashboard_graph_data = json.dumps(team._get_graph())
+            team.dashboard_graph_data = json.dumps(team._get_graph(), default=str)
 
     def _compute_is_favorite(self):
         for team in self:
