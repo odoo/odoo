@@ -22,9 +22,10 @@
         %endif
         <br/><br/>
         Please find your delivery order attached for more details.<br/><br/>
-        Thank you,<br/>
-        % if user and user.signature:
-          ${user.signature | safe}
+        Thank you,
+        % if user.signature:
+            <br />
+            ${user.signature | safe}
         % endif
     </p>
 </div>
@@ -33,7 +34,6 @@
         <field name="report_name">${(object.name or '').replace('/','_')}</field>
         <field name="lang">${object.partner_id.lang}</field>
         <field name="auto_delete" eval="True"/>
-        <field name="user_signature" eval="False"/>
     </record>
 </data>
 </odoo>

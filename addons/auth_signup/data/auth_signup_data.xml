@@ -50,8 +50,11 @@
                             </a>
                         </div>
                         If you do not expect this, you can safely ignore this email.<br/><br/>
-                        Thanks,<br/>
-                        ${user.signature | safe}<br/>
+                        Thanks,
+                        % if user.signature:
+                            <br/>
+                            ${user.signature | safe}
+                        % endif
                     </div>
                 </td></tr>
                 <tr><td style="text-align:center;">
@@ -96,7 +99,6 @@
             </field>
             <field name="lang">${object.lang}</field>
             <field name="auto_delete" eval="True"/>
-            <field name="user_signature" eval="False"/>
         </record>
 
         <!-- Email template for new users -->
@@ -194,7 +196,6 @@
 </table></field>
             <field name="lang">${object.lang}</field>
             <field name="auto_delete" eval="True"/>
-            <field name="user_signature" eval="False"/>
         </record>
 
         <!-- Email template for reminder of unregistered users -->
@@ -246,7 +247,6 @@
             </field>
             <field name="lang">${object.partner_id.lang}</field>
             <field name="auto_delete" eval="True"/>
-            <field name="user_signature" eval="False"/>
         </record>
 
         <!-- Email template for new users that used a signup token -->
@@ -294,8 +294,11 @@
                                 Go to My Account
                             </a>
                         </div>
-                        Thanks,<br/><br />
-                        ${user.signature | safe}<br/>
+                        Thanks,<br/>
+                        % if user.signature:
+                            <br/>
+                            ${user.signature | safe}
+                        % endif
                     </div>
                 </td></tr>
                 <tr><td style="text-align:center;">
@@ -339,7 +342,6 @@
 </table></field>
             <field name="lang">${object.lang}</field>
             <field name="auto_delete" eval="True"/>
-            <field name="user_signature" eval="False"/>
         </record>
 
     </data>

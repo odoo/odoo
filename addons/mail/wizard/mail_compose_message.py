@@ -374,9 +374,6 @@ class MailComposer(models.TransientModel):
                 values['attachment_ids'] = [att.id for att in template.attachment_ids]
             if template.mail_server_id:
                 values['mail_server_id'] = template.mail_server_id.id
-            if template.user_signature and 'body_html' in values:
-                signature = self.env.user.signature
-                values['body_html'] = tools.append_content_to_html(values['body_html'], signature, plaintext=False)
         elif template_id:
             values = self.generate_email_for_composer(
                 template_id, [res_id],
