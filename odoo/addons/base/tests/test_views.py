@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from functools import partial
+import logging
 
 from lxml import etree
 from lxml.builder import E
@@ -13,6 +14,8 @@ from odoo.tools import mute_logger
 from odoo.addons.base.models.ir_ui_view import (
     transfer_field_to_modifiers, transfer_node_to_modifiers, simplify_modifiers,
 )
+
+_logger = logging.getLogger(__name__)
 
 
 class ViewXMLID(common.TransactionCase):
@@ -2288,3 +2291,14 @@ class TestQWebRender(ViewCase):
         content3 = self.env['ir.qweb'].with_context(check_view_ids=[view1.id, view2.id, view3.id]).render('base.dummy_primary_ext')
 
         self.assertNotEqual(content1, content3)
+
+
+@common.tagged('post_install', '-at_install', '-standard', 'migration')
+class TestAllViews(common.TransactionCase):
+    def test_views(self):
+        views = self.env['ir.ui.view'].with_context(lang=None).search([])
+        for index, view in enumerate(views):
+            if index % 500 == 0:
+                _logger.info('checked %s/%s views', index, len(views))
+            with self.subTest(name=view.name):
+                view._check_xml()
