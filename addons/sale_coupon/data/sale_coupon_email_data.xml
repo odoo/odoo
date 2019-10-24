@@ -88,8 +88,8 @@
         % endif
         <br/>
         Thank you,
-        <br/>
-        % if object.order_id.user_id:
+        % if object.order_id.user_id.signature:
+            <br />
             ${object.order_id.user_id.signature | safe}
         % endif
     </td></tr>
@@ -99,7 +99,6 @@
             <field name="report_name">Your Coupon Code</field>
             <field name="lang">${object.partner_id.lang}</field>
             <field name="auto_delete" eval="True"/>
-            <field name="user_signature" eval="False"/>
       </record>
 
         <record id="expire_coupon_cron" model="ir.cron">

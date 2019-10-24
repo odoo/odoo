@@ -36,12 +36,18 @@
                 </p>
             </td>
         </tr>
+        % if user.signature
+        <tr>
+            <td style="padding:15px 20px 10px 20px;">
+                ${user.signature | safe}
+            </td>
+        </tr>
+        % endif
     </tbody>
  </table>
 </div></field>
             <field name="lang">${object.lang}</field>
             <field name="auto_delete" eval="True"/>
-            <field name="user_signature" eval="True"/>
         </record>
     </data>
 </odoo>
