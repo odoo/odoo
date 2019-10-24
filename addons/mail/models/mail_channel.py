@@ -367,7 +367,7 @@ class Channel(models.Model):
         # Notifies the message author when his message is pending moderation if required on channel.
         # The fields "email_from" and "reply_to" are filled in automatically by method create in model mail.message.
         if self.moderation_notify and self.moderation_notify_msg and message_type == 'email' and moderation_status == 'pending_moderation':
-            self.env['mail.mail'].create({
+            self.env['mail.mail'].sudo().create({
                 'author_id': self.env.user.partner_id.id,
                 'email_from': self.env.user.company_id.catchall_formatted or self.env.user.company_id.email_formatted,
                 'body_html': self.moderation_notify_msg,
@@ -426,7 +426,7 @@ class Channel(models.Model):
                 'subject': _("Guidelines of channel %s") % self.name,
                 'recipient_ids': [(4, partner.id)]
             }
-            mail = self.env['mail.mail'].create(create_values)
+            mail = self.env['mail.mail'].sudo().create(create_values)
         return True
 
     def _update_moderation_email(self, emails, status):

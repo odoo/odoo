@@ -697,7 +697,7 @@ class MailThread(models.AbstractModel):
         else:
             bounce_mail_values['email_from'] = tools.decode_message_header(message, 'To')
         bounce_mail_values.update(mail_values)
-        self.env['mail.mail'].create(bounce_mail_values).send()
+        self.env['mail.mail'].sudo().create(bounce_mail_values).send()
 
     @api.model
     def _routing_handle_bounce(self, email_message, message_dict):
