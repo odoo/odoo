@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import common, Form
+from odoo.tests import Form
+
+from odoo.addons.stock_dropshipping.tests.common import TestStockDropshippingCommon
 
 
-class TestProcurementException(common.TransactionCase):
+class TestProcurementException(TestStockDropshippingCommon):
 
     def test_00_procurement_exception(self):
 
@@ -21,10 +23,10 @@ class TestProcurementException(common.TransactionCase):
 
         # I create a sales order with this product with route dropship.
         so_form = Form(self.env['sale.order'])
-        so_form.partner_id = self.env.ref('base.res_partner_2')
-        so_form.partner_invoice_id = self.env.ref('base.res_partner_address_3')
-        so_form.partner_shipping_id = self.env.ref('base.res_partner_address_3')
-        so_form.payment_term_id = self.env.ref('account.account_payment_term_end_following_month')
+        so_form.partner_id = self.customer
+        so_form.partner_invoice_id = self.customer
+        so_form.partner_shipping_id = self.customer
+        so_form.payment_term_id = self.payment_term
         with so_form.order_line.new() as line:
             line.product_id = product_with_no_seller
             line.product_uom_qty = 3
@@ -39,7 +41,7 @@ class TestProcurementException(common.TransactionCase):
         with Form(product_with_no_seller) as f:
             with f.seller_ids.new() as seller:
                 seller.delay = 1
-                seller.name = self.env.ref('base.res_partner_2')
+                seller.name = self.supplier
                 seller.min_qty = 2.0
 
         # I confirm the sales order, no error this time

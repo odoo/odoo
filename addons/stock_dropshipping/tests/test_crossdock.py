@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import common, Form
+from odoo.tests import Form
 from odoo.tools import mute_logger
 
+from odoo.addons.stock_dropshipping.tests.common import TestStockDropshippingCommon
 
-class TestCrossdock(common.TransactionCase):
+
+class TestCrossdock(TestStockDropshippingCommon):
 
     def test_00_crossdock(self):
 
-        # Create a supplier
-        supplier_crossdock = self.env['res.partner'].create({'name': "Crossdocking supplier"})
+        supplier_crossdock = self.supplier
 
         # I first create a warehouse with pick-pack-ship and reception in 2 steps
         wh_f = Form(self.env['stock.warehouse'])
@@ -40,7 +41,7 @@ class TestCrossdock(common.TransactionCase):
 
         # Create a sales order with a line of 100 PCE incoming shipment with route_id crossdock shipping
         so_form = Form(self.env['sale.order'])
-        so_form.partner_id = self.env.ref('base.res_partner_4')
+        so_form.partner_id = self.customer
         so_form.warehouse_id = wh_pps
 
         with mute_logger('odoo.tests.common.onchange'):

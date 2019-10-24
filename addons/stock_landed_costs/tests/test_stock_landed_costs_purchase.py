@@ -12,7 +12,7 @@ class TestLandedCosts(TestStockLandedCostsCommon):
         super(TestLandedCosts, self).setUp()
         # Create picking incoming shipment
         self.picking_in = self.Picking.create({
-            'partner_id': self.supplier_id,
+            'partner_id': self.supplier.id,
             'picking_type_id': self.picking_type_in_id,
             'location_id': self.supplier_location_id,
             'location_dest_id': self.stock_location_id})
@@ -34,7 +34,7 @@ class TestLandedCosts(TestStockLandedCostsCommon):
             'location_dest_id': self.stock_location_id})
         # Create picking outgoing shipment
         self.picking_out = self.Picking.create({
-            'partner_id': self.customer_id,
+            'partner_id': self.customer.id,
             'picking_type_id': self.picking_type_out_id,
             'location_id': self.stock_location_id,
             'location_dest_id': self.customer_location_id})

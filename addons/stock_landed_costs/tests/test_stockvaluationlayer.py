@@ -230,6 +230,11 @@ class TestStockValuationLCFIFOVB(TestStockValuationLC):
         cls.vendor2.property_account_payable_id = cls.payable_account
         cls.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
         cls.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
+        cls.env['account.journal'].create({
+            'name': 'purchase Journal',
+            'code': 'PUJTEST',
+            'type': 'purchase',
+        })
 
     def test_vendor_bill_flow_anglo_saxon_1(self):
         """In anglo saxon accounting, receive 10@10 and invoice. Then invoice 1@50 as a landed costs
