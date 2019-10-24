@@ -10,6 +10,7 @@ import pytz
 from odoo import api, exceptions, fields, models, _
 
 from odoo.tools.misc import clean_context
+from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 
 _logger = logging.getLogger(__name__)
 
@@ -91,7 +92,7 @@ class MailActivityType(models.Model):
             activity_type.initial_res_model_id = activity_type.res_model_id
 
     def unlink(self):
-        if any(self.get_external_id().values()):
+        if any(self.get_external_id().values()) and not self._context.get(MODULE_UNINSTALL_FLAG):
             raise exceptions.ValidationError("You can not delete activity type that are used as master data.")
         return super(MailActivityType, self).unlink()
 
