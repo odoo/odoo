@@ -17,6 +17,22 @@ class StockMoveLine(models.Model):
         help="Informative, not used in matching")
     done_move = fields.Boolean('Move Done', related='move_id.is_done', readonly=False, store=True)  # TDE FIXME: naming
 
+    def create(self, values):
+        res = super(StockMoveLine, self).create(values)
+        for line in res:
+            # If the line is added in a done production, we need to map it
+            # manually to the produced move lines in order to see them in the
+            # traceability report
+            if line.move_id.raw_material_production_id and line.state == 'done':
+                mo = line.move_id.raw_material_production_id
+                if line.lot_produced_ids:
+                    produced_move_lines = mo.move_finished_ids.move_line_ids.filtered(lambda sml: sml.lot_id in line.lot_produced_ids)
+                    line.produce_line_ids = [(6, 0, produced_move_lines.ids)]
+                else:
+                    produced_move_lines = mo.move_finished_ids.move_line_ids
+                    line.produce_line_ids = [(6, 0, produced_move_lines.ids)]
+        return res
+
     def _get_similar_move_lines(self):
         lines = super(StockMoveLine, self)._get_similar_move_lines()
         if self.move_id.production_id:
