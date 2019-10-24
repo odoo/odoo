@@ -883,6 +883,13 @@ class Worker(object):
     def signal_handler(self, sig, frame):
         self.alive = False
 
+    def signal_time_expired_handler(self, n, stack):
+        # TODO: print actual RUSAGE_SELF (since last check_limits) instead of
+        #       just repeating the config setting
+        _logger.info('Worker (%d) CPU time limit (%s) reached.', self.pid, config['limit_time_cpu'])
+        # We dont suicide in such case
+        raise Exception('CPU time limit exceeded.')
+
     def sleep(self):
         try:
             select.select([self.multi.socket, self.wakeup_fd_r], [], [], self.multi.beat)
@@ -909,15 +916,9 @@ class Worker(object):
 
         set_limit_memory_hard()
 
-    def set_limits(self):
-        # SIGXCPU (exceeded CPU time) signal handler will raise an exception.
+        # update RLIMIT_CPU so limit_time_cpu applies per unit of work
         r = resource.getrusage(resource.RUSAGE_SELF)
         cpu_time = r.ru_utime + r.ru_stime
-        def time_expired(n, stack):
-            _logger.info('Worker (%d) CPU time limit (%s) reached.', self.pid, config['limit_time_cpu'])
-            # We dont suicide in such case
-            raise Exception('CPU time limit exceeded.')
-        signal.signal(signal.SIGXCPU, time_expired)
         soft, hard = resource.getrlimit(resource.RLIMIT_CPU)
         resource.setrlimit(resource.RLIMIT_CPU, (cpu_time + config['limit_time_cpu'], hard))
 
@@ -938,11 +939,15 @@ class Worker(object):
             self.multi.socket.setblocking(0)
 
         signal.signal(signal.SIGINT, self.signal_handler)
-        signal.signal(signal.SIGTERM, signal.SIG_DFL)
-        signal.signal(signal.SIGCHLD, signal.SIG_DFL)
-        signal.set_wakeup_fd(self.wakeup_fd_w)
+        signal.signal(signal.SIGXCPU, self.signal_time_expired_handler)
 
-        self.set_limits()
+        signal.signal(signal.SIGTERM, signal.SIG_DFL)
+        signal.signal(signal.SIGHUP, signal.SIG_DFL)
+        signal.signal(signal.SIGCHLD, signal.SIG_DFL)
+        signal.signal(signal.SIGTTIN, signal.SIG_DFL)
+        signal.signal(signal.SIGTTOU, signal.SIG_DFL)
+
+        signal.set_wakeup_fd(self.wakeup_fd_w)
 
     def stop(self):
         pass
@@ -964,14 +969,18 @@ class Worker(object):
             sys.exit(1)
 
     def _runloop(self):
+        signal.pthread_sigmask(signal.SIG_BLOCK, {
+            signal.SIGXCPU,
+            signal.SIGINT, signal.SIGQUIT, signal.SIGUSR1,
+        })
         try:
             while self.alive:
+                self.check_limits()
                 self.multi.pipe_ping(self.watchdog_pipe)
                 self.sleep()
                 if not self.alive:
                     break
                 self.process_work()
-                self.check_limits()
         except:
             _logger.exception("Worker %s (%s) Exception occured, exiting...", self.__class__.__name__, self.pid)
             sys.exit(1)
