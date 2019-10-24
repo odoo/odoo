@@ -197,7 +197,6 @@ class TestMailAPIPerformance(BaseMailPerformance):
             'email_from': '${object.user_id.email_formatted | safe}',
             'partner_to': '${object.customer_id.id}',
             'email_to': '${("%s Customer <%s>" % (object.name, object.email_from)) | safe}',
-            'user_signature': False,
         })
 
         # automatically follow activities, for backward compatibility concerning query count
