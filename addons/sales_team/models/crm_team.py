@@ -261,7 +261,7 @@ class CrmTeam(models.Model):
 
         else:
             for data_item in graph_data:
-                values.append({x_field: data_item.get('x_value'), y_field: data_item.get('y_value')})
+                values.append({x_field: format_date(data_item.get('x_value'), locale=locale), y_field: data_item.get('y_value')})
 
         [graph_title, graph_key] = self._graph_title_and_key()
         color = '#875A7B' if '+e' in version else '#7c7bad'
