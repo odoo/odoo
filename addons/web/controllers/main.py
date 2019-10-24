@@ -1124,11 +1124,14 @@ class Database(http.Controller):
             odoo.service.db.check_super(master_pwd)
             ts = datetime.datetime.utcnow().strftime("%Y-%m-%d_%H-%M-%S")
             filename = "%s_%s.%s" % (name, ts, backup_format)
+            dump_stream = tempfile.TemporaryFile()
+            odoo.service.db.dump_db(name, dump_stream, backup_format)
             headers = [
                 ('Content-Type', 'application/octet-stream; charset=binary'),
                 ('Content-Disposition', content_disposition(filename)),
+                ('Content-Length', dump_stream.tell()),
             ]
-            dump_stream = odoo.service.db.dump_db(name, None, backup_format)
+            dump_stream.seek(0)
             response = werkzeug.wrappers.Response(dump_stream, headers=headers, direct_passthrough=True)
             return response
         except Exception as e:
