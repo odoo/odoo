@@ -130,6 +130,11 @@ tour.register('course_member', {
 }, {
     trigger: 'button.o_portal_chatter_composer_btn',
     in_modal: false,
+}, {
+    trigger: 'a[id="review-tab"]'
+}, {
+    trigger: '.o_portal_chatter_message:contains("This is a great course. Top !")',
+    run: function () {}, // check review is correctly added
 }
 ]);
 
