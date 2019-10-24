@@ -157,7 +157,13 @@ class MigrationManager(object):
             lst.sort()
             return lst
 
-        installed_version = getattr(pkg, 'load_version', pkg.installed_version) or ''
+        installed_version = getattr(pkg, 'load_version', pkg.installed_version)
+
+        if installed_version is None:
+            raise ValueError(
+                "Module %s cannot be migrated because it has no latest_version defined" % pkg.name
+            )
+
         parsed_installed_version = parse_version(installed_version)
         current_version = parse_version(convert_version(pkg.data['version']))
 
