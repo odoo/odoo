@@ -160,35 +160,50 @@
                             <t t-set="move_lines" t-value="line.move_line_ids.filtered(lambda x: x.state == 'done' and x.qty_done)"/>
                         </t>
                         <t t-foreach="move_lines" t-as="ml">
-                            <tr>
-                                <th style="text-align: left;">
-                                    <span t-field="line.product_id"/>
-                                </th>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Quantity:
-                                    <span t-esc="ml.product_uom_qty" t-if="ml.state !='done'"/>
-                                    <span t-esc="ml.qty_done"  t-if="ml.state =='done'"/>
-                                    <span t-field="ml.product_uom_id" groups="uom.group_uom"/>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="text-align: center; vertical-align: middle;" class="col-5">
+                            <t t-set="measure_type" t-value="ml.product_uom_id.category_id.measure_type"/>
+                            <t t-if="measure_type == 'unit'">
+                                <t t-set="qty" t-value="int(ml.qty_done or ml.product_uom_qty)"/>
+                            </t>
+                            <t t-else="">
+                                <t t-set="qty" t-value="1"/>
+                            </t>
+                            <t t-foreach="range(qty)" t-as="item">
+                                <tr>
+                                    <th style="text-align: left;">
+                                        <span t-field="line.product_id"/>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Quantity:
+                                        <t t-if="measure_type == 'unit'">
+                                            <span>1.0</span>
+                                            <span t-field="ml.product_uom_id" groups="uom.group_uom"/>
+                                        </t>
+                                        <t t-else="">
+                                            <span t-esc="ml.product_uom_qty" t-if="ml.state !='done'"/>
+                                            <span t-esc="ml.qty_done"  t-if="ml.state =='done'"/>
+                                            <span t-field="ml.product_uom_id" groups="uom.group_uom"/>
+                                        </t>
+                                    </td>
+                                </tr>
+                                <tr>
                                     <t t-if="ml.lot_id">
-                                        <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', ml.lot_id.name, 600, 100)" style="width:100%;height:35px" alt="Barcode"/>
-                                        <span t-field="ml.lot_id.name"/>
+                                        <td style="text-align: center; vertical-align: middle;" class="col-5">
+                                            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', ml.lot_id.name, 600, 100)" style="width:100%;height:35px" alt="Barcode"/>
+                                            <span t-field="ml.lot_id.name"/>
+                                        </td>
                                     </t>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="text-align: center; vertical-align: middle;" class="col-5">
+                                </tr>
+                                <tr>
                                     <t t-if="line.product_id.barcode and not ml.lot_id">
-                                        <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', line.product_id.barcode, 600, 100)" style="width:100%;height:20%;" alt="Barcode"/>
-                                        <span t-field="line.product_id.barcode"/>
+                                        <td style="text-align: center; vertical-align: middle;" class="col-5">
+                                            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', line.product_id.barcode, 600, 100)" style="width:100%;height:20%;" alt="Barcode"/>
+                                            <span t-field="line.product_id.barcode"/>
+                                        </td>
                                     </t>
-                                </td>
-                            </tr>
+                                </tr>
+                            </t>
                         </t>
                     </t>
                 </table>
