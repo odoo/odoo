@@ -1071,6 +1071,8 @@ class AccountMove(models.Model):
         # Check user group.
         system_user = self.env.is_system()
         if not system_user:
+            self.invoice_sequence_number_next_prefix = False
+            self.invoice_sequence_number_next = False
             return
 
         # Check moves being candidates to set a custom number next.
