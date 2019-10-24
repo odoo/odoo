@@ -1226,11 +1226,20 @@
         data-selector="section, .parallax, .carousel-item"
         data-exclude=".s_hr, .s_image_gallery, .o_gallery .carousel-item"/>
 
-    <!-- Background Image -->
-    <div data-js="background_position"
+    <!-- Background Image Size/Position -->
+    <div data-js="BackgroundPosition"
         data-selector="section, .parallax, .carousel-item"
         data-exclude=".o_gallery .carousel-item">
-        <we-button data-background-position="true" data-no-preview="true">Background Image Sizing</we-button>
+        <we-row>
+            <we-select data-no-preview="true">
+                <we-button data-background-type="cover">Cover</we-button>
+                <we-button data-background-type="repeat-pattern">Repeat pattern</we-button>
+            </we-select>
+            <we-button class="fa fa-fw fa-arrows" title="Background Position"
+                       data-background-position-overlay="true" data-no-preview="true"/>
+        </we-row>
+        <we-input string="Background width" data-set-style="background-size" data-default-value="auto"/>
+        <we-input string="Background height" data-set-style="background-size" data-default-value="auto"/>
     </div>
 
     <!-- Parallax -->

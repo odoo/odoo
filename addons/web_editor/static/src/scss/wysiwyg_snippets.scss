@@ -836,6 +836,29 @@ body.editor_enable.editor_has_snippets {
                 }
             }
         }
+
+        // Background position overlay
+        &.o_we_background_position_overlay {
+            background-color: rgba(0,0,0,.7);
+            z-index: auto;
+
+            .o_we_overlay_content {
+                cursor: grab;
+
+                .o_we_grabbing {
+                    cursor: grabbing;
+                }
+            }
+
+            .o_overlay_background > * {
+                display: block !important;
+                top: 0 !important;
+                right: 0 !important;
+                bottom: 0 !important;
+                left: 0 !important;
+                transform: none !important;
+            }
+        }
     }
 
     .contact_menu {

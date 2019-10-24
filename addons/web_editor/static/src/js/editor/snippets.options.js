@@ -3,7 +3,6 @@ odoo.define('web_editor.snippets.options', function (require) {
 
 var core = require('web.core');
 var ColorPaletteWidget = require('web_editor.ColorPalette').ColorPaletteWidget;
-var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
 var weWidgets = require('wysiwyg.widgets');
 
@@ -1520,9 +1519,9 @@ registry.background = SnippetOption.extend({
 });
 
 /**
- * Handles the edition of snippet's background image position.
+ * Handles the edition of snippets' background image position.
  */
-registry['background_position'] = SnippetOption.extend({
+registry.BackgroundPosition = SnippetOption.extend({
     xmlDependencies: ['/web_editor/static/src/xml/editor.xml'],
 
     /**
@@ -1530,16 +1529,36 @@ registry['background_position'] = SnippetOption.extend({
      */
     start: function () {
         this._super.apply(this, arguments);
-        var self = this;
-        this.$target.on('snippet-option-change', function () {
-            self.onFocus();
+
+        this._initOverlay();
+        this.img = document.createElement('img');
+        this.img.src = this._getSrcFromCssValue();
+
+        this.$target.on('snippet-option-change', () => {
+            // Hides option if the bg image is removed in favor of a bg color
+            this._updateUI();
+            // this.img is used to compute dragging speed
+            this.img.src = this._getSrcFromCssValue();
         });
+
+        // Resize overlay content on window resize because background images
+        // change size, and on carousel slide because they sometimes take up
+        // more space and move elements around them.
+        $(window).on('resize.bgposition', () => this._dimensionOverlay());
+    },
+    /**
+     * @override
+     */
+    destroy: function () {
+        this._toggleBgOverlay(false);
+        $(window).off('.bgposition');
+        this._super.apply(this, arguments);
     },
     /**
      * @override
      */
     onFocus: function () {
-        this.$el.toggleClass('d-none', this.$target.css('background-image') === 'none');
+        this._updateUI();
     },
 
     //--------------------------------------------------------------------------
@@ -1547,77 +1566,31 @@ registry['background_position'] = SnippetOption.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Opens a Dialog to edit the snippet's backgroung image position.
+     * Sets the background type (cover/repeat pattern).
      *
-     * @see this.selectClass for parameters
+     * @see this.selectClass for params
      */
-    backgroundPosition: function (previewMode, value, $opt) {
-        var self = this;
+    backgroundType: function (previewMode, value, $opt) {
+        this.$target.toggleClass('o_bg_img_opt_repeat', value === 'repeat-pattern');
+        this.$target.css('background-position', '');
+        this.$target.css('background-size', '');
+    },
+    /**
+     * Saves current background position and enables overlay.
+     *
+     * @see this.selectClass for params
+     */
+    backgroundPositionOverlay: function (previewMode, value, $opt) {
+        const position = this.$target.css('background-position').split(' ').map(v => parseInt(v));
+        // Convert % values to pixels (because mouse movement is in pixels)
+        const delta = this._getBackgroundDelta();
+        this.originalPosition = {
+            left: position[0] / 100 * delta.x || 0,
+            top: position[1] / 100 * delta.y || 0,
+        };
+        this.currentPosition = _.clone(this.originalPosition);
 
-        this.previousState = [this.$target.attr('class'), this.$target.css('background-size'), this.$target.css('background-position')];
-
-        this.bgPos = self.$target.css('background-position').split(' ');
-        this.bgSize = self.$target.css('background-size').split(' ');
-
-        this.modal = new Dialog(null, {
-            title: _t("Background Image Sizing"),
-            $content: $(qweb.render('web_editor.dialog.background_position')),
-            buttons: [
-                {text: _t("Ok"), classes: 'btn-primary', close: true, click: _.bind(this._saveChanges, this)},
-                {text: _t("Discard"), close: true, click: _.bind(this._discardChanges, this)},
-            ],
-        }).open();
-
-        this.modal.opened().then(function () {
-            // Fetch data form $target
-            var value = ((self.$target.hasClass('o_bg_img_opt_contain')) ? 'contain' : ((self.$target.hasClass('o_bg_img_opt_custom')) ? 'custom' : 'cover'));
-            self.modal.$('> label > input[value=' + value + ']').prop('checked', true);
-
-            if (self.$target.hasClass('o_bg_img_opt_repeat')) {
-                self.modal.$('#o_bg_img_opt_contain_repeat').prop('checked', true);
-                self.modal.$('#o_bg_img_opt_custom_repeat').val('o_bg_img_opt_repeat');
-            } else if (self.$target.hasClass('o_bg_img_opt_repeat_x')) {
-                self.modal.$('#o_bg_img_opt_custom_repeat').val('o_bg_img_opt_repeat_x');
-            } else if (self.$target.hasClass('o_bg_img_opt_repeat_y')) {
-                self.modal.$('#o_bg_img_opt_custom_repeat').val('o_bg_img_opt_repeat_y');
-            }
-
-            if (self.bgPos.length > 1) {
-                self.bgPos = {
-                    x: self.bgPos[0],
-                    y: self.bgPos[1],
-                };
-                self.modal.$('#o_bg_img_opt_custom_pos_x').val(self.bgPos.x.replace('%', ''));
-                self.modal.$('#o_bg_img_opt_custom_pos_y').val(self.bgPos.y.replace('%', ''));
-            }
-            if (self.bgSize.length > 1) {
-                self.modal.$('#o_bg_img_opt_custom_size_x').val(self.bgSize[0].replace('%', ''));
-                self.modal.$('#o_bg_img_opt_custom_size_y').val(self.bgSize[1].replace('%', ''));
-            }
-
-            // Focus Point
-            self.$focus = self.modal.$('.o_focus_point');
-            self._updatePosInformation();
-
-            var imgURL = /\(['"]?([^'"]+)['"]?\)/g.exec(self.$target.css('background-image'));
-            imgURL = (imgURL && imgURL[1]) || '';
-            var $img = $('<img/>', {class: 'img img-fluid', src: imgURL});
-            $img.on('load', function () {
-                self._bindImageEvents($img);
-            });
-            $img.prependTo(self.modal.$('.o_bg_img_opt_object'));
-
-            // Bind events
-            self.modal.$el.on('change', '> label > input', function (e) {
-                self.modal.$('> .o_bg_img_opt').addClass('o_hidden')
-                                               .filter('[data-value=' + e.target.value + ']')
-                                               .removeClass('o_hidden');
-            });
-            self.modal.$el.on('change', 'input, select', function (e) {
-                self._saveChanges();
-            });
-            self.modal.$('> label > input:checked').trigger('change');
-        });
+        this._toggleBgOverlay(true);
     },
 
     //--------------------------------------------------------------------------
@@ -1625,116 +1598,219 @@ registry['background_position'] = SnippetOption.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Bind events on the given image so that the users can adapt the focus
-     * point.
+     * Initializes the overlay, binds events to the buttons, inserts it in
+     * the DOM.
      *
      * @private
-     * @param {jQuery} $img
      */
-    _bindImageEvents: function ($img) {
-        var self = this;
+    _initOverlay: function () {
+        this.$backgroundOverlay = $(qweb.render('web_editor.background_position_overlay'));
+        this.$overlayContent = this.$backgroundOverlay.find('.o_we_overlay_content');
+        this.$overlayBackground = this.$overlayContent.find('.o_overlay_background');
 
-        var mousedown = false;
-        $img.on('mousedown', function (e) {
-            mousedown = true;
+        this.$backgroundOverlay.on('click', '.o_btn_apply', () => {
+            this.$target.css('background-position', this.$bgDragger.css('background-position'));
+            this._toggleBgOverlay(false);
         });
-        $img.on('mousemove', function (e) {
-            if (mousedown) {
-                _update(e);
+        this.$backgroundOverlay.on('click', '.o_btn_discard', () => {
+            this._toggleBgOverlay(false);
+        });
+
+        this.$backgroundOverlay.insertAfter(this.$overlay);
+    },
+    /**
+     * Sets the overlay in the right place so that the draggable background
+     * renders over the target, and size the background item like the target.
+     *
+     * @private
+     */
+    _dimensionOverlay: function () {
+        if (!this.$backgroundOverlay.is('.oe_active')) {
+            return;
+        }
+        // TODO: change #wrapwrap after web_editor rework.
+        const $wrapwrap = $('#wrapwrap');
+        const targetOffset = this.$target.offset();
+
+        this.$backgroundOverlay.css({
+            width: $wrapwrap.innerWidth(),
+            height: $wrapwrap.innerHeight(),
+        });
+
+        this.$overlayContent.offset(targetOffset);
+
+        this.$bgDragger.css({
+            width: `${this.$target.innerWidth()}px`,
+            height: `${this.$target.innerHeight()}px`,
+        });
+    },
+    /**
+     * Toggles the overlay's display and renders a background clone inside of it.
+     *
+     * @private
+     * @param {boolean} activate toggle the overlay on (true) or off (false)
+     */
+    _toggleBgOverlay: function (activate) {
+        if (this.$backgroundOverlay.is('.oe_active') === activate) {
+            return;
+        }
+
+        if (!activate) {
+            this.$backgroundOverlay.removeClass('oe_active');
+            this.trigger_up('unblock_preview_overlays');
+            this.trigger_up('activate_snippet', {$snippet: this.$target});
+
+            $(document).off('click.bgposition');
+            return;
+        }
+
+        this.trigger_up('hide_overlay');
+        this.trigger_up('activate_snippet', {
+            $snippet: this.$target,
+            previewMode: true,
+        });
+        this.trigger_up('block_preview_overlays');
+
+        // Create empty clone of $target with same display size, make it draggable and give it a tooltip.
+        this.$bgDragger = this.$target.clone().empty();
+        this.$bgDragger.on('mousedown', this._onDragBackgroundStart.bind(this));
+        this.$bgDragger.tooltip({
+            title: 'Click and drag the background to adjust its position!',
+            trigger: 'manual',
+            container: this.$backgroundOverlay
+        });
+
+        // Replace content of overlayBackground, activate the overlay and give it the right dimensions.
+        this.$overlayBackground.empty().append(this.$bgDragger);
+        this.$backgroundOverlay.addClass('oe_active');
+        this._dimensionOverlay();
+        this.$bgDragger.tooltip('show');
+
+        // Needs to be deferred or the click event that activated the overlay deactivates it as well.
+        // This is caused by the click event which we are currently handling bubbling up to the document.
+        window.setTimeout(() => $(document).on('click.bgposition', this._onDocumentClicked.bind(this)), 0);
+    },
+    /**
+     * Disables background position if no background image, disables size inputs
+     * in cover mode, and activates the proper select option.
+     *
+     * @override
+     */
+    _setActive: function () {
+        this.$el.toggleClass('d-none', this.$target.css('background-image') === 'none');
+        this.$el.find('we-input').toggleClass('d-none', this.$target.css('background-repeat') !== 'repeat');
+        this.$el.find('[data-background-type]').removeClass('active')
+            .filter(`[data-background-type=${this.$target.css('background-repeat') === 'repeat' ? 'repeat-pattern' : 'cover'}]`).addClass('active');
+
+        this._super.apply(this, arguments);
+    },
+    /**
+     * Returns the src value from a css value related to a background image
+     * (e.g. "url('blabla')" => "blabla" / "none" => "").
+     *
+     * @private
+     * @param {string} value
+     * @returns {string}
+     */
+    _getSrcFromCssValue: function (value) {
+        if (value === undefined) {
+            value = this.$target.css('background-image');
+        }
+        var srcValueWrapper = /url\(['"]*|['"]*\)|^none$/g;
+        return value && value.replace(srcValueWrapper, '') || '';
+    },
+    /**
+     * Returns the difference between the target's size and the background's
+     * rendered size. Background position values in % are a percentage of this.
+     *
+     * @private
+     */
+    _getBackgroundDelta: function () {
+        const bgSize = this.$target.css('background-size');
+        if (bgSize !== 'cover') {
+            let [width, height] = bgSize.split(' ');
+            if (width === 'auto' && (height === 'auto' || !height)) {
+                return {
+                    x: this.$target.outerWidth() - this.img.naturalWidth,
+                    y: this.$target.outerHeight() - this.img.naturalHeight,
+                };
             }
-        });
-        $img.on('mouseup', function (e) {
-            self.$focus.addClass('o_with_transition');
-            _update(e);
-            setTimeout(function () {
-                self.$focus.removeClass('o_with_transition');
-            }, 200);
-            mousedown = false;
-        });
-
-        function _update(e) {
-            var posX = e.pageX - $(e.target).offset().left;
-            var posY = e.pageY - $(e.target).offset().top;
-            self.bgPos = {
-                x: clipValue(posX / $img.width() * 100).toFixed(2) + '%',
-                y: clipValue(posY / $img.height() * 100).toFixed(2) + '%',
+            // At least one of width or height is not auto, so we can use it to calculate the other if it's not set
+            [width, height] = [parseInt(width), parseInt(height)];
+            return {
+                x: this.$target.outerWidth() - (width || (height * this.img.naturalWidth / this.img.naturalHeight)),
+                y: this.$target.outerHeight() - (height || (width * this.img.naturalHeight / this.img.naturalWidth)),
             };
-            self._updatePosInformation();
-            self._saveChanges();
+        }
 
-            function clipValue(value) {
-                return Math.max(0, Math.min(value, 100));
-            }
-        }
+        const renderRatio = Math.max(
+            this.$target.outerWidth() / this.img.naturalWidth,
+            this.$target.outerHeight() / this.img.naturalHeight
+        );
+
+        return {
+            x: this.$target.outerWidth() - Math.round(renderRatio * this.img.naturalWidth),
+            y: this.$target.outerHeight() - Math.round(renderRatio * this.img.naturalHeight),
+        };
     },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
     /**
-     * Removes all option-related classes and style on the target element.
+     * Drags the overlay's background image, copied to target on "Apply".
      *
      * @private
      */
-    _clean: function () {
-        this.$target.removeClass('o_bg_img_opt_contain o_bg_img_opt_custom o_bg_img_opt_repeat o_bg_img_opt_repeat_x o_bg_img_opt_repeat_y')
-                    .css({
-                        'background-size': '',
-                        'background-position': '',
-                    });
-    },
-    /**
-     * Restores the target style before last edition made with the option.
-     *
-     * @private
-     */
-    _discardChanges: function () {
-        this._clean();
-        if (this.previousState) {
-            this.$target.addClass(this.previousState[0]).css({
-                'background-size': this.previousState[1],
-                'background-position': this.previousState[2],
-            });
-        }
-    },
-    /**
-     * Updates the visual representation of the chosen background position.
-     *
-     * @private
-     */
-    _updatePosInformation: function () {
-        this.modal.$('.o_bg_img_opt_ui_info .o_x').text(this.bgPos.x);
-        this.modal.$('.o_bg_img_opt_ui_info .o_y').text(this.bgPos.y);
-        this.$focus.css({
-            left: this.bgPos.x,
-            top: this.bgPos.y,
+    _onDragBackgroundStart: function (ev) {
+        ev.preventDefault();
+        this.$bgDragger.addClass('o_we_grabbing');
+        const $document = $(this.ownerDocument);
+        $document.on('mousemove.bgposition', this._onDragBackgroundMove.bind(this));
+        $document.one('mouseup', () => {
+            this.$bgDragger.removeClass('o_we_grabbing');
+            $document.off('mousemove.bgposition');
         });
     },
     /**
-     * Updates the target element to match the chosen options.
+     * Drags the overlay's background image, copied to target on "Apply".
      *
      * @private
      */
-    _saveChanges: function () {
-        this._clean();
+    _onDragBackgroundMove: function (ev) {
+        ev.preventDefault();
 
-        var bgImgSize = this.modal.$('> :not(label):not(.o_hidden)').data('value') || 'cover';
-        switch (bgImgSize) {
-            case 'cover':
-                this.$target.css('background-position', this.bgPos.x + ' ' + this.bgPos.y);
-                break;
-            case 'contain':
-                this.$target.addClass('o_bg_img_opt_contain');
-                this.$target.toggleClass('o_bg_img_opt_repeat', this.modal.$('#o_bg_img_opt_contain_repeat').prop('checked'));
-                break;
-            case 'custom':
-                this.$target.addClass('o_bg_img_opt_custom');
-                var sizeX = this.modal.$('#o_bg_img_opt_custom_size_x').val();
-                var sizeY = this.modal.$('#o_bg_img_opt_custom_size_y').val();
-                var posX = this.modal.$('#o_bg_img_opt_custom_pos_x').val();
-                var posY = this.modal.$('#o_bg_img_opt_custom_pos_y').val();
-                this.$target.addClass(this.modal.$('#o_bg_img_opt_custom_repeat').val())
-                            .css({
-                                'background-size': (sizeX ? sizeX + '%' : 'auto') + ' ' + (sizeY ? sizeY + '%' : 'auto'),
-                                'background-position': (posX ? posX + '%' : 'auto') + ' ' + (posY ? posY + '%' : 'auto'),
-                            });
-                break;
+        const delta = this._getBackgroundDelta();
+        this.currentPosition.left = clamp(this.currentPosition.left + ev.originalEvent.movementX, [0, delta.x]);
+        this.currentPosition.top = clamp(this.currentPosition.top + ev.originalEvent.movementY, [0, delta.y]);
+
+        const percentPosition = {
+            left: this.currentPosition.left / delta.x * 100,
+            top: this.currentPosition.top / delta.y * 100,
+        };
+        // In cover mode, one delta will be 0 and dividing by it will yield Infinity.
+        // Defaulting to originalPosition in that case (can't be dragged)
+        percentPosition.left = isFinite(percentPosition.left) ? percentPosition.left : this.originalPosition.left;
+        percentPosition.top = isFinite(percentPosition.top) ? percentPosition.top : this.originalPosition.top;
+
+        this.$bgDragger.css('background-position', `${percentPosition.left}% ${percentPosition.top}%`);
+
+        function clamp(val, bounds) {
+            // We sort the bounds because when one dimension of the rendered background is
+            // larger than the container, delta is negative, and we want to use it as lower bound
+            bounds = bounds.sort();
+            return Math.max(bounds[0], Math.min(val, bounds[1]));
+        }
+    },
+    /**
+     * Deactivates the overlay if the user clicks outside of it.
+     *
+     * @private
+     */
+    _onDocumentClicked: function (ev) {
+        if (!ev.target.closest('.o_we_background_position_overlay')) {
+            this._toggleBgOverlay(false);
         }
     },
 });

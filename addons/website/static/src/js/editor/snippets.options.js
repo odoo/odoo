@@ -674,7 +674,7 @@ options.registry.parallax = options.Class.extend({
      */
     onFocus: function () {
         this.trigger_up('option_update', {
-            optionNames: ['background', 'background_position'],
+            optionNames: ['background', 'BackgroundPosition'],
             name: 'target',
             data: this.$target.find('> .s_parallax_bg'),
         });

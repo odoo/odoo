@@ -239,15 +239,20 @@ font[class*='bg-'] {
 .oe_img_bg {
     background-size: cover;
     background-repeat: no-repeat;
+
+    &.o_bg_img_opt_repeat {
+        background-size: auto;
+        background-repeat: repeat;
+    }
+
+    // Compatibility <= 13.0, TODO remove?
+    // -----------------------------------
     &.o_bg_img_opt_contain {
         background-size: contain;
         background-position: center center;
     }
     &.o_bg_img_opt_custom {
         background-size: auto;
-    }
-    &.o_bg_img_opt_repeat {
-        background-repeat: repeat;
     }
     &.o_bg_img_opt_repeat_x {
         background-repeat: repeat-x;
