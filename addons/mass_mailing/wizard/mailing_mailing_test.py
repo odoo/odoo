@@ -14,7 +14,7 @@ class TestMassMailing(models.TransientModel):
 
     def send_mail_test(self):
         self.ensure_one()
-        mails = self.env['mail.mail']
+        mails_sudo = self.env['mail.mail'].sudo()
         mailing = self.mass_mailing_id
         test_emails = tools.email_split(self.email_to)
         mass_mail_layout = self.env.ref('mass_mailing.mass_mailing_mail_layout')
@@ -33,7 +33,7 @@ class TestMassMailing(models.TransientModel):
                 'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],
                 'auto_delete': True,
             }
-            mail = self.env['mail.mail'].create(mail_values)
-            mails |= mail
-        mails.send()
+            mail = self.env['mail.mail'].sudo().create(mail_values)
+            mails_sudo |= mail
+        mails_sudo.send()
         return True

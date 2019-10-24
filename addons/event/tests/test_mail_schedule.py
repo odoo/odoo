@@ -56,7 +56,7 @@ class TestMailSchedule(TestEventCommon):
         # verify that subscription scheduler was auto-executed after each registration
         self.assertEqual(len(schedulers[0].mail_registration_ids), 2, 'event: incorrect number of mail scheduled date')
 
-        mails = self.env['mail.mail'].search([('subject', 'ilike', 'registration'), ('date', '>=', now)], order='date DESC', limit=3)
+        mails = self.env['mail.mail'].sudo().search([('subject', 'ilike', 'registration'), ('date', '>=', now)], order='date DESC', limit=3)
         self.assertEqual(len(mails), 2, 'event: wrong number of registration mail sent')
 
         for registration in schedulers[0].mail_registration_ids:
@@ -73,5 +73,5 @@ class TestMailSchedule(TestEventCommon):
         self.assertTrue(schedulers[0].mail_sent, 'event: reminder scheduler should have sent an email')
         self.assertTrue(schedulers[0].done, 'event: reminder scheduler should be done')
 
-        mails = self.env['mail.mail'].search([('subject', 'ilike', 'TestEventMail'), ('date', '>=', now)], order='date DESC', limit=3)
+        mails = self.env['mail.mail'].sudo().search([('subject', 'ilike', 'TestEventMail'), ('date', '>=', now)], order='date DESC', limit=3)
         self.assertEqual(len(mails), 3, 'event: wrong number of reminders in outgoing mail queue')
