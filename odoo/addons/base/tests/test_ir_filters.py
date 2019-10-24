@@ -1,9 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
+import logging
+
 from odoo import exceptions
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
-from odoo.tests.common import TransactionCase, ADMIN_USER_ID
+from odoo.tests.common import TransactionCase, ADMIN_USER_ID, tagged
+
+_logger = logging.getLogger(__name__)
 
 def noid(seq):
     """ Removes values that are not relevant for the test comparisons """
@@ -289,3 +294,37 @@ class TestReadGroup(TransactionCase):
 
         res = Filters.read_group([], ['name', 'user_id'], ['user_id'])
         self.assertTrue(any(val['user_id'] == False for val in res), "At least one group must contain val['user_id'] == False.")
+
+
+@tagged('post_install', '-at_install', 'migration')
+class TestAllFilters(TransactionCase):
+    def check_filter(self, name, model, domain, fields, groupby, order, context):
+        if groupby:
+            try:
+                self.env[model].with_context(context).read_group(domain, fields, groupby, orderby=order)
+            except ValueError as e:
+                raise self.failureException("Test filter '%s' failed: %s" % (name, e)) from None
+            except KeyError as e:
+                raise self.failureException("Test filter '%s' failed: field or aggregate %s does not exist"% (name, e)) from None
+        elif domain:
+            try:
+                self.env[model].with_context(context).search(domain, order=order)
+            except ValueError as e:
+                raise self.failureException("Test filter '%s' failed: %s" % (name, e)) from None
+        else:
+            _logger.info("No domain or group by in filter %s with model %s and context %s", name, model, context)
+
+    def test_filters(self):
+        for filter_ in self.env['ir.filters'].search([]):
+            with self.subTest(name=filter_.name):
+                context = ast.literal_eval(filter_.context)
+                groupby = context.get('group_by')
+                self.check_filter(
+                    name=filter_.name,
+                    model=filter_.model_id,
+                    domain=filter_._get_eval_domain(),
+                    fields=[field.split(':')[0] for field in (groupby or [])],
+                    groupby=groupby,
+                    order=ast.literal_eval(filter_.sort),
+                    context=context,
+                )
