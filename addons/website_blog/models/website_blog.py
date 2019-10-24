@@ -37,7 +37,7 @@ class Blog(models.Model):
         return res
 
     @api.returns('mail.message', lambda value: value.id)
-    def message_post(self, *, parent_id=False, subtype=None, **kwargs):
+    def message_post(self, *, parent_id=False, subtype_id=False, **kwargs):
         """ Temporary workaround to avoid spam. If someone replies on a channel
         through the 'Presentation Published' email, it should be considered as a
         note as we don't want all channel followers to be notified of this answer. """
@@ -45,10 +45,8 @@ class Blog(models.Model):
         if parent_id:
             parent_message = self.env['mail.message'].sudo().browse(parent_id)
             if parent_message.subtype_id and parent_message.subtype_id == self.env.ref('website_blog.mt_blog_blog_published'):
-                if kwargs.get('subtype_id'):
-                    kwargs['subtype_id'] = False
-                subtype = 'mail.mt_note'
-        return super(Blog, self).message_post(parent_id=parent_id, subtype=subtype, **kwargs)
+                subtype_id = self.env.ref('mail.mt_note').id
+        return super(Blog, self).message_post(parent_id=parent_id, subtype_id=subtype_id, **kwargs)
 
     def all_tags(self, join=False, min_limit=1):
         BlogTag = self.env['blog.tag']

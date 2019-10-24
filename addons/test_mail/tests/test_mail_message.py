@@ -360,13 +360,13 @@ class TestMessageAccess(TestMailCommon):
         ).with_context({'mail_create_nosubscribe': False})
 
         # mark all as read clear needactions
-        group_private.message_post(body='Test', message_type='comment', subtype='mail.mt_comment', partner_ids=[emp_partner.id])
+        group_private.message_post(body='Test', message_type='comment', subtype_xmlid='mail.mt_comment', partner_ids=[emp_partner.id])
         emp_partner.env['mail.message'].mark_all_as_read(domain=[])
         na_count = emp_partner.get_needaction_count()
         self.assertEqual(na_count, 0, "mark all as read should conclude all needactions")
 
         # mark all as read also clear inaccessible needactions
-        new_msg = group_private.message_post(body='Zest', message_type='comment', subtype='mail.mt_comment', partner_ids=[emp_partner.id])
+        new_msg = group_private.message_post(body='Zest', message_type='comment', subtype_xmlid='mail.mt_comment', partner_ids=[emp_partner.id])
         needaction_accessible = len(emp_partner.env['mail.message'].search([['needaction', '=', True]]))
         self.assertEqual(needaction_accessible, 1, "a new message to a partner is readable to that partner")
 
@@ -388,13 +388,13 @@ class TestMessageAccess(TestMailCommon):
         portal_partner = self.user_portal.partner_id.with_user(self.user_portal)
 
         # mark all as read clear needactions
-        self.group_pigs.message_post(body='Test', message_type='comment', subtype='mail.mt_comment', partner_ids=[portal_partner.id])
+        self.group_pigs.message_post(body='Test', message_type='comment', subtype_xmlid='mail.mt_comment', partner_ids=[portal_partner.id])
         portal_partner.env['mail.message'].mark_all_as_read(domain=[])
         na_count = portal_partner.get_needaction_count()
         self.assertEqual(na_count, 0, "mark all as read should conclude all needactions")
 
         # mark all as read also clear inaccessible needactions
-        new_msg = self.group_pigs.message_post(body='Zest', message_type='comment', subtype='mail.mt_comment', partner_ids=[portal_partner.id])
+        new_msg = self.group_pigs.message_post(body='Zest', message_type='comment', subtype_xmlid='mail.mt_comment', partner_ids=[portal_partner.id])
         needaction_accessible = len(portal_partner.env['mail.message'].search([['needaction', '=', True]]))
         self.assertEqual(needaction_accessible, 1, "a new message to a partner is readable to that partner")
 

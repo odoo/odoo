@@ -69,7 +69,7 @@ class MailChannel(models.Model):
                 message = _('has left the conversation.')
             leave_message = '%s %s' % (name, message)
             self.message_post(author_id=self.env.ref('base.user_root').sudo().partner_id.id,
-                              body=leave_message, message_type='comment', subtype='mt_comment')
+                              body=leave_message, message_type='comment', subtype_xmlid='mail.mt_comment')
 
     def message_post(self, **kwargs):
         """Override to mark the visitor as still connected.

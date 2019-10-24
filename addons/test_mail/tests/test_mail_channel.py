@@ -149,7 +149,7 @@ class TestChannelFeatures(TestMailCommon):
         self.assertEqual(self.test_channel.channel_partner_ids, self.env['res.partner'])
 
     def test_channel_post_nofollow(self):
-        self.test_channel.message_post(body='Test', message_type='comment', subtype='mt_comment')
+        self.test_channel.message_post(body='Test', message_type='comment', subtype_xmlid='mail.mt_comment')
         self.assertEqual(self.test_channel.message_channel_ids, self.test_channel)
         self.assertEqual(self.test_channel.message_partner_ids, self.env['res.partner'])
 
@@ -168,7 +168,7 @@ class TestChannelFeatures(TestMailCommon):
         })
         self._join_channel(self.test_channel, self.user_employee.partner_id | self.test_partner | nomail.partner_id)
         with self.mock_mail_gateway():
-            self.test_channel.message_post(body="Test", message_type='comment', subtype='mt_comment')
+            self.test_channel.message_post(body="Test", message_type='comment', subtype_xmlid='mail.mt_comment')
         self.assertSentEmail(self.test_channel.env.user.partner_id, [self.partner_employee, self.test_partner])
 
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
@@ -178,7 +178,7 @@ class TestChannelFeatures(TestMailCommon):
         self.test_channel.write({'email_send': False})
         self._join_channel(self.test_channel, self.user_employee.partner_id | self.test_partner)
         with self.mock_mail_gateway():
-            self.test_channel.message_post(body="Test", message_type='comment', subtype='mt_comment')
+            self.test_channel.message_post(body="Test", message_type='comment', subtype_xmlid='mail.mt_comment')
         self.assertNotSentEmail()
         self.assertEqual(len(self._mails), 0)
 
@@ -188,7 +188,7 @@ class TestChannelFeatures(TestMailCommon):
         self.test_channel.write({'alias_name': False})
         self.test_channel.message_subscribe([self.user_employee.partner_id.id, self.test_partner.id])
         with self.mock_mail_gateway():
-            self.test_channel.message_post(body="Test", message_type='comment', subtype='mt_comment')
+            self.test_channel.message_post(body="Test", message_type='comment', subtype_xmlid='mail.mt_comment')
         self.assertSentEmail(self.test_channel.env.user.partner_id, [self.test_partner])
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
@@ -323,10 +323,10 @@ class TestChannelModeration(TestMailCommon):
         self.channel_1._update_moderation_email([email1], 'ban')
         self.channel_1._update_moderation_email([email2], 'allow')
 
-        msg_admin = self.channel_1.message_post(message_type='email', subtype='mt_comment', author_id=self.partner_admin.id)
-        msg_moderator = self.channel_1.message_post(message_type='comment', subtype='mt_comment', author_id=self.partner_employee.id)
-        msg_email1 = self.channel_1.message_post(message_type='comment', subtype='mt_comment', email_from=formataddr(("MyName", email1)))
-        msg_email2 = self.channel_1.message_post(message_type='email', subtype='mt_comment', email_from=email2)
+        msg_admin = self.channel_1.message_post(message_type='email', subtype_xmlid='mail.mt_comment', author_id=self.partner_admin.id)
+        msg_moderator = self.channel_1.message_post(message_type='comment', subtype_xmlid='mail.mt_comment', author_id=self.partner_employee.id)
+        msg_email1 = self.channel_1.message_post(message_type='comment', subtype_xmlid='mail.mt_comment', email_from=formataddr(("MyName", email1)))
+        msg_email2 = self.channel_1.message_post(message_type='email', subtype_xmlid='mail.mt_comment', email_from=email2)
         msg_notif = self.channel_1.message_post()
 
         messages = self.env['mail.message'].search([('model', '=', 'mail.channel'), ('res_id', '=', self.channel_1.id)])

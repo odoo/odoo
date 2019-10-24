@@ -104,7 +104,7 @@ class PublisherWarrantyContract(AbstractModel):
                 poster = user
             for message in result["messages"]:
                 try:
-                    poster.message_post(body=message, subtype='mt_comment', partner_ids=[user.partner_id.id])
+                    poster.message_post(body=message, subtype_xmlid='mail.mt_comment', partner_ids=[user.partner_id.id])
                 except Exception:
                     pass
             if result.get('enterprise_info'):

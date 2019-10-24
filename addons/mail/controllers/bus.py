@@ -53,7 +53,7 @@ class MailChatController(BusController):
         message = mail_channel.with_context(mail_create_nosubscribe=True).message_post(author_id=author_id,
                                                                                        email_from=email_from, body=body,
                                                                                        message_type='comment',
-                                                                                       subtype='mail.mt_comment')
+                                                                                       subtype_xmlid='mail.mt_comment')
         return message and message.id or False
 
     @route(['/mail/chat_history'], type="json", auth="public", cors="*")
