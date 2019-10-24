@@ -72,7 +72,7 @@ class TestComposer(TestMailCommon, TestRecipients):
         }).send_mail()
 
         # check mail_mail
-        mails = self.env['mail.mail'].search([('subject', 'ilike', 'Testing')])
+        mails = self.env['mail.mail'].sudo().search([('subject', 'ilike', 'Testing')])
         for mail in mails:
             self.assertEqual(mail.recipient_ids, self.partner_1 | self.partner_2,
                              'compose wizard: mail_mail mass mailing: mail.mail in mass mail incorrect recipients')

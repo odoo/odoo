@@ -48,7 +48,7 @@ class TestMailTemplate(TestMailCommon, TestRecipients):
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_template_send_email(self):
         mail_id = self.email_template.send_mail(self.test_record.id)
-        mail = self.env['mail.mail'].browse(mail_id)
+        mail = self.env['mail.mail'].sudo().browse(mail_id)
         self.assertEqual(mail.subject, 'About %s' % self.test_record.name)
         self.assertEqual(mail.email_to, self.email_template.email_to)
         self.assertEqual(mail.email_cc, self.email_template.email_cc)

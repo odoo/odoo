@@ -86,7 +86,7 @@ class TestMessagePost(TestMailCommon, TestRecipients):
         self.assertEqual(msg.channel_ids, self.env['mail.channel'])
 
         # notifications emails should have been deleted
-        self.assertFalse(self.env['mail.mail'].search([('mail_message_id', '=', msg.id)]),
+        self.assertFalse(self.env['mail.mail'].sudo().search([('mail_message_id', '=', msg.id)]),
                          'message_post: mail.mail notifications should have been auto-deleted')
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
@@ -101,7 +101,7 @@ class TestMessagePost(TestMailCommon, TestRecipients):
         )
 
         # notifications emails should not have been deleted: one for customers, one for user
-        self.assertEqual(len(self.env['mail.mail'].search([('mail_message_id', '=', msg.id)])), 2)
+        self.assertEqual(len(self.env['mail.mail'].sudo().search([('mail_message_id', '=', msg.id)])), 2)
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_post_notifications_emails_tweak(self):

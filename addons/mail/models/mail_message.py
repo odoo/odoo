@@ -134,7 +134,7 @@ class Message(models.Model):
     # By setting up the inverse one2many, we avoid to have to do a search to find the mails linked to the `mail.message`
     # as the cache value for this inverse one2many is up-to-date.
     # Besides for new messages, and messages never sending emails, there was no mail, and it was searching for nothing.
-    mail_ids = fields.One2many('mail.mail', 'mail_message_id', string='Mails')
+    mail_ids = fields.One2many('mail.mail', 'mail_message_id', string='Mails', groups="base.group_system")
     canned_response_ids = fields.One2many('mail.shortcode', 'message_ids', string="Canned Responses", store=False)
 
     def _get_needaction(self):
