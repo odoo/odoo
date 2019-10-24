@@ -185,9 +185,8 @@ class Website(models.Model):
         attachments_to_unlink.unlink()
         return super(Website, self).unlink()
 
-    @api.model
-    def create_and_redirect_to_theme(self, vals):
-        self.browse(vals)._force()
+    def create_and_redirect_to_theme(self):
+        self._force()
         action = self.env.ref('website.theme_install_kanban_action')
         return action.read()[0]
 
