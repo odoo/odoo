@@ -1943,7 +1943,7 @@ class StockMove(SavepointCase):
 
         # create the backorder in the uom of the quants
         backorder_wizard_dict = picking_stock_pack.button_validate()
-        backorder_wizard = self.env[backorder_wizard_dict['res_model']].browse(backorder_wizard_dict['res_id'])
+        backorder_wizard = self.env[backorder_wizard_dict['res_model']].browse(backorder_wizard_dict['res_id']).with_context(backorder_wizard_dict['context'])
         backorder_wizard.process()
         self.assertEqual(move_stock_pack.state, 'done')
         self.assertEqual(move_stock_pack.quantity_done, 0.5)
@@ -2109,7 +2109,7 @@ class StockMove(SavepointCase):
             if ml.lot_id.name != 'lot3':
                 ml.qty_done = 1
         res_dict_for_back_order = picking_pack_cust.button_validate()
-        backorder_wizard = self.env[(res_dict_for_back_order.get('res_model'))].browse(res_dict_for_back_order.get('res_id'))
+        backorder_wizard = self.env[(res_dict_for_back_order.get('res_model'))].browse(res_dict_for_back_order.get('res_id')).with_context(res_dict_for_back_order['context'])
         backorder_wizard.process()
         backorder = self.env['stock.picking'].search([('backorder_id', '=', picking_pack_cust.id)])
         backordered_move = backorder.move_lines
@@ -3298,7 +3298,7 @@ class StockMove(SavepointCase):
         picking.action_assign()
         res_dict = picking.button_validate()
         self.assertEqual(res_dict.get('res_model'), 'stock.immediate.transfer')
-        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
+        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id')).with_context(res_dict['context'])
         wizard.process()
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 10.0)
 
@@ -3331,10 +3331,10 @@ class StockMove(SavepointCase):
         # Only 5 products are reserved on the move of 10, click on `button_validate`.
         res_dict = picking.button_validate()
         self.assertEqual(res_dict.get('res_model'), 'stock.immediate.transfer')
-        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
+        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id')).with_context(res_dict['context'])
         res_dict_for_back_order = wizard.process()
         self.assertEqual(res_dict_for_back_order.get('res_model'), 'stock.backorder.confirmation')
-        backorder_wizard = self.env[(res_dict_for_back_order.get('res_model'))].browse(res_dict_for_back_order.get('res_id'))
+        backorder_wizard = self.env[(res_dict_for_back_order.get('res_model'))].browse(res_dict_for_back_order.get('res_id')).with_context(res_dict_for_back_order['context'])
         # Chose to create a backorder.
         backorder_wizard.process()
 
@@ -3397,11 +3397,11 @@ class StockMove(SavepointCase):
 
         action = picking.button_validate()
         self.assertEqual(action.get('res_model'), 'stock.immediate.transfer')
-        wizard = self.env[(action.get('res_model'))].browse(action.get('res_id'))
+        wizard = self.env[(action.get('res_model'))].browse(action.get('res_id')).with_context(action.get('context'))
         action = wizard.process()
         self.assertTrue(isinstance(action, dict), 'Should open backorder wizard')
         self.assertEqual(action.get('res_model'), 'stock.backorder.confirmation')
-        wizard = self.env[(action.get('res_model'))].browse(action.get('res_id'))
+        wizard = self.env[(action.get('res_model'))].browse(action.get('res_id')).with_context(action.get('context'))
         wizard.process()
         backorder = self.env['stock.picking'].search([('backorder_id', '=', picking.id)])
         self.assertEqual(len(backorder), 1.0)
@@ -3445,7 +3445,7 @@ class StockMove(SavepointCase):
         # No quantites filled, immediate transfer wizard should pop up.
         immediate_trans_wiz_dict = picking.button_validate()
         self.assertEqual(immediate_trans_wiz_dict.get('res_model'), 'stock.immediate.transfer')
-        immediate_trans_wiz = self.env[immediate_trans_wiz_dict['res_model']].browse(immediate_trans_wiz_dict['res_id'])
+        immediate_trans_wiz = self.env[immediate_trans_wiz_dict['res_model']].browse(immediate_trans_wiz_dict['res_id']).with_context(immediate_trans_wiz_dict['context'])
         immediate_trans_wiz.process()
 
         self.assertEqual(picking.move_lines.quantity_done, 5.0)

@@ -51,7 +51,8 @@ class TestFifoPrice(TestPurchase):
 
         # Process the reception of purchase order 1 and set date
         picking = purchase_order_1.picking_ids[0]
-        self.env['stock.immediate.transfer'].create({'pick_ids': [(4, picking.id)]}).process()
+        res = picking.button_validate()
+        self.env[res['res_model']].browse(res['res_id']).with_context(res['context']).process()
 
         # Check the standard price of the product (fifo icecream), that should have not changed
         # because the standard price is supposed to be updated only when goods are going out of the stock
@@ -75,7 +76,8 @@ class TestFifoPrice(TestPurchase):
 
         # Process the reception of purchase order 2
         picking = purchase_order_2.picking_ids[0]
-        self.env['stock.immediate.transfer'].create({'pick_ids': [(4, picking.id)]}).process()
+        res = picking.button_validate()
+        self.env[res['res_model']].browse(res['res_id']).with_context(res['context']).process()
 
         # Check the standard price of the product, that should have not changed because the
         # standard price is supposed to be updated only when goods are going out of the stock
@@ -101,7 +103,8 @@ class TestFifoPrice(TestPurchase):
         outgoing_shipment.action_assign()
 
         # Process the delivery of the outgoing shipment
-        self.env['stock.immediate.transfer'].create({'pick_ids': [(4, outgoing_shipment.id)]}).process()
+        res = outgoing_shipment.button_validate()
+        self.env[res['res_model']].browse(res['res_id']).with_context(res['context']).process()
 
         # Check stock value became 1600 .
         self.assertEqual(product_cable_management_box.value_svl, 1600.0, 'Stock valuation should be 1600')
@@ -125,7 +128,8 @@ class TestFifoPrice(TestPurchase):
         outgoing_shipment_uom.action_assign()
 
         # Process the delivery of the outgoing shipment
-        self.env['stock.immediate.transfer'].create({'pick_ids': [(4, outgoing_shipment_uom.id)]}).process()
+        res = outgoing_shipment_uom.button_validate()
+        self.env[res['res_model']].browse(res['res_id']).with_context(res['context']).process()
 
         # Check stock valuation and qty in stock
         self.assertEqual(product_cable_management_box.value_svl, 1560.0, 'Stock valuation should be 1560')
@@ -162,7 +166,8 @@ class TestFifoPrice(TestPurchase):
         purchase_order_usd.button_confirm()
         # Process the reception of purchase order with USD
         picking = purchase_order_usd.picking_ids[0]
-        self.env['stock.immediate.transfer'].create({'pick_ids': [(4, picking.id)]}).process()
+        res = picking.button_validate()
+        self.env[res['res_model']].browse(res['res_id']).with_context(res['context']).process()
 
         # Create delivery order of 49.5 kg
         outgoing_shipment_cur = self.env['stock.picking'].create({
@@ -183,7 +188,8 @@ class TestFifoPrice(TestPurchase):
         outgoing_shipment_cur.action_assign()
 
         # Process the delivery of the outgoing shipment
-        self.env['stock.immediate.transfer'].create({'pick_ids': [(4, outgoing_shipment_cur.id)]}).process()
+        res = outgoing_shipment_cur.button_validate()
+        self.env[res['res_model']].browse(res['res_id']).with_context(res['context']).process()
 
         # Do a delivery of an extra 10 kg
         outgoing_shipment_ret = self.env['stock.picking'].create({
@@ -202,7 +208,8 @@ class TestFifoPrice(TestPurchase):
 
         # I assign this outgoing shipment
         outgoing_shipment_ret.action_assign()
-        self.env['stock.immediate.transfer'].create({'pick_ids': [(4, outgoing_shipment_ret.id)]}).process()
+        res = outgoing_shipment_ret.button_validate()
+        self.env[res['res_model']].browse(res['res_id']).with_context(res['context']).process()
 
         # Check rounded price is 150.0 / 1.2834
         self.assertEqual(round(product_cable_management_box.qty_available), 0.0, 'Wrong quantity in stock after first reception.')
@@ -291,7 +298,8 @@ class TestFifoPrice(TestPurchase):
 
         # Process the reception of purchase order neg
         picking = purchase_order_neg.picking_ids[0]
-        self.env['stock.immediate.transfer'].create({'pick_ids': [(4, picking.id)]}).process()
+        res = picking.button_validate()
+        self.env[res['res_model']].browse(res['res_id']).with_context(res['context']).process()
 
         # Receive purchase order with 600 kg FIFO Ice Cream at 80 euro/kg
         purchase_order_neg2 = self.env['purchase.order'].create({
@@ -310,7 +318,8 @@ class TestFifoPrice(TestPurchase):
 
         # Process the reception of purchase order neg2
         picking = purchase_order_neg2.picking_ids[0]
-        self.env['stock.immediate.transfer'].create({'pick_ids': [(4, picking.id)]}).process()
+        res = picking.button_validate()
+        self.env[res['res_model']].browse(res['res_id']).with_context(res['context']).process()
 
         original_out_move = outgoing_shipment_neg.move_lines[0]
         self.assertEqual(original_out_move.product_id.value_svl,  12000.0, 'Value of the move should be 12000')

@@ -84,7 +84,7 @@ class TestStockValuation(TransactionCase):
 
         # validate the receipt
         res_dict = picking1.button_validate()
-        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
+        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id')).with_context(res_dict['context'])
         wizard.process()
 
         # the unit price of the valuationlayer used the latest value
@@ -132,7 +132,7 @@ class TestStockValuation(TransactionCase):
 
         # validate the receipt
         res_dict = picking1.button_validate()
-        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
+        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id')).with_context(res_dict['context'])
         wizard.process()
 
         # the unit price of the valuation layer used the latest value
@@ -202,7 +202,7 @@ class TestStockValuation(TransactionCase):
 
         # validate the receipt
         res_dict = picking1.button_validate()
-        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
+        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id')).with_context(res_dict['context'])
         wizard.process()
 
         # the unit price of the valuation layer used the latest value
@@ -267,7 +267,7 @@ class TestStockValuation(TransactionCase):
         move1.quantity_done = 5
         res_dict = picking1.button_validate()
         self.assertEqual(res_dict['res_model'], 'stock.backorder.confirmation')
-        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
+        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id')).with_context(res_dict['context'])
         wizard.process()
 
         self.assertEqual(len(picking1.move_lines), 1)
