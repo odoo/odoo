@@ -86,7 +86,7 @@ def _message_post_helper(res_model, res_id, message, token='', _hash=False, pid=
     message_post_args = dict(
         body=message,
         message_type=kw.pop('message_type', "comment"),
-        subtype=kw.pop('subtype', "mt_comment"),
+        subtype_xmlid=kw.pop('subtype_xmlid', "mail.mt_comment"),
         author_id=author_id,
         **kw
     )

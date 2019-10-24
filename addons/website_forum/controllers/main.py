@@ -329,7 +329,7 @@ class WebsiteForum(WebsiteProfile):
             post.with_context(mail_create_nosubscribe=True).message_post(
                 body=body,
                 message_type='comment',
-                subtype='mt_comment')
+                subtype_xmlid='mail.mt_comment')
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/toggle_correct', type='json', auth="public", website=True)

@@ -40,7 +40,7 @@ class TestChannelPartnersNotification(common.TestMailCommon):
         self.test_channel.write({'email_send': True})
         self._join_channel(self.test_channel, self.test_partner)
         with self.mock_mail_gateway():
-            self.test_channel.message_post(body="Test", message_type='comment', subtype='mt_comment')
+            self.test_channel.message_post(body="Test", message_type='comment', subtype_xmlid='mail.mt_comment')
 
         self.assertEqual(len(self._mails), 1, 'Number of mail incorrect. Should be equal to 1.')
         for email in self._mails:
