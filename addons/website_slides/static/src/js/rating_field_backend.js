@@ -10,8 +10,8 @@ var QWeb = core.qweb;
 
 var FieldFloatRating = basicFields.FieldFloat.extend({
     xmlDependencies: !basicFields.FieldFloat.prototype.xmlDependencies ?
-        ['/website_rating/static/src/xml/portal_tools.xml'] : basicFields.FieldFloat.prototype.xmlDependencies.concat(
-            ['/website_rating/static/src/xml/portal_tools.xml']
+        ['/portal_rating/static/src/xml/portal_tools.xml'] : basicFields.FieldFloat.prototype.xmlDependencies.concat(
+            ['/portal_rating/static/src/xml/portal_tools.xml']
         ),
     //--------------------------------------------------------------------------
     // Private
@@ -25,7 +25,7 @@ var FieldFloatRating = basicFields.FieldFloat.extend({
         var self = this;
 
         return Promise.resolve(this._super()).then(function () {
-            self.$el.html(QWeb.render('website_rating.rating_stars_static', {
+            self.$el.html(QWeb.render('portal_rating.rating_stars_static', {
                 'val': self.value / 2,
                 'inline_mode': true
             }));
