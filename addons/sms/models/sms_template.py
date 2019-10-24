@@ -20,7 +20,7 @@ class SMSTemplate(models.Model):
     model_id = fields.Many2one(
         'ir.model', string='Applies to', required=True,
         domain=['&', ('is_mail_thread_sms', '=', True), ('transient', '=', False)],
-        help="The type of document this template can be used with")
+        help="The type of document this template can be used with", ondelete='cascade')
     model = fields.Char('Related Document Model', related='model_id.model', index=True, store=True, readonly=True)
     body = fields.Char('Body', translate=True, required=True)
     lang = fields.Char('Language', help="Use this field to either force a specific language (ISO code) or dynamically "
