@@ -59,4 +59,4 @@ def main():
         o = commands[command]()
         o.run(args)
     else:
-        sys.exit('Unknow command %r' % (command,))
+        sys.exit('Unknown command %r' % (command,))
