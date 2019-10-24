@@ -251,32 +251,24 @@ class View(models.Model):
             return view_id if view_id._name == 'ir.ui.view' else self.env['ir.ui.view']
 
     @api.model
-    def _get_inheriting_views_arch_website(self, view_id):
-        return self.env['website'].browse(self._context.get('website_id'))
-
-    @api.model
-    def _get_inheriting_views_arch_domain(self, view_id, model):
-        domain = super(View, self)._get_inheriting_views_arch_domain(view_id, model)
-        current_website = self._get_inheriting_views_arch_website(view_id)
+    def _get_inheriting_views_arch_domain(self, model):
+        domain = super(View, self)._get_inheriting_views_arch_domain(model)
+        current_website = self.env['website'].browse(self._context.get('website_id'))
         website_views_domain = current_website.website_domain()
         # when rendering for the website we have to include inactive views
         # we will prefer inactive website-specific views over active generic ones
         if current_website:
             domain = [leaf for leaf in domain if 'active' not in leaf]
-
         return expression.AND([website_views_domain, domain])
 
     @api.model
-    def get_inheriting_views_arch(self, view_id, model):
+    def get_inheriting_views_arch(self, model):
         if not self._context.get('website_id'):
-            return super(View, self).get_inheriting_views_arch(view_id, model)
+            return super(View, self).get_inheriting_views_arch(model)
 
-        inheriting_views = super(View, self.with_context(active_test=False)).get_inheriting_views_arch(view_id, model)
-
+        views = super(View, self.with_context(active_test=False)).get_inheriting_views_arch(model)
         # prefer inactive website-specific views over active generic ones
-        inheriting_views = self.browse([view[1] for view in inheriting_views]).filter_duplicate().filtered('active')
-
-        return [(view.arch, view.id) for view in inheriting_views]
+        return views.filter_duplicate().filtered('active')
 
     @api.model
     @tools.ormcache_context('self.env.uid', 'self.env.su', 'xml_id', keys=('website_id',))
