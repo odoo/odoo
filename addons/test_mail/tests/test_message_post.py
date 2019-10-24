@@ -27,7 +27,7 @@ class TestMessagePost(TestMailCommon, TestRecipients):
         (self.user_employee | self.user_admin).write({'notification_type': 'inbox'})
         with self.assertSinglePostNotifications([{'partner': self.partner_employee, 'type': 'inbox'}], {'content': 'Body'}):
             self.test_record.message_post(
-                body='Body', message_type='comment', subtype='mail.mt_comment',
+                body='Body', message_type='comment', subtype_xmlid='mail.mt_comment',
                 partner_ids=[self.user_employee.partner_id.id])
 
         self.test_record.message_subscribe([self.partner_1.id])
@@ -35,14 +35,14 @@ class TestMessagePost(TestMailCommon, TestRecipients):
                 {'partner': self.partner_employee, 'type': 'inbox'},
                 {'partner': self.partner_1, 'type': 'email'}], {'content': 'NewBody'}):
             self.test_record.message_post(
-                body='NewBody', message_type='comment', subtype='mail.mt_comment',
+                body='NewBody', message_type='comment', subtype_xmlid='mail.mt_comment',
                 partner_ids=[self.user_employee.partner_id.id])
 
         with self.assertSinglePostNotifications([
                 {'partner': self.partner_1, 'type': 'email'},
                 {'partner': self.partner_portal, 'type': 'email'}], {'content': 'ToPortal'}):
             self.test_record.message_post(
-                body='ToPortal', message_type='comment', subtype='mail.mt_comment',
+                body='ToPortal', message_type='comment', subtype_xmlid='mail.mt_comment',
                 partner_ids=[self.partner_portal.id])
 
     def test_post_inactive_follower(self):
@@ -52,14 +52,14 @@ class TestMessagePost(TestMailCommon, TestRecipients):
         self.test_record._message_subscribe(self.user_employee.partner_id.ids)
         with self.assertSinglePostNotifications([{'partner': self.partner_employee, 'type': 'inbox'}], {'content': 'Test'}):
             self.test_record.message_post(
-                body='Test', message_type='comment', subtype='mail.mt_comment')
+                body='Test', message_type='comment', subtype_xmlid='mail.mt_comment')
 
         self.user_employee.active = False
         # at this point, partner is still active and would receive an email notification
         self.user_employee.partner_id._write({'active': False})
         with self.assertPostNotifications([{'content': 'Test', 'notif': []}]):
             self.test_record.message_post(
-                body='Test', message_type='comment', subtype='mail.mt_comment')
+                body='Test', message_type='comment', subtype_xmlid='mail.mt_comment')
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_post_notifications(self):
@@ -74,7 +74,7 @@ class TestMessagePost(TestMailCommon, TestRecipients):
                 {'partner': self.partner_admin, 'type': 'email'}], {'content': _body}, mail_unlink_sent=True):
             msg = self.test_record.with_user(self.user_employee).message_post(
                 body=_body, subject=_subject,
-                message_type='comment', subtype='mt_comment',
+                message_type='comment', subtype_xmlid='mail.mt_comment',
                 partner_ids=[self.partner_1.id, self.partner_2.id]
             )
 
@@ -95,7 +95,7 @@ class TestMessagePost(TestMailCommon, TestRecipients):
 
         msg = self.test_record.with_user(self.user_employee).message_post(
             body='Test', subject='Test',
-            message_type='comment', subtype='mt_comment',
+            message_type='comment', subtype_xmlid='mail.mt_comment',
             partner_ids=[self.partner_1.id, self.partner_2.id],
             mail_auto_delete=False
         )
@@ -126,7 +126,7 @@ class TestMessagePost(TestMailCommon, TestRecipients):
         with self.mock_mail_gateway():
             msg = self.test_record.with_user(self.user_employee).message_post(
                 body='Test', subject='Test',
-                message_type='comment', subtype='mt_comment',
+                message_type='comment', subtype_xmlid='mail.mt_comment',
                 attachment_ids=[_attach_1.id, _attach_2.id],
                 partner_ids=[self.partner_1.id],
                 attachments=_attachments,
@@ -155,7 +155,7 @@ class TestMessagePost(TestMailCommon, TestRecipients):
         with self.mock_mail_gateway():
             parent_msg = self.test_record.with_user(self.user_employee).message_post(
                 body='<p>Test</p>', subject='Test Subject',
-                message_type='comment', subtype='mt_comment')
+                message_type='comment', subtype_xmlid='mail.mt_comment')
 
         self.assertEqual(parent_msg.partner_ids, self.env['res.partner'])
         self.assertNotSentEmail()
@@ -163,7 +163,7 @@ class TestMessagePost(TestMailCommon, TestRecipients):
         with self.assertPostNotifications([{'content': '<p>Test Answer</p>', 'notif': [{'partner': self.partner_1, 'type': 'email'}]}]):
             msg = self.test_record.with_user(self.user_employee).message_post(
                 body='<p>Test Answer</p>',
-                message_type='comment', subtype='mt_comment',
+                message_type='comment', subtype_xmlid='mail.mt_comment',
                 partner_ids=[self.partner_1.id],
                 parent_id=parent_msg.id)
 
@@ -177,7 +177,7 @@ class TestMessagePost(TestMailCommon, TestRecipients):
 
         new_msg = self.test_record.with_user(self.user_employee).message_post(
             body='<p>Test Answer Bis</p>',
-            message_type='comment', subtype='mt_comment',
+            message_type='comment', subtype_xmlid='mail.mt_comment',
             parent_id=msg.id)
 
         self.assertEqual(new_msg.parent_id.id, parent_msg.id, 'message_post: flatten error')
@@ -193,7 +193,7 @@ class TestMessagePost(TestMailCommon, TestRecipients):
         ]), patch.object(MailTestSimple, 'check_access_rights', return_value=True):
             new_msg = self.test_record.with_user(self.user_portal).message_post(
                 body='<p>Test</p>', subject='Subject',
-                message_type='comment', subtype='mt_comment')
+                message_type='comment', subtype_xmlid='mail.mt_comment')
 
         self.assertEqual(new_msg.sudo().notified_partner_ids, (self.partner_1 | self.user_employee.partner_id))
 
@@ -201,14 +201,14 @@ class TestMessagePost(TestMailCommon, TestRecipients):
         with self.assertRaises(AccessError):
             self.test_record.with_user(self.user_portal).message_post(
                 body='<p>Test</p>', subject='Subject',
-                message_type='comment', subtype='mt_comment')
+                message_type='comment', subtype_xmlid='mail.mt_comment')
 
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.addons.mail.models.mail_thread')
     def test_post_internal(self):
         self.test_record.message_subscribe([self.user_admin.partner_id.id])
         msg = self.test_record.with_user(self.user_employee).message_post(
             body='My Body', subject='My Subject',
-            message_type='comment', subtype='mt_note')
+            message_type='comment', subtype_xmlid='mail.mt_note')
         self.assertEqual(msg.partner_ids, self.env['res.partner'])
         self.assertEqual(msg.notified_partner_ids, self.env['res.partner'])
 

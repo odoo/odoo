@@ -1777,7 +1777,7 @@ class MailThread(models.AbstractModel):
     def message_post(self, *,
                      body='', subject=None, message_type='notification',
                      email_from=None, author_id=None, parent_id=False,
-                     subtype_id=False, subtype=None, partner_ids=None, channel_ids=None,
+                     subtype_xmlid=None, subtype_id=False, partner_ids=None, channel_ids=None,
                      attachments=None, attachment_ids=None,
                      add_sign=True, record_name=False,
                      **kwargs):
@@ -1791,8 +1791,6 @@ class MailThread(models.AbstractModel):
             :param int parent_id: handle thread formation
             :param int subtype_id: subtype_id of the message, mainly use fore
                 followers mechanism
-            :param int subtype: xmlid that will be used to compute subtype_id
-                if subtype_id is not given.
             :param list(int) partner_ids: partner_ids to notify
             :param list(int) channel_ids: channel_ids to notify
             :param list(tuple(str,str), tuple(str,str, dict) or int) attachments : list of attachment tuples in the form
@@ -1814,7 +1812,9 @@ class MailThread(models.AbstractModel):
             raise ValueError('message_post should only be call to post message on record. Use message_notify instead')
 
         if 'model' in msg_kwargs or 'res_id' in msg_kwargs:
-            raise ValueError("message_post doesn't support model and res_id parameters anymore. Please call message_post on record")
+            raise ValueError("message_post doesn't support model and res_id parameters anymore. Please call message_post on record.")
+        if 'subtype' in kwargs:
+            raise ValueError("message_post doesn't support subtype parameter anymore. Please give a valid subtype_id or subtype_xmlid value instead.")
 
         self = self.with_lang() # add lang to context imediatly since it will be usefull in various flows latter.
 
@@ -1832,11 +1832,10 @@ class MailThread(models.AbstractModel):
         # Find the message's author
         author_id, email_from = self._message_compute_author(author_id, email_from, raise_exception=True)
 
+        if subtype_xmlid:
+            subtype_id = self.env['ir.model.data'].xmlid_to_res_id(subtype_xmlid)
         if not subtype_id:
-            subtype = subtype or 'mt_note'
-            if '.' not in subtype:
-                subtype = 'mail.%s' % subtype
-            subtype_id = self.env['ir.model.data'].xmlid_to_res_id(subtype)
+            subtype_id = self.env['ir.model.data'].xmlid_to_res_id('mail_mt_note')
 
         # automatically subscribe recipients if asked to
         if self._context.get('mail_post_autofollow') and partner_ids:

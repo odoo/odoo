@@ -226,7 +226,7 @@ class Attendee(models.Model):
         result = self.write({'state': 'accepted'})
         for attendee in self:
             if attendee.event_id:
-                attendee.event_id.message_post(body=_("%s has accepted invitation") % (attendee.common_name), subtype="calendar.subtype_invitation")
+                attendee.event_id.message_post(body=_("%s has accepted invitation") % (attendee.common_name), subtype_xmlid="calendar.subtype_invitation")
         return result
 
     def do_decline(self):
@@ -234,7 +234,7 @@ class Attendee(models.Model):
         res = self.write({'state': 'declined'})
         for attendee in self:
             if attendee.event_id:
-                attendee.event_id.message_post(body=_("%s has declined invitation") % (attendee.common_name), subtype="calendar.subtype_invitation")
+                attendee.event_id.message_post(body=_("%s has declined invitation") % (attendee.common_name), subtype_xmlid="calendar.subtype_invitation")
         return res
 
 

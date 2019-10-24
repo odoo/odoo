@@ -608,7 +608,7 @@ class TestAccessRightsWrite(TestHrHolidaysAccessRightsCommon):
         """ User may communicate on its own leaves, even if validated """
         self.employee_leave.with_user(self.user_employee_id).message_post(
             body='I haz messaging',
-            subtype='mail.mt_comment',
+            subtype_xmlid='mail.mt_comment',
             message_type='comment'
         )
 
@@ -616,7 +616,7 @@ class TestAccessRightsWrite(TestHrHolidaysAccessRightsCommon):
 
         self.employee_leave.with_user(self.user_employee_id).message_post(
             body='I still haz messaging',
-            subtype='mail.mt_comment',
+            subtype_xmlid='mail.mt_comment',
             message_type='comment'
         )
 

@@ -497,12 +497,12 @@ class Post(models.Model):
         if 'content' in vals or 'name' in vals:
             for post in self:
                 if post.parent_id:
-                    body, subtype = _('Answer Edited'), 'website_forum.mt_answer_edit'
+                    body, subtype_xmlid = _('Answer Edited'), 'website_forum.mt_answer_edit'
                     obj_id = post.parent_id
                 else:
-                    body, subtype = _('Question Edited'), 'website_forum.mt_question_edit'
+                    body, subtype_xmlid = _('Question Edited'), 'website_forum.mt_question_edit'
                     obj_id = post
-                obj_id.message_post(body=body, subtype=subtype)
+                obj_id.message_post(body=body, subtype_xmlid=subtype_xmlid)
         if 'active' in vals:
             answers = self.env['forum.post'].with_context(active_test=False).search([('parent_id', 'in', self.ids)])
             if answers:
@@ -717,7 +717,7 @@ class Post(models.Model):
             'email_from': self_sudo.create_uid.email_formatted,  # use sudo here because of access to res.users model
             'body': tools.html_sanitize(self.content, sanitize_attributes=True, strip_style=True, strip_classes=True),
             'message_type': 'comment',
-            'subtype': 'mail.mt_comment',
+            'subtype_xmlid': 'mail.mt_comment',
             'date': self.create_date,
         }
         new_message = question.with_context(mail_create_nosubscribe=True).message_post(**values)

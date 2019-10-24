@@ -331,7 +331,7 @@ var DocumentThread = Thread.extend({
                 _.extend(messageData, {
                     context: data.context,
                     message_type: data.message_type,
-                    subtype: data.subtype || "mail.mt_comment",
+                    subtype_xmlid: data.subtype_xmlid || "mail.mt_comment",
                     subtype_id: data.subtype_id,
                 });
                 return self._rpc({
