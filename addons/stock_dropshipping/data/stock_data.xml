@@ -1,9 +1,6 @@
 <?xml version="1.0"?>
 <odoo>
     <data noupdate="1">
-        <function model="res.company" name="create_missing_dropship_sequence"/>
-        <function model="res.company" name="create_missing_dropship_picking_type"/>
-
         <record id="route_drop_shipping" model='stock.location.route'>
             <field name="name">Dropship</field>
             <field name="sequence">3</field>
