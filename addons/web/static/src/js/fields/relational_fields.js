@@ -2720,7 +2720,7 @@ var FieldSelection = AbstractField.extend({
      * @returns {jQuery}
      */
     getFocusableElement: function () {
-        return this.$el.is('select') ? this.$el : $();
+        return this.$el && this.$el.is('select') ? this.$el : $();
     },
     /**
      * @override
