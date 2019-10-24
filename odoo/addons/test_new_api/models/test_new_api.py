@@ -266,7 +266,7 @@ class Edition(models.Model):
 
     name = fields.Char()
     res_id = fields.Integer(required=True)
-    res_model_id = fields.Many2one('ir.model', required=True)
+    res_model_id = fields.Many2one('ir.model', required=True, ondelete='cascade')
     res_model = fields.Char(related='res_model_id.model', store=True, readonly=False)
 
 
