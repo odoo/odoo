@@ -17,20 +17,30 @@ class LeadTest(models.Model):
     active = fields.Boolean(default=True)
     partner_id = fields.Many2one('res.partner', string='Partner')
     date_action_last = fields.Datetime(string='Last Action', readonly=True)
-    employee = fields.Boolean(related='partner_id.employee', readonly=True, store=True)
+    employee = fields.Boolean(compute='_compute_employee_deadline', store=True)
     line_ids = fields.One2many('base.automation.line.test', 'lead_id')
 
     priority = fields.Boolean()
-    deadline = fields.Boolean(compute='_compute_deadline', store=True)
+    deadline = fields.Boolean(compute='_compute_employee_deadline', store=True)
     is_assigned_to_admin = fields.Boolean(string='Assigned to admin user')
 
-    @api.depends('priority')
-    def _compute_deadline(self):
+    @api.depends('partner_id.employee', 'priority')
+    def _compute_employee_deadline(self):
+        # this method computes two fields on purpose; don't split it
         for record in self:
+            record.employee = record.partner_id.employee
             if not record.priority:
                 record.deadline = False
             else:
-                record.deadline = fields.Datetime.from_string(record.create_date) + relativedelta.relativedelta(days=3)
+                record.deadline = record.create_date + relativedelta.relativedelta(days=3)
+
+    def write(self, vals):
+        result = super().write(vals)
+        # force recomputation of field 'deadline' via 'employee': the action
+        # based on 'deadline' must be triggered
+        self.mapped('employee')
+        return result
+
 
 class LineTest(models.Model):
     _name = "base.automation.line.test"
