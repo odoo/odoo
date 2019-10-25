@@ -79,6 +79,7 @@
         <script type="text/javascript" src="/website/static/src/js/menu/navbar.js"/>
 
         <script type="text/javascript" src="/website/static/src/js/visitor_timezone.js"/>
+        <script type="text/javascript" src="/website/static/src/js/show_password.js"/>
         <!-- Custom empty file for user javascript -->
         <script type="text/javascript" src="/website/static/src/js/user_custom_javascript.js"/>
     </xpath>
@@ -793,6 +794,42 @@
             <div class="text-center text-muted">Edit the content below this line to adapt the default "page not found" page.</div>
         </div>
         <hr/>
+    </t>
+</template>
+
+<template id="protected_403" name="Page Protected">
+    <t t-call="website.login_layout">
+        <div class="container">
+            <div class='row'>
+                <form class="offset-md-3 col-md-6" method="POST">
+                    <div class="alert alert-info mt32" t-if="not request.params.get('visibility_password')">
+                        <div class="h5 text-center">
+                            <i class="fa fa-lock fa-2x"/><br/>
+                            <span class="mt-1">A password is required to access this page.</span>
+                        </div>
+                    </div>
+                    <div class="alert alert-warning mt32" t-else="">
+                        <div class="h5 text-center">
+                            <i class="fa fa-lock fa-2x"/><br/>
+                            <span class="mt-1">Wrong password</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="hidden" name="url" t-att-value="path" />
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                            <input type="password" id="password" class="form-control" required="required" name="visibility_password" />
+                            <div class="input-group-append">
+                              <button class="btn btn-secondary" type="button" id="showPass">
+                                <i class="fa fa-eye"></i>
+                              </button>
+                          </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="h4 btn btn-primary btn-block">Access to this page</button>
+                </form>
+            </div>
+        </div>
     </t>
 </template>
 

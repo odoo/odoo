@@ -650,7 +650,7 @@ class Website(models.Model):
             view_id = View.get_view_id(template)
         if not view_id:
             raise NotFound
-        return View.browse(view_id)
+        return View.sudo().browse(view_id)
 
     @api.model
     def pager(self, url, total, page=1, step=30, scope=5, url_args=None):
@@ -764,7 +764,7 @@ class Website(models.Model):
                     yield page
 
         # '/' already has a http.route & is in the routing_map so it will already have an entry in the xml
-        domain = [('url', '!=', '/')]
+        domain = [('url', '!=', '/'), ('visibility', '=', False)]
         if not force:
             domain += [('website_indexed', '=', True)]
             # is_visible

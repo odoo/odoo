@@ -229,11 +229,14 @@
                 <field name="inherit_id" position="attributes">
                     <attribute name="context">{'display_website': True}</attribute>
                 </field>
-                <field name="name" position="after">
+                <field name="type" position="after">
                     <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
                     <field name="key"/>
                     <field name="page_ids" invisible="1" />
                     <field name="first_page_id" attrs="{'invisible': [('page_ids', '=', [])]}" />
+                    <field name="visibility" attrs="{'invisible': [('type', '!=', 'qweb')]}" />
+                    <field name="visibility_group" attrs="{'invisible': [('visibility', '!=', 'restricted_group')]}" />
+                    <field name="visibility_password" attrs="{'invisible': [('visibility', '!=', 'password')]}" />
                 </field>
                 <sheet position="before">
                     <header>
