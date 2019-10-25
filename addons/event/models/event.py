@@ -7,6 +7,7 @@ from odoo import _, api, fields, models
 from odoo.tools import format_datetime
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools.translate import html_translate
+from odoo.tools.misc import _format_time_ago
 
 from dateutil.relativedelta import relativedelta
 
@@ -102,6 +103,7 @@ class EventEvent(models.Model):
     name = fields.Char(
         string='Event', translate=True, required=True,
         readonly=False)
+    note = fields.Text(string='Note')
     active = fields.Boolean(default=True)
     user_id = fields.Many2one(
         'res.users', string='Responsible',
@@ -131,6 +133,7 @@ class EventEvent(models.Model):
     legend_blocked = fields.Char(related='stage_id.legend_blocked', string='Kanban Blocked Explanation', readonly=True)
     legend_done = fields.Char(related='stage_id.legend_done', string='Kanban Valid Explanation', readonly=True)
     legend_normal = fields.Char(related='stage_id.legend_normal', string='Kanban Ongoing Explanation', readonly=True)
+    duration_str = fields.Char(compute='_compute_duration_str')
     # Seats and computation
     seats_max = fields.Integer(
         string='Maximum Attendees Number',
@@ -268,6 +271,11 @@ class EventEvent(models.Model):
             begin_tz = fields.Datetime.context_timestamp(event, event.date_begin)
             end_tz = fields.Datetime.context_timestamp(event, event.date_end)
             event.is_one_day = (begin_tz.date() == end_tz.date())
+
+    @api.depends('date_begin', 'date_end')
+    def _compute_duration_str(self):
+        for event in self:
+            event.duration_str = _format_time_ago(self.env, event.date_end - event.date_begin, add_direction=False)
 
     @api.onchange('is_online')
     def _onchange_is_online(self):
