@@ -2,13 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.survey.tests import common
-from odoo.tests.common import HttpCase
 from psycopg2 import IntegrityError
 from odoo.exceptions import AccessError
 from odoo.tools import mute_logger
 
 
-class TestCertificationBadge(common.SurveyCase, HttpCase):
+class TestCertificationBadge(common.SurveyCase):
     def setUp(self):
         super(TestCertificationBadge, self).setUp()
         self.certification_survey = self.env['survey.survey'].with_user(self.survey_manager).create({

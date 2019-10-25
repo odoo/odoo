@@ -15,7 +15,7 @@ class TestUi(tests.HttpCase):
         })
         self.env.ref('website_slides.slide_channel_demo_0_gard_0')._remove_membership(self.env.ref('base.partner_demo').ids)
 
-        self.phantom_js(
+        self.browser_js(
             '/slides',
             'odoo.__DEBUG__.services["web_tour.tour"].run("course_member")',
             'odoo.__DEBUG__.services["web_tour.tour"].tours.course_member.ready',
@@ -31,7 +31,7 @@ class TestUi(tests.HttpCase):
         })
         self.env.ref('website_slides.slide_channel_demo_0_gard_0')._remove_membership(self.env.ref('base.partner_demo').ids)
 
-        self.phantom_js(
+        self.browser_js(
             '/slides',
             'odoo.__DEBUG__.services["web_tour.tour"].run("course_member")',
             'odoo.__DEBUG__.services["web_tour.tour"].tours.course_member.ready',
@@ -44,7 +44,7 @@ class TestUi(tests.HttpCase):
         user_portal.flush()
         self.env.ref('website_slides.slide_channel_demo_0_gard_0')._remove_membership(self.env.ref('base.partner_demo_portal').ids)
 
-        self.phantom_js(
+        self.browser_js(
             '/slides',
             'odoo.__DEBUG__.services["web_tour.tour"].run("course_member")',
             'odoo.__DEBUG__.services["web_tour.tour"].tours.course_member.ready',
@@ -63,7 +63,7 @@ class TestUiYoutube(tests.HttpCase):
         })
         self.env.ref('website_slides.slide_channel_demo_3_furn0')._remove_membership(self.env.ref('base.partner_demo').ids)
 
-        self.phantom_js(
+        self.browser_js(
             '/slides',
             'odoo.__DEBUG__.services["web_tour.tour"].run("course_member_youtube")',
             'odoo.__DEBUG__.services["web_tour.tour"].tours.course_member_youtube.ready',
@@ -78,7 +78,7 @@ class TestUiYoutube(tests.HttpCase):
             'groups_id': [(5, 0), (4, self.env.ref('base.group_user').id), (4, self.env.ref('website.group_website_designer').id)]
         })
 
-        self.phantom_js(
+        self.browser_js(
             '/slides',
             'odoo.__DEBUG__.services["web_tour.tour"].run("course_publisher")',
             'odoo.__DEBUG__.services["web_tour.tour"].tours.course_publisher.ready',

@@ -56,7 +56,7 @@ related to testing Odoo content (modules, mainly):
 .. autoclass:: odoo.tests.common.SavepointCase
 
 .. autoclass:: odoo.tests.common.HttpCase
-    :members: browse_ref, ref, url_open, phantom_js
+    :members: browse_ref, ref, url_open, browser_js
 
 .. autofunction:: odoo.tests.common.tagged
 
@@ -321,7 +321,7 @@ infrastructure:
 
 - we want the runbot to also run these tests, so there is a test (in `test_js.py`_)
   which simply spawns a browser and points it to the *web/tests* url.  Note that
-  the phantom_js method does not spawn phantom_js, but Chrome headless instead.
+  the browser_js method spawns a Chrome headless instance.
 
 
 Modularity and testing
@@ -501,7 +501,7 @@ Testing Python code and JS code separately is very useful, but it does not prove
 that the web client and the server work together.  In order to do that, we can
 write another kind of test: tours.  A tour is a mini scenario of some interesting
 business flow.  It explains a sequence of steps that should be followed.  The
-test runner will then create a phantom_js browser, point it to the proper url
+test runner will then create a Chrome headless browser, point it to the proper url
 and simulate the click and inputs, according to the scenario.
 
 Screenshots and screencasts during browser_js tests
