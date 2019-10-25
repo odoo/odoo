@@ -2,6 +2,8 @@
 
 .. highlight:: xml
 
+.. _reference/reports:
+
 ============
 QWeb Reports
 ============
