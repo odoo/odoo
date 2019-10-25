@@ -21,13 +21,17 @@
             <field name="name">account.analytic.line.tree.hr_timesheet</field>
             <field name="model">account.analytic.line</field>
             <field name="arch" type="xml">
-                <tree editable="top" string="Timesheet Activities">
+                <tree editable="top" string="Timesheet Activities" js_class="timesheet_tree">
                     <field name="date"/>
                     <field name="name"/>
                     <field name="project_id" required="1" context="{'form_view_ref': 'project.project_project_view_form_simplified',}"/>
                     <field name="task_id" widget="task_with_hours" context="{'default_project_id': project_id}" domain="[('project_id', '=', project_id)]"/>
+                    <field name="is_timer_running" string="Timer" widget="timer_toggle_button" readonly="1" attrs="{ 'invisible': [('display_timer', '=', False)] }" invisible="not context.get('my_timesheet_display_timer')" />
                     <field name="unit_amount" widget="timesheet_uom" sum="Total"/>
                     <field name="company_id" invisible="1"/>
+                    <field name="timer_start" invisible="1"/>
+                    <field name="display_timer" invisible="1"/>
+                    <field name="user_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -41,8 +45,6 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='date']" position="after">
                     <field name="employee_id" required="1" options='{"no_open": True}'/>
-                    <field name="user_id" invisible="1"/>
-                    <field name="company_id" invisible="1"/>
                 </xpath>
             </field>
         </record>
@@ -139,13 +141,15 @@
             <field name="name">account.analytic.line.kanban</field>
             <field name="model">account.analytic.line</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile">
+                <kanban class="o_kanban_mobile" js_class="timesheet_kanban_view">
                     <field name="date"/>
                     <field name="user_id"/>
                     <field name="name"/>
                     <field name="project_id"/>
                     <field name="task_id" context="{'default_project_id': project_id}" domain="[('project_id', '=', project_id)]"/>
-                    <field name="unit_amount"/>
+                    <field name="unit_amount" widget="timesheet_uom"/>
+                    <field name="timer_start" invisible="1"/>
+                    <field name="display_timer" invisible="1"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_global_click">
@@ -161,6 +165,9 @@
                                             <span>
                                                 <t t-esc="record.name.value"/>
                                             </span>
+                                            <div class="float-right">
+                                                <field name="is_timer_running" widget="timer_toggle_button" readonly='True' attrs="{ 'invisible': [('display_timer', '=', False)] }" />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -188,6 +195,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('project_id', '!=', False), ('user_id', '=', uid)]</field>
             <field name="context">{
+                "my_timesheet_display_timer": True,
                 "search_default_week":1,
             }</field>
             <field name="search_view_id" ref="hr_timesheet_line_search"/>
@@ -252,6 +260,13 @@
             <field name="sequence" eval="5"/>
             <field name="view_mode">form</field>
             <field name="view_id" ref="timesheet_view_form_user"/>
+            <field name="act_window_id" ref="timesheet_action_all"/>
+        </record>
+
+        <record id="timesheet_action_view_all_pivot" model="ir.actions.act_window.view">
+            <field name="sequence" eval="6"/>
+            <field name="view_mode">pivot</field>
+            <field name="view_id" ref="view_hr_timesheet_line_pivot"/>
             <field name="act_window_id" ref="timesheet_action_all"/>
         </record>
 

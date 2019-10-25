@@ -9,7 +9,8 @@ from odoo.exceptions import UserError, AccessError
 from odoo.osv import expression
 
 class AccountAnalyticLine(models.Model):
-    _inherit = 'account.analytic.line'
+    _name = 'account.analytic.line'
+    _inherit = ['account.analytic.line', 'timer.mixin']
 
     @api.model
     def default_get(self, field_list):
@@ -47,6 +48,12 @@ class AccountAnalyticLine(models.Model):
     employee_id = fields.Many2one('hr.employee', "Employee", check_company=True)
     department_id = fields.Many2one('hr.department', "Department", compute='_compute_department_id', store=True, compute_sudo=True)
     encoding_uom_id = fields.Many2one('uom.uom', compute='_compute_encoding_uom_id')
+
+    # Timer Fields
+    display_timer = fields.Boolean(
+        compute='_compute_display_timer',
+        help="used to display the timer if the encoding unit is 'Hours'"
+    )
 
     def _compute_encoding_uom_id(self):
         for analytic_line in self:
@@ -100,10 +107,8 @@ class AccountAnalyticLine(models.Model):
 
     def write(self, values):
         # If it's a basic user then check if the timesheet is his own.
-        for record in self:
-            if not self.user_has_groups('hr_timesheet.group_hr_timesheet_approver'):
-                if self.env.user.id != record.user_id.id:
-                    raise AccessError(_("You aren't allowed to access to the timesheet that it's not yours"))
+        if not self.user_has_groups('hr_timesheet.group_hr_timesheet_approver') and any(self.env.user.id != analytic_line.user_id.id for analytic_line in self):
+            raise AccessError(_("You cannot access timesheets that are not yours."))
 
         values = self._timesheet_preprocess(values)
         result = super(AccountAnalyticLine, self).write(values)
@@ -201,3 +206,62 @@ class AccountAnalyticLine(models.Model):
                     'amount': amount_converted,
                 })
         return result
+
+    # ----------------------------------------------------
+    # Timer Methods
+    # ----------------------------------------------------
+    def _compute_display_timer(self):
+        """ Check if the encoding unit is 'Hours',
+
+            if yes then the timer button is displayed
+        """
+        for analytic_line in self:
+            analytic_line.display_timer = analytic_line.encoding_uom_id.id == self.env.ref('uom.product_uom_hour').id
+
+    def action_timer_start(self):
+        """ Action start the timer of the current timesheet.
+
+            Start timer and search if another timer hasn't been launched.
+            If yes, then stop the timer before launch this timer.
+        """
+        self.ensure_one()
+        if not self.timer_start and self.display_timer:
+            self._stop_running_timers()
+            super().action_timer_start()
+
+    def _stop_running_timers(self):
+        """ Search if a timesheet has a timer activated and stop the timer.
+
+            Check if a timer is activated for another timesheet
+            if yes, then update unit_amount field and stop timer,
+            otherwise, do nothing.
+        """
+        analytic_line = self.search([('timer_start', '!=', False), ('user_id', '=', self.env.uid)])
+
+        if analytic_line:
+            analytic_line.action_timer_stop()
+
+    def action_timer_stop(self):
+        """ Action stop the timer of the current timesheet.
+
+            When the timer must be stopped, we must calculate the new
+            unit_amount based on the timer and the previous value of
+            unit_amount for the current timesheet.
+        """
+        self.ensure_one()
+        if self.timer_start and self.display_timer:
+            minutes_spent = self._get_minutes_spent()
+
+            if self.unit_amount == 0 and minutes_spent < 1:
+                # Check if unit_amount equals 0 and minutes_spent is less than 1 minute,
+                # if yes, then remove the timesheet
+                self.unlink()
+            else:
+                if minutes_spent < 1:
+                    amount = self.unit_amount
+                else:
+                    amount = self.unit_amount + minutes_spent * 60 / 3600
+
+                self.write({'unit_amount': amount})
+
+                super().action_timer_stop()
