@@ -297,6 +297,7 @@ class MixedModel(models.Model):
     number = fields.Float(digits=(10, 2), default=3.14)
     number2 = fields.Float(digits='New API Precision')
     date = fields.Date()
+    moment = fields.Datetime()
     now = fields.Datetime(compute='_compute_now')
     lang = fields.Selection(string='Language', selection='_get_lang')
     reference = fields.Reference(string='Related Document',
@@ -515,6 +516,22 @@ class ComputeOnchange(models.Model):
         for record in self:
             if record.active:
                 record.baz = record.foo
+
+
+class ModelBinary(models.Model):
+    _name = 'test_new_api.model_binary'
+    _description = 'Test Image field'
+
+    binary = fields.Binary()
+    binary_related_store = fields.Binary("Binary Related Store", related='binary', store=True, readonly=False)
+    binary_related_no_store = fields.Binary("Binary Related No Store", related='binary', store=False, readonly=False)
+    binary_computed = fields.Binary(compute='_compute_binary')
+
+    @api.depends('binary')
+    def _compute_binary(self):
+        # arbitrary value: 'bin_size' must have no effect
+        for record in self:
+            record.binary_computed = [(record.id, bool(record.binary))]
 
 
 class ModelImage(models.Model):

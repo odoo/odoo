@@ -87,6 +87,8 @@ class ResPartner(models.Model):
             return False, 'Insufficient Credit'
         url = '%s/%s' % (self.get_endpoint(), action)
         account = self.env['iap.account'].get('partner_autocomplete')
+        if not account.account_token:
+            return False, 'No Account Token'
         params.update({
             'db_uuid': self.env['ir.config_parameter'].sudo().get_param('database.uuid'),
             'account_token': account.account_token,

@@ -457,7 +457,9 @@ var ListRenderer = BasicRenderer.extend({
      */
     _renderButton: function (record, node) {
         var self = this;
-        var $button = viewUtils.renderButtonFromNode(node, {
+        var nodeWithoutWidth = Object.assign({}, node);
+        delete nodeWithoutWidth.attrs.width;
+        var $button = viewUtils.renderButtonFromNode(nodeWithoutWidth, {
             extraClass: node.attrs.icon ? 'o_icon_button' : undefined,
             textAsTitle: !!node.attrs.icon,
         });
@@ -759,13 +761,17 @@ var ListRenderer = BasicRenderer.extend({
      * @returns {jQueryElement} a <th> element
      */
     _renderHeaderCell: function (node) {
-        var name = node.attrs.name;
+        const { icon, name, string } = node.attrs;
         var order = this.state.orderedBy;
         var isNodeSorted = order[0] && order[0].name === name;
         var field = this.state.fields[name];
         var $th = $('<th>');
         if (name) {
             $th.attr('data-name', name);
+        } else if (string) {
+            $th.attr('data-string', string);
+        } else if (icon) {
+            $th.attr('data-icon', icon);
         }
         if (node.attrs.editOnly) {
             $th.addClass('oe_edit_only');
@@ -776,7 +782,7 @@ var ListRenderer = BasicRenderer.extend({
         if (!field) {
             return $th;
         }
-        var description = node.attrs.string || field.string;
+        var description = string || field.string;
         if (node.attrs.widget) {
             $th.addClass(' o_' + node.attrs.widget + '_cell');
             if (this.state.fieldsInfo.list[name].Widget.prototype.noLabel) {

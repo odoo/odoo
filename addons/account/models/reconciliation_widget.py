@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import copy
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.osv import expression
@@ -31,7 +32,7 @@ class AccountReconciliation(models.AbstractModel):
         ctx = dict(self._context, force_price_include=False)
 
         processed_moves = self.env['account.move']
-        for st_line, datum in zip(st_lines, data):
+        for st_line, datum in zip(st_lines, copy.deepcopy(data)):
             payment_aml_rec = AccountMoveLine.browse(datum.get('payment_aml_ids', []))
 
             for aml_dict in datum.get('counterpart_aml_dicts', []):

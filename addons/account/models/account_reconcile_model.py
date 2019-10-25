@@ -147,7 +147,7 @@ class AccountReconcileModel(models.Model):
         return action
 
     def _compute_number_entries(self):
-        data = self.env['account.move.line'].read_group([('reconcile_model_id', 'in', self.ids)], ['reconcile_model_ids'], 'reconcile_model_id')
+        data = self.env['account.move.line'].read_group([('reconcile_model_id', 'in', self.ids)], ['reconcile_model_id'], 'reconcile_model_id')
         mapped_data = dict([(d['reconcile_model_id'][0], d['reconcile_model_id_count']) for d in data])
         for model in self:
             model.number_entries = mapped_data.get(model.id, 0)
@@ -496,7 +496,13 @@ class AccountReconcileModel(models.Model):
                     AND
                         regexp_split_to_array(TRIM(REGEXP_REPLACE(move.ref, '[^0-9|^\s]', '', 'g')),'\s+')
                         && regexp_split_to_array(TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')), '\s+')
-                )                                   AS communication_flag
+                )                                   AS communication_flag,
+                -- Determine a matching or not with the statement line communication using the move.invoice_payment_ref.
+                (
+                    move.invoice_payment_ref IS NOT NULL
+                    AND
+                    TRIM(move.invoice_payment_ref) = TRIM(st_line.name)
+                )                                   AS payment_reference_flag
             FROM account_bank_statement_line st_line
             LEFT JOIN account_journal journal       ON journal.id = st_line.journal_id
             LEFT JOIN jnl_precision                 ON jnl_precision.journal_id = journal.id
@@ -555,6 +561,12 @@ class AccountReconcileModel(models.Model):
                                 AND
                                     regexp_split_to_array(TRIM(REGEXP_REPLACE(move.ref, '[^0-9|^\s]', '', 'g')),'\s+')
                                     && regexp_split_to_array(TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')), '\s+')
+                            )
+                            OR
+                            (
+                                move.invoice_payment_ref IS NOT NULL
+                                AND
+                                TRIM(move.invoice_payment_ref) = TRIM(st_line.name)
                             )
                         )
                     )
@@ -746,23 +758,32 @@ class AccountReconcileModel(models.Model):
                     first_batch_candidates_proposed = []
                     second_batch_candidates = []
                     second_batch_candidates_proposed = []
+                    third_batch_candidates = []
+                    third_batch_candidates_proposed = []
                     for c in candidates:
                         # Don't take into account already reconciled lines.
                         if c['aml_id'] in reconciled_amls_ids:
                             continue
 
                         # Dispatch candidates between lines matching invoices with the communication or only the partner.
-                        elif c['communication_flag']:
+                        elif c['payment_reference_flag']:
                             if c['aml_id'] in amls_ids_to_exclude:
                                 first_batch_candidates_proposed.append(c)
                             else:
                                 first_batch_candidates.append(c)
-                        elif not first_batch_candidates:
+                        elif c['communication_flag']:
                             if c['aml_id'] in amls_ids_to_exclude:
                                 second_batch_candidates_proposed.append(c)
                             else:
                                 second_batch_candidates.append(c)
-                    available_candidates = first_batch_candidates + first_batch_candidates_proposed or second_batch_candidates + second_batch_candidates_proposed
+                        elif not first_batch_candidates:
+                            if c['aml_id'] in amls_ids_to_exclude:
+                                third_batch_candidates_proposed.append(c)
+                            else:
+                                third_batch_candidates.append(c)
+                    available_candidates = (first_batch_candidates + first_batch_candidates_proposed
+                                            or second_batch_candidates + second_batch_candidates_proposed
+                                            or third_batch_candidates + third_batch_candidates_proposed)
 
                     # Special case: the amount are the same, submit the line directly.
                     for c in available_candidates:
@@ -773,7 +794,7 @@ class AccountReconcileModel(models.Model):
                             break
 
                     # Needed to handle check on total residual amounts.
-                    if first_batch_candidates or model._check_rule_propositions(line, available_candidates):
+                    if first_batch_candidates or first_batch_candidates_proposed or second_batch_candidates or second_batch_candidates_proposed or model._check_rule_propositions(line, available_candidates):
                         results[line.id]['model'] = model
 
                         # Add candidates to the result.
@@ -791,7 +812,7 @@ class AccountReconcileModel(models.Model):
                             results[line.id]['status'] = 'write_off'
 
                         # Process auto-reconciliation.
-                        if model.auto_reconcile:
+                        if (first_batch_candidates or second_batch_candidates) and model.auto_reconcile:
                             # An open balance is needed but no partner has been found.
                             if reconciliation_results['open_balance_dict'] is False:
                                 break
