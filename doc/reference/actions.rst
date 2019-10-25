@@ -21,7 +21,7 @@ e.g. button methods. All actions share two mandatory attributes:
 ``binding_model_id``
     if set, the action is available in the action bar for the given model
 
-    .. note:: For Server Actions, use ``model_id``.
+    .. note:: For Server Actions, be sure to also specify ``model_id`` (you need both).
 
 A client can get actions in 4 forms:
 
