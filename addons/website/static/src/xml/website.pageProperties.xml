@@ -33,7 +33,14 @@
     <t t-set="depTooltip">
         <t t-call="website.get_tooltip_dependencies"/>
     </t>
-    (could be used in <a href="#" data-toggle="popover" t-att-data-content="depTooltip" data-html="true" title="Dependencies"><t t-esc="dep_text" /></a>)
+    (could be used in <a href="#" class="o_dependencies_redirect_link"><t t-esc="dep_text" /></a>)
+</t>
+<t t-name="website.page_dependencies_popover">
+    <div class="popover o_redirect_old_url" role="tooltip">
+        <div class="arrow"/>
+        <h3 class="popover-header"/>
+        <div class="popover-body"/>
+    </div>
 </t>
 
 <!-- Page Properties -->
@@ -74,7 +81,7 @@
                             </label>
                         </a>
                     </div>
-                    <div class="col-md-7 mt4">
+                    <div class="col-md-7 mt4 o_dependencies_redirect_list_popover">
                         <span class="text-muted" id="dependencies_redirect"></span>
                     </div>
                 </div>
