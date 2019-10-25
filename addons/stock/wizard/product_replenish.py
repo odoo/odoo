@@ -46,7 +46,7 @@ class ProductReplenish(models.TransientModel):
         company = product_tmpl_id.company_id or self.env.company
         if 'product_uom_id' in fields:
             res['product_uom_id'] = product_tmpl_id.uom_id.id
-        if 'company' in fields:
+        if 'company_id' in fields:
             res['company_id'] = company.id
         if 'warehouse_id' in fields:
             warehouse = self.env['stock.warehouse'].search([('company_id', '=', company.id)], limit=1)
