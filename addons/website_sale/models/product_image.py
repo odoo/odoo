@@ -41,3 +41,23 @@ class ProductImage(models.Model):
         for image in self:
             if image.video_url and not image.embed_code:
                 raise ValidationError(_("Provided video URL for '%s' is not valid. Please enter a valid video URL.") % image.name)
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        """
+            We don't want the default_product_tmpl_id from the context
+            to be applied if we have a product_variant_id set to avoid
+            having the variant images to show also as template images.
+            But we want it if we don't have a product_variant_id set.
+        """
+        context_without_template = self.with_context({k: v for k, v in self.env.context.items() if k != 'default_product_tmpl_id'})
+        normal_vals = []
+        variant_vals_list = []
+
+        for vals in vals_list:
+            if vals.get('product_variant_id') and 'default_product_tmpl_id' in self.env.context:
+                variant_vals_list.append(vals)
+            else:
+                normal_vals.append(vals)
+
+        return super().create(normal_vals) + super(ProductImage, context_without_template).create(variant_vals_list)
