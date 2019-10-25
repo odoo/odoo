@@ -3,7 +3,7 @@
 import odoo.tests
 
 
-class TestMonetaryAccess(odoo.tests.HttpCase):
+class TestMonetaryAccess(odoo.tests.TransactionCase):
 
     def test_monetary_access_create(self):
         """Monetary fields that depend on compute/related currency

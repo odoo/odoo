@@ -87,37 +87,6 @@ def get_db_name():
 DB = get_db_name()
 
 
-def at_install(flag):
-    """ Sets the at-install state of a test, the flag is a boolean specifying
-    whether the test should (``True``) or should not (``False``) run during
-    module installation.
-
-    By default, tests are run right after installing the module, before
-    starting the installation of the next module.
-
-    .. deprecated:: 12.0
-
-        ``at_install`` is now a flag, you can use :func:`tagged` to
-        add/remove it, although ``tagged`` only works on test classes
-    """
-    return tagged('at_install' if flag else '-at_install')
-
-def post_install(flag):
-    """ Sets the post-install state of a test. The flag is a boolean
-    specifying whether the test should or should not run after a set of
-    module installations.
-
-    By default, tests are *not* run after installation of all modules in the
-    current installation set.
-
-    .. deprecated:: 12.0
-
-        ``post_install`` is now a flag, you can use :func:`tagged` to
-        add/remove it, although ``tagged`` only works on test classes
-    """
-    return tagged('post_install' if flag else '-post_install')
-
-
 def new_test_user(env, login='', groups='base.group_user', context=None, **kwargs):
     """ Helper function to create a new test user. It allows to quickly create
     users given its login and groups (being a comma separated list of xml ids).
@@ -955,7 +924,8 @@ class HttpCase(TransactionCase):
 
     def setUp(self):
         super(HttpCase, self).setUp()
-
+        if not self.env.registry.loaded:
+            self._logger.warning('HttpCase test should be in post_install only')
         if self.registry_test_mode:
             self.registry.enter_test_mode(self.cr)
             self.addCleanup(self.registry.leave_test_mode)
@@ -1101,8 +1071,6 @@ class HttpCase(TransactionCase):
         # database
         self.env.cache.invalidate()
         return res
-
-    phantom_js = browser_js
 
 
 def users(*logins):

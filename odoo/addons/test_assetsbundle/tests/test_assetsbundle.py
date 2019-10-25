@@ -12,7 +12,7 @@ from odoo import api
 from odoo.addons.base.models.assetsbundle import AssetsBundle
 from odoo.addons.base.models.ir_attachment import IrAttachment
 from odoo.modules.module import get_resource_path
-from odoo.tests import HttpCase
+from odoo.tests import HttpCase, tagged
 from odoo.tests.common import TransactionCase
 
 GETMTINE = os.path.getmtime
@@ -512,11 +512,12 @@ class TestJavascriptAssetsBundle(FileTouchable):
 </html>""").encode('utf8'))
 
 
+@tagged('-at_install', 'post_install')
 class TestAssetsBundleInBrowser(HttpCase):
     def test_01_js_interpretation(self):
         """ Checks that the javascript of a bundle is correctly interpreted.
         """
-        self.phantom_js(
+        self.browser_js(
             "/test_assetsbundle/js",
             "a + b + c === 6 ? console.log('test successful') : console.log('error')",
             login="admin"
@@ -542,7 +543,7 @@ class TestAssetsBundleInBrowser(HttpCase):
         })
         self.env.user.flush()
 
-        self.phantom_js(
+        self.browser_js(
             "/test_assetsbundle/js",
             "a + b + c + d === 10 ? console.log('test successful') : console.log('error')",
             login="admin",

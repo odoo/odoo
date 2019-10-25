@@ -54,6 +54,7 @@ class TestViews(TransactionCase):
         self.assertEqual(specific_main_view_children.website_id, website_1, "..and the website is the correct one.")
 
 
+@tagged('-at_install', 'post_install')
 class Crawler(HttpCase):
     def test_multi_website_views_retrieving(self):
         View = self.env['ir.ui.view']

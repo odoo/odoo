@@ -6,7 +6,7 @@ from datetime import date
 from unittest.mock import patch
 
 from odoo import http
-from odoo.tests import common
+from odoo.tests import common, tagged
 from odoo.addons.web.controllers.main import ExportXlsxWriter
 from odoo.addons.test_mail.tests.common import mail_new_test_user
 
@@ -69,6 +69,7 @@ class XlsxCreatorCase(common.HttpCase):
         self.assertFalse(value, "There are unexpected cells in the export")
 
 
+@tagged('-at_install', 'post_install')
 class TestGroupedExport(XlsxCreatorCase):
     model_name = 'export.group_operator'
 

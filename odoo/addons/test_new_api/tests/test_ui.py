@@ -17,6 +17,7 @@ class TestUi(odoo.tests.HttpCase):
             'widget_x2many', step_delay=100, login="admin", timeout=120)
 
 
+@odoo.tests.tagged('-at_install', 'post_install')
 class TestUiTranslation(odoo.tests.HttpCase):
 
     @mute_logger('odoo.sql_db', 'odoo.http')

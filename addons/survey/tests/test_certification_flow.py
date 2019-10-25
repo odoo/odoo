@@ -9,7 +9,7 @@ from odoo.tests import tagged
 from odoo.tests.common import HttpCase
 
 
-@tagged('functional')
+@tagged('-at_install', 'post_install', 'functional')
 class TestCertificationFlow(common.SurveyCase, HttpCase):
     def _answer_question(self, question, answer, answer_token, csrf_token, button_submit='next'):
         # Employee submits the question answer

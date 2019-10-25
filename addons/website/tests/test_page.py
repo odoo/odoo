@@ -184,6 +184,7 @@ class TestPage(common.TransactionCase):
         self.assertTrue(website_id not in View.search([('name', 'in', ('Base', 'Extension'))]).mapped('website_id').ids, "Same for views")
 
 
+@tagged('-at_install', 'post_install')
 class Crawler(HttpCase):
     def test_unpublished_page(self):
         Page = self.env['website.page']

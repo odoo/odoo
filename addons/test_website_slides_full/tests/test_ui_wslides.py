@@ -16,7 +16,7 @@ class TestUi(tests.HttpCase):
         })
         self.env.ref('website_slides.slide_channel_demo_6_furn3')._remove_membership(self.env.ref('base.partner_demo').ids)
 
-        self.phantom_js(
+        self.browser_js(
             '/slides',
             'odoo.__DEBUG__.services["web_tour.tour"].run("certification_member")',
             'odoo.__DEBUG__.services["web_tour.tour"].tours.certification_member.ready',
