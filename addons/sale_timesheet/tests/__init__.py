@@ -7,3 +7,4 @@ from . import test_sale_service
 from . import test_project_billing
 from . import test_reinvoice
 from . import test_reporting
+from . import test_child_tasks

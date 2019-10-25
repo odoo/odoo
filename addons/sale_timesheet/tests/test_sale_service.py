@@ -598,4 +598,4 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
 
         # copy the task
         task_copy = task.copy()
-        self.assertEqual(task.sale_line_id, task_copy.sale_line_id, "Duplicatinga task should keep its Sale line")
+        self.assertFalse(task_copy.sale_line_id, "Duplicatinga task should not keep its Sale line")
