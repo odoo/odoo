@@ -9,33 +9,46 @@ import threading
 class Picking(models.Model):
     _inherit = 'stock.picking'
 
+    def _pre_action_done_hook(self):
+        res = super()._pre_action_done_hook()
+        if res is True:
+            pickings_to_warn_sms = self._check_warn_sms()
+            if pickings_to_warn_sms:
+                return pickings_to_warn_sms._action_generate_warn_sms_wizard()
+        return res
+
+    def _check_warn_sms(self):
+        warn_sms_pickings = self.browse()
+        for picking in self:
+            is_delivery = picking.company_id.stock_move_sms_validation \
+                    and picking.picking_type_id.code == 'outgoing' \
+                    and (picking.partner_id.mobile or picking.partner_id.phone)
+            if is_delivery and not getattr(threading.currentThread(), 'testing', False) \
+                    and not self.env.registry.in_test_mode() \
+                    and not picking.company_id.has_received_warning_stock_sms \
+                    and picking.company_id.stock_move_sms_validation:
+                warn_sms_pickings |= picking
+        return warn_sms_pickings
+
+    def _action_generate_warn_sms_wizard(self):
+        view = self.env.ref('stock_sms.view_confirm_stock_sms')
+        wiz = self.env['confirm.stock.sms'].create({'pick_ids': [(4, p.id) for p in self]})
+        return {
+            'name': _('SMS'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'confirm.stock.sms',
+            'views': [(view.id, 'form')],
+            'view_id': view.id,
+            'target': 'new',
+            'res_id': wiz.id,
+            'context': self.env.context,
+        }
+
     def _sms_get_number_fields(self):
         """ This method returns the fields to use to find the number to use to
         send an SMS on a record. """
         return ['mobile', 'phone']
-
-    def _check_sms_confirmation_popup(self):
-        is_delivery = self.company_id.stock_move_sms_validation \
-                and self.picking_type_id.code == 'outgoing' \
-                and (self.partner_id.mobile or self.partner_id.phone)
-        if is_delivery and not getattr(threading.currentThread(), 'testing', False) \
-                and not self.env.registry.in_test_mode() \
-                and not self.company_id.has_received_warning_stock_sms \
-                and self.company_id.stock_move_sms_validation:
-            view = self.env.ref('stock_sms.view_confirm_stock_sms')
-            wiz = self.env['confirm.stock.sms'].create({'picking_id': self.id})
-            return {
-                'name': _('SMS'),
-                'type': 'ir.actions.act_window',
-                'view_mode': 'form',
-                'res_model': 'confirm.stock.sms',
-                'views': [(view.id, 'form')],
-                'view_id': view.id,
-                'target': 'new',
-                'res_id': wiz.id,
-                'context': self.env.context,
-            }
-        return False
 
     def _send_confirmation_email(self):
         super(Picking, self)._send_confirmation_email()

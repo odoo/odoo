@@ -12,8 +12,6 @@ class StockImmediateTransfer(models.TransientModel):
     pick_ids = fields.Many2many('stock.picking', 'stock_picking_transfer_rel')
 
     def process(self):
-        pick_to_backorder = self.env['stock.picking']
-        pick_to_do = self.env['stock.picking']
         for picking in self.pick_ids:
             # If still in draft => confirm and assign
             if picking.state == 'draft':
@@ -25,13 +23,18 @@ class StockImmediateTransfer(models.TransientModel):
             for move in picking.move_lines.filtered(lambda m: m.state not in ['done', 'cancel']):
                 for move_line in move.move_line_ids:
                     move_line.qty_done = move_line.product_uom_qty
-            if picking._check_backorder():
-                pick_to_backorder |= picking
-                continue
-            pick_to_do |= picking
-        # Process every picking that do not require a backorder, then return a single backorder wizard for every other ones.
-        if pick_to_do:
-            pick_to_do._action_done()
-        if pick_to_backorder:
-            return pick_to_backorder.action_generate_backorder_wizard()
-        return False
+
+        pickings_to_validate = self.env.context.get('button_validate_picking_ids')
+        if pickings_to_validate:
+            return self.env['stock.picking'].browse(pickings_to_validate).with_context(skip_immediate=True).button_validate()
+        return True
+
+    def process_no_immediate(self):
+        # Remove `self.pick_ids` from `button_validate_picking_ids` and call `button_validate` with
+        # the subset (if any).
+        pickings_to_validate = self.env['stock.picking'].browse(self.env.context.get('button_validate_picking_ids'))
+        pickings_to_validate = pickings_to_validate - self.pick_ids
+        if pickings_to_validate:
+            return pickings_to_validate.with_context(skip_immediate=True).button_validate()
+        return True
+

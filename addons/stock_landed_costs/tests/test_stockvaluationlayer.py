@@ -253,7 +253,7 @@ class TestStockValuationLCFIFOVB(TestStockValuationLC):
         # Process the receipt
         receipt = rfq.picking_ids
         wiz = receipt.button_validate()
-        wiz = self.env['stock.immediate.transfer'].browse(wiz['res_id']).process()
+        wiz = self.env['stock.immediate.transfer'].browse(wiz['res_id']).with_context(wiz['context']).process()
         self.assertEqual(rfq.order_line.qty_received, 10)
 
         input_aml = self._get_stock_input_move_lines()[-1]
@@ -341,7 +341,7 @@ class TestStockValuationLCFIFOVB(TestStockValuationLC):
         # Process the receipt
         receipt = rfq.picking_ids
         wiz = receipt.button_validate()
-        wiz = self.env['stock.immediate.transfer'].browse(wiz['res_id']).process()
+        wiz = self.env['stock.immediate.transfer'].browse(wiz['res_id']).with_context(wiz['context']).process()
         self.assertEqual(rfq.order_line.qty_received, 10)
 
         input_aml = self._get_stock_input_move_lines()[-1]
