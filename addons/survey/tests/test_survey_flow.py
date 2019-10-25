@@ -6,7 +6,7 @@ from odoo.tests import tagged
 from odoo.tests.common import HttpCase
 
 
-@tagged('functional')
+@tagged('-at_install', 'post_install', 'functional')
 class TestSurveyFlow(common.SurveyCase, HttpCase):
     def _format_submission_data(self, page, answer_data, additional_post_data):
         post_data = {}

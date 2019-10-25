@@ -2,9 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from werkzeug.urls import url_decode, url_parse
-from odoo.tests.common import HttpCase
+from odoo.tests.common import HttpCase, tagged
 
 
+@tagged('-at_install', 'post_install')
 class TestMultiCompany(HttpCase):
 
     def test_redirect_to_records(self):
