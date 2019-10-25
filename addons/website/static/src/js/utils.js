@@ -3,18 +3,8 @@ odoo.define('website.utils', function (require) {
 
 var ajax = require('web.ajax');
 var core = require('web.core');
-var weContext = require('web_editor.context');
 
 var qweb = core.qweb;
-
-//TODO Remove me !
-var weGetContext = weContext.get;
-weContext.get = function (context) {
-    var html = document.documentElement;
-    return _.extend({
-        website_id: html.getAttribute('data-website-id') | 0,
-    }, weGetContext(context), context);
-};
 
 /**
  * Allows to load anchors from a page.
