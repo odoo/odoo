@@ -946,6 +946,7 @@
                                         <field name="invoice_source_email"
                                                widget="email"
                                                attrs="{'invisible': ['|', ('type', 'not in', ('in_invoice', 'in_refund')), ('invoice_source_email', '=', False)]}"/>
+                                        <field name="to_check"/>
                                     </group>
                                     <group string="Payments"
                                            name="payments_info_group"
@@ -1042,6 +1043,8 @@
                     <separator/>
                     <filter name="draft" string="Draft" domain="[('state','=','draft')]"/>
                     <filter name="unpaid" string="Posted" domain="[('state', '=', 'posted'), ('invoice_payment_state', '=', 'not_paid')]"/>
+                    <separator/>
+                    <filter string="To Check" name="to_check" domain="[('to_check', '=', True)]"/>
                     <separator/>
                     <filter name="in_payment" string="In Payment" domain="[('invoice_payment_state', '=', 'in_payment')]"/>
                     <filter name="paid" string="Paid" domain="[('invoice_payment_state', '=', 'paid')]"/>
