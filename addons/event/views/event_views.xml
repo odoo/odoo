@@ -175,6 +175,13 @@
             </field>
         </record>
 
+        <record id="event_registration_action_tree" model="ir.actions.act_window">
+           <field name="name">Event registrations</field>
+           <field name="type">ir.actions.act_window</field>
+           <field name="res_model">event.registration</field>
+           <field name="view_mode">tree,kanban,form,calendar,graph</field>
+        </record>
+
         <!-- EVENT.EVENT VIEWS -->
         <record id="event_event_action_pivot" model="ir.actions.act_window" >
             <field name="name">Events Analysis</field>
@@ -251,6 +258,9 @@
                                     <field name="seats_max" attrs="{'invisible': [('seats_availability', '=', 'unlimited')], 'required': [('seats_availability', '=', 'limited')]}"/>
                                 </div>
                             </group>
+                            <group class="w-100">
+                                <field name="note" placeholder="Add a note..." nolabel="1"/>
+                            </group>
                         </group>
                         <notebook>
                             <page string="Communication" name="event_communication">
@@ -297,14 +307,29 @@
             </field>
         </record>
 
+        <record id="event_event_view_form_quick_create" model="ir.ui.view">
+            <field name="name">event.event.form.quick_create</field>
+            <field name="model">event.event</field>
+            <field name="priority">1000</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="name"/>
+                        <field name="date_begin"/>
+                        <field name="date_end"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="view_event_kanban">
             <field name="name">event.event.kanban</field>
             <field name="model">event.event</field>
             <field name="arch" type="xml">
-                <kanban class="o_event_kanban_view" default_group_by="stage_id">
+                <kanban class="o_event_kanban_view" default_group_by="stage_id" quick_create_view="event.event_event_view_form_quick_create">
                     <field name="user_id"/>
                     <field name="stage_id" options='{"group_by_tooltip": {"description": "Description"}}'/>
-                    <field name="country_id"/>
+                    <field name="address_id"/>
                     <field name="date_begin"/>
                     <field name="date_end"/>
                     <field name="seats_unconfirmed"/>
@@ -315,22 +340,13 @@
                     <field name="legend_blocked"/>
                     <field name="legend_normal"/>
                     <field name="legend_done"/>
+                    <field name="duration_str"/>
+                    <field name="activity_ids"/>
+                    <field name="activity_state"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) : ''}} oe_kanban_card oe_kanban_global_click">
-                                <div class="o_dropdown_kanban dropdown">
-
-                                    <a class="dropdown-toggle o-no-caret btn" role="button" data-toggle="dropdown" data-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
-                                        <span class="fa fa-ellipsis-v"/>
-                                    </a>
-                                    <div class="dropdown-menu" role="menu">
-                                        <t t-if="widget.deletable">
-                                            <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
-                                        </t>
-                                        <ul class="oe_kanban_colorpicker" data-field="color" role="menu"/>
-                                    </div>
-                                </div>
-                                <div class="o_event_left">
+                                <div class="o_event_left text-center">
                                     <div class="o_day"><t t-esc="record.date_begin.raw_value.getDate()"/></div>
                                     <div>
                                         <t t-esc="moment(record.date_begin.raw_value).format('MMM')"/>
@@ -338,26 +354,35 @@
                                     </div>
                                     <div><t t-esc="moment(record.date_begin.raw_value).format('LT')"/></div>
                                 </div>
-                                <div class="o_event_right">
-                                    <h4 class="o_kanban_record_title"><field name="name"/></h4>
+                                <div class="o_event_right d-flex flex-column justify-content-between">
                                     <div>
-                                        <t t-if="record.country_id.raw_value"> <b class="o_kanban_record_subtitle"> <field name="country_id"/> </b> <br/> </t>
-                                        <b><i class="fa fa-clock-o"/>
-                                        To</b> <t t-esc="moment(record.date_end.raw_value).format('lll')"/>
+                                        <h1 class="o_kanban_record_title"><field name="name"/></h1>
+                                        <p t-esc="record.address_id.value"/>
                                     </div>
-                                    <h4>
-                                        <a name="%(act_event_registration_from_event)d" type="action">
-                                            <t t-esc="record.seats_expected.raw_value"/> Expected attendees
-                                        </a>
-                                        <t t-if="(record.seats_reserved.raw_value + record.seats_used.raw_value) > 0 "><br/>
-                                            <a name="%(event_event_action_pivot)d" type="action">
-                                                <t t-esc="record.seats_reserved.raw_value + record.seats_used.raw_value"/> Confirmed attendees
-                                            </a>
-                                        </t>
-                                    </h4>
+                                    <div class="o_event_duration_str">Duration <field name="duration_str"/></div>
+                                    <div class="o_event_stat text-left d-flex justify-content-between">
+                                        <div class="text-left inline-block mr-2">
+                                            <button
+                                                type="action"
+                                                class="btn btn-link p-0"
+                                                name="%(event_registration_action_tree)d"
+                                                t-esc="record.seats_expected.raw_value"/>
+                                            <p>Expected</p>
+                                        </div>
+                                        <div class="text-left inline-block">
+                                            <button
+                                                type="action"
+                                                class="btn btn-link my-0 p-0"
+                                                name="%(event_registration_action_tree)d"
+                                                context="{'search_default_confirmed': True}"
+                                                t-esc="record.seats_reserved.raw_value"/>
+                                            <p>Confirmed</p>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="o_event_bottom_right">
-                                    <field name="kanban_state" widget="state_selection" groups="base.group_user"/>
+                                <div class="o_event_bottom_right d-flex justify-content-between align-items-center position-absolute">
+                                    <field name="activity_ids" widget="kanban_activity"/>
+                                    <field name="kanban_state" widget="state_selection"/>
                                     <img t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value"/>
                                 </div>
                             </div>
@@ -436,7 +461,6 @@
            <field name="type">ir.actions.act_window</field>
            <field name="res_model">event.event</field>
            <field name="view_mode">kanban,calendar,tree,form,pivot</field>
-           <field name="context">{"search_default_upcoming":1}</field>
            <field name="search_view_id" ref="view_event_search"/>
            <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -706,6 +730,5 @@
         </record>
 
         <menuitem name="Mail Schedulers" id="menu_event_mail_schedulers" action="action_event_mail" parent="menu_event_configuration" groups="base.group_no_one"/>
-
     </data>
 </odoo>

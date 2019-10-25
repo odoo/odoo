@@ -3,9 +3,10 @@
     <record id="event_event_view_form_inherit_mass_mailing_track" model="ir.ui.view">
         <field name="name">event.event.view.form.inherit.mass.mailing.track</field>
         <field name="model">event.event</field>
-        <field name="inherit_id" ref="website_event_track.view_event_form"/>
+        <field name="priority" eval="25"/>
+        <field name="inherit_id" ref="event.view_event_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//header" position="inside">
+            <xpath expr="//field[@name='stage_id']" position="before">
                 <button name="action_mass_mailing_track_speakers" string="Contact Track Speakers" type="object" attrs="{'invisible': [('track_count', '=', 0)]}"/>
             </xpath>
         </field>
