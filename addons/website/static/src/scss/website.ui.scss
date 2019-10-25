@@ -555,3 +555,15 @@ body .modal {
         }
     }
 }
+
+// Page Properties
+.o_redirect_old_url {
+    @include media-breakpoint-down(sm) {
+        // Because o_technical_modal class class has a higher z-index than $zindex-modal.
+        z-index: $o-we-technical-modal-zindex + ($zindex-popover - $zindex-modal);
+    }
+    .popover-body {
+        overflow-y: auto;
+        max-height: 14.2rem;
+    }
+}
