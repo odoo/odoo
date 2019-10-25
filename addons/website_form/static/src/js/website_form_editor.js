@@ -32,6 +32,10 @@ odoo.define('website_form_editor', function (require) {
                     close: true
                 }],
             }, options));
+
+            this.opened(() => {
+                this.$modal.find('.o_website_form_input, .modal-footer .btn').first().focus();
+            });
         },
 
         //----------------------------------------------------------------------
