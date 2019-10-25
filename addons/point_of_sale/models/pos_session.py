@@ -34,7 +34,7 @@ class PosSession(models.Model):
                         _("You cannot confirm all orders of this session, because they have not the 'paid' status.\n"
                           "{reference} is in state {state}, total amount: {total}, paid: {paid}").format(
                             reference=order.pos_reference or order.name,
-                            state=order.state,
+                            state=dict(order._fields['state']._description_selection(self.env)).get(order.state),
                             total=order.amount_total,
                             paid=order.amount_paid,
                         ))
