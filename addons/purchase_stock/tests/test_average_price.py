@@ -53,7 +53,8 @@ class TestAveragePrice(TestPurchase):
 
         # Process the reception of purchase order 1
         picking = purchase_order_1.picking_ids[0]
-        self.env['stock.immediate.transfer'].create({'pick_ids': [(4, picking.id)]}).process()
+        res = picking.button_validate()
+        self.env[res['res_model']].browse(res['res_id']).with_context(res['context']).process()
 
         # Check the average_price of the product (average icecream).
         self.assertEqual(product_cable_management_box.qty_available, 10.0, 'Wrong quantity in stock after first reception')
@@ -76,7 +77,8 @@ class TestAveragePrice(TestPurchase):
         purchase_order_2.button_confirm()
         # Process the reception of purchase order 2
         picking = purchase_order_2.picking_ids[0]
-        self.env['stock.immediate.transfer'].create({'pick_ids': [(4, picking.id)]}).process()
+        res = picking.button_validate()
+        self.env['stock.immediate.transfer'].browse(res['res_id']).with_context(res['context']).process()
 
         # Check the standard price
         self.assertEqual(product_cable_management_box.standard_price, 75.0, 'After second reception, we should have an average price of 75.0 on the product')
@@ -97,7 +99,8 @@ class TestAveragePrice(TestPurchase):
 
         # Assign this outgoing shipment and process the delivery
         outgoing_shipment.action_assign()
-        self.env['stock.immediate.transfer'].create({'pick_ids': [(4, outgoing_shipment.id)]}).process()
+        res = outgoing_shipment.button_validate()
+        self.env['stock.immediate.transfer'].browse(res['res_id']).with_context(res['context']).process()
 
         # Check the average price (60 * 10 + 30 * 80) / 40 = 75.0€ did not change
         self.assertEqual(product_cable_management_box.standard_price, 75.0, 'Average price should not have changed with outgoing picking!')
@@ -119,8 +122,10 @@ class TestAveragePrice(TestPurchase):
         # Confirm the first purchase order
         purchase_order_3.button_confirm()
         # Process the reception of purchase order 3 in grams
+
         picking = purchase_order_3.picking_ids[0]
-        self.env['stock.immediate.transfer'].create({'pick_ids': [(4, picking.id)]}).process()
+        res = picking.button_validate()
+        self.env[res['res_model']].browse(res['res_id']).with_context(res['context']).process()
 
         # Check price is (75.0 * 20 + 200*0.5) / 20.5 = 78.04878€
         self.assertEqual(product_cable_management_box.qty_available, 20.5, 'Reception of purchase order in grams leads to wrong quantity in stock')

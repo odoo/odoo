@@ -36,7 +36,6 @@ class StockPicking(models.Model):
     # -------------------------------------------------------------------------
     # Action methods
     # -------------------------------------------------------------------------
-
     def action_cancel(self):
         for picking in self:
             picking._get_subcontracted_productions()._action_cancel()

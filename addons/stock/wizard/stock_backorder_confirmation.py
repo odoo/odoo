@@ -22,10 +22,18 @@ class StockBackorderConfirmation(models.TransientModel):
                                          precision_rounding=move.product_uom.rounding) > 0:
                             moves_to_log[move] = (move.quantity_done, move.product_uom_qty)
                     pick_id._log_less_quantities_than_expected(moves_to_log)
-            confirmation.pick_ids.with_context(cancel_backorder=cancel_backorder)._action_done()
+
+        pickings_to_validate = self.env.context.get('button_validate_picking_ids')
+        if pickings_to_validate:
+            pickings_to_validate = self.env['stock.picking'].browse(pickings_to_validate).with_context(skip_backorder=True)
+            if cancel_backorder:
+                pickings_to_validate = pickings_to_validate.with_context(picking_ids_not_to_backorder=self.pick_ids.ids)
+            return pickings_to_validate.button_validate()
+        return True
+
 
     def process(self):
-        self._process()
+        return self._process()
 
     def process_cancel_backorder(self):
-        self._process(cancel_backorder=True)
+        return self._process(cancel_backorder=True)

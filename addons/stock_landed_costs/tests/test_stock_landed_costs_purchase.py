@@ -234,7 +234,7 @@ class TestLandedCosts(TestStockLandedCostsCommon):
         self.picking_in.action_confirm()
         # Transfer incoming shipment
         res_dict = self.picking_in.button_validate()
-        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
+        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id')).with_context(res_dict.get('context'))
         wizard.process()
         return self.picking_in
 
@@ -247,7 +247,7 @@ class TestLandedCosts(TestStockLandedCostsCommon):
         # Transfer picking.
 
         res_dict = self.picking_out.button_validate()
-        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
+        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id')).with_context(res_dict['context'])
         wizard.process()
 
     def _create_landed_costs(self, value, picking_in):

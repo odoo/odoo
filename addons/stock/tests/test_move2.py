@@ -641,7 +641,7 @@ class TestPickShip(TestStockCommon):
         self.env['stock.quant']._update_available_quantity(self.productA, location, 10.0)
         picking_pick.move_lines.quantity_done = 5.0
         backorder_wizard_values = picking_pick.button_validate()
-        backorder_wizard = self.env[(backorder_wizard_values.get('res_model'))].browse(backorder_wizard_values.get('res_id'))
+        backorder_wizard = self.env[(backorder_wizard_values.get('res_model'))].browse(backorder_wizard_values.get('res_id')).with_context(backorder_wizard_values['context'])
         backorder_wizard.process()
 
         self.assertTrue(picking_client.move_line_ids, 'A move line should be created.')
@@ -896,7 +896,8 @@ class TestSinglePicking(TestStockCommon):
 
         # Process only one product without creating a backorder
         delivery_order.move_lines[0].move_line_ids[0].qty_done = 2
-        backorder_wizard = self.env['stock.backorder.confirmation'].create({'pick_ids': [(4, delivery_order.id)]})
+        res_dict = delivery_order.button_validate()
+        backorder_wizard = self.env['stock.backorder.confirmation'].browse(res_dict['res_id']).with_context(res_dict['context'])
         backorder_wizard.process_cancel_backorder()
 
         # No backorder should be created and the move corresponding to the missing product should be cancelled
@@ -1851,7 +1852,7 @@ class TestSinglePicking(TestStockCommon):
         receipt.owner_id = owner1
         receipt = receipt.save()
         wiz = receipt.button_validate()
-        self.env['stock.immediate.transfer'].browse(wiz['res_id']).process()
+        self.env['stock.immediate.transfer'].browse(wiz['res_id']).with_context(wiz['context']).process()
 
         supplier_location = self.env['stock.location'].browse(self.supplier_location)
         stock_location = self.env['stock.location'].browse(self.stock_location)
