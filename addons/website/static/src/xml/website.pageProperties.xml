@@ -82,15 +82,16 @@
                     <label class="col-form-label col-md-3 redirect_type" for="redirect_type">Type</label>
                     <div class="col-md-6 redirect_type">
                         <select class="form-control" id="redirect_type">
-                            <option t-foreach="widget.fields.redirect_type.selection" t-as="field" t-att-value="field[0]"><t t-esc="field[0] + ': ' + field[1]" /></option>
+                            <option value="301">301 Moved permanently</option>
+                            <option value="302">302 Moved temporarily</option>
                         </select>
                     </div>
                 </div>
             </div>
             <div role="tabpanel" id="advances_page_info" class="tab-pane fade">
                 <div class="form-group row">
-                    <label class="control-label col-md-5" for="is_menu">Show in Top Menu</label>
-                    <div class="col-sm-2">
+                    <label class="control-label col-md-4" for="is_menu">Show in Top Menu</label>
+                    <div class="col-sm-8">
                         <label class="o_switch" for="is_menu" >
                             <input type="checkbox" t-att-checked="widget.page.menu_ids.length > 0 ? true : undefined" id="is_menu"/>
                             <span/>
@@ -98,8 +99,8 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="control-label col-md-5" for="is_homepage">Use as Homepage</label>
-                    <div class="col-sm-2">
+                    <label class="control-label col-md-4" for="is_homepage">Use as Homepage</label>
+                    <div class="col-sm-8">
                         <label class="o_switch" for="is_homepage" >
                             <input type="checkbox" t-att-checked="widget.page.is_homepage ? true : undefined" id="is_homepage"/>
                             <span/>
@@ -107,7 +108,7 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="control-label col-md-5" for="is_indexed">
+                    <label class="control-label col-md-4" for="is_indexed">
                         Indexed
                         <i class="fa fa-question-circle-o" title="Hide this page from search results" role="img" aria-label="Info"></i>
                     </label>
@@ -119,8 +120,8 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="control-label col-md-5" for="is_published">Publish</label>
-                    <div class="col-sm-2">
+                    <label class="control-label col-md-4" for="is_published">Publish</label>
+                    <div class="col-sm-8">
                         <label class="o_switch js_publish_btn" for="is_published">
                             <input type="checkbox" t-att-checked="widget.page.website_published ? true : undefined" id="is_published"/>
                             <span/>
@@ -128,13 +129,35 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="control-label col-md-5" for="date_publish">Publishing Date</label>
-                    <div class="col-md-7">
+                    <label class="control-label col-md-4" for="date_publish">Publishing Date</label>
+                    <div class="col-md-8">
                         <div class="input-group date" id="date_publish_container" data-target-input="nearest">
                             <input type="text" class="form-control datetimepicker-input" data-target="#date_publish_container" id="date_publish"/>
                             <div class="input-group-append" data-target="#date_publish_container" data-toggle="datetimepicker">
                                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="control-label col-md-4" for="visibility">Visibility</label>
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <select id="visibility" class="form-control col-md-4">
+                                <option value="" t-att-selected="widget.page.visibility == ''">Public</option>
+                                <option value="connected" t-att-selected="widget.page.visibility == 'connected' ? 'selected' : undefined">Connected</option>
+                                <option value="restricted_group" t-att-selected="widget.page.visibility == 'restricted_group' ? 'selected' : undefined">Has Group</option>
+                                <option value="password" t-att-selected="widget.page.visibility == 'password' ? 'selected' : undefined">Password</option>
+                                <option value="employee" t-att-selected="widget.page.visibility == 'employee' ? 'selected' : undefined">Internal users</option>
+                            </select>
+                            <div class="ml-1 input-group-prepend show_visibility_password" >
+                                <div class="input-group-text"><i class="fa fa-key"></i></div>
+                            </div>
+                            <input type="text" t-att-value='widget.page.visibility_password ? widget.page.visibility_password : ""' class="form-control show_visibility_password" id="visibility_password"/>
+                            <div class="ml-1 input-group-prepend show_visibility_group">
+                                <div class="input-group-text"><i class="fa fa-group"></i></div>
+                            </div>
+                            <input type="text" class="form-control show_visibility_group" id="visibility_group" t-att-value="widget.page.visibility_group ? widget.page.visibility_group[1] : ''" t-att-data-group-id='widget.page.visibility_group ? widget.page.visibility_group[0] : 0' />
                         </div>
                     </div>
                 </div>
