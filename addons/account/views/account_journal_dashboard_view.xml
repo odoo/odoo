@@ -334,7 +334,7 @@
                             <t t-if="dashboard.number_to_check > 0">
                                 <div class="row">
                                     <div class="col-7 text-left">
-                                        <a type="object" name="open_action" context="{'action_name': 'action_move_journal_line', 'search_default_to_check': True}"><t t-esc="dashboard.number_to_check"/> to check</a>
+                                        <a type="object" name="open_action" context="{'search_default_to_check': True}"><t t-esc="dashboard.number_to_check"/> to check</a>
                                     </div>
                                     <div class="col-5 text-right">
                                         <span><t t-esc="dashboard.to_check_balance"/></span>
