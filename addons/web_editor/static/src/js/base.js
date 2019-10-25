@@ -1,6 +1,8 @@
 odoo.define('web_editor.base', function (require) {
 'use strict';
 
+// TODO this should be re-removed as soon as possible.
+
 var ajax = require('web.ajax');
 var session = require('web.session');
 
@@ -126,10 +128,21 @@ return {
 odoo.define('web_editor.context', function (require) {
 'use strict';
 
+// TODO this should be re-removed as soon as possible.
+
 function getContext(context) {
     var html = document.documentElement;
     return _.extend({
         lang: (html.getAttribute('lang') || 'en_US').replace('-', '_'),
+
+        // Unfortunately this is a mention of 'website' in 'web_editor' as there
+        // was no other way to do it as this was restored in a stable version.
+        // Indeed, the editor is currently using this context at the root of JS
+        // module, so there is no way for website to hook itself before
+        // web_editor uses it (without a risky refactoring of web_editor in
+        // stable). As mentioned above, the editor should not use this context
+        // anymore anyway (this was restored by the saas-12.2 editor revert).
+        'website_id': html.getAttribute('data-website-id') | 0,
     }, context || {});
 }
 function getExtraContext(context) {
@@ -151,6 +164,8 @@ return {
 
 odoo.define('web_editor.ready', function (require) {
 'use strict';
+
+// TODO this should be re-removed as soon as possible.
 
 var base = require('web_editor.base');
 
