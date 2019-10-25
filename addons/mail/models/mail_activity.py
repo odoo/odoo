@@ -637,14 +637,14 @@ class MailActivityMixin(models.AbstractModel):
         if self.env.context.get('mail_activity_automation_skip'):
             return False
 
-        if not date_deadline:
-            date_deadline = fields.Date.context_today(self)
-        if isinstance(date_deadline, datetime):
-            _logger.warning("Scheduled deadline should be a date (got %s)", date_deadline)
         if act_type_xmlid:
             activity_type = self.sudo().env.ref(act_type_xmlid)
         else:
             activity_type = self.env['mail.activity.type'].sudo().browse(act_values['activity_type_id'])
+        if not date_deadline:
+            date_deadline = fields.Date.context_today(self) + relativedelta(**{activity_type.delay_unit: activity_type.delay_count})
+        if isinstance(date_deadline, datetime):
+            _logger.warning("Scheduled deadline should be a date (got %s)", date_deadline)
 
         model_id = self.env['ir.model']._get(self._name).id
         activities = self.env['mail.activity']
