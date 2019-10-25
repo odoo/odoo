@@ -526,7 +526,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
 
         picking_receipt.move_lines.quantity_done = 3
         backorder_wiz = picking_receipt.button_validate()
-        backorder_wiz = self.env[backorder_wiz['res_model']].browse(backorder_wiz['res_id']).with_context(backorder_wiz['context'])
+        backorder_wiz = Form(self.env[backorder_wiz['res_model']].with_context(backorder_wiz['context'])).save()
         backorder_wiz.process()
 
         backorder = self.env['stock.picking'].search([('backorder_id', '=', picking_receipt.id)])

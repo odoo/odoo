@@ -102,9 +102,8 @@ class TestStockValuation(StockAccountTestCommon):
 
         # validate the dropshipping picking
         self.assertEqual(len(self.sale_order1.picking_ids), 1)
-        #self.assertEqual(self.sale_order1.picking_ids.move_lines._is_dropshipped(), True)
         wizard = self.sale_order1.picking_ids.button_validate()
-        immediate_transfer = self.env[wizard['res_model']].browse(wizard['res_id']).with_context(wizard['context'])
+        immediate_transfer = Form(self.env[wizard['res_model']].with_context(wizard['context'])).save()
         immediate_transfer.process()
         self.assertEqual(self.sale_order1.picking_ids.state, 'done')
 

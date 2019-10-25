@@ -897,7 +897,7 @@ class TestSinglePicking(TestStockCommon):
         # Process only one product without creating a backorder
         delivery_order.move_lines[0].move_line_ids[0].qty_done = 2
         res_dict = delivery_order.button_validate()
-        backorder_wizard = self.env['stock.backorder.confirmation'].browse(res_dict['res_id']).with_context(res_dict['context'])
+        backorder_wizard = Form(self.env['stock.backorder.confirmation'].with_context(res_dict['context'])).save()
         backorder_wizard.process_cancel_backorder()
 
         # No backorder should be created and the move corresponding to the missing product should be cancelled
@@ -1917,7 +1917,8 @@ class TestSinglePicking(TestStockCommon):
         receipt.owner_id = owner1
         receipt = receipt.save()
         wiz = receipt.button_validate()
-        self.env['stock.immediate.transfer'].browse(wiz['res_id']).with_context(wiz['context']).process()
+        wiz = Form(self.env['stock.immediate.transfer'].with_context(wiz['context'])).save()
+        wiz.process()
 
         supplier_location = self.env['stock.location'].browse(self.supplier_location)
         stock_location = self.env['stock.location'].browse(self.stock_location)

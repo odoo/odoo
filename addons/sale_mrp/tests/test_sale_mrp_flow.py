@@ -563,7 +563,7 @@ class TestSaleMrpFlow(AccountTestCommon):
         pick = so.picking_ids
         pick.move_lines.write({'quantity_done': 1})
         wiz_act = pick.button_validate()
-        wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id']).with_context(wiz_act['context'])
+        wiz = Form(self.env[wiz_act['res_model']].with_context(wiz_act['context'])).save()
         wiz.process()
         self.assertEqual(so.invoice_status, 'no', 'Sale MRP: so invoice_status should be "no" after partial delivery of a kit')
         del_qty = sum(sol.qty_delivered for sol in so.order_line)
@@ -681,7 +681,7 @@ class TestSaleMrpFlow(AccountTestCommon):
         # To check the products on the picking
         self.assertEqual(pick.move_lines.mapped('product_id'), self.component1 | self.component2)
         wiz_act = pick.button_validate()
-        wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id']).with_context(wiz_act['context'])
+        wiz = Form(self.env[wiz_act['res_model']].with_context(wiz_act['context'])).save()
         wiz.process()
         # Create the invoice
         self.so._create_invoices()
@@ -762,7 +762,7 @@ class TestSaleMrpFlow(AccountTestCommon):
         picking_original.move_lines.sorted()[0].write({'quantity_done': 1})
 
         wiz_act = so.picking_ids[0].button_validate()
-        wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id']).with_context(wiz_act['context']).process()
+        wiz = Form(self.env[wiz_act['res_model']].with_context(wiz_act['context'])).save().process()
 
         # Check that the backorder was created, no kit should be delivered at this point
         self.assertEqual(len(so.picking_ids), 2)
@@ -774,7 +774,7 @@ class TestSaleMrpFlow(AccountTestCommon):
         # Then create a backorder for the missing components
         backorder_1.move_lines.write({'quantity_done': 6})
         wiz_act = backorder_1.button_validate()
-        wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id']).with_context(wiz_act['context']).process()
+        wiz = Form(self.env[wiz_act['res_model']].with_context(wiz_act['context'])).save().process()
 
         # Check that a backorder is created
         self.assertEqual(len(so.picking_ids), 3)
@@ -791,7 +791,7 @@ class TestSaleMrpFlow(AccountTestCommon):
         backorder_2.move_lines.write({'quantity_done': 3})
 
         wiz_act = backorder_2.button_validate()
-        wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id']).with_context(wiz_act['context']).process()
+        wiz = Form(self.env[wiz_act['res_model']].with_context(wiz_act['context'])).save().process()
 
         self.assertEqual(len(so.picking_ids), 4)
         backorder_3 = so.picking_ids - picking_original - backorder_2 - backorder_1
@@ -884,7 +884,7 @@ class TestSaleMrpFlow(AccountTestCommon):
 
         # Create a backorder for the missing componenents
         wiz_act = picking_original.button_validate()
-        wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id']).with_context(wiz_act['context']).process()
+        wiz = Form(self.env[wiz_act['res_model']].with_context(wiz_act['context'])).save().process()
 
         # Check that a backorded is created
         self.assertEqual(len(so.picking_ids), 2)
@@ -904,7 +904,7 @@ class TestSaleMrpFlow(AccountTestCommon):
 
         # Create a backorder for the missing componenents
         wiz_act = backorder_1.button_validate()
-        wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id']).with_context(wiz_act['context']).process()
+        wiz = Form(self.env[wiz_act['res_model']].with_context(wiz_act['context'])).save().process()
 
         # Only 1 kit_parent should be delivered at this point
         self.assertEqual(order_line.qty_delivered, 1)
@@ -943,7 +943,7 @@ class TestSaleMrpFlow(AccountTestCommon):
 
         # Create a backorder for the missing componenents
         wiz_act = backorder_2.button_validate()
-        wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id']).with_context(wiz_act['context']).process()
+        wiz = Form(self.env[wiz_act['res_model']].with_context(wiz_act['context'])).save().process()
 
         # Check that x3 kit_parents are indeed delivered
         self.assertEqual(order_line.qty_delivered, 3)
@@ -987,7 +987,7 @@ class TestSaleMrpFlow(AccountTestCommon):
 
         # Process all components and validate the picking
         wiz_act = return_pick.button_validate()
-        wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id']).with_context(wiz_act['context'])
+        wiz = Form(self.env[wiz_act['res_model']].with_context(wiz_act['context'])).save()
         wiz.process()
 
         # Now quantity delivered should be 3 again
@@ -1010,7 +1010,7 @@ class TestSaleMrpFlow(AccountTestCommon):
             })
 
         wiz_act = return_of_return_pick.button_validate()
-        self.env[wiz_act['res_model']].browse(wiz_act['res_id']).with_context(wiz_act['context']).process()
+        Form(self.env[wiz_act['res_model']].with_context(wiz_act['context'])).save().process()
 
         # As one of each component is missing, only 6 kit_parents should be delivered
         self.assertEqual(order_line.qty_delivered, 6)
@@ -1204,7 +1204,7 @@ class TestSaleMrpFlow(AccountTestCommon):
         }
         self._process_quantities(move_lines, qty_to_process)
         res = move_lines.picking_id.button_validate()
-        self.env[res['res_model']].browse(res['res_id']).with_context(res['context']).process()
+        Form(self.env[res['res_model']].with_context(res['context'])).save().process()
 
         # Check that a backorder is created
         self.assertEqual(len(so.picking_ids), 2)
