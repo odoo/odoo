@@ -84,3 +84,9 @@ class StockPicking(models.Model):
         check_company=True,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         help='Batch associated to this transfer', copy=False)
+
+    def _should_show_transfers(self):
+        if len(self.batch_id) == 1:
+            return False
+        return super()._should_show_transfers()
+

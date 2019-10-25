@@ -4,7 +4,7 @@ import unittest
 from odoo.addons.stock_landed_costs.tests.common import TestStockLandedCostsCommon
 from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounting_data
 
-from odoo.tests import tagged
+from odoo.tests import tagged, Form
 
 
 @tagged('post_install', '-at_install')
@@ -234,7 +234,7 @@ class TestLandedCosts(TestStockLandedCostsCommon):
         self.picking_in.action_confirm()
         # Transfer incoming shipment
         res_dict = self.picking_in.button_validate()
-        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id')).with_context(res_dict.get('context'))
+        wizard = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict.get('context'))).save()
         wizard.process()
         return self.picking_in
 
@@ -247,7 +247,7 @@ class TestLandedCosts(TestStockLandedCostsCommon):
         # Transfer picking.
 
         res_dict = self.picking_out.button_validate()
-        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id')).with_context(res_dict['context'])
+        wizard = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict['context'])).save()
         wizard.process()
 
     def _create_landed_costs(self, value, picking_in):

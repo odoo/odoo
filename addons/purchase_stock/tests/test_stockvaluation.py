@@ -92,7 +92,7 @@ class TestStockValuation(TransactionCase):
 
         # validate the receipt
         res_dict = picking1.button_validate()
-        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id')).with_context(res_dict['context'])
+        wizard = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict['context'])).save()
         wizard.process()
 
         # the unit price of the valuationlayer used the latest value
@@ -140,7 +140,7 @@ class TestStockValuation(TransactionCase):
 
         # validate the receipt
         res_dict = picking1.button_validate()
-        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id')).with_context(res_dict['context'])
+        wizard = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict['context'])).save()
         wizard.process()
 
         # the unit price of the valuation layer used the latest value
@@ -210,7 +210,7 @@ class TestStockValuation(TransactionCase):
 
         # validate the receipt
         res_dict = picking1.button_validate()
-        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id')).with_context(res_dict['context'])
+        wizard = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict['context'])).save()
         wizard.process()
 
         # the unit price of the valuation layer used the latest value

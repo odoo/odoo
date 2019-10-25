@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.exceptions import UserError
+from odoo.tests import Form
 from odoo.tests.common import SavepointCase
 
 
@@ -1943,7 +1944,7 @@ class StockMove(SavepointCase):
 
         # create the backorder in the uom of the quants
         backorder_wizard_dict = picking_stock_pack.button_validate()
-        backorder_wizard = self.env[backorder_wizard_dict['res_model']].browse(backorder_wizard_dict['res_id']).with_context(backorder_wizard_dict['context'])
+        backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
         backorder_wizard.process()
         self.assertEqual(move_stock_pack.state, 'done')
         self.assertEqual(move_stock_pack.quantity_done, 0.5)
@@ -3298,7 +3299,7 @@ class StockMove(SavepointCase):
         picking.action_assign()
         res_dict = picking.button_validate()
         self.assertEqual(res_dict.get('res_model'), 'stock.immediate.transfer')
-        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id')).with_context(res_dict['context'])
+        wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
         wizard.process()
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 10.0)
 
@@ -3331,7 +3332,7 @@ class StockMove(SavepointCase):
         # Only 5 products are reserved on the move of 10, click on `button_validate`.
         res_dict = picking.button_validate()
         self.assertEqual(res_dict.get('res_model'), 'stock.immediate.transfer')
-        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id')).with_context(res_dict['context'])
+        wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
         res_dict_for_back_order = wizard.process()
         self.assertEqual(res_dict_for_back_order.get('res_model'), 'stock.backorder.confirmation')
         backorder_wizard = self.env[(res_dict_for_back_order.get('res_model'))].browse(res_dict_for_back_order.get('res_id')).with_context(res_dict_for_back_order['context'])
@@ -3397,7 +3398,7 @@ class StockMove(SavepointCase):
 
         action = picking.button_validate()
         self.assertEqual(action.get('res_model'), 'stock.immediate.transfer')
-        wizard = self.env[(action.get('res_model'))].browse(action.get('res_id')).with_context(action.get('context'))
+        wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
         action = wizard.process()
         self.assertTrue(isinstance(action, dict), 'Should open backorder wizard')
         self.assertEqual(action.get('res_model'), 'stock.backorder.confirmation')
@@ -3445,7 +3446,7 @@ class StockMove(SavepointCase):
         # No quantites filled, immediate transfer wizard should pop up.
         immediate_trans_wiz_dict = picking.button_validate()
         self.assertEqual(immediate_trans_wiz_dict.get('res_model'), 'stock.immediate.transfer')
-        immediate_trans_wiz = self.env[immediate_trans_wiz_dict['res_model']].browse(immediate_trans_wiz_dict['res_id']).with_context(immediate_trans_wiz_dict['context'])
+        immediate_trans_wiz = Form(self.env[immediate_trans_wiz_dict['res_model']].with_context(immediate_trans_wiz_dict['context'])).save()
         immediate_trans_wiz.process()
 
         self.assertEqual(picking.move_lines.quantity_done, 5.0)
@@ -3585,6 +3586,76 @@ class StockMove(SavepointCase):
         # No products are reserved on the move of 10, click on `button_validate`.
         with self.assertRaises(UserError):
             picking.button_validate()
+
+    def test_immediate_validate_8(self):
+        """Validate three receipts at once."""
+        partner = self.env['res.partner'].create({'name': 'Pierre'})
+        receipt1 = self.env['stock.picking'].create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'partner_id': partner.id,
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+        })
+        self.env['stock.move'].create({
+            'name': 'test_immediate_validate_8_1',
+            'location_id': receipt1.location_id.id,
+            'location_dest_id': receipt1.location_dest_id.id,
+            'picking_id': receipt1.id,
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+        })
+        receipt1.action_confirm()
+        receipt2 = self.env['stock.picking'].create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'partner_id': partner.id,
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+        })
+        self.env['stock.move'].create({
+            'name': 'test_immediate_validate_8_2',
+            'location_id': receipt2.location_id.id,
+            'location_dest_id': receipt2.location_dest_id.id,
+            'picking_id': receipt2.id,
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+        })
+        receipt2.action_confirm()
+        receipt3 = self.env['stock.picking'].create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'partner_id': partner.id,
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+        })
+        self.env['stock.move'].create({
+            'name': 'test_immediate_validate_8_3',
+            'location_id': receipt3.location_id.id,
+            'location_dest_id': receipt3.location_dest_id.id,
+            'picking_id': receipt3.id,
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+        })
+        receipt3.action_confirm()
+
+        immediate_trans_wiz_dict = (receipt1 + receipt2).button_validate()
+        immediate_trans_wiz = Form(self.env[immediate_trans_wiz_dict['res_model']].with_context(immediate_trans_wiz_dict['context'])).save()
+        # The different transfers are displayed to the users.
+        self.assertTrue(immediate_trans_wiz.show_transfers)
+        # All transfers are processed by default
+        self.assertEqual(immediate_trans_wiz.immediate_transfer_line_ids.mapped('to_immediate'), [True, True])
+        # Only transfer receipt1
+        immediate_trans_wiz.immediate_transfer_line_ids.filtered(lambda line: line.picking_id == receipt2).to_immediate = False
+        immediate_trans_wiz.process()
+        self.assertEqual(receipt1.state, 'done')
+        self.assertEqual(receipt2.state, 'assigned')
+        # Transfer receipt2 and receipt3.
+        immediate_trans_wiz_dict = (receipt3 + receipt2).button_validate()
+        immediate_trans_wiz = Form(self.env[immediate_trans_wiz_dict['res_model']].with_context(immediate_trans_wiz_dict['context'])).save()
+        immediate_trans_wiz.process()
+        self.assertEqual(receipt2.state, 'done')
+        self.assertEqual(receipt3.state, 'done')
 
     def test_set_quantity_done_1(self):
         move1 = self.env['stock.move'].create({
