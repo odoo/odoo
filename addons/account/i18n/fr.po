@@ -11,7 +11,6 @@
 # e2f <projects@e2f.com>, 2018
 # bb76cd9ac0cb7e20167a14728edb858b, 2018
 # Fabien Pinckaers <fp@openerp.com>, 2018
-# Fred Gilson <fgi@odoo.com>, 2018
 # Laura Piraux <lap@odoo.com>, 2018
 # 6534c450c77b2549e41c52e2051f5839, 2018
 # Jérôme Tanché <jerome.tanche@ouest-dsi.fr>, 2018
@@ -41,6 +40,7 @@
 # Martin Trigaux, 2019
 # Cécile Collart <cco@odoo.com>, 2019
 # Herve GUERIN <herve.guerin@auguria.fr>, 2019
+# Florian Hatat, 2019
 # 
 msgid ""
 msgstr ""
@@ -48,7 +48,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-08 13:35+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Herve GUERIN <herve.guerin@auguria.fr>, 2019\n"
+"Last-Translator: Florian Hatat, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -128,7 +128,7 @@ msgstr "&amp;times;"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "-> Reconcile"
-msgstr "reconcilier"
+msgstr "-> Lettrer"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -840,10 +840,10 @@ msgid ""
 "posted. Those will be posted automatically after performing the bank "
 "reconciliation."
 msgstr ""
-"Une entrée de journal générée dans une journal configuré pour poster les "
-"entrées uniquement lorsques les règlements sont réconciliés avec un relevé "
-"bancaire ne peut être comptabilisée manuellement. Ces entrées seront "
-"comptabilisées automatiquement après la reconciliation bancaire."
+"Une entrée de règlement ne peut pas être comptabilisée manuellement "
+"lorsqu'elle est saisie dans un journal qui n'autorise la validation "
+"d'entrées que pour les règlements lettrés avec un relevé bancaire. Ces "
+"règlements seront comptabilisés automatiquement après le lettrage bancaire."
 
 #. module: account
 #: code:addons/account/models/reconciliation_widget.py:681
@@ -858,8 +858,8 @@ msgid ""
 "the sum of line subtotals equals the total with taxes."
 msgstr ""
 "Un arrondi par ligne est conseillé si vos prix comprennent les taxes. De "
-"cette façon, la somme des sous-totaux de ligne est égale au total taxes "
-"incluses."
+"cette façon, la somme des sous-totaux de lignes est égale au total taxes "
+"comprises."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:527
@@ -937,8 +937,8 @@ msgid ""
 "Account %s (%s) does not allow reconciliation. First change the "
 "configuration of this account to allow it."
 msgstr ""
-"Le compte %s (%s) ne permet pas la réconciliation. Changez la configuration "
-"du compte si vous souhaitez la permettre."
+"Le compte %s (%s) ne permet pas le lettrage. Changez la configuration du "
+"compte si vous souhaitez la permettre."
 
 #. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
@@ -2127,7 +2127,7 @@ msgstr "Complétion automatique des factures fournisseurs (OCR + AI)"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_invoice_extract
 msgid "Automate Bill Processing"
-msgstr "Automatisez l'Enregistrement des Factures"
+msgstr "Automatisez l'enregistrement des factures"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -2304,7 +2304,7 @@ msgstr "Préselection de transactions bancaires à réconcilier"
 #: model:ir.model.fields,field_description:account.field_res_company__account_bank_reconciliation_start
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_bank_reconciliation_start
 msgid "Bank Reconciliation Threshold"
-msgstr "Limite de Réconciliation Bancaire"
+msgstr "Limite pour le lettrage"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement
@@ -2997,8 +2997,8 @@ msgid ""
 "Choose how you want to credit this invoice. You cannot Modify and Cancel if "
 "the invoice is already reconciled"
 msgstr ""
-"Choisissez comment vous voulez créditer cette facture. Vous ne pouvez pas la"
-" modifier ou l'annuler si la facture est déjà réconciliée. "
+"Choisissez comment vous voulez créditer cette facture. Vous ne pouvez pas "
+"modifier ou annuler une facture déjà lettrée."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.actions_account_fiscal_year
@@ -3480,7 +3480,7 @@ msgstr "Créer un nouveau produit en achat"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_reconcile_model
 msgid "Create a new reconciliation model"
-msgstr "Créer un nouveau modèle de réconciliation"
+msgstr "Créer un nouveau modèle de lettrage"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.product_product_action_sellable
@@ -4089,7 +4089,7 @@ msgstr "Taxe de vente par défaut"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Default Sending Options"
-msgstr "Options d'Envoi par Défaut"
+msgstr "Options d'envoi par défaut"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__tax_ids
@@ -4276,7 +4276,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_digest_digest
 msgid "Digest"
-msgstr "Digest"
+msgstr "Récapitulatif"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__group_products_in_bills
@@ -4389,8 +4389,8 @@ msgstr "Affichage sur les factures"
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
-"Accès non disponible, ne pas tenir compte de cette donnée dans l'email "
-"digest de l'utilisateur"
+"Accès non disponible, ne pas tenir compte de cette donnée dans l'e-mail "
+"récapitulatif envoyé à l'utilisateur"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__auto_delete_message
@@ -4593,7 +4593,7 @@ msgstr "Fermeture de la Caisse"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_year__date_to
 msgid "Ending Date, included in the fiscal year."
-msgstr "Date de Fin, inclue dans l'année fiscale."
+msgstr "Date de fin, comprise dans l'année fiscale."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_move_line_form
@@ -8141,7 +8141,7 @@ msgstr "Pourcentage du prix"
 #: selection:account.tax,amount_type:0
 #: selection:account.tax.template,amount_type:0
 msgid "Percentage of Price Tax Included"
-msgstr "Pourcentage du prix taxes incluses"
+msgstr "Pourcentage du prix taxes comprises"
 
 #. module: account
 #: selection:account.reconcile.model,second_amount_type:0
@@ -8610,7 +8610,7 @@ msgstr "Lettré"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoice_ids
 msgid "Reconciled Invoices"
-msgstr "Factures Réconciliées"
+msgstr "Factures lettrées"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -9299,7 +9299,7 @@ msgstr "Envoyer & Imprimer"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__invoice_is_email
 msgid "Send Email"
-msgstr "Envoyer un courriel"
+msgstr "Envoyer par courriel"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:633
@@ -9503,7 +9503,7 @@ msgstr "Montrer le journal dans le tableau de bord"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_show_line_subtotals_tax_included
 msgid "Show line subtotals with taxes (B2C)"
-msgstr "Montrez les sous-totaux des lignes avec incluses (B2C)"
+msgstr "Montrez les sous-totaux des lignes avec taxes comprises (B2C)"
 
 #. module: account
 #: model:res.groups,comment:account.group_show_line_subtotals_tax_included
@@ -9581,7 +9581,7 @@ msgstr "Date de début"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_year__date_from
 msgid "Start Date, included in the fiscal year."
-msgstr "Date de début, inclue dans l'année fiscale."
+msgstr "Date de début, comprise dans l'année fiscale."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__balance_start
@@ -10013,12 +10013,12 @@ msgstr "Taxe à appliquer"
 #. module: account
 #: selection:res.config.settings,show_line_subtotals_tax_selection:0
 msgid "Tax-Excluded"
-msgstr "Taxe Exclue"
+msgstr "Hors taxes"
 
 #. module: account
 #: selection:res.config.settings,show_line_subtotals_tax_selection:0
 msgid "Tax-Included"
-msgstr "Taxe Inclue"
+msgstr "Taxes comprises"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10126,9 +10126,9 @@ msgid ""
 "number again if the line is cancelled, set to draft and re-processed again."
 msgstr ""
 "Champ technique contenant le numéro attribué à l'écriture de journal, "
-"renseigné automatiquement lorsque la ligne de relevé est réconciliée puis il"
-" est stocké afin d'utiliser le même numéro si la ligne est annulée, modifiée"
-" à l'état \"Brouillon\" et retraitée à nouveau."
+"renseigné automatiquement lorsque la ligne de relevé est lettrée puis il est"
+" stocké afin d'utiliser le même numéro si la ligne est annulée, modifiée à "
+"l'état \"Brouillon\" et retraitée à nouveau."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_abstract_payment__multi
@@ -10460,7 +10460,7 @@ msgstr "Le modèle de tableau pour la société (le cas échéant)"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_bnk_stmt_check
 msgid "The closing balance is different than the computed one!"
-msgstr "La balance de clôture est différent celui encodé!"
+msgstr "Le solde de clôture est différent de celui qui a été calculé !"
 
 #. module: account
 #: sql_constraint:account.journal:0
@@ -10726,8 +10726,8 @@ msgid ""
 "The payments which have not been matched with a bank statement will not be "
 "shown in bank reconciliation data if they were made before this date."
 msgstr ""
-"Les règlements qui n'ont pas été liés à un relevé bancaire ne seront pas "
-"montré dans les données de lettrage s'ils ont été encodé avant cette date."
+"Les règlements qui ne font pas partie d'un relevé bancaire et qui ont été "
+"saisis avant la date suivante ne seront pas proposés au lettrage."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner_category_ids
@@ -10914,7 +10914,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:48
 #, python-format
 msgid "There is nothing to reconcile."
-msgstr "Il n'y a rien à réconcilier."
+msgstr "Il n'y a rien à lettrer."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_error
@@ -10980,7 +10980,7 @@ msgid ""
 "This allows you grouping payments into a single batch and eases the reconciliation process.\n"
 "-This installs the account_batch_payment module."
 msgstr ""
-"Ceci vous permet de grouper des paiements dans un seul groupe et de faciliter le processus de réconciliation. \n"
+"Ceci vous permet de grouper des paiements dans un seul groupe et de faciliter le processus de lettrage. \n"
 "- Ceci installe le module account_batch_payment"
 
 #. module: account
@@ -11133,8 +11133,8 @@ msgid ""
 "This page displays all the bank transactions that are to be reconciled and "
 "provides with a neat interface to do so."
 msgstr ""
-"Cette page affiche toutes les transactions bancaires à réconcilier et pour "
-"cela vous offre une interface claire."
+"Cette page affiche toutes les transactions bancaires à lettrer et pour cela "
+"vous offre une interface claire."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -11148,7 +11148,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:299
 #, python-format
 msgid "This payment is registered but not reconciled."
-msgstr "Ce paiement est enregistré mais pas réconcilié. "
+msgstr "Ce paiement est enregistré mais pas lettré. "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_supplier_payment_term_id
@@ -11204,8 +11204,8 @@ msgid ""
 "Those can be used to quickly create a journal items when reconciling\n"
 "                a bank statement or an account."
 msgstr ""
-"Ceux-ci seront utilisés pour créer rapidement un journal d'articles lors de la réconciliation\n"
-"d'un virmeent banquaire ou d'un compte."
+"Ceux-ci seront utilisés pour créer rapidement un journal d'articles lors du lettrage\n"
+"d'un relevé bancaire ou d'un compte."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -11228,7 +11228,7 @@ msgstr "A payer"
 msgid "To reconcile the entries company should be the same for all entries."
 msgstr ""
 "La société doit être la même sur toutes les entrées afin de pouvoir les "
-"réconcilier."
+"lettrer."
 
 #. module: account
 #. openerp-web
@@ -11340,7 +11340,7 @@ msgstr "Montant total que ce client vous doit."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line__price_total
 msgid "Total amount with taxes"
-msgstr "Montant total taxes incluses"
+msgstr "Montant total taxes comprises"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line__price_subtotal
@@ -11536,7 +11536,7 @@ msgstr "Annuler le lettrage"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_unreconcile_view
 msgid "Unreconcile Transactions"
-msgstr "Transactions non réconciliées "
+msgstr "Délettrer des transactions"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -11546,7 +11546,7 @@ msgstr "Non lettré"
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_open_unreconciled
 msgid "Unreconciled Entries"
-msgstr "Entrées non réconciliées "
+msgstr "Entrées non lettrées "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__amount_untaxed
@@ -12032,7 +12032,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:944
 #, python-format
 msgid "You are trying to reconcile some entries that are already reconciled."
-msgstr "Vous essayez de réconcilier des entrées qui le sont déjà."
+msgstr "Vous essayez de lettrer des entrées qui le sont déjà."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__blocked
@@ -12285,7 +12285,7 @@ msgid ""
 "payment entries first."
 msgstr ""
 "Vous ne pouvez pas payer une facture qui est partiellement payée. Vous devez"
-" d'abord réconcilier les lignes de paiement."
+" d'abord lettrer les lignes de paiement."
 
 #. module: account
 #: code:addons/account/models/account.py:327

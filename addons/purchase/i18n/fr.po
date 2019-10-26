@@ -413,7 +413,7 @@ msgstr "Contrôle de facture"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__invoice_count
 msgid "Bill Count"
-msgstr ""
+msgstr "Nombre de factures"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__invoice_lines
@@ -1060,7 +1060,7 @@ msgstr "Nom"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Name, TIN, Email, or Reference"
-msgstr ""
+msgstr "Nom, numéro de TVA, mail ou référence"
 
 #. module: purchase
 #: code:addons/purchase/controllers/portal.py:40
@@ -1156,6 +1156,8 @@ msgid ""
 "On ordered quantities: Control bills based on ordered quantities.\n"
 "On received quantities: Control bills based on received quantities."
 msgstr ""
+"Sur base des quantités commandées: factures de controle basées sur les quantités commandées. \n"
+"Sur base des quantités reçues: factures de controle basées sur les quantités reçues."
 
 #. module: purchase
 #: selection:product.template,purchase_method:0
@@ -1393,12 +1395,12 @@ msgstr "Commande fournisseur"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "Purchase Order #"
-msgstr ""
+msgstr "Numéro de Bon de Commande"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_order_approval
 msgid "Purchase Order Approval"
-msgstr ""
+msgstr "Approbation du Bon de Commande"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -1409,7 +1411,7 @@ msgstr "Confirmation du Bon de commande #"
 #: model:ir.model.fields,field_description:purchase.field_res_partner__purchase_order_count
 #: model:ir.model.fields,field_description:purchase.field_res_users__purchase_order_count
 msgid "Purchase Order Count"
-msgstr ""
+msgstr "Nombre de Bons de Commandes"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
@@ -1492,7 +1494,7 @@ msgstr "Responsable Achats"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__group_warning_purchase
 msgid "Purchase Warnings"
-msgstr ""
+msgstr "Avertissements d'achats"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1534,7 +1536,7 @@ msgstr "Achats"
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_bill_union
 msgid "Purchases & Bills Union"
-msgstr ""
+msgstr "Union des achats & factures"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__dest_address_id
@@ -1705,7 +1707,7 @@ msgstr "Chercher un bon de commande"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 msgid "Search Reference Document"
-msgstr ""
+msgstr "Chercher le document de référence"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__use_po_lead
@@ -1720,7 +1722,7 @@ msgstr "Jeton de sécurité"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_invoice_supplier_purchase_form
 msgid "Select a purchase order or an old bill"
-msgstr ""
+msgstr "Sélectionner un bon de commande ou une ancienne facture"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_product__purchase_line_warn
@@ -1877,6 +1879,9 @@ msgid ""
 "difference between a purchase order and its related vendor bill when "
 "validating this vendor bill."
 msgstr ""
+"Ce compte est utilisé dans la valorisation automatique de l'inventaire pour "
+"enregistrer la différence de prix entre un bon de commande et sa facture "
+"fournisseur quand celle-ci est validée."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_category__property_account_creditor_price_difference_categ
@@ -2184,6 +2189,8 @@ msgstr ""
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__partner_id
 msgid "You can find a vendor by its Name, TIN, Email or Internal Reference."
 msgstr ""
+"Vous pouvez trouver un fournisseur par son nom, numéro de TVA, courriel ou "
+"sa référence interne."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_product_action

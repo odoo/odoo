@@ -8,6 +8,7 @@
 # Laura Piraux <lap@odoo.com>, 2018
 # Nathan Grognet <ngr@odoo.com>, 2018
 # Martin Trigaux, 2018
+# Oriane Malburny <oma@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-12-19 08:21+0000\n"
 "PO-Revision-Date: 2018-08-24 09:24+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"Last-Translator: Oriane Malburny <oma@odoo.com>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -211,6 +212,10 @@ msgid ""
 " 'purchase_requisition' module is installed and this option is selected, the"
 " system will create a draft call for tender."
 msgstr ""
+"Créer un ordre d'achat brouillon: sur base de votre configuration d'article,"
+" le système va créer un ordre d'achat brouillon. Proposer un appel d'offre :"
+" Si le module 'purchase_requisition' est installé est cette option est "
+"sélectionnée, le système va créer un appel d'offre brouillon."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__create_uid
@@ -587,7 +592,7 @@ msgstr "Ligne de l'appel d'offre"
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_type
 msgid "Purchase Requisition Type"
-msgstr ""
+msgstr "Type de Convention d'achat"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.act_res_partner_2_purchase_order
@@ -639,7 +644,7 @@ msgstr "Appel d'offres"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_stock_move__requisition_line_ids
 msgid "Requisition Line"
-msgstr ""
+msgstr "Ligne de demande"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_stock_move__requistion_line_ids
@@ -705,12 +710,12 @@ msgstr "Document d'origine"
 #. module: purchase_requisition
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid "Start a new purchase agreement"
-msgstr ""
+msgstr "Commencer une nouvelle convention d'achat"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__state_blanket_order
 msgid "State Blanket Order"
-msgstr ""
+msgstr "Etat de la commande prévisionnelle"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__state
@@ -757,6 +762,9 @@ msgid ""
 "There is already an open blanket order for this supplier. We suggest you to "
 "use to complete this open blanket order instead of creating a new one."
 msgstr ""
+"Il y a déjà une commande à livraison échelonnée pour ce fournisseur. Nous "
+"vous suggérons de compléter cette commande plutôt que d'en créer une "
+"nouvelle."
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -828,13 +836,15 @@ msgstr "Historique de communication du site web"
 #: code:addons/purchase_requisition/models/purchase_requisition.py:178
 #, python-format
 msgid "You can only delete draft requisitions."
-msgstr ""
+msgstr "Vous pouvez seulement supprimer les demandes brouillon."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase_requisition.py:123
 #, python-format
 msgid "You cannot confirm agreement '%s' because there is no product line."
 msgstr ""
+"Vous ne pouvez confirmer la convention '%s' parce qu'il n'y a pas de ligne "
+"de produit."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase_requisition.py:127
@@ -843,12 +853,16 @@ msgstr ""
 #, python-format
 msgid "You cannot confirm the blanket order without price."
 msgstr ""
+"Vous ne pouvez pas confirmer la commande à livraison échelonnée sans un "
+"prix."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase_requisition.py:129
 #, python-format
 msgid "You cannot confirm the blanket order without quantity."
 msgstr ""
+"Vous ne pouvez pas confirmer la commande à livraison échelonnée sans "
+"quantité."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase_requisition.py:156
