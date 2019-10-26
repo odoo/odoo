@@ -37,6 +37,16 @@ msgid ""
 "                %endif\n"
 "            "
 msgstr ""
+"\n"
+"                %if object.origin:\n"
+"                    ${object.company_id.name}: Nous sommes heureux de vous informer que votre ordre n° ${object.origin} a été envoyé.\n"
+"                %else:\n"
+"                    ${object.company_id.name}: Nous sommes heureux de vous informer que votre ordre a été envoyé\n"
+"                %endif\n"
+"                %if object.carrier_tracking_ref:\n"
+"                    Votre référence de suivi est ${object.carrier_tracking_ref}.\n"
+"                %endif\n"
+"            "
 
 #. module: stock_sms
 #: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
@@ -66,7 +76,7 @@ msgstr "Confirmer"
 #. module: stock_sms
 #: model:ir.model,name:stock_sms.model_confirm_stock_sms
 msgid "Confirm Stock SMS"
-msgstr ""
+msgstr "Confirmer stock SMS"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__create_uid
@@ -81,7 +91,7 @@ msgstr "Créé le"
 #. module: stock_sms
 #: model:sms.template,name:stock_sms.sms_template_data_stock_delivery
 msgid "Delivery: Send by SMS Text Message"
-msgstr ""
+msgstr "Livraison: Envoyer par SMS"
 
 #. module: stock_sms
 #: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
@@ -96,7 +106,7 @@ msgstr "Afficher Nom"
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_res_company__has_received_warning_stock_sms
 msgid "Has Received Warning Stock Sms"
-msgstr ""
+msgstr "A reçu des avertissements stock SMS"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__id
@@ -145,13 +155,13 @@ msgstr "Template SMS"
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_res_config_settings__stock_move_sms_validation
 msgid "SMS Validation with stock move"
-msgstr ""
+msgstr "Validation SMS avec le mouvement de stock"
 
 #. module: stock_sms
 #: model:ir.model.fields,help:stock_sms.field_res_company__stock_sms_confirmation_template_id
 #: model:ir.model.fields,help:stock_sms.field_res_config_settings__stock_sms_confirmation_template_id
 msgid "SMS sent to the customer once the order is done."
-msgstr ""
+msgstr "SMS envoyé au client dès que l'ordre est fait."
 
 #. module: stock_sms
 #: model:ir.model,name:stock_sms.model_stock_picking
@@ -164,3 +174,5 @@ msgid ""
 "You are about to confirm this Delivery Order by SMS Text Message.<br/>\n"
 "                This feature can easily be disabled from the Settings of Inventory or by clicking on \"Disable SMS\".<br/>"
 msgstr ""
+"Vous êtes sur le point de confirmer cet ordre de livraison par SMS.<br/>\n"
+"                Cette fonctionnalité peut aisément être désactivée depuis la configuration de l'inventaire ou en cliquant sur \"Désactiver SMS\".<br/>"

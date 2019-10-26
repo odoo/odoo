@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_theme_install
+# 	* website_theme_install
 # 
 # Translators:
 # Jeanphy <hzh0292@qq.com>, 2019
@@ -23,9 +23,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"POT-Creation-Date: 2019-10-18 09:48+0000\n"
 "PO-Revision-Date: 2019-08-26 09:16+0000\n"
 "Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -66,7 +66,7 @@ msgid "Author"
 msgstr "作者"
 
 #. module: website_theme_install
-#: selection:theme.ir.ui.view,mode:0
+#: model:ir.model.fields.selection,name:website_theme_install.selection__theme_ir_ui_view__mode__primary
 msgid "Base view"
 msgstr "基础视图"
 
@@ -132,7 +132,7 @@ msgid "Display Name"
 msgstr "显示名称"
 
 #. module: website_theme_install
-#: selection:theme.ir.ui.view,mode:0
+#: model:ir.model.fields.selection,name:website_theme_install.selection__theme_ir_ui_view__mode__extension
 msgid "Extension View"
 msgstr "扩展视图"
 
@@ -162,6 +162,7 @@ msgstr "是否已安装到当前网站"
 
 #. module: website_theme_install
 #: model:ir.model.fields,field_description:website_theme_install.field_ir_attachment__key
+#: model:ir.model.fields,field_description:website_theme_install.field_mrp_document__key
 #: model:ir.model.fields,field_description:website_theme_install.field_theme_ir_attachment__key
 #: model:ir.model.fields,field_description:website_theme_install.field_theme_ir_ui_view__key
 msgid "Key"
@@ -246,6 +247,11 @@ msgid "Page Indexed"
 msgstr "页面已索引"
 
 #. module: website_theme_install
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_website_page__copy_ids
+msgid "Page using a copy of me"
+msgstr ""
+
+#. module: website_theme_install
 #: model:ir.model.fields,field_description:website_theme_install.field_theme_website_menu__parent_id
 msgid "Parent"
 msgstr "上级"
@@ -282,6 +288,7 @@ msgstr "单号规则"
 
 #. module: website_theme_install
 #: model:ir.model.fields,help:website_theme_install.field_ir_attachment__key
+#: model:ir.model.fields,help:website_theme_install.field_mrp_document__key
 msgid ""
 "Technical field used to resolve multiple attachments in a multi-website "
 "environment."
@@ -320,11 +327,6 @@ msgstr "主题实用工具"
 #: model_terms:ir.ui.view,arch_db:website_theme_install.theme_view_kanban
 msgid "Theme preview"
 msgstr "主题预览"
-
-#. module: website_theme_install
-#: model:ir.model.fields,field_description:website_theme_install.field_theme_website_page__copy_ids
-msgid "Theme using a copy of me"
-msgstr "使用我的副本为主题"
 
 #. module: website_theme_install
 #: model:ir.model.fields,field_description:website_theme_install.field_theme_ir_ui_view__type
@@ -390,12 +392,12 @@ msgid "install a theme"
 msgstr "安装主题"
 
 #. module: website_theme_install
-#: selection:theme.ir.ui.view,inherit_id:0
+#: model:ir.model.fields.selection,name:website_theme_install.selection__theme_ir_ui_view__inherit_id__ir_ui_view
 msgid "ir.ui.view"
 msgstr "ir.ui.view"
 
 #. module: website_theme_install
-#: selection:theme.ir.ui.view,inherit_id:0
+#: model:ir.model.fields.selection,name:website_theme_install.selection__theme_ir_ui_view__inherit_id__theme_ir_ui_view
 msgid "theme.ir.ui.view"
 msgstr "theme.ir.ui.view"
 

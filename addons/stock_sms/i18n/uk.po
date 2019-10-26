@@ -34,6 +34,16 @@ msgid ""
 "                %endif\n"
 "            "
 msgstr ""
+"\n"
+"                %if object.origin:\n"
+"                    ${object.company_id.name}: Раді повідомити, що ваше замовлення n° ${object.origin} відправлено.\n"
+"                %else:\n"
+"                    ${object.company_id.name}: Раді повідомити, що ваше замовлення відправлено.\n"
+"                %endif\n"
+"                %if object.carrier_tracking_ref:\n"
+"                    Ваш референс відстеження ${object.carrier_tracking_ref}.\n"
+"                %endif\n"
+"            "
 
 #. module: stock_sms
 #: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
@@ -63,7 +73,7 @@ msgstr "Підтвердити"
 #. module: stock_sms
 #: model:ir.model,name:stock_sms.model_confirm_stock_sms
 msgid "Confirm Stock SMS"
-msgstr ""
+msgstr "Підтвердити складські SMS"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__create_uid
@@ -78,12 +88,12 @@ msgstr "Створено на"
 #. module: stock_sms
 #: model:sms.template,name:stock_sms.sms_template_data_stock_delivery
 msgid "Delivery: Send by SMS Text Message"
-msgstr ""
+msgstr "Доставка: Надіслати через SMS повідомлення"
 
 #. module: stock_sms
 #: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
 msgid "Disable SMS"
-msgstr ""
+msgstr "Відключити SMS"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__display_name
@@ -93,7 +103,7 @@ msgstr "Назва для відображення"
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_res_company__has_received_warning_stock_sms
 msgid "Has Received Warning Stock Sms"
-msgstr ""
+msgstr "Має отримане складське попереджувальне Sms  "
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__id
@@ -130,7 +140,7 @@ msgstr "SMS"
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_res_company__stock_move_sms_validation
 msgid "SMS Confirmation"
-msgstr ""
+msgstr "Підтвердження SMS"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_res_company__stock_sms_confirmation_template_id
@@ -142,13 +152,13 @@ msgstr "Шаблон SMS"
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_res_config_settings__stock_move_sms_validation
 msgid "SMS Validation with stock move"
-msgstr ""
+msgstr "Підтвердження SMS зі складськими переміщеннями"
 
 #. module: stock_sms
 #: model:ir.model.fields,help:stock_sms.field_res_company__stock_sms_confirmation_template_id
 #: model:ir.model.fields,help:stock_sms.field_res_config_settings__stock_sms_confirmation_template_id
 msgid "SMS sent to the customer once the order is done."
-msgstr ""
+msgstr "SMS надсилається клієнту після того, як замовлення буде виконане."
 
 #. module: stock_sms
 #: model:ir.model,name:stock_sms.model_stock_picking
@@ -161,3 +171,5 @@ msgid ""
 "You are about to confirm this Delivery Order by SMS Text Message.<br/>\n"
 "                This feature can easily be disabled from the Settings of Inventory or by clicking on \"Disable SMS\".<br/>"
 msgstr ""
+"Ви збираєтесь підтвердити це замовлення доставки SMS-повідомленням.<br/>\n"
+"                Цю функцію можна легко відключити в налаштуваннях складу або натиснувши \"Вимкнути SMS\".<br/>"

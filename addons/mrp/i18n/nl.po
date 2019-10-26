@@ -8,9 +8,9 @@
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2019
 # Maxim Vandenbroucke <mxv@odoo.com>, 2019
 # Charles Vervaecke <cvk@odoo.com>, 2019
-# Martin Trigaux, 2019
 # Cas Vissers <casvissers@brahoo.nl>, 2019
 # Melroy van den Berg <webmaster1989@gmail.com>, 2019
+# Martin Trigaux, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # 
@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-07 07:12+0000\n"
+"POT-Creation-Date: 2019-10-18 09:46+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -99,7 +99,7 @@ msgstr "# Stuklijsten waar gebruikt"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "%s cannot be deleted. Try to cancel them before."
-msgstr ""
+msgstr "%s kan niet verwijderd worden. Probeer deze eerst te annuleren."
 
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_bom_structure
@@ -794,7 +794,7 @@ msgstr "Stuklijst details"
 #, python-format
 msgid "BoM line product %s should not be the same as BoM product."
 msgstr ""
-"Product van de stuklijstregel %s kan miet hetzelfde zijn als het "
+"Product van de stuklijstregel %s kan niet hetzelfde zijn als het "
 "stuklijstproduct."
 
 #. module: mrp
@@ -1388,7 +1388,7 @@ msgstr "Tijdsduur per eenheid"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "Effective Date"
-msgstr "Geboekte datum"
+msgstr "Boekdatum"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__date_finished
@@ -1424,14 +1424,6 @@ msgid "Ensure the traceability of a storable product in your warehouse."
 msgstr ""
 "Zorg voor de traceerbaarheid van een product dat kan worden opgeslagen in uw"
 " magazijn."
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
-#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
-#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
-msgid "Exception Activities"
-msgstr "Uitzondering activiteiten"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
@@ -2688,6 +2680,8 @@ msgid ""
 "Paste the url of your Google Slide. Make sure the access to the document is "
 "public."
 msgstr ""
+"Plak de URL van uw Google slide. Verzeker u er van dat het document "
+"publiekelijk beschikbaar is."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -2946,7 +2940,7 @@ msgstr "Geproduceerd"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__operation_id
 msgid "Produced in Operation"
-msgstr "Geproduceerd ij bewerking"
+msgstr "Geproduceerd bij bewerking"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_product
@@ -3778,7 +3772,7 @@ msgstr "Sub stuklijst"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Subcontract the production of some products"
-msgstr "Besteed de productie van enkele productenn uit"
+msgstr "Besteed de productie van enkele producten uit"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_subcontracting
@@ -4049,6 +4043,8 @@ msgid ""
 "This menu gives you the full traceability of inventory operations on a specific product.\n"
 "                    You can filter on the product to see all the past movements for the product."
 msgstr ""
+"Deze menu geeft u de volledige traceerbaarheid van voorraadbewerking op een specifiek product. U kan op het product\n"
+"filteren om alle vorige mutaties voor het product te zien."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__production_location_id
@@ -4525,6 +4521,11 @@ msgstr "Meld onvoldoende demontage hoeveelheid"
 #, python-format
 msgid "Warning"
 msgstr "Waarschuwing"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Warnings"
+msgstr "Waarschuwingen"
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_wood_wear
