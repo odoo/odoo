@@ -23,7 +23,7 @@ class Partner(models.Model):
     @api.multi
     def _compute_meeting_count(self):
         for partner in self:
-            partner.meeting_count = len(partner.meeting_ids)
+            partner.meeting_count = self.env["calendar.event"].search_count([('partner_ids', '=', partner.id)])
 
     @api.multi
     def schedule_meeting(self):
@@ -31,7 +31,7 @@ class Partner(models.Model):
         partner_ids.append(self.env.user.partner_id.id)
         action = self.env.ref('calendar.action_calendar_event').read()[0]
         action['context'] = {
-            'search_default_partner_ids': self._context['partner_name'],
             'default_partner_ids': partner_ids,
         }
+        action['domain'] = [('partner_ids', 'in', self.meeting_ids.ids)]
         return action
