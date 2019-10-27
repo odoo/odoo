@@ -2,12 +2,20 @@
 # This file contains the translation of the following modules:
 # * payment_stripe
 # 
+# Translators:
+# Kaloyan Naumov <kaloyan@lumnus.net>, 2019
+# Bernard <bernard@abv.bg>, 2019
+# Iliana Ilieva <i.ilieva@sunservice-bg.com>, 2019
+# Albena Mincheva <albena_vicheva@abv.bg>, 2019
+# Maria Boyadjieva <marabo2000@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
 "PO-Revision-Date: 2018-08-24 09:22+0000\n"
+"Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2019\n"
 "Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,7 +28,7 @@ msgstr ""
 #: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:9
 #, python-format
 msgid "&times;"
-msgstr ""
+msgstr "&times;"
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__stripe_image_url
@@ -29,31 +37,34 @@ msgid ""
 "product. As defined in your Stripe profile. See: "
 "https://stripe.com/docs/checkout"
 msgstr ""
+"Относителен или абсолютен URL адрес, насочен към квадратно изображение на "
+"Вашата марка или продукт. Както е определен в профила Ви в Stripe. Вижте: "
+"https://stripe.com/docs/checkout"
 
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0
 msgid "Adyen"
-msgstr ""
+msgstr "Adyen"
 
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0
 msgid "Authorize.Net"
-msgstr ""
+msgstr "Authorize.Net"
 
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0
 msgid "Buckaroo"
-msgstr ""
+msgstr "Buckaroo"
 
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
 msgid "CVC"
-msgstr ""
+msgstr "Код за валидиране на карта - CVC"
 
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
 msgid "Card number"
-msgstr ""
+msgstr "Номер на карта"
 
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
@@ -63,21 +74,21 @@ msgstr ""
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_image_url
 msgid "Checkout Image URL"
-msgstr ""
+msgstr "URL адрес на изображение за отписване"
 
 #. module: payment_stripe
 #. openerp-web
 #: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:15
 #, python-format
 msgid "Close"
-msgstr ""
+msgstr "Затворете"
 
 #. module: payment_stripe
 #. openerp-web
 #: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:8
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "Грешка"
 
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
@@ -94,44 +105,44 @@ msgstr ""
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0
 msgid "Manual Configuration"
-msgstr ""
+msgstr "Механична конфигурация"
 
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0
 msgid "Ogone"
-msgstr ""
+msgstr "Ogone"
 
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0
 msgid "PayUmoney"
-msgstr ""
+msgstr "PayUmoney"
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr ""
+msgstr "Обработчик на плащане"
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_token
 msgid "Payment Token"
-msgstr ""
+msgstr "Платежен токен"
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
+msgstr "Платежна транзакция"
 
 #. module: payment_stripe
 #. openerp-web
 #: code:addons/payment_stripe/static/src/js/stripe.js:59
 #, python-format
 msgid "Payment error"
-msgstr ""
+msgstr "Грешка при плащане"
 
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0
 msgid "Paypal"
-msgstr ""
+msgstr "PayPal"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:174
@@ -144,17 +155,17 @@ msgstr ""
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__provider
 msgid "Provider"
-msgstr ""
+msgstr "Доставчик"
 
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0
 msgid "Sips"
-msgstr ""
+msgstr "Sips"
 
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0
 msgid "Stripe"
-msgstr ""
+msgstr "Stripe"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_publishable_key
@@ -176,13 +187,13 @@ msgstr ""
 #: code:addons/payment_stripe/models/payment.py:184
 #, python-format
 msgid "Stripe: %s orders found for reference %s"
-msgstr ""
+msgstr "Stripe: %s открити поръчки за референция %s"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:180
 #, python-format
 msgid "Stripe: no order found for reference %s"
-msgstr ""
+msgstr "Stripe: не е намерена поръчка за референция %s"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:260
@@ -199,4 +210,4 @@ msgstr ""
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0
 msgid "Wire Transfer"
-msgstr ""
+msgstr "Банков превод"

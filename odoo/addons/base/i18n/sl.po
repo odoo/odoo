@@ -10,9 +10,9 @@
 # Simon Hohler <simon.hohler@gmail.com>, 2019
 # matjaz k <matjaz@mentis.si>, 2019
 # jl2035 <jaka.luthar@gmail.com>, 2019
-# Martin Trigaux, 2019
 # Boris Kodelja <boris@hbs.si>, 2019
 # Grega Vavtar <grega@hbs.si>, 2019
+# Martin Trigaux, 2019
 # Tadej Lupšina <tadej@hbs.si>, 2019
 # Jasmina Macur <jasmina@hbs.si>, 2019
 # Matjaz Mozetic <m.mozetic@matmoz.si>, 2019
@@ -183,6 +183,22 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Overview:\n"
+"---------\n"
+"\n"
+"* Chart of Accounts and Taxes template for companies in Japan.\n"
+"* This probably does not cover all the necessary accounts for a company. You are expected to add/delete/modify accounts based on this template.\n"
+"\n"
+"Note:\n"
+"-----\n"
+"\n"
+"* Fiscal positions '内税' and '外税' have been added to handle special requirements which might arise from POS implementation. [1]  You may not need to use these at all under normal circumstances.\n"
+"\n"
+"[1] See https://github.com/odoo/odoo/pull/6470 for detail.\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_deferred_revenue
@@ -820,6 +836,9 @@ msgid ""
 "    Schedule your teams across projects and estimate deadlines more accurately.\n"
 "    "
 msgstr ""
+"\n"
+"    Razporedite svoje skupine po projektih in natančneje ocenite roke.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_ebay
@@ -2124,6 +2143,54 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"EU Mini One Stop Shop (MOSS) VAT for telecommunications, broadcasting and electronic services\n"
+"=============================================================================================\n"
+"\n"
+"As of January 1rst, 2015, telecommunications, broadcasting\n"
+"and electronic services sold within the European Union\n"
+"have to be always taxed in the country where the customer\n"
+"belongs. In order to simplify the application of this EU\n"
+"directive, the Mini One Stop Shop (MOSS) registration scheme\n"
+"allows businesses to make a unique tax declaration.\n"
+"\n"
+"This module makes it possible by helping with the creation\n"
+"of the required EU fiscal positions and taxes in order to\n"
+"automatically apply and record the required taxes.\n"
+"\n"
+"This module installs a wizard to help setup fiscal positions\n"
+"and taxes for selling electronic services inside EU.\n"
+"\n"
+"The wizard lets you select:\n"
+" - the EU countries to which you are selling these\n"
+"   services\n"
+" - your national VAT tax for services, to be mapped\n"
+"   to the target country's tax\n"
+" - optionally: a template fiscal position, in order\n"
+"   to copy the account mapping. Should be your\n"
+"   existing B2C Intra-EU fiscal position. (defaults\n"
+"   to no account mapping)\n"
+" - optionally: an account to use for collecting the\n"
+"   tax amounts (defaults to the account used by your\n"
+"   national VAT tax for services)\n"
+"\n"
+"It creates the corresponding fiscal positions and taxes,\n"
+"automatically applicable for EU sales with a customer\n"
+"in the selected countries.\n"
+"The wizard can be run again for adding more countries.\n"
+"\n"
+"The wizard creates a separate Chart of Taxes for collecting the\n"
+"VAT amounts of the MOSS declaration, so extracting the MOSS\n"
+"data should be easy.\n"
+"Look for a Chart of Taxes named \"EU MOSS VAT Chart\" in the\n"
+"Taxes Report menu (Generic Accounting Report).\n"
+"\n"
+"References\n"
+"++++++++++\n"
+"- Directive 2008/8/EC\n"
+"- Council Implementing Regulation (EU) No 1042/2013\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_utm
@@ -4815,6 +4882,13 @@ msgid ""
 "from sales order. It adds sales name and sales Reference on production order.\n"
 "    "
 msgstr ""
+"\n"
+"This module provides facility to the user to install mrp and sales modulesat a time.\n"
+"====================================================================================\n"
+"\n"
+"It is basically used when we want to keep track of production orders generated\n"
+"from sales order. It adds sales name and sales Reference on production order.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_iot
@@ -5300,7 +5374,7 @@ msgstr "%y - Leto brez stoletja [00,99].\""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
 msgid "&amp;nbsp;"
-msgstr ""
+msgstr "&amp;nbsp;"
 
 #. module: base
 #: code:addons/base/models/ir_fields.py:188
@@ -6305,7 +6379,7 @@ msgstr "Dostopni žeton"
 #. module: base
 #: model:res.groups,name:base.group_private_addresses
 msgid "Access to Private Addresses"
-msgstr ""
+msgstr "Dostop do zasebnih naslovov"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_analytic_default
@@ -6725,7 +6799,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_administration
 msgid "Administration"
-msgstr "Skrbništvo"
+msgstr "Uprava"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_N
@@ -6967,7 +7041,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_analytic
 msgid "Analytic Accounting"
-msgstr "Analitično računovodstvo"
+msgstr "Analitično knjigovodstvo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_analytic_enterprise
@@ -7087,7 +7161,7 @@ msgstr "Ocena"
 #. module: base
 #: model:ir.module.category,name:base.module_category_hr_appraisal
 msgid "Appraisals"
-msgstr "Ocenjevanja"
+msgstr "Ocene"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.open_module_tree
@@ -7243,7 +7317,7 @@ msgstr "Prisotnosti"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_mass_mailing
 msgid "Attract visitors to subscribe to mailing lists"
-msgstr ""
+msgstr "Privabite obiskovalce, da se naročijo na mailing liste"
 
 #. module: base
 #: model:res.country,name:base.au
@@ -7577,7 +7651,7 @@ msgstr "Osnovno polje"
 #: code:addons/base/models/res_lang.py:240
 #, python-format
 msgid "Base Language 'en_US' can not be deleted."
-msgstr ""
+msgstr "Osnovnega jezika 'en_US' ni mogoče izbrisati."
 
 #. module: base
 #: selection:ir.model,state:0
@@ -10189,7 +10263,7 @@ msgstr ""
 #: code:addons/base/models/ir_qweb_fields.py:634
 #, python-format
 msgid "Displayed contry image"
-msgstr ""
+msgstr "Prikaz slike države"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:629
@@ -10278,7 +10352,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_project
 msgid "Documents - Projects"
-msgstr ""
+msgstr "Dokumenti - Projekti"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_sign
@@ -10383,7 +10457,7 @@ msgstr ""
 #: code:addons/base/models/ir_attachment.py:542
 #, python-format
 msgid "ERROR: Invalid PDF file!"
-msgstr ""
+msgstr "NAPAKA: Neveljavna PDF datoteka!"
 
 #. module: base
 #: code:addons/base/models/ir_attachment.py:589
@@ -10395,7 +10469,7 @@ msgstr ""
 #: code:addons/base/models/ir_attachment.py:584
 #, python-format
 msgid "ERROR: the file must be a PDF"
-msgstr ""
+msgstr "NAPAKA: datoteka mora biti PDF"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_escpos
@@ -11879,7 +11953,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de_skr04
 msgid "Germany SKR04 - Accounting"
-msgstr ""
+msgstr "Nemčija SKR04 - Knjigovodstvo"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_dashboard
@@ -13250,7 +13324,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_groups_search
 msgid "Internal Groups"
-msgstr ""
+msgstr "Interne skupine"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -15281,7 +15355,7 @@ msgstr "Več družb"
 #. module: base
 #: model:res.groups,name:base.group_multi_currency
 msgid "Multi Currencies"
-msgstr "Več valutno poslovane"
+msgstr "Več valutno poslovanje"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_multilang
@@ -18098,12 +18172,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_sale_timesheet
 msgid "Project, Helpdesk, Timesheet and Sale Orders"
-msgstr ""
+msgstr "Projekt, Služb aza pomoč, Časovnice in Prodajni nalog"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_timesheet
 msgid "Project, Tasks, Timesheet"
-msgstr ""
+msgstr "Projekt, Opravila, Časovnice"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -18166,7 +18240,7 @@ msgstr "Objave na blogu, napovedi, novice"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event
 msgid "Publish events, sell tickets"
-msgstr "Objavljajte dogodke, prodajajte zahtevke"
+msgstr "Objavljajte dogodke, prodajajte vstopnice"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_slides
@@ -19004,7 +19078,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_voucher
 msgid "Sale & Purchase Vouchers"
-msgstr "Prodaja in nakup bonov"
+msgstr "Prodajni in nabavni vaučerji"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_coupon
@@ -19328,7 +19402,7 @@ msgstr "Možnosti izbire"
 #: model:ir.model.fields,field_description:base.field_res_partner__self
 #: model:ir.model.fields,field_description:base.field_res_users__self
 msgid "Self"
-msgstr ""
+msgstr "Isti"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_sale_timesheet
@@ -21375,7 +21449,7 @@ msgid ""
 "\n"
 "(Document type: %s, Operation: %s)"
 msgstr ""
-"Zahtevana operacija ne more biti končana zaradi varnostnih omejitev. Prosimo kontaktirajte sistemskega administratorja.\n"
+"Zahtevana operacija ne more biti končana zaradi varnostnih omejitev. Prosimo, kontaktirajte sistemskega administratorja.\n"
 "\n"
 "(Tip dokumenta: %s, Operacija: %s)"
 
@@ -22228,7 +22302,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_uom
 msgid "Units of measure"
-msgstr ""
+msgstr "Merske enote"
 
 #. module: base
 #: model:ir.model,name:base.model__unknown
@@ -23740,7 +23814,7 @@ msgstr ""
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "reference"
-msgstr ""
+msgstr "sklic"
 
 #. module: base
 #: selection:ir.model.fields,ttype:0
