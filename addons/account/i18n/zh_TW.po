@@ -8,8 +8,8 @@
 # 金儒 楊 <ce1123@cooleagle.com.tw>, 2018
 # sejun huang <sejun.huang@gmail.com>, 2018
 # Martin Trigaux, 2019
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
 # Michael Yeung, 2019
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 09:07+0000\n"
 "PO-Revision-Date: 2017-09-20 10:13+0000\n"
-"Last-Translator: Michael Yeung, 2019\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3472,7 +3472,7 @@ msgstr "聯絡人"
 #: model:ir.model,name:account.model_account_abstract_payment
 msgid ""
 "Contains the logic shared between models which allows to register payments"
-msgstr "包含在允許登記付款的模型之間的共享邏輯"
+msgstr "包含在允許登記收/付款的模型之間的共享邏輯"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_contract_ids
@@ -5762,13 +5762,13 @@ msgstr "憑單必須是草稿狀態才能審核它。"
 #: code:addons/account/models/account_invoice.py:795
 #, python-format
 msgid "Invoice must be paid in order to set it to register payment."
-msgstr "憑單必須已付款了才能設定為登記付款。"
+msgstr "憑單必須已付款了才能設定為登記收/付款。"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:787
 #, python-format
 msgid "Invoice must be validated in order to set it to register payment."
-msgstr "登記付款前必須先審核憑單。"
+msgstr "登記收/付款前必須先審核憑單。"
 
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_paid
@@ -8444,12 +8444,12 @@ msgstr "根據此種類型的退款，如果憑單已經調節，您不可以修
 #: model:ir.ui.view,arch_db:account.view_account_payment_from_invoices
 #: model:ir.ui.view,arch_db:account.view_account_payment_invoice_form
 msgid "Register Payment"
-msgstr "登記付款"
+msgstr "登記收/付款"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Register Payments"
-msgstr "登記付款"
+msgstr "登記收/付款"
 
 #. module: account
 #: model:ir.model,name:account.model_account_register_payments
@@ -11234,7 +11234,7 @@ msgstr "您只可以刪除草稿狀態的憑單明細。"
 #: code:addons/account/models/account_payment.py:141
 #, python-format
 msgid "You can only register payments for open invoices"
-msgstr "只有打開狀態的憑單能被登記付款"
+msgstr "只有打開狀態的憑單能被登記收/付款"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_report_style_overwrite
