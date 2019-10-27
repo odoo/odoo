@@ -1627,8 +1627,6 @@ class Meeting(models.Model):
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        if 'date' in groupby:
-            raise UserError(_('Group by date is not supported, use the calendar view instead.'))
         return super(Meeting, self.with_context(virtual_id=False)).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
     def read(self, fields=None, load='_classic_read'):
