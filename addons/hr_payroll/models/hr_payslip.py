@@ -82,12 +82,23 @@ class HrPayslip(models.Model):
             raise ValidationError(_("Payslip 'Date From' must be earlier 'Date To'."))
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
+    def copy(self, default=None):
+        rec = super(HrPayslip, self).copy(default)
+        for l in self.input_line_ids:
+            l.copy({'payslip_id': rec.id})
+        for l in self.line_ids:
+            l.copy({'slip_id': rec.id, 'input_ids': []})
+        return rec
+
+    @api.multi
     def action_payslip_draft(self):
         return self.write({'state': 'draft'})
 
     @api.multi
     def action_payslip_done(self):
-        self.compute_sheet()
+        if not self.env.context.get('without_compute_sheet'):
+            self.compute_sheet()
         return self.write({'state': 'done'})
 
     @api.multi
@@ -100,8 +111,9 @@ class HrPayslip(models.Model):
     def refund_sheet(self):
         for payslip in self:
             copied_payslip = payslip.copy({'credit_note': True, 'name': _('Refund: ') + payslip.name})
-            copied_payslip.compute_sheet()
-            copied_payslip.action_payslip_done()
+            number = copied_payslip.number or self.env['ir.sequence'].next_by_code('salary.slip')
+            copied_payslip.write({'number': number})
+            copied_payslip.with_context(without_compute_sheet=True).action_payslip_done()
         formview_ref = self.env.ref('hr_payroll.view_hr_payslip_form', False)
         treeview_ref = self.env.ref('hr_payroll.view_hr_payslip_tree', False)
         return {
