@@ -927,6 +927,55 @@ QUnit.module('Views', {
         $view.remove();
     });
 
+    QUnit.test('fetch event when being in timezone', function (assert) {
+        assert.expect(3);
+
+        var calendar = createView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar class="o_calendar_test" '+
+                'date_start="start" '+
+                'date_stop="stop" '+
+                'mode="week" >'+
+                    '<field name="name"/>'+
+                    '<field name="start"/>'+
+                    '<field name="allday"/>'+
+            '</calendar>',
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+            session: {
+                getTZOffset: function () {
+                    return 660;
+                },
+            },
+
+            mockRPC: function (route, args) {
+                if (args.method === 'search_read' && args.model === 'event') {
+                    assert.deepEqual(args.kwargs.domain, [
+                        ["start", "<=", "2016-12-17 12:59:59"], // in UTC. which is 2016-12-17 23:59:59 in TZ Sydney 11 hours later
+                        ["stop", ">=", "2016-12-10 13:00:00"]   // in UTC. which is 2016-12-11 00:00:00 in TZ Sydney 11 hours later
+                    ], 'The domain should contain the right range');
+                }
+                return this._super(route, args);
+            },
+        });
+
+        var $view = $('#qunit-fixture').contents();
+        $view.prependTo('body'); // => select with click position
+
+        assert.strictEqual(calendar.$('.fc-day-header:first').text(), 'Sun 12/11',
+            'The calendar start date should be 2016-12-11');
+        assert.strictEqual(calendar.$('.fc-day-header:last()').text(), 'Sat 12/17',
+            'The calendar start date should be 2016-12-17');
+
+        calendar.destroy();
+        $view.remove();
+    });
+
     QUnit.test('create event with timezone in week mode with formViewDialog American locale', function (assert) {
         assert.expect(8);
 
