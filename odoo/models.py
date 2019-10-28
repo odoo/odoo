@@ -5859,8 +5859,8 @@ Fields:
                 on_change attribute
 
             When ``field_name`` is falsy, the method first adds default values
-            to ``values``, applies onchange methods to them, and return all the
-            fields in ``field_onchange``.
+            to ``values``, computes the remaining fields, applies onchange
+            methods to them, and return all the fields in ``field_onchange``.
         """
         # this is for tests using `Form`
         self.flush()
@@ -5902,11 +5902,12 @@ Fields:
             """ A dict with the values of a record, following a prefix tree. """
             __slots__ = ()
 
-            def __init__(self, record, tree):
+            def __init__(self, record, tree, fetch=True):
                 # put record in dict to include it when comparing snapshots
                 super(Snapshot, self).__init__({'<record>': record, '<tree>': tree})
-                for name in tree:
-                    self.fetch(name)
+                if fetch:
+                    for name in tree:
+                        self.fetch(name)
 
             def fetch(self, name):
                 """ Set the value of field ``name`` from the record's value. """
@@ -5920,6 +5921,8 @@ Fields:
 
             def has_changed(self, name):
                 """ Return whether a field on record has changed. """
+                if name not in self:
+                    return True
                 record = self['<record>']
                 subnames = self['<tree>'][name]
                 if record._fields[name].type not in ('one2many', 'many2many'):
@@ -5977,14 +5980,11 @@ Fields:
         nametree = PrefixTree(self.browse(), field_onchange)
 
         if first_call:
-            names = list(nametree)
             values.update(self.default_get([
                 name
-                for name in names
+                for name in nametree
                 if name not in values
             ]))
-            for name in names:
-                values.setdefault(name, False)
 
         # prefetch x2many lines without data (for the initial snapshot)
         for name, subnames in nametree.items():
@@ -6032,7 +6032,7 @@ Fields:
         record = self.new(initial_values, origin=self)
 
         # make a snapshot based on the initial values of record
-        snapshot0 = Snapshot(record, nametree)
+        snapshot0 = Snapshot(record, nametree, fetch=(not first_call))
 
         # store changed values in cache; also trigger recomputations based on
         # subfields (e.g., line.a has been modified, line.b is computed stored
