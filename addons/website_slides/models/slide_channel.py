@@ -106,7 +106,7 @@ class Channel(models.Model):
     slide_last_update = fields.Date('Last Update', compute='_compute_slide_last_update', store=True)
     slide_partner_ids = fields.One2many(
         'slide.slide.partner', 'channel_id', string="Slide User Data",
-        copy=False, groups='website.group_website_publisher')
+        copy=False, groups='website_slides.group_website_slides_officer')
     promote_strategy = fields.Selection([
         ('latest', 'Latest Published'),
         ('most_voted', 'Most Voted'),
@@ -156,7 +156,7 @@ class Channel(models.Model):
     members_count = fields.Integer('Attendees count', compute='_compute_members_count')
     members_done_count = fields.Integer('Attendees Done Count', compute='_compute_members_done_count')
     is_member = fields.Boolean(string='Is Member', compute='_compute_is_member', compute_sudo=False)
-    channel_partner_ids = fields.One2many('slide.channel.partner', 'channel_id', string='Members Information', groups='website.group_website_publisher', depends=['partner_ids'])
+    channel_partner_ids = fields.One2many('slide.channel.partner', 'channel_id', string='Members Information', groups='website_slides.group_website_slides_officer', depends=['partner_ids'])
     upload_group_ids = fields.Many2many(
         'res.groups', 'rel_upload_groups', 'channel_id', 'group_id', string='Upload Groups',
         help="Group of users allowed to publish contents on a documentation course.")
@@ -276,12 +276,12 @@ class Channel(models.Model):
     @api.depends_context('uid')
     def _compute_can_upload(self):
         for record in self:
-            if record.user_id == self.env.user:
+            if record.user_id == self.env.user or self.env.is_superuser():
                 record.can_upload = True
             elif record.upload_group_ids:
                 record.can_upload = bool(record.upload_group_ids & self.env.user.groups_id)
             else:
-                record.can_upload = self.env.user.has_group('website.group_website_publisher')
+                record.can_upload = self.env.user.has_group('website_slides.group_website_slides_manager')
 
     @api.depends('channel_type', 'user_id', 'can_upload')
     @api.depends_context('uid')
@@ -295,7 +295,7 @@ class Channel(models.Model):
             elif record.user_id == self.env.user or self.env.is_superuser():
                 record.can_publish = True
             else:
-                record.can_publish = self.env.user.has_group('website.group_website_publisher')
+                record.can_publish = self.env.user.has_group('website_slides.group_website_slides_manager')
 
     @api.model
     def _get_can_publish_error_message(self):

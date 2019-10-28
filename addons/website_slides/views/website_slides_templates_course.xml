@@ -396,7 +396,7 @@
                 t-att-data-can-publish="channel.can_publish"><i class="fa fa-plus mr-1"/><span>Add Content</span></a>
             <a class="o_wslides_js_slide_section_add border btn btn-light bg-white" t-attf-channel_id="#{channel.id}"
                 href="#" role="button"
-                groups="website.group_website_publisher"><i class="fa fa-folder-o mr-1"/><span>Add Section</span></a>
+                groups="website_slides.group_website_slides_officer"><i class="fa fa-folder-o mr-1"/><span>Add Section</span></a>
         </div>
     </div>
     <div t-field="channel.description_html"/>
@@ -641,7 +641,7 @@
         <div class="card-body p-3">
             <a t-if="can_access" class="card-title h5 mb-2o_wslides_desc_truncate_2" t-attf-href="/slides/slide/#{slug(slide)}#{query_string}" t-esc="slide.name"/>
             <span t-else="" class="card-title h5 mb-2 o_wslides_desc_truncate_2 text-muted" t-esc="slide.name"/>
-            <div class="card-subtitle mb-2 text-muted" t-if="slide.is_preview or (not slide.is_published and user.has_group('website.group_website_publisher'))">
+            <div class="card-subtitle mb-2 text-muted" t-if="slide.is_preview or (not slide.is_published and user.has_group('website_slides.group_website_slides_officer'))">
                 <t t-if="slide.is_preview">
                     <span class="badge badge-info">Free preview</span>
                 </t>

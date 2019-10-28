@@ -16,7 +16,7 @@
                                 type="object"
                                 icon="fa-files-o"
                                 class="oe_stat_button"
-                                groups="website.group_website_publisher">
+                                groups="website_slides.group_website_slides_officer">
                                 <div class="o_field_widget o_stat_info">
                                     <span class="o_stat_value"><field name="total_slides" nolabel="1"/></span>
                                     <span name="total_slides_label" class="o_stat_text">Contents</span>
@@ -26,7 +26,7 @@
                                 type="object"
                                 icon="fa-trophy"
                                 class="oe_stat_button"
-                                groups="website.group_website_publisher">
+                                groups="website_slides.group_website_slides_officer">
                                 <div class="o_field_widget o_stat_info">
                                     <span class="o_stat_value"><field name="members_done_count" nolabel="1"/></span>
                                     <span name="members_done_count_label" class="o_stat_text">Finished</span>
@@ -36,14 +36,14 @@
                                 type="object"
                                 icon="fa-users"
                                 class="oe_stat_button"
-                                groups="website.group_website_publisher">
+                                groups="website_slides.group_website_slides_officer">
                                 <field name="members_count" string="Attendees" widget="statinfo"/>
                             </button>
                              <button name="action_view_ratings"
                                 type="object"
                                 icon="fa-star"
                                 class="oe_stat_button"
-                                groups="website.group_website_publisher"
+                                groups="website_slides.group_website_slides_officer"
                                 attrs="{'invisible': [('allow_comment', '=', False)]}">
                                 <field name="rating_count" string="Reviews" widget="statinfo"/>
                             </button>
