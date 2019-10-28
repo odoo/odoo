@@ -476,7 +476,11 @@ class StockMove(models.Model):
                 move_dest_ids._delay_alert_log_activity('auto', move)
 
         # Manual tracking of the `state` field for the stock.picking records.
-        track_pickings = not self._context.get('mail_notrack') and any(field in vals for field in ['state', 'picking_id'])
+        track_pickings = (
+            not self._context.get('mail_notrack')
+            and not self._context.get('tracking_disable')
+            and any(field in vals for field in ['state', 'picking_id'])
+        )
         if track_pickings:
             to_track_picking_ids = {move.picking_id.id for move in self if move.picking_id}
             if vals.get('picking_id'):
