@@ -3,8 +3,9 @@
 
 from contextlib import contextmanager
 from dateutil.relativedelta import relativedelta
+from odoo.exceptions import UserError
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 
 
 class HrWorkEntry(models.Model):
@@ -40,11 +41,7 @@ class HrWorkEntry(models.Model):
         for rec in self:
             rec.conflict = rec.state == 'conflict'
 
-    @api.onchange('duration')
-    def _onchange_duration(self):
-        self._inverse_duration()
-
-    @api.depends('date_stop', 'date_start')
+    @api.depends('date_stop', 'date_start', 'work_entry_type_id')
     def _compute_duration(self):
         for work_entry in self:
             work_entry.duration = work_entry._get_duration(work_entry.date_start, work_entry.date_stop)
@@ -134,6 +131,9 @@ class HrWorkEntry(models.Model):
             elif vals['state'] == 'cancelled':
                 vals['active'] = False
                 skip_check &= all(self.mapped(lambda w: w.state != 'conflict'))
+            elif vals['state'] == 'validated':
+                if self.filtered(lambda w: not w.work_entry_type_id) or ('work_entry_type_id' in vals and not vals['work_entry_type_id']):
+                    raise UserError(_('You cannot validate a work entry without work entry type.'))
 
         if 'active' in vals:
             vals['state'] = 'draft' if vals['active'] else 'cancelled'
