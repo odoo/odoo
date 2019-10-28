@@ -37,8 +37,9 @@
                     removal_date &lt; current_date or inventory_quantity &lt; 0
                 </attribute>
             </xpath>
-            <xpath expr="//field[@name='inventory_quantity']" position="before" >
-                <field name="removal_date"/>
+            <xpath expr="//field[@name='inventory_quantity']" position="before">
+                <field name="removal_date" optional="show"
+                    invisible="context.get('hide_removal_date')"/>
             </xpath>
         </field>
     </record>
