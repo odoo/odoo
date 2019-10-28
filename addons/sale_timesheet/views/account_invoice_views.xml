@@ -6,6 +6,7 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">account.analytic.line</field>
         <field name="view_mode">tree,form,graph</field>
+        <field name="context">{}</field>
         <field name="domain">[('timesheet_invoice_id', '=', active_id)]</field>
     </record>
 
