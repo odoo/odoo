@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
+import json
 import requests
 import pprint
 from werkzeug import urls
@@ -56,7 +57,8 @@ class PaymentAcquirerStripeSCA(models.Model):
             resp.raise_for_status()
         except:
             _logger.error(resp.text)
-            raise
+            error = json.loads(resp.text)
+            raise Exception(error['error']['message'])
         return resp.json()
 
     def _create_stripe_session(self, kwargs):
