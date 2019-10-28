@@ -1,4 +1,4 @@
-odoo.define('pos_hr.tour.login_with_employees', function (require) {
+odoo.define('pos_restaurant_hr.tour.login_with_employees', function (require) {
     "use strict";
 
     var Tour = require("web_tour.tour");
@@ -40,7 +40,19 @@ odoo.define('pos_hr.tour.login_with_employees', function (require) {
 
         }
         return steps;
+    }
 
+    function open_table(table_id, order_count) {
+        order_count = order_count || null;
+        var steps = [{
+            content: 'open table ' + table_id,
+            trigger: '.label:contains(' + table_id +')',
+            run: 'click',
+        }];
+        if (order_count !== null){
+            steps = steps.concat(verify_orders_synced(order_count));
+        }
+        return steps;
     }
 
     var steps = [{
@@ -51,33 +63,21 @@ odoo.define('pos_hr.tour.login_with_employees', function (require) {
 
     // Login with an employee with no manager rights
     // Check if close button is hidden
-    // Check if price control is disabled
     steps = steps.concat(login_with_employee('Abigail Peterson', false));
     steps = steps.concat([{
         content: 'Check close button hidden',
         trigger: 'body:not(.header-button:contains("Close"))',
         run: function() {},
-    }, {
-        content: 'Check price control is disabled',
-        trigger: '.mode-button:contains("Price").disabled-mode',
-        run: function() {},
     }]);
-
-    // Lock sression and check there is no close session button in the lockscreen
-    steps = steps.concat([{
-        content: 'Lock session',
-        trigger: '.fa-unlock',
-        run: 'click',
-    }, { 
-        content: 'Check lock-window is shown without close button',
-        trigger: '.login-screen:not(.close-session)',
-        run: function(){},
-    }]);
+    steps = steps.concat(open_table('T5'));
 
     // Check if session gets locked automatically if nothing is done for a configured period.
     // the timeout to find the trigger is used as the time nothing is done.
-    steps = steps.concat(login_with_employee('Abigail Peterson', false));
     steps = steps.concat([{
+        content: 'Wait for floor screen',
+        trigger: '.floor-screen',
+        run: function() {},
+    }, {
         content: 'Wait for session to lock',
         trigger: '.select-employee',
         run: function() {},
@@ -101,5 +101,5 @@ odoo.define('pos_hr.tour.login_with_employees', function (require) {
         run: 'click',
     }]);
 
-    Tour.register('pos_hr', { test: true, url: '/pos/web' }, steps);
+    Tour.register('pos_restaurant_hr', { test: true, url: '/pos/web' }, steps);
 });

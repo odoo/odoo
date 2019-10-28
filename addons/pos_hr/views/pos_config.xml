@@ -7,10 +7,16 @@
         <field name="arch" type="xml">
             <xpath expr="//button[@id='btn_use_employees']" position='replace'>
                 <div attrs="{'invisible': [('module_pos_hr', '=', False)]}">
-                    <span class="o_form_label oe_edit_only">Allowed Employees </span>
-                    <field name="employee_ids" widget="many2many_tags" 
-                    domain="[('company_id', '=', company_id)]"
-                    />
+                    <div>
+                        <span class="o_form_label oe_edit_only">Allowed Employees </span>
+                        <field name="employee_ids" widget="many2many_tags" 
+                            domain="[('company_id', '=', company_id)]"/>
+                    </div>
+                    <div>
+                        <label for="auto_lock"/>
+                        <field name="auto_lock" widget="float_time" class="oe_inline"/> 
+                        <span class="o_form_label oe_inline"> Minutes</span> <span class="oe_grey">If set to 0, no auto-lock</span>
+                    </div>
                 </div>
             </xpath>
             <xpath expr="//div[@id='pricing']" position='inside'>

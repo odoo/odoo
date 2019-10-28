@@ -13,6 +13,21 @@ gui.Gui.include({
             this._super();
         }
     },
+    show_screen: function(screen_name, params, refresh, skip_close_popup){
+        var order = this.pos.get_order();
+        if (order) {
+            if (screen_name === 'login') {
+                order.set_screen_data( 'screen' ,[
+                        order.get_screen_data('previous-screen'), 
+                        this.get_current_screen()
+                ]);
+            } else if (Array.isArray(order.get_screen_data('previous-screen'))) {
+                order.set_screen_data('screen', order.get_screen_data('previous-screen')[0]);
+                screen_name = order.get_screen_data('previous-screen')[1];
+            }
+        }
+        this._super(screen_name, params, refresh, skip_close_popup);
+    },
     select_employee: function(options) {
         options = options || {};
         var self = this;

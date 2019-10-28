@@ -58,6 +58,7 @@ class TestFrontend(HttpCase):
                                             'receivable_account_id': self.account_receivable.id,
             })],
             'module_pos_hr': True,
+            'auto_lock': 0.1,
             'restrict_price_control': True,
         })
         env['hr.employee'].search([('name', '=', 'Mitchell Admin')], limit=1).pin = '0000'

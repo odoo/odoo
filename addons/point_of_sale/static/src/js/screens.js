@@ -1239,6 +1239,7 @@ var ClientListScreenWidget = ScreenWidget.extend({
         this.$('.searchbox .search-clear').click(function(){
             self.clear_search();
         });
+        debugger;
     },
     hide: function () {
         this._super();

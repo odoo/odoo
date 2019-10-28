@@ -302,6 +302,62 @@ var TableWidget = PosBaseWidget.extend({
     },
 });
 
+screens.ScreenWidget.include({
+    _get_floor_idle_timeout: function() {
+        return 60000;
+    },
+    _get_floor_idle_exclude_screens: function(){
+        return ['floor-screen'];
+    },
+    /**
+     * Set or unset a timeout to go back to the floorplan.
+     *
+     * if deactivate is true unset the timeout, Else set a timeout to go back to the floorplan and
+     * force a sync of the current table.
+     * @param {bool} deactivate optional boolean, default false.
+     * @param {number} timeout, optional timeout in miliseconds, default one minute.
+     */
+    set_idle_timer: function(deactivate) {
+        deactivate = deactivate || false;
+        if (this.idle_timer) {
+            clearTimeout(this.idle_timer);
+        }
+        var self = this;
+        if (!deactivate && !this.hidden){
+            this.idle_timer = setTimeout(function(){self.pos.set_table(null)}, self._get_floor_idle_timeout());
+        }
+    },
+
+    renderElement: function() {
+        this._super();
+        console.log('setting idle '+ this.$el.attr('class'));
+        if(this.pos.config.iface_floorplan) {
+	    var self = this;
+            if (!this._get_floor_idle_exclude_screens().some(function(screen_class){return self.$el.hasClass(screen_class);})) {
+                console.log('set idle '+ this.$el.attr('class'));
+                this.$el.on('mousemove mousedown touchstart click scroll keypress',
+                    function() {
+                        self.set_idle_timer()
+                    }
+                );
+            }
+        }
+    },
+    show: function() {
+        this._super();
+        if (this.pos.config.iface_floorplan) {
+	    var self = this;
+            if (!this._get_floor_idle_exclude_screens().some(function(screen_class){return self.$el.hasClass(screen_class);})) {
+                this.set_idle_timer();
+            }
+        }
+    },
+    close: function() {
+        this._super()
+        this.set_idle_timer(true);
+    },
+})
+
 // The screen that allows you to select the floor, see and select the table,
 // as well as edit them.
 var FloorScreenWidget = screens.ScreenWidget.extend({
@@ -804,16 +860,6 @@ var _super_posmodel = models.PosModel.prototype;
 models.PosModel = models.PosModel.extend({
     after_load_server_data: function() {
         var res = _super_posmodel.after_load_server_data.call(this);
-        if (this.config.iface_floorplan) {
-	    var self = this;
-            this.table = null;
-	    $('.screen').not('.floor-screen').onmousemove = 	function() {self.set_idle_timer()};
-	    $('.screen').not('.floor-screen').onmousedown = 	function() {self.set_idle_timer()}; // touchscreen presses
-	    $('.screen').not('.floor-screen').ontouchstart = function() {self.set_idle_timer()};
-	    $('.screen').not('.floor-screen').onclick = 	function() {self.set_idle_timer()};     // touchpad clicks
-	    $('.screen').not('.floor-screen').onscroll = 	function() {self.set_idle_timer()};    // scrolling with arrow keys
-	    $('.screen').not('.floor-screen').onkeypress = 	function() {self.set_idle_timer()};
-        }
         return res;
     },
 
@@ -860,28 +906,6 @@ models.PosModel = models.PosModel.extend({
     },
 
     /**
-     * Set or unset a timeout to go back to the floorplan.
-     *
-     * if deactivate is true unset the timeout, Else set a timeout to go back to the floorplan and
-     * force a sync of the current table.
-     * @param {bool} deactivate optional boolean, default false.
-     * @param {number} timeout, optional timeout in miliseconds, default one minute.
-     */
-    set_idle_timer: function(deactivate, timeout) {
-        timeout = timeout || 60000;
-        deactivate = deactivate || false;
-        if (this.idle_timer) {
-            clearTimeout(this.idle_timer);
-        }
-        var self = this;
-        if (deactivate) {
-            clearTimeout(this.idle_timer);
-        } else {
-            this.idle_timer = setTimeout(function(){self.set_table(null)}, timeout);
-        }
-    },
-
-    /**
      * Changes the current table.
      *
      * Switch table and make sure all nececery syncing tasks are done.
@@ -891,7 +915,6 @@ models.PosModel = models.PosModel.extend({
         var self = this;
         var ids_to_remove = this.db.get_ids_to_remove_from_server();
         if (!table || this.order_to_transfer_to_different_table) { // no table ? go back to the floor plan, see ScreenSelector
-            this.set_idle_timer(true);
             var order_ids = [];
             var table_orders = this.get_order_list();
             table_orders.forEach(function(o){
@@ -946,7 +969,6 @@ models.PosModel = models.PosModel.extend({
 
             clearInterval(this.table_longpolling);
             this.table = table;
-            this.set_idle_timer();
 
             this.set_synch('connecting', 1);
             this._get_from_server(table.id)

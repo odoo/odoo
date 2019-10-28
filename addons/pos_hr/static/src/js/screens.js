@@ -8,6 +8,7 @@ var ScreenWidget = require('point_of_sale.screens').ScreenWidget;
 var _t = core._t;
 
 ScreenWidget.include({
+    autolock: true,
 
     // what happens when a cashier id barcode is scanned.
     // the default behavior is the following : 
@@ -41,9 +42,46 @@ ScreenWidget.include({
             return prom
         }
     },
+    renderElement: function() {
+        this._super();
+        console.log('setting lock '+ this.$el.attr('class'));
+        if (this.pos.config.module_pos_hr) {
+            this.pos.barcode_reader.set_action_callback('cashier', _.bind(this.barcode_cashier_action, this));
+            
+            if (this.autolock && this.pos.config.auto_lock !== 0) {
+                if (!this.$el.hasClass('login-screen')){
+                    var self = this;
+                    console.log('set lock '+ this.$el.attr('class'));
+                    this.$el.on(
+                            'mousemove mousedown touchstart click scroll keypress',
+                            function() {self.set_lock_timer()}
+                    );
+                }
+            }
+        }
+    },
     show: function() {
         this._super();
-        this.pos.barcode_reader.set_action_callback('cashier', _.bind(this.barcode_cashier_action, this));
+        if (this.pos.config.module_pos_hr && this.autolock && this.pos.config.auto_lock !== 0) {
+            this.set_lock_timer();
+        }
+    },
+    close: function() {
+        this._super();
+        this.set_lock_timer(true);
+    },
+    set_lock_timer: function(deactivate) {
+        var timeout = this.pos.config.auto_lock * 60000;
+        deactivate = deactivate || false;
+        if (this.lock_timer) {
+            clearTimeout(this.lock_timer);
+        }
+        if (!deactivate  && !this.hidden) {
+            var self = this;
+            this.lock_timer = setTimeout(function(){
+                self.gui.show_screen('login');
+            }, timeout);
+        }
     },
 });
 
@@ -56,6 +94,7 @@ ScreenWidget.include({
 
 var LoginScreenWidget = ScreenWidget.extend({
     template: 'LoginScreenWidget',
+    autolock: false,
 
     /**
      * @override
