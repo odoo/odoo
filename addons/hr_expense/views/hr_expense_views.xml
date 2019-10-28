@@ -105,12 +105,12 @@
                                 <field name="quantity" class="oe_inline"/>
                                 <field name="product_uom_id" required="1" widget="selection" class="oe_inline" groups="uom.group_uom"/>
                             </div>
-                            <field name="tax_ids" widget="many2many_tags" groups="account.group_account_user" attrs="{'readonly': [('is_editable', '=', False)]}" context="{'default_company_id': company_id}"/>
+                            <field name="tax_ids" widget="many2many_tags" groups="account.group_account_readonly" attrs="{'readonly': [('is_editable', '=', False)]}" context="{'default_company_id': company_id}"/>
                             <field name="total_amount" widget='monetary' options="{'currency_field': 'currency_id'}"/>
                         </group><group>
                             <field name="reference" attrs="{'readonly': [('is_ref_editable', '=', False)]}"/>
                             <field name="date"/>
-                            <field name="account_id" options="{'no_create': True}" domain="[('internal_type', '=', 'other'), ('company_id', '=', company_id)]" groups="account.group_account_user" attrs="{'readonly': [('is_editable', '=', False)]}" context="{'default_company_id': company_id}"/>
+                            <field name="account_id" options="{'no_create': True}" domain="[('internal_type', '=', 'other'), ('company_id', '=', company_id)]" groups="account.group_account_readonly" attrs="{'readonly': [('is_editable', '=', False)]}" context="{'default_company_id': company_id}"/>
                             <field name="employee_id" groups="hr_expense.group_hr_expense_team_approver" context="{'default_company_id': company_id}"/>
                             <field name="sheet_id" invisible="1"/>
                             <field name="currency_id" groups="base.group_multi_currency"/>
@@ -351,7 +351,7 @@
                                 <field name="company_id" groups="base.group_multi_company"/>
                             </group>
                             <group string="Accounting">
-                                <field name="property_account_expense_id" groups="account.group_account_user"/>
+                                <field name="property_account_expense_id" groups="account.group_account_readonly"/>
                                 <field name="supplier_taxes_id" widget="many2many_tags" context="{'default_type_tax_use':'purchase'}"/>
                                 <field name="taxes_id" widget="many2many_tags" context="{'default_type_tax_use':'sale'}"/>
                             </group>
@@ -534,7 +534,7 @@
                                 <field name="currency_id" optional="hide"/>
                                 <field name="quantity" optional="hide"/>
                                 <field name="company_id"/>
-                                <field name="tax_ids" optional="hide" widget="many2many_tags" groups="account.group_account_user" context="{'default_company_id': company_id}"/>
+                                <field name="tax_ids" optional="hide" widget="many2many_tags" groups="account.group_account_readonly" context="{'default_company_id': company_id}"/>
                                 <field name="total_amount" optional="show"/>
                                 <field name="company_currency_id" invisible="1"/>
                                 <field name="total_amount_company" optional="show" groups="base.group_multi_currency"/>
@@ -553,11 +553,11 @@
                             <group>
                                 <group>
                                     <field name="journal_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('payment_mode', '!=', 'own_account')]}" context="{'default_company_id': company_id}"/>
-                                    <field name="bank_journal_id" groups="account.group_account_user" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('payment_mode', '!=', 'company_account')]}" context="{'default_company_id': company_id}"/>
-                                    <field name="accounting_date" groups="account.group_account_user" attrs="{'invisible': [('state', 'not in', ['approve', 'post', 'done'])]}"/>
+                                    <field name="bank_journal_id" groups="account.group_account_readonly" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('payment_mode', '!=', 'company_account')]}" context="{'default_company_id': company_id}"/>
+                                    <field name="accounting_date" groups="account.group_account_readonly" attrs="{'invisible': [('state', 'not in', ['approve', 'post', 'done'])]}"/>
                                 </group>
                                 <group>
-                                    <field name="account_move_id" groups="account.group_account_user" attrs="{'invisible': [('state', 'not in', ['post', 'done'])]}" readonly="1"/>
+                                    <field name="account_move_id" groups="account.group_account_readonly" attrs="{'invisible': [('state', 'not in', ['post', 'done'])]}" readonly="1"/>
                                 </group>
                             </group>
                         </page>
@@ -867,9 +867,9 @@ if records:
         <menuitem id="menu_hr_expense_sheet_all_to_approve" name="To Approve" sequence="1" parent="menu_hr_expense_report"
             action="action_hr_expense_sheet_all_to_approve"/>
         <menuitem id="menu_hr_expense_sheet_all_to_post" name="To Post" sequence="2" parent="menu_hr_expense_report"
-            action="action_hr_expense_sheet_all_to_post" groups="account.group_account_user"/>
+            action="action_hr_expense_sheet_all_to_post" groups="account.group_account_readonly"/>
         <menuitem id="menu_hr_expense_sheet_all_to_pay" name="To Pay" sequence="3" parent="menu_hr_expense_report"
-            action="action_hr_expense_sheet_all_to_pay" groups="account.group_account_user"/>
+            action="action_hr_expense_sheet_all_to_pay" groups="account.group_account_readonly"/>
 
         <menuitem id="menu_hr_expense_reports" name="Reporting" sequence="4" parent="menu_hr_expense_root" groups="hr_expense.group_hr_expense_manager"/>
         <menuitem id="menu_hr_expense_all_expenses" name="Expenses Analysis" sequence="0" parent="menu_hr_expense_reports" action="hr_expense_actions_all"/>

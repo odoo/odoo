@@ -1190,6 +1190,11 @@ class GroupsView(models.Model):
                 return (app, 'selection', gs.sorted('id'), category_name)
             # determine sequence order: a group appears after its implied groups
             order = {g: len(g.trans_implied_ids & gs) for g in gs}
+            # We want a selection for Accounting too. Auditor and Invoice are both
+            # children of Accountant, but the two of them make a full accountant
+            # so it makes no sense to have checkboxes.
+            if app.xml_id == 'base.module_category_accounting_accounting':
+                return (app, 'selection', gs.sorted(key=order.get), category_name)
             # check whether order is total, i.e., sequence orders are distinct
             if len(set(order.values())) == len(gs):
                 return (app, 'selection', gs.sorted(key=order.get), category_name)

@@ -75,7 +75,7 @@
                                 </div>
                             </div>
 
-                             <div class="col-4 o_kanban_card_manage_section o_kanban_manage_new">
+                             <div class="col-4 o_kanban_card_manage_section o_kanban_manage_new" groups="account.group_account_user">
                                 <div class="o_kanban_card_manage_title">
                                     <span role="separator">New</span>
                                 </div>
@@ -127,7 +127,7 @@
                                 </div>
                             </div>
 
-                             <div class="col-4 o_kanban_card_manage_section o_kanban_manage_new">
+                             <div class="col-4 o_kanban_card_manage_section o_kanban_manage_new" groups="account.group_account_invoice">
                                 <div class="o_kanban_card_manage_title">
                                     <span>New</span>
                                 </div>
@@ -150,8 +150,8 @@
                                     <span>Reporting</span>
                                 </div>
                                 <div>
-                                    <a t-if="journal_type == 'sale'" type="action" name="%(action_account_invoice_report_all)d" groups="account.group_account_manager">Invoices Analysis</a>
-                                    <a t-if="journal_type == 'purchase'" type="action" name="%(action_account_invoice_report_all_supp)d" groups="account.group_account_manager">Bills Analysis</a>
+                                    <a t-if="journal_type == 'sale'" type="action" name="%(action_account_invoice_report_all)d" groups="account.group_account_readonly">Invoices Analysis</a>
+                                    <a t-if="journal_type == 'purchase'" type="action" name="%(action_account_invoice_report_all_supp)d" groups="account.group_account_readonly">Bills Analysis</a>
                                 </div>
                             </div>
                         </div>
@@ -173,7 +173,7 @@
                                 </div>
                             </div>
 
-                             <div class="col-4 o_kanban_card_manage_section o_kanban_manage_new">
+                             <div class="col-4 o_kanban_card_manage_section o_kanban_manage_new" groups="account.group_account_user">
                                 <div class="o_kanban_card_manage_title">
                                     <span>New</span>
                                 </div>
@@ -187,7 +187,7 @@
                                     <span>Operations</span>
                                 </div>
                                 <div>
-                                    <a type="object" name="open_action_with_context" context="{'action_name': 'action_validate_account_move', 'search_default_journal': True}">Post All Entries</a>
+                                    <a type="object" name="open_action_with_context" context="{'action_name': 'action_validate_account_move', 'search_default_journal': True}"  groups="account.group_account_user">Post All Entries</a>
                                 </div>
                             </div>
                         </div>
@@ -210,7 +210,7 @@
 
                     <t t-name="JournalMiscelaneous">
                         <div class="col-5 o_kanban_primary_left">
-                            <button type="object" name="action_create_new" class="btn btn-primary">
+                            <button type="object" name="action_create_new" class="btn btn-primary" groups="account.group_account_invoice">
                                 <span>New Entry</span>
                             </button>
                         </div>
@@ -236,17 +236,17 @@
                         <div class="col-5 o_kanban_primary_left">
                             <t t-if="journal_type == 'bank'" id="journal_body_bank_cash_left">
                                 <div name="bank_journal_cta">
-                                    <button t-if="dashboard.bank_statements_source == 'undefined'" name="action_configure_bank_journal" type="object" class="btn btn-primary">Configure</button>
-                                    <div name="bank_statement_create_button" t-if="dashboard.bank_statements_source != 'online_sync'">
+                                    <button t-if="dashboard.bank_statements_source == 'undefined'" name="action_configure_bank_journal" type="object" class="btn btn-primary"  groups="account.group_account_invoice">Configure</button>
+                                    <div name="bank_statement_create_button" t-if="dashboard.bank_statements_source != 'online_sync'" groups="account.group_account_invoice">
                                         <a type="object" name="create_bank_statement" class="oe_inline">Create</a><span name="button_import_placeholder"/> Statements
                                     </div>
                                 </div>
                             </t>
                             <t t-if="dashboard.number_to_reconcile > 0">
-                                <a t-if="journal_type == 'cash'" type="object" name="create_cash_statement" class="oe_inline">New Transactions</a>
+                                <a t-if="journal_type == 'cash'" type="object" name="create_cash_statement" class="oe_inline" groups="account.group_account_invoice">New Transactions</a>
                             </t>
                             <t t-if="dashboard.number_to_reconcile == 0">
-                                <button t-if="journal_type == 'cash'" type="object" name="create_cash_statement" class="btn btn-primary">New Transactions</button>
+                                <button t-if="journal_type == 'cash'" type="object" name="create_cash_statement" class="btn btn-primary" groups="account.group_account_invoice">New Transactions</button>
                             </t>
                         </div>
                         <!-- On the right, show other common informations/actions -->
@@ -287,18 +287,18 @@
                     <t t-name="JournalBodySalePurchase" id="account.JournalBodySalePurchase">
                         <div class="col-5 o_kanban_primary_left">
                             <t t-if="journal_type == 'sale'">
-                                <button type="object" name="action_create_new" class="btn btn-primary o_invoice_new">
+                                <button type="object" name="action_create_new" class="btn btn-primary o_invoice_new" groups="account.group_account_invoice">
                                     <span>New Invoice</span>
                                 </button>
-                                <button class="btn btn-primary d-block o_button_upload_bill" journal_type="sale">
+                                <button class="btn btn-primary d-block o_button_upload_bill" journal_type="sale" groups="account.group_account_invoice">
                                     <span>Upload Invoices</span>
                                 </button>
                             </t>
                             <t t-if="journal_type == 'purchase'">
-                                <button type="object" name="action_create_new" class="btn btn-primary o_invoice_new">
+                                <button type="object" name="action_create_new" class="btn btn-primary o_invoice_new" groups="account.group_account_invoice">
                                     <span>New Bill</span>
                                 </button>
-                                <button class="btn btn-primary d-block o_button_upload_bill" journal_type="purchase">
+                                <button class="btn btn-primary d-block o_button_upload_bill" journal_type="purchase" groups="account.group_account_invoice">
                                     <span>Upload Bills</span>
                                 </button>
                             </t>
@@ -372,5 +372,5 @@
         </field>
     </record>
 
-    <menuitem id="menu_board_journal_1" name="Overview" action="open_account_journal_dashboard_kanban" parent="menu_finance" sequence="1" groups="account.group_account_user"/>
+    <menuitem id="menu_board_journal_1" name="Overview" action="open_account_journal_dashboard_kanban" parent="menu_finance" sequence="1" groups="account.group_account_readonly"/>
 </odoo>

@@ -221,11 +221,11 @@ class AccountMove(models.Model):
         help='International Commercial Terms are a series of predefined commercial terms used in international transactions.')
 
     # ==== Payment widget fields ====
-    invoice_outstanding_credits_debits_widget = fields.Text(groups="account.group_account_invoice",
+    invoice_outstanding_credits_debits_widget = fields.Text(groups="account.group_account_invoice,account.group_account_readonly",
         compute='_compute_payments_widget_to_reconcile_info')
-    invoice_payments_widget = fields.Text(groups="account.group_account_invoice",
+    invoice_payments_widget = fields.Text(groups="account.group_account_invoice,account.group_account_readonly",
         compute='_compute_payments_widget_reconciled_info')
-    invoice_has_outstanding = fields.Boolean(groups="account.group_account_invoice",
+    invoice_has_outstanding = fields.Boolean(groups="account.group_account_invoice,account.group_account_readonly",
         compute='_compute_payments_widget_to_reconcile_info')
 
     # ==== Vendor bill fields ====
@@ -253,7 +253,7 @@ class AccountMove(models.Model):
         help="Technical field used to have a dynamic domain on journal / taxes in the form view.")
     bank_partner_id = fields.Many2one('res.partner', help='Technical field to get the domain on the bank', compute='_compute_bank_partner_id')
     invoice_has_matching_suspense_amount = fields.Boolean(compute='_compute_has_matching_suspense_amount',
-        groups='account.group_account_invoice',
+        groups='account.group_account_invoice,account.group_account_readonly',
         help="Technical field used to display an alert on invoices if there is at least a matching amount in any supsense account.")
     tax_lock_date_message = fields.Char(
         compute='_compute_tax_lock_date_message',
