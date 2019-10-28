@@ -431,6 +431,11 @@ class PosOrder(models.Model):
     def create_picking(self):
         """Create a picking for each order and validate it."""
         Picking = self.env['stock.picking']
+        # If no email is set on the user, the picking creation and validation will fail be cause of
+        # the 'Unable to log message, please configure the sender's email address.' error.
+        # We disable the tracking in this case.
+        if not self.env.user.partner_id.email:
+            Picking = Picking.with_context(tracking_disable=True)
         Move = self.env['stock.move']
         StockWarehouse = self.env['stock.warehouse']
         for order in self:
@@ -469,7 +474,10 @@ class PosOrder(models.Model):
                 pos_qty = any([x.qty > 0 for x in order.lines if x.product_id.type in ['product', 'consu']])
                 if pos_qty:
                     order_picking = Picking.create(picking_vals.copy())
-                    order_picking.message_post(body=message)
+                    if self.env.user.partner_id.email:
+                        order_picking.message_post(body=message)
+                    else:
+                        order_picking.sudo().message_post(body=message)
                 neg_qty = any([x.qty < 0 for x in order.lines if x.product_id.type in ['product', 'consu']])
                 if neg_qty:
                     return_vals = picking_vals.copy()
@@ -479,7 +487,10 @@ class PosOrder(models.Model):
                         'picking_type_id': return_pick_type.id
                     })
                     return_picking = Picking.create(return_vals)
-                    return_picking.message_post(body=message)
+                    if self.env.user.partner_id.email:
+                        return_picking.message_post(body=message)
+                    else:
+                        return_picking.message_post(body=message)
 
             for line in order.lines.filtered(lambda l: l.product_id.type in ['product', 'consu'] and not float_is_zero(l.qty, precision_rounding=l.product_id.uom_id.rounding)):
                 moves |= Move.create({
