@@ -245,6 +245,13 @@ class StockMove(models.Model):
 
         res = super(StockMove, self)._action_done(cancel_backorder=cancel_backorder)
 
+        # '_action_done' might have created an extra move to be valued
+        for move in res - self:
+            for valued_type in self._get_valued_types():
+                if getattr(move, '_is_%s' % valued_type)():
+                    valued_moves[valued_type] |= move
+                    continue
+
         stock_valuation_layers = self.env['stock.valuation.layer'].sudo()
         # Create the valuation layers in batch by calling `moves._create_valued_type_svl`.
         for valued_type in self._get_valued_types():
