@@ -27,7 +27,7 @@ class PosOrder(models.Model):
         taxes = line.tax_ids.filtered(lambda t: t.company_id.id == line.order_id.company_id.id)
         taxes = fiscal_position_id.map_tax(taxes, line.product_id, line.order_id.partner_id)
         price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-        taxes = taxes.compute_all(price, line.order_id.pricelist_id.currency_id, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)['taxes']
+        taxes = taxes.compute_all(price, line.order_id.currency_id, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)['taxes']
         return sum(tax.get('amount', 0.0) for tax in taxes)
 
     @api.model
@@ -159,7 +159,7 @@ class PosOrder(models.Model):
         :param draft: Indicate that the pos_order is not validated yet.
         :type draft: bool.
         """
-        prec_acc = order.pricelist_id.currency_id.decimal_places
+        prec_acc = order.currency_id.decimal_places
 
         order_bank_statement_lines= self.env['pos.payment'].search([('pos_order_id', '=', order.id)])
         order_bank_statement_lines.unlink()
@@ -216,7 +216,7 @@ class PosOrder(models.Model):
     amount_return = fields.Float(string='Returned', digits=0, required=True, readonly=True)
     lines = fields.One2many('pos.order.line', 'order_id', string='Order Lines', states={'draft': [('readonly', False)]}, readonly=True, copy=True)
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True)
-    pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', required=True, states={
+    pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', states={
                                    'draft': [('readonly', False)]}, readonly=True)
     partner_id = fields.Many2one('res.partner', string='Customer', change_default=True, index=True, states={'draft': [('readonly', False)], 'paid': [('readonly', False)]})
     sequence_number = fields.Integer(string='Sequence Number', help='A session-unique sequence number for the order', default=1)
@@ -275,7 +275,7 @@ class PosOrder(models.Model):
     @api.onchange('payment_ids', 'lines')
     def _onchange_amount_all(self):
         for order in self:
-            currency = order.pricelist_id.currency_id
+            currency = order.currency_id
             order.amount_paid = sum(payment.amount for payment in order.payment_ids)
             order.amount_return = sum(payment.amount < 0 and payment.amount or 0 for payment in order.payment_ids)
             order.amount_tax = currency.round(sum(self._amount_line_tax(line, order.fiscal_position_id) for line in order.lines))
@@ -298,7 +298,7 @@ class PosOrder(models.Model):
             amounts[order['order_id'][0]]['taxes'] = order['price_subtotal_incl'] - order['price_subtotal']
 
         for order in self:
-            currency = order.pricelist_id.currency_id
+            currency = order.currency_id
             order.write({
                 'amount_paid': amounts[order.id]['paid'],
                 'amount_return': amounts[order.id]['return'],
@@ -392,7 +392,7 @@ class PosOrder(models.Model):
                 'partner_id': order.partner_id.id,
                 'narration': order.note or '',
                 # considering partner's sale pricelist's currency
-                'currency_id': order.pricelist_id.currency_id.id,
+                'currency_id': order.currency_id.id,
                 'invoice_user_id': order.user_id.id,
                 'invoice_date': order.date_order.date(),
                 'fiscal_position_id': order.fiscal_position_id.id,
@@ -666,7 +666,7 @@ class PosOrderLine(models.Model):
         fpos = self.order_id.fiscal_position_id
         tax_ids_after_fiscal_position = fpos.map_tax(self.tax_ids, self.product_id, self.order_id.partner_id)
         price = self.price_unit * (1 - (self.discount or 0.0) / 100.0)
-        taxes = tax_ids_after_fiscal_position.compute_all(price, self.order_id.pricelist_id.currency_id, self.qty, product=self.product_id, partner=self.order_id.partner_id)
+        taxes = tax_ids_after_fiscal_position.compute_all(price, self.order_id.currency_id, self.qty, product=self.product_id, partner=self.order_id.partner_id)
         return {
             'price_subtotal_incl': taxes['total_included'],
             'price_subtotal': taxes['total_excluded'],
@@ -675,12 +675,8 @@ class PosOrderLine(models.Model):
     @api.onchange('product_id')
     def _onchange_product_id(self):
         if self.product_id:
-            if not self.order_id.pricelist_id:
-                raise UserError(
-                    _('You have to select a pricelist in the sale form !\n'
-                      'Please set one before choosing a product.'))
             price = self.order_id.pricelist_id.get_product_price(
-                self.product_id, self.qty or 1.0, self.order_id.partner_id)
+                self.product_id, self.qty or 1.0, self.product_uom_id)
             self._onchange_qty()
             self.tax_ids = self.product_id.taxes_id.filtered(lambda r: not self.company_id or r.company_id == self.company_id)
             tax_ids_after_fiscal_position = self.order_id.fiscal_position_id.map_tax(self.tax_ids, self.product_id, self.order_id.partner_id)
@@ -689,12 +685,10 @@ class PosOrderLine(models.Model):
     @api.onchange('qty', 'discount', 'price_unit', 'tax_ids')
     def _onchange_qty(self):
         if self.product_id:
-            if not self.order_id.pricelist_id:
-                raise UserError(_('You have to select a pricelist in the sale form.'))
             price = self.price_unit * (1 - (self.discount or 0.0) / 100.0)
             self.price_subtotal = self.price_subtotal_incl = price * self.qty
             if (self.product_id.taxes_id):
-                taxes = self.product_id.taxes_id.compute_all(price, self.order_id.pricelist_id.currency_id, self.qty, product=self.product_id, partner=False)
+                taxes = self.product_id.taxes_id.compute_all(price, self.order_id.currency_id, self.qty, product=self.product_id, partner=False)
                 self.price_subtotal = taxes['total_excluded']
                 self.price_subtotal_incl = taxes['total_included']
 
@@ -774,8 +768,8 @@ class ReportSaleDetails(models.AbstractModel):
         products_sold = {}
         taxes = {}
         for order in orders:
-            if user_currency != order.pricelist_id.currency_id:
-                total += order.pricelist_id.currency_id._convert(
+            if user_currency != order.currency_id:
+                total += order.currency_id._convert(
                     order.amount_total, user_currency, order.company_id, order.date_order or fields.Date.today())
             else:
                 total += order.amount_total

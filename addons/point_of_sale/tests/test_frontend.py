@@ -119,6 +119,7 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
 
         fixed_pricelist = env['product.pricelist'].create({
             'name': 'Fixed',
+            'currency_id': env.ref('point_of_sale.letter_tray').currency_id.id,
             'item_ids': [(0, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 1,

@@ -12,29 +12,31 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
         }
     }
 
-    function _build_pricelist_context (pricelist, quantity, date) {
+    function _build_pricelist_context (pricelist, quantity, currency) {
         return {
-            pricelist: pricelist.id,
+            pricelist_id: pricelist && pricelist.id,
             quantity: quantity,
+            currency_id: currency && currency.id,
         };
     }
 
     function compare_backend_frontend (product, pricelist_name, quantity) {
         return function () {
             var pricelist = _.findWhere(posmodel.pricelists, {name: pricelist_name});
+            var currency = posmodel.currency;
             var frontend_price = product.get_price(pricelist, quantity);
             // ORM applies digits= on non-stored computed field when
             // reading. It does not however truncate like it does when
             // storing the field.
             frontend_price = round_di(frontend_price, posmodel.dp['Product Price']);
 
-            var context = _build_pricelist_context(pricelist, quantity);
+            var context = _build_pricelist_context(pricelist, quantity, currency);
             return rpc.query({model: 'product.product', method: 'read', args: [[product.id], ['price']], context: context})
                 .then(function (backend_result) {
                     var debug_info = _.extend(context, {
                         product: product.id,
                         product_display_name: product.display_name,
-                        pricelist_name: pricelist.name,
+                        pricelist_name: pricelist && pricelist.name,
                     });
                     var backend_price = backend_result[0].price;
                     assert(frontend_price === backend_price,

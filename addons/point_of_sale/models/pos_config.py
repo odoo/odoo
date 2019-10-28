@@ -74,6 +74,7 @@ class AccountBankStmtCashWizard(models.Model):
 class PosConfig(models.Model):
     _name = 'pos.config'
     _description = 'Point of Sale Configuration'
+    _check_company_auto = True
 
     def _default_picking_type_id(self):
         return self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1).pos_type_id.id
@@ -109,17 +110,17 @@ class PosConfig(models.Model):
         default=_default_picking_type_id,
         required=True,
         domain="[('code', '=', 'outgoing'), ('warehouse_id.company_id', '=', company_id)]",
-        ondelete='restrict')
+        ondelete='restrict', check_company=True)
     journal_id = fields.Many2one(
         'account.journal', string='Sales Journal',
         domain=[('type', '=', 'sale')],
         help="Accounting journal used to post sales entries.",
-        default=_default_sale_journal)
+        default=_default_sale_journal, check_company=True)
     invoice_journal_id = fields.Many2one(
         'account.journal', string='Invoice Journal',
         domain=[('type', '=', 'sale')],
         help="Accounting journal used to create invoices.",
-        default=_default_invoice_journal)
+        default=_default_invoice_journal, check_company=True)
     currency_id = fields.Many2one('res.currency', compute='_compute_currency', string="Currency")
     iface_cashdrawer = fields.Boolean(string='Cashdrawer', help="Automatically open the cashdrawer.")
     iface_electronic_scale = fields.Boolean(string='Electronic Scale', help="Enables Electronic Scale integration.")
@@ -167,10 +168,13 @@ class PosConfig(models.Model):
     pos_session_username = fields.Char(compute='_compute_current_session_user')
     pos_session_state = fields.Char(compute='_compute_current_session_user')
     pos_session_duration = fields.Char(compute='_compute_current_session_user')
-    pricelist_id = fields.Many2one('product.pricelist', string='Default Pricelist', required=True, default=_default_pricelist,
+    pricelist_id = fields.Many2one('product.pricelist', string='Default Pricelist',
         help="The pricelist used if no customer is selected or if the customer has no Sale Pricelist configured.")
-    available_pricelist_ids = fields.Many2many('product.pricelist', string='Available Pricelists', default=_default_pricelist,
-        help="Make several pricelists available in the Point of Sale. You can also apply a pricelist to specific customers from their contact form (in Sales tab). To be valid, this pricelist must be listed here as an available pricelist. Otherwise the default pricelist will apply.")
+    available_pricelist_ids = fields.Many2many('product.pricelist', string='Available Pricelists',
+        help="Make several pricelists available in the Point of Sale. "
+        "You can also apply a pricelist to specific customers from their contact form (in Sales tab). "
+        "To be valid, this pricelist must be listed here as an available pricelist. Otherwise the default pricelist will apply.",
+        check_company=True)
     allowed_pricelist_ids = fields.Many2many(
         'product.pricelist',
         string='Allowed Pricelists',
@@ -340,7 +344,7 @@ class PosConfig(models.Model):
         for config in self:
             if config.use_pricelist and config.pricelist_id not in config.available_pricelist_ids:
                 raise ValidationError(_("The default pricelist must be included in the available pricelists."))
-        if any(self.available_pricelist_ids.mapped(lambda pricelist: pricelist.currency_id != self.currency_id)):
+        if any(p.currency_id != self.currency_id for p in self.available_pricelist_ids):
             raise ValidationError(_("All available pricelists must be in the same currency as the company or"
                                     " as the Sales Journal set on this point of sale if you use"
                                     " the Accounting application."))
@@ -352,11 +356,6 @@ class PosConfig(models.Model):
                 .mapped(lambda pm: self.currency_id not in (self.company_id.currency_id | pm.cash_journal_id.currency_id))
         ):
             raise ValidationError(_("All payment methods must be in the same currency as the Sales Journal or the company currency if that is not set."))
-
-    @api.constrains('company_id', 'available_pricelist_ids')
-    def _check_companies(self):
-        if any(self.available_pricelist_ids.mapped(lambda pl: pl.company_id.id not in (False, self.company_id.id))):
-            raise ValidationError(_("The selected pricelists must belong to no company or the company of the point of sale."))
 
     @api.onchange('iface_tipproduct')
     def _onchange_tipproduct(self):
@@ -381,6 +380,8 @@ class PosConfig(models.Model):
         using a pricelist for this iotbox.
         """
         if not self.use_pricelist:
+            self.pricelist_id = None
+        else:
             self.pricelist_id = self._default_pricelist()
 
     @api.onchange('available_pricelist_ids')
@@ -440,6 +441,8 @@ class PosConfig(models.Model):
 
     @api.model
     def create(self, values):
+        if values.get('company_id'):
+            self = self.with_company(values['company_id'])
         IrSequence = self.env['ir.sequence'].sudo()
         val = {
             'name': _('POS Order %s') % values['name'],
@@ -453,6 +456,9 @@ class PosConfig(models.Model):
 
         val.update(name=_('POS order line %s') % values['name'], code='pos.order.line')
         values['sequence_line_id'] = IrSequence.create(val).id
+        if values.get('use_pricelist') and not values.get('pricelist_id'):
+            values['pricelist_id'] = self._default_pricelist().id
+            values['available_pricelist_ids'] = [(4, values['pricelist_id'])]
         pos_config = super(PosConfig, self).create(values)
         pos_config.sudo()._check_modules_to_install()
         pos_config.sudo()._check_groups_implied()

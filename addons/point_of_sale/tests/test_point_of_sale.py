@@ -40,7 +40,8 @@ class TestPointOfSale(TransactionCase):
 
         # make sure this doesn't pick the company2 pricelist
         new_config = self.env["pos.config"].create({
-            "name": "usd config"
+            "name": "usd config",
+            "use_pricelist": True,
         })
 
         self.assertEqual(new_config.pricelist_id, company1_pricelist,
@@ -56,7 +57,8 @@ class TestPointOfSale(TransactionCase):
 
         # make sure this doesn't pick the company2 pricelist
         new_config = self.env["pos.config"].create({
-            "name": "usd config"
+            "name": "usd config",
+            "use_pricelist": True,
         })
 
         self.assertEqual(new_config.pricelist_id, universal_pricelist,

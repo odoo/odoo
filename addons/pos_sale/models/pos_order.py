@@ -20,7 +20,7 @@ class PosOrder(models.Model):
     def _compute_currency_rate(self):
         for order in self:
             date_order = order.date_order or fields.Datetime.now()
-            order.currency_rate = self.env['res.currency']._get_conversion_rate(order.company_id.currency_id, order.pricelist_id.currency_id, order.company_id, date_order)
+            order.currency_rate = self.env['res.currency']._get_conversion_rate(order.company_id.currency_id, order.currency_id, order.company_id, date_order)
 
     def _prepare_invoice(self):
         invoice_vals = super(PosOrder, self)._prepare_invoice()
