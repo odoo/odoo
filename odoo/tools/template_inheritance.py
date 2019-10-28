@@ -138,6 +138,9 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
                         else:
                             comment = content
                     source = copy.deepcopy(spec_content)
+                    for attr in ('t-name', 't-inherit'):
+                        if node.get(attr):
+                            source.set(attr, node.get(attr))
                     if comment is not None:
                         text = source.text
                         source.text = None
