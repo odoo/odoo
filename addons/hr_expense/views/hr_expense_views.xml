@@ -28,21 +28,26 @@
             <field name="model">hr.expense</field>
             <field name="arch" type="xml">
                 <tree string="Expenses" decoration-bf="message_unread == True" class="o_expense_tree" js_class="hr_expense_tree" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'">
-                    <field name="currency_id" invisible="True"/>
                     <field name="attachment_number" invisible="True"/>
-                    <field name="date"/>
+                    <field name="date" optional="show"/>
                     <field name="name"/>
                     <field name="employee_id"/>
-                    <field name="sheet_id" invisible="not context.get('show_report', False)"/>
-                    <field name="payment_mode"/>
-                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
-                    <field name="total_amount" sum="Total Amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    <field name="sheet_id" optional="show" invisible="not context.get('show_report', False)"/>
+                    <field name="payment_mode" optional="show"/>
+                    <field name="reference" optional="hide"/>
+                    <field name="analytic_account_id" optional="show" groups="analytic.group_analytic_accounting"/>
+                    <field name="analytic_tag_ids" optional="hide" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
+                    <field name="account_id" optional="hide"/>
+                    <field name="unit_amount" optional="hide"/>
+                    <field name="currency_id" optional="hide"/>
+                    <field name="quantity" optional="hide"/>
+                    <field name="tax_ids" optional="hide" widget="many2many_tags" groups="account.group_account_user"/>
+                    <field name="total_amount" optional="show" sum="Total Amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                     <button name="action_get_attachment_view" string="View Attached Documents" type="object" icon="fa-paperclip" attrs="{'invisible': [('attachment_number', '=', 0)]}"/>
                     <field name="message_unread" invisible="1"/>
-                    <field name="state"/>
-                    <field name="activity_exception_decoration" widget="activity_exception"/>
+                    <field name="state" optional="show"/>
+                    <field name="company_id" optional="show" groups="base.group_multi_company"/>
+                    <field name="activity_exception_decoration"  widget="activity_exception"/>
                 </tree>
             </field>
         </record>
@@ -443,15 +448,17 @@
             <field name="model">hr.expense.sheet</field>
             <field name="arch" type="xml">
                 <tree string="Expense Reports" decoration-warning="state=='draft'" decoration-bf="message_unread == True" decoration-danger="state=='cancel'">
+                    <field name="accounting_date" optional="show" groups="account.group_account_manager"/>
+                    <field name="create_date" optional="hide"/>
                     <field name="name" string="Expense Report"/>
                     <field name="employee_id"/>
-                    <field name="create_date"/>
-                    <field name="accounting_date" groups="account.group_account_manager"/>
-                    <field name="total_amount" sum="Total Amount"/>
-                    <field name="currency_id" invisible="1"/>
-                    <field name="state"/>
+                    <field name="user_id" optional="show"/>
+                    <field name="total_amount" optional="show" sum="Total Amount"/>
+                    <field name="currency_id" optional="hide"/>
+                    <field name="journal_id" optional="hide"/>
+                    <field name="state" optional="show"/>
+                    <field name="company_id" optional="show" groups="base.group_multi_company"/>
                     <field name="message_unread" invisible="1"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
                 </tree>
             </field>
@@ -502,19 +509,23 @@
                         <page name="expenses" string="Expense">
                         <field name="expense_line_ids" nolabel="1" widget="many2many" domain="[('state', '=', 'draft'), ('employee_id', '=', employee_id), ('company_id', '=', company_id)]" options="{'reload_on_button': True}" context="{'form_view_ref' : 'hr_expense.hr_expense_view_form_without_header'}">
                             <tree decoration-danger="is_refused">
-                                <field name="date"/>
+                                <field name="date" optional="show"/>
                                 <field name="name"/>
                                 <field name="state" invisible="1"/>
-                                <field name="analytic_account_id" domain="['|', ('company_id', '=', parent.company_id), ('company_id', '=', False)]" groups="analytic.group_analytic_accounting"/>
-                                <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
+                                <field name="reference" optional="hide"/>
+                                <field name="analytic_account_id" optional="show" domain="['|', ('company_id', '=', parent.company_id), ('company_id', '=', False)]" groups="analytic.group_analytic_accounting"/>
+                                <field name="analytic_tag_ids" optional="hide" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
+                                <field name="account_id" optional="hide"/>
                                 <field name="message_unread" invisible="1"/>
-                                <field name="attachment_number" string=" "/>
-                                <button name="action_get_attachment_view" string="View Attachments" type="object" icon="fa-paperclip" attrs="{'invisible': ['&amp;', ('attachment_number', '=', 0), ('state', '!=', 'draft')]}"/>
-                                <field name="tax_ids" widget="many2many_tags" groups="account.group_account_user"/>
-                                <field name="currency_id" invisible="1"/>
-                                <field name="total_amount"/>
+                                <field name="attachment_number" optional="show" string=" "/>
+                                <button name="action_get_attachment_view"  string="View Attachments" type="object" icon="fa-paperclip" attrs="{'invisible': ['&amp;', ('attachment_number', '=', 0), ('state', '!=', 'draft')]}"/>
+                                <field name="unit_amount" optional="hide"/>
+                                <field name="currency_id" optional="hide"/>
+                                <field name="quantity" optional="hide"/>
+                                <field name="tax_ids" optional="hide" widget="many2many_tags" groups="account.group_account_user"/>
+                                <field name="total_amount" optional="show"/>
                                 <field name="company_currency_id" invisible="1"/>
-                                <field name="total_amount_company" groups="base.group_multi_currency"/>
+                                <field name="total_amount_company" optional="show" groups="base.group_multi_currency"/>
                                 <field name="is_refused" invisible="True"/>
                            </tree>
                         </field>

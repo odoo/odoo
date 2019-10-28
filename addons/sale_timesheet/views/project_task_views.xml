@@ -28,6 +28,18 @@
         </field>
     </record>
 
+    <record id="project_project_view_tree_inherit_sale_timesheet" model="ir.ui.view">
+        <field name="name">project.project.tree.inherit.sale.timesheet</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='analytic_account_id']" position="after">
+                <field name="sale_order_id" optional="hide" widget="sale_order_many2one"/>
+                <field name="sale_line_id" optional="hide" widget="sale_order_many2one"/>
+            </xpath>
+        </field>
+    </record>
+
     <record id="project_project_view_kanban_inherit_sale_timesheet" model="ir.ui.view">
         <field name="name">project.project.kanban.inherit.sale.timesheet</field>
         <field name="model">project.project</field>

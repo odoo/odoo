@@ -12,6 +12,17 @@
             </xpath>
         </field>
     </record>
+    <record id="hr_expense_tree_view_inherit_sale_expense" model="ir.ui.view">
+        <field name="name">hr.expense.tree.inherit.sale.expense</field>
+        <field name="model">hr.expense</field>
+        <field name="inherit_id" ref="hr_expense.view_expenses_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='reference']" position="after">
+                <field name="sale_order_id" optional="hide" attrs="{'invisible': [('can_be_reinvoiced', '=', False)]}" options="{'no_create_edit': True, 'no_create': True, 'no_open': True}"  context="{'sale_show_partner_name': True, 'sale_expense_all_order': True}"/>
+                <field name="can_be_reinvoiced" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
     <record id="hr_expense_form_view_inherit_account_manager" model="ir.ui.view">
         <field name="name">hr.expense.form.inherit.sale.expense</field>
         <field name="model">hr.expense</field>
