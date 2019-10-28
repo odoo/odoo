@@ -4,6 +4,16 @@
 from odoo import fields, models
 
 
+class Product(models.Model):
+    _inherit = "product.product"
+
+    def action_open_quants(self):
+        # Override to hide the `removal_date` column if not needed.
+        if not any(product.use_expiration_date for product in self):
+            self = self.with_context(hide_removal_date=True)
+        return super().action_open_quants()
+
+
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
