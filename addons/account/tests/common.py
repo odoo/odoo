@@ -595,7 +595,8 @@ class AccountTestInvoicingCommon(SavepointCase):
             'name': 'add_invoice_line',
             'rounding': 0.05,
             'strategy': 'add_invoice_line',
-            'account_id': cls.company_data['default_account_revenue'].copy().id,
+            'profit_account_id': cls.company_data['default_account_revenue'].copy().id,
+            'loss_account_id': cls.company_data['default_account_expense'].copy().id,
             'rounding_method': 'UP',
         })
         cls.cash_rounding_b = cls.env['account.cash.rounding'].create({
