@@ -617,6 +617,15 @@ class TestFields(common.TransactionCase):
         self.assertTrue(record.filtered_domain([('date', '<', '2012-05-02')]))
         self.assertTrue(record.filtered_domain([('date', '<', date(2012, 5, 2))]))
         self.assertTrue(record.filtered_domain([('date', '<', datetime(2012, 5, 2, 12, 0, 0))]))
+        self.assertTrue(record.filtered_domain([('date', '!=', False)]))
+        self.assertFalse(record.filtered_domain([('date', '=', False)]))
+
+        record.date = None
+        self.assertFalse(record.filtered_domain([('date', '<', '2012-05-02')]))
+        self.assertFalse(record.filtered_domain([('date', '<', date(2012, 5, 2))]))
+        self.assertFalse(record.filtered_domain([('date', '<', datetime(2012, 5, 2, 12, 0, 0))]))
+        self.assertFalse(record.filtered_domain([('date', '!=', False)]))
+        self.assertTrue(record.filtered_domain([('date', '=', False)]))
 
     def test_21_datetime(self):
         """ test datetime fields """
@@ -647,6 +656,15 @@ class TestFields(common.TransactionCase):
         self.assertTrue(record.filtered_domain([('moment', '<', '2012-05-02')]))
         self.assertTrue(record.filtered_domain([('moment', '<', date(2012, 5, 2))]))
         self.assertTrue(record.filtered_domain([('moment', '<', datetime(2012, 5, 1, 12, 0, 0))]))
+        self.assertTrue(record.filtered_domain([('moment', '!=', False)]))
+        self.assertFalse(record.filtered_domain([('moment', '=', False)]))
+
+        record.moment = None
+        self.assertFalse(record.filtered_domain([('moment', '<', '2012-05-02')]))
+        self.assertFalse(record.filtered_domain([('moment', '<', date(2012, 5, 2))]))
+        self.assertFalse(record.filtered_domain([('moment', '<', datetime(2012, 5, 2, 12, 0, 0))]))
+        self.assertFalse(record.filtered_domain([('moment', '!=', False)]))
+        self.assertTrue(record.filtered_domain([('moment', '=', False)]))
 
     def test_21_date_datetime_helpers(self):
         """ test date/datetime fields helpers """
