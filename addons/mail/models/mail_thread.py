@@ -1483,7 +1483,7 @@ class MailThread(models.AbstractModel):
         if partner and partner.id in [val[0] for val in result[self.ids[0]]]:  # already existing partner ID -> skip
             return result
         if partner and partner.email:  # complete profile: id, name <email>
-            result[self.ids[0]].append((partner.id, tools.formataddr((partner.name, partner.email)), reason))
+            result[self.ids[0]].append((partner.id, partner.email_formatted, reason))
         elif partner:  # incomplete profile: id, name
             result[self.ids[0]].append((partner.id, '%s' % (partner.name), reason))
         else:  # unknown partner, we are probably managing an email address
