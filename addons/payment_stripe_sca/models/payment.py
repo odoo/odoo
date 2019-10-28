@@ -54,6 +54,12 @@ class PaymentAcquirerStripeSCA(models.Model):
             resp.raise_for_status()
         except:
             _logger.error(resp.text)
+            try:
+                error = resp.json()
+            except ValueError:  # .json() raise ValueError if the response body does not contain valid json. So we fallback on original Exception
+                pass
+            else:
+                raise Exception(error.get('error', {}).get('message'))
             raise
         return resp.json()
 
