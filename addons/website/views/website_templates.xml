@@ -124,9 +124,6 @@
     <xpath expr="//header" position="attributes">
         <attribute name="data-name">Header</attribute>
     </xpath>
-    <xpath expr="//header//a[hasclass('navbar-brand')]" position="replace">
-        <a class="navbar-brand" href="/" t-if="website" t-field="website.name">My Website</a>
-    </xpath>
     <xpath expr="//header//ul[@id='top_menu']" position="attributes">
         <attribute name="class" separator=" " add="o_menu_loading"/>
     </xpath>
@@ -190,6 +187,12 @@
     </xpath>
     <xpath expr="//body" position="inside">
         <t t-raw="website.custom_code_footer"/>
+    </xpath>
+</template>
+
+<template id="website_name" inherit_id="website.layout" name="Website Name" active="False">
+    <xpath expr="//header//a[hasclass('navbar-brand')]" position="replace">
+        <a class="navbar-brand" href="/">My Website</a>
     </xpath>
 </template>
 
