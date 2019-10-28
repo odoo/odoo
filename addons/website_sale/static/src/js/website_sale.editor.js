@@ -201,7 +201,7 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
      */
     onFocus: function () {
         var listLayoutEnabled = this.$target.closest('#products_grid').hasClass('o_wsale_layout_list');
-        this.$el.find('.o_wsale_soptions_menu_sizes').closest('we-collapse-area')
+        this.$el.find('.o_wsale_soptions_menu_sizes')
             .toggleClass('d-none', listLayoutEnabled);
     },
 

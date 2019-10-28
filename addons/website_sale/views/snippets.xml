@@ -71,39 +71,34 @@
         <div data-js="WebsiteSaleProductsItem"
             data-selector="#products_grid .oe_product"
             data-no-check="true">
-            <we-collapse-area>
-                <we-toggler>Size</we-toggler>
-                <we-collapse class="o_wsale_soptions_menu_sizes">
-                    <table>
-                        <tr>
-                            <td/><td/><td/><td/>
-                        </tr>
-                        <tr>
-                            <td/><td/><td/><td/>
-                        </tr>
-                        <tr>
-                            <td/><td/><td/><td/>
-                        </tr>
-                        <tr>
-                            <td/><td/><td/><td/>
-                        </tr>
-                    </table>
-                </we-collapse>
-            </we-collapse-area>
+            <div class="o_wsale_soptions_menu_sizes">
+                <we-title>Size</we-title>
+                <table>
+                    <tr>
+                        <td/><td/><td/><td/>
+                    </tr>
+                    <tr>
+                        <td/><td/><td/><td/>
+                    </tr>
+                    <tr>
+                        <td/><td/><td/><td/>
+                    </tr>
+                    <tr>
+                        <td/><td/><td/><td/>
+                    </tr>
+                </table>
+            </div>
 
             <div name="style" data-no-preview="true">
                 <!-- Placeholder to be filled in JS -->
             </div>
 
-            <we-collapse-area>
-                <we-toggler>Promote</we-toggler>
-                <we-collapse data-no-preview="true">
-                    <we-button data-change-sequence="top">Push to top</we-button>
-                    <we-button data-change-sequence="up">Push up</we-button>
-                    <we-button data-change-sequence="down">Push down</we-button>
-                    <we-button data-change-sequence="bottom">Push to bottom</we-button>
-                </we-collapse>
-            </we-collapse-area>
+            <div name="reordering" data-no-preview="true">
+                <we-button data-change-sequence="top">Push to top</we-button>
+                <we-button data-change-sequence="up">Push up</we-button>
+                <we-button data-change-sequence="down">Push down</we-button>
+                <we-button data-change-sequence="bottom">Push to bottom</we-button>
+            </div>
         </div>
 
         <div data-js="ProductsSearchBar"
