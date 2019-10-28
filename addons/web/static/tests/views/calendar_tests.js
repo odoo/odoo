@@ -1058,6 +1058,51 @@ QUnit.module('Views', {
         calendar.destroy();
     });
 
+    QUnit.test('fetch event when being in timezone', async function (assert) {
+        assert.expect(3);
+
+        var calendar = await createCalendarView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar class="o_calendar_test" '+
+                'date_start="start" '+
+                'date_stop="stop" '+
+                'mode="week" >'+
+                    '<field name="name"/>'+
+                    '<field name="start"/>'+
+                    '<field name="allday"/>'+
+            '</calendar>',
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+            session: {
+                getTZOffset: function () {
+                    return 660;
+                },
+            },
+
+            mockRPC: async function (route, args) {
+                if (args.method === 'search_read' && args.model === 'event') {
+                    assert.deepEqual(args.kwargs.domain, [
+                        ["start", "<=", "2016-12-17 12:59:59"], // in UTC. which is 2016-12-17 23:59:59 in TZ Sydney 11 hours later
+                        ["stop", ">=", "2016-12-10 13:00:00"]   // in UTC. which is 2016-12-11 00:00:00 in TZ Sydney 11 hours later
+                    ], 'The domain should contain the right range');
+                }
+                return this._super(route, args);
+            },
+        });
+
+        assert.strictEqual(calendar.$('.fc-day-header:first').text(), 'Sun 11',
+            'The calendar start date should be 2016-12-11');
+        assert.strictEqual(calendar.$('.fc-day-header:last()').text(), 'Sat 17',
+            'The calendar start date should be 2016-12-17');
+
+        calendar.destroy();
+    });
+
     QUnit.test('create event with timezone in week mode with formViewDialog American locale', async function (assert) {
         assert.expect(7);
 
