@@ -1295,8 +1295,18 @@ class AccountInvoice(models.Model):
         res = []
         # loop the invoice.tax.line in reversal sequence
         for tax_line in sorted(self.tax_line_ids, key=lambda x: -x.sequence):
+<<<<<<< HEAD
             if tax_line.amount_total:
                 analytic_tag_ids = [(4, analytic_tag.id, None) for analytic_tag in tax_line.analytic_tag_ids]
+=======
+            tax = tax_line.tax_id
+            if tax.amount_type == "group":
+                for child_tax in tax.children_tax_ids:
+                    done_taxes.append(child_tax.id)
+
+            analytic_tag_ids = [(4, analytic_tag.id, None) for analytic_tag in tax_line.analytic_tag_ids]
+            if tax_line.amount_total:
+>>>>>>> 06f936c4e40... temp
                 res.append({
                     'invoice_tax_line_id': tax_line.id,
                     'tax_line_id': tax_line.tax_id.id,
@@ -1314,6 +1324,10 @@ class AccountInvoice(models.Model):
                     'tag_ids': [(6, 0, tax_line.tag_ids.ids)],
                     'tax_base_amount': tax_line.base,
                 })
+<<<<<<< HEAD
+=======
+            done_taxes.append(tax.id)
+>>>>>>> 06f936c4e40... temp
         return res
 
     def inv_line_characteristic_hashcode(self, invoice_line):
