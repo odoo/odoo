@@ -5,6 +5,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import float_compare, float_is_zero
+from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 
 
 class Inventory(models.Model):
@@ -74,7 +75,8 @@ class Inventory(models.Model):
 
     def unlink(self):
         for inventory in self:
-            if inventory.state not in ('draft', 'cancel'):
+            if (inventory.state not in ('draft', 'cancel')
+               and not self.env.context.get(MODULE_UNINSTALL_FLAG, False)):
                 raise UserError(_('You can only delete a draft inventory adjustment. If the inventory adjustment is not done, you can cancel it.'))
         return super(Inventory, self).unlink()
 
