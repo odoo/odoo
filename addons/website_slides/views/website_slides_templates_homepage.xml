@@ -135,7 +135,7 @@
                         <div class="o_wslides_home_content_section mb-3"
                             t-if="not channels_popular">
                             <p class="h2">No Course created yet.</p>
-                            <p groups="website.group_website_designer">Click on "New" in the top-right corner to write your first course.</p>
+                            <p groups="website_slides.group_website_slides_officer">Click on "New" in the top-right corner to write your first course.</p>
                         </div>
                         <t t-if="channels_my">
                             <t t-set="void_count" t-value="3 - len(channels_my[:3])"/>
@@ -321,7 +321,7 @@
             <div class="container o_wslides_home_main pb-5">
                 <div t-if="not channels and not search_term and not search_slide_type and not search_my and not search_tags and not search_channel_tag_id">
                     <p class="h2">No Course created yet.</p>
-                    <p groups="website.group_website_designer">Click on "New" in the top-right corner to write your first course.</p>
+                    <p groups="website_slides.group_website_slides_officer">Click on "New" in the top-right corner to write your first course.</p>
                 </div>
                 <div t-elif="search_term and not channels" class="alert alert-info mb-5">
                     No course was found matching your search <code><t t-esc="search_term"/></code>.

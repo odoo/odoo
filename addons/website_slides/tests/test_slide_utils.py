@@ -7,7 +7,7 @@ from odoo.tests.common import users
 
 class TestSequencing(slides_common.SlidesCase):
 
-    @users('user_publisher')
+    @users('user_officer')
     def test_category_update(self):
         self.assertEqual(self.channel.slide_category_ids, self.category)
         self.assertEqual(self.channel.slide_content_ids, self.slide | self.slide_2 | self.slide_3)
@@ -53,7 +53,7 @@ class TestSequencing(slides_common.SlidesCase):
         self.assertEqual(new_slide.category_id, self.env['slide.slide'])
         self.assertEqual(self.slide_3.category_id, self.env['slide.slide'])
 
-    @users('user_publisher')
+    @users('user_officer')
     def test_resequence(self):
         self.category.write({'sequence': 4})
         self.slide_2.write({'sequence': 8})

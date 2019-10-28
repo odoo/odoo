@@ -10,6 +10,7 @@
     'installable': True,
     'auto_install': True,
     'data': [
+        'security/ir.model.access.csv',
         'views/assets.xml',
         'views/slide_channel_views.xml',
         'views/slide_slide_views.xml',

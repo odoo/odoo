@@ -111,11 +111,11 @@ class TestUi(TestUICommon):
             'odoo.__DEBUG__.services["web_tour.tour"].tours.course_member.ready',
             login=user_demo.login)
 
-    def test_course_member_website_publisher(self):
+    def test_course_member_elearning_officer(self):
         user_demo = self.user_demo
         user_demo.flush()
         user_demo.write({
-            'groups_id': [(5, 0), (4, self.env.ref('base.group_user').id), (4, self.env.ref('website.group_website_publisher').id)]
+            'groups_id': [(5, 0), (4, self.env.ref('base.group_user').id), (4, self.env.ref('website_slides.group_website_slides_officer').id)]
         })
 
         self.browser_js(
@@ -153,13 +153,11 @@ class TestUiYoutube(HttpCaseWithUserDemo):
             'odoo.__DEBUG__.services["web_tour.tour"].tours.course_member_youtube.ready',
             login=user_demo.login)
 
-    def test_course_publisher_website_designer(self):
-        # remove membership because we need to be able to join the course during the tour
-        # group_website_designer
+    def test_course_publisher_elearning_manager(self):
         user_demo = self.user_demo
         user_demo.flush()
         user_demo.write({
-            'groups_id': [(5, 0), (4, self.env.ref('base.group_user').id), (4, self.env.ref('website.group_website_designer').id)]
+            'groups_id': [(5, 0), (4, self.env.ref('base.group_user').id), (4, self.env.ref('website_slides.group_website_slides_manager').id)]
         })
 
         self.browser_js(
