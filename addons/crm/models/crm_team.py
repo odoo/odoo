@@ -16,6 +16,7 @@ class Team(models.Model):
     use_leads = fields.Boolean('Leads', help="Check this box to filter and qualify incoming requests as leads before converting them into opportunities and assigning them to a salesperson.")
     use_opportunities = fields.Boolean('Pipeline', default=True, help="Check this box to manage a presales process with opportunities.")
     alias_id = fields.Many2one('mail.alias', string='Alias', ondelete="restrict", required=True, help="The email address associated with this channel. New emails received will automatically create new leads assigned to the channel.")
+    alias_name = fields.Char('Alias Name', store=True, compute='_compute_alias_name')
 
     unassigned_leads_count = fields.Integer(
         compute='_compute_unassigned_leads_count',
@@ -79,10 +80,11 @@ class Team(models.Model):
             team.overdue_opportunities_count = counts.get(team.id, 0)
             team.overdue_opportunities_amount = amounts.get(team.id, 0)
 
-    @api.onchange('use_leads', 'use_opportunities')
-    def _onchange_use_leads_opportunities(self):
-        if not self.use_leads and not self.use_opportunities:
-            self.alias_name = False
+    @api.depends('use_leads', 'use_opportunities')
+    def _compute_alias_name(self):
+        for lead in self:
+            if not lead.use_leads and not lead.use_opportunities:
+                lead.alias_name = False
 
     def get_alias_model_name(self, vals):
         return 'crm.lead'

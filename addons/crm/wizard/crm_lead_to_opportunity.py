@@ -50,7 +50,7 @@ class Lead2OpportunityPartner(models.TransientModel):
     ], 'Conversion Action', required=True)
     opportunity_ids = fields.Many2many('crm.lead', string='Opportunities')
     user_id = fields.Many2one('res.users', 'Salesperson', index=True)
-    team_id = fields.Many2one('crm.team', 'Sales Team', index=True)
+    team_id = fields.Many2one('crm.team', 'Sales Team', index=True, compute='_compute_team_id', store=True, readonly=False)
 
     @api.onchange('action')
     def onchange_action(self):
@@ -59,19 +59,18 @@ class Lead2OpportunityPartner(models.TransientModel):
         else:
             self.partner_id = False
 
-    @api.onchange('user_id')
-    def _onchange_user(self):
+    @api.depends('user_id')
+    def _compute_team_id(self):
         """ When changing the user, also set a team_id or restrict team id
             to the ones user_id is member of.
         """
-        if self.user_id:
-            if self.team_id:
-                user_in_team = self.env['crm.team'].search_count([('id', '=', self.team_id.id), '|', ('user_id', '=', self.user_id.id), ('member_ids', '=', self.user_id.id)])
-            else:
+        for wizard in self:
+            if wizard.user_id:
                 user_in_team = False
-            if not user_in_team:
-                values = self.env['crm.lead']._onchange_user_values(self.user_id.id if self.user_id else False)
-                self.team_id = values.get('team_id', False)
+                if wizard.team_id:
+                    user_in_team = wizard.env['crm.team'].search_count([('id', '=', wizard.team_id.id), '|', ('user_id', '=', wizard.user_id.id), ('member_ids', '=', wizard.user_id.id)])
+                if not user_in_team:
+                    wizard.team_id = wizard.env['crm.lead']._get_user_team_id(wizard.user_id.id if wizard.user_id else False)
 
     @api.model
     def _get_duplicated_leads(self, partner_id, email, include_lost=False):
