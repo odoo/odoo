@@ -7,12 +7,6 @@
         <field name="sequence">7</field>
     </record>
 
-    <record id="group_account_invoice" model="res.groups">
-        <field name="name">Billing</field>
-        <field name="category_id" ref="base.module_category_accounting_accounting"/>
-        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
-    </record>
-
     <record id="group_show_line_subtotals_tax_excluded" model="res.groups">
         <field name="name">Tax display B2B</field>
         <field name="comment">Show line subtotals without taxes (B2B)</field>
@@ -25,9 +19,22 @@
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
+    <record id="group_account_readonly" model="res.groups">
+        <field name="name">Show Accounting Features - Readonly</field>
+        <field name="category_id" ref="base.module_category_accounting_accounting"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="group_account_invoice" model="res.groups">
+        <field name="name">Billing</field>
+        <field name="category_id" ref="base.module_category_accounting_accounting"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
     <record id="group_account_user" model="res.groups">
         <field name="name">Show Full Accounting Features</field>
         <field name="category_id" ref="base.module_category_hidden"/>
+        <field name="implied_ids" eval="[(4, ref('group_account_invoice')), (4, ref('group_account_readonly'))]"/>
     </record>
 
     <record id="group_account_manager" model="res.groups">
@@ -209,6 +216,44 @@
         <field name="model_id" ref="account.model_account_move_line"/>
         <field name="domain_force">[('move_id.type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')), ('move_id.message_partner_ids','child_of',[user.commercial_partner_id.id])]</field>
         <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
+
+    <!-- Some modules (i.e. sale) restrict the access for some users
+    We want the readonly group to still have the read access on all moves.-->
+    <record id="account_move_rule_group_readonly" model="ir.rule">
+        <field name="name">Readonly Move</field>
+        <field name="model_id" ref="model_account_move"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('account.group_account_readonly'))]"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="account_move_line_rule_group_readonly" model="ir.rule">
+        <field name="name">Readonly Move Line</field>
+        <field name="model_id" ref="model_account_move_line"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('account.group_account_readonly'))]"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- Some modules (i.e. sale) restrict the access for some users
+    We want the invoice group to still have all access on all moves.-->
+    <record id="account_move_rule_group_invoice" model="ir.rule">
+        <field name="name">Readonly Move</field>
+        <field name="model_id" ref="model_account_move"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('account.group_account_invoice'))]"/>
+    </record>
+
+    <record id="account_move_line_rule_group_invoice" model="ir.rule">
+        <field name="name">Readonly Move Line</field>
+        <field name="model_id" ref="model_account_move_line"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('account.group_account_invoice'))]"/>
     </record>
 </data>
 </odoo>

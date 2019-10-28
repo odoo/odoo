@@ -53,7 +53,7 @@
                             icon="fa-bars"
                             string="Journal Items"
                             attrs="{'invisible':[('move_id', '=', False)]}"
-                            groups="account.group_account_user"
+                            groups="account.group_account_readonly"
                             >
                         </button>
                     </div>
@@ -65,7 +65,7 @@
                         <field name="user_id"/>
                         <field name="currency_id" invisible="1"/>
                         <field name="config_id"/>
-                        <field name="move_id" readonly="1" groups="account.group_account_user" />
+                        <field name="move_id" readonly="1" groups="account.group_account_readonly" />
                         <field name="start_at" attrs="{'invisible' : [('state', '=', 'opening_control')]}"/>
                         <field name="stop_at" attrs="{'invisible' : [('state', '!=', 'closed')]}"/>
                     </group>

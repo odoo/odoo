@@ -33,6 +33,7 @@
         </record>
 
         <act_window name="Send receipt by email"
+            groups="account.group_account_invoice"
             res_model="mail.compose.message"
             binding_model="account.payment"
             view_mode="form"

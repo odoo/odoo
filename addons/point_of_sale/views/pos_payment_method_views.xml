@@ -13,7 +13,7 @@
                     <group name="Payment methods">
                         <group>
                             <field name="hide_use_payment_terminal" invisible="1"/>
-                            <field name="receivable_account_id" groups="account.group_account_user" />
+                            <field name="receivable_account_id" groups="account.group_account_readonly" />
                             <field name="is_cash_count" />
                             <field name="cash_journal_id" attrs="{'invisible': [('is_cash_count', '=', False)], 'required': [('is_cash_count', '=', True)]}" />
                             <field name="split_transactions" groups="base.group_no_one" />
@@ -35,7 +35,7 @@
             <tree string="Payment Methods">
                 <field name="hide_use_payment_terminal" invisible="1"/>
                 <field name="name" />
-                <field name="receivable_account_id" groups="account.group_account_user"/>
+                <field name="receivable_account_id" groups="account.group_account_readonly"/>
                 <field name="is_cash_count" />
                 <field name="split_transactions" groups="base.group_no_one" />
                 <field name="use_payment_terminal" attrs="{'invisible': [('hide_use_payment_terminal', '=', True)]}" />
@@ -50,7 +50,7 @@
         <field name="arch" type="xml">
             <search string="Payment Methods">
                 <field name="name"/>
-                <field name="receivable_account_id" groups="account.group_account_user" />
+                <field name="receivable_account_id" groups="account.group_account_readonly" />
                 <group expand="1" string="Group By">
                     <filter name="group_by_receivable_account" string="Account" domain="[]"  context="{'group_by':'receivable_account_id'}"/>
                 </group>

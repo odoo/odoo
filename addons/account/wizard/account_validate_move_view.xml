@@ -26,6 +26,7 @@
             <field name="context">{}</field>
             <field name="target">new</field>
             <field name="help">This wizard will validate all journal entries selected. Once journal entries are validated, you can not update them anymore.</field>
+            <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
             <field name="binding_model_id" ref="account.model_account_move" />
             <field name="binding_view_types">list</field>
         </record>

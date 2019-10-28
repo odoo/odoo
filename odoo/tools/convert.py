@@ -741,7 +741,6 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
         encoding: utf-8'''
     filename, _ext = os.path.splitext(os.path.basename(fname))
     model = filename.split('-')[0]
-
     reader = pycompat.csv_reader(io.BytesIO(csvcontent), quotechar='"', delimiter=',')
     fields = next(reader)
 

@@ -387,7 +387,7 @@ class ResPartner(models.Model):
         help="Total amount you have to pay to this vendor.")
     debit_limit = fields.Monetary('Payable Limit')
     total_invoiced = fields.Monetary(compute='_invoice_total', string="Total Invoiced",
-        groups='account.group_account_invoice')
+        groups='account.group_account_invoice,account.group_account_readonly')
     currency_id = fields.Many2one('res.currency', compute='_get_company_currency', readonly=True,
         string="Currency", help='Utility field to express amount currency')
     journal_item_count = fields.Integer(compute='_compute_journal_item_count', string="Journal Items", type="integer")

@@ -11,7 +11,7 @@
             file="account.report_invoice_with_payments"
             attachment="(object.state == 'posted') and ((object.name or 'INV').replace('/','_')+'.pdf')"
             print_report_name="(object._get_report_base_filename())"
-            groups="account.group_account_invoice"
+            groups="account.group_account_invoice,account.group_account_readonly"
         />
 
         <record id="action_account_original_vendor_bill" model="ir.actions.report">
@@ -57,7 +57,7 @@
         />
 
         <report
-            id="action_report_account_statement" 
+            id="action_report_account_statement"
             model="account.bank.statement"
             string="Statement"
             name="account.report_statement"

@@ -124,7 +124,7 @@
                 <form string="Register Payment">
                     <header>
                         <button name="post" class="oe_highlight" states="draft" string="Confirm" type="object"/>
-                        <button name="action_draft" class="btn btn-secondary" attrs="{'invisible': [('state', '=', 'draft')]}" string="Reset To Draft" type="object"/>
+                        <button name="action_draft" class="btn btn-secondary" attrs="{'invisible': [('state', '=', 'draft')]}" string="Reset To Draft" type="object" groups="account.group_account_invoice"/>
                         <button name="cancel" states="draft" string="Cancel" type="object"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,posted,reconciled,cancelled"/>
                     </header>
@@ -132,7 +132,7 @@
                         <div class="oe_button_box" name="button_box">
                             <button class="oe_stat_button" name="button_journal_entries"
                                     string="Journal Items" type="object"
-                                    groups="account.group_account_user"
+                                    groups="account.group_account_readonly"
                                     attrs="{'invisible':[('move_line_ids','=',[])]}" icon="fa-bars"/>
                             <field name="move_line_ids" invisible="1"/>
                             <button class="oe_stat_button" name="button_invoices" type="object" icon="fa-bars" attrs="{'invisible':[('reconciled_invoices_count','=', 0)]}" >
@@ -178,7 +178,7 @@
                                 <field name="payment_date"/>
                                 <field name="communication"/>
                             </group>
-                            <group name="payment_difference" attrs="{'invisible': [('payment_difference', '=', 0.0)]}" groups="account.group_account_user">
+                            <group name="payment_difference" attrs="{'invisible': [('payment_difference', '=', 0.0)]}" groups="account.group_account_readonly">
                                 <label for="payment_difference"/>
                                 <div>
                                     <field name="payment_difference"/>
@@ -319,6 +319,7 @@
 
         <record id="action_account_invoice_from_list" model="ir.actions.server">
             <field name="name">Register Payment</field>
+            <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
             <field name="model_id" ref="account.model_account_payment"/>
             <field name="binding_model_id" ref="account.model_account_move"/>
             <field name="binding_view_types">list</field>
@@ -333,6 +334,7 @@
             <field name="name">Post Payments</field>
             <field name="type">ir.actions.server</field>
             <field name="state">code</field>
+            <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
             <field name="model_id" ref="account.model_account_payment"/>
             <field name="binding_model_id" ref="account.model_account_payment"/>
             <field name="binding_view_types">list</field>

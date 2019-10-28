@@ -143,7 +143,7 @@
             <field name="context">{'search_default_activeacc': True}</field>
         </record>
 
-        <menuitem action="action_account_form" id="menu_action_account_form" parent="account.account_account_menu" groups="account.group_account_user" sequence="1"/>
+        <menuitem action="action_account_form" id="menu_action_account_form" parent="account.account_account_menu" groups="account.group_account_readonly" sequence="1"/>
 
         <record id="action_duplicate_account" model="ir.actions.server">
             <field name="name">Duplicate</field>
@@ -277,7 +277,7 @@
                                         <field name="bank_id"/>
                                     </group>
                                     <group >
-                                        <field name="bank_statements_source" widget="radio" attrs="{'required': [('type', '=', 'bank')]}"  groups="account.group_account_user"/>
+                                        <field name="bank_statements_source" widget="radio" attrs="{'required': [('type', '=', 'bank')]}"  groups="account.group_account_readonly"/>
                                     </group>
                                 </group>
                             </page>
@@ -303,8 +303,8 @@
                                         </div>
                                     </group>
                                     <group>
-                                        <field name="default_debit_account_id" options="{'no_create': True}" domain="[('deprecated', '=', False)]" groups="account.group_account_user"/>
-                                        <field name="default_credit_account_id" options="{'no_create': True}" domain="[('deprecated', '=', False)]" groups="account.group_account_user"/>
+                                        <field name="default_debit_account_id" options="{'no_create': True}" domain="[('deprecated', '=', False)]" groups="account.group_account_readonly"/>
+                                        <field name="default_credit_account_id" options="{'no_create': True}" domain="[('deprecated', '=', False)]" groups="account.group_account_readonly"/>
                                         <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                                     </group>
                                 </group>
@@ -327,7 +327,7 @@
                                             <a type='action' name='%(action_open_settings)d' class="btn btn-link" role="button"><i class="fa fa-fw o_button_icon fa-arrow-right"/> Configure Email Servers</a>
                                         </div>
                                     </group>
-                                    <group string="Posting" name="column_posting" groups="account.group_account_user,account.group_account_manager" attrs="{'invisible': [('type', 'not in', ['bank', 'cash'])]}">
+                                    <group string="Posting" name="column_posting" groups="account.group_account_readonly" attrs="{'invisible': [('type', 'not in', ['bank', 'cash'])]}">
                                         <field name="profit_account_id" options="{'no_create': True}" attrs="{'invisible': [('type', '!=', 'cash')]}"/>
                                         <field name="loss_account_id" options="{'no_create': True}" attrs="{'invisible': [('type', '!=', 'cash')]}"/>
                                         <field name="post_at" widget="radio" attrs="{'invisible': [('type', 'not in', ['bank', 'cash'])]}"/>
@@ -336,7 +336,7 @@
                                         <div class="text-muted" colspan="2">Keep empty for no control</div>
                                         <field name="type_control_ids" widget="many2many_tags"/>
                                         <field name="account_control_ids" widget="many2many_tags"/>
-                                        <field name="restrict_mode_hash_table" groups="account.group_account_user"/>
+                                        <field name="restrict_mode_hash_table" groups="account.group_account_readonly"/>
                                     </group>
                                     <group string="Payment Method Types" attrs="{'invisible': [('type', 'not in', ['bank', 'cash'])]}">
                                         <field name="inbound_payment_method_ids" widget="many2many_checkboxes"/>
@@ -996,7 +996,7 @@ action = model.setting_init_bank_account_action()
             id="account_report_folder"
             name="Reporting"
             parent="account_account_menu"
-            groups="account.group_account_manager"
+            groups="account.group_account_readonly"
             sequence="4"/>
 
         <!-- Account Types -->
@@ -1209,9 +1209,9 @@ action = model.setting_init_bank_account_action()
                                     <field name="price_include" attrs="{'invisible':[('amount_type','=', 'group')]}" />
                                     <field name="include_base_amount" attrs="{'invisible':[('amount_type','=', 'group')]}" />
                                     <field name="hide_tax_exigibility" invisible="1"/>
-                                    <field name="tax_exigibility" widget="radio" attrs="{'invisible':['|', ('amount_type','=', 'group'), ('hide_tax_exigibility', '=', False)]}" groups="account.group_account_user"/>
-                                    <field name="cash_basis_base_account_id" options="{'no_create': True}" attrs="{'invisible': [('tax_exigibility', '=', 'on_invoice')]}" groups="account.group_account_user"/>
-                                    <field name="cash_basis_transition_account_id" options="{'no_create': True}" attrs="{'invisible': [('tax_exigibility', '=', 'on_invoice')], 'required': [('tax_exigibility', '=', 'on_payment')]}" groups="account.group_account_user"/>
+                                    <field name="tax_exigibility" widget="radio" attrs="{'invisible':['|', ('amount_type','=', 'group'), ('hide_tax_exigibility', '=', False)]}" groups="account.group_account_readonly"/>
+                                    <field name="cash_basis_base_account_id" options="{'no_create': True}" attrs="{'invisible': [('tax_exigibility', '=', 'on_invoice')]}" groups="account.group_account_readonly"/>
+                                    <field name="cash_basis_transition_account_id" options="{'no_create': True}" attrs="{'invisible': [('tax_exigibility', '=', 'on_invoice')], 'required': [('tax_exigibility', '=', 'on_payment')]}" groups="account.group_account_readonly"/>
                                 </group>
                             </group>
                         </page>

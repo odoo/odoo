@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <menuitem id="account_reports_sg_statements_menu" name="Singapore" parent="account.menu_finance_reports" sequence="0" groups="account.group_account_user"/>
+    <menuitem id="account_reports_sg_statements_menu" name="Singapore" parent="account.menu_finance_reports" sequence="0" groups="account.group_account_readonly"/>
 
         <record id="sg_chart_template" model="account.chart.template">
             <field name="name">Singapore Chart of Accounts - Standard</field>
@@ -290,7 +290,7 @@
             <field name="chart_template_id" ref="sg_chart_template"/>
             <field name="reconcile" eval="False" />
         </record>
-        
+
         <record model="account.account.template" id="account_account_735">
             <field name="name">Trade Receivable Account</field>
             <field name="code">100010</field>

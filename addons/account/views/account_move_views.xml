@@ -34,7 +34,7 @@
                                         <field name="statement_id" readonly="True" attrs="{'invisible': [('statement_id','=',False)]}"/>
                                     </group>
                                     <group string="Dates">
-                                        <field name="date" groups="account.group_account_user"/>
+                                        <field name="date" groups="account.group_account_readonly"/>
                                         <field name="date_maturity"/>
                                     </group>
 
@@ -141,12 +141,12 @@
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="journal_id" options='{"no_open":True}'/>
                     <field name="move_id" optional="show"/>
-                    <field name="account_id" options="{'no_open': True}" groups="account.group_account_user"/>
+                    <field name="account_id" options="{'no_open': True}" groups="account.group_account_readonly"/>
                     <field name="partner_id" optional="show"/>
                     <field name="statement_id" invisible="1"/>
                     <field name="ref" optional="show"/>
                     <field name="name" optional="show"/>
-                    <field name="analytic_account_id" groups="account.group_account_user" optional="show"/>
+                    <field name="analytic_account_id" groups="account.group_account_readonly" optional="show"/>
                     <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags" optional="hide"/>
                     <field name="tax_ids" widget="many2many_tags" width="0.5" optional="show"/>
                     <field name="debit" sum="Total Debit"/>
@@ -175,7 +175,7 @@
                     <field name="move_id" optional="show"/>
                     <field name="account_id" optional="show" options="{'no_open': True, 'no_create': True}"
                            domain="[('company_id', '=', company_id)]"
-                           groups="account.group_account_user"/>
+                           groups="account.group_account_readonly"/>
                     <field name="statement_id" invisible="1"/>
                     <field name="partner_id" optional="show" readonly="1"/>
                     <field name="ref" optional="hide"/>
@@ -476,12 +476,12 @@
                                 string="Send &amp; Print"
                                 attrs="{'invisible':['|', '|', ('state', '!=', 'posted'), ('invoice_sent', '=', True), ('type', 'not in', ('out_invoice', 'out_refund'))]}"
                                 class="oe_highlight"
-                                groups="base.group_user"/>
+                                groups="account.group_account_invoice"/>
                         <button name="action_invoice_sent"
                                 type="object"
                                 string="Send &amp; Print"
                                 attrs="{'invisible':['|', '|', ('state', '!=', 'posted'), ('invoice_sent', '=', False), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}"
-                                groups="base.group_user"/>
+                                groups="account.group_account_invoice"/>
                         <!-- Register Payment (only invoices / receipts) -->
                         <button name="action_invoice_register_payment" id="account_invoice_payment_btn"
                                 type="object" class="oe_highlight"
@@ -509,17 +509,17 @@
                         <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
                     </header>
                     <!-- Invoice outstanding credits -->
-                    <div groups="account.group_account_invoice"
+                    <div groups="account.group_account_invoice,account.group_account_readonly"
                          class="alert alert-warning" role="alert" style="margin-bottom:0px;"
                          attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('tax_lock_date_message', '=', False)]}">
                         <field name="tax_lock_date_message" nolabel="1"/>
                     </div>
-                    <div groups="account.group_account_invoice"
+                    <div groups="account.group_account_invoice,account.group_account_readonly"
                          class="alert alert-info" role="alert" style="margin-bottom:0px;"
                          attrs="{'invisible': ['|', '|', ('type', 'not in', ('out_invoice', 'out_refund')), ('invoice_has_outstanding', '=', False), ('payment_state', 'not in', ('not_paid', 'partial'))]}">
                         You have <bold><a class="alert-link" href="#outstanding" role="button">outstanding payments</a></bold> for this customer. You can allocate them to mark this invoice as paid.
                     </div>
-                    <div groups="account.group_account_invoice"
+                    <div groups="account.group_account_invoice,account.group_account_readonly"
                          class="alert alert-info" role="alert" style="margin-bottom:0px;"
                          attrs="{'invisible': ['|', '|', ('type', 'not in', ('in_invoice', 'in_refund')), ('invoice_has_outstanding', '=', False), ('payment_state', 'not in', ('not_paid', 'partial'))]}">
                         You have <bold><a class="alert-link" href="#outstanding" role="button">outstanding debits</a></bold> for this supplier. You can allocate them to mark this bill as paid.
@@ -641,7 +641,7 @@
 
                                 <field name="journal_id"
                                        invisible="context.get('default_journal_id') and context.get('type', 'entry') != 'entry'"
-                                       groups="account.group_account_user"
+                                       groups="account.group_account_readonly"
                                        options="{'no_create': True}"
                                        domain="[('type', '=?', invoice_filter_type_domain)]"
                                        attrs="{'readonly': [('name', '!=', '/')]}"/>
@@ -674,7 +674,7 @@
                                         <field name="product_id" optional="show" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
                                         <field name="name" widget="section_and_note_text" attrs="{'required': [('parent.type', 'not in', ('in_invoice', 'in_refund','in_receipt'))]}"/>
                                         <field name="account_id"
-                                               groups="account.group_account_user"
+                                               groups="account.group_account_readonly"
                                                domain="[('deprecated', '=', False), ('user_type_id.type', 'not in', ('receivable', 'payable')), ('company_id', '=', parent.company_id)]"
                                                attrs="{'required': [('display_type', '=', False)]}"/>
                                         <field name="analytic_account_id"
@@ -857,7 +857,7 @@
                                 <!-- Internal note -->
                                 <field name="narration" placeholder="Add an internal note..." nolabel="1" height="50"/>
                             </page>
-                            <page id="aml_tab" string="Journal Items" groups="account.group_account_user">
+                            <page id="aml_tab" string="Journal Items" groups="account.group_account_readonly">
                                 <field name="line_ids"
                                        context="{'line_ids': line_ids, 'journal_id': journal_id, 'default_partner_id': commercial_partner_id, 'default_currency_id': currency_id != company_currency_id and currency_id or False}">
                                     <tree editable="bottom" string="Journal Items" decoration-muted="display_type in ('line_section', 'line_note')" default_order="sequence, date desc, move_name desc, id">
@@ -1134,6 +1134,7 @@
         <record id="action_accrual_entry" model="ir.actions.server">
             <field name="name">Create Accrual Entry</field>
             <field name="model_id" ref="account.model_account_move_line"/>
+            <field name="groups_id" eval="[(4, ref('account.group_account_user'))]"/>
             <field name="binding_model_id" ref="account.model_account_move_line"/>
             <field name="state">code</field>
             <field name="code">action = records.action_accrual_entry()</field>
@@ -1381,6 +1382,7 @@
         <record model="ir.actions.server" id="action_move_switch_invoice_to_credit_note">
             <field name="name">Switch into refund/credit note</field>
             <field name="model_id" ref="account.model_account_move"/>
+            <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
             <field name="binding_model_id" ref="account.model_account_move" />
             <field name="state">code</field>
             <field name="code">
@@ -1459,49 +1461,49 @@ if records:
             id="menu_action_move_journal_line_form"
             action="action_move_journal_line"
             parent="account.menu_finance_entries_accounting_miscellaneous"
-            groups="account.group_account_user"
+            groups="account.group_account_readonly"
             sequence="1"/>
 
         <menuitem
             id="menu_action_account_moves_journal_sales"
             action="action_account_moves_journal_sales"
             parent="account.menu_finance_entries_accounting_journals"
-            groups="account.group_account_user"
+            groups="account.group_account_readonly"
             sequence="1"/>
 
         <menuitem
             id="menu_action_account_moves_journal_purchase"
             action="action_account_moves_journal_purchase"
             parent="account.menu_finance_entries_accounting_journals"
-            groups="account.group_account_user"
+            groups="account.group_account_readonly"
             sequence="1"/>
 
         <menuitem
             id="menu_action_account_moves_journal_bank_cash"
             action="action_account_moves_journal_bank_cash"
             parent="account.menu_finance_entries_accounting_journals"
-            groups="account.group_account_user"
+            groups="account.group_account_readonly"
             sequence="1"/>
 
         <menuitem
             id="menu_action_account_moves_journal_misc"
             action="action_account_moves_journal_misc"
             parent="account.menu_finance_entries_accounting_journals"
-            groups="account.group_account_user"
+            groups="account.group_account_readonly"
             sequence="1"/>
 
         <menuitem
             id="menu_action_account_moves_ledger_general"
             action="action_account_moves_ledger_general"
             parent="account.menu_finance_entries_accounting_ledgers"
-            groups="account.group_account_user"
+            groups="account.group_account_readonly"
             sequence="1"/>
 
         <menuitem
             id="menu_action_account_moves_ledger_partner"
             action="action_account_moves_ledger_partner"
             parent="account.menu_finance_entries_accounting_ledgers"
-            groups="account.group_account_user"
+            groups="account.group_account_readonly"
             sequence="1"/>
 
     </data>

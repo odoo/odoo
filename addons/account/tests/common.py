@@ -448,8 +448,8 @@ class AccountTestNoChartCommonMultiCompany(AccountTestNoChartCommon):
     """ Some tests required to be executed at module installation, and not 'post install', like moslty
         of accounting tests, since a chart of account is required
         This test setup class provides data for test suite to make business flow working without a chart
-        of account installed in a multi-company environment. 
-        The class provide some helpers methods to create particular document types. Each test suite extending 
+        of account installed in a multi-company environment.
+        The class provide some helpers methods to create particular document types. Each test suite extending
         this method can call thoses method to set up their testing environment in their own `setUpClass` method.
     """
 
@@ -497,7 +497,7 @@ class AccountTestNoChartCommonMultiCompany(AccountTestNoChartCommon):
         super(AccountTestNoChartCommonMultiCompany, cls).setUpAdditionalAccounts()
         user_type_income = cls.env.ref('account.data_account_type_direct_costs')
         cls.account_income_company_B = cls.env['account.account'].create({
-            'code': 'NC1112', 
+            'code': 'NC1112',
             'name': 'Sale - Test Account Company B',
             'user_type_id': user_type_income.id,
             'company_id': cls.company_B.id,
