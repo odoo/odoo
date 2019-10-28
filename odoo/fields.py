@@ -963,7 +963,14 @@ class Field(MetaField('DummyField', (object,), {})):
                         self.compute_value(recs)
                     except (AccessError, MissingError):
                         self.compute_value(record)
-                    value = env.cache.get(record, self)
+                    try:
+                        value = env.cache.get(record, self)
+                    except CacheMiss:
+                        if self.readonly:
+                            raise
+                        # fallback to null value if compute gives nothing
+                        value = self.convert_to_cache(False, record, validate=False)
+                        env.cache.set(record, self, value)
 
             elif self.type == 'many2one' and self.delegate and not record.id:
                 # parent record of a new record: new record, with the same
