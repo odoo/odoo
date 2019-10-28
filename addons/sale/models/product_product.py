@@ -12,6 +12,7 @@ class ProductProduct(models.Model):
 
     def _compute_sales_count(self):
         r = {}
+        self.sales_count = 0
         if not self.user_has_groups('sales_team.group_sale_salesman'):
             return r
         date_from = fields.Datetime.to_string(fields.datetime.combine(fields.datetime.now() - timedelta(days=365),
