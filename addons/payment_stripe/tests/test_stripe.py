@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import unittest
 import odoo
 from odoo import fields
 from odoo.addons.payment.tests.common import PaymentAcquirerCommon
@@ -16,37 +15,32 @@ class StripeCommon(PaymentAcquirerCommon):
             'stripe_publishable_key': 'pk_test_QSPnimmb4ZhtkEy3Uhdm4S6J',
             'state': 'test',
         })
+        self.token = self.env['payment.token'].create({
+            'name': 'Test Card',
+            'acquirer_id': self.stripe.id,
+            'acquirer_ref': 'cus_G27S7FqQ2w3fuH',
+            'stripe_payment_method': 'pm_1FW3DdAlCFm536g8eQoSCejY',
+            'partner_id': self.buyer.id,
+            'verified': True,
+        })
 
 
 @odoo.tests.tagged('post_install', '-at_install', '-standard', 'external')
 class StripeTest(StripeCommon):
 
-    @unittest.skip("demonstrating skipping")
     def test_10_stripe_s2s(self):
         self.assertEqual(self.stripe.state, 'test', 'test without test environment')
-
-        # Create payment meethod for Stripe
-        payment_token = self.env['payment.token'].create({
-            'acquirer_id': self.stripe.id,
-            'partner_id': self.buyer_id,
-            'cc_number': '4242424242424242',
-            'cc_expiry': '02 / 26',
-            'cc_brand': 'visa',
-            'cvc': '111',
-            'cc_holder_name': 'Johndoe',
-        })
-
         # Create transaction
         tx = self.env['payment.transaction'].create({
-            'reference': 'test_ref_%s' % fields.date.today(),
+            'reference': 'stripe_test_10_%s' % fields.datetime.now().strftime('%Y%m%d_%H%M%S'),
             'currency_id': self.currency_euro.id,
             'acquirer_id': self.stripe.id,
             'partner_id': self.buyer_id,
-            'payment_token_id': payment_token.id,
+            'payment_token_id': self.token.id,
             'type': 'server2server',
             'amount': 115.0
         })
-        tx.stripe_s2s_do_transaction()
+        tx.with_context(off_session=True).stripe_s2s_do_transaction()
 
         # Check state
         self.assertEqual(tx.state, 'done', 'Stripe: Transcation has been discarded.')
@@ -63,89 +57,22 @@ class StripeTest(StripeCommon):
 
     def test_30_stripe_form_management(self):
         self.assertEqual(self.stripe.state, 'test', 'test without test environment')
-
-        # typical data posted by Stripe after client has successfully paid
-        stripe_post_data = {
-            u'amount': 470000,
-            u'amount_refunded': 0,
-            u'application_fee': None,
-            u'balance_transaction': u'txn_172xfnGMfVJxozLwssrsQZyT',
-            u'captured': True,
-            u'created': 1446529775,
-            u'currency': u'eur',
-            u'customer': None,
-            u'description': None,
-            u'destination': None,
-            u'dispute': None,
-            u'failure_code': None,
-            u'failure_message': None,
-            u'fraud_details': {},
-            u'id': u'ch_172xfnGMfVJxozLwEjSfpfxD',
-            u'invoice': None,
-            u'livemode': False,
-            u'metadata': {u'reference': u'SO100-1'},
-            u'object': u'charge',
-            u'paid': True,
-            u'receipt_email': None,
-            u'receipt_number': None,
-            u'refunded': False,
-            u'refunds': {u'data': [],
-                         u'has_more': False,
-                         u'object': u'list',
-                         u'total_count': 0,
-                         u'url': u'/v1/charges/ch_172xfnGMfVJxozLwEjSfpfxD/refunds'},
-            u'shipping': None,
-            u'source': {u'address_city': None,
-                        u'address_country': None,
-                        u'address_line1': None,
-                        u'address_line1_check': None,
-                        u'address_line2': None,
-                        u'address_state': None,
-                        u'address_zip': None,
-                        u'address_zip_check': None,
-                        u'brand': u'Visa',
-                        u'country': u'US',
-                        u'customer': None,
-                        u'cvc_check': u'pass',
-                        u'dynamic_last4': None,
-                        u'exp_month': 2,
-                        u'exp_year': 2022,
-                        u'fingerprint': u'9tJA9bUEuvEb3Ell',
-                        u'funding': u'credit',
-                        u'id': u'card_172xfjGMfVJxozLw1QO6gYNM',
-                        u'last4': u'4242',
-                        u'metadata': {},
-                        u'name': u'norbert.buyer@example.com',
-                        u'object': u'card',
-                        u'tokenization_method': None},
-            u'statement_descriptor': None,
-            u'status': u'succeeded'}
-
+        ref = 'stripe_test_30_%s' % fields.datetime.now().strftime('%Y%m%d_%H%M%S')
         tx = self.env['payment.transaction'].create({
             'amount': 4700.0,
             'acquirer_id': self.stripe.id,
             'currency_id': self.currency_euro.id,
-            'reference': 'SO100-1',
+            'reference': ref,
             'partner_name': 'Norbert Buyer',
-            'partner_country_id': self.country_france.id})
+            'partner_country_id': self.country_france.id,
+            'payment_token_id': self.token.id,
+        })
+        res = tx.with_context(off_session=True)._stripe_create_payment_intent()
+        tx.stripe_payment_intent = res.get('payment_intent')
 
+        # typical data posted by Stripe after client has successfully paid
+        stripe_post_data = {'reference': ref}
         # validate it
         tx.form_feedback(stripe_post_data, 'stripe')
         self.assertEqual(tx.state, 'done', 'Stripe: validation did not put tx into done state')
         self.assertEqual(tx.acquirer_reference, stripe_post_data.get('id'), 'Stripe: validation did not update tx id')
-        stripe_post_data['metadata']['reference'] = u'SO100-2'
-        # reset tx
-        tx = self.env['payment.transaction'].create({
-            'amount': 4700,
-            'acquirer_id': self.stripe.id,
-            'currency_id': self.currency_euro.id,
-            'reference': 'SO100-2',
-            'partner_name': 'Norbert Buyer',
-            'partner_country_id': self.country_france.id})
-        # simulate an error
-        stripe_post_data['status'] = 'error'
-        stripe_post_data.update({u'error': {u'message': u"Your card's expiration year is invalid.", u'code': u'invalid_expiry_year', u'type': u'card_error', u'param': u'exp_year'}})
-        with mute_logger('odoo.addons.payment_stripe.models.payment'):
-            tx.form_feedback(stripe_post_data, 'stripe')
-        # check state
-        self.assertEqual(tx.state, 'cancel', 'Stipe: erroneous validation did not put tx into error state')
