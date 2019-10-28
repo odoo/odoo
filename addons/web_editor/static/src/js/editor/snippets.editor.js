@@ -781,7 +781,7 @@ var SnippetsMenu = Widget.extend({
             if (!$target.closest('body > *').length) {
                 return;
             }
-            if ($target.closest('#web_editor-top-edit, #oe_snippets, #oe_manipulators, .o_technical_modal, .oe_drop_zone, .o_notification_manager, .o_we_no_overlay').length) {
+            if ($target.closest('#web_editor-top-edit, #oe_snippets, #oe_manipulators, .o_technical_modal, .oe_drop_zone, .o_notification_manager, .o_we_no_overlay, .ui-autocomplete').length) {
                 return;
             }
             this._activateSnippet($target);

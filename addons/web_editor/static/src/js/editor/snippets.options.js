@@ -4,6 +4,7 @@ odoo.define('web_editor.snippets.options', function (require) {
 var core = require('web.core');
 const concurrency = require('web.concurrency');
 const ColorpickerDialog = require('web.ColorpickerDialog');
+const time = require('web.time');
 var Widget = require('web.Widget');
 var ColorPaletteWidget = require('web_editor.ColorPalette').ColorPaletteWidget;
 const weUtils = require('web_editor.utils');
@@ -1001,6 +1002,109 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
     },
 });
 
+const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
+    events: _.extend({}, InputUserValueWidget.prototype.events || {}, {
+        'error.datetimepicker': '_onDateTimePickerError',
+    }),
+
+    /**
+     * @override
+     */
+    init: function () {
+        this._super(...arguments);
+        this.__libInput = 0;
+    },
+    /**
+     * @override
+     */
+    start: async function () {
+        await this._super(...arguments);
+
+        const datetimePickerId = _.uniqueId('datetimepicker');
+        this.inputEl.setAttribute('type', 'text');
+        this.inputEl.setAttribute('class', 'datetimepicker-input mx-0 text-left');
+        this.inputEl.setAttribute('id', datetimePickerId);
+        this.inputEl.setAttribute('data-target', '#' + datetimePickerId);
+        this.inputEl.setAttribute('data-toggle', 'datetimepicker');
+
+        const datepickersOptions = {
+            minDate: moment({y: 1900}),
+            maxDate: moment().add(200, 'y'),
+            calendarWeeks: true,
+            defaultDate: moment().format(),
+            icons: {
+                close: 'fa fa-check primary',
+                today: 'far fa-calendar-check',
+            },
+            locale: moment.locale(),
+            format: time.getLangDatetimeFormat(),
+            sideBySide: true,
+            buttons: {
+                showClose: true,
+                showToday: true,
+            },
+            widgetParent: 'body',
+        };
+        this.__libInput++;
+        $(this.inputEl).datetimepicker(datepickersOptions);
+        this.__libInput--;
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+    * @override
+    */
+    getValue: function (methodName) {
+        const value = this._super(...arguments);
+        let date = new Date(value);
+        if (isNaN(date)) {
+            date = new Date();
+        }
+        return moment(date).unix().toString();
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _notifyValueChange: function () {
+        if (this.__libInput > 0) {
+            return;
+        }
+        this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    _updateUI: async function () {
+        await this._super(...arguments);
+        const val = parseInt(this._value);
+        if (!isNaN(val)) {
+            this.__libInput++;
+            $(this.inputEl).datetimepicker('date', moment(val * 1000));
+            this.__libInput--;
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Prevents crash manager to throw CORS error. Note that library already
+     * clears the wrong date format.
+     */
+    _onDateTimePickerError: function (ev) {
+        ev.stopPropagation();
+    },
+});
+
 const userValueWidgetsRegistry = {
     'we-button': ButtonUserValueWidget,
     'we-checkbox': CheckboxUserValueWidget,
@@ -1008,6 +1112,7 @@ const userValueWidgetsRegistry = {
     'we-input': InputUserValueWidget,
     'we-multi': MultiUserValueWidget,
     'we-colorpicker': ColorpickerUserValueWidget,
+    'we-datetimepicker': DatetimePickerUserValueWidget,
 };
 
 /**

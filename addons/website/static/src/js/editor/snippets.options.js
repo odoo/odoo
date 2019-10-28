@@ -4,6 +4,7 @@ odoo.define('website.editor.snippets.options', function (require) {
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var weWidgets = require('wysiwyg.widgets');
+const wUtils = require('website.utils');
 var options = require('web_editor.snippets.options');
 
 var _t = core._t;
@@ -1467,6 +1468,136 @@ options.registry.gallery = options.Class.extend({
     },
 });
 
+options.registry.countdown = options.Class.extend({
+    events: _.extend({}, options.Class.prototype.events || {}, {
+        'click .toggle-edit-message': '_onToggleEndMessageClick',
+    }),
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Changes the countdown action at zero.
+     *
+     * @see this.selectClass for parameters
+     */
+    endAction: function (previewMode, widgetValue, params) {
+        this.$target[0].dataset.endAction = widgetValue;
+        if (widgetValue === 'message') {
+            if (!this.$target.find('.s_countdown_end_message').length) {
+                const message = this.endMessage || qweb.render('website.s_countdown.end_message');
+                this.$target.find('.container').append(message);
+            }
+        } else {
+            const $message = this.$target.find('.s_countdown_end_message').detach();
+            if ($message.length) {
+                this.endMessage = $message[0].outerHTML;
+            }
+        }
+        this._refreshPublicWidgets();
+    },
+    /**
+    * Changes the countdown style.
+    *
+    * @see this.selectClass for parameters
+    */
+    layout: function (previewMode, widgetValue, params) {
+        switch (widgetValue) {
+            case 'circle':
+                this.$target[0].dataset.progressBarStyle = 'disappear';
+                this.$target[0].dataset.progressBarWeight = 'thin';
+                this.$target[0].dataset.layoutBackground = 'none';
+                break;
+            case 'boxes':
+                this.$target[0].dataset.progressBarStyle = 'none';
+                this.$target[0].dataset.layoutBackground = 'plain';
+                break;
+            case 'clean':
+                this.$target[0].dataset.progressBarStyle = 'none';
+                this.$target[0].dataset.layoutBackground = 'none';
+                break;
+            case 'text':
+                this.$target[0].dataset.progressBarStyle = 'none';
+                this.$target[0].dataset.layoutBackground = 'none';
+                break;
+        }
+        this.$target[0].dataset.layout = widgetValue;
+        this._refreshPublicWidgets();
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    updateUI: function () {
+        this._super(...arguments);
+        const dataset = this.$target[0].dataset;
+
+        // End Action UI
+        this.$el.find('[data-attribute-name="redirectUrl"]')
+            .toggleClass('d-none', dataset.endAction !== 'redirect');
+        this.$el.find('.toggle-edit-message')
+            .toggleClass('d-none', dataset.endAction !== 'message');
+        this.$el.find('[data-toggle-class="hide-countdown"]')
+            .toggleClass('d-none', dataset.endAction === 'nothing');
+
+        // End Message UI
+        this.updateUIEndMessage();
+
+        // Styling UI
+        this.$el.find('[data-attribute-name="layoutBackground"], [data-attribute-name="progressBarStyle"]')
+            .toggleClass('d-none', dataset.layout === 'clean' || dataset.layout === 'text');
+        this.$el.find('[data-attribute-name="layoutBackgroundColor"]')
+            .toggleClass('d-none', dataset.layoutBackground === 'none');
+        this.$el.find('[data-attribute-name="progressBarWeight"], [data-attribute-name="progressBarColor"]')
+            .toggleClass('d-none', dataset.progressBarStyle === 'none');
+    },
+    /**
+     * @see this.updateUI
+     */
+    updateUIEndMessage: function () {
+        this.$target.find('.s_countdown_canvas_wrapper')
+            .toggleClass("d-none", this.showEndMessage === true && this.$target.hasClass("hide-countdown"));
+        this.$target.find('.s_countdown_end_message')
+            .toggleClass("d-none", !this.showEndMessage);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _computeWidgetState: function (methodName, params) {
+        switch (methodName) {
+            case 'endAction':
+            case 'layout':
+                return this.$target[0].dataset[methodName];
+        }
+        return this._super(...arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onToggleEndMessageClick: function () {
+        this.showEndMessage = !this.showEndMessage;
+        this.$el.find(".toggle-edit-message")
+            .toggleClass('text-primary', this.showEndMessage);
+        this.updateUIEndMessage();
+        this.trigger_up('cover_update');
+    },
+});
+
 options.registry.gallery_img = options.Class.extend({
     /**
      * Rebuilds the whole gallery when one image is removed.
@@ -1940,4 +2071,39 @@ options.registry.SnippetMove = options.Class.extend({
         }
     },
 });
+
+const InputUserValueWidget = options.userValueWidgetsRegistry['we-input'];
+const UrlPickerUserValueWidget = InputUserValueWidget.extend({
+    custom_events: _.extend({}, InputUserValueWidget.prototype.custom_events || {}, {
+        website_url_chosen: '_onWebsiteURLChosen',
+    }),
+
+    /**
+     * @override
+     */
+    start: async function () {
+        await this._super(...arguments);
+        $(this.inputEl).addClass('text-left');
+        wUtils.autocompleteWithPages(this, $(this.inputEl));
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Called when the autocomplete change the input value.
+     *
+     * @private
+     */
+    _onWebsiteURLChosen: function () {
+        $(this.inputEl).trigger('input');
+        this._notifyValueChange(false);
+    },
+});
+
+options.userValueWidgetsRegistry['we-urlpicker'] = UrlPickerUserValueWidget;
+return {
+    UrlPickerUserValueWidget: UrlPickerUserValueWidget,
+};
 });
