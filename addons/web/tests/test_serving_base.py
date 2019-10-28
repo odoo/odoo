@@ -397,7 +397,7 @@ class TestStaticInheritance(BaseCase):
                             <div t-name="template_%(t_number)s_mod_%(m_number)s"
                                 t-inherit="template_%(t_inherit)s_mod_%(m_number)s"
                                 t-inherit-mode="primary">
-                                <xpath expr="//div[1]" position="before">
+                                <xpath expr="/div/div[1]" position="before">
                                     <div>Sick XPath</div>
                                 </xpath>
                             </div>
@@ -408,7 +408,7 @@ class TestStaticInheritance(BaseCase):
                             <div t-name="template_%(t_number)s_mod_%(m_number)s"
                                 t-inherit="mod_%(m_module_inherit)s.template_%(t_module_inherit)s_mod_%(m_module_inherit)s"
                                 t-inherit-mode="primary">
-                                <xpath expr="//div[1]" position="inside">
+                                <xpath expr="/div/div[1]" position="inside">
                                     <div>Mental XPath</div>
                                 </xpath>
                             </div>
@@ -476,9 +476,9 @@ class TestStaticInheritance(BaseCase):
         contents = HomeStaticTemplateHelpers.get_qweb_templates(addons=self._get_module_names(), debug=True)
         expected = b"""
             <templates>
-                <form overriden-attr="overriden">
+                <div overriden-attr="overriden" t-name="template_1_1">
                     <!-- Modified by template_1_2 from module_1 -->And I grew strong
-                </form>
+                </div>
             </templates>
         """
 
@@ -510,11 +510,12 @@ class TestStaticInheritance(BaseCase):
         contents = HomeStaticTemplateHelpers.get_qweb_templates(addons=self._get_module_names(), debug=True)
         expected = b"""
             <templates>
-                <form>
-                    <!-- Modified by template_1_2 from module_1 -->And I grew strong
+                <div t-name="template_1_1">
+                    <!-- Modified by template_1_2 from module_1 -->
+                    And I grew strong
                     <p>And I learned how to get along</p>
                     And so you're back
-                </form>
+                </div>
             </templates>
         """
 
@@ -550,11 +551,11 @@ class TestStaticInheritance(BaseCase):
         contents = HomeStaticTemplateHelpers.get_qweb_templates(addons=self._get_module_names(), debug=True)
         expected = b"""
             <templates>
-                <form>
+                <div t-name="template_1_1">
                     <!-- Modified by template_1_2 from module_1 -->
                     And I grew strong
                     <p>And I learned how to get along</p>
-                </form>
+                </div>
                 And so you're back
             </templates>
         """
@@ -563,7 +564,7 @@ class TestStaticInheritance(BaseCase):
 
     def test_replace_root_node_tag(self):
         """
-        Root node is not targeted by //NODE_TAG in xpath
+        Root node IS targeted by //NODE_TAG in xpath
         """
         self.modules = [
             ('module_1_file_1', None, 'module_1'),
@@ -589,11 +590,10 @@ class TestStaticInheritance(BaseCase):
         contents = HomeStaticTemplateHelpers.get_qweb_templates(addons=self._get_module_names(), debug=True)
         expected = b"""
             <templates>
-                <form t-name="template_1_1" random-attr="gloria">
-                    <div>At first I was afraid</div>
+                <div t-name="template_1_1">
                     <!-- Modified by template_1_2 from module_1 -->
-                    <div>Form replacer</div>
-                </form>
+                    Form replacer
+                </div>
             </templates>
         """
 
@@ -601,7 +601,7 @@ class TestStaticInheritance(BaseCase):
 
     def test_replace_root_node_tag_in_primary(self):
         """
-        Root node is not targeted by //NODE_TAG in xpath
+        Root node IS targeted by //NODE_TAG in xpath
         """
         self.maxDiff = None
         self.modules = [
@@ -630,10 +630,9 @@ class TestStaticInheritance(BaseCase):
                     <div>At first I was afraid</div>
                     <form>Inner Form</form>
                 </form>
-                <form t-name="template_1_2" random-attr="gloria" t-inherit="template_1_1">
-                    <div>At first I was afraid</div>
-                    <div>Form replacer</div>
-                </form>
+                <div t-name="template_1_2" t-inherit="template_1_1">
+                    Form replacer
+                </div>
             </templates>
         """
 
@@ -671,10 +670,10 @@ class TestStaticInheritance(BaseCase):
                 <form t-name="template_1_1" random-attr="gloria">
                     <div>At first I was afraid</div>
                  </form>
-                 <form overriden-attr="overriden" t-name="template_1_2" t-inherit="template_1_1">
+                 <div overriden-attr="overriden" t-name="template_1_2" t-inherit="template_1_1">
                     And I grew strong
                     <p>And I learned how to get along</p>
-                 </form>
+                 </div>
             </templates>
         """
 
@@ -708,11 +707,11 @@ class TestStaticInheritance(BaseCase):
         contents = HomeStaticTemplateHelpers.get_qweb_templates(addons=self._get_module_names(), debug=False)
         expected = b"""
             <templates>
-                <form>
+                <div t-name="template_1_1">
                     And I grew strong
                     <p>And I learned how to get along</p>
                     And so you're back
-                </form>
+                </div>
             </templates>
         """
 
