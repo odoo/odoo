@@ -81,7 +81,10 @@ class Company(models.Model):
     street2 = fields.Char(compute='_compute_address', inverse='_inverse_street2')
     zip = fields.Char(compute='_compute_address', inverse='_inverse_zip')
     city = fields.Char(compute='_compute_address', inverse='_inverse_city')
-    state_id = fields.Many2one('res.country.state', compute='_compute_address', inverse='_inverse_state', string="Fed. State")
+    state_id = fields.Many2one(
+        'res.country.state', compute='_compute_address', inverse='_inverse_state',
+        string="Fed. State", domain="[('country_id', '=?', country_id)]"
+    )
     bank_ids = fields.One2many('res.partner.bank', 'company_id', string='Bank Accounts', help='Bank accounts related to this company')
     country_id = fields.Many2one('res.country', compute='_compute_address', inverse='_inverse_country', string="Country")
     email = fields.Char(related='partner_id.email', store=True, readonly=False)
@@ -173,13 +176,9 @@ class Company(models.Model):
 
     @api.onchange('country_id')
     def _onchange_country_id_wrapper(self):
-        res = {'domain': {'state_id': []}}
-        if self.country_id:
-            res['domain']['state_id'] = [('country_id', '=', self.country_id.id)]
         values = self.on_change_country(self.country_id.id)['value']
         for fname, value in values.items():
             setattr(self, fname, value)
-        return res
 
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
