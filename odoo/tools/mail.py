@@ -539,7 +539,7 @@ def formataddr(pair):
         except UnicodeEncodeError:
             # non-ascii name, transcode the name in a safe format
             # rfc2047 - MIME Message Header Extensions for Non-ASCII Text
-            return "=?utf-8?b?{name}?= {addr}".format(
+            return "=?utf-8?b?{name}?= <{addr}>".format(
                 name=base64.b64encode(name.encode('utf-8')).decode('ascii'),
                 addr=address)
         else:
