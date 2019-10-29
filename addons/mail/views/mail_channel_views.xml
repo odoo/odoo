@@ -38,8 +38,12 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem name="Channels/Partner" id="mail_channel_partner_menu" parent="base.menu_email"
-            action="mail_channel_partner_action" sequence="92" groups="base.group_no_one"/>
+        <menuitem name="Channels/Partner"
+            id="mail_channel_partner_menu"
+            parent="base.menu_email"
+            action="mail_channel_partner_action"
+            sequence="21"
+            groups="base.group_no_one"/>
 
         <!-- mail.channel -->
         <record id="mail_channel_view_kanban" model="ir.ui.view">
@@ -187,7 +191,7 @@
         </record>
 
         <!-- settings !-->
-        <menuitem id="mail_channel_menu_settings" parent="base.menu_email" sequence="90"
+        <menuitem id="mail_channel_menu_settings" parent="base.menu_email" sequence="20"
             name="Channels" action="mail_channel_action_view"
             groups="base.group_no_one"/>
 

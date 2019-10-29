@@ -88,7 +88,8 @@
     <menuitem
       id="menu_mail_activity_type"
       action="mail_activity_type_action"
-      parent="base.menu_email"
+      parent="mail.mail_menu_technical"
+      sequence="10"
     />
 
     <record id="mail_activity_action" model="ir.actions.act_window">
@@ -100,7 +101,8 @@
     <menuitem
       id="menu_mail_activities"
       action="mail_activity_action"
-      parent="base.menu_email"
+      parent="mail.mail_menu_technical"
+      sequence="11"
     />
 
     <record id="mail_activity_view_form_popup" model="ir.ui.view">
