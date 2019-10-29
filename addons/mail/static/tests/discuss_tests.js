@@ -1966,5 +1966,63 @@ QUnit.test('messages marked as read move to "History" mailbox', async function (
     discuss.destroy();
 });
 
+QUnit.test('save filter discuss', async function (assert) {
+    assert.expect(3);
+
+    var messageFetchCount = 0;
+    const discuss = await createDiscuss({
+        context: {},
+        params: {},
+        data: this.data,
+        services: this.services,
+        archs: {
+            'mail.message,false,search': '<search>' +
+                '<field name="body" string="Content" filter_domain="[\'|\', (\'subject\', \'ilike\', self), (\'body\', \'ilike\', self)]"/>' +
+            '</search>',
+        },
+        session: {
+            partner_id: 3
+        },
+        mockRPC: async function (route, args) {
+            if (args.method === 'message_fetch' && messageFetchCount === 1) {
+                assert.deepEqual(args.args[0], [
+                    ["needaction", "=", true],
+                    "|",
+                    ["subject", "ilike", "she was born in a hurricane"],
+                    ["body", "ilike", "she was born in a hurricane"],
+                ], 'The fetch domain is correct');
+            }
+            return this._super.apply(this,arguments);
+        },
+        intercepts: {
+            create_filter: function (ev) {
+                assert.deepEqual(
+                    JSON.parse(ev.data.filter.domain), [
+                        "|",
+                        ["subject", "ilike", "she was born in a hurricane"],
+                        ["body", "ilike", "she was born in a hurricane"]
+                    ], 'The filter should have been saved with the right domain');
+            }
+        }
+    });
+
+    assert.containsOnce(discuss, '.o_searchview_input_container', 'search view input present');
+
+    $('.o_searchview_input').val("she was born in a hurricane").trigger('keyup');
+    await testUtils.nextTick();
+
+    messageFetchCount = 1;
+    $('.o_searchview_input').trigger($.Event('keydown', { which: $.ui.keyCode.ENTER }));
+    await testUtils.nextTick();
+
+    await testUtils.dom.click(discuss.$('.o_favorites_menu_button'));
+    await testUtils.dom.click(discuss.$('.o_add_favorite'));
+
+    await testUtils.fields.editInput(discuss.$('.o_favorite_name input'), 'War');
+    await testUtils.dom.click(discuss.$('.o_save_favorite button'));
+
+    discuss.destroy();
+});
+
 });
 });
