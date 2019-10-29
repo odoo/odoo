@@ -384,7 +384,7 @@ class AccountMove(models.Model):
                 # Numbering attributed by the transmitter. <1.1.2>
                 elements = tree.xpath('//ProgressivoInvio')
                 if elements:
-                    invoice_form.invoice_payment_ref = elements[0].text
+                    invoice_form.payment_reference = elements[0].text
 
                 elements = body_tree.xpath('.//DatiGeneraliDocumento//Numero')
                 if elements:
@@ -490,7 +490,7 @@ class AccountMove(models.Model):
                     else:
                         bank = self.env['res.partner.bank'].search([('acc_number', '=', elements[0].text)])
                     if bank:
-                        invoice_form.invoice_partner_bank_id = bank
+                        invoice_form.partner_bank_id = bank
                     else:
                         message_to_log.append("%s<br/>%s" % (
                             _("Bank account not found, useful informations from XML file:"),

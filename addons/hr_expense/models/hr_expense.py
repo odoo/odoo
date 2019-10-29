@@ -482,7 +482,7 @@ class HrExpense(models.Model):
                     'partner_id': expense.employee_id.address_home_id.commercial_partner_id.id,
                     'partner_type': 'supplier',
                     'journal_id': journal.id,
-                    'payment_date': expense.date,
+                    'date': expense.date,
                     'state': 'reconciled',
                     'currency_id': expense.currency_id.id if different_currency else journal_currency.id,
                     'amount': abs(total_amount_currency) if different_currency else abs(total_amount),

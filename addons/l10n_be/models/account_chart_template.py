@@ -7,11 +7,6 @@ from odoo import api, models, fields
 class AccountChartTemplate(models.Model):
     _inherit = 'account.chart.template'
 
-    def get_countries_posting_at_bank_rec(self):
-        rslt = super(AccountChartTemplate, self).get_countries_posting_at_bank_rec()
-        rslt.append('BE')
-        return rslt
-
     @api.model
     def _prepare_all_journals(self, acc_template_ref, company, journals_dict=None):
         journal_data = super(AccountChartTemplate, self)._prepare_all_journals(

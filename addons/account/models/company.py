@@ -45,6 +45,7 @@ class ResCompany(models.Model):
     cash_account_code_prefix = fields.Char(string='Prefix of the cash accounts')
     default_cash_difference_income_account_id = fields.Many2one('account.account', string="Cash Difference Income Account")
     default_cash_difference_expense_account_id = fields.Many2one('account.account', string="Cash Difference Expense Account")
+    account_journal_suspense_account_id = fields.Many2one('account.account', string='Journal Suspense Account')
     transfer_account_code_prefix = fields.Char(string='Prefix of the transfer accounts')
     account_sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax")
     account_purchase_tax_id = fields.Many2one('account.tax', string="Default Purchase Tax")
@@ -64,9 +65,6 @@ class ResCompany(models.Model):
     property_stock_valuation_account_id = fields.Many2one('account.account', string="Account Template for Stock Valuation")
     bank_journal_ids = fields.One2many('account.journal', 'company_id', domain=[('type', '=', 'bank')], string='Bank Journals')
     tax_exigibility = fields.Boolean(string='Use Cash Basis')
-    account_bank_reconciliation_start = fields.Date(string="Bank Reconciliation Threshold", help="""The bank reconciliation widget won't ask to reconcile payments older than this date.
-                                                                                                       This is useful if you install accounting after having used invoicing for some time and
-                                                                                                       don't want to reconcile all the past payments with bank statements.""")
 
     incoterm_id = fields.Many2one('account.incoterms', string='Default incoterm',
         help='International Commercial Terms are a series of predefined commercial terms used in international transactions.')
@@ -456,7 +454,7 @@ class ResCompany(models.Model):
                 raise RedirectWarning(msg, action.id, _("Go to the journal configuration"))
 
             sample_invoice = self.env['account.move'].with_context(default_move_type='out_invoice', default_journal_id=journal.id).create({
-                'invoice_payment_ref': _('Sample invoice'),
+                'payment_reference': _('Sample invoice'),
                 'partner_id': partner.id,
                 'invoice_line_ids': [
                     (0, 0, {

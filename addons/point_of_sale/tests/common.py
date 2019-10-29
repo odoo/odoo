@@ -31,9 +31,9 @@ class TestPointOfSaleCommon(StockAccountTestCommon):
             'company_id': cls.company_id})
         cls.company.write({
             'anglo_saxon_accounting': coa.use_anglo_saxon,
-            'bank_account_code_prefix': coa.bank_account_code_prefix,
-            'cash_account_code_prefix': coa.cash_account_code_prefix,
-            'transfer_account_code_prefix': coa.transfer_account_code_prefix,
+            'bank_account_code_prefix': 'test' + coa.bank_account_code_prefix,
+            'cash_account_code_prefix': 'test' + coa.cash_account_code_prefix,
+            'transfer_account_code_prefix': 'test' + coa.transfer_account_code_prefix,
             'chart_template_id': coa.id,})
         cls.product3 = cls.env['product.product'].create({
             'name': 'Product 3',

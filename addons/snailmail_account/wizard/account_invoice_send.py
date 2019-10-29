@@ -49,7 +49,7 @@ class AccountInvoiceSend(models.TransientModel):
             })
             letters |= letter
 
-        self.invoice_ids.filtered(lambda inv: not inv.invoice_sent).write({'invoice_sent': True})
+        self.invoice_ids.filtered(lambda inv: not inv.is_move_sent).write({'is_move_sent': True})
         if len(self.invoice_ids) == 1:
             letters._snailmail_print()
         else:
