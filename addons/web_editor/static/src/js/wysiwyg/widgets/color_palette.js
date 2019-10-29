@@ -62,7 +62,6 @@ const ColorPaletteWidget = Widget.extend({
         await templatePromise;
         return res;
     },
-
     /**
      * @override
      */
