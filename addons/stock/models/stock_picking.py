@@ -907,6 +907,9 @@ class Picking(models.Model):
                 continue
             if picking.immediate_transfer or any(move.additional for move in picking.move_lines):
                 picking.action_confirm()
+                # Make sure the reservation is bypassed in immediate transfer mode.
+                if picking.immediate_transfer:
+                    picking.move_lines.write({'state': 'assigned'})
 
     def _create_backorder(self):
         """ This method is called when the user chose to create a backorder. It will create a new
