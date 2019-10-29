@@ -418,7 +418,6 @@ div.carousel {
 // Parallax Theme
 .parallax {
     position: relative;
-    z-index: 0;
 
     .oe_structure {
         > :first-child {
@@ -429,6 +428,9 @@ div.carousel {
         }
     }
 
+    > * {
+        position: relative;
+    }
     > .s_parallax_bg {
         .o-position-absolute(0, 0, 0, 0);
         background-size: cover;
