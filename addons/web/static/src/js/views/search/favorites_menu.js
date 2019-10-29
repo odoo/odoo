@@ -65,6 +65,12 @@ return Widget.extend({
 
         _.each(this.filters, this.append_filter.bind(this));
 
+        this.$dropdownReference = this.$('.o_dropdown_toggler_btn');
+        this.$menu = this.$('.o_favorites_menu');
+        if (_t.database.parameters.direction === 'rtl') {
+            this.$menu.addClass('dropdown-menu-right');
+        }
+
         return this._super();
     },
     toggle_save_menu: function (is_open) {
@@ -76,6 +82,7 @@ return Widget.extend({
         if (this.$save_search.hasClass('o_open_menu')) {
             this.$save_name.find('input').first().focus();
         }
+        this.$dropdownReference.dropdown('update');
     },
     _closeMenus: function () {
         this.toggle_save_menu(false);

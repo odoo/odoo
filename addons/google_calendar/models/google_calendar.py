@@ -851,6 +851,14 @@ class GoogleCalendar(models.AbstractModel):
                             parent_oe_id = event_to_synchronize[base_event][0][1].OE.event_id
                             if parent_oe_id:
                                 CalendarEvent.browse("%s-%s" % (parent_oe_id, new_google_event_id)).with_context(curr_attendee=event.OE.attendee_id).unlink(can_be_deleted=True)
+                            else:
+                                main_att = CalendarAttendee.with_context(context_novirtual).search([('partner_id', '=', my_partner_id), ('google_internal_event_id', '=', event.GG.event['id'].rsplit('_', 1)[0])], limit=1)
+                                if main_att:
+                                    excluded_event_id = str(main_att.event_id.id) + '-' + new_google_event_id
+
+                                    CalendarEvent.browse(excluded_event_id).with_context(google_internal_event_id=event.GG.event.get('id'), oe_update_date=False).unlink(can_be_deleted=False)
+                                else:
+                                    _logger.warn("Could not create the correct exclusion for event")
 
                 elif isinstance(actToDo, Delete):
                     if actSrc == 'GG':
