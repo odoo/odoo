@@ -103,10 +103,10 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
         this.$('.ask_for_redirect').addClass('d-none');
         this.$('.redirect_type').addClass('d-none');
         this.$('.warn_about_call').addClass('d-none');
-        if (this.page.visibility != 'password') {
+        if (this.page.visibility !== 'password') {
             this.$('.show_visibility_password').addClass('d-none');
         }
-        if (this.page.visibility != 'restricted_group') {
+        if (this.page.visibility !== 'restricted_group') {
             this.$('.show_visibility_group').addClass('d-none');
         }
         this.autocompleteWithGroups(this.$('#visibility_group'));
@@ -353,8 +353,8 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
                     response(founds);
                 });
             },
-            change: (event, ui) => {
-                var $target = $(event.target);
+            change: (ev, ui) => {
+                var $target = $(ev.target);
                 if (!ui.item) {
                     $target.val("");
                     $target.removeData('group-id');
@@ -396,7 +396,9 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
         var createRedirect = this.$('input#create_redirect').prop('checked');
         this.$('.redirect_type').toggleClass('d-none', !createRedirect);
     },
-
+    /**
+     * @private
+     */
     _onVisibilityChanged: function (ev) {
         this.$('.show_visibility_password').toggleClass('d-none', ev.target.value !== 'password');
         this.$('.show_visibility_group').toggleClass('d-none', ev.target.value !== 'restricted_group');
