@@ -140,7 +140,7 @@ class PosOrder(models.Model):
 
         for order in table_orders:
             order['pos_session_id'] = order['session_id'][0]
-            order['uid'] = order['pos_reference'].split(' ')[1]
+            order['uid'] = order['pos_reference'].split(' ')[-1]
             order['name'] = order['pos_reference']
             order['creation_date'] = order['create_date']
             order['server_id'] = order['id']
