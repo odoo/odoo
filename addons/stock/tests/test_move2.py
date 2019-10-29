@@ -1880,6 +1880,7 @@ class TestSinglePicking(TestStockCommon):
                 'product_uom': self.productA.uom_id.id,
                 'location_id': self.stock_location,
                 'location_dest_id': self.customer_location,
+                'quantity_done': 5,
             })],
         })
         self.assertEqual(delivery_order.state, 'assigned')
