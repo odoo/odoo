@@ -236,9 +236,9 @@ class MailTemplate(models.Model):
             variables['object'] = record
             try:
                 render_result = template.render(variables)
-            except Exception:
-                _logger.info("Failed to render template %r using values %r" % (template, variables), exc_info=True)
-                raise UserError(_("Failed to render template %r using values %r")% (template, variables))
+            except Exception as e:
+                _logger.info("Failed to render template : %s" % e, exc_info=True)
+                raise UserError(_("Failed to render template : %s") % e)
             if render_result == u"False":
                 render_result = u""
             results[res_id] = render_result
