@@ -6,6 +6,7 @@ import functools
 import itertools
 import logging
 import psycopg2
+import datetime
 
 from odoo import api, fields, models
 from odoo import SUPERUSER_ID, _
@@ -390,11 +391,11 @@ class MergePartnerAutomatic(models.TransientModel):
 
     @api.model
     def _get_ordered_partner(self, partner_ids):
-        """ Helper : returns a `res.partner` recordset ordered by create_date/active fields
+        """ Helper : returns a `res.partner` recordset ordered by id/create_date/active fields
             :param partner_ids : list of partner ids to sort
         """
         return self.env['res.partner'].browse(partner_ids).sorted(
-            key=lambda p: (p.active, (p.create_date or '')),
+            key=lambda p: (p.active, (p.create_date or datetime.datetime(1970, 1, 1), p.id)),
             reverse=True,
         )
 
