@@ -16,6 +16,7 @@
         'wizard/mail_resend_message_views.xml',
         'views/mail_message_subtype_views.xml',
         'views/mail_tracking_views.xml',
+        'views/mail_notification_views.xml',
         'views/mail_message_views.xml',
         'views/mail_mail_views.xml',
         'views/mail_followers_views.xml',
