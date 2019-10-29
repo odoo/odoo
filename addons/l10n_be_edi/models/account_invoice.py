@@ -53,7 +53,7 @@ class AccountMove(models.Model):
                 invoice_form.ref = elements[0].text
             elements = tree.xpath('//cbc:InstructionID', namespaces=namespaces)
             if elements:
-                invoice_form.invoice_payment_ref = elements[0].text
+                invoice_form.payment_reference = elements[0].text
 
             # Dates
             elements = tree.xpath('//cbc:IssueDate', namespaces=namespaces)

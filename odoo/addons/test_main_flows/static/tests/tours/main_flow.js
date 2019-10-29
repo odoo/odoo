@@ -970,7 +970,7 @@ tour.stepUtils.mobileModifier(tour.stepUtils.autoExpandMoreButtons('.o_control_p
     trigger: ".o_field_widget[name=balance_end_real] input",
     content: _t("Let's calculate the ending balance."),
     position: 'right',
-    run: 'text 9010.85', // + 12.65
+    run: 'text 9955.87',
 }, {
     // FIXME convert list in kanban + form
     edition: "enterprise",
@@ -1010,7 +1010,7 @@ tour.stepUtils.mobileModifier(tour.stepUtils.autoExpandMoreButtons('.o_control_p
     position: 'right',
 }, {
     edition: "enterprise",
-    trigger: ".o_selected_row .o_field_widget[name=name]",
+    trigger: ".o_selected_row .o_field_widget[name=payment_ref]",
     content: _t("Let's enter a name."),
     position: "bottom",
     run: "text the_flow.statement.line",
@@ -1020,7 +1020,8 @@ tour.stepUtils.mobileModifier(tour.stepUtils.autoExpandMoreButtons('.o_control_p
     content: _t('Save.'),
     position: 'bottom',
 },
-...tour.stepUtils.statusbarButtonsSteps('Reconcile', _t('<p><b>Reconcile</p>'), ".breadcrumb-item.active:contains('the_flow.statement')").map(tour.stepUtils.editionEnterpriseModifier),
+...tour.stepUtils.statusbarButtonsSteps('Post', _t('Processing'), ".breadcrumb-item.active:contains('the_flow.statement')").map(tour.stepUtils.editionEnterpriseModifier),
+...tour.stepUtils.statusbarButtonsSteps('Reconcile', _t('Reconcile'), ".o_statusbar_status .btn.dropdown-toggle:contains(Processing)").map(tour.stepUtils.editionEnterpriseModifier),
 {
     edition: "enterprise",
     trigger: "button.o_reconcile, button.o_validate",

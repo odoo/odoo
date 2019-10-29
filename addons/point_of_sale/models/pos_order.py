@@ -384,7 +384,7 @@ class PosOrder(models.Model):
                 raise UserError(_('Please provide a partner for the sale.'))
 
             move_vals = {
-                'invoice_payment_ref': order.name,
+                'payment_reference': order.name,
                 'invoice_origin': order.name,
                 'journal_id': order.session_id.config_id.invoice_journal_id.id,
                 'move_type': 'out_invoice' if order.amount_total >= 0 else 'out_refund',

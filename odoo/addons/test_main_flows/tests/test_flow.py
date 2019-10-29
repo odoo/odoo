@@ -47,8 +47,6 @@ class BaseTestUi(odoo.tests.HttpCase):
             'name': 'Vendor Bills - Test',
             'code': 'TEXJ',
             'type': 'purchase',
-            'default_credit_account_id': a_expense.id,
-            'default_debit_account_id': a_expense.id,
             'refund_sequence': True,
         })
         self.bank_journal = self.env['account.journal'].create({

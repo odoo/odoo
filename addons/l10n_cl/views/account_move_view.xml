@@ -26,7 +26,7 @@
                 <field name="invoice_date" optional="show"/>
                 <field name="invoice_date_due" optional="show"/>
                 <field name="date" string="Accounting Date" optional="show"/>
-                <field name="invoice_payment_ref" optional="hide"/>
+                <field name="payment_reference" optional="hide"/>
                 <field name="invoice_user_id" optional="show" invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund','out_receipt')" string="Sales Person"/>
                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="show"/>
                 <field name="invoice_origin" optional="show" string="Source Document"/>

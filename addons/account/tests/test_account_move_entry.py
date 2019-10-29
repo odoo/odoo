@@ -280,6 +280,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         # lines[1] = 'move 1 counterpart line'
         # lines[2] = 'move 1 receivable line'
         # lines[3] = 'move 2 counterpart line'
+        draft_moves.post()
         lines = draft_moves.mapped('line_ids').sorted('balance')
 
         (lines[0] + lines[2]).reconcile()

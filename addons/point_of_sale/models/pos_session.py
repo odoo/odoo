@@ -207,7 +207,6 @@ class PosSession(models.Model):
                 'journal_id': cash_journal.id,
                 'user_id': self.env.user.id,
                 'name': pos_name,
-                'balance_start': self.env["account.bank.statement"]._get_opening_balance(cash_journal.id) if cash_journal.type == 'cash' else 0
             }
             statement_ids |= statement_ids.with_context(ctx).create(st_values)
 
@@ -251,7 +250,6 @@ class PosSession(models.Model):
                 values['start_at'] = fields.Datetime.now()
             values['state'] = 'opened'
             session.write(values)
-            session.statement_ids.button_open()
         return True
 
     def action_pos_session_closing_control(self):
@@ -300,14 +298,13 @@ class PosSession(models.Model):
             self._create_picking_at_end_of_session()
         self.with_company(self.company_id)._create_account_move()
         if self.move_id.line_ids:
-            self.move_id.post()
             # Set the uninvoiced orders' state to 'done'
             self.env['pos.order'].search([('session_id', '=', self.id), ('state', '=', 'paid')]).write({'state': 'done'})
         else:
             # The cash register needs to be confirmed for cash diffs
             # made thru cash in/out when sesion is in cash_control.
             if self.config_id.cash_control:
-                self.cash_register_id.button_confirm_bank()
+                self.cash_register_id.button_validate()
             self.move_id.unlink()
         self.write({'state': 'closed'})
         return {
@@ -340,7 +337,6 @@ class PosSession(models.Model):
             pickings = self.env['stock.picking']._create_picking_from_pos_order_lines(location_dest_id, lines, picking_type)
             pickings.write({'pos_session_id': self.id, 'origin': self.name})
 
-
     def _create_account_move(self):
         """ Create account.move and account.move.line records for this session.
 
@@ -365,6 +361,10 @@ class PosSession(models.Model):
         data = self._create_cash_statement_lines_and_cash_move_lines(data)
         data = self._create_invoice_receivable_lines(data)
         data = self._create_stock_output_lines(data)
+
+        if account_move.line_ids:
+            account_move.post()
+
         data = self._reconcile_account_move_lines(data)
 
     def _accumulate_amounts(self, data):
@@ -633,10 +633,11 @@ class PosSession(models.Model):
         for statement in self.statement_ids:
             if not self.config_id.cash_control:
                 statement.write({'balance_end_real': statement.balance_end})
-            statement.button_confirm_bank()
+            statement.button_post()
+            statement.button_validate()
             all_lines = (
-                  split_cash_statement_lines[statement].mapped('journal_entry_ids').filtered(lambda aml: aml.account_id.internal_type == 'receivable')
-                | combine_cash_statement_lines[statement].mapped('journal_entry_ids').filtered(lambda aml: aml.account_id.internal_type == 'receivable')
+                  split_cash_statement_lines[statement].mapped('move_id.line_ids').filtered(lambda aml: aml.account_id.internal_type == 'receivable')
+                | combine_cash_statement_lines[statement].mapped('move_id.line_ids').filtered(lambda aml: aml.account_id.internal_type == 'receivable')
                 | split_cash_receivable_lines[statement]
                 | combine_cash_receivable_lines[statement]
             )
@@ -772,11 +773,11 @@ class PosSession(models.Model):
 
     def _get_statement_line_vals(self, statement, receivable_account, amount):
         return {
-            'date': fields.Date.context_today(self),
             'amount': amount,
-            'name': self.name,
+            'payment_ref': self.name,
             'statement_id': statement.id,
-            'account_id': receivable_account.id,
+            'journal_id': statement.journal_id.id,
+            'counterpart_account_id': receivable_account.id,
         }
 
     def _update_amounts(self, old_amounts, amounts_to_add, date, round=True, force_company_currency=False):

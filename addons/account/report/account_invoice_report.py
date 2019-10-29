@@ -55,7 +55,7 @@ class AccountInvoiceReport(models.Model):
     _depends = {
         'account.move': [
             'name', 'state', 'move_type', 'partner_id', 'invoice_user_id', 'fiscal_position_id',
-            'invoice_date', 'invoice_date_due', 'invoice_payment_term_id', 'invoice_partner_bank_id',
+            'invoice_date', 'invoice_date_due', 'invoice_payment_term_id', 'partner_bank_id',
         ],
         'account.move.line': [
             'quantity', 'price_subtotal', 'amount_residual', 'balance', 'amount_currency',

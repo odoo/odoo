@@ -9,7 +9,7 @@
             <xpath expr="//div[@id='qrcode']" position="after">
                 <link type="text/css" rel="stylesheet" href="/l10n_ch/static/src/scss/report_swissqr.css"/>
                 <div class="swissqr_content" t-if="o.display_swiss_qr_code()">
-                    <div class="swissqr_body" t-if="o.invoice_partner_bank_id._eligible_for_qr_code('ch_qr', o.partner_id, o.currency_id)">
+                    <div class="swissqr_body" t-if="o.partner_bank_id._eligible_for_qr_code('ch_qr', o.partner_id, o.currency_id)">
                         <div id="title_zone" class="swissqr_column_left title_zone">
                             <span class="swissqr_text title title_zone">QR-bill payment part</span><br/>
                         </div>
@@ -19,11 +19,11 @@
                             <span class="swissqr_text content">Credit transfer</span>
                         </div>
 
-                        <img class="swissqr" t-att-src="o.invoice_partner_bank_id.build_qr_code_url(o.amount_residual, o.ref or o.name, o.invoice_payment_ref, o.currency_id, o.partner_id, 'ch_qr')"/>
+                        <img class="swissqr" t-att-src="o.partner_bank_id.build_qr_code_url(o.amount_residual, o.ref or o.name, o.payment_reference, o.currency_id, o.partner_id, 'ch_qr')"/>
 
                         <div id="indications_zone" class="swissqr_column_right indication_zone">
                             <span class="swissqr_text title">Account</span><br/>
-                            <span class="swissqr_text content" t-field="o.invoice_partner_bank_id.acc_number"/><br/>
+                            <span class="swissqr_text content" t-field="o.partner_bank_id.acc_number"/><br/>
 
                             <span class="swissqr_text title">Creditor</span><br/>
                             <span class="swissqr_text content" t-field="o.company_id.name"/><br/>
@@ -33,11 +33,11 @@
                             <span class="swissqr_text content" t-field="o.company_id.city"/><br/>
 
                             <span class="swissqr_text title">Reference number</span><br/>
-                            <t t-if="o.invoice_partner_bank_id.currency_id.name == 'EUR'">
-                                <span class="swissqr_text content" t-field="o.invoice_partner_bank_id.l10n_ch_isr_subscription_eur"/><br/>
+                            <t t-if="o.partner_bank_id.currency_id.name == 'EUR'">
+                                <span class="swissqr_text content" t-field="o.partner_bank_id.l10n_ch_isr_subscription_eur"/><br/>
                             </t>
-                            <t t-if="o.invoice_partner_bank_id.currency_id.name == 'CHF'">
-                                <span class="swissqr_text content" t-field="o.invoice_partner_bank_id.l10n_ch_isr_subscription_chf"/><br/>
+                            <t t-if="o.partner_bank_id.currency_id.name == 'CHF'">
+                                <span class="swissqr_text content" t-field="o.partner_bank_id.l10n_ch_isr_subscription_chf"/><br/>
                             </t>
 
                             <span class="swissqr_text title">Additional information</span><br/>

@@ -121,7 +121,7 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
             'journal_id': cls.company_data['default_journal_purchase'].id,
             'date': fields.Date.from_string('2019-01-01'),
             'fiscal_position_id': False,
-            'invoice_payment_ref': '',
+            'payment_reference': '',
             'invoice_payment_term_id': cls.pay_terms_a.id,
             'amount_untaxed': 960.0,
             'amount_tax': 168.0,
@@ -313,7 +313,7 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
     def test_in_refund_line_onchange_partner_1(self):
         move_form = Form(self.invoice)
         move_form.partner_id = self.partner_b
-        move_form.invoice_payment_ref = 'turlututu'
+        move_form.payment_reference = 'turlututu'
         move_form.save()
 
         self.assertInvoiceValues(self.invoice, [
@@ -357,7 +357,7 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
         ], {
             **self.move_vals,
             'partner_id': self.partner_b.id,
-            'invoice_payment_ref': 'turlututu',
+            'payment_reference': 'turlututu',
             'fiscal_position_id': self.fiscal_pos_a.id,
             'invoice_payment_term_id': self.pay_terms_b.id,
             'amount_untaxed': 960.0,
@@ -418,7 +418,7 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
         ], {
             **self.move_vals,
             'partner_id': self.partner_b.id,
-            'invoice_payment_ref': 'turlututu',
+            'payment_reference': 'turlututu',
             'fiscal_position_id': self.fiscal_pos_a.id,
             'invoice_payment_term_id': self.pay_terms_b.id,
             'amount_untaxed': 960.0,

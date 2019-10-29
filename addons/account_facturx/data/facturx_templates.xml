@@ -166,7 +166,7 @@
 
                         <!-- Reference. -->
                         <ram:BuyerOrderReferencedDocument>
-                            <ram:IssuerAssignedID t-esc="'%s: %s' % (record.name, record.invoice_payment_ref) if record.invoice_payment_ref else record.name"/>
+                            <ram:IssuerAssignedID t-esc="'%s: %s' % (record.name, record.payment_reference) if record.payment_reference else record.name"/>
                         </ram:BuyerOrderReferencedDocument>
                     </ram:ApplicableHeaderTradeAgreement>
 
@@ -184,9 +184,9 @@
                     <ram:ApplicableHeaderTradeSettlement>
 
                         <!-- Bank account. -->
-                        <ram:SpecifiedTradeSettlementPaymentMeans t-if="record.invoice_partner_bank_id.acc_type == 'iban'">
+                        <ram:SpecifiedTradeSettlementPaymentMeans t-if="record.partner_bank_id.acc_type == 'iban'">
                             <ram:PayeePartyCreditorFinancialAccount>
-                                <ram:IBANID t-esc="record.invoice_partner_bank_id.sanitized_acc_number"/>
+                                <ram:IBANID t-esc="record.partner_bank_id.sanitized_acc_number"/>
                             </ram:PayeePartyCreditorFinancialAccount>
                         </ram:SpecifiedTradeSettlementPaymentMeans>
 

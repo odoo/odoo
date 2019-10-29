@@ -409,7 +409,7 @@
                     <field name="invoice_date" optional="show" invisible="context.get('default_move_type') not in ('in_invoice', 'in_refund','in_receipt')" string="Bill Date"/>
                     <field name="invoice_date" optional="show" invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund','out_receipt')" string="Invoice Date"/>
                     <field name="invoice_origin" optional="hide" string="Source Document"/>
-                    <field name="invoice_payment_ref" optional="hide" invisible="context.get('default_move_type') in ('out_invoice', 'out_refund','out_receipt')"/>
+                    <field name="payment_reference" optional="hide" invisible="context.get('default_move_type') in ('out_invoice', 'out_refund','out_receipt')"/>
                     <field name="ref" optional="hide"/>
                     <field name="invoice_user_id" optional="hide" invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund','out_receipt')" string="Sales Person"/>
                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="show"/>
@@ -484,18 +484,19 @@
                         <button name="action_invoice_sent"
                                 type="object"
                                 string="Send &amp; Print"
-                                attrs="{'invisible':['|', '|', ('state', '!=', 'posted'), ('invoice_sent', '=', True), ('move_type', 'not in', ('out_invoice', 'out_refund'))]}"
+                                attrs="{'invisible':['|', '|', ('state', '!=', 'posted'), ('is_move_sent', '=', True), ('move_type', 'not in', ('out_invoice', 'out_refund'))]}"
                                 class="oe_highlight"
                                 groups="account.group_account_invoice"/>
                         <button name="action_invoice_sent"
                                 type="object"
                                 string="Send &amp; Print"
-                                attrs="{'invisible':['|', '|', ('state', '!=', 'posted'), ('invoice_sent', '=', False), ('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}"
+                                attrs="{'invisible':['|', '|', ('state', '!=', 'posted'), ('is_move_sent', '=', False), ('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}"
                                 groups="account.group_account_invoice"/>
                         <!-- Register Payment (only invoices / receipts) -->
-                        <button name="action_invoice_register_payment" id="account_invoice_payment_btn"
+                        <button name="action_register_payment" id="account_invoice_payment_btn"
                                 type="object" class="oe_highlight"
                                 attrs="{'invisible': ['|', '|', ('state', '!=', 'posted'), ('payment_state', 'not in', ('not_paid', 'partial')), ('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"
+                                context="{'dont_redirect_to_payments': True}"
                                 string="Register Payment"
                                 groups="account.group_account_invoice"/>
                         <!-- Preview (only customer invoices) -->
@@ -574,7 +575,7 @@
                         <field name="display_qr_code" invisible="1"/>
 
                         <field name="invoice_has_outstanding" invisible="1"/>
-                        <field name="invoice_sent" invisible="1"/>
+                        <field name="is_move_sent" invisible="1"/>
                         <field name="invoice_has_matching_suspense_amount" invisible="1"/>
                         <field name="has_reconciled_entries" invisible="1"/>
                         <field name="restrict_mode_hash_table" invisible="1"/>
@@ -611,9 +612,9 @@
                                 <label for="ref" string="Bill Reference"
                                        attrs="{'invisible':[('move_type', 'not in', ('in_invoice', 'in_receipt', 'in_refund'))]}" />
                                 <field name="ref" nolabel="1" attrs="{'invisible':[('move_type', 'not in', ('in_invoice', 'in_receipt', 'in_refund'))]}" />
-                                <field name="invoice_payment_ref"
+                                <field name="payment_reference"
                                        attrs="{'invisible': ['|',('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')), ('state', '=', 'draft')], 'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="invoice_partner_bank_id"
+                                <field name="partner_bank_id"
                                        context="{'default_partner_id': commercial_partner_id}"
                                        domain="[('partner_id', '=', bank_partner_id)]"
                                        attrs="{'invisible': [('move_type', 'not in', ('in_invoice', 'in_refund', 'in_receipt'))], 'readonly': [('state', '!=', 'draft')]}"/>
@@ -637,7 +638,10 @@
                                        attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
 
                                 <field name="date" string="Accounting Date"
-                                       attrs="{'invisible': [('move_type', 'in', ('out_invoice', 'out_refund', 'out_receipt'))]}"/>
+                                       attrs="{
+                                            'invisible': [('move_type', 'in', ('out_invoice', 'out_refund', 'out_receipt'))],
+                                            'readonly': [('state', '!=', 'draft')],
+                                       }"/>
 
                                 <!-- Invoice payment terms (only invoices) + due date (only invoices / receipts) -->
                                 <label for="invoice_payment_term_id" string="Due Date"
@@ -993,11 +997,12 @@
                                         <field name="invoice_user_id" domain="[('share', '=', False)]"/>
                                         <field name="invoice_origin" string="Source Document" force_save="1"
                                                attrs="{'invisible': [('invoice_origin', '=', False)]}"/>
-                                        <field name="invoice_partner_bank_id"
+                                        <field name="partner_bank_id"
                                                context="{'default_partner_id': commercial_partner_id}"
                                                domain="[('partner_id', '=', bank_partner_id)]"
                                                attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                        <field name="qr_code_method" attrs="{'invisible': [('display_qr_code', '=', False)]}"/>
+                                        <field name="qr_code_method"
+                                               attrs="{'invisible': [('display_qr_code', '=', False)]}"/>
                                     </group>
                                     <group string="Accounting"
                                            name="accounting_info_group"
@@ -1094,7 +1099,7 @@
                            filter_domain="[
                                 '|', '|' , '|', '|',
                                 ('name', 'ilike', self), ('invoice_origin', 'ilike', self),
-                                ('ref', 'ilike', self), ('invoice_payment_ref', 'ilike', self),
+                                ('ref', 'ilike', self), ('payment_reference', 'ilike', self),
                                 ('partner_id', 'child_of', self)]"/>
                     <field name="journal_id"/>
                     <field name="partner_id" operator="child_of"/>

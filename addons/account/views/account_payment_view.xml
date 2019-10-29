@@ -2,12 +2,14 @@
 <odoo>
     <data>
 
+        <!-- VIEWS -->
+
         <record id="view_account_payment_tree" model="ir.ui.view">
             <field name="name">account.payment.tree</field>
             <field name="model">account.payment</field>
             <field name="arch" type="xml">
-                <tree decoration-info="state == 'draft'" decoration-muted="state in ['reconciled', 'cancelled']" edit="false">
-                    <field name="payment_date"/>
+                <tree decoration-info="state == 'draft'" decoration-muted="state == 'cancelled'" edit="false">
+                    <field name="date"/>
                     <field name="name"/>
                     <field name="journal_id"/>
                     <field name="payment_method_id"/>
@@ -15,8 +17,7 @@
                     <field name="amount" sum="Amount"/>
                     <field name="state"/>
                     <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="currency_id" invisible="1"/>
-                    <field name="partner_type" invisible="1"/>
+                    <field name="currency_id" groups="base.group_multi_currency"/>
                 </tree>
             </field>
         </record>
@@ -40,7 +41,7 @@
                 <kanban class="o_kanban_mobile">
                     <field name="name"/>
                     <field name="partner_id"/>
-                    <field name="payment_date"/>
+                    <field name="date"/>
                     <field name="state"/>
                     <templates>
                         <t t-name="kanban-box">
@@ -50,7 +51,7 @@
                                         <strong><span><field name="name"/></span></strong>
                                     </div>
                                     <div class="col-6 text-right">
-                                        <strong><i class="fa fa-clock-o" role="img" aria-label="Date" title="Date"/> <t t-esc="record.payment_date.value"/></strong>
+                                        <strong><i class="fa fa-clock-o" role="img" aria-label="Date" title="Date"/> <t t-esc="record.date.value"/></strong>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -82,31 +83,36 @@
             <field name="arch" type="xml">
                 <search string="Payments">
                     <field name="name" string="Payment"
-                        filter_domain="['|', '|', ('name', 'ilike', self), ('partner_id', 'ilike', self), ('communication', 'ilike', self)]"/>
+                        filter_domain="['|', '|', ('name', 'ilike', self), ('partner_id', 'ilike', self), ('ref', 'ilike', self)]"/>
                     <field name="partner_id" string="Customer/Vendor"/>
                     <field name="journal_id"/>
                     <field name="is_internal_transfer"/>
                     <separator/>
-                    <filter string="Customer Payments" name="inbound_filter" domain="[('partner_type', '=', 'customer')]"/>
-                    <filter string="Vendor Payments" name="outbound_filter" domain="[('partner_type', '=', 'supplier')]"/>
+                    <filter string="Customer Payments"
+                            name="inbound_filter"
+                            domain="[('partner_type', '=', 'customer'), ('is_internal_transfer', '=', False)]"/>
+                    <filter string="Vendor Payments"
+                            name="outbound_filter"
+                            domain="[('partner_type', '=', 'supplier'), ('is_internal_transfer', '=', False)]"/>
                     <filter string="Transfers" name="transfers_filter" domain="[('is_internal_transfer', '=', True)]"/>
                     <separator/>
                     <filter string="Draft" name="state_draft" domain="[('state', '=', 'draft')]"/>
                     <filter string="Posted" name="state_posted" domain="[('state', '=', 'posted')]"/>
-                    <filter string="Sent" name="state_sent" domain="[('state', '=', 'sent')]"/>
-                    <filter string="Reconciled" name="reconciled" domain="[('state', '=', 'reconciled')]"/>
                     <separator/>
-                    <filter string="Payment Date" name="payment_date" date="payment_date"/>
+                    <filter string="Sent" name="state_sent" domain="[('is_move_sent', '=', True)]"/>
+                    <filter string="Bank Matched" name="matched" domain="[('is_matched', '=', True)]"/>
+                    <filter string="Reconciled" name="reconciled" domain="[('is_reconciled', '=', True)]"/>
+                    <separator/>
+                    <filter string="Payment Date" name="date" date="date"/>
                     <separator/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <filter string="Customer/Vendor" name="partner" domain="[]" context="{'group_by': 'partner_id'}"/>
                     <filter string="Journal" name="journal" domain="[]" context="{'group_by': 'journal_id'}"/>
                     <filter string="Payment Method" name="paymentmethod" domain="[]" context="{'group_by': 'payment_method_id'}"/>
                     <filter string="Status" name="state" domain="[]" context="{'group_by': 'state'}"/>
-                    <filter string="Payment Date" name="groupby_payment_date" domain="[]" context="{'group_by': 'payment_date'}"/>
+                    <filter string="Payment Date" name="groupby_date" domain="[]" context="{'group_by': 'date'}"/>
                     <filter string="Currency" name="currency" domain="[]" context="{'group_by': 'currency_id'}" groups="base.group_multi_currency"/>
-                    <!-- company_id is not stored (cdca5d4751a979f6b694f02d88160843f81a77f5). But we can't break structure-->
-                    <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company" invisible="1"/>
+                    <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
                     <separator/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
                         domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
@@ -125,28 +131,50 @@
             <field name="arch" type="xml">
                 <form string="Register Payment">
                     <header>
-                        <button name="post" class="oe_highlight" states="draft" string="Confirm" type="object"/>
-                        <button name="action_draft" class="btn btn-secondary" attrs="{'invisible': [('state', '=', 'draft')]}" string="Reset To Draft" type="object" groups="account.group_account_invoice"/>
-                        <button name="cancel" attrs="{'invisible': [('state', 'in', ('cancelled', 'posted', 'invoicing_legacy'))]}" string="Cancel" type="object"/>
-                        <button name="mark_as_sent" string="Mark as Sent" type="object" attrs="{'invisible': ['|', ('state', '!=', 'posted'), ('payment_method_code', '!=', 'manual')]}"/>
-                        <button name="unmark_as_sent"  string="Unmark as Sent" type="object" attrs="{'invisible': ['|', ('state', '!=', 'sent'), ('payment_method_code', '!=', 'manual')]}"/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,posted,reconciled,cancelled"/>
+                        <button name="action_post" string="Confirm" type="object" class="oe_highlight"
+                                attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                        <button name="action_draft" string="Reset To Draft" type="object" class="btn btn-secondary"
+                                attrs="{'invisible': [('state', 'not in', ('posted', 'cancel'))]}"
+                                groups="account.group_account_invoice"/>
+                        <button name="action_cancel" string="Cancel" type="object"
+                                attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                        <button name="mark_as_sent" string="Mark as Sent" type="object"
+                                attrs="{'invisible': ['|', '|', ('state', '!=', 'posted'), ('is_move_sent', '=', True), ('payment_method_code', '!=', 'manual')]}"/>
+                        <button name="unmark_as_sent"  string="Unmark as Sent" type="object"
+                                attrs="{'invisible': ['|', '|', ('state', '!=', 'posted'), ('is_move_sent', '=', False), ('payment_method_code', '!=', 'manual')]}"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
                     </header>
 
                     <sheet>
+                        <!-- Invisible fields -->
+                        <field name="id" invisible="1"/>
+                        <field name="is_move_sent" invisible="1"/>
+                        <field name="is_reconciled" invisible="1"/>
+                        <field name="payment_method_code" invisible="1"/>
+                        <field name="show_partner_bank_account" invisible="1"/>
+                        <field name="require_partner_bank_account" invisible="1"/>
+                        <field name="hide_payment_method" invisible="1"/>
+                        <field name="available_payment_method_ids" invisible="1"/>
+                        <field name="suitable_journal_ids" invisible="1"/>
+
                         <div class="oe_button_box" name="button_box">
-                            <button class="oe_stat_button" name="button_journal_entries"
-                                    string="Journal Items" type="object"
-                                    groups="account.group_account_readonly"
-                                    attrs="{'invisible':['|', ('move_line_ids','=',[]), ('state', '=', 'invoicing_legacy')]}" icon="fa-bars"/>
-                            <field name="move_line_ids" invisible="1"/>
-                            <button class="oe_stat_button" name="button_invoices" type="object" icon="fa-bars" attrs="{'invisible':[('reconciled_invoices_count','=', 0)]}" >
+                            <!-- Invoice stat button -->
+                            <button name="button_open_invoices" type="object"
+                                    class="oe_stat_button" icon="fa-bars"
+                                    attrs="{'invisible': [('reconciled_invoices_count','=', 0)]}">
                                 <field name="reconciled_invoices_count"/>
-                                <span attrs="{'invisible':[('reconciled_invoices_count','&gt;',1)]}">Invoice</span>
-                                <span attrs="{'invisible':[('reconciled_invoices_count','&lt;=',1)]}">Invoices</span>
+                                <span attrs="{'invisible': [('reconciled_invoices_count','&gt;', 1)]}">Invoice</span>
+                                <span attrs="{'invisible': [('reconciled_invoices_count','&lt;=', 1)]}">Invoices</span>
                             </button>
-                            <field name="has_invoices" invisible="1"/>
-                            <field name="move_reconciled" invisible="1"/>
+
+                            <!-- Statement stat button -->
+                            <button name="button_open_statements" type="object"
+                                    class="oe_stat_button" icon="fa-bars"
+                                    attrs="{'invisible': [('reconciled_statements_count','=', 0)]}">
+                                <field name="reconciled_statements_count"/>
+                                <span attrs="{'invisible': [('reconciled_statements_count','&gt;', 1)]}">Statement</span>
+                                <span attrs="{'invisible': [('reconciled_statements_count','&lt;=', 1)]}">Statements</span>
+                            </button>
                         </div>
 
                         <widget name="web_ribbon" text="Invoicing App Legacy"
@@ -155,54 +183,58 @@
                                 tooltip="This payment has been generated through the Invoicing app, before installing Accounting. It has been disabled by the 'Invoicing Switch Threshold Date' setting so that it does not impact your accounting."
                         />
 
-                        <field name="id" invisible="1"/>
                         <div class="oe_title" attrs="{'invisible': [('state', '=', 'draft')]}">
-                            <h1><field name="name"/></h1>
+                            <h1><field name="name" attrs="{'readonly': [('state', '!=', 'draft')]}"/></h1>
                         </div>
 
                         <group>
-                            <field name="invoice_ids" invisible="1"/>
-                            <field name="is_internal_transfer" invisible="1"/>
-                            <group name="partner_group" invisible="context.get('active_model') == 'account.move'">
-                                <field name="payment_type" widget="radio"/>
-                                <field name="partner_type" widget="selection" attrs="{'required': [('state', '=', 'draft')], 'invisible': [('is_internal_transfer', '=', True)]}"/>
-                                <field name="partner_id" attrs="{'required': [('state', '=', 'draft')]}" context="{'default_is_company': True}"/>
-                                <field name="company_id" groups="base.group_multi_company" required="1"/>
+                            <group name="group1">
+                                <field name="payment_type" widget="radio"
+                                       attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="partner_type" widget="selection"
+                                       attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('is_internal_transfer', '=', True)]}"/>
+                                <field name="partner_id" context="{'default_is_company': True}"
+                                       attrs="{'readonly': ['|', ('state', '!=', 'draft'), ('is_internal_transfer', '=', True)]}"/>
+                                <field name="destination_account_id"
+                                       attrs="{'readonly': ['|', ('state', '!=', 'draft'), ('is_internal_transfer', '=', True)]}"/>
+                                <field name="is_internal_transfer"
+                                       attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
                             </group>
-                            <group>
-                                <field name="amount" invisible="1"/>
-                                <field name="_suitable_journal_ids" invisible="1"/>
-                                <field name="journal_id" widget="selection" attrs="{'invisible': [('amount', '=', 0), ('state', '!=', 'draft')]}"/>
-                                <field name="hide_payment_method" invisible="1"/>
-                                <field name="_payment_methods" invisible="1"/>
-                                <field name="payment_method_id" widget="radio" attrs="{'invisible': [('hide_payment_method', '=', True)]}"/>
-                                <field name="possible_bank_partner_ids" invisible="1"/>
-                                <field name="partner_bank_account_id" attrs="{'invisible': [('show_partner_bank_account', '!=', True)], 'required': [('require_partner_bank_account', '=', True)]}" context="{'default_partner_id': partner_id}"/>
-                                <field name="show_partner_bank_account" invisible="1"/>
-                                <field name="require_partner_bank_account" invisible="1"/>
-                                <field name="payment_method_code" invisible="1"/>
+                            <group name="group2">
+                                <field name="journal_id"
+                                       widget="selection"
+                                       domain="[('type', 'in', ('bank', 'cash'))]"
+                                       attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="payment_method_id" widget="radio"
+                                       required="1"
+                                       attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('hide_payment_method', '=', True)]}"/>
+                                <field name="partner_bank_id" context="{'default_partner_id': partner_id}"
+                                       attrs="{'invisible': [('show_partner_bank_account', '=', False)], 'required': [('require_partner_bank_account', '=', True)]}"/>
+
+                                <!-- /!\ Required due to the _inherits but must not be required when saving a new
+                                record. Using 'required': [('id', '!=', False)] is not working due to the groups set on
+                                the field.
+                                -->
+                                <field name="move_id"
+                                       required="0"
+                                       attrs="{'invisible': [('id', '=', False)]}"
+                                       groups="account.group_account_readonly"/>
                             </group>
-                            <group name="right_column">
+                            <group name="group3">
                                 <label for="amount"/>
                                 <div name="amount_div" class="o_row">
-                                    <field name="amount"/>
-                                    <field name="currency_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_currency"/>
+                                    <field name="amount"
+                                           attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                    <field name="currency_id"
+                                           options="{'no_create': True, 'no_open': True}"
+                                           required="1"
+                                           attrs="{'readonly': [('state', '!=', 'draft')]}"
+                                           groups="base.group_multi_currency"/>
                                 </div>
-                                <field name="payment_date"/>
-                                <field name="communication"/>
-                            </group>
-                            <group name="payment_difference" attrs="{'invisible': [('payment_difference', '=', 0.0)]}" groups="account.group_account_readonly">
-                                <label for="payment_difference"/>
-                                <div>
-                                    <field name="payment_difference"/>
-                                    <field name="payment_difference_handling" widget="radio" nolabel="1"/>
-                                    <div attrs="{'invisible': [('payment_difference_handling','=','open')]}">
-                                        <label for="writeoff_account_id" class="oe_edit_only" string="Post Difference In"/>
-                                        <field name="writeoff_account_id" options="{'no_create': True}" string="Post Difference In" attrs="{'required': [('payment_difference_handling', '=', 'reconcile'), ('payment_difference', '!=', 0.0)]}"/>
-                                        <label for="writeoff_label" class="oe_edit_only" string="Label"/>
-                                        <field name="writeoff_label" attrs="{'required': [('payment_difference_handling', '=', 'reconcile'), ('payment_difference', '!=', 0.0)]}"/>
-                                    </div>
-                                </div>
+                                <field name="date"
+                                       attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="ref" string="Memo"/>
                             </group>
 
                             <group>
@@ -223,31 +255,6 @@
             </field>
         </record>
 
-        <record id="view_account_payment_form_multi" model="ir.ui.view">
-            <field name="name">account.payment.form.multi</field>
-            <field name="model">account.payment.register</field>
-            <field name="arch" type="xml">
-                <form string="Register Payment">
-                    <field name="invoice_company_id" invisible="1"/>
-                    <field name="available_payment_methods" invisible="1"/>
-                    <group>
-                        <group>
-                            <field name="payment_method_id" widget="radio"/>
-                            <field name="group_payment"/>
-                        </group>
-                        <group>
-                            <field name="journal_id" widget="selection"/>
-                            <field name="payment_date"/>
-                        </group>
-                    </group>
-                    <footer>
-                        <button string="Create Payment" name="create_payments" type="object" class="oe_highlight"/>
-                        <button string="Cancel" class="btn btn-secondary" special="cancel"/>
-                    </footer>
-                </form>
-            </field>
-        </record>
-
         <record id="view_account_payment_graph" model="ir.ui.view">
             <field name="name">account.payment.graph</field>
             <field name="model">account.payment</field>
@@ -260,6 +267,8 @@
             </field>
         </record>
 
+        <!-- ACTIONS -->
+
         <record id="action_account_payments" model="ir.actions.act_window">
             <field name="name">Payments</field>
             <field name="res_model">account.payment</field>
@@ -268,7 +277,7 @@
                 'default_payment_type': 'inbound',
                 'default_partner_type': 'customer',
                 'search_default_inbound_filter': 1,
-                'res_partner_search_mode': 'customer',
+                'default_move_journal_types': ('bank', 'cash'),
             }</field>
             <field name="view_id" ref="view_account_payment_tree"/>
             <field name="help" type="html">
@@ -288,7 +297,7 @@
                 'default_payment_type': 'outbound',
                 'default_partner_type': 'supplier',
                 'search_default_outbound_filter': 1,
-                'res_partner_search_mode': 'supplier',
+                'default_move_journal_types': ('bank', 'cash'),
             }</field>
             <field name="view_id" ref="view_account_supplier_payment_tree"/>
             <field name="help" type="html">
@@ -316,33 +325,16 @@
             </field>
         </record>
 
-        <record id="view_account_payment_invoice_form" model="ir.ui.view">
-            <field name="name">account.payment.invoice.form</field>
-            <field name="model">account.payment</field>
-            <field name="inherit_id" ref="view_account_payment_form"/>
-            <field name="mode">primary</field>
-            <field name="arch" type="xml">
-                <xpath expr="//header" position='replace'></xpath>
-                <xpath expr="//div[@name='button_box']" position='replace'></xpath>
-                <xpath expr="//sheet" position='after'>
-                    <footer>
-                        <field name="state" invisible="1"/>
-                        <button string='Validate' name="post" type="object" class="btn-primary"/>
-                        <button string="Cancel" class="btn-secondary" special="cancel"/>
-                    </footer>
-                </xpath>
-            </field>
-        </record>
-
         <record id="action_account_invoice_from_list" model="ir.actions.server">
             <field name="name">Register Payment</field>
             <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
-            <field name="model_id" ref="account.model_account_payment"/>
+            <field name="model_id" ref="account.model_account_move"/>
             <field name="binding_model_id" ref="account.model_account_move"/>
             <field name="binding_view_types">list</field>
             <field name="state">code</field>
             <field name="code">
-                action = model.action_register_payment()
+                if records:
+                    action = records.action_register_payment()
             </field>
         </record>
 
@@ -356,7 +348,7 @@
             <field name="binding_model_id" ref="account.model_account_payment"/>
             <field name="binding_view_types">list</field>
             <field name="code">
-                records.post()
+                records.action_post()
             </field>
         </record>
 

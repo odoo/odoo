@@ -92,14 +92,14 @@ class HrExpenseSheetRegisterPaymentWizard(models.TransientModel):
             'partner_type': 'supplier',
             'payment_type': 'outbound',
             'partner_id': self.partner_id.id,
-            'partner_bank_account_id': self.partner_bank_account_id.id,
+            'partner_bank_id': self.partner_bank_account_id.id,
             'journal_id': self.journal_id.id,
             'company_id': self.company_id.id,
             'payment_method_id': self.payment_method_id.id,
             'amount': self.amount,
             'currency_id': self.currency_id.id,
-            'payment_date': self.payment_date,
-            'communication': self.communication
+            'date': self.payment_date,
+            'ref': self.communication
         }
 
     def expense_post_payment(self):
@@ -112,7 +112,7 @@ class HrExpenseSheetRegisterPaymentWizard(models.TransientModel):
 
         # Create payment and post it
         payment = self.env['account.payment'].create(self._get_payment_vals())
-        payment.post()
+        payment.action_post()
 
         # Log the payment in the chatter
         body = (_("A payment of %s %s with the reference <a href='/mail/view?%s'>%s</a> related to your expense %s has been made.") % (payment.amount, payment.currency_id.symbol, url_encode({'model': 'account.payment', 'res_id': payment.id}), payment.name, expense_sheet.name))
@@ -120,7 +120,7 @@ class HrExpenseSheetRegisterPaymentWizard(models.TransientModel):
 
         # Reconcile the payment and the expense, i.e. lookup on the payable account move lines
         account_move_lines_to_reconcile = self.env['account.move.line']
-        for line in payment.move_line_ids + expense_sheet.account_move_id.line_ids:
+        for line in payment.line_ids + expense_sheet.account_move_id.line_ids:
             if line.account_id.internal_type == 'payable' and not line.reconciled:
                 account_move_lines_to_reconcile |= line
         account_move_lines_to_reconcile.reconcile()

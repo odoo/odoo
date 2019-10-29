@@ -1,21 +1,20 @@
 # -*- coding: utf-8 -*-
 
-import time
 import math
-import re
+import logging
 
 from odoo.osv import expression
 from odoo.tools.float_utils import float_round as round, float_compare
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.exceptions import UserError, ValidationError
 from odoo import api, fields, models, _, tools
-from odoo.tests.common import Form
 
 TYPE_TAX_USE = [
     ('sale', 'Sales'),
     ('purchase', 'Purchases'),
     ('none', 'None'),
 ]
+
+_logger = logging.getLogger(__name__)
 
 
 class AccountAccountType(models.Model):
@@ -414,6 +413,43 @@ class AccountAccount(models.Model):
         ids = self._cr.fetchall()
         if ids:
             raise ValidationError(_('Some journal items already exist with this account but in other journals than the allowed ones.'))
+
+    @api.constrains('currency_id')
+    def _check_journal_consistency(self):
+        ''' Ensure the currency set on the journal is the same as the currency set on the
+        linked accounts.
+        '''
+        if not self:
+            return
+
+        self.env['account.account'].flush(['currency_id'])
+        self.env['account.journal'].flush([
+            'currency_id',
+            'default_debit_account_id',
+            'default_credit_account_id',
+            'payment_debit_account_id',
+            'payment_credit_account_id',
+            'suspense_account_id',
+        ])
+        self._cr.execute('''
+            SELECT account.id, journal.id
+            FROM account_account account
+            JOIN res_company company ON company.id = account.company_id
+            JOIN account_journal journal ON
+                journal.default_debit_account_id = account.id
+                OR
+                journal.default_credit_account_id = account.id
+            WHERE account.id IN %s
+            AND journal.type IN ('bank', 'cash')
+            AND journal.currency_id IS NOT NULL
+            AND journal.currency_id != company.currency_id
+            AND account.currency_id != journal.currency_id 
+        ''', [tuple(self.ids)])
+        res = self._cr.fetchone()
+        if res:
+            account = self.env['account.account'].browse(res[0])
+            journal = self.env['account.journal'].browse(res[1])
+            raise ValidationError(_("The foreign currency set on the journal '%s' and the account '%s' must be the same.") % (journal.display_name, account.display_name))
 
     @api.constrains('company_id')
     def _check_company_consistency(self):
@@ -949,14 +985,33 @@ class AccountJournal(models.Model):
     account_control_ids = fields.Many2many('account.account', 'journal_account_control_rel', 'journal_id', 'account_id', string='Accounts Allowed',
         check_company=True,
         domain="[('deprecated', '=', False), ('company_id', '=', company_id)]")
-    default_credit_account_id = fields.Many2one('account.account', string='Default Credit Account',
-        domain="[('deprecated', '=', False), ('company_id', '=', company_id)]",
-        help="It acts as a default account for credit amount",
+    default_credit_account_id = fields.Many2one('account.account', string='Default Credit Account', copy=False,
+        domain=[('deprecated', '=', False)], help="It acts as a default account for credit amount",
         check_company=True,
         ondelete='restrict')
-    default_debit_account_id = fields.Many2one('account.account', string='Default Debit Account',
+    default_debit_account_id = fields.Many2one('account.account', string='Default Debit Account', copy=False,
         check_company=True,
         domain="[('deprecated', '=', False), ('company_id', '=', company_id)]", help="It acts as a default account for debit amount", ondelete='restrict')
+    payment_debit_account_id = fields.Many2one('account.account', string='Outstanding Receipts Account', copy=False,
+        ondelete='restrict',
+        domain=[('deprecated', '=', False)],
+        help="Incoming payments entries triggered by invoices/refunds will be posted on the Outstanding Receipts Account "
+             "and displayed as blue lines in the bank reconciliation widget. During the reconciliation process, concerned "
+             "transactions will be reconciled with entries on the Outstanding Receipts Account instead of the "
+             "receivable account.")
+    payment_credit_account_id = fields.Many2one('account.account', string='Outstanding Payments Account', copy=False,
+        ondelete='restrict',
+        domain=[('deprecated', '=', False)],
+        help="Outgoing payments entries triggered by bills/credit notes will be posted on the Outstanding Payments Account "
+             "and displayed as blue lines in the bank reconciliation widget. During the reconciliation process, concerned "
+             "transactions will be reconciled with entries on the Outstanding Payments Account instead of the "
+             "payable account.")
+    suspense_account_id = fields.Many2one('account.account', string='Bank Suspense Account',
+        ondelete='restrict', readonly=False, store=True, require=True,
+        compute='_compute_suspense_account_id',
+        domain=[('deprecated', '=', False), ('reconcile', '=', True)],
+        help="Bank statements transactions will be posted on the suspense account until the final reconciliation "
+             "allowing finding the right account.")
     restrict_mode_hash_table = fields.Boolean(string="Lock Posted Entries with Hash",
         help="If ticked, the accounting entry or invoice receives a hash as soon as it is posted and cannot be modified anymore.")
     sequence = fields.Integer(help='Used to order Journals in the dashboard view', default=10)
@@ -1009,7 +1064,6 @@ class AccountJournal(models.Model):
     bank_statements_source = fields.Selection(selection=_get_bank_statements_available_sources, string='Bank Feeds', default='undefined', help="Defines how the bank statements will be registered")
     bank_acc_number = fields.Char(related='bank_account_id.acc_number', readonly=False)
     bank_id = fields.Many2one('res.bank', related='bank_account_id.bank_id', readonly=False)
-    post_at = fields.Selection([('pay_val', 'Payment Validation'), ('bank_rec', 'Bank Reconciliation')], string="Post At", default='pay_val')
 
     # Sale journals fields
     sale_activity_type_id = fields.Many2one('mail.activity.type', string='Schedule Activity', default=False, help="Activity will be automatically scheduled on payment due date, improving collection process.")
@@ -1034,6 +1088,18 @@ class AccountJournal(models.Model):
     _sql_constraints = [
         ('code_company_uniq', 'unique (code, name, company_id)', 'The code and name of the journal must be unique per company !'),
     ]
+
+    @api.depends('company_id', 'type')
+    def _compute_suspense_account_id(self):
+        for journal in self:
+            if journal.type not in ('bank', 'cash'):
+                journal.suspense_account_id = False
+            elif journal.suspense_account_id:
+                journal.suspense_account_id = journal.suspense_account_id
+            elif journal.company_id.account_journal_suspense_account_id:
+                journal.suspense_account_id = journal.company_id.account_journal_suspense_account_id
+            else:
+                journal.suspense_account_id = False
 
     def _compute_alias_domain(self):
         alias_domain = self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")
@@ -1070,15 +1136,6 @@ class AccountJournal(models.Model):
         if self._cr.fetchone():
             raise ValidationError(_('Some journal items already exist in this journal but with other accounts than the allowed ones.'))
 
-    @api.constrains('currency_id', 'default_credit_account_id', 'default_debit_account_id')
-    def _check_currency(self):
-        for journal in self:
-            if journal.currency_id:
-                if journal.default_credit_account_id and not journal.default_credit_account_id.currency_id.id == journal.currency_id.id:
-                    raise ValidationError(_('The currency of the journal should be the same than the default credit account.'))
-                if journal.default_debit_account_id and not journal.default_debit_account_id.currency_id.id == journal.currency_id.id:
-                    raise ValidationError(_('The currency of the journal should be the same than the default debit account.'))
-
     @api.constrains('type', 'bank_account_id')
     def _check_bank_account(self):
         for journal in self:
@@ -1105,6 +1162,43 @@ class AccountJournal(models.Model):
         ''', [tuple(self.ids)])
         if self._cr.fetchone():
             raise UserError(_("You can't change the company of your journal since there are some journal entries linked to it."))
+
+    @api.constrains('default_debit_account_id', 'default_credit_account_id', 'payment_debit_account_id', 'payment_credit_account_id')
+    def _check_journal_not_shared_accounts(self):
+        accounts = self.default_debit_account_id \
+                   + self.default_credit_account_id \
+                   + self.payment_debit_account_id \
+                   + self.payment_credit_account_id
+
+        if not accounts:
+            return
+
+        self.env['account.journal'].flush([
+            'default_debit_account_id',
+            'default_credit_account_id',
+            'payment_debit_account_id',
+            'payment_credit_account_id',
+        ])
+        self._cr.execute('''
+            SELECT
+                account.name,
+                ARRAY_AGG(DISTINCT journal.name) AS journal_names
+            FROM account_account account
+            LEFT JOIN account_journal journal ON
+                journal.default_debit_account_id = account.id
+                OR
+                journal.default_credit_account_id = account.id
+                OR
+                journal.payment_debit_account_id = account.id
+                OR
+                journal.payment_credit_account_id = account.id
+            WHERE account.id IN %s
+            GROUP BY account.name
+            HAVING COUNT(DISTINCT journal.id) > 1
+        ''', [tuple(accounts.ids)])
+        res = self._cr.fetchone()
+        if res:
+            raise ValidationError(_("The account %s can't be shared between multiple journals: %s") % (res[0], ', '.join(res[1])))
 
     @api.constrains('type', 'default_credit_account_id', 'default_debit_account_id')
     def _check_type_default_credit_account_id_type(self):
@@ -1183,10 +1277,6 @@ class AccountJournal(models.Model):
                         'partner_id': company.partner_id.id,
                     })
             if 'currency_id' in vals:
-                if not 'default_debit_account_id' in vals and journal.default_debit_account_id:
-                    journal.default_debit_account_id.currency_id = vals['currency_id']
-                if not 'default_credit_account_id' in vals and journal.default_credit_account_id:
-                    journal.default_credit_account_id.currency_id = vals['currency_id']
                 if journal.bank_account_id:
                     journal.bank_account_id.currency_id = vals['currency_id']
             if 'bank_account_id' in vals:
@@ -1205,16 +1295,15 @@ class AccountJournal(models.Model):
                     raise UserError(_("You cannot modify the field %s of a journal that already has accounting entries.") % field_string)
         result = super(AccountJournal, self).write(vals)
 
+        for journal in self:
+            # Ensure the liquidity accounts are sharing the same foreign currency.
+            accounts = journal.default_debit_account_id + journal.default_credit_account_id
+            accounts.write({'currency_id': journal.currency_id.id})
+
         # Create the bank_account_id if necessary
         if 'bank_acc_number' in vals:
             for journal in self.filtered(lambda r: r.type == 'bank' and not r.bank_account_id):
                 journal.set_bank_account(vals.get('bank_acc_number'), vals.get('bank_id'))
-        # Changing the 'post_at' option will post the draft payment moves and change the related invoices' state.
-        if 'post_at' in vals and vals['post_at'] != 'bank_rec':
-            draft_moves = self.env['account.move'].search([('journal_id', 'in', self.ids), ('state', '=', 'draft')])
-            pending_payments = draft_moves.mapped('line_ids.payment_id')
-            pending_payments.mapped('move_line_ids.move_id').post()
-            pending_payments.mapped('reconciled_invoice_ids').filtered(lambda x: x.state == 'in_payment').write({'state': 'paid'})
         for record in self:
             if record.restrict_mode_hash_table and not record.secure_sequence_id:
                 record._create_secure_sequence(['secure_sequence_id'])
@@ -1222,41 +1311,9 @@ class AccountJournal(models.Model):
         return result
 
     @api.model
-    def _prepare_liquidity_account(self, name, company, currency_id, type):
-        '''
-        This function prepares the value to use for the creation of the default debit and credit accounts of a
-        liquidity journal (created through the wizard of generating COA from templates for example).
-
-        :param name: name of the bank account
-        :param company: company for which the wizard is running
-        :param currency_id: ID of the currency in which is the bank account
-        :param type: either 'cash' or 'bank'
-        :return: mapping of field names and values
-        :rtype: dict
-        '''
-        digits = 6
-        acc = self.env['account.account'].search([('company_id', '=', company.id)], limit=1)
-        if acc:
-            digits = len(acc.code)
-        # Seek the next available number for the account code
-        if type == 'bank':
-            account_code_prefix = company.bank_account_code_prefix or ''
-        else:
-            account_code_prefix = company.cash_account_code_prefix or company.bank_account_code_prefix or ''
-
-        liquidity_type = self.env.ref('account.data_account_type_liquidity')
-        return {
-                'name': name,
-                'currency_id': currency_id or False,
-                'code': self.env['account.account']._search_new_account_code(company, digits, account_code_prefix),
-                'user_type_id': liquidity_type and liquidity_type.id or False,
-                'company_id': company.id,
-        }
-
-    @api.model
-    def get_next_bank_cash_default_code(self, journal_type, company_id):
+    def get_next_bank_cash_default_code(self, journal_type, company):
         journal_code_base = (journal_type == 'cash' and 'CSH' or 'BNK')
-        journals = self.env['account.journal'].search([('code', 'like', journal_code_base + '%'), ('company_id', '=', company_id)])
+        journals = self.env['account.journal'].search([('code', 'like', journal_code_base + '%'), ('company_id', '=', company.id)])
         for num in range(1, 100):
             # journal_code has a maximal size of 5, hence we can enforce the boundary num < 100
             journal_code = journal_code_base + str(num)
@@ -1264,38 +1321,89 @@ class AccountJournal(models.Model):
                 return journal_code
 
     @api.model
-    def create(self, vals):
-        company_id = vals.get('company_id', self.env.company.id)
-        if vals.get('type') in ('bank', 'cash'):
-            # For convenience, the name can be inferred from account number
-            if not vals.get('name') and 'bank_acc_number' in vals:
-                vals['name'] = vals['bank_acc_number']
+    def _fill_missing_values(self, vals):
+        journal_type = vals.get('type')
 
-            # If no code provided, loop to find next available journal code
-            if not vals.get('code'):
-                vals['code'] = self.get_next_bank_cash_default_code(vals['type'], company_id)
+        # 'type' field is required.
+        if not journal_type:
+            return
+
+        # === Fill missing company ===
+        company = self.env['res.company'].browse(vals['company_id']) if vals.get('company_id') else self.env.company
+        vals['company_id'] = company.id
+
+        # Don't get the digits on 'chart_template_id' since the chart template could be a custom one.
+        random_account = self.env['account.account'].search([('company_id', '=', company.id)], limit=1)
+        digits = len(random_account.code) if random_account else 6
+
+        liquidity_type = self.env.ref('account.data_account_type_liquidity')
+        current_assets_type = self.env.ref('account.data_account_type_current_assets')
+
+        if journal_type in ('bank', 'cash'):
+            has_liquidity_accounts = vals.get('default_debit_account_id') or vals.get('default_credit_account_id')
+            has_payment_accounts = vals.get('payment_debit_account_id') or vals.get('payment_credit_account_id')
+            has_profit_account = vals.get('profit_account_id')
+            has_loss_account = vals.get('loss_account_id')
+
+            if journal_type == 'bank':
+                liquidity_account_prefix = company.bank_account_code_prefix or ''
+            else:
+                liquidity_account_prefix = company.cash_account_code_prefix or company.bank_account_code_prefix or ''
+
+            # === Fill missing name ===
+            vals['name'] = vals.get('name') or vals.get('bank_acc_number')
+
+            # === Fill missing code ===
+            if 'code' not in vals:
+                vals['code'] = self.get_next_bank_cash_default_code(journal_type, company)
                 if not vals['code']:
                     raise UserError(_("Cannot generate an unused journal code. Please fill the 'Shortcode' field."))
 
+            # === Fill missing accounts ===
+            if not has_liquidity_accounts:
+                liquidity_account = self.env['account.account'].create({
+                    'name': vals.get('name'),
+                    'code': self.env['account.account']._search_new_account_code(company, digits, liquidity_account_prefix),
+                    'user_type_id': liquidity_type.id,
+                    'currency_id': vals.get('currency_id'),
+                    'company_id': company.id,
+                })
 
-            # Create a default debit/credit account if not given
-            default_account = vals.get('default_debit_account_id') or vals.get('default_credit_account_id')
-            company = self.env['res.company'].browse(company_id)
-            if not default_account:
-                account_vals = self._prepare_liquidity_account(vals.get('name'), company, vals.get('currency_id'), vals.get('type'))
-                default_account = self.env['account.account'].create(account_vals)
-                vals['default_debit_account_id'] = default_account.id
-                vals['default_credit_account_id'] = default_account.id
-            if vals['type'] == 'cash':
-                if not vals.get('profit_account_id'):
-                    vals['profit_account_id'] = company.default_cash_difference_income_account_id.id
-                if not vals.get('loss_account_id'):
-                    vals['loss_account_id'] = company.default_cash_difference_expense_account_id.id
+                vals.update({
+                    'default_debit_account_id': liquidity_account.id,
+                    'default_credit_account_id': liquidity_account.id,
+                })
+            if not has_payment_accounts:
+                vals['payment_debit_account_id'] = self.env['account.account'].create({
+                    'name': _("Outstanding Receipts"),
+                    'code': self.env['account.account']._search_new_account_code(company, digits, liquidity_account_prefix),
+                    'reconcile': True,
+                    'user_type_id': current_assets_type.id,
+                    'company_id': company.id,
+                }).id
+                vals['payment_credit_account_id'] = self.env['account.account'].create({
+                    'name': _("Outstanding Payments"),
+                    'code': self.env['account.account']._search_new_account_code(company, digits, liquidity_account_prefix),
+                    'reconcile': True,
+                    'user_type_id': current_assets_type.id,
+                    'company_id': company.id,
+                }).id
+            if journal_type == 'cash' and not has_profit_account:
+                vals['profit_account_id'] = company.default_cash_difference_income_account_id.id
+            if journal_type == 'cash' and not has_loss_account:
+                vals['loss_account_id'] = company.default_cash_difference_expense_account_id.id
 
+        # === Fill missing refund_sequence ===
         if 'refund_sequence' not in vals:
             vals['refund_sequence'] = vals['type'] in ('sale', 'purchase')
 
+    @api.model
+    def create(self, vals):
+        # OVERRIDE
+        self._fill_missing_values(vals)
+
         journal = super(AccountJournal, self.with_context(mail_create_nolog=True)).create(vals)
+
         if 'alias_name' in vals:
             journal._update_mail_alias(vals)
 
@@ -1400,6 +1508,123 @@ class AccountJournal(models.Model):
                     vals_write[seq_field] = seq.id
             if vals_write:
                 journal.write(vals_write)
+
+    # -------------------------------------------------------------------------
+    # REPORTING METHODS
+    # -------------------------------------------------------------------------
+
+    def _get_journal_bank_account_balance(self, domain=None):
+        ''' Get the bank balance of the current journal by filtering the journal items using the journal's accounts.
+
+        /!\ The current journal is not part of the applied domain. This is the expected behavior since we only want
+        a logic based on accounts.
+
+        :param domain:  An additional domain to be applied on the account.move.line model.
+        :return:        The balance expressed in the journal's currency.
+        '''
+        self.ensure_one()
+        self.env['account.move.line'].check_access_rights('read')
+
+        accounts = self.default_debit_account_id + self.default_credit_account_id
+        if not accounts:
+            return 0.0
+
+        domain = (domain or []) + [
+            ('account_id', 'in', tuple(accounts.ids)),
+            ('display_type', 'not in', ('line_section', 'line_note')),
+            ('move_id.state', '!=', 'cancel'),
+        ]
+        query = self.env['account.move.line']._where_calc(domain)
+        tables, where_clause, where_params = query.get_sql()
+
+        query = '''
+            SELECT
+                COUNT(account_move_line.id) AS nb_lines,
+                COALESCE(SUM(account_move_line.balance), 0.0),
+                COALESCE(SUM(account_move_line.amount_currency), 0.0)
+            FROM ''' + tables + '''
+            WHERE ''' + where_clause + '''
+        '''
+        self._cr.execute(query, where_params)
+
+        company_currency = self.company_id.currency_id
+        journal_currency = self.currency_id if self.currency_id and self.currency_id != company_currency else False
+
+        nb_lines, balance, amount_currency = self._cr.fetchone()
+        return amount_currency if journal_currency else balance, nb_lines
+
+    def _get_journal_outstanding_payments_account_balance(self, domain=None, date=None):
+        ''' Get the outstanding payments balance of the current journal by filtering the journal items using the
+        journal's accounts.
+
+        /!\ The current journal is not part of the applied domain. This is the expected behavior since we only want
+        a logic based on accounts.
+
+        :param domain:  An additional domain to be applied on the account.move.line model.
+        :param date:    The date to be used when performing the currency conversions.
+        :return:        The balance expressed in the journal's currency.
+        '''
+        self.ensure_one()
+        self.env['account.move.line'].check_access_rights('read')
+        conversion_date = date or fields.Date.context_today(self)
+
+        accounts = self.payment_debit_account_id + self.payment_credit_account_id
+        if not accounts:
+            return 0.0
+
+        domain = (domain or []) + [
+            ('account_id', 'in', tuple(accounts.ids)),
+            ('display_type', 'not in', ('line_section', 'line_note')),
+            ('move_id.state', '!=', 'cancel'),
+            ('reconciled', '=', False),
+        ]
+        query = self.env['account.move.line']._where_calc(domain)
+        tables, where_clause, where_params = query.get_sql()
+
+        self._cr.execute('''
+            SELECT
+                COUNT(account_move_line.id) AS nb_lines,
+                account_move_line.currency_id,
+                account.reconcile AS is_account_reconcile,
+                SUM(account_move_line.amount_residual) AS amount_residual,
+                SUM(account_move_line.balance) AS balance,
+                SUM(account_move_line.amount_residual_currency) AS amount_residual_currency,
+                SUM(account_move_line.amount_currency) AS amount_currency
+            FROM ''' + tables + '''
+            JOIN account_account account ON account.id = account_move_line.account_id
+            WHERE ''' + where_clause + '''
+            GROUP BY account_move_line.currency_id, account.reconcile
+        ''', where_params)
+
+        company_currency = self.company_id.currency_id
+        journal_currency = self.currency_id if self.currency_id and self.currency_id != company_currency else False
+        balance_currency = journal_currency or company_currency
+
+        total_balance = 0.0
+        nb_lines = 0
+        for res in self._cr.dictfetchall():
+            nb_lines += res['nb_lines']
+
+            amount_currency = res['amount_residual_currency'] if res['is_account_reconcile'] else res['amount_currency']
+            balance = res['amount_residual'] if res['is_account_reconcile'] else res['balance']
+
+            if res['currency_id'] and journal_currency and res['currency_id'] == journal_currency.id:
+                total_balance += amount_currency
+            elif journal_currency:
+                total_balance += company_currency._convert(balance, balance_currency, self.company_id, conversion_date)
+            else:
+                total_balance += balance
+        return total_balance, nb_lines
+
+    def _get_last_bank_statement(self, domain=None):
+        ''' Retrieve the last bank statement created using this journal.
+        :param domain:  An additional domain to be applied on the account.bank.statement model.
+        :return:        An account.bank.statement record or an empty recordset.
+        '''
+        self.ensure_one()
+        last_statement_domain = (domain or []) + [('journal_id', '=', self.id)]
+        last_st_line = self.env['account.bank.statement.line'].search(last_statement_domain, order='date desc, id desc', limit=1)
+        return last_st_line.statement_id
 
 
 class ResPartnerBank(models.Model):
