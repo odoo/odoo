@@ -109,7 +109,6 @@ def valid_type_in_colspan(arch):
         for attrib in arch.xpath('//@colspan')
     )
 
-
 @validate('form')
 def valid_type_in_col(arch):
     """A `col` attribute must be an `integer` type."""
@@ -122,86 +121,6 @@ def valid_type_in_col(arch):
 def valid_alternative_image_text(arch):
     """An `img` tag must have an alt value."""
     if arch.xpath('//img[not(@alt or @t-att-alt or @t-attf-alt)]'):
-        return "Warning"
-    return True
-
-@validate('calendar', 'diagram', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree')
-def valid_alternative_icon_text(arch):
-    """An icon with fa- class or in a button must have aria-label in its tag, parents, descendants or have text."""
-    valid_aria_attrs = {
-        'aria-label', 'aria-labelledby', 't-att-aria-label', 't-attf-aria-label',
-        't-att-aria-labelledby', 't-attf-aria-labelledby'}
-    valid_t_attrs = {'t-value', 't-raw', 't-field', 't-esc'}
-    valid_attrs = valid_aria_attrs | valid_t_attrs
-    valid_aria_attrs_xpath = ' or '.join('@' + attr for attr in valid_aria_attrs)
-    valid_attrs_xpath = ' or '.join('@' + attr for attr in valid_attrs)
-
-    # Select elements with class begining by 'fa-'
-    xpath = '(//*[contains(concat(" ", @class), " fa-")'
-    xpath += ' or contains(concat(" ", @t-att-class), " fa-")'
-    xpath += ' or contains(concat(" ", @t-attf-class), " fa-")]'
-    xpath += ' | //button[@icon])'
-    # Elements with accessibility or string attrs are good
-    xpath += '[not(' + valid_attrs_xpath + ')]'
-    # And we ignore all elements with describing in children
-    xpath += '[not(//*[' + valid_attrs_xpath + '])]'
-    # Aria label can be on ancestors
-    xpath += '[not(ancestor[' + valid_aria_attrs_xpath + '])]'
-    # Labels provide text by definition
-    xpath += '[not(descendant-or-self::label)]'
-    # Buttons can have a string attribute
-    xpath += '[not(descendant-or-self::button[@string])]'
-    # Fields have labels
-    xpath += '[not(descendant-or-self::field)]'
-    # And finally, if there is some text, it's good too
-    xpath += '[not(descendant-or-self::*[text()])]'
-    # Following or preceding text
-    xpath += '[not(preceding-sibling::text()[normalize-space()])]'
-    xpath += '[not(following-sibling::text()[normalize-space()])]'
-    # Following or preceding text in span
-    xpath += '[not(preceding-sibling::span[text()])]'
-    xpath += '[not(following-sibling::span[text()])]'
-
-    if arch.xpath(xpath):
-        return "Warning"
-    return True
-
-@validate('calendar', 'diagram', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree')
-def valid_title_icon(arch):
-    """An icon with fa- class or in a button must have title in its tag, parents, descendants or have text."""
-    valid_title_attrs = {'title', 't-att-title', 't-attf-title'}
-    valid_t_attrs = {'t-value', 't-raw', 't-field', 't-esc'}
-    valid_attrs = valid_title_attrs | valid_t_attrs
-    valid_title_attrs_xpath = ' or '.join('@' + attr for attr in valid_title_attrs)
-    valid_attrs_xpath = ' or '.join('@' + attr for attr in valid_attrs)
-
-    # Select elements with class begining by 'fa-'
-    xpath = '(//*[contains(concat(" ", @class), " fa-")'
-    xpath += ' or contains(concat(" ", @t-att-class), " fa-")'
-    xpath += ' or contains(concat(" ", @t-attf-class), " fa-")]'
-    xpath += ' | //button[@icon])'
-    # Elements with accessibility or string attrs are good
-    xpath += '[not(' + valid_attrs_xpath + ')]'
-    # And we ignore all elements with describing in children
-    xpath += '[not(//*[' + valid_attrs_xpath + '])]'
-    # Aria label can be on ancestors
-    xpath += '[not(ancestor[' + valid_title_attrs_xpath + '])]'
-    # Labels provide text by definition
-    xpath += '[not(descendant-or-self::label)]'
-    # Buttons can have a string attribute
-    xpath += '[not(descendant-or-self::button[@string])]'
-    # Fields have labels
-    xpath += '[not(descendant-or-self::field)]'
-    # And finally, if there is some text, it's good too
-    xpath += '[not(descendant-or-self::*[text()])]'
-    # Following or preceding text
-    xpath += '[not(preceding-sibling::text()[normalize-space()])]'
-    xpath += '[not(following-sibling::text()[normalize-space()])]'
-    # Following or preceding text in span
-    xpath += '[not(preceding-sibling::span[text()])]'
-    xpath += '[not(following-sibling::span[text()])]'
-
-    if arch.xpath(xpath):
         return "Warning"
     return True
 
