@@ -1,7 +1,8 @@
 //
-// This file is meant to determine the timezone of a website visitor
-// If the visitor already exists, no need to keep the timezone cookie
-// as the timezone is set on the visitor.
+// This file is meant to allow to switch the type of an input #password
+// from password to text on mousedown on an input group.
+// On mouse down, we see the password in clear text
+// On mouse up, we hide it again.
 //
 odoo.define('website.show_password', function (require) {
 'use strict';

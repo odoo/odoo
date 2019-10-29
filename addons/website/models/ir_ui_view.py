@@ -189,10 +189,11 @@ class View(models.Model):
     def _create_website_specific_pages_for_view(self, new_view, website):
         for page in self.page_ids:
             # create new pages for this view
-            page.copy({
+            new_page = page.copy({
                 'view_id': new_view.id,
                 'is_published': page.is_published,
             })
+            page.menu_ids.filtered(lambda m: m.website_id.id == website.id).page_id = new_page.id
 
     @api.model
     def get_related_views(self, key, bundles=False):
