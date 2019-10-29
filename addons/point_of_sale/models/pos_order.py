@@ -943,6 +943,7 @@ class ReportSaleDetails(models.AbstractModel):
             } for (product, price_unit, discount), qty in products_sold.items()], key=lambda l: l['product_name'])
         }
 
+    @api.model
     def _get_report_values(self, docids, data=None):
         data = dict(data or {})
         configs = self.env['pos.config'].browse(data['config_ids'])
