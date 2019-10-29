@@ -219,27 +219,29 @@
             <field name="name">mrp.bom.line.view.form</field>
             <field name="model">mrp.bom.line</field>
             <field name="arch" type="xml">
-                <form string="Bill of Material line">
-                    <group>
-                        <group string="Product">
-                            <field name="product_id"/>
-                            <field name="parent_product_tmpl_id" invisible="1"/>
-                            <label for="product_qty" string="Quantity"/>
-                            <div class="o_row">
-                                <field name="product_qty"/>
-                                <field name="product_uom_category_id" invisible="1"/>
-                                <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="uom.group_uom"/>
-                            </div>
-                            <field name="possible_bom_product_template_attribute_value_ids" invisible="1"/>
-                            <field name="bom_product_template_attribute_value_ids" widget="many2many_tags" options="{'no_create': True}" groups="product.group_product_variant"/>
+                <form string="Bill of Material line" create="0" edit="0">
+                    <sheet>
+                        <group>
+                            <group string="Component">
+                                <field name="product_id"/>
+                                <field name="parent_product_tmpl_id" invisible="1"/>
+                                <label for="product_qty" string="Quantity"/>
+                                <div class="o_row">
+                                    <field name="product_qty"/>
+                                    <field name="product_uom_category_id" invisible="1"/>
+                                    <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="uom.group_uom"/>
+                                </div>
+                                <field name="possible_bom_product_template_attribute_value_ids" invisible="1"/>
+                                <field name="bom_product_template_attribute_value_ids" widget="many2many_tags" options="{'no_create': True}" groups="product.group_product_variant"/>
+                            </group>
+                            <group string="Operation">
+                                <field name="company_id" invisible="1"/>
+                                <field name="routing_id" invisible="1"/>
+                                <field name="sequence" groups="base.group_no_one"/>
+                                <field name="operation_id" groups="mrp.group_mrp_routings"/>
+                            </group>
                         </group>
-                        <group string="BoM details">
-                            <field name="company_id" invisible="1"/>
-                            <field name="routing_id" invisible="1"/>
-                            <field name="sequence"/>
-                            <field name="operation_id" groups="mrp.group_mrp_routings"/>
-                        </group>
-                    </group>
+                    </sheet>
                 </form>
             </field>
         </record>
