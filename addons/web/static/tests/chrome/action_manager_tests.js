@@ -1847,12 +1847,22 @@ QUnit.module('ActionManager', {
     });
 
     QUnit.test('state is pushed for client actions', async function (assert) {
-        assert.expect(2);
+        assert.expect(3);
 
-        var ClientAction = AbstractAction.extend({});
-        var actionManager = await createActionManager({
+        const ClientAction = AbstractAction.extend({
+            getTitle: function () {
+                return 'a title';
+            },
+            getState: function () {
+                return {foo: 'baz'};
+            }
+        });
+        const actionManager = await createActionManager({
             intercepts: {
-                push_state: function () {
+                push_state: function (ev) {
+                    const expectedState = {action: 'HelloWorldTest', foo: 'baz', title: 'a title'};
+                    assert.deepEqual(ev.data.state, expectedState,
+                        "should include a complete state description, including custom state");
                     assert.step('push state');
                 },
             },

@@ -331,13 +331,11 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
      * example with a new id.
      *
      * @private
-     * @param {Object} [state] information that will be pushed to the outside
-     *   world
      */
-    _pushState: function (state) {
+    _pushState: function () {
         this.trigger_up('push_state', {
             controllerID: this.controllerID,
-            state: state || {},
+            state: this.getState(),
         });
     },
     /**

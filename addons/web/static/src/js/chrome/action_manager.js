@@ -450,9 +450,6 @@ var ActionManager = Widget.extend({
         action.controllerID = controllerID;
         var prom = this._executeAction(action, options);
         prom.then(function () {
-            // AAB: this should be done automatically in AbstractAction, so that
-            // it can be overridden by actions that have specific stuff to push
-            // (e.g. Discuss, Views)
             self._pushState(controllerID, {});
         });
         return prom;
@@ -625,6 +622,7 @@ var ActionManager = Widget.extend({
                 state.active_ids = action.context.active_ids.join(',');
             }
         }
+        state = _.extend({}, controller.widget.getState(), state);
         return state;
     },
     /**
