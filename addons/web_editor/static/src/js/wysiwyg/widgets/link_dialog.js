@@ -41,6 +41,11 @@ var LinkDialog = Dialog.extend({
         this.data = linkInfo || {};
         this.needLabel = linkInfo.needLabel;
         this.data.iniClassName = linkInfo.className || '';
+        if (this.data.range) {
+            this._imageOnLink();
+        }
+        this.data.text = this.data.text.replace(/[ \t\r\n]+/g, ' ');
+
         var allBtnClassSuffixes = /(^|\s+)btn(-[a-z0-9_-]*)?/gi;
         var allBtnShapes = /\s*(rounded-circle|flat)\s*/gi;
         this.data.className = this.data.iniClassName
@@ -196,6 +201,98 @@ var LinkDialog = Dialog.extend({
             classes: classes.replace(allWhitespace, ' ').replace(allStartAndEndSpace, ''),
             isNewWindow: isNewWindow,
         };
+    },
+    /**
+     * Convert image/icon in text [IMG] in the link
+     *
+     * @private
+     */
+    _imageOnLink () {
+        var is_link = this.data.range.isOnAnchor();
+        var r = this.data.range;
+        var sc = r.sc;
+        var so = r.so;
+        var ec = r.ec;
+        var eo = r.eo;
+
+        var nodes;
+        if (!is_link) {
+            if (sc.tagName) {
+                sc = so ? sc.childNodes[so] : sc;
+                while (sc.firstChild) { sc = sc.firstChild; }
+                so = 0;
+            } else if (so !== sc.textContent.length) {
+                if (sc === ec) {
+                    ec = sc = sc.splitText(so);
+                    eo -= so;
+                } else {
+                    sc = sc.splitText(so);
+                }
+                so = 0;
+            }
+            if (ec.tagName) {
+                ec = eo ? ec.childNodes[eo-1] : ec;
+                while (ec.lastChild) { ec = ec.lastChild; }
+                eo = ec.textContent.length;
+            } else if (eo !== ec.textContent.length) {
+                ec.splitText(eo);
+            }
+
+            nodes = [];
+            var node = sc;
+            while (node) {
+                nodes.push(node);
+                if (node === ec) {
+                    break;
+                }
+                if (node.firstChild) {
+                    node = node.firstChild;
+                } else if (node.nextSibling) {
+                    node = node.nextSibling;
+                } else if (node.parentNode) {
+                    node = node.parentNode;
+                }
+            }
+
+            // browsers can't target a picture or void node
+            if (ec.tagName === 'BR' || sc.tagName === 'IMG' || sc.classList && sc.classList.contains('fa')) {
+                so = [].indexOf.call(sc.parentNode.childNodes, sc);
+                sc = sc.parentNode;
+            }
+            if (ec.tagName === 'BR') {
+                eo = [].indexOf.call(ec.parentNode.childNodes, ec);
+                ec = ec.parentNode;
+            } else if (ec.tagName === 'IMG' || ec.classList && ec.classList.contains('fa')) {
+                eo = [].indexOf.call(ec.parentNode.childNodes, ec) + 1;
+                ec = ec.parentNode;
+            }
+        } else {
+            nodes = $(sc).closest('a').contents().get();
+        }
+
+        if (sc.tagName === 'IMG' && nodes.indexOf(sc) === -1) {
+            nodes.push(sc);
+        }
+        if (nodes.length > 1 || $(nodes[0]).closest('img, .fa').length) {
+            var text = "";
+            this.data.images = [];
+            for (var i=0; i<nodes.length; i++) {
+                var $img = $(nodes[i]).closest('img, .fa');
+                if ($img.length) {
+                    this.data.images.push($img[0]);
+                    text += '[IMG]';
+                } else if (!is_link && nodes[i].nodeType === 1) {
+                    // just use text nodes from listBetween
+                } else if (!is_link && i===0) {
+                    text += nodes[i].textContent.slice(so, Infinity);
+                } else if (!is_link && i===nodes.length-1) {
+                    text += nodes[i].textContent.slice(0, eo);
+                } else {
+                    text += nodes[i].textContent;
+                }
+            }
+            this.data.text = text;
+        }
     },
 
     //--------------------------------------------------------------------------
