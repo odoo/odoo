@@ -47,13 +47,14 @@ def _auto_install_l10n(cr, registry):
             module_list.append('base_vat')
         if country_code == 'MX':
             module_list.append('l10n_mx_edi')
-
-        # European countries will be using SEPA
+        # European countries will be using CAMT
         europe = env.ref('base.europe', raise_if_not_found=False)
         if europe:
             europe_country_codes = [x.code for x in europe.country_ids]
             if country_code in europe_country_codes:
-                module_list.append('account_sepa')
                 module_list.append('account_bank_statement_import_camt')
+        # check for SEPA countries
+        if env.company.country_id.sepa_member:
+            module_list.append('account_sepa')
         module_ids = env['ir.module.module'].search([('name', 'in', module_list), ('state', '=', 'uninstalled')])
         module_ids.sudo().button_install()

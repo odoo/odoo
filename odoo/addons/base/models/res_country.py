@@ -66,6 +66,7 @@ class Country(models.Model):
         ], string="Customer Name Position", default="before",
         help="Determines where the customer/company name should be placed, i.e. after or before the address.")
     vat_label = fields.Char(string='Vat Label', translate=True, help="Use this field if you want to change vat label.")
+    sepa_member = fields.Boolean(string='SEPA member', help='The country is part of the single euro payments area (SEPA).')
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)',

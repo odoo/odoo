@@ -83,6 +83,7 @@
         <record id="at" model="res.country">
             <field name="name">Austria</field>
             <field name="code">at</field>
+            <field name="sepa_member">True</field>
             <field file="base/static/img/country_flags/at.png" name="image" type="base64" />
             <field name="currency_id" ref="EUR" />
             <field eval="43" name="phone_code" />
@@ -141,6 +142,7 @@
         <record id="be" model="res.country">
             <field name="name">Belgium</field>
             <field name="code">be</field>
+            <field name="sepa_member">True</field>
             <field file="base/static/img/country_flags/be.png" name="image" type="base64" />
             <field eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="EUR" />
@@ -157,6 +159,7 @@
         <record id="bg" model="res.country">
             <field name="name">Bulgaria</field>
             <field name="code">bg</field>
+            <field name="sepa_member">True</field>
             <field file="base/static/img/country_flags/bg.png" name="image" type="base64" />
             <field name="currency_id" ref="BGN" />
             <field eval="359" name="phone_code" />
@@ -306,6 +309,7 @@
         <record id="ch" model="res.country">
             <field name="name">Switzerland</field>
             <field name="code">ch</field>
+            <field name="sepa_member">True</field>
             <field file="base/static/img/country_flags/ch.png" name="image" type="base64" />
             <field name="address_format" eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" />
             <field name="currency_id" ref="CHF" />
@@ -393,6 +397,7 @@
         <record id="cy" model="res.country">
             <field name="name">Cyprus</field>
             <field name="code">cy</field>
+            <field name="sepa_member">True</field>
             <field file="base/static/img/country_flags/cy.png" name="image" type="base64" />
             <field name="currency_id" ref="CYP" />
             <field eval="357" name="phone_code" />
@@ -401,6 +406,7 @@
         <record id="cz" model="res.country">
             <field name="name">Czech Republic</field>
             <field name="code">cz</field>
+            <field name="sepa_member">True</field>
             <field file="base/static/img/country_flags/cz.png" name="image" type="base64" />
             <field name="currency_id" ref="CZK" />
             <field eval="420" name="phone_code" />
@@ -409,6 +415,7 @@
         <record id="de" model="res.country">
             <field name="name">Germany</field>
             <field name="code">de</field>
+            <field name="sepa_member">True</field>
             <field file="base/static/img/country_flags/de.png" name="image" type="base64" />
             <field eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="EUR" />
@@ -425,6 +432,7 @@
         <record id="dk" model="res.country">
             <field name="name">Denmark</field>
             <field name="code">dk</field>
+            <field name="sepa_member">True</field>
             <field file="base/static/img/country_flags/dk.png" name="image" type="base64" />
             <field eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="DKK" />
@@ -464,6 +472,7 @@
         <record id="ee" model="res.country">
             <field name="name">Estonia</field>
             <field name="code">ee</field>
+            <field name="sepa_member">True</field>
             <field file="base/static/img/country_flags/ee.png" name="image" type="base64" />
             <field name="currency_id" ref="EUR" />
             <field eval="372" name="phone_code" />
@@ -492,6 +501,7 @@
         <record id="es" model="res.country">
             <field name="name">Spain</field>
             <field name="code">es</field>
+            <field name="sepa_member">True</field>
             <field file="base/static/img/country_flags/es.png" name="image" type="base64" />
             <field eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="EUR" />
@@ -508,6 +518,7 @@
         <record id="fi" model="res.country">
             <field name="name">Finland</field>
             <field name="code">fi</field>
+            <field name="sepa_member">True</field>
             <field file="base/static/img/country_flags/fi.png" name="image" type="base64" />
             <field name="address_format" eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" />
             <field name="currency_id" ref="EUR" />
@@ -545,6 +556,7 @@
         <record id="fr" model="res.country">
             <field name="name">France</field>
             <field name="code">fr</field>
+            <field name="sepa_member">True</field>
             <field file="base/static/img/country_flags/fr.png" name="image" type="base64" />
             <field eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="EUR" />
@@ -588,6 +600,7 @@
         <record id="gi" model="res.country">
             <field name="name">Gibraltar</field>
             <field name="code">gi</field>
+            <field name="sepa_member">True</field>
             <field file="base/static/img/country_flags/gi.png" name="image" type="base64" />
             <field name="currency_id" ref="GIP" />
             <field eval="350" name="phone_code" />
@@ -636,6 +649,7 @@
         <record id="gr" model="res.country">
             <field name="name">Greece</field>
             <field name="code">gr</field>
+            <field name="sepa_member">True</field>
             <field file="base/static/img/country_flags/gr.png" name="image" type="base64" />
             <field name="currency_id" ref="EUR" />
             <field eval="30" name="phone_code" />
@@ -716,6 +730,7 @@
         <record id="hu" model="res.country">
             <field name="name">Hungary</field>
             <field name="code">hu</field>
+            <field name="sepa_member">True</field>
             <field file="base/static/img/country_flags/hu.png" name="image" type="base64" />
             <field name="currency_id" ref="HUF" />
             <field eval="36" name="phone_code" />
@@ -731,6 +746,7 @@
         <record id="ie" model="res.country">
             <field name="name">Ireland</field>
             <field name="code">ie</field>
+            <field name="sepa_member">True</field>
             <field file="base/static/img/country_flags/ie.png" name="image" type="base64" />
             <field name="currency_id" ref="EUR" />
             <field eval="353" name="phone_code" />
@@ -783,6 +799,7 @@
         <record id="is" model="res.country">
             <field name="name">Iceland</field>
             <field name="code">is</field>
+            <field name="sepa_member">True</field>
             <field file="base/static/img/country_flags/is.png" name="image" type="base64" />
             <field name="currency_id" ref="ISK" />
             <field eval="354" name="phone_code" />
@@ -790,6 +807,7 @@
         <record id="it" model="res.country">
             <field name="name">Italy</field>
             <field name="code">it</field>
+            <field name="sepa_member">True</field>
             <field file="base/static/img/country_flags/it.png" name="image" type="base64" />
             <field name="currency_id" ref="EUR" />
             <field eval="39" name="phone_code" />
@@ -926,6 +944,7 @@
         <record id="li" model="res.country">
             <field name="name">Liechtenstein</field>
             <field name="code">li</field>
+            <field name="sepa_member">True</field>
             <field file="base/static/img/country_flags/li.png" name="image" type="base64" />
             <field name="address_format" eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" />
             <field name="currency_id" ref="CHF" />
@@ -955,6 +974,7 @@
         <record id="lt" model="res.country">
             <field name="name">Lithuania</field>
             <field name="code">lt</field>
+            <field name="sepa_member">True</field>
             <field file="base/static/img/country_flags/lt.png" name="image" type="base64" />
             <field name="currency_id" ref="EUR"/>
             <field eval="370" name="phone_code" />
@@ -963,6 +983,7 @@
         <record id="lu" model="res.country">
             <field name="name">Luxembourg</field>
             <field name="code">lu</field>
+            <field name="sepa_member">True</field>
             <field file="base/static/img/country_flags/lu.png" name="image" type="base64" />
             <field name="currency_id" ref="EUR" />
             <field eval="352" name="phone_code" />
@@ -971,6 +992,7 @@
         <record id="lv" model="res.country">
             <field name="name">Latvia</field>
             <field name="code">lv</field>
+            <field name="sepa_member">True</field>
             <field file="base/static/img/country_flags/lv.png" name="image" type="base64" />
             <field name="currency_id" ref="EUR"/>
             <field eval="371" name="phone_code" />
@@ -994,6 +1016,7 @@
             <field name="name">Monaco</field>
             <field name="currency_id" ref="EUR" />
             <field name="code">mc</field>
+            <field name="sepa_member">True</field>
             <field file="base/static/img/country_flags/mc.png" name="image" type="base64" />
             <field eval="377" name="phone_code" />
         </record>
@@ -1097,6 +1120,7 @@
         <record id="mt" model="res.country">
             <field name="name">Malta</field>
             <field name="code">mt</field>
+            <field name="sepa_member">True</field>
             <field file="base/static/img/country_flags/mt.png" name="image" type="base64" />
             <field name="currency_id" ref="EUR" />
             <field eval="356" name="phone_code" />
@@ -1192,6 +1216,7 @@
         <record id="nl" model="res.country">
             <field name="name">Netherlands</field>
             <field name="code">nl</field>
+            <field name="sepa_member">True</field>
             <field file="base/static/img/country_flags/nl.png" name="image" type="base64" />
             <field eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="EUR" />
@@ -1201,6 +1226,7 @@
         <record id="no" model="res.country">
             <field name="name">Norway</field>
             <field name="code">no</field>
+            <field name="sepa_member">True</field>
             <field file="base/static/img/country_flags/no.png" name="image" type="base64" />
             <field name="currency_id" ref="NOK" />
             <field eval="47" name="phone_code" />
@@ -1286,6 +1312,7 @@
         <record id="pl" model="res.country">
             <field name="name">Poland</field>
             <field name="code">pl</field>
+            <field name="sepa_member">True</field>
             <field file="base/static/img/country_flags/pl.png" name="image" type="base64" />
             <field name="address_format" eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" />
             <field name="currency_id" ref="PLN" />
@@ -1322,6 +1349,7 @@
         <record id="pt" model="res.country">
             <field name="name">Portugal</field>
             <field name="code">pt</field>
+            <field name="sepa_member">True</field>
             <field file="base/static/img/country_flags/pt.png" name="image" type="base64" />
             <field name="currency_id" ref="EUR" />
             <field eval="351" name="phone_code" />
@@ -1357,6 +1385,7 @@
         <record id="ro" model="res.country">
             <field name="name">Romania</field>
             <field name="code">ro</field>
+            <field name="sepa_member">True</field>
             <field file="base/static/img/country_flags/ro.png" name="image" type="base64" />
             <field name="currency_id" ref="RON" />
             <field eval="40" name="phone_code" />
@@ -1414,6 +1443,7 @@
         <record id="se" model="res.country">
             <field name="name">Sweden</field>
             <field name="code">se</field>
+            <field name="sepa_member">True</field>
             <field file="base/static/img/country_flags/se.png" name="image" type="base64" />
             <field name="currency_id" ref="SEK" />
             <field eval="46" name="phone_code" />
@@ -1437,6 +1467,7 @@
         <record id="si" model="res.country">
             <field name="name">Slovenia</field>
             <field name="code">si</field>
+            <field name="sepa_member">True</field>
             <field file="base/static/img/country_flags/si.png" name="image" type="base64" />
             <field name="currency_id" ref="EUR" />
             <field eval="386" name="phone_code" />
@@ -1451,6 +1482,7 @@
         <record id="sk" model="res.country">
             <field name="name">Slovakia</field>
             <field name="code">sk</field>
+            <field name="sepa_member">True</field>
             <field file="base/static/img/country_flags/sk.png" name="image" type="base64" />
             <field name="currency_id" ref="SKK" />
             <field eval="421" name="phone_code" />
@@ -1466,6 +1498,7 @@
         <record id="sm" model="res.country">
             <field name="name">San Marino</field>
             <field name="code">sm</field>
+            <field name="sepa_member">True</field>
             <field file="base/static/img/country_flags/sm.png" name="image" type="base64" />
             <field name="currency_id" ref="ITL" />
             <field eval="378" name="phone_code" />
@@ -1663,6 +1696,7 @@
             <field name="name">United Kingdom</field>
             <field eval="'%(street)s\n%(street2)s\n%(city)s\n%(state_name)s\n%(zip)s\n%(country_name)s'" name="address_format" />
             <field name="code">gb</field>
+            <field name="sepa_member">True</field>
             <field file="base/static/img/country_flags/gb.png" name="image" type="base64" />
             <field name="currency_id" ref="GBP" />
             <field eval="44" name="phone_code" />

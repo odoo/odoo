@@ -92,6 +92,7 @@ class ResPartnerBank(models.Model):
         ('unique_number', 'unique(sanitized_acc_number, company_id)', 'Account Number must be unique'),
     ]
 
+
     @api.depends('acc_number')
     def _compute_sanitized_acc_number(self):
         for bank in self:
@@ -131,12 +132,10 @@ class ResPartnerBank(models.Model):
         communication = ""
         if comment:
             communication = (comment[:137] + '...') if len(comment) > 140 else comment
-        qr_code_string = 'BCD\n001\n1\nSCT\n%s\n%s\n%s\nEUR%s\n\n\n%s' % (self.bank_bic, self.company_id.name, self.acc_number, amount, communication)
+        qr_code_string = 'BCD\n001\n1\nSCT\n%s\n%s\n%s\nEUR%s\n\n\n%s' % (self.bank_bic or "", self.company_id.name, self.acc_number, amount, communication)
         qr_code_url = '/report/barcode/?type=%s&value=%s&width=%s&height=%s&humanreadable=1' % ('QR', werkzeug.url_quote_plus(qr_code_string), 128, 128)
         return qr_code_url
 
     def _validate_qr_code_arguments(self):
         for bank in self:
-            bank.qr_code_valid = (bank.bank_bic
-                                            and bank.company_id.name
-                                            and bank.acc_number)
+            bank.qr_code_valid = (bank.company_id.name and bank.acc_number)
