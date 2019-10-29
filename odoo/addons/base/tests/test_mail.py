@@ -3,9 +3,11 @@
 
 
 from unittest.mock import patch
+import email.policy
+import email.message
+import threading
 
-from odoo.tests.common import BaseCase
-from odoo.tests.common import SavepointCase
+from odoo.tests.common import BaseCase, SavepointCase, TransactionCase
 from odoo.tools import (
     html_sanitize, append_content_to_html, plaintext2html, email_split,
     misc, formataddr,
@@ -374,3 +376,31 @@ class EmailConfigCase(SavepointCase):
             "The body of an email",
         )
         self.assertEqual(message["From"], "settings@example.com")
+
+
+class TestEmailMessage(TransactionCase):
+    def test_as_string(self):
+        """Ensure all email sent are bpo-34424 free"""
+
+        class FakeSMTP:
+            """SMTP stub"""
+            def __init__(this):
+                this.email_sent = False
+
+            def sendmail(this, smtp_from, smtp_to_list, message_str):
+                this.email_sent = True
+                message_truth = (
+                    r'From: .+? <joe@example\.com>\r\n'
+                    r'To: .+? <joe@example\.com>\r\n'
+                    r'\r\n'
+                )
+                self.assertRegex(message_str, message_truth)
+
+        msg = email.message.EmailMessage(policy=email.policy.SMTP)
+        msg['From'] = '"Joé Doe" <joe@example.com>'
+        msg['To'] = '"Joé Doe" <joe@example.com>'
+
+        smtp = FakeSMTP()
+        self.patch(threading.currentThread(), 'testing', False)
+        self.env['ir.mail_server'].send_email(msg, smtp_session=smtp)
+        self.assertTrue(smtp.email_sent)
