@@ -119,7 +119,7 @@ class AccountMove(models.Model):
             # Name.
             elements = tree.xpath('//ram:BuyerOrderReferencedDocument/ram:IssuerAssignedID', namespaces=tree.nsmap)
             if elements:
-                invoice_form.invoice_payment_ref = elements[0].text
+                invoice_form.payment_reference = elements[0].text
 
             # Comment.
             elements = tree.xpath('//ram:IncludedNote/ram:Content', namespaces=tree.nsmap)

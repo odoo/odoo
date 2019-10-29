@@ -457,12 +457,12 @@ class PurchaseOrder(models.Model):
                 else:
                     ref_invoice_vals['invoice_line_ids'] += invoice_vals['invoice_line_ids']
                 origins.add(invoice_vals['invoice_origin'])
-                payment_refs.add(invoice_vals['invoice_payment_ref'])
+                payment_refs.add(invoice_vals['payment_reference'])
                 refs.add(invoice_vals['ref'])
             ref_invoice_vals.update({
                 'ref': ', '.join(refs)[:2000],
                 'invoice_origin': ', '.join(origins),
-                'invoice_payment_ref': len(payment_refs) == 1 and payment_refs.pop() or False,
+                'payment_reference': len(payment_refs) == 1 and payment_refs.pop() or False,
             })
             new_invoice_vals_list.append(ref_invoice_vals)
         invoice_vals_list = new_invoice_vals_list
@@ -499,8 +499,8 @@ class PurchaseOrder(models.Model):
             'invoice_user_id': self.user_id and self.user_id.id,
             'partner_id': partner_invoice_id,
             'fiscal_position_id': (self.fiscal_position_id or self.fiscal_position_id.get_fiscal_position(partner_invoice_id)).id,
-            'invoice_payment_ref': self.partner_ref or '',
-            'invoice_partner_bank_id': self.partner_id.bank_ids[:1].id,
+            'payment_reference': self.partner_ref or '',
+            'partner_bank_id': self.partner_id.bank_ids[:1].id,
             'invoice_origin': self.name,
             'invoice_payment_term_id': self.payment_term_id.id,
             'invoice_line_ids': [],

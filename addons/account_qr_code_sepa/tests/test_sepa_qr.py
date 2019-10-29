@@ -26,7 +26,7 @@ class TestSEPAQRCode(AccountTestInvoicingCommon):
             'move_type': 'out_invoice',
             'partner_id': cls.partner_a.id,
             'currency_id': cls.env.ref('base.EUR').id,
-            'invoice_partner_bank_id': cls.acc_sepa_iban.id,
+            'partner_bank_id': cls.acc_sepa_iban.id,
             'company_id': cls.company_data['company'].id,
             'invoice_line_ids': [
                 (0, 0, {'quantity': 1, 'price_unit': 100})
@@ -43,12 +43,12 @@ class TestSEPAQRCode(AccountTestInvoicingCommon):
         self.sepa_qr_invoice.generate_qr_code()
 
         # Using a non-SEPA IBAN shouldn't
-        self.sepa_qr_invoice.invoice_partner_bank_id = self.acc_non_sepa_iban
+        self.sepa_qr_invoice.partner_bank_id = self.acc_non_sepa_iban
         with self.assertRaises(UserError, msg="It shouldn't be possible to generate a SEPA QR-code for IBAN of countries outside SEPA zone."):
             self.sepa_qr_invoice.generate_qr_code()
 
         # Changing the currency should break it as well
-        self.sepa_qr_invoice.invoice_partner_bank_id = self.acc_sepa_iban
+        self.sepa_qr_invoice.partner_bank_id = self.acc_sepa_iban
         self.sepa_qr_invoice.currency_id = self.env.ref('base.USD').id
         with self.assertRaises(UserError, msg="It shouldn't be possible to generate a SEPA QR-code for another currency as EUR."):
             self.sepa_qr_invoice.generate_qr_code()

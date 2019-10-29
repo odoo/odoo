@@ -81,10 +81,10 @@ class StockMoveInvoice(AccountTestCommon):
         self.invoice.post()
         self.journal = self.AccountJournal.search([('type', '=', 'cash'), ('company_id', '=', self.sale_prepaid.company_id.id)], limit=1)
 
-        register_payments = self.env['account.payment.register'].with_context(active_ids=self.invoice.ids).create({
+        register_payments = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=self.invoice.ids).create({
             'journal_id': self.journal.id,
         })
-        register_payments.create_payments()
+        register_payments._create_payments()
 
         # Check the SO after paying the invoice
         self.assertNotEqual(self.sale_prepaid.invoice_count, 0, 'order not invoiced')

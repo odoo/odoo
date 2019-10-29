@@ -62,9 +62,9 @@
                         <t t-if="print_bank">
                             <div id="voucher-for-bank">
                                 <p t-if="not invoice.company_id.l10n_ch_isr_preprinted_bank">
-                                    <t t-esc="invoice.invoice_partner_bank_id.bank_id.name"/><br />
-                                    <t t-esc="invoice.invoice_partner_bank_id.bank_id.zip"/>
-                                    <t t-esc="invoice.invoice_partner_bank_id.bank_id.city"/>
+                                    <t t-esc="invoice.partner_bank_id.bank_id.name"/><br />
+                                    <t t-esc="invoice.partner_bank_id.bank_id.zip"/>
+                                    <t t-esc="invoice.partner_bank_id.bank_id.city"/>
                                 </p>
                             </div>
                             <!--Zugunsten von/En faveur de/A favore di-->
@@ -103,9 +103,9 @@
                         <t t-if="print_bank">
                             <div id="slip-for-bank">
                                 <p t-if="not invoice.company_id.l10n_ch_isr_preprinted_bank">
-                                    <t t-esc="invoice.invoice_partner_bank_id.bank_id.name"/><br />
-                                    <t t-esc="invoice.invoice_partner_bank_id.bank_id.zip"/>
-                                    <t t-esc="invoice.invoice_partner_bank_id.bank_id.city"/>
+                                    <t t-esc="invoice.partner_bank_id.bank_id.name"/><br />
+                                    <t t-esc="invoice.partner_bank_id.bank_id.zip"/>
+                                    <t t-esc="invoice.partner_bank_id.bank_id.city"/>
                                 </p>
                             </div>
                             <!--Zugunsten von/En faveur de/A favore di-->

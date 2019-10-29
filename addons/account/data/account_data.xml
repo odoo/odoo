@@ -127,58 +127,6 @@
             <field name="payment_type">outbound</field>
         </record>
 
-        <!-- Payment sequences -->
-        <record id="sequence_payment_customer_invoice" model="ir.sequence">
-            <field name="name">Payments customer invoices sequence</field>
-            <field name="code">account.payment.customer.invoice</field>
-            <field name="prefix">CUST.IN/%(range_year)s/</field>
-            <field eval="1" name="number_next"/>
-            <field eval="1" name="number_increment"/>
-            <field eval="True" name="use_date_range"/>
-            <field eval="False" name="company_id"/>
-            <field name="padding">4</field>
-        </record>
-        <record id="sequence_payment_customer_refund" model="ir.sequence">
-            <field name="name">Payments customer credit notes sequence</field>
-            <field name="code">account.payment.customer.refund</field>
-            <field name="prefix">CUST.OUT/%(range_year)s/</field>
-            <field eval="1" name="number_next"/>
-            <field eval="1" name="number_increment"/>
-            <field eval="True" name="use_date_range"/>
-            <field eval="False" name="company_id"/>
-            <field name="padding">4</field>
-        </record>
-        <record id="sequence_payment_supplier_invoice" model="ir.sequence">
-            <field name="name">Payments supplier invoices sequence</field>
-            <field name="code">account.payment.supplier.invoice</field>
-            <field name="prefix">SUPP.OUT/%(range_year)s/</field>
-            <field eval="1" name="number_next"/>
-            <field eval="1" name="number_increment"/>
-            <field eval="True" name="use_date_range"/>
-            <field eval="False" name="company_id"/>
-            <field name="padding">4</field>
-        </record>
-        <record id="sequence_payment_supplier_refund" model="ir.sequence">
-            <field name="name">Payments supplier credit notes sequence</field>
-            <field name="code">account.payment.supplier.refund</field>
-            <field name="prefix">SUPP.IN/%(range_year)s/</field>
-            <field eval="1" name="number_next"/>
-            <field eval="1" name="number_increment"/>
-            <field eval="True" name="use_date_range"/>
-            <field eval="False" name="company_id"/>
-            <field name="padding">4</field>
-        </record>
-        <record id="sequence_payment_transfer" model="ir.sequence">
-            <field name="name">Payments transfer sequence</field>
-            <field name="code">account.payment.transfer</field>
-            <field name="prefix">TRANS/%(range_year)s/</field>
-            <field eval="1" name="number_next"/>
-            <field eval="1" name="number_increment"/>
-            <field eval="True" name="use_date_range"/>
-            <field eval="False" name="company_id"/>
-            <field name="padding">4</field>
-        </record>
-
         <!-- Account Tax Group -->
         <record id="tax_group_taxes" model="account.tax.group">
             <field name="name">Taxes</field>
