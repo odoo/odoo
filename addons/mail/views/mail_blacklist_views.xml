@@ -58,6 +58,10 @@
     </record>
 
     <!-- Technical Menu -->
-    <menuitem id="mail_blacklist_menu" name="Mass Mail Blacklist" action="mail_blacklist_action" parent="base.menu_email"/>
+    <menuitem id="mail_blacklist_menu"
+        name="Email Blacklist"
+        action="mail_blacklist_action"
+        parent="mail.mail_menu_technical"
+        sequence="20"/>
 
 </odoo>

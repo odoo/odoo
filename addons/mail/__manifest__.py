@@ -9,6 +9,7 @@
     'website': 'https://www.odoo.com/page/discuss',
     'depends': ['base', 'base_setup', 'bus', 'web_tour'],
     'data': [
+        'views/mail_menus.xml',
         'wizard/invite_view.xml',
         'wizard/mail_compose_message_view.xml',
         'wizard/mail_resend_cancel_views.xml',
