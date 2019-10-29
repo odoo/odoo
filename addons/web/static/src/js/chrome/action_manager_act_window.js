@@ -119,7 +119,6 @@ ActionManager.include({
             return this.doAction(action, options);
         }
         return _super.apply(this, arguments);
-
     },
 
     //--------------------------------------------------------------------------

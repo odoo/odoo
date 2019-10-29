@@ -126,6 +126,17 @@ var FormController = BasicController.extend({
         return this.model.getName(this.handle);
     },
     /**
+     * Add the current ID to the state pushed in the url.
+     *
+     * @override
+     */
+    getState: function () {
+        const state = this._super.apply(this, arguments);
+        const env = this.model.get(this.handle, {env: true});
+        state.id = env.currentId;
+        return state;
+    },
+    /**
      * Render buttons for the control panel.  The form view can be rendered in
      * a dialog, and in that case, if we have buttons defined in the footer, we
      * have to use them instead of the standard buttons.
@@ -420,20 +431,6 @@ var FormController = BasicController.extend({
         } else {
             this._super.apply(this, arguments);
         }
-    },
-    /**
-     * We just add the current ID to the state pushed. This allows the web
-     * client to add it in the url, for example.
-     *
-     * @override method from AbstractController
-     * @private
-     * @param {Object} [state]
-     */
-    _pushState: function (state) {
-        state = state || {};
-        var env = this.model.get(this.handle, {env: true});
-        state.id = env.currentId;
-        this._super(state);
     },
     /**
      * Overrides to reload the form when saving failed in readonly (e.g. after
