@@ -143,12 +143,14 @@
         <record id="menu_home" model="website.menu">
             <field name="name">Home</field>
             <field name="url">/</field>
+            <field name="page_id" ref="website.homepage_page"/>
             <field name="parent_id" ref="website.main_menu"/>
             <field name="sequence" type="int">10</field>
         </record>
         <record id="menu_contactus" model="website.menu">
             <field name="name">Contact us</field>
             <field name="url">/contactus</field>
+            <field name="page_id" ref="website.contactus_page"/>
             <field name="parent_id" ref="website.main_menu"/>
             <field name="sequence" type="int">60</field>
         </record>
