@@ -1,27 +1,18 @@
 #!/usr/bin/python3
-import logging
-import time
-from threading import Thread, Event, Lock
-from usb import core
-from gatt import DeviceManager as Gatt_DeviceManager
-import subprocess
+from base64 import b64decode
+from dbus.mainloop.glib import DBusGMainLoop
+from importlib import util
 import json
-from re import sub, finditer
-import urllib3
+import logging
 import os
 import socket
+import subprocess
 import sys
-from importlib import util
-import v4l2
-from fcntl import ioctl
-from cups import Connection as cups_connection
-from glob import glob
-from base64 import b64decode
-from pathlib import Path
-import socket
-import ctypes
+from threading import Thread, Event
+import time
+import urllib3
 
-from odoo import http, tools, _
+from odoo import http, tools
 from odoo.http import send_file
 from odoo.modules.module import get_resource_path
 from odoo.addons.hw_drivers.tools import helpers
@@ -91,7 +82,7 @@ class StatusController(http.Controller):
                 subprocess.check_call([get_resource_path('point_of_sale', 'tools/posbox/configuration/connect_to_server.sh'), url, '', token, 'noreboot'])
                 helpers.check_certificate()
                 m.send_alldevices()
-                m.load_drivers()
+                m.load_iot_handlers()
                 image = get_resource_path('hw_drivers', 'static/img', 'True.jpg')
             except subprocess.CalledProcessError as e:
                 _logger.error('A error encountered : %s ' % e.output)
@@ -135,9 +126,55 @@ sys.stderr = ExceptionLogger()
 #----------------------------------------------------------
 
 drivers = []
-bt_devices = {}
-socket_devices = {}
+interfaces = {}
 iot_devices = {}
+
+class InterfaceMetaClass(type):
+    def __new__(cls, clsname, bases, attrs):
+        if clsname in interfaces:
+            return interfaces[clsname]
+        new_interface = super(InterfaceMetaClass, cls).__new__(cls, clsname, bases, attrs)
+        interfaces[clsname] = new_interface
+        return new_interface
+
+class Interface(Thread, metaclass=InterfaceMetaClass):
+    _loop_delay = 3  # Delay (in seconds) between calls to get_devices or 0 if it should be called only once
+    _detected_devices = {}
+    connection_type = ''
+
+    def __init__(self):
+        super(Interface, self).__init__()
+        self.drivers = [d for d in drivers if d.connection_type == self.connection_type]
+
+    def run(self):
+        while self.connection_type and self.drivers:
+            self.update_iot_devices(self.get_devices())
+            if not self._loop_delay:
+                break
+            time.sleep(self._loop_delay)
+
+    def update_iot_devices(self, devices={}):
+        added = devices.keys() - self._detected_devices
+        removed = self._detected_devices - devices.keys()
+        self._detected_devices = devices.keys()
+
+        for path in removed:
+            if path in iot_devices:
+                iot_devices[path].disconnect()
+                _logger.info('Device %s is now disconnected', path)
+
+        for path in added:
+            for driver in self.drivers:
+                if driver.supported(device=devices[path]):
+                    _logger.info('Device %s is now connected', path)
+                    d = driver(device=devices[path])
+                    d.daemon = True
+                    d.start()
+                    iot_devices[path] = d
+                    break
+
+    def get_devices(self):
+        raise NotImplementedError()
 
 class DriverMetaClass(type):
     def __new__(cls, clsname, bases, attrs):
@@ -160,7 +197,6 @@ class Driver(Thread, metaclass=DriverMetaClass):
         super(Driver, self).__init__()
         self.dev = device
         self.data = {'value': ''}
-        self.gatt_device = False
         self._device_manufacturer = ''
 
     @property
@@ -253,12 +289,6 @@ class EventManager(object):
                 self.sessions[session]['event'].set()
 
 
-class IoTDevice(object):
-
-    def __init__(self, dev, connection_type):
-        self.dev = dev
-        self.connection_type = connection_type
-
 event_manager = EventManager()
 
 
@@ -268,21 +298,22 @@ event_manager = EventManager()
 
 class Manager(Thread):
 
-    def load_drivers(self):
+    def load_iot_handlers(self):
         """
-        This method loads local files: 'odoo/addons/hw_drivers/drivers'
-        And execute these python drivers
+        This method loads local files: 'odoo/addons/hw_drivers/iot_handlers/drivers' and
+        'odoo/addons/hw_drivers/iot_handlers/interfaces'
+        And execute these python drivers and interfaces
         """
-        helpers.download_drivers()
-        path = get_resource_path('hw_drivers', 'drivers')
-        driversList = os.listdir(path)
-        self.devices = {}
-        for driver in driversList:
-            path_file = os.path.join(path, driver)
-            spec = util.spec_from_file_location(driver, path_file)
-            if spec:
-                module = util.module_from_spec(spec)
-                spec.loader.exec_module(module)
+        helpers.download_iot_handlers()
+        for directory in ['interfaces', 'drivers']:
+            path = get_resource_path('hw_drivers', 'iot_handlers', directory)
+            filesList = os.listdir(path)
+            for file in filesList:
+                path_file = os.path.join(path, file)
+                spec = util.spec_from_file_location(file, path_file)
+                if spec:
+                    module = util.module_from_spec(spec)
+                    spec.loader.exec_module(module)
         http.addons_manifest = {}
         http.root = http.Root()
 
@@ -335,222 +366,28 @@ class Manager(Thread):
         else:
             _logger.warning('Odoo server not set')
 
-    def get_connected_displays(self):
-        display_devices = {}
-
-        displays = subprocess.check_output(['tvservice', '-l']).decode()
-        x_screen = 0
-        for match in finditer('Display Number (\d), type HDMI (\d)', displays):
-            display_id, hdmi_id = match.groups()
-            tvservice_output = subprocess.check_output(['tvservice', '-nv', display_id]).decode().rstrip()
-            if tvservice_output:
-                display_name = tvservice_output.split('=')[1]
-                display_identifier = sub('[^a-zA-Z0-9 ]+', '', display_name).replace(' ', '_') + "_" + str(hdmi_id)
-                iot_device = IoTDevice({
-                    'identifier': display_identifier,
-                    'name': display_name,
-                    'x_screen': str(x_screen),
-                }, 'display')
-                display_devices[display_identifier] = iot_device
-                x_screen += 1
-
-        if not len(display_devices):
-            # No display connected, create "fake" device to be accessed from another computer
-            display_devices['distant_display'] = IoTDevice({
-                'identifier': "distant_display",
-                'name': "Distant Display",
-            }, 'display')
-
-        return display_devices
-
-    def serial_loop(self):
-        serial_devices = {}
-        for identifier in glob('/dev/serial/by-path/*'):
-            iot_device = IoTDevice({'identifier': identifier, }, 'serial')
-            serial_devices[identifier] = iot_device
-        return serial_devices
-
-    def usb_loop(self):
-        """
-        Loops over the connected usb devices, assign them an identifier, instantiate
-        an `IoTDevice` for them.
-
-        USB devices are identified by a combination of their `idVendor` and
-        `idProduct`. We can't be sure this combination in unique per equipment.
-        To still allow connecting multiple similar equipments, we complete the
-        identifier by a counter. The drawbacks are we can't be sure the equipments
-        will get the same identifiers after a reboot or a disconnect/reconnect.
-
-        :return: a dict of the `IoTDevices` instances indexed by their identifier.
-        """
-        usb_devices = {}
-        devs = core.find(find_all=True)
-        cpt = 2
-        for dev in devs:
-            dev.identifier =  "usb_%04x:%04x" % (dev.idVendor, dev.idProduct)
-            if dev.identifier in usb_devices:
-                dev.identifier += '_%s' % cpt
-                cpt += 1
-            iot_device = IoTDevice(dev, 'usb')
-            usb_devices[dev.identifier] = iot_device
-        return usb_devices
-
-    def video_loop(self):
-        camera_devices = {}
-        videos = glob('/dev/video*')
-        for video in videos:
-            with open(video, 'w') as path:
-                dev = v4l2.v4l2_capability()
-                ioctl(path, v4l2.VIDIOC_QUERYCAP, dev)
-                dev.interface = video
-                dev.identifier = dev.bus_info.decode('utf-8')
-                iot_device = IoTDevice(dev, 'video')
-                camera_devices[dev.identifier] = iot_device
-        return camera_devices
-
-    def printer_loop(self):
-        printer_devices = {}
-        with cups_lock:
-            devices = conn.getDevices()
-        for path in devices:
-            if 'uuid=' in path:
-                serial = sub('[^a-zA-Z0-9 ]+', '', path.split('uuid=')[1])
-            elif 'serial=' in path:
-                serial = sub('[^a-zA-Z0-9 ]+', '', path.split('serial=')[1])
-            else:
-                serial = sub('[^a-zA-Z0-9 ]+', '', path)
-            devices[path]['identifier'] = serial
-            devices[path]['url'] = path
-            iot_device = IoTDevice(devices[path], 'printer')
-            printer_devices[serial] = iot_device
-        return printer_devices
-
     def run(self):
         """
         Thread that will check connected/disconnected device, load drivers if needed and contact the odoo server with the updates
         """
         helpers.check_git_branch()
         helpers.check_certificate()
-        updated_devices = {}
         self.send_alldevices()
-        self.load_drivers()
-        # The list of devices doesn't change after the Raspberry has booted
-        display_devices = self.get_connected_displays()
-        cpt = 0
+        self.load_iot_handlers()
+        self.previous_iot_devices = []
+        for interface in interfaces.values():
+            i = interface()
+            i.daemon = True
+            i.start()
         while 1:
-            updated_devices = self.usb_loop()
-            updated_devices.update(self.video_loop())
-            updated_devices.update(mpdm.devices)
-            updated_devices.update(display_devices)
-            updated_devices.update(bt_devices)
-            updated_devices.update(socket_devices)
-            updated_devices.update(self.serial_loop())
-            if cpt % 40 == 0:
-                printer_devices = self.printer_loop()
-                cpt = 0
-            updated_devices.update(printer_devices)
-            cpt += 1
-            added = updated_devices.keys() - self.devices.keys()
-            removed = self.devices.keys() - updated_devices.keys()
-            self.devices = updated_devices
-            send_devices = False
-            for path in [device_rm for device_rm in removed if device_rm in iot_devices]:
-                iot_devices[path].disconnect()
-                _logger.info('Device %s is now disconnected', path)
-                send_devices = True
-            for path in [device_add for device_add in added if device_add not in iot_devices]:
-                for driverclass in [d for d in drivers if d.connection_type == self.devices[path].connection_type]:
-                    if driverclass.supported(device = updated_devices[path].dev):
-                        _logger.info('Device %s is now connected', path)
-                        d = driverclass(device = updated_devices[path].dev)
-                        d.daemon = True
-                        d.start()
-                        iot_devices[path] = d
-                        send_devices = True
-                        break
-            if send_devices:
+            if iot_devices != self.previous_iot_devices:
                 self.send_alldevices()
+                self.previous_iot_devices = iot_devices.copy()
             time.sleep(3)
 
-class GattBtManager(Gatt_DeviceManager):
-
-    def device_discovered(self, device):
-        path = "bt_%s" % (device.mac_address,)
-        if path not in bt_devices:
-            device.manager = self
-            device.identifier = path
-            iot_device = IoTDevice(device, 'bluetooth')
-            bt_devices[path] = iot_device
-
-class BtManager(Thread):
-
-    def run(self):
-        dm = GattBtManager(adapter_name='hci0')
-        for device in [device_con for device_con in dm.devices() if device_con.is_connected()]:
-            device.disconnect()
-        dm.start_discovery()
-        dm.run()
-
-class SocketManager(Thread):
-
-    def run(self):
-        while True:
-            try:
-                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-                sock.bind(('', 9000))
-                sock.listen(1)
-                dev, addr = sock.accept()
-                if addr and addr[0] not in socket_devices:
-                    iot_device = IoTDevice(type('', (), {'dev': dev}), 'socket')
-                    socket_devices[addr[0]] = iot_device
-            except OSError as e:
-                _logger.error(_('Error in SocketManager: %s') % (e.strerror))
-
-class MPDManager(Thread):
-    def __init__(self):
-        super(MPDManager, self).__init__()
-        self.devices = {}
-        self.mpd_session = ctypes.c_void_p()
-
-    def run(self):
-        eftapi.EFT_CreateSession(ctypes.byref(self.mpd_session))
-        while True:
-            if self.terminal_connected(terminal_id):
-                self.devices[terminal_id] = IoTDevice(terminal_id, 'mpd')
-            elif terminal_id in self.devices:
-                self.devices = {}
-            time.sleep(20)
-
-    def terminal_connected(self, terminal_id):
-        eftapi.EFT_QueryStatus(self.mpd_session)
-        device_status = ctypes.c_long()
-        eftapi.EFT_GetDeviceStatusCode(self.mpd_session, ctypes.byref(device_status))
-        return device_status.value in [0, 1]
-
-
-conn = cups_connection()
-PPDs = conn.getPPDs()
-printers = conn.getPrinters()
-cups_lock = Lock()  # We can only make one call to Cups at a time
-
-mpdm = MPDManager()
-terminal_id = helpers.read_file_first_line('odoo-six-payment-terminal.conf')
-subprocess.call(["pkill", "-9", "eftdvs"])  # Kill any running MPD server
-if terminal_id:
-    subprocess.Popen(["eftdvs", "/ConfigDir", "/usr/share/eftdvs/", "/TID", terminal_id])  # Start MPD server
-    eftapi = ctypes.CDLL("eftapi.so")  # Library given by Six
-    mpdm.daemon = True
-    mpdm.start()
+# Must be started from main thread
+DBusGMainLoop(set_as_default=True)
 
 m = Manager()
 m.daemon = True
 m.start()
-
-bm = BtManager()
-bm.daemon = True
-bm.start()
-
-sm = SocketManager()
-sm.daemon = True
-sm.start()

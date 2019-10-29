@@ -13,7 +13,7 @@ from odoo import http
 from odoo.addons.hw_drivers.tools import helpers
 from odoo.addons.hw_drivers.controllers.driver import Driver, event_manager, iot_devices
 
-path = os.path.realpath(os.path.join(os.path.dirname(__file__), '../views'))
+path = os.path.realpath(os.path.join(os.path.dirname(__file__), '../../views'))
 loader = jinja2.FileSystemLoader(path)
 
 jinja_env = jinja2.Environment(loader=loader, autoescape=True)
@@ -188,7 +188,7 @@ class DisplayController(http.Controller):
         cust_js = None
         interfaces = ni.interfaces()
 
-        with open(os.path.join(os.path.dirname(__file__), "../static/src/js/worker.js")) as js:
+        with open(os.path.join(os.path.dirname(__file__), "../../static/src/js/worker.js")) as js:
             cust_js = js.read()
 
         display_ifaces = []
