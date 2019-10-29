@@ -11,15 +11,15 @@
 # fanha99 <fanha99@hotmail.com>, 2019
 # Dao Nguyen <trucdao.uel@gmail.com>, 2019
 # Chinh Chinh <trinhttp@trobz.com>, 2019
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
+# thanhnguyen.icsc <thanhnguyen.icsc@gmail.com>, 2019
 # Duy BQ <duybq86@gmail.com>, 2019
 # Dung Nguyen Thi <dungnt@trobz.com>, 2019
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-07 07:11+0000\n"
+"POT-Creation-Date: 2019-10-18 09:46+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
 "Last-Translator: Dung Nguyen Thi <dungnt@trobz.com>, 2019\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
@@ -63,7 +63,7 @@ msgstr "${object.project_id.company_id.name}: Khảo sát mức độ hài lòng
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "% On"
-msgstr ""
+msgstr "% Ở"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -1201,11 +1201,6 @@ msgstr ""
 "Mọi người đều có thể đề xuất ý tưởng và biên tập viên đánh dấu những ý tưởng"
 " hay nhất là %s. Đính kèmtất cả các tài liệu hoặc liên kết đến nhiệm vụ trực"
 " tiếp, để có tất cả thông tin vềmột nghiên cứu tập trung."
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_task_search_form
-msgid "Exception Activities"
-msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__date
@@ -2963,14 +2958,14 @@ msgid "There are no projects."
 msgstr "Không có dự án."
 
 #. module: project
+#: model_terms:ir.actions.act_window,help:project.rating_rating_action_view_project_rating
+msgid "There are no ratings for this object at the moment"
+msgstr "Chưa có đánh giá cho dự án này ở thời điểm này"
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "There are no tasks."
 msgstr "Không có Nhiệm vụ."
-
-#. module: project
-#: model_terms:ir.actions.act_window,help:project.rating_rating_action_view_project_rating
-msgid "There are no ratings for this object at the moment"
-msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_from
@@ -3225,12 +3220,12 @@ msgstr "Lịch làm việc"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Working Time to Assign"
-msgstr "Thời gian để phân công"
+msgstr "Thời gian làm việc đến lúc phân công"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Working Time to Close"
-msgstr "Thời gian làm việc để Đóng"
+msgstr "Thời gian làm việc đến lúc Đóng"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_days_open
@@ -3281,24 +3276,12 @@ msgstr ""
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
-msgid "You cannot create recursive tasks."
-msgstr "Bạn không thể tạo các nhiệm vụ đệ quy."
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
 msgid ""
 "You cannot delete a project containing tasks. You can either archive it or "
 "first delete all of its tasks."
 msgstr ""
 "Bạn không thể xóa một dự án có chứa các nhiệm vụ. Bạn có thể lưu trữ nó "
 "hoặcđầu tiên xóa tất cả các nhiệm vụ của nó."
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid "Your task must be in the same company as its project."
-msgstr "Nhiệm vụ phải thuộc về công ty tương ứng với dự án của nó"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all

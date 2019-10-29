@@ -63,7 +63,7 @@ msgstr "Adyen test modus"
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "An unexpected error occured. Message from Adyen: %s"
-msgstr ""
+msgstr "Er is een onverwachte fout opgetreden. Bericht van Adyen: %s"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_config__adyen_ask_customer_for_tip
@@ -95,6 +95,8 @@ msgstr "Bericht van Adyen: %s"
 msgid ""
 "Please configure a tip product for POS %s to support tipping with Adyen."
 msgstr ""
+"Gelieve een fooi product te configureren voor de kassa %s om fooien met "
+"Adyen te ondersteunen."
 
 #. module: pos_adyen
 #: model:ir.model,name:pos_adyen.model_pos_config
@@ -109,7 +111,7 @@ msgstr "Kassa betaalmethodes"
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_config__adyen_ask_customer_for_tip
 msgid "Prompt the customer to tip."
-msgstr ""
+msgstr "Vraag de klanten om een fooi te geven."
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__use_payment_terminal
@@ -119,7 +121,7 @@ msgstr ""
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_test_mode
 msgid "Run transactions in the test environment."
-msgstr ""
+msgstr "Transacties uitvoeren in de testomgeving."
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_latest_response
@@ -137,7 +139,7 @@ msgstr ""
 #: code:addons/pos_adyen/models/pos_payment_method.py:0
 #, python-format
 msgid "Terminal %s is already used on payment method %s."
-msgstr ""
+msgstr "Terminal %s wordt al gebruikt voor de betaalmethode %s."
 
 #. module: pos_adyen
 #. openerp-web
@@ -147,6 +149,8 @@ msgid ""
 "The connection to your payment terminal failed. Please check if it is still "
 "connected to the internet."
 msgstr ""
+"De connectie met uw betaalterminal is mislukt. Gelieve te controleren of het"
+" nog steeds verbonden is met het internet."
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__use_payment_terminal
@@ -163,4 +167,4 @@ msgstr ""
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_terminal_identifier
 msgid "[Terminal model]-[Serial number], for example: P400Plus-123456789"
-msgstr ""
+msgstr "[Terminal model]-[Serienummer], bijvoorbeeld: P400Plus-123456789"

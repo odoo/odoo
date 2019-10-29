@@ -10,16 +10,17 @@
 # Maxim Vandenbroucke <mxv@odoo.com>, 2019
 # Charles Vervaecke <cvk@odoo.com>, 2019
 # Martin Trigaux, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
+# Cécile Collart <cco@odoo.com>, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-07 07:11+0000\n"
+"POT-Creation-Date: 2019-10-18 09:46+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -514,7 +515,7 @@ msgstr "Alle taken"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
 msgid "All employees"
-msgstr ""
+msgstr "Alle werknemers"
 
 #. module: project
 #. openerp-web
@@ -984,7 +985,7 @@ msgstr ""
 "Klanten stellen feedback per e-mail voor; Odoo maakt taken automatisch aan "
 "en u kunt rechtstreeks communiceren over de taak. Uw managers bepalen welke "
 "feedback wordt geaccepteerd %s en welke feedback wordt verplaatst naar de "
-"kolom 'Geweigerd'."
+"kolom 'Afgewezen'."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__daily
@@ -1130,7 +1131,7 @@ msgstr "Dropdown menu"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Edit"
-msgstr "Wijzig"
+msgstr "Wijzigen"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -1207,11 +1208,6 @@ msgstr ""
 "Iedereen kan ideeën voorstellen en de editor markeert de beste als %s. "
 "Koppel alle documenten of links direct aan de taak om alle informatie over "
 "een onderzoek gecentraliseerd beschikbaar te hebben."
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_task_search_form
-msgid "Exception Activities"
-msgstr "Uitzondering activiteiten"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__date
@@ -1310,7 +1306,7 @@ msgstr "GTD"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Get customer feedback"
-msgstr ""
+msgstr "Krijg klant feedback"
 
 #. module: project
 #. openerp-web
@@ -1571,7 +1567,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
 msgid "Invited employees"
-msgstr ""
+msgstr "Uitgenodigde werknemers"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_is_follower
@@ -2187,7 +2183,7 @@ msgstr "Portaal toegang URL"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
 msgid "Portal users and all employees"
-msgstr ""
+msgstr "Portaal gebruikers en alle werknemers"
 
 #. module: project
 #. openerp-web
@@ -2292,7 +2288,7 @@ msgstr "Project: activeer voorbeeld project"
 #: model:ir.cron,cron_name:project.ir_cron_rating_project
 #: model:ir.cron,name:project.ir_cron_rating_project
 msgid "Project: Send rating"
-msgstr "Project: verstuur beoordeling"
+msgstr "Project: verzend beoordeling"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_view_project_all
@@ -2483,7 +2479,7 @@ msgstr "Ref"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Refused"
-msgstr "Geweigerd"
+msgstr "Afgewezen"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_report
@@ -2977,14 +2973,14 @@ msgid "There are no projects."
 msgstr "Er zijn geen projecten."
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
-msgid "There are no tasks."
-msgstr "Er zijn geen taken."
-
-#. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_view_project_rating
 msgid "There are no ratings for this object at the moment"
 msgstr "Er zijn geen beoordelingen voor dit object op de moment"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
+msgid "There are no tasks."
+msgstr "Er zijn geen taken."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_from

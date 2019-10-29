@@ -5134,7 +5134,15 @@ Record ids: %(records)s
                 (key, comparator, value) = d
                 if key.endswith('.id'):
                     key = key[:-3]
-                if key == 'id': key=''
+                if key == 'id':
+                    key = ''
+                # determine the field with the final type for values
+                field = None
+                if key:
+                    model = self.browse()
+                    for fname in key.split('.'):
+                        field = model._fields[fname]
+                        model = model[fname]
                 if comparator in ('like', 'ilike', '=like', '=ilike', 'not ilike', 'not like'):
                     value_esc = value.replace('_', '?').replace('%', '*').replace('[', '?')
                 records = self.browse()
@@ -5151,16 +5159,14 @@ Record ids: %(records)s
                             data = data.mapped('display_name')
                         else:
                             data = data and data.ids or [False]
-                    else:
-                        true_data = next((d for d in data if d), None)
-                        if isinstance(true_data, datetime.date):
-                            # convert all date and datetime values to datetime
-                            normalize = Datetime.to_datetime
-                            if isinstance(value, (list, tuple)):
-                                value = [normalize(v) for v in value]
-                            else:
-                                value = normalize(value)
-                            data = [normalize(d) for d in data]
+                    elif field and field.type in ('date', 'datetime'):
+                        # convert all date and datetime values to datetime
+                        normalize = Datetime.to_datetime
+                        if isinstance(value, (list, tuple)):
+                            value = [normalize(v) for v in value]
+                        else:
+                            value = normalize(value)
+                        data = [normalize(d) for d in data]
                     if comparator in ('in', 'not in'):
                         if not (isinstance(value, list) or isinstance(value, tuple)):
                             value = [value]
@@ -5170,13 +5176,13 @@ Record ids: %(records)s
                     elif comparator == 'in':
                         ok = any(map(lambda x: x in data, value))
                     elif comparator == '<':
-                        ok = any(map(lambda x: x < value, data))
+                        ok = any(map(lambda x: x is not None and x < value, data))
                     elif comparator == '>':
-                        ok = any(map(lambda x: x > value, data))
+                        ok = any(map(lambda x: x is not None and x > value, data))
                     elif comparator == '<=':
-                        ok = any(map(lambda x: x <= value, data))
+                        ok = any(map(lambda x: x is not None and x <= value, data))
                     elif comparator == '>=':
-                        ok = any(map(lambda x: x >= value, data))
+                        ok = any(map(lambda x: x is not None and x >= value, data))
                     elif comparator in ('!=', '<>'):
                         ok = value not in data
                     elif comparator == 'not in':

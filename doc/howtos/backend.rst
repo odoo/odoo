@@ -53,11 +53,18 @@ Business objects
     Declared as Python classes, these resources are automatically persisted
     by Odoo based on their configuration
 
-Data files
-    XML or CSV files declaring metadata (views or reports), configuration
-    data (modules parameterization), demonstration data and more
+:ref:`Object views <reference/views>`
+    Definition of business objects UI display
 
-Web controllers
+:ref:`Data files <reference/data>`
+    XML or CSV files declaring the model metadata :
+
+    * :ref:`views <reference/views>` or :ref:`reports <reference/reports>`,
+    * configuration data (modules parametrization, :ref:`security rules <reference/security>`),
+    * demonstration data
+    * and more
+
+:ref:`Web controllers <reference/controllers>`
     Handle requests from web browsers
 
 Static web data

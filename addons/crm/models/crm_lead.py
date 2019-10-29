@@ -1177,7 +1177,7 @@ class Lead(models.Model):
             return self.env.ref('crm.mt_lead_lost')
         elif 'stage_id' in init_values:
             return self.env.ref('crm.mt_lead_stage')
-        elif self.active:
+        elif 'active' in init_values and self.active:
             return self.env.ref('crm.mt_lead_restored')
         return super(Lead, self)._track_subtype(init_values)
 
