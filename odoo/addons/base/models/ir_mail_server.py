@@ -9,6 +9,7 @@ import email.policy
 import logging
 import re
 import smtplib
+import sys
 import threading
 
 import html2text
@@ -414,7 +415,14 @@ class IrMailServer(models.Model):
             smtp = smtp or self.connect(
                 smtp_server, smtp_port, smtp_user, smtp_password,
                 smtp_encryption, smtp_debug, mail_server_id=mail_server_id)
-            smtp.sendmail(smtp_from, smtp_to_list, message.as_string())
+
+            message_str = message.as_string()
+            # header folding code is buggy and adds redundant carriage
+            # returns, it got fixed in 3.7.4 thanks to bpo-34424
+            if sys.version_info < (3, 7, 4):
+                message_str = re.sub('\r+', '\r', message_str)
+
+            smtp.sendmail(smtp_from, smtp_to_list, message_str)
             # do not quit() a pre-established smtp_session
             if not smtp_session:
                 smtp.quit()
