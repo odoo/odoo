@@ -22,7 +22,7 @@ class Mailing(models.Model):
     # mailing options
     mailing_type = fields.Selection(selection_add=[('sms', 'SMS')])
     # sms options
-    body_plaintext = fields.Text('SMS Body')
+    body_plaintext = fields.Text('SMS Body', compute='_compute_body_plaintext', store=True, readonly=False)
     sms_template_id = fields.Many2one('sms.template', string='SMS Template', ondelete='set null')
     sms_has_insufficient_credit = fields.Boolean(
         'Insufficient IAP credits', compute='_compute_sms_has_insufficient_credit',
@@ -32,17 +32,19 @@ class Mailing(models.Model):
     # opt_out_link
     sms_allow_unsubscribe = fields.Boolean('Include opt-out link', default=False)
 
-    @api.onchange('mailing_type')
-    def _onchange_mailing_type(self):
-        if self.mailing_type == 'sms' and (not self.medium_id or self.medium_id == self.env.ref('utm.utm_medium_email')):
-            self.medium_id = self.env.ref('mass_mailing_sms.utm_medium_sms').id
-        elif self.mailing_type == 'mail' and (not self.medium_id or self.medium_id == self.env.ref('mass_mailing_sms.utm_medium_sms')):
-            self.medium_id = self.env.ref('utm.utm_medium_email').id
+    @api.depends('mailing_type')
+    def _compute_medium_id(self):
+        for mailing in self:
+            if mailing.mailing_type == 'sms' and (not mailing.medium_id or mailing.medium_id == self.env.ref('utm.utm_medium_email')):
+                mailing.medium_id = self.env.ref('mass_mailing_sms.utm_medium_sms').id
+            elif mailing.mailing_type == 'mail' and (not mailing.medium_id or mailing.medium_id == self.env.ref('mass_mailing_sms.utm_medium_sms')):
+                mailing.medium_id = self.env.ref('utm.utm_medium_email').id
 
-    @api.onchange('sms_template_id', 'mailing_type')
-    def _onchange_sms_template_id(self):
-        if self.mailing_type == 'sms' and self.sms_template_id:
-            self.body_plaintext = self.sms_template_id.body
+    @api.depends('sms_template_id', 'mailing_type')
+    def _compute_body_plaintext(self):
+        for mailing in self:
+            if mailing.mailing_type == 'sms' and mailing.sms_template_id:
+                mailing.body_plaintext = mailing.sms_template_id.body
 
     @api.depends('mailing_trace_ids.failure_type')
     def _compute_sms_has_insufficient_credit(self):

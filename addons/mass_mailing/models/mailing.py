@@ -81,7 +81,8 @@ class MassMailing(models.Model):
     campaign_id = fields.Many2one('utm.campaign', string='UTM Campaign')
     source_id = fields.Many2one('utm.source', string='Source', required=True, ondelete='cascade',
                                 help="This is the link source, e.g. Search Engine, another domain, or name of email list")
-    medium_id = fields.Many2one('utm.medium', string='Medium', help="Delivery method: Email")
+    medium_id = fields.Many2one('utm.medium', string='Medium', compute='_compute_medium_id', store=True, readonly=False,
+                                help="Delivery method: Email")
     clicks_ratio = fields.Integer(compute="_compute_clicks_ratio", string="Number of Clicks")
     state = fields.Selection([('draft', 'Draft'), ('in_queue', 'In Queue'), ('sending', 'Sending'), ('done', 'Sent')],
         string='Status', required=True, tracking=True, copy=False, default='draft', group_expand='_group_expand_states')
@@ -98,7 +99,7 @@ class MassMailing(models.Model):
     mailing_model_id = fields.Many2one('ir.model', string='Recipients Model', domain=[('model', 'in', MASS_MAILING_BUSINESS_MODELS)],
         default=lambda self: self.env.ref('mass_mailing.model_mailing_list').id)
     mailing_model_name = fields.Char(related='mailing_model_id.model', string='Recipients Model Name', readonly=True, related_sudo=True)
-    mailing_domain = fields.Char(string='Domain', default=[])
+    mailing_domain = fields.Char(string='Domain', compute='_compute_mailing_domain', readonly=False, store=True, default=[])
     mail_server_id = fields.Many2one('ir.mail_server', string='Mail Server',
         default=_get_default_mail_server_id,
         help="Use a specific mail server in priority. Otherwise Odoo relies on the first outgoing mail server available (based on their sequencing) as it does for normal mails.")
@@ -128,7 +129,7 @@ class MassMailing(models.Model):
     replied_ratio = fields.Integer(compute="_compute_statistics", string='Replied Ratio')
     bounced_ratio = fields.Integer(compute="_compute_statistics", string='Bounced Ratio')
     next_departure = fields.Datetime(compute="_compute_next_departure", string='Scheduled date')
-     
+
     def _compute_total(self):
         for mass_mailing in self:
             mass_mailing.total = len(mass_mailing.sudo()._get_recipients())
@@ -197,30 +198,32 @@ class MassMailing(models.Model):
             else:
                 mass_mailing.next_departure = cron_time
 
-    @api.onchange('mailing_model_name', 'contact_list_ids')
-    def _onchange_model_and_list(self):
-        mailing_domain = literal_eval(self.mailing_domain) if self.mailing_domain else []
-        if self.mailing_model_name:
-            if mailing_domain:
-                try:
-                    self.env[self.mailing_model_name].search(mailing_domain, limit=1)
-                except:
-                    mailing_domain = []
-            if not mailing_domain:
-                if self.mailing_model_name == 'mailing.list' and self.contact_list_ids:
-                    mailing_domain = [('list_ids', 'in', self.contact_list_ids.ids)]
-                elif 'is_blacklisted' in self.env[self.mailing_model_name]._fields and not self.mailing_domain:
-                    mailing_domain = [('is_blacklisted', '=', False)]
-                elif 'opt_out' in self.env[self.mailing_model_name]._fields and not self.mailing_domain:
-                    mailing_domain = [('opt_out', '=', False)]
-        else:
-            mailing_domain = []
-        self.mailing_domain = repr(mailing_domain)
+    @api.depends('mailing_model_name', 'contact_list_ids')
+    def _compute_mailing_domain(self):
+        for mailing in self:
+            mailing_domain = literal_eval(mailing.mailing_domain) if mailing.mailing_domain else []
+            if mailing.mailing_model_name:
+                if mailing_domain:
+                    try:
+                        self.env[mailing.mailing_model_name].search(mailing_domain, limit=1)
+                    except:
+                        mailing_domain = []
+                if not mailing_domain:
+                    if mailing.mailing_model_name == 'mailing.list' and mailing.contact_list_ids:
+                        mailing_domain = [('list_ids', 'in', mailing.contact_list_ids.ids)]
+                    elif 'is_blacklisted' in self.env[mailing.mailing_model_name]._fields and not mailing.mailing_domain:
+                        mailing_domain = [('is_blacklisted', '=', False)]
+                    elif 'opt_out' in self.env[mailing.mailing_model_name]._fields and not mailing.mailing_domain:
+                        mailing_domain = [('opt_out', '=', False)]
+            else:
+                mailing_domain = []
+            mailing.mailing_domain = repr(mailing_domain)
 
-    @api.onchange('mailing_type')
-    def _onchange_mailing_type(self):
-        if self.mailing_type == 'mail' and not self.medium_id:
-            self.medium_id = self.env.ref('utm.utm_medium_email').id
+    @api.depends('mailing_type')
+    def _compute_medium_id(self):
+        for mailing in self:
+            if mailing.mailing_type == 'mail' and not mailing.medium_id:
+                mailing.medium_id = self.env.ref('utm.utm_medium_email').id
 
     # ------------------------------------------------------
     # ORM
