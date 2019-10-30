@@ -7999,7 +7999,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('list view with optional fields rendering', async function (assert) {
-        assert.expect(9);
+        assert.expect(11);
 
         var RamStorageService = AbstractStorageService.extend({
             storage: new RamStorage(),
@@ -8018,6 +8018,9 @@ QUnit.module('Views', {
             services: {
                 local_storage: RamStorageService,
             },
+            translateParameters: {
+                direction: 'ltr',
+            }
         });
 
         assert.containsN(list, 'th', 3,
@@ -8025,6 +8028,13 @@ QUnit.module('Views', {
 
         assert.containsOnce(list.$('table'), '.o_optional_columns_dropdown_toggle',
             "should have the optional columns dropdown toggle inside the table");
+
+        var $optionalFieldsToggler = list.$('table *:last()');
+        assert.ok($optionalFieldsToggler.hasClass('o_optional_columns_dropdown_toggle'),
+            'The optional fields toggler is the last element');
+
+        assert.ok(list.$('.o_optional_columns .dropdown-menu').hasClass('dropdown-menu-right'),
+            'In LTR, the dropdown should be anchored to the right and expand to the left');
 
         // optional fields
         await testUtils.dom.click(list.$('table .o_optional_columns_dropdown_toggle'));
@@ -8052,6 +8062,44 @@ QUnit.module('Views', {
 
         await testUtils.dom.click(list.$('table .o_optional_columns_dropdown_toggle'));
         assert.notOk(list.$('div.o_optional_columns div.dropdown-item [name="m2o"]').is(":checked"));
+
+        list.destroy();
+    });
+
+    QUnit.test('list view with optional fields rendering in RTL mode', async function (assert) {
+        assert.expect(3);
+
+        var RamStorageService = AbstractStorageService.extend({
+            storage: new RamStorage(),
+        });
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree>' +
+                    '<field name="foo"/>' +
+                    '<field name="m2o" optional="hide"/>' +
+                    '<field name="amount"/>' +
+                    '<field name="reference" optional="hide"/>' +
+                '</tree>',
+            services: {
+                local_storage: RamStorageService,
+            },
+            translateParameters: {
+                direction: 'rtl',
+            }
+        });
+
+        assert.containsOnce(list.$('table'), '.o_optional_columns_dropdown_toggle',
+            "should have the optional columns dropdown toggle inside the table");
+
+        var $optionalFieldsToggler = list.$('table *:last()');
+        assert.ok($optionalFieldsToggler.hasClass('o_optional_columns_dropdown_toggle'),
+            'The optional fields toggler is the last element');
+
+        assert.ok(list.$('.o_optional_columns .dropdown-menu').hasClass('dropdown-menu-left'),
+            'In RTL, the dropdown should be anchored to the left and expand to the right');
 
         list.destroy();
     });
