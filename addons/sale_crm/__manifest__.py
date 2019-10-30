@@ -6,25 +6,18 @@
     'version': '1.0',
     'category': 'Hidden',
     'description': """
-This module adds a shortcut on one or several opportunity cases in the CRM.
-===========================================================================
+Generate quotations from opportunities
+======================================
 
-This shortcut allows you to generate a sales order based on the selected case.
-If different cases are open (a list), it generates one sales order by case.
-The case is then closed and linked to the generated sales order.
-
-We suggest you to install this module, if you installed both the sale and the crm
-modules.
-    """,
-    'depends': ['sale_management', 'crm'],
+This module adds a button on opportunities on the basis of which you can generate a quotation.
+The opportunity is then closed and linked to the generated sales order.
+When several opportunities are selected, a separate quotation is generated for each of them.
+""",
+    'depends': ['sale', 'crm'],
     'data': [
-        'security/ir.model.access.csv',
-        'views/partner_views.xml',
         'views/sale_order_views.xml',
         'views/crm_lead_views.xml',
-        'views/crm_team_views.xml',
         'wizard/crm_opportunity_to_quotation_views.xml'
     ],
     'auto_install': True,
-    'uninstall_hook': 'uninstall_hook'
 }

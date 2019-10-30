@@ -28,9 +28,7 @@ class Opportunity2Quotation(models.TransientModel):
     lead_id = fields.Many2one('crm.lead', "Associated Lead", required=True)
 
     def action_apply(self):
-        """ Convert lead to opportunity or merge lead and opportunity and open
-            the freshly created opportunity view.
-        """
+        """ Create a quotation from a lead according to the partner assignation policy. """
         self.ensure_one()
         if self.action != 'nothing':
             self.lead_id.write({
@@ -46,4 +44,3 @@ class Opportunity2Quotation(models.TransientModel):
         self.ensure_one()
         result = self.lead_id.handle_partner_assignation(action='create')
         return result.get(self.lead_id.id)
-

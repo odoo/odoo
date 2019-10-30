@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="new_quotation_action" model="ir.actions.act_window">
+        <field name="name">Quotation</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">form,tree,graph</field>
+        <field name="domain">[('opportunity_id', '=', active_id)]</field>
+        <field name="context">{'search_default_opportunity_id': active_id, 'default_opportunity_id': active_id}</field>
+    </record>
+
+    <record id="view_crm_lead_form_inherit_sale_management" model="ir.ui.view">
+        <field name="name">crm.lead.form.inherit.sale.management</field>
+        <field name="model">crm.lead</field>
+        <field name="priority">10</field>
+        <field name="inherit_id" ref="sale_crm.view_crm_lead_form_inherit_sale_crm"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_new_quotation_handle_partner']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            <xpath expr="//button[@id='view_quotation_button']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            <xpath expr="//button[@id='view_order_button']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- add needaction_menu_ref to reload quotation needaction when opportunity needaction is reloaded -->
+    <record id="crm.crm_lead_opportunities" model="ir.actions.act_window">
+        <field name="context">{'default_type': 'opportunity', 'default_user_id': uid}</field>
+    </record>
+
+    <record id="sales_team.mail_activity_type_action_config_sales" model="ir.actions.act_window">
+        <field name="domain">['|', ('res_model_id', '=', False), ('res_model_id.model', 'in', ['crm.lead', 'sale.order', 'res.partner', 'product.template', 'product.product'])]</field>
+    </record>
+
+</odoo>
