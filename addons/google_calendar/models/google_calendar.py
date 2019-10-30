@@ -830,10 +830,15 @@ class GoogleCalendar(models.AbstractModel):
                         recs.delete_an_event(current_event[0])
                     elif actSrc == 'GG':
                         new_google_event_id = event.GG.event['id'].rsplit('_', 1)[1]
+                        parent_oe = event_to_synchronize[base_event][0][1].OE.event
                         if 'T' in new_google_event_id:
                             new_google_event_id = new_google_event_id.replace('T', '')[:-1]
                         else:
-                            new_google_event_id = new_google_event_id + "000000"
+                            #allday event, need to match the changes that will be applied with _inverse_dates otherwise the exclusion will not occur
+                            if parent_oe:
+                                new_google_event_id = new_google_event_id + parent_oe.start.strftime("%H%M%S")
+                            else:
+                                new_google_event_id = new_google_event_id + "000000"
 
                         if event.GG.status:
                             parent_event = {}
@@ -847,9 +852,8 @@ class GoogleCalendar(models.AbstractModel):
                             else:
                                 recs.create_from_google(event, my_partner_id)
                         else:
-                            parent_oe_id = event_to_synchronize[base_event][0][1].OE.event_id
-                            if parent_oe_id:
-                                CalendarEvent.browse("%s-%s" % (parent_oe_id, new_google_event_id)).with_context(curr_attendee=event.OE.attendee_id).unlink(can_be_deleted=True)
+                            if parent_oe:
+                                CalendarEvent.browse("%s-%s" % (parent_oe.id, new_google_event_id)).with_context(curr_attendee=event.OE.attendee_id).unlink(can_be_deleted=True)
                             else:
                                 main_att = CalendarAttendee.with_context(context_novirtual).search([('partner_id', '=', my_partner_id), ('google_internal_event_id', '=', event.GG.event['id'].rsplit('_', 1)[0])], limit=1)
                                 if main_att:
