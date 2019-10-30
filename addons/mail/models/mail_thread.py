@@ -2812,6 +2812,7 @@ class MailThread(models.AbstractModel):
             values = {
                 'object': record,
                 'model_description': model_description,
+                'access_link': self._notify_get_action_link('view'),
             }
             assignation_msg = view.render(values, engine='ir.qweb', minimal_qcontext=True)
             assignation_msg = self.env['mail.thread']._replace_local_links(assignation_msg)
