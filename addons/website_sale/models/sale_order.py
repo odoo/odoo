@@ -100,6 +100,7 @@ class SaleOrder(models.Model):
             'quantity': qty,
             'date': order.date_order,
             'pricelist': order.pricelist_id.id,
+            'force_company': order.company_id.id,
         })
         product = self.env['product.product'].with_context(product_context).browse(product_id)
         discount = 0
