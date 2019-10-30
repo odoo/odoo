@@ -207,15 +207,15 @@ if(!$('.js_surveyresult').length) {
         var chartConfig;
         if(graph_type == 'multi_bar'){
             chartConfig = init_multibar_chart(graph_data);
-            return load_chart(chartConfig, containerSelector);
+            load_chart(chartConfig, containerSelector);
         }
         else if(graph_type == 'bar'){
             chartConfig = init_bar_chart(graph_data);
-            return load_chart(chartConfig, containerSelector);
+            load_chart(chartConfig, containerSelector);
         }
         else if(graph_type == 'pie'){
             chartConfig = init_pie_chart(graph_data);
-            return load_chart(chartConfig, containerSelector);
+            load_chart(chartConfig, containerSelector);
         }
         else if (graph_type === 'doughnut') {
             var quizz_score = $(graph).attr("quizz-score") || 0.0;
@@ -227,7 +227,7 @@ if(!$('.js_surveyresult').length) {
     var $scoringResultsChart = $('#scoring_results_chart');
     if ($scoringResultsChart.length > 0) {
         var chartConfig = init_pie_chart($scoringResultsChart.data('graph_data'));
-        return load_chart(chartConfig, '#scoring_results_chart');
+        load_chart(chartConfig, '#scoring_results_chart');
     }
 
     // Script for filter
