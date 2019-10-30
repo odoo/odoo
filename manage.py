@@ -53,8 +53,12 @@ def start_bootstrap(dbname, config_path=None):
     return db, cr, pool
 
 
-def end_bootstrap(cr):
+def end_bootstrap(db, cr):
     cr.close()
+    # Don't close the **all** DB connection in production!! Otherwise, parallel
+    # process may be killed!?
+    # from openerp.sql_db import close_db
+    # close_db(db.dbname)
     logging.shutdown()
 
 
@@ -63,6 +67,7 @@ def shell_subcommand(args):
         'cr': cr,
         'pool': pool,
         'uid': SUPERUSER_ID,
+        'SUPERUSER_ID': SUPERUSER_ID,  # For copy/paste, more simple ;-)
         'pp': pp,
     }
     banner = """
@@ -169,15 +174,23 @@ def anonymize_subcommand(args):
             logger.info('Fetchmail server conf reset.')
 
 
+def refresh_module_list_subcommand(args):
+    modobj = pool.get('ir.module.module')
+    modobj.update_list(cr, SUPERUSER_ID)
+    logger.info('Module list updated!.')
+
+
 COMMAND_SHELL = 'shell'
 COMMAND_MIGRATE = 'migrate'
 COMMAND_PASSWORD_RESET = 'password_reset'
 COMMAND_ANONYMIZE = 'anonymize'
+COMMAND_REFRESH_MOD = 'refresh_mod'
 COMMANDS = [
     COMMAND_SHELL,
     COMMAND_MIGRATE,
     COMMAND_PASSWORD_RESET,
     COMMAND_ANONYMIZE,
+    COMMAND_REFRESH_MOD,
 ]
 
 MIGRATE_STAGE_PRE = 'pre'
@@ -229,6 +242,9 @@ parser_anonymize.set_defaults(func=anonymize_subcommand)
 parser_anonymize.add_argument('--new-password', required=True)
 parser_anonymize.add_argument('--new-email', required=True)
 
+parser_refresh_mod = subparsers.add_parser(COMMAND_REFRESH_MOD, help='Refresh the list of modules available in Python path.')
+parser_refresh_mod.set_defaults(func=refresh_module_list_subcommand)
+
 if __name__ == "__main__":
     args = parser.parse_args()
     db, cr, pool = start_bootstrap(args.dbname, args.config_path)
@@ -236,4 +252,4 @@ if __name__ == "__main__":
     try:
         args.func(args)
     finally:
-        end_bootstrap(cr)
+        end_bootstrap(db, cr)
