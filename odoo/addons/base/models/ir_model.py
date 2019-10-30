@@ -675,9 +675,32 @@ class IrModelFields(models.Model):
         # prevent screwing up fields that depend on these fields
         self._prepare_update()
 
+        # determine registry fields corresponding to self
+        fields = []
+        for record in self:
+            try:
+                fields.append(self.pool[record.model]._fields[record.name])
+            except KeyError:
+                pass
+
         model_names = self.mapped('model')
         self._drop_column()
         res = super(IrModelFields, self).unlink()
+
+        # discard the removed fields from field triggers
+        def discard_fields(tree):
+            # discard fields from the tree's root node
+            tree.get(None, set()).difference_update(fields)
+            # discard subtrees labelled with any of the fields
+            for field in fields:
+                tree.pop(field, None)
+            # discard fields from remaining subtrees
+            for field, subtree in tree.items():
+                if field is not None:
+                    discard_fields(subtree)
+
+        discard_fields(self.pool.field_triggers)
+        self.pool.registry_invalidated = True
 
         # The field we just deleted might be inherited, and the registry is
         # inconsistent in this case; therefore we reload the registry.
@@ -1872,9 +1895,13 @@ class IrModelData(models.Model):
         constraints = self.env['ir.model.constraint'].search([('module', 'in', modules.ids)])
         constraints._module_data_uninstall()
 
-        # remove fields, selections and relations
+        # Remove fields, selections and relations. Note that the selections of
+        # removed fields do not require any "data fix", as their corresponding
+        # column no longer exists. We can therefore completely ignore them. That
+        # is why selections are removed after fields: most selections are
+        # deleted on cascade by their corresponding field.
         delete(self.env['ir.model.fields'].browse(field_ids))
-        delete(self.env['ir.model.fields.selection'].browse(selection_ids))
+        delete(self.env['ir.model.fields.selection'].browse(selection_ids).exists())
         relations = self.env['ir.model.relation'].search([('module', 'in', modules.ids)])
         relations._module_data_uninstall()
 
