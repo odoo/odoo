@@ -33,6 +33,7 @@ The service is provided by the In App Purchase Odoo platform.
     ],
     'qweb': [
         'static/src/xml/thread.xml',
+        'static/src/xml/fields_phone_widget.xml',
     ],
     'installable': True,
     'auto_install': True,

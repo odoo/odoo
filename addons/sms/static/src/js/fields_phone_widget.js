@@ -4,7 +4,7 @@ odoo.define('sms.fields', function (require) {
 var basic_fields = require('web.basic_fields');
 var core = require('web.core');
 var session = require('web.session');
-
+var QWeb = core.qweb;
 var _t = core._t;
 
 /**
@@ -13,6 +13,9 @@ var _t = core._t;
 
 var Phone = basic_fields.FieldPhone;
 Phone.include({
+    events: _.extend({}, Phone.prototype.events, {
+        'click .o_field_phone_sms': '_onClickSMS'
+    }),
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -53,20 +56,11 @@ Phone.include({
      * @private
      */
     _renderReadonly: function () {
-        var def = this._super.apply(this, arguments);
         if (this.nodeOptions.enable_sms) {
-            var $composerButton = $('<a>', {
-                title: _t('Send SMS Text Message'),
-                href: '',
-                class: 'ml-3 d-inline-flex align-items-center o_field_phone_sms',
-                html: $('<small>', {class: 'font-weight-bold ml-1', html: 'SMS'}),
-            });
-            $composerButton.prepend($('<i>', {class: 'fa fa-mobile'}));
-            $composerButton.on('click', this._onClickSMS.bind(this));
-            this.$el = $('<div/>').append(this.$el).append($composerButton);
+            this.$el.html(QWeb.render('field_phone_widget_readonly', {'widget': this}));
+        } else {
+            this._super.apply(this, arguments);
         }
-
-        return def;
     },
 });
 

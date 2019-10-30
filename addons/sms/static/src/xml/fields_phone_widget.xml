@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="field_phone_widget_readonly">
+        <a t-attf-href="tel:{{widget.value || ''}}" t-esc="widget.value" class="o_field_phone o_field_widget o_form_uri"/>
+        <button t-if="widget.nodeOptions.enable_sms" title="Send SMS Text Message" class="ml-2 p-0 btn btn-link align-items-center o_field_phone_sms">
+            <i class="fa fa-mobile"/>
+            <small class="font-weight-bold ml-1">SMS</small>
+        </button>
+    </t>
+</templates>

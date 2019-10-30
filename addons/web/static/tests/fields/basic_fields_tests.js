@@ -4815,14 +4815,14 @@ QUnit.module('basic_fields', {
         var $phone = form.$('a.o_field_widget.o_form_uri');
         assert.strictEqual($phone.length, 1,
             "should have rendered the phone number as a link with correct classes");
-        assert.strictEqual($phone.text(), 'yop',
+        assert.strictEqual($phone.text().trim(), 'yop',
             "value should be displayed properly");
 
         // switch to edit mode and check the result
         await testUtils.form.clickEdit(form);
         assert.containsOnce(form, 'input[type="text"].o_field_widget',
             "should have an input for the phone field");
-        assert.strictEqual(form.$('input[type="text"].o_field_widget').val(), 'yop',
+        assert.strictEqual(form.$('input[type="text"].o_field_widget').val().trim(), 'yop',
             "input should contain field value in edit mode");
 
         // change value in edit mode
@@ -4830,7 +4830,7 @@ QUnit.module('basic_fields', {
 
         // save
         await testUtils.form.clickSave(form);
-        assert.strictEqual(form.$('a.o_field_widget.o_form_uri').text(), 'new',
+        assert.strictEqual(form.$('a.o_field_widget.o_form_uri').text().trim(), 'new',
             "new value should be displayed properly");
 
         form.destroy();
@@ -4852,7 +4852,7 @@ QUnit.module('basic_fields', {
         });
 
         assert.containsN(list, 'tbody td:not(.o_list_record_selector)', 5);
-        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text(), 'yop',
+        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text().trim(), 'yop',
             "value should be displayed properly");
 
         assert.containsN(list, 'a.o_field_widget.o_form_uri', 5,
@@ -4870,7 +4870,7 @@ QUnit.module('basic_fields', {
         await testUtils.dom.click(list.$buttons.find('.o_list_button_save'));
         $cell = list.$('tbody td:not(.o_list_record_selector)').first();
         assert.doesNotHaveClass($cell.parent(), 'o_selected_row', 'should not be in edit mode anymore');
-        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text(), 'new',
+        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text().trim(), 'new',
             "value should be properly updated");
         assert.containsN(list, 'a.o_field_widget.o_form_uri', 5,
             "should still have links with correct classes");

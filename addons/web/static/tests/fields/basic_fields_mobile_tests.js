@@ -73,7 +73,7 @@ QUnit.module('basic_fields', {
         var $phoneLink = form.$('a.o_form_uri.o_field_widget');
         assert.strictEqual($phoneLink.length, 1,
             "should have a anchor with correct classes");
-        assert.strictEqual($phoneLink.text(), 'yop',
+        assert.strictEqual($phoneLink.text().trim(), 'yop',
             "value should be displayed properly");
         assert.hasAttrValue($phoneLink, 'href', 'tel:yop',
             "should have proper tel prefix");
@@ -91,7 +91,7 @@ QUnit.module('basic_fields', {
         // save
         await testUtils.form.clickSave(form);
         $phoneLink = form.$('a.o_form_uri.o_field_widget');
-        assert.strictEqual($phoneLink.text(), 'new',
+        assert.strictEqual($phoneLink.text().trim(), 'new',
             "new value should be displayed properly");
         assert.hasAttrValue($phoneLink, 'href', 'tel:new',
             "should still have proper tel prefix");
@@ -111,7 +111,7 @@ QUnit.module('basic_fields', {
 
         assert.containsN(list, '.o_data_row', 3,
             "should have 3 record");
-        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text(), 'yop',
+        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text().trim(), 'yop',
             "value should be displayed properly");
 
         var $phoneLink = list.$('a.o_form_uri.o_field_widget');
@@ -132,7 +132,7 @@ QUnit.module('basic_fields', {
         await testUtils.dom.click(list.$buttons.find('.o_list_button_save'));
         $cell = list.$('tbody td:not(.o_list_record_selector)').first();
         assert.doesNotHaveClass($cell.parent(), 'o_selected_row', 'should not be in edit mode anymore');
-        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text(), 'new',
+        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text().trim(), 'new',
             "value should be properly updated");
         $phoneLink = list.$('a.o_form_uri.o_field_widget');
         assert.strictEqual($phoneLink.length, 3,
@@ -168,7 +168,7 @@ QUnit.module('basic_fields', {
 
         // save
         await testUtils.form.clickSave(form);
-        assert.strictEqual(form.$('.o_field_widget').text(), val,
+        assert.strictEqual(form.$('.o_field_widget').text().trim(), val,
             "value should have been correctly escaped");
 
         form.destroy();
