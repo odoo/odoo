@@ -49,6 +49,10 @@ var SnippetEditor = Widget.extend({
         this.$target = $(target);
         this.$target.data('snippet-editor', this);
         this.templateOptions = templateOptions;
+
+        this.__isStarted = new Promise((function (resolve) {
+            this.__isStartedResolveFunc = resolve;
+        }).bind(this));
     },
     /**
      * @override
@@ -111,7 +115,9 @@ var SnippetEditor = Widget.extend({
             }
         });
 
-        return Promise.all(defs);
+        return Promise.all(defs).then(function () {
+            self.__isStartedResolveFunc(self);
+        });
     },
     /**
      * @override
@@ -1282,7 +1288,7 @@ var SnippetsMenu = Widget.extend({
         var self = this;
         var snippetEditor = $snippet.data('snippet-editor');
         if (snippetEditor) {
-            return Promise.resolve(snippetEditor);
+            return snippetEditor.__isStarted;
         }
 
         var def;
@@ -1292,6 +1298,15 @@ var SnippetsMenu = Widget.extend({
         }
 
         return Promise.resolve(def).then(function (parentEditor) {
+            // When reaching this position, after the Promise resolution, the
+            // snippet editor instance might have been created by another call
+            // to _createSnippetEditor... the whole logic should be improved
+            // to avoid doing this here.
+            snippetEditor = $snippet.data('snippet-editor');
+            if (snippetEditor) {
+                return snippetEditor.__isStarted;
+            }
+
             snippetEditor = new SnippetEditor(parentEditor || self, $snippet, self.templateOptions, self.getEditableArea(), self.options);
             self.snippetEditors.push(snippetEditor);
             return snippetEditor.appendTo(self.$snippetEditorArea);
