@@ -102,10 +102,12 @@ class AccountFiscalPosition(models.Model):
         null_zip_dom = zip_domain = [('zip_from', '=', 0), ('zip_to', '=', 0)]
         null_country_dom = [('country_id', '=', False), ('country_group_id', '=', False)]
 
-        if zipcode and zipcode.isdigit():
+        # DO NOT USE zipcode.isdigit() b/c '4020²' would be true, so we try/except
+        try:
             zipcode = int(zipcode)
-            zip_domain = [('zip_from', '<=', zipcode), ('zip_to', '>=', zipcode)]
-        else:
+            if zipcode != 0:
+                zip_domain = [('zip_from', '<=', zipcode), ('zip_to', '>=', zipcode)]
+        except (ValueError, TypeError):
             zipcode = 0
 
         if state_id:
