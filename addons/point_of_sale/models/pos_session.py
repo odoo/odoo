@@ -112,6 +112,10 @@ class PosSession(models.Model):
                 )
                 session.cash_register_balance_end = session.cash_register_balance_start + session.cash_register_total_entry_encoding
                 session.cash_register_difference = session.cash_register_balance_end_real - session.cash_register_balance_end
+            else:
+                session.cash_register_total_entry_encoding = 0.0
+                session.cash_register_balance_end = 0.0
+                session.cash_register_difference = 0.0
 
     @api.depends('order_ids.payment_ids.amount')
     def _compute_total_payments_amount(self):
