@@ -8,6 +8,7 @@ from . import test_db_cursor
 from . import test_expression
 from . import test_float
 from . import test_func
+from . import test_http_case
 from . import test_image
 from . import test_ir_actions
 from . import test_ir_attachment
