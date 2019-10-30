@@ -7,7 +7,7 @@
             </p>
         </xpath>
         <xpath expr="//h2/span" position="before">
-            <span t-if="o.company_id.country_id.code == 'AE' and o.type in ['out_invoice', 'out_refund']">Tax</span>
+            <span t-if="o.company_id.country_id.code == 'AE' and o.move_type in ['out_invoice', 'out_refund']">Tax</span>
         </xpath>
 
         <xpath expr="//div[hasclass('clearfix')]" position="after">

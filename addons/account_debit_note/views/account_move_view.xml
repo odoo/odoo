@@ -10,7 +10,7 @@
                 <button name="%(action_view_account_move_debit)d" string='Add Debit Note'
                                 type='action' groups="account.group_account_invoice"
                                 attrs="{'invisible': ['|', '|', ('debit_origin_id', '!=', False),
-                                        ('type', 'not in', ('out_invoice', 'in_invoice', 'out_refund', 'in_refund')), ('state', '!=', 'posted')]}"/>
+                                        ('move_type', 'not in', ('out_invoice', 'in_invoice', 'out_refund', 'in_refund')), ('state', '!=', 'posted')]}"/>
             </button>
             <div class="oe_button_box" position="inside">
                 <button type="object" class="oe_stat_button" name="action_view_debit_notes" icon="fa-plus" attrs="{'invisible': [('debit_note_count', '=', 0)]}">

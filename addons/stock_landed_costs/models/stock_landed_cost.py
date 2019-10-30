@@ -72,7 +72,7 @@ class LandedCost(models.Model):
         related='account_journal_id.company_id')
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'stock_landed_cost_id')
     vendor_bill_id = fields.Many2one(
-        'account.move', 'Vendor Bill', copy=False, domain=[('type', '=', 'in_invoice')])
+        'account.move', 'Vendor Bill', copy=False, domain=[('move_type', '=', 'in_invoice')])
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
 
     @api.depends('cost_lines.price_unit')
@@ -131,7 +131,7 @@ class LandedCost(models.Model):
                 'date': cost.date,
                 'ref': cost.name,
                 'line_ids': [],
-                'type': 'entry',
+                'move_type': 'entry',
             }
             valuation_layer_ids = []
             for line in cost.valuation_adjustment_lines.filtered(lambda line: line.move_id):

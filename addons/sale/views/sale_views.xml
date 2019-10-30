@@ -1151,7 +1151,7 @@
             <field name="inherit_id" ref="account.view_invoice_tree"/>
             <field name="arch" type="xml">
                 <field name="invoice_user_id" position="after">
-                    <field name="team_id" invisible="context.get('default_type') not in ('out_invoice', 'out_refund','out_receipt')" optional="hide"/>
+                    <field name="team_id" invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund','out_receipt')" optional="hide"/>
                 </field>
             </field>
         </record>
@@ -1166,7 +1166,7 @@
                     <xpath expr="//field[@name='partner_id']" position="after">
                        <field name="partner_shipping_id"
                               groups="sale.group_delivery_invoice_address"
-                              attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}"/>
+                              attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}"/>
                    </xpath>
                     <xpath expr="//field[@name='invoice_line_ids']//field[@name='discount']" position="attributes">
                         <attribute name="groups">product.group_discount_per_so_line</attribute>
@@ -1178,7 +1178,7 @@
                         <group string="Marketing"
                                name="utm_link"
                                groups="base.group_no_one"
-                               attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund'))]}">
+                               attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund'))]}">
                             <field name="campaign_id"/>
                             <field name="medium_id"/>
                             <field name="source_id"/>
@@ -1251,12 +1251,12 @@
             <field name="view_id" ref="account.view_move_tree"/>
             <field name="domain">[
                 ('state', '=', 'posted'),
-                ('type', 'in', ['out_invoice', 'out_refund'])]</field>
+                ('move_type', 'in', ['out_invoice', 'out_refund'])]</field>
             <field name="context">{
                     'search_default_team_id': [active_id],
                     'default_team_id': active_id,
-                    'default_type':'out_invoice',
-                    'type':'out_invoice',
+                    'default_move_type':'out_invoice',
+                    'move_type':'out_invoice',
                     'journal_type': 'sale',
                 }
             </field>

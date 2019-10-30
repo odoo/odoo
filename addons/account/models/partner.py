@@ -311,7 +311,7 @@ class ResPartner(models.Model):
         # generate where clause to include multicompany rules
         where_query = account_invoice_report._where_calc([
             ('partner_id', 'in', all_partner_ids), ('state', 'not in', ['draft', 'cancel']),
-            ('type', 'in', ('out_invoice', 'out_refund'))
+            ('move_type', 'in', ('out_invoice', 'out_refund'))
         ])
         account_invoice_report._apply_ir_rules(where_query, 'read')
         from_clause, where_clause, where_clause_params = where_query.get_sql()
@@ -465,11 +465,11 @@ class ResPartner(models.Model):
         self.ensure_one()
         action = self.env.ref('account.action_move_out_invoice_type').read()[0]
         action['domain'] = [
-            ('type', 'in', ('out_invoice', 'out_refund')),
+            ('move_type', 'in', ('out_invoice', 'out_refund')),
             ('state', '=', 'posted'),
             ('partner_id', 'child_of', self.id),
         ]
-        action['context'] = {'default_type':'out_invoice', 'type':'out_invoice', 'journal_type': 'sale', 'search_default_unpaid': 1}
+        action['context'] = {'default_move_type':'out_invoice', 'move_type':'out_invoice', 'journal_type': 'sale', 'search_default_unpaid': 1}
         return action
 
     def can_edit_vat(self):
@@ -478,7 +478,7 @@ class ResPartner(models.Model):
         if not can_edit_vat:
             return can_edit_vat
         has_invoice = self.env['account.move'].search([
-            ('type', 'in', ['out_invoice', 'out_refund']),
+            ('move_type', 'in', ['out_invoice', 'out_refund']),
             ('partner_id', 'child_of', self.commercial_partner_id.id),
             ('state', '=', 'posted')
         ], limit=1)

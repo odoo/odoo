@@ -38,7 +38,7 @@ class AccountMoveReversal(models.TransientModel):
 
             if record.l10n_latam_use_documents:
                 refund = record.env['account.move'].new({
-                    'type': record._reverse_type_map(record.move_ids.type),
+                    'move_type': record._reverse_type_map(record.move_ids.move_type),
                     'journal_id': record.move_ids.journal_id.id,
                     'partner_id': record.move_ids.partner_id.id,
                     'company_id': record.move_ids.company_id.id,

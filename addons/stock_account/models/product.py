@@ -237,7 +237,7 @@ class ProductProduct(models.Model):
                 'company_id': company_id.id,
                 'ref': product.default_code,
                 'stock_valuation_layer_ids': [(6, None, [stock_valuation_layer.id])],
-                'type': 'entry',
+                'move_type': 'entry',
                 'line_ids': [(0, 0, {
                     'name': _('%s changed cost from %s to %s - %s') % (self.env.user.name, product.standard_price, new_price, product.display_name),
                     'account_id': debit_account_id,
@@ -488,7 +488,7 @@ class ProductProduct(models.Model):
                     'credit': abs(value),
                     'product_id': product.id,
                 })],
-                'type': 'entry',
+                'move_type': 'entry',
             }
             move_vals_list.append(move_vals)
         return move_vals_list
@@ -524,7 +524,7 @@ class ProductProduct(models.Model):
                     'credit': abs(value),
                     'product_id': product.id,
                 })],
-                'type': 'entry',
+                'move_type': 'entry',
             }
             move_vals_list.append(move_vals)
         return move_vals_list

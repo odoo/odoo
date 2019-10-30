@@ -10,7 +10,7 @@
                 <field name="l10n_latam_internal_type" invisible="1"/>
             </form>
             <field name="ref" position="attributes">
-                <attribute name="attrs">{'invisible': [('type', '=', 'out_invoice'), ('l10n_latam_internal_type', '!=', 'debit_note')], 'required': [('l10n_latam_internal_type', '=', 'debit_note')]}</attribute>
+                <attribute name="attrs">{'invisible': [('move_type', '=', 'out_invoice'), ('l10n_latam_internal_type', '!=', 'debit_note')], 'required': [('l10n_latam_internal_type', '=', 'debit_note')]}</attribute>
             </field>
         </field>
     </record>
@@ -27,7 +27,7 @@
                 <field name="invoice_date_due" optional="show"/>
                 <field name="date" string="Accounting Date" optional="show"/>
                 <field name="invoice_payment_ref" optional="hide"/>
-                <field name="invoice_user_id" optional="show" invisible="context.get('default_type') not in ('out_invoice', 'out_refund','out_receipt')" string="Sales Person"/>
+                <field name="invoice_user_id" optional="show" invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund','out_receipt')" string="Sales Person"/>
                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="show"/>
                 <field name="invoice_origin" optional="show" string="Source Document"/>
                 <field name="amount_untaxed_signed" string="Amount Untaxed" sum="Total" optional="show"/>
@@ -38,7 +38,7 @@
                 <field name="company_currency_id" invisible="1"/>
                 <field name="state" optional="show"/>
                 <field name="payment_state" optional="hide"/>
-                <field name="type" invisible="context.get('default_type', True)"/>
+                <field name="move_type" invisible="context.get('default_move_type', True)"/>
             </tree>
         </field>
     </record>
@@ -47,8 +47,8 @@
         <field name="name">Sale Invoices and Credit Notes</field>
         <field name="view_id" ref="view_complete_invoice_refund_tree"/>
         <field name="res_model">account.move</field>
-        <field name="domain">[('type', 'in', ['out_invoice', 'out_refund'])]</field>
-        <field name="context">{'default_type': 'out_invoice'}</field>
+        <field name="domain">[('move_type', 'in', ['out_invoice', 'out_refund'])]</field>
+        <field name="context">{'default_move_type': 'out_invoice'}</field>
         <field name="target">current</field>
         <field name="view_mode">tree,form</field>
     </record>
@@ -57,8 +57,8 @@
         <field name="name">Vendor Bills and Refunds</field>
         <field name="view_id" ref="view_complete_invoice_refund_tree"/>
         <field name="res_model">account.move</field>
-        <field name="domain">[('type', 'in', ['in_invoice', 'in_refund'])]</field>
-        <field name="context">{'default_type': 'in_invoice'}</field>
+        <field name="domain">[('move_type', 'in', ['in_invoice', 'in_refund'])]</field>
+        <field name="context">{'default_move_type': 'in_invoice'}</field>
         <field name="target">current</field>
         <field name="view_mode">tree,form</field>
     </record>

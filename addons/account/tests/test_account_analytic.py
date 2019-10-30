@@ -31,7 +31,7 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon):
         ''' Ensure you can't change the company of an account.analytic.account if there are some journal entries '''
 
         self.env['account.move'].create({
-            'type': 'entry',
+            'move_type': 'entry',
             'date': '2019-01-01',
             'line_ids': [
                 (0, 0, {

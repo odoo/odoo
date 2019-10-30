@@ -292,7 +292,7 @@ class TestStockValuationLCFIFOVB(TestStockValuationLCCommon):
 
         # Create a vendor bill for a landed cost product, post it and validate a landed cost
         # linked to this vendor bill. LC; 1@50
-        lcvb = Form(self.env['account.move'].with_context(default_type='in_invoice'))
+        lcvb = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         lcvb.partner_id = self.vendor2
         with lcvb.invoice_line_ids.new() as inv_line:
             inv_line.product_id = self.productlc1
@@ -434,7 +434,7 @@ class TestStockValuationLCFIFOVB(TestStockValuationLCCommon):
 
         # Create a vendor bill for a landed cost product, post it and validate a landed cost
         # linked to this vendor bill. LC; 1@50
-        lcvb = Form(self.env['account.move'].with_context(default_type='in_invoice'))
+        lcvb = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         lcvb.partner_id = self.vendor2
         with lcvb.invoice_line_ids.new() as inv_line:
             inv_line.product_id = self.productlc1

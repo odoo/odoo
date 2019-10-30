@@ -30,7 +30,7 @@ class TestAccountMovePartnerCount(TransactionCase):
             })
             self.move = self.env['account.move'].with_env(env).create({
                 'partner_id': self.partner.id,
-                'type': 'out_invoice',
+                'move_type': 'out_invoice',
                 'journal_id': self.journal.id,
                 'currency_id': self.env.user.company_id.currency_id.id,
             })

@@ -55,7 +55,7 @@ class TestPurchaseOrderReport(AccountTestCommon):
         })
         po.button_confirm()
 
-        f = Form(self.env['account.move'].with_context(default_type='in_invoice'))
+        f = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         f.partner_id = po.partner_id
         f.purchase_id = po
         invoice = f.save()

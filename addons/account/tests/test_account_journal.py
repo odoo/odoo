@@ -21,7 +21,7 @@ class TestAccountJournal(AccountTestInvoicingCommon):
         ''' Ensure you can't change the company of an account.journal if there are some journal entries '''
 
         self.env['account.move'].create({
-            'type': 'entry',
+            'move_type': 'entry',
             'date': '2019-01-01',
             'journal_id': self.company_data['default_journal_sale'].id,
         })

@@ -104,7 +104,7 @@ class ProductProduct(models.Model):
 
             #Cost price is calculated afterwards as it is a property
             self.env['account.move.line'].flush(['price_unit', 'quantity', 'balance', 'product_id', 'display_type'])
-            self.env['account.move'].flush(['state', 'payment_state', 'type', 'invoice_date', 'company_id'])
+            self.env['account.move'].flush(['state', 'payment_state', 'move_type', 'invoice_date', 'company_id'])
             self.env['product.template'].flush(['list_price'])
             sqlstr = """
                 WITH currency_rate AS ({})
@@ -125,7 +125,7 @@ class ProductProduct(models.Model):
                 WHERE l.product_id = %s
                 AND i.state IN %s
                 AND i.payment_state IN %s
-                AND i.type IN %s
+                AND i.move_type IN %s
                 AND i.invoice_date BETWEEN %s AND  %s
                 AND i.company_id = %s
                 AND l.display_type IS NULL
