@@ -8,6 +8,15 @@ from odoo.exceptions import AccessError
 class PosConfig(models.Model):
     _inherit = 'pos.config'
 
+<<<<<<< HEAD
+=======
+    def _get_default_pos_team(self):
+        try:
+            team = self.env['crm.team'].sudo()._get_default_team_id(user_id=self.env.uid)
+            return team if team.active else None
+        except ValueError:
+            return None 
+>>>>>>> 085f5ac71db... temp
 
     crm_team_id = fields.Many2one(
         'crm.team', string="Sales Team",
