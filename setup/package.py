@@ -437,7 +437,7 @@ class KVMWinBuildExe(KVM):
         with open(os.path.join(self.args.build_dir, 'setup/win32/Makefile.version'), 'w') as f:
             f.write("VERSION=%s\n" % VERSION.replace('~', '_').replace('+', ''))
         with open(os.path.join(self.args.build_dir, 'setup/win32/Makefile.python'), 'w') as f:
-            f.write("PYTHON_VERSION=%s\n" % self.args.vm_winxp_python_version.replace('.', ''))
+            f.write("PYTHON_VERSION=%s\n" % self.args.vm_winxp_python_version)
         with open(os.path.join(self.args.build_dir, 'setup/win32/Makefile.servicename'), 'w') as f:
             f.write("SERVICENAME=%s\n" % nt_service_name)
 
@@ -494,7 +494,7 @@ def parse_args():
     ap.add_argument("--vm-winxp-image", default='/home/odoo/vm/win1036/win10_winpy36.qcow2', help="%(default)s")
     ap.add_argument("--vm-winxp-ssh-key", default='/home/odoo/vm/win1036/id_rsa', help="%(default)s")
     ap.add_argument("--vm-winxp-login", default='Naresh', help="Windows login %(default)s")
-    ap.add_argument("--vm-winxp-python-version", default='3.6', help="Windows Python version installed in the VM (default: %(default)s)")
+    ap.add_argument("--vm-winxp-python-version", default='3.7.4', help="Windows Python version installed in the VM (default: %(default)s)")
 
     ap.add_argument("-t", "--test", action="store_true", default=False, help="Test built packages")
     ap.add_argument("-s", "--sign", action="store_true", default=False, help="Sign Debian package / generate Rpm repo")
