@@ -592,7 +592,7 @@ class AccountBankStatementLine(models.Model):
         if self.ref:
             ref = move_ref + ' - ' + self.ref if move_ref else self.ref
         data = {
-            'type': 'entry',
+            'move_type': 'entry',
             'journal_id': self.statement_id.journal_id.id,
             'currency_id': self.statement_id.currency_id.id,
             'date': self.statement_id.accounting_date or self.date,

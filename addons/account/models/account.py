@@ -1100,7 +1100,7 @@ class AccountJournal(models.Model):
             if self.company_id != self.env.ref('base.main_company'):
                 alias_name += '-' + str(self.company_id.name)
         return {
-            'alias_defaults': {'type': type == 'purchase' and 'in_invoice' or 'out_invoice', 'company_id': self.company_id.id, 'journal_id': self.id},
+            'alias_defaults': {'move_type': type == 'purchase' and 'in_invoice' or 'out_invoice', 'company_id': self.company_id.id, 'journal_id': self.id},
             'alias_parent_thread_id': self.id,
             'alias_name': alias_name,
         }
@@ -1568,10 +1568,10 @@ class AccountTax(models.Model):
     def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
         context = self._context or {}
 
-        if context.get('type'):
-            if context.get('type') in ('out_invoice', 'out_refund'):
+        if context.get('move_type'):
+            if context.get('move_type') in ('out_invoice', 'out_refund'):
                 args += [('type_tax_use', '=', 'sale')]
-            elif context.get('type') in ('in_invoice', 'in_refund'):
+            elif context.get('move_type') in ('in_invoice', 'in_refund'):
                 args += [('type_tax_use', '=', 'purchase')]
 
         if context.get('journal_id'):

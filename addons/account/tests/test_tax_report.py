@@ -158,7 +158,7 @@ class TaxReportTest(AccountTestInvoicingCommon):
         })
 
         test_invoice = self.env['account.move'].create({
-            'type': 'out_invoice',
+            'move_type': 'out_invoice',
             'partner_id': self.partner_a.id,
             'date': '1992-12-22',
             'invoice_line_ids': [

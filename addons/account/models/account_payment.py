@@ -111,14 +111,14 @@ class account_payment(models.Model):
         if not invoices or any(invoice.state != 'posted' for invoice in invoices):
             raise UserError(_("You can only register payments for open invoices"))
         # Check if, in batch payments, there are not negative invoices and positive invoices
-        dtype = invoices[0].type
+        dtype = invoices[0].move_type
         for inv in invoices[1:]:
-            if inv.type != dtype:
-                if ((dtype == 'in_refund' and inv.type == 'in_invoice') or
-                        (dtype == 'in_invoice' and inv.type == 'in_refund')):
+            if inv.move_type != dtype:
+                if ((dtype == 'in_refund' and inv.move_type == 'in_invoice') or
+                        (dtype == 'in_invoice' and inv.move_type == 'in_refund')):
                     raise UserError(_("You cannot register payments for vendor bills and supplier refunds at the same time."))
-                if ((dtype == 'out_refund' and inv.type == 'out_invoice') or
-                        (dtype == 'out_invoice' and inv.type == 'out_refund')):
+                if ((dtype == 'out_refund' and inv.move_type == 'out_invoice') or
+                        (dtype == 'out_invoice' and inv.move_type == 'out_refund')):
                     raise UserError(_("You cannot register payments for customer invoices and credit notes at the same time."))
 
         amount = self._compute_payment_amount(invoices, invoices[0].currency_id, invoices[0].journal_id, rec.get('payment_date') or fields.Date.today())
@@ -127,7 +127,7 @@ class account_payment(models.Model):
             'amount': abs(amount),
             'payment_type': 'inbound' if amount > 0 else 'outbound',
             'partner_id': invoices[0].commercial_partner_id.id,
-            'partner_type': MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type],
+            'partner_type': MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].move_type],
             'communication': invoices[0].invoice_payment_ref or invoices[0].ref or invoices[0].name,
             'invoice_ids': [(6, 0, invoices.ids)],
         })
@@ -299,13 +299,13 @@ class account_payment(models.Model):
         if not invoices:
             return 0.0
 
-        self.env['account.move'].flush(['type', 'currency_id'])
+        self.env['account.move'].flush(['move_type', 'currency_id'])
         self.env['account.move.line'].flush(['amount_residual', 'amount_residual_currency', 'move_id', 'account_id'])
         self.env['account.account'].flush(['user_type_id'])
         self.env['account.account.type'].flush(['type'])
         self._cr.execute('''
             SELECT
-                move.type AS type,
+                move.move_type AS type,
                 move.currency_id AS currency_id,
                 SUM(line.amount_residual) AS amount_residual,
                 SUM(line.amount_residual_currency) AS residual_currency
@@ -315,7 +315,7 @@ class account_payment(models.Model):
             LEFT JOIN account_account_type account_type ON account_type.id = account.user_type_id
             WHERE move.id IN %s
             AND account_type.type IN ('receivable', 'payable')
-            GROUP BY move.id, move.type
+            GROUP BY move.id, move.move_type
         ''', [tuple(invoices.ids)])
         query_res = self._cr.dictfetchall()
 
@@ -637,7 +637,7 @@ class account_payment(models.Model):
             If invoice_ids is not empty, there will be one reconcilable move line per invoice to reconcile with.
             If the payment is a transfer, a second journal entry is created in the destination journal to receive money from the transfer account.
         """
-        AccountMove = self.env['account.move'].with_context(default_type='entry')
+        AccountMove = self.env['account.move'].with_context(default_move_type='entry')
         for rec in self:
 
             if rec.state != 'draft':
@@ -790,7 +790,7 @@ class payment_register(models.TransientModel):
             'amount': abs(amount),
             'currency_id': invoices[0].currency_id.id,
             'partner_id': invoices[0].commercial_partner_id.id,
-            'partner_type': MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type],
+            'partner_type': MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].move_type],
             'partner_bank_account_id': invoices[0].invoice_partner_bank_id.id,
         }
         return values
@@ -803,7 +803,7 @@ class payment_register(models.TransientModel):
         grouped = defaultdict(lambda: self.env["account.move"])
         for inv in self.invoice_ids:
             if self.group_payment:
-                grouped[(inv.commercial_partner_id, inv.currency_id, inv.invoice_partner_bank_id, MAP_INVOICE_TYPE_PARTNER_TYPE[inv.type])] += inv
+                grouped[(inv.commercial_partner_id, inv.currency_id, inv.invoice_partner_bank_id, MAP_INVOICE_TYPE_PARTNER_TYPE[inv.move_type])] += inv
             else:
                 grouped[inv.id] += inv
         return [self._prepare_payment_vals(invoices) for invoices in grouped.values()]

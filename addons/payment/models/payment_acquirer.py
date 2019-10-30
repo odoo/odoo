@@ -625,7 +625,7 @@ class PaymentTransaction(models.Model):
     payment_id = fields.Many2one('account.payment', string='Payment', readonly=True)
     invoice_ids = fields.Many2many('account.move', 'account_invoice_transaction_rel', 'transaction_id', 'invoice_id',
         string='Invoices', copy=False, readonly=True,
-        domain=[('type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))])
+        domain=[('move_type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))])
     invoice_ids_nbr = fields.Integer(compute='_compute_invoice_ids_nbr', string='# of Invoices')
 
     _sql_constraints = [

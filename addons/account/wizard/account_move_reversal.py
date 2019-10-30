@@ -35,7 +35,7 @@ class AccountMoveReversal(models.TransientModel):
         if any(move.state != "posted" for move in move_ids):
             raise UserError(_('You can only reverse posted moves.'))
         res['move_ids'] = [(6, 0, move_ids.ids)]
-        res['refund_method'] = (len(move_ids) > 1 or move_ids.type == 'entry') and 'cancel' or 'refund'
+        res['refund_method'] = (len(move_ids) > 1 or move_ids.move_type == 'entry') and 'cancel' or 'refund'
         return res
 
     @api.depends('move_ids')
@@ -44,7 +44,7 @@ class AccountMoveReversal(models.TransientModel):
             move_ids = record.move_ids
             record.residual = len(move_ids) == 1 and move_ids.amount_residual or 0
             record.currency_id = len(move_ids.currency_id) == 1 and move_ids.currency_id or False
-            record.move_type = move_ids.type if len(move_ids) == 1 else (any(move.type in ('in_invoice', 'out_invoice') for move in move_ids) and 'some_invoice' or False)
+            record.move_type = move_ids.move_type if len(move_ids) == 1 else (any(move.move_type in ('in_invoice', 'out_invoice') for move in move_ids) and 'some_invoice' or False)
 
     def _prepare_default_reversal(self, move):
         return {

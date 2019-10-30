@@ -13,7 +13,7 @@ class AccountMove(models.Model):
         # OVERRIDE to update the cancel date.
         res = super(AccountMove, self).button_draft()
         for move in self:
-            if move.type == 'out_invoice':
+            if move.move_type == 'out_invoice':
                 self.env['membership.membership_line'].search([
                     ('account_invoice_line', 'in', move.mapped('invoice_line_ids').ids)
                 ]).write({'date_cancel': False})
@@ -23,7 +23,7 @@ class AccountMove(models.Model):
         # OVERRIDE to update the cancel date.
         res = super(AccountMove, self).button_cancel()
         for move in self:
-            if move.type == 'out_invoice':
+            if move.move_type == 'out_invoice':
                 self.env['membership.membership_line'].search([
                     ('account_invoice_line', 'in', move.mapped('invoice_line_ids').ids)
                 ]).write({'date_cancel': fields.Date.today()})
@@ -46,7 +46,7 @@ class AccountMoveLine(models.Model):
         # OVERRIDE
         res = super(AccountMoveLine, self).write(vals)
 
-        to_process = self.filtered(lambda line: line.move_id.type == 'out_invoice' and line.product_id.membership)
+        to_process = self.filtered(lambda line: line.move_id.move_type == 'out_invoice' and line.product_id.membership)
 
         # Nothing to process, break.
         if not to_process:
@@ -82,7 +82,7 @@ class AccountMoveLine(models.Model):
     def create(self, vals_list):
         # OVERRIDE
         lines = super(AccountMoveLine, self).create(vals_list)
-        to_process = lines.filtered(lambda line: line.move_id.type == 'out_invoice' and line.product_id.membership)
+        to_process = lines.filtered(lambda line: line.move_id.move_type == 'out_invoice' and line.product_id.membership)
 
         # Nothing to process, break.
         if not to_process:

@@ -49,7 +49,7 @@
     <record id="filter_invoice_refund" model="ir.filters">
         <field name="name">By Credit Note</field>
         <field name="model_id">account.invoice.report</field>
-        <field name="domain">[('type', '=', 'out_refund')]</field>
+        <field name="domain">[('move_type', '=', 'out_refund')]</field>
         <field name="user_id" eval="False"/>
         <field name="context">{'group_by': ['invoice_date:month', 'invoice_user_id']}</field>
     </record>
@@ -73,11 +73,11 @@
                 <filter string="To Invoice" name="toinvoice" domain="[('state','=','draft')]" help = "Draft Invoices"/>
                 <filter string="Invoiced" name="current" domain="[('state','not in', ('draft','cancel'))]"/>
                 <separator/>
-                <filter string="Customers" name="customer" domain="['|', ('type','=','out_invoice'),('type','=','out_refund')]"/>
-                <filter string="Vendors" name="supplier" domain="['|', ('type','=','in_invoice'),('type','=','in_refund')]"/>
+                <filter string="Customers" name="customer" domain="['|', ('move_type','=','out_invoice'),('move_type','=','out_refund')]"/>
+                <filter string="Vendors" name="supplier" domain="['|', ('move_type','=','in_invoice'),('move_type','=','in_refund')]"/>
                 <separator/>
-                <filter string="Invoices" name="invoice" domain="['|', ('type','=','out_invoice'),('type','=','in_invoice')]"/>
-                <filter string="Credit Notes" name="creditnote" domain="['|', ('type','=','out_refund'),('type','=','in_refund')]"/>
+                <filter string="Invoices" name="invoice" domain="['|', ('move_type','=','out_invoice'),('move_type','=','in_invoice')]"/>
+                <filter string="Credit Notes" name="creditnote" domain="['|', ('move_type','=','out_refund'),('move_type','=','in_refund')]"/>
                 <field name="partner_id" operator="child_of"/>
                 <field name="invoice_user_id" />
                 <field name="product_id" />

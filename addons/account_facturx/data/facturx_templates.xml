@@ -32,7 +32,7 @@
                                 quantity=line.quantity,
                                 product=line.product_id,
                                 partner=record.partner_id,
-                                is_refund=line.move_id.type in ('in_refund', 'out_refund'))"/>
+                                is_refund=line.move_id.move_type in ('in_refund', 'out_refund'))"/>
                         <ram:GrossPriceProductTradePrice>
                             <ram:ChargeAmount
                                 t-att-currencyID="currency.name"
@@ -119,7 +119,7 @@
                 <!-- Document Headers. -->
                 <rsm:ExchangedDocument>
                     <ram:ID t-esc="record.ref"/>
-                    <ram:TypeCode t-esc="'381' if 'refund' in record.type else '380'"/>
+                    <ram:TypeCode t-esc="'381' if 'refund' in record.move_type else '380'"/>
                     <ram:IssueDateTime>
                         <udt:DateTimeString format="102" t-esc="format_date(record.invoice_date)"/>
                     </ram:IssueDateTime>

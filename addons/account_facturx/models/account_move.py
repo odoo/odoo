@@ -58,12 +58,12 @@ class AccountMove(models.Model):
         if self._context.get('default_journal_id'):
             journal = self.env['account.journal'].browse(self.env.context['default_journal_id'])
             default_type = 'out_invoice' if journal.type == 'sale' else 'in_invoice'
-        elif self._context.get('default_type'):
-            default_type = self._context['default_type']
-        elif self.type in self.env['account.move'].get_invoice_types(include_receipts=True):
+        elif self._context.get('default_move_type'):
+            default_type = self._context['default_move_type']
+        elif self.move_type in self.env['account.move'].get_invoice_types(include_receipts=True):
             # in case an attachment is saved on a draft invoice previously created, we might
             # have lost the default value in context but the type was already set
-            default_type = self.type
+            default_type = self.move_type
 
         if not default_type:
             raise UserError(_("No information about the journal or the type of invoice is passed"))
@@ -93,10 +93,10 @@ class AccountMove(models.Model):
             refund_sign = -1 if 'refund' in default_type else 1
 
         # Write the type as the journal entry is already created.
-        self.type = default_type
+        self.move_type = default_type
 
         # self could be a single record (editing) or be empty (new).
-        with Form(self.with_context(default_type=default_type)) as invoice_form:
+        with Form(self.with_context(default_move_type=default_type)) as invoice_form:
             # Partner (first step to avoid warning 'Warning! You must first select a partner.').
             partner_type = invoice_form.journal_id.type == 'purchase' and 'SellerTradeParty' or 'BuyerTradeParty'
             elements = tree.xpath('//ram:'+partner_type+'/ram:SpecifiedTaxRegistration/ram:ID', namespaces=tree.nsmap)
@@ -231,7 +231,7 @@ class AccountMove(models.Model):
         res = super(AccountMove, self).message_post(**kwargs)
 
         if not self.env.context.get('no_new_invoice') and len(self) == 1 and self.state == 'draft' and (
-            self.env.context.get('default_type', self.type) in self.env['account.move'].get_invoice_types(include_receipts=True)
+            self.env.context.get('default_move_type', self.move_type) in self.env['account.move'].get_invoice_types(include_receipts=True)
             or self.env['account.journal'].browse(self.env.context.get('default_journal_id')).type in ('sale', 'purchase')
         ):
             for attachment in self.env['ir.attachment'].browse(kwargs.get('attachment_ids', [])):

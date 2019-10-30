@@ -50,7 +50,7 @@ class TestInvoiceTaxes(AccountTestCommon, SavepointCaseWithUserDemo):
 
         :param taxes_per_line: A list of tuple (price_unit, account.tax recordset)
         '''
-        self_ctx = self.env['account.move'].with_context(default_type=inv_type)
+        self_ctx = self.env['account.move'].with_context(default_move_type=inv_type)
         invoice_form = Form(self_ctx)
         invoice_form.partner_id = self.partner_demo
 

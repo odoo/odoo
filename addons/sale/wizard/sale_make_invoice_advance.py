@@ -72,7 +72,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
     def _prepare_invoice_values(self, order, name, amount, so_line):
         invoice_vals = {
-            'type': 'out_invoice',
+            'move_type': 'out_invoice',
             'invoice_origin': order.name,
             'invoice_user_id': order.user_id.id,
             'narration': order.note,

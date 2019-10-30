@@ -901,7 +901,7 @@ class AccountTestInvoicingCommon(SavepointCase):
 
     @classmethod
     def init_invoice(cls, move_type):
-        move_form = Form(cls.env['account.move'].with_context(default_type=move_type))
+        move_form = Form(cls.env['account.move'].with_context(default_move_type=move_type))
         move_form.invoice_date = fields.Date.from_string('2019-01-01')
         move_form.partner_id = cls.partner_a
         with move_form.invoice_line_ids.new() as line_form:
@@ -1080,7 +1080,7 @@ class TestAccountReconciliationCommon(AccountTestCommon):
         date_invoice = date_invoice or time.strftime('%Y') + '-07-01'
 
         invoice_vals = {
-            'type': type,
+            'move_type': type,
             'partner_id': partner_id or self.partner_agrolait_id,
             'invoice_date': date_invoice,
             'date': date_invoice,
@@ -1098,7 +1098,7 @@ class TestAccountReconciliationCommon(AccountTestCommon):
         if currency_id:
             invoice_vals['currency_id'] = currency_id
 
-        invoice = self.env['account.move'].with_context(default_type=type).create(invoice_vals)
+        invoice = self.env['account.move'].with_context(default_move_type=type).create(invoice_vals)
         if auto_validate:
             invoice.post()
         return invoice

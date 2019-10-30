@@ -20,7 +20,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         tax_repartition_line = cls.company_data['default_tax_sale'].invoice_repartition_line_ids\
             .filtered(lambda line: line.repartition_type == 'tax')
         cls.test_move = cls.env['account.move'].create({
-            'type': 'entry',
+            'move_type': 'entry',
             'date': fields.Date.from_string('2016-01-01'),
             'line_ids': [
                 (0, None, {
@@ -241,7 +241,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
     def test_misc_draft_reconciled_entries_1(self):
         draft_moves = self.env['account.move'].create([
             {
-                'type': 'entry',
+                'move_type': 'entry',
                 'line_ids': [
                     (0, None, {
                         'name': 'move 1 receivable line',
@@ -258,7 +258,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
                 ]
             },
             {
-                'type': 'entry',
+                'move_type': 'entry',
                 'line_ids': [
                     (0, None, {
                         'name': 'move 2 receivable line',

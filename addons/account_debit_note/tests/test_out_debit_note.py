@@ -23,7 +23,7 @@ class TestAccountDebitNote(AccountTestInvoicingCommon):
         debit_note = self.env['account.move'].search([('debit_origin_id', '=', invoice.id)])
         debit_note.ensure_one()
         self.assertEqual(len(debit_note.invoice_line_ids), 2, "Should have copied the invoice lines")
-        self.assertEqual(debit_note.type, 'out_invoice', 'Type of debit note should be the same as the original invoice')
+        self.assertEqual(debit_note.move_type, 'out_invoice', 'Type of debit note should be the same as the original invoice')
         self.assertEqual(debit_note.state, 'draft', 'We should create debit notes in draft state')
 
     def test_10_debit_note_in_refund(self):
@@ -42,5 +42,5 @@ class TestAccountDebitNote(AccountTestInvoicingCommon):
         debit_note.ensure_one()
 
         self.assertFalse(debit_note.invoice_line_ids, 'We should not copy lines by default on debit notes')
-        self.assertEqual(debit_note.type, 'in_invoice', 'Type of debit note should not be refund anymore')
+        self.assertEqual(debit_note.move_type, 'in_invoice', 'Type of debit note should not be refund anymore')
         self.assertEqual(debit_note.state, 'draft', 'We should create debit notes in draft state')

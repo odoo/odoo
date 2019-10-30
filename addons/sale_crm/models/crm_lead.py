@@ -45,15 +45,15 @@ class CrmLead(models.Model):
             ('state', '=', 'posted'),
             ('invoice_user_id', '=', self.env.uid),
             ('invoice_date', '>=', date_today.replace(day=1) - relativedelta(months=+1)),
-            ('type', 'in', ['out_invoice', 'out_refund'])
+            ('move_type', 'in', ['out_invoice', 'out_refund'])
         ]
 
-        invoice_data = self.env['account.move'].search_read(account_invoice_domain, ['invoice_date', 'amount_untaxed', 'type'])
+        invoice_data = self.env['account.move'].search_read(account_invoice_domain, ['invoice_date', 'amount_untaxed', 'move_type'])
 
         for invoice in invoice_data:
             if invoice['invoice_date']:
                 invoice_date = fields.Date.from_string(invoice['invoice_date'])
-                sign = 1 if invoice['type'] == 'out_invoice' else -1
+                sign = 1 if invoice['move_type'] == 'out_invoice' else -1
                 if invoice_date <= date_today and invoice_date >= date_today.replace(day=1):
                     res['invoiced']['this_month'] += sign * invoice['amount_untaxed']
                 elif invoice_date < date_today.replace(day=1) and invoice_date >= date_today.replace(day=1) - relativedelta(months=+1):

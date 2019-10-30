@@ -35,7 +35,7 @@ class res_partner(models.Model):
 
         supplier_invoice_groups = self.env['account.move'].read_group(
             domain=[('partner_id', 'in', all_partners.ids),
-                    ('type', 'in', ('in_invoice', 'in_refund'))],
+                    ('move_type', 'in', ('in_invoice', 'in_refund'))],
             fields=['partner_id'], groupby=['partner_id']
         )
         partners = self.browse()

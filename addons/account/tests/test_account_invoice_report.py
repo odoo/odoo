@@ -16,7 +16,7 @@ class TestAccountInvoiceReport(AccountTestInvoicingCommon):
 
         cls.invoices = cls.env['account.move'].create([
             {
-                'type': 'out_invoice',
+                'move_type': 'out_invoice',
                 'partner_id': cls.partner_a.id,
                 'invoice_date': fields.Date.from_string('2016-01-01'),
                 'currency_id': cls.currency_data['currency'].id,
@@ -34,7 +34,7 @@ class TestAccountInvoiceReport(AccountTestInvoicingCommon):
                 ]
             },
             {
-                'type': 'out_receipt',
+                'move_type': 'out_receipt',
                 'invoice_date': fields.Date.from_string('2016-01-01'),
                 'currency_id': cls.currency_data['currency'].id,
                 'invoice_line_ids': [
@@ -46,7 +46,7 @@ class TestAccountInvoiceReport(AccountTestInvoicingCommon):
                 ]
             },
             {
-                'type': 'out_refund',
+                'move_type': 'out_refund',
                 'partner_id': cls.partner_a.id,
                 'invoice_date': fields.Date.from_string('2017-01-01'),
                 'currency_id': cls.currency_data['currency'].id,
@@ -59,7 +59,7 @@ class TestAccountInvoiceReport(AccountTestInvoicingCommon):
                 ]
             },
             {
-                'type': 'in_invoice',
+                'move_type': 'in_invoice',
                 'partner_id': cls.partner_a.id,
                 'invoice_date': fields.Date.from_string('2016-01-01'),
                 'currency_id': cls.currency_data['currency'].id,
@@ -72,7 +72,7 @@ class TestAccountInvoiceReport(AccountTestInvoicingCommon):
                 ]
             },
             {
-                'type': 'in_receipt',
+                'move_type': 'in_receipt',
                 'partner_id': cls.partner_a.id,
                 'invoice_date': fields.Date.from_string('2016-01-01'),
                 'currency_id': cls.currency_data['currency'].id,
@@ -85,7 +85,7 @@ class TestAccountInvoiceReport(AccountTestInvoicingCommon):
                 ]
             },
             {
-                'type': 'in_refund',
+                'move_type': 'in_refund',
                 'partner_id': cls.partner_a.id,
                 'invoice_date': fields.Date.from_string('2017-01-01'),
                 'currency_id': cls.currency_data['currency'].id,

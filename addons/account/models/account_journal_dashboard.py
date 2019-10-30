@@ -210,7 +210,7 @@ class account_journal(models.Model):
             WHERE move.journal_id = %(journal_id)s
             AND move.state = 'posted'
             AND move.payment_state in ('not_paid', 'partial')
-            AND move.type IN %(invoice_types)s
+            AND move.move_type IN %(invoice_types)s
         ''', {
             'invoice_types': tuple(self.env['account.move'].get_invoice_types(True)),
             'journal_id': self.id
@@ -252,7 +252,7 @@ class account_journal(models.Model):
         #TODO need to check if all invoices are in the same currency than the journal!!!!
         elif self.type in ['sale', 'purchase']:
             title = _('Bills to pay') if self.type == 'purchase' else _('Invoices owed to you')
-            self.env['account.move'].flush(['amount_residual', 'currency_id', 'type', 'invoice_date', 'company_id', 'journal_id', 'date', 'state', 'payment_state'])
+            self.env['account.move'].flush(['amount_residual', 'currency_id', 'move_type', 'invoice_date', 'company_id', 'journal_id', 'date', 'state', 'payment_state'])
 
             (query, query_args) = self._get_open_bills_to_pay_query()
             self.env.cr.execute(query, query_args)
@@ -265,9 +265,9 @@ class account_journal(models.Model):
             today = fields.Date.today()
             query = '''
                 SELECT
-                    (CASE WHEN type IN ('out_refund', 'in_refund') THEN -1 ELSE 1 END) * amount_residual AS amount_total,
+                    (CASE WHEN move_type IN ('out_refund', 'in_refund') THEN -1 ELSE 1 END) * amount_residual AS amount_total,
                     currency_id AS currency,
-                    type,
+                    move_type,
                     invoice_date,
                     company_id
                 FROM account_move move
@@ -275,7 +275,7 @@ class account_journal(models.Model):
                 AND date <= %s
                 AND state = 'posted'
                 AND payment_state in ('not_paid', 'partial')
-                AND type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt');
+                AND move_type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt');
             '''
             self.env.cr.execute(query, (self.id, today))
             late_query_results = self.env.cr.dictfetchall()
@@ -324,16 +324,16 @@ class account_journal(models.Model):
         """
         return ('''
             SELECT
-                (CASE WHEN move.type IN ('out_refund', 'in_refund') THEN -1 ELSE 1 END) * move.amount_residual AS amount_total,
+                (CASE WHEN move.move_type IN ('out_refund', 'in_refund') THEN -1 ELSE 1 END) * move.amount_residual AS amount_total,
                 move.currency_id AS currency,
-                move.type,
+                move.move_type,
                 move.invoice_date,
                 move.company_id
             FROM account_move move
             WHERE move.journal_id = %(journal_id)s
             AND move.state = 'posted'
             AND move.payment_state in ('not_paid', 'partial')
-            AND move.type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt');
+            AND move.move_type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt');
         ''', {'journal_id': self.id})
 
     def _get_draft_bills_query(self):
@@ -344,16 +344,16 @@ class account_journal(models.Model):
         """
         return ('''
             SELECT
-                (CASE WHEN move.type IN ('out_refund', 'in_refund') THEN -1 ELSE 1 END) * move.amount_total AS amount_total,
+                (CASE WHEN move.move_type IN ('out_refund', 'in_refund') THEN -1 ELSE 1 END) * move.amount_total AS amount_total,
                 move.currency_id AS currency,
-                move.type,
+                move.move_type,
                 move.invoice_date,
                 move.company_id
             FROM account_move move
             WHERE move.journal_id = %(journal_id)s
             AND move.state = 'draft'
             AND move.payment_state in ('not_paid', 'partial')
-            AND move.type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt');
+            AND move.move_type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt');
         ''', {'journal_id': self.id})
 
     def _count_results_and_sum_amounts(self, results_dict, target_currency, curr_cache=None):
@@ -388,11 +388,11 @@ class account_journal(models.Model):
         ctx = self._context.copy()
         ctx['default_journal_id'] = self.id
         if self.type == 'sale':
-            ctx['default_type'] = 'out_refund' if ctx.get('refund') else 'out_invoice'
+            ctx['default_move_type'] = 'out_refund' if ctx.get('refund') else 'out_invoice'
         elif self.type == 'purchase':
-            ctx['default_type'] = 'in_refund' if ctx.get('refund') else 'in_invoice'
+            ctx['default_move_type'] = 'in_refund' if ctx.get('refund') else 'in_invoice'
         else:
-            ctx['default_type'] = 'entry'
+            ctx['default_move_type'] = 'entry'
             ctx['view_no_maturity'] = True
         return {
             'name': _('Create invoice/bill'),
@@ -466,7 +466,7 @@ class account_journal(models.Model):
             'search_default_journal_id': self.id,
         })
 
-        domain_type_field = action['res_model'] == 'account.move.line' and 'move_id.type' or 'type' # The model can be either account.move or account.move.line
+        domain_type_field = action['res_model'] == 'account.move.line' and 'move_id.move_type' or 'move_type' # The model can be either account.move or account.move.line
 
         if self.type == 'sale':
             action['domain'] = [(domain_type_field, 'in', ('out_invoice', 'out_refund', 'out_receipt'))]

@@ -44,7 +44,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         return rslt
 
     def _create_invoice_for_po(self, purchase_order, date):
-        move_form = Form(self.env['account.move'].with_context(default_type='in_invoice'))
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         move_form.invoice_date = date
         move_form.partner_id = self.test_partner
         move_form.currency_id = self.currency_two

@@ -409,7 +409,7 @@ class PurchaseOrder(models.Model):
         create_bill = self.env.context.get('create_bill', False)
         # override the context to get rid of the default filtering
         result['context'] = {
-            'default_type': 'in_invoice',
+            'default_move_type': 'in_invoice',
             'default_company_id': self.company_id.id,
             'default_purchase_id': self.id,
         }
@@ -532,9 +532,9 @@ class PurchaseOrderLine(models.Model):
             qty = 0.0
             for inv_line in line.invoice_lines:
                 if inv_line.move_id.state not in ['cancel']:
-                    if inv_line.move_id.type == 'in_invoice':
+                    if inv_line.move_id.move_type == 'in_invoice':
                         qty += inv_line.product_uom_id._compute_quantity(inv_line.quantity, line.product_uom)
-                    elif inv_line.move_id.type == 'in_refund':
+                    elif inv_line.move_id.move_type == 'in_refund':
                         qty -= inv_line.product_uom_id._compute_quantity(inv_line.quantity, line.product_uom)
             line.qty_invoiced = qty
 

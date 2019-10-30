@@ -141,14 +141,14 @@ class AccountMove(models.Model):
                 record.l10n_ch_isr_optical_line = left + '>' + record.l10n_ch_isr_number + '+ ' + record.l10n_ch_isr_subscription + '>'
 
     @api.depends(
-        'type', 'name', 'currency_id.name',
+        'move_type', 'name', 'currency_id.name',
         'invoice_partner_bank_id.l10n_ch_postal',
         'invoice_partner_bank_id.l10n_ch_isr_subscription_eur',
         'invoice_partner_bank_id.l10n_ch_isr_subscription_chf')
     def _compute_l10n_ch_isr_valid(self):
         """Returns True if all the data required to generate the ISR are present"""
         for record in self:
-            record.l10n_ch_isr_valid = record.type == 'out_invoice' and\
+            record.l10n_ch_isr_valid = record.move_type == 'out_invoice' and\
                 record.name and \
                 record.l10n_ch_isr_subscription and \
                 record.invoice_partner_bank_id.l10n_ch_postal and \

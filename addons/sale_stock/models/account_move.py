@@ -14,9 +14,9 @@ class AccountMove(models.Model):
         """ Overridden from stock_account.
         Returns the stock moves associated to this invoice."""
         rslt = super(AccountMove, self)._stock_account_get_last_step_stock_moves()
-        for invoice in self.filtered(lambda x: x.type == 'out_invoice'):
+        for invoice in self.filtered(lambda x: x.move_type == 'out_invoice'):
             rslt += invoice.mapped('invoice_line_ids.sale_line_ids.order_id.picking_ids.move_lines').filtered(lambda x: x.state == 'done' and x.location_dest_id.usage == 'customer')
-        for invoice in self.filtered(lambda x: x.type == 'out_refund'):
+        for invoice in self.filtered(lambda x: x.move_type == 'out_refund'):
             rslt += invoice.mapped('reversed_entry_id.invoice_line_ids.sale_line_ids.order_id.picking_ids.move_lines').filtered(lambda x: x.state == 'done' and x.location_id.usage == 'customer')
         return rslt
 
@@ -73,7 +73,7 @@ class AccountMove(models.Model):
 
         # Prepare and return lot_values
         qties_per_lot = defaultdict(lambda: 0)
-        if self.type == 'out_refund':
+        if self.move_type == 'out_refund':
             for ml in outgoing_sml:
                 qties_per_lot[ml.lot_id] -= ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_id)
             for ml in incoming_sml:

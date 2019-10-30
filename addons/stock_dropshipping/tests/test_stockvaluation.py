@@ -108,7 +108,7 @@ class TestStockValuation(StockAccountTestCommon):
         self.assertEqual(self.sale_order1.picking_ids.state, 'done')
 
         # create the vendor bill
-        move_form = Form(self.env['account.move'].with_context(default_type='in_invoice'))
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         move_form.partner_id = vendor1
         move_form.purchase_id = self.purchase_order1
         move_form.line_ids.tax_ids = False
