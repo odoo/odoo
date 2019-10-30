@@ -834,7 +834,23 @@ class ChromeBrowser():
             elif res and res.get('method') == 'Runtime.consoleAPICalled' and res.get('params', {}).get('type') in ('log', 'error', 'trace'):
                 logs = res.get('params', {}).get('args')
                 log_type = res.get('params', {}).get('type')
-                content = " ".join([str(log.get('value', '')) for log in logs])
+                content = []
+                for log in logs:
+                    text = ''
+                    if log.get('type') == 'string':
+                        text = str(log.get('value', '`Empty string`'))
+                    elif log.get('type') == 'object' and 'Error' in log.get('className', '') and log.get('description'):
+                        text = str(log.get('description'))
+                    else:
+                        type_ = log.get('className') or log.get('type')
+                        properties = log.get('preview', {}).get('properties')
+                        if log.get('type') == 'object' and properties and all(p.get('name') is not None and p.get('value') is not None for p in properties):
+                            elems = ['%s:%s' % (p.get('name'), "'%s'" % p.get('value') if p.get('type') == 'string' else p.get('value')) for p in properties]
+                            text = "%s\n{%s}" % (type_, ", ".join(elems))
+                        else:
+                            text = str(log)
+                    content.append(text)
+                content = " ".join(content)
                 if log_type == 'error':
                     self.take_screenshot()
                     self._save_screencast()
@@ -1026,7 +1042,10 @@ class HttpCase(TransactionCase):
             # flush updates to the database before launching the client side,
             # otherwise they simply won't be visible
             ICP.flush()
-            url = "%s%s" % (base_url, url_path or '/')
+            if re.match('[a-z]*:', url_path or ''): # about:, http:, ...
+                url = url_path
+            else:
+                url = "%s%s" % (base_url, url_path or '/')
             self._logger.info('Open "%s" in browser', url)
 
             if self.browser.screencasts_dir:
