@@ -24,7 +24,6 @@ from lxml import etree, html
 import odoo
 from . import config, pycompat
 from .misc import file_open, get_iso_codes, SKIPPED_ELEMENT_TYPES
-from .osutil import walksymlinks
 
 _logger = logging.getLogger(__name__)
 
@@ -1006,7 +1005,7 @@ def trans_generate(lang, modules, cr):
 
     for (path, recursive) in path_list:
         _logger.debug("Scanning files of modules at %s", path)
-        for root, dummy, files in walksymlinks(path):
+        for root, dummy, files in os.walk(path, followlinks=True):
             for fname in fnmatch.filter(files, '*.py'):
                 babel_extract_terms(fname, path, root,
                                     extract_keywords={'_': None, '_lt': None})
