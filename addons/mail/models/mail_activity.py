@@ -387,7 +387,11 @@ class MailActivity(models.Model):
         for activity in self:
             model_description = self.env['ir.model']._get(activity.res_model).display_name
             body = body_template.render(
-                dict(activity=activity, model_description=model_description),
+                dict(
+                    activity=activity,
+                    model_description=model_description,
+                    access_link=self.env['mail.thread']._notify_get_action_link('view', model=activity.res_model, res_id=activity.res_id),
+                ),
                 engine='ir.qweb',
                 minimal_qcontext=True
             )
