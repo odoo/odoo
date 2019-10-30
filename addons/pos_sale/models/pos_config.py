@@ -9,7 +9,7 @@ class PosConfig(models.Model):
 
     def _get_default_pos_team(self):
         try:
-            team = self.env.ref('sales_team.pos_sales_team')
+            team = self.env['crm.team'].sudo()._get_default_team_id(user_id=self.env.uid)
             return team if team.active else None
         except ValueError:
             return None 
