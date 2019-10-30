@@ -54,6 +54,9 @@ class TestPoSSetup(TestPoSCommon):
             self.assertAlmostEqual(get_price(pricelist, product), product.lst_price * 0.5)
 
     def test_taxes(self):
+        tax0 = self.taxes['tax0']
+        self.assertEqual(tax0.name, 'Tax 0%')
+        self.assertAlmostEqual(tax0.amount, 0)
         tax7 = self.taxes['tax7']
         self.assertEqual(tax7.name, 'Tax 7%')
         self.assertAlmostEqual(tax7.amount, 7)

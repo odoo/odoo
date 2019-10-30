@@ -279,6 +279,7 @@ class TestPoSCommon(TransactionCase):
         tax7: 7%, excluded in product price
         tax10: 10%, included in product price
         """
+        tax0 = self.env['account.tax'].create({'name': 'Tax 0%', 'amount': 0})
         tax7 = self.env['account.tax'].create({'name': 'Tax 7%', 'amount': 7})
         tax10 = self.env['account.tax'].create({'name': 'Tax 10%', 'amount': 10, 'price_include': True, 'include_base_amount': False})
         (tax7 | tax10).mapped('invoice_repartition_line_ids').write({'account_id': self.tax_received_account.id})
@@ -292,6 +293,7 @@ class TestPoSCommon(TransactionCase):
             tax.children_tax_ids.add(tax10)
 
         return {
+            'tax0': tax0,
             'tax7': tax7,
             'tax10': tax10,
             'tax_group_7_10': tax_group_7_10

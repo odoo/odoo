@@ -415,9 +415,19 @@ class PosSession(models.Model):
         #   - non-cash combine receivables (not for automatic reconciliation)
         MoveLine = self.env['account.move.line'].with_context(check_move_validity=False)
 
+        def is_zero(amount):
+            return float_is_zero(amount, precision_rounding=self.currency_id.rounding)
+
+        def create_move_lines(vals):
+            # Zero val move line should not be created.
+            return MoveLine.create([
+                val for val in vals
+                if not (is_zero(val['credit']) and is_zero(val['debit']))
+            ])
+
         tax_vals = [self._get_tax_vals(key, amounts['amount'], amounts['amount_converted'], amounts['base_amount']) for key, amounts in taxes.items()]
         # Check if all taxes lines have account_id assigned. If not, there are repartition lines of the tax that have no account_id.
-        tax_names_no_account = [line['name'] for line in tax_vals if line['account_id'] == False]
+        tax_names_no_account = [line['name'] for line in tax_vals if line['account_id'] == False and not (is_zero(line['credit']) and is_zero(line['debit']))]
         if len(tax_names_no_account) > 0:
             error_message = _(
                 'Unable to close and validate the session.\n'
@@ -425,7 +435,7 @@ class PosSession(models.Model):
             ) % ', '.join(tax_names_no_account)
             raise UserError(error_message)
 
-        MoveLine.create(
+        create_move_lines(
             tax_vals
             + [self._get_sale_vals(key, amounts['amount'], amounts['amount_converted']) for key, amounts in sales.items()]
             + [self._get_stock_expense_vals(key, amounts['amount'], amounts['amount_converted']) for key, amounts in stock_expense.items()]
@@ -452,7 +462,7 @@ class PosSession(models.Model):
         combine_cash_statement_line_vals = defaultdict(list)
         combine_cash_receivable_vals = defaultdict(list)
         for payment_method, amounts in combine_receivables_cash.items():
-            if not float_is_zero(amounts['amount'] , precision_rounding=self.currency_id.rounding):
+            if not is_zero(amounts['amount']):
                 statement = statements_by_journal_id[payment_method.cash_journal_id.id]
                 combine_cash_statement_line_vals[statement].append(self._get_statement_line_vals(statement, payment_method.receivable_account_id, amounts['amount']))
                 combine_cash_receivable_vals[statement].append(self._get_combine_receivable_vals(payment_method, amounts['amount'], amounts['amount_converted']))
@@ -465,8 +475,8 @@ class PosSession(models.Model):
         for statement in self.statement_ids:
             split_cash_statement_lines[statement] = BankStatementLine.create(split_cash_statement_line_vals[statement])
             combine_cash_statement_lines[statement] = BankStatementLine.create(combine_cash_statement_line_vals[statement])
-            split_cash_receivable_lines[statement] = MoveLine.create(split_cash_receivable_vals[statement])
-            combine_cash_receivable_lines[statement] = MoveLine.create(combine_cash_receivable_vals[statement])
+            split_cash_receivable_lines[statement] = create_move_lines(split_cash_receivable_vals[statement])
+            combine_cash_receivable_lines[statement] = create_move_lines(combine_cash_receivable_vals[statement])
 
         ## SECTION: Create invoice receivable lines for this session's move_id.
         # Keep reference of the invoice receivable lines because
@@ -476,7 +486,7 @@ class PosSession(models.Model):
         for receivable_account_id, amounts in invoice_receivables.items():
             invoice_receivable_vals[receivable_account_id].append(self._get_invoice_receivable_vals(receivable_account_id, amounts['amount'], amounts['amount_converted']))
         for receivable_account_id, vals in invoice_receivable_vals.items():
-            invoice_receivable_lines[receivable_account_id] = MoveLine.create(vals)
+            invoice_receivable_lines[receivable_account_id] = create_move_lines(vals)
 
         ## SECTION: Create stock output lines
         # Keep reference to the stock output lines because
@@ -486,7 +496,7 @@ class PosSession(models.Model):
         for output_account, amounts in stock_output.items():
             stock_output_vals[output_account].append(self._get_stock_output_vals(output_account, amounts['amount'], amounts['amount_converted']))
         for output_account, vals in stock_output_vals.items():
-            stock_output_lines[output_account] = MoveLine.create(vals)
+            stock_output_lines[output_account] = create_move_lines(vals)
 
         ## SECTION: Reconcile account move lines
         # reconcile cash receivable lines
