@@ -12,6 +12,7 @@ class AccountMoveReversal(models.TransientModel):
 
     move_id = fields.Many2one('account.move', string='Journal Entry',
         domain=[('state', '=', 'posted'), ('type', 'not in', ('out_refund', 'in_refund'))])
+    new_move_ids = fields.Many2many('account.move')
     date = fields.Date(string='Reversal date', default=fields.Date.context_today, required=True)
     reason = fields.Char(string='Reason')
     refund_method = fields.Selection(selection=[
@@ -79,6 +80,8 @@ class AccountMoveReversal(models.TransientModel):
             new_moves = moves._reverse_moves(default_values_list)
         else:
             return
+
+        self.new_move_ids = new_moves
 
         # Create action.
         action = {
