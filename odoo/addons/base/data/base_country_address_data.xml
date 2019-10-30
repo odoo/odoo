@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Main Address Format
+                street
+                street2
+                zip city state
+                Country_name -->
+        <!-- Partner country specific base view -->
+        <record id="view_partner_address" model="ir.ui.view">
+            <field name="name">res.partner.form</field>
+            <field name="model">res.partner</field>
+            <field name="priority" eval="100"/>
+            <field name="arch" type="xml">
+                <form string="Partner Address">
+                    <field name="is_company" invisible="1"/>
+                    <field name="type" invisible="1"/>
+                    <field name="parent_id" invisible="1"/>
+                    <div class="o_address_format o_zip_city">
+                        <field name="street" placeholder="Street..." class="o_address_street"/>
+                        <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                        <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                        <field name="city" placeholder="City" class="o_address_city"/>
+                        <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}'/>
+                        <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Address Format:
+                street
+                street2
+                Zip state City
+                Country_name -->
+        <record id="view_partner_address_street_zip_state_city_country" model="ir.ui.view">
+            <field name="name">view partner address form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_address"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('o_address_format')]" position="attributes">
+                    <attribute name="class">o_address_format</attribute>
+                </xpath>
+                <xpath expr="//field[@name='city']" position="replace"/>
+                <xpath expr="//field[@name='state_id']" position="after">
+                    <field name="city" placeholder="City" class="o_address_city"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Address Format:
+                street
+                street2
+                State Zip City
+                Country_name -->
+        <record id="view_partner_address_street_state_zip_city_country" model="ir.ui.view">
+            <field name="name">view partner address form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_address"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='zip']" position="before">
+                    <field name="state_id" position="move"/>
+                </xpath>
+                <xpath expr="//field[@name='zip']" position="after">
+                    <field name="city" position="move"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Address Format:
+                street
+                street2
+                state City zip
+                Country_name -->
+        <record id="view_partner_address_street_state_city_zip_country" model="ir.ui.view">
+            <field name="name">view partner address form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_address"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('o_address_format')]" position="attributes">
+                    <attribute name="class">o_address_format</attribute>
+                </xpath>
+                <xpath expr="//field[@name='city']" position="before">
+                    <field name="state_id" position="move"/>
+                </xpath>
+                <xpath expr="//field[@name='city']" position="after">
+                    <field name="zip" position="move"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Address Format:
+                street
+                street2
+                City Zip State_name
+                Country_name -->
+        <record id="view_partner_address_street_city_zip_state_country" model="ir.ui.view">
+            <field name="name">view partner address form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_address"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('o_address_format')]" position="attributes">
+                    <attribute name="class">o_address_format o_zip_state</attribute>
+                </xpath>
+                <xpath expr="//field[@name='city']" position="after">
+                    <field name="zip" position="move"/>
+                </xpath>
+                <xpath expr="//field[@name='country_id']" position="before">
+                    <field name="state_id" position="move"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Address Format:
+                city
+                street
+                street2
+                zip
+                state
+                Country_name -->
+        <record id="view_partner_address_city_street_zip_state_country" model="ir.ui.view">
+            <field name="name">view partner address form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_address"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('o_address_format')]" position="attributes">
+                    <attribute name="class">o_address_format o_zip_state</attribute>
+                </xpath>
+                <xpath expr="//field[@name='street']" position="before">
+                    <field name="city" position="move"/>
+                </xpath>
+                <xpath expr="//field[@name='country_id']" position="before">
+                    <field name="zip" position="move"/>
+                    <field name="state_id" position="move"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Address Format:
+                Country_name
+                Zip State City
+                Street
+                Street2 -->
+        <record id="view_partner_address_country_zip_state_city_street" model="ir.ui.view">
+            <field name="name">view partner address form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_address"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('o_address_format')]" position="attributes">
+                    <attribute name="class">o_address_format o_zip_state</attribute>
+                </xpath>
+                <xpath expr="//field[@name='street']" position="before">
+                    <field name="country_id" position="move"/>
+                    <field name="zip" position="move"/>
+                    <field name="state_id" position="move"/>
+                    <field name="city" position="move"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Address Format:
+                Country_name
+                Zip City State
+                Street
+                Street2 -->
+        <record id="view_partner_address_country_zip_city_state_street" model="ir.ui.view">
+            <field name="name">view partner address form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_address"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='street']" position="before">
+                    <field name="country_id" position="move"/>
+                    <field name="zip" position="move"/>
+                    <field name="city" position="move"/>
+                    <field name="state_id" position="move"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Address Format:
+                Country_name
+                Street
+                Street2
+                City Zip state-->
+        <record id="view_partner_address_country_street_city_zip_state" model="ir.ui.view">
+            <field name="name">view partner address form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_address"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('o_address_format')]" position="attributes">
+                    <attribute name="class">o_address_format o_zip_state</attribute>
+                </xpath>
+                <xpath expr="//field[@name='street']" position="before">
+                    <field name="country_id" position="move"/>
+                </xpath>
+                <xpath expr="//field[@name='city']" position="after">
+                    <field name="zip" position="move"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Address Format:
+                Country_name
+                state city
+                street
+                street2
+                Zip-->
+        <record id="view_partner_address_country_state_city_street_zip" model="ir.ui.view">
+            <field name="name">view partner address form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_address"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('o_address_format')]" position="attributes">
+                    <attribute name="class">o_address_format o_state_city</attribute>
+                </xpath>
+                <xpath expr="//field[@name='street']" position="before">
+                    <field name="country_id" position="move"/>
+                    <field name="state_id" position="move"/>
+                    <field name="city" position="move"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

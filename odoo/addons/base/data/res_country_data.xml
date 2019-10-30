@@ -13,6 +13,7 @@
             <field name="name">United Arab Emirates</field>
             <field name="code">ae</field>
             <field file="base/static/img/country_flags/ae.png" name="image" type="base64" />
+            <field eval="'%(street)s\n%(street2)s\n%(state_name)s\n%(country_name)s'" name="address_format"/>
             <field name="currency_id" ref="AED" />
             <field eval="971" name="phone_code" />
         </record>
@@ -61,8 +62,10 @@
         <record id="aq" model="res.country">
             <field name="name">Antarctica</field>
             <field name="code">aq</field>
+            <field eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" name="address_format"/>
             <field name="currency_id" ref="XCD" />
             <field eval="672" name="phone_code" />
+            <field name="address_view_id" ref="base.view_partner_address"/>
         </record>
         <record id="ar" model="res.country">
             <field name="name">Argentina</field>
@@ -71,7 +74,8 @@
             <field name="currency_id" ref="ARS" />
             <field eval="54" name="phone_code" />
             <field name="vat_label">CUIT</field>
-            <field eval="'%(street)s\n%(street2)s\n%(city)s %(state_name)s %(zip)s\n%(country_name)s'" name="address_format"/>
+            <field eval="'%(street)s\n%(street2)s\n%(state_code)s%(zip)s %(city)s\n%(country_name)s'" name="address_format"/>
+            <field name="address_view_id" ref="base.view_partner_address_street_state_zip_city_country"/>
         </record>
         <record id="as" model="res.country">
             <field name="name">American Samoa</field>
@@ -84,9 +88,11 @@
             <field name="name">Austria</field>
             <field name="code">at</field>
             <field file="base/static/img/country_flags/at.png" name="image" type="base64" />
+            <field eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="EUR" />
             <field eval="43" name="phone_code" />
             <field name="vat_label">VAT</field>
+            <field name="address_view_id" ref="base.view_partner_address"/>
         </record>
         <record id="au" model="res.country">
             <field name="name">Australia</field>
@@ -135,6 +141,7 @@
             <field name="name">Bangladesh</field>
             <field name="code">bd</field>
             <field file="base/static/img/country_flags/bd.png" name="image" type="base64" />
+            <field eval="'%(street)s\n%(street2)s\n%(city)s %(zip)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="BDT" />
             <field eval="880" name="phone_code" />
         </record>
@@ -146,6 +153,7 @@
             <field name="currency_id" ref="EUR" />
             <field eval="32" name="phone_code" />
             <field name="vat_label">VAT</field>
+            <field name="address_view_id" ref="base.view_partner_address"/>
         </record>
         <record id="bf" model="res.country">
             <field name="name">Burkina Faso</field>
@@ -256,8 +264,10 @@
             <field name="name">Belarus</field>
             <field name="code">by</field>
             <field file="base/static/img/country_flags/by.png" name="image" type="base64" />
+            <field eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="BYN" />
             <field eval="375" name="phone_code" />
+            <field name="address_view_id" ref="base.view_partner_address"/>
         </record>
         <record id="bz" model="res.country">
             <field name="name">Belize</field>
@@ -310,6 +320,7 @@
             <field name="address_format" eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" />
             <field name="currency_id" ref="CHF" />
             <field eval="41" name="phone_code" />
+            <field name="address_view_id" ref="base.view_partner_address"/>
         </record>
         <record id="ci" model="res.country">
             <field name="name">Côte d'Ivoire</field>
@@ -329,8 +340,10 @@
             <field name="name">Chile</field>
             <field name="code">cl</field>
             <field file="base/static/img/country_flags/cl.png" name="image" type="base64" />
+             <field name="address_format" eval="'%(street)s\n%(street2)s\n%(zip)s\n%(city)s\n%(state_name)s\n%(country_name)s'"/>
             <field name="currency_id" ref="CLP" />
             <field eval="56" name="phone_code" />
+            <field name="address_view_id" ref="base.view_partner_address"/>
         </record>
         <record id="cm" model="res.country">
             <field name="name">Cameroon</field>
@@ -346,6 +359,7 @@
             <field eval="'%(country_name)s, %(zip)s\n%(state_name)s %(city)s %(street)s %(street2)s'" name="address_format" />
             <field name="currency_id" ref="CNY" />
             <field eval="86" name="phone_code" />
+            <field name="address_view_id" ref="base.view_partner_address_country_state_city_street_zip"/>
         </record>
         <record id="co" model="res.country">
             <field name="name">Colombia</field>
@@ -403,9 +417,11 @@
             <field name="name">Czech Republic</field>
             <field name="code">cz</field>
             <field file="base/static/img/country_flags/cz.png" name="image" type="base64" />
+            <field eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="CZK" />
             <field eval="420" name="phone_code" />
             <field name="vat_label">VAT</field>
+            <field name="address_view_id" ref="base.view_partner_address"/>
         </record>
         <record id="de" model="res.country">
             <field name="name">Germany</field>
@@ -415,6 +431,7 @@
             <field name="currency_id" ref="EUR" />
             <field eval="49" name="phone_code" />
             <field name="vat_label">VAT</field>
+            <field name="address_view_id" ref="base.view_partner_address"/>
         </record>
         <record id="dj" model="res.country">
             <field name="name">Djibouti</field>
@@ -431,6 +448,7 @@
             <field name="currency_id" ref="DKK" />
             <field eval="45" name="phone_code" />
             <field name="vat_label">VAT</field>
+            <field name="address_view_id" ref="base.view_partner_address"/>
         </record>
         <record id="dm" model="res.country">
             <field name="name">Dominica</field>
@@ -466,9 +484,11 @@
             <field name="name">Estonia</field>
             <field name="code">ee</field>
             <field file="base/static/img/country_flags/ee.png" name="image" type="base64" />
+            <field eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="EUR" />
             <field eval="372" name="phone_code" />
             <field name="vat_label">VAT</field>
+            <field name="address_view_id" ref="base.view_partner_address"/>
         </record>
         <record id="eg" model="res.country">
             <field name="name">Egypt</field>
@@ -494,10 +514,11 @@
             <field name="name">Spain</field>
             <field name="code">es</field>
             <field file="base/static/img/country_flags/es.png" name="image" type="base64" />
-            <field eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" name="address_format" />
+            <field eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(state_name)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="EUR" />
             <field eval="34" name="phone_code" />
             <field name="vat_label">VAT</field>
+            <field name="address_view_id" ref="base.view_partner_address"/>
         </record>
         <record id="et" model="res.country">
             <field name="name">Ethiopia</field>
@@ -514,6 +535,7 @@
             <field name="currency_id" ref="EUR" />
             <field eval="358" name="phone_code" />
             <field name="vat_label">VAT</field>
+            <field name="address_view_id" ref="base.view_partner_address"/>
         </record>
         <record id="fj" model="res.country">
             <field name="name">Fiji</field>
@@ -551,6 +573,7 @@
             <field name="currency_id" ref="EUR" />
             <field eval="33" name="phone_code" />
             <field name="vat_label">VAT</field>
+            <field name="address_view_id" ref="base.view_partner_address"/>
         </record>
         <record id="ga" model="res.country">
             <field name="name">Gabon</field>
@@ -638,9 +661,11 @@
             <field name="name">Greece</field>
             <field name="code">gr</field>
             <field file="base/static/img/country_flags/gr.png" name="image" type="base64" />
+            <field eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="EUR" />
             <field eval="30" name="phone_code" />
             <field name="vat_label">VAT</field>
+            <field name="address_view_id" ref="base.view_partner_address"/>
         </record>
         <record id="gs" model="res.country">
             <field name="name">South Georgia and the South Sandwich Islands</field>
@@ -682,6 +707,7 @@
             <field name="name">Hong Kong</field>
             <field name="code">hk</field>
             <field file="base/static/img/country_flags/hk.png" name="image" type="base64" />
+            <field eval="'%(street)s\n%(street2)s\n%(city)s\n%(state_name)s\n%(zip)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="HKD" />
             <field eval="852" name="phone_code" />
         </record>
@@ -706,6 +732,7 @@
             <field eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s \n%(country_name)s'" name="address_format" />
             <field eval="385" name="phone_code" />
             <field name="vat_label">VAT</field>
+            <field name="address_view_id" ref="base.view_partner_address"/>
         </record>
         <record id="ht" model="res.country">
             <field name="name">Haiti</field>
@@ -718,21 +745,26 @@
             <field name="name">Hungary</field>
             <field name="code">hu</field>
             <field file="base/static/img/country_flags/hu.png" name="image" type="base64" />
+            <field eval="'%(city)s\n%(street)s\n%(street2)s\n%(zip)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="HUF" />
             <field eval="36" name="phone_code" />
             <field name="vat_label">VAT</field>
+            <field name="address_view_id" ref="base.view_partner_address_city_street_zip_state_country"/>
         </record>
         <record id="id" model="res.country">
             <field name="name">Indonesia</field>
             <field name="code">id</field>
             <field file="base/static/img/country_flags/id.png" name="image" type="base64" />
+            <field eval="'%(street)s\n%(street2)s\n%(city)s %(zip)s\n%(state_name)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="IDR" />
             <field eval="62" name="phone_code" />
+            <field name="address_view_id" ref="base.view_partner_address_street_city_zip_state_country"/>
         </record>
         <record id="ie" model="res.country">
             <field name="name">Ireland</field>
             <field name="code">ie</field>
             <field file="base/static/img/country_flags/ie.png" name="image" type="base64" />
+            <field eval="'%(street)s\n%(street2)s\n%(city)s\n%(state_code)s\n%(zip)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="EUR" />
             <field eval="353" name="phone_code" />
             <field name="vat_label">VAT</field>
@@ -741,8 +773,10 @@
             <field name="name">Israel</field>
             <field name="code">il</field>
             <field file="base/static/img/country_flags/il.png" name="image" type="base64" />
+            <field eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="ILS" />
             <field eval="972" name="phone_code" />
+            <field name="address_view_id" ref="base.view_partner_address"/>
         </record>
         <record id="im" model="res.country">
             <field name="name">Isle of Man</field>
@@ -759,6 +793,7 @@
             <field name="currency_id" ref="INR" />
             <field eval="91" name="phone_code" />
             <field name="vat_label">GSTIN</field>
+            <field name="address_view_id" ref="base.view_partner_address_street_city_zip_state_country"/>
         </record>
         <record id="io" model="res.country">
             <field name="name">British Indian Ocean Territory</field>
@@ -785,16 +820,20 @@
             <field name="name">Iceland</field>
             <field name="code">is</field>
             <field file="base/static/img/country_flags/is.png" name="image" type="base64" />
+            <field eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="ISK" />
             <field eval="354" name="phone_code" />
+            <field name="address_view_id" ref="base.view_partner_address"/>
         </record>
         <record id="it" model="res.country">
             <field name="name">Italy</field>
             <field name="code">it</field>
             <field file="base/static/img/country_flags/it.png" name="image" type="base64" />
             <field name="currency_id" ref="EUR" />
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s %(state_name)s\n%(country_name)s'" />
             <field eval="39" name="phone_code" />
             <field name="vat_label">VAT</field>
+            <field name="address_view_id" ref="base.view_partner_address"/>
         </record>
         <record id="je" model="res.country">
             <field name="name">Jersey</field>
@@ -822,9 +861,10 @@
             <field name="code">jp</field>
             <field file="base/static/img/country_flags/jp.png" name="image" type="base64" />
             <field name="currency_id" ref="JPY" />
-            <field name="address_format" eval="'%(zip)s\n%(state_name)s %(city)s\n%(street)s\n%(street2)s\n%(country_name)s'"/>
+            <field name="address_format" eval="'%(country_name)s\n%(zip)s\n%(state_name)s %(city)s\n%(street)s\n%(street2)s\n'"/>
             <field name="name_position">after</field>
             <field eval="81" name="phone_code" />
+            <field name="address_view_id" ref="base.view_partner_address_country_zip_state_city_street"/>
         </record>
         <record id="ke" model="res.country">
             <field name="name">Kenya</field>
@@ -879,8 +919,10 @@
             <field name="name">South Korea</field>
             <field name="code">kr</field>
             <field file="base/static/img/country_flags/kr.png" name="image" type="base64" />
+            <field name="address_format" eval="'%(country_name)s\n%(street)s\n%(street2)s\n%(city)s %(zip)s %(state_name)s'"/>
             <field name="currency_id" ref="KRW" />
             <field eval="82" name="phone_code" />
+            <field name="address_view_id" ref="base.view_partner_address_country_street_city_zip_state"/>
         </record>
         <record id="kw" model="res.country">
             <field name="name">Kuwait</field>
@@ -928,16 +970,19 @@
             <field name="name">Liechtenstein</field>
             <field name="code">li</field>
             <field file="base/static/img/country_flags/li.png" name="image" type="base64" />
-            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" />
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s %(state_name)s\n%(country_name)s'" />
             <field name="currency_id" ref="CHF" />
             <field eval="423" name="phone_code" />
+            <field name="address_view_id" ref="base.view_partner_address"/>
         </record>
         <record id="lk" model="res.country">
             <field name="name">Sri Lanka</field>
             <field name="code">lk</field>
             <field file="base/static/img/country_flags/lk.png" name="image" type="base64" />
+            <field eval="'%(street)s\n%(street2)s\n%(city)s\n%(zip)s\n%(state_name)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="LKR" />
             <field eval="94" name="phone_code" />
+            <field name="address_view_id" ref="base.view_partner_address_street_city_zip_state_country"/>
         </record>
         <record id="lr" model="res.country">
             <field name="name">Liberia</field>
@@ -1064,6 +1109,7 @@
             <field name="name">Macau</field>
             <field name="code">mo</field>
             <field file="base/static/img/country_flags/mo.png" name="image" type="base64" />
+            <field eval="'%(street)s\n%(street2)s\n%(city)s\n%(state_name)s\n%(zip)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="MOP" />
             <field eval="853" name="phone_code" />
         </record>
@@ -1133,13 +1179,16 @@
             <field eval="52" name="phone_code" />
             <field name="vat_label">RFC</field>
             <field eval="'%(street)s %(street2)s\n%(zip)s %(city)s, %(state_code)s\n%(country_name)s'"  name="address_format" />
+            <field name="address_view_id" ref="base.view_partner_address"/>
         </record>
         <record id="my" model="res.country">
             <field name="name">Malaysia</field>
             <field name="code">my</field>
             <field file="base/static/img/country_flags/my.png" name="image" type="base64" />
+            <field eval="'%(street)s %(street2)s\n%(zip)s %(city)s %(state_name)s\n%(country_name)s'"  name="address_format" />
             <field name="currency_id" ref="MYR" />
             <field eval="60" name="phone_code" />
+            <field name="address_view_id" ref="base.view_partner_address"/>
         </record>
         <record id="mz" model="res.country">
             <field name="name">Mozambique</field>
@@ -1198,13 +1247,16 @@
             <field name="currency_id" ref="EUR" />
             <field eval="31" name="phone_code" />
             <field name="vat_label">VAT</field>
+            <field name="address_view_id" ref="base.view_partner_address"/>
         </record>
         <record id="no" model="res.country">
             <field name="name">Norway</field>
             <field name="code">no</field>
             <field file="base/static/img/country_flags/no.png" name="image" type="base64" />
+            <field eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="NOK" />
             <field eval="47" name="phone_code" />
+            <field name="address_view_id" ref="base.view_partner_address"/>
         </record>
         <record id="np" model="res.country">
             <field name="name">Nepal</field>
@@ -1231,13 +1283,16 @@
             <field name="name">New Zealand</field>
             <field name="code">nz</field>
             <field file="base/static/img/country_flags/nz.png" name="image" type="base64" />
+            <field eval="'%(street)s\n%(street2)s\n%(state_name)s\n%(city)s %(zip)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="NZD" />
             <field eval="64" name="phone_code" />
+            <field name="address_view_id" ref="base.view_partner_address_street_state_city_zip_country"/>
         </record>
         <record id="om" model="res.country">
             <field name="name">Oman</field>
             <field name="code">om</field>
             <field file="base/static/img/country_flags/om.png" name="image" type="base64" />
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(city)s\n%(country_name)s'" />
             <field name="currency_id" ref="OMR" />
             <field eval="968" name="phone_code" />
         </record>
@@ -1253,8 +1308,10 @@
             <field name="name">Peru</field>
             <field name="code">pe</field>
             <field file="base/static/img/country_flags/pe.png" name="image" type="base64" />
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(city)s %(zip)s\n%(country_name)s'" />
             <field name="currency_id" ref="PEN" />
             <field eval="51" name="phone_code" />
+            <field name="address_view_id" ref="base.view_partner_address_street_city_zip_state_country"/>
         </record>
         <record id="pf" model="res.country">
             <field name="name">French Polynesia</field>
@@ -1274,15 +1331,19 @@
             <field name="name">Philippines</field>
             <field name="code">ph</field>
             <field file="base/static/img/country_flags/ph.png" name="image" type="base64" />
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(city)s\n%(zip)s %(state_name)s\n%(country_name)s'" />
             <field name="currency_id" ref="PHP" />
             <field eval="63" name="phone_code" />
+            <field name="address_view_id" ref="base.view_partner_address_street_city_zip_state_country"/>
         </record>
         <record id="pk" model="res.country">
             <field name="name">Pakistan</field>
             <field name="code">pk</field>
             <field file="base/static/img/country_flags/pk.png" name="image" type="base64" />
+            <field eval="'%(street)s\n%(street2)s\n%(city)s\n%(zip)s\n%(state_name)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="PKR" />
             <field eval="92" name="phone_code" />
+            <field name="address_view_id" ref="base.view_partner_address_street_city_zip_state_country"/>
         </record>
         <record id="pl" model="res.country">
             <field name="name">Poland</field>
@@ -1292,6 +1353,7 @@
             <field name="currency_id" ref="PLN" />
             <field eval="48" name="phone_code" />
             <field name="vat_label">VAT</field>
+            <field name="address_view_id" ref="base.view_partner_address"/>
         </record>
         <record id="pm" model="res.country">
             <field name="name">Saint Pierre and Miquelon</field>
@@ -1324,9 +1386,11 @@
             <field name="name">Portugal</field>
             <field name="code">pt</field>
             <field file="base/static/img/country_flags/pt.png" name="image" type="base64" />
+            <field eval="'%(street)s\n%(street2)s\n%(city)s\n%(zip)s %(state_name)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="EUR" />
             <field eval="351" name="phone_code" />
             <field name="vat_label">VAT</field>
+            <field name="address_view_id" ref="base.view_partner_address_street_city_zip_state_country"/>
         </record>
         <record id="pw" model="res.country">
             <field name="name">Palau</field>
@@ -1346,6 +1410,7 @@
             <field name="name">Qatar</field>
             <field name="code">qa</field>
             <field file="base/static/img/country_flags/qa.png" name="image" type="base64" />
+            <field eval="'%(street)s\n%(street2)s\n%(city)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="QAR" />
             <field eval="974" name="phone_code" />
         </record>
@@ -1367,13 +1432,16 @@
             <field name="name">Serbia</field>
             <field name="code">rs</field>
             <field file="base/static/img/country_flags/rs.png" name="image" type="base64" />
+            <field eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="RSD" />
             <field eval="381" name="phone_code" />
+            <field name="address_view_id" ref="base.view_partner_address"/>
         </record>
         <record id="ru" model="res.country">
             <field name="name">Russian Federation</field>
             <field name="code">ru</field>
             <field file="base/static/img/country_flags/ru.png" name="image" type="base64" />
+            <field eval="'%(street)s\n%(street2)s\n%(city)s\n%(state_name)s\n%(zip)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="RUB" />
             <field eval="7" name="phone_code" />
         </record>
@@ -1388,8 +1456,10 @@
             <field name="name">Saudi Arabia</field>
             <field name="code">sa</field>
             <field file="base/static/img/country_flags/sa.png" name="image" type="base64" />
+            <field eval="'%(street)s\n%(street2)s\n%(city)s %(zip)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="SAR" />
             <field eval="966" name="phone_code" />
+            <field name="address_view_id" ref="base.view_partner_address_street_city_zip_state_country"/>
         </record>
         <record id="sb" model="res.country">
             <field name="name">Solomon Islands</field>
@@ -1416,17 +1486,21 @@
             <field name="name">Sweden</field>
             <field name="code">se</field>
             <field file="base/static/img/country_flags/se.png" name="image" type="base64" />
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s %(state_name)s\n%(country_name)s'"/>
             <field name="currency_id" ref="SEK" />
             <field eval="46" name="phone_code" />
             <field name="vat_label">VAT</field>
+            <field name="address_view_id" ref="base.view_partner_address"/>
         </record>
         <record id="sg" model="res.country">
             <field name="name">Singapore</field>
             <field name="code">sg</field>
             <field file="base/static/img/country_flags/sg.png" name="image" type="base64" />
+            <field eval="'%(street)s\n%(street2)s\n%(city)s %(zip)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="SGD" />
             <field eval="65" name="phone_code" />
             <field name="vat_label">GST No.</field>
+            <field name="address_view_id" ref="base.view_partner_address_street_city_zip_state_country"/>
         </record>
         <record id="sh" model="res.country">
             <field name="name">Saint Helena, Ascension and Tristan da Cunha</field>
@@ -1439,9 +1513,11 @@
             <field name="name">Slovenia</field>
             <field name="code">si</field>
             <field file="base/static/img/country_flags/si.png" name="image" type="base64" />
+            <field eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="EUR" />
             <field eval="386" name="phone_code" />
             <field name="vat_label">VAT</field>
+            <field name="address_view_id" ref="base.view_partner_address"/>
         </record>
         <record id="sj" model="res.country">
             <field name="name">Svalbard and Jan Mayen</field>
@@ -1453,9 +1529,11 @@
             <field name="name">Slovakia</field>
             <field name="code">sk</field>
             <field file="base/static/img/country_flags/sk.png" name="image" type="base64" />
+            <field eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="SKK" />
             <field eval="421" name="phone_code" />
             <field name="vat_label">VAT</field>
+            <field name="address_view_id" ref="base.view_partner_address"/>
         </record>
         <record id="sl" model="res.country">
             <field name="name">Sierra Leone</field>
@@ -1615,9 +1693,10 @@
             <field name="name">Turkey</field>
             <field name="code">tr</field>
             <field file="base/static/img/country_flags/tr.png" name="image" type="base64" />
-            <field eval="'%(street)s\n%(street2)s\n%(city)s %(state_name)s %(zip)s\n%(country_name)s'" name="address_format" />
+            <field eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s %(state_name)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="TRY" />
             <field eval="90" name="phone_code" />
+            <field name="address_view_id" ref="base.view_partner_address"/>
         </record>
         <record id="tt" model="res.country">
             <field name="name">Trinidad and Tobago</field>
@@ -1636,8 +1715,10 @@
         <record id="tw" model="res.country">
             <field name="name">Taiwan</field>
             <field name="code">tw</field>
+            <field eval="'%(country_name)s\n%(zip)s %(city)s %(state_name)s\n%(street)s\n%(street2)s'" name="address_format" />
             <field name="currency_id" ref="TWD" />
             <field eval="886" name="phone_code" />
+            <field name="address_view_id" ref="base.view_partner_address_country_zip_city_state_street"/>
         </record>
         <record id="tz" model="res.country">
             <field name="name">Tanzania</field>
@@ -1650,6 +1731,7 @@
             <field name="name">Ukraine</field>
             <field name="code">ua</field>
             <field file="base/static/img/country_flags/ua.png" name="image" type="base64" />
+            <field eval="'%(street)s\n%(street2)s\n%(city)s\n%(state_name)s\n%(zip)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="UAH" />
             <field eval="380" name="phone_code" />
         </record>
@@ -1738,7 +1820,8 @@
             <field file="base/static/img/country_flags/vn.png" name="image" type="base64" />
             <field name="currency_id" ref="VND" />
             <field eval="84" name="phone_code" />
-            <field eval="'%(street)s\n%(street2)s\n%(city)s\n%(state_name)s %(country_name)s'" name="address_format" />
+            <field eval="'%(street)s\n%(street2)s\n%(state_name)s\n %(country_name)s'" name="address_format" />
+            <field name="address_view_id" ref="base.view_partner_address_street_state_zip_city_country"/>
         </record>
         <record id="vu" model="res.country">
             <field name="name">Vanuatu</field>
