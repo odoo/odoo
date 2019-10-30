@@ -150,7 +150,7 @@ class AcquirerAdyen(models.Model):
 
     @api.multi
     def adyen_form_generate_values(self, values):
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        base_url = self.get_base_url()
         # tmp
         import datetime
         from dateutil import relativedelta
