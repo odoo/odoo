@@ -84,7 +84,7 @@ class AccountMove(models.Model):
         for inv in self.filtered(lambda x: x.company_id.l10n_ar_company_requires_vat):
             purchase_aliquots = 'not_zero'
             # we require a single vat on each invoice line except from some purchase documents
-            if inv.type in ['in_invoice', 'in_refund'] and inv.l10n_latam_document_type_id.purchase_aliquots == 'zero':
+            if inv.move_type in ['in_invoice', 'in_refund'] and inv.l10n_latam_document_type_id.purchase_aliquots == 'zero':
                 purchase_aliquots = 'zero'
             for line in inv.mapped('invoice_line_ids').filtered(lambda x: x.display_type not in ('line_section', 'line_note')):
                 vat_taxes = line.tax_ids.filtered(lambda x: x.tax_group_id.l10n_ar_vat_afip_code)

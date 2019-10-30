@@ -99,7 +99,7 @@ class TestReconciliationMatchingRules(AccountTestCommon):
     @classmethod
     def _create_invoice_line(cls, amount, partner, type):
         ''' Create an invoice on the fly.'''
-        invoice_form = Form(cls.env['account.move'].with_context(default_type=type, default_invoice_date='2019-09-01', default_date='2019-09-01'))
+        invoice_form = Form(cls.env['account.move'].with_context(default_move_type=type, default_invoice_date='2019-09-01', default_date='2019-09-01'))
         invoice_form.partner_id = partner
         with invoice_form.invoice_line_ids.new() as invoice_line_form:
             invoice_line_form.name = 'xxxx'

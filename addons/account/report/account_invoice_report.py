@@ -21,7 +21,7 @@ class AccountInvoiceReport(models.Model):
     commercial_partner_id = fields.Many2one('res.partner', string='Partner Company', help="Commercial Entity")
     country_id = fields.Many2one('res.country', string="Country")
     invoice_user_id = fields.Many2one('res.users', string='Salesperson', readonly=True)
-    type = fields.Selection([
+    move_type = fields.Selection([
         ('out_invoice', 'Customer Invoice'),
         ('in_invoice', 'Vendor Bill'),
         ('out_refund', 'Customer Credit Note'),
@@ -58,7 +58,7 @@ class AccountInvoiceReport(models.Model):
 
     _depends = {
         'account.move': [
-            'name', 'state', 'type', 'partner_id', 'invoice_user_id', 'fiscal_position_id',
+            'name', 'state', 'move_type', 'partner_id', 'invoice_user_id', 'fiscal_position_id',
             'invoice_date', 'invoice_date_due', 'invoice_payment_term_id', 'invoice_partner_bank_id',
         ],
         'account.move.line': [
@@ -88,7 +88,7 @@ class AccountInvoiceReport(models.Model):
                 line.partner_id AS commercial_partner_id,
                 move.name,
                 move.state,
-                move.type,
+                move.move_type,
                 move.partner_id,
                 move.invoice_user_id,
                 move.fiscal_position_id,
@@ -148,7 +148,7 @@ class AccountInvoiceReport(models.Model):
     @api.model
     def _where(self):
         return '''
-            WHERE move.type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')
+            WHERE move.move_type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')
                 AND line.account_id IS NOT NULL
                 AND NOT line.exclude_from_invoice_tab
         '''
@@ -168,7 +168,7 @@ class AccountInvoiceReport(models.Model):
                 line.partner_id,
                 move.name,
                 move.state,
-                move.type,
+                move.move_type,
                 move.amount_residual_signed,
                 move.amount_total_signed,
                 move.partner_id,

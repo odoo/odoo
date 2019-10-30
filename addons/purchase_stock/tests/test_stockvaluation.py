@@ -376,7 +376,7 @@ class TestStockValuationWithCOA(AccountTestCommon):
         receipt_po1.move_lines.quantity_done = 10
         receipt_po1.button_validate()
 
-        move_form = Form(self.env['account.move'].with_context(default_type='in_invoice'))
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         move_form.partner_id = self.partner_id
         move_form.purchase_id = po1
         invoice_po1 = move_form.save()
@@ -401,7 +401,7 @@ class TestStockValuationWithCOA(AccountTestCommon):
         receipt_po2.move_lines.quantity_done = 10
         receipt_po2.button_validate()
 
-        move_form = Form(self.env['account.move'].with_context(default_type='in_invoice'))
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         move_form.partner_id = self.partner_id
         move_form.purchase_id = po2
         invoice_po2 = move_form.save()
@@ -425,7 +425,7 @@ class TestStockValuationWithCOA(AccountTestCommon):
         self.assertEqual(self.product1.value_svl, 200)
 
         # create a credit note for po2
-        move_form = Form(self.env['account.move'].with_context(default_type='in_refund'))
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_refund'))
         move_form.partner_id = self.partner_id
         move_form.purchase_id = po2
         with move_form.invoice_line_ids.edit(0) as line_form:
@@ -460,7 +460,7 @@ class TestStockValuationWithCOA(AccountTestCommon):
         receipt.button_validate()
 
         # Create an invoice with a different price
-        move_form = Form(self.env['account.move'].with_context(default_type='in_invoice'))
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         move_form.partner_id = order.partner_id
         move_form.purchase_id = order
         with move_form.invoice_line_ids.edit(0) as line_form:
@@ -575,8 +575,8 @@ class TestStockValuationWithCOA(AccountTestCommon):
         })
         po.button_confirm()
 
-        inv = self.env['account.move'].with_context(default_type='in_invoice').create({
-            'type': 'in_invoice',
+        inv = self.env['account.move'].with_context(default_move_type='in_invoice').create({
+            'move_type': 'in_invoice',
             'invoice_date': date_po,
             'date': date_po,
             'currency_id': self.eur_currency.id,
@@ -708,8 +708,8 @@ class TestStockValuationWithCOA(AccountTestCommon):
         line_product_average = po.order_line.filtered(lambda l: l.product_id == self.product1)
         line_product_standard = po.order_line.filtered(lambda l: l.product_id == product_standard)
 
-        inv = self.env['account.move'].with_context(default_type='in_invoice').create({
-            'type': 'in_invoice',
+        inv = self.env['account.move'].with_context(default_move_type='in_invoice').create({
+            'move_type': 'in_invoice',
             'invoice_date': date_invoice,
             'date': date_invoice,
             'currency_id': self.eur_currency.id,
@@ -883,8 +883,8 @@ class TestStockValuationWithCOA(AccountTestCommon):
         self.assertAlmostEqual(product_avg.standard_price, 42.86)
 
         today = date_invoice
-        inv = self.env['account.move'].with_context(default_type='in_invoice').create({
-            'type': 'in_invoice',
+        inv = self.env['account.move'].with_context(default_move_type='in_invoice').create({
+            'move_type': 'in_invoice',
             'invoice_date': date_invoice,
             'date': date_invoice,
             'currency_id': self.eur_currency.id,
@@ -1060,8 +1060,8 @@ class TestStockValuationWithCOA(AccountTestCommon):
         self.assertAlmostEqual(product_avg.standard_price, 42.86)
 
         today = date_invoice
-        inv = self.env['account.move'].with_context(default_type='in_invoice').create({
-            'type': 'in_invoice',
+        inv = self.env['account.move'].with_context(default_move_type='in_invoice').create({
+            'move_type': 'in_invoice',
             'invoice_date': date_invoice,
             'date': date_invoice,
             'currency_id': self.eur_currency.id,
@@ -1090,8 +1090,8 @@ class TestStockValuationWithCOA(AccountTestCommon):
         self.assertAlmostEqual(product_avg.standard_price, 40.18)
 
         today = date_invoice1
-        inv1 = self.env['account.move'].with_context(default_type='in_invoice').create({
-            'type': 'in_invoice',
+        inv1 = self.env['account.move'].with_context(default_move_type='in_invoice').create({
+            'move_type': 'in_invoice',
             'invoice_date': date_invoice1,
             'date': date_invoice1,
             'currency_id': self.eur_currency.id,
@@ -1215,7 +1215,7 @@ class TestStockValuationWithCOA(AccountTestCommon):
         receipt.button_validate()
 
         # Create an invoice with a different price and a discount
-        invoice_form = Form(self.env['account.move'].with_context(default_type='in_invoice'))
+        invoice_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         invoice_form.purchase_id = order
         with invoice_form.invoice_line_ids.edit(0) as line_form:
             line_form.price_unit = 100.0
@@ -1262,7 +1262,7 @@ class TestStockValuationWithCOA(AccountTestCommon):
         receipt.button_validate()
 
         # Create an invoice with a different price and a discount
-        invoice_form = Form(self.env['account.move'].with_context(default_type='in_invoice'))
+        invoice_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         invoice_form.purchase_id = order
         with invoice_form.invoice_line_ids.edit(0) as line_form:
             line_form.tax_ids.clear()
@@ -1309,7 +1309,7 @@ class TestStockValuationWithCOA(AccountTestCommon):
         receipt.button_validate()
 
         # Create an invoice with a different price and a discount
-        invoice_form = Form(self.env['account.move'].with_context(default_type='in_invoice'))
+        invoice_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         invoice_form.purchase_id = order
         with invoice_form.invoice_line_ids.edit(0) as line_form:
             line_form.price_unit = 100.0

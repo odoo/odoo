@@ -110,7 +110,7 @@ class AccountMove(models.Model):
                     continue
 
                 # Compute accounting fields.
-                sign = -1 if move.type == 'out_refund' else 1
+                sign = -1 if move.move_type == 'out_refund' else 1
                 price_unit = line._stock_account_get_anglo_saxon_price_unit()
                 balance = sign * line.quantity * price_unit
 

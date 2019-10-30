@@ -24,7 +24,7 @@ class TestAccountTax(AccountTestInvoicingCommon):
         self.company_data['default_tax_sale'].name = 'test_changing_account_company'
 
         self.env['account.move'].create({
-            'type': 'out_invoice',
+            'move_type': 'out_invoice',
             'date': '2019-01-01',
             'invoice_line_ids': [
                 (0, 0, {

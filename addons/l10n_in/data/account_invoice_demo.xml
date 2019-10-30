@@ -3,7 +3,7 @@
 
     <!-- Demo of B2B (business-to-business) Taxable supplies made to other registered person.-->
     <record id="demo_invoice_b2b" model="account.move">
-        <field name="type">out_invoice</field>
+        <field name="move_type">out_invoice</field>
         <field name="partner_id" ref="l10n_in.res_partner_registered_customer"/>
         <field name="l10n_in_reseller_partner_id" ref="l10n_in.res_partner_reseller"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
@@ -48,7 +48,7 @@
 
     <!-- Demo of B2CS (business to consumer small) Taxable supplies made to other unregistered Person and below INR 2.5 lakhs invoice value.-->
     <record id="demo_invoice_b2cs" model="account.move">
-        <field name="type">out_invoice</field>
+        <field name="move_type">out_invoice</field>
         <field name="partner_id" ref="l10n_in.res_partner_unregistered_customer"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
         <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
@@ -95,7 +95,7 @@
 
     <!-- Demo of B2CL (business to consumer - Large) Taxable supplies made to other unregistered Person and invoice value is more than INR 2.5 lakhs.-->
     <record id="demo_invoice_b2cl" model="account.move">
-        <field name="type">out_invoice</field>
+        <field name="move_type">out_invoice</field>
         <field name="partner_id" ref="l10n_in.res_partner_unregistered_customer_out_state"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
         <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
@@ -115,7 +115,7 @@
 
     <!-- Demo of EXP(Export) supplies including supplies to SEZ/SEZ Developer or deemed exports.-->
     <record id="demo_invoice_exp" model="account.move">
-        <field name="type">out_invoice</field>
+        <field name="move_type">out_invoice</field>
         <field name="partner_id" ref="base.res_partner_3"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
         <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
@@ -145,7 +145,7 @@
 
     <!-- Demo of exemp(Nil Rated, Exempted and Non GST supplies). Set Nill rated and Exempted tax in line.-->
     <record id="demo_invoice_nill" model="account.move">
-        <field name="type">out_invoice</field>
+        <field name="move_type">out_invoice</field>
         <field name="partner_id" ref="l10n_in.res_partner_registered_customer"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
         <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
@@ -172,7 +172,7 @@
 
     <!-- Demo of cdnr(Credit/ Debit Note for registered person). Create credit note for demo b2b invoice.-->
     <record id="demo_invoice_cdnr" model="account.move">
-        <field name="type">out_refund</field>
+        <field name="move_type">out_refund</field>
         <field name="partner_id" ref="l10n_in.res_partner_registered_customer"/>
         <field name="l10n_in_reseller_partner_id" ref="l10n_in.res_partner_reseller"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
@@ -218,7 +218,7 @@
 
     <!-- Demo of cdnr(Credit/ Debit Note for unregistered person). Create credit note for demo b2cl invoice.-->
     <record id="demo_invoice_cdnur" model="account.move">
-        <field name="type">out_refund</field>
+        <field name="move_type">out_refund</field>
         <field name="partner_id" ref="l10n_in.res_partner_unregistered_customer"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
         <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
@@ -240,7 +240,7 @@
     <!-- Demo of atadj(Advance adjustments). When invoice is reconcile against Advance payment.
     Reconciled invoice consideration for which payment have been received in the past months.-->
     <record id="demo_invoice_atadj" model="account.move">
-        <field name="type">out_invoice</field>
+        <field name="move_type">out_invoice</field>
         <field name="partner_id" ref="l10n_in.res_partner_registered_customer"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
         <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>

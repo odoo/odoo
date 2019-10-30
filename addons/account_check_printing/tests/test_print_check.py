@@ -32,7 +32,7 @@ class TestPrintCheck(AccountTestCommon):
         cls.bank_journal.check_manual_sequencing = True
 
     def create_invoice(self, amount=100, is_refund=False):
-        invoice = self.env['account.move'].with_context(default_type=is_refund and 'out_refund' or 'in_invoice').create({
+        invoice = self.env['account.move'].with_context(default_move_type=is_refund and 'out_refund' or 'in_invoice').create({
             'partner_id': self.partner_axelor.id,
             'invoice_date': time.strftime('%Y') + '-06-26',
             'date': time.strftime('%Y') + '-06-26',

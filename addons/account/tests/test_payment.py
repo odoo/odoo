@@ -76,7 +76,7 @@ class TestPayment(AccountTestCommon):
     def create_invoice(self, amount=100, type='out_invoice', currency_id=None, partner=None, account_id=None):
         """ Returns an open invoice """
         invoice = self.env['account.move'].create({
-            'type': type,
+            'move_type': type,
             'partner_id': partner or self.partner_agrolait.id,
             'currency_id': currency_id or self.currency_eur_id,
             'invoice_date': time.strftime('%Y') + '-06-26',
@@ -596,7 +596,7 @@ class TestPayment(AccountTestCommon):
             'company_id': self.env.ref('base.main_company').id
         })
         inv1 = self.env['account.move'].create({
-            'type': 'out_invoice',
+            'move_type': 'out_invoice',
             'partner_id': self.partner_agrolait.id,
             'currency_id': self.currency_usd_id,
             'invoice_date': time.strftime('%Y') + '-01-01',

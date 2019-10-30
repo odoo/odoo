@@ -79,7 +79,7 @@ class CrmTeam(models.Model):
                 SUM(-line.balance)   AS amount_untaxed_signed
             FROM account_move move
             LEFT JOIN account_move_line line ON line.move_id = move.id
-            WHERE move.type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')
+            WHERE move.move_type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')
             AND move.payment_state IN ('in_payment', 'paid')
             AND move.state = 'posted'
             AND move.team_id IN %s

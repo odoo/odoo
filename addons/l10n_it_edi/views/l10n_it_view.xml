@@ -153,31 +153,31 @@
         <data>
             <xpath expr="//button[@name='preview_invoice']" position="after">
                 <button name="post" type="object" icon="fa-envelope-o" class="btn btn-primary" string="Resend"
-                        attrs="{'invisible': ['|', ('type', 'not in', ('out_invoice', 'out_refund')), ('l10n_it_send_state', '!=', 'invalid')]}"/>
+                        attrs="{'invisible': ['|', ('move_type', 'not in', ('out_invoice', 'out_refund')), ('l10n_it_send_state', '!=', 'invalid')]}"/>
             </xpath>
-            <xpath expr="//field[@name='type']" position="before">
+            <xpath expr="//field[@name='move_type']" position="before">
                 <div class="alert alert-success" role="alert"
-                     attrs="{'invisible': ['|', ('type', 'not in', ('out_invoice', 'out_refund')), ('l10n_it_send_state', 'not in', ['delivered', 'delivered_accepted', 'delivered_refused', 'delivered_expired', 'failed_delivery'])]}">
+                     attrs="{'invisible': ['|', ('move_type', 'not in', ('out_invoice', 'out_refund')), ('l10n_it_send_state', 'not in', ['delivered', 'delivered_accepted', 'delivered_refused', 'delivered_expired', 'failed_delivery'])]}">
                     <i class="fa fa-check" aria-label="Delivered" title="Delivered"></i> <field name="l10n_it_send_state" readonly="1"/>
                 </div>
                 <div class="alert alert-warning" role="alert"
-                     attrs="{'invisible': ['|', ('type', 'not in', ('out_invoice', 'out_refund')), ('l10n_it_send_state', '!=', 'sent')]}">
+                     attrs="{'invisible': ['|', ('move_type', 'not in', ('out_invoice', 'out_refund')), ('l10n_it_send_state', '!=', 'sent')]}">
                     <i class="fa fa-paper-plane-o"/> E-Invoice sent, waiting for a response
                 </div>
                 <div class="alert alert-danger" role="alert"
-                     attrs="{'invisible': ['|', ('type', 'not in', ('out_invoice', 'out_refund')), ('l10n_it_send_state', '!=', 'invalid')]}">
+                     attrs="{'invisible': ['|', ('move_type', 'not in', ('out_invoice', 'out_refund')), ('l10n_it_send_state', '!=', 'invalid')]}">
                     <i class="fa fa-exclamation-triangle"/> E-Invoice check failed. You can modify the invoice, and resend it.
                 </div>
             </xpath>
             <xpath expr="//page[@name='other_info']" position="after">
                 <page string="Electronic Invoicing"
                     name="electronic_invoicing"
-                    attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}">
+                    attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}">
                     <group>
                         <group>
                             <field name="l10n_it_stamp_duty"/>
                             <field name="l10n_it_ddt_id"
-                                   attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund'))]}"/>
+                                   attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund'))]}"/>
                         </group>
                     </group>
                 </page>

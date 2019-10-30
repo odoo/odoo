@@ -89,7 +89,7 @@ class Repair(models.Model):
     invoice_id = fields.Many2one(
         'account.move', 'Invoice',
         copy=False, readonly=True, tracking=True,
-        domain=[('type', '=', 'out_invoice')])
+        domain=[('move_type', '=', 'out_invoice')])
     move_id = fields.Many2one(
         'stock.move', 'Move',
         copy=False, readonly=True, tracking=True, check_company=True,
@@ -318,7 +318,7 @@ class Repair(models.Model):
             if not group or len(current_invoices_list) == 0:
                 fpos = self.env['account.fiscal.position'].get_fiscal_position(partner_invoice.id, delivery_id=repair.address_id.id)
                 invoice_vals = {
-                    'type': 'out_invoice',
+                    'move_type': 'out_invoice',
                     'partner_id': partner_invoice.id,
                     'currency_id': currency.id,
                     'narration': narration,
@@ -430,7 +430,7 @@ class Repair(models.Model):
         for company_id, invoices_vals_list in invoices_vals_list_per_company.items():
             # VFE TODO remove the default_company_id ctxt key ?
             # Account fallbacks on self.env.company, which is correct with with_company
-            self.env['account.move'].with_company(company_id).with_context(default_company_id=company_id, default_type='out_invoice').create(invoices_vals_list)
+            self.env['account.move'].with_company(company_id).with_context(default_company_id=company_id, default_move_type='out_invoice').create(invoices_vals_list)
 
         repairs.write({'invoiced': True})
         repairs.mapped('operations').filtered(lambda op: op.type == 'add').write({'invoiced': True})
