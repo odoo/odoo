@@ -693,6 +693,10 @@ class PosOrderLine(models.Model):
         if line and 'tax_ids' not in line[2]:
             product = self.env['product.product'].browse(line[2]['product_id'])
             line[2]['tax_ids'] = [(6, 0, [x.id for x in product.taxes_id])]
+        # Clean up fields sent by the JS
+        line = [
+            line[0], line[1], {k: v for k, v in line[2].items() if k in self.env['pos.order.line']._fields}
+        ]
         return line
 
     company_id = fields.Many2one('res.company', string='Company', related="order_id.company_id", store=True)
