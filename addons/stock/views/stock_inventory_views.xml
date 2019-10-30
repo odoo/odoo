@@ -56,6 +56,19 @@
         </field>
     </record>
 
+    <record id="stock_inventory_line_tree_zqc" model="ir.ui.view">
+        <field name="name">stock.inventory.line.tree_zqc</field>
+        <field name="model">stock.inventory.line</field>
+        <field name="inherit_id" ref="stock.stock_inventory_line_tree2"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='difference_qty']" position="replace"/>
+            <xpath expr="//field[@name='theoretical_qty']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
     <record id="stock_inventory_line_search" model="ir.ui.view">
         <field name="name">stock.inventory.line.search</field>
         <field name="model">stock.inventory.line</field>
@@ -202,6 +215,7 @@
         <field name="view_mode">tree,kanban,form</field>
         <field name="view_id" ref="view_inventory_tree"/>
         <field name="search_view_id" ref="view_inventory_filter"/>
+        <field name="domain">['|', ('picking_id', '=', False), ('state', '=', 'done')]</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
             Create a new inventory adjustment

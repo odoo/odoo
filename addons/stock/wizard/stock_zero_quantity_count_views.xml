@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_zero_quantity_count" model="ir.ui.view">
+        <field name="name">stock_zero_quantity_count</field>
+        <field name="model">stock.zero.quantity.count</field>
+        <field name="arch" type="xml">
+            <form string="Zero Quantity Cycle Count">
+                <field name="location_ids" invisible="1"/>
+                <div>Can you confirm there is no stock left in <span class="text-primary"><field name="location_names"/></span> ? </div>
+                <footer>
+                    <button name="button_confirm_zqc" string="Yes" type="object" class="btn-primary"/>
+                    <button name="button_inventory" string="No, adjust inventory" type="object" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

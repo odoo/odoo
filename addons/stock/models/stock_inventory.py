@@ -62,6 +62,7 @@ class Inventory(models.Model):
         'Include Exhausted Products', readonly=True,
         states={'draft': [('readonly', False)]},
         help="Include also products with quantity of 0")
+    picking_id = fields.Many2one('stock.picking', string='Picking triggering the inventory')
 
     @api.onchange('company_id')
     def _onchange_company_id(self):
@@ -120,6 +121,12 @@ class Inventory(models.Model):
         self.action_check()
         self.write({'state': 'done'})
         self.post_inventory()
+        return True
+
+    def action_validate_zqc(self):
+        pickings_to_validate = self.env.context.get('button_validate_picking_ids')
+        if pickings_to_validate:
+            return self.env['stock.picking'].browse(pickings_to_validate).with_context(skip_zqc=True).button_validate()
         return True
 
     def post_inventory(self):
