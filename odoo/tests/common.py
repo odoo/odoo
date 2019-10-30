@@ -31,7 +31,7 @@ from decorator import decorator
 from lxml import etree, html
 
 from odoo.models import BaseModel
-from odoo.osv.expression import normalize_domain
+from odoo.osv.expression import normalize_domain, TRUE_LEAF, FALSE_LEAF
 from odoo.tools import pycompat
 from odoo.tools.misc import find_in_path
 from odoo.tools.safe_eval import safe_eval
@@ -1134,12 +1134,17 @@ class Form(object):
                 e1 = stack.pop()
                 e2 = stack.pop()
                 stack.append(e1 or e2)
-            elif isinstance(it, list):
-                f, op, val = it
-                field_val = vals[f]
-                stack.append(self._OPS[op](field_val, val))
+            elif isinstance(it, tuple):
+                if it == TRUE_LEAF:
+                    stack.append(True)
+                elif it == FALSE_LEAF:
+                    stack.append(False)
+                else:
+                    f, op, val = it
+                    field_val = vals[f]
+                    stack.append(self._OPS[op](field_val, val))
             else:
-                raise ValueError("Unknown domain element %s" % it)
+                raise ValueError("Unknown domain element %s" % [it])
         [result] = stack
         return result
     _OPS = {
