@@ -3,14 +3,12 @@
     
     <record id="account_tax_report_ro_baza_intracom_eu" model="account.tax.report.line">
         <field name="name">Baza COMERŢ INTRACOMUNITAR ŞI ÎN AFARA UE</field>
-        <field name="tag_name">Baza COMERŢ INTRACOMUNITAR ŞI ÎN AFARA UE</field>
         <field name="code">tax_ro_baza_intracom_eu</field>
         <field name="sequence" eval="0"/>
         <field name="country_id" ref="base.ro"/>
     </record>
     <record id="account_tax_report_ro_tva_intracom_eu" model="account.tax.report.line">
         <field name="name">TVA COMERŢ INTRACOMUNITAR ŞI ÎN AFARA UE</field>
-        <field name="tag_name">TVA COMERŢ INTRACOMUNITAR ŞI ÎN AFARA UE</field>
         <field name="code">tax_ro_tva_intracom_eu</field>
         <field name="sequence" eval="1"/>
         <field name="country_id" ref="base.ro"/>
@@ -165,14 +163,12 @@
     
     <record id="account_tax_report_ro_baza_livrari" model="account.tax.report.line">
         <field name="name">BAZA LIVRĂRI DE BUNURI/ PRESTĂRI DE SERVICII ÎN INTERIORUL ŢĂRII ŞI EXPORTURI</field>
-        <field name="tag_name">BAZA LIVRĂRI DE BUNURI/ PRESTĂRI DE SERVICII ÎN INTERIORUL ŢĂRII ŞI EXPORTURI</field>
         <field name="code">tax_ro_baza_livrari</field>
         <field name="sequence" eval="19"/>
         <field name="country_id" ref="base.ro"/>
     </record>
     <record id="account_tax_report_ro_tva_livrari" model="account.tax.report.line">
         <field name="name">TVA LIVRĂRI DE BUNURI/ PRESTĂRI DE SERVICII ÎN INTERIORUL ŢĂRII ŞI EXPORTURI</field>
-        <field name="tag_name">TVA LIVRĂRI DE BUNURI/ PRESTĂRI DE SERVICII ÎN INTERIORUL ŢĂRII ŞI EXPORTURI</field>
         <field name="code">tax_ro_tva_livrari</field>
         <field name="sequence" eval="20"/>
         <field name="country_id" ref="base.ro"/>
@@ -356,14 +352,12 @@
     
     <record id="account_tax_report_ro_baza_intracom_eu_achiz" model="account.tax.report.line">
         <field name="name">BAZA ACHIZIŢII INTRACOMUNITARE DE BUNURI ŞI ALTE ACHIZIŢII DE BUNURI ŞI SERVICII IMPOZABILE ÎN ROMÂNIA</field>
-        <field name="tag_name">BAZA ACHIZIŢII INTRACOMUNITARE DE BUNURI ŞI ALTE ACHIZIŢII DE BUNURI ŞI SERVICII IMPOZABILE ÎN ROMÂNIA</field>
         <field name="code">tax_ro_baza_intracom_eu_a</field>
         <field name="sequence" eval="42"/>
         <field name="country_id" ref="base.ro"/>
     </record>
     <record id="account_tax_report_ro_tva_intracom_eu_achiz" model="account.tax.report.line">
         <field name="name">TVA ACHIZIŢII INTRACOMUNITARE DE BUNURI ŞI ALTE ACHIZIŢII DE BUNURI ŞI SERVICII IMPOZABILE ÎN ROMÂNIA</field>
-        <field name="tag_name">TVA ACHIZIŢII INTRACOMUNITARE DE BUNURI ŞI ALTE ACHIZIŢII DE BUNURI ŞI SERVICII IMPOZABILE ÎN ROMÂNIA</field>
         <field name="code">tax_ro_tva_intracom_eu_a</field>
         <field name="sequence" eval="43"/>
         <field name="country_id" ref="base.ro"/>
@@ -473,14 +467,12 @@
     
     <record id="account_tax_report_ro_baza_achiz" model="account.tax.report.line">
         <field name="name">BAZA ACHIZIŢII DE BUNURI/ SERVICII ÎN INTERIORUL ŢĂRII ŞI IMPORTURI, ACHIZIŢII INTRACOMUNITARE, SCUTITE SAU NEIMPOZABILE</field>
-        <field name="tag_name">BAZA ACHIZIŢII DE BUNURI/ SERVICII ÎN INTERIORUL ŢĂRII ŞI IMPORTURI, ACHIZIŢII INTRACOMUNITARE, SCUTITE SAU NEIMPOZABILE</field>
         <field name="code">tax_ro_baza_achiz</field>
         <field name="sequence" eval="56"/>
         <field name="country_id" ref="base.ro"/>
     </record>
     <record id="account_tax_report_ro_tva_achiz" model="account.tax.report.line">
         <field name="name">TVA ACHIZIŢII DE BUNURI/ SERVICII ÎN INTERIORUL ŢĂRII ŞI IMPORTURI, ACHIZIŢII INTRACOMUNITARE, SCUTITE SAU NEIMPOZABILE</field>
-        <field name="tag_name">TVA ACHIZIŢII DE BUNURI/ SERVICII ÎN INTERIORUL ŢĂRII ŞI IMPORTURI, ACHIZIŢII INTRACOMUNITARE, SCUTITE SAU NEIMPOZABILE</field>
         <field name="code">tax_ro_tva_achiz</field>
         <field name="sequence" eval="57"/>
         <field name="country_id" ref="base.ro"/>
@@ -659,7 +651,7 @@
     <record id="account_tax_report_ro_tva_rd30" model="account.tax.report.line">
         <field name="name">30 - TVA - SUB-TOTAL TAXĂ DEDUSĂ CONFORM ART. 297 ŞI ART. 298 SAU ART. 300 ŞI ART. 298 (rd.30&lt;=rd.29)</field>
         <field name="code">tax_ro_tva_rd30</field>
-        <field name="formula">tax_ro_tva_achiz</field>
+        <field name="formula">tax_ro_tva_intracom_eu_a + tax_ro_tva_achiz</field>
         <field name="sequence" eval="78"/>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -699,7 +691,7 @@
         <field name="name">34 - TVA - TOTAL TAXA DEDUSA (rd.30+rd.31+rd.32+rd.33)</field>
         <field name="code">tax_ro_tva_rd34</field>
         <field name="sequence" eval="83"/>
-        <field name="formula">tax_ro_tva_achiz + tax_ro_tva_rd31 + tax_ro_tva_rd32 + tax_ro_tva_rd33</field>
+        <field name="formula">tax_ro_tva_intracom_eu_a + tax_ro_tva_achiz + tax_ro_tva_rd31 + tax_ro_tva_rd32 + tax_ro_tva_rd33</field>
         <field name="country_id" ref="base.ro"/>
     </record>
 </odoo>
