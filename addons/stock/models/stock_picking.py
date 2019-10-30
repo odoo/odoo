@@ -15,7 +15,7 @@ from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, format_datetime
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
-from odoo.tools.misc import format_date
+from odoo.tools.misc import clean_context, format_date
 
 
 class PickingType(models.Model):
@@ -375,6 +375,7 @@ class Picking(models.Model):
         ('available', 'Available'),
         ('expected', 'Expected'),
         ('late', 'Late')], compute='_compute_products_availability')
+    inventory_ids = fields.One2many('stock.inventory', 'picking_id')
 
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per company!'),
@@ -716,6 +717,10 @@ class Picking(models.Model):
     def action_cancel(self):
         self.mapped('move_lines')._action_cancel()
         self.write({'is_locked': True})
+        # delete any linked inventories since zqc should no longer be applicable
+        inventory_ids = self.inventory_ids.filtered(lambda i: i.state != 'done')
+        inventory_ids.action_cancel_draft()
+        inventory_ids.unlink()
         return True
 
     def _action_done(self):
@@ -765,6 +770,22 @@ class Picking(models.Model):
         done_incoming_moves._trigger_assign()
 
         self._send_confirmation_email()
+
+        # For each linked inventory we:
+        # - cancel and delete empty ones (they are assumed to be mistakes)
+        # - delete draft ones (including user cancelled ones)
+        # - validate non-empty ones (data inconsistency can occur in case user adds lines + save + closes without validating)
+        # as part of _action_done, since it is implied they were created by a ZQC of the current picking(s).
+        inventory_ids_to_delete = self.inventory_ids.filtered(lambda i: i.state == 'confirm' and not i.line_ids)
+        inventory_ids_to_delete.action_cancel_draft()
+        inventory_ids_to_delete = self.inventory_ids.filtered(lambda i: i.state == 'draft')
+        inventory_ids_to_delete.unlink()
+        inventory_ids = self.inventory_ids.filtered(lambda i: i.state == 'confirm')
+        for inventory in inventory_ids:
+            # make sure we don't conflict with another stock move that occurs after adjustment is created
+            inventory.line_ids.action_refresh_quantity()
+            inventory.action_validate()
+
         return True
 
     def _send_confirmation_email(self):
@@ -944,6 +965,12 @@ class Picking(models.Model):
             if pickings_to_immediate:
                 return pickings_to_immediate._action_generate_immediate_wizard(show_transfers=self._should_show_transfers())
 
+        # Zero Quantity Count Wizard
+        if self.env.user.has_group('stock.group_stock_zero_quantity_count') and not self.env.context.get('skip_zqc'):
+            empty_locations = self._check_zqc()
+            if empty_locations:
+                return self._action_generate_zqc_wizard(empty_locations)
+
         if not self.env.context.get('skip_backorder'):
             pickings_to_backorder = self._check_backorder()
             if pickings_to_backorder:
@@ -992,6 +1019,23 @@ class Picking(models.Model):
             'context': dict(self.env.context, default_show_transfers=show_transfers, default_pick_ids=[(4, p.id) for p in self]),
         }
 
+    def _action_generate_zqc_wizard(self, empty_locations):
+        view = self.env.ref('stock.view_zero_quantity_count')
+        return {
+            'name': _('Zero Quantity Cycle Count'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'stock.zero.quantity.count',
+            'views': [(view.id, 'form')],
+            'view_id': view.id,
+            'context': {
+                'default_location_ids': [(4, loc.id) for loc in empty_locations],
+                'default_pick_ids': [(4, p.id) for p in self],
+                **clean_context(self.env.context)
+            },
+            'target': 'new',
+        }
+
     def action_toggle_is_locked(self):
         self.ensure_one()
         self.is_locked = not self.is_locked
@@ -1030,6 +1074,34 @@ class Picking(models.Model):
             if all(float_is_zero(move_line.qty_done, precision_digits=precision_digits) for move_line in picking.move_line_ids.filtered(lambda m: m.state not in ('done', 'cancel'))):
                 immediate_pickings |= picking
         return immediate_pickings
+
+    def _check_zqc(self):
+        """ Return the locations that will be emptied out when `self` is processed. """
+        empty_locations = self.env['stock.location']
+
+        # Group move lines per locations
+        ml_per_loc = defaultdict(lambda: self.env['stock.move.line'])
+        for ml in self.move_line_ids:
+            if ml.location_id.usage in ('internal', 'transit'):
+                ml_per_loc[ml.location_id] |= ml
+
+        # Check if locations would be emptied by those movelines
+        for loc, move_line_ids in ml_per_loc.items():
+            quants = self.env['stock.quant'].search([
+                ('location_id', '=', loc.id),
+            ])
+
+            remaining_qties = defaultdict(lambda: 0)
+            for quant in quants:
+                remaining_qties[quant.product_id] += quant.quantity
+            for ml in move_line_ids:
+                remaining_qties[ml.product_id] -= ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_po_id)
+
+            precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            if all([float_is_zero(value, precision_digits=precision) for value in remaining_qties.values()]):
+                empty_locations |= loc
+
+        return empty_locations
 
     def _autoconfirm_picking(self):
         """ Automatically run `action_confirm` on `self` if the picking is an immediate transfer or

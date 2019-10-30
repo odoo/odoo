@@ -365,3 +365,139 @@ class TestBatchPicking(TransactionCase):
 
         # final package location should be correctly set based on wizard
         self.assertEqual(package.location_id.id, self.customer_location.id)
+
+    def test_zero_quantity_count_no_inventory(self):
+        """ Create 2 products with available quantity in stock,
+        make 2 delivery orders so the quantities left reach zero and make sure
+        the wizard is correctly raised. Also ensure that when zqc is confirmed
+        (i.e. no inventory) then the picking is also correctly validated
+        """
+
+        # We write the group on the user to enable the feature
+        grp_zero_quantity_count = self.env.ref('stock.group_stock_zero_quantity_count')
+        self.env.user.write({'groups_id': [(4, grp_zero_quantity_count.id, 0)]})
+
+        # ensure only our products are in a location that will trigger a zqc
+        wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+        shelf_zqc_1 = self.env['stock.location'].create({
+            'name': 'Shelf ZQC1',
+            'location_id': wh.lot_stock_id.id,
+        })
+        shelf_zqc_2 = self.env['stock.location'].create({
+            'name': 'Shelf ZQC2',
+            'location_id': wh.lot_stock_id.id,
+        })
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 0.0)
+        self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 0.0)
+        self.env['stock.quant']._update_available_quantity(self.productA, shelf_zqc_1, 10.0)
+        self.env['stock.quant']._update_available_quantity(self.productB, shelf_zqc_2, 10.0)
+
+        self.batch.action_confirm()
+        self.batch.action_assign()
+        self.assertEqual(self.picking_client_1.state, 'assigned', 'Picking 1 should be ready')
+        self.assertEqual(self.picking_client_2.state, 'assigned', 'Picking 2 should be ready')
+
+        immediate_transfer_wiz_action = self.batch.action_done()
+
+        # An immediate transfer wizard shoud be raised
+        wiz_model = immediate_transfer_wiz_action.get('res_model')
+        self.assertEqual(wiz_model, 'stock.immediate.transfer', 'A Wizard for an immediate transfer should be raised')
+        immediate_transfer_wizard = Form(self.env[wiz_model].with_context(immediate_transfer_wiz_action['context'])).save()
+
+        # When processed, the immediate transfer should trigger the raising of the zero quantity wizard
+        zqc_wizard_action = immediate_transfer_wizard.process()
+        wiz_model = zqc_wizard_action.get('res_model')
+        self.assertEqual(wiz_model, 'stock.zero.quantity.count', 'A Wizard for a Zero Quantity Count should be raised')
+        zqc_wizard = Form(self.env[wiz_model].with_context(zqc_wizard_action['context'])).save()
+        # We check the wizard was correctly populated
+        self.assertEqual(zqc_wizard.location_ids, shelf_zqc_1 + shelf_zqc_2)
+        self.assertEqual(zqc_wizard.pick_ids, self.picking_client_1 + self.picking_client_2)
+
+        # We confirm the Zero Quantity Count Wizard
+        res = zqc_wizard.button_confirm_zqc()
+
+        # Picking should be done at this point
+        self.assertEqual(self.batch.state, 'done')
+
+        # No more wizards should be raised
+        self.assertTrue(isinstance(res, bool))
+
+    def test_zero_quantity_count_w_inventory(self):
+        """ Create 2 products with available quantity in stock,
+        make 2 delivery orders so the quantities left reach zero and make sure
+        the wizard is correctly raised. Also ensure that a zqc triggered inventory
+        correctly updates the quantities and also validates the picking correctly.
+        """
+
+        # We write the group on the user to enable the feature
+        grp_zero_quantity_count = self.env.ref('stock.group_stock_zero_quantity_count')
+        self.env.user.write({'groups_id': [(4, grp_zero_quantity_count.id, 0)]})
+
+        # ensure only our products are in a location that will trigger a zqc
+        wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+        shelf_zqc_1 = self.env['stock.location'].create({
+            'name': 'Shelf ZQC1',
+            'location_id': wh.lot_stock_id.id,
+        })
+        shelf_zqc_2 = self.env['stock.location'].create({
+            'name': 'Shelf ZQC2',
+            'location_id': wh.lot_stock_id.id,
+        })
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 0.0)
+        self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 0.0)
+        self.env['stock.quant']._update_available_quantity(self.productA, shelf_zqc_1, 10.0)
+        self.env['stock.quant']._update_available_quantity(self.productB, shelf_zqc_2, 10.0)
+
+        self.batch.action_confirm()
+        self.batch.action_assign()
+        self.assertEqual(self.picking_client_1.state, 'assigned', 'Picking 1 should be ready')
+        self.assertEqual(self.picking_client_2.state, 'assigned', 'Picking 2 should be ready')
+
+        immediate_transfer_wiz_action = self.batch.action_done()
+
+        # An immediate transfer wizard shoud be raised
+        wiz_model = immediate_transfer_wiz_action.get('res_model')
+        self.assertEqual(wiz_model, 'stock.immediate.transfer', 'A Wizard for an immediate transfer should be raised')
+        immediate_transfer_wizard = Form(self.env[wiz_model].with_context(immediate_transfer_wiz_action['context'])).save()
+
+        # When processed, the immediate transfer should trigger the raising of the zero quantity wizard
+        zqc_wizard_action = immediate_transfer_wizard.process()
+        wiz_model = zqc_wizard_action.get('res_model')
+        self.assertEqual(wiz_model, 'stock.zero.quantity.count', 'A Wizard for a Zero Quantity Count should be raised')
+        zqc_wizard = Form(self.env[wiz_model].with_context(zqc_wizard_action['context'])).save()
+        # We check the wizard was correctly populated
+        self.assertEqual(zqc_wizard.location_ids, shelf_zqc_1 + shelf_zqc_2)
+        self.assertEqual(zqc_wizard.pick_ids, self.picking_client_1 + self.picking_client_2)
+
+        # We don't confirm the Zero Quantity Count, the wizard should raise an inventory line dialog
+        inventory_line_zqc_action = zqc_wizard.button_inventory()
+        self.assertEqual(inventory_line_zqc_action['res_model'], 'stock.inventory.line')
+        self.assertEqual(inventory_line_zqc_action['target'], 'new')
+        self.assertCountEqual(inventory_line_zqc_action['context']['button_validate_picking_ids'], [self.picking_client_1.id, self.picking_client_2.id])
+
+        # We adjust the quantity of pzero1 at shelf_zqc_1
+        inventory = self.env['stock.inventory'].with_context(
+            inventory_line_zqc_action['context']
+        ).browse(inventory_line_zqc_action['context']['default_inventory_id'])
+
+        self.env['stock.inventory.line'].create({
+            'inventory_id': inventory.id,
+            'location_id': shelf_zqc_1.id,
+            'product_id': self.productA.id,
+            'product_qty': 1
+        })
+
+        self.assertIn(inventory, self.picking_client_1.inventory_ids + self.picking_client_2.inventory_ids, 'Inventory should be linked to a picking in the batch via zqc wizard')
+        res = inventory.action_validate_zqc()
+
+        # Picking should be done at this point
+        self.assertEqual(self.batch.state, 'done')
+
+        # We check the adjusted quantities
+        available_qty_shelf_zqc_1 = self.env['stock.quant']._get_available_quantity(self.productA, shelf_zqc_1)
+        available_qty_shelf_zqc_2 = self.env['stock.quant']._get_available_quantity(self.productA, shelf_zqc_2)
+        self.assertEqual(available_qty_shelf_zqc_1, 1)
+        self.assertEqual(available_qty_shelf_zqc_2, 0)
+
+        # No more wizards should be raised
+        self.assertTrue(isinstance(res, bool))
