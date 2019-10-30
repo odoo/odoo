@@ -13,7 +13,7 @@ publicWidget.registry.productsRecentlyViewedSnippet = publicWidget.Widget.extend
     selector: '.s_wsale_products_recently_viewed',
     xmlDependencies: ['/website_sale/static/src/xml/website_sale_recently_viewed.xml'],
     disabledInEditableMode: false,
-    events: {
+    read_events: {
         'click .js_add_cart': '_onAddToCart',
         'click .js_remove': '_onRemove',
     },
