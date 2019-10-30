@@ -195,7 +195,8 @@ var SnippetEditor = Widget.extend({
      * editor (itself).
      */
     removeSnippet: function () {
-        this.toggleFocus(false);
+        this.toggleOverlay(false);
+        this.toggleOptions(false);
 
         this.trigger_up('call_for_each_child_snippet', {
             $snippet: this.$target,
@@ -249,14 +250,12 @@ var SnippetEditor = Widget.extend({
         }
     },
     /**
-     * Displays/Hides the editor overlay and notifies the associated snippet
-     * options. Note: when it is displayed, this is here that the parent
-     * snippet options are moved to the editor overlay.
+     * Displays/Hides the editor overlay.
      *
-     * @param {boolean} focus - true to display, false to hide
+     * @param {boolean} show
      * @param {boolean} [previewMode=false]
      */
-    toggleFocus: function (focus, previewMode) {
+    toggleOverlay: function (show, previewMode) {
         if (!this.$el) {
             return;
         }
@@ -264,38 +263,45 @@ var SnippetEditor = Widget.extend({
         if (previewMode) {
             // In preview mode, the sticky classes are left untouched, we only
             // add/remove the preview class when toggling/untoggling
-            this.$el.toggleClass('o_we_overlay_preview', focus);
+            this.$el.toggleClass('o_we_overlay_preview', show);
         } else {
             // In non preview mode, the preview class is always removed, and the
             // sticky class is added/removed when toggling/untoggling
             this.$el.removeClass('o_we_overlay_preview');
-            this.$el.toggleClass('o_we_overlay_sticky', focus);
+            this.$el.toggleClass('o_we_overlay_sticky', show);
         }
 
-        focus = this.$el.hasClass('o_we_overlay_sticky') ? true : focus;
+        show = this.$el.hasClass('o_we_overlay_sticky') ? true : show;
 
         // Show/hide overlay in preview mode or not
-        this.$el.toggleClass('oe_active', focus);
+        this.$el.toggleClass('oe_active', show);
         this.cover();
-
-        // In non-preview mode, update the options panel if necessary
-        if (previewMode) {
+    },
+    /**
+     * Displays/Hides the editor (+ parent) options and call onFocus/onBlur if
+     * necessary.
+     *
+     * @param {boolean} show
+     */
+    toggleOptions: function (show) {
+        if (!this.$el) {
             return;
         }
+
         var lastIndex = this._customize$Elements.length - 1;
         var optionsAlreadyShown = !!this._customize$Elements[lastIndex].parent().length;
-        if (optionsAlreadyShown === focus) {
+        if (optionsAlreadyShown === show) {
             return;
         }
         this.trigger_up('update_customize_elements', {
-            customize$Elements: focus ? this._customize$Elements : [],
+            customize$Elements: show ? this._customize$Elements : [],
         });
         this._customize$Elements.forEach(($el, i) => {
             var editor = $el.data('editor');
             var styles = _.values(editor.styles);
             $el.toggleClass('d-none', styles.length === 0);
             _.sortBy(styles, '__order').forEach(style => {
-                if (focus) {
+                if (show) {
                     style.$el.appendTo($el);
                     style.onFocus();
                 } else {
@@ -1058,21 +1064,25 @@ var SnippetsMenu = Widget.extend({
                 }
                 resolve(null);
             }).then(editorToEnable => {
+                const editorToEnableHierarchy = [];
+                let current = editorToEnable;
+                while (current && current.$target) {
+                    editorToEnableHierarchy.push(current);
+                    current = current.getParent();
+                }
+
                 // First disable all editors...
                 for (let i = this.snippetEditors.length; i--;) {
                     const editor = this.snippetEditors[i];
-                    if (editor === editorToEnable) {
-                        // Avoid disable -> enable of an editor (the toggleFocus
-                        // method is in charge of doing nothing is nothing has
-                        // to be done but if we explicitly ask for disable then
-                        // enable... it will disable then enable).
-                        continue;
+                    editor.toggleOverlay(false, previewMode);
+                    if (!previewMode && !editorToEnableHierarchy.includes(editor)) {
+                        editor.toggleOptions(false);
                     }
-                    editor.toggleFocus(false, previewMode);
                 }
                 // ... then enable the right editor
                 if (editorToEnable) {
-                    editorToEnable.toggleFocus(true, previewMode);
+                    editorToEnable.toggleOverlay(true, previewMode);
+                    editorToEnable.toggleOptions(true);
                 }
                 return editorToEnable;
             });
