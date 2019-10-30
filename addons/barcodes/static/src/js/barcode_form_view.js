@@ -38,14 +38,21 @@ FormController.include({
         };
 
         this.barcodeMutex = new concurrency.Mutex();
+    },
+
+    /**
+     * @override
+     */
+    on_attach_callback: function () {
+        this._super.apply(this, arguments);
         this._barcodeStartListening();
     },
     /**
      * @override
      */
-    destroy: function () {
+    on_detach_callback: function () {
+        this._super.apply(this, arguments);
         this._barcodeStopListening();
-        this._super();
     },
 
     //--------------------------------------------------------------------------
