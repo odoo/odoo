@@ -99,7 +99,7 @@ class PaymentAcquirerAuthorize(models.Model):
         if values.get('billing_partner_country') and values.get('billing_partner_country') == self.env.ref('base.us', False):
             billing_state = values['billing_partner_state'].code if values.get('billing_partner_state') else ''
 
-        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+        base_url = self.get_base_url()
         authorize_tx_values = dict(values)
         temp_authorize_tx_values = {
             'x_login': self.authorize_login,
