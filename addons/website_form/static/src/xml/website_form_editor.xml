@@ -39,6 +39,18 @@
         </t>
     </t>
 
+    <!-- Email Field -->
+    <t t-name="website_form.field_email">
+        <t t-call="website_form.field">
+            <input
+                type="email"
+                class="form-control o_website_form_input"
+                t-att-name="field.name"
+                t-att-required="field.required"
+            />
+        </t>
+    </t>
+
     <!-- HTML Field -->
     <t t-name="website_form.field_html">
         <!--
