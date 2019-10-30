@@ -35,7 +35,7 @@ msgstr "%s (kopie)"
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid "%s challenge certificate"
-msgstr ""
+msgstr "%s uitdaging certificaat"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.page
@@ -45,7 +45,7 @@ msgstr "&amp;times;"
 #. module: survey
 #: model:ir.actions.report,print_report_name:survey.certification_report
 msgid "'Certification - %s' % (object.survey_id.display_name)"
-msgstr ""
+msgstr "'Certificering - %s' % (object.survey_id.display_name)"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_header
@@ -419,6 +419,8 @@ msgid ""
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('certifications_count', '&lt;', 2)]}\">Certifications</span>\n"
 "                        <span class=\"o_stat_text\" attrs=\"{'invisible': [('certifications_count', '&gt;', 1)]}\">Certification</span>"
 msgstr ""
+"<span class=\"o_stat_text\" attrs=\"{'invisible': [('certifications_count', '&lt;', 2)]}\">Certificeringen</span>\n"
+"                        <span class=\"o_stat_text\" attrs=\"{'invisible': [('certifications_count', '&gt;', 1)]}\">Certificering</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_kanban
@@ -762,12 +764,12 @@ msgstr "Certificering"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__certification_badge_id
 msgid "Certification Badge"
-msgstr ""
+msgstr "Certificering badge"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__certification_badge_id_dummy
 msgid "Certification Badge "
-msgstr ""
+msgstr "Certificering badge"
 
 #. module: survey
 #: model:mail.template,report_name:survey.mail_template_certification
@@ -794,12 +796,12 @@ msgstr "Certificeringen"
 #: model:ir.model.fields,field_description:survey.field_res_partner__certifications_count
 #: model:ir.model.fields,field_description:survey.field_res_users__certifications_count
 msgid "Certifications Count"
-msgstr ""
+msgstr "Aantal certificeringen"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.res_partner_action_certifications
 msgid "Certifications Succeeded"
-msgstr ""
+msgstr "Certificeringen gelukt"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
@@ -1055,7 +1057,7 @@ msgstr "Datum en tijd antwoord"
 #: model:ir.model.fields,help:survey.field_survey_user_input__deadline
 msgid "Datetime until customer can open the survey and submit answers"
 msgstr ""
-"Datum tot wanneer de klant de enquête kan openen en antwoorden kan indienen"
+"Datum t/m wanneer de klant de enquête kan openen en antwoorden kan indienen"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__deadline
@@ -2593,8 +2595,8 @@ msgstr "Test uw kennis van uw producten!"
 
 #. module: survey
 #: model_terms:survey.survey,description:survey.vendor_certification
-msgid "Test your vendor skills!."
-msgstr "Test uw leverancier skills!"
+msgid "Test your vendor skills!"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_user_input_line__answer_type__text
@@ -2659,7 +2661,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_survey_badge_uniq
 msgid "The badge for each survey should be unique!"
-msgstr ""
+msgstr "De badge moet voor elke enquete uniek zijn!"
 
 #. module: survey
 #: model:survey.label,value:survey.survey_feedback_p2_q2_row4
@@ -3138,7 +3140,7 @@ msgstr "Het is niet mogelijk uitnodigingen versturen voor gesloten enquêtes."
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.sfinished
 msgid "You received the badge"
-msgstr ""
+msgstr "U ontvangt de badge"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.sfinished
@@ -3153,7 +3155,7 @@ msgstr "antw"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "e.g. Satisfaction Survey"
-msgstr ""
+msgstr "bijvoorbeeld enquete tevredenheid"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.auth_required

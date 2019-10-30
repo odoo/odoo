@@ -240,12 +240,12 @@ var ModeratorRejectMessageDialog = Dialog.extend({
 
 var Discuss = AbstractAction.extend({
     contentTemplate: 'mail.discuss',
-    custom_events: {
+    custom_events: _.extend({}, AbstractAction.prototype.custom_events, {
         discard_extended_composer: '_onDiscardExtendedComposer',
         message_moderation: '_onMessageModeration',
         search: '_onSearch',
         update_moderation_buttons: '_onUpdateModerationButtons',
-    },
+    }),
     events: {
         'click .o_mail_sidebar_title .o_add': '_onAddThread',
         'blur .o_mail_add_thread input': '_onAddThreadBlur',

@@ -285,9 +285,11 @@ class BaseAutomation(models.Model):
             # Note: This is to catch updates made by field recomputations.
             #
             def _compute_field_value(self, field):
-                # retrieve the action rules to possibly execute
-                if not field.store:
+                # determine fields that may trigger an action
+                stored_fields = [f for f in self._field_computed[field] if f.store]
+                if not any(stored_fields):
                     return _compute_field_value.origin(self, field)
+                # retrieve the action rules to possibly execute
                 actions = self.env['base.automation']._get_actions(self, ['on_write', 'on_create_or_write'])
                 records = self.filtered('id').with_env(actions.env)
                 # check preconditions on records
@@ -295,7 +297,7 @@ class BaseAutomation(models.Model):
                 # read old values before the update
                 old_values = {
                     old_vals.pop('id'): old_vals
-                    for old_vals in (records.read([field.name]))
+                    for old_vals in (records.read([f.name for f in stored_fields]))
                 }
                 # call original method
                 _compute_field_value.origin(self, field)

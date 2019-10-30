@@ -176,6 +176,8 @@ class StockMove(models.Model):
             valued_quantity = 0
             for valued_move_line in valued_move_lines:
                 valued_quantity += valued_move_line.product_uom_id._compute_quantity(valued_move_line.qty_done, move.product_id.uom_id)
+            if float_is_zero(forced_quantity or valued_quantity, precision_rounding=move.product_id.uom_id.rounding):
+                continue
             svl_vals = move.product_id._prepare_out_svl_vals(forced_quantity or valued_quantity, move.company_id)
             svl_vals.update(move._prepare_common_svl_vals())
             if forced_quantity:
@@ -244,6 +246,13 @@ class StockMove(models.Model):
         valued_moves['in'].product_price_update_before_done()
 
         res = super(StockMove, self)._action_done(cancel_backorder=cancel_backorder)
+
+        # '_action_done' might have created an extra move to be valued
+        for move in res - self:
+            for valued_type in self._get_valued_types():
+                if getattr(move, '_is_%s' % valued_type)():
+                    valued_moves[valued_type] |= move
+                    continue
 
         stock_valuation_layers = self.env['stock.valuation.layer'].sudo()
         # Create the valuation layers in batch by calling `moves._create_valued_type_svl`.

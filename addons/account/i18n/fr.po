@@ -25,7 +25,6 @@
 # bb76cd9ac0cb7e20167a14728edb858b, 2019
 # Jérôme Tanché <jerome.tanche@ouest-dsi.fr>, 2019
 # Nathan Grognet <ngr@odoo.com>, 2019
-# Florian Hatat, 2019
 # Rémi CAZENAVE <remi@le-filament.com>, 2019
 # Olivier ANDRE <frsw194@gmail.com>, 2019
 # Celia Tydgat <cty@odoo.com>, 2019
@@ -46,6 +45,8 @@
 # Alain van de Werve <avw@openerp.com>, 2019
 # Herve GUERIN <herve.guerin@auguria.fr>, 2019
 # Martin Trigaux, 2019
+# Florian Hatat, 2019
+# Vincent Luba <vincent@biz-4-africa.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -53,7 +54,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-07 07:11+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"Last-Translator: Vincent Luba <vincent@biz-4-africa.com>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -920,10 +921,10 @@ msgid ""
 "posted. Those will be posted automatically after performing the bank "
 "reconciliation."
 msgstr ""
-"Une entrée de journal générée dans une journal configuré pour poster les "
-"entrées uniquement lorsques les règlements sont réconciliés avec un relevé "
-"bancaire ne peut être comptabilisée manuellement. Ces entrées seront "
-"comptabilisées automatiquement après la reconciliation bancaire."
+"Une entrée de règlement ne peut pas être comptabilisée manuellement "
+"lorsqu'elle est saisie dans un journal qui n'autorise la validation "
+"d'entrées que pour les règlements lettrés avec un relevé bancaire. Ces "
+"règlements seront comptabilisés automatiquement après le lettrage bancaire."
 
 #. module: account
 #: code:addons/account/models/reconciliation_widget.py:0
@@ -1016,8 +1017,8 @@ msgid ""
 "Account %s (%s) does not allow reconciliation. First change the "
 "configuration of this account to allow it."
 msgstr ""
-"Le compte %s (%s) ne permet pas la réconciliation. Changez la configuration "
-"du compte si vous souhaitez la permettre."
+"Le compte %s (%s) ne permet pas le lettrage. Changez la configuration du "
+"compte si vous souhaitez la permettre."
 
 #. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
@@ -2361,18 +2362,18 @@ msgstr "Lettrage bancaire"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_tree
 msgid "Bank Reconciliation Move Presets"
-msgstr "Préselection de transactions bancaires à réconcilier"
+msgstr "Préselections de transactions bancaires à lettrer"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "Bank Reconciliation Move preset"
-msgstr "Préselection de transactions bancaires à réconcilier"
+msgstr "Présélection de transactions bancaires à lettrer"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_bank_reconciliation_start
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_bank_reconciliation_start
 msgid "Bank Reconciliation Threshold"
-msgstr "Limite de Réconciliation Bancaire"
+msgstr "Date limite pour le lettrage"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement
@@ -5394,7 +5395,7 @@ msgstr "Groupe de taxes"
 msgid "Group payments into a single batch to ease the reconciliation process"
 msgstr ""
 "Grouper les paiements en une seule opération pour simplifier le processus de"
-" réconciliation."
+" lettrage."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
@@ -6202,7 +6203,7 @@ msgstr "Factures"
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_invoice
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
 msgid "Invoices &amp; Bills"
-msgstr ""
+msgstr "Factures"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_invoice_report_all
@@ -8896,7 +8897,7 @@ msgstr "Écritures lettrées"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoice_ids
 msgid "Reconciled Invoices"
-msgstr "Factures réconciliées"
+msgstr "Factures lettrées"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoices_count
@@ -11473,7 +11474,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "There is nothing to reconcile."
-msgstr "Il n'y a rien à réconcilier."
+msgstr "Il n'y a rien à lettrer."
 
 #. module: account
 #: code:addons/account/models/company.py:0
@@ -11552,7 +11553,7 @@ msgid ""
 "This allows you grouping payments into a single batch and eases the reconciliation process.\n"
 "-This installs the account_batch_payment module."
 msgstr ""
-"Ceci vous permet de grouper des paiements dans un seul groupe et de faciliter le processus de réconciliation. \n"
+"Ceci vous permet de grouper des paiements dans un seul groupe et de faciliter le processus de lettrage. \n"
 "- Ceci installe le module account_batch_payment"
 
 #. module: account
@@ -11693,8 +11694,8 @@ msgid ""
 "This page displays all the bank transactions that are to be reconciled and "
 "provides with a neat interface to do so."
 msgstr ""
-"Cette page affiche toutes les transactions bancaires à réconcilier et pour "
-"cela vous offre une interface claire."
+"Cette page affiche toutes les transactions bancaires à lettrer et pour cela "
+"vous offre une interface claire."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -11708,7 +11709,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "This payment is registered but not reconciled."
-msgstr "Ce paiement est enregistré mais pas réconcilié."
+msgstr "Ce paiement est enregistré mais pas lettré. "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_supplier_payment_term_id
@@ -11756,8 +11757,8 @@ msgid ""
 "Those can be used to quickly create a journal items when reconciling\n"
 "                a bank statement or an account."
 msgstr ""
-"Ceux-ci seront utilisés pour créer rapidement un journal d'articles lors de la réconciliation\n"
-"d'un virmeent banquaire ou d'un compte."
+"Ceux-ci seront utilisés pour créer rapidement un journal d'articles lors du lettrage\n"
+"d'un relevé bancaire ou d'un compte."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -11789,7 +11790,7 @@ msgstr "À facturer"
 msgid "To reconcile the entries company should be the same for all entries."
 msgstr ""
 "La société doit être la même sur toutes les entrées afin de pouvoir les "
-"réconcilier."
+"lettrer."
 
 #. module: account
 #. openerp-web
@@ -12057,7 +12058,7 @@ msgstr "Annuler le lettrage"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_unreconcile_view
 msgid "Unreconcile Transactions"
-msgstr "Transactions non réconciliées"
+msgstr "Délettrer des transactions"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -12469,7 +12470,7 @@ msgstr "Valeur erronée au crédit ou au débit de la pièce comptable !"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You are trying to reconcile some entries that are already reconciled."
-msgstr "Vous essayez de réconcilier des entrées qui le sont déjà."
+msgstr "Vous essayez de lettrer des entrées qui le sont déjà."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__blocked

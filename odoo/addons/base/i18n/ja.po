@@ -9,9 +9,9 @@
 # SHIMIZU Taku <shimizu.taku@gmail.com>, 2019
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2019
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2019
-# Tim Siu Lai <tl@roomsfor.hk>, 2019
 # Takuya Sawada <takuya@tuntunkun.com>, 2019
 # Martin Trigaux, 2019
+# Tim Siu Lai <tl@roomsfor.hk>, 2019
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2019
 # 
 msgid ""
@@ -772,6 +772,8 @@ msgid ""
 "       Technical module: Matrix Implementation\n"
 "    "
 msgstr ""
+"\n"
+"技術モジュール：マトリックス実装"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_multilang
@@ -6336,6 +6338,12 @@ msgid ""
 "                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Private Address</b>\n"
 "                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Address</b>"
 msgstr ""
+"<b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">会社アドレス</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">請求先</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">配送先</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">他のアドレス</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">個人アドレス</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">アドレス</b>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_short_form
@@ -9122,7 +9130,7 @@ msgstr "構成を複製することはできません！"
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Cannot rename/delete fields that are still present in views:"
-msgstr ""
+msgstr "ビューにまだ存在するフィールドの名前変更/削除はできません："
 
 #. module: base
 #: model:res.country,name:base.cv
@@ -9493,7 +9501,7 @@ msgstr "カラーインデクス"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_document_layout
 msgid "Colors"
-msgstr ""
+msgstr "色"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__column1
@@ -9601,7 +9609,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__favicon
 msgid "Company Favicon"
-msgstr ""
+msgstr "会社ファビコン"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_document_layout__logo
@@ -9779,7 +9787,7 @@ msgstr ""
 #. module: base
 #: model:ir.actions.act_window,name:base.action_base_document_layout_configurator
 msgid "Configure your document layout"
-msgstr ""
+msgstr "ドキュメントレイアウトを設定"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_product_configurator
@@ -9832,7 +9840,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_consolidation
 msgid "Consolidation"
-msgstr ""
+msgstr "連結"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint__name
@@ -10798,7 +10806,7 @@ msgstr "他のコンタクトとの重複排除"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "Default Company"
-msgstr ""
+msgstr "デフォルト会社"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters__is_default
@@ -12278,12 +12286,12 @@ msgstr "項目名"
 #: model:ir.module.category,name:base.module_category_operations_field_service
 #: model:ir.module.module,shortdesc:base.module_industry_fsm
 msgid "Field Service"
-msgstr ""
+msgstr "フィールドサービス"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_fsm_report
 msgid "Field Service Reports"
-msgstr ""
+msgstr "フィールドサービスレポート"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_fsm_stock
@@ -13112,7 +13120,7 @@ msgstr "グレナダ"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_grid
 msgid "Grid View"
-msgstr ""
+msgstr "グリッドビュー"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_access__group_id
@@ -13491,7 +13499,7 @@ msgstr "採用活動を管理するのに役立ちます。"
 #. module: base
 #: model:ir.module.category,description:base.module_category_human_resources_time_off
 msgid "Helps you manage your time off."
-msgstr ""
+msgstr "休暇管理をサポート。"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_sales_sign
@@ -14020,7 +14028,7 @@ msgstr "インポート / エクスポート"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_amazon
 msgid "Import Amazon orders and sync deliveries"
-msgstr ""
+msgstr "Amazonオーダインポートおよび運送同期"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_facturx
@@ -14546,7 +14554,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__type__invoice
 msgid "Invoice Address"
-msgstr "請求書住所"
+msgstr "請求先"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.layout_preview
@@ -16489,7 +16497,7 @@ msgstr ""
 msgid ""
 "Module loading %s failed: file %s could not be processed:\n"
 " %s"
-msgstr ""
+msgstr "%s モジュール読込失敗：%s を処理できませんでした： %s"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_translation__module
@@ -18211,7 +18219,7 @@ msgstr "One2Manyフィールドは`commercial_fields` や　`address fields`の�
 #. module: base
 #: model:ir.module.category,name:base.module_category_marketing_online_appointment
 msgid "Online Appointment"
-msgstr ""
+msgstr "オンライン予約"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_sale
@@ -18596,7 +18604,7 @@ msgstr "その他"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__type__other
 msgid "Other Address"
-msgstr ""
+msgstr "他のアドレス"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_extra
@@ -19032,7 +19040,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.layout_preview
 msgid "Payment Terms:"
-msgstr ""
+msgstr "支払条件："
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_payment
@@ -19190,7 +19198,7 @@ msgstr "あなた自身のパスワードを変更をするには、パスワー
 #. module: base
 #: model:ir.module.category,name:base.module_category_sales_point_of_sale
 msgid "Point Of Sale"
-msgstr "販売時点"
+msgstr "POS"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_point_of_sale
@@ -19806,7 +19814,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_barcode
 msgid "Qweb Field Barcode"
-msgstr ""
+msgstr "Qwebフィールドバーコード"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_contact
@@ -20277,7 +20285,7 @@ msgstr "リセラー"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__reset_mode
 msgid "Reset Mode"
-msgstr ""
+msgstr "リセットモード"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.reset_view_arch_wizard_view
@@ -20610,7 +20618,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_subscription_dashboard
 msgid "Sale Subscription Dashboard"
-msgstr ""
+msgstr "販売サブスクリプションダッシュボード"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_purchase
@@ -20640,7 +20648,7 @@ msgstr "販売"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Sales & Purchase"
-msgstr ""
+msgstr "販売 & 購買"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_expense
@@ -21172,7 +21180,7 @@ msgstr "ToDoとしてセット"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_open_base_onboarding_company
 msgid "Set your company data"
-msgstr "会社情報を設定"
+msgstr "会社データを設定"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_company_step
@@ -21373,7 +21381,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_marketing_social
 #: model:ir.module.category,name:base.module_category_social
 msgid "Social"
-msgstr ""
+msgstr "ソーシャル"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_facebook
@@ -22329,7 +22337,7 @@ msgstr "この添付ファイルが添付されたデータベース・オブジ
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__company_id
 msgid "The default company for this user."
-msgstr ""
+msgstr "このユーザのデフォルト会社。"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_failures_dialog
@@ -22942,7 +22950,7 @@ msgstr "時刻書式"
 #: model:ir.module.category,name:base.module_category_human_resources_time_off
 #: model:ir.module.module,shortdesc:base.module_hr_holidays
 msgid "Time Off"
-msgstr ""
+msgstr "休暇"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_holidays_gantt
@@ -24316,7 +24324,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner__website
 #: model:ir.model.fields,field_description:base.field_res_users__website
 msgid "Website Link"
-msgstr ""
+msgstr "ウェブサイトリンク"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_livechat

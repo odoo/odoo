@@ -10,6 +10,7 @@
 # Charles Vervaecke <cvk@odoo.com>, 2019
 # Martin Trigaux, 2019
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2019
+# Cécile Collart <cco@odoo.com>, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # 
@@ -1955,7 +1956,7 @@ msgstr "Dynamische bladwijzer generator"
 #: code:addons/mail/static/src/xml/activity.xml:0
 #, python-format
 msgid "Edit"
-msgstr "Wijzig"
+msgstr "Wijzigen"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
@@ -2306,7 +2307,7 @@ msgstr "Veld *Mailactiviteit* kan niet worden ingesteld naar \"False\"."
 #: code:addons/mail/models/ir_model.py:0
 #, python-format
 msgid "Field \"Mail Blacklist\" cannot be changed to \"False\"."
-msgstr ""
+msgstr "Veld \"Mail blacklist\" kan niet naar \"Onwaar\" gezet worden."
 
 #. module: mail
 #: code:addons/mail/models/ir_model.py:0
@@ -2725,7 +2726,7 @@ msgid ""
 "the email will be send as soon as possible."
 msgstr ""
 "Indien ingesteld, zal de wachtrij de e-mail te sturen na de datum. Indien "
-"niet ingesteld, zal de e-mail zo snel mogelijk worden verstuurd."
+"niet ingesteld, zal de e-mail zo snel mogelijk worden verzonden."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview__scheduled_date
@@ -2735,7 +2736,7 @@ msgid ""
 "the email will be send as soon as possible. Jinja2 placeholders may be used."
 msgstr ""
 "Indien ingesteld, zal de wachtrij managerde e-mail sturen na de datum. "
-"Indien niet ingesteld, zal de e-mail zo snel mogelijk worden verstuurd. "
+"Indien niet ingesteld, zal de e-mail zo snel mogelijk worden verzonden. "
 "Jinja2 placeholders kunnen worden gebruikt."
 
 #. module: mail
@@ -3595,7 +3596,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/thread.xml:0
 #, python-format
 msgid "Messages marked as read will appear in the history."
-msgstr ""
+msgstr "Berichten gemarkeerd als gelezen worden getoond in de geschiedenis."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__internal
@@ -4068,7 +4069,7 @@ msgstr "Notificatie bericht"
 #: model:ir.cron,cron_name:mail.ir_cron_delete_notification
 #: model:ir.cron,name:mail.ir_cron_delete_notification
 msgid "Notification: Delete Notifications older than 6 Month"
-msgstr ""
+msgstr "Notificatie: verwijder notificaties ouder dan 6 maanden"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__notification_ids
@@ -5065,7 +5066,7 @@ msgstr "Zeg iets"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "Schedule"
-msgstr "Plannen"
+msgstr "Planning"
 
 #. module: mail
 #. openerp-web
@@ -5106,7 +5107,7 @@ msgstr "Geplande datum"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__scheduled_date
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Scheduled Send Date"
-msgstr "Geplande verstuurdatum"
+msgstr "Geplande verzenddatum"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_search
@@ -5208,7 +5209,7 @@ msgstr "Verzend e-mail"
 #: code:addons/mail/models/mail_template.py:0
 #, python-format
 msgid "Send Mail (%s)"
-msgstr "Verstuur mail (%s)"
+msgstr "Verzend mail (%s)"
 
 #. module: mail
 #. openerp-web
@@ -5230,19 +5231,19 @@ msgstr "Bericht versturen"
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_partner_mass_mail
 msgid "Send email"
-msgstr "Verstuur e-mail"
+msgstr "Verzend e-mail"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/discuss.js:0
 #, python-format
 msgid "Send explanation to author"
-msgstr "Verstuur uitleg naar auteur"
+msgstr "Verzend uitleg naar auteur"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Send guidelines"
-msgstr "Verstuur richtlijnen"
+msgstr "Verzend richtlijnen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__moderation_guidelines
@@ -5254,7 +5255,7 @@ msgstr "Verzend regels naar nieuwe abonnees"
 #: code:addons/mail/static/src/xml/chatter.xml:0
 #, python-format
 msgid "Send message"
-msgstr "Verstuur bericht"
+msgstr "Verzend bericht"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__email_send
@@ -5681,7 +5682,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/activity.js:0
 #, python-format
 msgid "This record has an exception activity."
-msgstr ""
+msgstr "Dit record heeft een activiteit met uitzondering."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
@@ -6269,7 +6270,7 @@ msgstr "Je gaat %s berichten verwijderen. Bevestig je de actie?"
 #: code:addons/mail/static/src/js/discuss.js:0
 #, python-format
 msgid "You are going to discard 1 message. Do you confirm the action?"
-msgstr "U gaat één bericht verwerpen. Bevestigd u de actie?"
+msgstr "U gaat één bericht verwijderen. Bevestigd u de actie?"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form

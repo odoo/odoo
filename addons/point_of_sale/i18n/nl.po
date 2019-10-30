@@ -10,6 +10,7 @@
 # Thijs van Oers <thijsvanoers@yahoo.com>, 2019
 # Maxim Vandenbroucke <mxv@odoo.com>, 2019
 # Martin Trigaux, 2019
+# Cécile Collart <cco@odoo.com>, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # 
@@ -136,6 +137,12 @@ msgstr ""
 "<p>KIik om een nieuwe kassa sessie te starten <b>draait op tablets</b>, "
 "laptops, of industrieele hardware.</p><p>Wanneer de sessie is gestart, kan "
 "het systeem blijven draaien zonder een internet verbinding.</p>"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:0
+#, python-format
+msgid "<p>Dear %s,<br/>Here is your electronic ticket for the %s. </p>"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -550,7 +557,7 @@ msgstr "Kenmerken"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Authorized Difference"
-msgstr ""
+msgstr "Toegestane bedrag afwijking"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__rescue
@@ -758,7 +765,7 @@ msgstr "Kas controle"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Cash In/Out"
-msgstr ""
+msgstr "Geld in/uit"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__cash_journal_id
@@ -837,7 +844,7 @@ msgstr "Stoelen"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Change"
-msgstr "Wijzig"
+msgstr "Wijzigen"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1062,12 +1069,12 @@ msgstr "Apparaten verbinden met uw Kassa"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Connect devices to your PoS through an IoT Box"
-msgstr ""
+msgstr "Verbind toestellen met uw kassa via een IoT box"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__other_devices
 msgid "Connect devices to your PoS without an IoT Box."
-msgstr ""
+msgstr "Verbind toestellen met uw kassa zonder een IoT box."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1876,7 +1883,7 @@ msgstr "Kop- & voetstuk"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__hide_use_payment_terminal
 msgid "Hide Use Payment Terminal"
-msgstr ""
+msgstr "Verberg gebruik betaalterminal"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2710,7 +2717,7 @@ msgstr "Order "
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "Order %s is not fully paid."
-msgstr ""
+msgstr "Order %s is niet volledig betaald."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__order_count
@@ -2926,7 +2933,7 @@ msgstr "Betaalterminals"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__transaction_id
 msgid "Payment Transaction ID"
-msgstr ""
+msgstr "Betalingstransactie ID"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2945,7 +2952,7 @@ msgstr "Betaalaanvraag in behandeling"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Payment reversed"
-msgstr ""
+msgstr "Betaling omgekeerd"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -3589,6 +3596,12 @@ msgstr "Lees weegschaal"
 #: code:addons/point_of_sale/static/src/js/tours/point_of_sale.js:0
 #, python-format
 msgid "Ready to launch your <b>point of sale</b>?"
+msgstr "Klaar om uw <b>kassa</b> te lanceren?"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:0
+#, python-format
+msgid "Receipt %s"
 msgstr ""
 
 #. module: point_of_sale
@@ -3729,7 +3742,7 @@ msgstr "Retourneren"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Reverse Payment"
-msgstr ""
+msgstr "Omkering betaling"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_sms_error
@@ -3848,7 +3861,7 @@ msgstr "Selecteer prijslijst"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__selectable_categ_ids
 msgid "Selectable Categ"
-msgstr ""
+msgstr "Selecteerbare categ"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3863,7 +3876,7 @@ msgstr "Verzenden"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Send Payment Request"
-msgstr "Verstuurd betaalaanvraag"
+msgstr "Verzend betaalaanvraag"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4091,7 +4104,7 @@ msgstr "Beginsaldo"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Starting Cash"
-msgstr ""
+msgstr "Startbalans"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4537,7 +4550,7 @@ msgstr "Theoretisch eindsaldo"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "There are no products in this category."
-msgstr ""
+msgstr "Er zijn geen producten in deze categorie."
 
 #. module: point_of_sale
 #. openerp-web
@@ -4859,7 +4872,7 @@ msgstr "Totaal:"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Transaction cancelled"
-msgstr ""
+msgstr "Transactie geannuleerd"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_barcode_rule__type
@@ -5362,7 +5375,7 @@ msgstr "b.v. terugstuurbeleid, bedankt om bij ons te kopen!"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
 msgid "e.g. Soft Drinks"
-msgstr ""
+msgstr "bijvoorbeeld frisdranken"
 
 #. module: point_of_sale
 #. openerp-web

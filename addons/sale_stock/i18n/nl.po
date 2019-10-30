@@ -63,7 +63,7 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
 msgid "<span class=\"o_stat_text\">Sales</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Verkoop</span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.product_template_view_form_inherit_stock
@@ -252,7 +252,7 @@ msgstr "Vergeet niet de klant te wijzigen op de volgende leveringen: %s"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__effective_date
 msgid "Effective Date"
-msgstr "Geboekte datum"
+msgstr "Boekdatum"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -364,7 +364,7 @@ msgstr "Partij/Serienummer"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Lots &amp; Serial numbers will appear on the invoice"
-msgstr ""
+msgstr "Partij- &amp; Serienummers worden afgedrukt op de factuur"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
@@ -608,6 +608,9 @@ msgid ""
 "                        From <strong>\"%s\"</strong> To <strong>\"%s\"</strong>,\n"
 "                        You should probably update the partner on this document."
 msgstr ""
+"Het afleveradres is gewijzigd op de verkooporder<br/>\n"
+"Van \"<strong>\" %s\"</strong> naar <strong>\"%s\"</strong>,\n"
+"U moet waarschijnlijk de relatie in dit document bijwerken."
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
@@ -620,7 +623,7 @@ msgstr "Dit product is verpakt door %.2f %s.. U moet %.2f %s verkopen."
 #: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
 #, python-format
 msgid "This product is replenished on demand."
-msgstr ""
+msgstr "Dit product wordt op aanvraag bijgevuld."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking

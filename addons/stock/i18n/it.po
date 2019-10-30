@@ -3,7 +3,6 @@
 # 	* stock
 # 
 # Translators:
-# Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2019
 # Christian <chris@effeci.info>, 2019
 # mbo_odoo <mbo@odoo.com>, 2019
 # Davide Corio <enlightx@gmail.com>, 2019
@@ -207,7 +206,7 @@ msgid ""
 "            Manual actions may be needed."
 msgstr ""
 ".\n"
-"            Potrebbero essere necessarie azioni manuali."
+"            Richieste possibili azioni manuali."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -440,7 +439,7 @@ msgstr "<strong>Ubicazione</strong>"
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Lot/Serial Number</strong>"
-msgstr "<strong>Lotto/Numero di serie</strong>"
+msgstr "<strong>Numero di serie/lotto</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_warehouse_orderpoint_kanban
@@ -509,7 +508,7 @@ msgstr "<strong>Data pianificata:</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<strong>Shipping Date:</strong>"
-msgstr ""
+msgstr "<strong>Data di spedizione:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -2085,7 +2084,7 @@ msgstr "Data effettiva"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Email Confirmation"
-msgstr ""
+msgstr "E-mail di conferma"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__stock_move_email_validation
@@ -3292,7 +3291,7 @@ msgstr "Lotto/Serie"
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_body_print
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_inventory
 msgid "Lot/Serial #"
-msgstr "Numero di lotto/serie"
+msgstr "N. di serie/lotto"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
@@ -3309,17 +3308,17 @@ msgstr "Lotto/Serie:"
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 msgid "Lot/Serial Number"
-msgstr "Numero di lotto/seriale"
+msgstr "Numero di serie/lotto"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_lot_label
 msgid "Lot/Serial Number (PDF)"
-msgstr "Lotto/numero di serie (PDF)"
+msgstr "Numero di serie/lotto (PDF)"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.label_lot_template
 msgid "Lot/Serial Number (ZPL)"
-msgstr "Numero di lotto/serie (ZPL)"
+msgstr "Numero di serie/lotto (ZPL)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_tree
@@ -3329,18 +3328,18 @@ msgstr "Inventario numero lotto/seriale"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__lot_name
 msgid "Lot/Serial Number Name"
-msgstr "Nome del lotto/numero di serie"
+msgstr "Nome numero di serie/lotto"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "Lot/Serial Numbers"
-msgstr ""
+msgstr "Numeri di serie/lotto"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_production_lot
 msgid "Lots & Serial Numbers"
-msgstr "Lotti e numeri seriali"
+msgstr "Numeri di serie e lotti"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -3364,7 +3363,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_tree
 msgid "Lots/Serial Numbers"
-msgstr "Numeri di lotti/seriali"
+msgstr "Numeri di serie/lotti"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__mto_pull_id
@@ -4432,13 +4431,13 @@ msgstr "Movimenti del prodotto (riga movimento magazzino)"
 #. module: stock
 #: model:ir.actions.report,name:stock.label_product_packaging
 msgid "Product Packaging (ZPL)"
-msgstr "Imballaggio prodotti (ZPL)"
+msgstr "Imballaggio prodotto (ZPL)"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_packagings
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Product Packagings"
-msgstr "Imballaggi prodotti"
+msgstr "Imballaggi prodotto"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -5244,7 +5243,7 @@ msgstr "Esegui scheduler"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_sms
 msgid "SMS Confirmation"
-msgstr "Conferma SMS"
+msgstr "SMS di conferma"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__message_has_sms_error
@@ -5392,11 +5391,14 @@ msgid ""
 "Send an automatic confirmation SMS Text Message when Delivery Orders are "
 "done"
 msgstr ""
+"Invia un messaggio SMS di conferma automatico a ordine di consegna "
+"completato"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Send an automatic confirmation email when Delivery Orders are done"
 msgstr ""
+"Invia una e-mail di conferma automatica a ordine di consegna completato"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__pick_ship
@@ -5520,7 +5522,7 @@ msgstr "Spedizione"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Shipping"
-msgstr "Trasmettere"
+msgstr "Spedizione"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery
@@ -6661,7 +6663,7 @@ msgstr "Deminimizza"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_production_lot__name
 msgid "Unique Lot/Serial Number"
-msgstr "Numeri di lotto/serie univoci"
+msgstr "Numero di serie/lotto univoco"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__price_unit
