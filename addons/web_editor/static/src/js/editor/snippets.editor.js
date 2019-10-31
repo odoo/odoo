@@ -1053,16 +1053,17 @@ var SnippetsMenu = Widget.extend({
                 resolve(null);
             }).then(editorToEnable => {
                 // First disable all editors...
-                this.snippetEditors.forEach(editor => {
+                for (let i = this.snippetEditors.length; i--;) {
+                    const editor = this.snippetEditors[i];
                     if (editor === editorToEnable) {
                         // Avoid disable -> enable of an editor (the toggleFocus
                         // method is in charge of doing nothing is nothing has
                         // to be done but if we explicitly ask for disable then
                         // enable... it will disable then enable).
-                        return;
+                        continue;
                     }
                     editor.toggleFocus(false, previewMode);
-                });
+                }
                 // ... then enable the right editor
                 if (editorToEnable) {
                     editorToEnable.toggleFocus(true, previewMode);
