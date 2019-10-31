@@ -9,13 +9,13 @@ class Project(models.Model):
     _inherit = "project.project"
 
     allow_timesheets = fields.Boolean("Timesheets", default=True, help="Enable timesheeting on the project.")
-
-    @api.onchange('partner_id')
-    def _onchange_partner_id(self):
-        domain = []
-        if self.partner_id:
-            domain = [('partner_id', '=', self.partner_id.id)]
-        return {'domain': {'analytic_account_id': domain}}
+    analytic_account_id = fields.Many2one(
+        # note: replaces ['|', ('company_id', '=', False), ('company_id', '=', company_id)]
+        domain="""[
+            '|', ('company_id', '=', False), ('company_id', '=', company_id),
+            ('partner_id', '=?', partner_id),
+        ]"""
+    )
 
     @api.onchange('analytic_account_id')
     def _onchange_analytic_account(self):
