@@ -408,6 +408,47 @@ body.editor_enable.editor_has_snippets {
             }
         }
 
+        // Chart Snippet
+        we-matrix {
+            overflow-y: auto;
+
+            table {
+                table-layout: fixed;
+                width: 100%;
+
+                td, th {
+                    text-align: center;
+                    we-button {
+                        display: inline-block;
+                        color: white;
+                        height: 100%;
+
+                        &.o_we_matrix_remove_col, &.o_we_matrix_remove_row {
+                            display: none;
+                        }
+                    }
+                    input {
+                        border: 1px solid var(--o-we-bg-color-dark);
+                        background-color: var(--o-we-bg-color-dark);
+                        color: var(--o-we-color);
+                        font-size: 12px;
+                        width: 100%;
+                    }
+                    &:last-child {
+                        width: 28px;
+                    }
+                }
+                &.o_we_matrix_five_col {
+                    width: auto;
+                    td, th {
+                        input {
+                            width: 43px;
+                        }
+                    }
+                }
+            }
+        }
+
         //----------------------------------------------------------------------
         // Layout Utils
         //----------------------------------------------------------------------
