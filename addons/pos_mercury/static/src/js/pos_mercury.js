@@ -125,6 +125,10 @@ pos_model.Paymentline = pos_model.Paymentline.extend({
         if (this.mercury_card_number) {
             this.name = this.mercury_card_brand + " (****" + this.mercury_card_number + ")";
         }
+    },
+    is_done: function () {
+        var res = _paylineproto.is_done.apply(this);
+        return res && !this.mercury_swipe_pending;
     }
 });
 
