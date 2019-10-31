@@ -2192,6 +2192,14 @@ exports.Paymentline = Backbone.Model.extend({
     },
 
     /**
+     * Check if paymentline is done.
+     * Paymentline is done if there is no payment status or the payment status is done.
+     */
+    is_done: function() {
+        return this.get_payment_status() ? this.get_payment_status() === 'done' : true;
+    },
+
+    /**
      * Set additional info to be printed on the receipts. value should
      * be compatible with both the QWeb and ESC/POS receipts.
      *
@@ -2862,11 +2870,7 @@ exports.Order = Backbone.Model.extend({
     },
     get_total_paid: function() {
         return round_pr(this.paymentlines.reduce((function(sum, paymentLine) {
-            if (paymentLine.get_payment_status()) {
-                if (paymentLine.get_payment_status() == 'done') {
-                    sum += paymentLine.get_amount();
-                }
-            } else {
+            if (paymentLine.is_done()) {
                 sum += paymentLine.get_amount();
             }
             return sum;
