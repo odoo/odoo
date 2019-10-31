@@ -118,8 +118,10 @@ class HolidaysType(models.Model):
                 holiday_type.valid = True
 
     def _search_valid(self, operator, value):
-        dt = self._context.get('default_date_from') or fields.Date.context_today(self)
+        dt = self._context.get('default_date_from', False)
 
+        if not dt:
+            return []
         signs = ['>=', '<='] if operator == '=' else ['<=', '>=']
 
         return ['|', ('validity_stop', operator, False), '&',
