@@ -82,9 +82,6 @@ class IrHttp(models.AbstractModel):
     # Routing map
     #------------------------------------------------------
 
-    _routing_map = {}
-    _rewrite_len = {}
-
     @classmethod
     def _get_converters(cls):
         return {'model': ModelConverter, 'models': ModelsConverter, 'int': SignedIntConverter}
@@ -253,6 +250,11 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def routing_map(cls, key=None):
+
+        if not hasattr(cls, '_routing_map'):
+            cls._routing_map = {}
+            cls._rewrite_len = {}
+
         if key not in cls._routing_map:
             _logger.info("Generating routing map for key %s" % str(key))
             installed = request.registry._init_modules | set(odoo.conf.server_wide_modules)
