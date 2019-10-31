@@ -397,6 +397,7 @@ class MrpProduction(models.Model):
         self.product_uom_id = self.bom_id.product_uom_id.id
         self.picking_type_id = self.bom_id.picking_type_id or self.picking_type_id
 
+<<<<<<< HEAD
     @api.onchange('date_planned_start')
     def _onchange_date_planned_start(self):
         self.move_raw_ids.update({
@@ -421,14 +422,21 @@ class MrpProduction(models.Model):
         })
 
     @api.onchange('picking_type_id')
+=======
+    @api.onchange('picking_type_id', 'routing_id')
+>>>>>>> 7cea866f653... temp
     def onchange_picking_type(self):
         location = self.env.ref('stock.stock_location_stock')
         try:
             location.check_access_rule('read')
         except (AttributeError, AccessError):
             location = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.company_id.id)], limit=1).lot_stock_id
+<<<<<<< HEAD
         self.move_raw_ids.update({'picking_type_id': self.picking_type_id})
         self.location_src_id = self.picking_type_id.default_location_src_id.id or location.id
+=======
+        self.location_src_id = self.routing_id.location_id.id or self.picking_type_id.default_location_src_id.id or location.id
+>>>>>>> 7cea866f653... temp
         self.location_dest_id = self.picking_type_id.default_location_dest_id.id or location.id
 
     @api.multi

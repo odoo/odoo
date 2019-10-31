@@ -20,6 +20,14 @@ class MrpRouting(models.Model):
     operation_ids = fields.One2many(
         'mrp.routing.workcenter', 'routing_id', 'Operations',
         copy=True, oldname='workcenter_lines')
+<<<<<<< HEAD
+=======
+    location_id = fields.Many2one(
+        'stock.location', 'Raw Materials Location',
+        help="Keep empty if you produce at the location where you find the raw materials. "
+             "Set a location if you produce at a fixed location. This can be a partner location "
+             "if you subcontract the manufacturing operations.")
+>>>>>>> 7cea866f653... temp
     company_id = fields.Many2one(
         'res.company', 'Company',
         default=lambda self: self.env['res.company']._company_default_get('mrp.routing'))
