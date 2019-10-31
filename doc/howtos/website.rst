@@ -367,9 +367,9 @@ Relations between models
 ------------------------
 
 We have seen a pair of "basic" fields stored directly in the record. There are
-:ref:`a number of basic fields <reference/orm/fields/basic>`. The second
+:ref:`a number of basic fields <reference/fields/basic>`. The second
 broad categories of fields are :ref:`relational
-<reference/orm/fields/relational>` and used to link records to one another
+<reference/fields/relational>` and used to link records to one another
 (within a model or across models).
 
 For demonstration, let's create a *courses* model. Each course should have a
