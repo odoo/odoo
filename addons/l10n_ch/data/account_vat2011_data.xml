@@ -792,4 +792,53 @@
             <field name="children_tax_ids" eval="[(6, 0, [ref('vat_77_purchase_return'), ref('vat_77_purchase')])]"/>
         </record>
 
+
+        <!-- Taxes for other movements -->
+        <record model="account.tax.template" id="vat_other_movements_900">
+            <field name="name">Subventions, taxes touristiques à 0%</field>
+            <field name="amount" eval="0.00"/>
+            <field name="description">0% subventions</field>
+            <field name="amount_type">percent</field>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+            <field name="type_tax_use">sale</field>
+            <field name="tax_group_id" ref="tax_group_tva_0"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('account_tax_report_line_chtax_900')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('account_tax_report_line_chtax_900')],
+                }),
+            ]"/>
+        </record>
+
+        <record model="account.tax.template" id="vat_other_movements_910">
+            <field name="name">Dons, dividendes, dédommagements à 0%</field>
+            <field name="amount" eval="0.00"/>
+            <field name="description">0% dons</field>
+            <field name="amount_type">percent</field>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+            <field name="type_tax_use">sale</field>
+            <field name="tax_group_id" ref="tax_group_tva_0"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('account_tax_report_line_chtax_910')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('account_tax_report_line_chtax_910')],
+                }),
+            ]"/>
+        </record>
 </odoo>
