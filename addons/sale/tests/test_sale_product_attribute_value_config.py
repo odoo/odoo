@@ -7,29 +7,27 @@ from odoo.tests import tagged
 
 
 class TestSaleProductAttributeValueSetup(TestProductAttributeValueSetup):
-
-    @classmethod
-    def _setup_currency(cls, currency_ratio=2):
+    def _setup_currency(self, currency_ratio=2):
         """Get or create a currency. This makes the test non-reliant on demo.
 
         With an easy currency rate, for a simple 2 ratio in the following tests.
         """
-        from_currency = cls.computer.currency_id
-        cls._set_or_create_rate_today(from_currency, rate=1)
+        from_currency = self.computer.currency_id
+        self._set_or_create_rate_today(from_currency, rate=1)
 
-        to_currency = cls._get_or_create_currency("my currency", "C")
-        cls._set_or_create_rate_today(to_currency, currency_ratio)
+        to_currency = self._get_or_create_currency("my currency", "C")
+        self._set_or_create_rate_today(to_currency, currency_ratio)
+
         return to_currency
 
-    @classmethod
-    def _set_or_create_rate_today(cls, currency, rate):
+    def _set_or_create_rate_today(self, currency, rate):
         """Get or create a currency rate for today. This makes the test
         non-reliant on demo data."""
         name = fields.Date.today()
         currency_id = currency.id
-        company_id = cls.env.company.id
+        company_id = self.env.company.id
 
-        CurrencyRate = cls.env['res.currency.rate']
+        CurrencyRate = self.env['res.currency.rate']
 
         currency_rate = CurrencyRate.search([
             ('company_id', '=', company_id),
@@ -47,11 +45,10 @@ class TestSaleProductAttributeValueSetup(TestProductAttributeValueSetup):
                 'rate': rate,
             })
 
-    @classmethod
-    def _get_or_create_currency(cls, name, symbol):
+    def _get_or_create_currency(self, name, symbol):
         """Get or create a currency based on name. This makes the test
         non-reliant on demo data."""
-        currency = cls.env['res.currency'].search([('name', '=', name)])
+        currency = self.env['res.currency'].search([('name', '=', name)])
         return currency or currency.create({
             'name': name,
             'symbol': symbol,
@@ -128,7 +125,7 @@ class TestSaleProductAttributeValueConfig(TestSaleProductAttributeValueSetup):
             self.assertFalse(self.computer._is_combination_possible(computer_ssd_256 + computer_ram_8 + computer_hdd_1))
 
             # CASE: OK after attribute line removed
-            self.computer_hdd_attribute_lines.write({'active': False})
+            self.computer_hdd_attribute_lines.unlink()
             self.assertTrue(self.computer._is_combination_possible(computer_ssd_256 + computer_ram_8))
 
             # CASE: not archived (with no_variant)
@@ -145,7 +142,7 @@ class TestSaleProductAttributeValueConfig(TestSaleProductAttributeValueSetup):
             self.assertFalse(self.computer._is_combination_possible(computer_ssd_256 + computer_ram_8 + computer_hdd_1))
 
             # CASE: archived combination has different attributes (including no_variant)
-            self.computer_ssd_attribute_lines.write({'active': False})
+            self.computer_ssd_attribute_lines.unlink()
 
             variant4 = self.computer._get_variant_for_combination(computer_ram_8 + computer_hdd_1)
             self.env['sale.order.line'].create({
@@ -156,7 +153,7 @@ class TestSaleProductAttributeValueConfig(TestSaleProductAttributeValueSetup):
             self.assertTrue(self.computer._is_combination_possible(computer_ram_8 + computer_hdd_1))
 
             # CASE: archived combination has different attributes (without no_variant)
-            self.computer_hdd_attribute_lines.write({'active': False})
+            self.computer_hdd_attribute_lines.unlink()
             self.hdd_attribute.create_variant = 'always'
             self._add_hdd_attribute_line()
             computer_ssd_256 = self._get_product_template_attribute_value(self.ssd_256)
@@ -232,7 +229,7 @@ class TestSaleProductAttributeValueConfig(TestSaleProductAttributeValueSetup):
 
         # CASE: no_variant combination, it's another variant now
 
-        self.computer_ssd_attribute_lines.write({'active': False})
+        self.computer_ssd_attribute_lines.unlink()
         self.ssd_attribute.create_variant = 'no_variant'
         self._add_ssd_attribute_line()
         computer_ssd_256 = self._get_product_template_attribute_value(self.ssd_256)
@@ -251,7 +248,7 @@ class TestSaleProductAttributeValueConfig(TestSaleProductAttributeValueSetup):
         self.assertEqual(res['list_price'], 2222 * currency_ratio)
 
         # CASE: dynamic combination, but the variant already exists
-        self.computer_hdd_attribute_lines.write({'active': False})
+        self.computer_hdd_attribute_lines.unlink()
         self.hdd_attribute.create_variant = 'dynamic'
         self._add_hdd_attribute_line()
         computer_ssd_256 = self._get_product_template_attribute_value(self.ssd_256)
@@ -350,7 +347,7 @@ class TestSaleProductAttributeValueConfig(TestSaleProductAttributeValueSetup):
         """The goal of this test is to make sure the create_product_variant does
         work with dynamic. If the combination is possible, it should create it.
         If it's not possible, it should not create it."""
-        self.computer_hdd_attribute_lines.write({'active': False})
+        self.computer_hdd_attribute_lines.unlink()
         self.hdd_attribute.create_variant = 'dynamic'
         self._add_hdd_attribute_line()
 

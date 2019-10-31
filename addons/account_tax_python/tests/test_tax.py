@@ -6,10 +6,10 @@ from odoo.tests import tagged
 @tagged('post_install', '-at_install')
 class TestTaxPython(TestTax):
 
-    @classmethod
-    def setUpClass(cls):
-        super(TestTaxPython, cls).setUpClass()
-        cls.python_tax = cls.tax_model.create({
+    def setUp(self):
+        super(TestTaxPython, self).setUp()
+
+        self.python_tax = self.tax_model.create({
             'name': 'Python TAx',
             'amount_type': 'code',
             'amount': 0.0,

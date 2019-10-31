@@ -8,7 +8,7 @@ class WebsiteSaleVisitorTests(TransactionCase):
 
     def setUp(self):
         super().setUp()
-        self.website = self.env.ref('website.default_website')
+        self.website = self.env['website'].browse(1)
         self.WebsiteSaleController = WebsiteSale()
         self.cookies = {}
 
@@ -20,10 +20,7 @@ class WebsiteSaleVisitorTests(TransactionCase):
         self.assertEqual(len(Visitor.search([])), 0, "No visitor at the moment")
         self.assertEqual(len(Track.search([])), 0, "No track at the moment")
 
-        product = self.env['product.product'].create({
-            'name': 'Storage Box',
-            'website_published': True,
-        })
+        product = self.env.ref('product.product_product_7')
 
         with MockRequest(self.env, website=self.website):
             self.cookies = self.WebsiteSaleController.products_recently_viewed_update(product.id)
@@ -37,12 +34,7 @@ class WebsiteSaleVisitorTests(TransactionCase):
         self.assertEqual(len(Visitor.search([])), 1, "No visitor should be created after visiting another tracked product")
         self.assertEqual(len(Track.search([])), 1, "No track should be created after visiting the same tracked product before 30 min")
 
-        product = self.env['product.product'].create({
-            'name': 'Large Cabinet',
-            'website_published': True,
-            'list_price': 320.0,
-        })
-
+        product = self.env.ref('product.product_product_6')
         with MockRequest(self.env, website=self.website, cookies=self.cookies):
             self.WebsiteSaleController.products_recently_viewed_update(product.id)
 

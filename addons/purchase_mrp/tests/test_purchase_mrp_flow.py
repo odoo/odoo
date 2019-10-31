@@ -223,7 +223,7 @@ class TestSaleMrpFlow(TransactionCase):
         #              |- component_e x1
 
         # Creation of a sale order for x7 kit_parent
-        partner = self.env['res.partner'].create({'name': 'My Test Partner'})
+        partner = self.env.ref('base.res_partner_1')
         f = Form(self.env['purchase.order'])
         f.partner_id = partner
         with f.order_line.new() as line:

@@ -6,10 +6,9 @@
 from odoo.tests import Form, tagged
 from odoo.addons.stock_account.tests.test_stockvaluationlayer import TestStockValuationCommon
 from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounting_data
-from odoo.addons.stock_account.tests.stock_account_minimal_test import StockAccountMinimalTest
 
 
-class TestStockValuationLC(TestStockValuationCommon, StockAccountMinimalTest):
+class TestStockValuationLC(TestStockValuationCommon):
     @classmethod
     def setUpClass(cls):
         super(TestStockValuationLC, cls).setUpClass()

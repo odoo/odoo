@@ -2,18 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
-from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 from odoo.tools import mute_logger
+from odoo.tests import common
 from odoo.exceptions import AccessError
 
 
-class TestAPI(SavepointCaseWithUserDemo):
+class TestAPI(common.TransactionCase):
     """ test the new API of the ORM """
-
-    @classmethod
-    def setUpClass(cls):
-        super(TestAPI, cls).setUpClass()
-        cls._load_partners_set()
 
     def assertIsRecordset(self, value, model):
         self.assertIsInstance(value, models.BaseModel)
@@ -53,8 +48,8 @@ class TestAPI(SavepointCaseWithUserDemo):
     @mute_logger('odoo.models')
     def test_02_query_limit(self):
         """ Build a recordset with offset, and check equivalence. """
-        partners1 = self.env['res.partner'].search([], order='id asc', limit=10)
-        partners2 = self.env['res.partner'].search([], order='id asc')[:10]
+        partners1 = self.env['res.partner'].search([], limit=10)
+        partners2 = self.env['res.partner'].search([])[:10]
         self.assertIsRecordset(partners1, 'res.partner')
         self.assertIsRecordset(partners2, 'res.partner')
         self.assertEqual(list(partners1), list(partners2))
@@ -62,8 +57,8 @@ class TestAPI(SavepointCaseWithUserDemo):
     @mute_logger('odoo.models')
     def test_03_query_offset_limit(self):
         """ Build a recordset with offset and limit, and check equivalence. """
-        partners1 = self.env['res.partner'].search([], order='id asc', offset=3, limit=7)
-        partners2 = self.env['res.partner'].search([], order='id asc')[3:10]
+        partners1 = self.env['res.partner'].search([], offset=3, limit=7)
+        partners2 = self.env['res.partner'].search([])[3:10]
         self.assertIsRecordset(partners1, 'res.partner')
         self.assertIsRecordset(partners2, 'res.partner')
         self.assertEqual(list(partners1), list(partners2))
@@ -178,7 +173,7 @@ class TestAPI(SavepointCaseWithUserDemo):
         partners[0].company_id.write({'name': 'Fools'})
 
         # create an environment with the demo user
-        demo = self.env['res.users'].search([('login', 'ilike', 'demo')])[0]
+        demo = self.env['res.users'].search([('login', '=', 'demo')])[0]
         demo_env = self.env(user=demo)
         self.assertNotEqual(demo_env, self.env)
 
@@ -198,18 +193,16 @@ class TestAPI(SavepointCaseWithUserDemo):
             self.assertEqual(p.env, demo_env)
 
         # demo user can read but not modify company data
-        demo_partner = self.env['res.partner'].search([('name', '=', 'Landon Roberts')]).with_user(demo)
-        self.assertTrue(demo_partner.company_id, 'This partner is supposed to be linked to a company')
-        demo_partner.company_id.name
+        demo_partners[0].company_id.name
         with self.assertRaises(AccessError):
-            demo_partner.company_id.write({'name': 'Pricks'})
+            demo_partners[0].company_id.write({'name': 'Pricks'})
 
         # remove demo user from all groups
         demo.write({'groups_id': [(5,)]})
 
         # demo user can no longer access partner data
         with self.assertRaises(AccessError):
-            demo_partner.company_id.name
+            demo_partners[0].company_id.name
 
     @mute_logger('odoo.models')
     def test_60_cache(self):
@@ -326,7 +319,7 @@ class TestAPI(SavepointCaseWithUserDemo):
 
         # the recordset operations below share the prefetch set
         same_prefetch(partners, partners.browse(partners.ids))
-        same_prefetch(partners, partners.with_user(self.user_demo))
+        same_prefetch(partners, partners.with_user(self.env.ref('base.user_demo')))
         same_prefetch(partners, partners.with_context(active_test=False))
         same_prefetch(partners, partners[:10].with_prefetch(partners._prefetch_ids))
 
@@ -345,7 +338,7 @@ class TestAPI(SavepointCaseWithUserDemo):
             'name': 'Non-empty relational fields',
             'country_id': self.ref('base.be'),
             'bank_ids': [(0, 0, {'acc_number': 'FOO42'})],
-            'category_id': [(4, self.partner_category.id)],
+            'category_id': [(4, self.ref('base.res_partner_category_0'))],
         }
         partners = partners.create(vals0) + partners.create(vals1)
         for partner in partners:
@@ -518,5 +511,5 @@ class TestAPI(SavepointCaseWithUserDemo):
         self.assertEqual(ps.sorted('name').ids, by_name_ids)
 
         # sort by inverse name, with a field name
-        by_name_ids = [p.id for p in sorted(ps, key=lambda p: p.name, reverse=True)]
+        by_name_ids.reverse()
         self.assertEqual(ps.sorted('name', reverse=True).ids, by_name_ids)

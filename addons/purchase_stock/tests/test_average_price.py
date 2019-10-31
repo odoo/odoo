@@ -4,16 +4,15 @@
 import time
 
 from .common import TestPurchase
-from odoo.addons.stock_account.tests.stock_account_minimal_test import StockAccountMinimalTest
 
-class TestAveragePrice(TestPurchase, StockAccountMinimalTest):
+
+class TestAveragePrice(TestPurchase):
 
     def test_00_average_price(self):
         """ Testcase for average price computation"""
 
-        res_partner_3 = self.env['res.partner'].create({
-            'name': 'Gemini Partner',
-        })
+        self._load('account', 'test', 'account_minimal_test.xml')
+        self._load('stock_account', 'test', 'stock_valuation_account.xml')
 
         # Set a product as using average price.
         product_cable_management_box = self.env['product.product'].create({
@@ -30,12 +29,12 @@ class TestAveragePrice(TestPurchase, StockAccountMinimalTest):
         })
         product_cable_management_box.categ_id.property_cost_method = 'average'
         product_cable_management_box.categ_id.property_valuation = 'real_time'
-        product_cable_management_box.categ_id.property_stock_account_input_categ_id = self.o_expense
-        product_cable_management_box.categ_id.property_stock_account_output_categ_id = self.o_income
+        product_cable_management_box.categ_id.property_stock_account_input_categ_id = self.ref('purchase.o_expense')
+        product_cable_management_box.categ_id.property_stock_account_output_categ_id = self.ref('purchase.o_income')
 
         # I create a draft Purchase Order for first incoming shipment for 10 pieces at 60€
         purchase_order_1 = self.env['purchase.order'].create({
-            'partner_id': res_partner_3.id,
+            'partner_id': self.env.ref('base.res_partner_3').id,
             'order_line': [(0, 0, {
                 'name': 'Average Ice Cream',
                 'product_id': product_cable_management_box.id,
@@ -63,7 +62,7 @@ class TestAveragePrice(TestPurchase, StockAccountMinimalTest):
 
         # I create a draft Purchase Order for second incoming shipment for 30 pieces at 80€
         purchase_order_2 = self.env['purchase.order'].create({
-            'partner_id': res_partner_3.id,
+            'partner_id': self.env.ref('base.res_partner_3').id,
             'order_line': [(0, 0, {
                 'name': product_cable_management_box.name,
                 'product_id': product_cable_management_box.id,
@@ -109,7 +108,7 @@ class TestAveragePrice(TestPurchase, StockAccountMinimalTest):
 
         # Make a new purchase order with 500 g Average Ice Cream at a price of 0.2€/g
         purchase_order_3 = self.env['purchase.order'].create({
-            'partner_id': res_partner_3.id,
+            'partner_id': self.env.ref('base.res_partner_3').id,
             'order_line': [(0, 0, {
                 'name': product_cable_management_box.name,
                 'product_id': product_cable_management_box.id,

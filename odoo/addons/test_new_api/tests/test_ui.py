@@ -1,13 +1,9 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 import odoo.tests
 from odoo.tools import mute_logger
-from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
 
 @odoo.tests.common.tagged('post_install', '-at_install')
-class TestUi(HttpCaseWithUserDemo):
+class TestUi(odoo.tests.HttpCase):
 
     def test_01_admin_widget_x2many(self):
         # FIXME: breaks if too many children of base.menu_tests

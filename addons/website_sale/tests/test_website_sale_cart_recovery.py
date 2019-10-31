@@ -3,19 +3,13 @@
 
 from odoo.tests import tagged
 from odoo.tests.common import HttpCase, TransactionCase
-from odoo.addons.base.tests.common import HttpCaseWithUserPortal
+
 
 @tagged('post_install', '-at_install')
-class TestWebsiteSaleCartRecovery(HttpCaseWithUserPortal):
+class TestWebsiteSaleCartRecovery(HttpCase):
 
     def test_01_shop_cart_recovery_tour(self):
         """The goal of this test is to make sure cart recovery works."""
-        self.env['product.product'].create({
-            'name': 'Acoustic Bloc Screens',
-            'list_price': 2950.0,
-            'website_published': True,
-        })
-
         self.start_tour("/", 'shop_cart_recovery', login="portal")
 
 

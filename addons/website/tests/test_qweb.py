@@ -4,13 +4,12 @@
 import re
 
 from odoo import tools
-from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.addons.website.tools import MockRequest
 from odoo.modules.module import get_module_resource
 from odoo.tests.common import TransactionCase
 
 
-class TestQweb(TransactionCaseWithUserDemo):
+class TestQweb(TransactionCase):
     def _load(self, module, *args):
         tools.convert_file(self.cr, 'website',
                            get_module_resource(module, *args),
@@ -19,7 +18,7 @@ class TestQweb(TransactionCaseWithUserDemo):
     def test_qweb_cdn(self):
         self._load('website', 'tests', 'template_qweb_test.xml')
 
-        website = self.env.ref('website.default_website')
+        website = self.env['website'].browse(1)
         website.write({
             "cdn_activated": True,
             "cdn_url": "http://test.cdn"
@@ -72,7 +71,7 @@ class TestQweb(TransactionCaseWithUserDemo):
 class TestQwebProcessAtt(TransactionCase):
     def setUp(self):
         super(TestQwebProcessAtt, self).setUp()
-        self.website = self.env.ref('website.default_website')
+        self.website = self.env['website'].browse(1)
         self.env.ref('base.lang_fr').active = True
         self.website.language_ids = self.env.ref('base.lang_en') + self.env.ref('base.lang_fr')
         self.website.default_lang_id = self.env.ref('base.lang_en')

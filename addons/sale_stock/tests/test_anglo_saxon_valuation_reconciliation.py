@@ -13,14 +13,14 @@ class TestValuationReconciliation(ValuationReconciliationTestCase):
     def setUp(self):
         super(TestValuationReconciliation, self).setUp()
         self.account_receivable = self.env['account.account'].create({
-            'code': 'X1111 - Test Sale Stock',
+            'code': 'X1111',
             'name': 'Sale - Test Receivable Account',
             'user_type_id': self.env.ref('account.data_account_type_receivable').id,
             'reconcile': True
         })
 
         self.account_income = self.env['account.account'].create({
-            'code': 'X1112 - Test Sale Stock',
+            'code': 'X1112',
             'name': 'Sale - Test Account',
             'user_type_id': self.env.ref('account.data_account_type_direct_costs').id
         })

@@ -3,21 +3,13 @@
 
 import psycopg2
 
-from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
-from odoo.fields import Date
 from odoo.models import BaseModel
 from odoo.tests.common import TransactionCase
 from odoo.tools import mute_logger
 from odoo.osv import expression
 
 
-class TestExpression(SavepointCaseWithUserDemo):
-
-    @classmethod
-    def setUpClass(cls):
-        super(TestExpression, cls).setUpClass()
-        cls._load_partners_set()
-
+class TestExpression(TransactionCase):
     def _search(self, obj, domain, init_domain=[]):
         sql = obj.search(domain)
         allobj = obj.search(init_domain)
@@ -119,7 +111,7 @@ class TestExpression(SavepointCaseWithUserDemo):
         Category = self.env['res.partner.category']
 
         # search through m2m relation
-        partners = self._search(Partner, [('category_id', 'child_of', self.partner_category.id)])
+        partners = self._search(Partner, [('category_id', 'child_of', self.ref('base.res_partner_category_0'))])
         self.assertTrue(partners)
 
         # setup test partner categories
@@ -225,8 +217,8 @@ class TestExpression(SavepointCaseWithUserDemo):
         Partner = self.env['res.partner']
         all_partners = self._search(Partner, [])
         self.assertTrue(len(all_partners) > 1)
-        one = self.env.ref('base.main_partner')
-        others = all_partners - one
+        one = all_partners[0]
+        others = all_partners[1:]
 
         res_1 = self._search(Partner, [('id', '=', one.id)])
         self.assertEqual(one, res_1)
@@ -250,15 +242,15 @@ class TestExpression(SavepointCaseWithUserDemo):
         Partner = self.env['res.partner']
 
         # testing equality with name
-        partners = self._search(Partner, [('parent_id', '=', 'Pepper Street')])
+        partners = self._search(Partner, [('parent_id', '=', 'Deco Addict')])
         self.assertTrue(partners)
 
         # testing the in operator with name
-        partners = self._search(Partner, [('parent_id', 'in', 'Pepper Street')])
+        partners = self._search(Partner, [('parent_id', 'in', 'Deco Addict')])
         self.assertTrue(partners)
 
         # testing the in operator with a list of names
-        partners = self._search(Partner, [('parent_id', 'in', ['Pepper Street', 'Inner Works'])])
+        partners = self._search(Partner, [('parent_id', 'in', ['Deco Addict', 'Wood Corner'])])
         self.assertTrue(partners)
 
         # check if many2one works with empty search list
@@ -488,22 +480,6 @@ class TestExpression(SavepointCaseWithUserDemo):
         Currency = self.env['res.currency']
         CurrencyRate = self.env['res.currency.rate']
 
-        CurrencyRate.create([
-            {
-                'currency_id': self.env.ref('base.EUR').id,
-                'name': '2000-01-01',
-                'rate': 1.0,
-            }, {
-                'currency_id': self.env.ref('base.USD').id,
-                'name': '2000-01-01',
-                'rate': 1.2834,
-            }, {
-                'currency_id': self.env.ref('base.USD').id,
-                'name': '2000-01-02',
-                'rate': 1.5289,
-            }
-        ])
-
         # create a currency and a currency rate
         currency = Currency.create({'name': 'ZZZ', 'symbol': 'ZZZ', 'rounding': 1.0})
         currency_rate = CurrencyRate.create({'name': '2010-01-01', 'currency_id': currency.id, 'rate': 1.0})
@@ -607,8 +583,8 @@ class TestExpression(SavepointCaseWithUserDemo):
     def test_like_wildcards(self):
         # check that =like/=ilike expressions are working on an untranslated field
         Partner = self.env['res.partner']
-        partners = self._search(Partner, [('name', '=like', 'I_ner_W_rk_')])
-        self.assertTrue(all(partner.name == 'Inner Works' for partner in partners), "Must match only 'Inner Works'")
+        partners = self._search(Partner, [('name', '=like', 'W_od_C_rn_r')])
+        self.assertTrue(len(partners) == 1, "Must match one partner (Wood Corner)")
         partners = self._search(Partner, [('name', '=ilike', 'G%')])
         self.assertTrue(len(partners) >= 1, "Must match one partner (Gemini Furniture)")
 
@@ -631,6 +607,12 @@ class TestExpression(SavepointCaseWithUserDemo):
         for domain in domains:
             countries = self._search(Country, domain)
             self.assertEqual(countries, belgium)
+
+    def test_long_table_alias(self):
+        # To test the 64 characters limit for table aliases in PostgreSQL
+        self.patch_order('res.users', 'partner_id')
+        self.patch_order('res.partner', 'commercial_partner_id,company_id,name')
+        self.env['res.users'].search([('name', '=', 'test')])
 
     @mute_logger('odoo.sql_db')
     def test_invalid(self):
@@ -658,12 +640,12 @@ class TestExpression(SavepointCaseWithUserDemo):
         vals = {
             'name': 'OpenERP Test',
             'active': False,
-            'category_id': [(6, 0, [self.partner_category.id])],
+            'category_id': [(6, 0, [self.ref("base.res_partner_category_0")])],
             'child_ids': [(0, 0, {'name': 'address of OpenERP Test', 'country_id': self.ref("base.be")})],
         }
         Partner.create(vals)
-        partner = self._search(Partner, [('category_id', 'ilike', 'sellers'), ('active', '=', False)], [('active', '=', False)])
-        self.assertTrue(partner, "Record not Found with category sellers and active False.")
+        partner = self._search(Partner, [('category_id', 'ilike', 'vendor'), ('active', '=', False)], [('active', '=', False)])
+        self.assertTrue(partner, "Record not Found with category vendor and active False.")
 
         # testing for one2many field with country Belgium and active=False
         partner = self._search(Partner, [('child_ids.country_id','=','Belgium'),('active','=',False)], [('active', '=', False)])
@@ -673,7 +655,7 @@ class TestExpression(SavepointCaseWithUserDemo):
         """ Check that we can exclude translated fields (bug lp:1071710) """
         # first install french language
         self.env['ir.translation']._load_module_terms(['base'], ['fr_FR'])
-        self.env['res.partner'].search([('name', '=', 'Pepper Street')]).country_id = self.env.ref('base.be')
+        self.env.ref('base.res_partner_2').country_id = self.env.ref('base.be')
         # actual test
         Country = self.env['res.country'].with_context(lang='fr_FR')
         be = self.env.ref('base.be')
@@ -682,7 +664,7 @@ class TestExpression(SavepointCaseWithUserDemo):
 
         # indirect search via m2o
         Partner = self.env['res.partner']
-        deco_addict = self._search(Partner, [('name', '=', 'Pepper Street')])
+        deco_addict = self._search(Partner, [('name', '=', 'Deco Addict')])
 
         not_be = self._search(Partner, [('country_id', '!=', 'Belgium')])
         self.assertNotIn(deco_addict, not_be)
@@ -731,15 +713,6 @@ class TestExpression(SavepointCaseWithUserDemo):
         # AND with OR with single FALSE_LEAF and normal leaf
         expr = expression.AND([expression.OR([false]), normal])
         self.assertEqual(expr, false)
-
-
-class TestExpression2(TransactionCase):
-
-    def test_long_table_alias(self):
-        # To test the 64 characters limit for table aliases in PostgreSQL
-        self.patch_order('res.users', 'partner_id')
-        self.patch_order('res.partner', 'commercial_partner_id,company_id,name')
-        self.env['res.users'].search([('name', '=', 'test')])
 
 
 class TestAutoJoin(TransactionCase):

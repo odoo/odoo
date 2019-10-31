@@ -1,26 +1,22 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
 from odoo.tests.common import Form
 from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install')
-class TestInvoiceTaxes(AccountingTestCase, SavepointCaseWithUserDemo):
+class TestInvoiceTaxes(AccountingTestCase):
 
-    @classmethod
-    def setUpClass(cls):
-        super(TestInvoiceTaxes, cls).setUpClass()
+    def setUp(self):
+        super(TestInvoiceTaxes, self).setUp()
 
-        cls.percent_tax_1 = cls.env['account.tax'].create({
+        self.percent_tax_1 = self.env['account.tax'].create({
             'name': '21%',
             'amount_type': 'percent',
             'amount': 21,
             'sequence': 10,
         })
-        cls.percent_tax_1_incl = cls.env['account.tax'].create({
+        self.percent_tax_1_incl = self.env['account.tax'].create({
             'name': '21% incl',
             'amount_type': 'percent',
             'amount': 21,
@@ -28,19 +24,19 @@ class TestInvoiceTaxes(AccountingTestCase, SavepointCaseWithUserDemo):
             'include_base_amount': True,
             'sequence': 20,
         })
-        cls.percent_tax_2 = cls.env['account.tax'].create({
+        self.percent_tax_2 = self.env['account.tax'].create({
             'name': '12%',
             'amount_type': 'percent',
             'amount': 12,
             'sequence': 30,
         })
-        cls.group_tax = cls.env['account.tax'].create({
+        self.group_tax = self.env['account.tax'].create({
             'name': 'group 12% + 21%',
             'amount_type': 'group',
             'amount': 21,
             'children_tax_ids': [
-                (4, cls.percent_tax_1_incl.id),
-                (4, cls.percent_tax_2.id)
+                (4, self.percent_tax_1_incl.id),
+                (4, self.percent_tax_2.id)
             ],
             'sequence': 40,
         })
@@ -52,7 +48,7 @@ class TestInvoiceTaxes(AccountingTestCase, SavepointCaseWithUserDemo):
         '''
         self_ctx = self.env['account.move'].with_context(default_type=inv_type)
         invoice_form = Form(self_ctx)
-        invoice_form.partner_id = self.partner_demo
+        invoice_form.partner_id = self.env.ref('base.partner_demo')
 
         for amount, taxes in taxes_per_line:
             with invoice_form.invoice_line_ids.new() as invoice_line_form:

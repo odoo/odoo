@@ -1,7 +1,3 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from odoo import tools
 import odoo
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 
@@ -12,54 +8,51 @@ class TestPoSWithFiscalPosition(TestPoSCommon):
     keywords/phrases: fiscal position
     """
 
-    @classmethod
-    def setUpClass(cls):
-        super(TestPoSWithFiscalPosition, cls).setUpClass()
+    def setUp(self):
+        super(TestPoSWithFiscalPosition, self).setUp()
+        self.config = self.basic_config
 
-        cls.config = cls.basic_config
+        self.new_tax_17 = self.env['account.tax'].create({'name': 'New Tax 17%', 'amount': 17})
+        self.new_tax_17.invoice_repartition_line_ids.write({'account_id': self.tax_received_account.id})
 
-        cls.new_tax_17 = cls.env['account.tax'].create({'name': 'New Tax 17%', 'amount': 17})
-        cls.new_tax_17.invoice_repartition_line_ids.write({'account_id': cls.tax_received_account.id})
+        self.fpos = self._create_fiscal_position()
+        self.fpos_no_tax_dest = self._create_fiscal_position_no_tax_dest()
 
-        cls.fpos = cls._create_fiscal_position()
-        cls.fpos_no_tax_dest = cls._create_fiscal_position_no_tax_dest()
-
-        cls.product1 = cls.create_product(
+        self.product1 = self.create_product(
             'Product 1',
-            cls.categ_basic,
+            self.categ_basic,
             lst_price=10.99,
             standard_price=5.0,
-            tax_ids=cls.taxes['tax7'].ids,
+            tax_ids=self.taxes['tax7'].ids,
         )
-        cls.product2 = cls.create_product(
+        self.product2 = self.create_product(
             'Product 2',
-            cls.categ_basic,
+            self.categ_basic,
             lst_price=19.99,
             standard_price=10.0,
-            tax_ids=cls.taxes['tax10'].ids,
+            tax_ids=self.taxes['tax10'].ids,
         )
-        cls.product3 = cls.create_product(
+        self.product3 = self.create_product(
             'Product 3',
-            cls.categ_basic,
+            self.categ_basic,
             lst_price=30.99,
             standard_price=15.0,
-            tax_ids=cls.taxes['tax7'].ids,
+            tax_ids=self.taxes['tax7'].ids,
         )
-        cls.adjust_inventory([cls.product1, cls.product2, cls.product3], [100, 50, 50])
+        self.adjust_inventory([self.product1, self.product2, self.product3], [100, 50, 50])
 
-    @classmethod
-    def _create_fiscal_position(cls):
-        fpos = cls.env['account.fiscal.position'].create({'name': 'Test Fiscal Position'})
+    def _create_fiscal_position(self):
+        fpos = self.env['account.fiscal.position'].create({'name': 'Test Fiscal Position'})
 
-        account_fpos = cls.env['account.fiscal.position.account'].create({
+        account_fpos = self.env['account.fiscal.position.account'].create({
             'position_id': fpos.id,
-            'account_src_id': cls.sale_account.id,
-            'account_dest_id': cls.other_sale_account.id,
+            'account_src_id': self.sale_account.id,
+            'account_dest_id': self.other_sale_account.id,
         })
-        tax_fpos = cls.env['account.fiscal.position.tax'].create({
+        tax_fpos = self.env['account.fiscal.position.tax'].create({
             'position_id': fpos.id,
-            'tax_src_id': cls.taxes['tax7'].id,
-            'tax_dest_id': cls.new_tax_17.id,
+            'tax_src_id': self.taxes['tax7'].id,
+            'tax_dest_id': self.new_tax_17.id,
         })
         fpos.write({
             'account_ids': [(6, 0, account_fpos.ids)],
@@ -67,17 +60,16 @@ class TestPoSWithFiscalPosition(TestPoSCommon):
         })
         return fpos
 
-    @classmethod
-    def _create_fiscal_position_no_tax_dest(cls):
-        fpos_no_tax_dest = cls.env['account.fiscal.position'].create({'name': 'Test Fiscal Position'})
-        account_fpos = cls.env['account.fiscal.position.account'].create({
+    def _create_fiscal_position_no_tax_dest(self):
+        fpos_no_tax_dest = self.env['account.fiscal.position'].create({'name': 'Test Fiscal Position'})
+        account_fpos = self.env['account.fiscal.position.account'].create({
             'position_id': fpos_no_tax_dest.id,
-            'account_src_id': cls.sale_account.id,
-            'account_dest_id': cls.other_sale_account.id,
+            'account_src_id': self.sale_account.id,
+            'account_dest_id': self.other_sale_account.id,
         })
-        tax_fpos = cls.env['account.fiscal.position.tax'].create({
+        tax_fpos = self.env['account.fiscal.position.tax'].create({
             'position_id': fpos_no_tax_dest.id,
-            'tax_src_id': cls.taxes['tax7'].id,
+            'tax_src_id': self.taxes['tax7'].id,
         })
         fpos_no_tax_dest.write({
             'account_ids': [(6, 0, account_fpos.ids)],
@@ -122,7 +114,6 @@ class TestPoSWithFiscalPosition(TestPoSCommon):
         | Total balance       |     0.0 |
         +---------------------+---------+
         """
-
         self.customer.write({'property_account_position_id': self.fpos.id})
         self.open_new_session()
 
@@ -216,7 +207,6 @@ class TestPoSWithFiscalPosition(TestPoSCommon):
         | Total balance       |     0.0 |
         +---------------------+---------+
         """
-
         self.customer.write({'property_account_position_id': self.fpos_no_tax_dest.id})
         self.open_new_session()
         # create orders
@@ -310,7 +300,6 @@ class TestPoSWithFiscalPosition(TestPoSCommon):
         | Total balance       |     0.0 |
         +---------------------+---------+
         """
-
         self.customer.write({'property_account_position_id': self.fpos.id})
         self.open_new_session()
         # create orders

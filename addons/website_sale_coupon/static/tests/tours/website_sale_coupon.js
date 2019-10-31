@@ -7,7 +7,7 @@ var ajax = require('web.ajax');
 
 tour.register('shop_sale_coupon', {
     test: true,
-    url: '/shop?search=Small%20Cabinet',
+    url: '/shop?search=Large%20Cabinet',
 },
     [
         {
@@ -24,14 +24,14 @@ tour.register('shop_sale_coupon', {
                 }
             }
         },
-        /* 1. Buy 1 Small Cabinet, enable coupon code & insert 10% code */
+        /* 1. Buy 1 Large Cabinet, enable coupon code & insert 10% code */
         {
-            content: "select Small Cabinet",
+            content: "select Large Cabinet",
             extra_trigger: '.oe_search_found',
-            trigger: '.oe_product_cart a:contains("Small Cabinet")',
+            trigger: '.oe_product_cart a:contains("Large Cabinet")',
         },
         {
-            content: "add 2 Small Cabinet into cart",
+            content: "add 2 Large Cabinet into cart",
             trigger: '#product_details input[name="add_qty"]',
             run: "text 2",
         },
@@ -59,10 +59,10 @@ tour.register('shop_sale_coupon', {
             trigger: '.show_coupon',
         },
         {
-            content: "insert promo code 'testcode'",
+            content: "insert promo code '10pc'",
             extra_trigger: 'form[name="coupon_code"]',
             trigger: 'form[name="coupon_code"] input[name="promo"]',
-            run: "text testcode",
+            run: "text 10pc",
         },
         {
             content: "validate the coupon",
@@ -127,7 +127,7 @@ tour.register('shop_sale_coupon', {
         },
         /* 3. Add some cabinet to get a free one, play with quantity */
         {
-            content: "add one Small Cabinet",
+            content: "add one Large Cabinet",
             trigger: '#cart_products input.js_quantity',
             run: "text 3",
         },
@@ -137,13 +137,13 @@ tour.register('shop_sale_coupon', {
             run: function () {}, // it's a check
         },
         {
-            content: "add more Small Cabinet into cart",
+            content: "add more Large Cabinet into cart",
             trigger: '#cart_products input.js_quantity',
             run: "text 4",
         },
         {
             content: "check free product is added",
-            trigger: '#wrap:has(.reward_product:contains("Free Product - Small Cabinet"))',
+            trigger: '#wrap:has(.reward_product:contains("Free Product - Large Cabinet"))',
             run: function () {}, // it's a check
         },
         {
@@ -153,7 +153,7 @@ tour.register('shop_sale_coupon', {
         },
         {
             content: "check free product is removed",
-            trigger: '#wrap:not(:has(.reward_product:contains("Free Product - Small Cabinet")))',
+            trigger: '#wrap:not(:has(.reward_product:contains("Free Product - Large Cabinet")))',
             run: function () {}, // it's a check
         },
         /* 4. Check /shop/payment does not break the `merged discount lines split per tax` (eg: with _compute_tax_id) */

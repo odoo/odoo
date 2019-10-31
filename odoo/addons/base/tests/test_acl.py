@@ -4,18 +4,19 @@
 from lxml import etree
 
 from odoo.exceptions import AccessError
-from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.tests.common import TransactionCase
 from odoo.tools.misc import mute_logger
 
 # test group that demo user should not have
+USER_DEMO = 'base.user_demo'
 GROUP_SYSTEM = 'base.group_system'
 
 
-class TestACL(TransactionCaseWithUserDemo):
+class TestACL(TransactionCase):
 
     def setUp(self):
         super(TestACL, self).setUp()
+        self.demo_user = self.env.ref(USER_DEMO)
         self.erp_system_group = self.env.ref(GROUP_SYSTEM)
 
     def _set_field_groups(self, model, field_name, groups):
@@ -25,7 +26,7 @@ class TestACL(TransactionCaseWithUserDemo):
     def test_field_visibility_restriction(self):
         """Check that model-level ``groups`` parameter effectively restricts access to that
            field for users who do not belong to one of the explicitly allowed groups"""
-        currency = self.env['res.currency'].with_user(self.user_demo)
+        currency = self.env['res.currency'].with_user(self.demo_user)
 
         # Add a view that adds a label for the field we are going to check
         extension = self.env["ir.ui.view"].create({
@@ -49,7 +50,7 @@ class TestACL(TransactionCaseWithUserDemo):
         original_fields = currency.fields_get([])
         form_view = currency.fields_view_get(False, 'form')
         view_arch = etree.fromstring(form_view.get('arch'))
-        has_group_system = self.user_demo.has_group(GROUP_SYSTEM)
+        has_group_system = self.demo_user.has_group(GROUP_SYSTEM)
         self.assertFalse(has_group_system, "`demo` user should not belong to the restricted group before the test")
         self.assertIn('decimal_places', original_fields, "'decimal_places' field must be properly visible before the test")
         self.assertNotEqual(view_arch.xpath("//field[@name='decimal_places'][@nolabel='1']"), [],
@@ -70,8 +71,8 @@ class TestACL(TransactionCaseWithUserDemo):
                           "Label for 'decimal_places' must not be found in view definition")
 
         # Make demo user a member of the restricted group and check that the field is back
-        self.erp_system_group.users += self.user_demo
-        has_group_system = self.user_demo.has_group(GROUP_SYSTEM)
+        self.erp_system_group.users += self.demo_user
+        has_group_system = self.demo_user.has_group(GROUP_SYSTEM)
         fields = currency.fields_get([])
         form_view = currency.fields_view_get(False, 'form')
         view_arch = etree.fromstring(form_view.get('arch'))
@@ -85,10 +86,10 @@ class TestACL(TransactionCaseWithUserDemo):
     @mute_logger('odoo.models')
     def test_field_crud_restriction(self):
         "Read/Write RPC access to restricted field should be forbidden"
-        partner = self.env['res.partner'].browse(1).with_user(self.user_demo)
+        partner = self.env['res.partner'].browse(1).with_user(self.demo_user)
 
         # Verify the test environment first
-        has_group_system = self.user_demo.has_group(GROUP_SYSTEM)
+        has_group_system = self.demo_user.has_group(GROUP_SYSTEM)
         self.assertFalse(has_group_system, "`demo` user should not belong to the restricted group")
         self.assertTrue(partner.read(['bank_ids']))
         self.assertTrue(partner.write({'bank_ids': []}))
@@ -102,8 +103,8 @@ class TestACL(TransactionCaseWithUserDemo):
             partner.write({'bank_ids': []})
 
         # Add the restricted group, and check that it works again
-        self.erp_system_group.users += self.user_demo
-        has_group_system = self.user_demo.has_group(GROUP_SYSTEM)
+        self.erp_system_group.users += self.demo_user
+        has_group_system = self.demo_user.has_group(GROUP_SYSTEM)
         self.assertTrue(has_group_system, "`demo` user should now belong to the restricted group")
         self.assertTrue(partner.read(['bank_ids']))
         self.assertTrue(partner.write({'bank_ids': []}))
@@ -111,10 +112,7 @@ class TestACL(TransactionCaseWithUserDemo):
     @mute_logger('odoo.models')
     def test_fields_browse_restriction(self):
         """Test access to records having restricted fields"""
-        # Invalidate cache to avoid restricted value to be available
-        # in the cache
-        self.user_demo.invalidate_cache()
-        partner = self.env['res.partner'].with_user(self.user_demo)
+        partner = self.env['res.partner'].with_user(self.demo_user)
         self._set_field_groups(partner, 'email', GROUP_SYSTEM)
 
         # accessing fields must no raise exceptions...
@@ -128,7 +126,7 @@ class TestACL(TransactionCaseWithUserDemo):
     def test_view_create_edit_button_invisibility(self):
         """ Test form view Create, Edit, Delete button visibility based on access right of model"""
         methods = ['create', 'edit', 'delete']
-        company = self.env['res.company'].with_user(self.user_demo)
+        company = self.env['res.company'].with_user(self.demo_user)
         company_view = company.fields_view_get(False, 'form')
         view_arch = etree.fromstring(company_view['arch'])
         for method in methods:
@@ -136,9 +134,9 @@ class TestACL(TransactionCaseWithUserDemo):
 
     def test_view_create_edit_button_visibility(self):
         """ Test form view Create, Edit, Delete button visibility based on access right of model"""
-        self.erp_system_group.users += self.user_demo
+        self.erp_system_group.users += self.demo_user
         methods = ['create', 'edit', 'delete']
-        company = self.env['res.company'].with_user(self.user_demo)
+        company = self.env['res.company'].with_user(self.demo_user)
         company_view = company.fields_view_get(False, 'form')
         view_arch = etree.fromstring(company_view['arch'])
         for method in methods:
@@ -147,7 +145,7 @@ class TestACL(TransactionCaseWithUserDemo):
     def test_m2o_field_create_edit_invisibility(self):
         """ Test many2one field Create and Edit option visibility based on access rights of relation field""" 
         methods = ['create', 'write']
-        company = self.env['res.company'].with_user(self.user_demo)
+        company = self.env['res.company'].with_user(self.demo_user)
         company_view = company.fields_view_get(False, 'form')
         view_arch = etree.fromstring(company_view['arch'])
         field_node = view_arch.xpath("//field[@name='currency_id']")
@@ -157,9 +155,9 @@ class TestACL(TransactionCaseWithUserDemo):
 
     def test_m2o_field_create_edit_visibility(self):
         """ Test many2one field Create and Edit option visibility based on access rights of relation field""" 
-        self.erp_system_group.users += self.user_demo
+        self.erp_system_group.users += self.demo_user
         methods = ['create', 'write']
-        company = self.env['res.company'].with_user(self.user_demo)
+        company = self.env['res.company'].with_user(self.demo_user)
         company_view = company.fields_view_get(False, 'form')
         view_arch = etree.fromstring(company_view['arch'])
         field_node = view_arch.xpath("//field[@name='currency_id']")
@@ -168,11 +166,12 @@ class TestACL(TransactionCaseWithUserDemo):
             self.assertEqual(field_node[0].get('can_' + method), 'true')
 
 
-class TestIrRule(TransactionCaseWithUserDemo):
+class TestIrRule(TransactionCase):
 
     def test_ir_rule(self):
         model_res_partner = self.env.ref('base.model_res_partner')
         group_user = self.env.ref('base.group_user')
+        user_demo = self.env.ref('base.user_demo')
 
         # create an ir_rule for the Employee group with an blank domain
         rule1 = self.env['ir.rule'].create({
@@ -183,7 +182,7 @@ class TestIrRule(TransactionCaseWithUserDemo):
         })
 
         # read as demo user the partners (one blank domain)
-        partners_demo = self.env['res.partner'].with_user(self.user_demo)
+        partners_demo = self.env['res.partner'].with_user(user_demo)
         partners = partners_demo.search([])
         self.assertTrue(partners, "Demo user should see some partner.")
 
@@ -257,7 +256,7 @@ class TestIrRule(TransactionCaseWithUserDemo):
         # create a new group with demo user in it, and a complex rule
         group_test = self.env['res.groups'].create({
             'name': 'Test Group',
-            'users': [(6, 0, self.user_demo.ids)],
+            'users': [(6, 0, user_demo.ids)],
         })
 
         # add the rule to the new group, with a domain containing an implicit

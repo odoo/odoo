@@ -48,7 +48,7 @@ tour.STEPS.SHOW_APPS_MENU_ITEM,
         $input.trigger(keyDownEvent);
     }
 }, {
-    trigger: 'ul.ui-autocomplete a:contains("Customizable Desk (TEST)")',
+    trigger: 'ul.ui-autocomplete a:contains("Customizable Desk")',
     run: 'click'
 }, {
     content: "check price is correct (USD)",
@@ -66,7 +66,7 @@ tour.STEPS.SHOW_APPS_MENU_ITEM,
     trigger: '.o_sale_product_configurator_add:not(.disabled)'
 }, {
     content: "check we are on the add modal",
-    trigger: '.td-product_name:contains("Customizable Desk (TEST) (Steel, White)")',
+    trigger: '.td-product_name:contains("Customizable Desk (CONFIG) (Steel, White)")',
     extra_trigger: '.oe_optional_products_modal',
     run: 'click'
 }, {

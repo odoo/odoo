@@ -1,34 +1,26 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import tools
 from odoo.api import Environment
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 from datetime import date, timedelta
 
 import odoo.tests
 
-
-class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
-
-    def setUp(self):
-        super().setUp()
+@odoo.tests.tagged('post_install', '-at_install')
+class TestUi(odoo.tests.HttpCase):
+    def test_01_pos_basic_order(self):
         env = self.env(user=self.env.ref('base.user_admin'))
 
         journal_obj = env['account.journal']
         account_obj = env['account.account']
         main_company = env.ref('base.main_company')
-        self.main_pos_config = env.ref('point_of_sale.pos_config_main')
-
-        env['res.partner'].create({
-            'name': 'Deco Addict',
-        })
+        main_pos_config = env.ref('point_of_sale.pos_config_main')
 
         account_receivable = account_obj.create({'code': 'X1012',
                                                  'name': 'Account Receivable - Test',
                                                  'user_type_id': env.ref('account.data_account_type_receivable').id,
                                                  'reconcile': True})
-        self.env.company.account_default_pos_receivable_account_id = account_receivable
         field = env['ir.model.fields']._get('res.partner', 'property_account_receivable_id')
         env['ir.property'].create({'name': 'property_account_receivable_id',
                                    'company_id': main_company.id,
@@ -43,64 +35,8 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
             'sequence': 10,
         })
 
-        # Archive all existing product to avoid noise during the tours
-        all_pos_product = self.env['product.product'].search([('available_in_pos', '=', True)])
-        discount = self.env.ref('point_of_sale.product_product_consumable')
-        tip = self.env.ref('point_of_sale.product_product_tip')
-        (all_pos_product - discount - tip)._write({'active': False})
-
         # test an extra price on an attribute
-        pear = env['product.product'].create({
-            'name': 'Whiteboard Pen',
-            'available_in_pos': True,
-            'list_price': 1.20,
-            'taxes_id': False,
-            'weight': 0.01,
-            'to_weight': True,
-        })
-        wall_shelf = env['product.product'].create({
-            'name': 'Wall Shelf Unit',
-            'available_in_pos': True,
-            'list_price': 1.98,
-            'taxes_id': False,
-        })
-        small_shelf = env['product.product'].create({
-            'name': 'Small Shelf',
-            'available_in_pos': True,
-            'list_price': 2.83,
-            'taxes_id': False,
-        })
-        magnetic_board = env['product.product'].create({
-            'name': 'Magnetic Board',
-            'available_in_pos': True,
-            'list_price': 1.98,
-            'taxes_id': False,
-        })
-        monitor_stand = env['product.product'].create({
-            'name': 'Monitor Stand',
-            'available_in_pos': True,
-            'list_price': 3.19,
-            'taxes_id': False,
-        })
-        desk_pad = env['product.product'].create({
-            'name': 'Desk Pad',
-            'available_in_pos': True,
-            'list_price': 1.98,
-            'taxes_id': False,
-        })
-        letter_tray = env['product.product'].create({
-            'name': 'Letter Tray',
-            'available_in_pos': True,
-            'list_price': 4.80,
-            'taxes_id': False,
-        })
-        desk_organizer = env['product.product'].create({
-            'name': 'Desk Organizer',
-            'available_in_pos': True,
-            'list_price': 5.10,
-            'taxes_id': False,
-        })
-
+        pear = env.ref('point_of_sale.whiteboard')
         attribute = env['product.attribute'].create({
             'name': 'add 2',
         })
@@ -124,12 +60,12 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
                 'compute_price': 'fixed',
                 'fixed_price': 2,
                 'applied_on': '0_product_variant',
-                'product_id': wall_shelf.id,
+                'product_id': env.ref('point_of_sale.wall_shelf').id,
             }), (0, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 13.95,  # test for issues like in 7f260ab517ebde634fc274e928eb062463f0d88f
                 'applied_on': '0_product_variant',
-                'product_id': small_shelf.id,
+                'product_id': env.ref('point_of_sale.small_shelf').id,
             })],
         })
 
@@ -139,17 +75,17 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
                 'compute_price': 'percentage',
                 'percent_price': 100,
                 'applied_on': '0_product_variant',
-                'product_id': wall_shelf.id,
+                'product_id': env.ref('point_of_sale.wall_shelf').id,
             }), (0, 0, {
                 'compute_price': 'percentage',
                 'percent_price': 99,
                 'applied_on': '0_product_variant',
-                'product_id': small_shelf.id,
+                'product_id': env.ref('point_of_sale.small_shelf').id,
             }), (0, 0, {
                 'compute_price': 'percentage',
                 'percent_price': 0,
                 'applied_on': '0_product_variant',
-                'product_id': magnetic_board.id,
+                'product_id': env.ref('point_of_sale.magnetic_board').id,
             })],
         })
 
@@ -160,33 +96,33 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
                 'price_discount': 6,
                 'price_surcharge': 5,
                 'applied_on': '0_product_variant',
-                'product_id': wall_shelf.id,
+                'product_id': env.ref('point_of_sale.wall_shelf').id,
             }), (0, 0, {
                 # .99 prices
                 'compute_price': 'formula',
                 'price_surcharge': -0.01,
                 'price_round': 1,
                 'applied_on': '0_product_variant',
-                'product_id': small_shelf.id,
+                'product_id': env.ref('point_of_sale.small_shelf').id,
             }), (0, 0, {
                 'compute_price': 'formula',
                 'price_min_margin': 10,
                 'price_max_margin': 100,
                 'applied_on': '0_product_variant',
-                'product_id': magnetic_board.id,
+                'product_id': env.ref('point_of_sale.magnetic_board').id,
             }), (0, 0, {
                 'compute_price': 'formula',
                 'price_surcharge': 10,
                 'price_max_margin': 5,
                 'applied_on': '0_product_variant',
-                'product_id': monitor_stand.id,
+                'product_id': env.ref('point_of_sale.monitor_stand').id,
             }), (0, 0, {
                 'compute_price': 'formula',
                 'price_discount': -100,
                 'price_min_margin': 5,
                 'price_max_margin': 20,
                 'applied_on': '0_product_variant',
-                'product_id': desk_pad.id,
+                'product_id': env.ref('point_of_sale.desk_pad').id,
             })],
         })
 
@@ -197,13 +133,13 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
                 'fixed_price': 1,
                 'applied_on': '0_product_variant',
                 'min_quantity': 2,
-                'product_id': wall_shelf.id,
+                'product_id': env.ref('point_of_sale.wall_shelf').id,
             }), (0, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 2,
                 'applied_on': '0_product_variant',
                 'min_quantity': 1,
-                'product_id': wall_shelf.id,
+                'product_id': env.ref('point_of_sale.wall_shelf').id,
             }), (0, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 2,
@@ -219,16 +155,11 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
                 'compute_price': 'fixed',
                 'fixed_price': 1,
                 'applied_on': '1_product',
-                'product_tmpl_id': wall_shelf.product_tmpl_id.id,
+                'product_tmpl_id': env.ref('point_of_sale.wall_shelf_product_template').id,
             }), (0, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 2,
             })],
-        })
-
-        product_category_3 = env['product.category'].create({
-            'name': 'Services',
-            'parent_id': env.ref('product.product_category_1').id,
         })
 
         env['product.pricelist'].create({
@@ -238,7 +169,7 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
                 'compute_price': 'fixed',
                 'fixed_price': 1,
                 'applied_on': '2_product_category',
-                'categ_id': product_category_3.id,  # All / Saleable / Services
+                'categ_id': env.ref('product.product_category_3').id,  # All / Saleable / Services
             }), (0, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 2,
@@ -256,7 +187,7 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
                 'compute_price': 'fixed',
                 'fixed_price': 1,
                 'applied_on': '2_product_category',
-                'categ_id': product_category_3.id,  # All / Saleable / Services
+                'categ_id': env.ref('product.product_category_3').id,  # All / Saleable / Services
             })],
         })
 
@@ -332,11 +263,7 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
         excluded_pricelist = env['product.pricelist'].create({
             'name': 'Not loaded'
         })
-        res_partner_18 = self.env['res.partner'].create({
-            'name': 'Lumber Inc',
-            'is_company': True,
-        })
-        res_partner_18.property_product_pricelist = excluded_pricelist
+        env.ref('base.res_partner_18').property_product_pricelist = excluded_pricelist
 
         partner = self.env['res.partner'].create({
             'name': 'TEST PARTNER',
@@ -360,9 +287,10 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
         src_tax = env['account.tax'].create({'name': "SRC", 'amount': 10})
         dst_tax = env['account.tax'].create({'name': "DST", 'amount': 5})
 
-        letter_tray.taxes_id = [(6, 0, [src_tax.id])]
+        env.ref('point_of_sale.letter_tray').taxes_id = [(6, 0, [src_tax.id])]
 
-        self.main_pos_config.write({
+
+        main_pos_config.write({
             'tax_regime_selection': True,
             'fiscal_position_ids': [(0, 0, {
                                             'name': "FP-POS-2M",
@@ -393,23 +321,18 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
             ('res_id', '=', False)
         ]).write({'value_reference': 'product.pricelist,%s' % public_pricelist.id})
 
-
-@odoo.tests.tagged('post_install', '-at_install')
-class TestUi(TestPointOfSaleHttpCommon):
-    def test_01_pos_basic_order(self):
-
         # open a session, the /pos/web controller will redirect to it
-        self.main_pos_config.open_session_cb(check_coa=False)
+        main_pos_config.open_session_cb()
 
         # needed because tests are run before the module is marked as
         # installed. In js web will only load qweb coming from modules
         # that are returned by the backend in module_boot. Without
         # this you end up with js, css but no qweb.
-        self.env['ir.module.module'].search([('name', '=', 'point_of_sale')], limit=1).state = 'installed'
+        env['ir.module.module'].search([('name', '=', 'point_of_sale')], limit=1).state = 'installed'
 
-        self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, 'pos_pricelist', login="admin")
+        self.start_tour("/pos/web?config_id=%d" % main_pos_config.id, 'pos_pricelist', login="admin")
 
-        self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, 'pos_basic_order', login="admin")
+        self.start_tour("/pos/web?config_id=%d" % main_pos_config.id, 'pos_basic_order', login="admin")
 
-        for order in self.env['pos.order'].search([]):
+        for order in env['pos.order'].search([]):
             self.assertEqual(order.state, 'paid', "Validated order has payment of " + str(order.amount_paid) + " and total of " + str(order.amount_total))

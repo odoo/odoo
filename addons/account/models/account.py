@@ -259,6 +259,7 @@ class AccountAccount(models.Model):
         """, tuple(self.ids))
         ids = self._cr.fetchall()
         if ids:
+            # import pdb; pdb.set_trace()
             raise ValidationError(_('Some journal items already exist with this account but in other journals than the allowed ones.'))
 
     @api.depends('code')

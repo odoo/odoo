@@ -8,25 +8,24 @@ from datetime import datetime, timedelta
 
 class TestCrmMailActivity(TestCrmCases):
 
-    @classmethod
-    def setUpClass(cls):
-        super(TestCrmMailActivity, cls).setUpClass()
+    def setUp(self):
+        super(TestCrmMailActivity, self).setUp()
         # Set up activities
-        lead_model_id = cls.env['ir.model']._get('crm.lead').id
-        ActivityType = cls.env['mail.activity.type']
-        cls.activity3 = ActivityType.create({
+        lead_model_id = self.env['ir.model']._get('crm.lead').id
+        ActivityType = self.env['mail.activity.type']
+        self.activity3 = ActivityType.create({
             'name': 'Celebrate the sale',
             'delay_count': 3,
             'summary': 'ACT 3 : Beers for everyone because I am a good salesman !',
             'res_model_id': lead_model_id,
         })
-        cls.activity2 = ActivityType.create({
+        self.activity2 = ActivityType.create({
             'name': 'Call for Demo',
             'delay_count': 6,
             'summary': 'ACT 2 : I want to show you my ERP !',
             'res_model_id': lead_model_id,
         })
-        cls.activity1 = ActivityType.create({
+        self.activity1 = ActivityType.create({
             'name': 'Initial Contact',
             'delay_count': 5,
             'summary': 'ACT 1 : Presentation, barbecue, ... ',
@@ -34,15 +33,13 @@ class TestCrmMailActivity(TestCrmCases):
         })
 
         # I create an opportunity, as salesman
-        cls.partner_client = cls.env['res.partner'].create({
-            'name': 'Wood Corner',
-        })
-        cls.lead = cls.env['crm.lead'].with_user(cls.crm_salesman).create({
+        self.partner_client = self.env.ref("base.res_partner_1")
+        self.lead = self.env['crm.lead'].with_user(self.crm_salesman).create({
             'name': 'Test Opp',
             'type': 'opportunity',
-            'partner_id': cls.partner_client.id,
-            'team_id': cls.env.ref("sales_team.team_sales_department").id,
-            'user_id': cls.crm_salesman.id,
+            'partner_id': self.partner_client.id,
+            'team_id': self.env.ref("sales_team.team_sales_department").id,
+            'user_id': self.crm_salesman.id,
         })
 
     def test_crm_activity_recipients(self):

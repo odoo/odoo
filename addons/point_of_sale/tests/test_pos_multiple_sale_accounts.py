@@ -1,9 +1,4 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 import odoo
-
-from odoo import tools
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -19,7 +14,6 @@ class TestPoSMultipleSaleAccounts(TestPoSCommon):
 
     def setUp(self):
         super(TestPoSMultipleSaleAccounts, self).setUp()
-
         self.config = self.basic_config
         self.product1 = self.create_product(
             'Product 1',
@@ -87,7 +81,6 @@ class TestPoSMultipleSaleAccounts(TestPoSCommon):
         | Total balance       |    0.00 |
         +---------------------+---------+
         """
-
         self.open_new_session()
 
         # create orders
@@ -167,7 +160,6 @@ class TestPoSMultipleSaleAccounts(TestPoSCommon):
         | Total balance       |    0.00 |
         +---------------------+---------+
         """
-
         self.open_new_session()
 
         # create orders

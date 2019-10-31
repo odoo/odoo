@@ -21,4 +21,7 @@ trigger an automatic reminder email.
         'data/base_automation_data.xml',
         'views/base_automation_view.xml',
     ],
+    'demo': [
+        'data/base_automation_demo.xml',
+    ],
 }

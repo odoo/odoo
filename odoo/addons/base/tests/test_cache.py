@@ -6,12 +6,11 @@ import platform
 import psutil
 import unittest
 
-from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.exceptions import CacheMiss
 from odoo.tests.common import TransactionCase
 
 
-class TestRecordCache(TransactionCaseWithUserDemo):
+class TestRecordCache(TransactionCase):
 
     def test_cache(self):
         """ Check the record cache object. """
@@ -38,7 +37,7 @@ class TestRecordCache(TransactionCaseWithUserDemo):
             check1(record, ref, ref_val)
 
         foo1, bar1 = Model.browse([1, 2])
-        foo2, bar2 = Model.with_user(self.user_demo).browse([1, 2])
+        foo2, bar2 = Model.with_user(self.env.ref('base.user_demo')).browse([1, 2])
         self.assertNotEqual(foo1.env.uid, foo2.env.uid)
 
         # cache is empty

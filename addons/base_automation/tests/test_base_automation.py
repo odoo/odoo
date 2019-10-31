@@ -2,107 +2,17 @@
 # # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from unittest.mock import patch
 
-from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
-from odoo.tests import tagged
+from odoo.tests import common
 
 
-@tagged('post_install', '-at_install')
-class BaseAutomationTest(TransactionCaseWithUserDemo):
+@common.tagged('post_install','-at_install')
+class base_automation_test(common.TransactionCase):
 
     def setUp(self):
-        super(BaseAutomationTest, self).setUp()
+        super(base_automation_test, self).setUp()
         self.user_root = self.env.ref('base.user_root')
         self.user_admin = self.env.ref('base.user_admin')
-
-        self.test_mail_template_automation = self.env['mail.template'].create({
-            'name': 'Template Automation',
-            'model_id': self.env.ref('base_automation.model_base_automation_lead_test').id,
-            'body_html': """&lt;div&gt;Email automation&lt;/div&gt;""",
-        })
-
-        self.res_partner_1 = self.env['res.partner'].create({'name': 'My Partner'})
-        self.env['base.automation'].create([
-            {
-                'name': 'Base Automation: test rule on create',
-                'model_id': self.env.ref('base_automation.model_base_automation_lead_test').id,
-                'state': 'code',
-                'code': "records.write({'user_id': %s})" % (self.user_demo.id),
-                'trigger': 'on_create',
-                'active': True,
-                'filter_domain': "[('state', '=', 'draft')]",
-            }, {
-                'name': 'Base Automation: test rule on write',
-                'model_id': self.env.ref('base_automation.model_base_automation_lead_test').id,
-                'state': 'code',
-                'code': "records.write({'user_id': %s})" % (self.user_demo.id),
-                'trigger': 'on_write',
-                'active': True,
-                'filter_domain': "[('state', '=', 'done')]",
-                'filter_pre_domain': "[('state', '=', 'open')]",
-            }, {
-                'name': 'Base Automation: test rule on recompute',
-                'model_id': self.env.ref('base_automation.model_base_automation_lead_test').id,
-                'state': 'code',
-                'code': "records.write({'user_id': %s})" % (self.user_demo.id),
-                'trigger': 'on_write',
-                'active': True,
-                'filter_domain': "[('employee', '=', True)]",
-            }, {
-                'name': 'Base Automation: test recursive rule',
-                'model_id': self.env.ref('base_automation.model_base_automation_lead_test').id,
-                'state': 'code',
-                'code': """
-record = model.browse(env.context['active_id'])
-if 'partner_id' in env.context['old_values'][record.id]:
-    record.write({'state': 'draft'})""",
-                'trigger': 'on_write',
-                'active': True,
-            }, {
-                'name': 'Base Automation: test rule on secondary model',
-                'model_id': self.env.ref('base_automation.model_base_automation_line_test').id,
-                'state': 'code',
-                'code': "records.write({'user_id': %s})" % (self.user_demo.id),
-                'trigger': 'on_create',
-                'active': True,
-            }, {
-                'name': 'Base Automation: test rule on write check context',
-                'model_id': self.env.ref('base_automation.model_base_automation_lead_test').id,
-                'state': 'code',
-                'code': """
-record = model.browse(env.context['active_id'])
-if 'user_id' in env.context['old_values'][record.id]:
-    record.write({'is_assigned_to_admin': (record.user_id.id == 1)})""",
-                'trigger': 'on_write',
-                'active': True,
-            }, {
-                'name': 'Base Automation: test rule with trigger',
-                'model_id': self.env.ref('base_automation.model_base_automation_lead_test').id,
-                'trigger_field_ids': [(4, self.env.ref('base_automation.field_base_automation_lead_test__state').id)],
-                'state': 'code',
-                'code': """
-record = model.browse(env.context['active_id'])
-record['name'] = record.name + 'X'""",
-                'trigger': 'on_write',
-                'active': True,
-            }, {
-                'name': 'Base Automation: test send an email',
-                'model_id': self.env.ref('base_automation.model_base_automation_lead_test').id,
-                'template_id': self.test_mail_template_automation.id,
-                'trigger_field_ids': [(4, self.env.ref('base_automation.field_base_automation_lead_test__deadline').id)],
-                'state': 'email',
-                'code': """
-record = model.browse(env.context['active_id'])
-record['name'] = record.name + 'X'""",
-                'trigger': 'on_write',
-                'active': True,
-                'filter_domain': "[('deadline', '!=', False)]",
-                'filter_pre_domain': "[('deadline', '=', False)]",
-            }
-        ])
-
-    def tearDown(self):
-        super().tearDown()
-        self.env['base.automation']._unregister_hook()
+        self.user_demo = self.env.ref('base.user_demo')
 
     def create_lead(self, **kwargs):
         vals = {
@@ -173,7 +83,7 @@ record['name'] = record.name + 'X'""",
         Check that a rule is executed whenever a field is recomputed after a
         change on another model.
         """
-        partner = self.res_partner_1
+        partner = self.env.ref('base.res_partner_1')
         partner.write({'employee': False})
         lead = self.create_lead(state='open', partner_id=partner.id)
         self.assertFalse(lead.employee, "Customer field should updated to False")
@@ -189,7 +99,7 @@ record['name'] = record.name + 'X'""",
         Check that a rule is executed whenever a field is recomputed and the
         context contains the target field
         """
-        partner = self.res_partner_1
+        partner = self.env.ref('base.res_partner_1')
         lead = self.create_lead(state='draft', partner_id=partner.id)
         self.assertFalse(lead.deadline, 'There should not be a deadline defined')
         # change priority and user; this triggers deadline recomputation, and
@@ -199,7 +109,7 @@ record['name'] = record.name + 'X'""",
         self.assertTrue(lead.is_assigned_to_admin, 'Lead should be assigned to admin')
 
     def test_11b_recomputed_field(self):
-        mail_automation = self.env['base.automation'].search([('name', '=', 'Base Automation: test send an email')])
+        mail_automation = self.env.ref('base_automation.test_rule_on_write_recompute_send_email')
         send_mail_count = 0
 
         def _patched_get_actions(*args, **kwargs):
@@ -241,7 +151,7 @@ record['name'] = record.name + 'X'""",
         self.assertEqual(lead.state, 'open')
         self.assertEqual(lead.user_id, self.user_root)
         # change partner; this should trigger the rule that modifies the state
-        partner = self.res_partner_1
+        partner = self.env.ref('base.res_partner_1')
         lead.write({'partner_id': partner.id})
         self.assertEqual(lead.state, 'draft')
 
@@ -268,7 +178,7 @@ record['name'] = record.name + 'X'""",
         """
         lead = self.create_lead(name="X")
         lead.priority = True
-        partner1 = self.res_partner_1
+        partner1 = self.env.ref('base.res_partner_1')
         lead.partner_id = partner1.id
         self.assertEqual(lead.name, 'X', "No update until now.")
 
@@ -282,10 +192,10 @@ record['name'] = record.name + 'X'""",
         self.assertEqual(lead.name, 'XXXX', "One update should have happened.")
 
         # change the rule to trigger on partner_id
-        rule = self.env['base.automation'].search([('name', '=', 'Base Automation: test rule with trigger')])
-        rule.write({'trigger_field_ids':  [(6, 0, [self.env.ref('base_automation.field_base_automation_lead_test__partner_id').id])]})
+        rule = self.env.ref('base_automation.test_rule_with_trigger')
+        rule.trigger_field_ids = self.env.ref('base_automation.field_base_automation_lead_test__partner_id')
 
-        partner2 = self.env['res.partner'].create({'name': 'A new partner'})
+        partner2 = self.env.ref('base.res_partner_2')
         lead.name = 'X'
         lead.state = 'open'
         self.assertEqual(lead.name, 'X', "No update should have happened.")

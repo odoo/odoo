@@ -5,12 +5,12 @@ import datetime
 from datetime import datetime, timedelta, time
 
 from odoo import fields
-from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
+from odoo.tests.common import TransactionCase
 import pytz
 import re
 
 
-class TestCalendar(SavepointCaseWithUserDemo):
+class TestCalendar(TransactionCase):
 
     def setUp(self):
         super(TestCalendar, self).setUp()
@@ -136,14 +136,12 @@ class TestCalendar(SavepointCaseWithUserDemo):
             (u'2017-07-12 14:30:00', u'2017-07-12 15:00:00'),
             "Sanity check"
         )
-        partner_1 = self.env['res.partner'].create({'name': 'A First Partner'})
-        partner_2 = self.env['res.partner'].create({'name': 'A Second Partner'})
         values = {
             'allday': False,
             'name': u'wheee',
             'attendee_ids': [
-                (0, 0, {'state': u'needsAction', 'partner_id': partner_1.id, 'email': u'bob@example.com'}),
-                (0, 0, {'state': u'needsAction', 'partner_id': partner_2.id, 'email': u'ed@example.com'}),
+                (0, 0, {'state': u'needsAction', 'partner_id': 8, 'email': u'bob@example.com'}),
+                (0, 0, {'state': u'needsAction', 'partner_id': 10, 'email': u'ed@example.com'}),
             ],
             'recurrency': True,
             'privacy': u'public',
@@ -152,7 +150,7 @@ class TestCalendar(SavepointCaseWithUserDemo):
             'start': '2017-07-10 15:30:00',
             'location': u"XXX",
             'duration': 0.5,
-            'partner_ids': [(4, partner_1.id), (4, partner_2.id)],
+            'partner_ids': [(4, 10), (4, 8)],
             'description': u"A thing"
         }
 
@@ -227,7 +225,7 @@ class TestCalendar(SavepointCaseWithUserDemo):
             'name': 'Test',
         })
         now = datetime.now()
-        test_user = self.user_demo
+        test_user = self.env.ref('base.user_demo')
         test_name, test_description, test_description2 = 'Test-Meeting', '<p>Test-Description</p>', '<p>NotTest</p>'
 
         # create using default_* keys
@@ -266,7 +264,7 @@ class TestCalendar(SavepointCaseWithUserDemo):
         self.assertEqual(self.env['calendar.event'], self.env['calendar.event'].search([('name', '=', test_name)]))
 
         # create using active_model keys
-        test_event = self.env['calendar.event'].with_user(self.user_demo).with_context(
+        test_event = self.env['calendar.event'].with_user(self.env.ref('base.user_demo')).with_context(
             active_model=test_record._name,
             active_id=test_record.id,
         ).create({
@@ -328,7 +326,7 @@ class TestCalendar(SavepointCaseWithUserDemo):
             'summary': 'Meeting with partner',
             'activity_type_id': activty_type.id,
             'res_model_id': self.env['ir.model'].search([('model', '=', 'res.partner')], limit=1).id,
-            'res_id': self.env['res.partner'].create({'name': 'A Partner'}).id,
+            'res_id': self.env['res.partner'].search([('name', 'ilike', 'Deco Addict')], limit=1).id,
         })
 
         calendar_event = self.env['calendar.event'].create({
@@ -361,7 +359,7 @@ class TestCalendar(SavepointCaseWithUserDemo):
             'summary': 'Meeting with partner',
             'activity_type_id': activty_type.id,
             'res_model_id': self.env['ir.model'].search([('model', '=', 'res.partner')], limit=1).id,
-            'res_id': self.env['res.partner'].create({'name': 'A Partner'}).id,
+            'res_id': self.env['res.partner'].search([('name', 'ilike', 'Deco Addict')], limit=1).id,
         })
 
         calendar_event = self.env['calendar.event'].create({

@@ -4,44 +4,11 @@
 from collections import defaultdict
 import json
 
-from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 from odoo.tests.common import TransactionCase, users, warmup, tagged
 from odoo.tools import mute_logger
 
 
-class TestPerformance(SavepointCaseWithUserDemo):
-
-    @classmethod
-    def setUpClass(cls):
-        super(TestPerformance, cls).setUpClass()
-        cls._load_partners_set()
-
-        partner3 = cls.env['res.partner'].search([('name', '=', 'AnalytIQ')], limit=1)
-        partner4 = cls.env['res.partner'].search([('name', '=', 'Urban Trends')], limit=1)
-        partner10 = cls.env['res.partner'].search([('name', '=', 'Ctrl-Alt-Fix')], limit=1)
-        partner12 = cls.env['res.partner'].search([('name', '=', 'Ignitive Labs')], limit=1)
-
-        cls.env['test_performance.base'].create([{
-            'name': 'Object 0',
-            'value': 0,
-            'partner_id': partner3.id,
-        }, {
-            'name': 'Object 1',
-            'value': 10,
-            'partner_id': partner3.id,
-        }, {
-            'name': 'Object 2',
-            'value': 20,
-            'partner_id': partner4.id,
-        }, {
-            'name': 'Object 3',
-            'value': 30,
-            'partner_id': partner10.id,
-        }, {
-            'name': 'Object 4',
-            'value': 40,
-            'partner_id': partner12.id,
-        }])
+class TestPerformance(TransactionCase):
 
     @users('__system__', 'demo')
     @warmup
@@ -410,10 +377,9 @@ class TestPerformance(SavepointCaseWithUserDemo):
 
     def expected_read_group(self):
         groups = defaultdict(list)
-        all_records = self.env['test_performance.base'].search([])
-        for record in all_records:
+        for record in self.env['test_performance.base'].search([]):
             groups[record.partner_id.id].append(record.value)
-        partners = self.env['res.partner'].search([('id', 'in', all_records.mapped('partner_id').ids)])
+        partners = self.env['res.partner'].search([('id', 'in', list(groups))])
         return [{
             '__domain': [('partner_id', '=', partner.id)],
             'partner_id': (partner.id, partner.display_name),
