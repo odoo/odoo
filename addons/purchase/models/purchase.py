@@ -349,6 +349,13 @@ class PurchaseOrder(models.Model):
     @api.multi
     def button_done(self):
         self.write({'state': 'done'})
+        
+    @api.multi
+    def write(self, vals):
+        if vals.get('partner_id'):
+            for purchase in self.filtered(lambda x: x.partner_id != vals['partner_id'] and x.partner_id in x.message_partner_ids):
+                purchase.message_unsubscribe(partner_ids=self.partner_id.ids)
+        return super(PurchaseOrder, self).write(vals)
 
     @api.multi
     def _add_supplier_to_product(self):
