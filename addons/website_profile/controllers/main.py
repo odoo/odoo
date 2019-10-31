@@ -168,7 +168,7 @@ class WebsiteProfile(http.Controller):
         """
         domain = [('website_published', '=', True)]
         if 'badge_category' in kwargs:
-            domain = expression.AND([[('challenge_ids.category', '=', kwargs.get('badge_category'))], domain])
+            domain = expression.AND([[('challenge_ids.challenge_category', '=', kwargs.get('badge_category'))], domain])
         return domain
 
     @http.route('/profile/ranks_badges', type='http', auth="public", website=True, sitemap=True)

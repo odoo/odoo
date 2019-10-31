@@ -725,7 +725,7 @@ class Survey(models.Model):
             'reward_id': self.certification_badge_id.id,
             'state': 'inprogress',
             'period': 'once',
-            'category': 'certification',
+            'challenge_category': 'certification',
             'reward_realtime': True,
             'report_message_frequency': 'never',
             'user_domain': [('karma', '>', 0)],
