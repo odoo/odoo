@@ -642,23 +642,6 @@ PaymentScreenWidget.include({
             this.pos.barcode_reader.set_action_callback('credit', _.bind(this.credit_code_action, this));
         }
     },
-
-    // before validating, get rid of any paymentlines that are waiting
-    // on a swipe.
-    validate_order: function(force_validation) {
-        if (this.pos.get_order().is_paid() && ! this.invoicing) {
-            var lines = this.pos.get_order().get_paymentlines();
-
-            for (var i = 0; i < lines.length; i++) {
-                if (lines[i].mercury_swipe_pending) {
-                    this.pos.get_order().remove_paymentline(lines[i]);
-                    this.render_paymentlines();
-                }
-            }
-        }
-
-        this._super(force_validation);
-    }
 });
 
 });
