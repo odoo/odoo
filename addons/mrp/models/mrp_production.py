@@ -301,14 +301,14 @@ class MrpProduction(models.Model):
             self.product_uom_id = self.product_id.uom_id.id
             return {'domain': {'product_uom_id': [('category_id', '=', self.product_id.uom_id.category_id.id)]}}
 
-    @api.onchange('picking_type_id')
+    @api.onchange('picking_type_id', 'routing_id')
     def onchange_picking_type(self):
         location = self.env.ref('stock.stock_location_stock')
         try:
             location.check_access_rule('read')
         except (AttributeError, AccessError):
             location = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.company_id.id)], limit=1).lot_stock_id
-        self.location_src_id = self.picking_type_id.default_location_src_id.id or location.id
+        self.location_src_id = self.routing_id.location_id.id or self.picking_type_id.default_location_src_id.id or location.id
         self.location_dest_id = self.picking_type_id.default_location_dest_id.id or location.id
 
     @api.multi
