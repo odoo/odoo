@@ -21,7 +21,7 @@ class MrpRouting(models.Model):
         'mrp.routing.workcenter', 'routing_id', 'Operations',
         copy=True, oldname='workcenter_lines')
     location_id = fields.Many2one(
-        'stock.location', 'Production Location',
+        'stock.location', 'Raw Materials Location',
         help="Keep empty if you produce at the location where you find the raw materials. "
              "Set a location if you produce at a fixed location. This can be a partner location "
              "if you subcontract the manufacturing operations.")
