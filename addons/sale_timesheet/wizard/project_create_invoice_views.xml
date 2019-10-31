@@ -8,6 +8,7 @@
             <form string="Create Sales Order from Project">
                 <group>
                     <field name="project_id" readonly="1"/>
+                    <field name="_candidate_orders" invisible="1"/>
                     <field name="sale_order_id" options="{'no_create_edit': True}" context="{'sale_show_partner_name': True}"/>
                     <field name="amount_to_invoice"/>
                 </group>

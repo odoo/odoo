@@ -23,16 +23,20 @@ class ProjectCreateInvoice(models.TransientModel):
         return result
 
     project_id = fields.Many2one('project.project', "Project", help="Project to make billable", required=True)
-    sale_order_id = fields.Many2one('sale.order', string="Choose the Sales Order to invoice", required=True)
+    _candidate_orders = fields.Many2many('sale.order', compute='_compute_candidate_orders')
+    sale_order_id = fields.Many2one(
+        'sale.order', string="Choose the Sales Order to invoice", required=True,
+        domain="[('id', 'in', _candidate_orders)]"
+    )
     amount_to_invoice = fields.Monetary("Amount to invoice", compute='_compute_amount_to_invoice', currency_field='currency_id', help="Total amount to invoice on the sales order, including all items (services, storables, expenses, ...)")
     currency_id = fields.Many2one(related='sale_order_id.currency_id', readonly=True)
 
-    @api.onchange('project_id')
-    def _onchange_project_id(self):
-        sale_orders = self.project_id.tasks.mapped('sale_line_id.order_id').filtered(lambda so: so.invoice_status == 'to invoice')
-        return {
-            'domain': {'sale_order_id': [('id', 'in', sale_orders.ids)]},
-        }
+    @api.depends('project_id.tasks.sale_line_id.order_id.invoice_status')
+    def _compute_candidate_orders(self):
+        for p in self:
+            p._candidate_orders = p.project_id\
+                .mapped('tasks.sale_line_id.order_id')\
+                .filtered(lambda so: so.invoice_status == 'to invoice')
 
     @api.depends('sale_order_id')
     def _compute_amount_to_invoice(self):
