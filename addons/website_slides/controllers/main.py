@@ -253,7 +253,7 @@ class WebsiteSlides(WebsiteProfile):
             challenges_done = None
         else:
             challenges = request.env['gamification.challenge'].sudo().search([
-                ('category', '=', 'slides'),
+                ('challenge_category', '=', 'slides'),
                 ('reward_id.is_published', '=', True)
             ], order='id asc', limit=5)
             challenges_done = request.env['gamification.badge.user'].sudo().search([
