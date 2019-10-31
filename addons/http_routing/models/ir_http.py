@@ -183,7 +183,7 @@ def url_for(url_from, lang_code=None, no_rewrite=False):
 
     # don't try to match route if we know that no rewrite has been loaded.
     routing = getattr(request, 'website_routing', None)  # not modular, but not overridable
-    if not request.env['ir.http']._rewrite_len.get(routing):
+    if not getattr(request.env['ir.http'], '_rewrite_len', {}).get(routing):
         no_rewrite = True
 
     # avoid useless check for 1 char URL '/', '#', ... and absolute URL
