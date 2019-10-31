@@ -59,7 +59,7 @@
         <field name="country_id" ref="base.do"/>
     </record>
 
-    <record id="account_financial_report_line_02_01_do account_tax_report_total_itbs" model="account.tax.report.line">
+    <record id="account_financial_report_line_02_01_do_account_tax_report_total_itbs" model="account.tax.report.line">
         <field name="name">III.10 TOTAL ITBIS COBRADO (Sumar casillas 8+9)</field>
         <field name="sequence" eval="1"/>
         <field name="parent_id" ref="account_tax_report_3_liquidacion"/>
@@ -71,14 +71,14 @@
         <field name="tag_name">III.8</field>
         <field name="code">DOTAX020101</field>
         <field name="sequence" eval="1"/>
-        <field name="parent_id" ref="account_financial_report_line_02_01_do account_tax_report_total_itbs"/>
+        <field name="parent_id" ref="account_financial_report_line_02_01_do_account_tax_report_total_itbs"/>
         <field name="country_id" ref="base.do"/>
     </record>
 
     <record id="account_tax_report_tbs_11_casilla" model="account.tax.report.line">
         <field name="name">III.9 TBIS COBRADO (11% de la casilla 7)</field>
         <field name="sequence" eval="2"/>
-        <field name="parent_id" ref="account_financial_report_line_02_01_do account_tax_report_total_itbs"/>
+        <field name="parent_id" ref="account_financial_report_line_02_01_do_account_tax_report_total_itbs"/>
         <field name="country_id" ref="base.do"/>
     </record>
 
