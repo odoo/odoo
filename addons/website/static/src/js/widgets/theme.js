@@ -515,6 +515,7 @@ var ThemeCustomizeDialog = Dialog.extend({
                 resetButton: false,
                 defaultColor: $color.css('background-color'),
                 excluded: ['transparent_grayscale'],
+                excludeSectionOf: colorName,
             });
             var chosenColor = undefined;
             colorpicker.on('color_picked custom_color_picked', self, function (ev) {
