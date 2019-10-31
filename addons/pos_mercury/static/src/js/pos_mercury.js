@@ -132,6 +132,14 @@ pos_model.Paymentline = pos_model.Paymentline.extend({
     }
 });
 
+var _order_super = pos_model.Order.prototype;
+pos_model.Order = pos_model.Order.extend({
+    electronic_payment_in_progress: function() {
+        var res = _order_super.electronic_payment_in_progress.apply(this, arguments);
+        return res || this.get_paymentlines().some(line => line.mercury_swipe_pending);
+    },
+});
+
 // Lookup table to store status and error messages
 var lookUpCodeTransaction = {
     'Approved': {
@@ -618,36 +626,13 @@ PaymentScreenWidget.include({
 
     // make sure there is only one paymentline waiting for a swipe
     click_paymentmethods: function (id) {
-        var i;
         var order = this.pos.get_order();
-        var payment_method = this.pos.payment_methods_by_id[id]
-        // this.pos.get_order().add_paymentline(payment_method);
-
-        if (payment_method.pos_mercury_config_id) {
-            var already_swipe_pending = false;
-            var lines = order.get_paymentlines();
-
-            for (i = 0; i < lines.length; i++) {
-                if (lines[i].payment_method.pos_mercury_config_id && lines[i].mercury_swipe_pending) {
-                    already_swipe_pending = true;
-                }
-            }
-
-            if (already_swipe_pending) {
-                this.gui.show_popup('error',{
-                    'title': _t('Error'),
-                    'body':  _t('One credit card swipe already pending.'),
-                });
-            } else {
-                var res = this._super(id);
-                if (res && order.get_due(order.selected_paymentline) > 0) {
-                    order.selected_paymentline.mercury_swipe_pending = true;
-                    this.render_paymentlines();
-                    order.trigger('change', order); // needed so that export_to_JSON gets triggered
-                }
-            }
-        } else {
-            this._super(id);
+        var payment_method = this.pos.payment_methods_by_id[id];
+        var res = this._super(id);
+        if (res && payment_method.pos_mercury_config_id) {
+            order.selected_paymentline.mercury_swipe_pending = true;
+            this.render_paymentlines();
+            order.trigger('change', order); // needed so that export_to_JSON gets triggered
         }
     },
 
