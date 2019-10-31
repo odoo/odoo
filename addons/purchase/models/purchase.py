@@ -354,7 +354,7 @@ class PurchaseOrder(models.Model):
     def write(self, vals):
         if vals.get('partner_id'):
             for purchase in self.filtered(lambda x: x.partner_id != vals['partner_id'] and x.partner_id in x.message_partner_ids):
-                purchase.message_unsubscribe(partner_ids=self.partner_id.ids)
+                purchase.message_unsubscribe(partner_ids=purchase.partner_id.ids)
         return super(PurchaseOrder, self).write(vals)
 
     @api.multi
