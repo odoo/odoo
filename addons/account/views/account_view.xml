@@ -18,7 +18,6 @@
                              <field name="user_type_id" widget="account_hierarchy_selection"/>
                              <field name="tax_ids" widget="many2many_tags" domain="[('company_id','=',company_id)]" attrs="{'invisible': [('internal_group', '=', 'off_balance')]}"/>
                              <field name="tag_ids" widget="many2many_tags" domain="[('applicability', '!=', 'taxes')]" context="{'default_applicability': 'accounts'}" options="{'no_create_edit': True}"/>
-                             <field name="group_id"/>
                              <field name="allowed_journal_ids" widget="many2many_tags" domain="[('company_id','=',company_id)]" options="{'no_create_edit': True}"/>
                              <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                              <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
@@ -1790,8 +1789,11 @@ action = model.setting_init_bank_account_action()
                 <sheet>
                     <group>
                         <field name="name"/>
-                        <field name="code_prefix"/>
-                        <field name="parent_id"/>
+                        <label for="code_prefix_start" string="Code Prefix"/>
+                        <div>
+                            From <field name="code_prefix_start" class="oe_inline"/> to <field name="code_prefix_end" class="oe_inline"/>
+                        </div>
+                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                     </group>
                 </sheet>
                 </form>
@@ -1804,7 +1806,7 @@ action = model.setting_init_bank_account_action()
             <field name="arch" type="xml">
                 <search string="Account groups">
                     <field name="name"
-                           filter_domain="['|', ('code_prefix', '=like', str(self) + '%'), ('name', 'ilike', self)]"
+                           filter_domain="['|', ('code_prefix_start', '=like', str(self) + '%'), ('name', 'ilike', self)]"
                            string="Account group"/>
                 </search>
             </field>
@@ -1815,8 +1817,10 @@ action = model.setting_init_bank_account_action()
             <field name="model">account.group</field>
             <field name="arch" type="xml">
                 <tree string="Account Group">
-                    <field name="code_prefix"/>
+                    <field name="code_prefix_start"/>
+                    <field name="code_prefix_end"/>
                     <field name="name"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
