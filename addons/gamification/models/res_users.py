@@ -283,7 +283,13 @@ WHERE sub.user_id IN %%s""" % {
         default value in related views.
 
         TDE FIXME in post-12.4: make next_rank_id a non-stored computed field correctly computed """
-        return self.next_rank_id or (not self.rank_id and self.env['gamification.karma.rank'].search([], order="karma_min ASC", limit=1))
+
+        if self.next_rank_id:
+            return self.next_rank_id
+        elif not self.rank_id:
+            return self.env['gamification.karma.rank'].search([], order="karma_min ASC", limit=1)
+        else:
+            return self.env['gamification.karma.rank']
 
     def get_gamification_redirection_data(self):
         """
