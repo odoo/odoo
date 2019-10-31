@@ -861,6 +861,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         :type data: list(list(str))
         :returns: {ids: list(int)|False, messages: [Message][, lastrow: int]}
         """
+        self.flush()
+
         # determine values of mode, current_module and noupdate
         mode = self._context.get('mode', 'init')
         current_module = self._context.get('module', '__import__')
@@ -907,30 +909,27 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
             # try to create in batch
             try:
-                recs = self._load_records(data_list, mode == 'update')
-                ids.extend(recs.ids)
-                cr.execute('RELEASE SAVEPOINT model_load_save')
+                with cr.savepoint():
+                    recs = self._load_records(data_list, mode == 'update')
+                    ids.extend(recs.ids)
                 return
             except Exception:
-                cr.execute('ROLLBACK TO SAVEPOINT model_load_save')
+                pass
 
             # try again, this time record by record
             for rec_data in data_list:
                 try:
-                    cr.execute('SAVEPOINT model_load_save')
-                    rec = self._load_records([rec_data], mode == 'update')
-                    ids.append(rec.id)
-                    cr.execute('RELEASE SAVEPOINT model_load_save')
+                    with cr.savepoint():
+                        rec = self._load_records([rec_data], mode == 'update')
+                        ids.append(rec.id)
                 except psycopg2.Warning as e:
                     info = rec_data['info']
                     messages.append(dict(info, type='warning', message=str(e)))
-                    cr.execute('ROLLBACK TO SAVEPOINT model_load_save')
                 except psycopg2.Error as e:
                     info = rec_data['info']
                     messages.append(dict(info, type='error', **PGERROR_TO_OE[e.pgcode](self, fg, info, e)))
                     # Failed to write, log to messages, rollback savepoint (to
                     # avoid broken transaction) and keep going
-                    cr.execute('ROLLBACK TO SAVEPOINT model_load_save')
                 except Exception as e:
                     _logger.exception("Error while loading record")
                     info = rec_data['info']
@@ -939,7 +938,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     messages.append(dict(info, type='error', message=message, moreinfo=moreinfo))
                     # Failed for some reason, perhaps due to invalid data supplied,
                     # rollback savepoint and keep going
-                    cr.execute('ROLLBACK TO SAVEPOINT model_load_save')
 
         # make 'flush' available to the methods below, in the case where XMLID
         # resolution fails, for instance
