@@ -121,11 +121,12 @@ class Project(models.Model):
 class ProjectTask(models.Model):
     _inherit = "project.task"
 
-    sale_line_id = fields.Many2one('sale.order.line', 'Sales Order Item', domain="[('is_service', '=', True), ('order_partner_id', 'child_of', commercial_partner_id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done'])]",
+    sale_line_id = fields.Many2one('sale.order.line', 'Sales Order Item', domain="[('is_service', '=', True), ('order_partner_id', 'child_of', commercial_partner_id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done']), ('order_id', '=?', project_sale_order_id)]",
         compute='_compute_sale_line', store=True, readonly=False,
         help="Sales order item to which the task is linked. If an employee timesheets on a this task, "
         "and if this employee is not in the 'Employee/Sales Order Item Mapping' of the project, the "
         "timesheet entry will be linked to this sales order item.", copy=False)
+    project_sale_order_id = fields.Many2one('sale.order', string="project's sale order", related='project_id.sale_order_id')
     sale_order_id = fields.Many2one('sale.order', 'Sales Order', compute='_compute_sale_order_id', store=True, readonly=False, help="Sales order to which the task is linked.")
     billable_type = fields.Selection([
         ('task_rate', 'At Task Rate'),
@@ -161,7 +162,7 @@ class ProjectTask(models.Model):
 
     @api.onchange('project_id')
     def _onchange_project(self):
-        result = super(ProjectTask, self)._onchange_project()
+        super(ProjectTask, self)._onchange_project()
         if self.project_id:
             if self.project_id.billable_type == 'employee_rate':
                 if not self.partner_id:
@@ -172,12 +173,6 @@ class ProjectTask(models.Model):
                 if not self.partner_id:
                     self.partner_id = self.sale_line_id.order_partner_id
         # set domain on SO: on non billable project, all SOL of customer, otherwise the one from the SO
-        result = result or {}
-        domain = [('is_service', '=', True), ('is_expense', '=', False), ('order_partner_id', 'child_of', self.partner_id.commercial_partner_id.id), ('state', 'in', ['sale', 'done'])]
-        if self.project_id.sale_order_id:
-            domain += [('order_id', '=', self.project_id.sale_order_id.id)]
-        result.setdefault('domain', {})['sale_line_id'] = domain
-        return result
 
     @api.depends('project_id.sale_line_id.order_partner_id')
     def _compute_partner_id(self):
