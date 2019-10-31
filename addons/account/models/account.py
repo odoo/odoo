@@ -238,7 +238,7 @@ class AccountAccount(models.Model):
     company_id = fields.Many2one('res.company', string='Company', required=True,
         default=lambda self: self.env.company)
     tag_ids = fields.Many2many('account.account.tag', 'account_account_account_tag', string='Tags', help="Optional tags you may want to assign for custom reporting")
-    group_id = fields.Many2one('account.group')
+    group_id = fields.Many2one('account.group', compute='_compute_account_group', store=True)
     root_id = fields.Many2one('account.root', compute='_compute_account_root', store=True)
     allowed_journal_ids = fields.Many2many('account.journal', string="Allowed Journals", help="Define in which journals this account can be used. If empty, can be used in all journals.")
 
@@ -280,6 +280,13 @@ class AccountAccount(models.Model):
         # So instead, we make it a many2one to a psql view with what we need as records.
         for record in self:
             record.root_id = record.code and (ord(record.code[0]) * 1000 + ord(record.code[1])) or False
+
+    @api.depends('code')
+    def _compute_account_group(self):
+        if self.ids:
+            self.env['account.group']._adapt_accounts_for_account_groups(self)
+        else:
+            self.group_id = False
 
     def _search_used(self, operator, value):
         if operator not in ['=', '!='] or not isinstance(value, bool):
@@ -403,22 +410,6 @@ class AccountAccount(models.Model):
             self.tax_ids = self.company_id.account_sale_tax_id
         elif self.internal_group == 'expense' and not self.tax_ids:
             self.tax_ids = self.company_id.account_purchase_tax_id
-
-    @api.onchange('code')
-    def onchange_code(self):
-        AccountGroup = self.env['account.group']
-
-        group = False
-        code_prefix = self.code
-
-        # find group with longest matching prefix
-        while code_prefix:
-            matching_group = AccountGroup.search([('code_prefix', '=', code_prefix)], limit=1)
-            if matching_group:
-                group = matching_group
-                break
-            code_prefix = code_prefix[:-1]
-        self.group_id = group
 
     def name_get(self):
         result = []
@@ -550,19 +541,40 @@ class AccountGroup(models.Model):
     _name = "account.group"
     _description = 'Account Group'
     _parent_store = True
-    _order = 'code_prefix'
+    _order = 'code_prefix_start'
 
-    parent_id = fields.Many2one('account.group', index=True, ondelete='cascade')
+    parent_id = fields.Many2one('account.group', index=True, ondelete='cascade', readonly=True)
     parent_path = fields.Char(index=True)
     name = fields.Char(required=True)
-    code_prefix = fields.Char()
+    code_prefix_start = fields.Char()
+    code_prefix_end = fields.Char()
+    company_id = fields.Many2one('res.company', required=True, default=lambda self: self.env.company)
+
+    _sql_constraints = [
+        (
+            'check_length_prefix',
+            'CHECK(char_length(COALESCE(code_prefix_start, \'\')) = char_length(COALESCE(code_prefix_end, \'\')))',
+            'The length of the starting and the ending code prefix must be the same'
+        ),
+    ]
+
+    @api.onchange('code_prefix_start')
+    def _onchange_code_prefix_start(self):
+        if not self.code_prefix_end or self.code_prefix_end < self.code_prefix_start:
+            self.code_prefix_end = self.code_prefix_start
+
+    @api.onchange('code_prefix_end')
+    def _onchange_code_prefix_end(self):
+        if not self.code_prefix_start or self.code_prefix_start > self.code_prefix_end:
+            self.code_prefix_start = self.code_prefix_end
 
     def name_get(self):
         result = []
         for group in self:
-            name = group.name
-            if group.code_prefix:
-                name = group.code_prefix + ' ' + name
+            prefix = group.code_prefix_start and str(group.code_prefix_start)
+            if prefix and group.code_prefix_end != group.code_prefix_start:
+                prefix += '-' + str(group.code_prefix_end)
+            name = (prefix and (prefix + ' ') or '') + group.name
             result.append((group.id, name))
         return result
 
@@ -573,9 +585,106 @@ class AccountGroup(models.Model):
             domain = []
         else:
             criteria_operator = ['|'] if operator not in expression.NEGATIVE_TERM_OPERATORS else ['&', '!']
-            domain = criteria_operator + [('code_prefix', '=ilike', name + '%'), ('name', operator, name)]
+            domain = criteria_operator + [('code_prefix_start', '=ilike', name + '%'), ('name', operator, name)]
         group_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
         return models.lazy_name_get(self.browse(group_ids).with_user(name_get_uid))
+
+    @api.constrains('code_prefix_start', 'code_prefix_end')
+    def _constraint_prefix_overlap(self):
+        self.env['account.group'].flush()
+        query = """
+            SELECT other.id FROM account_group this
+            JOIN account_group other
+              ON char_length(other.code_prefix_start) = char_length(this.code_prefix_start)
+             AND other.id != this.id
+             AND other.company_id = this.company_id
+             AND (
+                other.code_prefix_start <= this.code_prefix_start AND this.code_prefix_start <= other.code_prefix_end
+                OR
+                other.code_prefix_start >= this.code_prefix_start AND this.code_prefix_end >= other.code_prefix_start
+            )
+            WHERE this.id IN %(ids)s
+        """
+        self.env.cr.execute(query, {'ids': tuple(self.ids)})
+        res = self.env.cr.fetchall()
+        if res:
+            raise ValidationError(_('Account Groups with the same granularity can\'t overlap'))
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if 'code_prefix_start' in vals and not vals.get('code_prefix_end'):
+                vals['code_prefix_end'] = vals['code_prefix_start']
+        res_ids = super(AccountGroup, self).create(vals_list)
+        res_ids._adapt_accounts_for_account_groups()
+        res_ids._adapt_parent_account_group()
+        return res_ids
+
+    def write(self, vals):
+        res = super(AccountGroup, self).write(vals)
+        if 'code_prefix_start' in vals or 'code_prefix_end' in vals:
+            self._adapt_accounts_for_account_groups()
+            self._adapt_parent_account_group()
+        return res
+
+    def unlink(self):
+        for record in self:
+            account_ids = self.env['account.account'].search([('group_id', '=', record.id)])
+            account_ids.write({'group_id': record.parent_id.id})
+
+            children_ids = self.env['account.group'].search([('parent_id', '=', record.id)])
+            children_ids.write({'parent_id': record.parent_id.id})
+        super(AccountGroup, self).unlink()
+
+    def _adapt_accounts_for_account_groups(self, account_ids=None):
+        """Ensure consistency between accounts and account groups.
+
+        Find and set the most specific group matching the code of the account.
+        The most specific is the one with the longest prefixes and with the starting
+        prefix being smaller than the account code and the ending prefix being greater.
+        """
+        if not self and not account_ids:
+            return
+        self.env['account.group'].flush()
+        self.env['account.account'].flush()
+        query = """
+            UPDATE account_account account SET group_id = (
+                SELECT agroup.id FROM account_group agroup
+                WHERE agroup.code_prefix_start <= LEFT(account.code, char_length(agroup.code_prefix_start))
+                AND agroup.code_prefix_end >= LEFT(account.code, char_length(agroup.code_prefix_end))
+                AND agroup.company_id = account.company_id
+                ORDER BY char_length(agroup.code_prefix_start) DESC LIMIT 1
+            ) WHERE account.company_id in %(company_ids)s {where_account};
+        """.format(
+            where_account=account_ids and 'AND account.id IN %(account_ids)s' or ''
+        )
+        self.env.cr.execute(query, {'company_ids': tuple((self.company_id or account_ids.company_id).ids), 'account_ids': account_ids and tuple(account_ids.ids)})
+        self.env['account.account'].invalidate_cache(fnames=['group_id'])
+
+    def _adapt_parent_account_group(self):
+        """Ensure consistency of the hierarchy of account groups.
+
+        Find and set the most specific parent for each group.
+        The most specific is the one with the longest prefixes and with the starting
+        prefix being smaller than the child prefixes and the ending prefix being greater.
+        """
+        if not self:
+            return
+        self.env['account.group'].flush()
+        query = """
+            UPDATE account_group agroup SET parent_id = (
+                SELECT parent.id FROM account_group parent
+                WHERE char_length(parent.code_prefix_start) < char_length(agroup.code_prefix_start)
+                AND parent.code_prefix_start <= LEFT(agroup.code_prefix_start, char_length(parent.code_prefix_start))
+                AND parent.code_prefix_end >= LEFT(agroup.code_prefix_end, char_length(parent.code_prefix_end))
+                AND parent.id != agroup.id
+                AND parent.company_id = %(company_id)s
+                ORDER BY char_length(parent.code_prefix_start) DESC LIMIT 1
+            ) WHERE agroup.company_id = %(company_id)s;
+        """
+        self.env.cr.execute(query, {'company_id': self.company_id.id})
+        self.env['account.group'].invalidate_cache(fnames=['parent_id'])
+        self.env['account.group'].search([('company_id', '=', self.company_id.id)])._parent_store_update()
 
 
 class AccountRoot(models.Model):
