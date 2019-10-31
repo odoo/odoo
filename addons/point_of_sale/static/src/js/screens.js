@@ -2436,6 +2436,14 @@ var PaymentScreenWidget = ScreenWidget.extend({
     // and complete the sale process
     validate_order: function(force_validation) {
         if (this.order_is_valid(force_validation)) {
+            // remove pending payments before finalizing the validation
+            var order = this.pos.get_order();
+            order.get_paymentlines().forEach(line => {
+                if (!line.is_done()) {
+                    order.remove_paymentline(line);
+                }
+            });
+            this.render_paymentlines();
             this.finalize_validation();
         }
     },
