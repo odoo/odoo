@@ -36,8 +36,8 @@ Spanish charts of accounts (PGCE 2008).
         "base_vat",
     ],
     "data" : [
-        'data/account_group.xml',
         'data/account_chart_template_data.xml',
+        'data/account_group.xml',
         'data/account.account.template-common.csv',
         'data/account.account.template-pymes.csv',
         'data/account.account.template-assoc.csv',
