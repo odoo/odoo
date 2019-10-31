@@ -28,8 +28,10 @@
         <script type="text/javascript">
             $(function() {
                 // Little eye
-                $('body').on('mousedown mouseup', '.o_little_eye', function (ev) {
-                    $(ev.target).closest('.input-group').find('.form-control').prop('type', ev.type === 'mousedown' ? 'text' : 'password');
+                $('body').on('mousedown', '.o_little_eye', function (ev) {
+                    $(ev.target).closest('.input-group').find('.form-control').prop("type",
+                        (i, old) => { return old === "text" ? "password" : "text"; }
+                    );
                 });
                 // db modal
                 $('body').on('click', '.o_database_action', function (ev) {
@@ -53,19 +55,61 @@
                         }
                     }
                 });
+
+                // generate a random master password
+                // removed I1O0 to avoid confusions
+                var charset = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+                var password = "";
+                for (var i = 0, n = charset.length; i < 12; ++i) {
+                    password += charset.charAt(Math.floor(Math.random() * n));
+                    if (i === 3 || i === 7) {
+                        password += "-";
+                    }
+                }
+                var master_pwds = document.getElementsByClassName("generated_master_pwd");
+                for (var i=0, len=master_pwds.length|0; i<len; i=i+1|0) {
+                    master_pwds[i].innerText = password;
+                }
+                var master_pwd_inputs = document.getElementsByClassName("generated_master_pwd_input");
+                for (var i=0, len=master_pwd_inputs.length|0; i<len; i=i+1|0) {
+                    master_pwd_inputs[i].value = password;
+                    master_pwd_inputs[i].setAttribute('autocomplete', 'new-password');
+                }
             });
         </script>
     </head>
 
-    {% macro master_input() -%}
-        <div class="form-group">
-            {% if insecure %}
+    {% macro master_input(set_master_pwd=False) -%}
+
+        {% set input_class = "form-control" %}
+        {% if insecure %}
+            {% if set_master_pwd %}
                 <input type="hidden" name="master_pwd" class="form-control" value="admin"/>
             {% else %}
-                <label for="master_pwd" class="col-form-label">Master Password</label>
-                <input id="master_pwd" type="password" name="master_pwd" class="form-control" required="required" autofocus="autofocus"/>
+                <div class="alert alert-warning">
+                    <p>Warning, your Odoo database manager is not protected. To secure it, we have generated the following master password for it:</p>
+                    <p style="text-align: center;"><strong class="generated_master_pwd"></strong></p>
+                    <p>You can change it below but be sure to remember it, it will be asked for future operations on databases.</p>
+                </div>
+                {% set input_class = "form-control generated_master_pwd_input" %}
             {% endif %}
-        </div>
+        {% endif %}
+        {% if not insecure or not set_master_pwd %}
+            <div class="form-group row">
+                <label for="master_pwd" class="col-md-4 col-form-label">Master Password</label>
+                <div class="col-md-8 input-group">
+                    <input name="master_pwd"
+                        class="{{ input_class}}"
+                        required="required"
+                        autofocus="autofocus"
+                        type="password"
+                        autocomplete="current-password" />
+                    <div class="input-group-append">
+                        <span class="fa fa-eye o_little_eye input-group-text" aria-hidden="true" style="cursor: pointer;"></span>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
     {%- endmacro %}
 
     {% macro create_form() -%}
@@ -73,7 +117,7 @@
         <div class="form-group row">
             <label for="name" class="col-md-4 col-form-label">Database Name</label>
             <div class="col-md-8">
-                <input id="name" type="text" name="name" class="form-control" required="required" autocomplete="off" pattern="{{ pattern }}" title="Only alphanumerical characters, underscore, hyphen and dot are allowed"/>
+                <input id="dbname" type="text" name="name" class="form-control" required="required" autocomplete="off" pattern="{{ pattern }}" title="Only alphanumerical characters, underscore, hyphen and dot are allowed"/>
             </div>
         </div>
         <div class="form-group row">
@@ -225,13 +269,17 @@
                     <form id="form_restore_db" role="form" action="/web/database/restore" method="post" enctype="multipart/form-data">
                         <div class="modal-body">
                             {{ master_input() }}
-                            <div class="form-group">
-                                <label for="backup_file" class="col-form-label">File</label>
-                                <input id="backup_file" type="file" name="backup_file" class="required"/>
+                            <div class="form-group row">
+                                <label for="backup_file" class="col-md-4 col-form-label">File</label>
+                                <div class="col-md-8">
+                                    <input id="backup_file" type="file" name="backup_file" class="required"/>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label for="name" class="col-form-label">Database Name</label>
-                                <input id="name" type="text" name="name" class="form-control" required="required" pattern="{{ pattern }}" title="Only alphanumerical characters, underscore, hyphen and dot are allowed"/>
+                            <div class="form-group row">
+                                <label for="name" class="col-md-4 col-form-label">Database Name</label>
+                                <div class="col-md-8">
+                                    <input id="dbname_restore" type="text" name="name" class="form-control" required="required" pattern="{{ pattern }}" title="Only alphanumerical characters, underscore, hyphen and dot are allowed"/>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label for="copy">This database might have been moved or copied.</label>
@@ -268,11 +316,11 @@
                     <form id="form_change_pwd" role="form" action="/web/database/change_password" method="post">
                         <div class="modal-body">
                             <p>The master password is required to create, delete, dump or restore databases.</p>
-                            {{ master_input() }}
+                            {{ master_input(set_master_pwd=True) }}
                             <div class="form-group">
                                 <label for="master_pwd_new" class="col-form-label">New Master Password</label>
                                 <div class="input-group">
-                                    <input id="master_pwd_new" type="password" name="master_pwd_new" class="form-control" required="required" autocomplete="off"/>
+                                    <input id="master_pwd_new" type="password" name="master_pwd_new" class="form-control" required="required" autocomplete="new-password"/>
                                     <div class="input-group-append">
                                         <span class="fa fa-eye o_little_eye input-group-text" aria-hidden="true" style="cursor: pointer;"></span>
                                     </div>
@@ -300,7 +348,7 @@
                             {{ master_input() }}
                             <div class="form-group">
                                 <label for="name" class="col-form-label">Database Name</label>
-                                <input id="name" type="text" name="name" class="form-control" required="required" readonly="readonly"/>
+                                <input id="dbname_duplicate" type="text" name="name" class="form-control" required="required" readonly="readonly"/>
                             </div>
                             <div class="form-group">
                                 <label for="new_name" class="col-form-label">New Name</label>
@@ -328,7 +376,7 @@
                             {{ master_input() }}
                             <div class="form-group">
                                 <label for="name" class="col-form-label">Database</label>
-                                <input id="name" type="text" name="name" class="form-control" required="required" readonly="readonly"/>
+                                <input id="dbname_delete" type="text" name="name" class="form-control" required="required" readonly="readonly"/>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -352,7 +400,7 @@
                             {{ master_input() }}
                             <div class="form-group">
                                 <label for="name" class="col-form-label">Database Name</label>
-                                <input id="name" type="text" name="name" class="form-control" required="required" readonly="readonly"/>
+                                <input id="dbname_backup" type="text" name="name" class="form-control" required="required" readonly="readonly"/>
                             </div>
                             <div class="form-group">
                                 <label for="backup_format" class="col-form-label">Backup Format</label>
