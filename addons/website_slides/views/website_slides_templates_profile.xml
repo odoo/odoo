@@ -36,8 +36,6 @@
     <template id="display_course">
         <div class="row">
             <div class="col-12 col-lg-6" t-foreach="courses" t-as="course">
-                <!-- We cannot use the course.channel_id.completion here since the slide.channel.partners are fetched in sudo mode, recompute it -->
-                <t t-set="channel_completion" t-value="round(100.0 * course.completion / (course.channel_id.total_slides or 1))" />
                 <div class="card mb-2">
                     <div class="card-body o_wprofile_slides_course_card_body p-0 d-flex"
                         t-attf-onclick="location.href='/slides/#{slug(course.channel_id)}';">
@@ -58,9 +56,9 @@
 
                             <div class="d-flex align-items-center">
                                 <div class="progress flex-grow-1" style="height:0.5em">
-                                    <div class="progress-bar bg-primary" t-att-style="'width: '+ str(channel_completion)+'%'"/>
+                                    <div class="progress-bar bg-primary" t-att-style="'width: '+ str(course.completion)+'%'"/>
                                 </div>
-                                <small class="font-weight-bold pl-2"><span t-esc="channel_completion"/> %</small>
+                                <small class="font-weight-bold pl-2"><span t-esc="course.completion"/> %</small>
                             </div>
                         </div>
                     </div>
