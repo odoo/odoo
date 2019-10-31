@@ -259,9 +259,9 @@ class Product(models.Model):
                     ids.add(item)
                 else:
                     domain = expression.OR([[('name', 'ilike', item)], domain])
-            if force_company_id:
-                domain = expression.AND([[('company_id', '=', force_company_id)], domain])
             if domain:
+                if force_company_id:
+                    domain = expression.AND([[('company_id', '=', force_company_id)], domain])
                 ids |= set(self.env[model].search(domain).ids)
             return ids
 
