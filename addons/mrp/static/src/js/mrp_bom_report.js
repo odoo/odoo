@@ -169,6 +169,9 @@ var MrpBomReport = stock_report_generic.extend({
             type: 'ir.actions.act_window',
             res_model: $(ev.currentTarget).data('model'),
             res_id: $(ev.currentTarget).data('res-id'),
+            context: {
+                'active_id': $(ev.currentTarget).data('res-id')
+            },
             views: [[false, 'form']],
             target: 'current'
         });
