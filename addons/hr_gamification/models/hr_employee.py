@@ -18,12 +18,12 @@ class HrEmployeeBase(models.AbstractModel):
         'gamification.badge.user', 'employee_id',
         help="Badges directly linked to the employee")
 
-    @api.depends('user_id.goal_ids.challenge_id.category')
+    @api.depends('user_id.goal_ids.challenge_id.challenge_category')
     def _compute_employee_goals(self):
         for employee in self:
             employee.goal_ids = self.env['gamification.goal'].search([
                 ('user_id', '=', employee.user_id.id),
-                ('challenge_id.category', '=', 'hr'),
+                ('challenge_id.challenge_category', '=', 'hr'),
             ])
 
     @api.depends('direct_badge_ids', 'user_id.badge_ids.employee_id')
