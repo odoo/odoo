@@ -31,6 +31,7 @@ const ColorPaletteWidget = Widget.extend({
      * @param {string} [options.colorPrefix='bg-'] Used for the class based colors (theme).
      * @param {boolean} [options.resetButton=true] Whether to display or not the reset button.
      * @param {string[]} [options.excluded=[]] Sections not to display.
+     * @param {string[]} [options.excludeSectionOf] Extra section to exclude: the one containing the named color.
      * @param {JQuery} [options.$editable=$()] Editable content from which the custom colors are retrieved.
      */
     init: function (parent, options) {
@@ -42,6 +43,7 @@ const ColorPaletteWidget = Widget.extend({
             colorPrefix: 'bg-',
             resetButton: true,
             excluded: [],
+            excludeSectionOf: null,
             $editable: $(),
         }, options || {});
 
@@ -86,6 +88,9 @@ const ColorPaletteWidget = Widget.extend({
         _.each(this.options.excluded, function (exc) {
             $wrapper.find('[data-name="' + exc + '"]').remove();
         });
+        if (this.options.excludeSectionOf) {
+            $wrapper.find('[data-name]:has([data-color="' + this.options.excludeSectionOf + '"])').remove();
+        }
 
         // Render common colors
         if (!this.options.excluded.includes('common')) {
