@@ -35,6 +35,18 @@ def preserve_existing_tags_on_taxes(cr, registry, module):
 #  ---------------------------------------------------------------
 
 
+class AccountGroupTemplate(models.Model):
+    _name = "account.group.template"
+    _description = 'Template for Account Groups'
+    _order = 'code_prefix_start'
+
+    parent_id = fields.Many2one('account.group.template', index=True, ondelete='cascade')
+    name = fields.Char(required=True)
+    code_prefix_start = fields.Char()
+    code_prefix_end = fields.Char()
+    chart_template_id = fields.Many2one('account.chart.template', string='Chart Template', required=True)
+
+
 class AccountAccountTemplate(models.Model):
     _name = "account.account.template"
     _description = 'Templates for Accounts'
@@ -56,8 +68,6 @@ class AccountAccountTemplate(models.Model):
         help="This optional field allow you to link an account template to a specific chart template that may differ from the one its root parent belongs to. This allow you "
             "to define chart templates that extend another and complete it with few new accounts (You don't need to define the whole structure that is common to both several times).")
     tag_ids = fields.Many2many('account.account.tag', 'account_account_template_account_tag', string='Account tag', help="Optional tags you may want to assign for custom reporting")
-    group_id = fields.Many2one('account.group')
-    root_id = fields.Many2one('account.root')
 
     @api.depends('name', 'code')
     def name_get(self):
@@ -193,7 +203,7 @@ class AccountChartTemplate(models.Model):
                 accounting_props.sudo().unlink()
 
             # delete account, journal, tax, fiscal position and reconciliation model
-            models_to_delete = ['account.reconcile.model', 'account.fiscal.position', 'account.tax', 'account.move', 'account.journal']
+            models_to_delete = ['account.reconcile.model', 'account.fiscal.position', 'account.tax', 'account.move', 'account.journal', 'account.group']
             for model in models_to_delete:
                 res = self.env[model].sudo().search([('company_id', '=', company.id)])
                 if len(res):
@@ -544,6 +554,9 @@ class AccountChartTemplate(models.Model):
         account_template_ref = self.generate_account(taxes_ref, account_ref, code_digits, company)
         account_ref.update(account_template_ref)
 
+        # Generate account groups, from template
+        self.generate_account_groups(company)
+
         # writing account values after creation of accounts
         for key, value in generated_tax_res['account_dict']['account.tax'].items():
             if value['cash_basis_transition_account_id'] or value['cash_basis_base_account_id']:
@@ -635,7 +648,6 @@ class AccountChartTemplate(models.Model):
                 'tax_ids': [(6, 0, tax_ids)],
                 'company_id': company.id,
                 'tag_ids': [(6, 0, [t.id for t in account_template.tag_ids])],
-                'group_id': account_template.group_id.id,
             }
         return val
 
@@ -664,6 +676,23 @@ class AccountChartTemplate(models.Model):
         for template, account in zip(acc_template, accounts):
             acc_template_ref[template.id] = account.id
         return acc_template_ref
+
+    def generate_account_groups(self, company):
+        """ This method generates account groups from account groups templates.
+        :param company: company to generate the account groups for
+        """
+        self.ensure_one()
+        group_templates = self.env['account.group.template'].search([('chart_template_id', '=', self.id)])
+        template_vals = []
+        for group_template in group_templates:
+            vals = {
+                'name': group_template.name,
+                'code_prefix_start': group_template.code_prefix_start,
+                'code_prefix_end': group_template.code_prefix_end,
+                'company_id': company.id,
+            }
+            template_vals.append((group_template, vals))
+        groups = self._create_records_with_xmlid('account.group', template_vals, company)
 
     def _prepare_reconcile_model_vals(self, company, account_reconcile_model, acc_template_ref, tax_template_ref):
         """ This method generates a dictionary of all the values for the account.reconcile.model that will be created.
