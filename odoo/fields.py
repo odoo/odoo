@@ -138,8 +138,23 @@ class Field(MetaField('DummyField', (object,), {})):
             ``one2many`` and computed fields, including property fields and
             related fields)
 
-        :param string oldname: the previous name of this field, so that ORM can rename
+        :param str oldname: the previous name of this field, so that ORM can rename
             it automatically at migration
+
+        :param str group_operator: aggregate function used by :meth:`~odoo.models.Model.read_group`
+            when grouping on this field.
+
+            Supported aggregate functions are:
+
+                * ``array_agg`` : values, including nulls, concatenated into an array
+                * ``count`` : number of rows
+                * ``count_distinct`` : number of distinct rows
+                * ``bool_and`` : true if all values are true, otherwise false
+                * ``bool_or`` : true if at least one value is true, otherwise false
+                * ``max`` : maximum value of all values
+                * ``min`` : minimum value of all values
+                * ``avg`` : the average (arithmetic mean) of all values
+                * ``sum`` : sum of all values
 
         .. _field-computed:
 
