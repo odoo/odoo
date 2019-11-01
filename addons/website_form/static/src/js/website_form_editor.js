@@ -363,32 +363,56 @@ odoo.define('website_form_editor', function (require) {
         init_form: function () {
             var self = this;
             var modelName = this.activeForm.model;
+            var currentModel = this.$target.attr('data-model_name');
             var formKey = this.activeForm.website_form_key;
-            if (modelName !== this.$target.attr('data-model_name')) {
-                this.$target.attr('data-model_name', modelName);
-                this.$target.find(".form-field:not(:has('.o_website_form_send')), .o_form_heading").remove();
+            if (!currentModel) {
+                // Directly change the parameters if model is being set for the first time
+                this.changeFormParameters(modelName, formKey);
+            } else if (modelName !== currentModel) {
+                var warningMessage = _t("Are you sure you want to change the parameters of your form? All the current fields will be discarded.");
+                new Dialog(this, {
+                    title: _t("Warning"),
+                    size: 'medium',
+                    $content: $('<div>', {text: warningMessage}),
+                    buttons: [{
+                        text: _t("Ok"),
+                        classes: 'btn-primary',
+                        click: function () {
+                            self.changeFormParameters(modelName, formKey);
+                        },
+                        close: true,
+                    }, {
+                        text: _t("Discard"),
+                        close: true,
+                    }],
+                }).open({shouldFocusButtons: true});
+            }
+        },
 
-                if (formKey) {
-                    var formInfo = FormEditorRegistry.get(formKey);
-                    ajax.loadXML(formInfo.defaultTemplatePath, qweb).then(function () {
-                        // Append form title
-                        $('<h1>', {
-                            class: 'o_form_heading',
-                            text: self.activeForm.website_form_label,
-                        }).prependTo(self.$target.find('.container'));
-                        self.$target.find('.form-group:has(".o_website_form_send")').before($(qweb.render(formInfo.defaultTemplateName)));
+        changeFormParameters: function (modelName, formKey) {
+            var self = this;
+            this.$target.attr('data-model_name', modelName);
+            this.$target.find(".form-field:not(:has('.o_website_form_send')), .o_form_heading").remove();
+            if (formKey) {
+                var formInfo = FormEditorRegistry.get(formKey);
+                ajax.loadXML(formInfo.defaultTemplatePath, qweb).then(function () {
+                    // Append form title
+                    $('<h1>', {
+                        class: 'o_form_heading',
+                        text: self.activeForm.website_form_label,
+                    }).prependTo(self.$target.find('.container'));
+                    self.$target.find('.form-group:has(".o_website_form_send")').before($(qweb.render(formInfo.defaultTemplateName)));
+                });
+            } else {
+                // Force fetch the fields of the new model
+                // and render all model required fields
+                this.fetch_model_fields().then(function (fields) {
+                    _.each(fields, function (field, field_name) {
+                        if (field.required) {
+                            self.append_field(field);
+                        }
                     });
-                } else {
-                    // Force fetch the fields of the new model
-                    // and render all model required fields
-                    this.fetch_model_fields().then(function (fields) {
-                        _.each(fields, function (field, field_name){
-                            if (field.required) {
-                                self.append_field(field);
-                            }
-                        });
-                    });
-                }
+                });
             }
         },
 
