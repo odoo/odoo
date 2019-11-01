@@ -356,7 +356,7 @@ class Picking(models.Model):
         check_company=True,
         help="When validating the transfer, the products will be assigned to this owner.")
     printed = fields.Boolean('Printed')
-    is_locked = fields.Boolean(default=True, help='When the picking is not done this allows changing the '
+    is_locked = fields.Boolean(default=False, help='When the picking is not done this allows changing the '
                                'initial demand. When the picking is done this allows '
                                'changing the done quantities.')
     product_id = fields.Many2one('product.product', 'Product', related='move_lines.product_id', readonly=False)
