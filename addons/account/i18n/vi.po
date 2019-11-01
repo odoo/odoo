@@ -2022,7 +2022,7 @@ msgstr "Được áp dụng cho các phát sinh có"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__tax_adjustments_wizard__adjustment_type__debit
 msgid "Applied on debit journal item"
-msgstr "Được áp dụng cho các phát sinh ghi nợ"
+msgstr "Được áp dụng cho các phát sinh nợ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_onboarding_sale_tax_form
@@ -2847,7 +2847,7 @@ msgid ""
 "Changing your company name is not allowed once invoices have been issued for"
 " your account. Please contact us directly for this operation."
 msgstr ""
-"Việc đổi tên công ty của bạn là không được phép khi công nợ đã được ghi nhận"
+"Việc đổi tên công ty của bạn là không được phép khi đã phát hành hoá đơn"
 " cho tài khoản của bạn. Vui lòng liên hệ trực tiếp chúng tôi việc này."
 
 #. module: account
@@ -3135,12 +3135,12 @@ msgstr "Báo cáo chung"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__invoice_reference_model
 msgid "Communication Standard"
-msgstr ""
+msgstr "Chuẩn mực Thông tin liên lạc"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__invoice_reference_type
 msgid "Communication Type"
-msgstr ""
+msgstr "Kiểu Thông tin liên lạc"
 
 #. module: account
 #: model:ir.model,name:account.model_res_company
@@ -3501,7 +3501,7 @@ msgstr "Tạo mới một mô hình đối soát"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_receipt_type
 msgid "Create a new sales receipt"
-msgstr ""
+msgstr "Tạo mới một biên lai bán hàng"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.product_product_action_sellable
@@ -3511,7 +3511,7 @@ msgstr "Tạo mới một sản phẩm có thể bán"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.res_partner_action_supplier
 msgid "Create a new supplier in your address book"
-msgstr ""
+msgstr "Tạo mới một nhà cung cấp vào danh bạ của bạn"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_tax_form
@@ -6866,7 +6866,7 @@ msgstr "Ngày Khoá đối với Quản lý Tài chính"
 #: model:ir.model.fields,field_description:account.field_account_journal__restrict_mode_hash_table
 #: model:ir.model.fields,field_description:account.field_account_move__restrict_mode_hash_table
 msgid "Lock Posted Entries with Hash"
-msgstr ""
+msgstr "Khoá bút toán đã vào sổ với mã băm (Hash)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__is_log
@@ -8123,12 +8123,12 @@ msgstr "Tham chiếu thanh toán"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Payment References"
-msgstr ""
+msgstr "Tham chiếu Thanh toán"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__invoice_payment_state
 msgid "Payment Status"
-msgstr ""
+msgstr "Tình trạng Thanh toán"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_payment_term_form
@@ -8697,7 +8697,7 @@ msgstr "Lý do..."
 #: model:ir.ui.menu,name:account.menu_action_move_in_receipt_type
 #: model:ir.ui.menu,name:account.menu_action_move_out_receipt_type
 msgid "Receipts"
-msgstr "Nhận hàng"
+msgstr "Biên lai"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_receivable
@@ -9284,7 +9284,7 @@ msgstr "Khớp chung loại tiền tệ"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sample_invoice_step
 msgid "Sample Invoice"
-msgstr "Công nợ mẫu"
+msgstr "Hoá đơn mẫu"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -9313,7 +9313,7 @@ msgstr "Tên chi tiết hoá đơn mẫu 2"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sample_invoice_step
 msgid "Sample invoice sent!"
-msgstr "Công nợ mẫu đã gửi!"
+msgstr "Hoá đơn mẫu đã gửi!"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__sanitized_acc_number
@@ -9828,7 +9828,7 @@ msgstr "Email nguồn"
 msgid ""
 "Specify which way will be used to round the invoice amount to the rounding "
 "precision"
-msgstr "Quy định cách làm tròn tổng tiền công nợ"
+msgstr "Quy định cách làm tròn tổng tiền hoá đơn về độ chính xác này"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox__start_bank_stmt_ids
@@ -10960,7 +10960,7 @@ msgid ""
 "The following invoice(s) will not be sent by email, because the customers "
 "don't have email address."
 msgstr ""
-"Các công nợ sau sẽ không được gửi qua email, bởi vì khách hàng không có địa "
+"Các Hoá đơn sau sẽ không được gửi qua email, bởi vì khách hàng không có địa "
 "chỉ email."
 
 #. module: account
@@ -10971,6 +10971,9 @@ msgid ""
 "though they don't generate any tag: %s . This probably means you forgot to "
 "set a tag_name on these lines."
 msgstr ""
+"Các dòng báo cáo thuế sau đây được sử dụng trong một số mẫu phân vùng thuế "
+"mặc chúng không sinh ra bất cứ thẻ: %s. Chắc là bạn đã quên thiết lập Tên thẻ "
+"cho các dòng này."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -11093,7 +11096,7 @@ msgid ""
 "the invoices & payments matching was performed."
 msgstr ""
 "Đối tác có ít nhất 1 khoản công nợ chưa được đối soát kể từ lần gần nhất bạn"
-" thực  hiện việc khớp hoá đơn và các thanh toán từ các đối tác."
+" thực hiện việc khớp hoá đơn và các thanh toán từ các đối tác."
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -12443,8 +12446,8 @@ msgid ""
 "invoices, once validated, to help the customer to refer to that particular "
 "invoice when making the payment."
 msgstr ""
-"Bạn có thể cài ở đây mặc định nội dung giao dịch sẽ hiển thị trên công nợ "
-"bán hàng, mỗi khi xác nhận, để giúp khách hàng theo dõi được công nợ khi họ "
+"Bạn có thể cài ở đây mặc định nội dung giao dịch sẽ hiển thị trên hoá đơn "
+"khách hàng, mỗi khi xác nhận, để giúp khách hàng theo dõi và dẫn chiếu được hoá đơn khi "
 "thực hiện việc thanh toán."
 
 #. module: account
@@ -12453,6 +12456,7 @@ msgstr ""
 msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s."
 msgstr ""
+"Bạn không thể thêm hoặc sửa các bút toán có ngày trước và vào ngày khoá %s."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12625,7 +12629,7 @@ msgid ""
 "You cannot register payments for customer invoices and credit notes at the "
 "same time."
 msgstr ""
-"Bạn không thể cùng thanh toán cho công nợ khách hàng và hoá đơn điều chỉnh "
+"Bạn không thể cùng thanh toán cho hoá đơn khách hàng và hoá đơn điều chỉnh "
 "giảm cùng lúc."
 
 #. module: account
@@ -12635,7 +12639,7 @@ msgid ""
 "You cannot register payments for vendor bills and supplier refunds at the "
 "same time."
 msgstr ""
-"Bạn không thể cùng thanh toán cho công nợ nhà cung cấp và công nợ điều chỉnh"
+"Bạn không thể cùng thanh toán cho hoá đơn nhà cung cấp hoá đơn điều chỉnh"
 " giảm cùng lúc."
 
 #. module: account
