@@ -868,8 +868,15 @@ var ListRenderer = BasicRenderer.extend({
             'aria-expanded': false,
         });
         $a.appendTo($optionalColumnsDropdown);
+
+        // Set the expansion direction of the dropdown
+        // The button is located at the end of the list headers
+        // We want the dropdown to expand towards the list rather than away from it
+        // https://getbootstrap.com/docs/4.0/components/dropdowns/#menu-alignment
+        var direction = _t.database.parameters.direction;
+        var dropdownMenuClass = direction === 'rtl' ? 'dropdown-menu-left' : 'dropdown-menu-right';
         var $dropdown = $("<div>", {
-            class: 'dropdown-menu dropdown-menu-right o_optional_columns_dropdown',
+            class: 'dropdown-menu o_optional_columns_dropdown ' + dropdownMenuClass,
             role: 'menu',
         });
         this.optionalColumns.forEach(function (col) {

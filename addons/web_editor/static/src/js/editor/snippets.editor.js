@@ -45,6 +45,10 @@ var SnippetEditor = Widget.extend({
         this.templateOptions = templateOptions;
         this.isTargetParentEditable = false;
         this.isTargetMovable = false;
+
+        this.__isStarted = new Promise(resolve => {
+            this.__isStartedResolveFunc = resolve;
+        });
     },
     /**
      * @override
@@ -121,7 +125,9 @@ var SnippetEditor = Widget.extend({
         // a flickering when not needed.
         this.$target.on('transitionend.snippet_editor, animationend.snippet_editor', postAnimationCover);
 
-        return Promise.all(defs);
+        return Promise.all(defs).then(() => {
+            this.__isStartedResolveFunc(this);
+        });
     },
     /**
      * @override
@@ -1051,16 +1057,17 @@ var SnippetsMenu = Widget.extend({
                 resolve(null);
             }).then(editorToEnable => {
                 // First disable all editors...
-                this.snippetEditors.forEach(editor => {
+                for (let i = this.snippetEditors.length; i--;) {
+                    const editor = this.snippetEditors[i];
                     if (editor === editorToEnable) {
                         // Avoid disable -> enable of an editor (the toggleFocus
                         // method is in charge of doing nothing is nothing has
                         // to be done but if we explicitly ask for disable then
                         // enable... it will disable then enable).
-                        return;
+                        continue;
                     }
                     editor.toggleFocus(false, previewMode);
-                });
+                }
                 // ... then enable the right editor
                 if (editorToEnable) {
                     editorToEnable.toggleFocus(true, previewMode);
@@ -1362,7 +1369,7 @@ var SnippetsMenu = Widget.extend({
         var self = this;
         var snippetEditor = $snippet.data('snippet-editor');
         if (snippetEditor) {
-            return Promise.resolve(snippetEditor);
+            return snippetEditor.__isStarted;
         }
 
         var def;
@@ -1372,6 +1379,15 @@ var SnippetsMenu = Widget.extend({
         }
 
         return Promise.resolve(def).then(function (parentEditor) {
+            // When reaching this position, after the Promise resolution, the
+            // snippet editor instance might have been created by another call
+            // to _createSnippetEditor... the whole logic should be improved
+            // to avoid doing this here.
+            snippetEditor = $snippet.data('snippet-editor');
+            if (snippetEditor) {
+                return snippetEditor.__isStarted;
+            }
+
             let editableArea = self.getEditableArea();
             snippetEditor = new SnippetEditor(parentEditor || self, $snippet, self.templateOptions, $snippet.closest('[data-oe-type="html"], .oe_structure').add(editableArea), self.options);
             self.snippetEditors.push(snippetEditor);
