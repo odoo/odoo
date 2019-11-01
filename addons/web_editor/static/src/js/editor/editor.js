@@ -20,6 +20,7 @@ var EditorMenuBar = Widget.extend({
     custom_events: {
         request_history_undo_record: '_onHistoryUndoRecordRequest',
         request_save: '_onSaveRequest',
+        force_destroy_rte_last: '_onForceDestroyRTELast',
     },
 
     /**
@@ -279,6 +280,20 @@ var EditorMenuBar = Widget.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * forcefully destroy rte $last variable
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onForceDestroyRTELast: function (ev) {
+        var $target = ev.data.$el;
+        var $last = this.rte.$last;
+        if ($target.has($last).length) {
+            $last.destroy();
+            this.rte.$last = null;
+        }
+    },
     /**
      * Called when the "Discard" button is clicked -> discards the changes.
      *

@@ -185,6 +185,14 @@ publicWidget.registry.newsletter_popup = publicWidget.Widget.extend({
             var $modal = self.massMailingPopup.$modal;
             if ($modal) { // The dialog might have never been opened
                 self.$el.data('content', $modal.find('.modal-body').html());
+                // rte has $last variable as current modal, and modal is destroyed
+                // so while rte later destroyed, $last will not exist and will throw
+                // traceback while destroying rte, so here forcefully destroy rte $last
+                // variable before current modal which is $last for rte get destroyed
+                var $snippetEditor = self.$el.data('snippetEditor');
+                if ($snippetEditor) {
+                    $snippetEditor.trigger_up('force_destroy_rte_last', {$el: $($modal)});
+                }
             }
         });
     },
