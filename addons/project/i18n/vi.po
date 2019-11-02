@@ -509,7 +509,7 @@ msgstr "Toàn bộ Tác vụ"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
 msgid "All employees"
-msgstr ""
+msgstr "Toàn bộ Nhân viên"
 
 #. module: project
 #. openerp-web
@@ -962,7 +962,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_status
 msgid "Customer(s) Ratings"
-msgstr "Các Khách hàng xếp hạng"
+msgstr "Đánh giá bởi khách hàng"
 
 #. module: project
 #. openerp-web
@@ -1021,7 +1021,11 @@ msgid ""
 "- All employees: employees may see all project and tasks.\n"
 "- Portal users and all employees: employees may see everything.   Portal users may see project and tasks followed by.\n"
 "   them or by someone of their company."
-msgstr ""
+msgstr "Xác lập tính riêng tư của các nhiệm vụ của dự án:\n"
+"- Chỉ Nhân viên được mởi: nhân viên chỉ thấy dự án này và nhiệm vụ mà họ theo dõi.\n"
+"- Toàn bộ Nhân viên: tất cả nhân viên đêù thấy dự án này và các nhiệm vụ của nó.\n"
+"- Người dùng Portal và toàn bộ Nhân viên: tất cả các nhân viên thấy dự án này và mọi thứ của nó. Người dùng portal chỉ có thể thấy dự án và nhiệm"
+" vụ được theo dõi bởi chính họ hoặc ai đó trong công ty của họ."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -1299,7 +1303,7 @@ msgstr "GTD"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Get customer feedback"
-msgstr ""
+msgstr "Tiếp nhận phản hồi của khách hàng"
 
 #. module: project
 #. openerp-web
@@ -1386,6 +1390,11 @@ msgid ""
 "\n"
 "Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks."
 msgstr ""
+"Làm thế nào để tiếp nhận phản hồi từ khách hàng?\n"
+"- Đánh giá khi thay đổi giai đoạn: một email sẽ được gửi khi một nhiệm vụ được kéo sang một giai đoạn khác.\n"
+"- Đánh giá định kỳ: email sẽ được gửi cho khách hàng một cách định kỳ.\n"
+"\n"
+"Đừng quên thiết lập một mẫu email ứng với các giai đoạn mà bạn muốn nhận được phàn hồi của khách hàng."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -1419,7 +1428,7 @@ msgstr "Biểu tượng"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Icon để chỉ báo một hoạt động ngoại lệ."
 
 #. module: project
 #. openerp-web
@@ -1555,7 +1564,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
 msgid "Invited employees"
-msgstr ""
+msgstr "Chỉ Nhân viên được mởi"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_is_follower
@@ -1911,7 +1920,7 @@ msgstr "Hiện tại không có đánh giá dự án nào được công bố"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__no
 msgid "No rating"
-msgstr "Không xếp hạng"
+msgstr "Không đánh giá"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -2127,7 +2136,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__periodic
 msgid "Periodical Rating"
-msgstr "Xếp hạng định kỳ"
+msgstr "Đánh giá định kỳ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
@@ -2172,7 +2181,7 @@ msgstr "URL truy cập cổng thông tin"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
 msgid "Portal users and all employees"
-msgstr ""
+msgstr "Người dùng Portal và toàn bộ Nhân viên"
 
 #. module: project
 #. openerp-web
@@ -2256,6 +2265,8 @@ msgid ""
 "Project in which sub-tasks of the current project will be created. It can be"
 " the current project itself."
 msgstr ""
+"Dự án mà trong đó các nhiệm vụ con của dự án hiện hành sẽ được tạo. Nó có thể"
+" là chính dự án hiện hành."
 
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
@@ -2616,7 +2627,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Software Development"
-msgstr "Phát triển phần mềm"
+msgstr "Phát triển Phần mềm"
 
 #. module: project
 #. openerp-web
