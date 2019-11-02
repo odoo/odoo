@@ -769,7 +769,10 @@ class ChromeBrowser():
                     self._logger.error(content)
                     logged_error = True
                 else:
-                    self._logger.info('console log: %s', content)
+                    # split log into 16000 chars chunks to avoid random output errors
+                    chunk_size = 16000
+                    for i in range(0, len(content), chunk_size):
+                        self._logger.info('console log: %s', content[0 + i:chunk_size + i])
                 for log in logs:
                     if log.get('type', '') == 'string' and log.get('value', '').lower() == 'ok':
                         # it is possible that some tests returns ok while an error was shown in logs.
