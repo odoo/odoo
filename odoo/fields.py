@@ -20,12 +20,16 @@ except ImportError:
 
 import psycopg2
 
-from .tools import float_repr, float_round, frozendict, html_sanitize, human_size, pg_varchar, \
-    ustr, OrderedSet, pycompat, sql, date_utils, unique, IterableGenerator, image_process, merge_sequences
+from .tools import (
+    float_repr, float_round, float_compare, float_is_zero, frozendict, html_sanitize, human_size,
+    pg_varchar, ustr, OrderedSet, pycompat, sql, date_utils, unique, IterableGenerator,
+    image_process, merge_sequences,
+)
 from .tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from .tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 from .tools.translate import html_translate, _
 from .tools.mimetypes import guess_mimetype
+
 from odoo.exceptions import CacheMiss
 
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
@@ -1146,6 +1150,36 @@ class Float(Field):
     :param digits: a pair (total, decimal) or a
         string referencing a `decimal.precision` record.
     :type digits: tuple(int,int) or str
+
+    When a float is a quantity associated with an unit of measure, it is important
+    to use the right tool to compare or round values with the correct precision.
+
+    The Float class provides some static methods for this purpose:
+
+    :func:`~odoo.fields.Float.round()` to round a float with the given precision.
+    :func:`~odoo.fields.Float.is_zero()` to check if a float equals zero at the given precision.
+    :func:`~odoo.fields.Float.compare()` to compare two floats at the given precision.
+
+    .. admonition:: Example
+
+        To round a quantity with the precision of the unit of mesure::
+
+            fields.Float.round(self.product_uom_qty, precision_rounding=self.product_uom_id.rounding)
+
+        To check if the quantity is zero with the precision of the unit of mesure::
+
+            fields.Float.is_zero(self.product_uom_qty, precision_rounding=self.product_uom_id.rounding)
+
+        To compare two quantities::
+
+            field.Float.compare(self.product_uom_qty, self.qty_done, precision_rounding=self.product_uom_id.rounding)
+
+        The compare helper uses the __cmp__ semantics for historic purposes, therefore
+        the proper, idiomatic way to use this helper is like so:
+
+            if result == 0, the first and second floats are equal
+            if result < 0, the first float is lower than the second
+            if result > 0, the first float is greater than the second
     """
 
     type = 'float'
@@ -1203,6 +1237,10 @@ class Float(Field):
         if value or value == 0.0:
             return value
         return ''
+
+    round = staticmethod(float_round)
+    is_zero = staticmethod(float_is_zero)
+    compare = staticmethod(float_compare)
 
 
 class Monetary(Field):
