@@ -899,16 +899,24 @@ class WebsiteSale(http.Controller):
 
         assert order.partner_id.id != request.website.partner_id.id
 
+        # to avoid payment flow interruption issues (e.g. customer goes to acquirer
+        # payment page, stops close tab then modifies their card), we duplicate the
+        # order and link the transaction to that duplicate that the customer cannot
+        # modify anymore
+        order_to_pay = order.copy({'original_cart_id': order.id})
+        # put the order in the session as authorized for this customer
+        orders_in_payment = request.session.get('sale_orders_in_payment', set())
+        orders_in_payment.add(order_to_pay.id)
+        request.session.update(sale_orders_in_payment=orders_in_payment, sale_last_order_id=order_to_pay.id)
         # Create transaction
         vals = {'acquirer_id': acquirer_id,
-                'return_url': '/shop/payment/validate'}
+                'return_url': '/shop/payment/validate?sale_order_id=%s' % (order_to_pay.id)}
 
         if save_token:
             vals['type'] = 'form_save'
         if token:
             vals['payment_token_id'] = int(token)
-
-        transaction = order._create_payment_transaction(vals)
+        transaction = order_to_pay._create_payment_transaction(vals)
 
         # store the new transaction into the transaction list and if there's an old one, we remove it
         # until the day the ecommerce supports multiple orders at the same time
@@ -918,11 +926,16 @@ class WebsiteSale(http.Controller):
             PaymentProcessing.remove_payment_transaction(last_tx)
         PaymentProcessing.add_payment_transaction(transaction)
         request.session['__website_sale_last_tx_id'] = transaction.id
-        return transaction.render_sale_button(order)
+        return transaction.render_sale_button(order_to_pay)
 
     @http.route('/shop/payment/token', type='http', auth='public', website=True, sitemap=False)
     def payment_token(self, pm_id=None, **kwargs):
-        """ Method that handles payment using saved tokens
+        """ Method that handles payment using saved tokens.
+
+        Note that unlike payments done using a redirection, we don't duplicate the
+        order as interrupted payment flows shenanigans are not possible (the customer
+        never leaves Odoo and the payment is "instant", so modifying the cart is really
+        impractical).
 
         :param int pm_id: id of the payment.token that we want to use to pay.
         """
@@ -947,6 +960,9 @@ class WebsiteSale(http.Controller):
 
         tx = order._create_payment_transaction(vals)
         PaymentProcessing.add_payment_transaction(tx)
+        orders_in_payment = request.session.get('sale_orders_in_payment', set())
+        orders_in_payment.add(order.id)
+        request.session.update(sale_orders_in_payment=orders_in_payment)
         return request.redirect('/payment/process')
 
     @http.route('/shop/payment/get_status/<int:sale_order_id>', type='json', auth="public", website=True)
@@ -974,8 +990,9 @@ class WebsiteSale(http.Controller):
         if sale_order_id is None:
             order = request.website.sale_get_order()
         else:
-            order = request.env['sale.order'].sudo().browse(sale_order_id)
-            assert order.id == request.session.get('sale_last_order_id')
+            order = request.env['sale.order'].sudo().browse(int(sale_order_id))
+            orders_in_payment = request.session.get('sale_orders_in_payment', set())
+            assert order.id in orders_in_payment
 
         if transaction_id:
             tx = request.env['payment.transaction'].sudo().browse(transaction_id)
@@ -993,12 +1010,12 @@ class WebsiteSale(http.Controller):
             return request.redirect(order.get_portal_url())
 
         # clean context and session, then redirect to the confirmation page
-        request.website.sale_reset()
+        request.website.sale_reset(force_unlink_id=order.original_cart_id.id)
         if tx and tx.state == 'draft':
             return request.redirect('/shop')
 
         PaymentProcessing.remove_payment_transaction(tx)
-        return request.redirect('/shop/confirmation')
+        return request.redirect('/shop/confirmation?sale_order_id=%s' % (order.id))
 
     @http.route(['/shop/terms'], type='http', auth="public", website=True, sitemap=True)
     def terms(self, **kw):
@@ -1013,7 +1030,13 @@ class WebsiteSale(http.Controller):
          - take a sale.order id, because we request a sale.order and are not
            session dependant anymore
         """
-        sale_order_id = request.session.get('sale_last_order_id')
+        if post.get('sale_order_id'):
+            sale_order_id = int(post.get('sale_order_id'))
+            orders_in_payment = request.session.get('sale_orders_in_payment', set())
+            assert sale_order_id in orders_in_payment
+            request.session['sale_orders_in_payment'] = orders_in_payment - {sale_order_id,}
+        else:
+            sale_order_id = request.session.get('sale_last_order_id')
         if sale_order_id:
             order = request.env['sale.order'].sudo().browse(sale_order_id)
             return request.render("website_sale.confirmation", {'order': order})

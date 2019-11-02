@@ -28,6 +28,7 @@ class SaleOrder(models.Model):
     cart_recovery_email_sent = fields.Boolean('Cart recovery email already sent')
     website_id = fields.Many2one('website', string='Website', readonly=True,
                                  help='Website through which this order was placed.')
+    original_cart_id = fields.Many2one('sale.order', string='Original Cart', help='This cart is a copy of the following cart created during the payment process.')
 
     @api.depends('order_line')
     def _compute_website_order_line(self):

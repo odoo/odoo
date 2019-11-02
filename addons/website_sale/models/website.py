@@ -353,7 +353,12 @@ class Website(models.Model):
 
         return sale_order
 
-    def sale_reset(self):
+    def sale_reset(self, force_unlink_id=False):
+        # if order was a 'safe payment' copy, delete the original to avoid sending
+        # a cart recovery email, etc.
+        order_id = request.session.get('sale_order_id')
+        if order_id and order_id == force_unlink_id:
+            request.env['sale.order'].sudo().browse(order_id).unlink()
         request.session.update({
             'sale_order_id': False,
             'website_sale_current_pl': False,
