@@ -4764,7 +4764,7 @@ msgstr "Grootboekrekening uitgestelde kosten"
 #: model:account.account.type,name:account.data_account_type_expenses
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Expenses"
-msgstr "Declaraties"
+msgstr "Kosten"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__reference
@@ -5609,6 +5609,8 @@ msgid ""
 "If you want to use \"Off-Balance Sheet\" accounts, all the accounts of the "
 "journal entry must be of this type"
 msgstr ""
+"Als je rekeningen wilt gebruiken welke niet aan de balans worden toegevoegd,"
+" dan moeten alle rekeningen van de boeking zijn van dit type"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -6415,7 +6417,7 @@ msgstr "Dagboeknaam"
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_group_list
 msgid "Journal group are used in reporting to display relevant data together."
 msgstr ""
-"Journaal groep wordt gebruikt in de rapportage om relevante gegevens samen "
+"Dagboekgroep wordt gebruikt in de rapportage om relevante gegevens samen "
 "weer te geven."
 
 #. module: account
@@ -6842,6 +6844,8 @@ msgstr "Weergave van de subtotalen"
 #, python-format
 msgid "Lines from \"Off-Balance Sheet\" accounts cannot be reconciled"
 msgstr ""
+"Regels van rekeningen welke niet zijn opgenomen in de balans kunnen niet "
+"worden afgeletterd"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report_line__children_line_ids
@@ -7627,7 +7631,7 @@ msgstr ""
 #. module: account
 #: model:account.account.type,name:account.data_account_off_sheet
 msgid "Off-Balance Sheet"
-msgstr ""
+msgstr "Niet opgenomen in balans"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_line_form
@@ -7674,8 +7678,8 @@ msgstr "Slechts één betaling wordt gemaakt door de relatie (bank)/valuta."
 msgid ""
 "Only posted journal entries being not already a refund can be reversed."
 msgstr ""
-"Alleen geboekte journaalboekingen die nog niet zijn terugbetaald, kunnen "
-"worden teruggedraaid."
+"Alleen geboekte boekingen die nog niet zijn gecrediteerd, kunnen worden "
+"teruggedraaid."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__period_lock_date
@@ -8376,19 +8380,19 @@ msgstr "Definieer een reeks voor dit dagboek."
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Please define an accounting miscellaneous journal in your company"
-msgstr "Definieer een boekhoudkundig divers journaal in uw bedrijf"
+msgstr "Maak een memoriaal dagboek aan voor uw bedrijf"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Please define an accounting purchase journal in your company"
-msgstr "Definieer een boekhoudkundig aankoop journaal in uw bedrijf"
+msgstr "Maak een inkoop dagboek aan voor uw bedrijf"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Please define an accounting sale journal in your company"
-msgstr "Definieer een boekhoudkundig verkoop journaal in uw bedrijf"
+msgstr "Maak een verkoop dagboek aan voor uw bedrijf"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -8492,8 +8496,7 @@ msgstr "Geboekte boekingsregels"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Posted journal entry must have an unique sequence number per company."
-msgstr ""
-"Geposte journaalboekingen moeten een uniek volgnummer per bedrijf hebben."
+msgstr "Geboekte boekingen moeten een uniek volgnummer per bedrijf hebben."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -12682,7 +12685,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot modify a journal entry linked to a posted payment."
-msgstr "U kunt geen journaalpost wijzigen van een reeds toegekende betaling."
+msgstr "U kunt geen boeking wijzigen van een reeds toegekende betaling."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

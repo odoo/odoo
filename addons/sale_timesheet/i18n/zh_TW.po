@@ -65,6 +65,9 @@ msgid ""
 "                                                                Non Billable Tasks\n"
 "                                                            </span>"
 msgstr ""
+"<span class=\"btn-link\" style=\"font-weight:normal;\" title=\"Includes the time logged into a task which is not linked to any Sales Order.\">\n"
+"                                                                非計費任務\n"
+"                                                            </span>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -79,7 +82,7 @@ msgstr "<span class=\"o_label\">概述</span>"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
 msgid "<span class=\"o_stat_text\">Recorded</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">紀錄</span>"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -172,6 +175,10 @@ msgid ""
 " - At employee rate: each employee log time billed at his rate.\n"
 " - No Billable: track time without invoicing it"
 msgstr ""
+"以哪個標準進行計費時間計算：\n"
+" - 以任務費率：每次花在任務上的時間都根據任務費率計費。\n"
+" - 以員工費率：每位員工記錄時間，以其費率計費。\n"
+" - 非計費：跟蹤時間而不開票"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project_overview.py:0
@@ -189,20 +196,20 @@ msgstr "計費類型"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Billed at a Fixed Price"
-msgstr ""
+msgstr "以固定價格計費"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__billable_fixed
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Billed at a Fixed price"
-msgstr ""
+msgstr "以固定價格計費"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__billable_time
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Billed on Timesheets"
-msgstr ""
+msgstr "依工時表計費"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -248,7 +255,7 @@ msgstr "公司"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
 msgid "Configure your services"
-msgstr ""
+msgstr "設置您的服務"
 
 #. module: sale_timesheet
 #: model:ir.filters,name:sale_timesheet.ir_filter_project_profitability_report_costs_and_revenues
@@ -313,7 +320,7 @@ msgstr "在現有專案中創建任務"
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_tracking__task_in_project
 msgid "Create a task in sale order's project"
-msgstr ""
+msgstr "在銷售訂單的專案中創建任務"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__create_uid
@@ -349,7 +356,7 @@ msgstr "客戶"
 #: model:product.product,name:sale_timesheet.product_service_order_timesheet
 #: model:product.template,name:sale_timesheet.product_service_order_timesheet_product_template
 msgid "Customer Care (Prepaid Hours)"
-msgstr ""
+msgstr "客戶服務（預付費時間）"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__partner_id
@@ -368,7 +375,7 @@ msgstr "顯示名稱"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__visible_project
 msgid "Display project"
-msgstr ""
+msgstr "顯示專案"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_tracking__no
@@ -400,6 +407,8 @@ msgid ""
 "Employee/Sale Order Item Mapping:\n"
 " Defines to which sales order item an employee's timesheet entry will be linked.By extension, it defines the rate at which an employee's time on the project is billed."
 msgstr ""
+"員工/銷售訂單專案串聯：\n"
+" 定義員工工時表項目將連結到哪個銷售訂單專案。通過擴展，它定義專案的計費時間。"
 
 #. module: sale_timesheet
 #: model:project.task.type,name:sale_timesheet.project_stage_fixed
@@ -440,7 +449,7 @@ msgstr "小時"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Hours recorded and Profitability"
-msgstr ""
+msgstr "記錄的小時數和毛利"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__id
@@ -470,28 +479,28 @@ msgstr "進行中"
 msgid ""
 "Includes the time logged from the Timesheet module that is linked to a "
 "project, but not to a task."
-msgstr ""
+msgstr "包括從連結到專案而不是任務的工時表模組記錄的時間。"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid ""
 "Includes the time logged into a task which is linked to a cancelled Sales "
 "Order."
-msgstr ""
+msgstr "包括連結到已取消銷售訂單的任務上的時間。"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid ""
 "Includes the time logged into tasks for which you invoice based on ordered "
 "quantities or on milestones."
-msgstr ""
+msgstr "包括根據訂購數量或里程碑為其開具發票的任務記錄的時間。"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid ""
 "Includes the time logged into tasks for which you invoice based on "
 "timesheets on tasks."
-msgstr ""
+msgstr "包括根據任務的時程表為其開具發票的任務記錄的時間。"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__timesheet_invoice_id
@@ -629,7 +638,7 @@ msgstr "需要功能或者技術幫助"
 #: model:project.task,legend_blocked:sale_timesheet.project_task_3
 #: model:project.task.type,legend_blocked:sale_timesheet.project_from_sale_order_1_in_progress
 msgid "Need help"
-msgstr ""
+msgstr "需要幫助"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__billable_type__no
@@ -666,13 +675,13 @@ msgstr "非計費任務"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Non billable tasks"
-msgstr ""
+msgstr "非計費任務"
 
 #. module: sale_timesheet
 #: model:project.task,legend_blocked:sale_timesheet.project_task_2
 #: model:project.task.type,legend_blocked:sale_timesheet.project_from_sale_order_1_done
 msgid "Not done yet"
-msgstr ""
+msgstr "尚未完成"
 
 #. module: sale_timesheet
 #: model:project.task,legend_blocked:sale_timesheet.project_task_4
@@ -697,6 +706,8 @@ msgid ""
 "On Sales order confirmation, this product can generate a project and/or task.         From those, you can track the service you are selling.\n"
 "         'In sale order's project': Will use the sale order's configured project if defined or fallback to         creating a new project based on the selected template."
 msgstr ""
+"在銷售訂單確認時，此產品可以生成專案和/或任務。        從中，您可以跟蹤您正在銷售的服務。\n"
+"         \"銷售訂單項目\"：如果定義或回退，將使用銷售訂單的設定項目基於所選範本創建新專案。"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_policy__ordered_timesheet
@@ -727,7 +738,7 @@ msgstr "商品"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_product_template
 msgid "Product Template"
-msgstr "产品模板"
+msgstr "產品模板"
 
 #. module: sale_timesheet
 #: model:ir.filters,name:sale_timesheet.ir_filter_project_profitability_report_manager_and_product
@@ -799,7 +810,7 @@ msgstr "專案管理員"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
 msgid "Project Overview"
-msgstr ""
+msgstr "計畫總覽"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_profitability_report
@@ -858,7 +869,7 @@ msgstr "下一階段就緒"
 #: model:project.task,legend_done:sale_timesheet.project_task_4
 #: model:project.task.type,legend_done:sale_timesheet.project_from_sale_order_1_to_do
 msgid "Ready to be started"
-msgstr ""
+msgstr "準備開始"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project_overview.py:0
@@ -934,6 +945,7 @@ msgid ""
 "timesheet entry will be linked to the sales order item defined on the "
 "project."
 msgstr ""
+"專案連結到的銷售訂單物料。如果沒有銷售訂單物料定義的任務的員工時程表，並且此員工不在專案的\"員工/銷售訂單物料映射\"中，則時程表條目將連結到在專案上定義的銷售訂單物料。"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_task__sale_line_id
@@ -942,22 +954,22 @@ msgid ""
 " this task, and if this employee is not in the 'Employee/Sales Order Item "
 "Mapping' of the project, the timesheet entry will be linked to this sales "
 "order item."
-msgstr ""
+msgstr "任務連結到的銷售訂單物料。如果此任務的員工時程表，並且此員工不在專案的\"員工/銷售訂單物料映射\"中，則時程表條目將連結到此銷售訂單專案。"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__sale_order_id
 msgid "Sales order to which the project is linked."
-msgstr ""
+msgstr "專案連結到的銷售訂單。"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_task__sale_order_id
 msgid "Sales order to which the task is linked."
-msgstr ""
+msgstr "任務連結到的銷售訂單。"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order__project_id
 msgid "Select a non billable project on which tasks can be created."
-msgstr ""
+msgstr "選擇可以創建任務的不可計費專案。"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product__project_id
@@ -1114,14 +1126,14 @@ msgstr "選定的銷售訂單應包含應收憑單的內容。"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "There are no timesheets for now."
-msgstr ""
+msgstr "目前尚無工時表。"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid ""
 "This cost is based on the \"Timesheet cost\" set in the HR Settings of your "
 "employees."
-msgstr ""
+msgstr "此成本基於員工 HR 設置中設置的\"工時表成本\"。"
 
 #. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.project_profitability_report_action
@@ -1188,7 +1200,7 @@ msgstr "工時表編碼單元"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_total_duration
 msgid "Timesheet Total Duration"
-msgstr ""
+msgstr "工時表 總投入時間"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__timesheet_unit_amount
@@ -1226,7 +1238,7 @@ msgstr "工時表"
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_billing_report
 msgid "Timesheets By Billing Rate"
-msgstr ""
+msgstr "時程表（按計費費率）"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -1270,7 +1282,7 @@ msgstr "銷售訂單應收憑單總額，包括所有專案（服務，倉儲，
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order__timesheet_total_duration
 msgid "Total recorded duration, expressed in the encoding UoM"
-msgstr ""
+msgstr "記錄投入時間總數，以編碼 UoM 表示"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__service_type
@@ -1310,7 +1322,7 @@ msgstr "不含稅待開立應收憑單金額"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__expense_amount_untaxed_to_invoice
 msgid "Untaxed Amount to Re-invoice"
-msgstr ""
+msgstr "重新開立應收憑單的未含稅金額"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__expense_amount_untaxed_invoiced
@@ -1335,7 +1347,7 @@ msgstr "嚮導"
 #: model:project.task,legend_done:sale_timesheet.project_task_3
 #: model:project.task.type,legend_done:sale_timesheet.project_from_sale_order_1_in_progress
 msgid "Work done"
-msgstr ""
+msgstr "已完成的工作"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/account.py:0
@@ -1370,24 +1382,24 @@ msgstr "為了刪除銷售訂單項，您必須將任務從銷售訂單項中解
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "billable_fixed"
-msgstr ""
+msgstr "billable_fixed"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "billable_time"
-msgstr ""
+msgstr "billable_time"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "canceled"
-msgstr ""
+msgstr "已取消"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "non_billable"
-msgstr ""
+msgstr "non_billable"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "non_billable_project"
-msgstr ""
+msgstr "non_billable_project"
