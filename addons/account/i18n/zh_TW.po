@@ -242,7 +242,7 @@ msgstr "<em>草稿憑單</em>"
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_kanban
 msgid "<i class=\"fa fa-clock-o\" aria-label=\"Date\" role=\"img\" title=\"Date\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-clock-o\" aria-label=\"Date\" role=\"img\" title=\"Date\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_kanban
@@ -260,6 +260,8 @@ msgid ""
 "<i class=\"fa fa-ellipsis-v\" aria-label=\"Selection\" role=\"img\" "
 "title=\"Selection\"/>"
 msgstr ""
+"<i class=\"fa fa-ellipsis-v\" aria-label=\"Selection\" role=\"img\" "
+"title=\"Selection\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -350,6 +352,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -831,6 +835,10 @@ msgid ""
 "either in 'Tax-Included' or in 'Tax-Excluded' mode\n"
 "(or switch twice the mode if you are already in the desired one)."
 msgstr ""
+"使用者不能同時擁有Tax B2B和Tax B2C。\n"
+"您應該進入常規設定，然後選擇顯示產品價格\n"
+"「含稅」或「不含稅」模式\n"
+"（如果您已經處於所需模式中，請將模式切換兩次）。"
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account
@@ -3433,7 +3441,7 @@ msgstr "創建人"
 #: code:addons/account/models/account_invoice.py:419
 #, python-format
 msgid "Created by: %s"
-msgstr ""
+msgstr "建立者： %s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__create_date
@@ -5410,7 +5418,7 @@ msgstr "貿易條款用來在買家和賣家之間區分交易成本和責任。
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_line_id
 msgid "Indicates that this journal item is a tax line"
-msgstr ""
+msgstr "表示此日記帳專案是稅行"
 
 #. module: account
 #. openerp-web
@@ -5963,7 +5971,7 @@ msgstr "日記帳明細"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_move_line_select_tax_audit
 msgid "Journal Items for Tax Audit"
-msgstr ""
+msgstr "稅務審計的日記帳項"
 
 #. module: account
 #. openerp-web
@@ -7788,7 +7796,7 @@ msgstr "支付用於登記流動性。您可以通過自己的方式或使用安
 #: code:addons/account/models/account_payment.py:444
 #, python-format
 msgid "Payments without a customer can't be matched"
-msgstr ""
+msgstr "無法匹配沒有客戶的支付"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree_pending_invoice
@@ -9678,7 +9686,7 @@ msgstr "稅金映射"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_ids
 msgid "Taxes that apply on the base amount"
-msgstr ""
+msgstr "適用於基本金額的稅"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_search
@@ -10069,7 +10077,7 @@ msgstr "被用在這張憑單的分錄上的商務實體"
 msgid ""
 "The currency of the bank statement line must be different than the statement"
 " currency."
-msgstr ""
+msgstr "銀行對帳單行的貨幣必須不同於對帳單貨幣。"
 
 #. module: account
 #: code:addons/account/models/account.py:551
@@ -10146,7 +10154,7 @@ msgstr "財政狀況將決定該聯繫人的稅和科目。"
 msgid ""
 "The following invoice(s) will not be sent by email, because the customers "
 "don't have email address."
-msgstr ""
+msgstr "以下發票將不會通過電子信件發送，因為客戶沒有電子信件地址。"
 
 #. module: account
 #: code:addons/account/models/account.py:564
@@ -11488,7 +11496,7 @@ msgstr "核銷金額"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:217
 #, python-format
 msgid "Writeoff Date"
-msgstr ""
+msgstr "沖銷日期"
 
 #. module: account
 #: sql_constraint:account.move.line:0
@@ -11747,7 +11755,7 @@ msgstr "你不能同時間登記銷售發票及退款單"
 msgid ""
 "You cannot register payments for vendor bills and supplier refunds at the "
 "same time."
-msgstr ""
+msgstr "您無法同時註冊供應商帳單和供應商退款的付款。"
 
 #. module: account
 #: code:addons/account/models/account.py:644
