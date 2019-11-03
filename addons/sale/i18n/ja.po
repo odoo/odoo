@@ -365,7 +365,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Confirmation Email</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">確認メール</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -686,7 +686,7 @@ msgstr "セクション追加"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Add several variants to an order from a grid"
-msgstr ""
+msgstr "グリッドビューからオーダに複数のバリアントを追加"
 
 #. module: sale
 #: model:res.groups,name:sale.group_delivery_invoice_address
@@ -712,7 +712,7 @@ msgstr "見積送状を送る"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_amazon
 msgid "Amazon Sync"
-msgstr ""
+msgstr "Amazon連携"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -804,7 +804,7 @@ msgstr "自動請求"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Automatic email sent after the customer has signed or paid online"
-msgstr ""
+msgstr "顧客がオンラインで署名または支払い後に送信される自動メール"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__journal_name
@@ -992,7 +992,7 @@ msgstr "確認Eメール"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Connectors"
-msgstr ""
+msgstr "コネクター"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_partner
@@ -3215,12 +3215,12 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Select product attributes and optional products from the sales order"
-msgstr ""
+msgstr "受注からプロダクト属性とオプションプロダクトを選択"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Select specific invoice and delivery addresses"
-msgstr ""
+msgstr "請求先および出荷先アドレスを指定"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__sale_line_warn
@@ -3247,7 +3247,7 @@ msgstr "荷姿あたりのユニット数の倍数でプロダクトを販売"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell variants of a product using attributes (size, color, etc.)"
-msgstr ""
+msgstr "属性（サイズ、色など）を使用してプロダクトのバリエーションを販売"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3750,7 +3750,7 @@ msgstr "請求対象"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_to_invoice
 msgid "To Invoice Quantity"
-msgstr ""
+msgstr "請求可能数量"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
@@ -3871,7 +3871,7 @@ msgstr "単位"
 #: model:product.template,uom_name:sale.advance_product_0_product_template
 #: model:product.template,uom_name:sale.product_product_4e_product_template
 msgid "Units"
-msgstr ""
+msgstr "個"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_uom_form_action
@@ -3883,7 +3883,7 @@ msgstr "単位"
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_uom_categ_form_action
 msgid "Units of Measure Categories"
-msgstr ""
+msgstr "単位カテゴリ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_auto_done_setting
@@ -3908,18 +3908,18 @@ msgstr "税抜金額"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__untaxed_amount_invoiced
 msgid "Untaxed Amount Invoiced"
-msgstr ""
+msgstr "請求済金額(税抜)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__untaxed_amount_to_invoice
 #: model:ir.model.fields,field_description:sale.field_sale_report__untaxed_amount_to_invoice
 msgid "Untaxed Amount To Invoice"
-msgstr ""
+msgstr "請求待ち金額(税抜)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__untaxed_amount_invoiced
 msgid "Untaxed Invoiced Amount"
-msgstr ""
+msgstr "請求済金額(税抜)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__price_subtotal
@@ -3972,7 +3972,7 @@ msgstr "注文を検証"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Variant Grid Entry"
-msgstr ""
+msgstr "バリアントグリッド入力"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
@@ -4053,6 +4053,8 @@ msgid ""
 "You can not remove an order line once the sales order is confirmed.\n"
 "You should rather set the quantity to 0."
 msgstr ""
+"販売オーダ確認後は明細を削除できません。\n"
+"必要に応じて数量を0に変更してください。"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice

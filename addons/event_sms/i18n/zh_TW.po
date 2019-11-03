@@ -28,6 +28,9 @@ msgid ""
 "${object.event_id.name} event is starting ${object.get_date_range_str()}. We"
 " confirm your registration and hope to meet you there."
 msgstr ""
+"${object.event_id.organizer_id.name or object.event_id.company_id.name or "
+"user.env.company.name}: 我們很榮幸的通知您 ${object.event_id.name} 活動正在進行中 "
+"${object.get_date_range_str()}.並向您確認您的登記資訊，很期待與您的會面."
 
 #. module: event_sms
 #: model:sms.template,body:event_sms.sms_template_data_event_registration
@@ -36,6 +39,8 @@ msgid ""
 "user.env.company.name}: We are happy to confirm your registration for the "
 "${object.event_id.name} event."
 msgstr ""
+"${object.event_id.organizer_id.name or object.event_id.company_id.name or "
+"user.env.company.name}: 我們很榮幸的通知您已完成登記 ${object.event_id.name} 活動."
 
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_mail
@@ -50,12 +55,12 @@ msgstr "活動登記"
 #. module: event_sms
 #: model:sms.template,name:event_sms.sms_template_data_event_registration
 msgid "Event: Registration"
-msgstr ""
+msgstr "活動：登記"
 
 #. module: event_sms
 #: model:sms.template,name:event_sms.sms_template_data_event_reminder
 msgid "Event: Reminder"
-msgstr ""
+msgstr "活動：提醒"
 
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_type_mail
@@ -71,13 +76,13 @@ msgstr "登記信件調度"
 #: model:ir.model.fields.selection,name:event_sms.selection__event_mail__notification_type__sms
 #: model:ir.model.fields.selection,name:event_sms.selection__event_type_mail__notification_type__sms
 msgid "SMS"
-msgstr ""
+msgstr "SMS簡訊"
 
 #. module: event_sms
 #: model:ir.model.fields,field_description:event_sms.field_event_mail__sms_template_id
 #: model:ir.model.fields,field_description:event_sms.field_event_type_mail__sms_template_id
 msgid "SMS Template"
-msgstr ""
+msgstr "簡訊範本"
 
 #. module: event_sms
 #: model:ir.model.fields,field_description:event_sms.field_event_mail__notification_type
@@ -90,4 +95,4 @@ msgstr "發送"
 #: model:ir.model.fields,help:event_sms.field_event_type_mail__sms_template_id
 msgid ""
 "This field contains the template of the SMS that will be automatically sent"
-msgstr ""
+msgstr "此欄位包含將自動發送的 SMS 的範本"

@@ -3,11 +3,9 @@
 # 	* point_of_sale
 # 
 # Translators:
+# Andy Cheng <andy.cheng@richsoda.com>, 2019
 # Ying <acc.tou@gmail.com>, 2019
 # bluce Lan <bluce.lan@gmail.com>, 2019
-# Andy Cheng <andy.cheng@richsoda.com>, 2019
-# amos lin <seeing@edirect168.com>, 2019
-# Michael Yeung, 2019
 # Martin Trigaux, 2019
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
 # 
@@ -74,7 +72,7 @@ msgstr "&nbsp;"
 #. module: point_of_sale
 #: model:ir.actions.report,print_report_name:point_of_sale.pos_invoice_report
 msgid "'Invoice - %s' % (object.name)"
-msgstr ""
+msgstr "'發票 - %s' % (object.name)"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
@@ -96,7 +94,7 @@ msgstr "+ 交易"
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid ", we advise you to close it and to create a new one."
-msgstr ""
+msgstr "，我們建議您關閉它並創建一個新的。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -114,11 +112,13 @@ msgid ""
 "<i class=\"fa fa-fw fa-shopping-bag\" role=\"img\" aria-label=\"Shopping "
 "cart\" title=\"Shopping cart\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-shopping-bag\" role=\"img\" aria-label=\"Shopping "
+"cart\" title=\"Shopping cart\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_kanban
 msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Amount\" title=\"Amount\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Amount\" title=\"Amount\"/>"
 
 #. module: point_of_sale
 #. openerp-web
@@ -141,12 +141,12 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "<span class=\"o_form_label\">Barcode Scanner</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">條形碼掃瞄器</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "<span class=\"o_form_label\">Default Pricelist</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">預設價格表</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -156,7 +156,7 @@ msgstr "<span class=\"o_form_label\"> 日誌項目 </span>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "<span class=\"o_form_label\">Login with Employees</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">員工登錄</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -230,7 +230,7 @@ msgid ""
 "<span>There is a difference between the expected and actual closing in cash."
 " Are you sure you want to close the session and post the accounting "
 "entries?</span>"
-msgstr ""
+msgstr "<span>預期現金和實際結算之間存在差異。 您確定要關閉會話並發佈會計分錄嗎？</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -240,7 +240,7 @@ msgstr "<span>視圖</span>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "= Expected in Cash"
-msgstr ""
+msgstr "= 預計現金"
 
 #. module: point_of_sale
 #. openerp-web
@@ -321,12 +321,12 @@ msgstr "接受客戶提示或將其更改轉換為提示"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with a Vantiv payment terminal"
-msgstr ""
+msgstr "接受Vantiv支付終端的付款"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with an Adyen payment terminal"
-msgstr ""
+msgstr "接受Adyen支付終端的付款"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_search
@@ -343,7 +343,7 @@ msgstr "科目表模版"
 msgid ""
 "Account used as counterpart of the income account in the accounting entry "
 "representing the pos sales."
-msgstr ""
+msgstr "帳戶用作代表銷售額的會計分錄中的收入帳戶的對應方。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -380,7 +380,7 @@ msgstr "活動"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "活動例外勳章"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_state
@@ -390,7 +390,7 @@ msgstr "活動狀態"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Actual in Cash"
-msgstr ""
+msgstr "實際現金"
 
 #. module: point_of_sale
 #. openerp-web
@@ -427,12 +427,12 @@ msgstr "地址"
 #. module: point_of_sale
 #: model:res.groups,name:point_of_sale.group_pos_manager
 msgid "Administrator"
-msgstr ""
+msgstr "管理員"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Advanced Pricelists"
-msgstr ""
+msgstr "高級價格表"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -442,7 +442,7 @@ msgstr "Adyen"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_adyen
 msgid "Adyen Payment Terminal"
-msgstr ""
+msgstr "Adyen支付終端"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -537,7 +537,7 @@ msgstr "屬性"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Authorized Difference"
-msgstr ""
+msgstr "授權差額"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__rescue
@@ -557,7 +557,7 @@ msgstr "自動打開收銀箱。"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_available_categ_ids
 msgid "Available PoS Product Categories"
-msgstr ""
+msgstr "可用PoS產品類別"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__available_pricelist_ids
@@ -568,7 +568,7 @@ msgstr "可用價格表"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Available Product Categories"
-msgstr ""
+msgstr "可用產品類別"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product__available_in_pos
@@ -603,7 +603,7 @@ msgstr "倒退鍵 Backspace"
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "Balance control"
-msgstr ""
+msgstr "平衡控制"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -705,7 +705,7 @@ msgstr "取消"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Cancel Payment Request"
-msgstr ""
+msgstr "取消付款申請"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_order__state__cancel
@@ -743,7 +743,7 @@ msgstr "現金管理"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Cash In/Out"
-msgstr ""
+msgstr "現金進出"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__cash_journal_id
@@ -813,7 +813,7 @@ msgstr "POS使用的類別。"
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pos_category_chairs
 msgid "Chairs"
-msgstr ""
+msgstr "椅子"
 
 #. module: point_of_sale
 #. openerp-web
@@ -894,12 +894,12 @@ msgstr "兒童類"
 msgid ""
 "Choose a specific fiscal position at the order depending on the kind of "
 "customer (tax exempt, onsite vs. takeaway, etc.)."
-msgstr ""
+msgstr "根據客戶的類型選擇訂單上的具體財務狀況(免稅、現場與外賣等)。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Choose among fiscal positions when processing an order"
-msgstr ""
+msgstr "處理訂單時在財務狀況中進行選擇"
 
 #. module: point_of_sale
 #. openerp-web
@@ -933,7 +933,7 @@ msgstr "用戶端螢幕已中斷連線"
 #: code:addons/point_of_sale/static/src/js/chrome.js:0
 #, python-format
 msgid "Client Screen Unsupported. Please upgrade the IoT Box"
-msgstr ""
+msgstr "客戶端螢幕不受支援。 請升級IoT Box"
 
 #. module: point_of_sale
 #. openerp-web
@@ -993,7 +993,7 @@ msgstr "公司"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__company_has_template
 msgid "Company has chart of accounts"
-msgstr ""
+msgstr "公司有會計科目表"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_config_settings
@@ -1034,22 +1034,22 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Connect devices to your PoS"
-msgstr ""
+msgstr "將設備連接到PoS"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Connect devices to your PoS through an IoT Box"
-msgstr ""
+msgstr "通過IoT Box將設備連接到PoS"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__other_devices
 msgid "Connect devices to your PoS without an IoT Box."
-msgstr ""
+msgstr "無需IoT Box即可將設備連接到PoS。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Connected Devices"
-msgstr ""
+msgstr "連接設備"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1070,28 +1070,28 @@ msgstr "連接到代理伺服器"
 #: code:addons/point_of_sale/static/src/js/models.js:0
 #, python-format
 msgid "Connecting to the IoT Box"
-msgstr ""
+msgstr "正連接到IoT Box"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Connection error"
-msgstr ""
+msgstr "連接錯誤"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/printers.js:0
 #, python-format
 msgid "Connection to IoT Box failed"
-msgstr ""
+msgstr "連接到IoT Box失敗"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/printers.js:0
 #, python-format
 msgid "Connection to the printer failed"
-msgstr ""
+msgstr "與列印機的連接失敗"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_partner
@@ -1111,12 +1111,12 @@ msgstr "在打開和關閉時控制零用金"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__currency_rate
 msgid "Conversion Rate"
-msgstr ""
+msgstr "轉化率"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__currency_rate
 msgid "Conversion rate from company currency to order currency."
-msgstr ""
+msgstr "從公司貨幣到訂單貨幣的轉換率。"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1199,7 +1199,7 @@ msgstr "目前前台"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__current_user_id
 msgid "Current Session Responsible"
-msgstr ""
+msgstr "目前會話負責"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__current_session_state
@@ -1392,12 +1392,12 @@ msgstr "辦公桌召集人"
 #: model:product.product,name:point_of_sale.desk_pad
 #: model:product.template,name:point_of_sale.desk_pad_product_template
 msgid "Desk Pad"
-msgstr ""
+msgstr "桌墊"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pos_category_desks
 msgid "Desks"
-msgstr ""
+msgstr "桌台"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1534,7 +1534,7 @@ msgstr "無權訪問，跳過使用者摘要電子信件的此數據"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Don't show again"
-msgstr ""
+msgstr "不再彈出"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1618,7 +1618,7 @@ msgid ""
 "Employees can scan their badge or enter a PIN to log in to a PoS session. "
 "These credentials are configurable in the *HR Settings* tab of the employee "
 "form."
-msgstr ""
+msgstr "員工可以掃瞄徽章或輸入PIN以登錄PoS會話。 這些憑據可在員工表單的* HR Settings *選項中進行配置。"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1758,14 +1758,14 @@ msgstr "面向不精確的工業用觸摸屏。"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Force Done"
-msgstr ""
+msgstr "強制完成"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Force done"
-msgstr ""
+msgstr "強制完成"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1807,7 +1807,7 @@ msgstr "分組POS中的產品"
 #: code:addons/point_of_sale/static/src/js/models.js:0
 #, python-format
 msgid "HTTPS connection to IoT Box failed"
-msgstr ""
+msgstr "與IoT Box的HTTPS連接失敗"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1841,7 +1841,7 @@ msgstr "頁首和頁尾"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__hide_use_payment_terminal
 msgid "Hide Use Payment Terminal"
-msgstr ""
+msgstr "隱藏使用付款終端"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1888,7 +1888,7 @@ msgstr "圖示"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "表示一個例外活動的圖標。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__message_needaction
@@ -1916,7 +1916,7 @@ msgstr ""
 msgid ""
 "If ticked, each payment will generate a separated journal item. Ticking that"
 " option will slow the closing of the PoS."
-msgstr ""
+msgstr "如果勾選此項，每筆付款將生成一個單獨的日記帳專案。勾選該選項將減慢PoS的關閉速度。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__image_128
@@ -1959,6 +1959,9 @@ msgid ""
 "                Invocing/Accounting app will create Bank and Cash payment\n"
 "                methods automatically."
 msgstr ""
+"從常規設定安裝會計科目表\n"
+"                開立發票/會計應用程序將創建銀行和現金支付\n"
+"                方法自動化。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_mercury
@@ -1968,7 +1971,7 @@ msgstr "集成的卡支付"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__receivable_account_id
 msgid "Intermediary Account"
-msgstr ""
+msgstr "中介帳戶"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_category_action
@@ -2027,17 +2030,17 @@ msgstr "會計"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "IoT Box Devices"
-msgstr ""
+msgstr "IoT Box 裝置"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "IoT Box IP Address"
-msgstr ""
+msgstr "IoT Box IP地址"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_cashbox__is_a_template
 msgid "Is A Template"
-msgstr ""
+msgstr "是一個模板"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_is_follower
@@ -2047,12 +2050,12 @@ msgstr "是關注人"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__is_invoiced
 msgid "Is Invoiced"
-msgstr ""
+msgstr "已開立發票"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__is_in_company_currency
 msgid "Is Using Company Currency"
-msgstr ""
+msgstr "使用公司貨幣"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_restaurant
@@ -2114,7 +2117,7 @@ msgstr "Kpi Pos 總計值"
 #: model:product.product,name:point_of_sale.led_lamp
 #: model:product.template,name:point_of_sale.led_lamp_product_template
 msgid "LED Lamp"
-msgstr ""
+msgstr "LED燈"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__name
@@ -2199,7 +2202,7 @@ msgstr "Led 燈"
 #: model:product.product,name:point_of_sale.letter_tray
 #: model:product.template,name:point_of_sale.letter_tray_product_template
 msgid "Letter Tray"
-msgstr ""
+msgstr "信託盤"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__name
@@ -2278,7 +2281,7 @@ msgstr "用於此POS的忠誠度方案。"
 #: model:product.product,name:point_of_sale.magnetic_board
 #: model:product.template,name:point_of_sale.magnetic_board_product_template
 msgid "Magnetic Board"
-msgstr ""
+msgstr "磁板"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_main_attachment_id
@@ -2307,7 +2310,7 @@ msgstr ""
 msgid ""
 "Make sure you are using IoT Box v18.12 or higher. Navigate to %s to accept "
 "the certificate of your IoT Box."
-msgstr ""
+msgstr "確保您使用的是IoT Box v18.12或更高版本。導航到 %s接受IoT Box的證書。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_error
@@ -2334,7 +2337,7 @@ msgstr "雜項"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_hr
 msgid "Module Pos Hr"
-msgstr ""
+msgstr "模組Pos Hr"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
@@ -2398,7 +2401,7 @@ msgstr ""
 #: model:product.product,name:point_of_sale.newspaper_rack
 #: model:product.template,name:point_of_sale.newspaper_rack_product_template
 msgid "Newspaper Rack"
-msgstr ""
+msgstr "報紙架"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
@@ -2452,7 +2455,7 @@ msgstr "找不到訂單"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "No results found for \""
-msgstr ""
+msgstr "找不到結果 \""
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:0
@@ -2497,7 +2500,7 @@ msgstr "列印數量"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "錯誤數"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__message_needaction_counter
@@ -2630,6 +2633,8 @@ msgid ""
 "Operation type used to record product pickings <br/>\n"
 "                                    Products will be taken from the default source location of this operation type"
 msgstr ""
+"用於記錄產品揀選的操作類型 <br/>\n"
+"                                    產品將從該操作類型的預設源位置獲取"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2657,7 +2662,7 @@ msgstr "訂單"
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "Order %s is not fully paid."
-msgstr ""
+msgstr "訂單 %s未全額付款。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__order_count
@@ -2729,7 +2734,7 @@ msgstr "訂單分析"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__other_devices
 msgid "Other Devices"
-msgstr ""
+msgstr "其他設備"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -2863,17 +2868,17 @@ msgstr "付款參考"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Payment Successful"
-msgstr ""
+msgstr "支付成功"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Payment Terminals"
-msgstr ""
+msgstr "付款終端"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__transaction_id
 msgid "Payment Transaction ID"
-msgstr ""
+msgstr "付款交易ID"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2885,14 +2890,14 @@ msgstr "可用支付方式"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Payment request pending"
-msgstr ""
+msgstr "待付款請求"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Payment reversed"
-msgstr ""
+msgstr "付款被撤銷"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -2913,7 +2918,7 @@ msgstr "付款"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_payment_methods_tree
 msgid "Payments Methods"
-msgstr ""
+msgstr "付款方式"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2962,7 +2967,7 @@ msgstr "揀貨錯誤"
 #: code:addons/point_of_sale/models/stock_warehouse.py:0
 #, python-format
 msgid "Picking POS"
-msgstr ""
+msgstr "挑選POS"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2983,14 +2988,14 @@ msgstr "請確認大金額"
 #: code:addons/point_of_sale/static/src/js/printers.js:0
 #, python-format
 msgid "Please check if the IoT Box is still connected."
-msgstr ""
+msgstr "請檢查IoT Box是否仍連接。"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/printers.js:0
 #, python-format
 msgid "Please check if the printer is still connected."
-msgstr ""
+msgstr "請檢查列印機是否仍連接。"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/res_company.py:0
@@ -3005,7 +3010,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/models.js:0
 #, python-format
 msgid "Please configure a payment method in your POS."
-msgstr ""
+msgstr "請在POS中配置支付方法。"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -3018,7 +3023,7 @@ msgstr "請為這個產品定義收益科目: \"%s\" (id:%d)。"
 #: code:addons/point_of_sale/static/src/js/screens.js:0
 #, python-format
 msgid "Please print the invoice from the backend"
-msgstr ""
+msgstr "請從後台列印發票"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
@@ -3048,7 +3053,7 @@ msgstr "POS類別"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "PoS Interface"
-msgstr ""
+msgstr "PoS接口"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/stock_warehouse.py:0
@@ -3063,12 +3068,12 @@ msgstr "POS 訂單"
 #: model:ir.ui.menu,name:point_of_sale.menu_products_pos_category
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "PoS Product Categories"
-msgstr ""
+msgstr "PoS產品類別"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_tree_view
 msgid "PoS Product Category"
-msgstr ""
+msgstr "PoS產品類別"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_property_form
@@ -3123,7 +3128,7 @@ msgstr "POS配置"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__config_ids
 msgid "Point of Sale Configurations"
-msgstr ""
+msgstr "銷售點配置"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_point_of_sale_report_saledetails
@@ -3143,7 +3148,7 @@ msgstr "POS發票報表"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_make_payment
 msgid "Point of Sale Make Payment Wizard"
-msgstr ""
+msgstr "銷售點付款嚮導"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__group_pos_manager_id
@@ -3153,7 +3158,7 @@ msgstr "POS管理組"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_warehouse__pos_type_id
 msgid "Point of Sale Operation Type"
-msgstr ""
+msgstr "銷售點經營類型"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_order_line
@@ -3176,12 +3181,12 @@ msgstr "銷售訂單點報告"
 #: model:ir.model,name:point_of_sale.model_pos_payment_method
 #: model:ir.model.fields,field_description:point_of_sale.field_account_journal__pos_payment_method_ids
 msgid "Point of Sale Payment Methods"
-msgstr ""
+msgstr "POS付款方式"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_payment
 msgid "Point of Sale Payments"
-msgstr ""
+msgstr "銷售點付款"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_session
@@ -3207,7 +3212,7 @@ msgstr "POS配置"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_partner__pos_order_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users__pos_order_ids
 msgid "Pos Order"
-msgstr ""
+msgstr "Pos 訂單"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_partner__pos_order_count
@@ -3378,7 +3383,7 @@ msgstr "列印機"
 #: code:addons/point_of_sale/static/src/js/screens.js:0
 #, python-format
 msgid "Printing is not supported on some android browsers"
-msgstr ""
+msgstr "不支援從一些安卓瀏覽器列印"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3388,7 +3393,7 @@ msgid ""
 "Printing is not supported on some android browsers due to no default "
 "printing protocol is available. It is possible to print your tickets by "
 "making use of an IoT Box."
-msgstr ""
+msgstr "某些Android瀏覽器不支援列印，因為沒有可用的預設列印協議。 可以使用IoT Box列印門票。"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_procurement_group
@@ -3440,7 +3445,7 @@ msgstr "產品測量單位"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__product_uom_id
 msgid "Product UoM"
-msgstr ""
+msgstr "產品計量單位"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_uom_category
@@ -3560,7 +3565,7 @@ msgstr "票據列印機"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__use_payment_terminal
 msgid "Record payments with a terminal on this journal."
-msgstr ""
+msgstr "在此日記帳上記錄終端的付款。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -3680,7 +3685,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "短信發送錯誤"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__nbr_lines
@@ -3995,7 +4000,7 @@ msgstr "削減"
 #: model:product.product,name:point_of_sale.small_shelf
 #: model:product.template,name:point_of_sale.small_shelf_product_template
 msgid "Small Shelf"
-msgstr ""
+msgstr "小架子"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4155,7 +4160,7 @@ msgstr "總計"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_box_out
 msgid "Take Money In/Out"
-msgstr ""
+msgstr "拿錢進/出"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4387,7 +4392,7 @@ msgstr " 由於未知的錯誤，提供的文件不能被讀取"
 msgid ""
 "The rate of the currency to the currency of rate applicable at the date of "
 "the order"
-msgstr ""
+msgstr "貨幣對訂單日期適用貨幣匯率的比率"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_print_skip_screen
@@ -4763,7 +4768,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "記錄的例外活動類型。"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -4868,7 +4873,7 @@ msgstr "使用已有批次/序列號碼"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__use_payment_terminal
 msgid "Use a Payment Terminal"
-msgstr ""
+msgstr "使用付款終端"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_partner__barcode
@@ -4967,7 +4972,7 @@ msgstr ""
 #: model:product.product,name:point_of_sale.wall_shelf
 #: model:product.template,name:point_of_sale.wall_shelf_product_template
 msgid "Wall Shelf Unit"
-msgstr ""
+msgstr "牆架單元"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_stock_warehouse

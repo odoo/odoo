@@ -26,23 +26,23 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "\" category."
-msgstr ""
+msgstr "\" 類別。"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.option_collapse_categories_recursive
 msgid "#{'Unfold' if c.id in category.parents_and_self.ids else 'Fold'}"
-msgstr ""
+msgstr "#{'Unfold' if c.id in category.parents_and_self.ids else 'Fold'}"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
 msgid "&amp; Shipping"
-msgstr ""
+msgstr "&amp; 送貨地址"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "/shop/address"
-msgstr ""
+msgstr "/shop/address"
 
 #. module: website_sale
 #: model:product.template.attribute.value,name:website_sale.product_1_attribute_3_value_1
@@ -163,6 +163,100 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    % set company = object.company_id or object.user_id.company_id or user.company_id\n"
+"                    <span style=\"font-size: 10px;\">您的購物車</span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        ${object.name}\n"
+"                    </span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img src=\"/logo.png?company=${company.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${company.name}\"/>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <h1 style=\"color:#A9A9A9;\">購物車內目前還有尚未結帳的商品.</h1>\n"
+"                    您是否要繼續完成採購呢?<br/><br/>\n"
+"                    % if object.order_line:\n"
+"                        % for line in object.website_order_line:\n"
+"                            <hr/>\n"
+"                            <table width=\"100%\">\n"
+"                                <tr>\n"
+"                                    <td style=\"padding: 10px; width:150px;\">\n"
+"                                        <img src=\"/web/image/product.product/${line.product_id.id}/image_128\" style=\"width: 100px; height: 100px; object-fit: contain;\" alt=\"Product image\"/>\n"
+"                                    </td>\n"
+"                                    <td>\n"
+"                                        <strong>${line.product_id.display_name}</strong><br/>${line.name}\n"
+"                                    </td>\n"
+"                                    <td width=\"100px\" align=\"right\">\n"
+"                                        ${(line.product_uom_qty) | int} ${(line.product_uom.name)}\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                        % endfor\n"
+"                        <hr/>\n"
+"                    % endif\n"
+"                    <div style=\"text-align: center; margin: 16px 0px 16px 0px; font-size: 14px;\">\n"
+"                        <a href=\"${object.get_base_url()}/shop/cart?access_token=${object.access_token}\" target=\"_blank\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                            回到訂單\n"
+"                        </a>\n"
+"                    </div>\n"
+"                    <div style=\"text-align: center;\"><strong>感謝您蒞臨 ${user.company_id.name}!</strong></div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    ${company.name}\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                    ${company.phone}\n"
+"                    % if company.email\n"
+"                        | <a href=\"'mailto:%s' % ${company.email}\" style=\"text-decoration:none; color: #454748;\">${company.email}</a>\n"
+"                    % endif\n"
+"                    % if company.website\n"
+"                        | <a href=\"'%s' % ${company.website}\" style=\"text-decoration:none; color: #454748;\">${company.website}</a>\n"
+"                    % endif\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        Powered by <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=website\" style=\"color: #875A7B;\">Odoo</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
@@ -173,27 +267,27 @@ msgstr "<b>交流： </b>"
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
 msgid "<b>Shipping: </b>"
-msgstr ""
+msgstr "<b>送貨地址: </b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
 msgid "<b>Your order: </b>"
-msgstr ""
+msgstr "<b>你的訂單r: </b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
 msgid "<i class=\"fa fa-arrow-right\"/> Add payment acquirers"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/> 添加付款收單方"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_buy_now
 msgid "<i class=\"fa fa-bolt\"/> Buy Now"
-msgstr ""
+msgstr "<i class=\"fa fa-bolt\"></i>立即購買"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "<i class=\"fa fa-cart-plus\"/> Choose number of products"
-msgstr ""
+msgstr "<i class=\"fa fa-cart-plus\"></i>選擇產品數量"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_kanban
@@ -206,6 +300,8 @@ msgid ""
 "<i class=\"fa fa-chevron-left\"/>\n"
 "                                            <span>Back</span>"
 msgstr ""
+"<i class=\"fa fa-chevron-left\"/>\n"
+"                                            <span>退回</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout
@@ -213,16 +309,18 @@ msgid ""
 "<i class=\"fa fa-chevron-left\"/>\n"
 "                                    <span>Return to Cart</span>"
 msgstr ""
+"<i class=\"fa fa-chevron-left\"/>\n"
+"                                    <span>回到購物車</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "<i class=\"fa fa-columns\"/> Number of Columns"
-msgstr ""
+msgstr "<i class=\"fa fa-columns\"></i>列數"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
 msgid "<i class=\"fa fa-edit\"/> Edit"
-msgstr ""
+msgstr "<i class=\"fa fa-edit\"/> 編輯"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout
@@ -230,6 +328,8 @@ msgid ""
 "<i class=\"fa fa-plus-square\"/>\n"
 "                                                        <span>Add an address</span>"
 msgstr ""
+"<i class=\"fa fa-plus-square\"/>\n"
+"                                                        <span>添加位址</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -239,7 +339,7 @@ msgstr "<i class=\"fa fa-print\"/> 列印"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "<i class=\"fa fa-search\"/> Products Search Bar"
-msgstr ""
+msgstr "<i class=\"fa fa-search\"></i>產品搜索欄"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.header
@@ -253,7 +353,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "<i class=\"fa fa-shopping-cart\"/> Add to Cart"
-msgstr ""
+msgstr "<i class=\"fa fa-shopping-cart\"></i>添加到購物車"
 
 #. module: website_sale
 #: code:addons/website_sale/models/crm_team.py:0
@@ -264,6 +364,10 @@ msgid ""
 "                        <p>You should send an email to the customers to encourage them!</p>\n"
 "                    "
 msgstr ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"                        您可以在這裡找到所有放棄的購物車，即您的網站訪客在一個多小時前生成的尚未確認的購物車.</p>\n"
+"                        <p>您應該向客戶發送電子郵件以通知他們!</p>\n"
+"                    "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.terms
@@ -271,6 +375,8 @@ msgid ""
 "<small class=\"text-muted float-right\">Source: https://termsfeed.com/blog"
 "/sample-terms-and-conditions-template</small>"
 msgstr ""
+"<small class=\"text-muted float-right\">資料來源：https：//termsfeed.com/blog"
+"/sample-terms-and-conditions-template</small>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -278,6 +384,8 @@ msgid ""
 "<span class=\"\">Process Checkout</span>\n"
 "                                        <span class=\"fa fa-chevron-right\"/>"
 msgstr ""
+"<span class=\"\">處理結帳</span>\n"
+"                                        <span class=\"fa fa-chevron-right\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -285,6 +393,8 @@ msgid ""
 "<span class=\"\">Process Checkout</span>\n"
 "                                    <span class=\"fa fa-chevron-right\"/>"
 msgstr ""
+"<span class=\"\">處理結帳</span>\n"
+"                                    <span class=\"fa fa-chevron-right\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
@@ -292,6 +402,8 @@ msgid ""
 "<span class=\"fa fa-chevron-down fa-border float-right\" role=\"img\" aria-"
 "label=\"Details\" title=\"Details\"/>"
 msgstr ""
+"<span class=\"fa fa-chevron-down fa-border float-right\" role=\"img\" aria-"
+"label=\"Details\" title=\"Details\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.shop_product_carousel
@@ -299,6 +411,8 @@ msgid ""
 "<span class=\"fa fa-chevron-left p-2\" role=\"img\" aria-label=\"Previous\" "
 "title=\"Previous\"/>"
 msgstr ""
+"<span class=\"fa fa-chevron-left p-2\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Previous\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -306,6 +420,8 @@ msgid ""
 "<span class=\"fa fa-chevron-left\"/>\n"
 "                                        <span class=\"\">Continue Shopping</span>"
 msgstr ""
+"<span class=\"fa fa-chevron-left\"/>\n"
+"                                        <span class=\"\">繼續購物</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -313,11 +429,13 @@ msgid ""
 "<span class=\"fa fa-chevron-left\"/>\n"
 "                                    Continue<span class=\"d-none d-md-inline\"> Shopping</span>"
 msgstr ""
+"<span class=\"fa fa-chevron-left\"/>\n"
+"                                    繼續<span class=\"d-none d-md-inline\"> 購物</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
 msgid "<span class=\"fa fa-chevron-left\"/> Previous"
-msgstr ""
+msgstr "<span class=\"fa fa-chevron-left\"/> 上一頁"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.shop_product_carousel
@@ -325,6 +443,8 @@ msgid ""
 "<span class=\"fa fa-chevron-right p-2\" role=\"img\" aria-label=\"Next\" "
 "title=\"Next\"/>"
 msgstr ""
+"<span class=\"fa fa-chevron-right p-2\" role=\"img\" aria-label=\"Next\" "
+"title=\"Next\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -347,7 +467,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Confirmation Email</span>"
-msgstr "確認郵件"
+msgstr "<span class=\"o_form_label\">確認電子郵件</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -360,6 +480,8 @@ msgid ""
 "<span>Confirm</span>\n"
 "                                    <i class=\"fa fa-chevron-right\"/>"
 msgstr ""
+"<span>確認</span>\n"
+"                                    <i class=\"fa fa-chevron-right\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -372,6 +494,8 @@ msgid ""
 "<span>Next</span>\n"
 "                                            <i class=\"fa fa-chevron-right\"/>"
 msgstr ""
+"<span>下一步</span>\n"
+"                                            <i class=\"fa fa-chevron-right\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -381,17 +505,17 @@ msgstr "<span>訂單</span>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.short_cart_summary
 msgid "<span>Process Checkout</span>"
-msgstr ""
+msgstr "<span>處理結帳</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "<span>Video Preview</span>"
-msgstr ""
+msgstr "<span>影片預覽</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
 msgid "<span>Your payment has been authorized.</span>"
-msgstr ""
+msgstr "<span>你的付款已經完成確認</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.suggested_products_list
@@ -425,6 +549,8 @@ msgid ""
 "be part of a very long and thorough list in your Terms and Conditions "
 "agreements so as to encompass the most amount of negative uses."
 msgstr ""
+"一個 <b>限制用戶可以做什麼</b> 條款可以告知用戶，通過同意使用您的服務，他們也同意不做某些事情。 "
+"這可以是您的條款和條件協議中非常長且徹底的列表的一部分，以包含最多的負面用途。"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.terms
@@ -445,6 +571,8 @@ msgid ""
 "have an account with you) can be terminated in case of abuses or at your "
 "sole discretion."
 msgstr ""
+"一個 <b>終止</b> "
+"條款將告知用戶在您的網站和移動應用程序上的帳戶或用戶訪問您的網站和移動設備（如果用戶無法擁有您的帳戶），可以在發生濫用或自行決定時終止。"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
@@ -456,7 +584,7 @@ msgstr "提供的文檔"
 msgid ""
 "A product can be either a physical product or a service that you sell to "
 "your customers."
-msgstr ""
+msgstr "產品可以是實體產品，也可以是您向客戶銷售的服務。"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -473,7 +601,7 @@ msgstr "一目瞭然"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 msgid "Abandoned"
-msgstr ""
+msgstr "失效"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__is_abandoned_cart
@@ -522,7 +650,7 @@ msgstr ""
 msgid ""
 "Accessories show up when the customerreviews the cart before payment (cross-"
 "sell strategy)."
-msgstr ""
+msgstr "當客戶在付款之前查看購物車（交叉銷售策略）時，配件會顯示。"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__accessory_product_ids
@@ -575,7 +703,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/xml/website_sale_utils.xml:0
 #, python-format
 msgid "All results"
-msgstr ""
+msgstr "所有結果"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -647,7 +775,7 @@ msgstr "銀行名稱"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Be aware!"
-msgstr ""
+msgstr "請注意！"
 
 #. module: website_sale
 #: model:res.country.group,name:website_sale.benelux
@@ -693,12 +821,12 @@ msgstr "以兩種優惠方案增加您的銷售：促銷和優惠券代碼。具
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_boxes
 msgid "Boxes"
-msgstr ""
+msgstr "盒子"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_cabinets
 msgid "Cabinets"
-msgstr ""
+msgstr "櫃"
 
 #. module: website_sale
 #. openerp-web
@@ -711,7 +839,7 @@ msgstr "行銷"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__can_image_1024_be_zoomed
 msgid "Can Image 1024 be zoomed"
-msgstr ""
+msgstr "畫素1024可放大"
 
 #. module: website_sale
 #. openerp-web
@@ -781,12 +909,12 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_description
 msgid "Category Description"
-msgstr ""
+msgstr "分類的描述"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_chairs
 msgid "Chairs"
-msgstr ""
+msgstr "椅子"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__child_id
@@ -873,7 +1001,7 @@ msgstr "配件"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping cost and ship with Easypost"
-msgstr ""
+msgstr "使用Easypost計算運費和運費"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -918,7 +1046,7 @@ msgstr "確認訂單"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
 msgid "Confirm Order <span class=\"fa fa-chevron-right\"/>"
-msgstr ""
+msgstr "確認訂單 <span class=\"fa fa-chevron-right\"/>"
 
 #. module: website_sale
 #. openerp-web
@@ -1027,7 +1155,7 @@ msgstr "預設價格表"
 #: code:addons/website_sale/static/src/xml/website_sale.editor.xml:0
 #, python-format
 msgid "Default order"
-msgstr ""
+msgstr "默認排序"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_public_category_action
@@ -1057,7 +1185,7 @@ msgstr "網站的說明"
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_desks
 msgid "Desks"
-msgstr ""
+msgstr "桌台"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__website_sequence
@@ -1121,7 +1249,7 @@ msgstr "完成"
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
 msgid "Double click here to set an image describing your product."
-msgstr ""
+msgstr "雙擊此處設置描述您的產品的圖像。"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -1153,7 +1281,7 @@ msgstr "歐元"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Easypost"
-msgstr ""
+msgstr "Easypost"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
@@ -1262,7 +1390,7 @@ msgstr "當線上支付確認時，自動生成應收憑單"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
 msgid "Give us your feedback"
-msgstr ""
+msgstr "給我們您的反饋"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_public_category__sequence
@@ -1308,7 +1436,7 @@ msgstr "我同意"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.reduction_code
 msgid "I have a promo code"
-msgstr ""
+msgstr "我有促銷代碼"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__id
@@ -1333,6 +1461,10 @@ msgid ""
 "will respond to any DMCA take down notices received and you will take down "
 "the content."
 msgstr ""
+"如果您的網站或移動應用允許用戶創建內容並向其他用戶公開內容，則<b>內容</ b>部分將通知用戶他們擁有創建內容的權利。 "
+"“內容”子句通常提及用戶必須向您（網站或移動應用開發者）發送許可證，以便您可以在您的網站/移動應用上共享此內容，並將其提供給其他用戶。 "
+"用戶創建的用戶對其他用戶是公開的，DMCA通知條款（或版權侵權）部分有助於通知用戶和版權作者，如果發現任何內容是侵犯版權，您將回復任何DMCA取消收到的通知"
+" 你會刪除內容。"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__image_1920
@@ -1344,25 +1476,25 @@ msgstr "圖像"
 #: model:ir.model.fields,field_description:website_sale.field_product_image__image_1024
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__image_1024
 msgid "Image 1024"
-msgstr ""
+msgstr "畫素 1024"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__image_128
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__image_128
 msgid "Image 128"
-msgstr ""
+msgstr "畫素 128"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__image_256
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__image_256
 msgid "Image 256"
-msgstr ""
+msgstr "畫素 256"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__image_512
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__image_512
 msgid "Image 512"
-msgstr ""
+msgstr "畫素 512"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
@@ -1372,7 +1504,7 @@ msgstr "圖像名稱"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_res_config_settings__module_website_sale_stock
 msgid "Installs the \"Website Delivery Information\" application"
-msgstr ""
+msgstr "安裝“網站傳遞信息”應用程序"
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:0
@@ -1425,7 +1557,7 @@ msgstr ""
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_lamps
 msgid "Lamps"
-msgstr ""
+msgstr "燈光"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image____last_update
@@ -1525,7 +1657,7 @@ msgstr "媒體"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__paypal_seller_account
 msgid "Merchant Account ID"
-msgstr ""
+msgstr "商家帐户ID"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__manual_name
@@ -1553,7 +1685,7 @@ msgstr "我的購物車"
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 #, python-format
 msgid "Name"
-msgstr "名称"
+msgstr "名稱"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_line__name_short
@@ -1588,7 +1720,7 @@ msgstr "下一個"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
 msgid "Next <span class=\"fa fa-chevron-right\"/>"
-msgstr ""
+msgstr "下一步 <span class=\"fa fa-chevron-right\"/>"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_abandoned_orders_ecommerce
@@ -1614,7 +1746,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "No results"
-msgstr ""
+msgstr "沒有結果"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -1718,13 +1850,13 @@ msgstr ""
 #: code:addons/website_sale/models/sale_order.py:0
 #, python-format
 msgid "Option for: %s"
-msgstr ""
+msgstr "選項： %s"
 
 #. module: website_sale
 #: code:addons/website_sale/models/sale_order.py:0
 #, python-format
 msgid "Option: %s"
-msgstr ""
+msgstr "選項： %s"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1764,35 +1896,35 @@ msgstr "訂單明細會顯示在網站中，但不能用於統計分析。"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.short_cart_summary
 msgid "Order Total"
-msgstr ""
+msgstr "訂單總計"
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/xml/website_sale.editor.xml:0
 #, python-format
 msgid "Order by name (A-Z)"
-msgstr ""
+msgstr "按名稱排序 （A-Z）"
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/xml/website_sale.editor.xml:0
 #, python-format
 msgid "Order by name (Z-A)"
-msgstr ""
+msgstr "按名稱排序 （Z-A）"
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/xml/website_sale.editor.xml:0
 #, python-format
 msgid "Order by price: high to low"
-msgstr ""
+msgstr "按價格排序：從高到低"
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/xml/website_sale.editor.xml:0
 #, python-format
 msgid "Order by price: low to high"
-msgstr ""
+msgstr "按價格排序：從低到高"
 
 #. module: website_sale
 #. openerp-web
@@ -1833,7 +1965,7 @@ msgstr "訂單/天"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__paypal_pdt_token
 msgid "PDT Identity Token"
-msgstr ""
+msgstr "PDT 標識 Token"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__parent_id
@@ -1858,7 +1990,7 @@ msgstr "立即支付"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
 msgid "Pay Now <span class=\"fa fa-chevron-right\"/>"
-msgstr ""
+msgstr "立即付款<span class=\"fa fa-chevron-right\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
@@ -2036,13 +2168,13 @@ msgstr "產品公開類別"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_style
 msgid "Product Style"
-msgstr ""
+msgstr "商品樣式"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_template
 #: model:ir.model.fields,field_description:website_sale.field_product_image__product_tmpl_id
 msgid "Product Template"
-msgstr "产品模板"
+msgstr "商品模版"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_template_attribute_line
@@ -2328,7 +2460,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_products_searchbar
 msgid "Search for a product"
-msgstr ""
+msgstr "搜索產品"
 
 #. module: website_sale
 #. openerp-web
@@ -2362,7 +2494,7 @@ msgstr "以多種貨幣銷售"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Sell variants of a product using attributes (size, color, etc.)"
-msgstr ""
+msgstr "使用屬性（尺寸、顏色等）建立銷售產品的變體"
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.ir_actions_server_sale_cart_recovery_email
@@ -2403,6 +2535,8 @@ msgid ""
 "Ship to the same address\n"
 "                                                    <span class=\"ship_to_other text-muted\" style=\"display: none\">&amp;nbsp;(<i>Your shipping address will be requested later) </i></span>"
 msgstr ""
+"運送到同一地址\n"
+"                                                    <span class=\"ship_to_other text-muted\" style=\"display: none\">&amp;nbsp;(<i>您的送貨地址將在稍後申請) </i></span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2456,12 +2590,12 @@ msgstr "購物車"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_categories
 msgid "Show categories"
-msgstr ""
+msgstr "顯示分類"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_attributes
 msgid "Show options"
-msgstr ""
+msgstr "顯示選項"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -2730,7 +2864,7 @@ msgstr "這是您目前的購物車。"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "This product has no valid combination."
-msgstr ""
+msgstr "本產品沒有有效的組合。"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -2822,7 +2956,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_image__video_url
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "Video URL"
-msgstr ""
+msgstr "影片網址"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_popover
@@ -2832,7 +2966,7 @@ msgstr "查看購物車("
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_track
 msgid "Visited Pages"
-msgstr ""
+msgstr "訪問頁面"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_visitor__product_ids
@@ -2921,7 +3055,7 @@ msgstr "網站URL"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_visitor
 msgid "Website Visitor"
-msgstr ""
+msgstr "網站訪問者"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_meta_description
@@ -2988,6 +3122,8 @@ msgid ""
 "You are editing your <b>billing and shipping</b> addresses at the same time!<br/>\n"
 "                                            If you want to modify your shipping address, create a"
 msgstr ""
+"您正在編輯您的 <b>帳單和送貨</b> 位址在同一時間!<br/>\n"
+"                                            如果要修改送貨位址,請創建"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_carts
@@ -3078,7 +3214,7 @@ msgstr "代碼..."
 #: code:addons/website_sale/static/src/xml/website_sale.editor.xml:0
 #, python-format
 msgid "description"
-msgstr ""
+msgstr "描述"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_settings
@@ -3110,7 +3246,7 @@ msgstr "已找到）"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "hours."
-msgstr ""
+msgstr "時."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -3129,7 +3265,7 @@ msgstr "如果要恢復之前的購物車，請點選此處。您之前的購物
 #: code:addons/website_sale/static/src/xml/website_sale.editor.xml:0
 #, python-format
 msgid "image"
-msgstr ""
+msgstr "圖片"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -3144,24 +3280,24 @@ msgstr "專案)"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "ml-2"
-msgstr ""
+msgstr "ml-2"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "mt-2 ml-md-2"
-msgstr ""
+msgstr "mt-2 ml-md-2"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "new address"
-msgstr ""
+msgstr "新地址"
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/xml/website_sale.editor.xml:0
 #, python-format
 msgid "price"
-msgstr ""
+msgstr "價格"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_sale_note
@@ -3171,12 +3307,12 @@ msgstr "條款和條件"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "to follow your order."
-msgstr ""
+msgstr "按照您的訂單"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "w-100 w-md-auto mt-2"
-msgstr ""
+msgstr "w-100 w-md-auto mt-2"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.brand_promotion

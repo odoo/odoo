@@ -6,8 +6,8 @@
 # Jeanphy <hzh0292@qq.com>, 2019
 # Martin Trigaux, 2019
 # Andy Cheng <andy.cheng@richsoda.com>, 2019
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
 # Ying <acc.tou@gmail.com>, 2019
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-07 07:12+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Ying <acc.tou@gmail.com>, 2019\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,6 +30,8 @@ msgid ""
 "Quotation - %s' % (object.name) or                 'Purchase Order - %s' % "
 "(object.name))"
 msgstr ""
+"                 (object.state in ('draft', 'sent') and '詢價單 - %s' % "
+"(object.name) or                 '採購訂單 - %s' % (object.name))"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner__supplier_invoice_count
@@ -46,12 +48,12 @@ msgstr "# 明細"
 #: model:mail.template,subject:purchase.email_template_edi_purchase
 #: model:mail.template,subject:purchase.email_template_edi_purchase_done
 msgid "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
-msgstr "${object.company_id.name} 訂單 (參考 ${object.name or 'n/a' })"
+msgstr "${object.company_id.name} 採購訂單 (參考 ${object.name or 'n/a' })"
 
 #. module: purchase
 #: model:ir.actions.report,print_report_name:purchase.report_purchase_quotation
 msgid "'Request for Quotation - %s' % (object.name)"
-msgstr ""
+msgstr "'詢價單 - %s' % (object.name)"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -86,6 +88,25 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        親愛的 ${object.partner_id.name}\n"
+"        % if object.partner_id.parent_id:\n"
+"            (${object.partner_id.parent_id.name})\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        附件為本公司欲向貴公司採購之採購訂單 <strong>${object.name}</strong>\n"
+"        % if object.partner_ref:\n"
+"            編號: ${object.partner_ref}\n"
+"        % endif\n"
+"        總金額 <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"        自 ${object.company_id.name}.\n"
+"        <br/><br/>\n"
+"        若有任何問題請隨時提出討論!感謝!~\n"
+"        <br/><br/>\n"
+"        Best regards,\n"
+"    </p>\n"
+"</div>"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase
@@ -109,6 +130,24 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Dear ${object.partner_id.name}\n"
+"        % if object.partner_id.parent_id:\n"
+"            (${object.partner_id.parent_id.name})\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        附件為欲向貴公司提出之詢價單 <strong>${object.name}</strong>\n"
+"        % if object.partner_ref:\n"
+"            編號: ${object.partner_ref}\n"
+"        % endif\n"
+"        自 ${object.company_id.name}.\n"
+"        <br/><br/>\n"
+"        若有任何問題請隨時提出討論!感謝!~\n"
+"        <br/><br/>\n"
+"        Best regards,\n"
+"    </p>\n"
+"</div>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_partner_kanban_view
@@ -154,6 +193,8 @@ msgid ""
 "<span class=\"o_form_label\" attrs=\"{'invisible': [('state','not in',('draft','sent'))]}\">Request for Quotation </span>\n"
 "                        <span class=\"o_form_label\" attrs=\"{'invisible': [('state','in',('draft','sent'))]}\">Purchase Order </span>"
 msgstr ""
+"<span class=\"o_form_label\" attrs=\"{'invisible': [('state','not in',('draft','sent'))]}\">詢價單 </span>\n"
+"                        <span class=\"o_form_label\" attrs=\"{'invisible': [('state','in',('draft','sent'))]}\">採購訂單 </span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
@@ -174,7 +215,7 @@ msgstr "<strong>小計</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Date Req.</strong>"
-msgstr "<strong>申請日期</strong>"
+msgstr "<strong>請求日期</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -289,6 +330,9 @@ msgid ""
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"根據產品配置，接收數量可以通過機制自動計算：\n"
+"  - 手動：數量在明細上手動設置\n"
+"  - 庫存移動：數量來自已確認的領料\n"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_needaction
@@ -303,7 +347,7 @@ msgstr "活動"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "活動異常圖示"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_state
@@ -328,12 +372,12 @@ msgstr "添加小節"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Add several variants to the purchase order from a grid"
-msgstr ""
+msgstr "從矩陣向採購訂單添加多個變體"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_manager
 msgid "Administrator"
-msgstr ""
+msgstr "管理員"
 
 #. module: purchase
 #: code:addons/purchase/controllers/portal.py:0
@@ -375,27 +419,27 @@ msgstr "附件數"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_move__purchase_vendor_bill_id
 msgid "Auto-complete"
-msgstr ""
+msgstr "自動計算"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_account_move__purchase_vendor_bill_id
 msgid "Auto-complete from a past bill / purchase order."
-msgstr ""
+msgstr "從過去的帳單/採購訂單自動完成。"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_account_move__purchase_id
 msgid "Auto-complete from a past purchase order."
-msgstr ""
+msgstr "從過去的採購訂單自動完成。"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Automatically lock confirmed orders to prevent edition"
-msgstr ""
+msgstr "自動鎖定已確認的訂單以防止版本"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__price_average
 msgid "Average Cost"
-msgstr ""
+msgstr "平均價格"
 
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_average_delivery_time
@@ -420,7 +464,7 @@ msgstr "帳單明細"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Billed"
-msgstr ""
+msgstr "取得帳單"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_invoiced
@@ -650,12 +694,12 @@ msgstr "本單據生成的日期"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__delay
 msgid "Days to Confirm"
-msgstr ""
+msgstr "確認天數"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__delay_pass
 msgid "Days to Receive"
-msgstr ""
+msgstr "接收天數"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -712,7 +756,7 @@ msgstr "直運地址"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Exception Activities"
-msgstr ""
+msgstr "異常活動"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
@@ -749,12 +793,12 @@ msgstr "關注人（業務夥伴）"
 #. module: purchase
 #: model:ir.model.constraint,message:purchase.constraint_purchase_order_line_non_accountable_null_fields
 msgid "Forbidden values on non-accountable purchase order line"
-msgstr ""
+msgstr "non-accountable 採購訂單行上的禁止值"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__invoice_status__invoiced
 msgid "Fully Billed"
-msgstr ""
+msgstr "取得全額帳單"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -806,7 +850,7 @@ msgstr "圖示"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "用於指示異常活動的圖示。"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__message_needaction
@@ -832,7 +876,7 @@ msgstr "如果啟用，啟動三重供應商帳單：專案必須收到才可以
 msgid ""
 "If installed, the product variants will be added to purchase orders through "
 "a grid entry."
-msgstr ""
+msgstr "如果已安裝，產品變型將通過網格條目添加到採購訂單中。"
 
 #. module: purchase
 #: code:addons/purchase/models/product.py:0
@@ -970,7 +1014,7 @@ msgstr "手工應付憑單"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_received_manual
 msgid "Manual Received Qty"
-msgstr ""
+msgstr "手動接收數量"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company__po_lead
@@ -1025,7 +1069,7 @@ msgstr "兩步驗證所需要的最小金額"
 #. module: purchase
 #: model:ir.model.constraint,message:purchase.constraint_purchase_order_line_accountable_required_fields
 msgid "Missing required fields on accountable purchase order line."
-msgstr ""
+msgstr "在 accountable採購訂單行上缺少必要欄位。"
 
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_monthly_purchases
@@ -1046,7 +1090,7 @@ msgstr "我的採購"
 #: code:addons/purchase/controllers/portal.py:0
 #, python-format
 msgid "Name"
-msgstr "名称"
+msgstr "名稱"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1104,7 +1148,7 @@ msgstr "動作數量"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "錯誤數量"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__message_needaction_counter
@@ -1266,7 +1310,7 @@ msgstr "產品分類"
 #: model:ir.model,name:purchase.model_product_template
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__product_tmpl_id
 msgid "Product Template"
-msgstr "产品模板"
+msgstr "產品模板"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_type
@@ -1329,7 +1373,7 @@ msgstr "採購說明"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_purchase_product_matrix
 msgid "Purchase Grid Entry"
-msgstr ""
+msgstr "採購矩陣項目"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company__po_lead
@@ -1493,7 +1537,7 @@ msgstr "輸入地址,如果您想直接把貨直接從供應商發給客戶。�
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_billed
 msgid "Qty Billed"
-msgstr ""
+msgstr "已取得帳單數量"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_ordered
@@ -1503,12 +1547,12 @@ msgstr "訂購數量"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_received
 msgid "Qty Received"
-msgstr ""
+msgstr "已收貨數量"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_to_be_billed
 msgid "Qty to be Billed"
-msgstr ""
+msgstr "等待帳單數量"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1559,7 +1603,7 @@ msgstr "RFQ_${(object.name or '').replace('/','_')}"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "RFQs"
-msgstr ""
+msgstr "詢價單"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
@@ -1569,7 +1613,7 @@ msgstr "詢價單和採購訂單"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__currency_rate
 msgid "Ratio between the purchase order currency and the company currency"
-msgstr ""
+msgstr "採購訂單幣別與公司幣別之間的比率"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1579,7 +1623,7 @@ msgstr "通過電子郵件重新發送"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_planned
 msgid "Receipt Date"
-msgstr ""
+msgstr "收據日期"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1594,7 +1638,7 @@ msgstr "已接收數量"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_received_method
 msgid "Received Qty Method"
-msgstr ""
+msgstr "接收數量方法"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1609,7 +1653,7 @@ msgstr "收貨數量："
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_config_settings__default_purchase_method__receive
 msgid "Received quantities"
-msgstr ""
+msgstr "接收數量"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
@@ -1671,7 +1715,7 @@ msgstr "詢價單#"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Request managers to approve orders above a minimum amount"
-msgstr ""
+msgstr "要求經理批准高於最低授權金額的訂單"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_rfq
@@ -1688,7 +1732,7 @@ msgstr "責任使用者"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "簡訊發送錯誤"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__date_planned
@@ -1907,7 +1951,7 @@ msgstr "這個預設值是適用於任何新產品創造。這可以在產品細
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "This note is added to purchase orders."
-msgstr ""
+msgstr "此注釋將添加到採購訂單中。"
 
 #. module: purchase
 #: code:addons/purchase/models/account_invoice.py:0
@@ -1969,7 +2013,7 @@ msgstr "合計金額"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "記錄的異常活動的類型。"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:0
@@ -2002,7 +2046,7 @@ msgstr "計量單位"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
 msgid "Units of Measure Categories"
-msgstr ""
+msgstr "度量類別的單位"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2058,7 +2102,7 @@ msgstr "表示貨幣數量的工具字段"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Variant Grid Entry"
-msgstr ""
+msgstr "產品變體矩陣添加項目"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__partner_id
@@ -2070,7 +2114,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Vendor"
-msgstr "供应商"
+msgstr "供應商"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__vendor_bill_id
@@ -2179,6 +2223,8 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service."
 msgstr ""
+"您必須為您銷售或購買的所有產品定義產品，\n"
+"                無論是可庫存產品、消耗品還是服務。"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_normal_action_puchased
@@ -2186,6 +2232,8 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "            whether it's a storable product, a consumable or a service."
 msgstr ""
+"您必須為您銷售或購買的所有產品定義產品，\n"
+"            無論是可庫存產品、消耗品或是服務。"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:0
@@ -2194,3 +2242,5 @@ msgid ""
 "Your quotation contains products from company %s whereas your quotation belongs to company %s. \n"
 " Please change the company of your quotation or remove the products from other companies (%s)."
 msgstr ""
+"多公司邏輯錯誤：您的報價單包含來自 %s公司 的產品，而您的報價單屬於 %s公司。\n"
+" 請更改您的報價的公司或從其他公司（%s）中刪除產品。"

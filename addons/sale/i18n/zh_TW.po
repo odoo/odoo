@@ -80,7 +80,7 @@ msgstr "&amp;times;"
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_pro_forma_invoice
 msgid "'PRO-FORMA - %s' % (object.name)"
-msgstr ""
+msgstr "'形式發票 - %s' % (object.name)"
 
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_saleorder
@@ -88,13 +88,15 @@ msgid ""
 "(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
 "'Order - %s' % (object.name)"
 msgstr ""
+"(object.state in ('draft', 'sent') and '報價單 - %s' % (object.name)) or '銷售訂單 "
+"- %s' % (object.name)"
 
 #. module: sale
 #: model:product.product,description_sale:sale.product_product_4e
 #: model:product.product,description_sale:sale.product_product_4f
 #: model:product.template,description_sale:sale.product_product_4e_product_template
 msgid "160x80cm, with large legs."
-msgstr ""
+msgstr "160x80cm，有粗壯桌腳。"
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_sale_confirmation
@@ -231,6 +233,137 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 12px;\">\n"
+"        您好,\n"
+"        <br/><br/>\n"
+"        % set transaction = object.get_portal_last_transaction()\n"
+"        您的銷售訂單 <strong>${object.name}</strong> 金額 <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"        % if object.state == 'sale' or (transaction and transaction.state in ('done', 'authorized')) :\n"
+"            已確認.<br/>\n"
+"            感謝您的信任!!\n"
+"        % elif transaction and transaction.state == 'pending' :\n"
+"            is pending. It will be confirmed when the payment is received.\n"
+"            % if object.reference:\n"
+"                您的付款號碼為 <strong>${object.reference}</strong>.\n"
+"            % endif\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        若有任何問題請隨時與我們聯繫!\n"
+"        <br/><br/>\n"
+"        % if object.website_id:\n"
+"            <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-collapse: collapse;\">\n"
+"                <tr style=\"border-bottom: 2px solid #dee2e6;\">\n"
+"                    <td width=\"18%\"><strong>產品</strong></td>\n"
+"                    <td/>\n"
+"                    <td><strong>數量</strong></td>\n"
+"                    <td width=\"10%\" align=\"center\"><strong>價格</strong></td>\n"
+"                </tr>\n"
+"                % for line in object.order_line:\n"
+"                    % if not line.is_delivery:\n"
+"                        <tr style=\"${loop.cycle('background-color: #f2f2f2', 'background-color: #ffffff')}\">\n"
+"                            % if line.display_type == 'line_section':\n"
+"                                <td colspan=\"4\"><strong>${line.name}</strong></td>\n"
+"                            % elif line.display_type == 'line_note':\n"
+"                                <td colspan=\"4\"><i>${line.name}</i></td>\n"
+"                            % else:\n"
+"                                <td style=\"width: 150px;\">\n"
+"                                    <img src=\"/web/image/product.product/${line.product_id.id}/image_128\" style=\"width: 64px; height: 64px; object-fit: contain;\" alt=\"Product image\"/>\n"
+"                                </td>\n"
+"                                <td align=\"left\">${line.product_id.name}</td>\n"
+"                                <td>${line.product_uom_qty}</td>\n"
+"                                % if object.user_id.has_group('account.group_show_line_subtotals_tax_excluded'):\n"
+"                                    <td align=\"right\">${format_amount(line.price_reduce_taxexcl, object.currency_id)}</td>\n"
+"                                % endif\n"
+"                                % if object.user_id.has_group('account.group_show_line_subtotals_tax_included'):\n"
+"                                    <td align=\"right\">${format_amount(line.price_reduce_taxinc, object.currency_id)}</td>\n"
+"                                % endif\n"
+"                            % endif\n"
+"                        </tr>\n"
+"                    % endif\n"
+"                % endfor\n"
+"            </table>\n"
+"            <table width=\"40%\" style=\"color: #454748; font-size: 12px; border-spacing: 0px 4px;\" align=\"right\">\n"
+"                % if object.carrier_id:\n"
+"                    <tr>\n"
+"                        <td style=\"border-top: 1px solid #dee2e6;\" align=\"right\"><strong>運費:</strong></td>\n"
+"                        <td style=\"border-top: 1px solid #dee2e6;\" align=\"right\">${format_amount(object.amount_delivery, object.currency_id)}</td>\n"
+"                    </tr>\n"
+"                    <tr>\n"
+"                        <td width=\"30%\" align=\"right\"><strong>小計:</strong></td>\n"
+"                        <td align=\"right\">${format_amount(object.amount_untaxed, object.currency_id)}</td>\n"
+"                    </tr>\n"
+"                % else:\n"
+"                    <tr>\n"
+"                        <td style=\"border-top: 1px solid #dee2e6;\" width=\"30%\" align=\"right\"><strong>小計:</strong></td>\n"
+"                        <td style=\"border-top: 1px solid #dee2e6;\" align=\"right\">${format_amount(object.amount_untaxed, object.currency_id)}</td>\n"
+"                    </tr>\n"
+"                % endif\n"
+"                <tr>\n"
+"                    <td align=\"right\"><strong>稅額:</strong></td>\n"
+"                    <td align=\"right\">${format_amount(object.amount_tax, object.currency_id)}</td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td style=\"border-top: 1px solid #dee2e6;\" align=\"right\"><strong>總計:</strong></td>\n"
+"                    <td style=\"border-top: 1px solid #dee2e6;\" align=\"right\">${format_amount(object.amount_total, object.currency_id)}</td>\n"
+"                </tr>\n"
+"            </table>\n"
+"            <br/>\n"
+"            <table width=\"100%\" style=\"color: #454748; font-size: 12px;\">\n"
+"                % if object.partner_invoice_id:\n"
+"                    <tr>\n"
+"                        <td style=\"padding-top: 10px;\">\n"
+"                            <strong>支付對象:</strong>\n"
+"                            ${object.partner_invoice_id.street or ''}\n"
+"                            ${object.partner_invoice_id.city or ''}\n"
+"                            ${object.partner_invoice_id.state_id.name or ''}\n"
+"                            ${object.partner_invoice_id.zip or ''}\n"
+"                            ${object.partner_invoice_id.country_id.name or ''}\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                    <tr>\n"
+"                        <td>\n"
+"                            <strong>付款條件:</strong>\n"
+"                            % if transaction.payment_token_id:\n"
+"                                ${transaction.payment_token_id.name}\n"
+"                            % else:\n"
+"                                ${transaction.acquirer_id.name}\n"
+"                            % endif\n"
+"                             (${format_amount(transaction.amount, object.currency_id)})\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                % endif\n"
+"                % if object.partner_shipping_id and not object.only_services:\n"
+"                    <tr>\n"
+"                        <td>\n"
+"                            <br/>\n"
+"                            <strong>貨運地址:</strong>\n"
+"                            ${object.partner_shipping_id.street or ''}\n"
+"                            ${object.partner_shipping_id.city or ''}\n"
+"                            ${object.partner_shipping_id.state_id.name or ''}\n"
+"                            ${object.partner_shipping_id.zip or ''}\n"
+"                            ${object.partner_shipping_id.country_id.name or ''}\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                    % if object.carrier_id:\n"
+"                        <tr>\n"
+"                            <td>\n"
+"                                <strong>貨運方式:</strong>\n"
+"                                ${object.carrier_id.name}\n"
+"                                % if object.carrier_id.fixed_price == 0.0:\n"
+"                                    (Free)\n"
+"                                % else:\n"
+"                                    (${format_amount(object.carrier_id.fixed_price, object.currency_id)})\n"
+"                                % endif\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    % endif\n"
+"                % endif\n"
+"            </table>\n"
+"        % endif\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model:mail.template,body_html:sale.email_template_edi_sale
@@ -261,11 +394,35 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        % set doc_name = 'quotation' if object.state in ('draft', 'sent') else 'order'\n"
+"        您好,\n"
+"        <br/><br/>\n"
+"        您的\n"
+"        % if ctx.get('proforma'):\n"
+"            形式發票為 ${doc_name} <strong>${object.name}</strong>\n"
+"            % if object.origin:\n"
+"                (編號: ${object.origin} )\n"
+"            % endif\n"
+"            金額為 <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong> 已寄出.\n"
+"        % else:\n"
+"            ${doc_name} <strong>${object.name}</strong>\n"
+"            % if object.origin:\n"
+"                (編號: ${object.origin} )\n"
+"            % endif\n"
+"            金額為 <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong> 以更新.\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        若有任何問題請隨時通知我們!.\n"
+"        <br/>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-clock-o\" aria-label=\"Dates\" title=\"Dates\"/>"
-msgstr "<i class=\"fa fa-clock-o\" aria-label=\"Dates\" title=\"Dates\"/>"
+msgstr "<i class=\"fa fa-clock-o\" aria-label=\"Dates\" title=\"日期\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -453,7 +610,7 @@ msgstr "<strong class=\"d-block mb-1\">應收憑單</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong class=\"d-block mb-1\">Shipping Address:</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mb-1\">貨運地址:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -469,7 +626,7 @@ msgstr "<strong class=\"text-muted\">銷售員</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong>Expiration Date:</strong>"
-msgstr "<STRONG>到期日期：</STRONG>"
+msgstr "<strong>到期日期：</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -566,7 +723,7 @@ msgid ""
 "A standard invoice is issued with all the order lines ready for invoicing,"
 "         according to their invoicing policy (based on ordered or delivered "
 "quantity)."
-msgstr ""
+msgstr "根據產品的開立應收憑單策略（基於訂購數量或交付數量），將發出標準應收憑單，其中所有訂單明細均已準備好開立應收憑單。"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -589,6 +746,9 @@ msgid ""
 "                when you want to sell extra hours because the initial\n"
 "                hours have already been used."
 msgstr ""
+"一個典型的示例是預付費服務時間，\n"
+"              如果您想出售額外的時間，\n"
+"              因為客戶已經用完了原始預估的時間。"
 
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
@@ -670,7 +830,7 @@ msgstr "活動"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "活動異常圖示"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_state
@@ -701,7 +861,7 @@ msgstr "添加小節"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Add several variants to an order from a grid"
-msgstr ""
+msgstr "從矩陣在訂單添加多個產品變體"
 
 #. module: sale
 #: model:res.groups,name:sale.group_delivery_invoice_address
@@ -712,7 +872,7 @@ msgstr "在銷售訂單中的地址"
 #: model:ir.model.fields,help:sale.field_product_attribute_value__is_custom
 #: model:ir.model.fields,help:sale.field_product_template_attribute_value__is_custom
 msgid "Allow users to input custom values for this attribute value"
-msgstr ""
+msgstr "允許使用者輸入此屬性值的自訂值"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -727,7 +887,7 @@ msgstr "允許您發送形式發票."
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_amazon
 msgid "Amazon Sync"
-msgstr ""
+msgstr "Amazon同步整合"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -889,7 +1049,7 @@ msgstr "類別"
 msgid ""
 "Check this box if you send quotations to your customers rather than "
 "confirming orders straight away."
-msgstr ""
+msgstr "如果您要向客戶發送報價單，而不是立即確認訂單，點選於此。"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_open_sale_onboarding_payment_acquirer_wizard
@@ -911,7 +1071,7 @@ msgstr "點選此處為您的報價添加一些產品或服務。"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Click to define an invoicing target"
-msgstr ""
+msgstr "點選以定義開立應收憑單想木"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1093,11 +1253,13 @@ msgid ""
 "Creation date of draft/sent orders,\n"
 "Confirmation date of confirmed orders."
 msgstr ""
+"草稿/已發送訂單的創建日期，\n"
+"確認訂單的確認日期。"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__stripe
 msgid "Credit card (via Stripe)"
-msgstr ""
+msgstr "信用卡（通過Stripe支付）"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__currency_id
@@ -1121,12 +1283,12 @@ msgstr "自訂"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__custom_value
 msgid "Custom Value"
-msgstr ""
+msgstr "自訂值"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_custom_attribute_value_ids
 msgid "Custom Values"
-msgstr ""
+msgstr "客製數值"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__manual
@@ -1199,7 +1361,7 @@ msgstr "客戶"
 #: model:product.product,name:sale.product_product_4f
 #: model:product.template,name:sale.product_product_4e_product_template
 msgid "Customizable Desk (CONFIG)"
-msgstr ""
+msgstr "可自訂的辦公桌（配置）"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
@@ -1229,7 +1391,7 @@ msgstr "訂單日期"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__signed_on
 msgid "Date of the signature."
-msgstr "簽署日期"
+msgstr "簽回日期"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__create_date
@@ -1319,6 +1481,7 @@ msgid ""
 "shipping, the shipping policy of the order will be taken into account to "
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
+"交貨日期，您可以向客戶承諾，在服務產品的情況下，從訂單行的最短提前期計算。在裝運的情況下，將考慮訂單的裝運策略，以使用訂單行的最短或最長提前期。"
 
 #. module: sale
 #: model:product.product,name:sale.advance_product_0
@@ -1487,7 +1650,7 @@ msgstr "期望交貨日期"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Expected:"
-msgstr ""
+msgstr "預期："
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__expense_policy
@@ -1519,7 +1682,7 @@ msgstr "外部連結"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_no_variant_attribute_value_ids
 msgid "Extra Values"
-msgstr ""
+msgstr "額外數值"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -1543,7 +1706,7 @@ msgid ""
 "Fiscal positions are used to adapt taxes and accounts for particular "
 "customers or sales orders/invoices.The default value comes from the "
 "customer."
-msgstr ""
+msgstr "財務政策用於調整特定客戶或銷售訂單/發票的稅設置和會計科目。可於客戶主檔中設置。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_follower_ids
@@ -1597,7 +1760,7 @@ msgstr "生成付款連結"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_generate_link
 msgid "Generate a Payment Link"
-msgstr ""
+msgstr "產生付款網址"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1643,7 +1806,7 @@ msgstr "有預付定金"
 msgid ""
 "Here you can set a specific HTML color index (e.g. #ff0000) to display the "
 "color if the attribute type is 'Color'."
-msgstr ""
+msgstr "在這裡，您可以設置特定的 HTML 色彩索引（例如#ff0000），如果屬性類型為\"Color\"，則可以顯示顏色。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1670,7 +1833,7 @@ msgstr "圖示"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "用於指示異常活動的圖示。"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_needaction
@@ -1702,12 +1865,12 @@ msgstr "如果我們在伺服器存儲您的支付信息，將自動支付訂閱
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
 msgid "If you change the pricelist, only newly added lines will be affected."
-msgstr ""
+msgstr "如果更改價目表，則只會影響新增加的產品明細。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Import Amazon orders and sync deliveries"
-msgstr ""
+msgstr "導入Amazon訂單並同步交貨"
 
 #. module: sale
 #: code:addons/sale/models/product_template.py:0
@@ -1945,7 +2108,7 @@ msgstr "日記帳分錄"
 #. module: sale
 #: model:ir.model,name:sale.model_account_move_line
 msgid "Journal Item"
-msgstr "日記帳專案"
+msgstr "日記帳明細"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_order_confirmation_state__just_done
@@ -2093,7 +2256,7 @@ msgstr "媒體"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__paypal_seller_account
 msgid "Merchant Account ID"
-msgstr ""
+msgstr "商戶帳戶 ID"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_error
@@ -2150,7 +2313,7 @@ msgstr "我的銷售訂單明細"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__name
 msgid "Name"
-msgstr "名称"
+msgstr "名稱"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__signed_by
@@ -2215,7 +2378,7 @@ msgstr "沒有找到增銷的訂單"
 #: code:addons/sale/static/src/js/variant_mixin.js:0
 #, python-format
 msgid "Not available with %s"
-msgstr ""
+msgstr "不適用於 %s"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_order_confirmation_state__not_done
@@ -2251,7 +2414,7 @@ msgstr "訂單被確認和產品交付給客戶之間的天數"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "錯誤數量"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_needaction_counter
@@ -2338,7 +2501,7 @@ msgstr "僅整數值是有效的。"
 #: model:ir.model.constraint,message:sale.constraint_product_attribute_custom_value_sol_custom_value_unique
 msgid ""
 "Only one Custom Value is allowed per Attribute Value per Sales Order Line."
-msgstr ""
+msgstr "每個銷售訂單明細之每個屬性值只允許一個自訂值。"
 
 #. module: sale
 #. openerp-web
@@ -2346,7 +2509,7 @@ msgstr ""
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Open Sales app to send your first quotation in a few clicks."
-msgstr ""
+msgstr "打開銷售管理，只需簡易操作即可發送您的第一個報價單。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -2468,12 +2631,12 @@ msgstr "其他信息"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__other
 msgid "Other payment acquirer"
-msgstr ""
+msgstr "其他付款平台"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__paypal_pdt_token
 msgid "PDT Identity Token"
-msgstr ""
+msgstr "PDT 標識 Token"
 
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_pro_forma_invoice
@@ -2578,7 +2741,7 @@ msgstr "Paypal用戶類型"
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "Please define an accounting sales journal for the company %s (%s)."
-msgstr ""
+msgstr "請為公司 %s （%s） 定義會計銷售日記帳。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_url
@@ -2659,7 +2822,7 @@ msgstr "產品屬性"
 #. module: sale
 #: model:ir.model,name:sale.model_product_attribute_custom_value
 msgid "Product Attribute Custom Value"
-msgstr ""
+msgstr "產品屬性客製值"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2683,12 +2846,12 @@ msgstr "數量"
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__product_tmpl_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_template_id
 msgid "Product Template"
-msgstr "产品模板"
+msgstr "產品模板"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_template_attribute_value
 msgid "Product Template Attribute Value"
-msgstr ""
+msgstr "產品範本屬性值"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_id
@@ -2830,7 +2993,7 @@ msgstr "報價單已發送"
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Quotation viewed by customer %s"
-msgstr ""
+msgstr "庫戶查看之報價單%s"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotations
@@ -2879,7 +3042,7 @@ msgstr "重新開立收款憑證費用"
 #: model:ir.model.fields,field_description:sale.field_product_product__visible_expense_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__visible_expense_policy
 msgid "Re-Invoice Policy visible"
-msgstr ""
+msgstr "重新開立應收憑單策略可見"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -2896,7 +3059,7 @@ msgstr "生成此銷售訂單相關的請求單據"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__delivered
 msgid "Regular invoice"
-msgstr ""
+msgstr "一般應收憑單"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -2906,7 +3069,7 @@ msgstr "拒絕這個報價單"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__remaining_validity_days
 msgid "Remaining Days Before Expiration"
-msgstr ""
+msgstr "過期前的剩餘天數"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_report
@@ -2942,7 +3105,7 @@ msgstr "訂單確認要求進行線上簽名"
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "Requested date is too soon."
-msgstr "要求日期太早."
+msgstr "要求日期過早."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_user_id
@@ -2953,7 +3116,7 @@ msgstr "責任使用者"
 #: model:ir.model.fields,help:sale.field_crm_team__invoiced_target
 msgid ""
 "Revenue target for the current month (untaxed total of confirmed invoices)."
-msgstr ""
+msgstr "當月的收入目標（已確認應收憑單的未稅金額）。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_form
@@ -2964,12 +3127,12 @@ msgstr "收入"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__invoiced_amount
 msgid "Revenues generated by the campaign"
-msgstr ""
+msgstr "行銷活動產生的收入"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "簡訊發送錯誤"
 
 #. module: sale
 #. openerp-web
@@ -3005,7 +3168,7 @@ msgstr "銷售付款獲得onboarding嚮導"
 #. module: sale
 #: model:utm.source,name:sale.utm_source_sale_order_0
 msgid "Sale Promotion 1"
-msgstr ""
+msgstr "促銷活動 1"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3075,7 +3238,7 @@ msgstr "銷售訂單已經確認"
 #: model:ir.model.fields,field_description:sale.field_account_analytic_line__so_line
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_line_view_form_readonly
 msgid "Sales Order Item"
-msgstr "銷售訂單專案"
+msgstr "銷售訂單明細"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
@@ -3235,12 +3398,12 @@ msgstr "選擇一個產品，或者直接創建"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Select product attributes and optional products from the sales order"
-msgstr ""
+msgstr "從銷售訂單中選擇產品屬性和可選產品"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Select specific invoice and delivery addresses"
-msgstr ""
+msgstr "選擇特定的寄送發票以及交貨位址"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__sale_line_warn
@@ -3266,7 +3429,7 @@ msgstr "可在每個包裝中多個單位銷售產品"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell variants of a product using attributes (size, color, etc.)"
-msgstr ""
+msgstr "使用屬性（尺寸、顏色等）建立銷售產品的變體"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3286,7 +3449,7 @@ msgstr "發送報價以測試客戶網站入口。"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_open_sale_onboarding_sample_quotation
 msgid "Send a sample quotation"
-msgstr ""
+msgstr "發送報價範例"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3587,19 +3750,19 @@ msgstr "銷售訂單相關的分析會計帳戶。"
 msgid ""
 "The delivery date is sooner than the expected date.You may be unable to "
 "honor the delivery date."
-msgstr ""
+msgstr "交貨日期早于預期日期。您可能無法遵守交貨日期。"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_attribute__display_type
 #: model:ir.model.fields,help:sale.field_product_attribute_value__display_type
 #: model:ir.model.fields,help:sale.field_product_template_attribute_value__display_type
 msgid "The display type used in the Product Configurator."
-msgstr ""
+msgstr "產品配置器中使用的顯示類型。"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__fixed_amount
 msgid "The fixed amount to be invoiced in advance, taxes excluded."
-msgstr ""
+msgstr "要預先開立應收憑單的固定金額，不包括稅款。"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice
@@ -3623,7 +3786,7 @@ msgstr "利潤率計算為產品銷售價格減去其詳細表格中的成本集
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "The order is not in a state requiring customer signature."
-msgstr ""
+msgstr "訂單未處於需要客戶簽名的狀態。"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__reference
@@ -3633,7 +3796,7 @@ msgstr "此銷售訂單的付款通信。"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount
 msgid "The percentage of amount to be invoiced in advance, taxes excluded."
-msgstr ""
+msgstr "預先開立應收憑單之百分比(不包含稅)"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
@@ -3816,7 +3979,7 @@ msgstr "稅額總計"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.view_quotation_tree
 msgid "Total Tax Excluded"
-msgstr ""
+msgstr "不包括稅之總金額"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
@@ -3843,7 +4006,7 @@ msgstr "類型名稱"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "記錄的異常活動的類型。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_ups
@@ -3904,7 +4067,7 @@ msgstr "計量單位"
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_uom_categ_form_action
 msgid "Units of Measure Categories"
-msgstr ""
+msgstr "度量類別的單位"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_auto_done_setting
@@ -3995,7 +4158,7 @@ msgstr "驗證訂單"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Variant Grid Entry"
-msgstr ""
+msgstr "產品變體矩陣添加項目"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
@@ -4103,6 +4266,8 @@ msgid ""
 "                than initially ordered, with an invoicing policy based on\n"
 "                ordered quantities."
 msgstr ""
+"當您交付的數量比最初客戶訂購的數量更多時，\n"
+"您可以使用基於訂購數量的開立應收憑單策略來更新銷售訂單。"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -4110,7 +4275,7 @@ msgstr ""
 msgid ""
 "You cannot change the type of a sale order line. Instead you should delete "
 "the current line and create a new line of the proper type."
-msgstr ""
+msgstr "您不能更改銷售訂單明細的類型。相反，您應該刪除目前項目並創建正確類型的新行。"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.product_template_action
@@ -4118,6 +4283,8 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                    whether it's a storable product, a consumable or a service."
 msgstr ""
+"您必須為您銷售或購買的所有產品設置產品，\n"
+"                    無論是可庫存、消耗品或是服務產品。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -4151,6 +4318,8 @@ msgid ""
 "Your quotation contains products from company %s whereas your quotation belongs to company %s. \n"
 " Please change the company of your quotation or remove the products from other companies (%s)."
 msgstr ""
+"多公司邏輯錯誤：您的報價單包含來自 %s公司 的產品，而您的報價單屬於 %s公司。\n"
+" 請更改您的報價的公司或從其他公司（%s）中刪除產品。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_bpost
@@ -4197,4 +4366,4 @@ msgstr "type: [(name, amount, base, formated amount, formated base)]"
 #: code:addons/sale/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "uninvoiced sales orders"
-msgstr ""
+msgstr "未開立應收憑單之銷售訂單"

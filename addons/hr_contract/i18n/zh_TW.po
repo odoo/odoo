@@ -5,8 +5,8 @@
 # Translators:
 # Martin Trigaux, 2019
 # Andy Cheng <andy.cheng@richsoda.com>, 2019
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
 # bluce Lan <bluce.lan@gmail.com>, 2019
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-09-09 12:17+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: bluce Lan <bluce.lan@gmail.com>, 2019\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,6 +32,10 @@ msgid ""
 "there is no running contract for this employee or employee's contract is "
 "about to expire.\"/>"
 msgstr ""
+"<i class=\"fa fa-exclamation-triangle text-danger\" role=\"img\" "
+"title=\"合同有問題。該員工沒有正在運行的合同，或者該員工的合同即將到期.\" aria-label=\"There is something "
+"wrong with the contract. Either there is no running contract for this "
+"employee or employee's contract is about to expire.\"/>"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
@@ -42,6 +46,9 @@ msgid ""
 "                                            Calendar Mismatch : The employee's calendar does not match this contract's calendar. This could lead to unexpected behaviors.\n"
 "                                        </span>"
 msgstr ""
+"<span attrs=\"{'invisible': ['|', ('calendar_mismatch', '=', False), ('state', '!=', 'open')]}\" class=\"fa fa-exclamation-triangle text-danger o_calendar_warning pl-3\">\n"
+"                                        </span>\n"
+"                                        <span class=\"o_calendar_warning_tooltip text-danger\">日曆不匹配 ：員工的日曆與本合同的日曆不匹配。這可能會導致意外的行為。</span>"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
@@ -52,6 +59,9 @@ msgid ""
 "                                Calendar Mismatch : The employee's calendar does not match its current contract calendar. This could lead to unexpected behaviors.\n"
 "                            </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('calendar_mismatch', '=', False)]}\" class=\"fa fa-exclamation-triangle text-danger o_calendar_warning pl-3\">\n"
+"                            </span>\n"
+"                            <span class=\"o_calendar_warning_tooltip text-danger\">日曆不匹配 ：員工的日曆與其當前合同日曆不匹配。這可能會導致意外的行為。</span>"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
@@ -81,7 +91,7 @@ msgstr "活動"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "活動異常圖示"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_state
@@ -91,7 +101,7 @@ msgstr "活動狀態"
 #. module: hr_contract
 #: model:res.groups,name:hr_contract.group_hr_contract_manager
 msgid "Administrator"
-msgstr ""
+msgstr "管理員"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__advantages
@@ -109,12 +119,12 @@ msgstr "津貼..."
 msgid ""
 "An employee can only have one contract at the same time. (Excluding Draft "
 "and Cancelled contracts)"
-msgstr ""
+msgstr "員工只能同時擁有一份合同。（不包括草稿和取消的合同）"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Archived"
-msgstr "封存"
+msgstr "歸檔"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_attachment_count
@@ -130,7 +140,7 @@ msgstr "銀行帳戶號碼"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__calendar_mismatch
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__calendar_mismatch
 msgid "Calendar Mismatch"
-msgstr ""
+msgstr "日曆不匹配"
 
 #. module: hr_contract
 #: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__state__cancel
@@ -179,7 +189,7 @@ msgstr "合同條款"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contract_warning
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_employee_view_search
 msgid "Contract Warning"
-msgstr ""
+msgstr "合同通知"
 
 #. module: hr_contract
 #: model:mail.message.subtype,description:hr_contract.mt_contract_pending
@@ -243,7 +253,7 @@ msgstr "目前合同"
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_employee__contract_id
 msgid "Current contract of the employee"
-msgstr ""
+msgstr "員工當前合同"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
@@ -273,7 +283,7 @@ msgstr "編輯合同"
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Employed"
-msgstr ""
+msgstr "受僱"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_employee
@@ -378,7 +388,7 @@ msgstr "圖示"
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "用於指示異常活動的圖示。"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_needaction
@@ -488,7 +498,7 @@ msgstr "動作數量"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "錯誤數量"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_needaction_counter
@@ -508,7 +518,7 @@ msgstr "未讀訊息的數量"
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__hr_responsible_id
 msgid "Person responsible for validating the employee's contracts."
-msgstr ""
+msgstr "負責驗證員工合同的人員。"
 
 #. module: hr_contract
 #: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__kanban_state__blocked
@@ -534,7 +544,7 @@ msgstr "運行中"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "簡訊發送錯誤"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
@@ -588,7 +598,7 @@ msgstr "待續約"
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "記錄的異常活動的類型。"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_unread
