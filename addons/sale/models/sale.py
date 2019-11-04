@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from functools import partial
 from itertools import groupby
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.misc import formatLang
 from odoo.osv import expression
@@ -698,6 +698,9 @@ class SaleOrder(models.Model):
         return super(SaleOrder, self.with_context(mail_post_autofollow=True)).message_post(**kwargs)
 
     def _send_order_confirmation_mail(self):
+        if self.env.su:
+            # sending mail in sudo was meant for it being sent from superuser
+            self = self.with_user(SUPERUSER_ID)
         template_id = self._find_mail_template(force_confirmation_template=True)
         if template_id:
             for order in self:
