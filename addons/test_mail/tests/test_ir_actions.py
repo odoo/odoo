@@ -19,13 +19,14 @@ class TestServerActionsEmail(BaseFunctionalTest, TestServerActionsBase):
 
     def test_action_followers(self):
         self.test_partner.message_unsubscribe(self.test_partner.message_partner_ids.ids)
+        random_partner = self.env['res.partner'].create({'name': 'Thierry Wololo'})
         self.action.write({
             'state': 'followers',
-            'partner_ids': [(4, self.env.ref('base.partner_admin').id), (4, self.env.ref('base.partner_demo').id)],
+            'partner_ids': [(4, self.env.ref('base.partner_admin').id), (4, random_partner.id)],
             'channel_ids': [(4, self.env.ref('mail.channel_all_employees').id)]
         })
         self.action.with_context(self.context).run()
-        self.assertEqual(self.test_partner.message_partner_ids, self.env.ref('base.partner_admin') | self.env.ref('base.partner_demo'))
+        self.assertEqual(self.test_partner.message_partner_ids, self.env.ref('base.partner_admin') | random_partner)
         self.assertEqual(self.test_partner.message_channel_ids, self.env.ref('mail.channel_all_employees'))
 
     def test_action_next_activity(self):
