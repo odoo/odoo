@@ -14,13 +14,15 @@ class TestGetCurrentWebsite(TransactionCase):
         Website = self.env['website']
 
         # clean initial state
-        website1 = Website.browse(1)
+        website1 = self.env.ref('website.default_website')
         website1.domain = ''
         website1.country_group_ids = False
 
-        website2 = Website.browse(2)
-        website2.domain = ''
-        website2.country_group_ids = False
+        website2 = Website.create({
+            'name': 'My Website 2',
+            'domain': '',
+            'country_group_ids': False,
+        })
 
         country1 = self.env['res.country'].create({'name': "My Country 1"})
         country2 = self.env['res.country'].create({'name': "My Country 2"})
@@ -114,7 +116,7 @@ class TestGetCurrentWebsite(TransactionCase):
         self.assertEqual(Website._get_current_website_id('site-1.com', False), website1.id)
 
     def test_02_signup_user_website_id(self):
-        website = self.env['website'].browse(1)
+        website = self.env.ref('website.default_website')
         website.specific_user_account = True
 
         user = self.env['res.users'].create({'website_id': website.id, 'login': 'sad@mail.com', 'name': 'Hope Fully'})
