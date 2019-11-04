@@ -4,12 +4,12 @@
     <!-- Generic Field Layout -->
     <t t-name="website_form.field">
         <div t-att-class="'row form-group form-field' + (field.custom ? ' o_website_form_custom' : '') + (field.required ? ' o_website_form_required' : '')">
-            <div class="col-lg-3 col-md-4">
+            <div t-att-class="field.formatInfo and field.formatInfo.labelClass || 'col-lg-3 col-md-4'">
                 <label class="col-form-label" t-att-for="field.name">
                     <t t-esc="field.string"/>
                 </label>
             </div>
-            <div class="col-lg-7 col-md-8">
+            <div t-att-class="field.formatInfo and field.formatInfo.contentClass || 'col-lg-7 col-md-8'">
                 <t t-raw="0"/>
             </div>
         </div>
