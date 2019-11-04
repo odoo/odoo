@@ -1,16 +1,19 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 try:
     from unittest.mock import patch
 except ImportError:
     from mock import patch
 
+from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 from odoo.tests import common
 
 def strip_prefix(prefix, names):
     size = len(prefix)
     return [name[size:] for name in names if name.startswith(prefix)]
 
-class TestOnChange(common.TransactionCase):
+class TestOnChange(SavepointCaseWithUserDemo):
 
     def setUp(self):
         super(TestOnChange, self).setUp()
@@ -229,7 +232,7 @@ class TestOnChange(common.TransactionCase):
 
     def test_onchange_one2many_multi(self):
         """ test the effect of multiple onchange methods on one2many fields """
-        partner1 = self.env.ref('base.res_partner_1')
+        partner1 = self.env['res.partner'].create({'name': 'A partner'})
         multi = self.env['test_new_api.multi'].create({'partner': partner1.id})
         line1 = multi.lines.create({'multi': multi.id})
 
@@ -255,7 +258,7 @@ class TestOnChange(common.TransactionCase):
         #   -> set 'partner' on all lines
         #   -> recompute 'name'
         #       -> set 'name' on all lines
-        partner2 = self.env.ref('base.res_partner_2')
+        partner2 = self.env['res.partner'].create({'name': 'A second partner'})
         values = {
             'name': partner1.name,
             'partner': partner2.id,             # this one just changed
@@ -326,7 +329,7 @@ class TestOnChange(common.TransactionCase):
     def test_onchange_specific(self):
         """ test the effect of field-specific onchange method """
         discussion = self.env.ref('test_new_api.discussion_0')
-        demo = self.env.ref('base.user_demo')
+        demo = self.user_demo
 
         field_onchange = self.Discussion._onchange_spec()
         self.assertEqual(field_onchange.get('moderator'), '1')
@@ -381,7 +384,7 @@ class TestOnChange(common.TransactionCase):
     def test_onchange_one2many_value(self):
         """ test the value of the one2many field inside the onchange """
         discussion = self.env.ref('test_new_api.discussion_0')
-        demo = self.env.ref('base.user_demo')
+        demo = self.user_demo
 
         field_onchange = self.Discussion._onchange_spec()
         self.assertEqual(field_onchange.get('messages'), '1')
@@ -406,7 +409,7 @@ class TestOnChange(common.TransactionCase):
     def test_onchange_one2many_with_domain_on_related_field(self):
         """ test the value of the one2many field when defined with a domain on a related field"""
         discussion = self.env.ref('test_new_api.discussion_0')
-        demo = self.env.ref('base.user_demo')
+        demo = self.user_demo
 
         # mimic UI behaviour, so we get subfields
         # (we need at least subfield: 'important_emails.important')
@@ -489,7 +492,7 @@ class TestOnChange(common.TransactionCase):
         self.assertEqual(result['value'], onchange_result)
 
         self.env.cache.invalidate()
-        Message = self.env(user=self.env.ref('base.user_demo').id)['test_new_api.related']
+        Message = self.env(user=self.user_demo.id)['test_new_api.related']
         result = Message.onchange(value, ['message', 'message_name', 'message_currency'], field_onchange)
 
         self.assertEqual(result['value'], onchange_result)

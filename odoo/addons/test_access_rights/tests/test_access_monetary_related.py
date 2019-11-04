@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import odoo.tests
+
+from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 
 
-class TestMonetaryAccess(odoo.tests.TransactionCase):
+class TestMonetaryAccess(TransactionCaseWithUserDemo):
 
     def test_monetary_access_create(self):
         """Monetary fields that depend on compute/related currency
@@ -13,7 +14,7 @@ class TestMonetaryAccess(odoo.tests.TransactionCase):
            as well as trigger spurious ACL errors.
         """
         user_admin = self.env.ref("base.user_admin")
-        user_demo = self.env.ref("base.user_demo").with_user(user_admin)
+        user_demo = self.user_demo.with_user(user_admin)
 
         # this would raise without the fix introduced in this commit
         new_user = user_demo.copy({'monetary': 1/3})

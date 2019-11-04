@@ -30,7 +30,6 @@ class TestFormCreate(TransactionCase):
             })
             partner_form.property_account_payable_id = property_account_payable_id
             partner_form.property_account_receivable_id = property_account_receivable_id
-            # [('internal_type', '=', 'payable'), ('deprecated', '=', False)]
         partner_form.save()
 
     def test_create_res_users(self):

@@ -6,6 +6,7 @@ import pkgutil
 import re
 
 from odoo import fields
+from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 from odoo.tests import common
 from odoo.tools.misc import mute_logger
 
@@ -1007,7 +1008,13 @@ class test_o2m_multiple(ImporterCase):
         self.assertEqual(set(values(b.child2)), set([21, 22, 23]))
 
 
-class test_realworld(common.TransactionCase):
+class test_realworld(SavepointCaseWithUserDemo):
+
+    @classmethod
+    def setUpClass(cls):
+        super(test_realworld, cls).setUpClass()
+        cls._load_partners_set()
+
     def test_bigfile(self):
         data = json.loads(pkgutil.get_data(self.__module__, 'contacts_big.json').decode('utf-8'))
         result = self.env['res.partner'].load(['name', 'mobile', 'email', 'image_1920'], data)
