@@ -168,7 +168,7 @@ var SnippetEditor = Widget.extend({
      * Makes the editor overlay cover the associated snippet.
      */
     cover: function () {
-        if (!this.isShown() || !this.$target.length) {
+        if (!this.isShown() || !this.$target.length || !this.$target.is(':visible')) {
             return;
         }
         var offset = this.$target.offset();
