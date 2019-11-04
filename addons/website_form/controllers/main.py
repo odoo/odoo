@@ -18,6 +18,18 @@ from odoo.addons.base.models.ir_qweb_fields import nl2br
 
 class WebsiteForm(http.Controller):
 
+    # Fetch the relational records for provided fields
+    @http.route('/website_form/get_updated_fields', type='json', auth="public", website=True)
+    def website_form_get_updated_fields(self, model, fields):
+        model = request.env[model]
+        fields = model.fields_get(allfields=fields)
+
+        for fname, props in fields.items():
+            if props.get('relation') and props['relation'] != 'ir.attachment' and request.env[props['relation']].check_access_rights('read', raise_exception=False):
+                    fields[fname]['records'] = request.env[props['relation']].search_read(props.get('domain'), ['display_name'])
+
+        return fields
+
     # Check and insert values from the form on the model <model>
     @http.route('/website_form/<string:model_name>', type='http', auth="public", methods=['POST'], website=True)
     def website_form(self, model_name, **kwargs):

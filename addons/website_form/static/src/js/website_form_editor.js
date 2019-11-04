@@ -556,13 +556,8 @@ odoo.define('website_form_editor', function (require) {
 
                 // Replace this field by the new one
                 var $new_select = $(qweb.render("website_form.field_many2one", {field: field}));
-                // Reapply the custom style classes
-                if (this.$target.hasClass('o_website_form_required_custom')) {
-                    $new_select.addClass('o_website_form_required_custom');
-                }
-                if (this.$target.hasClass('o_website_form_field_hidden')) {
-                    $new_select.addClass('o_website_form_field_hidden');
-                }
+                // Reapply the style classes
+                $new_select.attr('class', this.$target.attr('class'));
                 this.$target.replaceWith($new_select);
             }
         }

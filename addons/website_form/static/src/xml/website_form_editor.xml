@@ -3,7 +3,8 @@
 
     <!-- Generic Field Layout -->
     <t t-name="website_form.field">
-        <div t-att-class="'row form-group form-field' + (field.custom ? ' o_website_form_custom' : '') + (field.required ? ' o_website_form_required' : '')">
+        <t t-set='isDynamic' t-value="!field.custom and _.contains(['many2one', 'many2many', 'one2many', 'selection'], field.type) ? true: false"/>
+        <div t-att-class="'row form-group form-field' + (field.custom ? ' o_website_form_custom' : '') + (field.required ? ' o_website_form_required' : '') + (isDynamic ? ' o_website_form_update': '')">
             <div t-att-class="field.formatInfo and field.formatInfo.labelClass || 'col-lg-3 col-md-4'">
                 <label class="col-form-label" t-att-for="field.name">
                     <t t-esc="field.string"/>
@@ -142,7 +143,8 @@
     <!-- Selection Field -->
     <t t-name="website_form.field_selection">
         <t t-call="website_form.field">
-            <div class="o_website_form_flex" data-display="horizontal">
+            <t t-set="display" t-value="field.display || 'horizontal'"/>
+            <div t-att-class="'o_website_form_flex' + (display === 'vertical' ? ' o_website_form_flex_fw' : '')" t-att-data-display="display">
                 <t t-foreach="field.selection" t-as="option">
                     <div class="radio o_website_form_flex_item">
                         <label class="col-form-label">
@@ -194,7 +196,8 @@
         <!-- Generic one2many -->
         <t t-if="field.relation != 'ir.attachment'">
             <t t-call="website_form.field">
-                <div class="o_website_form_flex" data-display="horizontal">
+                <t t-set="display" t-value="field.display || 'horizontal'"/>
+                <div t-att-class="'o_website_form_flex' + (display === 'vertical' ? ' o_website_form_flex_fw' : '')" t-att-data-display="display">
                     <t t-if="!field.records">
                         <input
                             class="o_website_form_input"
