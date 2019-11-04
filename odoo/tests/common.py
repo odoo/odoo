@@ -575,23 +575,19 @@ class SingleTransactionCase(BaseCase):
 
     @classmethod
     def setUpClass(cls):
-        super(SingleTransactionCase, cls).setUpClass()
+        super().setUpClass()
         cls.registry = odoo.registry(get_db_name())
+        cls.addClassCleanup(cls.registry.clear_caches)
+
         cls.cr = cls.registry.cursor()
+        cls.addClassCleanup(cls.cr.close)
+
         cls.env = api.Environment(cls.cr, odoo.SUPERUSER_ID, {})
+        cls.addClassCleanup(cls.env.reset)
 
     def setUp(self):
         super(SingleTransactionCase, self).setUp()
         self.env.user.flush()
-
-    @classmethod
-    def tearDownClass(cls):
-        # rollback and close the cursor, and reset the environments
-        cls.registry.clear_caches()
-        cls.env.reset()
-        cls.cr.rollback()
-        cls.cr.close()
-        super(SingleTransactionCase, cls).tearDownClass()
 
 
 savepoint_seq = itertools.count()
@@ -607,20 +603,20 @@ class SavepointCase(SingleTransactionCase):
     the test data either.
     """
     def setUp(self):
-        super(SavepointCase, self).setUp()
-        self._savepoint_id = next(savepoint_seq)
-        self.cr.execute('SAVEPOINT test_%d' % self._savepoint_id)
+        super().setUp()
+
         # restore environments after the test to avoid invoking flush() with an
         # invalid environment (inexistent user id) from another test
         envs = self.env.all.envs
         self.addCleanup(envs.update, list(envs))
         self.addCleanup(envs.clear)
 
-    def tearDown(self):
-        self.cr.execute('ROLLBACK TO SAVEPOINT test_%d' % self._savepoint_id)
-        self.env.clear()
-        self.registry.clear_caches()
-        super(SavepointCase, self).tearDown()
+        self.addCleanup(self.registry.clear_caches)
+        self.addCleanup(self.env.clear)
+
+        self._savepoint_id = next(savepoint_seq)
+        self.cr.execute('SAVEPOINT test_%d' % self._savepoint_id)
+        self.addCleanup(self.cr.execute, 'ROLLBACK TO SAVEPOINT test_%d' % self._savepoint_id)
 
 
 class ChromeBrowserException(Exception):
@@ -1221,17 +1217,13 @@ class HttpCase(TransactionCase):
         # start browser on demand
         if cls.browser is None:
             cls.browser = ChromeBrowser(cls._logger, cls.browser_size, cls.__name__)
+            cls.addClassCleanup(cls.terminate_browser)
 
     @classmethod
     def terminate_browser(cls):
         if cls.browser:
             cls.browser.stop()
             cls.browser = None
-
-    @classmethod
-    def tearDownClass(cls):
-        cls.terminate_browser()
-        super(HttpCase, cls).tearDownClass()
 
     def setUp(self):
         super(HttpCase, self).setUp()
