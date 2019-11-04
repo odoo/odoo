@@ -266,11 +266,28 @@ class TestSaleOrder(TestCommonSaleNoChart):
 
     def test_so_create_multicompany(self):
         """Check that only taxes of the right company are applied on the lines."""
-        user_demo = self.env.ref('base.user_demo')
+
+        # Preparing test Data
         company_1 = self.env.ref('base.main_company')
         company_2 = self.env['res.company'].create({
             'name': 'company 2',
             'parent_id': company_1.id,
+        })
+
+        user_demo = self.env['res.users'].create({
+            'login': 'zizizmyuser',
+            'password': 'zizizmyuser',
+            'partner_id': self.env['res.partner'].create({'name': 'Zizizmypartner'}).id,
+            'company_ids': [(6, False, [company_1.id])],
+            'company_id': company_1.id,
+            'groups_id': [(6, 0, [
+                self.env.ref('base.group_user').id,
+                self.env.ref('base.group_partner_manager').id,
+                self.env.ref('sales_team.group_sale_manager').id])]})
+
+        so_partner = self.env['res.partner'].create({'name': 'SO Partner'})
+        so_partner.write({
+            'property_account_position_id': False,
         })
 
         tax_company_1 = self.env['account.tax'].create({
@@ -291,7 +308,7 @@ class TestSaleOrder(TestCommonSaleNoChart):
         })
 
         so_1 = self.env['sale.order'].with_user(user_demo.id).create({
-            'partner_id': self.env.ref('base.res_partner_2').id,
+            'partner_id': self.env['res.partner'].create({'name': 'A partner'}).id,
             'company_id': company_1.id,
         })
         so_1.write({
