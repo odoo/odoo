@@ -106,9 +106,7 @@ var EditorMenuBar = Widget.extend({
 
         // Snippets menu
         if (self.snippetsMenu) {
-            // TODO improve this, the editor can be relocated so here,
-            // 'insertAfter(this.$el)' won't work.
-            defs.push(this.snippetsMenu.appendTo(this.$el.parent()));
+            defs.push(this.snippetsMenu.insertAfter(this.$el));
         }
         this.rte.editable().find('*').off('mousedown mouseup click');
 

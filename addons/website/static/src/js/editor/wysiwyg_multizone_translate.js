@@ -97,7 +97,7 @@ var WysiwygTranslate = WysiwygMultizone.extend({
         var promise = this.editor.prependTo(this.$editor[0].ownerDocument.body);
 
         return promise.then(function () {
-            self.options.toolbarHandler.append(self.editor.$el);
+            self._relocateEditorBar();
             var attrs = ['placeholder', 'title', 'alt'];
             _.each(attrs, function (attr) {
                 self._getEditableArea().filter('[' + attr + '*="data-oe-translation-id="]').filter(':empty, input, select, textarea, img').each(function () {
