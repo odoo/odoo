@@ -506,19 +506,16 @@ class TransactionCase(BaseCase):
     def setUp(self):
         super(TransactionCase, self).setUp()
         self.registry = odoo.registry(get_db_name())
+        self.addCleanup(self.registry.reset_changes)
+        self.addCleanup(self.registry.clear_caches)
+
         #: current transaction's cursor
         self.cr = self.cursor()
+        self.addCleanup(self.cr.close)
+
         #: :class:`~odoo.api.Environment` for the current test case
         self.env = api.Environment(self.cr, odoo.SUPERUSER_ID, {})
-
-        @self.addCleanup
-        def reset():
-            # rollback and close the cursor, and reset the environments
-            self.registry.clear_caches()
-            self.registry.reset_changes()
-            self.env.reset()
-            self.cr.rollback()
-            self.cr.close()
+        self.addCleanup(self.env.reset)
 
         self.patch(type(self.env['res.partner']), '_get_gravatar_image', lambda *a: False)
 
@@ -541,19 +538,15 @@ class SingleTransactionCase(BaseCase):
 
     @classmethod
     def setUpClass(cls):
-        super(SingleTransactionCase, cls).setUpClass()
+        super().setUpClass()
         cls.registry = odoo.registry(get_db_name())
-        cls.cr = cls.registry.cursor()
-        cls.env = api.Environment(cls.cr, odoo.SUPERUSER_ID, {})
+        cls.addClassCleanup(cls.registry.clear_caches)
 
-    @classmethod
-    def tearDownClass(cls):
-        # rollback and close the cursor, and reset the environments
-        cls.registry.clear_caches()
-        cls.env.reset()
-        cls.cr.rollback()
-        cls.cr.close()
-        super(SingleTransactionCase, cls).tearDownClass()
+        cls.cr = cls.registry.cursor()
+        cls.addClassCleanup(cls.cr.close)
+
+        cls.env = api.Environment(cls.cr, odoo.SUPERUSER_ID, {})
+        cls.addClassCleanup(cls.env.reset)
 
 
 savepoint_seq = itertools.count()
@@ -570,14 +563,18 @@ class SavepointCase(SingleTransactionCase):
     """
     def setUp(self):
         super(SavepointCase, self).setUp()
+        # restore environments after the test to avoid invoking flush() with an
+        # invalid environment (inexistent user id) from another test
+        envs = self.env.all.envs
+        self.addCleanup(envs.update, list(envs))
+        self.addCleanup(envs.clear)
+
+        self.addCleanup(self.registry.clear_caches)
+        self.addCleanup(self.env.clear)
+
         self._savepoint_id = next(savepoint_seq)
         self.cr.execute('SAVEPOINT test_%d' % self._savepoint_id)
-
-    def tearDown(self):
-        self.cr.execute('ROLLBACK TO SAVEPOINT test_%d' % self._savepoint_id)
-        self.env.clear()
-        self.registry.clear_caches()
-        super(SavepointCase, self).tearDown()
+        self.addCleanup(self.cr.execute, 'ROLLBACK TO SAVEPOINT test_%d' % self._savepoint_id)
 
 
 class ChromeBrowser():
@@ -977,17 +974,17 @@ class HttpCase(TransactionCase):
         self._logger = logging.getLogger('%s.%s' % (cls.__module__, cls.__name__))
 
     @classmethod
+    def terminate_browser(cls):
+        if cls.browser:
+            cls.browser.stop()
+            cls.browser = None
+
+    @classmethod
     def start_browser(cls, logger):
         # start browser on demand
         if cls.browser is None:
             cls.browser = ChromeBrowser(logger, cls.browser_size)
-
-    @classmethod
-    def tearDownClass(cls):
-        if cls.browser:
-            cls.browser.stop()
-            cls.browser = None
-        super(HttpCase, cls).tearDownClass()
+            cls.addClassCleanup(cls.terminate_browser)
 
     def setUp(self):
         super(HttpCase, self).setUp()
