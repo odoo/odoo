@@ -145,8 +145,37 @@ var PortalComposer = publicWidget.Widget.extend({
      * @private
      * @returns {Promise}
      */
-    _onSubmitButtonClick: function () {
-        return new Promise(function (resolve, reject) {});
+    _onSubmitButtonClick: function (ev) {
+        var self = this,
+            $form = this.$el.find('form.o_portal_chatter_composer_form'),
+            route = $form.attr('action');
+        return new Promise(function (resolve, reject) {
+            if (route === '/mail/chatter_post') {
+                ev.preventDefault();
+                var data = $form.serializeArray();
+                self._rpc({
+                    route: route,
+                    params: _.object(_.pluck(data, 'name'), _.pluck(data, 'value')),
+                }).then(function (url) {
+                    var $parent = self.getParent();
+                    if (self.options.is_portal_chatter) {
+                        $parent._chatterInit().then(function (result) {
+                            // reset chatter widget
+                            if (self.options['display_composer']) {
+                                $parent._composer.destroy();
+                                $parent.start();
+                                $parent.renderElement();
+                                $parent._composer.replace($parent.$('.o_portal_chatter_composer'));
+                            }
+                        });
+                    }
+                    // for if chatter/composer open inside the BS modal
+                    if ($parent.$el.is('.modal.fade.modal_shown')) {
+                        window.location.reload();
+                    }
+                });
+            }
+        });
     },
 
     //--------------------------------------------------------------------------
