@@ -2,13 +2,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 
+from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.tests.common import TransactionCase, users, warmup
 from odoo.tests import tagged
 from odoo.tools import mute_logger, formataddr
 
 
 @tagged('mail_performance')
-class BaseMailPerformance(TransactionCase):
+class BaseMailPerformance(TransactionCaseWithUserDemo):
 
     def setUp(self):
         super(BaseMailPerformance, self).setUp()
@@ -33,6 +34,49 @@ class BaseMailPerformance(TransactionCase):
 
 @tagged('mail_performance')
 class TestMailPerformance(BaseMailPerformance):
+
+    def setUp(self):
+        super(TestMailPerformance, self).setUp()
+
+        self.res_partner_3 = self.env['res.partner'].create({
+            'name': 'Gemini Furniture',
+            'email': 'gemini.furniture39@example.com',
+        })
+        self.res_partner_4 = self.env['res.partner'].create({
+            'name': 'Ready Mat',
+            'email': 'ready.mat28@example.com',
+        })
+        self.res_partner_10 = self.env['res.partner'].create({
+            'name': 'The Jackson Group',
+            'email': 'jackson.group82@example.com',
+        })
+        self.res_partner_12 = self.env['res.partner'].create({
+            'name': 'Azure Interior',
+            'email': 'azure.Interior24@example.com',
+        })
+        self.env['test_performance.mail'].create([
+            {
+                'name': 'Object 0',
+                'value': 0,
+                'partner_id': self.res_partner_3.id,
+            }, {
+                'name': 'Object 1',
+                'value': 10,
+                'partner_id': self.res_partner_3.id,
+            }, {
+                'name': 'Object 2',
+                'value': 20,
+                'partner_id': self.res_partner_4.id,
+            }, {
+                'name': 'Object 3',
+                'value': 30,
+                'partner_id': self.res_partner_10.id,
+            }, {
+                'name': 'Object 4',
+                'value': 40,
+                'partner_id': self.res_partner_12.id,
+            }
+        ])
 
     @users('__system__', 'demo')
     @warmup
@@ -84,7 +128,7 @@ class TestMailPerformance(BaseMailPerformance):
             'name': 'Test',
             'track': 'Y',
             'value': 40,
-            'partner_id': self.env.ref('base.res_partner_12').id,
+            'partner_id': self.res_partner_12.id,
         })
 
         with self.assertQueryCount(__system__=3, demo=3):
