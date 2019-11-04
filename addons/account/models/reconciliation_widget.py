@@ -478,11 +478,13 @@ class AccountReconciliation(models.AbstractModel):
         """
 
         domain_reconciliation = [
-            '&', '&',
+            '&',
             ('statement_line_id', '=', False),
             ('account_id', 'in', aml_accounts),
-            ('payment_id', '<>', False)
         ]
+        if st_line.company_id.account_bank_reconciliation_start:
+            domain_reconciliation = expression.AND([domain_reconciliation, [
+                ('date', '>=', st_line.company_id.account_bank_reconciliation_start)]])
 
         # default domain matching
         domain_matching = expression.AND([
@@ -514,8 +516,6 @@ class AccountReconciliation(models.AbstractModel):
         # filter on account.move.line having the same company as the statement line
         domain = expression.AND([domain, [('company_id', '=', st_line.company_id.id)]])
 
-        if st_line.company_id.account_bank_reconciliation_start:
-            domain = expression.AND([domain, [('date', '>=', st_line.company_id.account_bank_reconciliation_start)]])
         return domain
 
     @api.model
