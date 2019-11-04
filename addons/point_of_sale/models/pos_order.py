@@ -739,6 +739,7 @@ class PosOrderLine(models.Model):
 
     @api.model
     def create(self, values):
+        values = {k: v for k, v in values.items() if k in self}  # clean up JS fields
         if values.get('order_id') and not values.get('name'):
             # set name based on the sequence specified on the config
             config_id = self.order_id.browse(values['order_id']).session_id.config_id.id
