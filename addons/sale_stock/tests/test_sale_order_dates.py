@@ -36,7 +36,7 @@ class TestSaleExpectedDate(common.TransactionCase):
         self.env['stock.quant']._update_available_quantity(product_B, self.env.ref('stock.stock_location_stock'), 10)
         self.env['stock.quant']._update_available_quantity(product_C, self.env.ref('stock.stock_location_stock'), 10)
         sale_order = self.env['sale.order'].create({
-            'partner_id': self.ref('base.res_partner_3'),
+            'partner_id': self.env['res.partner'].create({'name': 'A Customer'}).id,
             'picking_policy': 'direct',
             'order_line': [
                 (0, 0, {'name': product_A.name, 'product_id': product_A.id, 'customer_lead': product_A.sale_delay, 'product_uom_qty': 5}),
@@ -90,7 +90,19 @@ class TestSaleExpectedDate(common.TransactionCase):
 
         # In order to test the Commitment Date feature in Sales Orders in Odoo,
         # I copy a demo Sales Order with committed Date on 2010-07-12
-        new_order = self.env.ref('sale.sale_order_6').copy({'commitment_date': '2010-07-12'})
+        new_order = self.env['sale.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'A Partner'}).id,
+            'order_line': [(0, 0, {
+                'name': "A product",
+                'product_id': self.env['product.product'].create({
+                    'name': 'A product',
+                    'type': 'product',
+                }).id,
+                'product_uom_qty': 1,
+                'price_unit': 750,
+            })],
+            'commitment_date': '2010-07-12',
+        })
         # I confirm the Sales Order.
         new_order.action_confirm()
         # I verify that the Procurements and Stock Moves have been generated with the correct date
