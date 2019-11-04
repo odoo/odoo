@@ -78,7 +78,7 @@
                             </page>
                             <page string="Analytic Lines" groups="analytic.group_analytic_accounting">
                                 <field name="date" invisible="1"/>
-                                <field name="analytic_line_ids" context="{'default_general_account_id':account_id, 'default_name': name, 'default_date':date, 'amount': (debit or 0.0)-(credit or 0.0)}"/>
+                                <field name="analytic_line_ids" context="{'tree_view_ref':'analytic.view_account_analytic_line_tree', 'default_general_account_id':account_id, 'default_name': name, 'default_date':date, 'amount': (debit or 0.0)-(credit or 0.0)}"/>
                             </page>
                         </notebook>
                     </sheet>
