@@ -10,6 +10,13 @@ class TestCommonTimesheet(TransactionCase):
     def setUp(self):
         super(TestCommonTimesheet, self).setUp()
 
+        # Crappy hack to disable the rule from timesheet grid, if it exists
+        # The registry doesn't contain the field timesheet_manager_id.
+        # but there is an ir.rule about it, crashing during its evaluation
+        rule = self.env.ref('timesheet_grid.hr_timesheet_rule_approver_update', raise_if_not_found=False)
+        if rule:
+            rule.active = False
+        
         # customer partner
         self.partner = self.env['res.partner'].create({
             'name': 'Customer Task',
