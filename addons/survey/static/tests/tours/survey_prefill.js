@@ -5,7 +5,7 @@ var tour = require('web_tour.tour');
 
 tour.register('test_survey_prefill', {
     test: true,
-    url: '/survey/start/b137640d-14d4-4748-9ef6-344ca256531e'
+    url: '/survey/start/b137640d-14d4-4748-9ef6-344caaaaaae'
 },
 [{      // Page-1
         trigger: 'a.btn.btn-primary.btn-lg:contains("Start Survey")',
@@ -17,7 +17,10 @@ tour.register('test_survey_prefill', {
         run: 'text 05/05/1980',
     }, { // Question: How frequently do you buy products online ?
         trigger: 'div.js_question-wrapper:contains("How frequently do you buy products online ?") select',
-        run: 'text 2', // value 2 = 'Once a week'
+        run: function() {
+            var optionID = $('option:contains("Once a week")').val();
+            $('div.js_question-wrapper:contains("How frequently do you buy products online ?") select').val(optionID);
+        },
     }, { // Question: How many times did you order products on our website ?
         trigger: 'div.js_question-wrapper:contains("How many times did you order products on our website ?") input',
         run: 'text 42',
