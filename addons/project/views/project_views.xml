@@ -491,7 +491,12 @@
                                     <field name="partner_id"/>
                                     <field name="email_from" invisible="1"/>
                                     <field name="email_cc" groups="base.group_no_one"/>
-                                    <field name="parent_id" attrs="{'invisible' : [('subtask_count', '>', 0)]}" groups="project.group_subtask_project"/>
+                                    <field
+                                        name="parent_id"
+                                        domain="[('parent_id', '=', False)]"
+                                        attrs="{'invisible' : [('subtask_count', '>', 0)]}"
+                                        groups="project.group_subtask_project"
+                                    />
                                     <field name="child_ids" invisible="1" />
                                     <field name="subtask_project_id" invisible="1" />
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
