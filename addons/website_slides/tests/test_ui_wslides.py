@@ -51,7 +51,7 @@ class TestUi(tests.HttpCase):
             login=user_portal.login)
 
 
-@tests.common.tagged('external', '-standard')
+@tests.common.tagged('external', 'post_install', '-standard', '-at_install')
 class TestUiYoutube(tests.HttpCase):
 
     def test_course_member_yt_employee(self):
