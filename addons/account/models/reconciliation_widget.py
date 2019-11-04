@@ -544,11 +544,13 @@ class AccountReconciliation(models.AbstractModel):
         excluded_ids.extend(to_check_excluded)
 
         domain_reconciliation = [
-            '&', '&',
+            '&',
             ('statement_line_id', '=', False),
             ('account_id', 'in', aml_accounts),
-            ('payment_id', '<>', False)
         ]
+        if st_line.company_id.account_bank_reconciliation_start:
+            domain_reconciliation = expression.AND([domain_reconciliation, [
+                ('date', '>=', st_line.company_id.account_bank_reconciliation_start)]])
 
         # default domain matching
         domain_matching = expression.AND([
@@ -589,8 +591,6 @@ class AccountReconciliation(models.AbstractModel):
         domain = expression.AND([domain, [('company_id', '=', st_line.company_id.id)]])
         domain = expression.AND([domain, [('move_id.state', '!=', 'draft')]])
 
-        if st_line.company_id.account_bank_reconciliation_start:
-            domain = expression.AND([domain, [('date', '>=', st_line.company_id.account_bank_reconciliation_start)]])
         return domain
 
     @api.model
