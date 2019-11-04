@@ -8,6 +8,12 @@ class TestProcurementException(common.TransactionCase):
 
     def test_00_procurement_exception(self):
 
+        res_partner_2 = self.env['res.partner'].create({'name': 'My Test Partner'})
+        res_partner_address = self.env['res.partner'].create({
+            'name': 'My Test Partner Address',
+            'parent_id': res_partner_2.id,
+        })
+
         # I create a product with no supplier define for it.
         product_form = Form(self.env['product.product'])
         product_form.name = 'product with no seller'
@@ -18,12 +24,11 @@ class TestProcurementException(common.TransactionCase):
         std_price_wiz = Form(self.env['stock.change.standard.price'].with_context(active_id=product_with_no_seller.id, active_model='product.product'))
         std_price_wiz.new_price = 70.0
         std_price_wiz.save()
-
         # I create a sales order with this product with route dropship.
         so_form = Form(self.env['sale.order'])
-        so_form.partner_id = self.env.ref('base.res_partner_2')
-        so_form.partner_invoice_id = self.env.ref('base.res_partner_address_3')
-        so_form.partner_shipping_id = self.env.ref('base.res_partner_address_3')
+        so_form.partner_id = res_partner_2
+        so_form.partner_invoice_id = res_partner_address
+        so_form.partner_shipping_id = res_partner_address
         so_form.payment_term_id = self.env.ref('account.account_payment_term_end_following_month')
         with so_form.order_line.new() as line:
             line.product_id = product_with_no_seller
@@ -39,7 +44,7 @@ class TestProcurementException(common.TransactionCase):
         with Form(product_with_no_seller) as f:
             with f.seller_ids.new() as seller:
                 seller.delay = 1
-                seller.name = self.env.ref('base.res_partner_2')
+                seller.name = res_partner_2
                 seller.min_qty = 2.0
 
         # I confirm the sales order, no error this time
