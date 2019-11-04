@@ -5,7 +5,7 @@ import logging
 from datetime import datetime
 from werkzeug.exceptions import Forbidden, NotFound
 
-from odoo import fields, http, tools, _
+from odoo import fields, http, SUPERUSER_ID, tools, _
 from odoo.http import request
 from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.addons.http_routing.models.ir_http import slug
@@ -110,7 +110,7 @@ class WebsiteSaleForm(WebsiteForm):
                 'no_auto_thread': False,
                 'res_id': order.id,
             }
-            request.env['mail.message'].sudo().create(values)
+            request.env['mail.message'].with_user(SUPERUSER_ID).create(values)
 
         if data['attachments']:
             self.insert_attachment(model_record, order.id, data['attachments'])
