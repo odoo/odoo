@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo import tools
-from odoo.tests import common, Form
+from odoo.addons.account.tests.account_minimal_test import AccountMinimalTest
+from odoo.tests import Form
 from odoo.modules.module import get_resource_path
 
 
-class TestProductMargin(common.TransactionCase):
+class TestProductMargin(AccountMinimalTest):
 
     def create_account_invoice(self, invoice_type, partner, product, quantity=0.0, price_unit=0.0):
         """ Create an invoice as in a view by triggering its onchange methods"""
@@ -19,19 +21,17 @@ class TestProductMargin(common.TransactionCase):
 
         invoice = invoice_form.save()
         invoice.post()
-        return invoice
 
     def test_product_margin(self):
         ''' In order to test the product_margin module '''
 
-        # load account_minimal_test.xml file for chart of account in configuration
-        tools.convert_file(self.cr, 'product_margin',
-                           get_resource_path('account', 'test', 'account_minimal_test.xml'),
-                           {}, 'init', False, 'test', self.registry._assertion_report)
-
         supplier = self.env['res.partner'].create({'name': 'Supplier'})
         customer = self.env['res.partner'].create({'name': 'Customer'})
-        ipad = self.env.ref("product.product_product_4")
+        ipad = self.env['product.product'].create({
+            'name': 'Ipad',
+            'standard_price': 500.0,
+            'list_price': 750.0,
+        })
 
         # Create supplier invoice and customer invoice to test product margin.
         # Define supplier invoices
