@@ -499,6 +499,8 @@ class Task(models.Model):
         string='Customer',
         compute='_compute_partner_id', store=True, readonly=False,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    partner_is_company = fields.Boolean(related='partner_id.is_company', readonly=True)
+    commercial_partner_id = fields.Many2one(related='partner_id.commercial_partner_id')
     partner_city = fields.Char(related='partner_id.city', readonly=False)
     manager_id = fields.Many2one('res.users', string='Project Manager', related='project_id.user_id', readonly=True, related_sudo=False)
     company_id = fields.Many2one('res.company', string='Company', required=True, default=_default_company_id)
