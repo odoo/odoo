@@ -10,9 +10,9 @@ class TestCreatePicking(common.TestProductCommon):
 
     def setUp(self):
         super(TestCreatePicking, self).setUp()
-        self.partner_id = self.env.ref('base.res_partner_1')
-        self.product_id_1 = self.env.ref('product.product_product_8')
-        self.product_id_2 = self.env.ref('product.product_product_11')
+        self.partner_id = self.env['res.partner'].create({'name': 'Wood Corner Partner'})
+        self.product_id_1 = self.env['product.product'].create({'name': 'Large Desk'})
+        self.product_id_2 = self.env['product.product'].create({'name': 'Conference Chair'})
         res_users_purchase_user = self.env.ref('purchase.group_purchase_user')
 
         Users = self.env['res.users'].with_context({'no_reset_password': True, 'mail_create_nosubscribe': True})
