@@ -20,15 +20,16 @@ class Employee(models.Model):
     expense_manager_id = fields.Many2one(
         'res.users', string='Expense',
         domain=_group_hr_expense_user_domain,
+        compute='_compute_expense_manager', store=True, readonly=False,
         help="User responsible of expense approval. Should be Expense approver.")
 
-    @api.onchange('parent_id')
-    def _onchange_parent_id(self):
-        super(Employee, self)._onchange_parent_id()
-        previous_manager = self._origin.parent_id.user_id
-        manager = self.parent_id.user_id
-        if manager and manager.has_group('hr_expense.group_hr_expense_user') and (self.expense_manager_id == previous_manager or not self.expense_manager_id):
-            self.expense_manager_id = manager
+    @api.depends('parent_id')
+    def _compute_expense_manager(self):
+        for employee in self:
+            previous_manager = employee._origin.parent_id.user_id
+            manager = employee.parent_id.user_id
+            if manager and manager.has_group('hr_expense.group_hr_expense_user') and (employee.expense_manager_id == previous_manager or not employee.expense_manager_id):
+                employee.expense_manager_id = manager
 
 
 class EmployeePublic(models.Model):

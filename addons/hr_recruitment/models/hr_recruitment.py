@@ -93,45 +93,26 @@ class Applicant(models.Model):
     _order = "priority desc, id desc"
     _inherit = ['mail.thread.cc', 'mail.activity.mixin', 'utm.mixin']
 
-    def _default_stage_id(self):
-        if self._context.get('default_job_id'):
-            return self.env['hr.recruitment.stage'].search([
-                '|',
-                ('job_ids', '=', False),
-                ('job_ids', '=', self._context['default_job_id']),
-                ('fold', '=', False)
-            ], order='sequence asc', limit=1).id
-        return False
-
-    def _default_company_id(self):
-        company_id = False
-        if self._context.get('default_department_id'):
-            department = self.env['hr.department'].browse(self._context['default_department_id'])
-            company_id = department.company_id.id
-        if not company_id and self.job_id:
-            company_id = self.env['hr.job'].browse(self._context['default_job_id']).company_id.ids
-        if not company_id:
-            company_id = self.env.company
-        return company_id
-
     name = fields.Char("Subject / Application Name", required=True)
     active = fields.Boolean("Active", default=True, help="If the active field is set to false, it will allow you to hide the case without removing it.")
     description = fields.Text("Description")
-    email_from = fields.Char("Email", size=128, help="Applicant email")
+    email_from = fields.Char("Email", size=128, help="Applicant email", compute='_compute_partner_phone_email', store=True, readonly=False)
     probability = fields.Float("Probability")
     partner_id = fields.Many2one('res.partner', "Contact", copy=False)
     create_date = fields.Datetime("Creation Date", readonly=True, index=True)
     stage_id = fields.Many2one('hr.recruitment.stage', 'Stage', ondelete='restrict', tracking=True,
+                               compute='_compute_stage', store=True, readonly=False,
                                domain="['|', ('job_ids', '=', False), ('job_ids', '=', job_id)]",
                                copy=False, index=True,
-                               group_expand='_read_group_stage_ids',
-                               default=_default_stage_id)
+                               group_expand='_read_group_stage_ids')
     last_stage_id = fields.Many2one('hr.recruitment.stage', "Last Stage",
                                     help="Stage of the applicant before being in the current stage. Used for lost cases analysis.")
     categ_ids = fields.Many2many('hr.applicant.category', string="Tags")
-    company_id = fields.Many2one('res.company', "Company", default=_default_company_id)
-    user_id = fields.Many2one('res.users', "Responsible", tracking=True, default=lambda self: self.env.uid)
-    date_closed = fields.Datetime("Closed", readonly=True, index=True)
+    company_id = fields.Many2one('res.company', "Company", compute='_compute_company', store=True, readonly=False)
+    user_id = fields.Many2one(
+        'res.users', "Responsible", compute='_compute_user',
+        tracking=True, default=lambda self: self.env.uid, store=True, readonly=False)
+    date_closed = fields.Datetime("Closed", compute='_compute_date_closed', store=True, index=True)
     date_open = fields.Datetime("Assigned", readonly=True, index=True)
     date_last_stage_update = fields.Datetime("Last Stage Update", index=True, default=fields.Datetime.now)
     priority = fields.Selection(AVAILABLE_PRIORITIES, "Appreciation", default='0')
@@ -142,10 +123,12 @@ class Applicant(models.Model):
     salary_expected = fields.Float("Expected Salary", group_operator="avg", help="Salary Expected by Applicant")
     availability = fields.Date("Availability", help="The date at which the applicant will be available to start working")
     partner_name = fields.Char("Applicant's Name")
-    partner_phone = fields.Char("Phone", size=32)
-    partner_mobile = fields.Char("Mobile", size=32)
+    partner_phone = fields.Char("Phone", size=32, compute='_compute_partner_phone_email', store=True, readonly=False)
+    partner_mobile = fields.Char("Mobile", size=32, compute='_compute_partner_phone_email', store=True, readonly=False)
     type_id = fields.Many2one('hr.recruitment.degree', "Degree")
-    department_id = fields.Many2one('hr.department', "Department", domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    department_id = fields.Many2one(
+        'hr.department', "Department", compute='_compute_department', store=True, readonly=False,
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     day_open = fields.Float(compute='_compute_day', string="Days to Open", compute_sudo=True)
     day_close = fields.Float(compute='_compute_day', string="Days to Close", compute_sudo=True)
     delay_close = fields.Float(compute="_compute_day", string='Delay to Close', readonly=True, group_operator="avg", help="Number of days to close", store=True)
@@ -220,38 +203,41 @@ class Applicant(models.Model):
         stage_ids = stages._search(search_domain, order=order, access_rights_uid=SUPERUSER_ID)
         return stages.browse(stage_ids)
 
-    @api.onchange('job_id')
-    def onchange_job_id(self):
-        vals = self._onchange_job_id_internal(self.job_id.id)
-        self.department_id = vals['value']['department_id']
-        self.user_id = vals['value']['user_id']
-        self.stage_id = vals['value']['stage_id']
+    @api.depends('job_id', 'department_id')
+    def _compute_company(self):
+        for applicant in self:
+            company_id = False
+            if applicant.department_id:
+                company_id = applicant.department_id.company_id.id
+            if not company_id and applicant.job_id:
+                company_id = applicant.job_id.company_id.id
+            applicant.company_id = company_id or self.env.company.id
 
-    def _onchange_job_id_internal(self, job_id):
-        department_id = False
-        user_id = False
-        company_id = False
-        stage_id = self.stage_id.id or self._context.get('default_stage_id')
-        if job_id:
-            job = self.env['hr.job'].browse(job_id)
-            department_id = job.department_id.id
-            user_id = job.user_id.id
-            company_id = job.company_id.id
-            if not stage_id:
-                stage_ids = self.env['hr.recruitment.stage'].search([
-                    '|',
-                    ('job_ids', '=', False),
-                    ('job_ids', '=', job.id),
-                    ('fold', '=', False)
-                ], order='sequence asc', limit=1).ids
-                stage_id = stage_ids[0] if stage_ids else False
+    @api.depends('job_id')
+    def _compute_department(self):
+        for applicant in self.filtered(lambda a: a.job_id):
+            applicant.department_id = applicant.job_id.department_id.id
 
-        return {'value': {
-            'department_id': department_id,
-            'company_id': company_id,
-            'user_id': user_id,
-            'stage_id': stage_id
-        }}
+    @api.depends('job_id')
+    def _compute_stage(self):
+        for applicant in self:
+            if applicant.job_id:
+                if not applicant.stage_id:
+                    stage_ids = self.env['hr.recruitment.stage'].search([
+                        '|',
+                        ('job_ids', '=', False),
+                        ('job_ids', '=', applicant.job_id.id),
+                        ('fold', '=', False)
+                    ], order='sequence asc', limit=1).ids
+                    applicant.stage_id = stage_ids[0] if stage_ids else False
+            else:
+                applicant.stage_id = False
+
+    @api.depends('job_id')
+    def _compute_user(self):
+        for applicant in self.filtered(lambda a: a.job_id):
+            applicant.user_id = applicant.job_id.user_id.id
+
 
     @api.onchange('email_from')
     def onchange_email_from(self):
@@ -268,39 +254,27 @@ class Applicant(models.Model):
         if self.partner_id and self.partner_mobile and not self.partner_id.mobile:
             self.partner_id.mobile = self.partner_mobile
 
-    @api.onchange('partner_id')
-    def onchange_partner_id(self):
-        self.partner_phone = self.partner_id.phone
-        self.partner_mobile = self.partner_id.mobile
-        self.email_from = self.partner_id.email
+    @api.depends('partner_id')
+    def _compute_partner_phone_email(self):
+        for applicant in self:
+            applicant.partner_phone = applicant.partner_id.phone
+            applicant.partner_mobile = applicant.partner_id.mobile
+            applicant.email_from = applicant.partner_id.email
 
-    @api.onchange('stage_id')
-    def onchange_stage_id(self):
-        vals = self._onchange_stage_id_internal(self.stage_id.id)
-        if vals['value'].get('date_closed'):
-            self.date_closed = vals['value']['date_closed']
-
-    def _onchange_stage_id_internal(self, stage_id):
-        if not stage_id:
-            return {'value': {}}
-        stage = self.env['hr.recruitment.stage'].browse(stage_id)
-        if stage.fold:
-            return {'value': {'date_closed': fields.datetime.now()}}
-        return {'value': {'date_closed': False}}
+    @api.depends('stage_id')
+    def _compute_date_closed(self):
+        for applicant in self:
+            if applicant.stage_id and applicant.stage_id.fold:
+                applicant.date_closed = fields.datetime.now()
+            else:
+                applicant.date_closed = False
 
     @api.model
     def create(self, vals):
         if vals.get('department_id') and not self._context.get('default_department_id'):
             self = self.with_context(default_department_id=vals.get('department_id'))
-        if vals.get('job_id') or self._context.get('default_job_id'):
-            job_id = vals.get('job_id') or self._context.get('default_job_id')
-            for key, value in self._onchange_job_id_internal(job_id)['value'].items():
-                if key not in vals:
-                    vals[key] = value
         if vals.get('user_id'):
             vals['date_open'] = fields.Datetime.now()
-        if 'stage_id' in vals:
-            vals.update(self._onchange_stage_id_internal(vals.get('stage_id'))['value'])
         return super(Applicant, self).create(vals)
 
     def write(self, vals):
@@ -310,7 +284,6 @@ class Applicant(models.Model):
         # stage_id: track last stage before update
         if 'stage_id' in vals:
             vals['date_last_stage_update'] = fields.Datetime.now()
-            vals.update(self._onchange_stage_id_internal(vals.get('stage_id'))['value'])
             if 'kanban_state' not in vals:
                 vals['kanban_state'] = 'normal'
             for applicant in self:

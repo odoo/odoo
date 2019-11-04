@@ -200,14 +200,15 @@
             <field name="name">hr.employee.tree</field>
             <field name="model">hr.employee</field>
             <field name="arch" type="xml">
-                <tree string="Employees">
-                    <field name="name"/>
-                    <field name="work_phone"/>
+                <tree string="Employees" multi_edit="1">
+                    <field name="name" readonly="1"/>
+                    <field name="work_phone" readonly="1"/>
                     <field name="work_email"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                     <field name="department_id"/>
                     <field name="job_id"/>
                     <field name="parent_id"/>
+                    <field name="work_location" optional="hide"/>
                     <field name="coach_id" invisible="1"/>
                 </tree>
             </field>
