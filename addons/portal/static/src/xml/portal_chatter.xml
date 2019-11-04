@@ -66,19 +66,21 @@
         </div>
     </t>
 
+    <!-- extend exist mail template for portal chatter -->
+    <t t-name="portal.Chatter.attachment_preview" t-extend="mail.Attachment">
+        <t t-jquery="[t-set='ext']" t-operation="replace">
+            <t t-set="ext" t-value="attachment.name.replace(/^.*\./, '')"/>
+        </t>
+    </t>
+
     <t t-name="portal.Chatter.Attachments">
-        <div t-if="attachments.length" class="row">
-            <div t-foreach="attachments" t-as="attachment" class="col-lg-2 col-md-3 col-sm-6">
-                <div class="o_portal_chatter_attachment mb-2 position-relative text-center" t-att-data-id="attachment.id">
-                    <button t-if="showDelete and attachment.state == 'pending'" class="o_portal_chatter_attachment_delete btn btn-sm btn-outline-danger" title="Delete">
-                        <i class="fa fa-times"/>
-                    </button>
-                    <a t-attf-href="/web/content/#{attachment.id}?download=true&amp;access_token=#{attachment.access_token}" target="_blank">
-                        <div class='oe_attachment_embedded o_image' t-att-title="attachment.name" t-att-data-mimetype="attachment.mimetype"/>
-                        <div class='o_portal_chatter_attachment_name'><t t-esc='attachment.name'/></div>
-                    </a>
-                </div>
-            </div>
+        <div t-if="attachments.length" class="o_attachments_list">
+            <t t-foreach="attachments" t-as="attachment">
+                <t t-call="portal.Chatter.attachment_preview">
+                    <t t-set="attachment.url" t-value="'/web/content/' + attachment.id + '/?download=true&amp;access_token=' + attachment.access_token"/>
+                    <t t-set="editable" t-value="showDelete and attachment.state == 'pending'"/>
+                </t>
+            </t>
         </div>
     </t>
 

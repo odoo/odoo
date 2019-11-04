@@ -4,9 +4,12 @@ odoo.define('portal.composer', function (require) {
 var ajax = require('web.ajax');
 var core = require('web.core');
 var publicWidget = require('web.public.widget');
+var DocumentViewer = require('mail.DocumentViewer');
 
 var qweb = core.qweb;
 var _t = core._t;
+
+ajax.loadXML('/mail/static/src/xml/thread.xml', qweb);
 
 /**
  * Widget PortalComposer
@@ -20,8 +23,9 @@ var PortalComposer = publicWidget.Widget.extend({
     events: {
         'change .o_portal_chatter_file_input': '_onFileInputChange',
         'click .o_portal_chatter_attachment_btn': '_onAttachmentButtonClick',
-        'click .o_portal_chatter_attachment_delete': 'async _onAttachmentDeleteClick',
+        'click .o_attachment_delete': 'async _onAttachmentDeleteClick',
         'click .o_portal_chatter_composer_btn': 'async _onSubmitButtonClick',
+        "click .o_attachment_view": "_onAttachmentView",
     },
 
     /**
@@ -69,6 +73,18 @@ var PortalComposer = publicWidget.Widget.extend({
 
     /**
      * @private
+     * @param {MouseEvent} ev
+     */
+    _onAttachmentView: function (ev) {
+        ev.stopPropagation();
+        var activeAttachmentID = $(ev.currentTarget).data('id');
+        if (activeAttachmentID) {
+            var attachmentViewer = new DocumentViewer(this, this.attachments, activeAttachmentID);
+            attachmentViewer.appendTo($('body'));
+        }
+    },
+    /**
+     * @private
      */
     _onAttachmentButtonClick: function () {
         this.$fileInput.click();
@@ -80,7 +96,7 @@ var PortalComposer = publicWidget.Widget.extend({
      */
     _onAttachmentDeleteClick: function (ev) {
         var self = this;
-        var attachmentId = $(ev.currentTarget).closest('.o_portal_chatter_attachment').data('id');
+        var attachmentId = $(ev.currentTarget).data('id');
         var accessToken = _.find(this.attachments, {'id': attachmentId}).access_token;
         ev.preventDefault();
         ev.stopPropagation();

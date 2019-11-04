@@ -46,7 +46,6 @@
                     <script type="text/javascript" src="/mail/static/src/js/thread_windows/abstract_thread_window.js"></script>
                     <script type="text/javascript" src="/mail/static/src/js/thread_windows/thread_window.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/discuss.js"></script>
-                <script type="text/javascript" src="/mail/static/src/js/document_viewer.js"></script>
                     <!-- composers -->
                     <script type="text/javascript" src="/mail/static/src/js/composers/basic_composer.js"></script>
                     <script type="text/javascript" src="/mail/static/src/js/composers/chatter_composer.js"></script>
@@ -101,6 +100,16 @@
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/activity_view.scss"/>
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/kanban_view.scss"/>
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/attachment_box.scss"/>
+            </xpath>
+        </template>
+
+        <!-- load document viewer for attchment preview -->
+        <template id="assets_common" inherit_id="web_editor.assets_common" name="Preview and chatter Assets">
+            <xpath expr="//link[last()]" position="after">
+                <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/document_viewer.scss"/>
+            </xpath>
+            <xpath expr="//script[last()]" position="after">
+                <script type="text/javascript" src="/mail/static/src/js/document_viewer.js"></script>
             </xpath>
         </template>
 

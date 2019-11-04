@@ -5,6 +5,7 @@ var core = require('web.core');
 var publicWidget = require('web.public.widget');
 var time = require('web.time');
 var portalComposer = require('portal.composer');
+var DocumentViewer = require('mail.DocumentViewer');
 
 var qweb = core.qweb;
 var _t = core._t;
@@ -22,6 +23,7 @@ var PortalChatter = publicWidget.Widget.extend({
     events: {
         'click .o_portal_chatter_pager_btn': '_onClickPager',
         'click .o_portal_chatter_js_is_internal': 'async _onClickUpdateIsInternal',
+        "click .o_attachment_view": "_onAttachmentView",
     },
 
     /**
@@ -241,6 +243,18 @@ var PortalChatter = publicWidget.Widget.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onAttachmentView: function (ev) {
+        var activeAttachmentID = $(ev.currentTarget).data('id');
+        var attachments = _.flatten(_.pluck(this.result.messages,'attachment_ids'));
+        if (activeAttachmentID) {
+            var attachmentViewer = new DocumentViewer(this, attachments, activeAttachmentID);
+            attachmentViewer.appendTo($('body'));
+        }
+    },
     _onChangeDomain: function () {
         var self = this;
         this.messageFetch().then(function () {
