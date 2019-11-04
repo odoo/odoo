@@ -15,7 +15,7 @@ class AccountBankStatement(models.Model):
         for bs in self:
             if bs.pos_session_id.state  in ('opened', 'closing_control') and bs.state == 'open':
                 raise UserError(_("You can't validate a bank statement that is used in an opened Session of a Point of Sale."))
-        return super( AccountBankStatement, self).check_confirm_bank()
+        return super(AccountBankStatement, self).check_confirm_bank()
 
 
 class AccountBankStatementLine(models.Model):
