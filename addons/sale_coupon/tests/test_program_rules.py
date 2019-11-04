@@ -34,7 +34,7 @@ class TestProgramRules(TestSaleCouponCommon):
         order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 3, "The promo offert should have been applied as the partner is correct, the discount is not created")
 
-        order = self.env['sale.order'].create({'partner_id': self.env.ref('base.res_partner_1').id})
+        order = self.env['sale.order'].create({'partner_id': self.env['res.partner'].create({'name': 'My Partner'}).id})
         order.write({'order_line': [
             (0, False, {
                 'product_id': self.product_A.id,
@@ -155,7 +155,7 @@ class TestProgramRules(TestSaleCouponCommon):
         ]})
         order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 3, "The promo offert should have been applied as we're between the validity dates")
-        order = self.env['sale.order'].create({'partner_id': self.env.ref('base.res_partner_1').id})
+        order = self.env['sale.order'].create({'partner_id': self.env['res.partner'].create({'name': 'My Partner'}).id})
         order.write({'order_line': [
             (0, False, {
                 'product_id': self.product_A.id,
