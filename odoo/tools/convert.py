@@ -712,15 +712,7 @@ form: module.record_id""" % (xml_id,)
         try:
             self._tag_root(de)
         except Exception as e:
-            exc_info = sys.exc_info()
-            pycompat.reraise(
-                ParseError,
-                ParseError(
-                    ustr(e),
-                    etree.tostring(de, encoding='unicode').rstrip(),
-                    de.getroottree().docinfo.URL, de.sourceline),
-                exc_info[2]
-            )
+            raise ParseError(ustr(e), etree.tostring(de, encoding='unicode').rstrip(), de.getroottree().docinfo.URL, de.sourceline)
     DATA_ROOTS = ['odoo', 'data', 'openerp']
 
 def convert_file(cr, module, filename, idref, mode='update', noupdate=False, kind=None, report=None, pathname=None):
