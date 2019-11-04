@@ -19,7 +19,7 @@ tour.register('test_json_auth', {
         window.location.href = window.location.origin;
     },
 }, {
-    trigger: 'span:contains(Mitchell Admin)',
+    trigger: 'span:contains(Mitchell Admin), span:contains(Administrator)',
     run: function () {},
 }
 ]);
