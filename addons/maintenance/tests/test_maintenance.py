@@ -36,12 +36,17 @@ class TestEquipment(TransactionCase):
             groups_id=[(6, 0, [res_manager.id])]
         ))
 
+        self.equipment_monitor = self.env['maintenance.equipment.category'].create({
+            'name': 'Monitors',
+            'alias_id': self.env.ref('maintenance.mail_alias_equipment').id,
+        })
+
     def test_10_equipment_request_category(self):
 
         # Create a new equipment
         equipment_01 = self.equipment.with_user(self.manager).create({
             'name': 'Samsung Monitor "15',
-            'category_id': self.ref('maintenance.equipment_monitor'),
+            'category_id': self.equipment_monitor.id,
             'technician_user_id': self.ref('base.user_root'),
             'owner_user_id': self.user.id,
             'assign_date': time.strftime('%Y-%m-%d'),
@@ -80,7 +85,7 @@ class TestEquipment(TransactionCase):
         """ Check the cron creates the necessary preventive maintenance requests"""
         equipment_cron = self.equipment.create({
             'name': 'High Maintenance Monitor because of Color Calibration',
-            'category_id': self.ref('maintenance.equipment_monitor'),
+            'category_id': self.equipment_monitor.id,
             'technician_user_id': self.ref('base.user_root'),
             'owner_user_id': self.user.id,
             'assign_date': time.strftime('%Y-%m-%d'),
@@ -113,7 +118,7 @@ class TestEquipment(TransactionCase):
         })
         equipment = self.equipment.create({
             'name': 'High Maintenance Monitor because of Color Calibration',
-            'category_id': self.ref('maintenance.equipment_monitor'),
+            'category_id': self.equipment_monitor.id,
             'technician_user_id': self.ref('base.user_root'),
             'owner_user_id': self.user.id,
             'assign_date': time.strftime('%Y-%m-%d'),
