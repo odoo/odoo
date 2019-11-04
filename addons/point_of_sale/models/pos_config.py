@@ -4,7 +4,7 @@
 from datetime import datetime
 from uuid import uuid4
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError, UserError
 
 
@@ -524,7 +524,7 @@ class PosConfig(models.Model):
             'target': 'self',
         }
 
-    def open_session_cb(self):
+    def open_session_cb(self, check_coa=True):
         """ new session button
 
         create one if none exist
@@ -532,7 +532,7 @@ class PosConfig(models.Model):
         """
         self.ensure_one()
         if not self.current_session_id:
-            if not self.company_has_template:
+            if check_coa and not tools.config['test_enable'] and not self.company_has_template:
                 raise UserError(_("A Chart of Accounts is not yet installed in your current company. Please install a "
                                   "Chart of Accounts through the Invoicing/Accounting settings before launching a PoS session." ))
             self._check_company_journal()

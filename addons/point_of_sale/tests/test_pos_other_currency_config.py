@@ -1,4 +1,9 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import odoo
+
+from odoo import tools
 from odoo.tests.common import Form
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 
@@ -9,6 +14,7 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
 
     def setUp(self):
         super(TestPoSOtherCurrencyConfig, self).setUp()
+
         self.config = self.other_currency_config
         self.product1 = self.create_product('Product 1', self.categ_basic, 10.0, 5)
         self.product2 = self.create_product('Product 2', self.categ_basic, 20.0, 10)
@@ -25,6 +31,7 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
         # Product price should be half of the original price because currency rate is 0.5.
         # (see `self._create_other_currency_config` method)
         # Except for product2 where the price is specified in the pricelist.
+
         self.assertAlmostEqual(self.config.pricelist_id.get_product_price(self.product1, 1, self.customer), 5.00)
         self.assertAlmostEqual(self.config.pricelist_id.get_product_price(self.product2, 1, self.customer), 12.99)
         self.assertAlmostEqual(self.config.pricelist_id.get_product_price(self.product3, 1, self.customer), 15.00)
@@ -60,6 +67,7 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
         | Total balance       |     0.0 |            0.00 |
         +---------------------+---------+-----------------+
         """
+
         self.open_new_session()
 
         # create orders
@@ -124,6 +132,7 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
         | Total balance       |     0.0 |            0.00 |
         +---------------------+---------+-----------------+
         """
+
         self.open_new_session()
 
         # create orders

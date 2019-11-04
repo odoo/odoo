@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import time
 
 import odoo
-from odoo import fields
+from odoo import fields, tools
 from odoo.tools import float_compare, mute_logger, test_reports
 from odoo.tests.common import Form
 from odoo.addons.point_of_sale.tests.common import TestPointOfSaleCommon
@@ -13,7 +15,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
 
     def test_order_refund(self):
-        self.pos_config.open_session_cb()
+        self.pos_config.open_session_cb(check_coa=False)
         current_session = self.pos_config.current_session_id
         # I create a new PoS order with 2 lines
         order = self.PosOrder.create({
@@ -94,7 +96,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             return untax, sum(tax.get('amount', 0.0) for tax in res['taxes'])
 
         # I click on create a new session button
-        self.pos_config.open_session_cb()
+        self.pos_config.open_session_cb(check_coa=False)
         current_session = self.pos_config.current_session_id
 
         # I create a PoS order with 2 units of PCSC234 at 450 EUR
@@ -305,7 +307,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             untax = res['total_excluded']
             return untax, sum(tax.get('amount', 0.0) for tax in res['taxes'])
 
-        self.pos_config.open_session_cb()
+        self.pos_config.open_session_cb(check_coa=False)
         current_session = self.pos_config.current_session_id
 
         untax1, atax1 = compute_tax(self.product3, 450*0.95, 2)
@@ -427,7 +429,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             return untax, sum(tax.get('amount', 0.0) for tax in res['taxes'])
 
         # I click on create a new session button
-        self.pos_config.open_session_cb()
+        self.pos_config.open_session_cb(check_coa=False)
 
         current_session = self.pos_config.current_session_id
         num_starting_orders = len(current_session.order_ids)
@@ -607,7 +609,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         })
 
         # I click on create a new session button
-        eur_config.open_session_cb()
+        eur_config.open_session_cb(check_coa=False)
         current_session = eur_config.current_session_id
 
         # I create a PoS order with 2 units of PCSC234 at 450 EUR (Tax Incl)
@@ -706,8 +708,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             self.assertAlmostEqual(a, b)
 
     def test_order_to_invoice_no_tax(self):
-
-        self.pos_config.open_session_cb()
+        self.pos_config.open_session_cb(check_coa=False)
         current_session = self.pos_config.current_session_id
 
         # I create a new PoS order with 2 units of PC1 at 450 EUR (Tax Incl) and 3 units of PCSC349 at 300 EUR. (Tax Excl)

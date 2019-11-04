@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo import tools
 import odoo
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 
@@ -10,6 +14,7 @@ class TestPoSSetup(TestPoSCommon):
     """
     def setUp(self):
         super(TestPoSSetup, self).setUp()
+
         self.config = self.basic_config
         self.products = [
             self.create_product('Product 1', self.categ_basic, lst_price=10.0, standard_price=5),
@@ -18,6 +23,7 @@ class TestPoSSetup(TestPoSCommon):
         ]
 
     def test_basic_config_values(self):
+
         config = self.basic_config
         self.assertEqual(config.currency_id, self.company_currency)
         self.assertEqual(config.pricelist_id.currency_id, self.company_currency)
@@ -40,6 +46,7 @@ class TestPoSSetup(TestPoSCommon):
     def test_product_price(self):
         def get_price(pricelist, product):
             return pricelist.get_product_price(product, 1, self.customer)
+
 
         # check usd pricelist
         pricelist = self.basic_config.pricelist_id
