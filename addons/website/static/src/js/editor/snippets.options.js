@@ -229,7 +229,20 @@ options.registry.carousel = options.Class.extend({
         this.$indicators = this.$target.find('.carousel-indicators');
         this.$controls = this.$target.find('.carousel-control-prev, .carousel-control-next, .carousel-indicators');
         this.$items = this.$target.find('.carousel-item');
-        this.$target.on('slid.bs.carousel.carousel_option', () => this._retargetEdition());
+
+        let _slideTimestamp;
+        this.$target.on('slide.bs.carousel.carousel_option', () => {
+            _slideTimestamp = window.performance.now();
+            setTimeout(() => this.trigger_up('activate_snippet', {$snippet: this.$target}));
+        });
+        this.$target.on('slid.bs.carousel.carousel_option', () => {
+            // slid.bs.carousel is most of the time fired too soon by bootstrap
+            // since it emulates the transitionEnd with a setTimeout. We wait
+            // here an extra 20% of the time before retargeting edition, which
+            // should be enough...
+            const _slideDuration = (window.performance.now() - _slideTimestamp);
+            setTimeout(() => this._retargetEdition(), 0.2 * _slideDuration);
+        });
 
         return this._super.apply(this, arguments);
     },
@@ -251,12 +264,6 @@ options.registry.carousel = options.Class.extend({
      */
     onClone: function () {
         this._assignUniqueID();
-    },
-    /**
-     * @override
-     */
-    onFocus: function () {
-        this._retargetEdition();
     },
     /**
      * @override
