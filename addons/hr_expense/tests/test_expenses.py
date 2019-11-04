@@ -146,13 +146,28 @@ class TestAccountEntry(TestExpenseCommon):
         self.assertEqual(self.analytic_account.line_ids[0].product_id, self.product_expense, "Product of AAL should be the one from the expense")
 
     def test_expense_from_email(self):
-        user_demo = self.env.ref('base.user_demo')
+        user_marc = self.env['res.users'].create({
+            'name': 'Marc User',
+            'login': 'Marc',
+            'email': 'marc.user@example.com',
+        })
+        self.env['hr.employee'].create({
+            'name': 'Marc Demo',
+            'user_id': user_marc.id,
+        })
+        air_ticket = self.env['product.product'].create({
+            'name': 'Air Flight',
+            'type': 'service',
+            'default_code': 'TESTREF',
+            'can_be_expensed': True,
+        })
+
         self.tax.price_include = False
 
         message_parsed = {
             'message_id': 'the-world-is-a-ghetto',
-            'subject': 'EXP_AF 9876',
-            'email_from': 'mark.brown23@example.com',
+            'subject': 'TESTREF 9876',
+            'email_from': 'marc.user@example.com',
             'to': 'catchall@yourcompany.com',
             'body': "Don't you know, that for me, and for you",
             'attachments': [],
@@ -160,20 +175,28 @@ class TestAccountEntry(TestExpenseCommon):
 
         expense = self.env['hr.expense'].message_new(message_parsed)
 
-        air_ticket = self.env.ref("hr_expense.air_ticket")
         self.assertEqual(expense.product_id, air_ticket)
         self.assertEqual(expense.tax_ids.ids, [])
         self.assertEqual(expense.total_amount, 9876.0)
-        self.assertTrue(expense.employee_id in user_demo.employee_ids)
+        self.assertTrue(expense.employee_id in user_marc.employee_ids)
 
     def test_expense_from_email_without_product(self):
-        user_demo = self.env.ref('base.user_demo')
+        user_marc = self.env['res.users'].create({
+            'name': 'Marc User',
+            'login': 'Marc',
+            'email': 'marc.user@example.com',
+        })
+        self.env['hr.employee'].create({
+            'name': 'Marc Demo',
+            'user_id': user_marc.id,
+        })
+
         self.tax.price_include = False
 
         message_parsed = {
             'message_id': 'the-world-is-a-ghetto',
             'subject': 'no product code 9876',
-            'email_from': 'mark.brown23@example.com',
+            'email_from': 'marc.user@example.com',
             'to': 'catchall@yourcompany.com',
             'body': "Don't you know, that for me, and for you",
             'attachments': [],
@@ -181,11 +204,10 @@ class TestAccountEntry(TestExpenseCommon):
 
         expense = self.env['hr.expense'].message_new(message_parsed)
 
-        air_ticket = self.env.ref("hr_expense.air_ticket")
         self.assertFalse(expense.product_id, "No product should be linked")
         self.assertEqual(expense.tax_ids.ids, [])
         self.assertEqual(expense.total_amount, 9876.0)
-        self.assertTrue(expense.employee_id in user_demo.employee_ids)
+        self.assertTrue(expense.employee_id in user_marc.employee_ids)
 
     def test_partial_payment_multiexpense(self):
         bank_journal = self.env['account.journal'].create({
