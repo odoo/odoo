@@ -8,9 +8,9 @@ odoo.define("website_sale.tour_shop_custom_attribute_value", function (require) 
         test: true,
     }, [{
         content: "click on Customizable Desk",
-        trigger: '.oe_product_cart a:contains("Customizable Desk")',
+        trigger: '.oe_product_cart a:contains("Customizable Desk (TEST)")',
     }, {
-        trigger: 'li.js_attribute_value span:contains(Custom)',
+        trigger: 'li.js_attribute_value span:contains(Custom TEST)',
         extra_trigger: 'li.js_attribute_value',
         run: 'click',
     }, {
@@ -21,7 +21,7 @@ odoo.define("website_sale.tour_shop_custom_attribute_value", function (require) 
         trigger: 'a:contains(Add to Cart)',
         run: 'click',
     }, {
-        trigger: 'span:contains(Custom: Wood)',
+        trigger: 'span:contains(Custom TEST: Wood)',
         extra_trigger: '#cart_products',
         run: function (){}, // check
     }]);

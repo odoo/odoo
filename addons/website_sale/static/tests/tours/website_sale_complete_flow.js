@@ -6,12 +6,12 @@ odoo.define('website_sale_tour.tour', function (require) {
 
     tour.register('website_sale_tour', {
         test: true,
-        url: '/shop?search=Storage Box',
+        url: '/shop?search=Storage Box Test',
     }, [
     // Testing b2c with Tax-Excluded Prices
     {
         content: "Open product page",
-        trigger: '.oe_product_cart a:contains("Storage Box")',
+        trigger: '.oe_product_cart a:contains("Storage Box Test")',
     },
     {
         content: "Add one more storage box",
@@ -28,7 +28,7 @@ odoo.define('website_sale_tour.tour', function (require) {
     },
     {
         content: "Check for 2 products in cart and proceed to checkout",
-        extra_trigger: '#cart_products tr:contains("Storage Box") input.js_quantity:propValue(2)',
+        extra_trigger: '#cart_products tr:contains("Storage Box Test") input.js_quantity:propValue(2)',
         trigger: 'a[href*="/shop/checkout"]',
     },
     {
@@ -196,17 +196,17 @@ odoo.define('website_sale_tour.tour', function (require) {
                 });
             });
             def2.then(function () {
-                window.location.href = '/web/session/logout?redirect=/shop?search=Storage Box';
+                window.location.href = '/web/session/logout?redirect=/shop?search=Storage Box Test';
             });
         },
     },
     // Testing b2b with Tax-Included Prices
     {
         content: "Open product page",
-        trigger: '.oe_product_cart a:contains("Storage Box")',
+        trigger: '.oe_product_cart a:contains("Storage Box Test")',
     },
     {
-        content: "Add one more Storage Box",
+        content: "Add one more Storage Box Test",
         trigger: '.js_add_cart_json:eq(1)',
     },
     {
@@ -220,7 +220,7 @@ odoo.define('website_sale_tour.tour', function (require) {
     },
     {
         content: "Check for 2 products in cart and proceed to checkout",
-        extra_trigger: '#cart_products tr:contains("Storage Box") input.js_quantity:propValue(2)',
+        extra_trigger: '#cart_products tr:contains("Storage Box Test") input.js_quantity:propValue(2)',
         trigger: 'a[href*="/shop/checkout"]',
     },
     {
@@ -344,13 +344,13 @@ odoo.define('website_sale_tour.tour', function (require) {
         run: function () {
             $('.oe_login_form input[name="login"]').val("abc@odoo.com");
             $('.oe_login_form input[name="password"]').val("1admin@admin");
-            $('.oe_login_form input[name="redirect"]').val("/shop?search=Storage Box");
+            $('.oe_login_form input[name="redirect"]').val("/shop?search=Storage Box Test");
             $('.oe_login_form').submit();
         },
     },
     {
         content: "Open product page",
-        trigger: '.oe_product_cart a:contains("Storage Box")',
+        trigger: '.oe_product_cart a:contains("Storage Box Test")',
     },
     {
         content: "Click on add to cart",

@@ -4,12 +4,67 @@
 import odoo.tests
 
 from odoo import api
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo, TransactionCaseWithUserDemo
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.addons.website.tools import MockRequest
 
 
 @odoo.tests.tagged('post_install', '-at_install')
-class TestUi(odoo.tests.HttpCase):
+class TestUi(HttpCaseWithUserDemo):
+
+    def setUp(self):
+        super(TestUi, self).setUp()
+        product_product_7 = self.env['product.product'].create({
+            'name': 'Storage Box',
+            'standard_price': 70.0,
+            'list_price': 79.0,
+            'website_published': True,
+        })
+        self.product_attribute_1 = self.env['product.attribute'].create({
+            'name': 'Legs',
+            'sequence': 10,
+        })
+        product_attribute_value_1 = self.env['product.attribute.value'].create({
+            'name': 'Steel',
+            'attribute_id': self.product_attribute_1.id,
+            'sequence': 1,
+        })
+        product_attribute_value_2 = self.env['product.attribute.value'].create({
+            'name': 'Aluminium',
+            'attribute_id': self.product_attribute_1.id,
+            'sequence': 2,
+        })
+        self.product_product_11_product_template = self.env['product.template'].create({
+            'name': 'Conference Chair (CONFIG)',
+            'list_price': 16.50,
+            'accessory_product_ids': [(4, product_product_7.id)],
+        })
+        self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': self.product_product_11_product_template.id,
+            'attribute_id': self.product_attribute_1.id,
+            'value_ids': [(4, product_attribute_value_1.id), (4, product_attribute_value_2.id)],
+        })
+
+        self.product_product_1_product_template = self.env['product.template'].create({
+            'name': 'Chair floor protection',
+            'list_price': 12.0,
+        })
+        self.product_product_11_product_template.optional_product_ids = [(6, 0, [self.product_product_1_product_template.id])]
+
+        cash_journal = self.env['account.journal'].create({'name': 'Cash - Test', 'type': 'cash', 'code': 'CASH - Test'})
+        self.env.ref('payment.payment_acquirer_transfer').journal_id = cash_journal
+
+        # Avoid Shipping/Billing address page
+        (self.env.ref('base.partner_admin') + self.partner_demo).write({
+            'street': '215 Vine St',
+            'city': 'Scranton',
+            'zip': '18503',
+            'country_id': self.env.ref('base.us').id,
+            'state_id': self.env.ref('base.state_us_39').id,
+            'phone': '+1 555-555-5555',
+            'email': 'admin@yourcompany.example.com',
+        })
+
     def test_01_admin_shop_tour(self):
         self.start_tour("/", 'shop', login="admin")
 
@@ -28,7 +83,15 @@ class TestUi(odoo.tests.HttpCase):
             'tax_group_id': tax_group.id
         })
         # storage box
-        self.env.ref('product.product_product_7').taxes_id = [tax.id]
+        self.product_product_7 = self.env['product.product'].create({
+            'name': 'Storage Box Test',
+            'standard_price': 70.0,
+            'list_price': 79.0,
+            'categ_id': self.env.ref('product.product_category_all').id,
+            'website_published': True,
+            'invoice_policy': 'delivery',
+        })
+        self.product_product_7.taxes_id = [tax.id]
         self.env['res.config.settings'].create({
             'auth_signup_uninvited': 'b2c',
             'show_line_subtotals_tax_selection': 'tax_excluded',
@@ -40,13 +103,14 @@ class TestUi(odoo.tests.HttpCase):
 
 
 @odoo.tests.tagged('post_install', '-at_install')
-class TestWebsiteSaleCheckoutAddress(odoo.tests.TransactionCase):
+class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo):
     ''' The goal of this method class is to test the address management on
         the checkout (new/edit billing/shipping, company_id, website_id..).
     '''
+
     def setUp(self):
         super(TestWebsiteSaleCheckoutAddress, self).setUp()
-        self.website = self.env['website'].browse(1)
+        self.website = self.env.ref('website.default_website')
         self.country_id = self.env['res.country'].search([], limit=1).id
         self.WebsiteSaleController = WebsiteSale()
         self.default_address_values = {
@@ -101,7 +165,7 @@ class TestWebsiteSaleCheckoutAddress(odoo.tests.TransactionCase):
         self.website.company_id = self.company_b
         self.env.user.company_id = self.company_a
 
-        self.demo_user = self.env.ref('base.user_demo')
+        self.demo_user = self.user_demo
         self.demo_user.company_ids += self.company_c
         self.demo_user.company_id = self.company_c
         self.demo_partner = self.demo_user.partner_id
