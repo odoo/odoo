@@ -1570,6 +1570,15 @@ order.
 
         <field name="int_value" options='{"type": "number", "step": 100}'/>
 
+    - format: should the number be formatted. (true by default)
+
+    By default, numbers are formatted according to locale parameters.
+        This option will prevent the field's value from being formatted.
+
+    .. code-block:: xml
+
+        <field name="int_value" options='{"format": false}'/>
+
 - float (FieldFloat)
     This is the default field type for fields of type *float*.
 
@@ -1601,6 +1610,15 @@ order.
     .. code-block:: xml
 
         <field name="int_value" options='{"type": "number", "step": 0.1}'/>
+
+    - format: should the number be formatted. (true by default)
+
+    By default, numbers are formatted according to locale parameters.
+        This option will prevent the field's value from being formatted.
+
+    .. code-block:: xml
+
+        <field name="int_value" options='{"format": false}'/>
 
 - float_time (FieldFloatTime)
     The goal of this widget is to display properly a float value that represents
