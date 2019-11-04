@@ -1271,7 +1271,7 @@ class SaleOrderLine(models.Model):
         lines_by_analytic = self.filtered(lambda sol: sol.qty_delivered_method == 'analytic')
         mapping = lines_by_analytic._get_delivered_quantity_by_analytic([('amount', '<=', 0.0)])
         for so_line in lines_by_analytic:
-            so_line.qty_delivered = mapping.get(so_line.id, 0.0)
+            so_line.qty_delivered = mapping.get(so_line.id or so_line._origin.id, 0.0)
         # compute for manual lines
         for line in self:
             if line.qty_delivered_method == 'manual':
