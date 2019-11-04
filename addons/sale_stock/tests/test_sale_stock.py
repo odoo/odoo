@@ -9,13 +9,14 @@ from odoo.tests import Form, tagged
 
 @tagged('post_install', '-at_install')
 class TestSaleStock(TestSale):
+
     def _get_new_sale_order(self, amount=10.0):
         """ Creates and returns a sale order with one default order line.
 
         :param float amount: quantity of product for the order line (10 by default)
         """
-        partner = self.env.ref('base.res_partner_1')
-        product = self.env.ref('product.product_delivery_01')
+        partner = self.partner
+        product = self.products['prod_del']
         sale_order_vals = {
             'partner_id': partner.id,
             'partner_invoice_id': partner.id,
@@ -121,10 +122,15 @@ class TestSaleStock(TestSale):
         self.assertFalse(self.so.order_line.sorted()[0].product_updatable)
         self.assertTrue(self.so.picking_ids, 'Sale Stock: no picking created for "invoice on order" storable products')
         # let's do an invoice for a deposit of 5%
+
+        advance_product = self.env['product.product'].create({
+            'name': 'Deposit',
+            'type': 'service',
+        })
         adv_wiz = self.env['sale.advance.payment.inv'].with_context(active_ids=[self.so.id]).create({
             'advance_payment_method': 'percentage',
             'amount': 5.0,
-            'product_id': self.env.ref('sale.advance_product_0').id,
+            'product_id': advance_product.id,
         })
         act = adv_wiz.with_context(open_invoices=True).create_invoices()
         inv = self.env['account.move'].browse(act['res_id'])
@@ -151,8 +157,7 @@ class TestSaleStock(TestSale):
         of the picking. Check that a refund invoice is well generated.
         """
         # intial so
-        self.partner = self.env.ref('base.res_partner_1')
-        self.product = self.env.ref('product.product_delivery_01')
+        self.product = self.products['prod_del']
         so_vals = {
             'partner_id': self.partner.id,
             'partner_invoice_id': self.partner.id,
@@ -223,8 +228,7 @@ class TestSaleStock(TestSale):
         the SO is set on 'done', the SO should be fully invoiced.
         """
         # intial so
-        self.partner = self.env.ref('base.res_partner_1')
-        self.product = self.env.ref('product.product_delivery_01')
+        self.product = self.products['prod_del']
         so_vals = {
             'partner_id': self.partner.id,
             'partner_invoice_id': self.partner.id,
@@ -276,6 +280,7 @@ class TestSaleStock(TestSale):
         item1 = self.products['prod_order']  # consumable
         item1.type = 'consu'
         item2 = self.products['prod_del']    # storable
+        item2.type = 'product'    # storable
 
         self.so = self.env['sale.order'].create({
             'partner_id': self.partner.id,
@@ -342,7 +347,9 @@ class TestSaleStock(TestSale):
         """
         # sell two products
         item1 = self.products['prod_order']  # consumable
+        item1.type = 'consu'  # consumable
         item2 = self.products['prod_del']    # storable
+        item2.type = 'product'    # storable
 
         self.env['stock.quant']._update_available_quantity(item2, self.env.ref('stock.stock_location_stock'), 2)
         self.so = self.env['sale.order'].create({
@@ -378,7 +385,7 @@ class TestSaleStock(TestSale):
         """
         item1 = self.products['prod_order']
         partner1 = self.partner.id
-        partner2 = self.env.ref('base.res_partner_2').id
+        partner2 = self.env['res.partner'].create({'name': 'Another Test Partner'})
         so1 = self.env['sale.order'].create({
             'partner_id': partner1,
             'order_line': [(0, 0, {
@@ -399,7 +406,7 @@ class TestSaleStock(TestSale):
         so1.action_confirm()
         self.assertEqual(len(so1.picking_ids), 2)
         picking2 = so1.picking_ids.filtered(lambda p: p.state != 'cancel')
-        self.assertEqual(picking2.partner_id.id, partner2)
+        self.assertEqual(picking2.partner_id.id, partner2.id)
 
     def test_06_uom(self):
         """ Sell a dozen of products stocked in units. Check that the quantities on the sale order
@@ -628,6 +635,7 @@ class TestSaleStock(TestSale):
         self.env['stock.quant']._update_reserved_quantity(item1, warehouse1.lot_stock_id, 3)
         warehouse2 = self.env['stock.warehouse'].create({
             'partner_id': self.env.ref('base.main_partner').id,
+            'name': 'Zizizatestwarehouse',
             'code': 'Test',
         })
         self.env['stock.quant']._update_available_quantity(item1, warehouse2.lot_stock_id, 5)

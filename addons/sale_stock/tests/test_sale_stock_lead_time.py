@@ -9,12 +9,12 @@ from odoo.addons.stock.tests.common2 import TestStockCommon
 
 class TestSaleStockLeadTime(TestStockCommon):
 
-    def setUp(self):
-        super(TestSaleStockLeadTime, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super(TestSaleStockLeadTime, cls).setUpClass()
 
         # Update the product_1 with type and Customer Lead Time
-        self.product_1.write({'type': 'product',
-                              'sale_delay': 5.0})
+        cls.product_1.write({'type': 'product', 'sale_delay': 5.0})
 
     def test_00_product_company_level_delays(self):
         """ In order to check schedule date, set product's Customer Lead Time
