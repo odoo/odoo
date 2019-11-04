@@ -82,7 +82,7 @@ var lastSteps = [{
 
 tour.register('test_certification_failure', {
     test: true,
-    url: '/survey/start/4ead4bc8-b8f2-4760-a682-1fde8ddb95ac'
+    url: '/survey/start/4ead4bc8-b8f2-4760-a682-1fde8daaaaac'
 }, [].concat(failSteps, retrySteps, failSteps, lastSteps));
 
 });
