@@ -67,8 +67,10 @@ class TestOnchangeProductId(TransactionCase):
 
     def test_pricelist_application(self):
         """ Test different prices are correctly applied based on dates """
-        support_product = self.env.ref('product.product_product_2')
-        support_product.list_price = 100
+        support_product = self.env['product.product'].create({
+            'name': 'Virtual Home Staging',
+            'list_price': 100,
+        })
         partner = self.res_partner_model.create(dict(name="George"))
 
         christmas_pricelist = self.env['product.pricelist'].create({
@@ -115,8 +117,10 @@ class TestOnchangeProductId(TransactionCase):
 
     def test_pricelist_uom_discount(self):
         """ Test prices and discounts are correctly applied based on date and uom"""
-        computer_case = self.env.ref('product.product_product_16')
-        computer_case.list_price = 100
+        computer_case = self.env['product.product'].create({
+            'name': 'Drawer Black',
+            'list_price': 100,
+        })
         partner = self.res_partner_model.create(dict(name="George"))
         categ_unit_id = self.ref('uom.product_uom_categ_unit')
         goup_discount_id = self.ref('product.group_discount_per_so_line')
@@ -167,8 +171,10 @@ class TestOnchangeProductId(TransactionCase):
 
     def test_pricelist_based_on_other(self):
         """ Test price and discount are correctly applied with a pricelist based on an other one"""
-        computer_case = self.env.ref('product.product_product_16')
-        computer_case.list_price = 100
+        computer_case = self.env['product.product'].create({
+            'name': 'Drawer Black',
+            'list_price': 100,
+        })
         partner = self.res_partner_model.create(dict(name="George"))
         goup_discount_id = self.ref('product.group_discount_per_so_line')
         self.env.user.write({'groups_id': [(4, goup_discount_id, 0)]})
@@ -217,7 +223,10 @@ class TestOnchangeProductId(TransactionCase):
 
     def test_pricelist_with_other_currency(self):
         """ Test prices are correctly applied with a pricelist with an other currency"""
-        computer_case = self.env.ref('product.product_product_16')
+        computer_case = self.env['product.product'].create({
+            'name': 'Drawer Black',
+            'list_price': 100,
+        })
         computer_case.list_price = 100
         partner = self.res_partner_model.create(dict(name="George"))
         categ_unit_id = self.ref('uom.product_uom_categ_unit')
