@@ -343,7 +343,7 @@ msgstr ""
 "                                % endfor\n"
 "                            </ol>\n"
 "                            % if ctx.get('partner_in_portal'):\n"
-"                                Vui lòng đăng nhập vào <a href=\"${object.get_portal_url()}\">Cổng thông tin đối tác</a> để có được thông tin chi tiết. Trên mỗi dây dẫn có hai nút ở góc trên cùng bên trái mà bạn nên nhấn sau khi liên hệ với đầu mối: \"Quan tâm\" &amp; \"Không quan tâm\".<br/>\n"
+"                                Vui lòng đăng nhập vào <a href=\"${object.get_portal_url()}\">Cổng thông tin đối tác</a> để có được thông tin chi tiết. Trên mỗi dây dẫn có hai nút ở góc trên cùng bên trái mà bạn nên nhấn sau khi liên hệ với tiềm năng: \"Quan tâm\" &amp; \"Không quan tâm\".<br/>\n"
 "                            % else:\n"
 "                                Bạn chưa có quyền truy cập cổng thông tin vào cơ sở dữ liệu của chúng tôi. Vui lòng liên hệ\n"
 "                                ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'us'}.<br/>\n"
@@ -845,7 +845,7 @@ msgstr "Đánh giá đối tác gần đây"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__lead_id
 msgid "Lead"
-msgstr "Đầu mối"
+msgstr "Tiềm năng"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -870,24 +870,24 @@ msgstr "Vị trí Tiềm năng"
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_crm_lead_forward_to_partner
 msgid "Lead forward to partner"
-msgstr "Chuyển tiếp đầu mối đến các đối tác"
+msgstr "Chuyển tiếp Tiềm năng đến các đối tác"
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_crm_lead
 msgid "Lead/Opportunity"
-msgstr "Đầu mối/Cơ hội"
+msgstr "Tiềm năng/Cơ hội"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_lead
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_menu_lead
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_leads
 msgid "Leads"
-msgstr "Các đầu mối"
+msgstr "Các Tiềm năng"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_partner_grade_form
 msgid "Level"
-msgstr "Mức độ"
+msgstr "Cấp độ"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__name
