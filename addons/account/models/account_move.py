@@ -2943,12 +2943,6 @@ class AccountMoveLine(models.Model):
             # A constraint on account.tax.repartition.line ensures both those fields are mutually exclusive
             record.tax_line_id = rep_line.invoice_tax_id or rep_line.refund_tax_id
 
-    @api.depends('account_id.user_type_id')
-    def _compute_is_unaffected_earnings_line(self):
-        for record in self:
-            unaffected_earnings_type = self.env.ref("account.data_unaffected_earnings")
-            record.is_unaffected_earnings_line = unaffected_earnings_type == record.account_id.user_type_id
-
     @api.depends('tag_ids', 'debit', 'credit', 'journal_id')
     def _compute_tax_audit(self):
         separator = '        '
