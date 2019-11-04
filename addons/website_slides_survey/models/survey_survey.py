@@ -14,3 +14,7 @@ class Survey(models.Model):
             return True
 
         return super(Survey, self)._check_answer_creation(user, partner, email, test_entry=test_entry, check_attempts=check_attempts, invite_token=invite_token)
+
+    def _prepare_challenge_category(self):
+        slide_survey = self.env['slide.slide'].search([('survey_id', '=', self.id)])
+        return 'slides' if slide_survey else 'certification'

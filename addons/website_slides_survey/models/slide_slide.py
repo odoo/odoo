@@ -57,7 +57,33 @@ class Slide(models.Model):
         rec = super(Slide, self).create(values)
         if rec.survey_id:
             rec.slide_type = 'certification'
+        if 'survey_id' in values:
+            rec._ensure_challenge_category()
         return rec
+
+    def write(self, values):
+        old_surveys = self.mapped('survey_id')
+        result = super(Slide, self).write(values)
+        if 'survey_id' in values:
+            self._ensure_challenge_category(old_surveys=old_surveys - self.mapped('survey_id'))
+        return result
+
+    def unlink(self):
+        old_surveys = self.mapped('survey_id')
+        result = super(Slide, self).unlink()
+        self._ensure_challenge_category(old_surveys=old_surveys, unlink=True)
+        return result
+
+    def _ensure_challenge_category(self, old_surveys=None, unlink=False):
+        """ If a slide is linked to a survey that gives a badge, the challenge category of this badge must be
+        set to 'slides' in order to appear under the certification badge list on ranks_badges page.
+        If the survey is unlinked from the slide, the challenge category must be reset to 'certification'"""
+        if old_surveys:
+            old_certification_challenges = old_surveys.mapped('certification_badge_id').challenge_ids
+            old_certification_challenges.write({'challenge_category': 'certification'})
+        if not unlink:
+            certification_challenges = self.mapped('survey_id').mapped('certification_badge_id').challenge_ids
+            certification_challenges.write({'challenge_category': 'slides'})
 
     def _generate_certification_url(self):
         """ get a map of certification url for certification slide from `self`. The url will come from the survey user input:
