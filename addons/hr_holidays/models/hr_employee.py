@@ -12,6 +12,7 @@ class HrEmployeeBase(models.AbstractModel):
 
     leave_manager_id = fields.Many2one(
         'res.users', string='Time Off',
+        compute='_compute_leave_manager', store=True, readonly=False,
         help="User responsible of leaves approval.")
     remaining_leaves = fields.Float(
         compute='_compute_remaining_leaves', string='Remaining Paid Time Off',
@@ -119,13 +120,13 @@ class HrEmployeeBase(models.AbstractModel):
             employee.current_leave_id = leave_data.get(employee.id, {}).get('current_leave_id')
             employee.is_absent = leave_data.get(employee.id) and leave_data.get(employee.id, {}).get('current_leave_state') not in ['cancel', 'refuse', 'draft']
 
-    @api.onchange('parent_id')
-    def _onchange_parent_id(self):
-        super(HrEmployeeBase, self)._onchange_parent_id()
-        previous_manager = self._origin.parent_id.user_id
-        manager = self.parent_id.user_id
-        if manager and self.leave_manager_id == previous_manager or not self.leave_manager_id:
-            self.leave_manager_id = manager
+    @api.depends('parent_id')
+    def _compute_leave_manager(self):
+        for employee in self:
+            previous_manager = employee._origin.parent_id.user_id
+            manager = employee.parent_id.user_id
+            if manager and employee.leave_manager_id == previous_manager or not employee.leave_manager_id:
+                employee.leave_manager_id = manager
 
     def _compute_show_leaves(self):
         show_leaves = self.env['res.users'].has_group('hr_holidays.group_hr_holidays_user')
@@ -144,20 +145,7 @@ class HrEmployeeBase(models.AbstractModel):
         ])
         return [('id', 'in', holidays.mapped('employee_id').ids)]
 
-    @api.model
-    def create(self, values):
-        if 'parent_id' in values:
-            manager = self.env['hr.employee'].browse(values['parent_id']).user_id
-            values['leave_manager_id'] = values.get('leave_manager_id', manager.id)
-        return super(HrEmployeeBase, self).create(values)
-
     def write(self, values):
-        if 'parent_id' in values:
-            manager = self.env['hr.employee'].browse(values['parent_id']).user_id
-            if manager:
-                to_change = self.filtered(lambda e: e.leave_manager_id == e.parent_id.user_id or not e.leave_manager_id)
-                to_change.write({'leave_manager_id': values.get('leave_manager_id', manager.id)})
-
         res = super(HrEmployeeBase, self).write(values)
         if 'parent_id' in values or 'department_id' in values:
             today_date = fields.Datetime.now()
