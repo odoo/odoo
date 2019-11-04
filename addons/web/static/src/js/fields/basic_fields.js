@@ -365,6 +365,16 @@ var InputField = DebouncedField.extend({
 var NumericField = InputField.extend({
     tagName: 'span',
 
+    /**
+     * @override
+     */
+    init() {
+        this._super.apply(this, arguments);
+        this.shouldFormat = Boolean(
+            JSON.parse('format' in this.nodeOptions ? this.nodeOptions.format : true)
+        );
+    },
+
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
@@ -427,7 +437,7 @@ var NumericField = InputField.extend({
      * @private
      */
     _formatValue: function (value) {
-        if (this.mode === 'edit' && this.nodeOptions.type === 'number') {
+        if (!this.shouldFormat || (this.mode === 'edit' && this.nodeOptions.type === 'number')) {
             return value;
         }
         return this._super.apply(this, arguments);

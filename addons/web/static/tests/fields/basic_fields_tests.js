@@ -4812,6 +4812,70 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('integer field without formatting', async function (assert) {
+        assert.expect(3);
+
+        this.data.partner.records = [{
+            'id': 999,
+            'int_field': 8069,
+        }];
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                '<field name="int_field" options="{\'format\': \'false\'}"/>' +
+            '</form>',
+            res_id: 999,
+            translateParameters: {
+                thousands_sep: ",",
+                grouping: [3, 0],
+            },
+        });
+
+        assert.ok(form.$('.o_form_view').hasClass('o_form_readonly'), 'Form in readonly mode');
+        assert.strictEqual(form.$('.o_field_widget[name=int_field]').text(), '8069',
+            'Integer value must not be formatted');
+        await testUtils.form.clickEdit(form);
+
+        assert.strictEqual(form.$('.o_field_widget').val(), '8069',
+            'Integer value must not be formatted');
+
+        form.destroy();
+    });
+
+    QUnit.test('integer field is formatted by default', async function (assert) {
+        assert.expect(3);
+
+        this.data.partner.records = [{
+            'id': 999,
+            'int_field': 8069,
+        }];
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                '<field name="int_field" />' +
+            '</form>',
+            res_id: 999,
+            translateParameters: {
+                thousands_sep: ",",
+                grouping: [3, 0],
+            },
+        });
+        assert.ok(form.$('.o_form_view').hasClass('o_form_readonly'), 'Form in readonly mode');
+        assert.strictEqual(form.$('.o_field_widget[name=int_field]').text(), '8,069',
+            'Integer value must be formatted by default');
+        await testUtils.form.clickEdit(form);
+
+        assert.strictEqual(form.$('.o_field_widget').val(), '8,069',
+            'Integer value must be formatted by default');
+
+        form.destroy();
+    });
 
     QUnit.module('FieldFloatTime');
 
