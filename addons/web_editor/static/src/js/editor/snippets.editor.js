@@ -97,7 +97,7 @@ var SnippetEditor = Widget.extend({
             $customize.find('.oe_snippet_clone').addClass('d-none');
         }
 
-        if (!this.isTargetParentEditable) {
+        if (!this.isTargetParentEditable || this.$target.is('.carousel-item')) { // TODO get rid of the carousel-item hack somehow
             $customize.find('.oe_snippet_remove').addClass('d-none');
         }
 
