@@ -286,6 +286,8 @@ class PosSession(models.Model):
         self._create_account_move()
         if self.move_id.line_ids:
             self.move_id.post()
+            # Set the uninvoiced orders' state to 'done'
+            self.env['pos.order'].search([('session_id', '=', self.id), ('state', '=', 'paid')]).write({'state': 'done'})
         else:
             # The cash register needs to be confirmed for cash diffs
             # made thru cash in/out when sesion is in cash_control.
