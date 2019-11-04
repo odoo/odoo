@@ -4,21 +4,22 @@ import logging
 _logger = logging.getLogger(__name__)
 
 from odoo.tests.common import HttpCase, tagged
+from odoo.addons.account.tests.account_minimal_test import AccountMinimalTest
 
-
-class AccountingTestCase(HttpCase):
-    """ This class extends the base TransactionCase, in order to test the
+class AccountingTestCase(AccountMinimalTest):
+    """ This class extends the base SavePoint Case, in order to test the
     accounting with localization setups. It is configured to run the tests after
     the installation of all modules, and will SKIP TESTS if it  cannot find an already
     configured accounting (which means no localization module has been installed).
     """
 
-    def setUp(self):
-        super(AccountingTestCase, self).setUp()
-        domain = [('company_id', '=', self.env.ref('base.main_company').id)]
-        if not self.env['account.account'].search_count(domain):
+    @classmethod
+    def setUpClass(cls):
+        super(AccountingTestCase, cls).setUpClass()
+        domain = [('company_id', '=', cls.env.company.id)]
+        if not cls.env['account.account'].search_count(domain):
             _logger.warning('Test skipped because there is no chart of account defined ...')
-            self.skipTest("No Chart of account found")
+            cls.skipTest(cls, "No Chart of account found")
 
     def ensure_account_property(self, property_name):
         '''Ensure the ir.property targeting an account.account passed as parameter exists.

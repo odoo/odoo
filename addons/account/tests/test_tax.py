@@ -6,77 +6,78 @@ from odoo.tests import tagged
 @tagged('post_install', '-at_install')
 class TestTax(AccountTestUsers):
 
-    def setUp(self):
-        super(TestTax, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super(TestTax, cls).setUpClass()
 
-        self.fixed_tax = self.tax_model.create({
+        cls.fixed_tax = cls.tax_model.create({
             'name': "Fixed tax",
             'amount_type': 'fixed',
             'amount': 10,
             'sequence': 1,
         })
-        self.fixed_tax_bis = self.tax_model.create({
+        cls.fixed_tax_bis = cls.tax_model.create({
             'name': "Fixed tax bis",
             'amount_type': 'fixed',
             'amount': 15,
             'sequence': 2,
         })
-        self.percent_tax = self.tax_model.create({
+        cls.percent_tax = cls.tax_model.create({
             'name': "Percent tax",
             'amount_type': 'percent',
             'amount': 10,
             'sequence': 3,
         })
-        self.percent_tax_bis = self.tax_model.create({
+        cls.percent_tax_bis = cls.tax_model.create({
             'name': "Percent tax bis",
             'amount_type': 'percent',
             'amount': 10,
             'sequence': 4,
         })
-        self.division_tax = self.tax_model.create({
+        cls.division_tax = cls.tax_model.create({
             'name': "Division tax",
             'amount_type': 'division',
             'amount': 10,
             'sequence': 4,
         })
-        self.group_tax = self.tax_model.create({
+        cls.group_tax = cls.tax_model.create({
             'name': "Group tax",
             'amount_type': 'group',
             'amount': 0,
             'sequence': 5,
             'children_tax_ids': [
-                (4, self.fixed_tax.id, 0),
-                (4, self.percent_tax.id, 0)
+                (4, cls.fixed_tax.id, 0),
+                (4, cls.percent_tax.id, 0)
             ]
         })
-        self.group_tax_bis = self.tax_model.create({
+        cls.group_tax_bis = cls.tax_model.create({
             'name': "Group tax bis",
             'amount_type': 'group',
             'amount': 0,
             'sequence': 6,
             'children_tax_ids': [
-                (4, self.fixed_tax.id, 0),
-                (4, self.percent_tax.id, 0)
+                (4, cls.fixed_tax.id, 0),
+                (4, cls.percent_tax.id, 0)
             ]
         })
-        self.group_of_group_tax = self.tax_model.create({
+        cls.group_of_group_tax = cls.tax_model.create({
             'name': "Group of group tax",
             'amount_type': 'group',
             'amount': 0,
             'sequence': 7,
             'children_tax_ids': [
-                (4, self.group_tax.id, 0),
-                (4, self.group_tax_bis.id, 0)
+                (4, cls.group_tax.id, 0),
+                (4, cls.group_tax_bis.id, 0)
             ]
         })
-        self.tax_with_no_account = self.tax_model.create({
+        cls.tax_with_no_account = cls.tax_model.create({
             'name': "Tax with no account",
             'amount_type': 'fixed',
             'amount': 0,
             'sequence': 8,
         })
-        some_account = self.env['account.account'].search([], limit=1)
-        self.tax_with_account = self.tax_model.create({
+        some_account = cls.env['account.account'].search([], limit=1)
+        cls.tax_with_account = cls.tax_model.create({
             'name': "Tax with account",
             'amount_type': 'fixed',
             'amount': 0,
@@ -106,9 +107,9 @@ class TestTax(AccountTestUsers):
                 }),
             ],
         })
-        self.bank_journal = self.env['account.journal'].search([('type', '=', 'bank'), ('company_id', '=', self.account_manager.company_id.id)])[0]
-        self.bank_account = self.bank_journal.default_debit_account_id
-        self.expense_account = self.env['account.account'].search([('user_type_id.type', '=', 'payable')], limit=1) #Should be done by onchange later
+        cls.bank_journal = cls.env['account.journal'].search([('type', '=', 'bank'), ('company_id', '=', cls.account_manager.company_id.id)])[0]
+        cls.bank_account = cls.bank_journal.default_debit_account_id
+        cls.expense_account = cls.env['account.account'].search([('user_type_id.type', '=', 'payable')], limit=1) #Should be done by onchange later
 
     def _check_compute_all_results(self, total_included, total_excluded, taxes, res):
         self.assertAlmostEqual(res['total_included'], total_included)
