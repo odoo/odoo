@@ -5,11 +5,13 @@ from odoo.tests import Form
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.exceptions import UserError
 
-
 class TestUnbuild(TestMrpCommon):
     def setUp(self):
         super(TestUnbuild, self).setUp()
         self.stock_location = self.env.ref('stock.stock_location_stock')
+        self.env.ref('base.group_user').write({
+            'implied_ids': [(4, self.env.ref('stock.group_production_lot').id)]
+        })
 
     def test_unbuild_standart(self):
         """ This test creates a MO and then creates 3 unbuild

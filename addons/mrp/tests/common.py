@@ -154,3 +154,27 @@ class TestMrpCommon(common2.TestStockCommon):
                 (0, 0, {'product_id': cls.product_4.id, 'product_qty': 8}),
                 (0, 0, {'product_id': cls.product_2.id, 'product_qty': 12})
             ]})
+        cls.stock_location_14 = cls.env['stock.location'].create({
+            'name': 'Shelf 2',
+            'location_id': cls.env.ref('stock.warehouse0').lot_stock_id.id,
+        })
+        cls.stock_location_components = cls.env['stock.location'].create({
+            'name': 'Shelf 1',
+            'location_id': cls.env.ref('stock.warehouse0').lot_stock_id.id,
+        })
+        cls.laptop = cls.env['product.product'].create({
+            'name': 'Acoustic Bloc Screens',
+            'uom_id': cls.env.ref("uom.product_uom_unit").id,
+            'uom_po_id': cls.env.ref("uom.product_uom_unit").id,
+            'type': 'product',
+            'tracking': 'none',
+            'categ_id': cls.env.ref('product.product_category_all').id,
+        })
+        cls.graphics_card = cls.env['product.product'].create({
+            'name': 'Individual Workplace',
+            'uom_id': cls.env.ref("uom.product_uom_unit").id,
+            'uom_po_id': cls.env.ref("uom.product_uom_unit").id,
+            'type': 'product',
+            'tracking': 'none',
+            'categ_id': cls.env.ref('product.product_category_all').id,
+        })
