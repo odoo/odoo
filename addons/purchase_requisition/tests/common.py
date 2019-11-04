@@ -35,7 +35,7 @@ class TestPurchaseRequisitionCommon(common.SavepointCase):
 
         cls.product_09 = cls.env['product.product'].create({
             'name': 'Pedal Bin',
-            'categ_id': cls.env.ref('product.product_category_5').id,
+            'categ_id': cls.env.ref('product.product_category_all').id,
             'standard_price': 10.0,
             'list_price': 47.0,
             'type': 'consu',
@@ -46,7 +46,7 @@ class TestPurchaseRequisitionCommon(common.SavepointCase):
 
         cls.product_13 = cls.env['product.product'].create({
             'name': 'Corner Desk Black',
-            'categ_id': cls.env.ref('product.product_category_5').id,
+            'categ_id': cls.env.ref('product.product_category_all').id,
             'standard_price': 78.0,
             'list_price': 85.0,
             'type': 'consu',
@@ -64,5 +64,7 @@ class TestPurchaseRequisitionCommon(common.SavepointCase):
                 'product_uom_id': cls.product_uom_id.id})]
             })
 
-        cls.res_partner_1 = cls.env.ref('base.res_partner_1')
+        cls.res_partner_1 = cls.env['res.partner'].create({
+            'name': 'Wood Corner',
+        })
         cls.env.user.company_id.currency_id = cls.env.ref("base.USD").id
