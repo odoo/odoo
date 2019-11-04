@@ -4,6 +4,7 @@ try:
     from unittest.mock import patch
 except ImportError:
     from mock import patch
+from odoo.addons.base.tests.common import TransactionCaseWithUserDemo, HttpCaseWithUserPortal
 from odoo.tests import tagged
 from odoo.tests.common import HttpCase, TransactionCase
 from odoo.tools import DotDict
@@ -37,15 +38,58 @@ class TestWebsitePriceList(TransactionCase):
     def setUp(self):
         super(TestWebsitePriceList, self).setUp()
         self.env.user.partner_id.country_id = False  # Remove country to avoid property pricelist computed.
-        self.website = self.env['website'].browse(1)
+        self.website = self.env.ref('website.default_website')
         self.website.user_id = self.env.user
 
-        self.env['product.pricelist'].search([]).write({'website_id': False})
-        website_pls = ('list_benelux', 'list_christmas', 'list_europe')
-        for pl in website_pls:
-            self.env.ref('website_sale.' + pl).website_id = self.website.id
+        (self.env['product.pricelist'].search([]) - self.env.ref('product.list0')).write({'website_id': False, 'active': False})
+        self.benelux = self.env['res.country.group'].create({
+            'name': 'BeNeLux',
+            'country_ids': [(6, 0, (self.env.ref('base.be') + self.env.ref('base.lu') + self.env.ref('base.nl')).ids)]
+        })
+        self.list_benelux = self.env['product.pricelist'].create({
+            'name': 'Benelux',
+            'selectable': True,
+            'website_id': self.website.id,
+            'country_group_ids': [(4, self.benelux.id)],
+            'sequence': 2,
+        })
+        item_benelux = self.env['product.pricelist.item'].create({
+            'pricelist_id': self.list_benelux.id,
+            'compute_price': 'percentage',
+            'base': 'list_price',
+            'percent_price': 10,
+            'currency_id': self.env.ref('base.EUR').id,
+        })
+
+
+        self.list_christmas = self.env['product.pricelist'].create({
+            'name': 'Christmas',
+            'selectable': False,
+            'website_id': self.website.id,
+            'country_group_ids': [(4, self.env.ref('base.europe').id)],
+            'sequence': 20,
+        })
+        item_christmas = self.env['product.pricelist.item'].create({
+            'pricelist_id': self.list_christmas.id,
+            'compute_price': 'formula',
+            'base': 'list_price',
+            'price_discount': 20,
+        })
+
+        list_europe = self.env['product.pricelist'].create({
+            'name': 'EUR',
+            'selectable': True,
+            'website_id': self.website.id,
+            'country_group_ids': [(4, self.env.ref('base.europe').id)],
+            'sequence': 3,
+            'currency_id': self.env.ref('base.EUR').id,
+        })
+        item_europe = self.env['product.pricelist.item'].create({
+            'pricelist_id': list_europe.id,
+            'compute_price': 'formula',
+            'base': 'list_price',
+        })
         self.env.ref('product.list0').website_id = self.website.id
-        self.env.ref('website_sale.list_benelux').selectable = True
         self.website.pricelist_id = self.ref('product.list0')
 
         ca_group = self.env['res.country.group'].create({
@@ -112,7 +156,7 @@ class TestWebsitePriceList(TransactionCase):
                               % (country, len(pls), pls.mapped('name'), len(result), result))
 
     def test_get_pricelist_available_promocode(self):
-        christmas_pl = self.ref('website_sale.list_christmas')
+        christmas_pl = self.list_christmas.id
 
         country_list = {
             False: True,
@@ -265,7 +309,11 @@ class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
 
         # set different country groups on pricelists
         c_EUR = self.env.ref('base.europe')
-        c_BENELUX = self.env.ref('website_sale.benelux')
+        c_BENELUX = self.env['res.country.group'].create({
+            'name': 'BeNeLux',
+            'country_ids': [(6, 0, (self.env.ref('base.be') + self.env.ref('base.lu') + self.env.ref('base.nl')).ids)]
+        })
+
         self.BE = self.env.ref('base.be')
         NL = self.env.ref('base.nl')
         c_BE = self.env['res.country.group'].create({'name': 'Belgium', 'country_ids': [(6, 0, [self.BE.id])]})
@@ -324,7 +372,7 @@ class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
 
 
 @tagged('post_install', '-at_install')
-class TestWebsitePriceListHttp(HttpCase):
+class TestWebsitePriceListHttp(HttpCaseWithUserPortal):
     def test_get_pricelist_available_multi_company(self):
         ''' Test that the `property_product_pricelist` of `res.partner` is not
             computed as SUPERUSER_ID.
@@ -348,7 +396,7 @@ class TestWebsitePriceListHttp(HttpCase):
 
 
 @tagged('post_install', '-at_install')
-class TestWebsitePriceListMultiCompany(TransactionCase):
+class TestWebsitePriceListMultiCompany(TransactionCaseWithUserDemo):
     def setUp(self):
         ''' Create a basic multi-company pricelist environment:
         - Set up 2 companies with their own company-restricted pricelist each.
@@ -359,14 +407,14 @@ class TestWebsitePriceListMultiCompany(TransactionCase):
         '''
         super(TestWebsitePriceListMultiCompany, self).setUp()
 
-        self.demo_user = self.env.ref('base.user_demo')
+        self.demo_user = self.user_demo
 
         # Create and add demo user to 2 companies
         self.company1 = self.demo_user.company_id
         self.company2 = self.env['res.company'].create({'name': 'Test Company'})
         self.demo_user.company_ids += self.company2
         # Set company2 as current company for demo user
-        self.website = self.env['website'].browse(1)
+        self.website = self.env.ref('website.default_website')
         self.website.company_id = self.company2
 
         # Create a company pricelist for each company and set it to demo user
@@ -431,4 +479,4 @@ class TestWebsitePriceListMultiCompany(TransactionCase):
         # Indeed, the ir.rule for pricelists rights about company should allow to
         # also read a pricelist from another company if that company is the one
         # from the currently visited website.
-        self.env(user=self.env.ref('base.user_demo'))['product.pricelist'].browse(demo_pl.id).name
+        self.env(user=self.user_demo)['product.pricelist'].browse(demo_pl.id).name
