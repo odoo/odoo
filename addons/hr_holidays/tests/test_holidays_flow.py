@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-
+import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from psycopg2 import IntegrityError
@@ -83,6 +83,30 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         Requests = self.env['hr.leave']
         Allocations = self.env['hr.leave.allocation']
         HolidaysStatus = self.env['hr.leave.type']
+
+        holiday_status_paid_time_off = self.env['hr.leave.type'].create({
+            'name': 'Paid Time Off',
+            'allocation_type': 'fixed',
+            'validation_type': 'both',
+            'validity_start': time.strftime('%Y-%m-01'),
+            'responsible_id': self.env.ref('base.user_admin').id,
+        })
+
+        self.env['hr.leave.allocation'].create([
+            {
+                'name': 'Paid Time off for David',
+                'holiday_status_id': holiday_status_paid_time_off.id,
+                'number_of_days': 20,
+                'employee_id': self.employee_emp_id,
+                'state': 'validate',
+            }, {
+                'name': 'Paid Time off for David',
+                'holiday_status_id': holiday_status_paid_time_off.id,
+                'number_of_days': 20,
+                'employee_id': self.ref('hr.employee_admin'),
+                'state': 'validate',
+            }
+        ])
 
         def _check_holidays_status(holiday_status, ml, lt, rl, vrl):
             self.assertEqual(holiday_status.max_leaves, ml,
@@ -172,7 +196,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
 
         employee_id = self.ref('hr.employee_admin')
         # cl can be of maximum 20 days for employee_admin
-        hol3_status = self.env.ref('hr_holidays.holiday_status_cl').with_context(employee_id=employee_id)
+        hol3_status = holiday_status_paid_time_off.with_context(employee_id=employee_id)
         # I assign the dates in the holiday request for 1 day
         hol3 = Requests.create({
             'name': 'Sick Time Off',
@@ -201,11 +225,11 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         # Print the HR Holidays(Summary Employee) Report through the wizard
         ctx = {
             'model': 'hr.employee',
-            'active_ids': [self.ref('hr.employee_admin'), self.ref('hr.employee_qdp'), self.ref('hr.employee_al')]
+            'active_ids': [self.ref('hr.employee_admin')]
         }
         data_dict = {
             'date_from': datetime.today().strftime('%Y-%m-01'),
-            'emp': [(6, 0, [self.ref('hr.employee_admin'), self.ref('hr.employee_qdp'), self.ref('hr.employee_al')])],
+            'emp': [(6, 0, [self.ref('hr.employee_admin')])],
             'holiday_type': 'Approved'
         }
         self.env.company.external_report_layout_id = self.env.ref('web.external_layout_standard').id
@@ -216,9 +240,25 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         # error message is triggered if the date_from is after
         # date_to. Coming from a bug due to the new ORM 13.0
 
+        holiday_status_paid_time_off = self.env['hr.leave.type'].create({
+            'name': 'Paid Time Off',
+            'allocation_type': 'fixed',
+            'validation_type': 'both',
+            'validity_start': time.strftime('%Y-%m-01'),
+            'responsible_id': self.env.ref('base.user_admin').id,
+        })
+
+        self.env['hr.leave.allocation'].create({
+            'name': 'Paid Time off for David',
+            'holiday_status_id': holiday_status_paid_time_off.id,
+            'number_of_days': 20,
+            'employee_id': self.ref('hr.employee_admin'),
+            'state': 'validate',
+        })
+
         leave_vals = {
             'name': 'Sick Time Off',
-            'holiday_status_id': self.env.ref('hr_holidays.holiday_status_cl').id,
+            'holiday_status_id': holiday_status_paid_time_off.id,
             'date_from': datetime.today().strftime('%Y-%m-11 19:00:00'),
             'date_to': datetime.today().strftime('%Y-%m-10 10:00:00'),
             'employee_id': self.ref('hr.employee_admin'),
@@ -231,7 +271,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
 
         leave_vals = {
             'name': 'Sick Time Off',
-            'holiday_status_id': self.env.ref('hr_holidays.holiday_status_cl').id,
+            'holiday_status_id': holiday_status_paid_time_off.id,
             'date_from': datetime.today().strftime('%Y-%m-10 10:00:00'),
             'date_to': datetime.today().strftime('%Y-%m-11 19:00:00'),
             'employee_id': self.ref('hr.employee_admin'),
