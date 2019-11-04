@@ -20,6 +20,7 @@ import unittest
 import psutil
 import werkzeug.serving
 from werkzeug.debug import DebuggedApplication
+from odoo.tests.common import OdooSuite
 
 if os.name == 'posix':
     # Unix only for workers
@@ -1130,7 +1131,7 @@ def load_test_file_py(registry, test_file):
             for mod_mod in get_test_modules(mod):
                 mod_path, _ = os.path.splitext(getattr(mod_mod, '__file__', ''))
                 if test_path == mod_path:
-                    suite = unittest.TestSuite()
+                    suite = OdooSuite()
                     for t in unittest.TestLoader().loadTestsFromModule(mod_mod):
                         suite.addTest(t)
                     _logger.log(logging.INFO, 'running tests %s.', mod_mod.__name__)
