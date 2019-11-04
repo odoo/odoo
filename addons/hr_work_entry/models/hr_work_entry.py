@@ -35,7 +35,7 @@ class HrWorkEntry(models.Model):
         ('_work_entry_start_before_end', 'check (date_stop > date_start)', 'Starting time should be before end time.')
     ]
 
-    @api.onchange('state')
+    @api.depends('state')
     def _compute_conflict(self):
         for rec in self:
             rec.conflict = rec.state == 'conflict'

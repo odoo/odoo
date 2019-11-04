@@ -72,12 +72,12 @@
         <field name="name">hr.work.entry.tree</field>
         <field name="model">hr.work.entry</field>
         <field name="arch" type="xml">
-            <tree>
-                <field name="name"/>
-                <field name="work_entry_type_id"/>
-                <field name="duration"/>
+            <tree multi_edit="1">
+                <field name="name" readonly="1"/>
+                <field name="work_entry_type_id" attrs="{'readonly': [('state', '=', 'validated')]}" options="{'no_create': True, 'no_open': True}"/>
+                <field name="duration" readonly="1"/>
                 <field name="state"/>
-                <field name="date_start" string="Beginning"/>
+                <field name="date_start" string="Beginning" readonly="1"/>
             </tree>
         </field>
     </record>

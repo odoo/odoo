@@ -12,6 +12,17 @@
             </field>
         </record>
 
+        <record id="view_employee_tree_inherit_expense" model="ir.ui.view">
+            <field name="name">hr.employee.tree.expense</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='work_location']" position="after">
+                    <field name="expense_manager_id" optional="hide"/>
+                </xpath>
+            </field>
+        </record>
+
         <record id="res_users_view_form_preferences" model="ir.ui.view">
             <field name="name">hr.user.preferences.form.inherit.hr.expense</field>
             <field name="model">res.users</field>

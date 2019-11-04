@@ -29,7 +29,9 @@ class HrEmployeeBase(models.AbstractModel):
     resource_id = fields.Many2one('resource.resource')
     resource_calendar_id = fields.Many2one('resource.calendar', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     parent_id = fields.Many2one('hr.employee', 'Manager', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-    coach_id = fields.Many2one('hr.employee', 'Coach', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    coach_id = fields.Many2one(
+        'hr.employee', 'Coach', compute='_compute_coach', store=True, readonly=False,
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     tz = fields.Selection(
         string='Timezone', related='resource_id.tz', readonly=False,
         help="This field is used in order to define in which timezone the resources will work.")
@@ -77,9 +79,10 @@ class HrEmployeeBase(models.AbstractModel):
                 employee.last_activity = False
                 employee.last_activity_time = False
 
-    @api.onchange('parent_id')
-    def _onchange_parent_id(self):
-        manager = self.parent_id
-        previous_manager = self._origin.parent_id
-        if manager and (self.coach_id == previous_manager or not self.coach_id):
-            self.coach_id = manager
+    @api.depends('parent_id')
+    def _compute_coach(self):
+        for employee in self:
+            manager = employee.parent_id
+            previous_manager = employee._origin.parent_id
+            if manager and (employee.coach_id == previous_manager or not employee.coach_id):
+                employee.coach_id = manager
