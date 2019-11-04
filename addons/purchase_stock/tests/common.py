@@ -22,11 +22,6 @@ class TestPurchase(TestStockCommon):
             product.name, '/', self.env.company, order_values)
         ])
 
-    def _load(self, module, *args):
-        tools.convert_file(self.cr, 'purchase',
-                           get_module_resource(module, *args),
-                           {}, 'init', False, 'test', self.registry._assertion_report)
-
     @classmethod
     def setUpClass(cls):
         super(TestPurchase, cls).setUpClass()
