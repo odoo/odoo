@@ -219,7 +219,7 @@ class TestComputeRankCommon(common.SavepointCase):
 
         cls.rank_1 = cls.env['gamification.karma.rank'].create({
             'name': 'rank 1',
-            'karma_min': 0,
+            'karma_min': 1,
         })
 
         cls.rank_2 = cls.env['gamification.karma.rank'].create({
