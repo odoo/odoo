@@ -440,7 +440,7 @@ class WebsiteSlides(WebsiteProfile):
                 last_message_values = last_message.read(['body', 'rating_value', 'attachment_ids'])[0]
                 last_message_attachment_ids = last_message_values.pop('attachment_ids', [])
                 if last_message_attachment_ids:
-                    last_message_attachment_ids = json.dumps(request.env['ir.attachment'].browse(last_message_attachment_ids).read(
+                    last_message_attachment_ids = json.dumps(request.env['ir.attachment'].sudo().browse(last_message_attachment_ids).read(
                         ['id', 'name', 'mimetype', 'file_size', 'access_token']
                     ))
             else:
