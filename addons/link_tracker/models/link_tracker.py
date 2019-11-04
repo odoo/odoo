@@ -15,7 +15,7 @@ from odoo import models, fields, api, _
 
 
 URL_REGEX = r'(\bhref=[\'"](?!mailto:|tel:|sms:)([^\'"]+)[\'"])'
-TEXT_URL_REGEX = r'(https?:\/\/(www\.)?[a-zA-Z0-9@:%._\+~#=/-]{1,64})'
+TEXT_URL_REGEX = r'https?://[a-zA-Z0-9@:%._\+~#=/-]+(?:\?\S+)?'
 
 
 def VALIDATE_URL(url):
@@ -168,8 +168,7 @@ class LinkTracker(models.Model):
     def _convert_links_text(self, body, vals, blacklist=None):
         shortened_schema = self.env['ir.config_parameter'].sudo().get_param('web.base.url') + '/r/'
         unsubscribe_schema = self.env['ir.config_parameter'].sudo().get_param('web.base.url') + '/sms/'
-        for match in re.findall(TEXT_URL_REGEX, body):
-            original_url = match[0]
+        for original_url in re.findall(TEXT_URL_REGEX, body):
             # don't shorten already-shortened links or links towards unsubscribe page
             if original_url.startswith(shortened_schema) or original_url.startswith(unsubscribe_schema):
                 continue
