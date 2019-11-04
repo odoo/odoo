@@ -192,7 +192,7 @@
                     <li t-if="company.phone" class="list-inline-item"><i class="fa fa-phone" role="img" aria-label="Phone" title="Phone"/> <span t-field="company.phone"/></li>
                     <li t-if="company.email" class="list-inline-item"><i class="fa fa-at" role="img" aria-label="Email" title="Email"/> <span t-field="company.email"/></li>
                     <li t-if="company.website" class="list-inline-item"><i class="fa fa-globe" role="img" aria-label="Website" title="Website"/> <span t-field="company.website"/></li>
-                    <li t-if="company.vat" class="list-inline-item"><i class="fa fa-building-o" role="img" aria-label="Fiscal number"/><t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-field="company.vat"/></li>
+                    <li t-if="company.vat" class="list-inline-item"><i class="fa fa-building-o" role="img" aria-label="Fiscal number"/><t t-esc="(company.country_id.vat_label or 'Tax ID').replace(' ','\N{NO-BREAK SPACE}')"/>: <span t-esc="company.vat.replace(' ','\N{NO-BREAK SPACE}')"/></li>
                 </ul>
                 <div t-field="company.report_footer"/>
                 <div t-if="report_type == 'pdf'" class="text-muted">
@@ -234,7 +234,7 @@
                     <li t-if="company.phone" class="list-inline-item">Tel: <span t-field="company.phone"/></li>
                     <li t-if="company.email" class="list-inline-item">Mail: <span t-field="company.email"/></li>
                     <li t-if="company.website" class="list-inline-item">Web: <span t-field="company.website"/></li>
-                    <li t-if="company.vat" class="list-inline-item"><t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-field="company.vat"/></li>
+                    <li t-if="company.vat" class="list-inline-item"><t t-esc="(company.country_id.vat_label or 'Tax ID').replace(' ','\N{NO-BREAK SPACE}')"/>: <span t-esc="company.vat.replace(' ','\N{NO-BREAK SPACE}')"/></li>
                 </ul>
                 <div t-field="company.report_footer"/>
                 <div t-if="report_type == 'pdf'">
@@ -323,7 +323,7 @@
                     <li t-if="company.phone" class="list-inline-item">Phone: <span t-field="company.phone"/></li>
                     <li t-if="company.email" class="list-inline-item">Email: <span t-field="company.email"/></li>
                     <li t-if="company.website" class="list-inline-item">Web: <span t-field="company.website"/></li>
-                    <li t-if="company.vat" class="list-inline-item"><t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-field="company.vat"/></li>
+                    <li t-if="company.vat" class="list-inline-item"><t t-esc="(company.country_id.vat_label or 'Tax ID').replace(' ','\N{NO-BREAK SPACE}')"/>: <span t-esc="company.vat.replace(' ','\N{NO-BREAK SPACE}')"/></li>
                 </ul>
 
                 <div name="financial_infos">
