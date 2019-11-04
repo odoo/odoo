@@ -72,6 +72,9 @@ class StripeTest(StripeCommon):
         })
         self.stripe.render('SO404', 320.0, self.currency_euro.id, values=self.buyer_values).decode('utf-8')
 
+    @unittest.skip(
+        "as the test is post-install and because payment_strip_sca changes"
+        "the code logic and is automatically installed, this test is invalid.")
     def test_30_stripe_form_management(self):
         self.assertEqual(self.stripe.environment, 'test', 'test without test environment')
 
