@@ -53,7 +53,7 @@ def start_bootstrap(dbname, config_path=None):
     return db, cr, pool
 
 
-def end_bootstrap(db, cr):
+def end_bootstrap(cr):
     cr.close()
     # Don't close the **all** DB connection in production!! Otherwise, parallel
     # process may be killed!?
@@ -252,4 +252,4 @@ if __name__ == "__main__":
     try:
         args.func(args)
     finally:
-        end_bootstrap(db, cr)
+        end_bootstrap(cr)
