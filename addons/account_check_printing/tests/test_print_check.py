@@ -13,22 +13,23 @@ import math
 @tagged('post_install', '-at_install')
 class TestPrintCheck(AccountingTestCase):
 
-    def setUp(self):
-        super(TestPrintCheck, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super(TestPrintCheck, cls).setUpClass()
 
-        self.invoice_model = self.env['account.move']
-        self.invoice_line_model = self.env['account.move.line']
-        self.payment_model = self.env['account.payment']
+        cls.invoice_model = cls.env['account.move']
+        cls.invoice_line_model = cls.env['account.move.line']
+        cls.payment_model = cls.env['account.payment']
 
-        self.partner_axelor = self.env.ref("base.res_partner_2")
-        self.product = self.env.ref("product.product_product_4")
-        self.payment_method_check = self.env.ref("account_check_printing.account_payment_method_check")
+        cls.partner_axelor = cls.env['res.partner'].create({'name': 'A Partner'})
+        cls.product = cls.env['product.product'].create({'name': 'A test Product'})
+        cls.payment_method_check = cls.env.ref("account_check_printing.account_payment_method_check")
 
-        self.account_payable = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_payable').id)], limit=1)
-        self.account_expenses = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_expenses').id)], limit=1)
+        cls.account_payable = cls.env['account.account'].search([('user_type_id', '=', cls.env.ref('account.data_account_type_payable').id)], limit=1)
+        cls.account_expenses = cls.env['account.account'].search([('user_type_id', '=', cls.env.ref('account.data_account_type_expenses').id)], limit=1)
 
-        self.bank_journal = self.env['account.journal'].create({'name': 'Bank', 'type': 'bank', 'code': 'BNK67'})
-        self.bank_journal.check_manual_sequencing = True
+        cls.bank_journal = cls.env['account.journal'].create({'name': 'Bank', 'type': 'bank', 'code': 'BNK67'})
+        cls.bank_journal.check_manual_sequencing = True
 
     def create_invoice(self, amount=100, is_refund=False):
         invoice = self.env['account.move'].with_context(default_type=is_refund and 'out_refund' or 'in_invoice').create({
