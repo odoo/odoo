@@ -11,7 +11,7 @@ tour.register('check_free_delivery', {
         // Part 1: Check free delivery
         {
             content: "select office chair black",
-            trigger: '.oe_product_cart:first a:contains("Office Chair Black")',
+            trigger: '.oe_product_cart a:contains("Office Chair Black TEST")',
         },
         {
             content: "click on add to cart",
