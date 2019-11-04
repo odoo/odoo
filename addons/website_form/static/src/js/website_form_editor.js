@@ -313,6 +313,12 @@ odoo.define('website_form_editor', function (require) {
 
         append_field: function (field) {
             var self = this;
+            // Copy formatting classes of last row (field)
+            var $lastField = this.$target.find('.form-field.row:last');
+            field.formatInfo = {
+                labelClass: $lastField.find('> div:first').attr('class'),
+                contentClass: $lastField.find('> div:last').attr('class'),
+            };
             this.render_field(field).then(function (field){
                 self.$target.find(".form-group:has('.o_website_form_send')").before(field);
             });
@@ -531,6 +537,10 @@ odoo.define('website_form_editor', function (require) {
                     string: this.$target.find('.col-form-label').text().trim(),
                     required: self.$target.hasClass('o_website_form_required'),
                     custom: self.$target.hasClass('o_website_form_custom'),
+                    formatInfo: {
+                        labelClass: this.$target.find('> div:first').attr('class'),
+                        contentClass: this.$target.find('> div:last').attr('class'),
+                    },
                 };
 
                 // Build the new records list from the editable select field
@@ -553,10 +563,6 @@ odoo.define('website_form_editor', function (require) {
                 if (this.$target.hasClass('o_website_form_field_hidden')) {
                     $new_select.addClass('o_website_form_field_hidden');
                 }
-                var labelClasses = this.$target.find('> div:first').attr('class');
-                var inputClasses = this.$target.find('> div:last').attr('class');
-                $new_select.find('> div:first').attr('class', labelClasses);
-                $new_select.find('> div:last').attr('class', inputClasses);
                 this.$target.replaceWith($new_select);
             }
         }
