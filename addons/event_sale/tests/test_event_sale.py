@@ -36,7 +36,7 @@ class EventSaleTest(common.TransactionCase):
 
         # I create a sales order
         self.sale_order = self.env['sale.order'].create({
-            'partner_id': self.env.ref('base.res_partner_2').id,
+            'partner_id': self.env['res.partner'].create({'name': 'My Attendee'}).id,
             'note': 'Invoice after delivery',
             'payment_term_id': self.env.ref('account.account_payment_term_end_following_month').id
         })
@@ -93,7 +93,7 @@ class EventSaleTest(common.TransactionCase):
         test_event_ticket = self.env['event.event.ticket'].create({
             'name': 'TestTicket',
             'event_id': test_event.id,
-            'product_id': 1,
+            'product_id': self.env['product.product'].search([], limit=1).id,
         })
         test_event_ticket.copy()
         test_event_ticket.product_id.active = False
