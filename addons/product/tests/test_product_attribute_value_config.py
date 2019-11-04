@@ -6,108 +6,114 @@ from psycopg2 import IntegrityError
 
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests import tagged
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import SavepointCase
 from odoo.tools import mute_logger
 
 
-class TestProductAttributeValueSetup(TransactionCase):
-    def setUp(self):
-        super(TestProductAttributeValueSetup, self).setUp()
+class TestProductAttributeValueSetup(SavepointCase):
+    @classmethod
+    def setUpClass(cls):
+        super(TestProductAttributeValueSetup, cls).setUpClass()
 
-        self.computer = self.env['product.template'].create({
+        cls.computer = cls.env['product.template'].create({
             'name': 'Super Computer',
             'price': 2000,
         })
 
-        self._add_ssd_attribute()
-        self._add_ram_attribute()
-        self._add_hdd_attribute()
+        cls._add_ssd_attribute()
+        cls._add_ram_attribute()
+        cls._add_hdd_attribute()
 
-        self.computer_case = self.env['product.template'].create({
+        cls.computer_case = cls.env['product.template'].create({
             'name': 'Super Computer Case'
         })
 
-        self._add_size_attribute()
+        cls._add_size_attribute()
 
-    def _add_ssd_attribute(self):
-        self.ssd_attribute = self.env['product.attribute'].create({'name': 'Memory', 'sequence': 1})
-        self.ssd_256 = self.env['product.attribute.value'].create({
+    @classmethod
+    def _add_ssd_attribute(cls):
+        cls.ssd_attribute = cls.env['product.attribute'].create({'name': 'Memory', 'sequence': 1})
+        cls.ssd_256 = cls.env['product.attribute.value'].create({
             'name': '256 GB',
-            'attribute_id': self.ssd_attribute.id,
+            'attribute_id': cls.ssd_attribute.id,
             'sequence': 1,
         })
-        self.ssd_512 = self.env['product.attribute.value'].create({
+        cls.ssd_512 = cls.env['product.attribute.value'].create({
             'name': '512 GB',
-            'attribute_id': self.ssd_attribute.id,
+            'attribute_id': cls.ssd_attribute.id,
             'sequence': 2,
         })
 
-        self._add_ssd_attribute_line()
+        cls._add_ssd_attribute_line()
 
-    def _add_ssd_attribute_line(self):
-        self.computer_ssd_attribute_lines = self.env['product.template.attribute.line'].create({
-            'product_tmpl_id': self.computer.id,
-            'attribute_id': self.ssd_attribute.id,
-            'value_ids': [(6, 0, [self.ssd_256.id, self.ssd_512.id])],
+    @classmethod
+    def _add_ssd_attribute_line(cls):
+        cls.computer_ssd_attribute_lines = cls.env['product.template.attribute.line'].create({
+            'product_tmpl_id': cls.computer.id,
+            'attribute_id': cls.ssd_attribute.id,
+            'value_ids': [(6, 0, [cls.ssd_256.id, cls.ssd_512.id])],
         })
-        self.computer_ssd_attribute_lines.product_template_value_ids[0].price_extra = 200
-        self.computer_ssd_attribute_lines.product_template_value_ids[1].price_extra = 400
+        cls.computer_ssd_attribute_lines.product_template_value_ids[0].price_extra = 200
+        cls.computer_ssd_attribute_lines.product_template_value_ids[1].price_extra = 400
 
-    def _add_ram_attribute(self):
-        self.ram_attribute = self.env['product.attribute'].create({'name': 'RAM', 'sequence': 2})
-        self.ram_8 = self.env['product.attribute.value'].create({
+    @classmethod
+    def _add_ram_attribute(cls):
+        cls.ram_attribute = cls.env['product.attribute'].create({'name': 'RAM', 'sequence': 2})
+        cls.ram_8 = cls.env['product.attribute.value'].create({
             'name': '8 GB',
-            'attribute_id': self.ram_attribute.id,
+            'attribute_id': cls.ram_attribute.id,
             'sequence': 1,
         })
-        self.ram_16 = self.env['product.attribute.value'].create({
+        cls.ram_16 = cls.env['product.attribute.value'].create({
             'name': '16 GB',
-            'attribute_id': self.ram_attribute.id,
+            'attribute_id': cls.ram_attribute.id,
             'sequence': 2,
         })
-        self.ram_32 = self.env['product.attribute.value'].create({
+        cls.ram_32 = cls.env['product.attribute.value'].create({
             'name': '32 GB',
-            'attribute_id': self.ram_attribute.id,
+            'attribute_id': cls.ram_attribute.id,
             'sequence': 3,
         })
-        self.computer_ram_attribute_lines = self.env['product.template.attribute.line'].create({
-            'product_tmpl_id': self.computer.id,
-            'attribute_id': self.ram_attribute.id,
-            'value_ids': [(6, 0, [self.ram_8.id, self.ram_16.id, self.ram_32.id])],
+        cls.computer_ram_attribute_lines = cls.env['product.template.attribute.line'].create({
+            'product_tmpl_id': cls.computer.id,
+            'attribute_id': cls.ram_attribute.id,
+            'value_ids': [(6, 0, [cls.ram_8.id, cls.ram_16.id, cls.ram_32.id])],
         })
-        self.computer_ram_attribute_lines.product_template_value_ids[0].price_extra = 20
-        self.computer_ram_attribute_lines.product_template_value_ids[1].price_extra = 40
-        self.computer_ram_attribute_lines.product_template_value_ids[2].price_extra = 80
+        cls.computer_ram_attribute_lines.product_template_value_ids[0].price_extra = 20
+        cls.computer_ram_attribute_lines.product_template_value_ids[1].price_extra = 40
+        cls.computer_ram_attribute_lines.product_template_value_ids[2].price_extra = 80
 
-    def _add_hdd_attribute(self):
-        self.hdd_attribute = self.env['product.attribute'].create({'name': 'HDD', 'sequence': 3})
-        self.hdd_1 = self.env['product.attribute.value'].create({
+    @classmethod
+    def _add_hdd_attribute(cls):
+        cls.hdd_attribute = cls.env['product.attribute'].create({'name': 'HDD', 'sequence': 3})
+        cls.hdd_1 = cls.env['product.attribute.value'].create({
             'name': '1 To',
-            'attribute_id': self.hdd_attribute.id,
+            'attribute_id': cls.hdd_attribute.id,
             'sequence': 1,
         })
-        self.hdd_2 = self.env['product.attribute.value'].create({
+        cls.hdd_2 = cls.env['product.attribute.value'].create({
             'name': '2 To',
-            'attribute_id': self.hdd_attribute.id,
+            'attribute_id': cls.hdd_attribute.id,
             'sequence': 2,
         })
-        self.hdd_4 = self.env['product.attribute.value'].create({
+        cls.hdd_4 = cls.env['product.attribute.value'].create({
             'name': '4 To',
-            'attribute_id': self.hdd_attribute.id,
+            'attribute_id': cls.hdd_attribute.id,
             'sequence': 3,
         })
 
-        self._add_hdd_attribute_line()
+        cls._add_hdd_attribute_line()
 
-    def _add_hdd_attribute_line(self):
-        self.computer_hdd_attribute_lines = self.env['product.template.attribute.line'].create({
-            'product_tmpl_id': self.computer.id,
-            'attribute_id': self.hdd_attribute.id,
-            'value_ids': [(6, 0, [self.hdd_1.id, self.hdd_2.id, self.hdd_4.id])],
+    @classmethod
+    def _add_hdd_attribute_line(cls):
+        cls.computer_hdd_attribute_lines = cls.env['product.template.attribute.line'].create({
+            'product_tmpl_id': cls.computer.id,
+            'attribute_id': cls.hdd_attribute.id,
+            'value_ids': [(6, 0, [cls.hdd_1.id, cls.hdd_2.id, cls.hdd_4.id])],
         })
-        self.computer_hdd_attribute_lines.product_template_value_ids[0].price_extra = 2
-        self.computer_hdd_attribute_lines.product_template_value_ids[1].price_extra = 4
-        self.computer_hdd_attribute_lines.product_template_value_ids[2].price_extra = 8
+        cls.computer_hdd_attribute_lines.product_template_value_ids[0].price_extra = 2
+        cls.computer_hdd_attribute_lines.product_template_value_ids[1].price_extra = 4
+        cls.computer_hdd_attribute_lines.product_template_value_ids[2].price_extra = 8
 
     def _add_ram_exclude_for(self):
         self._get_product_value_id(self.computer_ram_attribute_lines, self.ram_16).update({
@@ -117,27 +123,28 @@ class TestProductAttributeValueSetup(TransactionCase):
             })]
         })
 
-    def _add_size_attribute(self):
-        self.size_attribute = self.env['product.attribute'].create({'name': 'Size', 'sequence': 4})
-        self.size_m = self.env['product.attribute.value'].create({
+    @classmethod
+    def _add_size_attribute(cls):
+        cls.size_attribute = cls.env['product.attribute'].create({'name': 'Size', 'sequence': 4})
+        cls.size_m = cls.env['product.attribute.value'].create({
             'name': 'M',
-            'attribute_id': self.size_attribute.id,
+            'attribute_id': cls.size_attribute.id,
             'sequence': 1,
         })
-        self.size_l = self.env['product.attribute.value'].create({
+        cls.size_l = cls.env['product.attribute.value'].create({
             'name': 'L',
-            'attribute_id': self.size_attribute.id,
+            'attribute_id': cls.size_attribute.id,
             'sequence': 2,
         })
-        self.size_xl = self.env['product.attribute.value'].create({
+        cls.size_xl = cls.env['product.attribute.value'].create({
             'name': 'XL',
-            'attribute_id': self.size_attribute.id,
+            'attribute_id': cls.size_attribute.id,
             'sequence': 3,
         })
-        self.computer_case_size_attribute_lines = self.env['product.template.attribute.line'].create({
-            'product_tmpl_id': self.computer_case.id,
-            'attribute_id': self.size_attribute.id,
-            'value_ids': [(6, 0, [self.size_m.id, self.size_l.id, self.size_xl.id])],
+        cls.computer_case_size_attribute_lines = cls.env['product.template.attribute.line'].create({
+            'product_tmpl_id': cls.computer_case.id,
+            'attribute_id': cls.size_attribute.id,
+            'value_ids': [(6, 0, [cls.size_m.id, cls.size_l.id, cls.size_xl.id])],
         })
 
     def _get_product_value_id(self, product_template_attribute_lines, product_attribute_value):
