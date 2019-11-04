@@ -11,7 +11,8 @@ class PortalAccount(CustomerPortal):
 
     def _prepare_portal_layout_values(self):
         values = super(PortalAccount, self)._prepare_portal_layout_values()
-        invoice_count = request.env['account.move'].search_count([
+        # An internal user could not have access to the account.move model
+        invoice_count = request.env['account.move'].sudo().search_count([
             ('type', 'in', ('out_invoice', 'in_invoice', 'out_refund', 'in_refund', 'out_receipt', 'in_receipt')),
         ])
         values['invoice_count'] = invoice_count
