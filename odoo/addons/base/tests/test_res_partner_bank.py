@@ -3,10 +3,10 @@
 
 # Copyright (c) 2015 ACSONE SA/NV (<http://acsone.eu>)
 
-from odoo.tests.common import TransactionCase
+from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 
 
-class TestResPartnerBank(TransactionCase):
+class TestResPartnerBank(SavepointCaseWithUserDemo):
     """Tests acc_number
     """
 
@@ -17,7 +17,7 @@ class TestResPartnerBank(TransactionCase):
         self.assertEqual(0, len(vals))
         partner_bank = partner_bank_model.create({
             'acc_number': acc_number,
-            'partner_id': self.ref('base.res_partner_2'),
+            'partner_id': self.env['res.partner'].create({'name': 'Pepper Test'}).id,
             'acc_type': 'bank',
         })
         vals = partner_bank_model.search([('acc_number', '=', acc_number)])

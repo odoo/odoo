@@ -610,6 +610,7 @@ class TestQWeb(TransactionCase):
         return lambda: self.run_test_file(os.path.join(path, f))
 
     def run_test_file(self, path):
+        self.env.user.tz = 'Europe/Brussels'
         doc = etree.parse(path).getroot()
         loader = FileSystemLoader(path)
         qweb = self.env['ir.qweb']
