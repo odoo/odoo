@@ -3890,9 +3890,42 @@ class AccountPartialReconcile(models.Model):
 
     @api.model
     def _prepare_exchange_diff_partial_reconcile(self, aml, line_to_reconcile, currency):
+        """
+        Prepares the values for the partial reconciliation between an account.move.line
+        that needs to be fixed by an exchange rate entry and the account.move.line that fixes it
+
+        @param {account.move.line} aml:
+            The line that needs fixing with exchange difference entry
+            (e.g. a receivable/payable from an invoice)
+        @param {account.move.line} line_to_reconcile:
+            The line that fixes the aml. it is the receivable/payable line
+            of the exchange difference entry move
+        @param {res.currency} currency
+
+        @return {dict} values of account.partial.reconcile; ready for create()
+        """
+
+        # the exhange rate difference that will be fixed may be of opposite direction
+        # than the original move line (i.e. the exchange difference may be negative whereas
+        # the move line on which it applies may be a debit -- positive)
+        # So we need to register both the move line and the exchange line
+        # to either debit_move or credit_move as a function of whether the direction (debit VS credit)
+        # of the exchange loss/gain is the same (or not) as the direction of the line that is fixed here
+        if aml.currency_id:
+            residual_same_sign = aml.amount_currency * aml.amount_residual_currency >= 0
+        else:
+            residual_same_sign = aml.balance * aml.amount_residual >= 0
+
+        if residual_same_sign:
+            debit_move_id = line_to_reconcile.id if aml.credit else aml.id
+            credit_move_id = line_to_reconcile.id if aml.debit else aml.id
+        else:
+            debit_move_id = aml.id if aml.credit else line_to_reconcile.id
+            credit_move_id = aml.id if aml.debit else line_to_reconcile.id
+
         return {
-            'debit_move_id': aml.credit and line_to_reconcile.id or aml.id,
-            'credit_move_id': aml.debit and line_to_reconcile.id or aml.id,
+            'debit_move_id': debit_move_id,
+            'credit_move_id': credit_move_id,
             'amount': abs(aml.amount_residual),
             'amount_currency': abs(aml.amount_residual_currency),
             'currency_id': currency and currency.id or False,
