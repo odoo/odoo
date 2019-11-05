@@ -485,9 +485,12 @@
                 <div class="form-inline py-4 float-right">
                     <strong class="form-group text-white mr-2">Rank by :</strong>
                     <div class="form-group btn-group">
-                        <button type="button" t-attf-class="btn btn-secondary #{ 'active' if group_by == 'week' else ''}" onclick="location.href='/profile/users?group_by=week'">This week</button>
-                        <button type="button" t-attf-class="btn btn-secondary #{ 'active' if group_by == 'month' else ''}" onclick="location.href='/profile/users?group_by=month'">This month</button>
-                        <button type="button" t-attf-class="btn btn-secondary #{ 'active' if group_by == 'all' else ''}" onclick="location.href='/profile/users'">All time</button>
+                        <a t-attf-class="btn btn-secondary #{ 'active' if group_by == 'week' else ''}"
+                            t-att-href="'/profile/users?' + keep_query('search', group_by='week')">This week</a>
+                        <a t-attf-class="btn btn-secondary #{ 'active' if group_by == 'month' else ''}"
+                            t-att-href="'/profile/users?' + keep_query('search', group_by='month')">This month</a>
+                        <a t-attf-class="btn btn-secondary #{ 'active' if group_by == 'all' else ''}"
+                            t-att-href="'/profile/users?' + keep_query('search')">All time</a>
                     </div>
                 </div>
             </div>
@@ -506,7 +509,7 @@
                     <t t-call="website_profile.all_user_card"/>
                 </tr>
             </table>
-            <t t-if='search'>
+            <t t-if='search and not users'>
                 <div class='alert alert-warning'>No user found for <strong><t t-esc="search"/></strong>. Try another search.</div>
             </t>
             <div class="form-inline justify-content-center">
