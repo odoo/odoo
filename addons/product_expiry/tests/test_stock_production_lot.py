@@ -314,6 +314,56 @@ class TestStockProductionLot(TestStockCommon):
         self.assertAlmostEqual(
             apple_lot.alert_date, expiration_date - timedelta(days=6), delta=time_gap)
 
+    def test_04_2_expiration_date_on_receipt(self):
+        """ Test we can set an expiration date on receipt even if all expiration
+        date related fields aren't set on product. """
+        partner = self.env['res.partner'].create({
+            'name': 'Apple\'s Joe',
+            'company_id': self.env.ref('base.main_company').id,
+        })
+        # Unset some fields.
+        self.apple_product.expiration_time = False
+        self.apple_product.removal_time = False
+
+        expiration_date = datetime.today() + timedelta(days=30)
+        time_gap = timedelta(seconds=10)
+
+        # Receives a tracked production using expiration date.
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.partner_id = partner
+        picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = self.apple_product
+            move.product_uom_qty = 4
+        receipt = picking_form.save()
+        receipt.action_confirm()
+
+        # Defines a date during the receipt.
+        move = receipt.move_ids_without_package[0]
+        line = move.move_line_ids[0]
+        self.assertEqual(move.use_expiration_date, True)
+        line.lot_name = 'Apple Box #3'
+        line.expiration_date = expiration_date
+        line.qty_done = 4
+
+        receipt._action_done()
+        # Get back the lot created when the picking was done...
+        apple_lot = self.env['stock.production.lot'].search(
+            [('product_id', '=', self.apple_product.id)],
+            limit=1,
+        )
+        # ... and checks all date fields are correctly set.
+        self.assertAlmostEqual(
+            apple_lot.expiration_date, expiration_date, delta=time_gap,
+            msg="Must be define even if the product's `expiration_time` isn't set.")
+        self.assertAlmostEqual(
+            apple_lot.use_date, expiration_date + timedelta(days=5), delta=time_gap)
+        self.assertEqual(
+            apple_lot.removal_date, False,
+            "Must be false as the `removal_time` isn't set on product.")
+        self.assertAlmostEqual(
+            apple_lot.alert_date, expiration_date + timedelta(days=4), delta=time_gap)
+
     def test_05_confirmation_on_delivery(self):
         """ Test when user tries to delivery expired lot, he/she gets a
         confirmation wizard. """

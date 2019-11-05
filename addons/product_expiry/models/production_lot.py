@@ -103,7 +103,7 @@ class StockProductionLot(models.Model):
 
     def _update_date_values(self, new_date):
         if new_date:
-            time_delta = new_date - self.expiration_date
+            time_delta = new_date - (self.expiration_date or fields.Datetime.now())
             vals = self._get_date_values(time_delta)
             vals['expiration_date'] = new_date
             self.write(vals)
