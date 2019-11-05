@@ -135,6 +135,47 @@ WHERE final.user_id IN %%s""" % {
         self.env.cr.execute(query, tuple(where_clause_params + params))
         return self.env.cr.dictfetchall()
 
+    def _get_karma_position(self, user_domain):
+        """ Get absolute position in term of total karma for users. First a ranking
+        of all users is done given a user_domain; then the position of each user
+        belonging to the current record set is extracted.
+
+        Example: in website profile, search users with name containing Norbert. Their
+        positions should not be 1 to 4 (assuming 4 results), but their actual position
+        in the total karma ranking (with example user_domain being karma > 1,
+        website published True).
+
+        :param user_domain: general domain (i.e. active, karma > 1, website, ...)
+          to compute the absolute position of the current record set
+
+        :return list: [{
+            'user_id': user_id (belonging to current record set),
+            'karma_position': integer, ranking position
+        }, {..}] ordered by karma_position desc
+        """
+        if not self:
+            return {}
+
+        where_query = self.env['res.users']._where_calc(user_domain)
+        user_from_clause, user_where_clause, where_clause_params = where_query.get_sql()
+
+        # we search on every user in the DB to get the real positioning (not the one inside the subset)
+        # then, we filter to get only the subset.
+        query = """
+SELECT sub.user_id, sub.karma_position
+FROM (
+    SELECT "res_users"."id" as user_id, row_number() OVER (ORDER BY res_users.karma DESC) AS karma_position
+    FROM %(user_from_clause)s
+    WHERE %(user_where_clause)s
+) sub
+WHERE sub.user_id IN %%s""" % {
+            'user_from_clause': user_from_clause,
+            'user_where_clause': user_where_clause or 'TRUE',
+        }
+
+        self.env.cr.execute(query, tuple(where_clause_params + [tuple(self.ids)]))
+        return self.env.cr.dictfetchall()
+
     def _rank_changed(self):
         """
             Method that can be called on a batch of users with the same new rank
