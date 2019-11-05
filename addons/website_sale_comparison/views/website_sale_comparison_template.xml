@@ -46,6 +46,7 @@
                                         <td t-esc="att.attribute_id.name"/>
                                         <td>
                                             <t t-set='or_separator'>or</t>
+                                            <t t-if="att.attribute_id.create_variant == 'no_variant'"><t t-set="or_separator">-</t></t>
                                             <t t-esc="(' %s ' % or_separator).join(att.value_ids.mapped('name'))"/>
                                         </td>
                                     </tr>
