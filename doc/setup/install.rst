@@ -475,7 +475,7 @@ Enterprise Edition: (see :ref:`setup/install/editions` to get access)
 
   $ git clone https://github.com/odoo/enterprise.git
 
-.. note:: Those repositories are quite heavy so you might be interrested only fetching the branch
+.. note:: Those repositories are quite heavy so you might be interested only fetching the branch
           you need. See
           `branch
            <https://git-scm.com/docs/git-clone#Documentation/git-clone.txt--bltnamegt>`_
@@ -549,6 +549,7 @@ On Debian/Ubuntu, the requirements file requires the following packages to be in
 Some installations require wheel to be installed via pip too:
 
 .. code-block:: console
+
     $ pip3 install wheel
 
 Navigate to the path of your Odoo Community installation (`YourOdooCommunityPath`) and run **pip**
