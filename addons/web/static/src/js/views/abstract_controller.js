@@ -287,7 +287,7 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
             self.handle = handle || self.handle; // update handle if we reloaded
             var state = self.model.get(self.handle);
             var localState = self.renderer.getLocalState();
-            return self.dp.add(self.renderer.updateState(state, params)).then(function () {
+            return self.dp.add(self.updateRendererState(state, params)).then(function () {
                 if (self._controlPanel && cpUpdateIndex !== self._controlPanel.updateIndex) {
                     return;
                 }
@@ -295,6 +295,18 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
                 return self._update(state, params);
             });
         });
+    },
+
+    /**
+     * Update the state of the renderer.
+     * This method is required to be overridden in OWL components through the controller
+     * adapter
+     *
+     * @param {Object} state the model state
+     * @param {Object} params will be given to the model and to the renderer
+     */
+    updateRendererState: function(state, params) {
+        return this.renderer.updateState(state, params);
     },
 
     //--------------------------------------------------------------------------
