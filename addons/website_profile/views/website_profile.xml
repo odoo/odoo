@@ -481,7 +481,18 @@
         <div class="o_wprofile_all_users_header o_wprofile_gradient mb-n5 pb-5">
             <t t-call="website_profile.user_profile_sub_nav"/>
             <div class="container">
-                <h1 class="py-4 text-white">All Users</h1>
+                <h1 class="py-4 text-white d-inline-block">All Users</h1>
+                <div class="form-inline py-4 float-right">
+                    <strong class="form-group text-white mr-2">Rank by :</strong>
+                    <div class="form-group btn-group">
+                        <a t-attf-class="btn btn-secondary #{ 'active' if group_by == 'week' else ''}"
+                            t-att-href="'/profile/users?' + keep_query('search', group_by='week')">This week</a>
+                        <a t-attf-class="btn btn-secondary #{ 'active' if group_by == 'month' else ''}"
+                            t-att-href="'/profile/users?' + keep_query('search', group_by='month')">This month</a>
+                        <a t-attf-class="btn btn-secondary #{ 'active' if group_by == 'all' else ''}"
+                            t-att-href="'/profile/users?' + keep_query('search')">All time</a>
+                    </div>
+                </div>
             </div>
         </div>
     </template>
@@ -489,7 +500,7 @@
     <template id="users_page_content">
         <div class="container mb32">
             <div class="row mb-3">
-                <div class="col-md-4" t-foreach="top3_users" t-as="user" t-attf-onclick="location.href='/profile/user/#{user['id']}';">
+                <div class="col-md-4 d-flex flex-grow-1" t-foreach="top3_users" t-as="user" t-attf-onclick="location.href='/profile/user/#{user['id']}';">
                     <t t-call="website_profile.top3_user_card"></t>
                 </div>
             </div>
@@ -498,7 +509,7 @@
                     <t t-call="website_profile.all_user_card"/>
                 </tr>
             </table>
-            <t t-if='search'>
+            <t t-if='search and not users'>
                 <div class='alert alert-warning'>No user found for <strong><t t-esc="search"/></strong>. Try another search.</div>
             </t>
             <div class="form-inline justify-content-center">
@@ -508,7 +519,7 @@
     </template>
 
     <template id="top3_user_card" name="Top 3 User Card">
-        <div class="card text-center mb-2 border-bottom-0 o_wprofile_pointer">
+        <div class="card w-100 text-center mb-2 border-bottom-0 o_wprofile_pointer">
             <div class="card-body">
                 <div class="d-inline-block position-relative">
                     <img class="rounded-circle img-fluid"
@@ -519,6 +530,9 @@
                 <h3 class="mt-2 mb-0" t-esc="user['name']"></h3>
                 <span class="badge badge-danger font-weight-normal px-2" t-if="not user['website_published']">Unpublished</span>
                 <strong class="text-muted" t-esc="user['rank']"/>
+                <div class="h3 my-2" t-if="user['karma_gain']">
+                    <span class="badge badge-pill badge-success px-3 py-2" >+ <t t-esc="user['karma_gain']"/> XP</span>
+                </div>
             </div>
             <div class="row mx-0 o_wprofile_top3_card_footer text-nowrap">
                 <div class="col py-3"><b t-esc="user['karma']"/> <span class="text-muted">XP</span></div>
@@ -537,6 +551,17 @@
         <td class="align-middle w-md-75">
             <span class="font-weight-bold" t-esc="user['name']"/><br/>
             <span class="text-muted font-weight-bold" t-esc="user['rank']"></span>
+        </td>
+        <td class="align-middle text-nowrap">
+            <t t-if="user['karma_gain']">
+                <span class="badge badge-pill badge-success d-inline">+ <t t-esc="user['karma_gain']"/> XP</span>
+                <span class="text-muted pl-2 pr-3">
+                    <t t-if="group_by == 'week'">Weekly </t>
+                    <t t-elif="group_by == 'month'">Monthly </t>
+                    <t t-else="">All time </t>
+                    gain
+                </span>
+            </t>
         </td>
          <td t-if="not user['website_published']" class="align-middle font-weight-bold text-right text-nowrap">
             <span class="badge badge-danger font-weight-normal px-2 py-1 m-1">Unpublished</span>
