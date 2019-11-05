@@ -115,23 +115,25 @@
     <!-- Boolean Field -->
     <t t-name="website_form.field_boolean">
         <t t-call="website_form.field">
-            <input
-                type="checkbox"
-                value="Yes"
-                class="o_website_form_input"
-                t-att-name="field.name"
-                t-att-required="field.required"
-            />
+            <div class="col-form-label">
+                <input
+                    type="checkbox"
+                    value="Yes"
+                    class="o_website_form_input"
+                    t-att-name="field.name"
+                    t-att-required="field.required"
+                />
+            </div>
         </t>
     </t>
 
     <!-- Selection Field -->
     <t t-name="website_form.field_selection">
         <t t-call="website_form.field">
-            <div class="o_website_form_flex">
+            <div class="o_website_form_flex" data-display="horizontal">
                 <t t-foreach="field.selection" t-as="option">
                     <div class="radio o_website_form_flex_item">
-                        <label>
+                        <label class="col-form-label">
                             <input
                                 type="radio"
                                 class="o_website_form_input"
@@ -180,7 +182,7 @@
         <!-- Generic one2many -->
         <t t-if="field.relation != 'ir.attachment'">
             <t t-call="website_form.field">
-                <div class="o_website_form_flex">
+                <div class="o_website_form_flex" data-display="horizontal">
                     <t t-if="!field.records">
                         <input
                             class="o_website_form_input"
@@ -192,7 +194,7 @@
                     </t>
                     <t t-foreach="field.records" t-as="record">
                         <div class="checkbox o_website_form_flex_item">
-                            <label>
+                            <label class="col-form-label">
                                 <input
                                     type="checkbox"
                                     class="o_website_form_input"
