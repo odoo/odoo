@@ -179,10 +179,11 @@ class TestActivityMixin(TestActivityCommon):
 
             act3 = self.test_record.activity_schedule(
                 'test_mail.mail_act_test_todo',
-                today_user + relativedelta(days=3),
+                # date_deadline will be set to today + 3 days thanks to the delay in the activity type
                 user_id=self.user_employee.id)
             self.assertEqual(self.test_record.activity_state, 'overdue')
             self.assertEqual(self.test_record.activity_user_id, self.user_employee)
+            self.assertEqual(act3.date_deadline, today_user + relativedelta(days=3))
 
             self.test_record.invalidate_cache(ids=self.test_record.ids)
             self.assertEqual(self.test_record.activity_ids, act1 | act2 | act3)
