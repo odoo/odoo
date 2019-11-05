@@ -1107,10 +1107,6 @@ actual arch.
             for attr in node.attrib
         )
 
-    def translate_qweb(self, arch, lang):
-        # Deprecated: templates are translated once read from database
-        return arch
-
     @tools.ormcache('self.id')
     def get_view_xmlid(self):
         domain = [('model', '=', 'ir.ui.view'), ('res_id', '=', self.id)]
