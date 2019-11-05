@@ -75,7 +75,7 @@ class MembershipLine(models.Model):
                 line.state = 'invoiced'
             elif istate == 'paid':
                 line.state = 'paid'
-                invoices = Invoice.browse(fetched[1]).payment_ids.mapped('invoice_ids')
+                invoices = Invoice.browse(fetched[1]).payment_move_line_ids.mapped('invoice_id')
                 if invoices.filtered(lambda invoice: invoice.type == 'out_refund'):
                     line.state = 'canceled'
             elif istate == 'cancel':
