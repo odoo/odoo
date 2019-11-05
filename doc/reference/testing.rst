@@ -62,11 +62,16 @@ related to testing Odoo content (modules, mainly):
 
 By default, tests are run once right after the corresponding module has been
 installed. Test cases can also be configured to run after all modules have
-been installed, and not run right after the module installation:
+been installed, and not run right after the module installation::
 
-.. autofunction:: odoo.tests.common.at_install
+  # coding: utf-8
+  from odoo.tests import HttpCase, tagged
 
-.. autofunction:: odoo.tests.common.post_install
+  # This test should only be executed after all modules have been installed.
+  @tagged('-at_install', 'post_install')
+  class WebsiteVisitorTests(HttpCase):
+    def test_create_visitor_on_tracked_page(self):
+        Page = self.env['website.page']
 
 The most common situation is to use
 :class:`~odoo.tests.common.TransactionCase` and test a property of a model

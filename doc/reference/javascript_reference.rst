@@ -1777,7 +1777,7 @@ order.
       option is useful to inform the web client that the default field name is
       not the name of the current field, but the name of another field.
 
-    - accepted_file_extensions: the file extension the user can pick from the file input dialog box (default value is 'image/*')
+    - accepted_file_extensions: the file extension the user can pick from the file input dialog box (default value is `image/\*`)
       (cf: ``accept`` attribute on <input type="file"/>)
 
     .. code-block:: xml
@@ -2126,6 +2126,7 @@ Relational fields
     - Supported field types: *many2many*
 
     Options:
+
     - accepted_file_extensions: the file extension the user can pick from the file input dialog box
       (cf: ``accept`` attribute on <input type="file"/>)
 
