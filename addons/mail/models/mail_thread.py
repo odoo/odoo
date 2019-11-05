@@ -917,7 +917,7 @@ class MailThread(models.AbstractModel):
         #        As all MTA does not respect this RFC (googlemail is one of them),
         #       we also need to verify if the message come from "mailer-daemon"
         #    If not a bounce: reset bounce information
-        if bounce_alias and bounce_alias in email_tos_localparts:
+        if bounce_alias and any(bounce_alias in email_to_localpart for email_to_localpart in email_tos_localparts):
             bounce_re = re.compile("%s\+(\d+)-?([\w.]+)?-?(\d+)?" % re.escape(bounce_alias), re.UNICODE)
             bounce_match = bounce_re.search(email_to)
             if bounce_match:
