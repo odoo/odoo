@@ -193,3 +193,123 @@ class TestKarmaTrackingCommon(common.SavepointCase):
         self.assertEqual(user.karma_tracking_ids[1].new_value, 60)
         self.assertEqual(user.karma_tracking_ids[0].old_value, 0)
         self.assertEqual(user.karma_tracking_ids[0].new_value, 32)
+
+
+class TestComputeRankCommon(common.SavepointCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestComputeRankCommon, cls).setUpClass()
+
+        def _patched_send_mail(*args, **kwargs):
+            pass
+
+        patch_email = patch('odoo.addons.mail.models.mail_template.MailTemplate.send_mail', _patched_send_mail)
+        patch_email.start()
+
+        cls.users = cls.env['res.users']
+        for k in range(-5, 1030, 30):
+            cls.users += cls.env['res.users'].with_context(no_reset_password=True, mail_create_nosubscribe=True).create({
+                'name': str(k),
+                'login': "test_recompute_rank_%s" % k,
+                'karma': k,
+            })
+
+        cls.env['gamification.karma.rank'].search([]).unlink()
+
+        cls.rank_1 = cls.env['gamification.karma.rank'].create({
+            'name': 'rank 1',
+            'karma_min': 0,
+        })
+
+        cls.rank_2 = cls.env['gamification.karma.rank'].create({
+            'name': 'rank 2',
+            'karma_min': 250,
+        })
+
+        cls.rank_3 = cls.env['gamification.karma.rank'].create({
+            'name': 'rank 3',
+            'karma_min': 500,
+        })
+        cls.rank_4 = cls.env['gamification.karma.rank'].create({
+            'name': 'rank 4',
+            'karma_min': 1000,
+        })
+
+        patch_email.stop()
+
+    def test_00_initial_compute(self):
+
+        self.assertEqual(len(self.users), 35)
+
+        self.assertEqual(
+            len(self.rank_1.user_ids & self.users),
+            len([u for u in self.users if u.karma >= self.rank_1.karma_min and u.karma < self.rank_2.karma_min])
+        )
+        self.assertEqual(
+            len(self.rank_2.user_ids & self.users),
+            len([u for u in self.users if u.karma >= self.rank_2.karma_min and u.karma < self.rank_3.karma_min])
+        )
+        self.assertEqual(
+            len(self.rank_3.user_ids & self.users),
+            len([u for u in self.users if u.karma >= self.rank_3.karma_min and u.karma < self.rank_4.karma_min])
+        )
+        self.assertEqual(
+            len(self.rank_4.user_ids & self.users),
+            len([u for u in self.users if u.karma >= self.rank_4.karma_min])
+        )
+
+    def test_01_switch_rank(self):
+
+        self.assertEqual(len(self.users), 35)
+
+        self.rank_3.karma_min = 100
+        # rank_1 -> rank_3 -> rank_2 -> rank_4
+
+        self.assertEqual(
+            len(self.rank_1.user_ids & self.users),
+            len([u for u in self.users if u.karma >= self.rank_1.karma_min and u.karma < self.rank_3.karma_min])
+        )
+        self.assertEqual(
+            len(self.rank_3.user_ids & self.users),
+            len([u for u in self.users if u.karma >= self.rank_3.karma_min and u.karma < self.rank_2.karma_min])
+        )
+        self.assertEqual(
+            len(self.rank_2.user_ids & self.users),
+            len([u for u in self.users if u.karma >= self.rank_2.karma_min and u.karma < self.rank_4.karma_min])
+        )
+        self.assertEqual(
+            len(self.rank_4.user_ids & self.users),
+            len([u for u in self.users if u.karma >= self.rank_4.karma_min])
+        )
+
+    def test_02_update_rank_without_switch(self):
+        number_of_users = False
+
+        def _patched_recompute_rank(_self, *args, **kwargs):
+            nonlocal number_of_users
+            number_of_users = len(_self & self.users)
+
+        patch_bulk = patch('odoo.addons.gamification.models.res_users.Users._recompute_rank', _patched_recompute_rank)
+        patch_bulk.start()
+        self.rank_3.karma_min = 700
+        self.assertEqual(number_of_users, 7, "Should just recompute for the 7 users between 500 and 700")
+        patch_bulk.stop()
+
+    def test_03_test_bulk_call(self):
+        self.assertEqual(len(self.users), 35)
+
+        def _patched_check_in_bulk(*args, **kwargs):
+            raise
+
+        patch_bulk = patch('odoo.addons.gamification.models.res_users.Users._recompute_rank_bulk', _patched_check_in_bulk)
+        patch_bulk.start()
+
+        # call on 5 users should not trigger the bulk function
+        self.users[0:5]._recompute_rank()
+
+        # call on 50 users should trigger the bulk function
+        with self.assertRaises(Exception):
+            self.users[0:50]._recompute_rank()
+
+        patch_bulk.stop()
