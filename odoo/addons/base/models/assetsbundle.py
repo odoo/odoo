@@ -102,6 +102,8 @@ class AssetsBundle(object):
     rx_preprocess_imports = re.compile("""(@import\s?['"]([^'"]+)['"](;?))""")
     rx_css_split = re.compile("\/\*\! ([a-f0-9-]+) \*\/")
 
+    TRACKED_BUNDLES = ['web.assets_common', 'web.assets_backend']
+
     def __init__(self, name, files, env=None):
         self.name = name
         self.env = request.env if env is None else env
@@ -154,6 +156,8 @@ class AssetsBundle(object):
                         ["type", "text/css"],
                         ["rel", "stylesheet"],
                         ["href", attachment.url],
+                        ['data-asset-xmlid', self.name],
+                        ['data-asset-version', self.version],
                     ])
                     response.append(("link", attr, None))
                 if self.css_errors:
@@ -165,6 +169,8 @@ class AssetsBundle(object):
                     ["defer", "defer" if defer_load or lazy_load else None],
                     ["type", "text/javascript"],
                     ["data-src" if lazy_load else "src", self.js().url],
+                    ['data-asset-xmlid', self.name],
+                    ['data-asset-version', self.version],
                 ])
                 response.append(("script", attr, None))
 
@@ -305,6 +311,14 @@ class AssetsBundle(object):
             self.env.cr.commit()
 
         self.clean_attachments(type)
+
+        # For end-user assets (common and backend), send a message on the bus
+        # to invite the user to refresh their browser
+        if self.env and 'bus.bus' in self.env and self.name in self.TRACKED_BUNDLES:
+            channel = (self.env.registry.db_name, 'bundle_changed')
+            message = (self.name, self.version)
+            self.env['bus.bus'].sendone(channel, message)
+            _logger.debug('Asset Changed:  xml_id: %s -- version: %s' % message)
 
         return attachment
 
@@ -697,11 +711,15 @@ class JavascriptAsset(WebAsset):
             return ("script", OrderedDict([
                 ["type", "text/javascript"],
                 ["src", self.html_url],
+                ['data-asset-xmlid', self.bundle.name],
+                ['data-asset-version', self.bundle.version],
             ]), None)
         else:
             return ("script", OrderedDict([
                 ["type", "text/javascript"],
                 ["charset", "utf-8"],
+                ['data-asset-xmlid', self.bundle.name],
+                ['data-asset-version', self.bundle.version],
             ]), self.with_header())
 
 
@@ -773,13 +791,17 @@ class StylesheetAsset(WebAsset):
                 ["type", "text/css"],
                 ["rel", "stylesheet"],
                 ["href", self.html_url],
-                ["media", escape(to_text(self.media)) if self.media else None]
+                ["media", escape(to_text(self.media)) if self.media else None],
+                ['data-asset-xmlid', self.bundle.name],
+                ['data-asset-version', self.bundle.version],
             ])
             return ("link", attr, None)
         else:
             attr = OrderedDict([
                 ["type", "text/css"],
-                ["media", escape(to_text(self.media)) if self.media else None]
+                ["media", escape(to_text(self.media)) if self.media else None],
+                ['data-asset-xmlid', self.bundle.name],
+                ['data-asset-version', self.bundle.version],
             ])
             return ("style", attr, self.with_header())
 
