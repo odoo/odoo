@@ -500,7 +500,7 @@
     <template id="users_page_content">
         <div class="container mb32">
             <div class="row mb-3">
-                <div class="col-md-4" t-foreach="top3_users" t-as="user" t-attf-onclick="location.href='/profile/user/#{user['id']}';">
+                <div class="col-md-4 d-flex flex-grow-1" t-foreach="top3_users" t-as="user" t-attf-onclick="location.href='/profile/user/#{user['id']}';">
                     <t t-call="website_profile.top3_user_card"></t>
                 </div>
             </div>
@@ -519,7 +519,7 @@
     </template>
 
     <template id="top3_user_card" name="Top 3 User Card">
-        <div class="card text-center mb-2 border-bottom-0 o_wprofile_pointer">
+        <div class="card w-100 text-center mb-2 border-bottom-0 o_wprofile_pointer">
             <div class="card-body">
                 <div class="d-inline-block position-relative">
                     <img class="rounded-circle img-fluid"
