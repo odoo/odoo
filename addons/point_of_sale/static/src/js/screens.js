@@ -1075,6 +1075,11 @@ var ProductScreenWidget = ScreenWidget.extend({
             this.$('.control-buttons').removeClass('oe_hidden');
         }
         this._onKeypadKeyDown = this._onKeypadKeyDown.bind(this);
+
+        this.$('.switchpane').click(function(event){
+          var dest_pane = $(event.currentTarget).data('pane');
+          self.switchpane(dest_pane);
+        });
     },
 
     click_product: function(product) {
@@ -1094,6 +1099,16 @@ var ProductScreenWidget = ScreenWidget.extend({
         if (this.pos.config.iface_vkeyboard && this.chrome.widget.keyboard) {
             this.chrome.widget.keyboard.connect($(this.el.querySelector('.searchbox input')));
         }
+
+        if (window.matchMedia('(max-width: 800px)').matches) {
+            this.$el.find('.rightpane').addClass('oe_hidden');
+            this.$el.find('.switchpane').removeClass('oe_hidden');
+        }
+        else {
+            this.$el.find('.rightpane').removeClass('oe_hidden');
+            this.$el.find('.switchpane').addClass('oe_hidden');
+        }
+
         $(document).on('keydown.productscreen', this._onKeypadKeyDown);
     },
     close: function(){
@@ -1104,6 +1119,17 @@ var ProductScreenWidget = ScreenWidget.extend({
         $(document).off('keydown.productscreen', this._onKeypadKeyDown);
     },
 
+
+    switchpane: function(pane) {
+      if (pane === 'right') {
+          this.$el.find('.rightpane').removeClass('oe_hidden');
+          this.$el.find('.leftpane').addClass('oe_hidden');
+      }
+      else {
+        this.$el.find('.leftpane').removeClass('oe_hidden');
+        this.$el.find('.rightpane').addClass('oe_hidden');
+      }
+    },
     /**
      * Buffers the key typed and distinguishes between actual keystrokes and
      * scanner inputs.

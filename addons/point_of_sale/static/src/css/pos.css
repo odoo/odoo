@@ -209,7 +209,7 @@ td {
 }
 /* firefox seems to ignore the relative positionning of the subwindow-container
  * putting this inside subwindow-container fixes it.
- */ 
+ */
 .pos .subwindow .subwindow-container-fix{
     height: 100%;
     position: relative;
@@ -336,7 +336,7 @@ td {
     margin-left: 10px;
     margin-top: 5px;
     vertical-align:middle;
-} 
+}
 .pos .pos-branding .username{
     float:right;
     color:#DDD;
@@ -483,7 +483,7 @@ td {
 /*  c) The notifications indicator */
 
 .pos .oe_status{
-    float:right; 
+    float:right;
     color: rgba(255,255,255,0.4);
     padding: 14px;
     line-height: 20px;
@@ -529,22 +529,26 @@ td {
 /*  ********* The leftpane contains the order, numpad and paypad ********* */
 
 .pos .leftpane {
-    -webkit-box-sizing: border-box;
-       -moz-box-sizing: border-box;
-        -ms-box-sizing: border-box;
-            box-sizing: border-box;
-    position:absolute;
-    left:0;
-    width:440px;
-    top:0px;
-    bottom:0;
-    border-right: solid 1px #CECBCB;
     border-right: solid 3px #787878;
     background: #e2e2e2;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.pos .leftpane .orders {
+    flex-grow: 1;
 }
 
 .pos .leftpane .pads {
     border-top: solid 3px rgb(110, 200, 155);
+    display: flex;
+    flex-direction: column;
+}
+
+.pos .leftpane .pads .sub_pads {
+    display: flex;
+    flex-direction: row;
 }
 
 /*  ********* The control buttons ********* */
@@ -604,7 +608,7 @@ td {
 .pos .control-button.highlight,
 .pos .button.highlight {
     background: #6EC89B !important;
-    border: solid 1px #64AF8A !important; 
+    border: solid 1px #64AF8A !important;
     color: white !important;
 }
 .pos .control-button.altlight,
@@ -779,16 +783,22 @@ td {
     cursor: not-allowed;
 }
 
+/* ********* The mobile pane switcher ******* */
+.pos .switchpane {
+  height: 100px;
+  background-color: rgb(110, 200, 155);
+  flex-shrink: 0;
+}
+
+
 /*  ********* The right pane contains the screens and headers ********* */
 
 .pos .rightpane {
-    position: absolute;
-    top: 0;
-    bottom:0;
-    left: 440px;
-    right: 0;
-    vertical-align: top;
-    -webkit-transform: translate3d(0,0,0);
+    flex-grow: 1;
+    width: 440px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .pos .rightpane-header {
@@ -819,13 +829,6 @@ td {
     -webkit-overflow-scrolling: touch;
     -webkit-transform: translate3d(0,0,0);
 
-}
-.pos .product-list-container {
-    position:absolute;
-    top:0px;
-    bottom:0px;
-    left:0px;
-    right:0px;
 }
 
 /*  a) the product list navigation bar */
@@ -872,17 +875,13 @@ td {
 
 /*  b) the search box */
 
-.pos .searchbox {
-    position: absolute;
-    right: 2px;
-}
+
 .pos .searchbox input {
     width: 100px;
     border: 1px solid #cecbcb;
     padding: 10px 20px;
     padding-left: 38px;
     padding-right: 33px;
-    margin: 6px;
     background-color: white;
     border-radius: 20px;
     font-family: "Lato","Lucida Grande", Helvetica, Verdana, Arial;
@@ -1022,7 +1021,7 @@ td {
     line-height: 14px;
     width: 100%;
     /* for some reason the -90deg orientation doesn't match the -webkit-linear-gradient. It should be 180deg here.
-     * webkit also insists on rendering *both* gradients instead of only the native one. So it doesn't looks right. ugh. 
+     * webkit also insists on rendering *both* gradients instead of only the native one. So it doesn't looks right. ugh.
     background:         linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1)); */
     /*background:#FFF;*/
     padding: 3px;
@@ -1102,7 +1101,7 @@ td {
 /*  ********* The Screens  ********* */
 
 .pos .screen {
-    position:absolute;
+    position: absolute;
     text-align: center;
     top:0px;
     bottom:0px;
@@ -1133,12 +1132,22 @@ td {
 /* a) Generic Screen Layout Constructs */
 
 .screen .screen-content{
+    position: relative;
     margin: 0px auto;
     max-width: 1024px;
     text-align: left;
     height: 100%;
     overflow: hidden;
-    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.screen .screen-full-width{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
 }
 
 @media screen and (min-width: 1024px) {
@@ -1149,14 +1158,16 @@ td {
 }
 
 .screen .top-content{
-    position: absolute;
-    left: 0px; top: 0px; right: 0px;
     height: 64px;
     border-bottom: dashed 1px rgb(215,215,215);
     text-align: center;
+    display: flex;
+    align-items: center;
+}
+.screen .top-content h1{
+    flex-grow: 1;
 }
 .screen .top-content .button {
-    position: absolute;
     top: 0px;
     line-height: 32px;
     padding: 3px 13px;
@@ -1184,14 +1195,7 @@ td {
 .screen .top-content .button.highlight:hover {
     background: rgb(120,210,165);
 }
-.screen .top-content .button.back {
-    left: 0px;
-    margin-left: 16px;
-}
-.screen .top-content .button.next{
-    right: 0px;
-    margin-right: 16px;
-}
+
 .screen .left-content{
     position: absolute;
     left:0px; top: 64px; bottom: 0px;
@@ -1231,9 +1235,11 @@ td {
 /* a) Layout for the Product Screen */
 
 .pos .screen .layout-table {
+    display: block;
     border:none;
     width:100%;
-    height:100%;
+    flex-grow: 1;
+    overflow: auto;
 }
 
 .pos .screen .header-row {
@@ -1508,8 +1514,8 @@ td {
     }
     .oe_leftbar,
     .oe_loading,
-    .pos .pos-topheader, 
-    .pos .pos-leftpane, 
+    .pos .pos-topheader,
+    .pos .pos-leftpane,
     .pos .keyboard_frame,
     .pos .receipt-screen header,
     .pos .receipt-screen .top-content,
@@ -1519,9 +1525,9 @@ td {
     .pos,
     .pos .pos-content,
     .pos .rightpane,
-    .pos .screen, 
-    .pos .window, 
-    .pos .window .subwindow, 
+    .pos .screen,
+    .pos .window,
+    .pos .window .subwindow,
     .pos .subwindow .subwindow-container{
         display: block;
         position: static;
@@ -1754,10 +1760,7 @@ td {
     opacity: 0.3;
 }
 .pos .clientlist-screen .searchbox{
-    right: auto;
-    margin-left: -90px;
-    margin-top:8px;
-    left: 50%;
+    flex-grow: 1;
 }
 .pos .clientlist-screen .searchbox input{
     width: 120px;
@@ -1771,7 +1774,6 @@ td {
 /*  ********* The OrderWidget  ********* */
 
 .pos .order-container{
-    position: absolute;
     top: 0px;
     width:100%;
     height: 100%;
@@ -2078,7 +2080,7 @@ td {
     top: 10px;
     width: 200px;
     font-size: 10px;
-    
+
     background: rgba(0,0,0,0.82);
     color: white;
     padding-bottom: 10px;
@@ -2316,7 +2318,7 @@ td {
     line-height: 50px;
     margin-top: -1px;
     border-top: solid 3px rgba(60,60,60,0.1);
-    
+
 }
 .pos .popup.popup-selection .selection-item {
     width: auto;
