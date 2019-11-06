@@ -36,6 +36,10 @@ class WebsiteForm(http.Controller):
             id_record = self.insert_record(request, model_record, data['record'], data['custom'], data.get('meta'))
             if id_record:
                 self.insert_attachment(model_record, id_record, data['attachments'])
+                # in case of an email, we want to send it immediately instead of waiting
+                # for the email queue to process
+                if model_name == 'mail.mail':
+                    request.env[model_name].sudo().browse(id_record).send()
 
         # Some fields have additional SQL constraints that we can't check generically
         # Ex: crm.lead.probability which is a float between 0 and 1
@@ -175,6 +179,8 @@ class WebsiteForm(http.Controller):
 
     def insert_record(self, request, model, values, custom, meta=None):
         model_name = model.sudo().model
+        if model_name == 'mail.mail':
+            values.update({'reply_to': values.get('email_from')})
         record = request.env[model_name].sudo().with_context(mail_create_nosubscribe=True).create(values)
 
         if custom or meta:
