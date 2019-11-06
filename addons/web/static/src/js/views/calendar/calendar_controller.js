@@ -51,6 +51,7 @@ var CalendarController = AbstractController.extend({
         this.quickAddPop = params.quickAddPop;
         this.disableQuickCreate = params.disableQuickCreate;
         this.eventOpenPopup = params.eventOpenPopup;
+        this.showUnusualDays = params.showUnusualDays;
         this.formViewId = params.formViewId;
         this.readonlyFormViewId = params.readonlyFormViewId;
         this.mapping = params.mapping;
@@ -153,6 +154,31 @@ var CalendarController = AbstractController.extend({
     _move: function (to) {
         this.model[to]();
         return this.reload();
+    },
+    /**
+     * @override
+     * @private
+     */
+    _update: function () {
+        var self = this;
+        if (!this.showUnusualDays) {
+            return this._super.apply(this, arguments);
+        }
+        return this._super.apply(this, arguments).then(function () {
+            self._rpc({
+                model: self.modelName,
+                method: 'get_unusual_days',
+                args: [self.model.data.start_date.format('YYYY-MM-DD'), self.model.data.end_date.format('YYYY-MM-DD')],
+                context: self.context,
+            }).then(function (data) {
+                _.each(self.$el.find('td.fc-day'), function (td) {
+                    var $td = $(td);
+                    if (data[$td.data('date')]) {
+                        $td.addClass('o_calendar_disabled');
+                    }
+                });
+            });
+        });
     },
     /**
      * @private
