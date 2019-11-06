@@ -86,6 +86,10 @@ msgid ""
 "        - Never: Variants are never created for the attribute.\n"
 "        Note: the variants creation mode cannot be changed once the attribute is used on at least one product."
 msgstr ""
+"- Ngay lập tức: Tất cả các biến thể có thể có sẽ được tạo ngay kjhi thuộc tính và các giá trị của nó được thêm vào sản phẩm.\n"
+"        - Động: Mội biến thể sẽ chỉ được tạo khi thuộc tính và giá trị thuộc tính tương ứng của nó được thêm vào đơn bán.\n"
+"        - Không tạo biến thể: Biến thể sẽ không bao giờ được tạo cho thuộc tính này.\n"
+"        Lưu ý: chế độ tạo biến thể sẽ không thể thay đổi một khi thuộc tính đã được sử dụng cho một sản phẩm nào đó."
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_5
@@ -121,6 +125,12 @@ msgid ""
 "                                          Extra Price\n"
 "                                        </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('pricelist_item_count', '=', 1)]}\">\n"
+"                                          Giá bổ sung\n"
+"                                        </span>\n"
+"                                        <span attrs=\"{'invisible': [('pricelist_item_count', '!=', 1)]}\">\n"
+"                                          Giá bổ sung\n"
+"                                        </span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -129,6 +139,9 @@ msgid ""
 "                              <span attrs=\"{'invisible':[('base', '!=', 'standard_price')]}\">Cost  -  </span>\n"
 "                              <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Other Pricelist  -  </span>"
 msgstr ""
+"<span attrs=\"{'invisible':[('base', '!=', 'list_price')]}\">Giá bán  -  </span>\n"
+"                              <span attrs=\"{'invisible':[('base', '!=', 'standard_price')]}\">Giá vốn  -  </span>\n"
+"                              <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Bảng giá khác  -  </span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
@@ -144,7 +157,7 @@ msgstr "<span class=\"text-muted\">Không có mã vạch</span>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "<span>All general settings about this product are managed on</span>"
-msgstr ""
+msgstr "<span>Tất cả các thiết lập chung về sản phẩm này được quản lý ở</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -276,7 +289,7 @@ msgstr "Trạng thái Hoạt động"
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_sale_pricelist
 #: model:res.groups,name:product.group_sale_pricelist
 msgid "Advanced Pricelists"
-msgstr ""
+msgstr "Bảng giá nâng cao"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_pricelist_setting__advanced
@@ -352,7 +365,7 @@ msgstr "Thuộc tính"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__attribute_line_id
 msgid "Attribute Line"
-msgstr ""
+msgstr "Dòng thuộc tính"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
@@ -411,6 +424,10 @@ msgid ""
 "Cost Price : The base price will be the cost price.\n"
 "Other Pricelist : Computation of the base price based on another Pricelist."
 msgstr ""
+"Giá cơ sở để tính toán.\n"
+"Giá bán: Giá cơ sẽ là chính là Giá bán.\n"
+"Giá vốn: Giá cơ sẽ là giá vốn của sản phẩm.\n"
+"Báng giá khác: Việc tính toán giá cơ sở sẽ dược trên một bảng giá khác."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__base
@@ -420,7 +437,7 @@ msgstr "Dựa trên"
 #. module: product
 #: model:res.groups,name:product.group_product_pricelist
 msgid "Basic Pricelists"
-msgstr ""
+msgstr "Bảng giá cơ sở"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_4
@@ -852,7 +869,7 @@ msgstr "Thời lượng"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__dynamic
 msgid "Dynamically"
-msgstr ""
+msgstr "Động"
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_template_attribute_value_attribute_value_unique
@@ -1145,7 +1162,7 @@ msgstr "Nơi làm việc cá nhân"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__always
 msgid "Instantly"
-msgstr ""
+msgstr "Ngay lập tức"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -1382,7 +1399,7 @@ msgstr "Tên"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__no_variant
 msgid "Never"
-msgstr "Không bao giờ"
+msgstr "Không tạo biến thể"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -2581,7 +2598,7 @@ msgstr "Biến thể"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_variant
 msgid "Variants Creation Mode"
-msgstr ""
+msgstr "Chế độ tạo biến thể"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__name
@@ -2715,6 +2732,8 @@ msgid ""
 "You cannot change the Variants Creation Mode of the attribute %s because it is used on the following products:\n"
 "%s"
 msgstr ""
+"Bạn không thể thay đổi chế độ tạo biến thể của thuộc tính %s bởi vì nó đã được sử dụng trong các sản phẩm sau:\n"
+"%s"
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
