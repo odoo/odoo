@@ -477,6 +477,8 @@ class Users(models.Model):
 
     @api.multi
     def write(self, values):
+        if SUPERUSER_ID in self.ids and self._uid != SUPERUSER_ID :
+            raise UserError(_('You cannot edit the superuser.'))
         if values.get('active') and SUPERUSER_ID in self._ids:
             raise UserError(_("You cannot activate the superuser."))
         if values.get('active') == False and self._uid in self._ids:
