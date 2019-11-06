@@ -894,6 +894,7 @@ class MailThread(models.AbstractModel):
             raise TypeError('message must be an email.message.Message at this point')
         catchall_alias = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.alias")
         bounce_alias = self.env['ir.config_parameter'].sudo().get_param("mail.bounce.alias")
+        alias_domain = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.domain")
         fallback_model = model
 
         # get email.message.Message variables for future processing
@@ -914,12 +915,14 @@ class MailThread(models.AbstractModel):
         email_to_localparts = [
             e.split('@', 1)[0].lower()
             for e in (tools.email_split(email_to) or [''])
+            if not alias_domain or e.endswith('@%s' % alias_domain)
         ]
         # Delivered-To is a safe bet in most modern MTAs, but we have to fallback on To + Cc values
         # for all the odd MTAs out there, as there is no standard header for the envelope's `rcpt_to` value.
         rcpt_tos_localparts = [
             e.split('@')[0].lower()
             for e in tools.email_split(message_dict['recipients'])
+            if not alias_domain or e.endswith('@%s' % alias_domain)
         ]
         rcpt_tos_valid_localparts = [to for to in rcpt_tos_localparts]
 
@@ -981,7 +984,7 @@ class MailThread(models.AbstractModel):
             message_dict.pop('parent_id', None)
 
             # check it does not directly contact catchall
-            if catchall_alias and all(email_localpart == catchall_alias for email_localpart in email_to_localparts):
+            if catchall_alias and any(email.startswith(catchall_alias) for email in email_to_localparts):
                 _logger.info('Routing mail from %s to %s with Message-Id %s: direct write to catchall, bounce', email_from, email_to, message_id)
                 body = self.env.ref('mail.mail_bounce_catchall').render({
                     'message': message,
