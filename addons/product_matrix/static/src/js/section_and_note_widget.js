@@ -72,8 +72,12 @@ SectionAndNoteFieldOne2Many.include({
             },
             viewType: 'form',
             onSuccess: function (result) {
-                // why the hell do we receive a table of 8 classes here? :o
-                self._openMatrixConfigurator(result[0].recordData.grid, productTemplateId, editedCellAttributes);
+                // result = list of widgets
+                // find one of the SO widget
+                // (not so lines because the grid values are computed on the SO)
+                // and get the grid information from its recordData.
+                var gridInfo = result.find(r => r.recordData.grid).recordData.grid;
+                self._openMatrixConfigurator(gridInfo, productTemplateId, editedCellAttributes);
             }
         });
     },
