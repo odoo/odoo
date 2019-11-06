@@ -496,7 +496,7 @@ class HolidaysAllocation(models.Model):
         # If a category that created several holidays, cancel all related
         linked_requests = self.mapped('linked_request_ids')
         if linked_requests:
-            linked_requests.linked_request_ids.action_refuse()
+            linked_requests.action_refuse()
         self.activity_update()
         return True
 
