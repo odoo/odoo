@@ -454,6 +454,7 @@ class AlarmManager(models.AbstractModel):
             delta = delta.seconds + delta.days * 3600 * 24
 
             return {
+                'alarm_id': alarm.id,
                 'event_id': meeting.id,
                 'title': meeting.name,
                 'message': message,
