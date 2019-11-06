@@ -224,7 +224,9 @@ class PurchaseRequisitionLine(models.Model):
     def write(self, vals):
         res = super(PurchaseRequisitionLine, self).write(vals)
         if 'price_unit' in vals:
-            if vals['price_unit'] <= 0.0:
+            if vals['price_unit'] <= 0.0 and any(
+                    requisition.state not in ['draft', 'cancel', 'done'] and
+                    requisition.is_quantity_copy == 'none' for requisition in self.mapped('requisition_id')):
                 raise UserError(_('You cannot confirm the blanket order without price.'))
             # If the price is updated, we have to update the related SupplierInfo
             self.supplier_info_ids.write({'price': vals['price_unit']})
