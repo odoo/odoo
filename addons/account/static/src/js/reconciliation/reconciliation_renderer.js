@@ -534,7 +534,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             relation: 'account.account',
             type: 'many2one',
             name: 'account_id',
-            domain: [['company_id', '=', state.st_line.company_id]],
+            domain: [['company_id', '=', state.st_line.company_id], ['deprecated', '=', false]],
         }, {
             relation: 'account.journal',
             type: 'many2one',
@@ -568,7 +568,6 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
         }], {
             account_id: {
                 string: _t("Account"),
-                domain: [['deprecated', '=', false]],
             },
             label: {string: _t("Label")},
             amount: {string: _t("Account")},
