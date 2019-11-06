@@ -1247,6 +1247,7 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
         data.__alreadyDone = true;
         var linkDialog = new weWidgets.LinkDialog(this,
             data.options || {},
+            data.$editable,
             data.linkInfo
         );
         if (data.onSave) {
