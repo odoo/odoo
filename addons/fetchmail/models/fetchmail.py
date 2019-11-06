@@ -3,6 +3,7 @@
 
 import logging
 import poplib
+import socket
 from imaplib import IMAP4, IMAP4_SSL
 from poplib import POP3, POP3_SSL
 
@@ -16,6 +17,10 @@ MAIL_TIMEOUT = 60
 
 # Workaround for Python 2.7.8 bug https://bugs.python.org/issue23906
 poplib._MAXLINE = 65536
+
+# Add timeout to IMAP connections
+# HACK https://bugs.python.org/issue38615
+IMAP4._create_socket = lambda self: socket.create_connection((self.host or None, self.port), MAIL_TIMEOUT)
 
 
 class FetchmailServer(models.Model):
@@ -112,15 +117,13 @@ class FetchmailServer(models.Model):
             connection.login(self.user, self.password)
         elif self.type == 'pop':
             if self.is_ssl:
-                connection = POP3_SSL(self.server, int(self.port))
+                connection = POP3_SSL(self.server, int(self.port), timeout=MAIL_TIMEOUT)
             else:
-                connection = POP3(self.server, int(self.port))
+                connection = POP3(self.server, int(self.port), timeout=MAIL_TIMEOUT)
             #TODO: use this to remove only unread messages
             #connection.user("recent:"+server.user)
             connection.user(self.user)
             connection.pass_(self.password)
-        # Add timeout on socket
-        connection.sock.settimeout(MAIL_TIMEOUT)
         return connection
 
     @api.multi
