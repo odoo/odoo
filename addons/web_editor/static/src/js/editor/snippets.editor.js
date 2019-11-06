@@ -736,6 +736,8 @@ var SnippetsMenu = Widget.extend({
         'reload_snippet_dropzones': '_disableUndroppableSnippets',
         'update_customize_elements': '_onUpdateCustomizeElements',
         'hide_overlay': '_onHideOverlay',
+        'block_preview_overlays': '_onBlockPreviewOverlays',
+        'unblock_preview_overlays': '_onUnblockPreviewOverlays',
     },
 
     /**
@@ -1123,6 +1125,9 @@ var SnippetsMenu = Widget.extend({
      *          (might be async when an editor must be created)
      */
     _activateSnippet: function ($snippet, previewMode, ifInactiveOptions) {
+        if (this._blockPreviewOverlays && previewMode) {
+            return Promise.resolve();
+        }
         return this._activateSnippetMutex.exec(() => {
             return new Promise(resolve => {
                 // Take the first parent of the provided DOM (or itself) which
@@ -1837,6 +1842,18 @@ var SnippetsMenu = Widget.extend({
                 close: true,
             }],
         }).open();
+    },
+    /**
+     * @private
+     */
+    _onBlockPreviewOverlays: function (ev) {
+        this._blockPreviewOverlays = true;
+    },
+    /**
+     * @private
+     */
+    _onUnblockPreviewOverlays: function (ev) {
+        this._blockPreviewOverlays = false;
     },
     /**
      * @private
