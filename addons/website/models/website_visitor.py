@@ -117,7 +117,7 @@ class WebsiteVisitor(models.Model):
 
     @api.depends('last_connection_datetime')
     def _compute_time_statistics(self):
-        results = self.env['website.visitor'].search_read([('id', 'in', self.ids)], ['id', 'last_connection_datetime'])
+        results = self.env['website.visitor'].with_context(active_test=False).search_read([('id', 'in', self.ids)], ['id', 'last_connection_datetime'])
         mapped_data = {result['id']: result['last_connection_datetime'] for result in results}
 
         for visitor in self:
