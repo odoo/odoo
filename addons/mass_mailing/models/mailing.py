@@ -98,7 +98,9 @@ class MassMailing(models.Model):
     mailing_model_id = fields.Many2one('ir.model', string='Recipients Model', domain=[('model', 'in', MASS_MAILING_BUSINESS_MODELS)],
         default=lambda self: self.env.ref('mass_mailing.model_mailing_list').id)
     mailing_model_name = fields.Char(related='mailing_model_id.model', string='Recipients Model Name', readonly=True, related_sudo=True)
-    mailing_domain = fields.Char(string='Domain', default=[])
+    mailing_domain = fields.Char(string='Domain', default=[], store=True, readonly=False, compute='_compute_mailing_domain')
+    filter_id = fields.Many2one('mailing.saved.filters', string='Filters', store=True, readonly=False, compute='_compute_filter_id')
+    use_saved_filter = fields.Boolean(store=True, readonly=False, compute='_compute_use_saved_filter', help='Preferred Reply-To Address')
     mail_server_id = fields.Many2one('ir.mail_server', string='Mail Server',
         default=_get_default_mail_server_id,
         help="Use a specific mail server in priority. Otherwise Odoo relies on the first outgoing mail server available (based on their sequencing) as it does for normal mails.")
@@ -151,6 +153,29 @@ class MassMailing(models.Model):
     def _compute_model(self):
         for record in self:
             record.mailing_model_real = (record.mailing_model_name != 'mailing.list') and record.mailing_model_name or 'mailing.contact'
+
+    @api.depends('filter_id')
+    def _compute_mailing_domain(self):
+        for record in self:
+            if record.filter_id:
+                record.mailing_domain = record.filter_id.mailing_domain
+    
+    @api.depends('mailing_domain')
+    def _compute_filter_id(self):
+        """
+            This function has as purpose to verify if the user is still using a presaved filter
+            If the mailing_domain no longer is the same as the one of the filter
+            the user no longer uses a presaved filter and thus the filter_id is removed.
+        """
+        for record in self:
+            if record.filter_id:
+                if record.mailing_domain != record.filter_id.mailing_domain:
+                    record.filter_id = False
+    
+    @api.depends('filter_id', 'mailing_domain')
+    def _compute_use_saved_filter(self):
+        for record in self:
+            record.use_saved_filter = record.mailing_domain == record.filter_id.mailing_domain
 
     def _compute_statistics(self):
         """ Compute statistics of the mass mailing """
@@ -624,3 +649,16 @@ class MassMailing(models.Model):
             return lxml.html.tostring(root)
 
         return body_html
+
+
+class SavedFilters(models.Model):
+    """ SavedFilters saves the mailing domain a user want to be able to reuse. """
+    _name = 'mailing.saved.filters'
+    _description = 'Saved filters for Mass Mailing'
+
+    name = fields.Char(string='Filter Name', required=True)
+    mailing_domain = fields.Char(string='Domain', required=True)
+
+    _sql_constraints = [
+        ('name_unique', 'unique (name)', "There already is a filter with this name"),
+    ]

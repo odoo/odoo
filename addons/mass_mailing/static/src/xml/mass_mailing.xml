@@ -19,4 +19,20 @@
             </t>
         </div>
     </div>
+
+    <t t-name="mass_mailing.favorite_filter">
+        <div class="btn-group o_selection o_field_widget o_required_modifier w-auto">
+            <div class="o_add_favorite_filter">
+                <a class="fa fa-star-o o_gold" data-toggle="dropdown" aria-expanded="false" title="Add to Favorites"/>
+                <div class="dropdown-menu dropdown-menu-right o_mass_mailing_dropdown_favorite" role="menu">
+                        <input type="text" name="filter_name" placeholder="E.g.: VIP customers" class="o_domain_save_name"/>
+                        <button name="save" string="Save" class="btn btn-sm btn-primary o_domain_save_button">
+                        Save
+                        </button>
+                </div>
+            </div>
+            <a class="fa o_remove_favorite_filter fa-star" title="Remove from Favorites"/>
+        </div>
+    </t>
+
 </templates>
