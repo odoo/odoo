@@ -7,30 +7,85 @@ Internet of Things
 IoT Drivers allow any Odoo module to communicate in real-time with any device
 connected to the IoT Box. Communication with the IoT Box goes both ways, so the
 Odoo client can send commands to and receive information from any of the
-supported devices. To add support for a device, all we need is a `Driver`.
+supported devices.
 
-At each boot, the IoT Box will load all of the Drivers that can
-be located on the connected Odoo instance. Each module can contain a
-`drivers` directory, whose content will be copied to the IoT Box.
+To add support for a device, all we need is:
+
+- an `Interface`, to detect connected devices of a specific type
+- a `Driver`, to communicate with an individual device
+
+At each boot, the IoT Box will load all of the Interfaces and Drivers that can
+be located on the connected Odoo instance. Each module can contain an
+`iot_handlers` directory that will be copied to the IoT Box. The structure of
+this directory is the following
+
+.. code-block:: text
+
+    your_module
+    ├── ...
+    └── iot_handlers
+        ├── drivers
+        │   ├── DriverName.py
+        │   └── ...
+        │
+        └── interfaces
+            ├── InterfaceName.py
+            └── ...
 
 Detect Devices
 ==============
 
-The `addons/hw_drivers/controllers/driver.py` file contains a Manager that is
-in charge of the devices. The Manager maintains a list of connected devices
+Devices connected to the IoT Box are detected through `Interfaces`. There is an
+Interface for each supported connection type (USB, Bluetooth, Video,
+Printers, Serial, etc.). The interface maintains a list of detected devices
 and associates them with the right Driver.
 
 Supported devices will appear both on the IoT Box Homepage that you can access
 through its IP address and in the IoT module of the connected Odoo instance.
 
+Interface
+---------
+
+The role of the Interface is to maintain a list of devices connected through a
+determined connection type. Creating a new interface requires
+
+- Extending the `Interface` class
+- Setting the `connection_type` class attribute
+- Implementing the `get_devices` method, that should return a dictionary
+  containing data about each detected device. This data will be given as
+  argument to the constructors and `supported` method of the Drivers.
+
+.. note::
+    Setting the `_loop_delay` attribute will modify the interval between calls
+    to `get_devices`. By default, this interval is set to 3 seconds.
+
+.. code-block:: python
+
+    from odoo.addons.hw_drivers.controllers.driver import Interface
+
+    class InterfaceName(Interface):
+        connection_type = 'ConnectionType'
+
+        def get_devices(self):
+            return {
+                'device_identifier_1': {...},
+                ...
+            }
+
 Driver
 ------
 
-Once the Manager has retrieved the list of detected devices, it will loop
-through all of the Drivers that have the same connection type and test their
-respective `supported` method on all detected devices. If the supported method
-of a Driver returns `True`, an instance of this Driver will be created for the
-corresponding device.
+Once the interface has retrieved the list of detected devices, it will loop
+through all of the Drivers that have the same `connection_type` attribute and
+test their respective `supported` method on all detected devices. If the
+supported method of a Driver returns `True`, an instance of this Driver will be
+created for the corresponding device.
+
+.. note::
+    `supported` methods of drivers are given a priority order. The `supported`
+    method of a child class will always be tested before the one of its parent.
+    This priority can be adjusted by modifying the `priority` attribute of the
+    Driver.
 
 Creating a new Driver requires:
 
