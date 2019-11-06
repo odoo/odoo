@@ -5,6 +5,7 @@
 
 // ======  Variables =========
 $o-theme-navbar-logo-height: $nav-link-height !default;
+$o-theme-navbar-fixed-logo-height: $nav-link-height !default;
 
 // Portal toolbar (filters, search bar)
 $o-portal-mobile-toolbar: true; // Enable/Disable custom design
@@ -47,7 +48,6 @@ header {
                 height: $o-theme-navbar-logo-height;
 
                 @include media-breakpoint-down(sm) {
-                    height: auto;
                     max-height: min($o-theme-navbar-logo-height, 5rem);
                 }
             }
