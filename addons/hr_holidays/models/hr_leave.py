@@ -954,7 +954,11 @@ class HolidaysRequest(models.Model):
 
     def _get_responsible_for_approval(self):
         self.ensure_one()
-        responsible = self.env['res.users'].browse(SUPERUSER_ID)
+
+        responsible = self.env.user
+
+        if self.holiday_type != 'employee':
+            return responsible
 
         if self.validation_type == 'manager' or (self.validation_type == 'both' and self.state == 'confirm'):
             if self.employee_id.leave_manager_id:
