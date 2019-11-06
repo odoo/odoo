@@ -389,13 +389,23 @@
          data-no-check="true"
          groups="website.group_website_designer">
         <we-checkbox string="Show Sign In" data-customize-website-views="portal.portal_show_sign_in" data-reload="/"/>
-        <we-checkbox string="Fixed Top Menu" data-customize-website-views="website.affix_top_menu" data-reload="/"/>
         <we-colorpicker string="Background Color" data-customize-website-color="" data-color="menu"/>
         <we-select string="Logo" data-reload="/">
             <we-button data-customize-website-views="website.website_name">Text</we-button>
             <we-button data-customize-website-views="website.layout_logo_show">Image</we-button>
         </we-select>
-        <we-input string="Logo Height" data-customize-website-variable="null" data-variable="logo-height" data-unit="px" data-save-unit="rem"/>
+        <we-input string="Logo Height"
+                  data-customize-website-variable="null"
+                  data-variable="logo-height"
+                  data-unit="px"
+                  data-save-unit="rem"/>
+        <we-input id="option_logo_height_scrolled"
+                  string="Logo Height (Scrolled)"
+                  data-customize-website-variable="null"
+                  data-variable="fixed-logo-height"
+                  data-unit="px"
+                  data-save-unit="rem"
+                  data-dependencies="!header_visibility_scroll_opt"/>
         <we-row string="Font">
             <we-fontfamilypicker data-variable="navbar-font-number"/>
             <we-input data-customize-website-variable="null" data-variable="header-font-size" data-unit="px" data-save-unit="rem"/>
@@ -427,18 +437,50 @@
                        data-customize-website-variable="logo_hamburger"
                        string="Logo - Hamburger (cover)"/>
         </we-select>
+        <we-select id="header_visibilities_list" string="Header Visibility">
+            <we-button id="option_header_visibility_standard"
+                       data-name="header_visibility_standard_opt"
+                       data-select-class="o_header_standard"
+                       data-customize-website-views="website.header_visibility_standard"
+                       string="Standard"/>
+            <we-button id="option_header_visibility_scroll"
+                       data-name="header_visibility_scroll_opt"
+                       data-select-class=""
+                       data-customize-website-views=""
+                       string="Scroll"/>
+            <we-button id="option_header_visibility_fixed"
+                       data-name="header_visibility_fixed_opt"
+                       data-select-class="o_header_fixed"
+                       data-customize-website-views="website.header_visibility_fixed"
+                       string="Fixed"/>
+            <we-button id="option_header_visibility_disappears"
+                       data-name="header_visibility_disappears_opt"
+                       data-select-class="o_header_disappears"
+                       data-customize-website-views="website.header_visibility_disappears"
+                       string="Disappears"/>
+            <we-button id="option_header_visibility_fade_out"
+                       data-name="header_visibility_fade_out_opt"
+                       data-select-class="o_header_fade_out"
+                       data-customize-website-views="website.header_visibility_fade_out"
+                       string="Fade Out"/>
+        </we-select>
     </div>
 
     <div data-js="topMenuTransparency"
         data-selector="[data-main-object^='website.page('] #wrapwrap > header"
         data-no-check="true">
-        <we-checkbox string="Transparent on this page" data-transparent="true" data-no-preview="true"/>
+        <we-checkbox id="option_header_transparent"
+                     string="Transparent on this page"
+                     data-name="header_transparent_opt"
+                     data-transparent="true"
+                     data-no-preview="true"/>
     </div>
 
     <div data-js="topMenuColor"
          data-selector="[data-main-object^='website.page('] #wrapwrap > header"
          data-no-check="true">
         <we-colorpicker string="Transparent color"
+            id="option_header_transparent_color"
             data-select-style="true"
             data-css-property="background-color"
             data-color-prefix="bg-"
