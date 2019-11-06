@@ -389,6 +389,7 @@ class TestPoSCommon(TransactionCase):
                 'statement_ids': payments,
                 'uid': uid,
                 'user_id': self.pos_manager.id,
+                'to_invoice': is_invoiced,
             },
             'id': uid,
             'to_invoice': is_invoiced,
