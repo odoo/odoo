@@ -30,7 +30,7 @@ class UtmCampaign(models.Model):
                 c.id as campaign_id,
                 COUNT(s.id) AS expected,
                 COUNT(CASE WHEN s.sent is not null THEN 1 ELSE null END) AS sent,
-                COUNT(CASE WHEN s.scheduled is not null AND s.sent is null AND s.exception is null AND s.ignored is not null THEN 1 ELSE null END) AS ignored,
+                COUNT(CASE WHEN s.scheduled is not null AND s.sent is null AND s.exception is null AND s.canceled is not null THEN 1 ELSE null END) AS canceled,
                 COUNT(CASE WHEN s.id is not null AND s.bounced is null THEN 1 ELSE null END) AS delivered,
                 COUNT(CASE WHEN s.opened is not null THEN 1 ELSE null END) AS opened,
                 COUNT(CASE WHEN s.replied is not null THEN 1 ELSE null END) AS replied,
@@ -62,7 +62,7 @@ class UtmCampaign(models.Model):
                     'bounced_ratio': 0
                 }
             else:
-                total = (stats['expected'] - stats['ignored']) or 1
+                total = (stats['expected'] - stats['canceled']) or 1
                 delivered = stats['sent'] - stats['bounced']
                 vals = {
                     'received_ratio': 100.0 * delivered / total,

@@ -42,7 +42,7 @@ class SMSComposer(models.TransientModel):
             else:
                 trace_values['exception'] = fields.Datetime.now()
         elif sms_values['state'] == 'canceled':
-            trace_values['ignored'] = fields.Datetime.now()
+            trace_values['canceled'] = fields.Datetime.now()
         else:
             if self.mass_sms_allow_unsubscribe:
                 sms_values['body'] = '%s\n%s' % (sms_values['body'] or '', _('STOP SMS : %s') % self._get_unsubscribe_url(record.id, trace_code, sms_values['number']))

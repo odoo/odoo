@@ -86,13 +86,13 @@ class MailingSMSController(http.Controller):
             'unsubscribe_error': unsubscribe_error,
         })
 
-    @http.route('/r/<string:code>/s/<int:sms_sms_id>', type='http', auth="public")
-    def sms_short_link_redirect(self, code, sms_sms_id, **post):
+    @http.route('/r/<string:code>/s/<int:sms_id>', type='http', auth="public")
+    def sms_short_link_redirect(self, code, sms_id, **post):
         # don't assume geoip is set, it is part of the website module
         # which mass_mailing doesn't depend on
         country_code = request.session.get('geoip', False) and request.session.geoip.get('country_code', False)
-        if sms_sms_id:
-            trace_id = request.env['mailing.trace'].sudo().search([('sms_sms_id_int', '=', int(sms_sms_id))]).id
+        if sms_id:
+            trace_id = request.env['mailing.trace'].sudo().search([('sms_id_int', '=', int(sms_id))]).id
         else:
             trace_id = False
 

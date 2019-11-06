@@ -114,7 +114,7 @@ class MassMailing(models.Model):
     total = fields.Integer(compute="_compute_total")
     scheduled = fields.Integer(compute="_compute_statistics")
     expected = fields.Integer(compute="_compute_statistics")
-    ignored = fields.Integer(compute="_compute_statistics")
+    canceled = fields.Integer(compute="_compute_statistics")
     sent = fields.Integer(compute="_compute_statistics")
     delivered = fields.Integer(compute="_compute_statistics")
     opened = fields.Integer(compute="_compute_statistics")
@@ -153,8 +153,8 @@ class MassMailing(models.Model):
                 m.id as mailing_id,
                 COUNT(s.id) AS expected,
                 COUNT(CASE WHEN s.sent is not null THEN 1 ELSE null END) AS sent,
-                COUNT(CASE WHEN s.scheduled is not null AND s.sent is null AND s.exception is null AND s.ignored is null AND s.bounced is null THEN 1 ELSE null END) AS scheduled,
-                COUNT(CASE WHEN s.scheduled is not null AND s.sent is null AND s.exception is null AND s.ignored is not null THEN 1 ELSE null END) AS ignored,
+                COUNT(CASE WHEN s.scheduled is not null AND s.sent is null AND s.exception is null AND s.canceled is null AND s.bounced is null THEN 1 ELSE null END) AS scheduled,
+                COUNT(CASE WHEN s.scheduled is not null AND s.sent is null AND s.exception is null AND s.canceled is not null THEN 1 ELSE null END) AS canceled,
                 COUNT(CASE WHEN s.sent is not null AND s.exception is null AND s.bounced is null THEN 1 ELSE null END) AS delivered,
                 COUNT(CASE WHEN s.opened is not null THEN 1 ELSE null END) AS opened,
                 COUNT(CASE WHEN s.clicked is not null THEN 1 ELSE null END) AS clicked,
@@ -172,7 +172,7 @@ class MassMailing(models.Model):
                 m.id
         """, (tuple(self.ids), ))
         for row in self.env.cr.dictfetchall():
-            total = row['expected'] = (row['expected'] - row['ignored']) or 1
+            total = row['expected'] = (row['expected'] - row['canceled']) or 1
             row['received_ratio'] = 100.0 * row['delivered'] / total
             row['opened_ratio'] = 100.0 * row['opened'] / total
             row['clicks_ratio'] = 100.0 * row['clicked'] / total
@@ -308,8 +308,8 @@ class MassMailing(models.Model):
     def action_view_traces_scheduled(self):
         return self._action_view_traces_filtered('scheduled')
 
-    def action_view_traces_ignored(self):
-        return self._action_view_traces_filtered('ignored')
+    def action_view_traces_canceled(self):
+        return self._action_view_traces_filtered('canceled')
 
     def action_view_traces_failed(self):
         return self._action_view_traces_filtered('failed')

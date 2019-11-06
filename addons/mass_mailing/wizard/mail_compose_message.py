@@ -78,9 +78,9 @@ class MailComposeMessage(models.TransientModel):
                 }
                 if mail_values.get('body_html') and mass_mail_layout:
                     mail_values['body_html'] = mass_mail_layout.render({'body': mail_values['body_html']}, engine='ir.qweb', minimal_qcontext=True)
-                # propagate ignored state to trace when still-born
+                # propagate canceled state to trace when still-born
                 if mail_values.get('state') == 'cancel':
-                    trace_vals['ignored'] = fields.Datetime.now()
+                    trace_vals['canceled'] = fields.Datetime.now()
                 mail_values.update({
                     'mailing_id': mass_mailing.id,
                     'mailing_trace_ids': [(0, 0, trace_vals)],

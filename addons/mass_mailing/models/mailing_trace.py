@@ -14,11 +14,11 @@ class MailingTrace(models.Model):
     _rec_name = 'id'
     _order = 'scheduled DESC'
 
-    trace_type = fields.Selection([('mail', 'Mail')], string='Type', default='mail', required=True)
+    trace_type = fields.Selection([('email', 'Mail')], string='Type', default='email', required=True)
     display_name = fields.Char(compute='_compute_display_name')
     # mail data
-    mail_mail_id = fields.Many2one('mail.mail', string='Mail', index=True)
-    mail_mail_id_int = fields.Integer(
+    mail_id = fields.Many2one('mail.mail', string='Mail', index=True)
+    mail_id_int = fields.Integer(
         string='Mail ID (tech)',
         help='ID of the related mail_mail. This field is an integer field because '
              'the related mail_mail can be deleted separately from its statistics. '
@@ -26,7 +26,7 @@ class MailingTrace(models.Model):
         index=True,
     )
     email = fields.Char(string="Email")
-    message_id = fields.Char(string='Message-ID')
+    message_id = fields.Char(string='Message-ID', help="Technical field for the email Message-ID (RFC 2392)")
     # document
     model = fields.Char(string='Document model')
     res_id = fields.Integer(string='Document ID')
@@ -37,7 +37,7 @@ class MailingTrace(models.Model):
         string='Campaign',
         store=True, readonly=True, index=True)
     # Bounce and tracking
-    ignored = fields.Datetime(help='Date when the email has been invalidated. '
+    canceled = fields.Datetime(help='Date when the email has been invalidated. '
                                    'Invalid emails are blacklisted, opted-out or invalid email format')
     scheduled = fields.Datetime(help='Date when the email has been created', default=fields.Datetime.now)
     sent = fields.Datetime(help='Date when the email has been sent')
@@ -51,18 +51,17 @@ class MailingTrace(models.Model):
     # Status
     state = fields.Selection(compute="_compute_state",
                              selection=[('outgoing', 'Outgoing'),
-                                        ('exception', 'Exception'),
                                         ('sent', 'Sent'),
                                         ('opened', 'Opened'),
                                         ('replied', 'Replied'),
                                         ('bounced', 'Bounced'),
-                                        ('ignored', 'Ignored')], store=True)
+                                        ('exception', 'Exception'),
+                                        ('canceled', 'Canceled')], store=True)
     failure_type = fields.Selection(selection=[
         ("SMTP", "Connection failed (outgoing mail server problem)"),
         ("RECIPIENT", "Invalid email address"),
         ("BOUNCE", "Email address rejected by destination"),
-        ("UNKNOWN", "Unknown error"),
-    ], string='Failure type')
+        ("UNKNOWN", "Unknown error")], string='Failure type')
     state_update = fields.Datetime(compute="_compute_state", string='State Update',
                                    help='Last state update of the mail',
                                    store=True)
@@ -72,12 +71,12 @@ class MailingTrace(models.Model):
         for trace in self:
             trace.display_name = '%s: %s (%s)' % (trace.trace_type, trace.mass_mailing_id.name, trace.id)
 
-    @api.depends('sent', 'opened', 'clicked', 'replied', 'bounced', 'exception', 'ignored')
+    @api.depends('sent', 'opened', 'clicked', 'replied', 'bounced', 'exception', 'canceled')
     def _compute_state(self):
         self.update({'state_update': fields.Datetime.now()})
         for stat in self:
-            if stat.ignored:
-                stat.state = 'ignored'
+            if stat.canceled:
+                stat.state = 'canceled'
             elif stat.exception:
                 stat.state = 'exception'
             elif stat.opened or stat.clicked:
@@ -94,13 +93,13 @@ class MailingTrace(models.Model):
     @api.model_create_multi
     def create(self, values_list):
         for values in values_list:
-            if 'mail_mail_id' in values:
-                values['mail_mail_id_int'] = values['mail_mail_id']
+            if 'mail_id' in values:
+                values['mail_id_int'] = values['mail_id']
         return super(MailingTrace, self).create(values_list)
 
-    def _get_records(self, mail_mail_ids=None, mail_message_ids=None, domain=None):
-        if not self.ids and mail_mail_ids:
-            base_domain = [('mail_mail_id_int', 'in', mail_mail_ids)]
+    def _get_records(self, mail_ids=None, mail_message_ids=None, domain=None):
+        if not self.ids and mail_ids:
+            base_domain = [('mail_id_int', 'in', mail_ids)]
         elif not self.ids and mail_message_ids:
             base_domain = [('message_id', 'in', mail_message_ids)]
         else:
@@ -109,22 +108,22 @@ class MailingTrace(models.Model):
             base_domain = ['&'] + domain + base_domain
         return self.search(base_domain)
 
-    def set_opened(self, mail_mail_ids=None, mail_message_ids=None):
-        traces = self._get_records(mail_mail_ids, mail_message_ids, [('opened', '=', False)])
+    def set_opened(self, mail_ids=None, mail_message_ids=None):
+        traces = self._get_records(mail_ids, mail_message_ids, [('opened', '=', False)])
         traces.write({'opened': fields.Datetime.now(), 'bounced': False})
         return traces
 
-    def set_clicked(self, mail_mail_ids=None, mail_message_ids=None):
-        traces = self._get_records(mail_mail_ids, mail_message_ids, [('clicked', '=', False)])
+    def set_clicked(self, mail_ids=None, mail_message_ids=None):
+        traces = self._get_records(mail_ids, mail_message_ids, [('clicked', '=', False)])
         traces.write({'clicked': fields.Datetime.now()})
         return traces
 
-    def set_replied(self, mail_mail_ids=None, mail_message_ids=None):
-        traces = self._get_records(mail_mail_ids, mail_message_ids, [('replied', '=', False)])
+    def set_replied(self, mail_ids=None, mail_message_ids=None):
+        traces = self._get_records(mail_ids, mail_message_ids, [('replied', '=', False)])
         traces.write({'replied': fields.Datetime.now()})
         return traces
 
-    def set_bounced(self, mail_mail_ids=None, mail_message_ids=None):
-        traces = self._get_records(mail_mail_ids, mail_message_ids, [('bounced', '=', False), ('opened', '=', False)])
+    def set_bounced(self, mail_ids=None, mail_message_ids=None):
+        traces = self._get_records(mail_ids, mail_message_ids, [('bounced', '=', False), ('opened', '=', False)])
         traces.write({'bounced': fields.Datetime.now()})
         return traces

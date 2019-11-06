@@ -94,7 +94,7 @@ class MassMailController(http.Controller):
     @http.route('/mail/track/<int:mail_id>/blank.gif', type='http', auth='public')
     def track_mail_open(self, mail_id, **post):
         """ Email tracking. """
-        request.env['mailing.trace'].sudo().set_opened(mail_mail_ids=[mail_id])
+        request.env['mailing.trace'].sudo().set_opened(mail_ids=[mail_id])
         response = werkzeug.wrappers.Response()
         response.mimetype = 'image/gif'
         response.data = base64.b64decode(b'R0lGODlhAQABAIAAANvf7wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==')

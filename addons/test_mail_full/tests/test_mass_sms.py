@@ -114,7 +114,7 @@ class TestMassSMS(test_mail_full_common.TestSMSCommon):
             self.mailing, self.records | new_record_1, check_sms=True
         )
         self.assertSMSStatistics(
-            [{'partner': new_record_2.customer_id, 'number': self.records_numbers[0], 'content': 'Dear %s this is a mass SMS.' % new_record_2.display_name, 'state': 'ignored', 'failure_type': 'sms_duplicate'}],
+            [{'partner': new_record_2.customer_id, 'number': self.records_numbers[0], 'content': 'Dear %s this is a mass SMS.' % new_record_2.display_name, 'state': 'canceled', 'failure_type': 'sms_duplicate'}],
             self.mailing, new_record_2, check_sms=True
         )
 
@@ -139,7 +139,7 @@ class TestMassSMS(test_mail_full_common.TestSMSCommon):
         traces.unlink()
         # new failed traces generated for duplicates
         self.assertSMSStatistics(
-            [{'partner': record.customer_id, 'number': self.records_numbers[i], 'content': 'Dear %s this is a mass SMS.' % record.display_name, 'state': 'ignored', 'failure_type': 'sms_duplicate'} for i, record in enumerate(self.records[:5])],
+            [{'partner': record.customer_id, 'number': self.records_numbers[i], 'content': 'Dear %s this is a mass SMS.' % record.display_name, 'state': 'canceled', 'failure_type': 'sms_duplicate'} for i, record in enumerate(self.records[:5])],
             self.mailing, self.records[:5], check_sms=True
         )
         # new traces generated

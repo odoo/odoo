@@ -6,12 +6,12 @@
         <field name="model">mailing.trace</field>
         <field name="arch" type="xml">
            <search string="Mail Statistics">
-                <field name="mail_mail_id_int"/>
+                <field name="mail_id_int"/>
                 <field name="message_id"/>
                 <field name="email"/>
                 <field name="mass_mailing_id"/>
-                <filter string="Scheduled" name="filter_scheduled" domain="[('scheduled', '!=', False), ('sent', '=', False), ('exception', '=', False), ('ignored', '=', False), ('bounced', '=', False)]"/>
-                <filter string="Ignored" name="filter_ignored" domain="[('scheduled', '!=', False), ('sent', '=', False), ('exception', '=', False), ('ignored', '!=', False)]"/>
+                <filter string="Scheduled" name="filter_scheduled" domain="[('scheduled', '!=', False), ('sent', '=', False), ('exception', '=', False), ('canceled', '=', False), ('bounced', '=', False)]"/>
+                <filter string="Canceled" name="filter_canceled" domain="[('scheduled', '!=', False), ('sent', '=', False), ('exception', '=', False), ('canceled', '!=', False)]"/>
                 <filter string="Sent" name="filter_sent" domain="[('sent', '!=', False)]"/>
                 <filter string="Delivered" name="filter_delivered" domain="[('sent', '!=', False), ('exception', '=', False), ('bounced', '=', False)]"/>
                 <separator/>
@@ -47,7 +47,7 @@
                 <field name="clicked"/>
                 <field name="replied"/>
                 <field name="bounced"/>
-                <field name="ignored"/>
+                <field name="canceled"/>
             </tree>
         </field>
     </record>
@@ -74,7 +74,7 @@
                         <group string="Recipient">
                             <field name="trace_type" invisible="1"/>
                             <field name="email"/>
-                            <field name="mail_mail_id_int"/>
+                            <field name="mail_id_int"/>
                             <field name="message_id"/>
                         </group>
                         <group string="Document">
@@ -94,7 +94,7 @@
                         </group>
                         <group>
                             <field name="exception"/>
-                            <field name="ignored"/>
+                            <field name="canceled"/>
                             <field name="bounced"/>
                             <field name="failure_type"/>
                         </group>
@@ -120,14 +120,6 @@
         <field name="res_model">mailing.trace</field>
         <field name="view_mode">tree,form,graph,pivot</field>
         <field name="domain">[]</field>
-    </record>
-
-    <record id="action_view_mail_mail_statistics_mailing" model="ir.actions.act_window">
-        <field name="name">Mail Statistics</field>
-        <field name="res_model">mailing.trace</field>
-        <field name="view_mode">graph,tree,form,pivot</field>
-        <field name="domain">[]</field>
-        <field name="context">{'search_default_mass_mailing_id': active_id}</field>
     </record>
 
     <!-- Add in Technical/Email -->

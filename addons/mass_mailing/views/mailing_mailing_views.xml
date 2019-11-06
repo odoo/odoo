@@ -57,14 +57,14 @@
 
                         <field name="state" readonly="1" widget="statusbar"/>
                     </header>
-                    <div class="alert alert-info text-center" role="alert" attrs="{'invisible': ['&amp;','&amp;',('ignored', '=', 0),('scheduled', '=', 0),('failed', '=', 0)]}">
-                        <div attrs="{'invisible': [('ignored', '=', 0)]}">
+                    <div class="alert alert-info text-center" role="alert" attrs="{'invisible': ['&amp;','&amp;',('canceled', '=', 0),('scheduled', '=', 0),('failed', '=', 0)]}">
+                        <div attrs="{'invisible': [('canceled', '=', 0)]}">
                             <button class="btn-link py-0"
-                                    name="action_view_traces_ignored"
+                                    name="action_view_traces_canceled"
                                     type="object">
                                 <strong>
-                                    <field name="ignored" class="oe_inline mr-2"/>
-                                    <span name="ignored_text">emails have been ignored and will not be sent.</span>
+                                    <field name="canceled" class="oe_inline mr-2"/>
+                                    <span name="canceled_text">emails have been ignored and will not be sent.</span>
                                 </strong>
                             </button>
                         </div>

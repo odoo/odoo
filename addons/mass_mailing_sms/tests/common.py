@@ -21,7 +21,7 @@ class MockSMS(sms_common.MockSMS):
         self.assertEqual(set(found_sms.filtered(lambda s: not s.partner_id).mapped('number')), set(numbers))
 
         found_traces = self.env['mailing.trace'].sudo().search([
-            ('sms_sms_id_int', 'in', found_sms.ids),
+            ('sms_id_int', 'in', found_sms.ids),
         ])
         self.assertEqual(len(found_sms), len(found_traces))
         self.assertTrue(all(s.state == 'outgoing' for s in found_traces))
@@ -35,7 +35,7 @@ class MockSMS(sms_common.MockSMS):
           :param recipients_info: list[{
             'partner': res.partner record (may be empty),
             'number': number used for notification (may be empty, computed based on partner),
-            'state': outgoing / sent / ignored / exception / opened (sent by default),
+            'state': outgoing / sent / canceled / exception / opened (sent by default),
             'record: linked record,
             'failure_type': optional: sms_number_missing / sms_number_format / sms_credit / sms_server
             }, { ... }]
@@ -67,7 +67,7 @@ class MockSMS(sms_common.MockSMS):
                     self.assertSMSOutgoing(partner, number, content)
                 elif state == 'exception':
                     self.assertSMSFailed(partner, number, recipient_info.get('failure_type'), content)
-                elif state == 'ignored':
+                elif state == 'canceled':
                     self.assertSMSCanceled(partner, number, recipient_info.get('failure_type', False), content)
                 else:
                     raise NotImplementedError()
