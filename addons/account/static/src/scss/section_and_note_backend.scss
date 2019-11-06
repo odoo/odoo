@@ -16,3 +16,14 @@ table.o_section_and_note_list_view tr.o_data_row.o_is_line_section {
     border-top: 1px solid #BBB;
     border-bottom: 1px solid #BBB;
 }
+
+table.o_section_and_note_list_view tr.o_data_row {
+    &.o_is_line_note,
+    &.o_is_line_section {
+        td {
+            // There is an undeterministic CSS behaviour in Chrome related to
+            // the combination of the row's and its children's borders.
+            border: none !important;
+        }
+    }
+}

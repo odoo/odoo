@@ -5,6 +5,7 @@
 # Translators:
 # thomas quertinmont <tqu@odoo.com>, 2019
 # Martin Trigaux, 2019
+# Oriane Malburny <oma@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-09-09 12:18+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"Last-Translator: Oriane Malburny <oma@odoo.com>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,12 +50,12 @@ msgstr "Tarifs"
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order__grid_product_tmpl_id
 msgid "Grid Product Tmpl"
-msgstr ""
+msgstr "Grille des modèles d'articles"
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order__grid_update
 msgid "Grid Update"
-msgstr ""
+msgstr "Mise à jour de la grille"
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,help:purchase_product_matrix.field_purchase_order__report_grids
@@ -62,16 +63,18 @@ msgid ""
 "If set, the matrix of configurable products will be shown on the report of "
 "this order."
 msgstr ""
+"Si coché, la matrice d'articles configurables sera montrée sur le rapport de"
+" cet ordre."
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order_line__is_configurable_product
 msgid "Is the product configurable?"
-msgstr ""
+msgstr "Cet article est-il configurable?"
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order__report_grids
 msgid "Print Variant Grids"
-msgstr ""
+msgstr "Imprimer la grille des variantes"
 
 #. module: purchase_product_matrix
 #: model_terms:ir.ui.view,arch_db:purchase_product_matrix.purchase_order_form_matrix
@@ -101,7 +104,7 @@ msgstr "Ligne de commande d'achat"
 #. module: purchase_product_matrix
 #: model:ir.model.fields,help:purchase_product_matrix.field_purchase_order__grid_product_tmpl_id
 msgid "Technical field for product_matrix functionalities."
-msgstr ""
+msgstr "Champ technique pour les fonctionnalités de product_matrix."
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,help:purchase_product_matrix.field_purchase_order__grid
@@ -110,11 +113,15 @@ msgid ""
 "If grid_update, will be loaded on the SO. \n"
 "If not, represents the matrix to open."
 msgstr ""
+"Stockage technique de la grille. \n"
+"Si grid_update, sera chargée sur le devis. \n"
+"Si pas, représente la matrice à ouvrir."
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,help:purchase_product_matrix.field_purchase_order__grid_update
 msgid "Whether the grid field contains a new matrix to apply or not."
 msgstr ""
+"Est-ce que le champ grille contient une nouvelle matrice à appliquer ou pas."
 
 #. module: purchase_product_matrix
 #: code:addons/purchase_product_matrix/models/purchase.py:0
@@ -123,3 +130,5 @@ msgid ""
 "You cannot change the quantity of a product present in multiple purchase "
 "lines."
 msgstr ""
+"Vous ne pouvez modifier la quantité d'un article présent dans différentes "
+"lignes de bons de commande."

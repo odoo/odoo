@@ -319,7 +319,13 @@ exports.PosModel = Backbone.Model.extend({
     },{
         model:  'product.pricelist',
         fields: ['name', 'display_name', 'discount_policy'],
-        domain: function(self) { return [['id', 'in', self.config.available_pricelist_ids]]; },
+        domain: function(self) {
+            if (self.config.use_pricelist) {
+                return [['id', 'in', self.config.available_pricelist_ids]];
+            } else {
+                return [['id', '=', self.config.pricelist_id[0]]];
+            }
+        },
         loaded: function(self, pricelists){
             _.map(pricelists, function (pricelist) { pricelist.items = []; });
             self.default_pricelist = _.findWhere(pricelists, {id: self.config.pricelist_id[0]});
@@ -2382,6 +2388,7 @@ exports.Order = Backbone.Model.extend({
             creation_date: this.validation_date || this.creation_date, // todo: rename creation_date in master
             fiscal_position_id: this.fiscal_position ? this.fiscal_position.id : false,
             server_id: this.server_id ? this.server_id : false,
+            to_invoice: this.to_invoice ? this.to_invoice : false,
         };
         if (!this.is_paid && this.user_id) {
             json.user_id = this.user_id;

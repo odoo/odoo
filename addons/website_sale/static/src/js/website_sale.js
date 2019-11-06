@@ -12,8 +12,16 @@ publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
     events: {
         'mouseenter': '_onMouseEnter',
         'mouseleave': '_onMouseLeave',
+        'click': '_onClick',
     },
 
+    /**
+     * @constructor
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+        this._popoverRPC = null;
+    },
     /**
      * @override
      */
@@ -48,7 +56,7 @@ publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
             if (!self.$el.is(':hover') || $('.mycart-popover:visible').length) {
                 return;
             }
-            $.get("/shop/cart", {
+            self._popoverRPC = $.get("/shop/cart", {
                 type: 'popover',
             }).then(function (data) {
                 self.$el.data("bs.popover").config.content = data;
@@ -57,7 +65,7 @@ publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
                     self.$el.trigger('mouseleave');
                 });
             });
-        }, 100);
+        }, 300);
     },
     /**
      * @private
@@ -73,6 +81,25 @@ publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
                self.$el.popover('hide');
             }
         }, 1000);
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onClick: function (ev) {
+        // When clicking on the cart link, prevent any popover to show up (by
+        // clearing the related setTimeout) and, if a popover rpc is ongoing,
+        // wait for it to be completed before going to the link's href. Indeed,
+        // going to that page may perform the same computation the popover rpc
+        // is already doing.
+        clearTimeout(timeout);
+        if (this._popoverRPC && this._popoverRPC.state() === 'pending') {
+            ev.preventDefault();
+            var href = ev.currentTarget.href;
+            this._popoverRPC.then(function () {
+                window.location.href = href;
+            });
+        }
     },
 });
 });

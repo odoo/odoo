@@ -94,25 +94,25 @@ msgstr "%s : %.2furen"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%s are only valid between %s and %s"
-msgstr ""
+msgstr "%s zijn alleen geldig tussen %s en %s"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%s are only valid starting from %s"
-msgstr ""
+msgstr "%s zijn alleen geldig startend vanaf %s"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%s are only valid until %s"
-msgstr ""
+msgstr "%s zijn alleen geldig tot %s"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%s on %s : %.2f hours"
-msgstr ""
+msgstr "%s op %s : %.2f uren"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -491,6 +491,9 @@ msgid ""
 "                            Off Till\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            Verlof totl\n"
+"                        </span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
@@ -507,7 +510,7 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "<span class=\"o_stat_text\">Group Days Allocated</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Groepeer toegewezen dagen</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -732,7 +735,7 @@ msgstr "Verlof goedgekeurd"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__allocation_display
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__allocation_display
 msgid "Allocation Display"
-msgstr ""
+msgstr "Toewijzingen tonen"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__holiday_type
@@ -783,13 +786,13 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid "Allocation of %s : %.2f day(s) to %s"
-msgstr ""
+msgstr "Toewijzing van %s : %.2f dag(en) aan %s"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid "Allocation of %s : %.2f hour(s) to %s"
-msgstr ""
+msgstr "Toewijzing van %s : %.2f u(u)r(en) aan %s"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -798,12 +801,14 @@ msgid ""
 "Allocation request must be confirmed (\"To Approve\") in order to approve "
 "it."
 msgstr ""
+"Toewijzing moet bevestigd worden (\"Goed te keuren\") om het goed te kunnen "
+"keuren."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid "Allocation request must be confirmed in order to approve it."
-msgstr ""
+msgstr "Verlofaanvraag moet bevestigd worden om het goed te kunnen keuren."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -811,6 +816,7 @@ msgstr ""
 msgid ""
 "Allocation request must be confirmed or validated in order to refuse it."
 msgstr ""
+"Toewijzing moet bevestigd of goedgekeurd worden om deze te kunnen afwijzen."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -819,6 +825,8 @@ msgid ""
 "Allocation request must be in Draft state (\"To Submit\") in order to "
 "confirm it."
 msgstr ""
+"Toewijzing moet in concept status zijn (\"In te dienen\") om het te "
+"bevestigen."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -827,6 +835,8 @@ msgid ""
 "Allocation request state must be \"Refused\" or \"To Approve\" in order to "
 "reset to Draft."
 msgstr ""
+"De status van het toewijzingsverzoek moet \"Afgewezen\" of \"Goedkeuren\" "
+"zijn om te resetten naar Concept."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__allocation_to_approve_count
@@ -880,7 +890,7 @@ msgstr "Goedkeuren"
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.ir_actions_server_approve_allocations
 msgid "Approve Allocations"
-msgstr ""
+msgstr "Goedgekeurde toewijzingen"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__current_leave_state__validate
@@ -1636,7 +1646,7 @@ msgstr "Opgenomen verloven"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
 msgid "Leaves Taken/Total Allocated"
-msgstr ""
+msgstr "Verlof verbruikt/Totaal toegewezen"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__color_name__lightblue
@@ -1699,13 +1709,13 @@ msgstr "Manager"
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.action_manager_approval
 msgid "Manager Approval"
-msgstr ""
+msgstr "Goedkeuring van manager"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form_manager
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form_manager_approve
 msgid "Manager's Comment"
-msgstr ""
+msgstr "Opmerking van manager"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_approvals
@@ -1837,7 +1847,7 @@ msgstr "Nieuw"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "New %s Request created by %s from %s to %s"
-msgstr ""
+msgstr "Nieuw %s Verzoek aangemaakt door %s van %s tot %s"
 
 #. module: hr_holidays
 #. openerp-web
@@ -1986,7 +1996,7 @@ msgstr "Aantal ongelezen berichten"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
 msgid "Off Till"
-msgstr ""
+msgstr "Verlof tot"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_my
@@ -2015,13 +2025,13 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "Only a Leave Manager can reset a refused leave."
-msgstr ""
+msgstr "Alleen een verlof manager kan een afgewezen verlofaanvraag resetten."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "Only a Leave Manager can reset a started leave."
-msgstr ""
+msgstr "Alleen een verlof manager kan een gestarte verlof resetten."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -2077,7 +2087,7 @@ msgstr "Out of office"
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_cl
 msgid "Paid Time Off"
-msgstr ""
+msgstr "Betaald verlof"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__parent_id
@@ -2143,7 +2153,7 @@ msgstr "Weiger"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__state__refuse
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_report__state__refuse
 msgid "Refused"
-msgstr "Geweigerd"
+msgstr "Afgewezen"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__allocation_type__regular
@@ -2182,7 +2192,7 @@ msgstr "Resterend verlof"
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.action_report_to_payslip
 msgid "Report to Payslip"
-msgstr ""
+msgstr "Rapport naar loonstrook"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__payslip_status
@@ -2411,6 +2421,10 @@ msgid ""
 "The status is 'Refused', when time off request is refused by manager.\n"
 "The status is 'Approved', when time off request is approved by manager."
 msgstr ""
+"De status is ingesteld op 'Indienen', wanneer een verlofaanvraag wordt aangemaakt.\n"
+"De status is 'Goed te keuren', wanneer een verlofaanvraag wordt bevestigd door de gebruiker. \n"
+"De status wordt 'Afgewezen', wanneer een verlofaanvraag wordt afgewezen door de manager. \n"
+"De status wordt 'Goedgekeurd', wanneer een verlofaanvraag wordt goedgekeurd door de manager."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__state
@@ -2420,6 +2434,10 @@ msgid ""
 "The status is 'Refused', when an allocation request is refused by manager.\n"
 "The status is 'Approved', when an allocation request is approved by manager."
 msgstr ""
+"De status is ingesteld op 'Indienen', wanneer een verloftoewijzing wordt aangemaakt.\n"
+"De status is 'Goed te keuren', wanneer een verloftoewijzing wordt bevestigd door de gebruiker. \n"
+"De status wordt 'Afgewezen', wanneer een verloftoewijzing wordt afgewezen door de manager. \n"
+"De status wordt 'Goedgekeurd', wanneer een verloftoewijzing wordt goedgekeurd door de manager."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -2634,7 +2652,7 @@ msgstr "Goed te keuren verlof"
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_menu_manager_payroll_to_report
 msgid "Time Off to Report"
-msgstr ""
+msgstr "Verlof te rapporteren"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -2649,7 +2667,7 @@ msgstr "Eerder opgenomen verlof"
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.act_hr_employee_holiday_request
 msgid "Time off Analysis"
-msgstr ""
+msgstr "Verlofanalyse"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -2692,7 +2710,7 @@ msgid ""
 "Time off request state must be \"Refused\" or \"To Approve\" in order to be "
 "reset to draft."
 msgstr ""
-"Verlofaanvraag fase moet \"Afgekeurd\" of \"Goed te keuren\" zijn om terug "
+"Verlofaanvraag fase moet \"Afgewezen\" of \"Goed te keuren\" zijn om terug "
 "naar concept te zetten."
 
 #. module: hr_holidays
@@ -2857,7 +2875,7 @@ msgstr "Gebruiker"
 #: model:ir.model.fields,help:hr_holidays.field_hr_employee_public__leave_manager_id
 #: model:ir.model.fields,help:hr_holidays.field_res_users__leave_manager_id
 msgid "User responsible of leaves approval."
-msgstr ""
+msgstr "Gebruiker verantwoordelijk voor de goedkeuring van verlof."
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_res_users
@@ -2981,7 +2999,7 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "You cannot delete a time off which is in %s state"
-msgstr ""
+msgstr "U kan geen afwezigheid verwijderen die zich in de fase %s bevind"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -2996,6 +3014,8 @@ msgid ""
 "You cannot first approve a leave for %s, because you are not his leave "
 "manager"
 msgstr ""
+"U kan niet eerst aan afwezigheid goedkeuren voor %s, omdat u niet de "
+"afwezigheidsbeheerder bent voor deze persoon"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -3037,17 +3057,17 @@ msgstr "Uw %s gepland op %s is geaccepteerd"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "Your %s planned on %s has been refused"
-msgstr ""
+msgstr "Uw %s gepland op %s is afgewezen"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_available_holidays_report_tree
 msgid "by Employee"
-msgstr "door werknemer"
+msgstr "Per werknemer"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_summary_all
 msgid "by Type"
-msgstr ""
+msgstr "Per soort"
 
 #. module: hr_holidays
 #. openerp-web

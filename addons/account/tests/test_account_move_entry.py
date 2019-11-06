@@ -47,6 +47,22 @@ class TestAccountMove(InvoiceTestCommon):
             ]
         })
 
+    def test_custom_currency_on_account_1(self):
+        custom_account = self.company_data['default_account_revenue'].copy()
+
+        # The currency set on the account is not the same as the one set on the company.
+        # It should raise an error.
+        custom_account.currency_id = self.currency_data['currency']
+
+        with self.assertRaises(UserError), self.cr.savepoint():
+            self.test_move.line_ids[0].account_id = custom_account
+
+        # The currency set on the account is the same as the one set on the company.
+        # It should not raise an error.
+        custom_account.currency_id = self.company_data['currency']
+
+        self.test_move.line_ids[0].account_id = custom_account
+
     def test_misc_fiscalyear_lock_date_1(self):
         self.test_move.post()
 

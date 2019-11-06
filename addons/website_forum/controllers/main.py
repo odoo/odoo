@@ -300,7 +300,7 @@ class WebsiteForum(WebsiteProfile):
                 type='http', auth="user", methods=['POST'], website=True)
     def post_create(self, forum, post_parent=None, **post):
         if post.get('content', '') == '<p><br></p>':
-            return request.render('website.http_error', {
+            return request.render('http_routing.http_error', {
                 'status_code': _('Bad Request'),
                 'status_message': post_parent and _('Reply should not be empty.') or _('Question should not be empty.')
             })
@@ -369,7 +369,7 @@ class WebsiteForum(WebsiteProfile):
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/save', type='http', auth="user", methods=['POST'], website=True)
     def post_save(self, forum, post, **kwargs):
         if 'post_name' in kwargs and not kwargs.get('post_name').strip():
-            return request.render('website.http_error', {
+            return request.render('http_routing.http_error', {
                 'status_code': _('Bad Request'),
                 'status_message': _('Title should not be empty.')
             })

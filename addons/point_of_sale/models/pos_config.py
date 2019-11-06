@@ -171,6 +171,12 @@ class PosConfig(models.Model):
         help="The pricelist used if no customer is selected or if the customer has no Sale Pricelist configured.")
     available_pricelist_ids = fields.Many2many('product.pricelist', string='Available Pricelists', default=_default_pricelist,
         help="Make several pricelists available in the Point of Sale. You can also apply a pricelist to specific customers from their contact form (in Sales tab). To be valid, this pricelist must be listed here as an available pricelist. Otherwise the default pricelist will apply.")
+    allowed_pricelist_ids = fields.Many2many(
+        'product.pricelist',
+        string='Allowed Pricelists',
+        compute='_compute_allowed_pricelist_ids',
+        help='This is a technical field used for the domain of pricelist_id.',
+    )
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
     barcode_nomenclature_id = fields.Many2one('barcode.nomenclature', string='Barcode Nomenclature',
         help='Defines what kind of barcodes are available and how they are assigned to products, customers and cashiers.',
@@ -208,6 +214,14 @@ class PosConfig(models.Model):
     company_has_template = fields.Boolean(string="Company has chart of accounts", compute="_compute_company_has_template")
     current_user_id = fields.Many2one('res.users', string='Current Session Responsible', compute='_compute_current_session_user')
     other_devices = fields.Boolean(string="Other Devices", help="Connect devices to your PoS without an IoT Box.")
+
+    @api.depends('use_pricelist', 'available_pricelist_ids')
+    def _compute_allowed_pricelist_ids(self):
+        for config in self:
+            if config.use_pricelist:
+                config.allowed_pricelist_ids = config.available_pricelist_ids.ids
+            else:
+                config.allowed_pricelist_ids = self.env['product.pricelist'].search([]).ids
 
     @api.depends('company_id')
     def _compute_company_has_template(self):
@@ -308,10 +322,11 @@ class PosConfig(models.Model):
         if self.env['pos.payment.method'].search_count([('id', 'in', self.payment_method_ids.ids), ('company_id', '!=', self.company_id.id)]):
             raise ValidationError(_("The method payments and the point of sale must belong to the same company."))
 
-    @api.constrains('pricelist_id', 'available_pricelist_ids', 'journal_id', 'invoice_journal_id', 'payment_method_ids')
+    @api.constrains('pricelist_id', 'use_pricelist', 'available_pricelist_ids', 'journal_id', 'invoice_journal_id', 'payment_method_ids')
     def _check_currencies(self):
-        if self.pricelist_id not in self.available_pricelist_ids:
-            raise ValidationError(_("The default pricelist must be included in the available pricelists."))
+        for config in self:
+            if config.use_pricelist and config.pricelist_id not in config.available_pricelist_ids:
+                raise ValidationError(_("The default pricelist must be included in the available pricelists."))
         if any(self.available_pricelist_ids.mapped(lambda pricelist: pricelist.currency_id != self.currency_id)):
             raise ValidationError(_("All available pricelists must be in the same currency as the company or"
                                     " as the Sales Journal set on this point of sale if you use"

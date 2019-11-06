@@ -20,9 +20,9 @@
 # Marie Willemyns <mwi@odoo.com>, 2019
 # a270031086f2a0d3514bc0cb507b48f6, 2019
 # thomas quertinmont <tqu@odoo.com>, 2019
-# Oriane Malburny <oma@odoo.com>, 2019
 # Martin Trigaux, 2019
 # Olivier ANDRE <frsw194@gmail.com>, 2019
+# Oriane Malburny <oma@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -30,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-07 07:12+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Olivier ANDRE <frsw194@gmail.com>, 2019\n"
+"Last-Translator: Oriane Malburny <oma@odoo.com>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -279,6 +279,9 @@ msgid ""
 "                                has changed for product template %s: from %s"
 " to %s."
 msgstr ""
+"Du fait d'un changement de catégorie de produit (de %s à %s), la méthode de "
+"coût                               a changé pour le modèle d'article %s: de "
+"%s à %s."
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__fifo
@@ -288,7 +291,7 @@ msgstr "First In First Out (FIFO)"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory__has_account_moves
 msgid "Has Account Moves"
-msgstr ""
+msgstr "A des mouvements comptables"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__id
@@ -341,7 +344,7 @@ msgstr "Valorisation de l'inventaire"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_move_line__is_anglo_saxon_line
 msgid "Is Anglo Saxon Line"
-msgstr ""
+msgstr "Est une ligne d'Anglo-Saxon"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_move
@@ -384,7 +387,7 @@ msgstr "Dernière mise à jour le"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__stock_valuation_layer_id
 msgid "Linked To"
-msgstr ""
+msgstr "Lié à"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__manual_periodic
@@ -415,6 +418,8 @@ msgid ""
 "Please define an expense account for this product: \"%s\" (id:%d) - or for "
 "its category: \"%s\"."
 msgstr ""
+"Veuillez définir un compte de dépense pour cet article: \"%s\" (id:%d) - ou "
+"pour sa catégorie: \"%s\"."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__new_price
@@ -449,7 +454,7 @@ msgstr "Modèle d'article"
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Product value manually modified (from %s to %s)"
-msgstr ""
+msgstr "Valeur de l'article modifiée manuellement (de %s à %s)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__quantity
@@ -460,7 +465,7 @@ msgstr "Quantité"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__quantity_svl
 msgid "Quantity Svl"
-msgstr ""
+msgstr "Svl Quantité"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quant
@@ -560,12 +565,12 @@ msgstr "Compte de valorisation des stocks (sortant)"
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__stock_valuation_layer_ids
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__stock_valuation_layer_ids
 msgid "Stock Valuation Layer"
-msgstr ""
+msgstr "Couche de valorisation d'inventaire"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_account_move_line__is_anglo_saxon_line
 msgid "Technical field used to retrieve the anglo-saxon lines."
-msgstr ""
+msgstr "Champ technique utilisé pour récupérer les lignes d'anglo-saxon."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -574,6 +579,8 @@ msgid ""
 "The Stock Input and/or Output accounts cannot be the same than the Stock "
 "Valuation account."
 msgstr ""
+"Les comptes d'entrée et/ou de sortie de stock ne peuvent être les mêmes que "
+"le compte de valorisation d'inventaire."
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
@@ -613,6 +620,9 @@ msgid ""
 "There is no valuation layers. Valuation layers are created when some product"
 " moves should impact the valuation of the stock."
 msgstr ""
+"Il n'y a pas de couche de valorisation. Les couches de valorisation sont "
+"créées quand certains mouvements d'articles impactent la valorisation "
+"d'inventaire."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__value
@@ -697,13 +707,15 @@ msgstr "Valorisation"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_search
 msgid "Valuation Layer?"
-msgstr ""
+msgstr "Couche de valorisation?"
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Valuation method change for product category %s: from %s to %s."
 msgstr ""
+"La méthode de valorisation de la catégorie de produit %s a changé: de %s à "
+"%s."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__value
@@ -713,7 +725,7 @@ msgstr "Valeur"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__value_svl
 msgid "Value Svl"
-msgstr ""
+msgstr "Valeur Svl"
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -727,6 +739,8 @@ msgid ""
 "When automated inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
 msgstr ""
+"Quand la valorisation d'inventaire automatique est activée sur un article, "
+"ce compte contient la valeur actuelle des articles."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_account_input_categ_id
@@ -735,6 +749,9 @@ msgid ""
 "                unless there is a specific valuation account set on the source location. This is the default value for all products in this category.\n"
 "                It can also directly be set on each product."
 msgstr ""
+"Quand la valorisation d'inventaire est automatique, des entrées comptables de contre-partie sont postées dans ce compte pour chaque mouvement de stock entrant,\n"
+"                à moins qu'un compte de valorisation spécifique ne soit indiqué sur l'emplacement source. C'est une valeur par défaut pour tous les articles de cette catégorie.\n"
+"                Elle peut aussi être spécifiée directement sur chaque article."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_account_output_categ_id
@@ -743,6 +760,9 @@ msgid ""
 "                unless there is a specific valuation account set on the destination location. This is the default value for all products in this category.\n"
 "                It can also directly be set on each product."
 msgstr ""
+"Quand la valorisation d'inventaire est autmatique, les entrées comptables de contre-partie pour les sorties de stock seront postées dans ce compte,\n"
+"                à moins qu'un compte de valorisation spécifique ne soit indiqué sur l'emplacement de destination. C'est la valeur par défaut pour tous les articles de cette catégorie.\n"
+"                Elle peut aussi être spécifiée directement sur chaque article."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_journal
@@ -750,6 +770,9 @@ msgid ""
 "When doing automated inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
 msgstr ""
+"Quand la valorisation d'invenaire est automatique, c'est le journal "
+"comptable dans lequel les entrées seront automatiquement postées lorsque les"
+" mouvements de stock seront réalisés."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -758,6 +781,8 @@ msgid ""
 "You don't have any input valuation account defined on your product category."
 " You must define one before processing this operation."
 msgstr ""
+"Vous n'avez pas de compte d'entrée de valorisation définit sur la catégorie "
+"d'article. Vous devez en définir un avant de réaliser l'opération."
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
@@ -787,7 +812,7 @@ msgstr ""
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "You must set a counterpart account."
-msgstr ""
+msgstr "Vous devez indiquer un compte de contre-partie."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -797,4 +822,4 @@ msgstr "_Appliquer"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__remaining_value
 msgid "remaining_value Value"
-msgstr ""
+msgstr "Valeur de remaining_value"

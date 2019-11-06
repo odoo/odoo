@@ -56,6 +56,7 @@ class AccountMove(models.Model):
                     continue
 
                 if isr_subscription:
+                    isr_subscription = isr_subscription.replace("-", "")  # In case the user put the -
                     record.l10n_ch_isr_subscription = _format_isr_subscription_scanline(isr_subscription)
                     record.l10n_ch_isr_subscription_formatted = _format_isr_subscription(isr_subscription)
 
@@ -82,8 +83,7 @@ class AccountMove(models.Model):
 
         for record in self:
             if record.name and record.invoice_partner_bank_id and record.invoice_partner_bank_id.l10n_ch_postal:
-                invoice_issuer_ref = re.sub('^0*', '', record.invoice_partner_bank_id.l10n_ch_postal)
-                invoice_issuer_ref = invoice_issuer_ref.ljust(l10n_ch_ISR_NUMBER_ISSUER_LENGTH, '0')
+                invoice_issuer_ref = record.invoice_partner_bank_id.l10n_ch_postal.ljust(l10n_ch_ISR_NUMBER_ISSUER_LENGTH, '0')
                 invoice_ref = re.sub('[^\d]', '', record.name)
                 #We only keep the last digits of the sequence number if it is too long
                 invoice_ref = invoice_ref[-l10n_ch_ISR_NUMBER_ISSUER_LENGTH:]
@@ -199,11 +199,11 @@ class AccountMove(models.Model):
         `Payment Reference` of the invoice when invoice's journal is using Switzerland's communication standard
         """
         self.ensure_one()
-        return self.l10n_ch_isr_number_spaced
+        return self.l10n_ch_isr_number
 
     def _get_invoice_reference_ch_partner(self):
         """ This sets ISR reference number which is generated based on customer's `Bank Account` and set it as
         `Payment Reference` of the invoice when invoice's journal is using Switzerland's communication standard
         """
         self.ensure_one()
-        return self.l10n_ch_isr_number_spaced
+        return self.l10n_ch_isr_number

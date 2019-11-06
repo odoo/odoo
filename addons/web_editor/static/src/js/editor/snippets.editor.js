@@ -45,6 +45,10 @@ var SnippetEditor = Widget.extend({
         this.templateOptions = templateOptions;
         this.isTargetParentEditable = false;
         this.isTargetMovable = false;
+
+        this.__isStarted = new Promise(resolve => {
+            this.__isStartedResolveFunc = resolve;
+        });
     },
     /**
      * @override
@@ -121,7 +125,9 @@ var SnippetEditor = Widget.extend({
         // a flickering when not needed.
         this.$target.on('transitionend.snippet_editor, animationend.snippet_editor', postAnimationCover);
 
-        return Promise.all(defs);
+        return Promise.all(defs).then(() => {
+            this.__isStartedResolveFunc(this);
+        });
     },
     /**
      * @override
@@ -162,7 +168,7 @@ var SnippetEditor = Widget.extend({
      * Makes the editor overlay cover the associated snippet.
      */
     cover: function () {
-        if (!this.isShown() || !this.$target.length) {
+        if (!this.isShown() || !this.$target.length || !this.$target.is(':visible')) {
             return;
         }
         var offset = this.$target.offset();
@@ -1039,23 +1045,35 @@ var SnippetsMenu = Widget.extend({
      */
     _activateSnippet: function ($snippet, previewMode) {
         return this._activateSnippetMutex.exec(() => {
-            // First disable all editors if necessary
-            this.snippetEditors.forEach(editor => {
-                editor.toggleFocus(false, previewMode);
-            });
-            // Take the first parent of the provided DOM (or itself) which
-            // should have an associated snippet editor and create + enable it.
-            if ($snippet && $snippet.length) {
-                $snippet = globalSelector.closest($snippet);
-                if (!$snippet.length) {
-                    return Promise.resolve(null);
+            return new Promise(resolve => {
+                // Take the first parent of the provided DOM (or itself) which
+                // should have an associated snippet editor and create + enable it.
+                if ($snippet && $snippet.length) {
+                    $snippet = globalSelector.closest($snippet);
+                    if ($snippet.length) {
+                        return this._createSnippetEditor($snippet).then(resolve);
+                    }
                 }
-                return this._createSnippetEditor($snippet).then(editor => {
-                    editor.toggleFocus(true, previewMode);
-                    return editor;
-                });
-            }
-            return Promise.resolve(null);
+                resolve(null);
+            }).then(editorToEnable => {
+                // First disable all editors...
+                for (let i = this.snippetEditors.length; i--;) {
+                    const editor = this.snippetEditors[i];
+                    if (editor === editorToEnable) {
+                        // Avoid disable -> enable of an editor (the toggleFocus
+                        // method is in charge of doing nothing is nothing has
+                        // to be done but if we explicitly ask for disable then
+                        // enable... it will disable then enable).
+                        continue;
+                    }
+                    editor.toggleFocus(false, previewMode);
+                }
+                // ... then enable the right editor
+                if (editorToEnable) {
+                    editorToEnable.toggleFocus(true, previewMode);
+                }
+                return editorToEnable;
+            });
         });
     },
     /**
@@ -1351,7 +1369,7 @@ var SnippetsMenu = Widget.extend({
         var self = this;
         var snippetEditor = $snippet.data('snippet-editor');
         if (snippetEditor) {
-            return Promise.resolve(snippetEditor);
+            return snippetEditor.__isStarted;
         }
 
         var def;
@@ -1361,6 +1379,15 @@ var SnippetsMenu = Widget.extend({
         }
 
         return Promise.resolve(def).then(function (parentEditor) {
+            // When reaching this position, after the Promise resolution, the
+            // snippet editor instance might have been created by another call
+            // to _createSnippetEditor... the whole logic should be improved
+            // to avoid doing this here.
+            snippetEditor = $snippet.data('snippet-editor');
+            if (snippetEditor) {
+                return snippetEditor.__isStarted;
+            }
+
             let editableArea = self.getEditableArea();
             snippetEditor = new SnippetEditor(parentEditor || self, $snippet, self.templateOptions, $snippet.closest('[data-oe-type="html"], .oe_structure').add(editableArea), self.options);
             self.snippetEditors.push(snippetEditor);

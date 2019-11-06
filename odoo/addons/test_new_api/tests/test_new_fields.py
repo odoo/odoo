@@ -61,15 +61,51 @@ class TestFields(common.TransactionCase):
         record.priority = 4
         self.assertEqual(record.priority, 5)
 
+    def test_05_unknown_fields(self):
+        """ test ORM operations with unknown fields """
+        cat = self.env['test_new_api.category'].create({'name': 'Foo'})
+
+        with self.assertRaisesRegex(ValueError, 'Invalid field'):
+            cat.search([('zzz', '=', 42)])
+        with self.assertRaisesRegex(ValueError, 'Invalid field'):
+            cat.search([], order='zzz')
+
+        with self.assertRaisesRegex(ValueError, 'Invalid field'):
+            cat.read(['zzz'])
+
+        with self.assertRaisesRegex(ValueError, 'Invalid field'):
+            cat.read_group([('zzz', '=', 42)], fields=['color'], groupby=['parent'])
+        with self.assertRaisesRegex(ValueError, 'Invalid field'):
+            cat.read_group([], fields=['zzz'], groupby=['parent'])
+        with self.assertRaisesRegex(ValueError, 'Invalid field'):
+            cat.read_group([], fields=['zzz:sum'], groupby=['parent'])
+        with self.assertRaisesRegex(ValueError, 'Invalid field'):
+            cat.read_group([], fields=['color'], groupby=['zzz'])
+        with self.assertRaisesRegex(ValueError, 'Invalid field'):
+            cat.read_group([], fields=['color'], groupby=['parent'], orderby='zzz')
+        # exception: accept '__count' as field to aggregate
+        cat.read_group([], fields=['__count'], groupby=['parent'])
+
+        with self.assertRaisesRegex(ValueError, 'Invalid field'):
+            cat.create({'name': 'Foo', 'zzz': 42})
+
+        with self.assertRaisesRegex(ValueError, 'Invalid field'):
+            cat.write({'zzz': 42})
+
+        with self.assertRaisesRegex(ValueError, 'Invalid field'):
+            cat.new({'name': 'Foo', 'zzz': 42})
+
     def test_10_computed(self):
         """ check definition of computed fields """
         # by default function fields are not stored and readonly
         field = self.env['test_new_api.message']._fields['size']
         self.assertFalse(field.store)
+        self.assertFalse(field.compute_sudo)
         self.assertTrue(field.readonly)
 
         field = self.env['test_new_api.message']._fields['name']
         self.assertTrue(field.store)
+        self.assertTrue(field.compute_sudo)
         self.assertTrue(field.readonly)
 
     def test_10_computed_custom(self):
@@ -581,6 +617,15 @@ class TestFields(common.TransactionCase):
         self.assertTrue(record.filtered_domain([('date', '<', '2012-05-02')]))
         self.assertTrue(record.filtered_domain([('date', '<', date(2012, 5, 2))]))
         self.assertTrue(record.filtered_domain([('date', '<', datetime(2012, 5, 2, 12, 0, 0))]))
+        self.assertTrue(record.filtered_domain([('date', '!=', False)]))
+        self.assertFalse(record.filtered_domain([('date', '=', False)]))
+
+        record.date = None
+        self.assertFalse(record.filtered_domain([('date', '<', '2012-05-02')]))
+        self.assertFalse(record.filtered_domain([('date', '<', date(2012, 5, 2))]))
+        self.assertFalse(record.filtered_domain([('date', '<', datetime(2012, 5, 2, 12, 0, 0))]))
+        self.assertFalse(record.filtered_domain([('date', '!=', False)]))
+        self.assertTrue(record.filtered_domain([('date', '=', False)]))
 
     def test_21_datetime(self):
         """ test datetime fields """
@@ -611,6 +656,15 @@ class TestFields(common.TransactionCase):
         self.assertTrue(record.filtered_domain([('moment', '<', '2012-05-02')]))
         self.assertTrue(record.filtered_domain([('moment', '<', date(2012, 5, 2))]))
         self.assertTrue(record.filtered_domain([('moment', '<', datetime(2012, 5, 1, 12, 0, 0))]))
+        self.assertTrue(record.filtered_domain([('moment', '!=', False)]))
+        self.assertFalse(record.filtered_domain([('moment', '=', False)]))
+
+        record.moment = None
+        self.assertFalse(record.filtered_domain([('moment', '<', '2012-05-02')]))
+        self.assertFalse(record.filtered_domain([('moment', '<', date(2012, 5, 2))]))
+        self.assertFalse(record.filtered_domain([('moment', '<', datetime(2012, 5, 2, 12, 0, 0))]))
+        self.assertFalse(record.filtered_domain([('moment', '!=', False)]))
+        self.assertTrue(record.filtered_domain([('moment', '=', False)]))
 
     def test_21_date_datetime_helpers(self):
         """ test date/datetime fields helpers """
@@ -1597,6 +1651,18 @@ class TestFields(common.TransactionCase):
         assertBinaryValue(record, binary_value)
         assertBinaryValue(record_no_bin_size, binary_value)
         assertBinaryValue(record_bin_size, binary_size)
+
+        # check computed binary field with arbitrary Python value
+        record = self.env['test_new_api.model_binary'].create({})
+        record.flush()
+        record.invalidate_cache()
+        record_no_bin_size = record.with_context(bin_size=False)
+        record_bin_size = record.with_context(bin_size=True)
+
+        expected_value = [(record.id, False)]
+        self.assertEqual(record.binary_computed, expected_value)
+        self.assertEqual(record_no_bin_size.binary_computed, expected_value)
+        self.assertEqual(record_bin_size.binary_computed, expected_value)
 
 
 class TestX2many(common.TransactionCase):

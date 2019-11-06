@@ -133,6 +133,12 @@ msgstr ""
 "система продовжує працювати без підключення до інтернету.</p>"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:0
+#, python-format
+msgid "<p>Dear %s,<br/>Here is your electronic ticket for the %s. </p>"
+msgstr "<p>Шановний(а) %s,<br/>Це ваш електронний квиток на %s. </p>"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "<span class=\"o_form_label\">Barcode Scanner</span>"
 msgstr "<span class=\"o_form_label\">Сканер штрих-коду</span>"
@@ -3600,6 +3606,12 @@ msgstr "Зчитати показник вагів"
 #, python-format
 msgid "Ready to launch your <b>point of sale</b>?"
 msgstr "Готові запустити вашу <b>точку продажу</b>?"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:0
+#, python-format
+msgid "Receipt %s"
+msgstr "Квитанція %s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__receipt_footer

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import copy
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.osv import expression
@@ -31,7 +32,7 @@ class AccountReconciliation(models.AbstractModel):
         ctx = dict(self._context, force_price_include=False)
 
         processed_moves = self.env['account.move']
-        for st_line, datum in zip(st_lines, data):
+        for st_line, datum in zip(st_lines, copy.deepcopy(data)):
             payment_aml_rec = AccountMoveLine.browse(datum.get('payment_aml_ids', []))
 
             for aml_dict in datum.get('counterpart_aml_dicts', []):
@@ -138,7 +139,7 @@ class AccountReconciliation(models.AbstractModel):
                 COALESCE(p1.id,p2.id,p3.id)         AS partner_id
             FROM account_bank_statement_line st_line
         '''
-        query += 'LEFT JOIN res_partner_bank bank ON bank.id = st_line.bank_account_id OR bank.acc_number = st_line.account_number %s\n' % (where_bank)
+        query += "LEFT JOIN res_partner_bank bank ON bank.id = st_line.bank_account_id OR bank.sanitized_acc_number ILIKE regexp_replace(st_line.account_number, '\W+', '', 'g') %s\n" % (where_bank)
         query += 'LEFT JOIN res_partner p1 ON st_line.partner_id=p1.id \n'
         query += 'LEFT JOIN res_partner p2 ON bank.partner_id=p2.id \n'
         # By definition the commercial partner_id doesn't have a parent_id set

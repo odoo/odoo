@@ -112,7 +112,6 @@ class PosOrder(models.Model):
         :type existing_order: pos.order.
         :returns number pos_order id
         """
-        to_invoice = order['to_invoice'] if not draft else False
         order = order['data']
         pos_session = self.env['pos.session'].browse(order['pos_session_id'])
         if pos_session.state == 'closing_control' or pos_session.state == 'closed':
@@ -138,7 +137,7 @@ class PosOrder(models.Model):
             except Exception as e:
                 _logger.error('Could not fully process the POS Order: %s', tools.ustr(e))
 
-        if to_invoice:
+        if pos_order.to_invoice and pos_order.state == 'paid':
             pos_order.action_pos_order_invoice()
             pos_order.account_move.sudo().with_context(force_company=self.env.user.company_id.id).post()
 
@@ -431,6 +430,11 @@ class PosOrder(models.Model):
     def create_picking(self):
         """Create a picking for each order and validate it."""
         Picking = self.env['stock.picking']
+        # If no email is set on the user, the picking creation and validation will fail be cause of
+        # the 'Unable to log message, please configure the sender's email address.' error.
+        # We disable the tracking in this case.
+        if not self.env.user.partner_id.email:
+            Picking = Picking.with_context(tracking_disable=True)
         Move = self.env['stock.move']
         StockWarehouse = self.env['stock.warehouse']
         for order in self:
@@ -469,7 +473,10 @@ class PosOrder(models.Model):
                 pos_qty = any([x.qty > 0 for x in order.lines if x.product_id.type in ['product', 'consu']])
                 if pos_qty:
                     order_picking = Picking.create(picking_vals.copy())
-                    order_picking.message_post(body=message)
+                    if self.env.user.partner_id.email:
+                        order_picking.message_post(body=message)
+                    else:
+                        order_picking.sudo().message_post(body=message)
                 neg_qty = any([x.qty < 0 for x in order.lines if x.product_id.type in ['product', 'consu']])
                 if neg_qty:
                     return_vals = picking_vals.copy()
@@ -479,7 +486,10 @@ class PosOrder(models.Model):
                         'picking_type_id': return_pick_type.id
                     })
                     return_picking = Picking.create(return_vals)
-                    return_picking.message_post(body=message)
+                    if self.env.user.partner_id.email:
+                        return_picking.message_post(body=message)
+                    else:
+                        return_picking.message_post(body=message)
 
             for line in order.lines.filtered(lambda l: l.product_id.type in ['product', 'consu'] and not float_is_zero(l.qty, precision_rounding=l.product_id.uom_id.rounding)):
                 moves |= Move.create({
@@ -616,17 +626,24 @@ class PosOrder(models.Model):
 
     @api.model
     def action_receipt_to_customer(self, name, client, ticket, order_ids=False):
-        template_obj = self.env['mail.mail']
-        message = "<p>Dear %s,<br/>Here is your electronic ticket from the %s. </p>" % (client['name'], name)
+        # FIXME MASTER: make a true multi
+        if not self.env.user.has_group('point_of_sale.group_pos_user'):
+            return False
+        if not client.get('email'):
+            return False
+        orders = self.browse(order_ids) if order_ids else self
+
+        message = _("<p>Dear %s,<br/>Here is your electronic ticket for the %s. </p>") % (client['name'], name)
         template_data = {
-            'subject': 'Receipt %s' % name,
+            'subject': _('Receipt %s') % name,
             'body_html': message + '<img src="data:image/jpeg;base64,%s"/>' % ticket,
-            'email_from': self.env.company.email,
+            'author_id': self.env.user.partner_id.id,
+            'email_from': self.env.company.email or self.env.user.email_formatted,
             'email_to': client['email']
         }
 
-        if order_ids and self.env['pos.order'].browse(order_ids[0]).account_move:
-            report = self.env.ref('point_of_sale.pos_invoice_report').render_qweb_pdf(order_ids[0])
+        if orders.mapped('account_move'):
+            report = self.env.ref('point_of_sale.pos_invoice_report').render_qweb_pdf(orders.ids[0])
             filename = name + '.pdf'
             attachment = self.env['ir.attachment'].create({
                 'name': filename,
@@ -640,8 +657,8 @@ class PosOrder(models.Model):
             })
             template_data['attachment_ids'] = attachment
 
-        template_id = template_obj.create(template_data)
-        template_obj.send(template_id)
+        mail = self.env['mail.mail'].create(template_data)
+        mail.send()
 
     @api.model
     def remove_from_ui(self, server_ids):
@@ -675,6 +692,10 @@ class PosOrderLine(models.Model):
         if line and 'tax_ids' not in line[2]:
             product = self.env['product.product'].browse(line[2]['product_id'])
             line[2]['tax_ids'] = [(6, 0, [x.id for x in product.taxes_id])]
+        # Clean up fields sent by the JS
+        line = [
+            line[0], line[1], {k: v for k, v in line[2].items() if k in self.env['pos.order.line']._fields}
+        ]
         return line
 
     company_id = fields.Many2one('res.company', string='Company', related="order_id.company_id", store=True)

@@ -7,15 +7,15 @@
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2019
 # Maxim Vandenbroucke <mxv@odoo.com>, 2019
 # Charles Vervaecke <cvk@odoo.com>, 2019
-# Martin Trigaux, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
+# Martin Trigaux, 2019
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-07 07:13+0000\n"
+"POT-Creation-Date: 2019-10-18 09:47+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -84,6 +84,10 @@ msgid ""
 "        - Never: Variants are never created for the attribute.\n"
 "        Note: the variants creation mode cannot be changed once the attribute is used on at least one product."
 msgstr ""
+"- Onmiddellijk: alle mogelijke varianten worden gemaakt zodra het kenmerk en de bijbehorende waarden aan een product worden toegevoegd.\n"
+"- Dynamisch: elke variant wordt alleen gemaakt wanneer de bijbehorende kenmerken en waarden worden toegevoegd aan een verkooporder.\n"
+"- Nooit: varianten worden nooit gemaakt voor het kenmerk.\n"
+"Opmerking: de modus voor het maken van varianten kan niet worden gewijzigd nadat het kenmerk voor ten minste één product is gebruikt."
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_5
@@ -409,6 +413,9 @@ msgid ""
 "Barcode used for packaging identification. Scan this packaging barcode from "
 "a transfer in the Barcode app to move all the contained units"
 msgstr ""
+"Barcode gebruikt voor identificatie van de verpakking. Scan deze "
+"verpakkingsbarcode van een overdracht in de Barcode-app om alle aanwezige "
+"eenheden te verplaatsen"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__base
@@ -418,6 +425,10 @@ msgid ""
 "Cost Price : The base price will be the cost price.\n"
 "Other Pricelist : Computation of the base price based on another Pricelist."
 msgstr ""
+"Basisprijs voor berekening. \n"
+"Verkoopprijs: De basisprijs zal de verkoopprijs zijn. \n"
+"Kostprijs: De basisprijs zal de kostprijs zijn. \n"
+"Andere prijslijst: Berekening van de basisprijs gebaseerd op een andere prijslijst."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__base
@@ -866,6 +877,8 @@ msgstr "Dynamisch"
 #: model:ir.model.constraint,message:product.constraint_product_template_attribute_value_attribute_value_unique
 msgid "Each value should be defined only once per attribute per product."
 msgstr ""
+"Elke waarde moet slechts eenmaal per kenmerk per product worden "
+"gedefinieerd."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__date_end
@@ -884,11 +897,6 @@ msgid "Ending valid for the pricelist item validation"
 msgstr "Eindigend geldig voor de prijslijst item validatie"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
-msgid "Exception Activities"
-msgstr "Uitzondering activiteiten"
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__exclude_for
 msgid "Exclude for"
 msgstr "Uitsluiten voor"
@@ -905,6 +913,8 @@ msgid ""
 "Extra price for the variant with this attribute value on sale price. eg. 200"
 " price extra, 1000 + 200 = 1200."
 msgstr ""
+"Extra prijs: Extra prijs voor de variant met deze kenmerk waarde, bovenop de"
+" verkoopprijs. Bijvoorbeeld: 200 extra prijs. 1000 + 200 = 1200."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__fixed_price
@@ -1138,6 +1148,10 @@ msgid ""
 "        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
+"In standaardprijs & AVCO: waarde van het product (automatisch berekend in AVCO).\n"
+"In FIFO: waarde van de laatste eenheid die de voorraad verliet (automatisch berekend).\n"
+"Wordt gebruikt om het product te waarderen wanneer de inkoopkosten niet bekend zijn (bijvoorbeeld voorraadaanpassing).\n"
+"Wordt gebruikt om marges op verkooporders te berekenen."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
@@ -1324,6 +1338,9 @@ msgid ""
 "Make this attribute value not compatible with other values of the product or"
 " some attribute values of optional and accessory products."
 msgstr ""
+"Zorg ervoor dat deze kenmerkwaarde niet compatibel is met andere waarden van"
+" het product of een aantal kenmerkwaarden van optionele en accessoire "
+"producten."
 
 #. module: product
 #: model:res.groups,name:product.group_stock_packaging
@@ -1383,6 +1400,8 @@ msgid ""
 "Multiple prices: Pricelists with fixed price rules by product,\n"
 "Advanced rules: enables advanced price rules for pricelists."
 msgstr ""
+"Meerdere prijzen: prijslijsten met vaste prijsregels per product,\n"
+"Geavanceerde regels: activeert geavanceerde prijsregels voor prijslijsten."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__name
@@ -1487,6 +1506,8 @@ msgid ""
 "On the product %s you cannot associate the value %s with the attribute %s "
 "because they do not match."
 msgstr ""
+"Op het product %s kunt u de waarde %s niet aan het kenmerk %s koppelen, "
+"omdat deze niet overeenkomen."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
@@ -1495,6 +1516,7 @@ msgid ""
 "On the product %s you cannot transform the attribute %s into the attribute "
 "%s."
 msgstr ""
+"Op het product %s kunt u het kenmerk %s niet in het kenmerk %stransformeren."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -1550,20 +1572,20 @@ msgstr "Percentage prijs"
 #: code:addons/product/models/product_pricelist.py:0
 #, python-format
 msgid "Please specify the category for which this rule should be applied"
-msgstr ""
+msgstr "Geef de categorie op waarvoor deze regel moet worden toegepast"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
 #, python-format
 msgid "Please specify the product for which this rule should be applied"
-msgstr ""
+msgstr "Geef het product aan waarvoor deze regel moet worden toegepast"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
 #, python-format
 msgid ""
 "Please specify the product variant for which this rule should be applied"
-msgstr ""
+msgstr "Geef de productvariant op waarvoor deze regel moet worden toegepast"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_weight_in_lbs__1
@@ -2203,7 +2225,7 @@ msgstr ""
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "The attribute %s must have at least one value for the product %s."
-msgstr ""
+msgstr "Het kenmerk %s moet ten minste één waarde voor het product %s hebben."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__attribute_id
@@ -2211,6 +2233,8 @@ msgid ""
 "The attribute cannot be changed once the value is used on at least one "
 "product."
 msgstr ""
+"Het kenmerk kan niet worden gewijzigd nadat de waarde voor ten minste één "
+"product is gebruikt."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -2283,6 +2307,9 @@ msgid ""
 "expressed in the vendor Product Unit of Measure if not any, in the default "
 "unit of measure of the product otherwise."
 msgstr ""
+"De hoeveelheid in te kopen van deze leverancier om van de prijs te "
+"profiteren, uitgedrukt in de eventuele producteenheid van de leverancier, "
+"anders in de standaard maateenheid van het product."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price
@@ -2298,6 +2325,7 @@ msgstr ""
 #, python-format
 msgid "The value %s is not defined for the attribute %s on the product %s."
 msgstr ""
+"De waarde %s is niet gedefinieerd voor het kenmerk %s op het product %s."
 
 #. module: product
 #: code:addons/product/models/product_template.py:0
@@ -2661,6 +2689,11 @@ msgid "Volume unit of measure label"
 msgstr "Volume maateenheidslabel"
 
 #. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Warnings"
+msgstr "Waarschuwingen"
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight
 #: model:ir.model.fields,field_description:product.field_product_template__weight
 msgid "Weight"
@@ -2713,6 +2746,8 @@ msgid ""
 "You cannot change the Variants Creation Mode of the attribute %s because it is used on the following products:\n"
 "%s"
 msgstr ""
+"U kunt de variant aanmaakmodus van het kenmerk %s niet wijzigen, omdat het wordt gebruikt voor de volgende producten: \n"
+"%s"
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
@@ -2721,18 +2756,24 @@ msgid ""
 "You cannot change the attribute of the value %s because it is used on the "
 "following products:%s"
 msgstr ""
+"U kunt het kenmerk van de waarde %s niet wijzigen omdat deze wordt gebruikt voor de volgende producten:\n"
+"%s"
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "You cannot change the product of the value %s set on product %s."
 msgstr ""
+"U kunt het product van de waarde %s die op product %s is ingesteld niet "
+"wijzigen."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "You cannot change the value of the value %s set on product %s."
 msgstr ""
+"U kunt het waarde van de waarde %s die op product %s is ingesteld niet "
+"wijzigen."
 
 #. module: product
 #: code:addons/product/models/product.py:0
@@ -2764,6 +2805,8 @@ msgid ""
 "You cannot delete the attribute %s because it is used on the following products:\n"
 "%s"
 msgstr ""
+"U kunt het kenmerk %s niet verwijderen omdat deze wordt gebruikt voor de volgende producten:\n"
+"%s"
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
@@ -2772,6 +2815,8 @@ msgid ""
 "You cannot delete the value %s because it is used on the following products:\n"
 "%s"
 msgstr ""
+"U kunt de waarde  %s niet verwijderen omdat deze wordt gebruikt voor de volgende producten:\n"
+"%s"
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
@@ -2779,6 +2824,7 @@ msgstr ""
 msgid ""
 "You cannot move the attribute %s from the product %s to the product %s."
 msgstr ""
+"U kunt het kenmerk %s niet van het product %s naar product %s verplaatsen."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
@@ -2788,6 +2834,8 @@ msgid ""
 "You cannot update related variants from the values. Please update related "
 "values from the variants."
 msgstr ""
+"U kunt gerelateerde varianten niet bijwerken vanuit de waarden. Werk "
+"gerelateerde waarden van de varianten bij."
 
 #. module: product
 #: code:addons/product/wizard/product_price_list.py:0

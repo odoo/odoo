@@ -110,7 +110,12 @@ var WebsiteNavbar = publicWidget.RootWidget.extend({
                     return self._handleAction(actionName, params, (_i || 0) + 1);
                 });
             }
-            return Promise.all(defs);
+            return Promise.all(defs).then(function (values) {
+                if (values.length === 1) {
+                    return values[0];
+                }
+                return values;
+            });
         });
     },
     /**

@@ -175,7 +175,7 @@ class WebsiteSlides(WebsiteProfile):
             slide_partners = request.env['slide.slide.partner'].sudo().search([
                 ('channel_id', '=', channel.id),
                 ('partner_id', '=', request.env.user.partner_id.id),
-                ('slide_id.active', '=', True)
+                ('slide_id', 'in', slides.ids)
             ])
             for slide_partner in slide_partners:
                 channel_progress[slide_partner.slide_id.id].update(slide_partner.read()[0])
