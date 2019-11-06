@@ -320,6 +320,12 @@ class PosConfig(models.Model):
         if self.journal_id and self.journal_id.company_id.id != self.company_id.id:
             raise ValidationError(_("The sales journal and the point of sale must belong to the same company."))
 
+    def _check_profit_loss_cash_journal(self):
+        if self.cash_control and self.payment_method_ids:
+            for method in self.payment_method_ids:
+                if method.is_cash_count and (not method.cash_journal_id.loss_account_id or not method.cash_journal_id.profit_account_id):
+                    raise ValidationError(_("You need a loss and profit account on your cash journal."))
+
     @api.constrains('company_id', 'invoice_journal_id')
     def _check_company_invoice_journal(self):
         if self.invoice_journal_id and self.invoice_journal_id.company_id.id != self.company_id.id:
@@ -547,6 +553,7 @@ class PosConfig(models.Model):
             self._check_company_invoice_journal()
             self._check_company_payment()
             self._check_currencies()
+            self._check_profit_loss_cash_journal()
             self.env['pos.session'].create({
                 'user_id': self.env.uid,
                 'config_id': self.id
