@@ -21,7 +21,7 @@ var tour = require('web_tour.tour');
 
 var initTourSteps = [{
     content: 'eLearning: go to certification course',
-    trigger: 'a:contains("DIY Furniture")'
+    trigger: 'a:contains("DIY Furniture - TEST")'
 }, {
     content: 'eLearning: does not have access to certification',
     trigger: '.o_wslides_course_main',

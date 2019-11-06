@@ -18,14 +18,25 @@ class TestAccountJournalDashboard(AccountTestUsers):
             'type': 'sale',
         })
 
+        res_partner_3 = self.env['res.partner'].create({
+            'name': 'Gemini Furniture',
+        })
+
+        product_product_1 = self.env['product.product'].create({
+            'name': 'Virtual Interior Design',
+            'standard_price': 20.5,
+            'list_price': 30.75,
+            'type': 'service',
+        })
+
         invoice = self.env['account.move'].create({
             'type': 'out_invoice',
             'journal_id': journal.id,
-            'partner_id': self.env.ref('base.res_partner_3').id,
+            'partner_id': res_partner_3.id,
             'invoice_date': date_invoice,
             'date': date_invoice,
             'invoice_line_ids': [(0, 0, {
-                'product_id': self.env.ref('product.product_product_1').id,
+                'product_id': product_product_1.id,
                 'quantity': 40.0,
                 'name': 'product test 1',
                 'discount': 10.00,
@@ -35,11 +46,11 @@ class TestAccountJournalDashboard(AccountTestUsers):
         refund = self.env['account.move'].create({
             'type': 'out_refund',
             'journal_id': journal.id,
-            'partner_id': self.env.ref('base.res_partner_3').id,
+            'partner_id': res_partner_3.id,
             'invoice_date': '2019-01-21',
             'date': date_invoice,
             'invoice_line_ids': [(0, 0, {
-                'product_id': self.env.ref('product.product_product_1').id,
+                'product_id': product_product_1.id,
                 'quantity': 1.0,
                 'name': 'product test 1',
                 'price_unit': 13.3,

@@ -44,14 +44,14 @@ tour.register('website_reset_password', {
             });
             // Set a website on "Admin" partner to test the URL of the website.
             var def3 = rpc.query({
-                model: 'res.partner',
-                method: 'name_search',
-                kwargs: {'name': 'Mitchell Admin', 'args': [['company_id', '=', 1]]},
-            }).then(function (res) {
+                model: 'ir.model.data',
+                method: 'xmlid_to_res_id',
+                args: ['base.partner_admin'],
+            }).then(function (res_id) {
                 return rpc.query({
                     'model': 'res.partner',
                     'method': 'write',
-                    'args': [[res[0][0]], {
+                    'args': [[res_id], {
                         'website_id': 1,
                     }],
                 });

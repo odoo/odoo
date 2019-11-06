@@ -2,19 +2,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.stock_landed_costs.tests.common import TestStockLandedCostsCommon
+from odoo.addons.stock_account.tests.stock_account_minimal_test import StockAccountMinimalTest
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install')
-class TestStockLandedCosts(TestStockLandedCostsCommon):
+class TestStockLandedCosts(TestStockLandedCostsCommon, StockAccountMinimalTest):
 
     def test_stock_landed_costs(self):
         # In order to test the landed costs feature of stock,
         # I create a landed cost, confirm it and check its account move created
-
-        self._load('account', 'test', 'account_minimal_test.xml')
-        self._load('stock_account', 'test', 'stock_valuation_account.xml')
 
         # I create 2 products with different volume and gross weight and configure
         # them for real_time valuation and fifo costing method
@@ -24,8 +22,8 @@ class TestStockLandedCosts(TestStockLandedCostsCommon):
             'volume': 1,
         })
         product_landed_cost_1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
-        product_landed_cost_1.product_tmpl_id.categ_id.property_stock_account_input_categ_id = self.ref('stock_landed_costs.o_expense')
-        product_landed_cost_1.product_tmpl_id.categ_id.property_stock_account_output_categ_id = self.ref('stock_landed_costs.o_income')
+        product_landed_cost_1.product_tmpl_id.categ_id.property_stock_account_input_categ_id = self.o_expense
+        product_landed_cost_1.product_tmpl_id.categ_id.property_stock_account_output_categ_id = self.o_income
 
         product_landed_cost_2 = self.env['product.product'].create({
             'name': "LC product 2",
@@ -33,8 +31,8 @@ class TestStockLandedCosts(TestStockLandedCostsCommon):
             'volume': 1.5,
         })
         product_landed_cost_2.product_tmpl_id.categ_id.property_cost_method = 'fifo'
-        product_landed_cost_2.product_tmpl_id.categ_id.property_stock_account_input_categ_id = self.ref('stock_landed_costs.o_expense')
-        product_landed_cost_2.product_tmpl_id.categ_id.property_stock_account_output_categ_id = self.ref('stock_landed_costs.o_income')
+        product_landed_cost_2.product_tmpl_id.categ_id.property_stock_account_input_categ_id = self.o_expense
+        product_landed_cost_2.product_tmpl_id.categ_id.property_stock_account_output_categ_id = self.o_income
 
         picking_default_vals = self.env['stock.picking'].default_get(list(self.env['stock.picking'].fields_get()))
 
@@ -90,14 +88,15 @@ class TestStockLandedCosts(TestStockLandedCostsCommon):
 
         # I create a landed cost for those 2 pickings
         default_vals = self.env['stock.landed.cost'].default_get(list(self.env['stock.landed.cost'].fields_get()))
+        virtual_home_staging = self.env['product.product'].create({'name': 'Virtual Home Staging'})
         default_vals.update({
             'picking_ids': [picking_landed_cost_1.id, picking_landed_cost_2.id],
-            'account_journal_id': self.ref('stock_landed_costs.expenses_journal'),
+            'account_journal_id': self.expenses_journal,
             'cost_lines': [
-                (0, 0, {'product_id': self.ref('product.product_product_2')}),
-                (0, 0, {'product_id': self.ref('product.product_product_2')}),
-                (0, 0, {'product_id': self.ref('product.product_product_2')}),
-                (0, 0, {'product_id': self.ref('product.product_product_2')})],
+                (0, 0, {'product_id': virtual_home_staging.id}),
+                (0, 0, {'product_id': virtual_home_staging.id}),
+                (0, 0, {'product_id': virtual_home_staging.id}),
+                (0, 0, {'product_id': virtual_home_staging.id})],
             'valuation_adjustment_lines': [],
         })
         cost_lines_values = {

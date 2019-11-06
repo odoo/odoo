@@ -1,55 +1,60 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo.tests import common
 
-class TestFiscalPosition(common.TransactionCase):
+
+class TestFiscalPosition(common.SavepointCase):
     """Tests for fiscal positions in auto apply (account.fiscal.position).
     If a partner has a vat number, the fiscal positions with "vat_required=True"
     are preferred.
     """
 
-    def setUp(self):
-        super(TestFiscalPosition, self).setUp()
-        self.fp = self.env['account.fiscal.position']
+    @classmethod
+    def setUpClass(cls):
+        super(TestFiscalPosition, cls).setUpClass()
+        cls.fp = cls.env['account.fiscal.position']
 
         # reset any existing FP
-        self.fp.search([]).write({'auto_apply': False})
+        cls.fp.search([]).write({'auto_apply': False})
 
-        self.res_partner = self.env['res.partner']
-        self.be = be = self.env.ref('base.be')
-        self.fr = fr = self.env.ref('base.fr')
-        self.mx = mx = self.env.ref('base.mx')
-        self.eu = eu = self.env.ref('base.europe')
-        self.state_fr = self.env['res.country.state'].create(dict(
+        cls.res_partner = cls.env['res.partner']
+        cls.be = be = cls.env.ref('base.be')
+        cls.fr = fr = cls.env.ref('base.fr')
+        cls.mx = mx = cls.env.ref('base.mx')
+        cls.eu = eu = cls.env.ref('base.europe')
+        cls.state_fr = cls.env['res.country.state'].create(dict(
                                            name="State",
                                            code="ST",
                                            country_id=fr.id))
-        self.jc = self.res_partner.create(dict(
+        cls.jc = cls.res_partner.create(dict(
                                            name="JCVD",
                                            vat="BE0477472701",
                                            country_id=be.id))
-        self.ben = self.res_partner.create(dict(
+        cls.ben = cls.res_partner.create(dict(
                                            name="BP",
                                            country_id=be.id))
-        self.george = self.res_partner.create(dict(
+        cls.george = cls.res_partner.create(dict(
                                            name="George",
                                            vat="BE0477472701",
                                            country_id=fr.id))
-        self.alberto = self.res_partner.create(dict(
+        cls.alberto = cls.res_partner.create(dict(
                                            name="Alberto",
                                            vat="BE0477472701",
                                            country_id=mx.id))
-        self.be_nat = self.fp.create(dict(
+        cls.be_nat = cls.fp.create(dict(
                                          name="BE-NAT",
                                          auto_apply=True,
                                          country_id=be.id,
                                          vat_required=False,
                                          sequence=10))
-        self.fr_b2c = self.fp.create(dict(
+        cls.fr_b2c = cls.fp.create(dict(
                                          name="EU-VAT-FR-B2C",
                                          auto_apply=True,
                                          country_id=fr.id,
                                          vat_required=False,
                                          sequence=40))
-        self.fr_b2b = self.fp.create(dict(
+        cls.fr_b2b = cls.fp.create(dict(
                                          name="EU-VAT-FR-B2B",
                                          auto_apply=True,
                                          country_id=fr.id,

@@ -32,7 +32,7 @@ tour.register('sale_product_configurator_tour', {
         $input.trigger(keyDownEvent);
     }
 }, {
-    trigger: 'ul.ui-autocomplete a:contains("Customizable Desk")',
+    trigger: 'ul.ui-autocomplete a:contains("Customizable Desk (TEST)")',
     run: 'click'
 }, {
     trigger: '.configurator_container span:contains("Steel")',
@@ -71,12 +71,12 @@ tour.register('sale_product_configurator_tour', {
 },
 // check that 3 products were added to the SO
 {
-    trigger: 'td.o_data_cell:contains("Customizable Desk (CONFIG) (Aluminium, White)")',
+    trigger: 'td.o_data_cell:contains("Customizable Desk (TEST) (Aluminium, White)")',
     extra_trigger: 'div[name="order_line"]',
     in_modal: false,
     run: function (){}
 }, {
-    trigger: 'td.o_data_cell:contains("Conference Chair (CONFIG) (Aluminium)")',
+    trigger: 'td.o_data_cell:contains("Conference Chair (TEST) (Aluminium)")',
     extra_trigger: 'div[name="order_line"]',
     in_modal: false,
     run: function (){}

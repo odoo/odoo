@@ -16,9 +16,9 @@ class TestPurchaseOrder(AccountingTestCase):
         # Useful models
         self.PurchaseOrder = self.env['purchase.order']
         self.PurchaseOrderLine = self.env['purchase.order.line']
-        self.partner_id = self.env.ref('base.res_partner_1')
-        self.product_id_1 = self.env.ref('product.product_product_8')
-        self.product_id_2 = self.env.ref('product.product_product_11')
+        self.partner_id = self.env['res.partner'].create({'name': 'Wood Corner Partner'})
+        self.product_id_1 = self.env['product.product'].create({'name': 'Large Desk'})
+        self.product_id_2 = self.env['product.product'].create({'name': 'Conference Chair'})
 
         (self.product_id_1 | self.product_id_2).write({'purchase_method': 'purchase'})
         self.po_vals = {

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import fields
+from odoo import fields, tools
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
 from odoo.tests.common import Form
 from odoo.tests import tagged
@@ -7,9 +7,99 @@ from odoo.tests import tagged
 
 @tagged('post_install', '-at_install')
 class TestReconciliationMatchingRules(AccountingTestCase):
-    def _create_invoice_line(self, amount, partner, type):
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestReconciliationMatchingRules, cls).setUpClass()
+        cls.company = cls.env.user.company_id
+        cls.account_pay = cls.a_pay
+        cls.account_liq = cls.bnk
+        cls.account_rcv = cls.a_recv
+
+        cls.partner_1 = cls.env['res.partner'].create({'name': 'partner_1', 'company_id': cls.company.id})
+        cls.partner_2 = cls.env['res.partner'].create({'name': 'partner_2', 'company_id': cls.company.id})
+
+        cls.invoice_line_1 = cls._create_invoice_line(100, cls.partner_1, 'out_invoice')
+        cls.invoice_line_2 = cls._create_invoice_line(200, cls.partner_1, 'out_invoice')
+        cls.invoice_line_3 = cls._create_invoice_line(300, cls.partner_1, 'in_refund')
+        cls.invoice_line_3.move_id.name = "RBILL/2018/0013" # Without demo data, avoid to match with the first invoice
+        cls.invoice_line_4 = cls._create_invoice_line(1000, cls.partner_2, 'in_invoice')
+
+        current_assets_account = cls.env['account.account'].search([
+            ('user_type_id', '=', cls.env.ref('account.data_account_type_current_assets').id),
+            ('company_id', '=', cls.company.id)], limit=1)
+
+        cls.rule_0 = cls.env['account.reconcile.model'].search([('company_id', '=', cls.env.company.id), ('rule_type', '=', 'invoice_matching')])
+        if not cls.rule_0:
+            cls.rule_0 = cls.env['account.reconcile.model'].sudo().create({
+                "name": 'Invoices Matching Rule',
+                "sequence": '1',
+                "rule_type": 'invoice_matching',
+                "auto_reconcile": False,
+                "match_nature": 'both',
+                "match_same_currency": True,
+                "match_total_amount": True,
+                "match_total_amount_param": 100,
+                "match_partner": True,
+                "company_id": cls.company.id,
+            })
+
+        cls.rule_1 = cls.rule_0.copy()
+        cls.rule_1.account_id = current_assets_account
+        cls.rule_1.match_partner = True
+        cls.rule_1.match_partner_ids |= cls.partner_1 + cls.partner_2
+        cls.rule_2 = cls.env['account.reconcile.model'].create({
+            'name': 'write-off model',
+            'rule_type': 'writeoff_suggestion',
+            'match_partner': True,
+            'match_partner_ids': [],
+            'account_id': current_assets_account.id,
+        })
+
+        invoice_number = cls.invoice_line_1.move_id.name
+
+        cls.bank_journal = cls.env['account.journal'].search([('type', '=', 'bank'), ('company_id', '=', cls.company.id)], limit=1)
+
+        cls.bank_st = cls.env['account.bank.statement'].create({
+            'name': 'test bank journal', 'journal_id': cls.bank_journal.id,
+        })
+        cls.bank_line_1 = cls.env['account.bank.statement.line'].create({
+            'statement_id': cls.bank_st.id,
+            'name': 'invoice %s-%s' % (invoice_number.split('/')[1], invoice_number.split('/')[2]),
+            'partner_id': cls.partner_1.id,
+            'amount': 100,
+            'sequence': 1,
+        })
+        cls.bank_line_2 = cls.env['account.bank.statement.line'].create({
+            'statement_id': cls.bank_st.id,
+            'name': 'xxxxx',
+            'partner_id': cls.partner_1.id,
+            'amount': 600,
+            'sequence': 2,
+        })
+
+        cash_journal = cls.env['account.journal'].search([('type', '=', 'cash'), ('company_id', '=', cls.company.id)], limit=1)
+        cls.cash_st = cls.env['account.bank.statement'].create({
+            'name': 'test cash journal', 'journal_id': cash_journal.id,
+        })
+        cls.cash_line_1 = cls.env['account.bank.statement.line'].create({
+            'statement_id': cls.cash_st.id,
+            'name': 'yyyyy',
+            'partner_id': cls.partner_2.id,
+            'amount': -1000,
+            'sequence': 1,
+        })
+
+        cls.tax21 = cls.env['account.tax'].create({
+            'name': '21%',
+            'type_tax_use': 'purchase',
+            'amount': 21,
+        })
+
+    @classmethod
+    def _create_invoice_line(cls, amount, partner, type):
         ''' Create an invoice on the fly.'''
-        invoice_form = Form(self.env['account.move'].with_context(default_type=type))
+        invoice_form = Form(cls.env['account.move'].with_context(default_type=type))
         invoice_form.invoice_date = fields.Date.from_string('2019-09-01')
         invoice_form.partner_id = partner
         with invoice_form.invoice_line_ids.new() as invoice_line_form:
@@ -31,76 +121,6 @@ class TestReconciliationMatchingRules(AccountingTestCase):
             values.pop('reconciled_lines', None)
             self.assertDictEqual(values, expected_values[st_line_id])
 
-    def setUp(self):
-        super(AccountingTestCase, self).setUp()
-
-        self.account_pay = self.env['account.account'].search([('internal_type', '=', 'payable')], limit=1)
-        self.account_liq = self.env['account.account'].search([('internal_type', '=', 'liquidity')], limit=1)
-        self.account_rcv = self.env['account.account'].search([('internal_type', '=', 'receivable')], limit=1)
-
-        self.partner_1 = self.env['res.partner'].create({'name': 'partner_1'})
-        self.partner_2 = self.env['res.partner'].create({'name': 'partner_2'})
-
-        self.invoice_line_1 = self._create_invoice_line(100, self.partner_1, 'out_invoice')
-        self.invoice_line_2 = self._create_invoice_line(200, self.partner_1, 'out_invoice')
-        self.invoice_line_3 = self._create_invoice_line(300, self.partner_1, 'in_refund')
-        self.invoice_line_4 = self._create_invoice_line(1000, self.partner_2, 'in_invoice')
-
-        current_assets_account = self.env['account.account'].search(
-            [('user_type_id', '=', self.env.ref('account.data_account_type_current_assets').id)], limit=1)
-
-        self.rule_0 = self.env['account.reconcile.model'].search([('company_id', '=', self.env.company.id), ('rule_type', '=', 'invoice_matching')])
-        self.rule_1 = self.rule_0.copy()
-        self.rule_1.account_id = current_assets_account
-        self.rule_1.match_partner = True
-        self.rule_1.match_partner_ids |= self.partner_1 + self.partner_2
-        self.rule_2 = self.env['account.reconcile.model'].create({
-            'name': 'write-off model',
-            'rule_type': 'writeoff_suggestion',
-            'match_partner': True,
-            'match_partner_ids': [],
-            'account_id': current_assets_account.id,
-        })
-
-        invoice_number = self.invoice_line_1.move_id.name
-
-        self.bank_journal = self.env['account.journal'].search([('type', '=', 'bank')], limit=1)
-
-        self.bank_st = self.env['account.bank.statement'].create({
-            'name': 'test bank journal', 'journal_id': self.bank_journal.id,
-        })
-        self.bank_line_1 = self.env['account.bank.statement.line'].create({
-            'statement_id': self.bank_st.id,
-            'name': 'invoice %s-%s' % (invoice_number.split('/')[1], invoice_number.split('/')[2]),
-            'partner_id': self.partner_1.id,
-            'amount': 100,
-            'sequence': 1,
-        })
-        self.bank_line_2 = self.env['account.bank.statement.line'].create({
-            'statement_id': self.bank_st.id,
-            'name': 'xxxxx',
-            'partner_id': self.partner_1.id,
-            'amount': 600,
-            'sequence': 2,
-        })
-
-        cash_journal = self.env['account.journal'].search([('type', '=', 'cash')], limit=1)
-        self.cash_st = self.env['account.bank.statement'].create({
-            'name': 'test cash journal', 'journal_id': cash_journal.id,
-        })
-        self.cash_line_1 = self.env['account.bank.statement.line'].create({
-            'statement_id': self.cash_st.id,
-            'name': 'yyyyy',
-            'partner_id': self.partner_2.id,
-            'amount': -1000,
-            'sequence': 1,
-        })
-
-        self.tax21 = self.env['account.tax'].create({
-            'name': '21%',
-            'type_tax_use': 'purchase',
-            'amount': 21,
-        })
 
     def test_matching_fields(self):
         ''' Test all fields used to restrict the rules's applicability.'''
@@ -236,7 +256,7 @@ class TestReconciliationMatchingRules(AccountingTestCase):
         self.bank_line_1.amount += 5
 
         # Check match_partner_category_ids.
-        test_category = self.env.ref('base.res_partner_category_8')
+        test_category = self.env['res.partner.category'].create({'name': 'Consulting Services'})
         self.partner_2.category_id = test_category
         self.rule_1.match_partner_category_ids |= test_category
         self._check_statement_matching(self.rule_1, {
@@ -367,11 +387,14 @@ class TestReconciliationMatchingRules(AccountingTestCase):
 
         move.post()
         move_reversed = move._reverse_moves()
+
         self.assertTrue(move_reversed.exists())
 
         bank_st = self.env['account.bank.statement'].create({
             'name': 'test bank journal', 'journal_id': self.bank_journal.id,
         })
+        bank_st.journal_id.default_credit_account_id = payment_bnk_line.account_id
+        bank_st.journal_id.default_debit_account_id = payment_bnk_line.account_id
         bank_line_1 = self.env['account.bank.statement.line'].create({
             'statement_id': bank_st.id,
             'name': '8',
@@ -379,7 +402,7 @@ class TestReconciliationMatchingRules(AccountingTestCase):
             'amount': -10,
             'sequence': 1,
         })
-
+        bank_st.flush()
         expected_values = {
             bank_line_1.id: {'aml_ids': [payment_bnk_line.id], 'model': self.rule_0}
         }

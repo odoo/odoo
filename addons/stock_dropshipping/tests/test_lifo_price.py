@@ -2,20 +2,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, tools
+from odoo.addons.stock_account.tests.stock_account_minimal_test import StockAccountMinimalTest
 from odoo.modules.module import get_module_resource
 from odoo.tests import common, Form
 
 
-class TestLifoPrice(common.TransactionCase):
-
-    def _load(self, module, *args):
-        tools.convert_file(
-            self.cr, 'stock_dropshipping', get_module_resource(module, *args), {}, 'init', False, 'test', self.registry._assertion_report)
+class TestLifoPrice(StockAccountMinimalTest):
 
     def test_lifoprice(self):
-
-        self._load('account', 'test', 'account_minimal_test.xml')
-        self._load('stock_account', 'test', 'stock_valuation_account.xml')
 
         # Set product category removal strategy as LIFO
         product_category_001 = self.env['product.category'].create({
@@ -24,6 +18,7 @@ class TestLifoPrice(common.TransactionCase):
             'property_valuation': 'real_time',
             'property_cost_method': 'fifo',
         })
+        res_partner_3 = self.env['res.partner'].create({'name': 'My Test Partner'})
 
         # Set a product as using lifo price
         product_form = Form(self.env['product.product'])
@@ -39,8 +34,8 @@ class TestLifoPrice(common.TransactionCase):
         # category (or hand-assign the property_* version which seems...)
         # product_form.categ_id.valuation = 'real_time'
         # product_form.categ_id.property_cost_method = 'fifo'
-        product_form.categ_id.property_stock_account_input_categ_id = self.env.ref('stock_dropshipping.o_expense')
-        product_form.categ_id.property_stock_account_output_categ_id = self.env.ref('stock_dropshipping.o_income')
+        product_form.categ_id.property_stock_account_input_categ_id = self.o_expense
+        product_form.categ_id.property_stock_account_output_categ_id = self.o_income
         product_lifo_icecream = product_form.save()
 
         std_price_wiz = Form(self.env['stock.change.standard.price'].with_context(active_id=product_lifo_icecream.id, active_model='product.product'))
@@ -49,7 +44,7 @@ class TestLifoPrice(common.TransactionCase):
 
         # I create a draft Purchase Order for first in move for 10 pieces at 60 euro
         order_form = Form(self.env['purchase.order'])
-        order_form.partner_id = self.env.ref('base.res_partner_3')
+        order_form.partner_id = res_partner_3
         with order_form.order_line.new() as line:
             line.product_id = product_lifo_icecream
             line.product_qty = 10.0
@@ -58,7 +53,7 @@ class TestLifoPrice(common.TransactionCase):
 
         # I create a draft Purchase Order for second shipment for 30 pieces at 80 euro
         order2_form = Form(self.env['purchase.order'])
-        order2_form.partner_id = self.env.ref('base.res_partner_3')
+        order2_form.partner_id = res_partner_3
         with order2_form.order_line.new() as line:
             line.product_id = product_lifo_icecream
             line.product_qty = 30.0

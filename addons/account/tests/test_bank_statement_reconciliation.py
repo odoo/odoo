@@ -5,13 +5,14 @@ from odoo.tests import tagged
 @tagged('post_install', '-at_install')
 class TestBankStatementReconciliation(AccountingTestCase):
 
-    def setUp(self):
-        super(TestBankStatementReconciliation, self).setUp()
-        self.bs_model = self.env['account.bank.statement']
-        self.bsl_model = self.env['account.bank.statement.line']
-        self.partner = self.env['res.partner'].create({'name': 'test'})
-        self.currency_usd_id = self.env.ref("base.USD").id
-        self.currency_euro_id = self.env.ref("base.EUR").id
+    @classmethod
+    def setUpClass(cls):
+        super(TestBankStatementReconciliation, cls).setUpClass()
+        cls.bs_model = cls.env['account.bank.statement']
+        cls.bsl_model = cls.env['account.bank.statement.line']
+        cls.partner = cls.env['res.partner'].create({'name': 'test'})
+        cls.currency_usd_id = cls.env.ref("base.USD").id
+        cls.currency_euro_id = cls.env.ref("base.EUR").id
 
     def test_full_reconcile(self):
         self._reconcile_invoice_with_statement('pay_val')
