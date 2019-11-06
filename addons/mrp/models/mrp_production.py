@@ -703,6 +703,8 @@ class MrpProduction(models.Model):
         self.ensure_one()
 
         # Schedule all work orders (new ones and those already created)
+        qty_to_produce = max(self.product_qty - self.qty_produced, 0)
+        qty_to_produce = self.product_uom_id._compute_quantity(qty_to_produce, self.product_id.uom_id)
         start_date = self._get_start_date()
         for workorder in self.workorder_ids:
             workcenters = workorder.workcenter_id | workorder.workcenter_id.alternative_workcenter_ids
@@ -712,7 +714,7 @@ class MrpProduction(models.Model):
             for workcenter in workcenters:
                 # compute theoretical duration
                 time_cycle = workorder.operation_id.time_cycle
-                cycle_number = float_round(workorder.qty_producing / workcenter.capacity, precision_digits=0, rounding_method='UP')
+                cycle_number = float_round(qty_to_produce / workcenter.capacity, precision_digits=0, rounding_method='UP')
                 duration_expected = workcenter.time_start + workcenter.time_stop + cycle_number * time_cycle * 100.0 / workcenter.time_efficiency
 
                 # get first free slot
@@ -740,7 +742,7 @@ class MrpProduction(models.Model):
 
             # Instantiate start_date for the next workorder planning
             if workorder.next_work_order_id:
-                if workorder.operation_id.batch == 'no' or workorder.operation_id.batch_size >= workorder.qty_producing:
+                if workorder.operation_id.batch == 'no' or workorder.operation_id.batch_size >= qty_to_produce:
                     start_date = best_finished_date
                 else:
                     cycle_number = float_round(workorder.operation_id.batch_size / best_workcenter.capacity, precision_digits=0, rounding_method='UP')
@@ -1037,4 +1039,3 @@ class MrpProduction(models.Model):
             return self.env.ref('mrp.exception_on_mo').render(values=values)
 
         self.env['stock.picking']._log_activity(_render_note_exception_quantity_mo, documents)
-

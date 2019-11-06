@@ -1099,6 +1099,26 @@ class TestWorkOrderProcess(TestMrpCommon):
         self.assertAlmostEqual(wo.date_planned_start, datetime.now(), delta=timedelta(seconds=10))
         self.assertAlmostEqual(wo.date_planned_finished, datetime.now(), delta=timedelta(seconds=10))
 
+    def test_planning_7(self):
+        """ set the workcenter capacity to 10. Produce a dozen of product tracked by
+        SN. The production should be done in two batches"""
+        self.workcenter_1.capacity = 10
+        self.workcenter_1.time_efficiency = 100
+        self.workcenter_1.time_start = 0
+        self.workcenter_1.time_stop = 0
+        self.routing_1.operation_ids.time_cycle = 60
+        self.product_4.tracking = 'serial'
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.product_4
+        mo_form.bom_id = self.planning_bom
+        mo_form.product_uom_id = self.uom_dozen
+        mo_form.product_qty = 1
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo.button_plan()
+        wo = mo.workorder_ids
+        self.assertEqual(wo.duration_expected, 120)
+
     def test_plan_unplan_date(self):
         """ Testing planning a workorder then cancel it and then plan it again.
         The planned date must be the same the first time and the second time the
