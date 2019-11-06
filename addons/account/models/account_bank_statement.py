@@ -11,6 +11,7 @@ import time
 import math
 import base64
 
+
 class AccountCashboxLine(models.Model):
     """ Cash Box Details """
     _name = 'account.cashbox.line'
@@ -203,19 +204,7 @@ class AccountBankStatement(models.Model):
 
     @api.depends('date', 'journal_id')
     def _get_previous_statement(self):
-        # We have to sort self by date otherwise we may encounter some errors
-        # Let's assume the following case
-        # Self contains 3 record (1,2,3) with the following order on date (2019-01-13, 2019-01-12, 2019-01-15)
-        # On first iteration, record 1 will correctly set previous_Statement_id = 2
-        # On second iteration, before record 2 can set its previous_statement_id, it will look for someone
-        # pointing to him in order to change that to its self.previous_statement_id (because we could change the date of
-        # record 2 and move it to the end and we don't want the previously statement that was pointing towards him to
-        # continue doing so). However in the case of a creating in batch like in our example, this will cause the following
-        # issue: record 3 that was done just before in the first loop iteration will have its previous_statement_id set
-        # to False and its starting and ending balance won't be computed correctly.
-        # The solution to avoid that is to sort self by date in ascending order that way we are sure that no record
-        # set their values too soon.
-        for st in sorted(self, key=lambda l: l['date']):
+        for st in self:
             # Search for the previous statement
             domain = [('date', '<=', st.date), ('journal_id', '=', st.journal_id.id)]
             # The reason why we have to perform this test is because we have two use case here:
@@ -225,32 +214,7 @@ class AccountBankStatement(models.Model):
             if not isinstance(st.id, models.NewId):
                 domain.append(('id', '!=', st.id))
             previous_statement = self.search(domain, limit=1)
-            
-            # Exist early if no change
-            if previous_statement == st.previous_statement_id:
-                st.previous_statement_id = previous_statement.id
-                continue
-
-            # Search for statement pointing to myself to change it's previous_statement_id to my previous_statement_id
-            # This does not need to be compute when we are creating a record (newId)
-            if not isinstance(st.id, models.NewId):
-                point_to_me_statement = self.search([('previous_statement_id', '=', st.id)], limit=1)
-                if point_to_me_statement:
-                    point_to_me_statement.previous_statement_id = st.previous_statement_id.id
-
-            # two cases here:
-            # 1- If we have a previous statement, it is possible that we are creating a statement between 2 others stmt
-            # so we have to change the link of the stmt that was already pointing to the previous statement to ourself
-            # We only do this if the record already exists in db, because we can't
-            # assign a newId to an existing next_statement
-            # 2- We have found no more previous statement, however it is possible that we have been moved first of the list
-            # so we have to search for any other existing statement and link that one to us (this again also make sense
-            # only if we already have an actual id)
             st.previous_statement_id = previous_statement.id
-            if not isinstance(st.id, models.NewId):
-                next_statement = self.search([('previous_statement_id', '=', previous_statement.id), ('id', '!=', st.id), ('journal_id', '=', st.journal_id.id)], limit=1)
-                if next_statement:
-                    next_statement.previous_statement_id = st.id
 
 
     _name = "account.bank.statement"
@@ -288,6 +252,40 @@ class AccountBankStatement(models.Model):
     is_difference_zero = fields.Boolean(compute='_is_difference_zero', string='Is zero', help="Check if difference is zero.")
     previous_statement_id = fields.Many2one('account.bank.statement', help='technical field to compute starting balance correctly', compute='_get_previous_statement', store=True)
     is_valid_balance_start = fields.Boolean(string="Is Valid Balance Start", compute="_compute_is_valid_balance_start", help="technical field to display a warning message in case starting balance is different than previous ending balance")
+
+    def write(self, values):
+        res = super(AccountBankStatement, self).write(values)
+        if values.get('date') or values.get('journal'):
+            # If we are changing the date or journal of a bank statement, we have to change its previous_statement_id. This is done
+            # automatically using the compute function, but we also have to change the previous_statement_id of records that were
+            # previously pointing toward us and records that were pointing towards our new previous_statement_id. This is done here
+            # by marking those record as needing to be recomputed.
+            # Note that marking the field is not enough as we also have to recompute all its other fields that are depending on 'previous_statement_id'
+            # hence the need to call modified afterwards.
+            to_recompute = self.search([('previous_statement_id', 'in', self.ids), ('id', 'not in', self.ids)])
+            if to_recompute:
+                self.env.add_to_compute(self._fields['previous_statement_id'], to_recompute)
+                to_recompute.modified(['previous_statement_id'])
+            next_statements_to_recompute = self.search([('previous_statement_id', 'in', [st.previous_statement_id.id for st in self]), ('id', 'not in', self.ids)])
+            if next_statements_to_recompute:
+                self.env.add_to_compute(self._fields['previous_statement_id'], next_statements_to_recompute)
+                next_statements_to_recompute.modified(['previous_statement_id'])
+        return res
+
+    @api.model_create_multi
+    def create(self, values):
+        res = super(AccountBankStatement, self).create(values)
+        # Upon bank stmt creation, it is possible that the statement is inserted between two other statements and not at the end
+        # In that case, we have to search for statement that are pointing to the same previous_statement_id as ourselve in order to
+        # change their previous_statement_id to us. This is done by marking the field 'previous_statement_id' to be recomputed for such records.
+        # Note that marking the field is not enough as we also have to recompute all its other fields that are depending on 'previous_statement_id'
+        # hence the need to call modified afterwards.
+        # The reason we are doing this here and not in a compute field is that it is not easy to write dependencies for such field.
+        next_statements_to_recompute = self.search([('previous_statement_id', 'in', [st.previous_statement_id.id for st in res]), ('id', 'not in', res.ids)])
+        if next_statements_to_recompute:
+            self.env.add_to_compute(self._fields['previous_statement_id'], next_statements_to_recompute)
+            next_statements_to_recompute.modified(['previous_statement_id'])
+        return res
 
     def _balance_check(self):
         for stmt in self:
