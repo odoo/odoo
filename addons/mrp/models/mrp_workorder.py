@@ -434,8 +434,23 @@ class MrpWorkorder(models.Model):
         # One a piece is produced, you can launch the next work order
         self._start_nextworkorder()
 
-        # Test if the production is done
+        # To update the producing qty of next wo according to produced qty of current one
+        if self.product_tracking != 'serial' and self.next_work_order_id:
+            self.next_work_order_id.qty_producing = self.qty_produced - self.next_work_order_id.qty_produced
+            self.next_work_order_id._apply_update_workorder_lines()
+        # To update the qty_producing of current WO
         rounding = self.production_id.product_uom_id.rounding
+        previous_wo = self.env['mrp.workorder'].search([
+            ('next_work_order_id', '=', self.id)])
+        suggested_qty = self.qty_remaining
+        if previous_wo:
+            if float_compare(self.qty_produced, previous_wo.qty_produced, precision_rounding=rounding) < 0:
+                suggested_qty = previous_wo.qty_produced - self.qty_produced
+            else:
+                suggested_qty = 0
+        self.qty_producing = suggested_qty
+
+        # Test if the production is done
         if float_compare(self.qty_produced, self.production_id.product_qty, precision_rounding=rounding) < 0:
             previous_wo = self.env['mrp.workorder']
             if self.product_tracking != 'none':
@@ -447,7 +462,6 @@ class MrpWorkorder(models.Model):
                 candidate_found_in_previous_wo = self._defaults_from_finished_workorder_line(previous_wo.finished_workorder_line_ids)
             if not candidate_found_in_previous_wo:
                 # self is the first workorder
-                self.qty_producing = self.qty_remaining
                 self.finished_lot_id = False
                 if self.product_tracking == 'serial':
                     self.qty_producing = 1
