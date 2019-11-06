@@ -184,9 +184,9 @@ class ImLivechatChannel(models.Model):
             FROM mail_channel c
             LEFT OUTER JOIN mail_message_mail_channel_rel r ON c.id = r.mail_channel_id
             LEFT OUTER JOIN mail_message m ON r.mail_message_id = m.id
-            WHERE m.create_date > ((now() at time zone 'UTC') - interval '30 minutes')
-            AND c.channel_type = 'livechat'
+            WHERE c.channel_type = 'livechat' 
             AND c.livechat_operator_id in %s
+            AND m.create_date > ((now() at time zone 'UTC') - interval '30 minutes')
             GROUP BY c.livechat_operator_id
             ORDER BY COUNT(DISTINCT c.id) asc""", (tuple(operators.mapped('partner_id').ids),))
         active_channels = self.env.cr.dictfetchall()
