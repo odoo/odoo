@@ -176,7 +176,7 @@ class SaleOrderLine(models.Model):
         domain = lines_by_timesheet._timesheet_compute_delivered_quantity_domain()
         mapping = lines_by_timesheet.sudo()._get_delivered_quantity_by_analytic(domain)
         for line in lines_by_timesheet:
-            line.qty_delivered = mapping.get(line.id, 0.0)
+            line.qty_delivered = mapping.get(line.id or line._origin.id, 0.0)
 
     def _timesheet_compute_delivered_quantity_domain(self):
         """ Hook for validated timesheet in addionnal module """

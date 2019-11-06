@@ -44,13 +44,14 @@ class AccountInvoiceSend(models.TransientModel):
     @api.onchange('invoice_ids')
     def _compute_composition_mode(self):
         for wizard in self:
-            wizard.composition_mode = 'comment' if len(wizard.invoice_ids) == 1 else 'mass_mail'
+            wizard.composer_id.composition_mode = 'comment' if len(wizard.invoice_ids) == 1 else 'mass_mail'
 
     @api.onchange('template_id')
     def onchange_template_id(self):
-        if self.composer_id:
-            self.composer_id.template_id = self.template_id.id
-            self.composer_id.onchange_template_id_wrapper()
+        for wizard in self:
+            if wizard.composer_id:
+                wizard.composer_id.template_id = wizard.template_id.id
+                wizard.composer_id.onchange_template_id_wrapper()
 
     @api.onchange('is_email')
     def onchange_is_email(self):
@@ -74,7 +75,7 @@ class AccountInvoiceSend(models.TransientModel):
                 if invoices:
                     wizard.invoice_without_email = "%s\n%s" % (
                         _("The following invoice(s) will not be sent by email, because the customers don't have email address."),
-                        "\n".join([i.reference for i in invoices])
+                        "\n".join([i.name for i in invoices])
                         )
                 else:
                     wizard.invoice_without_email = False

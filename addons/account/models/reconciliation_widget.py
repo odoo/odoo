@@ -139,7 +139,7 @@ class AccountReconciliation(models.AbstractModel):
                 COALESCE(p1.id,p2.id,p3.id)         AS partner_id
             FROM account_bank_statement_line st_line
         '''
-        query += 'LEFT JOIN res_partner_bank bank ON bank.id = st_line.bank_account_id OR bank.acc_number = st_line.account_number %s\n' % (where_bank)
+        query += "LEFT JOIN res_partner_bank bank ON bank.id = st_line.bank_account_id OR bank.sanitized_acc_number ILIKE regexp_replace(st_line.account_number, '\W+', '', 'g') %s\n" % (where_bank)
         query += 'LEFT JOIN res_partner p1 ON st_line.partner_id=p1.id \n'
         query += 'LEFT JOIN res_partner p2 ON bank.partner_id=p2.id \n'
         # By definition the commercial partner_id doesn't have a parent_id set
