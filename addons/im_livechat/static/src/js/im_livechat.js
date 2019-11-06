@@ -482,7 +482,7 @@ var Feedback = Widget.extend({
             if (reason) {
                 content += " \n" + reason;
             }
-            self.trigger('send_message', { content: content });
+            self.trigger('send_message', { content: content, isFeedback: true });
         });
     },
     /**
