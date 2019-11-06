@@ -9,6 +9,7 @@ import math
 from collections import namedtuple
 
 from datetime import datetime, time
+from dateutil.rrule import rrule, DAILY
 from pytz import timezone, UTC
 
 from odoo import api, fields, models, SUPERUSER_ID, tools
@@ -990,3 +991,16 @@ class HolidaysRequest(models.Model):
             self.check_access_rule('read')
             return super(HolidaysRequest, self.sudo()).message_subscribe(partner_ids=partner_ids, channel_ids=channel_ids, subtype_ids=subtype_ids)
         return super(HolidaysRequest, self).message_subscribe(partner_ids=partner_ids, channel_ids=channel_ids, subtype_ids=subtype_ids)
+
+    @api.model
+    def get_unusual_days(self, date_from, date_to=None):
+        # Checking the calendar directly allows to not grey out the leaves taken
+        # by the employee
+        calendar = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1).resource_calendar_id
+        if not calendar:
+            return {}
+        dfrom = datetime.combine(fields.Date.from_string(date_from), time.min).replace(tzinfo=UTC)
+        dto = datetime.combine(fields.Date.from_string(date_to), time.max).replace(tzinfo=UTC)
+
+        works = {d[0].date() for d in calendar._work_intervals(dfrom, dto)}
+        return {fields.Date.to_string(day.date()): (day.date() not in works) for day in rrule(DAILY, dfrom, until=dto)}
