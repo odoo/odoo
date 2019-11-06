@@ -45,6 +45,7 @@ var LinkDialog = Dialog.extend({
         this.data = linkInfo || {};
 
         this.data.className = "";
+        this.data.iniClassName = "";
 
         var r = this.data.range;
         this.needLabel = !r || (r.sc === r.ec && r.so === r.eo);
