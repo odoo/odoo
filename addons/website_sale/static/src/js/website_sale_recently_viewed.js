@@ -150,7 +150,7 @@ publicWidget.registry.productsRecentlyViewedSnippet = publicWidget.Widget.extend
             },
         }).then(function (data) {
             wSaleUtils.updateCartNavBar(data);
-            var $navButton = wSaleUtils.getNavBarButton('.o_wsale_my_cart');
+            var $navButton = $('header .o_wsale_my_cart').first();
             var fetch = self._fetch();
             var animation = wSaleUtils.animateClone($navButton, $(ev.currentTarget).parents('.o_carousel_product_card'), 25, 40);
             Promise.all([fetch, animation]).then(function (values) {

@@ -1,24 +1,6 @@
 odoo.define('website_sale.utils', function (require) {
 'use strict';
 
-/**
- * Gets the element in the navbar currently displayed.
- * Depending on the scroll position, it could either be the one in the main
- * top bar or the one in the affixed navbar.
- *
- * @private
- * @param {string} selector
- * @returns {jQuery}
- */
-function getNavBarButton(selector) {
-    var $affixedHeaderButton = $('header.affixed ' + selector);
-    if ($affixedHeaderButton.length) {
-        return $affixedHeaderButton;
-    } else {
-        return $('header ' + selector).first();
-    }
-}
-
 function animateClone($cart, $elem, offsetTop, offsetLeft) {
     $cart.find('.o_animate_blink').addClass('o_red_highlight o_shadow_animation').delay(500).queue(function () {
         $(this).removeClass("o_shadow_animation").dequeue();
@@ -72,7 +54,6 @@ function updateCartNavBar(data) {
 
 return {
     animateClone: animateClone,
-    getNavBarButton: getNavBarButton,
     updateCartNavBar: updateCartNavBar,
 };
 });
