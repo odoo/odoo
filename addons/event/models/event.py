@@ -27,15 +27,18 @@ class EventType(models.Model):
     @api.model
     def _get_default_event_type_mail_ids(self):
         return [(0, 0, {
+            'notification_type': 'mail',
             'interval_unit': 'now',
             'interval_type': 'after_sub',
             'template_id': self.env.ref('event.event_subscription').id,
         }), (0, 0, {
+            'notification_type': 'mail',
             'interval_nbr': 1,
             'interval_unit': 'days',
             'interval_type': 'before_event',
             'template_id': self.env.ref('event.event_reminder').id,
         }), (0, 0, {
+            'notification_type': 'mail',
             'interval_nbr': 10,
             'interval_unit': 'days',
             'interval_type': 'before_event',
@@ -270,11 +273,11 @@ class EventEvent(models.Model):
             self.is_online = self.event_type_id.is_online
 
             if self.event_type_id.event_type_mail_ids:
-                self.event_mail_ids = [(5, 0, 0)] + [(0, 0, {
-                    'template_id': line.template_id,
-                    'interval_nbr': line.interval_nbr,
-                    'interval_unit': line.interval_unit,
-                    'interval_type': line.interval_type})
+                self.event_mail_ids = [(5, 0, 0)] + [
+                    (0, 0, {
+                        attribute_name: line[attribute_name]
+                        for attribute_name in self.env['event.type.mail']._get_event_mail_fields_whitelist()
+                        })
                     for line in self.event_type_id.event_type_mail_ids]
 
     @api.constrains('seats_min', 'seats_max', 'seats_availability')
