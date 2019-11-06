@@ -3,10 +3,10 @@ from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install')
-class TestBankStatementReconciliation(AccountingTestCase):
+class TestBankStatement(AccountingTestCase):
 
     def setUp(self):
-        super(TestBankStatementReconciliation, self).setUp()
+        super(TestBankStatement, self).setUp()
         self.bs_model = self.env['account.bank.statement']
         self.bsl_model = self.env['account.bank.statement.line']
         self.partner = self.env['res.partner'].create({'name': 'test'})
@@ -71,7 +71,6 @@ class TestBankStatementReconciliation(AccountingTestCase):
     def test_create_new_statement(self):
         # Create first statement on 1/1/2019
         bnk1 = self.create_bank_statement('2019-01-02', 100)
-        # import pdb;pdb.set_trace()
         self.assertEqual(bnk1.balance_start, 0)
         # Balance is automatically computed when creating statement with the lines
         self.assertEqual(bnk1.balance_end_real, 100)
