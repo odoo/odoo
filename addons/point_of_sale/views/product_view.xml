@@ -102,7 +102,7 @@
         <field name="model">uom.category</field>
         <field name="inherit_id" ref="uom.product_uom_categ_tree_view"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='measure_type']" position="after">
+            <xpath expr="//field[@name='name']" position="after">
                 <field name="is_pos_groupable" groups="base.group_no_one"/>
             </xpath>
         </field>
