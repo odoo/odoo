@@ -1,30 +1,34 @@
-from odoo.addons.stock.tests.test_packing import TestPacking
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo.addons.stock.tests.test_packing import TestPackingCommon
 
 
-class TestPacking(TestPacking):
+class TestPacking(TestPackingCommon):
 
-    def setUp(self):
-        super(TestPacking, self).setUp()
-        self.uom_kg = self.env.ref('uom.product_uom_kgm')
-        self.product_aw = self.env['product.product'].create({
+    @classmethod
+    def setUpClass(cls):
+        super(TestPacking, cls).setUpClass()
+        cls.uom_kg = cls.env.ref('uom.product_uom_kgm')
+        cls.product_aw = cls.env['product.product'].create({
             'name': 'Product AW',
             'type': 'product',
             'weight': 2.4,
-            'uom_id': self.uom_kg.id,
-            'uom_po_id': self.uom_kg.id
+            'uom_id': cls.uom_kg.id,
+            'uom_po_id': cls.uom_kg.id
         })
-        self.product_bw = self.env['product.product'].create({
+        cls.product_bw = cls.env['product.product'].create({
             'name': 'Product BW',
             'type': 'product',
             'weight': 0.3,
-            'uom_id': self.uom_kg.id,
-            'uom_po_id': self.uom_kg.id
+            'uom_id': cls.uom_kg.id,
+            'uom_po_id': cls.uom_kg.id
         })
-        test_carrier_product = self.env['product.product'].create({
+        test_carrier_product = cls.env['product.product'].create({
             'name': 'Test carrier product',
             'type': 'service',
         })
-        self.test_carrier = self.env['delivery.carrier'].create({
+        cls.test_carrier = cls.env['delivery.carrier'].create({
             'name': 'Test carrier',
             'delivery_type': 'fixed',
             'product_id': test_carrier_product.id,
