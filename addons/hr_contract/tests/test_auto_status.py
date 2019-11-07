@@ -1,16 +1,18 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
-from odoo.addons.hr_contract.tests.common import TestContractBase
+from odoo.addons.hr_contract.tests.common import TestContractCommon
 
 
-class TestHrContracts(TestContractBase):
+class TestHrContracts(TestContractCommon):
 
-    def setUp(self):
-        super(TestHrContracts, self).setUp()
-        self.contracts = self.env['hr.contract'].with_context(tracking_disable=True)
-        self.test_contract = dict(name='Test', wage=1, employee_id=self.employee.id, state='open')
+    @classmethod
+    def setUpClass(cls):
+        super(TestHrContracts, cls).setUpClass()
+        cls.contracts = cls.env['hr.contract'].with_context(tracking_disable=True)
+        cls.test_contract = dict(name='Test', wage=1, employee_id=cls.employee.id, state='open')
 
     def test_employee_contractwarning(self):
         self.assertEqual(self.employee.contract_warning, True)

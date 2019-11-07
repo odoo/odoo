@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.tests.common import TransactionCase
-from dateutil.relativedelta import relativedelta
+
+from odoo.tests.common import SavepointCase
 
 
-class TestContractBase(TransactionCase):
+class TestContractCommon(SavepointCase):
 
-    def setUp(self):
-        super(TestContractBase, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super(TestContractCommon, cls).setUpClass()
 
-        self.employee = self.env['hr.employee'].create({
+        cls.employee = cls.env['hr.employee'].create({
             'name': 'Richard',
             'gender': 'male',
-            'country_id': self.ref('base.be'),
+            'country_id': cls.env.ref('base.be').id,
         })
