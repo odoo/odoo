@@ -478,7 +478,7 @@
       <field name="name">IV.C. Exceeding amount (105)</field>
       <field name="sequence">3</field>
       <field name="parent_id" ref="account_tax_report_line_4_tax_tobe_paid_or_reclaimed"/>
-      <field name="formula">LUTAX_103-LUTAX_104</field>
+      <field name="formula">LUTAX_046 + LUTAX_056 + LUTAX_407 + LUTAX_410 + LUTAX_768 + LUTAX_227 - LUTAX_093 - LUTAX_097</field>
       <field name="country_id" ref="base.lu"/>
     </record>
 
@@ -487,6 +487,7 @@
       <field name="sequence">1</field>
       <field name="parent_id" ref="account_tax_report_line_4_tax_tobe_paid_or_reclaimed"/>
       <field name="code">LUTAX_103</field>
+      <field name="formula">LUTAX_046 + LUTAX_056 + LUTAX_407 + LUTAX_410 + LUTAX_768 + LUTAX_227</field>
       <field name="country_id" ref="base.lu"/>
     </record>
 
@@ -507,6 +508,7 @@
 
     <record id="account_tax_report_line_2f_supply_goods_tax" model="account.tax.report.line">
       <field name="name">II.F. Supply of goods for which the purchaser is liable for the payment of VAT - tax (768)</field>
+      <field name="code">LUTAX_768</field>
       <field name="sequence">11</field>
       <field name="parent_id" ref="account_tax_report_line_2_assesment_of_tax_due"/>
       <field name="country_id" ref="base.lu"/>
@@ -522,6 +524,7 @@
 
     <record id="account_tax_report_line_2g_special_arrangement" model="account.tax.report.line">
       <field name="name">II.G. Special arrangement for tax suspension: adjustment (Art.60bis, (5) and (8)) (227)</field>
+      <field name="code">LUTAX_227</field>
       <field name="sequence">12</field>
       <field name="parent_id" ref="account_tax_report_line_2_assesment_of_tax_due"/>
       <field name="country_id" ref="base.lu"/>
@@ -529,6 +532,7 @@
 
     <record id="account_tax_report_line_2h_total_tax_due" model="account.tax.report.line">
       <field name="name">II.H. Total tax due (076)</field>
+      <field name="formula">LUTAX_046 + LUTAX_056 + LUTAX_407 + LUTAX_410 + LUTAX_768 + LUTAX_227</field>
       <field name="sequence">13</field>
       <field name="parent_id" ref="account_tax_report_line_2_assesment_of_tax_due"/>
       <field name="country_id" ref="base.lu"/>
@@ -536,6 +540,7 @@
 
     <record id="account_tax_report_line_2a_breakdown_taxable_turnover_tax" model="account.tax.report.line">
       <field name="name">II.A. Breakdown of taxable turnover – tax (046)</field>
+      <field name="code">LUTAX_046</field>
       <field name="sequence">2</field>
       <field name="parent_id" ref="account_tax_report_line_2_assesment_of_tax_due"/>
       <field name="country_id" ref="base.lu"/>
@@ -583,6 +588,7 @@
 
     <record id="account_tax_report_line_2b_intra_community_acquisitions_goods_tax" model="account.tax.report.line">
       <field name="name">II.B. Intra-Community acquisitions of goods – tax (056)</field>
+      <field name="code">LUTAX_056</field>
       <field name="sequence">4</field>
       <field name="parent_id" ref="account_tax_report_line_2_assesment_of_tax_due"/>
       <field name="country_id" ref="base.lu"/>
@@ -622,6 +628,7 @@
 
     <record id="account_tax_report_line_2d_importation_of_goods_tax" model="account.tax.report.line">
       <field name="name">II.D. Importation of goods – tax (407)</field>
+      <field name="code">LUTAX_407</field>
       <field name="sequence">7</field>
       <field name="parent_id" ref="account_tax_report_line_2_assesment_of_tax_due"/>
       <field name="country_id" ref="base.lu"/>
@@ -693,6 +700,7 @@
 
     <record id="account_tax_report_line_2e_supply_of_service_for_customer_liable_for_payment_tax" model="account.tax.report.line">
       <field name="name">II.E. Supply of services for which the customer is liable for the payment of VAT – tax (410)</field>
+      <field name="code">LUTAX_410</field>
       <field name="sequence">9</field>
       <field name="parent_id" ref="account_tax_report_line_2_assesment_of_tax_due"/>
       <field name="country_id" ref="base.lu"/>
@@ -795,7 +803,7 @@
       <field name="name">IV.B. Total input tax deductible (104)</field>
       <field name="sequence">2</field>
       <field name="parent_id" ref="account_tax_report_line_4_tax_tobe_paid_or_reclaimed"/>
-      <field name="code">LUTAX_104</field>
+      <field name="formula">LUTAX_093 + LUTAX_097</field>
       <field name="country_id" ref="base.lu"/>
     </record>
 
@@ -807,6 +815,7 @@
 
     <record id="account_tax_report_line_3a_total_input_tax" model="account.tax.report.line">
       <field name="name">III.A. Total input tax (093)</field>
+      <field name="code">LUTAX_093</field>
       <field name="sequence">1</field>
       <field name="parent_id" ref="account_tax_report_line_3_assessment_deducible_tax"/>
       <field name="country_id" ref="base.lu"/>
@@ -814,6 +823,7 @@
 
     <record id="account_tax_report_line_3b_total_input_tax_nd" model="account.tax.report.line">
       <field name="name">III.B. Total input tax non-deductible (097)</field>
+      <field name="code">LUTAX_097</field>
       <field name="sequence">2</field>
       <field name="parent_id" ref="account_tax_report_line_3_assessment_deducible_tax"/>
       <field name="country_id" ref="base.lu"/>
@@ -835,6 +845,7 @@
 
     <record id="account_tax_report_line_3c_total_input_tax_deductible" model="account.tax.report.line">
       <field name="name">III.C. Total input tax deductible (102)</field>
+      <field name="formula">LUTAX_093 + LUTAX_097</field>
       <field name="sequence">3</field>
       <field name="parent_id" ref="account_tax_report_line_3_assessment_deducible_tax"/>
       <field name="country_id" ref="base.lu"/>
