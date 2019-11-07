@@ -5,10 +5,11 @@ from odoo.tests.common import SavepointCase
 from odoo.tools import float_round
 
 
-class TestPacking(SavepointCase):
+class TestPackingCommon(SavepointCase):
+
     @classmethod
     def setUpClass(cls):
-        super(TestPacking, cls).setUpClass()
+        super(TestPackingCommon, cls).setUpClass()
         cls.stock_location = cls.env.ref('stock.stock_location_stock')
         cls.warehouse = cls.env['stock.warehouse'].search([('lot_stock_id', '=', cls.stock_location.id)], limit=1)
         cls.warehouse.write({'delivery_steps': 'pick_pack_ship'})
@@ -18,6 +19,9 @@ class TestPacking(SavepointCase):
 
         cls.productA = cls.env['product.product'].create({'name': 'Product A', 'type': 'product'})
         cls.productB = cls.env['product.product'].create({'name': 'Product B', 'type': 'product'})
+
+
+class TestPacking(TestPackingCommon):
 
     def test_put_in_pack(self):
         """ In a pick pack ship scenario, create two packs in pick and check that
