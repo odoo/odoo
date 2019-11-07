@@ -573,6 +573,7 @@ class HrExpenseSheet(models.Model):
             return 'hr_expense.mt_expense_paid'
         return super(HrExpenseSheet, self)._track_subtype(init_values)
 
+<<<<<<< HEAD
     def _message_auto_subscribe_followers(self, updated_values, subtype_ids):
         res = super(HrExpenseSheet, self)._message_auto_subscribe_followers(updated_values, subtype_ids)
         if updated_values.get('employee_id'):
@@ -580,6 +581,76 @@ class HrExpenseSheet(models.Model):
             if employee.user_id:
                 res.append((employee.user_id.partner_id.id, subtype_ids, False))
         return res
+=======
+    def _get_users_to_subscribe(self, employee=False):
+        users = self.env['res.users']
+        employee = employee or self.employee_id
+        department = employee.sudo().department_id
+        if employee.user_id:
+            users |= employee.user_id
+        if employee.parent_id:
+            users |= employee.parent_id.user_id
+        if department and department.manager_id and employee.parent_id != department.manager_id:
+            users |= department.manager_id.user_id
+        return users
+
+    def _add_followers(self):
+        users = self._get_users_to_subscribe()
+        self.message_subscribe_users(user_ids=users.ids)
+
+    @api.model
+    def _create_set_followers(self, values):
+        # Add the followers at creation, so they can be notified
+        employee_id = values.get('employee_id')
+        if not employee_id:
+            return
+
+        employee = self.env['hr.employee'].browse(employee_id)
+        users = self._get_users_to_subscribe(employee=employee) - self.env.user
+        values['message_follower_ids'] = []
+        MailFollowers = self.env['mail.followers']
+        for partner in users.mapped('partner_id'):
+            values['message_follower_ids'] += MailFollowers._add_follower_command(self._name, [], {partner.id: None}, {})[0]
+
+    @api.onchange('employee_id')
+    def _onchange_employee_id(self):
+        self.address_id = self.employee_id.sudo().address_home_id
+        self.department_id = self.employee_id.department_id
+
+    @api.one
+    @api.depends('expense_line_ids', 'expense_line_ids.total_amount', 'expense_line_ids.currency_id')
+    def _compute_amount(self):
+        total_amount = 0.0
+        for expense in self.expense_line_ids:
+            total_amount += expense.currency_id.with_context(
+                date=expense.date,
+                company_id=expense.company_id.id
+            ).compute(expense.total_amount, self.currency_id)
+        self.total_amount = total_amount
+
+    @api.one
+    def _compute_attachment_number(self):
+        self.attachment_number = sum(self.expense_line_ids.mapped('attachment_number'))
+
+    @api.multi
+    def refuse_sheet(self, reason):
+        if not self.user_has_groups('hr_expense.group_hr_expense_user'):
+            raise UserError(_("Only HR Officers can refuse expenses"))
+        self.write({'state': 'cancel'})
+        for sheet in self:
+            sheet.message_post_with_view('hr_expense.hr_expense_template_refuse_reason',
+                                         values={'reason': reason ,'is_sheet':True ,'name':self.name})
+
+    @api.multi
+    def approve_expense_sheets(self):
+        if not self.user_has_groups('hr_expense.group_hr_expense_user'):
+            raise UserError(_("Only HR Officers can approve expenses"))
+        self.write({'state': 'approve', 'responsible_id': self.env.user.id})
+
+    @api.multi
+    def paid_expense_sheets(self):
+        self.write({'state': 'done'})
+>>>>>>> 83bfeb7f410... temp
 
     # --------------------------------------------
     # Actions
