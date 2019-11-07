@@ -19,7 +19,7 @@
                     <t t-if="not line.name" t-esc="'NO NAME'"/>
                 </Descrizione>
                 <Quantita t-esc="format_numbers(line.quantity)"/>
-                <UnitaMisura t-if="line.product_uom_id.category_id.measure_type != 'unit'" t-esc="line.product_uom_id.name"/>
+                <UnitaMisura t-if="line.product_uom_id.category_id != env.ref('uom.product_uom_categ_unit')" t-esc="line.product_uom_id.name"/>
                 <PrezzoUnitario t-esc="format_monetary(taxes['total_excluded'], currency)"/>
                 <ScontoMaggiorazione t-if="line.discount != 0">
                     <!-- [2.2.1.10] -->
