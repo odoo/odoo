@@ -2867,7 +2867,12 @@ QUnit.test('toggle_star message', async function (assert) {
     );
 });
 
-QUnit.test('composer state: text save and restore', async function (assert) {
+QUnit.skip('composer state: text save and restore', async function (assert) {
+    /**
+     * Skipped because composer state should now be synchronized by means
+     * of the store. However, this does not work good with summernote, and since
+     * we intend to remove it very soon, we omit this feature in the meantime.
+     */
     assert.expect(2);
 
     Object.assign(this.data.initMessaging, {
