@@ -738,7 +738,15 @@ class StockMove(models.Model):
         of moves in self.
         """
         origins = self.filtered(lambda m: m.origin).mapped('origin')
-        origin = len(origins) == 1 and origins[0] or False
+        origins = list(dict.fromkeys(origins)) # create a list of unique items
+        # Will display source document if any, when multiple different origins
+        # are found display a maximum of 5
+        if len(origins) == 0:
+            origin = False
+        else:
+            origin = ','.join(origins[:5])
+            if len(origins) > 5:
+                origin += "..."
         partners = self.mapped('partner_id')
         partner = len(partners) == 1 and partners.id or False
         return {
