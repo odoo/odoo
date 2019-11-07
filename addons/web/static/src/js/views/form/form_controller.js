@@ -287,10 +287,13 @@ var FormController = BasicController.extend({
     /**
      * @override
      */
-    _applyChanges: async function () {
-        const result = await this._super.apply(this, arguments);
-        core.bus.trigger('DOM_updated');
-        return result;
+    _applyChanges: function () {
+        var result = this._super.apply(this, arguments);
+        return Promise.resolve(async function () {
+            result = await result;
+            core.bus.trigger('DOM_updated');
+            return result;
+        });
     },
 
     /**
