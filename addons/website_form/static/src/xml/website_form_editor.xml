@@ -4,12 +4,12 @@
     <!-- Generic Field Layout -->
     <t t-name="website_form.field">
         <div t-att-class="'row form-group form-field' + (field.custom ? ' o_website_form_custom' : '') + (field.required ? ' o_website_form_required' : '')">
-            <div class="col-lg-3 col-md-4">
+            <div t-att-class="field.formatInfo and field.formatInfo.labelClass || 'col-lg-3 col-md-4'">
                 <label class="col-form-label" t-att-for="field.name">
                     <t t-esc="field.string"/>
                 </label>
             </div>
-            <div class="col-lg-7 col-md-8">
+            <div t-att-class="field.formatInfo and field.formatInfo.contentClass || 'col-lg-7 col-md-8'">
                 <t t-raw="0"/>
             </div>
         </div>
@@ -32,6 +32,18 @@
     <t t-name="website_form.field_text">
         <t t-call="website_form.field">
             <textarea
+                class="form-control o_website_form_input"
+                t-att-name="field.name"
+                t-att-required="field.required"
+            />
+        </t>
+    </t>
+
+    <!-- Email Field -->
+    <t t-name="website_form.field_email">
+        <t t-call="website_form.field">
+            <input
+                type="email"
                 class="form-control o_website_form_input"
                 t-att-name="field.name"
                 t-att-required="field.required"
@@ -115,23 +127,25 @@
     <!-- Boolean Field -->
     <t t-name="website_form.field_boolean">
         <t t-call="website_form.field">
-            <input
-                type="checkbox"
-                value="Yes"
-                class="o_website_form_input"
-                t-att-name="field.name"
-                t-att-required="field.required"
-            />
+            <div class="col-form-label">
+                <input
+                    type="checkbox"
+                    value="Yes"
+                    class="o_website_form_input"
+                    t-att-name="field.name"
+                    t-att-required="field.required"
+                />
+            </div>
         </t>
     </t>
 
     <!-- Selection Field -->
     <t t-name="website_form.field_selection">
         <t t-call="website_form.field">
-            <div class="o_website_form_flex">
+            <div class="o_website_form_flex" data-display="horizontal">
                 <t t-foreach="field.selection" t-as="option">
                     <div class="radio o_website_form_flex_item">
-                        <label>
+                        <label class="col-form-label">
                             <input
                                 type="radio"
                                 class="o_website_form_input"
@@ -180,7 +194,7 @@
         <!-- Generic one2many -->
         <t t-if="field.relation != 'ir.attachment'">
             <t t-call="website_form.field">
-                <div class="o_website_form_flex">
+                <div class="o_website_form_flex" data-display="horizontal">
                     <t t-if="!field.records">
                         <input
                             class="o_website_form_input"
@@ -192,7 +206,7 @@
                     </t>
                     <t t-foreach="field.records" t-as="record">
                         <div class="checkbox o_website_form_flex_item">
-                            <label>
+                            <label class="col-form-label">
                                 <input
                                     type="checkbox"
                                     class="o_website_form_input"

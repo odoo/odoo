@@ -241,9 +241,18 @@ odoo.define('website_form_editor.tour', function(require) {
             trigger:  "[data-website_form_field_require]"
         },
         {
+            content:  "Click on first Check Box",
+            trigger:  "label:contains('Iphone') span",
+        },
+        {
+            content:  "Click on 'Vertical' in menu 'Display'",
+            trigger:  "we-button:contains('Vertical')",
+        },
+        {
             content:  "Check the resulting field",
             trigger:  ".form-field.o_website_form_custom.o_website_form_required_custom" +
                             ":has(.col-form-label:contains('Products'))" +
+                            ":has(.o_website_form_flex[data-display='vertical'])" +
                             ":has(.checkbox label:contains('Iphone'):has(input[type='checkbox'][required]))" +
                             ":has(.checkbox label:contains('Galaxy S'):has(input[type='checkbox'][required]))" +
                             ":has(.checkbox label:contains('Xperia'):has(input[type='checkbox'][required]))" +
