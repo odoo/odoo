@@ -7,4 +7,4 @@ import odoo.tests
 class TestUi(odoo.tests.HttpCase):
 
     def test_01_crm_tour(self):
-        self.start_tour("/web", 'crm_tour', login="admin", step_delay=60)
+        self.start_tour("/web", 'crm_tour', login="admin")
