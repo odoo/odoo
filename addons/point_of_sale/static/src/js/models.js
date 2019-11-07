@@ -2108,7 +2108,8 @@ exports.Order = Backbone.Model.extend({
             uid: this.uid,
             sequence_number: this.sequence_number,
             creation_date: this.validation_date || this.creation_date, // todo: rename creation_date in master
-            fiscal_position_id: this.fiscal_position ? this.fiscal_position.id : false
+            fiscal_position_id: this.fiscal_position ? this.fiscal_position.id : false,
+            to_invoice: this.to_invoice ? this.to_invoice : false,
         };
     },
     export_for_printing: function(){
