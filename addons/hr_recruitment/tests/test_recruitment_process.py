@@ -2,14 +2,28 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import common
-from odoo.addons.hr.tests.test_hr_flow import TestHrFlow
+from odoo.addons.hr.tests.common import TestHrCommon
 from odoo.modules.module import get_module_resource
 
 
-class TestRecruitmentProcess(TestHrFlow):
+class TestRecruitmentProcess(TestHrCommon):
 
     def test_00_recruitment_process(self):
         """ Test recruitment process """
+
+        self.dep_rd = self.env['hr.department'].create({
+            'name': 'Research & Development',
+        })
+        self.job_developer = self.env['hr.job'].create({
+            'name': 'Experienced Developer',
+            'department_id': self.dep_rd.id,
+            'no_of_recruitment': 5,
+        })
+        self.employee_niv = self.env['hr.employee'].create({
+            'name': 'Sharlene Rhodes',
+        })
+        self.job_developer = self.job_developer.with_user(self.res_users_hr_officer.id)
+        self.employee_niv = self.employee_niv.with_user(self.res_users_hr_officer.id)
 
         # Create a new HR Recruitment Officer
         self.res_users_hr_recruitment_officer = self.env['res.users'].create({
