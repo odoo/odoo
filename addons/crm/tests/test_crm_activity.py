@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from .common import TestCrmCases
+from .common import TestCrmCommon
 from odoo import fields
 from datetime import datetime, timedelta
 
 
-class TestCrmMailActivity(TestCrmCases):
+class TestCrmMailActivity(TestCrmCommon):
 
     @classmethod
     def setUpClass(cls):

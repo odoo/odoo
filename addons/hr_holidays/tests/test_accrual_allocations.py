@@ -7,10 +7,10 @@ from odoo import fields
 
 from odoo.tools import mute_logger
 
-from odoo.addons.hr_holidays.tests.common import TestHrHolidaysBase
+from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
 
-class TestAccrualAllocations(TestHrHolidaysBase):
+class TestAccrualAllocations(TestHrHolidaysCommon):
     def setUp(self):
         super(TestAccrualAllocations, self).setUp()
 

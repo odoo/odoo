@@ -6,11 +6,11 @@ from odoo.addons.account.tests.common import AccountTestCommon
 from odoo.addons.account.tests.common import AccountTestNoChartCommon
 
 
-class TestSale(AccountTestCommon):
+class TestSaleCommon(AccountTestCommon):
 
     @classmethod
     def setUpClass(cls):
-        super(TestSale, cls).setUpClass()
+        super(TestSaleCommon, cls).setUpClass()
         # some users
         group_manager = cls.env.ref('sales_team.group_sale_manager')
         group_user = cls.env.ref('sales_team.group_sale_salesman')

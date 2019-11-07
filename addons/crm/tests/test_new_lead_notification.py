@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from .common import TestCrmCases
+from .common import TestCrmCommon
 
 
-class NewLeadNotification(TestCrmCases):
+class NewLeadNotification(TestCrmCommon):
 
     def test_new_lead_notification(self):
         """ Test newly create leads like from the website. People and channels

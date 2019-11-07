@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.exceptions import UserError
-from .common import TestPurchase
+from .common import PurchaseTestCommon
 
 
-class TestDeleteOrder(TestPurchase):
+class TestDeleteOrder(PurchaseTestCommon):
 
     def test_00_delete_order(self):
         ''' Testcase for deleting purchase order with purchase user group'''

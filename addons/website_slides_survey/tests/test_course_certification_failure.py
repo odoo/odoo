@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.survey.tests.common import SurveyCase
+from odoo.addons.survey.tests.common import TestSurveyCommon
 
 
-class TestCourseCertificationFailureFlow(SurveyCase):
+class TestCourseCertificationFailureFlow(TestSurveyCommon):
     def test_course_certification_failure_flow(self):
         # Step 1: create a simple certification
         # --------------------------------------------------

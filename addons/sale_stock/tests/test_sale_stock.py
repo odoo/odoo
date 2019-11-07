@@ -2,13 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import datetime, timedelta
 
-from odoo.addons.sale.tests.test_sale_common import TestSale
+from odoo.addons.sale.tests.test_sale_common import TestSaleCommon
 from odoo.exceptions import UserError
 from odoo.tests import Form, tagged
 
 
 @tagged('post_install', '-at_install')
-class TestSaleStock(TestSale):
+class TestSaleStock(TestSaleCommon):
 
     def _get_new_sale_order(self, amount=10.0):
         """ Creates and returns a sale order with one default order line.

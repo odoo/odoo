@@ -10,7 +10,7 @@ from odoo.tests.common import HttpCase
 
 
 @tagged('-at_install', 'post_install', 'functional')
-class TestCertificationFlow(common.SurveyCase, HttpCase):
+class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
     def _answer_question(self, question, answer, answer_token, csrf_token, button_submit='next'):
         # Employee submits the question answer
         post_data = self._format_submission_data(question, answer, {'csrf_token': csrf_token, 'token': answer_token, 'button_submit': button_submit})
