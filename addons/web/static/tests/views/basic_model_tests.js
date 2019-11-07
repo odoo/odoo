@@ -14,6 +14,10 @@ odoo.define('web.basic_model_tests', function (require) {
                 partner: {
                     fields: {
                         display_name: { string: "STRING", type: 'char' },
+                        // the following 2 fields must remain in that order to check that
+                        // active has priority over x_active despite the order
+                        x_active: { string: "Custom Active", type: 'boolean', default: true},
+                        active: {string: "Active", type: 'boolean', default: true},
                         total: { string: "Total", type: 'integer' },
                         foo: { string: "Foo", type: 'char' },
                         bar: { string: "Bar", type: 'integer' },
@@ -34,6 +38,7 @@ odoo.define('web.basic_model_tests', function (require) {
                     fields: {
                         name: { string: "Product Name", type: "char" },
                         category: { string: "Category M2M", type: 'many2many', relation: 'partner_type' },
+                        active: {string: "Active", type: 'boolean', default: true},
                     },
                     records: [
                         { id: 37, display_name: "xphone" },
@@ -44,6 +49,7 @@ odoo.define('web.basic_model_tests', function (require) {
                     fields: {
                         display_name: { string: "Partner Type", type: "char" },
                         date: { string: "Date Field", type: 'date' },
+                        x_active: { string: "Custom Active", type: 'boolean', default: true},
                     },
                     records: [
                         { id: 12, display_name: "gold", date: "2017-01-25" },
@@ -51,6 +57,14 @@ odoo.define('web.basic_model_tests', function (require) {
                         { id: 15, display_name: "bronze" }
                     ]
                 },
+                partner_title: {
+                    fields: {
+                        display_name: { string: "Partner Title", type: 'char'},
+                    },
+                    records: [
+                        { id: 42, display_name: "Dr."},
+                    ]
+                }
             };
 
             // add related fields to category.
@@ -2009,6 +2023,7 @@ odoo.define('web.basic_model_tests', function (require) {
             var resultID = await model.load(this.params);
             var record = model.get(resultID);
             assert.deepEqual(record.evalContext, {
+                active: true,
                 active_id: 1,
                 active_ids: [1],
                 active_model: "partner",
@@ -2024,7 +2039,8 @@ odoo.define('web.basic_model_tests', function (require) {
                 product_ids: [],
                 qux: false,
                 reference: false,
-                total: 0
+                total: 0,
+                x_active: true,
             }, "should use the proper eval context");
             model.destroy();
         });
@@ -2401,6 +2417,43 @@ odoo.define('web.basic_model_tests', function (require) {
                 "the id should match");
 
             model.destroy();
+        });
+
+        QUnit.test('identify correct active field', async function(assert) {
+            assert.expect(4);
+            var model = createModel({
+                Model: BasicModel,
+                data: this.data,
+            });
+            // check that active field is returned if present
+            this.params.res_id = 37;
+            this.params.modelName = 'product'
+            this.params.fields = this.data.product.fields;
+            var resultID = await model.load(this.params);
+            var record = model.get(resultID);
+            assert.equal(model.getActiveField(record), 'active', 'should have returned "active" field name');
+            // check that active field is not returned if not present
+            this.params.res_id = 42;
+            this.params.modelName = 'partner_title';
+            this.params.fields = this.data.partner_title.fields;
+            var resultID = await model.load(this.params);
+            var record = model.get(resultID);
+            assert.equal(model.getActiveField(record), undefined, 'should not have returned any field name');
+            // check that x_active field is returned if x_active present
+            this.params.res_id = 12;
+            this.params.modelName = 'partner_type';
+            this.params.fields = this.data.partner_type.fields;
+            var resultID = await model.load(this.params);
+            var record = model.get(resultID);
+            assert.equal(model.getActiveField(record), 'x_active', 'should have returned "x_active" field name');
+
+            // check that active field is returned if both active and x_active present
+            this.params.res_id = 1;
+            this.params.modelName = 'partner';
+            this.params.fields = this.data.partner.fields;
+            var resultID = await model.load(this.params);
+            var record = model.get(resultID);
+            assert.equal(model.getActiveField(record), 'active', 'should have returned "active" field name');
         });
     });
 });
