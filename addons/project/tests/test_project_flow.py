@@ -3,7 +3,7 @@
 
 import base64
 
-from .test_project_base import TestProjectBase
+from .test_project_base import TestProjectCommon
 from odoo.tools import mute_logger
 from odoo.modules.module import get_resource_path
 
@@ -34,7 +34,7 @@ Raoul Boitempoils
 Integrator at Agrolait"""
 
 
-class TestProjectFlow(TestProjectBase):
+class TestProjectFlow(TestProjectCommon):
 
     def test_project_process_project_manager_duplicate(self):
         pigs = self.project_pigs.with_user(self.user_projectmanager)

@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.sale.tests.test_sale_product_attribute_value_config import TestSaleProductAttributeValueSetup
+from odoo.addons.sale.tests.test_sale_product_attribute_value_config import TestSaleProductAttributeValueCommon
 from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install')
-class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueSetup):
+class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCommon):
 
     def test_get_combination_info(self):
         current_website = self.env['website'].get_current_website()

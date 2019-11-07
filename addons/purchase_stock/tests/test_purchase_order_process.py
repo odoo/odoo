@@ -1,7 +1,7 @@
-from .common import TestPurchase
+from .common import PurchaseTestCommon
 
 
-class TestPurchaseOrderProcess(TestPurchase):
+class TestPurchaseOrderProcess(PurchaseTestCommon):
 
     def test_00_cancel_purchase_order_flow(self):
         """ Test cancel purchase order with group user."""
