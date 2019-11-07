@@ -43,7 +43,6 @@
         'views/mail_channel_partner_views.xml',
     ],
     'demo': [
-        'data/mail_demo.xml',
         'data/mail_channel_demo.xml',
     ],
     'installable': True,
