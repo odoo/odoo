@@ -83,7 +83,7 @@ class TestOnchangeProductId(TransactionCase):
         po_line._onchange_quantity()
         self.assertEqual(1200, po_line.price_unit, "Unit price should be 1200 for one Dozen")
 
-        product_ipad = self.env.ref('product.product_product_4')
+        product_ipad = self.env['product.product'].create({'name': 'Conference Chair'})
         po_line2 = self.po_line_model.create({
             'name': product_ipad.name,
             'product_id': product_ipad.id,

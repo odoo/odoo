@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+
+import unittest
+
 from odoo import fields
 from odoo.tests.common import Form, SavepointCase
 from odoo.tests import tagged
@@ -19,7 +22,7 @@ class AccountingSavepointCase(SavepointCase):
         if not chart_template:
             chart_template = cls.env.ref('l10n_generic_coa.configurable_chart_template', raise_if_not_found=False)
         if not chart_template:
-            cls.skipTest("Accounting Tests skipped because the user's company has no chart of accounts.")
+            cls.skipTest(cls, "Accounting Tests skipped because the user's company has no chart of accounts.")
 
         # Create user.
         user = cls.env['res.users'].create({

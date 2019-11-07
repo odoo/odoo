@@ -55,7 +55,7 @@ class TestSaleMrpProcurement(TransactionCase):
 
         # I create a sale order for product Slider mobile
         so_form = Form(self.env['sale.order'])
-        so_form.partner_id = self.env.ref('base.res_partner_4')
+        so_form.partner_id = self.env['res.partner'].create({'name': 'Another Test Partner'})
         with so_form.order_line.new() as line:
             line.product_id = product_template_slidermobile0.product_variant_ids
             line.price_unit = 200
@@ -150,7 +150,7 @@ class TestSaleMrpProcurement(TransactionCase):
             warehouse.manufacture_steps = 'pbm_sam'
 
         so_form = Form(self.env['sale.order'])
-        so_form.partner_id = self.env.ref('base.res_partner_4')
+        so_form.partner_id = self.env['res.partner'].create({'name': 'Another Test Partner'})
         with so_form.order_line.new() as line:
             line.product_id = self.complex_product
             line.price_unit = 1

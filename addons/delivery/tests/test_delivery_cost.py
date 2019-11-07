@@ -15,17 +15,31 @@ class TestDeliveryCost(common.TransactionCase):
         self.SaleConfigSetting = self.env['res.config.settings']
         self.Product = self.env['product.product']
 
-        self.partner_18 = self.env.ref('base.res_partner_18')
+        self.partner_18 = self.env['res.partner'].create({'name': 'My Test Customer'})
         self.pricelist = self.env.ref('product.list0')
-        self.product_4 = self.env.ref('product.product_product_4')
+        self.product_4 = self.env['product.product'].create({'name': 'A product to deliver'})
         self.product_uom_unit = self.env.ref('uom.product_uom_unit')
-        self.normal_delivery = self.env.ref('delivery.normal_delivery_carrier')
-        self.partner_4 = self.env.ref('base.res_partner_4')
-        self.partner_address_13 = self.env.ref('base.res_partner_address_13')
+        self.product_delivery_normal = self.env['product.product'].create({
+            'name': 'Normal Delivery Charges',
+            'type': 'service',
+            'list_price': 10.0,
+            'categ_id': self.env.ref('delivery.product_category_deliveries').id,
+        })
+        self.normal_delivery = self.env['delivery.carrier'].create({
+            'name': 'Normal Delivery Charges',
+            'fixed_price': 10,
+            'delivery_type': 'fixed',
+            'product_id': self.product_delivery_normal.id,
+        })
+        self.partner_4 = self.env['res.partner'].create({'name': 'Another Customer'})
+        self.partner_address_13 = self.env['res.partner'].create({
+            'name': "Another Customer's Address",
+            'parent_id': self.partner_4.id,
+        })
         self.product_uom_hour = self.env.ref('uom.product_uom_hour')
         self.account_data = self.env.ref('account.data_account_type_revenue')
         self.account_tag_operating = self.env.ref('account.account_tag_operating')
-        self.product_2 = self.env.ref('product.product_product_2')
+        self.product_2 = self.env['product.product'].create({'name': 'Zizizaproduct'})
         self.product_category = self.env.ref('product.product_category_all')
         self.free_delivery = self.env.ref('delivery.free_delivery_carrier')
         # as the tests hereunder assume all the prices in USD, we must ensure

@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import unittest
 from odoo.addons.stock_landed_costs.tests.common import TestStockLandedCostsCommon
+from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounting_data
+
 from odoo.tests import tagged
 
 
@@ -46,12 +48,15 @@ class TestLandedCosts(TestStockLandedCostsCommon):
             'picking_id': self.picking_out.id,
             'location_id': self.stock_location_id,
             'location_dest_id': self.customer_location_id})
+        self.stock_input_account, self.stock_output_account, self.stock_valuation_account, self.expense_account, self.stock_journal = _create_accounting_data(self.env)
+        self.categ_all.write({
+            'property_stock_account_input_categ_id': self.stock_input_account.id,
+            'property_stock_account_output_categ_id': self.stock_output_account.id,
+            'property_stock_valuation_account_id': self.stock_valuation_account.id,
+            'property_stock_journal': self.stock_journal.id,
+        })
 
     def test_00_landed_costs_on_incoming_shipment(self):
-        chart_of_accounts = self.env.company.chart_template_id
-        generic_coa = self.env.ref('l10n_generic_coa.configurable_chart_template')
-        if chart_of_accounts != generic_coa:
-            raise unittest.SkipTest('Skip this test as it works only with %s (%s loaded)' % (generic_coa.name, chart_of_accounts.name))
         """ Test landed cost on incoming shipment """
         #
         # (A) Purchase product
@@ -101,11 +106,6 @@ class TestLandedCosts(TestStockLandedCostsCommon):
         self.assertEqual(account_entry['debit'], 430.0, 'Wrong Account Entry')
 
     def test_01_negative_landed_costs_on_incoming_shipment(self):
-        chart_of_accounts = self.env.company.chart_template_id
-        generic_coa = self.env.ref('l10n_generic_coa.configurable_chart_template')
-        if chart_of_accounts != generic_coa:
-            raise unittest.SkipTest('Skip this test as it works only with %s (%s loaded)' % (generic_coa.name, chart_of_accounts.name))
-
         """ Test negative landed cost on incoming shipment """
         #
         # (A) Purchase Product

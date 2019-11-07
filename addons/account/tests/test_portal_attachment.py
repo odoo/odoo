@@ -14,6 +14,13 @@ class TestUi(tests.HttpCase):
     def test_01_portal_attachment(self):
         """Test the portal chatter attachment route."""
 
+        miscellaneous_journal = self.env['account.journal'].create({
+            'name': 'Miscellaneous - Test',
+            'code': 'TMISC',
+            'type': 'general',
+            'show_on_dashboard': False,
+        })
+
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         # For this test we need a parent document with an access_token field
         # (in this case from portal.mixin) and also inheriting mail.thread.

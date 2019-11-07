@@ -4,7 +4,7 @@
 from dateutil import relativedelta
 from odoo import fields, models, api
 
-
+# YTI TODO: Move this brol to a new test_base_automation module 
 class LeadTest(models.Model):
     _name = "base.automation.lead.test"
     _description = "Automated Rule Test"
@@ -40,6 +40,7 @@ class LeadTest(models.Model):
         # based on 'deadline' must be triggered
         self.mapped('employee')
         return result
+
 
 
 class LineTest(models.Model):

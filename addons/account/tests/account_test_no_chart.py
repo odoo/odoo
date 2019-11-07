@@ -2,9 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import SavepointCase, HttpCase, tagged
+from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 
-
-class TestAccountNoChartCommon(SavepointCase):
+class TestAccountNoChartCommon(SavepointCaseWithUserDemo):
     """ Some tests required to be executed at module installation, and not 'post install', like moslty
         of accounting tests, since a chart of account is required
         This test setup class provides data for test suite to make business flow working without a chart

@@ -18,7 +18,7 @@ tour.register('course_member', {
 }, [
 // eLearning: go on free course and join it
 {
-    trigger: 'a:contains("Basics of Gardening")'
+    trigger: 'a:contains("Basics of Gardening - Test")'
 }, {
     trigger: 'a:contains("Join Course")'
 }, {

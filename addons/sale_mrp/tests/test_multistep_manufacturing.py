@@ -49,7 +49,7 @@ class TestMultistepManufacturing(TestMrpCommon):
 
         # Create sale order
         sale_form = Form(self.env['sale.order'])
-        sale_form.partner_id = self.env.ref('base.res_partner_1')
+        sale_form.partner_id = self.env['res.partner'].create({'name': 'My Test Partner'})
         sale_form.picking_policy = 'direct'
         sale_form.warehouse_id = self.warehouse
         with sale_form.order_line.new() as line:

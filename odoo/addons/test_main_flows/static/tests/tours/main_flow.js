@@ -666,12 +666,6 @@ tour.register('main_flow_tour', {
     content: _t("Register Payment"),
     position: "bottom",
 }, {
-    trigger: "select.o_field_widget[name=journal_id]",
-    extra_trigger: ".modal-dialog",
-    content: _t("Select Journal"),
-    position: "bottom",
-    run: 'text(Bank (USD))',
-}, {
     trigger: ".modal-footer .btn-primary",
     content: _t("Validate"),
     position: "bottom",
@@ -732,7 +726,7 @@ tour.register('main_flow_tour', {
     trigger: ".o_selected_row .o_field_widget[name=amount] input",
     content: _t("Write the amount received."),
     position: "bottom",
-    run: "text 12.65",
+    run: "text 11.00",
 }, {
     edition: "enterprise",
     trigger: ".o_selected_row .o_field_widget[name=partner_id] input",
@@ -762,7 +756,7 @@ tour.register('main_flow_tour', {
     position: "bottom",
 }, {
     edition: "enterprise",
-    trigger: "button.o_reconcile",
+    trigger: "button.o_reconcile, button.o_validate",
     content: _t('<p><b>Click on Reconcile</p>'),
     position: "right",
 }, {

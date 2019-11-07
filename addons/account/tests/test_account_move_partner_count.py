@@ -51,25 +51,3 @@ class TestAccountMovePartnerCount(TransactionCase):
             self.journal.with_env(env).unlink()
             self.account_income.with_env(env).unlink()
             self.partner.with_env(env).unlink()
-
-    def test_account_move_count(self):
-        # T2 create and post account move
-        with self.registry.cursor() as cr:
-            env = self.env(cr=cr)
-            self.move.with_env(env).post()
-            partner = self.partner.with_env(env)
-            self.assertEqual(partner.supplier_rank, 0)
-            self.assertEqual(partner.customer_rank, 1)
-
-    def test_account_move_count_concurrent(self):
-        # T2 Lock the partner row
-        with self.registry.cursor() as cr:
-            cr.execute("""SELECT id FROM res_partner WHERE id = %s FOR UPDATE""" % self.partner.id)
-
-            # T3 concurrently posts account move and tries to update partner
-            with self.registry.cursor() as cr:
-                env = self.env(cr=cr)
-                self.move.with_env(env).state = 'posted'
-
-                self.assertEqual(self.partner.with_env(env).customer_rank,
-                                 0, "It should not wait the concurrent transaction for the update")

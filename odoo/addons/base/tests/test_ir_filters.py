@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import exceptions
+from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.tests.common import TransactionCase, ADMIN_USER_ID
 
 def noid(seq):
@@ -12,7 +13,12 @@ def noid(seq):
     return seq
 
 
-class FiltersCase(TransactionCase):
+class FiltersCase(TransactionCaseWithUserDemo):
+    def setUp(self):
+        super(FiltersCase, self).setUp()
+        self.USER_NG = self.env['res.users'].name_search('demo')[0]
+        self.USER_ID = self.USER_NG[0]
+
     def build(self, model, *args):
         Model = self.env[model].with_user(ADMIN_USER_ID)
         for vals in args:
@@ -20,10 +26,6 @@ class FiltersCase(TransactionCase):
 
 
 class TestGetFilters(FiltersCase):
-    def setUp(self):
-        super(TestGetFilters, self).setUp()
-        self.USER_NG = self.env['res.users'].name_search('demo')[0]
-        self.USER_ID = self.USER_NG[0]
 
     def test_own_filters(self):
         self.build(
@@ -77,10 +79,6 @@ class TestGetFilters(FiltersCase):
 
 
 class TestOwnDefaults(FiltersCase):
-    def setUp(self):
-        super(TestOwnDefaults, self).setUp()
-        self.USER_NG = self.env['res.users'].name_search('demo')[0]
-        self.USER_ID = self.USER_NG[0]                 
 
     def test_new_no_filter(self):
         """
@@ -180,10 +178,6 @@ class TestOwnDefaults(FiltersCase):
 
 
 class TestGlobalDefaults(FiltersCase):
-    def setUp(self):
-        super(TestGlobalDefaults, self).setUp()
-        self.USER_NG = self.env['res.users'].name_search('demo')[0]
-        self.USER_ID = self.USER_NG[0]
 
     def test_new_filter_not_default(self):
         """

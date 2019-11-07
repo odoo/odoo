@@ -8,12 +8,21 @@ class TestLead2opportunity2win(TestCrmCases):
     def test_lead2opportunity2win(self):
         """ Tests for Test Lead 2 opportunity 2 win """
         CrmLead2OpportunityPartnerMass = self.env['crm.lead2opportunity.partner.mass']
-        CalendarAttendee = self.env['calendar.attendee']
         default_stage_id = self.ref("crm.stage_lead1")
 
-        crm_case_2 = self.env.ref('crm.crm_case_2')
-        crm_case_3 = self.env.ref('crm.crm_case_3')
-        crm_case_13 = self.env.ref('crm.crm_case_13')
+        crm_case_2 = self.env['crm.lead'].create({
+            'name': 'Design Software',
+            'type': 'lead',
+        })
+        crm_case_3 = self.env['crm.lead'].create({
+            'name': 'Pricing for 25 desks',
+            'type': 'lead',
+        })
+        crm_case_13 = self.env['crm.lead'].create({
+            'name': 'Quote for 600 Chairs',
+            'type': 'opportunity',
+            'contact_name': 'Will McEncroe',
+        })
 
         # In order to test the conversion of a lead into a opportunity,
         # I set lead to open stage.
@@ -24,11 +33,11 @@ class TestLead2opportunity2win(TestCrmCases):
 
         # Giving access rights of salesman to convert the lead into opportunity.
         # I convert lead into opportunity for exiting customer.
-        crm_case_3.with_user(self.crm_salemanager).convert_opportunity(self.env.ref("base.res_partner_2").id)
+        crm_case_3.with_user(self.crm_salemanager).convert_opportunity(self.res_partner_2.id)
 
         # I check details of converted opportunity.
         self.assertEqual(crm_case_3.type, 'opportunity', 'Lead is not converted to opportunity!')
-        self.assertEqual(crm_case_3.partner_id.id, self.env.ref("base.res_partner_2").id, 'Partner mismatch!')
+        self.assertEqual(crm_case_3.partner_id.id, self.res_partner_2.id, 'Partner mismatch!')
         self.assertEqual(crm_case_3.stage_id.id, default_stage_id, 'Stage of opportunity is incorrect!')
 
         # Now I schedule meeting with customer.
@@ -45,7 +54,7 @@ class TestLead2opportunity2win(TestCrmCases):
         mass.with_user(self.crm_salemanager).mass_convert()
 
         # Now I check first lead converted on opportunity.
-        self.assertEqual(crm_case_13.name, "Quote for 12 Tables", "Opportunity name not correct")
+        self.assertEqual(crm_case_13.name, "Quote for 600 Chairs", "Opportunity name not correct")
         self.assertEqual(crm_case_13.type, 'opportunity', "Lead is not converted to opportunity!")
         expected_partner = "Will McEncroe"
         self.assertEqual(crm_case_13.partner_id.name, expected_partner, "Partner mismatch! %s vs %s" % (crm_case_13.partner_id.name, expected_partner))
@@ -61,12 +70,6 @@ class TestLead2opportunity2win(TestCrmCases):
 
         # I check details of the opportunity after the loose
         self.assertEqual(crm_case_2.probability, 0.0, "Revenue probability should be 0.0!")
-
-        # I confirm review needs meeting.
-        self.env.ref('calendar.calendar_event_4').with_context({'active_model': 'calendar.event'}).write({'state': 'open'})
-
-        # I invite a user for meeting.
-        CalendarAttendee.create({'partner_id': self.ref('base.partner_root'), 'email': 'user@meeting.com'}).do_accept()
 
     def test_lead2opportunity_assign_salesmen(self):
         """ Tests for Test Lead2opportunity Assign Salesmen """
