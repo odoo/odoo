@@ -7,11 +7,6 @@ from odoo.modules.module import get_module_resource
 
 class TestStockLandedCostsCommon(AccountingTestCase):
 
-    def _load(self, module, *args):
-        tools.convert_file(self.cr, 'stock_landed_costs',
-                           get_module_resource(module, *args),
-                           {}, 'init', False, 'test', self.registry._assertion_report)
-
     def setUp(self):
         super(TestStockLandedCostsCommon, self).setUp()
         # Objects
@@ -21,8 +16,8 @@ class TestStockLandedCostsCommon(AccountingTestCase):
         self.LandedCost = self.env['stock.landed.cost']
         self.CostLine = self.env['stock.landed.cost.lines']
         # References
-        self.supplier_id = self.ref('base.res_partner_2')
-        self.customer_id = self.ref('base.res_partner_4')
+        self.supplier_id = self.env['res.partner'].create({'name': 'My Test Supplier'}).id
+        self.customer_id = self.env['res.partner'].create({'name': 'My Test Customer'}).id
         self.picking_type_in_id = self.ref('stock.picking_type_in')
         self.picking_type_out_id = self.ref('stock.picking_type_out')
         self.supplier_location_id = self.ref('stock.stock_location_suppliers')

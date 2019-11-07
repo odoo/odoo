@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo import tools
+
 import odoo
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 
@@ -8,6 +13,7 @@ class TestPoSProductsWithTax(TestPoSCommon):
 
     def setUp(self):
         super(TestPoSProductsWithTax, self).setUp()
+
         self.config = self.basic_config
         self.product1 = self.create_product(
             'Product 1',
@@ -60,6 +66,7 @@ class TestPoSProductsWithTax(TestPoSCommon):
 
         Thus, manually_calculated_taxes = (-24,89, -51.82)
         """
+
         self.open_new_session()
 
         # create orders
@@ -134,6 +141,7 @@ class TestPoSProductsWithTax(TestPoSCommon):
 
         Thus, manually_calculated_taxes = (-6.81, -44.54)
         """
+
         self.open_new_session()
 
         # create orders
@@ -182,7 +190,7 @@ class TestPoSProductsWithTax(TestPoSCommon):
         # check receivable line
         # should be equivalent to receivable in the invoice
         # should also be fully-reconciled
-        receivable_line = session_move.line_ids.filtered(lambda line: line.account_id == self.receivable_account)
+        receivable_line = session_move.line_ids.filtered(lambda line: line.account_id in self.receivable_account + self.env['account.account'].search([('name', '=', 'Account Receivable (PoS)')]) and line.name == 'From invoiced orders')
         self.assertAlmostEqual(receivable_line.balance, -426.09)
         self.assertTrue(receivable_line.full_reconcile_id, msg='Receivable line for invoices should be fully reconciled.')
 
@@ -229,6 +237,7 @@ class TestPoSProductsWithTax(TestPoSCommon):
 
         manually_calculated_taxes = (4.01, 6.37)
         """
+
         self.open_new_session()
 
         # create orders

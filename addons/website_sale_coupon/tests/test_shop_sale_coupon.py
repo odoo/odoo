@@ -9,16 +9,80 @@ from odoo.addons.sale.tests.test_sale_product_attribute_value_config import Test
 @tagged('post_install', '-at_install')
 class TestUi(TestSaleProductAttributeValueSetup, HttpCase):
 
-    def setUp(self):
-        super(TestUi, self).setUp()
-
+    @classmethod
+    def setUpClass(cls):
+        super(TestUi, cls).setUpClass()
         # set currency to not rely on demo data and avoid possible race condition
-        self.currency_ratio = 1.0
-        pricelist = self.env.ref('product.list0')
-        pricelist.currency_id = self._setup_currency(self.currency_ratio)
+        cls.currency_ratio = 1.0
+        pricelist = cls.env.ref('product.list0')
+        new_currency = cls._setup_currency(cls.currency_ratio)
+        pricelist.currency_id = new_currency
+        pricelist.flush()
+
 
     def test_01_admin_shop_sale_coupon_tour(self):
         # pre enable "Show # found" option to avoid race condition...
+        public_category = self.env['product.public.category'].create({'name': 'Public Category'})
+
+        large_cabinet = self.env['product.product'].create({
+            'name': 'Small Cabinet',
+            'list_price': 320.0,
+            'type': 'consu',
+            'is_published': True,
+            'sale_ok': True,
+            'public_categ_ids': [(4, public_category.id)],
+            'taxes_id': False,
+        })
+
+        free_large_cabinet = self.env['product.product'].create({
+            'name': 'Free Product - Small Cabinet',
+            'type': 'service',
+            'taxes_id': False,
+            'supplier_taxes_id': False,
+            'sale_ok': False,
+            'purchase_ok': False,
+            'invoice_policy': 'order',
+            'default_code': 'FREELARGECABINET',
+            'categ_id': self.env.ref('product.product_category_all').id,
+            'taxes_id': False,
+        })
+
+        ten_percent = self.env['product.product'].create({
+            'name': '10.0% discount on total amount',
+            'type': 'service',
+            'taxes_id': False,
+            'supplier_taxes_id': False,
+            'sale_ok': False,
+            'purchase_ok': False,
+            'invoice_policy': 'order',
+            'default_code': '10PERCENTDISC',
+            'categ_id': self.env.ref('product.product_category_all').id,
+            'taxes_id': False,
+        })
+
+        self.env['sale.coupon.program'].create({
+            'name': "Buy 3 Small Cabinets, get one for free",
+            'promo_code_usage': 'no_code_needed',
+            'discount_apply_on': 'on_order',
+            'reward_type': 'product',
+            'program_type': 'promotion_program',
+            'reward_product_id': large_cabinet.id,
+            'rule_min_quantity': 3,
+            'rule_products_domain': "[['name', 'ilike', 'Small Cabinet']]",
+            'discount_line_product_id': free_large_cabinet.id
+        })
+
+        self.env['sale.coupon.program'].create({
+            'name': "Code for 10% on orders",
+            'promo_code_usage': 'code_needed',
+            'promo_code': 'testcode',
+            'discount_apply_on': 'on_order',
+            'discount_type': 'percentage',
+            'discount_percentage': 10.0,
+            'program_type': 'promotion_program',
+            'discount_line_product_id': ten_percent.id
+        })
+
         self.env.ref("website_sale.search_count_box").write({"active": True})
         self.start_tour("/", 'shop_sale_coupon', login="admin")
 

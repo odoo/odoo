@@ -23,7 +23,15 @@ class TestSudo(Feedback):
     def test_sudo(self):
         record = self.env['test_access_right.some_obj'].create({'val': 5})
         user1 = self.user
-        user2 = self.env.ref('base.user_demo')
+        partner_demo = self.env['res.partner'].create({
+            'name': 'Marc Demo',
+        })
+        user2 = self.env['res.users'].create({
+            'login': 'demo2',
+            'password': 'demo2',
+            'partner_id': partner_demo.id,
+            'groups_id': [(6, 0, [self.env.ref('base.group_user').id, self.env.ref('base.group_partner_manager').id])],
+        })
 
         # with_user(user)
         record1 = record.with_user(user1)

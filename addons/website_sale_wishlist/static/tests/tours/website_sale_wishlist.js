@@ -6,7 +6,7 @@ var tour = require("web_tour.tour");
 
 tour.register('shop_wishlist', {
     test: true,
-    url: '/shop',
+    url: '/shop?search=Customizable Desk',
 },
     [
         {
@@ -41,7 +41,7 @@ tour.register('shop_wishlist', {
             run: function (){
                 $('.oe_login_form input[name="login"]').val("admin");
                 $('.oe_login_form input[name="password"]').val("admin");
-                $('.oe_login_form input[name="redirect"]').val("/shop");
+                $('.oe_login_form input[name="redirect"]').val("/shop?search=Customizable Desk");
                 $('.oe_login_form').submit();
             },
         },
@@ -51,8 +51,8 @@ tour.register('shop_wishlist', {
             run: function () {},
         },
         {
-            content: "click on Customizable Desk",
-            trigger: '.oe_product_cart a:contains("Customizable Desk")',
+            content: "click on Customizable Desk (TEST)",
+            trigger: '.oe_product_cart a:contains("Customizable Desk (TEST)")',
         },
         {
             content: "check the first variant is already in wishlist",
@@ -75,8 +75,8 @@ tour.register('shop_wishlist', {
             trigger: 'a[href="/shop/wishlist"]',
         },
         {
-            content: "remove Customizable Desk",
-            trigger: 'tr:contains("Customizable Desk") .o_wish_rm:first',
+            content: "remove Customizable Desk (TEST)",
+            trigger: 'tr:contains("Customizable Desk (TEST)") .o_wish_rm:first',
         },
         {
             content: "check that wishlist contains 1 item",

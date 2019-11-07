@@ -94,13 +94,14 @@ class BaseAutomation(models.Model):
                 }
             }}
 
-    @api.model
-    def create(self, vals):
-        vals['usage'] = 'base_automation'
-        base_automation = super(BaseAutomation, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            vals['usage'] = 'base_automation'
+        base_automations = super(BaseAutomation, self).create(vals_list)
         self._update_cron()
         self._update_registry()
-        return base_automation
+        return base_automations
 
     def write(self, vals):
         res = super(BaseAutomation, self).write(vals)

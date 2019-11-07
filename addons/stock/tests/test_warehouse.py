@@ -452,6 +452,17 @@ class TestWarehouse(TestStockCommon):
 
     def test_noleak(self):
         # non-regression test to avoid company_id leaking to other warehouses (see blame)
+        partner = self.env['res.partner'].create({'name': 'Chicago partner'})
+        company = self.env['res.company'].create({
+            'name': 'My Company (Chicago)1',
+            'currency_id': self.ref('base.USD')
+        })
+        self.env['stock.warehouse'].create({
+            'name': 'Chicago Warehouse2',
+            'company_id': company.id,
+            'code': 'Chic2',
+            'partner_id': partner.id
+        })
         wh = self.env["stock.warehouse"].search([])
 
         assert len(set(wh.mapped("company_id.id"))) > 1

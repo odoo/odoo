@@ -17,8 +17,16 @@ class TestStockValuation(TransactionCase):
         super(TestStockValuation, self).setUp()
         self.supplier_location = self.env.ref('stock.stock_location_suppliers')
         self.stock_location = self.env.ref('stock.stock_location_stock')
-        self.partner_id = self.env.ref('base.res_partner_1')
-        self.product1 = self.env.ref('product.product_product_8')
+        self.partner_id = self.env['res.partner'].create({
+            'name': 'Wood Corner Partner',
+            'company_id': self.env.user.company_id.id,
+        })
+        self.product1 = self.env['product.product'].create({
+            'name': 'Large Desk',
+            'standard_price': 1299.0,
+            'list_price': 1799.0,
+            'type': 'product',
+        })
         Account = self.env['account.account']
         self.stock_input_account = Account.create({
             'name': 'Stock Input',
@@ -287,7 +295,8 @@ class TestStockValuationWithCOA(AccountingTestCase):
         super(TestStockValuationWithCOA, self).setUp()
         self.supplier_location = self.env.ref('stock.stock_location_suppliers')
         self.stock_location = self.env.ref('stock.stock_location_stock')
-        self.partner_id = self.env.ref('base.res_partner_1')
+        self.partner_id = self.env['res.partner'].create({'name': 'Wood Corner Partner'})
+        self.product1 = self.env['product.product'].create({'name': 'Large Desk'})
 
         self.cat = self.env['product.category'].create({
             'name': 'cat',
@@ -520,6 +529,7 @@ class TestStockValuationWithCOA(AccountingTestCase):
         """
         company = self.env.user.company_id
         company.anglo_saxon_accounting = True
+        company.currency_id = self.usd_currency
 
         date_po = '2019-01-01'
 
@@ -587,6 +597,7 @@ class TestStockValuationWithCOA(AccountingTestCase):
         self.assertEqual(len(move_lines), 2)
 
         payable_line = move_lines.filtered(lambda l: l.account_id.internal_type == 'payable')
+
         self.assertEqual(payable_line.amount_currency, -100.0)
         self.assertAlmostEqual(payable_line.balance, -66.67)
 
@@ -603,6 +614,7 @@ class TestStockValuationWithCOA(AccountingTestCase):
         """
         company = self.env.user.company_id
         company.anglo_saxon_accounting = True
+        company.currency_id = self.usd_currency
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
         self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
 
@@ -778,6 +790,7 @@ class TestStockValuationWithCOA(AccountingTestCase):
         """
         company = self.env.user.company_id
         company.anglo_saxon_accounting = True
+        company.currency_id = self.usd_currency
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
         self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
 
@@ -938,6 +951,7 @@ class TestStockValuationWithCOA(AccountingTestCase):
         """
         company = self.env.user.company_id
         company.anglo_saxon_accounting = True
+        company.currency_id = self.usd_currency
         exchange_diff_journal = company.currency_exchange_journal_id.exists()
 
         date_po = '2019-01-01'

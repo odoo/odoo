@@ -9,7 +9,47 @@ class TestFrontend(odoo.tests.HttpCase):
         env = self.env(user=self.env.ref('base.user_admin'))
         account_obj = env['account.account']
 
-        pos_config = env.ref('pos_restaurant.pos_config_restaurant')
+        printer = self.env['restaurant.printer'].create({
+            'name': 'Kitchen Printer',
+            'proxy_ip': 'localhost',
+        })
+        drinks_category = self.env['pos.category'].create({'name': 'Drinks'})
+
+        pos_config = self.env['pos.config'].create({
+            'name': 'Bar',
+            'barcode_nomenclature_id': self.env.ref('barcodes.default_barcode_nomenclature').id,
+            'module_pos_restaurant': True,
+            'is_table_management': True,
+            'iface_splitbill': True,
+            'iface_printbill': True,
+            'iface_orderline_notes': True,
+            'printer_ids': [(4, printer.id)],
+            'iface_start_categ_id': drinks_category.id,
+            'start_category': True,
+            'pricelist_id': self.env.ref('product.list0').id,
+        })
+
+        main_floor = self.env['restaurant.floor'].create({
+            'name': 'Main Floor',
+            'pos_config_id': pos_config.id,
+        })
+
+        table_05 = self.env['restaurant.table'].create({
+            'name': 'T5',
+            'floor_id': main_floor.id,
+            'seats': 4,
+        })
+        table_04 = self.env['restaurant.table'].create({
+            'name': 'T4',
+            'floor_id': main_floor.id,
+            'seats': 4,
+        })
+        table_02 = self.env['restaurant.table'].create({
+            'name': 'T2',
+            'floor_id': main_floor.id,
+            'seats': 4,
+        })
+
         main_company = env.ref('base.main_company')
 
         account_receivable = account_obj.create({'code': 'X1012',
@@ -47,14 +87,37 @@ class TestFrontend(odoo.tests.HttpCase):
             })],
         })
 
-        coke = self.env.ref('pos_restaurant.coke')
-        coke.write({'taxes_id': [(6, 0, [])]})
-        water = self.env.ref('pos_restaurant.water')
-        water.write({'taxes_id': [(6, 0, [])]})
-        minute_maid = self.env.ref('pos_restaurant.minute_maid')
-        minute_maid.write({'taxes_id': [(6, 0, [])]})
+        coke = self.env['product.product'].create({
+            'available_in_pos': True,
+            'list_price': 2.20,
+            'name': 'Coca-Cola',
+            'weight': 0.01,
+            'pos_categ_id': drinks_category.id,
+            'categ_id': self.env.ref('point_of_sale.product_category_pos').id,
+            'taxes_id': [(6, 0, [])],
+        })
 
-        pos_config.open_session_cb()
+        water = self.env['product.product'].create({
+            'available_in_pos': True,
+            'list_price': 2.20,
+            'name': 'Water',
+            'weight': 0.01,
+            'pos_categ_id': drinks_category.id,
+            'categ_id': self.env.ref('point_of_sale.product_category_pos').id,
+            'taxes_id': [(6, 0, [])],
+        })
+
+        minute_maid = self.env['product.product'].create({
+            'available_in_pos': True,
+            'list_price': 2.20,
+            'name': 'Minute Maid',
+            'weight': 0.01,
+            'pos_categ_id': drinks_category.id,
+            'categ_id': self.env.ref('point_of_sale.product_category_pos').id,
+            'taxes_id': [(6, 0, [])],
+        })
+
+        pos_config.with_user(self.env.ref('base.user_admin')).open_session_cb(check_coa=False)
 
         self.start_tour("/pos/web?config_id=%d" % pos_config.id, 'pos_restaurant_sync', login="admin")
 

@@ -10,7 +10,7 @@ tour.register('event_buy_tickets', {
     [
         {
             content: "Go to the `Events` page",
-            trigger: 'a[href*="/event"]:contains("Conference for Architects"):first',
+            trigger: 'a[href*="/event"]:contains("Conference for Architects TEST"):first',
         },
         {
             content: "Show available Tickets",

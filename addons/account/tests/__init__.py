@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from . import account_minimal_test
 from . import test_account_move_out_invoice
 from . import test_account_move_out_refund
 from . import test_account_move_in_invoice

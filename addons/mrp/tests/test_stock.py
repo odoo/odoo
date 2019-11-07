@@ -10,6 +10,7 @@ class TestWarehouse(common.TestMrpCommon):
     def setUp(self):
         super(TestWarehouse, self).setUp()
 
+        unit = self.env.ref("uom.product_uom_unit")
         self.stock_location = self.env.ref('stock.stock_location_stock')
         self.depot_location = self.env['stock.location'].create({
             'name': 'Depot',
@@ -21,18 +22,35 @@ class TestWarehouse(common.TestMrpCommon):
             "location_out_id": self.depot_location.id,
             'category_id': self.env.ref('product.product_category_all').id,
         })
-
-        self.laptop = self.env.ref("product.product_product_25")
-        graphics_card = self.env.ref("product.product_product_24")
-        unit = self.env.ref("uom.product_uom_unit")
-        mrp_routing = self.env.ref("mrp.mrp_routing_0")
+        mrp_workcenter = self.env['mrp.workcenter'].create({
+            'name': 'Assembly Line 1',
+            'resource_calendar_id': self.env.ref('resource.resource_calendar_std').id,
+        })
+        mrp_routing = self.env['mrp.routing'].create({
+            'name': 'Primary Assembly',
+            'operation_ids': [(0, 0, {
+                'workcenter_id': mrp_workcenter.id,
+                'name': 'Manual Assembly',
+            })]
+        })
+        inventory = self.env['stock.inventory'].create({
+            'name': 'Initial inventory',
+            'line_ids': [(0, 0, {
+                'product_id': self.graphics_card.id,
+                'product_uom_id': self.graphics_card.uom_id.id,
+                'product_qty': 16.0,
+                'location_id': self.stock_location_14.id,
+            })]
+        })
+        inventory.action_start()
+        inventory.action_validate()
 
         self.bom_laptop = self.env['mrp.bom'].create({
             'product_tmpl_id': self.laptop.product_tmpl_id.id,
             'product_qty': 1,
             'product_uom_id': unit.id,
             'bom_line_ids': [(0, 0, {
-                'product_id': graphics_card.id,
+                'product_id': self.graphics_card.id,
                 'product_qty': 1,
                 'product_uom_id': unit.id
             })],
@@ -102,14 +120,14 @@ class TestWarehouse(common.TestMrpCommon):
             'name': 'Stock Inventory for Stick',
             'product_ids': [(4, self.product_4.id)],
             'line_ids': [
-                (0, 0, {'product_id': self.product_4.id, 'product_uom_id': self.product_4.uom_id.id, 'product_qty': 8, 'prod_lot_id': lot_product_4.id, 'location_id': self.ref('stock.stock_location_14')}),
+                (0, 0, {'product_id': self.product_4.id, 'product_uom_id': self.product_4.uom_id.id, 'product_qty': 8, 'prod_lot_id': lot_product_4.id, 'location_id': self.stock_location_14.id}),
             ]})
 
         stock_inv_product_2 = self.env['stock.inventory'].create({
             'name': 'Stock Inventory for Stone Tools',
             'product_ids': [(4, self.product_2.id)],
             'line_ids': [
-                (0, 0, {'product_id': self.product_2.id, 'product_uom_id': self.product_2.uom_id.id, 'product_qty': 12, 'prod_lot_id': lot_product_2.id, 'location_id': self.ref('stock.stock_location_14')})
+                (0, 0, {'product_id': self.product_2.id, 'product_uom_id': self.product_2.uom_id.id, 'product_qty': 12, 'prod_lot_id': lot_product_2.id, 'location_id': self.stock_location_14.id})
             ]})
         (stock_inv_product_4 | stock_inv_product_2)._action_start()
         stock_inv_product_2.action_validate()

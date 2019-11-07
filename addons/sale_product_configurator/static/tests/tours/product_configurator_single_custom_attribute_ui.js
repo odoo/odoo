@@ -29,7 +29,7 @@ tour.register('sale_product_configurator_single_custom_attribute_tour', {
         $input.trigger(keyDownEvent);
     }
 }, {
-    trigger: 'ul.ui-autocomplete a:contains("Customizable Desk")',
+    trigger: 'ul.ui-autocomplete a:contains("Customizable Desk (TEST)")',
     run: 'click'
 }, {
     trigger: '.configurator_container span:contains("Aluminium")',

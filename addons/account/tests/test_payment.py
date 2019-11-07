@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
 from odoo.tests import tagged
 from odoo.tests.common import Form
@@ -8,21 +11,29 @@ import time
 class TestPayment(AccountingTestCase):
 
     def setUp(self):
+        self.env.ref('base.main_company').currency_id = self.env.ref('base.USD')
         super(TestPayment, self).setUp()
         self.register_payments_model = self.env['account.payment.register'].with_context(active_model='account.move')
         self.payment_model = self.env['account.payment']
         self.acc_bank_stmt_model = self.env['account.bank.statement']
         self.acc_bank_stmt_line_model = self.env['account.bank.statement.line']
 
-        self.partner_agrolait = self.env.ref("base.res_partner_2")
-        self.partner_china_exp = self.env.ref("base.res_partner_3")
+        self.partner_agrolait = self.env['res.partner'].create({'name': 'Agrolait', 'is_company': True})
+        self.partner_china_exp = self.env['res.partner'].create({'name': 'China Export', 'is_company': True})
         self.currency_chf_id = self.env.ref("base.CHF").id
         self.currency_usd_id = self.env.ref("base.USD").id
         self.currency_eur_id = self.env.ref("base.EUR").id
 
         company = self.env.ref('base.main_company')
         self.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", [self.currency_eur_id, company.id])
-        self.product = self.env.ref("product.product_product_4")
+
+        self.product = self.env['product.product'].create({
+            'name': 'Product Product 4',
+            'standard_price': 500.0,
+            'list_price': 750.0,
+            'type': 'consu',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
         self.payment_method_manual_in = self.env.ref("account.account_payment_method_manual_in")
         self.payment_method_manual_out = self.env.ref("account.account_payment_method_manual_out")
 
@@ -38,11 +49,29 @@ class TestPayment(AccountingTestCase):
         self.bank_journal_usd = self.env['account.journal'].create({'name': 'Bank US', 'type': 'bank', 'code': 'BNK68', 'currency_id': self.currency_usd_id})
         self.account_usd = self.bank_journal_usd.default_debit_account_id
 
-        self.transfer_account = self.env['res.users'].browse(self.env.uid).company_id.transfer_account_id
-        self.diff_income_account = self.env['res.users'].browse(self.env.uid).company_id.income_currency_exchange_account_id
-        self.diff_expense_account = self.env['res.users'].browse(self.env.uid).company_id.expense_currency_exchange_account_id
+        if not self.env.user.company_id.transfer_account_id:
+            self.env.user.company_id.transfer_account_id = self.usd_bnk
+        self.transfer_account = self.env.user.company_id.transfer_account_id
+        self.diff_income_account = self.env.user.company_id.income_currency_exchange_account_id
+        self.diff_expense_account = self.env.user.company_id.expense_currency_exchange_account_id
 
         self.form_payment = Form(self.env['account.payment'])
+
+        self.env['res.currency.rate'].create([
+            {
+                'currency_id': self.env.ref('base.EUR').id,
+                'name': '2010-01-02',
+                'rate': 1.0,
+            }, {
+                'currency_id': self.env.ref('base.USD').id,
+                'name': '2010-01-02',
+                'rate': 1.2834,
+            }, {
+                'currency_id': self.env.ref('base.USD').id,
+                'name': time.strftime('%Y-06-05'),
+                'rate': 1.5289,
+            }
+        ])
 
     def create_invoice(self, amount=100, type='out_invoice', currency_id=None, partner=None, account_id=None):
         """ Returns an open invoice """
@@ -130,6 +159,12 @@ class TestPayment(AccountingTestCase):
         ])
 
     def test_payment_chf_journal_usd(self):
+        self.env['res.currency.rate'].create({
+            'rate': 1.3086,
+            'currency_id': self.currency_chf_id,
+            'name': '2010-01-02',
+        })
+
         payment = self.payment_model.create({
             'payment_date': time.strftime('%Y') + '-07-15',
             'payment_type': 'outbound',

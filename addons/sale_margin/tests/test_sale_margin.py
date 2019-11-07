@@ -12,9 +12,12 @@ class TestSaleMargin(common.TransactionCase):
         self.SaleOrder = self.env['sale.order']
 
         self.product_uom_id = self.ref('uom.product_uom_unit')
-        self.product_id = self.ref('product.product_product_24')
-        self.partner_id = self.ref('base.res_partner_4')
-        self.partner_invoice_address_id = self.ref('base.res_partner_address_7')
+        self.product_id = self.env['product.product'].create({'name': 'Individual Workplace'}).id
+        self.partner_id = self.env['res.partner'].create({'name': 'A test partner'}).id
+        self.partner_invoice_address_id = self.env['res.partner'].create({
+            'name': 'A test partner address',
+            'parent_id': self.partner_id,
+        }).id
         self.pricelist_id = self.ref('product.list0')
 
     def test_sale_margin(self):

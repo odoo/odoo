@@ -15,6 +15,7 @@ tour.register("banner", {
     position: "bottom",
 }, {
     trigger: "#snippet_structure .oe_snippet:eq(1) .oe_snippet_thumbnail",
+    extra_trigger: "body.editor_enable.editor_has_snippets",
     content: _t("Drag the <i>Cover</i> block and drop it in your page."),
     position: "bottom",
     run: "drag_and_drop #wrap",

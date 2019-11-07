@@ -7,33 +7,34 @@ from odoo.tests import tagged
 @tagged('post_install', '-at_install')
 class TestAccountMoveRounding(AccountingTestCase):
 
-    def setUp(self):
-        super(TestAccountMoveRounding, self).setUp()
-        self.currency = self.env['res.currency'].create({
+    @classmethod
+    def setUpClass(cls):
+        super(TestAccountMoveRounding, cls).setUpClass()
+        cls.currency = cls.env['res.currency'].create({
             'name': "RAM",
             'symbol': "🐏",
             'rounding': 0.01,
         })
-        self.company = self.env['res.company'].create({
+        cls.company = cls.env['res.company'].create({
             'name': "SHEEP",
-            'currency_id': self.currency.id,
+            'currency_id': cls.currency.id,
         })
-        self.account_type = self.env['account.account.type'].create(
-            {'name': 'BAAH',
-             'internal_group': 'asset',
-             'type': 'receivable'
+        cls.account_type = cls.env['account.account.type'].create({
+            'name': 'BAAH',
+            'internal_group': 'asset',
+            'type': 'receivable'
         })
-        self.journal = self.env['account.journal'].create({
-            'company_id': self.company.id,
+        cls.journal = cls.env['account.journal'].create({
+            'company_id': cls.company.id,
             'name': 'LAMB',
-            'code': 'L',
+            'code': 'LL',
             'type': 'purchase',
         })
-        self.account = self.env['account.account'].create({
-            'company_id': self.company.id,
+        cls.account = cls.env['account.account'].create({
+            'company_id': cls.company.id,
             'name': 'EWE',
-            'code': 'E',
-            'user_type_id': self.account_type.id,
+            'code': 'EE',
+            'user_type_id': cls.account_type.id,
             'reconcile': True,
         })
 

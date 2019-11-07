@@ -10,6 +10,7 @@ odoo.define("website_forum.tour_forum", function (require) {
         url: "/",
     }, [tour.STEPS.WEBSITE_NEW_PAGE, {
         trigger: "a[data-action=new_forum]",
+        extra_trigger: "body.o_new_content_open",
         content: _t("Select this menu item to create a new forum."),
         position: "bottom",
     }, {

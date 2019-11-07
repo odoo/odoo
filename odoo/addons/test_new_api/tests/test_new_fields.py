@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 #
 # test cases for new-style fields
 #
@@ -9,6 +12,7 @@ from PIL import Image
 import psycopg2
 
 from odoo import fields
+from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import common
 from odoo.tools import mute_logger, float_repr
@@ -16,7 +20,16 @@ from odoo.tools.date_utils import add, subtract, start_of, end_of
 from odoo.tools.image import image_data_uri
 
 
-class TestFields(common.TransactionCase):
+class TestFields(TransactionCaseWithUserDemo):
+
+    def setUp(self):
+        super(TestFields, self).setUp()
+        self.env.ref('test_new_api.discussion_0').write({'participants': [(4, self.user_demo.id)]})
+        # YTI FIX ME: The cache shouldn't be inconsistent (rco is gonna fix it)
+        # self.env.ref('test_new_api.discussion_0').participants -> 1 user
+        # self.env.ref('test_new_api.discussion_0').invalidate_cache()
+        # self.env.ref('test_new_api.discussion_0').with_context(active_test=False).participants -> 2 users
+        self.env.ref('test_new_api.message_0_1').write({'author': self.user_demo.id})
 
     def test_00_basics(self):
         """ test accessing new fields """
@@ -110,6 +123,9 @@ class TestFields(common.TransactionCase):
 
     def test_10_computed_custom(self):
         """ check definition of custom computed fields """
+        # Flush demo user before creating a new ir.model.fields to avoid
+        # a deadlock
+        self.user_demo.flush()
         self.env['ir.model.fields'].create({
             'name': 'x_bool_false_computed',
             'model_id': self.env.ref('test_new_api.model_test_new_api_message').id,
@@ -148,7 +164,7 @@ class TestFields(common.TransactionCase):
 
         # create a message, assign body, and check size in several environments
         message1 = self.env['test_new_api.message'].create({})
-        message2 = message1.with_user(self.env.ref('base.user_demo'))
+        message2 = message1.with_user(self.user_demo)
         self.assertEqual(message1.size, 0)
         self.assertEqual(message2.size, 0)
 
@@ -177,6 +193,10 @@ class TestFields(common.TransactionCase):
         check_stored(discussion1)
 
         # switch message from discussion, and check again
+        
+        # See YTI FIXME
+        discussion1.invalidate_cache()
+        
         discussion2 = discussion1.copy({'name': 'Another discussion'})
         message2 = discussion1.messages[0]
         message2.discussion = discussion2
@@ -184,7 +204,7 @@ class TestFields(common.TransactionCase):
 
         # create a new discussion with messages, and check their name
         user_root = self.env.ref('base.user_root')
-        user_demo = self.env.ref('base.user_demo')
+        user_demo = self.user_demo
         discussion3 = self.env['test_new_api.discussion'].create({
             'name': 'Stuff',
             'participants': [(4, user_root.id), (4, user_demo.id)],
@@ -265,7 +285,7 @@ class TestFields(common.TransactionCase):
         # We need to force the read in order to test the security access
         User.invalidate_cache()
         # group users as a recordset, and read them as user demo
-        users = (user1 + user2 + user3).with_user(self.env.ref('base.user_demo'))
+        users = (user1 + user2 + user3).with_user(self.user_demo)
         user1, user2, user3 = users
         # regression test: a bug invalidated the field's value from cache
         user1.company_type
@@ -480,6 +500,7 @@ class TestFields(common.TransactionCase):
     def test_15_constraint(self):
         """ test new-style Python constraints """
         discussion = self.env.ref('test_new_api.discussion_0')
+        discussion.flush()
 
         # remove oneself from discussion participants: we can no longer create
         # messages in discussion
@@ -773,7 +794,7 @@ class TestFields(common.TransactionCase):
 
     def test_23_relation(self):
         """ test relation fields """
-        demo = self.env.ref('base.user_demo')
+        demo = self.user_demo
         message = self.env.ref('test_new_api.message_0_0')
 
         # check environment of record and related records
@@ -791,6 +812,9 @@ class TestFields(common.TransactionCase):
         demo_message = message.with_user(demo)
         self.assertEqual(demo_message.env, demo_env)
         self.assertEqual(demo_message.discussion.env, demo_env)
+
+        # See YTI FIXME
+        message.discussion.invalidate_cache()
 
         # assign record's parent to a record in demo_env
         message.discussion = message.discussion.copy({'name': 'Copy'})
@@ -1249,7 +1273,7 @@ class TestFields(common.TransactionCase):
         access.write({'perm_read': False})
 
         # create an environment for demo user
-        env = self.env(user=self.env.ref('base.user_demo'))
+        env = self.env(user=self.user_demo)
         self.assertEqual(env.user.login, "demo")
 
         # create a new message as demo user
@@ -1274,7 +1298,7 @@ class TestFields(common.TransactionCase):
         access.write({'perm_read': False})
 
         # create an environment for demo user
-        env = self.env(user=self.env.ref('base.user_demo'))
+        env = self.env(user=self.user_demo)
         self.assertEqual(env.user.login, "demo")
 
         # create a new discussion and a new message as demo user
@@ -1328,6 +1352,9 @@ class TestFields(common.TransactionCase):
 
     def test_70_x2many_write(self):
         discussion = self.env.ref('test_new_api.discussion_0')
+        # See YTI FIXME
+        discussion.invalidate_cache()
+
         Message = self.env['test_new_api.message']
         # There must be 3 messages, 0 important
         self.assertEqual(len(discussion.messages), 3)
@@ -1353,10 +1380,14 @@ class TestFields(common.TransactionCase):
     def test_70_relational_inverse(self):
         """ Check the consistency of relational fields with inverse(s). """
         discussion = self.env.ref('test_new_api.discussion_0')
-        demo_discussion = discussion.with_user(self.env.ref('base.user_demo'))
+        demo_discussion = discussion.with_user(self.user_demo)
 
         # check that the demo user sees the same messages
         self.assertEqual(demo_discussion.messages, discussion.messages)
+
+        # See YTI FIXME
+        discussion.invalidate_cache()
+        demo_discussion.invalidate_cache()
 
         # add a message as user demo
         messages = demo_discussion.messages
@@ -1413,7 +1444,7 @@ class TestFields(common.TransactionCase):
         # And this gives error
         with self.assertRaises(UserError):
             self.env['test_new_api.binary_svg'].with_user(
-                self.env.ref('base.user_demo'),
+                self.user_demo,
             ).create({
                 'name': 'Test without attachment',
                 'image_wo_attachment': SVG,
@@ -1434,7 +1465,7 @@ class TestFields(common.TransactionCase):
         self.assertEqual(attachment.mimetype, 'image/svg+xml')
         # ...but this should be neutered with demo user
         record = self.env['test_new_api.binary_svg'].with_user(
-            self.env.ref('base.user_demo'),
+            self.user_demo,
         ).create({
             'name': 'Test without attachment',
             'image_attachment': SVG,
@@ -1448,7 +1479,7 @@ class TestFields(common.TransactionCase):
 
     def test_92_binary_self_avatar_svg(self):
         from odoo.addons.base.tests.test_mimetypes import SVG
-        demo_user = self.env.ref('base.user_demo')
+        demo_user = self.user_demo
         # User demo changes his own avatar
         demo_user.with_user(demo_user).image_1920 = SVG
         # The SVG file should have been neutered

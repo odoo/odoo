@@ -167,6 +167,11 @@ class TestPage(common.TransactionCase):
         View = self.env['ir.ui.view']
         Website = self.env['website']
 
+        website2 = self.env['website'].create({
+            'name': 'My Second Website',
+            'domain': '',
+        })
+
         # currently the view unlink of website.page can't handle views with inherited views
         self.extension_view.unlink()
 

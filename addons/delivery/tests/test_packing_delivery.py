@@ -38,7 +38,7 @@ class TestPacking(TestPacking):
         self.env['stock.quant']._update_available_quantity(self.product_bw, self.stock_location, 20.0)
 
         picking_ship = self.env['stock.picking'].create({
-            'partner_id': self.env.ref('base.res_partner_2').id,
+            'partner_id': self.env['res.partner'].create({'name': 'A partner'}).id,
             'picking_type_id': self.warehouse.out_type_id.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,

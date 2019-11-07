@@ -9,7 +9,7 @@ tour.register('sale_product_configurator_advanced_tour', {
     url: "/web",
     test: true,
 }, [tour.STEPS.SHOW_APPS_MENU_ITEM, {
-    trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
+    trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',  // Note: The module sale_management is mandatory
     edition: 'community'
 }, {
     trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
@@ -37,7 +37,7 @@ tour.register('sale_product_configurator_advanced_tour', {
         $input.trigger(keyDownEvent);
     }
 }, {
-    trigger: 'ul.ui-autocomplete a:contains("Customizable Desk")',
+    trigger: 'ul.ui-autocomplete a:contains("Customizable Desk (TEST)")',
     run: 'click'
 }, {
     trigger: 'span:contains("Custom")',
@@ -103,14 +103,14 @@ tour.register('sale_product_configurator_advanced_tour', {
     extra_trigger: '.oe_optional_products_modal',
     run: function () {} //check
 }, {
-    trigger: '.oe_optional_products_modal .js_product:eq(1) div:contains("Conference Chair (CONFIG) (Steel)")',
+    trigger: '.oe_optional_products_modal .js_product:eq(1) div:contains("Conference Chair (TEST) (Steel)")',
     run: function () {
         optionVariantImage = $('.oe_optional_products_modal .js_product:eq(1) img.variant_image').attr('src');
     }
 }, {
     trigger: '.oe_optional_products_modal .js_product:eq(1) input[data-value_name="Aluminium"]',
 }, {
-    trigger: '.oe_optional_products_modal .js_product:eq(1) div:contains("Conference Chair (CONFIG) (Aluminium)")',
+    trigger: '.oe_optional_products_modal .js_product:eq(1) div:contains("Conference Chair (TEST) (Aluminium)")',
     run: function () {
         var newVariantImage = $('.oe_optional_products_modal .js_product:eq(1) img.variant_image').attr('src');
         if (newVariantImage !== optionVariantImage) {
@@ -126,7 +126,7 @@ tour.register('sale_product_configurator_advanced_tour', {
     extra_trigger: '.oe_optional_products_modal',
     run: 'click'
 }, {
-    trigger: 'td.o_data_cell:contains("Customizable Desk (CONFIG) (Custom, White, PAV9, PAV5, PAV1)")',
+    trigger: 'td.o_data_cell:contains("Customizable Desk (TEST) (Custom, White, PAV9, PAV5, PAV1)")',
     extra_trigger: 'div[name="order_line"]',
     in_modal: false,
     run: function (){} //check

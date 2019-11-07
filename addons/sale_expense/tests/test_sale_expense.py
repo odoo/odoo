@@ -13,7 +13,13 @@ class TestSaleExpense(TestSale):
         self.env.ref('product.list0').currency_id = self.env.ref('base.main_company').currency_id
 
         # create a so with a product invoiced on delivery
-        prod = self.env.ref('product.product_product_1')
+        prod = self.env['product.product'].create({
+            'name': 'A product',
+            'invoice_policy': 'delivery',
+            'list_price': 30.75,
+            'uom_id': self.env.ref('uom.product_uom_hour').id,
+            'uom_po_id': self.env.ref('uom.product_uom_hour').id,
+        })
         so = self.env['sale.order'].create({
             'partner_id': self.partner.id,
             'partner_invoice_id': self.partner.id,
@@ -27,12 +33,18 @@ class TestSaleExpense(TestSale):
         init_price = so.amount_total
 
         # create some expense and validate it (expense at cost)
-        prod_exp_1 = self.env.ref('hr_expense.air_ticket')
+        prod_exp_1 = self.env['product.product'].create({
+            'name': 'Air Ticket',
+            'list_price': 700,
+            'can_be_expensed': True,
+            'expense_policy': 'cost',
+            'type': 'service',
+            'invoice_policy': 'delivery',
+        })
         company = self.env.ref('base.main_company')
         journal = self.env['account.journal'].create({'name': 'Purchase Journal - Test', 'code': 'HRTPJ', 'type': 'purchase', 'company_id': company.id})
-        account_payable = self.env['account.account'].create({'code': 'X1111', 'name': 'HR Expense - Test Payable Account', 'user_type_id': self.env.ref('account.data_account_type_payable').id, 'reconcile': True})
         employee = self.env['hr.employee'].create({'name': 'Test employee', 'user_id': self.user.id, 'address_home_id': self.user.partner_id.id})
-        self.user.partner_id.property_account_payable_id = account_payable.id
+        self.user.partner_id.property_account_payable_id = self.a_pay.id
         # Submit to Manager
         sheet = self.env['hr.expense.sheet'].create({
             'name': 'Expense for John Smith',
@@ -60,7 +72,16 @@ class TestSaleExpense(TestSale):
 
         # create some expense and validate it (expense at sale price)
         init_price = so.amount_total
-        prod_exp_2 = self.env.ref('hr_expense.car_travel')
+        prod_exp_2 = self.env['product.product'].create({
+            'name': 'Car Travel',
+            'expense_policy': 'sales_price',
+            'type': 'service',
+            'can_be_expensed': True,
+            'invoice_policy': 'delivery',
+            'list_price': 0.50,
+            'uom_id': self.env.ref('uom.product_uom_km').id,
+            'uom_po_id': self.env.ref('uom.product_uom_km').id,
+        })
         # Submit to Manager
         sheet = self.env['hr.expense.sheet'].create({
             'name': 'Expense for John Smith',
