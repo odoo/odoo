@@ -35,6 +35,7 @@ configuration of their taxes and fiscal positions manually.
         'base_vat',
     ],
     'data': [
+        'security/groups.xml',
         'data/l10n_fr_chart_data.xml',
         'data/account.account.template.csv',
         'data/account_chart_template_data.xml',
