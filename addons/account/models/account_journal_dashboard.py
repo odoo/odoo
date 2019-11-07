@@ -433,7 +433,7 @@ class account_journal(models.Model):
         [action] = self.env[model].browse(action_id).read()
         action['context'] = ctx
         if ctx.get('use_domain', False):
-            action['domain'] = ['|', ('journal_id', '=', self.id), ('journal_id', '=', False)]
+            action['domain'] = isinstance(ctx['use_domain'], list) and ctx['use_domain'] or ['|', ('journal_id', '=', self.id), ('journal_id', '=', False)]
             action['name'] += ' for journal ' + self.name
         return action
 
