@@ -8,24 +8,11 @@ from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.exceptions import ValidationError, UserError
 
 
-class TestWorkOrderProcess(TestMrpCommon):
-    def full_availability(self):
-        """set full availability for all calendars"""
-        calendar = self.env['resource.calendar'].search([])
-        calendar.write({'attendance_ids': [(5, 0, 0)]})
-        calendar.write({'attendance_ids': [
-            (0, 0, {'name': 'Monday', 'dayofweek': '0', 'hour_from': 0, 'hour_to': 24, 'day_period': 'morning'}),
-            (0, 0, {'name': 'Tuesday', 'dayofweek': '1', 'hour_from': 0, 'hour_to': 24, 'day_period': 'morning'}),
-            (0, 0, {'name': 'Wednesday', 'dayofweek': '2', 'hour_from': 0, 'hour_to': 24, 'day_period': 'morning'}),
-            (0, 0, {'name': 'Thursday', 'dayofweek': '3', 'hour_from': 0, 'hour_to': 24, 'day_period': 'morning'}),
-            (0, 0, {'name': 'Friday', 'dayofweek': '4', 'hour_from': 0, 'hour_to': 24, 'day_period': 'morning'}),
-            (0, 0, {'name': 'Saturday', 'dayofweek': '5', 'hour_from': 0, 'hour_to': 24, 'day_period': 'morning'}),
-            (0, 0, {'name': 'Sunday', 'dayofweek': '6', 'hour_from': 0, 'hour_to': 24, 'day_period': 'morning'}),
-        ]})
+class TestWorkOrderProcessCommon(TestMrpCommon):
 
     @classmethod
     def setUpClass(cls):
-        super(TestWorkOrderProcess, cls).setUpClass()
+        super(TestWorkOrderProcessCommon, cls).setUpClass()
         cls.source_location_id = cls.stock_location_14.id
         cls.warehouse = cls.env.ref('stock.warehouse0')
         # setting up alternative workcenters
@@ -153,6 +140,21 @@ class TestWorkOrderProcess(TestMrpCommon):
         })
 
 
+class TestWorkOrderProcess(TestWorkOrderProcessCommon):
+    def full_availability(self):
+        """set full availability for all calendars"""
+        calendar = self.env['resource.calendar'].search([])
+        calendar.write({'attendance_ids': [(5, 0, 0)]})
+        calendar.write({'attendance_ids': [
+            (0, 0, {'name': 'Monday', 'dayofweek': '0', 'hour_from': 0, 'hour_to': 24, 'day_period': 'morning'}),
+            (0, 0, {'name': 'Tuesday', 'dayofweek': '1', 'hour_from': 0, 'hour_to': 24, 'day_period': 'morning'}),
+            (0, 0, {'name': 'Wednesday', 'dayofweek': '2', 'hour_from': 0, 'hour_to': 24, 'day_period': 'morning'}),
+            (0, 0, {'name': 'Thursday', 'dayofweek': '3', 'hour_from': 0, 'hour_to': 24, 'day_period': 'morning'}),
+            (0, 0, {'name': 'Friday', 'dayofweek': '4', 'hour_from': 0, 'hour_to': 24, 'day_period': 'morning'}),
+            (0, 0, {'name': 'Saturday', 'dayofweek': '5', 'hour_from': 0, 'hour_to': 24, 'day_period': 'morning'}),
+            (0, 0, {'name': 'Sunday', 'dayofweek': '6', 'hour_from': 0, 'hour_to': 24, 'day_period': 'morning'}),
+        ]})
+
     def test_00_workorder_process(self):
         """ Testing consume quants and produced quants with workorder """
         dining_table = self.dining_table
@@ -242,11 +244,6 @@ class TestWorkOrderProcess(TestMrpCommon):
                 workorder_line_id.write({'lot_id': lot_leg.id, 'qty_done': 1})
         self.assertEqual(workorder.state, 'progress')
 
-        # YTI Clean that brol
-        # If mrp_workorder is installed, there could be checks defined on the
-        # workorder.
-        if hasattr(self.env['mrp.workorder'], 'check_ids'):
-            self.env['mrp.workorder'].search([]).write({'check_ids': False})
         workorder.record_production()
         self.assertEqual(workorder.state, 'done')
         move_table_sheet = production_table.move_raw_ids.filtered(lambda x : x.product_id == product_table_sheet)
@@ -346,11 +343,6 @@ class TestWorkOrderProcess(TestMrpCommon):
         workorders[0]._workorder_line_ids()[0].write({'lot_id': lot_sheet.id, 'qty_done': 1})
         self.assertEqual(workorders[0].state, 'progress')
 
-        # YTI Clean that brol
-        # If mrp_workorder is installed, there could be checks defined on the
-        # workorder.
-        if hasattr(self.env['mrp.workorder'], 'check_ids'):
-            self.env['mrp.workorder'].search([]).write({'check_ids': False})
         workorders[0].record_production()
 
         move_table_sheet = production_table.move_raw_ids.filtered(lambda p: p.product_id == product_table_sheet)
