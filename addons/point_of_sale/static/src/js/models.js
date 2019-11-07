@@ -2387,7 +2387,10 @@ exports.Order = Backbone.Model.extend({
             sequence_number: this.sequence_number,
             creation_date: this.validation_date || this.creation_date, // todo: rename creation_date in master
             fiscal_position_id: this.fiscal_position ? this.fiscal_position.id : false,
+<<<<<<< HEAD
             server_id: this.server_id ? this.server_id : false,
+=======
+>>>>>>> 44d0a5b467c... temp
             to_invoice: this.to_invoice ? this.to_invoice : false,
         };
         if (!this.is_paid && this.user_id) {
