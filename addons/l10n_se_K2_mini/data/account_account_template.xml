@@ -1,0 +1,1973 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ************************************************************* -->
+<!-- Account Account Templates -->
+<!-- ************************************************************* -->
+<odoo>
+    <data noupdate="1">
+        <record id="se_chart_template" model="account.chart.template">
+            <field name="name">Swedish Chart of Account</field>
+            <field name="currency_id" ref="base.SEK"/>
+            <field name="bank_account_code_prefix">193</field>
+            <field name="cash_account_code_prefix">191</field>
+            <field name="transfer_account_code_prefix">194</field>
+            <field name="code_digits">4</field>
+            <field name="visible" eval="True"/>
+            <field name="use_anglo_saxon" eval="True"/>
+            <field name="complete_tax_set" eval="True"/>
+            <field name="spoken_languages" eval="'sv_SE'"/>
+        </record>
+        <record id="coa_1030" model="account.account.template">
+            <field name="code">1030</field>
+            <field name="name">Patent</field>
+            <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1039" model="account.account.template">
+            <field name="code">1039</field>
+            <field name="name">Ackumulerade avskrivningar på patent</field>
+            <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1060" model="account.account.template">
+            <field name="code">1060</field>
+            <field name="name">Hyresrätter, tomträtter och liknande</field>
+            <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1069" model="account.account.template">
+            <field name="code">1069</field>
+            <field name="name">Ackumulerade avskrivningar på hyresrätter, tomträtter och liknande</field>
+            <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1110" model="account.account.template">
+            <field name="code">1110</field>
+            <field name="name">Byggnader på egen mark</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>        
+        <record id="coa_1119" model="account.account.template">
+            <field name="code">1119</field>
+            <field name="name">Ackumulerade avskrivningar på byggnader</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1130" model="account.account.template">
+            <field name="code">1130</field>
+            <field name="name">Mark</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1150" model="account.account.template">
+            <field name="code">1150</field>
+            <field name="name">Markanläggningar</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>        
+        <record id="coa_1159" model="account.account.template">
+            <field name="code">1159</field>
+            <field name="name">Ackumulerade avskrivningar på markanläggningar</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1210" model="account.account.template">
+            <field name="code">1210</field>
+            <field name="name">Maskiner och andra tekniska anläggningar</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>       
+        <record id="coa_1219" model="account.account.template">
+            <field name="code">1219</field>
+            <field name="name">Ackumulerade avskrivningar på maskiner och andra tekniska anläggningar</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1220" model="account.account.template">
+            <field name="code">1220</field>
+            <field name="name">Inventarier och verktyg</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>        
+        <record id="coa_1229" model="account.account.template">
+            <field name="code">1229</field>
+            <field name="name">Ackumulerade avskrivningar på inventarier och verktyg</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1240" model="account.account.template">
+            <field name="code">1240</field>
+            <field name="name">Bilar och andra transportmedel</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1249" model="account.account.template">
+            <field name="code">1249</field>
+            <field name="name">Ackumulerade avskrivningar på bilar och andra transportmedel</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1250" model="account.account.template">
+            <field name="code">1250</field>
+            <field name="name">Datorer</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>        
+        <record id="coa_1259" model="account.account.template">
+            <field name="code">1259</field>
+            <field name="name">Ackumulerade avskrivningar på datorer</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1290" model="account.account.template">
+            <field name="code">1290</field>
+            <field name="name">Övriga materiella anläggningstillgångar</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1291" model="account.account.template">
+            <field name="code">1291</field>
+            <field name="name">Konst och liknande tillgångar</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1299" model="account.account.template">
+            <field name="code">1299</field>
+            <field name="name">Ackumulerade avskrivningar på övriga materiella anläggningstillgångar</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1350" model="account.account.template">
+            <field name="code">1350</field>
+            <field name="name">Andelar och värdepapper i andra företag</field>
+            <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1380" model="account.account.template">
+            <field name="code">1380</field>
+            <field name="name">Andra långfristiga fordringar</field>
+            <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1410" model="account.account.template">
+            <field name="code">1410</field>
+            <field name="name">Lager av råvaror</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1419" model="account.account.template">
+            <field name="code">1419</field>
+            <field name="name">Förändring av lager av råvaror</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1440" model="account.account.template">
+            <field name="code">1440</field>
+            <field name="name">Produkter i arbete</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1449" model="account.account.template">
+            <field name="code">1449</field>
+            <field name="name">Förändring av produkter i arbete</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1450" model="account.account.template">
+            <field name="code">1450</field>
+            <field name="name">Lager av färdiga varor</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1459" model="account.account.template">
+            <field name="code">1459</field>
+            <field name="name">Förändring av lager av färdiga varor</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1460" model="account.account.template">
+            <field name="code">1460</field>
+            <field name="name">Lager av handelsvaror</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1469" model="account.account.template">
+            <field name="code">1469</field>
+            <field name="name">Förändring av lager av handelsvaror</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1470" model="account.account.template">
+            <field name="code">1470</field>
+            <field name="name">Pågående arbete</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1479" model="account.account.template">
+            <field name="code">1479</field>
+            <field name="name">Förändring av Pågående arbete</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1480" model="account.account.template">
+            <field name="code">1480</field>
+            <field name="name">Förskott för varor och tjänster</field>
+            <field name="user_type_id" ref="account.data_account_type_prepayments"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1490" model="account.account.template">
+            <field name="code">1490</field>
+            <field name="name">Övriga lagertillgångar</field>
+            <field name="user_type_id" ref="account.data_account_type_prepayments"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1510" model="account.account.template">
+            <field name="code">1510</field>
+            <field name="name">Kundfordringar</field>
+            <field eval="True" name="reconcile"/>
+            <field name="user_type_id" ref="account.data_account_type_receivable"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1513" model="account.account.template">
+            <field name="code">1513</field>
+            <field name="name">Kundfordringar - delad faktura</field>
+            <field eval="True" name="reconcile"/>
+            <field name="user_type_id" ref="account.data_account_type_receivable"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1519" model="account.account.template">
+            <field name="code">1519</field>
+            <field name="name">Nedskrivning av kundfordringar</field>
+            <field eval="True" name="reconcile"/>
+            <field name="user_type_id" ref="account.data_account_type_receivable"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1580" model="account.account.template">
+            <field name="code">1580</field>
+            <field name="name">Fordringar för kontokort och kuponger</field>
+            <field eval="True" name="reconcile"/>
+            <field name="user_type_id" ref="account.data_account_type_receivable"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1610" model="account.account.template">
+            <field name="code">1610</field>
+            <field name="name">Kortfristiga fordringar hos anställda</field>
+            <field eval="True" name="reconcile"/>
+            <field name="user_type_id" ref="account.data_account_type_receivable"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1630" model="account.account.template">
+            <field name="code">1630</field>
+            <field name="name">Avräkning för skatter och avgifter (skattekonto)</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1640" model="account.account.template">
+            <field name="code">1640</field>
+            <field name="name">Skattefordringar</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1650" model="account.account.template">
+            <field name="code">1650</field>
+            <field name="name">Momsfordran</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1680" model="account.account.template">
+            <field name="code">1680</field>
+            <field name="name">Andra kortfristiga fordringar</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1710" model="account.account.template">
+            <field name="code">1710</field>
+            <field name="name">Förutbetalda hyreskostnader</field>
+            <field name="user_type_id" ref="account.data_account_type_prepayments"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1720" model="account.account.template">
+            <field name="code">1720</field>
+            <field name="name">Förutbetald leasingavgifter, kortfristig del</field>
+            <field name="user_type_id" ref="account.data_account_type_prepayments"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1730" model="account.account.template">
+            <field name="code">1730</field>
+            <field name="name">Förutbetalda försäkringspremier</field>
+            <field name="user_type_id" ref="account.data_account_type_prepayments"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1740" model="account.account.template">
+            <field name="code">1740</field>
+            <field name="name">Förutbetalda räntekostnader</field>
+            <field name="user_type_id" ref="account.data_account_type_prepayments"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1750" model="account.account.template">
+            <field name="code">1750</field>
+            <field name="name">Upplupna hyresintäkter</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1760" model="account.account.template">
+            <field name="code">1760</field>
+            <field name="name">Upplupna ränteintäkter</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1790" model="account.account.template">
+            <field name="code">1790</field>
+            <field name="name">Övriga förutbetalda kostnader och upplupna intäkter</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1810" model="account.account.template">
+            <field name="code">1810</field>
+            <field name="name">Andel i börsnoterade företag</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1880" model="account.account.template">
+            <field name="code">1880</field>
+            <field name="name">Andra kortfristiga placeringar</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1890" model="account.account.template">
+            <field name="code">1890</field>
+            <field name="name">Nedskrivning av kortfristiga placceringar</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1910" model="account.account.template">
+            <field name="code">1910</field>
+            <field name="name">Kassa</field>
+            <field name="user_type_id" ref="account.data_account_type_liquidity"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1920" model="account.account.template">
+            <field name="code">1920</field>
+            <field name="name">PlusGiro</field>
+            <field name="user_type_id" ref="account.data_account_type_liquidity"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1930" model="account.account.template">
+            <field name="code">1930</field>
+            <field name="name">Företagskonto/checkkonto/affärskonto</field>
+            <field eval="True" name="reconcile"/>
+            <field name="user_type_id" ref="account.data_account_type_liquidity"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_1940" model="account.account.template">
+            <field name="code">1940</field>
+            <field name="name">Övriga bankkonton</field>
+            <field name="user_type_id" ref="account.data_account_type_liquidity"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2070" model="account.account.template">
+            <field name="code">2070</field>
+            <field name="name">Ändamålsbestämda medel</field>
+            <field name="user_type_id" ref="account.data_account_type_equity"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2081" model="account.account.template">
+            <field name="code">2081</field>
+            <field name="name">Aktiekapital</field>
+            <field name="user_type_id" ref="account.data_account_type_equity"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2086" model="account.account.template">
+            <field name="code">2086</field>
+            <field name="name">Reservfond</field>
+            <field name="user_type_id" ref="account.data_account_type_equity"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2091" model="account.account.template">
+            <field name="code">2091</field>
+            <field name="name">Balanserad vinst eller förlust</field>
+            <field name="user_type_id" ref="account.data_account_type_equity"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2098" model="account.account.template">
+            <field name="code">2098</field>
+            <field name="name">Vinst eller förlust från föregående år</field>
+            <field name="user_type_id" ref="account.data_account_type_equity"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2099" model="account.account.template">
+            <field name="code">2099</field>
+            <field name="name">Årets resultat</field>
+            <field name="user_type_id" ref="account.data_account_type_equity"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2123" model="account.account.template">
+            <field name="code">2123</field>
+            <field name="name">Periodiseringsfond 2013</field>
+            <field name="user_type_id" ref="account.data_account_type_equity"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2124" model="account.account.template">
+            <field name="code">2124</field>
+            <field name="name">Periodiseringsfond 2014</field>
+            <field name="user_type_id" ref="account.data_account_type_equity"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2125" model="account.account.template">
+            <field name="code">2125</field>
+            <field name="name">Periodiseringsfond 2015</field>
+            <field name="user_type_id" ref="account.data_account_type_equity"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2126" model="account.account.template">
+            <field name="code">2126</field>
+            <field name="name">Periodiseringsfond 2016</field>
+            <field name="user_type_id" ref="account.data_account_type_equity"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2127" model="account.account.template">
+            <field name="code">2127</field>
+            <field name="name">Periodiseringsfond 2017</field>
+            <field name="user_type_id" ref="account.data_account_type_equity"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2128" model="account.account.template">
+            <field name="code">2128</field>
+            <field name="name">Periodiseringsfond 2018</field>
+            <field name="user_type_id" ref="account.data_account_type_equity"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2129" model="account.account.template">
+            <field name="code">2129</field>
+            <field name="name">Periodiseringsfond 2019</field>
+            <field name="user_type_id" ref="account.data_account_type_equity"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2130" model="account.account.template">
+            <field name="code">2130</field>
+            <field name="name">Periodiseringsfond 2020</field>
+            <field name="user_type_id" ref="account.data_account_type_equity"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2131" model="account.account.template">
+            <field name="code">2131</field>
+            <field name="name">Periodiseringsfond 2021</field>
+            <field name="user_type_id" ref="account.data_account_type_equity"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2132" model="account.account.template">
+            <field name="code">2132</field>
+            <field name="name">Periodiseringsfond 2022</field>
+            <field name="user_type_id" ref="account.data_account_type_equity"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2133" model="account.account.template">
+            <field name="code">2133</field>
+            <field name="name">Periodiseringsfond 2023</field>
+            <field name="user_type_id" ref="account.data_account_type_equity"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2134" model="account.account.template">
+            <field name="code">2134</field>
+            <field name="name">Periodiseringsfond 2024</field>
+            <field name="user_type_id" ref="account.data_account_type_equity"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2150" model="account.account.template">
+            <field name="code">2150</field>
+            <field name="name">Ackumulerade överavskrivningar</field>
+            <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2210" model="account.account.template">
+            <field name="code">2210</field>
+            <field name="name">Avsättningar för pensioner enligt tryggandelagen</field>
+            <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2220" model="account.account.template">
+            <field name="code">2220</field>
+            <field name="name">Avsättningar för garantier</field>
+            <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2290" model="account.account.template">
+            <field name="code">2290</field>
+            <field name="name">Övriga avsättningar</field>
+            <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2330" model="account.account.template">
+            <field name="code">2330</field>
+            <field name="name">Checkräkningskredit</field>
+            <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>       
+        <record id="coa_2350" model="account.account.template">
+            <field name="code">2350</field>
+            <field name="name">Andra långfristiga skulder till kreditinstitut</field>
+            <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2390" model="account.account.template">
+            <field name="code">2390</field>
+            <field name="name">Övriga långfristga skulder</field>
+            <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2393" model="account.account.template">
+            <field name="code">2393</field>
+            <field name="name">Lån från närstående personer, långfristig del</field>
+            <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2410" model="account.account.template">
+            <field name="code">2410</field>
+            <field name="name">Andra kortfrigstiga låneskulder till kreditinstitut</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2420" model="account.account.template">
+            <field name="code">2420</field>
+            <field name="name">Förskott från kunder</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2440" model="account.account.template">
+            <field name="code">2440</field>
+            <field name="name">Leverantörsskulder</field>
+            <field eval="True" name="reconcile"/>
+            <field name="user_type_id" ref="account.data_account_type_payable"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2480" model="account.account.template">
+            <field name="code">2480</field>
+            <field name="name">Checkräkningskredit, kortfristig</field>
+            <field name="user_type_id" ref="account.data_account_type_payable"/>
+            <field eval="True" name="reconcile"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2490" model="account.account.template">
+            <field name="code">2490</field>
+            <field name="name">Övriga kortfristiga skulder till kreditinstitut, kunder och leverantörer</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2510" model="account.account.template">
+            <field name="code">2510</field>
+            <field name="name">Skatteskulder</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2610" model="account.account.template">
+            <field name="code">2610</field>
+            <field name="name">Utgående moms, 25 %</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>        
+        <record id="coa_2611" model="account.account.template">
+            <field name="code">2611</field>
+            <field name="name">Utgående moms på försäljning inom Sverige, 25 %</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2612" model="account.account.template">
+            <field name="code">2612</field>
+            <field name="name">Utgående moms på egna uttag, 25 %</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2613" model="account.account.template">
+            <field name="code">2613</field>
+            <field name="name">Utgående moms för uthyrning, 25 %</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2614" model="account.account.template">
+            <field name="code">2614</field>
+            <field name="name">Utgående moms omvänd skattskyldighet, 25 %</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2615" model="account.account.template">
+            <field name="code">2615</field>
+            <field name="name">Utgående moms import av varor, 25 %</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2616" model="account.account.template">
+            <field name="code">2616</field>
+            <field name="name">Utgående moms VMB 25 %</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2620" model="account.account.template">
+            <field name="code">2620</field>
+            <field name="name">Utgående moms, 12 %</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2621" model="account.account.template">
+            <field name="code">2621</field>
+            <field name="name">Utgående moms på försäljning inom Sverige, 12 %</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2622" model="account.account.template">
+            <field name="code">2622</field>
+            <field name="name">Utgående moms på egna uttag, 12 %</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2623" model="account.account.template">
+            <field name="code">2623</field>
+            <field name="name">Utgående moms för uthyrning, 12 %</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2624" model="account.account.template">
+            <field name="code">2624</field>
+            <field name="name">Utgående moms omvänd skattskyldighet, 12 %</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2625" model="account.account.template">
+            <field name="code">2625</field>
+            <field name="name">Utgående moms import av varor, 12 %</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2626" model="account.account.template">
+            <field name="code">2626</field>
+            <field name="name">Utgående moms VMB, 12 %</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2630" model="account.account.template">
+            <field name="code">2630</field>
+            <field name="name">Utgående moms, 6 %</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>        
+        <record id="coa_2631" model="account.account.template">
+            <field name="code">2631</field>
+            <field name="name">Utgående moms på försäljning inom Sverige, 6 %</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2632" model="account.account.template">
+            <field name="code">2632</field>
+            <field name="name">Utgående moms på egna uttag, 6 %</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2633" model="account.account.template">
+            <field name="code">2633</field>
+            <field name="name">Utgående moms för uthyrning, 6 %</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2634" model="account.account.template">
+            <field name="code">2634</field>
+            <field name="name">Utgående moms omvänd skattskyldighet, 6 %</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2635" model="account.account.template">
+            <field name="code">2635</field>
+            <field name="name">Utgående moms import av varor, 6 %</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2636" model="account.account.template">
+            <field name="code">2636</field>
+            <field name="name">Utgående moms VMB 6 %</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2640" model="account.account.template">
+            <field name="code">2640</field>
+            <field name="name">Ingående moms</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>        
+        <record id="coa_2641" model="account.account.template">
+            <field name="code">2641</field>
+            <field name="name">Debiterad ingående moms</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2642" model="account.account.template">
+            <field name="code">2642</field>
+            <field name="name">Debiterad ingående moms i anslutning till frivillig skattskyldighet</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2645" model="account.account.template">
+            <field name="code">2645</field>
+            <field name="name">Beräknad ingående moms på förvärv från utlandet</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2646" model="account.account.template">
+            <field name="code">2646</field>
+            <field name="name">Ingående moms på uthyrning</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2647" model="account.account.template">
+            <field name="code">2647</field>
+            <field name="name">Ingående moms omvänd skattskyldighet varor och tjänster i Sverige</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2648" model="account.account.template">
+            <field name="code">2648</field>
+            <field name="name">Vilande ingående moms</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2649" model="account.account.template">
+            <field name="code">2649</field>
+            <field name="name">Ingående moms, blandad verksamhet</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2650" model="account.account.template">
+            <field name="code">2650</field>
+            <field name="name">Redovisningskonto för moms</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2710" model="account.account.template">
+            <field name="code">2710</field>
+            <field name="name">Personalskatt</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2730" model="account.account.template">
+            <field name="code">2730</field>
+            <field name="name">Lagstadgade sociala avgifter och särskild löneskatt</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>        
+        <record id="coa_2740" model="account.account.template">
+            <field name="code">2740</field>
+            <field name="name">Avtalade sociala avgifter</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2790" model="account.account.template">
+            <field name="code">2790</field>
+            <field name="name">Övriga löneavdrag</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2820" model="account.account.template">
+            <field name="code">2820</field>
+            <field name="name">Kortfristiga skulder till anställda</field>
+            <field eval="True" name="reconcile"/>
+            <field name="user_type_id" ref="account.data_account_type_payable"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2840" model="account.account.template">
+            <field name="code">2840</field>
+            <field name="name">Kortfristig låneskulder</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2890" model="account.account.template">
+            <field name="code">2890</field>
+            <field name="name">Övriga kortfristiga skulder</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2910" model="account.account.template">
+            <field name="code">2910</field>
+            <field name="name">Upplupna löner</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>        
+        <record id="coa_2920" model="account.account.template">
+            <field name="code">2920</field>
+            <field name="name">Upplupna semesterlöner</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2930" model="account.account.template">
+            <field name="code">2930</field>
+            <field name="name">Upplupna pensionskostnader</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2940" model="account.account.template">
+            <field name="code">2940</field>
+            <field name="name">Upplupna lagstadgade sociala och andra avgifter</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2950" model="account.account.template">
+            <field name="code">2950</field>
+            <field name="name">Upplupna avtalade sociala avgifter</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2960" model="account.account.template">
+            <field name="code">2960</field>
+            <field name="name">Upplupna räntekostnader</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2970" model="account.account.template">
+            <field name="code">2970</field>
+            <field name="name">Förutbetalda intäkter</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2990" model="account.account.template">
+            <field name="code">2990</field>
+            <field name="name">Övriga upplupna kostnader och förutbetalda intäkter</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_2999" model="account.account.template">
+            <field name="code">2999</field>
+            <field name="name">OBS-konto</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_3000" model="account.account.template">
+            <field name="code">3000</field>
+            <field name="name">Försäljning inom Sverige</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_3001" model="account.account.template">
+            <field name="code">3001</field>
+            <field name="name">Försäljning inom Sverige, 25 % moms</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_3002" model="account.account.template">
+            <field name="code">3002</field>
+            <field name="name">Försäljning inom Sverige, 12 % moms</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_3003" model="account.account.template">
+            <field name="code">3003</field>
+            <field name="name">Försäljning inom Sverige, 6 % moms</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_3004" model="account.account.template">
+            <field name="code">3004</field>
+            <field name="name">Försäljning inom Sverige, momsfri</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_3100" model="account.account.template">
+            <field name="code">3100</field>
+            <field name="name">Försäljning av varor utanför EU</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_3105" model="account.account.template">
+            <field name="code">3105</field>
+            <field name="name">Försäljning varor till land utanför EU</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_3106" model="account.account.template">
+            <field name="code">3106</field>
+            <field name="name">Försäljning varor till annat EU-land, momspliktig</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_3108" model="account.account.template">
+            <field name="code">3108</field>
+            <field name="name">Försäljning varor till annat EU-land, momsfri</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_3200" model="account.account.template">
+            <field name="code">3200</field>
+            <field name="name">Försäljning VMB och omvänd moms</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_3211" model="account.account.template">
+            <field name="code">3211</field>
+            <field name="name">Försäljning positiv VMB 25 %</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_3212" model="account.account.template">
+            <field name="code">3212</field>
+            <field name="name">Försäljning negativ VMB 25 %</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>        
+        <record id="coa_3231" model="account.account.template">
+            <field name="code">3231</field>
+            <field name="name">Försäljning inom byggsektorn, omvänd skatteskyldighet moms</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record> 
+        <record id="coa_3300" model="account.account.template">
+            <field name="code">3300</field>
+            <field name="name">Försäljning av tjänster utanför Sverige</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record> 
+        <record id="coa_3305" model="account.account.template">
+            <field name="code">3305</field>
+            <field name="name">Försäljning av tjänster till land utanför EU</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record> 
+        <record id="coa_3308" model="account.account.template">
+            <field name="code">3308</field>
+            <field name="name">Försäljning av tjänster till annat EU-land</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_3400" model="account.account.template">
+            <field name="code">3400</field>
+            <field name="name">Försäljning, egna uttag</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record> 
+        <record id="coa_3401" model="account.account.template">
+            <field name="code">3401</field>
+            <field name="name">Egna uttag momspliktiga, 25 %</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record> 
+        <record id="coa_3402" model="account.account.template">
+            <field name="code">3402</field>
+            <field name="name">Egna uttag momspliktiga, 12 %</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_3403" model="account.account.template">
+            <field name="code">3403</field>
+            <field name="name">Egna uttag momspliktiga, 6 %</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_3404" model="account.account.template">
+            <field name="code">3404</field>
+            <field name="name">Egna uttag, momsfria</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_3500" model="account.account.template">
+            <field name="code">3500</field>
+            <field name="name">Fakturerade kostnader (gruppkonto)</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_3510" model="account.account.template">
+            <field name="code">3510</field>
+            <field name="name">Fakturerat Emballage</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_3520" model="account.account.template">
+            <field name="code">3520</field>
+            <field name="name">Fakturerade frakter</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_3521" model="account.account.template">
+            <field name="code">3521</field>
+            <field name="name">Fakturerade frakter, EU-land</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_3522" model="account.account.template">
+            <field name="code">3522</field>
+            <field name="name">Fakturerade frakter, export</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_3530" model="account.account.template">
+            <field name="code">3530</field>
+            <field name="name">Fakturerad tull- och speditionskostnader m.m.</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_3540" model="account.account.template">
+            <field name="code">3540</field>
+            <field name="name">Faktureringsavgifter</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_3541" model="account.account.template">
+            <field name="code">3541</field>
+            <field name="name">Faktureringsavgifter, EU-land</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_3542" model="account.account.template">
+            <field name="code">3542</field>
+            <field name="name">Faktureringsavgifter, export</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_3600" model="account.account.template">
+            <field name="code">3600</field>
+            <field name="name">Rörelsens sidointäkter (gruppkonto)</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_3730" model="account.account.template">
+            <field name="code">3730</field>
+            <field name="name">Lämnade rabatter</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_3740" model="account.account.template">
+            <field name="code">3740</field>
+            <field name="name">Öres- och kronutjämning</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_3800" model="account.account.template">
+            <field name="code">3800</field>
+            <field name="name">Aktiverat arbete för egen räkning (gruppkonto)</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_3900" model="account.account.template">
+            <field name="code">3900</field>
+            <field name="name">Övriga rörelseintäkter (gruppkonto)</field>
+            <field name="user_type_id" ref="account.data_account_type_other_income"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_3913" model="account.account.template">
+            <field name="code">3913</field>
+            <field name="name">Frivilligt momspliktiga hyresintäkter</field>
+            <field name="user_type_id" ref="account.data_account_type_other_income"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_3960" model="account.account.template">
+            <field name="code">3960</field>
+            <field name="name">Valutakursvinster på fordringar och skulder av rörelsekaraktär</field>
+            <field name="user_type_id" ref="account.data_account_type_other_income"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_3970" model="account.account.template">
+            <field name="code">3970</field>
+            <field name="name">Vinst vid avyttring av immateriella och materiella anläggningstillgångar</field>
+            <field name="user_type_id" ref="account.data_account_type_other_income"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_3980" model="account.account.template">
+            <field name="code">3980</field>
+            <field name="name">Erhållna offentliga stöd m.m.</field>
+            <field name="user_type_id" ref="account.data_account_type_other_income"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_4000" model="account.account.template">
+            <field name="code">4000</field>
+            <field name="name">Inköp av varor från Sverige</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_4200" model="account.account.template">
+            <field name="code">4200</field>
+            <field name="name">Sålda varor VMB</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_4211" model="account.account.template">
+            <field name="code">4211</field>
+            <field name="name">Sålda varor positiv VMB 25 %</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_4212" model="account.account.template">
+            <field name="code">4212</field>
+            <field name="name">Sålda varor negativ VMB 25 %</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_4400" model="account.account.template">
+            <field name="code">4400</field>
+            <field name="name">Momspliktiga inköp i Sverige</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_4415" model="account.account.template">
+            <field name="code">4415</field>
+            <field name="name">Inköpta varor i Sverige, omvänd skattskuldighet, 25 %</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>        
+        <record id="coa_4426" model="account.account.template">
+            <field name="code">4426</field>
+            <field name="name">Inköp tjänster i Sverige, omvänd skattskyldighet, 12 %</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_4427" model="account.account.template">
+            <field name="code">4427</field>
+            <field name="name">Inköp tjänster i Sverige, omvänd skattskyldighet, 6 %</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_4500" model="account.account.template">
+            <field name="code">4500</field>
+            <field name="name">Övriga momsplitiga inköp</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_4515" model="account.account.template">
+            <field name="code">4515</field>
+            <field name="name">Inköp av varor från annat EU-land, 25 %</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_4516" model="account.account.template">
+            <field name="code">4516</field>
+            <field name="name">Inköp av varor från annat EU-land, 12 %</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>        
+        <record id="coa_4517" model="account.account.template">
+            <field name="code">4517</field>
+            <field name="name">Inköp av varor från annat EU-land, 6 %</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_4518" model="account.account.template">
+            <field name="code">4518</field>
+            <field name="name">Inköp av varor från annat EU-land, momsfri</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_4531" model="account.account.template">
+            <field name="code">4531</field>
+            <field name="name">Inköp av tjänster från ett land utanför EU, 25 %</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_4532" model="account.account.template">
+            <field name="code">4532</field>
+            <field name="name">Inköp av tjänster från ett land utanför EU, 12 %</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_4533" model="account.account.template">
+            <field name="code">4533</field>
+            <field name="name">Inköp av tjänster från ett land utanför EU, 6 %</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_4535" model="account.account.template">
+            <field name="code">4535</field>
+            <field name="name">Inköp av tjänster från annat EU-land, 25 %</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_4536" model="account.account.template">
+            <field name="code">4536</field>
+            <field name="name">Inköp av tjänster från annat EU-land, 12 %</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_4537" model="account.account.template">
+            <field name="code">4537</field>
+            <field name="name">Inköp av tjänster från annat EU-land, 6 %</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_4538" model="account.account.template">
+            <field name="code">4538</field>
+            <field name="name">Inköp av tjänster från annat EU-land, momsfri</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_4545" model="account.account.template">
+            <field name="code">4545</field>
+            <field name="name">Import av varor, 25 % moms</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_4546" model="account.account.template">
+            <field name="code">4546</field>
+            <field name="name">Import av varor, 12 % moms</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_4547" model="account.account.template">
+            <field name="code">4547</field>
+            <field name="name">Import av varor, 6 % moms</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_4600" model="account.account.template">
+            <field name="code">4600</field>
+            <field name="name">Legoarbeten och underentreprenader (gruppkonto)</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_4700" model="account.account.template">
+            <field name="code">4700</field>
+            <field name="name">Reduktion av inköpspriser (gruppkonto)</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_4700" model="account.account.template">
+            <field name="code">4900</field>
+            <field name="name">Förändring av lager (gruppkonto)</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_4910" model="account.account.template">
+            <field name="code">4910</field>
+            <field name="name">Förändring av lager av råvaror</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_4920" model="account.account.template">
+            <field name="code">4920</field>
+            <field name="name">Förändring av lager av tillsatsmaterial och förnödenheter</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_4940" model="account.account.template">
+            <field name="code">4940</field>
+            <field name="name">Förändring produkter i arbete</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_4950" model="account.account.template">
+            <field name="code">4950</field>
+            <field name="name">Förändring av lager av färdiga varor</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_4960" model="account.account.template">
+            <field name="code">4960</field>
+            <field name="name">Förändring av lager av handelsvaror</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_4970" model="account.account.template">
+            <field name="code">4970</field>
+            <field name="name">Förändring pågående arbete, nedladgda kostnader</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_5010" model="account.account.template">
+            <field name="code">5010</field>
+            <field name="name">Lokalhyra</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_5020" model="account.account.template">
+            <field name="code">5020</field>
+            <field name="name">El för belusning</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_5030" model="account.account.template">
+            <field name="code">5030</field>
+            <field name="name">Värme</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_5040" model="account.account.template">
+            <field name="code">5040</field>
+            <field name="name">Vatten och avlopp</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_5060" model="account.account.template">
+            <field name="code">5060</field>
+            <field name="name">Städning och renhållning</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_5070" model="account.account.template">
+            <field name="code">5070</field>
+            <field name="name">Reparation och underhåll av lokaler</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_5120" model="account.account.template">
+            <field name="code">5120</field>
+            <field name="name">El för belysning</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_5130" model="account.account.template">
+            <field name="code">5130</field>
+            <field name="name">Värme</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_5140" model="account.account.template">
+            <field name="code">5140</field>
+            <field name="name">Vatten och avlopp</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_5160" model="account.account.template">
+            <field name="code">5160</field>
+            <field name="name">Städning och renhållning</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_5170" model="account.account.template">
+            <field name="code">5170</field>
+            <field name="name">Reparation och underhåll av fastighet</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_5200" model="account.account.template">
+            <field name="code">5200</field>
+            <field name="name">Hyra av anläggningstillgångar (gruppkonto)</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_5300" model="account.account.template">
+            <field name="code">5300</field>
+            <field name="name">Energikostnader (gruppkonto)</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_5410" model="account.account.template">
+            <field name="code">5410</field>
+            <field name="name">Förbrukningsinventarier</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_5420" model="account.account.template">
+            <field name="code">5420</field>
+            <field name="name">Programvaror</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_5460" model="account.account.template">
+            <field name="code">5460</field>
+            <field name="name">Förbrukningsmaterial</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_5480" model="account.account.template">
+            <field name="code">5480</field>
+            <field name="name">Arbetskläder</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_5500" model="account.account.template">
+            <field name="code">5500</field>
+            <field name="name">Reparation och underhåll (gruppkonto)</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_5600" model="account.account.template">
+            <field name="code">5600</field>
+            <field name="name">Kostnader för transportmedel (gruppkonto)</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_5611" model="account.account.template">
+            <field name="code">5611</field>
+            <field name="name">Drivmedel för personbilar</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_5612" model="account.account.template">
+            <field name="code">5612</field>
+            <field name="name">Försäkring och skatt för personbilar </field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_5613" model="account.account.template">
+            <field name="code">5613</field>
+            <field name="name">Reparation och underhåll av personbilar</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_5615" model="account.account.template">
+            <field name="code">5615</field>
+            <field name="name">Leasing av personbilar</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_5616" model="account.account.template">
+            <field name="code">5616</field>
+            <field name="name">Trängselskatt</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_5700" model="account.account.template">
+            <field name="code">5700</field>
+            <field name="name">Frakter och transporter (gruppkonto)</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_5800" model="account.account.template">
+            <field name="code">5800</field>
+            <field name="name">Resekostnader (gruppkonto)</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>             
+        <record id="coa_5810" model="account.account.template">
+            <field name="code">5810</field>
+            <field name="name">Biljetter</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_5820" model="account.account.template">
+            <field name="code">5820</field>
+            <field name="name">Hyrbilskostnader</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_5831" model="account.account.template">
+            <field name="code">5831</field>
+            <field name="name">Kost och logi i Sverige</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_5832" model="account.account.template">
+            <field name="code">5832</field>
+            <field name="name">Kost och logi i utlandet</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_5900" model="account.account.template">
+            <field name="code">5900</field>
+            <field name="name">Reklam och PR</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>        
+        <record id="coa_6071" model="account.account.template">
+            <field name="code">6071</field>
+            <field name="name">Representation, avdragsgill</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_6072" model="account.account.template">
+            <field name="code">6072</field>
+            <field name="name">Representation, ej avdragsgill</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_6090" model="account.account.template">
+            <field name="code">6090</field>
+            <field name="name">Övriga försäljningskostnader </field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_6100" model="account.account.template">
+            <field name="code">6100</field>
+            <field name="name">Kontorsmateriel och trycksaker (gruppkonto)</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_6210" model="account.account.template">
+            <field name="code">6210</field>
+            <field name="name">Telekommunikation</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_6230" model="account.account.template">
+            <field name="code">6230</field>
+            <field name="name">Datakommunikation</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>        
+        <record id="coa_6250" model="account.account.template">
+            <field name="code">6250</field>
+            <field name="name">Postbefordran</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_6310" model="account.account.template">
+            <field name="code">6310</field>
+            <field name="name">Företagsförsäkringar</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_6350" model="account.account.template">
+            <field name="code">6350</field>
+            <field name="name">Förluster på kundfordringar</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_6390" model="account.account.template">
+            <field name="code">6390</field>
+            <field name="name">Övriga riskkostnader</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_6410" model="account.account.template">
+            <field name="code">6410</field>
+            <field name="name">Styrelsearvoden som inte är lön</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_6420" model="account.account.template">
+            <field name="code">6420</field>
+            <field name="name">Ersättningar till revisor</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_6530" model="account.account.template">
+            <field name="code">6530</field>
+            <field name="name">Redovisningstjänster</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_6540" model="account.account.template">
+            <field name="code">6540</field>
+            <field name="name">IT-tjänster</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_6550" model="account.account.template">
+            <field name="code">6550</field>
+            <field name="name">Konsultarvoden</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>      
+        <record id="coa_6560" model="account.account.template">
+            <field name="code">6560</field>
+            <field name="name">Serviceavgifter till branschorganisationer</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_6570" model="account.account.template">
+            <field name="code">6570</field>
+            <field name="name">Bankkostnader</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_6580" model="account.account.template">
+            <field name="code">6580</field>
+            <field name="name">Advokat- och rättegångskostnader</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>        
+        <record id="coa_6590" model="account.account.template">
+            <field name="code">6590</field>
+            <field name="name">Övriga externa tjänster</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_6800" model="account.account.template">
+            <field name="code">6800</field>
+            <field name="name">Inhyrd personal (gruppkonto)</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>        
+        <record id="coa_6970" model="account.account.template">
+            <field name="code">6970</field>
+            <field name="name">Tidningar, tidskrifter och facklitteratur</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_6980" model="account.account.template">
+            <field name="code">6980</field>
+            <field name="name">Föreningsavgifter</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_6991" model="account.account.template">
+            <field name="code">6991</field>
+            <field name="name">Övriga externa kostnader, avdragsgilla</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_6992" model="account.account.template">
+            <field name="code">6992</field>
+            <field name="name">Övriga externa kostnader, ej avdragsgilla</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_7010" model="account.account.template">
+            <field name="code">7010</field>
+            <field name="name">Löner till kollektivanställda</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_7090" model="account.account.template">
+            <field name="code">7090</field>
+            <field name="name">Förändring av semesterlöneskuld</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_7210" model="account.account.template">
+            <field name="code">7210</field>
+            <field name="name">Löner till tjänstemän</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_7220" model="account.account.template">
+            <field name="code">7220</field>
+            <field name="name">Löner till företagsledare</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_7240" model="account.account.template">
+            <field name="code">7240</field>
+            <field name="name">Styrelsearvoden</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_7290" model="account.account.template">
+            <field name="code">7290</field>
+            <field name="name">Förändring av semesterlöneskuld</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_7310" model="account.account.template">
+            <field name="code">7310</field>
+            <field name="name">Kontanta extraersättningar</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_7321" model="account.account.template">
+            <field name="code">7321</field>
+            <field name="name">Skattefria traktamenten, Sverige</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_7322" model="account.account.template">
+            <field name="code">7322</field>
+            <field name="name">Skattepliktiga traktamenten, Sverige</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_7323" model="account.account.template">
+            <field name="code">7323</field>
+            <field name="name">Skattefria traktamenten, utlandet</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_7324" model="account.account.template">
+            <field name="code">7324</field>
+            <field name="name">Skattepliktiga traktamenten, utlandet</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_7331" model="account.account.template">
+            <field name="code">7331</field>
+            <field name="name">Skattefria bilersättningar</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_7332" model="account.account.template">
+            <field name="code">7332</field>
+            <field name="name">Skattepliktiga bilersättningar</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_7333" model="account.account.template">
+            <field name="code">7333</field>
+            <field name="name">Ersättning för trängselskatt, skattefri</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_7380" model="account.account.template">
+            <field name="code">7380</field>
+            <field name="name">Kostnader förmånder till anställda</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_7385" model="account.account.template">
+            <field name="code">7385</field>
+            <field name="name">Kostnader för fri bil</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_7390" model="account.account.template">
+            <field name="code">7390</field>
+            <field name="name">Övriga kostnadsersättningar och förmåner</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_7410" model="account.account.template">
+            <field name="code">7410</field>
+            <field name="name">Pensionsförsäkringspremier</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>        
+        <record id="coa_7511" model="account.account.template">
+            <field name="code">7511</field>
+            <field name="name">Arbetsgivaravgift för löner och ersättningar</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>        
+        <record id="coa_7512" model="account.account.template">
+            <field name="code">7512</field>
+            <field name="name">Arbetsgivaravgifter för förmånsvärden</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_7519" model="account.account.template">
+            <field name="code">7519</field>
+            <field name="name">Arbetsgivaravgifter för semester- och löneskulder</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_7520" model="account.account.template">
+            <field name="code">7520</field>
+            <field name="name">Avgifter 16,36 %</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_7530" model="account.account.template">
+            <field name="code">7530</field>
+            <field name="name">Särskild Löneskatt</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+
+        <record id="coa_7550" model="account.account.template">
+            <field name="code">7550</field>
+            <field name="name">Avkastningsskatt på pensionsmedel</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_7570" model="account.account.template">
+            <field name="code">7570</field>
+            <field name="name">Premier för arbetsmarknadsförsäkringar</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_7580" model="account.account.template">
+            <field name="code">7580</field>
+            <field name="name">Gruppförsäkringspremier</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_7590" model="account.account.template">
+            <field name="code">7590</field>
+            <field name="name">Övriga sociala och andra avgifter enligt lag och avtal</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_7600" model="account.account.template">
+            <field name="code">7600</field>
+            <field name="name">Övriga personalkostnader (gruppkonto)</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_7610" model="account.account.template">
+            <field name="code">7610</field>
+            <field name="name">Utbildning</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_7621" model="account.account.template">
+            <field name="code">7621</field>
+            <field name="name">Sjuk- och hälsovård, avdragsgill</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_7622" model="account.account.template">
+            <field name="code">7622</field>
+            <field name="name">Sjuk- och hälsovård, ej avdragsgill</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_7631" model="account.account.template">
+            <field name="code">7631</field>
+            <field name="name">Personalrepresentation, avdragsgill</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_7632" model="account.account.template">
+            <field name="code">7632</field>
+            <field name="name">Personalrepresentation, ej avdragsgill</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_7720" model="account.account.template">
+            <field name="code">7720</field>
+            <field name="name">Nedskrivningar av byggnader och mark</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_7730" model="account.account.template">
+            <field name="code">7730</field>
+            <field name="name">Nedskrivningar av maskiner och inventarier</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_7810" model="account.account.template">
+            <field name="code">7810</field>
+            <field name="name">Avskrivningar av immateriella anläggningstillgångar</field>
+            <field name="user_type_id" ref="account.data_account_type_depreciation"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>        
+        <record id="coa_7820" model="account.account.template">
+            <field name="code">7820</field>
+            <field name="name">Avskrivningar på byggnader och markanläggningar</field>
+            <field name="user_type_id" ref="account.data_account_type_depreciation"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>        
+        <record id="coa_7830" model="account.account.template">
+            <field name="code">7830</field>
+            <field name="name">Avskrivningar maskiner och inventarier</field>
+            <field name="user_type_id" ref="account.data_account_type_depreciation"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>        
+        <record id="coa_7970" model="account.account.template">
+            <field name="code">7970</field>
+            <field name="name">Förlust vid avyttring av immateriella och materiella anläggningstillgångar</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_7990" model="account.account.template">
+            <field name="code">7990</field>
+            <field name="name">Övriga rörelsekostnader</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/> 
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_8210" model="account.account.template">
+            <field name="code">8210</field>
+            <field name="name">Utdelningar på andelar i andra företag</field>
+            <field name="user_type_id" ref="account.data_account_type_other_income"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_8220" model="account.account.template">
+            <field name="code">8220</field>
+            <field name="name">Resultat vid försäljning av värdepapper i och långfristiga fordringar hos andra företag</field>
+            <field name="user_type_id" ref="account.data_account_type_other_income"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_8250" model="account.account.template">
+            <field name="code">8250</field>
+            <field name="name">Ränteintäkter från långfristiga fordringar hos och värdepapper i andra företag</field>
+            <field name="user_type_id" ref="account.data_account_type_other_income"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_8270" model="account.account.template">
+            <field name="code">8270</field>
+            <field name="name">Nedskrivningar av innehav av andelar i och långfristiga fordringar hos andra företag</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_8310" model="account.account.template">
+            <field name="code">8310</field>
+            <field name="name">Ränteintäkter från omsättningstillgångar</field>
+            <field name="user_type_id" ref="account.data_account_type_other_income"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>                         
+        <record id="coa_8314" model="account.account.template">
+            <field name="code">8314</field>
+            <field name="name">Skattefria ränteintäkter</field>
+            <field name="user_type_id" ref="account.data_account_type_other_income"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_8330" model="account.account.template">
+            <field name="code">8330</field>
+            <field name="name">Valutakursdifferenser på kortfristiga fordringar och placeringar</field>
+            <field name="user_type_id" ref="account.data_account_type_other_income"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_8340" model="account.account.template">
+            <field name="code">8340</field>
+            <field name="name">Utdelningar på kortfristiga placeringar</field>
+            <field name="user_type_id" ref="account.data_account_type_other_income"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_8350" model="account.account.template">
+            <field name="code">8350</field>
+            <field name="name">Resultat vid försäljning av kortfristiga placeringar</field>
+            <field name="user_type_id" ref="account.data_account_type_other_income"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_8390" model="account.account.template">
+            <field name="code">8390</field>
+            <field name="name">Övriga finansiella intäkter</field>
+            <field name="user_type_id" ref="account.data_account_type_other_income"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_8410" model="account.account.template">
+            <field name="code">8410</field>
+            <field name="name">Räntekostnader för långfristiga skulder</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_8420" model="account.account.template">
+            <field name="code">8420</field>
+            <field name="name">Räntekostnader för kortfristiga skulder</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_8422" model="account.account.template">
+            <field name="code">8422</field>
+            <field name="name">Dröjsmålsräntor för leverantörsskulder</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_8423" model="account.account.template">
+            <field name="code">8423</field>
+            <field name="name">Räntekostnader för skatter och avgifter</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_8430" model="account.account.template">
+            <field name="code">8430</field>
+            <field name="name">Valutakursdifferenser på skulder</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_8811" model="account.account.template">
+            <field name="code">8811</field>
+            <field name="name">Avsättning till periodiseringsfond</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>        
+        <record id="coa_8819" model="account.account.template">
+            <field name="code">8819</field>
+            <field name="name">Återföring från periodiseringsfond</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>        
+        <record id="coa_8850" model="account.account.template">
+            <field name="code">8850</field>
+            <field name="name">Förändring av överavskrivningar</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_8910" model="account.account.template">
+            <field name="code">8910</field>
+            <field name="name">Skatt som belastar årets resultat</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="coa_8990" model="account.account.template">
+            <field name="code">8990</field>
+            <field name="name">Resultat</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>        
+        <record id="coa_8999" model="account.account.template">
+            <field name="code">8999</field>
+            <field name="name">Årets resultat</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="se_chart_template"/>
+        </record>
+        <record id="se_chart_template" model="account.chart.template">
+            <field name="property_account_receivable_id" ref="coa_1510"/>
+            <field name="property_account_payable_id" ref="coa_2440"/>
+            <field name="property_account_expense_categ_id" ref="coa_4000"/>
+            <field name="property_account_income_categ_id" ref="coa_3001"/>
+            <field name="income_currency_exchange_account_id" ref="coa_3960"/>
+            <field name="expense_currency_exchange_account_id" ref="coa_3960"/>
+            <field name="property_stock_account_input_categ_id" ref="coa_4960"/>
+            <field name="property_stock_account_output_categ_id" ref="coa_4960"/>
+            <field name="property_stock_valuation_account_id" ref="coa_1410"/>
+        </record>        
+    </data>
+</odoo>

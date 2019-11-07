@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ************************************************************* -->
+<!-- Fiscal Position Templates -->
+<!-- ************************************************************* -->
+<odoo>
+    <data noupdate="1">
+        <record id="fp_sweden" model="account.fiscal.position.template">
+            <field name="name">Sverige</field>
+            <field name="chart_template_id" ref="se_chart_template" />
+        </record>
+        <record id="fp_euro" model="account.fiscal.position.template">
+            <field name="name">Europaunionen</field>
+            <field name="chart_template_id" ref="se_chart_template" />
+            <field name="vat_required" eval="True" />
+        </record>
+        <record id="fp_none_euro" model="account.fiscal.position.template">
+            <field name="name">Utanför Europaunionen</field>
+            <field name="chart_template_id" ref="se_chart_template" />
+        </record>
+    </data>
+</odoo>
