@@ -2,11 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import OrderedDict
-from odoo.addons.account.tests.account_test_classes import AccountingTestCase
-from odoo.addons.account.tests.account_test_no_chart import TestAccountNoChartCommon
+from odoo.addons.account.tests.common import AccountTestCommon
+from odoo.addons.account.tests.common import AccountTestNoChartCommon
 
 
-class TestSale(AccountingTestCase):
+class TestSale(AccountTestCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -89,11 +89,11 @@ class TestSale(AccountingTestCase):
         cls.partner = cls.env['res.partner'].create({'name': 'A test Partner'})
 
 
-class TestCommonSaleNoChart(TestAccountNoChartCommon):
+class TestCommonSaleNoChart(AccountTestNoChartCommon):
     """ This class should be extended for test suite of sale flows with a minimal chart of accounting
         installed. This test suite should be executed at module installation.
         This class provides some method to generate testing data well configured, according to the minimal
-        chart of account, defined in `TestAccountNoChartCommon` class.
+        chart of account, defined in `AccountTestNoChartCommon` class.
     """
 
     @classmethod

@@ -1,9 +1,9 @@
-from odoo.addons.account.tests.account_test_classes import AccountingTestCase
+from odoo.addons.account.tests.common import AccountTestCommon
 from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install')
-class TestSettings(AccountingTestCase):
+class TestSettings(AccountTestCommon):
 
     def test_switch_taxB2B_taxB2C(self):
         """
