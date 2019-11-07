@@ -9,6 +9,7 @@ class ResPartner(models.Model):
     event_count = fields.Integer("Events", compute='_compute_event_count', help="Number of events the partner has participated.")
 
     def _compute_event_count(self):
+        self.event_count = 0
         if not self.user_has_groups('event.group_event_user'):
             return
         for partner in self:
