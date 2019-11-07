@@ -6,11 +6,11 @@ from dateutil.relativedelta import relativedelta
 
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.tests.common import tagged, users, warmup, Form
-from odoo.addons.hr_holidays.tests.common import TestHrHolidaysBase
+from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
 
 @tagged('out_of_office')
-class TestOutOfOffice(TestHrHolidaysBase):
+class TestOutOfOffice(TestHrHolidaysCommon):
 
     def setUp(self):
         super().setUp()
@@ -55,7 +55,7 @@ class TestOutOfOffice(TestHrHolidaysBase):
         self.assertEqual(infos[0]['direct_partner'][0]['out_of_office_date_end'], leave_date_end)
 
 @tagged('out_of_office')
-class TestOutOfOfficePerformance(TestHrHolidaysBase, TransactionCaseWithUserDemo):
+class TestOutOfOfficePerformance(TestHrHolidaysCommon, TransactionCaseWithUserDemo):
 
     def setUp(self):
         super(TestOutOfOfficePerformance, self).setUp()

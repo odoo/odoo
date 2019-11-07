@@ -10,10 +10,10 @@ from odoo import fields
 from odoo.exceptions import AccessError, ValidationError, UserError
 from odoo.tools import mute_logger, test_reports
 
-from odoo.addons.hr_holidays.tests.common import TestHrHolidaysBase
+from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
 
-class TestHolidaysFlow(TestHrHolidaysBase):
+class TestHolidaysFlow(TestHrHolidaysCommon):
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_00_leave_request_flow_unlimited(self):

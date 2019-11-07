@@ -4,11 +4,11 @@
 from odoo.tests.common import SavepointCase
 
 
-class TestCrmCases(SavepointCase):
+class TestCrmCommon(SavepointCase):
 
     @classmethod
     def setUpClass(cls):
-        super(TestCrmCases, cls).setUpClass()
+        super(TestCrmCommon, cls).setUpClass()
 
         # Create a user as 'Crm Salesmanager' and added the `sales manager` group
         cls.crm_salemanager = cls.env['res.users'].create({

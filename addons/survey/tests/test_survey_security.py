@@ -9,7 +9,7 @@ from odoo.tools import mute_logger
 
 
 @tagged('security')
-class TestAccess(common.SurveyCase):
+class TestAccess(common.TestSurveyCommon):
 
     def setUp(self):
         super(TestAccess, self).setUp()

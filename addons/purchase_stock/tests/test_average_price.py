@@ -3,10 +3,10 @@
 
 import time
 
-from .common import TestPurchase
+from .common import PurchaseTestCommon
 from odoo.addons.stock_account.tests.common import StockAccountTestCommon
 
-class TestAveragePrice(TestPurchase, StockAccountTestCommon):
+class TestAveragePrice(PurchaseTestCommon, StockAccountTestCommon):
 
     def test_00_average_price(self):
         """ Testcase for average price computation"""

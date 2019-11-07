@@ -7,7 +7,7 @@ from odoo import tools
 from odoo.modules.module import get_module_resource
 
 
-class TestPurchase(TestStockCommon):
+class PurchaseTestCommon(TestStockCommon):
 
     def _create_make_procurement(self, product, product_qty, date_planned=False):
         ProcurementGroup = self.env['procurement.group']
@@ -24,7 +24,7 @@ class TestPurchase(TestStockCommon):
 
     @classmethod
     def setUpClass(cls):
-        super(TestPurchase, cls).setUpClass()
+        super(PurchaseTestCommon, cls).setUpClass()
 
         cls.route_buy = cls.warehouse_1.buy_pull_id.route_id.id
         cls.route_mto = cls.warehouse_1.mto_pull_id.route_id.id

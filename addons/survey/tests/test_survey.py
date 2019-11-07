@@ -13,7 +13,7 @@ from odoo.addons.survey.tests import common
 from odoo.tests.common import users
 
 
-class TestSurveyInternals(common.SurveyCase):
+class TestSurveyInternals(common.TestSurveyCommon):
 
     @users('survey_manager')
     def test_answer_validation_mandatory(self):

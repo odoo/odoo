@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from .common import TestCrmCases
+from .common import TestCrmCommon
 from odoo.modules.module import get_module_resource
 
 
-class TestCRMLead(TestCrmCases):
+class TestCRMLead(TestCrmCommon):
 
     def test_crm_lead_cancel(self):
         # I set a new sales team giving access rights of salesman.

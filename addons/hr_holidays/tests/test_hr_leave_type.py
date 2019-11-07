@@ -6,10 +6,10 @@ from dateutil.relativedelta import relativedelta
 
 from odoo.exceptions import AccessError
 
-from odoo.addons.hr_holidays.tests.common import TestHrHolidaysBase
+from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
 
-class TestHrLeaveType(TestHrHolidaysBase):
+class TestHrLeaveType(TestHrHolidaysCommon):
 
     def test_time_type(self):
         leave_type = self.env['hr.leave.type'].create({

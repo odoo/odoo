@@ -8,7 +8,7 @@ except ImportError:
 from odoo.exceptions import AccessError
 
 from odoo.tests.common import TransactionCase
-from odoo.addons.crm.tests.common import TestCrmCases
+from odoo.addons.crm.tests.common import TestCrmCommon
 
 
 class TestPartnerAssign(TransactionCase):
@@ -86,7 +86,7 @@ class TestPartnerAssign(TransactionCase):
             pass
 
 
-class TestPartnerLeadPortal(TestCrmCases):
+class TestPartnerLeadPortal(TestCrmCommon):
 
     def setUp(self):
         super(TestPartnerLeadPortal, self).setUp()

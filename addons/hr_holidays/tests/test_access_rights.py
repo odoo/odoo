@@ -5,15 +5,15 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from odoo import tests
-from odoo.addons.hr_holidays.tests.common import TestHrHolidaysBase
+from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 from odoo.exceptions import AccessError, UserError
 from odoo.tools import mute_logger
 
 
 @tests.tagged('access_rights', 'post_install', '-at_install')
-class TestLeavesRights(TestHrHolidaysBase):
+class TestHrHolidaysAccessRightsCommon(TestHrHolidaysCommon):
     def setUp(self):
-        super(TestLeavesRights, self).setUp()
+        super(TestHrHolidaysAccessRightsCommon, self).setUp()
         self.leave_type = self.env['hr.leave.type'].create({
             'name': 'Unlimited',
             'validation_type': 'hr',
@@ -84,7 +84,7 @@ class TestLeavesRights(TestHrHolidaysBase):
 
 
 @tests.tagged('access_rights', 'access_rights_states')
-class TestAcessRightsStates(TestLeavesRights):
+class TestAcessRightsStates(TestHrHolidaysAccessRightsCommon):
     # ******************************************************
     # Action draft
     # ******************************************************
@@ -377,7 +377,7 @@ class TestAcessRightsStates(TestLeavesRights):
             leave.with_user(self.user_hrmanager.id).action_draft()
 
 @tests.tagged('access_rights', 'access_rights_create')
-class TestAccessRightsCreate(TestLeavesRights):
+class TestAccessRightsCreate(TestHrHolidaysAccessRightsCommon):
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_base_user_create_self(self):
         """ A simple user can create a leave for himself """
@@ -519,7 +519,7 @@ class TestAccessRightsCreate(TestLeavesRights):
 
 
 @tests.tagged('access_rights', 'access_rights_read')
-class TestAccessRightsRead(TestLeavesRights):
+class TestAccessRightsRead(TestHrHolidaysAccessRightsCommon):
     # base.group_user
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
@@ -566,7 +566,7 @@ class TestAccessRightsRead(TestLeavesRights):
 
 
 @tests.tagged('access_rights', 'access_rights_write')
-class TestAccessRightsWrite(TestLeavesRights):
+class TestAccessRightsWrite(TestHrHolidaysAccessRightsCommon):
     # base.group_user
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
@@ -770,7 +770,7 @@ class TestAccessRightsWrite(TestLeavesRights):
     # TODO Can always cancel with great powers comes great responbilities
 
 
-class TestMultiCompany(TestHrHolidaysBase):
+class TestMultiCompany(TestHrHolidaysCommon):
 
     def setUp(self):
         super(TestMultiCompany, self).setUp()

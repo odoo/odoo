@@ -12,9 +12,9 @@ from odoo.tests import common, new_test_user
 survey_new_test_user = partial(new_test_user, context={'mail_create_nolog': True, 'mail_create_nosubscribe': True, 'mail_notrack': True, 'no_reset_password': True})
 
 
-class SurveyCase(common.SavepointCase):
+class TestSurveyCommon(common.SavepointCase):
     def setUp(self):
-        super(SurveyCase, self).setUp()
+        super(TestSurveyCommon, self).setUp()
 
         """ Some custom stuff to make the matching between questions and answers
           :param dict _type_match: dict

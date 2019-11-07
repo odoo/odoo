@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.project.tests.test_access_rights import TestPortalProjectBase
+from odoo.addons.project.tests.test_access_rights import TestProjectPortalCommon
 from odoo.exceptions import AccessError
 from odoo.tools import mute_logger
 
 
-class TestPortalProject(TestPortalProjectBase):
+class TestPortalProject(TestProjectPortalCommon):
     @mute_logger('odoo.addons.base.models.ir_model')
     def test_portal_project_access_rights(self):
         pigs = self.project_pigs

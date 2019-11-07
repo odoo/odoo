@@ -3,11 +3,11 @@ from datetime import timedelta
 
 from odoo import fields
 from odoo.tests import HttpCase, tagged, TransactionCase
-from odoo.addons.sale.tests.test_sale_product_attribute_value_config import TestSaleProductAttributeValueSetup
+from odoo.addons.sale.tests.test_sale_product_attribute_value_config import TestSaleProductAttributeValueCommon
 
 
 @tagged('post_install', '-at_install')
-class TestUi(TestSaleProductAttributeValueSetup, HttpCase):
+class TestUi(TestSaleProductAttributeValueCommon, HttpCase):
 
     @classmethod
     def setUpClass(cls):

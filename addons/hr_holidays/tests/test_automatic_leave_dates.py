@@ -3,11 +3,11 @@ from datetime import date, datetime
 
 from odoo.tests.common import Form, tagged
 
-from odoo.addons.hr_holidays.tests.common import TestHrHolidaysBase
+from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
 
 @tagged('prout')
-class TestAutomaticLeaveDates(TestHrHolidaysBase):
+class TestAutomaticLeaveDates(TestHrHolidaysCommon):
     def setUp(self):
         super(TestAutomaticLeaveDates, self).setUp()
 

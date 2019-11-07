@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.tests import tagged
-from .common import TestPurchase
+from .common import PurchaseTestCommon
 
 
-class TestMoveCancelPropagation(TestPurchase):
+class TestMoveCancelPropagation(PurchaseTestCommon):
 
     def setUp(self):
         super(TestMoveCancelPropagation, self).setUp()

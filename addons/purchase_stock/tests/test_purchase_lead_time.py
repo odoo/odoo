@@ -4,10 +4,10 @@
 from datetime import timedelta
 
 from odoo import fields
-from .common import TestPurchase
+from .common import PurchaseTestCommon
 
 
-class TestPurchaseLeadTime(TestPurchase):
+class TestPurchaseLeadTime(PurchaseTestCommon):
 
     def test_00_product_company_level_delays(self):
         """ To check dates, set product's Delivery Lead Time

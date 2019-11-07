@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.project.tests.test_project_base import TestProjectBase
+from odoo.addons.project.tests.test_project_base import TestProjectCommon
 from odoo.exceptions import AccessError
 from odoo.tools import mute_logger
 
 
-class TestPortalProjectBase(TestProjectBase):
+class TestProjectPortalCommon(TestProjectCommon):
 
     def setUp(self):
-        super(TestPortalProjectBase, self).setUp()
+        super(TestProjectPortalCommon, self).setUp()
         self.user_noone = self.env['res.users'].with_context({'no_reset_password': True, 'mail_create_nosubscribe': True}).create({
             'name': 'Noemie NoOne',
             'login': 'noemie',
@@ -28,7 +28,7 @@ class TestPortalProjectBase(TestProjectBase):
             'name': 'Test5', 'user_id': False, 'project_id': self.project_pigs.id})
 
 
-class TestPortalProject(TestPortalProjectBase):
+class TestPortalProject(TestProjectPortalCommon):
 
     @mute_logger('odoo.addons.base.models.ir_model')
     def test_employee_project_access_rights(self):

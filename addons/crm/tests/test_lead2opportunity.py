@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from .common import TestCrmCases
+from .common import TestCrmCommon
 
 
-class TestLead2opportunity2win(TestCrmCases):
+class TestLead2opportunity2win(TestCrmCommon):
 
     def test_lead2opportunity2win(self):
         """ Tests for Test Lead 2 opportunity 2 win """
