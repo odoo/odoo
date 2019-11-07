@@ -498,12 +498,13 @@ class HrExpenseSheet(models.Model):
     def _get_users_to_subscribe(self, employee=False):
         users = self.env['res.users']
         employee = employee or self.employee_id
+        department = employee.sudo().department_id
         if employee.user_id:
             users |= employee.user_id
         if employee.parent_id:
             users |= employee.parent_id.user_id
-        if employee.department_id and employee.department_id.manager_id and employee.parent_id != employee.department_id.manager_id:
-            users |= employee.department_id.manager_id.user_id
+        if department and department.manager_id and employee.parent_id != department.manager_id:
+            users |= department.manager_id.user_id
         return users
 
     def _add_followers(self):
