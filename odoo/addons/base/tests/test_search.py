@@ -148,3 +148,43 @@ class test_search(TransactionCase):
         expected_ids = [u2, u4, u3, u1]
         found_ids = Users.search([('id', 'in', expected_ids)]).ids
         self.assertEqual(found_ids, expected_ids)
+
+    def test_20_x_active(self):
+        """Check the behaviour of the x_active field."""
+        # test that a custom field x_active filters like active
+        # we take the model res.country as a test model as it is included in base and does
+        # not have an active field
+        model_country = self.env['res.country']
+        self.assertNotIn('active', model_country._fields)  # just in case someone adds the active field in the model
+        self.env['ir.model.fields'].create({
+            'name': 'x_active',
+            'model_id': self.env.ref('base.model_res_country').id,
+            'ttype': 'boolean',
+        })
+        self.assertEqual('x_active', model_country._active_name)
+        country_ussr = model_country.create({'name': 'USSR', 'x_active': False})
+        ussr_search = model_country.search([('name', '=', 'USSR')])
+        self.assertFalse(ussr_search)
+        ussr_search = model_country.with_context(active_test=False).search([('name', '=', 'USSR')])
+        self.assertIn(country_ussr, ussr_search, "Search with active_test on a custom x_active field failed")
+        ussr_search = model_country.search([('name', '=', 'USSR'), ('x_active', '=', False)])
+        self.assertIn(country_ussr, ussr_search, "Search with active_test on a custom x_active field failed")
+        # test that a custom field x_active on a model with the standard active
+        # field does not interfere with the standard behaviour
+        # use res.bank since it has an active field and is simple to use
+        model_bank = self.env['res.bank']
+        self.env['ir.model.fields'].create({
+            'name': 'x_active',
+            'model_id': self.env.ref('base.model_res_bank').id,
+            'ttype': 'boolean',
+        })
+        self.assertEqual('active', model_bank._active_name)
+        bank_credit_communal = model_bank.create({'name': 'Crédit Communal', 'x_active': False, 'active': True})
+        cc_search = model_bank.search([('name', '=', 'Crédit Communal')])
+        self.assertIn(bank_credit_communal, cc_search, "Search for active record with x_active set to False has failed")
+        bank_credit_communal.write({
+            'active': False,
+            'x_active': True,
+        })
+        cc_search = model_bank.search([('name', '=', 'Crédit Communal')])
+        self.assertNotIn(bank_credit_communal, cc_search, "Search for inactive record with x_active set to True has failed")

@@ -197,8 +197,10 @@ var FormController = BasicController.extend({
         var self = this;
         if (this.hasSidebar) {
             var otherItems = [];
-            if (this.archiveEnabled && this.initialState.data.active !== undefined) {
-                var classname = "o_sidebar_item_archive" + (this.initialState.data.active ? "" : " o_hidden")
+            const activeField = this.model.getActiveField(this.initialState);
+            const activeFieldValue = this.initialState.data[activeField];
+            if (this.archiveEnabled && activeField) {
+                var classname = "o_sidebar_item_archive" + (activeFieldValue ? "" : " o_hidden")
                 otherItems.push({
                     label: _t("Archive"),
                     callback: function () {
@@ -208,7 +210,7 @@ var FormController = BasicController.extend({
                     },
                     classname: classname,
                 });
-                classname = "o_sidebar_item_unarchive" + (this.initialState.data.active ? " o_hidden" : "")
+                classname = "o_sidebar_item_unarchive" + (activeFieldValue ? " o_hidden" : "")
                 otherItems.push({
                     label: _t("Unarchive"),
                     callback: this._toggleArchiveState.bind(this, false),
@@ -516,8 +518,11 @@ var FormController = BasicController.extend({
             var unarchive_item = _.find(this.sidebar.items.other, function(item) {
                 return item.classname && item.classname.includes('o_sidebar_item_unarchive')
             })
+            const state = this.model.get(this.handle, {raw: true});
+            const activeField = this.model.getActiveField(state);
+            const activeFieldValue = this.renderer.state.data[activeField];
             if (archive_item && unarchive_item) {
-                if (this.renderer.state.data.active) {
+                if (activeFieldValue) {
                     archive_item.classname = 'o_sidebar_item_archive';
                     unarchive_item.classname = 'o_sidebar_item_unarchive o_hidden';
                 } else {

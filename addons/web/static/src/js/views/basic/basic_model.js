@@ -1178,6 +1178,27 @@ var BasicModel = AbstractModel.extend({
         return Promise.resolve();
     },
     /**
+     * For a given resource of type 'record', get the active field, if any.
+     *
+     * Since the ORM can support both `active` and `x_active` fields for
+     * the archiving mechanism, check if any such field exists and prioritize
+     * them. The `active` field should always take priority over its custom
+     * version.
+     *
+     * @param {Object} record local resource
+     * @returns {String|undefined} the field name to use for archiving purposes
+     *   ('active', 'x_active') or undefined if no such field is present
+     */
+    getActiveField: function (record) {
+        const fields = Object.keys(record.fields);
+        const has_active = fields.includes('active');
+        if (has_active) {
+            return 'active';
+        }
+        const has_x_active = fields.includes('x_active');
+        return has_x_active?'x_active':undefined
+    },
+    /**
      * Toggle the active value of given records (to archive/unarchive them)
      *
      * @param {Array} recordIDs local ids of the records to (un)archive
