@@ -2,12 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, tools
-from odoo.addons.stock_account.tests.stock_account_minimal_test import StockAccountMinimalTest
+from odoo.addons.stock_account.tests.common import StockAccountTestCommon
 from odoo.modules.module import get_module_resource
 from odoo.tests import common, Form
 
 
-class TestLifoPrice(StockAccountMinimalTest):
+class TestLifoPrice(StockAccountTestCommon):
 
     def test_lifoprice(self):
 

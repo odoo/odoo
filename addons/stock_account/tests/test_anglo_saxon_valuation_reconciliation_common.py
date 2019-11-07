@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
-from odoo.addons.stock_account.tests.stock_account_minimal_test import StockAccountMinimalTest
+from odoo.addons.stock_account.tests.common import StockAccountTestCommon
 from odoo import fields
 
-class ValuationReconciliationTestCase(StockAccountMinimalTest):
+class ValuationReconciliationTestCommon(StockAccountTestCommon):
     """ Base class for tests checking interim accounts reconciliation works
     in anglosaxon accounting. It sets up everything we need in the tests, and is
     extended in both sale_stock and purchase modules to run the 'true' tests.
@@ -60,7 +60,7 @@ class ValuationReconciliationTestCase(StockAccountMinimalTest):
         })
 
     def setUp(self):
-        super(ValuationReconciliationTestCase, self).setUp()
+        super(ValuationReconciliationTestCommon, self).setUp()
 
         self.company = self.env.company
         self.company.anglo_saxon_accounting = True

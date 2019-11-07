@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-from odoo.addons.account.tests.invoice_test_common import InvoiceTestCommon
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests.common import Form
 from odoo.tests import tagged
 from odoo import fields
 
 
 @tagged('post_install', '-at_install')
-class TestAccountMoveOutRefundOnchanges(InvoiceTestCommon):
+class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
 
     @classmethod
     def setUpClass(cls):

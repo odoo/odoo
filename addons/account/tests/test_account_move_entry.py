@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo.addons.account.tests.invoice_test_common import InvoiceTestCommon
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged, new_test_user
 from odoo import fields
 from odoo.exceptions import ValidationError, UserError
@@ -8,7 +8,7 @@ from dateutil.relativedelta import relativedelta
 
 
 @tagged('post_install', '-at_install')
-class TestAccountMove(InvoiceTestCommon):
+class TestAccountMove(AccountTestInvoicingCommon):
 
     @classmethod
     def setUpClass(cls):
