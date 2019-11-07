@@ -502,6 +502,7 @@ registry.slider = publicWidget.Widget.extend({
 
 registry.parallax = Animation.extend({
     selector: '.parallax',
+    disabledInEditableMode: false,
     effects: [{
         startEvents: 'scroll',
         update: '_onWindowScroll',
