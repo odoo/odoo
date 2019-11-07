@@ -1137,7 +1137,7 @@ class GroupsView(models.Model):
             xml_content = etree.tostring(xml, pretty_print=True, encoding="unicode")
 
             new_context = dict(view._context)
-            new_context.pop('install_mode_data', None)  # don't set arch_fs for this computed view
+            new_context.pop('install_filename', None)  # don't set arch_fs for this computed view
             new_context['lang'] = None
             view.with_context(new_context).write({'arch': xml_content})
 
