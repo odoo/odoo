@@ -4,13 +4,13 @@ import json
 import base64
 import logging
 
-from odoo.addons.account.tests.account_test_classes import AccountingTestCase
+from odoo.addons.account.tests.common import AccountTestCommon
 from odoo.tests import tagged
 
 _logger = logging.getLogger(__name__)
 
 @tagged('post_install', '-at_install', '-standard', 'external')
-class TestPingenSend(AccountingTestCase):
+class TestPingenSend(AccountTestCommon):
 
     def setUp(self):
         super(TestPingenSend, self).setUp()

@@ -2,12 +2,12 @@
 from random import randint
 
 from odoo import fields, tools
-from odoo.addons.stock_account.tests.stock_account_minimal_test import StockAccountMinimalTest
+from odoo.addons.stock_account.tests.common import StockAccountTestCommon
 from odoo.tests.common import SavepointCase, Form
 from odoo.tools import float_is_zero
 
 
-class TestPointOfSaleCommon(StockAccountMinimalTest):
+class TestPointOfSaleCommon(StockAccountTestCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -146,7 +146,7 @@ class TestPointOfSaleCommon(StockAccountMinimalTest):
         (invoice_rep_lines | refund_rep_lines).write({'account_id': cls.a_expense.id})
 
 
-class TestPoSCommon(StockAccountMinimalTest):
+class TestPoSCommon(StockAccountTestCommon):
     """ Set common values for different special test cases.
 
     The idea is to set up common values here for the tests

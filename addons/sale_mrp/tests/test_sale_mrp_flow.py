@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.account.tests.account_minimal_test import AccountMinimalTest
+from odoo.addons.account.tests.common import AccountTestCommon
 from odoo.tests import common, Form
 from odoo.exceptions import UserError
 from odoo.tools import mute_logger, float_compare
@@ -9,7 +9,7 @@ from odoo.tools import mute_logger, float_compare
 
 # these tests create accounting entries, and therefore need a chart of accounts
 @common.tagged('post_install', '-at_install')
-class TestSaleMrpFlow(AccountMinimalTest):
+class TestSaleMrpFlow(AccountTestCommon):
 
     @classmethod
     def setUpClass(cls):

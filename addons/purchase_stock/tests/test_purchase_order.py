@@ -4,12 +4,12 @@
 from datetime import datetime
 
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from odoo.addons.account.tests.account_test_classes import AccountingTestCase
+from odoo.addons.account.tests.common import AccountTestCommon
 from odoo.tests import Form, tagged
 
 
 @tagged('post_install', '-at_install')
-class TestPurchaseOrder(AccountingTestCase):
+class TestPurchaseOrder(AccountTestCommon):
 
     def setUp(self):
         super(TestPurchaseOrder, self).setUp()

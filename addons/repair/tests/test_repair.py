@@ -3,12 +3,12 @@
 
 from datetime import datetime
 
-from odoo.addons.account.tests.account_test_classes import AccountingTestCase
+from odoo.addons.account.tests.common import AccountTestCommon
 from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install')
-class TestRepair(AccountingTestCase):
+class TestRepair(AccountTestCommon):
 
     @classmethod
     def setUpClass(cls):

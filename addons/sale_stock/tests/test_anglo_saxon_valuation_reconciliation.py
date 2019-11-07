@@ -3,12 +3,12 @@
 
 import time
 
-from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCase
+from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 from odoo.tests import Form, tagged
 
 
 @tagged('post_install', '-at_install')
-class TestValuationReconciliation(ValuationReconciliationTestCase):
+class TestValuationReconciliation(ValuationReconciliationTestCommon):
 
     def setUp(self):
         super(TestValuationReconciliation, self).setUp()

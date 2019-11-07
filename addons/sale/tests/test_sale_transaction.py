@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from odoo import tests
-from odoo.addons.account.tests.account_test_classes import AccountingTestCase
+from odoo.addons.account.tests.common import AccountTestCommon
 
 
 @tests.tagged('post_install', '-at_install')
-class TestSaleTransaction(AccountingTestCase):
+class TestSaleTransaction(AccountTestCommon):
     def test_sale_invoicing_from_transaction(self):
         ''' Test the following scenario:
         - Create a sale order

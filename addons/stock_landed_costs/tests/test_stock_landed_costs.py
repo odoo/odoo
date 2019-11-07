@@ -2,13 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.stock_landed_costs.tests.common import TestStockLandedCostsCommon
-from odoo.addons.stock_account.tests.stock_account_minimal_test import StockAccountMinimalTest
+from odoo.addons.stock_account.tests.common import StockAccountTestCommon
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install')
-class TestStockLandedCosts(TestStockLandedCostsCommon, StockAccountMinimalTest):
+class TestStockLandedCosts(TestStockLandedCostsCommon, StockAccountTestCommon):
 
     def test_stock_landed_costs(self):
         # In order to test the landed costs feature of stock,

@@ -1,9 +1,9 @@
-from odoo.addons.account.tests.account_test_classes import AccountingTestCase
+from odoo.addons.account.tests.common import AccountTestCommon
 from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install')
-class TestBankStatement(AccountingTestCase):
+class TestBankStatement(AccountTestCommon):
 
     def setUp(self):
         super(TestBankStatement, self).setUp()

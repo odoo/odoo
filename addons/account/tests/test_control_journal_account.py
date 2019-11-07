@@ -1,10 +1,10 @@
-from odoo.addons.account.tests.account_test_no_chart import TestAccountNoChartCommon
+from odoo.addons.account.tests.common import AccountTestNoChartCommon
 from odoo.tests.common import tagged
 from odoo.exceptions import UserError, ValidationError
 
 
 @tagged('post_install', '-at_install')
-class TestControlJournalAccount(TestAccountNoChartCommon):
+class TestControlJournalAccount(AccountTestNoChartCommon):
     @classmethod
     def setUpClass(cls):
         super(TestControlJournalAccount, cls).setUpClass()

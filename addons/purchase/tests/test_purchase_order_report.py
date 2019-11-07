@@ -3,10 +3,10 @@
 
 from datetime import datetime
 from odoo.tests import Form, tagged
-from odoo.addons.account.tests.account_minimal_test import AccountMinimalTest
+from odoo.addons.account.tests.common import AccountTestCommon
 
 @tagged('post_install', '-at_install')
-class TestPurchaseOrderReport(AccountMinimalTest):
+class TestPurchaseOrderReport(AccountTestCommon):
 
     @classmethod
     def setUpClass(cls):

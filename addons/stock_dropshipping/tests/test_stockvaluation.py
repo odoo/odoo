@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.stock_account.tests.stock_account_minimal_test import StockAccountMinimalTest
+from odoo.addons.stock_account.tests.common import StockAccountTestCommon
 from odoo.tests import Form, tagged
 
 @tagged('post_install', '-at_install')
-class TestStockValuation(StockAccountMinimalTest):
+class TestStockValuation(StockAccountTestCommon):
 
     @classmethod
     def setUpClass(cls):

@@ -2,13 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
-from odoo.addons.account.tests.account_test_classes import AccountingTestCase
+from odoo.addons.account.tests.common import AccountTestCommon
 from odoo.tests.common import Form
 from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install')
-class TestInvoiceTaxes(AccountingTestCase, SavepointCaseWithUserDemo):
+class TestInvoiceTaxes(AccountTestCommon, SavepointCaseWithUserDemo):
 
     @classmethod
     def setUpClass(cls):

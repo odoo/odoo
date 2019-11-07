@@ -4,10 +4,10 @@ import time
 
 from .common import TestPurchase
 from odoo.tests.common import Form
-from odoo.addons.stock_account.tests.stock_account_minimal_test import StockAccountMinimalTest
+from odoo.addons.stock_account.tests.common import StockAccountTestCommon
 
 
-class TestFifoReturns(TestPurchase, StockAccountMinimalTest):
+class TestFifoReturns(TestPurchase, StockAccountTestCommon):
 
     def test_fifo_returns(self):
         """Test to create product and purchase order to test the FIFO returns of the product"""

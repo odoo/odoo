@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from odoo import tools
-from odoo.addons.account.tests.account_test_classes import AccountingTestCase
+from odoo.addons.account.tests.common import AccountTestCommon
 from odoo.modules.module import get_module_resource
 
 
-class TestStockLandedCostsCommon(AccountingTestCase):
+class TestStockLandedCostsCommon(AccountTestCommon):
 
     def setUp(self):
         super(TestStockLandedCostsCommon, self).setUp()
