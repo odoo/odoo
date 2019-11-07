@@ -1,5 +1,6 @@
 # # -*- coding: utf-8 -*-
 # # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from unittest.mock import patch
 
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
@@ -16,7 +17,7 @@ class BaseAutomationTest(TransactionCaseWithUserDemo):
 
         self.test_mail_template_automation = self.env['mail.template'].create({
             'name': 'Template Automation',
-            'model_id': self.env.ref('base_automation.model_base_automation_lead_test').id,
+            'model_id': self.env.ref('test_base_automation.model_base_automation_lead_test').id,
             'body_html': """&lt;div&gt;Email automation&lt;/div&gt;""",
         })
 
@@ -24,7 +25,7 @@ class BaseAutomationTest(TransactionCaseWithUserDemo):
         self.env['base.automation'].create([
             {
                 'name': 'Base Automation: test rule on create',
-                'model_id': self.env.ref('base_automation.model_base_automation_lead_test').id,
+                'model_id': self.env.ref('test_base_automation.model_base_automation_lead_test').id,
                 'state': 'code',
                 'code': "records.write({'user_id': %s})" % (self.user_demo.id),
                 'trigger': 'on_create',
@@ -32,7 +33,7 @@ class BaseAutomationTest(TransactionCaseWithUserDemo):
                 'filter_domain': "[('state', '=', 'draft')]",
             }, {
                 'name': 'Base Automation: test rule on write',
-                'model_id': self.env.ref('base_automation.model_base_automation_lead_test').id,
+                'model_id': self.env.ref('test_base_automation.model_base_automation_lead_test').id,
                 'state': 'code',
                 'code': "records.write({'user_id': %s})" % (self.user_demo.id),
                 'trigger': 'on_write',
@@ -41,7 +42,7 @@ class BaseAutomationTest(TransactionCaseWithUserDemo):
                 'filter_pre_domain': "[('state', '=', 'open')]",
             }, {
                 'name': 'Base Automation: test rule on recompute',
-                'model_id': self.env.ref('base_automation.model_base_automation_lead_test').id,
+                'model_id': self.env.ref('test_base_automation.model_base_automation_lead_test').id,
                 'state': 'code',
                 'code': "records.write({'user_id': %s})" % (self.user_demo.id),
                 'trigger': 'on_write',
@@ -49,7 +50,7 @@ class BaseAutomationTest(TransactionCaseWithUserDemo):
                 'filter_domain': "[('employee', '=', True)]",
             }, {
                 'name': 'Base Automation: test recursive rule',
-                'model_id': self.env.ref('base_automation.model_base_automation_lead_test').id,
+                'model_id': self.env.ref('test_base_automation.model_base_automation_lead_test').id,
                 'state': 'code',
                 'code': """
 record = model.browse(env.context['active_id'])
@@ -59,14 +60,14 @@ if 'partner_id' in env.context['old_values'][record.id]:
                 'active': True,
             }, {
                 'name': 'Base Automation: test rule on secondary model',
-                'model_id': self.env.ref('base_automation.model_base_automation_line_test').id,
+                'model_id': self.env.ref('test_base_automation.model_base_automation_line_test').id,
                 'state': 'code',
                 'code': "records.write({'user_id': %s})" % (self.user_demo.id),
                 'trigger': 'on_create',
                 'active': True,
             }, {
                 'name': 'Base Automation: test rule on write check context',
-                'model_id': self.env.ref('base_automation.model_base_automation_lead_test').id,
+                'model_id': self.env.ref('test_base_automation.model_base_automation_lead_test').id,
                 'state': 'code',
                 'code': """
 record = model.browse(env.context['active_id'])
@@ -76,8 +77,8 @@ if 'user_id' in env.context['old_values'][record.id]:
                 'active': True,
             }, {
                 'name': 'Base Automation: test rule with trigger',
-                'model_id': self.env.ref('base_automation.model_base_automation_lead_test').id,
-                'trigger_field_ids': [(4, self.env.ref('base_automation.field_base_automation_lead_test__state').id)],
+                'model_id': self.env.ref('test_base_automation.model_base_automation_lead_test').id,
+                'trigger_field_ids': [(4, self.env.ref('test_base_automation.field_base_automation_lead_test__state').id)],
                 'state': 'code',
                 'code': """
 record = model.browse(env.context['active_id'])
@@ -86,9 +87,9 @@ record['name'] = record.name + 'X'""",
                 'active': True,
             }, {
                 'name': 'Base Automation: test send an email',
-                'model_id': self.env.ref('base_automation.model_base_automation_lead_test').id,
+                'model_id': self.env.ref('test_base_automation.model_base_automation_lead_test').id,
                 'template_id': self.test_mail_template_automation.id,
-                'trigger_field_ids': [(4, self.env.ref('base_automation.field_base_automation_lead_test__deadline').id)],
+                'trigger_field_ids': [(4, self.env.ref('test_base_automation.field_base_automation_lead_test__deadline').id)],
                 'state': 'email',
                 'code': """
 record = model.browse(env.context['active_id'])
@@ -283,7 +284,7 @@ record['name'] = record.name + 'X'""",
 
         # change the rule to trigger on partner_id
         rule = self.env['base.automation'].search([('name', '=', 'Base Automation: test rule with trigger')])
-        rule.write({'trigger_field_ids':  [(6, 0, [self.env.ref('base_automation.field_base_automation_lead_test__partner_id').id])]})
+        rule.write({'trigger_field_ids':  [(6, 0, [self.env.ref('test_base_automation.field_base_automation_lead_test__partner_id').id])]})
 
         partner2 = self.env['res.partner'].create({'name': 'A new partner'})
         lead.name = 'X'
