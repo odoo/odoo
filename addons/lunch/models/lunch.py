@@ -270,6 +270,9 @@ class LunchOrderLine(models.Model):
                 default_use_template=bool(template),
                 default_template_id=template.id,
                 default_lang=order['supplier'].lang or self.env.user.lang,
+                default_partner_ids=order['supplier'].ids,
+                default_res_id=self.ids[0],
+                default_model=self._name,
                 order=order,
                 lines=lines,
             )
