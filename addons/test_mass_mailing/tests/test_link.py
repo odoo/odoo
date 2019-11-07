@@ -48,7 +48,7 @@ class TestLinkTracker(common.TestMailCommon):
         mailing = self.env['mailing.mailing'].create({'name': 'Test Mailing', "subject": "Hi!"})
         code = self.link.code
         self.assertEqual(self.link.count, 1)
-        stat = self.env['mailing.trace'].create({'mass_mailing_id': mailing.id})
+        stat = self.env['mail.notification'].create({'mass_mailing_id': mailing.id})
         self.assertFalse(stat.opened)
         self.assertFalse(stat.clicked)
 

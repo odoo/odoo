@@ -17,8 +17,8 @@ class MailingSMSController(http.Controller):
             mailing = False
         if not mailing:
             return {'error': 'mailing_error'}
-        trace = request.env['mailing.trace'].sudo().search([
-            ('trace_type', '=', 'sms'),
+        trace = request.env['mail.notification'].sudo().search([
+            ('notification_type', '=', 'sms'),
             ('sms_code', '=', trace_code),
             ('mass_mailing_id', '=', mailing.id)
         ])
@@ -92,7 +92,7 @@ class MailingSMSController(http.Controller):
         # which mass_mailing doesn't depend on
         country_code = request.session.get('geoip', False) and request.session.geoip.get('country_code', False)
         if sms_id:
-            trace_id = request.env['mailing.trace'].sudo().search([('sms_id_int', '=', int(sms_id))]).id
+            trace_id = request.env['mail.notification'].sudo().search([('sms_id_int', '=', int(sms_id))]).id
         else:
             trace_id = False
 

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="mailing_trace_view_search" model="ir.ui.view">
-        <field name="name">mailing.trace.view.search.inherit.sms</field>
-        <field name="model">mailing.trace</field>
+        <field name="name">mail.notification.view.search.inherit.sms</field>
+        <field name="model">mail.notification</field>
         <field name="inherit_id" ref="mass_mailing.mailing_trace_view_search"/>
         <field name="arch" type="xml">
            <xpath expr="//field[@name='email']" position="after">
@@ -14,12 +14,12 @@
     </record>
 
     <record id="mailing_trace_view_tree" model="ir.ui.view">
-        <field name="name">mailing.trace.view.tree.inherit.sms</field>
-        <field name="model">mailing.trace</field>
+        <field name="name">mail.notification.view.tree.inherit.sms</field>
+        <field name="model">mail.notification</field>
         <field name="inherit_id" ref="mass_mailing.mailing_trace_view_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='email']" position="before">
-                <field name="trace_type"/>
+                <field name="notification_type"/>
             </xpath>
             <xpath expr="//field[@name='email']" position="after">
                 <field name="sms_number"/>
@@ -28,13 +28,13 @@
     </record>
 
     <record id="mailing_trace_view_tree_sms" model="ir.ui.view">
-        <field name="name">mailing.trace.view.tree.sms</field>
-        <field name="model">mailing.trace</field>
+        <field name="name">mail.notification.view.tree.sms</field>
+        <field name="model">mail.notification</field>
         <field name="priority">20</field>
         <field name="arch" type="xml">
             <tree string="SMS Traces" create="0">
                 <field name="sms_number"/>
-                <field name="state"/>
+                <field name="notification_status"/>
                 <field name="scheduled"/>
                 <field name="sent"/>
                 <field name="clicked"/>
@@ -47,47 +47,47 @@
     </record>
 
     <record id="mailing_trace_view_form" model="ir.ui.view">
-        <field name="name">mailing.trace.view.form.inherit.sms</field>
-        <field name="model">mailing.trace</field>
+        <field name="name">mail.notification.view.form.inherit.sms</field>
+        <field name="model">mail.notification</field>
         <field name="inherit_id" ref="mass_mailing.mailing_trace_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//span[@name='trace_type_name_mail']" position="attributes">
-                <attribute name="attrs">{'invisible': [('trace_type', '!=', 'email')]}</attribute>
+                <attribute name="attrs">{'invisible': [('notification_type', '!=', 'email')]}</attribute>
             </xpath>
             <xpath expr="//span[@name='trace_type_name_mail']" position="after">
-                <span name="trace_type_name_sms" attrs="{'invisible': [('trace_type', '!=', 'sms')]}">This sms</span>
+                <span name="notification_type_name_sms" attrs="{'invisible': [('notification_type', '!=', 'sms')]}">This sms</span>
             </xpath>
             <xpath expr="//field[@name='email']" position="attributes">
-                <attribute name="attrs">{'invisible': [('trace_type', '!=', 'email')]}</attribute>
+                <attribute name="attrs">{'invisible': [('notification_type', '!=', 'email')]}</attribute>
             </xpath>
             <xpath expr="//field[@name='mail_id_int']" position="attributes">
-                <attribute name="attrs">{'invisible': [('trace_type', '!=', 'email')]}</attribute>
+                <attribute name="attrs">{'invisible': [('notification_type', '!=', 'email')]}</attribute>
             </xpath>
             <xpath expr="//field[@name='message_id']" position="attributes">
-                <attribute name="attrs">{'invisible': [('trace_type', '!=', 'email')]}</attribute>
+                <attribute name="attrs">{'invisible': [('notification_type', '!=', 'email')]}</attribute>
             </xpath>
             <xpath expr="//field[@name='opened']" position="attributes">
-                <attribute name="attrs">{'invisible': [('trace_type', '=', 'sms')]}</attribute>
+                <attribute name="attrs">{'invisible': [('notification_type', '=', 'sms')]}</attribute>
             </xpath>
             <xpath expr="//field[@name='replied']" position="attributes">
-                <attribute name="attrs">{'invisible': [('trace_type', '=', 'sms')]}</attribute>
+                <attribute name="attrs">{'invisible': [('notification_type', '=', 'sms')]}</attribute>
             </xpath>
             <xpath expr="//field[@name='email']" position="after">
-                <field name="sms_number" attrs="{'invisible': [('trace_type', '!=', 'sms')]}"/>
-                <field name="sms_id_int" attrs="{'invisible': [('trace_type', '!=', 'sms')]}"/>
-                <field name="sms_code" attrs="{'invisible': [('trace_type', '!=', 'sms')]}"/>
+                <field name="sms_number" attrs="{'invisible': [('notification_type', '!=', 'sms')]}"/>
+                <field name="sms_id_int" attrs="{'invisible': [('notification_type', '!=', 'sms')]}"/>
+                <field name="sms_code" attrs="{'invisible': [('notification_type', '!=', 'sms')]}"/>
             </xpath>
         </field>
     </record>
 
     <record id="mailing_trace_view_form_sms" model="ir.ui.view">
-        <field name="name">mailing.trace.view.form.sms</field>
-        <field name="model">mailing.trace</field>
+        <field name="name">mail.notification.view.form.sms</field>
+        <field name="model">mail.notification</field>
         <field name="priority">20</field>
         <field name="arch" type="xml">
             <form string="SMS Trace" create="0">
                 <header>
-                    <field name="state" widget="statusbar"/>
+                    <field name="notification_status" widget="statusbar"/>
                 </header>
                 <sheet>
                     <div class="alert alert-info text-center" attrs="{'invisible': [('exception', '=', False)]}" role="alert">

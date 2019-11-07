@@ -50,9 +50,9 @@ class Mailing(models.Model):
 
     @api.depends('mailing_trace_ids.failure_type')
     def _compute_sms_has_insufficient_credit(self):
-        mailing_ids = self.env['mailing.trace'].sudo().search([
+        mailing_ids = self.env['mail.notification'].sudo().search([
             ('mass_mailing_id', 'in', self.ids),
-            ('trace_type', '=', 'sms'),
+            ('notification_type', '=', 'sms'),
             ('failure_type', '=', 'sms_credit')
         ]).mapped('mass_mailing_id')
         for mailing in self:
@@ -159,7 +159,7 @@ class Mailing(models.Model):
 
         query = """
             SELECT %(select_query)s
-              FROM mailing_trace trace
+              FROM mail_notification trace
               JOIN %(target_table)s target ON (trace.res_id = target.id)
              WHERE (%(where_query)s)
              AND trace.mass_mailing_id = %%(mailing_id)s

@@ -2,8 +2,8 @@
 <odoo>
     <!--  MAILING TRACE !-->
     <record model="ir.ui.view" id="mailing_trace_view_search">
-        <field name="name">mailing.trace.search</field>
-        <field name="model">mailing.trace</field>
+        <field name="name">mail.notification.search</field>
+        <field name="model">mail.notification</field>
         <field name="arch" type="xml">
            <search string="Mail Statistics">
                 <field name="mail_id_int"/>
@@ -21,10 +21,10 @@
                 <filter string="Bounced" name="filter_bounced" domain="[('bounced', '!=', False)]"/>
                 <filter string="Failed" name="filter_failed" domain="[('exception', '!=', False)]"/>
                 <group expand="0" string="Group By">
-                    <filter string="State" name="state" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="State" name="notification_status" domain="[]" context="{'group_by':'notification_status'}"/>
                     <filter string="Open Date" name="group_open_date" context="{'group_by': 'opened:day'}"/>
                     <filter string="Reply Date" name="group_reply_date" context="{'group_by': 'replied:day'}"/>
-                    <filter string="Last State Update" name="state_update" domain="[]" context="{'group_by':'state_update'}"/>
+                    <filter string="Last State Update" name="status_update" domain="[]" context="{'group_by':'status_update'}"/>
                     <filter string="Mass Mailing"  name="mass_mailing" domain="[]" context="{'group_by':'mass_mailing_id'}"/>
                 </group>
             </search>
@@ -32,13 +32,13 @@
     </record>
 
     <record model="ir.ui.view" id="mailing_trace_view_tree">
-        <field name="name">mailing.trace.tree</field>
-        <field name="model">mailing.trace</field>
+        <field name="name">mail.notification.tree</field>
+        <field name="model">mail.notification</field>
         <field name="arch" type="xml">
             <tree string="Mail Statistics" create="0">
                 <field name="mass_mailing_id"/>
                 <field name="email"/>
-                <field name="state"/>
+                <field name="notification_status"/>
                 <field name="message_id"/>
                 <field name="scheduled"/>
                 <field name="sent"/>
@@ -53,12 +53,12 @@
     </record>
 
     <record model="ir.ui.view" id="mailing_trace_view_form">
-        <field name="name">mailing.trace.form</field>
-        <field name="model">mailing.trace</field>
+        <field name="name">mail.notification.form</field>
+        <field name="model">mail.notification</field>
         <field name="arch" type="xml">
             <form string="Mail Statistics" create="0">
                 <header>
-                    <field name="state" widget="statusbar"/>
+                    <field name="notification_status" widget="statusbar"/>
                 </header>
                 <sheet>
                     <div class="alert alert-info text-center" role="alert" name="alert_mail_exception"
@@ -72,7 +72,7 @@
                     </div>
                     <group>
                         <group string="Recipient">
-                            <field name="trace_type" invisible="1"/>
+                            <field name="notification_type" invisible="1"/>
                             <field name="email"/>
                             <field name="mail_id_int"/>
                             <field name="message_id"/>
@@ -80,7 +80,7 @@
                         <group string="Document">
                             <field name="model"/>
                             <field name="res_id"/>
-                            <field name="state_update"/>
+                            <field name="status_update"/>
                         </group>
                     </group>
                     <group string="Marketing">
@@ -106,20 +106,20 @@
 
     <record id="view_mail_mail_statistics_graph" model="ir.ui.view">
         <field name="name">Mail Statistics Graph</field>
-        <field name="model">mailing.trace</field>
+        <field name="model">mail.notification</field>
         <field name="arch" type="xml">
             <graph string="Mail Statistics" type="bar" stacked="True" interval="day">
-                <field name="state_update" type="row" interval="day"/>
-                <field name="state" type="row"/>
+                <field name="status_update" type="row" interval="day"/>
+                <field name="notification_status" type="row"/>
             </graph>
         </field>
     </record>
 
     <record id="mailing_trace_action" model="ir.actions.act_window">
         <field name="name">Mailing Traces</field>
-        <field name="res_model">mailing.trace</field>
+        <field name="res_model">mail.notification</field>
         <field name="view_mode">tree,form,graph,pivot</field>
-        <field name="domain">[]</field>
+        <field name="domain">[('mass_mailing_id', '!=', False)]</field>
     </record>
 
     <!-- Add in Technical/Email -->

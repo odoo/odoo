@@ -110,7 +110,7 @@ class MassMailing(models.Model):
              'This lets you send different mailings to randomly selected recipients and test '
              'the effectiveness of the mailings, without causing duplicate messages.')
     # statistics data
-    mailing_trace_ids = fields.One2many('mailing.trace', 'mass_mailing_id', string='Emails Statistics')
+    mailing_trace_ids = fields.One2many('mail.notification', 'mass_mailing_id', string='Emails Statistics')
     total = fields.Integer(compute="_compute_total")
     scheduled = fields.Integer(compute="_compute_statistics")
     expected = fields.Integer(compute="_compute_statistics")
@@ -162,7 +162,7 @@ class MassMailing(models.Model):
                 COUNT(CASE WHEN s.bounced is not null THEN 1 ELSE null END) AS bounced,
                 COUNT(CASE WHEN s.exception is not null THEN 1 ELSE null END) AS failed
             FROM
-                mailing_trace s
+                mail_notification s
             RIGHT JOIN
                 mailing_mailing m
                 ON (m.id = s.mass_mailing_id)
@@ -346,7 +346,7 @@ class MassMailing(models.Model):
         elif view_filter == ('delivered'):
             opened_stats = self.mailing_trace_ids.filtered(lambda stat: stat.sent and not stat.bounced)
         else:
-            opened_stats = self.env['mailing.trace']
+            opened_stats = self.env['mail.notification']
         res_ids = opened_stats.mapped('res_id')
         model_name = self.env['ir.model']._get(self.mailing_model_real).display_name
         return {
@@ -424,7 +424,7 @@ class MassMailing(models.Model):
         # + use a basic heuristic for extracting emails
         query = """
             SELECT lower(substring(t.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)'))
-              FROM mailing_trace s
+              FROM mail_notification s
               JOIN %(target)s t ON (s.res_id = t.id)
              WHERE substring(t.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)') IS NOT NULL
         """
@@ -434,7 +434,7 @@ class MassMailing(models.Model):
             mail_field = 'email'
             query = """
                 SELECT lower(substring(p.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)'))
-                  FROM mailing_trace s
+                  FROM mail_notification s
                   JOIN %(target)s t ON (s.res_id = t.id)
                   JOIN res_partner p ON (t.partner_id = p.id)
                  WHERE substring(p.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)') IS NOT NULL
@@ -500,7 +500,7 @@ class MassMailing(models.Model):
 
     def _get_remaining_recipients(self):
         res_ids = self._get_recipients()
-        already_mailed = self.env['mailing.trace'].search_read([
+        already_mailed = self.env['mail.notification'].search_read([
             ('model', '=', self.mailing_model_real),
             ('res_id', 'in', res_ids),
             ('mass_mailing_id', '=', self.id)], ['res_id'])

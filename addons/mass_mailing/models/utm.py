@@ -36,7 +36,7 @@ class UtmCampaign(models.Model):
                 COUNT(CASE WHEN s.replied is not null THEN 1 ELSE null END) AS replied,
                 COUNT(CASE WHEN s.bounced is not null THEN 1 ELSE null END) AS bounced
             FROM
-                mailing_trace s
+                mail_notification s
             RIGHT JOIN
                 utm_campaign c
                 ON (c.id = s.campaign_id)
@@ -81,5 +81,5 @@ class UtmCampaign(models.Model):
             domain = [('campaign_id', '=', campaign.id)]
             if model:
                 domain += [('model', '=', model)]
-            res[campaign.id] = set(self.env['mailing.trace'].search(domain).mapped('res_id'))
+            res[campaign.id] = set(self.env['mail.notification'].search(domain).mapped('res_id'))
         return res

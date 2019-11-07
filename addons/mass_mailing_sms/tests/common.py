@@ -20,7 +20,7 @@ class MockSMS(sms_common.MockSMS):
         self.assertEqual(found_sms.filtered(lambda s: s.partner_id).mapped('partner_id'), partners)
         self.assertEqual(set(found_sms.filtered(lambda s: not s.partner_id).mapped('number')), set(numbers))
 
-        found_traces = self.env['mailing.trace'].sudo().search([
+        found_traces = self.env['mail.notification'].sudo().search([
             ('sms_id_int', 'in', found_sms.ids),
         ])
         self.assertEqual(len(found_sms), len(found_traces))
@@ -40,14 +40,14 @@ class MockSMS(sms_common.MockSMS):
             'failure_type': optional: sms_number_missing / sms_number_format / sms_credit / sms_server
             }, { ... }]
         """
-        traces = self.env['mailing.trace'].search([
+        notifications = self.env['mail.notification'].search([
             ('mass_mailing_id', 'in', mailing.ids),
             ('res_id', 'in', records.ids)
         ])
 
-        self.assertTrue(all(s.model == records._name for s in traces))
+        self.assertTrue(all(s.model == records._name for s in notifications))
         # self.assertTrue(all(s.utm_campaign_id == mailing.campaign_id for s in traces))
-        self.assertEqual(set(s.res_id for s in traces), set(records.ids))
+        self.assertEqual(set(s.res_id for s in notifications), set(records.ids))
 
         for recipient_info in recipients_info:
             partner = recipient_info.get('partner', self.env['res.partner'])
@@ -57,7 +57,7 @@ class MockSMS(sms_common.MockSMS):
             if number is None and partner:
                 number = phone_validation.phone_get_sanitized_record_number(partner)
 
-            notif = traces.filtered(lambda s: s.sms_number == number and s.state == state)
+            notif = notifications.filtered(lambda s: s.sms_number == number and s.notification_status == state)
             self.assertTrue(notif, 'SMS: not found notification for number %s, (state: %s)' % (number, state))
 
             if check_sms:

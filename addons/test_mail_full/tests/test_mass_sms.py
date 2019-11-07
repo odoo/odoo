@@ -123,8 +123,8 @@ class TestMassSMS(test_mail_full_common.TestSMSCommon):
             with self.mockSMSGateway():
                 self.mailing.action_send_sms(res_ids=self.records[:5].ids)
 
-        traces = self.env['mailing.trace'].search([('mass_mailing_id', 'in', self.mailing.ids)])
-        self.assertEqual(len(traces), 5)
+        notifications = self.env['mail.notification'].search([('mass_mailing_id', 'in', self.mailing.ids)])
+        self.assertEqual(len(notifications), 5)
         # new traces generated
         self.assertSMSStatistics(
             [{'partner': record.customer_id, 'number': self.records_numbers[i], 'content': 'Dear %s this is a mass SMS.' % record.display_name} for i, record in enumerate(self.records[:5])],
@@ -136,7 +136,7 @@ class TestMassSMS(test_mail_full_common.TestSMSCommon):
                 self.mailing.action_send_sms(res_ids=self.records.ids)
 
         # delete old traces (for testing purpose: ease check by deleting old ones)
-        traces.unlink()
+        notifications.unlink()
         # new failed traces generated for duplicates
         self.assertSMSStatistics(
             [{'partner': record.customer_id, 'number': self.records_numbers[i], 'content': 'Dear %s this is a mass SMS.' % record.display_name, 'state': 'canceled', 'failure_type': 'sms_duplicate'} for i, record in enumerate(self.records[:5])],

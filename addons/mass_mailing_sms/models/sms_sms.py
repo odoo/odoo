@@ -12,7 +12,7 @@ class SmsSms(models.Model):
     _inherit = ['sms.sms']
 
     mailing_id = fields.Many2one('mailing.mailing', string='Mass Mailing')
-    mailing_trace_ids = fields.One2many('mailing.trace', 'sms_id', string='Statistics')
+    mailing_trace_ids = fields.One2many('mail.notification', 'sms_id', string='Statistics')
 
     def _update_body_short_links(self):
         """ Override to tweak shortened URLs by adding statistics ids, allowing to
@@ -36,11 +36,11 @@ class SmsSms(models.Model):
         if any(sms.mailing_id for sms in self.env['sms.sms'].sudo().browse(all_sms_ids)):
             for state in self.IAP_TO_SMS_STATE.keys():
                 sms_ids = [item['res_id'] for item in iap_results if item['state'] == state]
-                traces = self.env['mailing.trace'].sudo().search([
+                notifications = self.env['mail.notification'].sudo().search([
                     ('sms_id_int', 'in', sms_ids)
                 ])
-                if traces and state == 'success':
-                    traces.write({'sent': fields.Datetime.now(), 'exception': False})
-                elif traces:
-                    traces.set_failed(failure_type=self.IAP_TO_SMS_STATE[state])
+                if notifications and state == 'success':
+                    notifications.write({'sent': fields.Datetime.now(), 'exception': False})
+                elif notifications:
+                    notifications.set_failed(failure_type=self.IAP_TO_SMS_STATE[state])
         return super(SmsSms, self)._postprocess_iap_sent_sms(iap_results, failure_reason=failure_reason, delete_all=delete_all)

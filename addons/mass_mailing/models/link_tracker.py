@@ -13,14 +13,14 @@ class LinkTracker(models.Model):
 class LinkTrackerClick(models.Model):
     _inherit = "link.tracker.click"
 
-    mailing_trace_id = fields.Many2one('mailing.trace', string='Mail Statistics')
+    mailing_trace_id = fields.Many2one('mail.notification', string='Mail Statistics')
     mass_mailing_id = fields.Many2one('mailing.mailing', string='Mass Mailing')
 
     def _prepare_click_values_from_route(self, **route_values):
         click_values = super(LinkTrackerClick, self)._prepare_click_values_from_route(**route_values)
 
         if click_values.get('mailing_trace_id'):
-            trace_sudo = self.env['mailing.trace'].sudo().browse(route_values['mailing_trace_id']).exists()
+            trace_sudo = self.env['mail.notification'].sudo().browse(route_values['mailing_trace_id']).exists()
             if not trace_sudo:
                 click_values['mailing_trace_id'] = False
             else:

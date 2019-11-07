@@ -13,6 +13,17 @@ professional emails and reuse templates.</field>
         <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
     </record>
 
+    <record id="ir_rule_mail_notifications_group_mass_mailing_user" model="ir.rule">
+        <field name="name">mail.notifications: group_mass_mailing_user: mass mailing notification/trace</field>
+        <field name="model_id" ref="model_mail_notification"/>
+        <field name="groups" eval="[(4, ref('mass_mailing.group_mass_mailing_user'))]"/>
+        <field name="domain_force">[('mass_mailing_id', '!=', False)]</field>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
     <!-- Group to manage campaigns -->
     <record id="group_mass_mailing_campaign" model="res.groups">
         <field name="name">Manage Mass Mailing Campaigns</field>

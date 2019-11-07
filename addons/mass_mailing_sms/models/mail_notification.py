@@ -8,14 +8,12 @@ from odoo import api, fields, models
 from odoo.osv import expression
 
 
-class MailingTrace(models.Model):
+class MailNotification(models.Model):
     """ Improve statistics model to add SMS support. Main attributes of
     statistics model are used, only some specific data is required. """
-    _inherit = 'mailing.trace'
+    _inherit = 'mail.notification'
     CODE_SIZE = 3
 
-    trace_type = fields.Selection(selection_add=[('sms', 'SMS')])
-    sms_id = fields.Many2one('sms.sms', string='SMS', index=True, ondelete='set null')
     sms_id_int = fields.Integer(
         string='SMS ID (tech)',
         help='ID of the related sms.sms. This field is an integer field because '
@@ -23,14 +21,8 @@ class MailingTrace(models.Model):
              'However the ID is needed for several action and controllers.',
         index=True,
     )
-    sms_number = fields.Char('Number')
     sms_code = fields.Char('Code')
     failure_type = fields.Selection(selection_add=[
-        ('sms_number_missing', 'Missing Number'),
-        ('sms_number_format', 'Wrong Number Format'),
-        ('sms_credit', 'Insufficient Credit'),
-        ('sms_server', 'Server Error'),
-        # mass mode specific codes
         ('sms_blacklist', 'Blacklisted'),
         ('sms_duplicate', 'Duplicate'),
     ])
@@ -40,9 +32,9 @@ class MailingTrace(models.Model):
         for values in values_list:
             if 'sms_id' in values:
                 values['sms_id_int'] = values['sms_id']
-            if values.get('trace_type') == 'sms' and not values.get('sms_code'):
+            if values.get('notification_type') == 'sms' and not values.get('sms_code'):
                 values['sms_code'] = self._get_random_code()
-        return super(MailingTrace, self).create(values_list)
+        return super(MailNotification, self).create(values_list)
 
     def _get_random_code(self):
         """ Generate a random code for trace. Uniqueness is not really necessary
