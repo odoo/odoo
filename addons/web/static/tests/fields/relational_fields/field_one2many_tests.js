@@ -5409,6 +5409,108 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
+        QUnit.test('nested x2many (inline form view) and onchanges', async function (assert) {
+            assert.expect(6);
+
+            this.data.partner.onchanges.bar = function (obj) {
+                if (!obj.bar) {
+                    obj.p = [[5], [0, 0, {
+                        turtles: [[0, 0, {
+                            turtle_foo: 'new turtle',
+                        }]],
+                    }]];
+                }
+            };
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `<form>
+                        <field name="bar"/>
+                        <field name="p">
+                            <tree>
+                                <field name="turtles"/>
+                            </tree>
+                            <form>
+                                <field name="turtles">
+                                    <tree>
+                                        <field name="turtle_foo"/>
+                                    </tree>
+                                </field>
+                            </form>
+                        </field>
+                    </form>`,
+            });
+
+            assert.containsNone(form, '.o_data_row');
+
+            await testUtils.dom.click(form.$('.o_field_widget[name=bar] input'));
+            assert.containsOnce(form, '.o_data_row');
+            assert.strictEqual(form.$('.o_data_row').text(), '1 record');
+
+            await testUtils.dom.click(form.$('.o_data_row:first'));
+
+            assert.containsOnce(document.body, '.modal .o_form_view');
+            assert.containsOnce(document.body, '.modal .o_form_view .o_data_row');
+            assert.strictEqual($('.modal .o_form_view .o_data_row').text(), 'new turtle');
+
+            form.destroy();
+        });
+
+        QUnit.test('nested x2many (non inline form view) and onchanges', async function (assert) {
+            assert.expect(6);
+
+            this.data.partner.onchanges.bar = function (obj) {
+                if (!obj.bar) {
+                    obj.p = [[5], [0, 0, {
+                        turtles: [[0, 0, {
+                            turtle_foo: 'new turtle',
+                        }]],
+                    }]];
+                }
+            };
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `
+                    <form>
+                        <field name="bar"/>
+                        <field name="p">
+                            <tree>
+                                <field name="turtles"/>
+                            </tree>
+                        </field>
+                    </form>`,
+                archs: {
+                    'partner,false,form': `
+                        <form>
+                            <field name="turtles">
+                                <tree>
+                                    <field name="turtle_foo"/>
+                                </tree>
+                            </field>
+                        </form>`,
+                },
+            });
+
+            assert.containsNone(form, '.o_data_row');
+
+            await testUtils.dom.click(form.$('.o_field_widget[name=bar] input'));
+            assert.containsOnce(form, '.o_data_row');
+            assert.strictEqual(form.$('.o_data_row').text(), '1 record');
+
+            await testUtils.dom.click(form.$('.o_data_row:first'));
+
+            assert.containsOnce(document.body, '.modal .o_form_view');
+            assert.containsOnce(document.body, '.modal .o_form_view .o_data_row');
+            assert.strictEqual($('.modal .o_form_view .o_data_row').text(), 'new turtle');
+
+            form.destroy();
+        });
+
         QUnit.test('one2many (who contains display_name) with tree view and without form view', async function (assert) {
             assert.expect(1);
 

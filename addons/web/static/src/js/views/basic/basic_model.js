@@ -214,21 +214,63 @@ var BasicModel = AbstractModel.extend({
      * It is useful for the cases where a record element is shared between
      * various views, such as a one2many with a tree and a form view.
      *
-     * @param {string} recordID a valid element ID
+     * @param {string} datapointID a valid element ID (of type 'list' or 'record')
      * @param {Object} viewInfo
      * @param {Object} viewInfo.fields
-     * @param {Object} viewInfo.fieldsInfo
+     * @param {Object} viewInfo.fieldInfo
+     * @param {string} viewInfo.viewType
+     * @returns {Promise} resolved when the fieldInfo have been set on the given
+     *   datapoint and all its children, and all rawChanges have been applied
      */
-    addFieldsInfo: function (recordID, viewInfo) {
-        var record = this.localData[recordID];
-        record.fields = _.extend({}, record.fields, viewInfo.fields);
-        // complete the given fieldsInfo with the fields of the main view, so
+    addFieldsInfo: function (dataPointID, viewInfo) {
+        var dataPoint = this.localData[dataPointID];
+        dataPoint.fields = _.extend({}, dataPoint.fields, viewInfo.fields);
+        // complete the given fieldInfo with the fields of the main view, so
         // that those field will be reloaded if a reload is triggered by the
         // secondary view
-        var fieldsInfo = _.mapObject(viewInfo.fieldsInfo, function (fieldsInfo) {
-            return _.defaults({}, fieldsInfo, record.fieldsInfo[record.viewType]);
+        dataPoint.fieldsInfo = dataPoint.fieldsInfo || {};
+        const mainFieldInfo = dataPoint.fieldsInfo[dataPoint[viewInfo.viewType]];
+        dataPoint.fieldsInfo[viewInfo.viewType] = _.defaults({}, viewInfo.fieldInfo, mainFieldInfo);
+
+        // Some fields in the new fields info might not be in the previous one,
+        // so we might have stored changes for them (e.g. coming from onchange
+        // RPCs), that we haven't been able to process earlier (because those
+        // fields were unknown at that time). So we now try to process them.
+        return this.applyRawChanges(dataPointID, viewInfo.viewType).then(() => {
+            const proms = [];
+            const fieldInfo = dataPoint.fieldsInfo[viewInfo.viewType];
+            // recursively apply the new field info on sub datapoints
+            if (dataPoint.type === 'list') {
+                // case 'list': on all datapoints in the list
+                Object.values(dataPoint._cache).forEach(subDataPointID => {
+                    proms.push(this.addFieldsInfo(subDataPointID, {
+                        fields: dataPoint.fields,
+                        fieldInfo: dataPoint.fieldsInfo[viewInfo.viewType],
+                        viewType: viewInfo.viewType,
+                    }));
+                });
+            } else {
+                // case 'record': on datapoints of all x2many fields
+                const values = _.extend({}, dataPoint.data, dataPoint._changes);
+                Object.keys(fieldInfo).forEach(fieldName => {
+                    const fieldType = dataPoint.fields[fieldName].type;
+                    if (fieldType === 'one2many' || fieldType === 'many2many') {
+                        const mode = fieldInfo[fieldName].mode;
+                        const views = fieldInfo[fieldName].views;
+                        const x2mDataPointID = values[fieldName];
+                        if (views[mode] && x2mDataPointID) {
+                            proms.push(this.addFieldsInfo(x2mDataPointID, {
+                                fields: views[mode].fields,
+                                fieldInfo: views[mode].fieldsInfo[mode],
+                                viewType: mode,
+                            }));
+                        }
+                    }
+                });
+            }
+            return Promise.all(proms);
         });
-        record.fieldsInfo = _.extend({}, record.fieldsInfo, fieldsInfo);
+
     },
     /**
      * Add and process default values for a given record. Those values are
@@ -3735,8 +3777,8 @@ var BasicModel = AbstractModel.extend({
      * @returns {boolean}
      */
     _isFieldProtected: function (record, fieldName, viewType) {
-        var fieldInfo = record.fieldsInfo &&
-                        (record.fieldsInfo[viewType || record.viewType][fieldName]);
+        viewType = viewType || record.viewType;
+        var fieldInfo = viewType && record.fieldsInfo && record.fieldsInfo[viewType][fieldName];
         if (fieldInfo) {
             var rawModifiers = fieldInfo.modifiers || {};
             var modifiers = this._evalModifiers(record, _.pick(rawModifiers, 'readonly'));
