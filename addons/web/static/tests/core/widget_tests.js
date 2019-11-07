@@ -452,21 +452,24 @@ QUnit.module('core', {}, function () {
 
     QUnit.test('start is not called when widget is destroyed', function (assert) {
         assert.expect(0);
-        var slowWillStartPromise = testUtils.makeTestPromise();
-        var $fix = $( "#qunit-fixture");
+        const $fix = $("#qunit-fixture");
 
-        var widget = new (Widget.extend({
-            willStart: function () {
-                return slowWillStartPromise;
-            },
+        // Note: willStart is always async
+        const MyWidget = Widget.extend({
             start: function () {
-                throw new Error('Should not call start method');
+                assert.ok(false, 'Should not call start method');
             },
-        }))();
+        });
 
+        const widget = new MyWidget();
         widget.appendTo($fix);
         widget.destroy();
-        slowWillStartPromise.resolve();
+
+        const divEl = document.createElement('div');
+        $fix[0].appendChild(divEl);
+        const widget2 = new MyWidget();
+        widget2.attachTo(divEl);
+        widget2.destroy();
     });
 
     QUnit.test("don't destroy twice widget's children", function (assert) {
