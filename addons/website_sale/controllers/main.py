@@ -388,6 +388,8 @@ class WebsiteSale(http.Controller):
                 values.update({'access_token': abandoned_order.access_token})
 
         if order:
+            # Removing the archived products from the cart
+            order.order_line.filtered(lambda l: not l.product_id.active).unlink()
             from_currency = order.company_id.currency_id
             to_currency = order.pricelist_id.currency_id
             compute_currency = lambda price: from_currency._convert(
