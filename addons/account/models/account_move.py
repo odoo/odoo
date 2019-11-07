@@ -605,6 +605,7 @@ class AccountMoveLine(models.Model):
                         AND EXISTS (
                             SELECT NULL
                             FROM account_move_line l
+                            JOIN account_move move ON move.id = l.move_id AND move.state = 'posted'
                             WHERE l.account_id = a.id
                             {7}
                             AND l.amount_residual > 0
@@ -612,6 +613,7 @@ class AccountMoveLine(models.Model):
                         AND EXISTS (
                             SELECT NULL
                             FROM account_move_line l
+                            JOIN account_move move ON move.id = l.move_id AND move.state = 'posted'
                             WHERE l.account_id = a.id
                             {7}
                             AND l.amount_residual < 0
@@ -677,8 +679,9 @@ class AccountMoveLine(models.Model):
             amount = move_line.amount_residual;
             rec_prop = move_line
             query = """
-                    SELECT a.id, a.id FROM account_move_line a
+                    SELECT a.id, a.id FROM account_move_line a, account_move move
                     WHERE a.amount_residual = -%(amount)s
+                    AND move.id = a.move_id AND move.state = 'posted'
                     AND NOT a.reconciled
                     AND a.account_id = %(account_id)s
                     AND a.id != %(move_line_id)s
@@ -690,8 +693,10 @@ class AccountMoveLine(models.Model):
             partner_id_condition = partner_id_condition and partner_id_condition+' AND b.partner_id = %(partner_id)s' or ''
             query = """
                     SELECT a.id, b.id
-                    FROM account_move_line a, account_move_line b
+                    FROM account_move_line a, account_move_line b, account_move move_a, account_move move_b
                     WHERE a.amount_residual = -b.amount_residual
+                    AND move_a.id = a.move_id AND move_a.state = 'posted'
+                    AND move_b.id = b.move_id AND move_b.state = 'posted'
                     AND NOT a.reconciled AND NOT b.reconciled
                     AND a.account_id = %(account_id)s AND b.account_id = %(account_id)s
                     {partner_id_condition}
@@ -782,7 +787,7 @@ class AccountMoveLine(models.Model):
 
     def _domain_move_lines_for_manual_reconciliation(self, account_id, partner_id=False, excluded_ids=None, str=False):
         """ Create domain criteria that are relevant to manual reconciliation. """
-        domain = ['&', ('reconciled', '=', False), ('account_id', '=', account_id)]
+        domain = ['&', '&', ('reconciled', '=', False), ('account_id', '=', account_id), ('move_id.state', '=', 'posted')]
         if partner_id:
             domain = expression.AND([domain, [('partner_id', '=', partner_id)]])
         if excluded_ids:
