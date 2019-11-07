@@ -32,6 +32,10 @@ odoo.define('website_form_editor', function (require) {
                     close: true
                 }],
             }, options));
+
+            this.opened(() => {
+                this.$modal.find('.o_website_form_input, .modal-footer .btn').first().focus();
+            });
         },
 
         //----------------------------------------------------------------------
@@ -309,6 +313,12 @@ odoo.define('website_form_editor', function (require) {
 
         append_field: function (field) {
             var self = this;
+            // Copy formatting classes of last row (field)
+            var $lastField = this.$target.find('.form-field.row:last');
+            field.formatInfo = {
+                labelClass: $lastField.find('> div:first').attr('class'),
+                contentClass: $lastField.find('> div:last').attr('class'),
+            };
             this.render_field(field).then(function (field){
                 self.$target.find(".form-group:has('.o_website_form_send')").before(field);
             });
@@ -359,32 +369,56 @@ odoo.define('website_form_editor', function (require) {
         init_form: function () {
             var self = this;
             var modelName = this.activeForm.model;
+            var currentModel = this.$target.attr('data-model_name');
             var formKey = this.activeForm.website_form_key;
-            if (modelName !== this.$target.attr('data-model_name')) {
-                this.$target.attr('data-model_name', modelName);
-                this.$target.find(".form-field:not(:has('.o_website_form_send')), .o_form_heading").remove();
+            if (!currentModel) {
+                // Directly change the parameters if model is being set for the first time
+                this.changeFormParameters(modelName, formKey);
+            } else if (modelName !== currentModel) {
+                var warningMessage = _t("Are you sure you want to change the parameters of your form? All the current fields will be discarded.");
+                new Dialog(this, {
+                    title: _t("Warning"),
+                    size: 'medium',
+                    $content: $('<div>', {text: warningMessage}),
+                    buttons: [{
+                        text: _t("Ok"),
+                        classes: 'btn-primary',
+                        click: function () {
+                            self.changeFormParameters(modelName, formKey);
+                        },
+                        close: true,
+                    }, {
+                        text: _t("Discard"),
+                        close: true,
+                    }],
+                }).open({shouldFocusButtons: true});
+            }
+        },
 
-                if (formKey) {
-                    var formInfo = FormEditorRegistry.get(formKey);
-                    ajax.loadXML(formInfo.defaultTemplatePath, qweb).then(function () {
-                        // Append form title
-                        $('<h1>', {
-                            class: 'o_form_heading',
-                            text: self.activeForm.website_form_label,
-                        }).prependTo(self.$target.find('.container'));
-                        self.$target.find('.form-group:has(".o_website_form_send")').before($(qweb.render(formInfo.defaultTemplateName)));
+        changeFormParameters: function (modelName, formKey) {
+            var self = this;
+            this.$target.attr('data-model_name', modelName);
+            this.$target.find(".form-field:not(:has('.o_website_form_send')), .o_form_heading").remove();
+            if (formKey) {
+                var formInfo = FormEditorRegistry.get(formKey);
+                ajax.loadXML(formInfo.defaultTemplatePath, qweb).then(function () {
+                    // Append form title
+                    $('<h1>', {
+                        class: 'o_form_heading',
+                        text: self.activeForm.website_form_label,
+                    }).prependTo(self.$target.find('.container'));
+                    self.$target.find('.form-group:has(".o_website_form_send")').before($(qweb.render(formInfo.defaultTemplateName)));
+                });
+            } else {
+                // Force fetch the fields of the new model
+                // and render all model required fields
+                this.fetch_model_fields().then(function (fields) {
+                    _.each(fields, function (field, field_name) {
+                        if (field.required) {
+                            self.append_field(field);
+                        }
                     });
-                } else {
-                    // Force fetch the fields of the new model
-                    // and render all model required fields
-                    this.fetch_model_fields().then(function (fields) {
-                        _.each(fields, function (field, field_name){
-                            if (field.required) {
-                                self.append_field(field);
-                            }
-                        });
-                    });
-                }
+                });
             }
         },
 
@@ -434,6 +468,34 @@ odoo.define('website_form_editor', function (require) {
         }
     });
 
+    // radio / checkboxes field option to display them horizontally or vertically
+    options.registry['website_form_editor_choice_field_display'] = options.Class.extend({
+        xmlDependencies: ['/website_form/static/src/xml/website_form_editor.xml'],
+
+        /**
+         * @see this.selectClass for parameters
+         */
+        website_form_choice_field_display: function (previewMode, value, $opt) {
+            this.$target.toggleClass('o_website_form_flex_fw', value === 'vertical');
+            this.$target[0].dataset.display = value;
+        },
+
+        //----------------------------------------------------------------------
+        // Private
+        //----------------------------------------------------------------------
+
+        /**
+         * @override
+         */
+        _setActive: function () {
+            this._super(...arguments);
+            this.$el.find('[data-website_form_choice_field_display]')
+                .removeClass('active')
+                .filter('[data-website_form_choice_field_display=' + this.$target.attr('data-display') + ']')
+                .addClass('active');
+        },
+    });
+
     // Generic custom field options
     options.registry['website_form_editor_field'] = options.Class.extend({
         xmlDependencies: ['/website_form/static/src/xml/website_form_editor.xml'],
@@ -475,6 +537,10 @@ odoo.define('website_form_editor', function (require) {
                     string: this.$target.find('.col-form-label').text().trim(),
                     required: self.$target.hasClass('o_website_form_required'),
                     custom: self.$target.hasClass('o_website_form_custom'),
+                    formatInfo: {
+                        labelClass: this.$target.find('> div:first').attr('class'),
+                        contentClass: this.$target.find('> div:last').attr('class'),
+                    },
                 };
 
                 // Build the new records list from the editable select field
@@ -497,10 +563,6 @@ odoo.define('website_form_editor', function (require) {
                 if (this.$target.hasClass('o_website_form_field_hidden')) {
                     $new_select.addClass('o_website_form_field_hidden');
                 }
-                var labelClasses = this.$target.find('> div:first').attr('class');
-                var inputClasses = this.$target.find('> div:last').attr('class');
-                $new_select.find('> div:first').attr('class', labelClasses);
-                $new_select.find('> div:last').attr('class', inputClasses);
                 this.$target.replaceWith($new_select);
             }
         }
