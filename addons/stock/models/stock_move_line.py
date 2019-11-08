@@ -65,6 +65,7 @@ class StockMoveLine(models.Model):
     origin = fields.Char(related='move_id.origin', string='Source')
     picking_type_entire_packs = fields.Boolean(related='picking_id.picking_type_id.show_entire_packs', readonly=True)
     description_picking = fields.Text(string="Description picking")
+    origin_returned_move_id = fields.Many2one('stock.move', 'Origin return move', related='move_id.origin_returned_move_id')
 
     @api.depends('picking_id.picking_type_id', 'product_id.tracking')
     def _compute_lots_visible(self):

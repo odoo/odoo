@@ -1096,7 +1096,7 @@ class StockMove(models.Model):
 
     def _should_bypass_reservation(self):
         self.ensure_one()
-        return self.location_id.should_bypass_reservation() or self.product_id.type != 'product'
+        return (self.location_id.should_bypass_reservation() and not self.origin_returned_move_id) or self.product_id.type != 'product'
 
     def _action_assign(self):
         """ Reserve stock moves by creating their stock move lines. A stock move is
@@ -1326,7 +1326,7 @@ class StockMove(models.Model):
 
         # Create extra moves where necessary
         for move in moves:
-            if move.state == 'cancel' or move.quantity_done <= 0:
+            if move.state == 'cancel' or move.quantity_done <= 0 or float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding):
                 continue
 
             moves_todo |= move._create_extra_move()
@@ -1337,7 +1337,8 @@ class StockMove(models.Model):
             # To know whether we need to create a backorder or not, round to the general product's
             # decimal precision and not the product's UOM.
             rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-            if float_compare(move.quantity_done, move.product_uom_qty, precision_digits=rounding) < 0:
+            if float_compare(move.quantity_done, move.product_uom_qty, precision_digits=rounding) < 0 and \
+                    not float_is_zero(move.product_uom_qty, precision_digits=rounding):
                 # Need to do some kind of conversion here
                 qty_split = move.product_uom._compute_quantity(move.product_uom_qty - move.quantity_done, move.product_id.uom_id, rounding_method='HALF-UP')
                 new_move = move._split(qty_split)
@@ -1518,3 +1519,56 @@ class StockMove(models.Model):
                 move.procure_method = rules.procure_method
             else:
                 move.procure_method = 'make_to_stock'
+
+    def _get_returnable_qties(self):
+        self.ensure_one()
+        first_move = self
+        moves = first_move
+        all_moves = first_move
+        while moves.mapped('returned_move_ids'):
+            all_moves |= moves.mapped('returned_move_ids')
+            moves = moves.mapped('returned_move_ids')
+
+        # Ignore cancelled and scrapped moves
+        relevant_moves = all_moves.filtered(lambda m: m.state != 'cancel' and not m.scrapped)
+
+        # Filter Incoming/Outgoing moves
+        moves_in = relevant_moves.filtered(lambda m: m.location_dest_id == first_move.location_dest_id)
+        moves_out = relevant_moves - moves_in
+
+        # Get tracked move lines
+        lot_sml_in = moves_in.move_line_ids.filtered(lambda m: bool(m.lot_id))
+        lot_sml_out = moves_out.move_line_ids.filtered(lambda m: bool(m.lot_id))
+
+        # Get untracked moves
+        untracked_sml_in = (moves_in - lot_sml_in.move_id).move_line_ids
+        untracked_sml_out = (moves_out - lot_sml_out.move_id).move_line_ids
+
+        # Get returnable quantities per SN/LN
+        returnable_qties_per_lot = defaultdict(lambda: 0)
+        for ml in lot_sml_out:
+            returnable_qties_per_lot[ml.lot_id] -= ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_id)
+        for ml in lot_sml_in:
+            returnable_qties_per_lot[ml.lot_id] += ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_id)
+
+        # Get returnable quantities for untracked product
+        returnable_qty_untracked = 0
+        for ml in untracked_sml_out:
+            returnable_qty_untracked -= ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_id)
+        for ml in untracked_sml_in:
+            returnable_qty_untracked += ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_id)
+
+        return returnable_qties_per_lot, returnable_qty_untracked
+
+    def _generate_return_move_line_values(self, qty, lot_id=False):
+        self.ensure_one()
+        return {
+            'picking_id': self.picking_id.id,
+            'move_id': self.id,
+            'product_id': self.product_id.id,
+            'product_uom_id': self.product_uom.id,
+            'location_id': self.location_id.id,
+            'location_dest_id': self.location_dest_id.id,
+            'lot_id': lot_id,
+            'qty_done': qty
+        }

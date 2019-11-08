@@ -368,6 +368,9 @@ class Picking(models.Model):
     immediate_transfer = fields.Boolean(default=False)
     package_level_ids = fields.One2many('stock.package_level', 'picking_id')
     package_level_ids_details = fields.One2many('stock.package_level', 'picking_id')
+    return_origin_picking_id = fields.Many2one('stock.picking', string="Returned Transfer")
+    return_picking_ids = fields.One2many('stock.picking', 'return_origin_picking_id', string="Returns")
+    return_pickings_count = fields.Integer('# Returns', compute='_compute_return_pickings_count')
 
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per company!'),
@@ -510,6 +513,30 @@ class Picking(models.Model):
             else:
                 picking.show_validate = True
 
+    @api.depends('return_picking_ids')
+    def _compute_return_pickings_count(self):
+        for picking in self:
+            picking.return_pickings_count = len(picking.return_picking_ids)
+
+    @api.depends('state', 'immediate_transfer', 'return_picking_ids', 'move_lines.product_uom_qty')
+    def _compute_is_location_readonly(self):
+        for picking in self:
+
+            if picking.state == 'draft':
+                picking.is_location_readonly = False
+            elif picking.state == 'assigned':
+                initial_demand_is_zero = all(
+                    float_is_zero(m.product_uom_qty, precision_rounding=m.product_uom.rounding)
+                    for m in picking.move_lines
+                )
+                picking.is_location_readonly = not (
+                    picking.immediate_transfer and
+                    picking.return_origin_picking_id and
+                    initial_demand_is_zero
+                )
+            else:
+                picking.is_location_readonly = True
+
     @api.onchange('picking_type_id', 'partner_id')
     def onchange_picking_type(self):
         if self.picking_type_id:
@@ -640,6 +667,108 @@ class Picking(models.Model):
         self.mapped('move_lines')._action_cancel()
         self.write({'is_locked': True})
         return True
+
+    def action_return(self):
+        self.ensure_one()
+        new_picking, return_picking_type = self._action_return()
+        self.return_picking_ids |= new_picking
+
+        # A backorder on a return does not make sense so the check for it should be skipped on validation
+        ctx = dict(self.env.context)
+        ctx.update({
+            'skip_backorder': True,
+            'picking_ids_not_to_backorder': [new_picking.id],
+            # We want to see detailed operations as a return will populate the move_line_ids
+            'force_detailed_view': True
+        })
+        return {
+            'name': _('Returned Picking'),
+            'view_mode': 'form,tree,calendar',
+            'res_model': 'stock.picking',
+            'res_id': new_picking.id,
+            'type': 'ir.actions.act_window',
+            'context': ctx,
+            'flags': {'mode': 'edit'}
+        }
+
+    def _action_return(self):
+        self.ensure_one()
+        returnable_moves = self.move_lines.filtered(lambda m: not m.scrapped)
+        if not returnable_moves:
+            raise UserError(_('There is nothing to return'))
+
+        # create new picking for returned products
+        return_picking_type = self.picking_type_id.return_picking_type_id or self.picking_type_id
+        new_picking = self.copy({
+            'move_lines': [],
+            'picking_type_id': return_picking_type.id,
+            'state': 'draft',
+            'origin': _("Return of %s") % self.name,
+            'location_id': self.location_dest_id.id,
+            'location_dest_id': self.location_id.id,
+            'immediate_transfer': True
+        })
+        new_picking.message_post_with_view('mail.message_origin_link',
+            values={'self': new_picking, 'origin': self},
+            subtype_id=self.env.ref('mail.mt_note').id)
+        ml_vals = []
+        for move in returnable_moves:
+            returnable_qties_per_lot, returnable_qty_untracked = move._get_returnable_qties()
+            # Check there's something to return in the move
+            if not float_is_zero(returnable_qty_untracked, precision_rounding=move.product_id.uom_id.rounding) or \
+                    not all(
+                        float_is_zero(returnable_qty, precision_rounding=move.product_id.uom_id.rounding)
+                        for lot, returnable_qty in returnable_qties_per_lot.items()
+                    ):
+                # TODO sle: the unreserve of the next moves could be less brutal
+                move.move_dest_ids.filtered(lambda m: m.state not in ('done', 'cancel'))._do_unreserve()
+                vals = self._prepare_return_move_values(move, new_picking)
+                r = move.copy(vals)
+                vals = {}
+
+                # +--------------------------------------------------------------------------------------------------------+
+                # |       picking_pick     <--Move Orig--    picking_pack     --Move Dest-->   picking_ship
+                # |              | returned_move_ids              ↑                                  | returned_move_ids
+                # |              ↓                                | return_line.move_id              ↓
+                # |       return pick(Add as dest)          return toLink                    return ship(Add as orig)
+                # +--------------------------------------------------------------------------------------------------------+
+                move_orig_to_link = move.move_dest_ids.mapped('returned_move_ids')
+                move_dest_to_link = move.move_orig_ids.mapped('returned_move_ids')
+                vals['move_orig_ids'] = [(4, m.id) for m in move_orig_to_link | move]
+                vals['move_dest_ids'] = [(4, m.id) for m in move_dest_to_link]
+                r.write(vals)
+
+                # We generate move lines values based on the current returned move
+                if move.product_id.tracking == 'none' and not float_is_zero(returnable_qty_untracked, precision_rounding=move.product_id.uom_id.rounding):
+                    ml_vals.append(r._generate_return_move_line_values(returnable_qty_untracked))
+                else:
+                    for lot_id, returnable_qty in returnable_qties_per_lot.items():
+                        if not float_is_zero(returnable_qty, precision_rounding=move.product_id.uom_id.rounding):
+                            ml_vals.append(r._generate_return_move_line_values(returnable_qty, lot_id=lot_id.id))
+
+        new_picking.action_confirm()
+        self.env['stock.move.line'].create(ml_vals)
+
+        return new_picking, return_picking_type
+
+    def _prepare_return_move_values(self, origin_move, new_picking):
+        """ Generates the values for the return move based on its origin
+        move, its returnable quantity and its return picking
+        """
+        return {
+            'product_id': origin_move.product_id.id,
+            'product_uom_qty': 0,
+            'product_uom': origin_move.product_id.uom_id.id,
+            'picking_id': new_picking.id,
+            'state': 'draft',
+            'date_expected': fields.Datetime.now(),
+            'location_id': origin_move.location_dest_id.id,
+            'location_dest_id': origin_move.location_id.id,
+            'picking_type_id': new_picking.picking_type_id.id,
+            'warehouse_id': origin_move.picking_id.picking_type_id.warehouse_id.id,
+            'origin_returned_move_id': origin_move.id,
+            'procure_method': 'make_to_stock',
+        }
 
     def _action_done(self):
         """Call `_action_done` on the `stock.move` of the `stock.picking` in `self`.
