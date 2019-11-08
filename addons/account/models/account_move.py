@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from copy import deepcopy
 import time
 from datetime import date
 from collections import OrderedDict
@@ -250,8 +251,31 @@ class AccountMove(models.Model):
                 balance = sum([l.balance for l in lines_to_sum])
 
                 # Compute the tax amount one by one.
-                quantity = len(lines_to_sum) if tax.amount_type == 'fixed' else 1
-                taxes_vals = tax.compute_all(balance, quantity=quantity, currency=line.currency_id, product=line.product_id, partner=line.partner_id)
+                if self.company_id.tax_calculation_rounding_method == 'round_globally':
+                    quantity = len(lines_to_sum) if tax.amount_type == 'fixed' else 1
+                    taxes_vals = tax.compute_all(balance, quantity=quantity, currency=line.currency_id, product=line.product_id, partner=line.partner_id)
+                else:
+                    taxes_vals_line = [
+                        tax.compute_all(
+                            lts.balance, quantity=1.0, currency=line.currency_id,
+                            product=line.product_id, partner=line.partner_id
+                        )
+                        for lts in lines_to_sum
+                    ]
+                    taxes_vals = {
+                        'total_void': 0.0,
+                        'total_excluded': 0.0,
+                        'total_included': 0.0,
+                        'taxes': deepcopy(taxes_vals_line[0]['taxes']),
+                    }
+                    taxes_vals['taxes'][0]['base'] = 0.0
+                    taxes_vals['taxes'][0]['amount'] = 0.0
+                    for val in taxes_vals_line:
+                        taxes_vals['total_void'] += val['total_void']
+                        taxes_vals['total_excluded'] += val['total_excluded']
+                        taxes_vals['total_included'] += val['total_included']
+                        taxes_vals['taxes'][0]['base'] += sum([v['base'] for v in val['taxes']])
+                        taxes_vals['taxes'][0]['amount'] += sum([v['amount'] for v in val['taxes']])
 
                 if taxes_vals.get('taxes'):
                     for line_vals in taxes_vals['taxes']:
