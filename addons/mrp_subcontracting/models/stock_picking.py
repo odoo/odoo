@@ -143,3 +143,8 @@ class StockPicking(models.Model):
             finished_move = mo.move_finished_ids.filtered(lambda m: m.product_id == move.product_id)
             finished_move.write({'move_dest_ids': [(4, move.id, False)]})
             mo.action_assign()
+
+    def _prepare_return_move_values(self, origin_move, qty, new_picking):
+        vals = super(StockPicking, self)._prepare_return_move_values(origin_move, qty, new_picking)
+        vals['is_subcontract'] = False
+        return vals

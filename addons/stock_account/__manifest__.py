@@ -33,6 +33,7 @@ Dashboard / Reports for Warehouse Management includes:
         'views/product_views.xml',
         'views/stock_quant_views.xml',
         'views/stock_valuation_layer_views.xml',
+        'views/stock_picking_views.xml',
     ],
     'test': [
     ],
