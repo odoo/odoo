@@ -54,7 +54,6 @@ class AccountAnalyticTag(models.Model):
 class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
     _description = 'Analytic Line'
-    _order = 'date desc'
 
     product_id = fields.Many2one('product.product', string='Product', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     general_account_id = fields.Many2one('account.account', string='Financial Account', ondelete='restrict', readonly=True,
