@@ -4,6 +4,7 @@ import io
 import logging
 import re
 import time
+import requests
 import werkzeug.wrappers
 from PIL import Image, ImageFont, ImageDraw
 from lxml import etree
@@ -173,7 +174,13 @@ class Web_Editor(http.Controller):
         if attachment.type == 'url':
             raise UserError(_("You cannot change the quality, the width or the name of an URL attachment."))
         if copy:
+            original = attachment
             attachment = attachment.copy()
+            if attachment.url:
+                # Need to make the url unique for this optimization level and size
+                attachment.url += '-q=%sw=%sh=%s' % (quality, width, height)
+            attachment.original_id = original
+            attachment.quality = quality
         data = {}
         if name:
             data['name'] = name
@@ -214,6 +221,13 @@ class Web_Editor(http.Controller):
         if attachments_to_remove:
             attachments_to_remove.unlink()
         return removal_blocked_by
+
+    @http.route('/web_editor/attachment/toggle_favorite', type='json', auth='user', website=True)
+    def toggle_favorite(self, ids, **kwargs):
+        """ Toggles a web-based image attachment's favorite status"""
+        for attachment in request.env['ir.attachment'].browse(ids):
+            attachment.is_favorite = not attachment.is_favorite
+        return attachment.is_favorite
 
     @http.route('/web_editor/get_image_info', type='json', auth='user', website=True)
     def get_image_info(self, image_id=None, xml_id=None):
@@ -259,6 +273,14 @@ class Web_Editor(http.Controller):
         if data:
             attachment_data['datas'] = data
         elif url:
+            try:
+                req = requests.head(url);
+                attachment_data.update({'mimetype': req.headers['content-type']})
+            except requests.exceptions.ConnectionError as e:
+                logger.exception("Connection Error: " + str(e))
+            except requests.exceptions.Timeout as e:
+                logger.exception("Timeout: " + str(e))
+
             attachment_data.update({
                 'type': 'url',
                 'url': url,

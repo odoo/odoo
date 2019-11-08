@@ -1,29 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
 
-<t t-extend="wysiwyg.widgets.file">
-    <t t-jquery=".o_we_existing_attachments" t-operation="after">
-        <div class="unsplash_img_container"></div>
+<t t-name="web_unsplash.unsplash.attachment" t-extend="wysiwyg.widgets.image.database.attachment">
+    <t t-jquery=".o_existing_attachment_cell" t-operation="attributes">
+        <attribute name="class">o_existing_attachment_cell unsplash_img_container position-relative</attribute>
+    </t>
+    <!-- empty top controls-->
+    <t t-jquery=".o_image_controls .w-100.d-flex" t-operation="inner"/>
+    <t t-jquery=".o_image_controls .w-100.text-center" t-operation="inner">
+        <span class="o_we_attachment_name">Photo by <a t-att-href="attachment.user.links.html"><t t-esc="attachment.user.username"/></a> on Unsplash</span>
+    </t>
+
+    <t t-jquery=".img.img-fluid" t-operation="replace">
+        <img class="img img-fluid o_we_attachment_highlight"
+            t-att-src="attachment.urls.thumbnail"
+            t-att-alt="attachment.alt_description"
+            t-att-title="attachment.alt_description"
+            t-att-data-imgid="attachment.id"
+            t-att-data-url="attachment.urls.hd"
+            t-att-data-download-url="attachment.links.download_location"/>
     </t>
 </t>
 
-<t t-name="web_unsplash.dialog.media.search_icon" t-extend="">
-    <div class="dropdown">
-        <button type="button" class="btn btn-primary dropdown-toggle o_we_search_icon" data-toggle="dropdown">
-            <i class="fa fa-search"/>
-            <span/>
-        </button>
-        <div class="dropdown-menu dropdown-menu-right">
-            <button class="dropdown-item o_search_an_image" type="button">
-                Search among my images for:
-                <div class="font-weight-bold o_search_value_input"></div>
-            </button>
-            <button class="dropdown-item o_search_from_unsplash" type="button">
-                Search from Unsplash for:
-                <div class="font-weight-bold o_search_value_input"></div>
-            </button>
-        </div>
-    </div>
+<t t-extend="wysiwyg.widgets.image.existing.attachment">
+    <t t-jquery="t" t-operation="replace">
+        <t t-if="!attachment.isUnsplash">
+            <t t-call="wysiwyg.widgets.image.database.attachment"/>
+        </t>
+        <t t-else="">
+            <t t-call="web_unsplash.unsplash.attachment"/>
+        </t>
+    </t>
 </t>
 
 <t t-name="web_unsplash.dialog.image.content">
@@ -46,11 +53,11 @@
     <h4><t t-esc="title"/></h4>
     <div class="details">
         <t t-esc="subtitle"/>
-        <div class="form-group mt-4 access_key_box">
+        <div class="form-group mt-4 mb-2 access_key_box">
             <input type="text" class="form-control w-100" id="accessKeyInput" placeholder="Paste your access key here"/>
         </div>
         <a href="https://www.odoo.com/documentation/user/general/unsplash/unsplash_access_key.html" target="_blank"><i class="fa fa-arrow-right"/> Generate an access key</a>
-        <div class="form-group mt-4 access_key_box">
+        <div class="form-group mt-4 mb-2 access_key_box">
             <input type="text" class="form-control w-100" id="appIdInput" placeholder="Paste your application ID here"/>
         </div>
         <a href="https://www.odoo.com/documentation/user/general/unsplash/unsplash_application_id.html" target="_blank"><i class="fa fa-arrow-right"/> How to find my Unsplash Application ID?</a>
@@ -59,12 +66,15 @@
 </t>
 
 <t t-name="web_unsplash.dialog.error.content">
-    <div class="d-flex mt-2 unsplash_error">
+    <div class="d-flex mt-2 py-2 border rounded mx-auto col-4 unsplash_error">
         <div class="mx-auto text-center">
             <t t-if="status == 'key_not_found'">
                 <t t-call="web_unsplash.dialog.error.credentials">
                     <t t-set="title">
-                        Unsplash requires an access key and an application ID
+                        Unsplash is not configured
+                    </t>
+                    <t t-set="subtitle">
+                        Search on Unsplash and in your database simultaneously by configuring an Unsplash access key and application ID
                     </t>
                 </t>
             </t>

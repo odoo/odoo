@@ -107,6 +107,7 @@ class Web_Unsplash(http.Controller):
 
             attachment = Attachments.create({
                 'name': '_'.join(url_frags),
+                'description': value.get('alt'),
                 'url': '/' + '/'.join(url_frags),
                 'mimetype': mimetype,
                 'datas': image_base64,

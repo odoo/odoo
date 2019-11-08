@@ -218,6 +218,9 @@ var SnippetEditor = Widget.extend({
         if (this.$target.data('name') !== undefined) {
             return this.$target.data('name');
         }
+        if (this.$target.is('img')) {
+            return _t("Image");
+        }
         if (this.$target.parent('.row').length) {
             return _t("Column");
         }
@@ -987,6 +990,7 @@ var SnippetsMenu = Widget.extend({
     cleanForSave: async function () {
         await this._activateSnippet(false);
         this.trigger_up('ready_to_clean_for_save');
+        await this._cleanEditors();
         await this._destroyEditors();
 
         this.getEditableArea().find('[contentEditable]')
@@ -1288,12 +1292,14 @@ var SnippetsMenu = Widget.extend({
     /**
      * @private
      */
+    _cleanEditors: function () {
+        return Promise.all(_.map(this.snippetEditors, snippetEditor => snippetEditor.cleanForSave()));
+    },
+    /**
+     * @private
+     */
     _destroyEditors: async function () {
-        const proms = _.map(this.snippetEditors, async function (snippetEditor) {
-            await snippetEditor.cleanForSave();
-            snippetEditor.destroy();
-        });
-        await Promise.all(proms);
+        await Promise.all(_.map(this.snippetEditors, snippetEditor => snippetEditor.destroy()));
         this.snippetEditors.splice(0);
     },
     /**

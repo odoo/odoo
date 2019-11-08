@@ -1167,6 +1167,7 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
             _.extend({
                 res_model: data.$editable.data('oe-model'),
                 res_id: data.$editable.data('oe-id'),
+                res_field: data.$editable.data('oe-field'),
                 domain: data.$editable.data('oe-media-domain'),
             }, data.options),
             data.media

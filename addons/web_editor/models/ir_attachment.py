@@ -11,9 +11,12 @@ class IrAttachment(models.Model):
     _inherit = "ir.attachment"
 
     local_url = fields.Char("Attachment URL", compute='_compute_local_url')
-    image_src = fields.Char(compute='_compute_image_src')
+    image_src = fields.Char(compute='_compute_image_src', store=True)
     image_width = fields.Integer(compute='_compute_image_size')
     image_height = fields.Integer(compute='_compute_image_size')
+    is_favorite = fields.Boolean(string="Favorite", default=False)
+    original_id = fields.Many2one("ir.attachment", string="Original ID", help="ID of the original image before it was resized/optimized")
+    quality = fields.Integer(string="Quality", help="Level of compression that was used when creating this resized image, 0 means uncompressed")
 
     def _compute_local_url(self):
         for attachment in self:
@@ -47,4 +50,4 @@ class IrAttachment(models.Model):
     def _get_media_info(self):
         """Return a dict with the values that we need on the media dialog."""
         self.ensure_one()
-        return self.read(['id', 'name', 'mimetype', 'checksum', 'url', 'type', 'res_id', 'res_model', 'public', 'access_token', 'image_src', 'image_width', 'image_height'])[0]
+        return self.read(['id', 'description', 'name', 'mimetype', 'checksum', 'url', 'type', 'res_id', 'res_model', 'public', 'access_token', 'image_src', 'image_width', 'image_height'])[0]

@@ -646,30 +646,6 @@ options.registry.layout_column = options.Class.extend({
     },
 });
 
-options.registry.parallax = options.Class.extend({
-    /**
-     * @override
-     */
-    onFocus: function () {
-        this.trigger_up('option_update', {
-            optionNames: ['background', 'BackgroundPosition'],
-            name: 'target',
-            data: this.$target.find('> .s_parallax_bg'),
-        });
-        // Refresh the parallax animation on focus; at least useful because
-        // there may have been changes in the page that influenced the parallax
-        // rendering (new snippets, ...).
-        // TODO make this automatic.
-        this._refreshPublicWidgets();
-    },
-    /**
-     * @override
-     */
-    onMove: function () {
-        this._refreshPublicWidgets();
-    },
-});
-
 options.registry.ul = options.Class.extend({
     /**
      * @override

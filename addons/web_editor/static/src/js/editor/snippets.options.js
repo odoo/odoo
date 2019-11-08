@@ -8,6 +8,7 @@ var Widget = require('web.Widget');
 var ColorPaletteWidget = require('web_editor.ColorPalette').ColorPaletteWidget;
 const weUtils = require('web_editor.utils');
 var weWidgets = require('wysiwyg.widgets');
+const ImageManager = require('web_editor.ImageManager');
 
 var qweb = core.qweb;
 var _t = core._t;
@@ -2327,19 +2328,177 @@ registry['sizing_y'] = registry.sizing.extend({
     },
 });
 
-/**
- * Handles the edition of snippet's background image.
- */
-registry.background = SnippetOptionWidget.extend({
+// Abstract option, used to manage images' size and quality.
+const ImageHandlerOption = SnippetOptionWidget.extend({
+    xmlDependencies: ['/web_editor/static/src/xml/editor.xml'],
+    events: _.extend({}, SnippetOptionWidget.prototype.events || {}, {
+        'input .custom-range': '_onQualityChange',
+    }),
+
     /**
      * @override
      */
-    start: function () {
+    start: async function () {
+        await this._super(...arguments);
+        this._acquireUIElements();
+        // We don't want to update the preview for every intermediate value if
+        // the user drags the input thumb.
+        this._onQualityChange = _.debounce(this._onQualityChange.bind(this), 200);
+    },
+    /**
+     * @override
+     */
+    cleanForSave: function () {
+        return this.imageManager.cleanForSave();
+    },
+    /**
+    * @override
+    */
+    updateUI: async function () {
+        await this._super(...arguments);
+        this._acquireUIElements();
+        const options = this.imageManager.getOptions();
+        this.$optimizeOption.toggleClass('d-none', !options.size && !options.quality);
+        this.$widthSelect.toggleClass('d-none', !options.size);
+        this.$qualityOption.toggleClass('d-none', !options.quality);
+
+        this.$qualityInput.val(this.imageManager.quality || 100);
+        this._updateWeight();
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Handles changes to the width select.
+     *
+     * @private
+     * @see this.selectClass for parameters
+     */
+    selectWidth: function (previewMode, value, $opt) {
+        this.imageManager.changeImageWidth(parseInt(value));
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Acquire the UI elements that need to be updated.
+     *
+     * @private
+     */
+    _acquireUIElements: function () {
+        this.$optimizeOption = this.$el.find('.o_we_optimize_option');
+        this.$qualityOption = this.$el.find('.o_we_quality_option');
+        this.$qualityInput = this.$qualityOption.find('input');
+        this.$fileSize = this.$el.find('.o_we_image_file_size');
+        this.$widthSelect = this.$el.find('we-select');
+    },
+    /**
+     * Updates the selection with the available widths.
+     *
+     * @private
+     */
+    _updateWidthSelection: async function () {
+        const availableWidths = this.imageManager.computeAvailableWidths();
+        await this._rerenderXML(() => {
+            const $xml = $(qweb.render('web_editor.image_quality_option'));
+            $xml.find('we-select').append(_.map(availableWidths, (labels, width) =>
+                $(`<we-button data-select-width="${width}">${width} ${labels.length ? `(${labels.join(', ')})` : ''}</we-button>`)
+            ));
+            return this.$originalUIElements.clone(true).add($xml);
+        });
+    },
+    /**
+     * Updates the image's weight in the UI.
+     *
+     * @private
+     */
+    _updateWeight: async function () {
+        const weight = await this.imageManager.getImageWeight();
+        this.$fileSize.text(`${(weight / 1024).toFixed(2)}kb`);
+    },
+    /**
+     * @override
+     */
+    _computeWidgetState: function (methodName, params) {
+        if (methodName === 'selectWidth') {
+            return this.imageManager.width;
+        }
+        return this._super(...arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Handles changes to the quality range input.
+     *
+     * @private
+     */
+    _onQualityChange: function (ev) {
+        // % 100 because we want 0 when quality is set to 100.
+        this.imageManager.changeImageQuality(parseInt(ev.target.value) % 100);
+        this._updateWeight();
+    },
+});
+/**
+ * Handles the edition of non-background images.
+ */
+registry.Image = ImageHandlerOption.extend({
+    /**
+     * @override
+     */
+    start: async function () {
+        await this._super(...arguments);
+        this.imageManager = new ImageManager(this.$target[0], this._rpc.bind(this));
+        this.imageManager.onUpdateAttachment(() => this._updateWidthSelection());
+        // Update cover when image is changed or resized (unfortunately, also happens)
+        // on quality change but this doesn't seem to affect performance enough to care.
+        this.$target.on('load.image_option', () => this.trigger_up('cover_update'));
+        await this.imageManager.loadAttachment();
+    },
+    /**
+     * @override
+     */
+    destroy: function () {
+        // Maybe should make ImageManager into a widget and register it as subwidget so this is automatic?
+        this.imageManager.destroy();
+        this.$target.off('.image_option');
+    },
+});
+/**
+ * Handles the edition of snippet's background image.
+ */
+registry.background = ImageHandlerOption.extend({
+    /**
+     * @override
+     */
+    start: async function () {
+        await this._super(...arguments);
+
         // Initialize background and events
         this.bindBackgroundEvents();
-        this.__customImageSrc = this._getSrcFromCssValue();
 
-        return this._super(...arguments);
+        // Image proxy for the background image
+        this.img = document.createElement('img');
+        this.img.classList.add('d-none');
+        this.img.src = this._getSrcFromCssValue();
+        this.imageManager = new ImageManager(this.img, this._rpc.bind(this));
+        // When the src of the image changes, set it as background.
+        new MutationObserver(mutations => mutations.forEach(mutation => {
+            // Waiting for the image to load can reduce or eliminate flickering.
+            this.img.addEventListener('load', () => {
+                this._setCustomBackground(this.img.getAttribute('src'));
+            }, {once: true});
+        })).observe(this.img, {attributes: true, attributeFilter: ['src']});
+        this.$target.append(this.img);
+
+        this.imageManager.onUpdateAttachment(() => this._updateWidthSelection());
+        await this.imageManager.loadAttachment();
     },
 
     //--------------------------------------------------------------------------
@@ -2353,18 +2512,13 @@ registry.background = SnippetOptionWidget.extend({
      */
     background: async function (previewMode, widgetValue, params) {
         if (previewMode === 'reset') {
-            return this._setCustomBackground(this.__customImageSrc, previewMode);
+            return this._setCustomBackground(this.img.getAttribute('src'), previewMode);
         }
         if (!previewMode) {
-            this.__customImageSrc = widgetValue;
+            this.img.src = widgetValue;
+            return await this.imageManager.loadAttachment();
         }
-        if (widgetValue) {
-            this.$target.css('background-image', `url('${widgetValue}')`);
-            this.$target.addClass('oe_img_bg');
-        } else {
-            this.$target.css('background-image', '');
-            this.$target.removeClass('oe_img_bg');
-        }
+        this._setCustomBackground(widgetValue, previewMode);
     },
 
     //--------------------------------------------------------------------------
@@ -2389,7 +2543,19 @@ registry.background = SnippetOptionWidget.extend({
         await this._super(...arguments);
         // TODO should be automatic for all options as equal to the start method
         this.bindBackgroundEvents();
-        this.__customImageSrc = this._getSrcFromCssValue();
+        this.img.src = this._getSrcFromCssValue();
+    },
+    /**
+     * @override
+     */
+    cleanForSave: async function () {
+        await this._super(...arguments);
+        this._setCustomBackground(this.img.attributes.src.value);
+        const toUnlink = this.img.dataset.unlinkAttachment;
+        if (toUnlink) {
+            this.$target[0].dataset.unlinkAttachment = toUnlink;
+        }
+        this.img.remove();
     },
 
     //--------------------------------------------------------------------------
@@ -2406,7 +2572,7 @@ registry.background = SnippetOptionWidget.extend({
      */
     _getSrcFromCssValue: function (value) {
         if (value === undefined) {
-            value = this.$target.css('background-image');
+            value = this.$target[0].style.backgroundImage;
         }
         var srcValueWrapper = /url\(['"]*|['"]*\)|^none$/g;
         return value && value.replace(srcValueWrapper, '') || '';
@@ -2419,8 +2585,13 @@ registry.background = SnippetOptionWidget.extend({
      * @returns {Promise}
      */
     _setCustomBackground: async function (value, previewMode) {
-        this.__customImageSrc = value;
-        this.background(false, this.__customImageSrc, {});
+        if (value) {
+            this.$target.css('background-image', `url('${value}')`);
+            this.$target.addClass('oe_img_bg');
+        } else {
+            this.$target.css('background-image', '');
+            this.$target.removeClass('oe_img_bg');
+        }
         await new Promise(resolve => {
             // Will update the UI of the correct widgets for all options
             // related to the same $target/editor
@@ -2465,17 +2636,6 @@ registry.background = SnippetOptionWidget.extend({
         }
         await this.background(previewMode, '', {});
         return true;
-    },
-    /**
-     * Called on media dialog save (when choosing a snippet's background) ->
-     * sets the resulting media as the snippet's background somehow.
-     *
-     * @private
-     * @param {Object} data
-     * @returns {Promise}
-     */
-    _onSaveMediaDialog: async function (data) {
-        await this._setCustomBackground(data.src);
     },
 });
 

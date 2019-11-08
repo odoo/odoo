@@ -163,6 +163,9 @@ var MediaDialog = Dialog.extend({
             self.final_data = data;
             _super.apply(self, args);
             $(data).trigger('content_changed');
+            if (self.isImageActive()) {
+                $(data).trigger('image_changed');
+            }
         });
     },
 

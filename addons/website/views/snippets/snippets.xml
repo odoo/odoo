@@ -216,11 +216,20 @@
         </we-select>
     </div>
 
+    <!-- Image -->
+    <div data-js="Image"
+        data-selector="img"
+        data-exclude=".s_hr, .s_image_gallery, .o_gallery .carousel-item">
+    </div>
+
     <!-- Background Image -->
     <div data-js="background" string="Background"
-        data-selector="section, .parallax, .carousel-item"
-        data-exclude=".s_hr, .s_image_gallery, .o_gallery .carousel-item">
-        <we-imagepicker class="o_we_inline" string="Background" data-background="" data-allow-videos=":not(.parallax, .s_parallax_bg)" data-first-filters="background"/>
+        data-selector="section, .carousel-item"
+        data-exclude=".s_hr, .s_image_gallery, .o_gallery .carousel-item, .parallax">
+        <we-imagepicker class="o_we_inline" string="Background" data-background="" data-allow-videos="*" data-first-filters="background"/>
+    </div>
+    <div data-js="background" string="Background" data-selector=".parallax" data-target=".s_parallax_bg">
+        <we-imagepicker class="o_we_inline" string="Background" data-background="" data-first-filters="background"/>
     </div>
 
     <!-- Background Image Size/Position -->

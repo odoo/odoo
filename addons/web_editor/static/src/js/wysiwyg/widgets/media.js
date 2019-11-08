@@ -2,12 +2,10 @@ odoo.define('wysiwyg.widgets.media', function (require) {
 'use strict';
 
 var concurrency = require('web.concurrency');
-var config = require('web.config');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var dom = require('web.dom');
 var fonts = require('wysiwyg.fonts');
-var ImageOptimizeDialog = require('wysiwyg.widgets.image_optimize_dialog').ImageOptimizeDialog;
 var utils = require('web.utils');
 var Widget = require('web.Widget');
 var session = require('web.session');
@@ -106,28 +104,19 @@ var SearchableMediaWidget = MediaWidget.extend({
 var FileWidget = SearchableMediaWidget.extend({
     events: _.extend({}, SearchableMediaWidget.prototype.events || {}, {
         'click .o_upload_media_button': '_onUploadButtonClick',
-        'click .o_we_quick_upload': '_onQuickUploadClick',
         'change .o_file_input': '_onFileInputChange',
         'click .o_upload_media_url_button': '_onUploadURLButtonClick',
         'input .o_we_url_input': '_onURLInputChange',
         'click .o_existing_attachment_cell': '_onAttachmentClick',
         'dblclick .o_existing_attachment_cell': '_onAttachmentDblClick',
         'click .o_existing_attachment_remove': '_onRemoveClick',
-        'click .o_existing_attachment_optimize': '_onExistingOptimizeClick',
+        'click .o_existing_attachment_favorite': '_onFavoriteClick',
         'click .o_load_more': '_onLoadMoreClick',
     }),
     existingAttachmentsTemplate: undefined,
 
     IMAGE_MIMETYPES: ['image/gif', 'image/jpe', 'image/jpeg', 'image/jpg', 'image/gif', 'image/png', 'image/svg+xml'],
     NUMBER_OF_ATTACHMENTS_TO_DISPLAY: 30,
-
-    // This factor is used to take into account that an image displayed in a BS
-    // column might get bigger when displayed on a smaller breakpoint if that
-    // breakpoint leads to have less columns.
-    // Eg. col-lg-6 -> 480px per column -> col-md-12 -> 720px per column -> 1.5
-    // However this will not be enough if going from 3 or more columns to 1, but
-    // in that case, we consider it a snippet issue.
-    OPTIMIZE_SIZE_FACTOR: 1.5,
 
     /**
      * @constructor
@@ -141,7 +130,6 @@ var FileWidget = SearchableMediaWidget.extend({
         this.options = _.extend({
             firstFilters: [],
             lastFilters: [],
-            showQuickUpload: config.isDebug(),
         }, options || {});
 
         this.attachments = [];
@@ -163,8 +151,8 @@ var FileWidget = SearchableMediaWidget.extend({
     /**
      * @override
      */
-    start: function () {
-        var def = this._super.apply(this, arguments);
+    start: async function () {
+        await this._super(...arguments);
         var self = this;
         this.$urlInput = this.$('.o_we_url_input');
         this.$form = this.$('form');
@@ -191,12 +179,25 @@ var FileWidget = SearchableMediaWidget.extend({
             o.id = +o.url.match(/\/web\/content\/(\d+)/, '')[1];
         }
         if (o.url) {
-            self._selectAttachement(_.find(self.attachments, function (attachment) {
-                return attachment.url === o.url;
-            }) || o);
+            // Get the corresponding attachment
+            const [media] = await this._rpc({
+                model: 'ir.attachment',
+                method: 'search_read',
+                args: [],
+                kwargs: {
+                    domain: [['image_src', 'like', o.url]],
+                    fields: ['original_id', 'image_src'],
+                    context: this.options.context,
+                },
+            });
+            let idToSelect = -1;
+            if (media) {
+                // Select the original attachment if there is one
+                idToSelect = media.original_id ? media.original_id[0] : media.id;
+            }
+            // Doing a linear search here, might be better to use a Map for attachemnts instead?
+            self._selectAttachment(self.attachments.find(attachment => attachment.id === idToSelect) || o);
         }
-
-        return def;
     },
 
     //--------------------------------------------------------------------------
@@ -218,20 +219,28 @@ var FileWidget = SearchableMediaWidget.extend({
      */
     search: function (needle, noRender) {
         var self = this;
-
+        const domain = this._getAttachmentsDomain(needle);
+        console.log(domain);
+        window.rpc = this._rpc.bind(this);
+        window.options = this.options;
+        window.domain = domain;
         return this._rpc({
             model: 'ir.attachment',
             method: 'search_read',
             args: [],
             kwargs: {
-                domain: this._getAttachmentsDomain(needle),
-                fields: ['name', 'mimetype', 'checksum', 'url', 'type', 'res_id', 'res_model', 'public', 'access_token', 'image_src', 'image_width', 'image_height'],
-                order: [{name: 'id', asc: false}],
+                domain: domain,
+                fields: ['name', 'description', 'mimetype', 'checksum', 'url', 'type', 'res_id', 'res_model', 'public', 'access_token', 'image_src', 'image_width', 'image_height', 'is_favorite'],
+                order: [{name: 'create_date', asc: false}],
                 context: this.options.context,
             },
         }).then(function (attachments) {
+            console.log('returned attachments', attachments);
             self.attachments = _.chain(attachments)
                 .sortBy(function (r) {
+                    if (r.is_favorite) {
+                        return -2;
+                    }
                     if (_.any(self.options.firstFilters, function (filter) {
                         var regex = new RegExp(filter, 'i');
                         return r.name && r.name.match(regex);
@@ -277,13 +286,26 @@ var FileWidget = SearchableMediaWidget.extend({
      * Only relevant for images.
      *
      * @see options.mediaWidth
-     * @see OPTIMIZE_SIZE_FACTOR
      *
      * @private
      * @returns {integer}
      */
     _computeOptimizedWidth: function () {
-        return Math.min(1920, parseInt(this.options.mediaWidth * this.OPTIMIZE_SIZE_FACTOR));
+        if (this.options.mediaWidth) {
+            return this.options.mediaWidth;
+        }
+        // If the media is in a column, it might get bigger on smaller screens.
+        // We use col-lg for this in most (all?) snippets.
+        if (this.$media.closest('[class*="col-lg"]').length) {
+            // A container's maximum inner width is 690px on the md breakpoint
+            if (this.$media.closest('.container').length) {
+                return Math.min(1920, Math.max(this.$media.width(), 690));
+            }
+            // A container-fluid's max inner width is 962px on the md breakpoint
+            return Math.min(1920, Math.max(this.$media.width(), 962));
+        }
+        // If it's not in a col-lg, it's probably not going to change size depending on breakpoints
+        return this.$media.width();
     },
     /**
      * Returns the domain for attachments used in media dialog.
@@ -297,14 +319,17 @@ var FileWidget = SearchableMediaWidget.extend({
      * @returns {Array} "ir.attachment" odoo domain.
      */
     _getAttachmentsDomain: function (needle) {
-        var domain = this.options.attachmentIDs && this.options.attachmentIDs.length ? ['|', ['id', 'in', this.options.attachmentIDs]] : [];
-
+        var domain = [];
+        // Show attachments on the current record
         var attachedDocumentDomain = [
-            '&',
+            '&', '&',
             ['res_model', '=', this.options.res_model],
-            ['res_id', '=', this.options.res_id|0]
+            ['res_id', '=', this.options.res_id | 0],
+            // By default, only attachment that have no res_field show up,
+            // so we have to specify that we also want attachments on the current field.
+            ['res_field', 'in', [this.options.res_field, false]],
         ];
-        // if the document is not yet created, do not see the documents of other users
+        // if the records is not yet created, do not see the documents of other users
         if (!this.options.res_id) {
             attachedDocumentDomain.unshift('&');
             attachedDocumentDomain.push(['create_uid', '=', this.options.user_id]);
@@ -312,7 +337,7 @@ var FileWidget = SearchableMediaWidget.extend({
         if (this.options.data_res_model) {
             var relatedDomain = ['&',
                 ['res_model', '=', this.options.data_res_model],
-                ['res_id', '=', this.options.data_res_id|0]];
+                ['res_id', '=', this.options.data_res_id | 0]];
             if (!this.options.data_res_id) {
                 relatedDomain.unshift('&');
                 relatedDomain.push(['create_uid', '=', session.uid]);
@@ -321,12 +346,19 @@ var FileWidget = SearchableMediaWidget.extend({
         } else {
             domain = domain.concat(attachedDocumentDomain);
         }
+        // Show all public attachments
         domain = ['|', ['public', '=', true]].concat(domain);
+
+        // The following are restrictions on the matched set, they add nothing:
+        // Must match the desired mime types
         domain = domain.concat(this.options.mimetypeDomain);
+        // Must match the search string
         if (needle && needle.length) {
             domain.push(['name', 'ilike', needle]);
         }
+        // Do not show cropped images
         domain.push('!', ['name', '=like', '%.crop']);
+        // Only show attachments that are binary or have a URL.
         domain.push('|', ['type', '=', 'binary'], ['url', '!=', false]);
         return domain;
     },
@@ -347,7 +379,7 @@ var FileWidget = SearchableMediaWidget.extend({
     _handleNewAttachment: function (attachment) {
         this.attachments.unshift(attachment);
         this._renderImages();
-        this._selectAttachement(attachment);
+        this._selectAttachment(attachment);
     },
     /**
      * @private
@@ -361,47 +393,6 @@ var FileWidget = SearchableMediaWidget.extend({
         } else {
             return this.search(this.$('.o_we_search').val() || '');
         }
-    },
-    /**
-     * Opens the image optimize dialog for the given attachment.
-     *
-     * Hides the media dialog while the optimize dialog is open to avoid an
-     * overlap of modals.
-     *
-     * @private
-     * @param {object} attachment
-     * @param {boolean} isExisting: whether this is a new attachment that was
-     *  just uploaded, or an existing attachment
-     * @returns {Promise} resolved with the updated attachment object when the
-     *  optimize dialog is saved. Rejected if the dialog is otherwise closed.
-     */
-    _openImageOptimizeDialog: function (attachment, isExisting) {
-        var self = this;
-        var promise = new Promise(function (resolve, reject) {
-            self.trigger_up('hide_parent_dialog_request');
-            var optimizeDialog = new ImageOptimizeDialog(self, {
-                attachment: attachment,
-                isExisting: isExisting,
-                optimizedWidth: self._computeOptimizedWidth(),
-            }).open();
-            optimizeDialog.on('attachment_updated', self, function (ev) {
-                optimizeDialog.off('closed');
-                resolve(ev.data);
-            });
-            optimizeDialog.on('closed', self, function () {
-                self.noSave = true;
-                if (isExisting) {
-                    reject();
-                } else {
-                    resolve(attachment);
-                }
-            });
-        });
-        var always = function () {
-            self.trigger_up('show_parent_dialog_request');
-        };
-        promise.then(always).guardedCatch(always);
-        return promise;
     },
     /**
      * Renders the existing attachments and returns the result as a string.
@@ -423,7 +414,17 @@ var FileWidget = SearchableMediaWidget.extend({
 
         // Render menu & content
         this.$('.o_we_existing_attachments').replaceWith(
-            this._renderExisting(attachments)
+            this._renderExisting(attachments.map(attachment => {
+                // Use a resizing url for binary attachments so they load faster
+                if (attachment.type === 'binary') {
+                    return _.extend(
+                        {},
+                        attachment,
+                        {thumbnail: `/web/image/${attachment.id}/${encodeURIComponent(attachment.name)}?width=292`},
+                    );
+                }
+                return attachment;
+            }))
         );
 
         this._highlightSelected();
@@ -490,8 +491,12 @@ var FileWidget = SearchableMediaWidget.extend({
                 self.$media.attr('href', href);
                 self.$media.addClass('o_image').attr('title', img.name).attr('data-mimetype', img.mimetype);
             }
-
-            self.$media.attr('alt', img.alt);
+            const alt = img.alt || img.description;
+            if (alt) {
+                self.$media.attr('alt', alt);
+            } else {
+                self.$media.removeAttr('alt');
+            }
             var style = self.style;
             if (style) {
                 self.$media.css(style);
@@ -515,7 +520,7 @@ var FileWidget = SearchableMediaWidget.extend({
      *  and to close the media dialog
      * @private
      */
-    _selectAttachement: function (attachment, save) {
+    _selectAttachment: function (attachment, save) {
         if (this.options.multiImages) {
             // if the clicked attachment is already selected then unselect it
             // unless it was a save request (then keep the current selection)
@@ -563,26 +568,13 @@ var FileWidget = SearchableMediaWidget.extend({
     _onAttachmentClick: function (ev, save) {
         var $attachment = $(ev.currentTarget);
         var attachment = _.find(this.attachments, {id: $attachment.data('id')});
-        this._selectAttachement(attachment, save);
+        this._selectAttachment(attachment, save);
     },
     /**
      * @private
      */
     _onAttachmentDblClick: function (ev) {
         this._onAttachmentClick(ev, true);
-    },
-    /**
-     * @private
-     */
-    _onExistingOptimizeClick: function (ev) {
-        var self = this;
-        var $a = $(ev.currentTarget).closest('.o_existing_attachment_cell');
-        var id = parseInt($a.data('id'), 10);
-        var attachment = _.findWhere(this.attachments, {id: id});
-        ev.stopPropagation();
-        return this._openImageOptimizeDialog(attachment, true).then(function (newAttachment) {
-            self._handleNewAttachment(newAttachment);
-        });
     },
     /**
      * Handles change of the file input: create attachments with the new files
@@ -604,10 +596,9 @@ var FileWidget = SearchableMediaWidget.extend({
      * @private
      * @returns {Promise}
      */
-    _addData: function () {
+    _addData: async function () {
         var self = this;
         var uploadMutex = new concurrency.Mutex();
-        var optimizeMutex = new concurrency.Mutex();
 
         // Upload the smallest file first to block the user the least possible.
         var files = _.sortBy(this.$fileInput[0].files, 'size');
@@ -615,56 +606,26 @@ var FileWidget = SearchableMediaWidget.extend({
         _.each(files, function (file) {
             // Upload one file at a time: no need to parallel as upload is
             // limited by bandwidth.
-            uploadMutex.exec(function () {
-                return utils.getDataURLFromFile(file).then(function (result) {
-                    var params = {
+            uploadMutex.exec(async function () {
+                const dataURL = await utils.getDataURLFromFile(file);
+                const newAttachment = await self._rpc({
+                    route: '/web_editor/attachment/add_data',
+                    params: {
                         'name': file.name,
-                        'data': result.split(',')[1],
+                        'data': dataURL.split(',')[1],
                         'res_id': self.options.res_id,
                         'res_model': self.options.res_model,
                         'filters': self.options.firstFilters.join('_'),
-                    };
-                    if (self.quickUpload) {
-                        params['width'] = self._computeOptimizedWidth();
-                        params['quality'] = 80;
-                    } else {
-                        params['width'] = 0;
-                        params['quality'] = 0;
-                    }
-                    return self._rpc({
-                        route: '/web_editor/attachment/add_data',
-                        params: params,
-                    }).then(function (attachment) {
-                        if (attachment.image_src && !self.quickUpload) {
-                            optimizeMutex.exec(function () {
-                                return self._openImageOptimizeDialog(attachment).then(function (updatedAttachment) {
-                                    self._handleNewAttachment(updatedAttachment);
-                                });
-                            });
-                        } else {
-                            self._handleNewAttachment(attachment);
-                        }
-                    });
+                    },
                 });
+                self._handleNewAttachment(newAttachment);
             });
         });
-
-        return uploadMutex.getUnlockedDef().then(function () {
-            return optimizeMutex.getUnlockedDef().then(function () {
-                self.quickUpload = false;
-                if (!self.options.multiImages && !self.noSave) {
-                    self.trigger_up('save_request');
-                }
-                self.noSave = false;
-            });
-        });
-    },
-    /**
-     * @private
-     */
-    _onQuickUploadClick: function () {
-        this.quickUpload = true;
-        this.$uploadButton.trigger('click');
+        await uploadMutex.getUnlockedDef();
+        if (!self.options.multiImages && !self.noSave) {
+            self.trigger_up('save_request');
+        }
+        self.noSave = false;
     },
     /**
      * @private
@@ -703,16 +664,38 @@ var FileWidget = SearchableMediaWidget.extend({
     /**
      * @private
      */
+    _onFavoriteClick: async function (ev) {
+        ev.stopPropagation();
+        const $cell = $(ev.currentTarget).closest('.o_existing_attachment_cell');
+        const id = parseInt($cell.data('id'));
+        const isFavorite = await this._rpc({
+            route: '/web_editor/attachment/toggle_favorite',
+            params: {
+                ids: [id],
+            },
+        });
+        ev.currentTarget.classList.toggle('active');
+        const attachment = _.findWhere(this.attachments, {id: id});
+        attachment.is_favorite = isFavorite;
+    },
+    /**
+     * @private
+     */
     _onURLInputChange: function () {
         var inputValue = this.$urlInput.val();
         var emptyValue = (inputValue === '');
 
         var isURL = /^.+\..+$/.test(inputValue); // TODO improve
-        var isImage = _.any(['.gif', '.jpeg', '.jpe', '.jpg', '.png'], function (format) {
-            return inputValue.endsWith(format);
-        });
 
-        this._updateAddUrlUi(emptyValue, isURL, isImage);
+        // Would be nice to be able to only get headers to determine content-type but we hit CORS (img src doesn't)
+        const img = document.createElement('img');
+        img.src = inputValue;
+        img.addEventListener('load', () => {
+            this._updateAddUrlUi(emptyValue, isURL, true);
+        }, {once: true});
+        img.addEventListener('error', () => {
+            this._updateAddUrlUi(emptyValue, isURL, false);
+        }, {once: true});
     },
     /**
      * @private
@@ -732,6 +715,12 @@ var FileWidget = SearchableMediaWidget.extend({
      */
     _addUrl: function () {
         var self = this;
+        // If input is collapsed, uncollapse it first
+        if (this.$urlInput.is('.o_we_horizontal_collapse')) {
+            this.$urlInput.removeClass('o_we_horizontal_collapse');
+            this._updateAddUrlUi(true, false, false);
+            return;
+        }
         return this._rpc({
             route: '/web_editor/attachment/add_url',
             params: {
@@ -791,8 +780,16 @@ var ImageWidget = FileWidget.extend({
      */
     _updateAddUrlUi: function (emptyValue, isURL, isImage) {
         this._super.apply(this, arguments);
-        this.$addUrlButton.text((isURL && !isImage) ? _t("Add as document") : _t("Add image"));
+        this.$addUrlButton.text((isURL && !isImage) ? _t("Add as document") : _t("Add"));
         this.$urlWarning.toggleClass('d-none', !isURL || isImage);
+    },
+    /**
+     * @override
+     */
+    _getAttachmentsDomain: function (needle) {
+        const domain = this._super.apply(this, arguments);
+        domain.push(['original_id', '=', false]);
+        return domain;
     },
 });
 
@@ -824,7 +821,7 @@ var DocumentWidget = FileWidget.extend({
      */
     _updateAddUrlUi: function (emptyValue, isURL, isImage) {
         this._super.apply(this, arguments);
-        this.$addUrlButton.text((isURL && isImage) ? _t("Add as image") : _t("Add document"));
+        this.$addUrlButton.text((isURL && isImage) ? _t("Add as image") : _t("Add"));
         this.$urlWarning.toggleClass('d-none', !isURL || !isImage);
     },
     /**
