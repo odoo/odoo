@@ -538,6 +538,11 @@ class Lead(models.Model):
         self.filtered(lambda lead: lead.active)._compute_probabilities()
         return True
 
+    def toggle_active(self):
+        res = super(Lead, self).toggle_active()
+        self.filtered(lambda lead: lead.active)._compute_probabilities()
+        return res
+
     def _rebuild_pls_frequency_table_threshold(self):
         """ Called by action_set_lost and action_set_won.
          Will run the cron to update the frequency table only if the number of lead is above
