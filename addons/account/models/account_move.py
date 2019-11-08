@@ -2353,6 +2353,19 @@ class AccountMove(models.Model):
         action['res_id'] = self.copy().id
         return action
 
+    def is_original_pdf(self):
+        """
+        Is it the first printed pdf version of this invoice ?
+
+        :return: True if original pdf doesn't exist yet, false otherwise
+        :rtype: bool
+        """
+        make_pdf_action = self.env['ir.actions.report'].search(
+            [('model', '=', 'account.move'), ('report_name', '=', 'account.report_invoice'),
+             ('report_type', '=', 'qweb-pdf')])
+        original_name = safe_eval(make_pdf_action.attachment, ctx={'object': self})
+        return not any(self.env['ir.attachment'].search([('res_id', '=', self.id), ('name', '=', original_name)]))
+
 
 class AccountMoveLine(models.Model):
     _name = "account.move.line"
