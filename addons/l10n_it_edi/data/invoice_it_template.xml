@@ -100,8 +100,8 @@
                             <CodiceFiscale t-if="record.company_id.l10n_it_tax_representative_partner_id.l10n_it_codice_fiscale" t-esc="record.company_id.l10n_it_tax_representative_partner_id.l10n_it_codice_fiscale"/>
                             <Anagrafica>
                                 <Denominazione t-if="record.company_id.l10n_it_tax_representative_partner_id.is_company" t-esc="record.company_id.l10n_it_tax_representative_partner_id.display_name"/>
-                                <Nome t-if="not record.company_id.l10n_it_tax_representative_partner_id.is_company" t-esc="record.company_id.l10n_it_tax_representative_partner_id.name"/>
-                                <Cognome t-if="not record.company_id.l10n_it_tax_representative_partner_id.is_company" t-esc="record.company_id.l10n_it_tax_representative_partner_id.name"/>
+                                <Nome t-if="not record.company_id.l10n_it_tax_representative_partner_id.is_company" t-esc="' '.join(record.company_id.l10n_it_tax_representative_partner_id.name.split()[:1])"/>
+                                <Cognome t-if="not record.company_id.l10n_it_tax_representative_partner_id.is_company" t-esc="' '.join(record.company_id.l10n_it_tax_representative_partner_id.name.split()[1:])"/>
                             </Anagrafica>
                         </DatiAnagrafici>
                     </RappresentanteFiscale>
@@ -115,8 +115,8 @@
                             <CodiceFiscale t-if="not record.commercial_partner_id.vat and not record.commercial_partner_id.l10n_it_codice_fiscale" t-esc="99999999999"/>
                             <Anagrafica>
                                 <Denominazione t-if="record.commercial_partner_id.is_company" t-esc="record.commercial_partner_id.display_name"/>
-                                <Nome t-if="not record.commercial_partner_id.is_company" t-esc="record.commercial_partner_id.name"/>
-                                <Cognome t-if="not record.commercial_partner_id.is_company" t-esc="record.commercial_partner_id.name"/>
+                                <Nome t-if="not record.commercial_partner_id.is_company" t-esc="' '.join(record.commercial_partner_id.name.split()[:1])"/>
+                                <Cognome t-if="not record.commercial_partner_id.is_company" t-esc="' '.join(record.commercial_partner_id.name.split()[1:])"/>
                             </Anagrafica>
                         </DatiAnagrafici>
                         <t t-call="l10n_it_edi.account_invoice_it_FatturaPA_sede">
