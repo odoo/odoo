@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo.addons.test_mail.tests import common
 from odoo.tools import formataddr
 
 
-class TestChannelPartnersNotification(common.MockEmails):
+class TestChannelPartnersNotification(common.TestMailCommon):
 
     def _join_channel(self, channel, partners):
         for partner in partners:
@@ -38,7 +39,8 @@ class TestChannelPartnersNotification(common.MockEmails):
         self.env['ir.config_parameter'].set_param('mail.catchall.domain', 'schlouby.fr')
         self.test_channel.write({'email_send': True})
         self._join_channel(self.test_channel, self.test_partner)
-        self.test_channel.message_post(body="Test", message_type='comment', subtype='mt_comment')
+        with self.mock_mail_gateway():
+            self.test_channel.message_post(body="Test", message_type='comment', subtype='mt_comment')
 
         self.assertEqual(len(self._mails), 1, 'Number of mail incorrect. Should be equal to 1.')
         for email in self._mails:
