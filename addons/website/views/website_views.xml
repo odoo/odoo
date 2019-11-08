@@ -289,7 +289,7 @@
             <field name="name">Themes Kanban</field>
             <field name="model">ir.module.module</field>
             <field name="arch" type="xml">
-                <kanban create="false" class="o_theme_kanban" default_order="state,sequence,name">
+                <kanban create="false" class="o_theme_kanban" default_order="state,sequence,name" js_class="theme_preview_kanban">
                     <field name="icon"/>
                     <field name="name"/>
                     <field name="state"/>
@@ -314,7 +314,7 @@
                                 <div t-else="" class="o_button_area">
                                     <button type="object" name="button_choose_theme" class="btn btn-primary">Use this theme</button>
                                     <hr t-if="record.url.value"/>
-                                    <a role="button" t-if="record.url.value" class="btn btn-secondary" t-att-href="record.url.value" target="_blank">Live Preview</a>
+                                    <button role="button" type="edit" t-if="record.url.value" class="btn btn-secondary">Live Preview</button>
                                 </div>
                                 <i states="installed" t-if="record.is_installed_on_current_website.raw_value"
                                     class="fa fa-check position-absolute p-1 m-2 rounded-circle bg-primary shadow"
@@ -357,18 +357,6 @@
         </record>
 
         <!-- Actions to list themes with custom kanban (launched on module installation) -->
-        <record id="theme_install_kanban_action" model="ir.actions.act_window">
-            <field name="name">Choose a theme for your website</field>
-            <field name="res_model">ir.module.module</field>
-            <field name="view_mode">kanban</field>
-            <field name="view_id" ref="theme_view_kanban"/>
-            <field name="search_view_id" ref="theme_view_search"/>
-            <field name="domain" eval="[
-                ('category_id', 'not in', [ref('base.module_category_hidden', False), ref('base.module_category_theme_hidden', False)]),
-                '|', ('category_id', '=', ref('base.module_category_theme', False)), ('category_id.parent_id', '=', ref('base.module_category_theme', False))
-            ]"/>
-        </record>
-
         <record id="theme_install_todo_action" model="ir.actions.server">
             <field name="name">Config: Choose Your Theme</field>
             <field name="model_id" ref="model_ir_module_module"/>
@@ -385,6 +373,38 @@ action = {
         <record id="theme_install_todo" model="ir.actions.todo">
             <field name="action_id" ref="theme_install_todo_action"/>
             <field name="sequence">0</field>
+        </record>
+
+        <record id="theme_view_form_preview" model="ir.ui.view">
+            <field name="name">website.form</field>
+            <field name="model">ir.module.module</field>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <form create="false" edit="false" delete="0" js_class="theme_preview_form">
+                  <div class="o_preview_frame h-100">
+                        <field name='url' widget='iframe'/>
+                        <img alt='' class='img_mobile' style='display:none' src="/website/static/src/img/phone.png"/>
+                  </div>
+
+                </form>
+            </field>
+        </record>
+
+        <record id="theme_install_kanban_action" model="ir.actions.act_window">
+            <field name="name">Choose a theme for your website</field>
+            <field name="res_model">ir.module.module</field>
+            <field name="view_mode">kanban,form</field>
+            <field name="view_id" ref="website.theme_view_kanban" />
+            <field name="target">fullscreen</field>
+            <field name="view_ids"
+                   eval="[(5, 0, 0),
+                          (0, 0, {'view_mode': 'kanban', 'view_id': ref('website.theme_view_kanban')}),
+                          (0, 0, {'view_mode': 'form', 'view_id': ref('website.theme_view_form_preview')})]"/>
+            <field name="search_view_id" ref="theme_view_search"/>
+            <field name="domain" eval="[
+                ('category_id', 'not in', [ref('base.module_category_hidden', False), ref('base.module_category_theme_hidden', False)]),
+                '|', ('category_id', '=', ref('base.module_category_theme', False)), ('category_id.parent_id', '=', ref('base.module_category_theme', False))
+            ]"/>
         </record>
 
         <!-- ONBOARDING -->

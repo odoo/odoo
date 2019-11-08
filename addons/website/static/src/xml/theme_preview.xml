@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="website.ThemePreview.Buttons">
+        <div>
+            <div class="o_form_buttons_view" role="toolbar" aria-label="Main actions">
+                <button type="object" name="button_choose_theme" class="btn btn-primary o_use_theme">
+                    Start Now
+                </button>
+                <button class="btn btn-link o_switch_theme">
+                    Choose another theme
+                </button>
+                <button class="o_switch_mode_button"></button>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="website.ThemePreview.SwitchModeButton">
+        <button class="o_switch_mode_button btn btn-light d-none d-md-inline">
+            <i t-attf-class="fa #{icon or 'fa-refresh'} mr-1"></i>
+            <t t-esc="PreviewType"/> Preview
+        </button>
+    </t>
+    <t t-name="website.ThemePreview.Loader">
+        <div class="o_theme_install_loader_container position-fixed fixed-top fixed-left h-100 w-100 bg-white d-flex justify-content-center align-items-center">
+            <div class="o_theme_install_loader"></div>
+        </div>
+    </t>
+</templates>
