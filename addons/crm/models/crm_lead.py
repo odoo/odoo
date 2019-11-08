@@ -480,6 +480,11 @@ class Lead(models.Model):
     # Actions Methods
     # ----------------------------------------
 
+    def toggle_active(self):
+        res = super(Lead, self).toggle_active()
+        self.filtered(lambda lead: lead.active)._compute_probabilities()
+        return res
+
     def _rebuild_pls_frequency_table_threshold(self):
         """ Called by action_set_lost and action_set_won.
          Will run the cron to update the frequency table only if the number of lead is above
@@ -496,7 +501,7 @@ class Lead(models.Model):
 
     def action_set_lost(self, **additional_values):
         """ Lost semantic: probability = 0 or active = False """
-        result = self.write({'active': False, 'probability': 0, **additional_values})
+        result = self.write({'active': False, 'probability': 0, 'automated_probability': 0, **additional_values})
         self._rebuild_pls_frequency_table_threshold()
         return result
 
