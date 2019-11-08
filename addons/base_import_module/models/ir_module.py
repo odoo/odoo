@@ -146,6 +146,19 @@ class IrModule(models.Model):
             r.append("Error while importing module '%s'.\n\n %s \n Make sure those modules are installed and try again." % (mod, error))
         return '\n'.join(r), module_names
 
+    def module_uninstall(self):
+        # Delete an ir_module_module record completely if it was an imported
+        # one. The rationale behind this is that an imported module *cannot* be
+        # reinstalled anyway, as it requires the data files. Any attempt to
+        # install it again will simply fail without trace.
+        res = super().module_uninstall()
+        modules_to_delete = self.filtered('imported')
+        if modules_to_delete:
+            _logger.info("deleting imported modules upon uninstallation: %s",
+                         ", ".join(modules_to_delete.mapped('name')))
+            modules_to_delete.unlink()
+        return res
+
 
 def _is_studio_custom(path):
     """
