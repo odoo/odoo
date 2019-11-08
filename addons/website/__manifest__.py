@@ -38,7 +38,11 @@
     'demo': [
         'data/website_demo.xml',
     ],
-    'qweb': ['static/src/xml/website.backend.xml'],
+    'qweb': [
+        'static/src/xml/website.backend.xml',
+        'static/src/xml/website_widget.xml',
+        'static/src/xml/theme_preview.xml',
+    ],
     'application': True,
     'uninstall_hook': 'uninstall_hook',
 }

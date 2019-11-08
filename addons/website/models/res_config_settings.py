@@ -161,5 +161,6 @@ class ResConfigSettings(models.TransientModel):
 
     def install_theme_on_current_website(self):
         self.website_id._force()
-        action = self.env.ref('website.theme_install_kanban_action')
-        return action.read()[0]
+        action = self.env.ref('website.theme_install_kanban_action').read()[0]
+        action['target'] = 'main'
+        return action
