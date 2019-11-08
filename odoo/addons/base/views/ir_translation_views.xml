@@ -54,12 +54,12 @@
         <record id="view_translation_tree" model="ir.ui.view">
             <field name="model">ir.translation</field>
             <field name="arch" type="xml">
-                <tree string="Translations" editable="top">
+                <tree string="Translations" editable="top" decoration-info="state == 'to_translate'">
                     <field name="src"/>
                     <field name="value"/>
-                    <field name="name"/>
+                    <field name="name" groups="base.group_no_one"/>
                     <field name="lang"/>
-                    <field name="type"/>
+                    <field name="type" groups="base.group_no_one"/>
                     <field name="state"/>
                 </tree>
             </field>

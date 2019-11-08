@@ -6,7 +6,7 @@
             <field name="name">Load a Translation</field>
             <field name="model">base.language.install</field>
             <field name="arch" type="xml">
-                <form string="Load a Translation">
+                <form string="Add a Language">
                     <field name="state" invisible="1"/>
                     <group states="init">
                         <field name="lang"/>
@@ -17,7 +17,7 @@
 You must change the preferences of the user to view the changes.</span>
                     </group>
                     <footer states="init">
-                        <button name="lang_install" string="Load" type="object" class="btn-primary"/>
+                        <button name="lang_install" string="Confirm" type="object" class="btn-primary"/>
                         <button special="cancel" string="Cancel" class="btn-secondary"/>
                     </footer>
                     <footer states="done">
@@ -28,7 +28,7 @@ You must change the preferences of the user to view the changes.</span>
         </record>
 
         <record id="action_view_base_language_install" model="ir.actions.act_window">
-            <field name="name">Load a Translation</field>
+            <field name="name">Add a Language</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">base.language.install</field>
             <field name="view_mode">form</field>

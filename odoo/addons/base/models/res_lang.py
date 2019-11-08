@@ -30,7 +30,7 @@ class Lang(models.Model):
     iso_code = fields.Char(string='ISO code', help='This ISO code is the name of po files to use for translations')
     url_code = fields.Char('URL Code', required=True, help='The Lang Code displayed in the URL')
     active = fields.Boolean()
-    direction = fields.Selection([('ltr', 'Left-to-Right'), ('rtl', 'Right-to-Left')], required=True, default='ltr')
+    direction = fields.Selection([('ltr', 'Left-to-Right'), ('rtl', 'Right-to-Left')], required=True, default='ltr', string="Reading Direction")
     date_format = fields.Char(string='Date Format', required=True, default=DEFAULT_DATE_FORMAT)
     time_format = fields.Char(string='Time Format', required=True, default=DEFAULT_TIME_FORMAT)
     week_start = fields.Selection([('1', 'Monday'),
@@ -47,6 +47,14 @@ class Lang(models.Model):
              "Provided ',' as the thousand separator in each case.")
     decimal_point = fields.Char(string='Decimal Separator', required=True, default='.', trim=False)
     thousands_sep = fields.Char(string='Thousands Separator', default=',', trim=False)
+
+    translation_count = fields.Integer(compute='_compute_translation_count', string="Translation Count")
+
+    def _compute_translation_count(self):
+        translation_data = self.env['ir.translation'].read_group([('lang', '=', self.code)], ['lang'], ['lang'])
+        result = dict((data['lang'], data['lang_count']) for data in translation_data)
+        for lang in self:
+            lang.translation_count = result.get(self.code, 0)
 
     _sql_constraints = [
         ('name_uniq', 'unique(name)', 'The name of the language must be unique !'),
