@@ -33,7 +33,7 @@ function get_first_visible_element($elements) {
     return $();
 }
 
-function do_before_unload(if_unload_callback, if_not_unload_callback) {
+function do_before_unload(if_unload_callback, if_not_unload_callback, if_not_unload_timeout) {
     if_unload_callback = if_unload_callback || function () {};
     if_not_unload_callback = if_not_unload_callback || if_unload_callback;
 
@@ -45,10 +45,10 @@ function do_before_unload(if_unload_callback, if_not_unload_callback) {
         if_unload_callback();
         if (old_before) return old_before.apply(this, arguments);
     };
-    reload_timeout = _.defer(function () {
+    reload_timeout = _.delay(function () {
         window.onbeforeunload = old_before;
         if_not_unload_callback();
-    });
+    }, if_not_unload_timeout || 1);
 }
 
 var RunningTourActionHelper = core.Class.extend({
@@ -272,7 +272,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
             do_before_unload(null, (function () {
                 this.play();
                 this.update();
-            }).bind(this));
+            }).bind(this), tour.test && 1000);
 
             var url = session.debug ? $.param.querystring(tour.url, {debug: session.debug}) : tour.url;
             window.location.href = window.location.origin + url;
