@@ -28,7 +28,7 @@ class Project(models.Model):
                 stat_buttons.append({
                     'name': _('Vendor Bills'),
                     'count': len(account_invoices),
-                    'icon': 'fa pencil-square-o',
+                    'icon': 'fa fa-pencil-square-o',
                     'action': _to_action_data(
                         action=self.env.ref('account.action_move_in_invoice_type'),
                         domain=[('id', 'in', account_invoices.ids)],
