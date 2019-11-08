@@ -10,7 +10,7 @@ var _onEmojiClickMixin = MailEmojisMixin._onEmojiClick;
 var QWeb = core.qweb;
 
 /*
- * Common code for FieldText and FieldChar
+ * Common code for FieldTextEmojis and FieldCharEmojis
  */
 var FieldEmojiCommon = {
     /**
@@ -19,7 +19,7 @@ var FieldEmojiCommon = {
      */
     init: function () {
         this._super.apply(this, arguments);
-        this._updatePreview =_.throttle(this._updatePreview, 1000, {leading: false});
+        this._triggerOnchange =_.throttle(this._triggerOnchange, 1000, {leading: false});
         this.emojis = emojis;
     },
 
@@ -28,24 +28,15 @@ var FieldEmojiCommon = {
      *
      * We use 'on_attach_callback' because we need the element to be attached to the form first.
      * That's because the $emojisIcon element needs to be rendered outside of this $el
-     * (which is an textarea, that can't 'contain' any other elements).
+     * (which is an text element, that can't 'contain' any other elements).
      *
      * @override
      */
     on_attach_callback: function () {
         var self = this;
-
         if (!this.$emojisIcon) {
-            this.$emojisIcon = $(QWeb.render(
-                'mail.EmojisDropdown', {
-                    widget: this,
-                    emojisDropdownId: 'emojis_dropdown'
-                }
-            ));
-            this.$emojisIcon.find('.o_mail_emoji').on('click', function (ev) {
-                self._onEmojiClick(ev);
-                self._isDirty = true;
-            });
+            this.$emojisIcon = $(QWeb.render('mail.EmojisDropdown', {widget: this}));
+            this.$emojisIcon.find('.o_mail_emoji').on('click', this._onEmojiClick.bind(this));
             this.$el.after(this.$emojisIcon);
         }
 
@@ -74,21 +65,22 @@ var FieldEmojiCommon = {
 
     /**
      * Overridden because we need to add the Emoji to the input AND trigger
-     * the 'change' event to refresh the various post previews.
+     * the 'change' event to refresh the value.
      *
      * @override
      * @private
      */
     _onEmojiClick: function () {
         _onEmojiClickMixin.apply(this, arguments);
+        self._isDirty = true;
         this.$input.trigger('change');
     },
 
     /**
      *
-     * By default, the 'change' event is only triggered when the textarea is blurred.
+     * By default, the 'change' event is only triggered when the text element is blurred.
      *
-     * We override this method because we want to update the various post previews while
+     * We override this method because we want to update the value while
      * the user is typing his message (and not only on blur).
      *
      * @override
@@ -96,7 +88,9 @@ var FieldEmojiCommon = {
      */
     _onKeydown: function () {
         this._super.apply(this, arguments);
-        this._updatePreview();
+        if (this.nodeOptions.onchange_on_keydown) {
+            this._triggerOnchange();
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -106,21 +100,20 @@ var FieldEmojiCommon = {
     /**
      * Used by MailEmojisMixin, check its document for more info.
      *
-     * @param {$.Element} $emoji
      * @private
      */
-    _getTargetTextArea($emoji) {
+    _getTargetTextElement() {
         return this.$el;
     },
 
     /**
-     * Triggers the 'change' event to refresh the various post previews.
+     * Triggers the 'change' event to refresh the value.
      * This method is throttled to run at most once every second.
      * (to avoid spamming the server while the user is typing his message)
      *
      * @private
      */
-    _updatePreview: function () {
+    _triggerOnchange: function () {
         this.$input.trigger('change');
     }
 };
