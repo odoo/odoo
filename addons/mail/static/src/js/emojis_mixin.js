@@ -1,7 +1,6 @@
 odoo.define('mail.emoji_mixin', function (require) {
 "use strict";
 
-var dom = require('web.dom');
 var emojis = require('mail.emojis');
 
 /**
@@ -9,8 +8,7 @@ var emojis = require('mail.emojis');
  *
  * It's used to:
  *
- * - handle the click on an emoji from a dropdown panel and add it to the related textarea
- * - replace the emoji code with the actual character, ex: ' :) ' -> ' 😊 '
+ * - handle the click on an emoji from a dropdown panel and add it to the related textarea/input
  * - format text and wrap the emojis around <span class="o_mail_emoji"> to make them look nicer
  *
  * Methods are based on the collections of emojis available in mail.emojis
@@ -23,33 +21,21 @@ return {
 
     /**
      * This method should be bound to a click event on an emoji.
-     * (used in textarea's emojis dropdown list)
+     * (used in text element's emojis dropdown list)
      *
-     * It assumes that a '_getTargetTextArea' method is defined that will return the related
-     * $textarea element.
-     *
-     * Some code from 'basic_composer.js' was copy/pasted to handle the cursor position in the
-     * textarea and handle text replacement if text was selected by the user.
+     * It assumes that a ``_getTargetTextElement`` method is defined that will return the related
+     * textarea/input element in which the emoji will be inserted.
      *
      * @param {MouseEvent} ev
      */
     _onEmojiClick: function (ev) {
-        ev.preventDefault();
+        var unicode = ev.currentTarget.textContent.trim();
+        var textInput = this._getTargetTextElement($(ev.currentTarget))[0];
+        var selectionStart = textInput.selectionStart;
 
-        var $target = $(ev.currentTarget);
-        var $textarea = this._getTargetTextArea($target);
-
-        // copy/pasted from 'basic_composer.js'
-        var inputElement = $textarea.get(0);
-        var cursorPosition = inputElement ? dom.getSelectionRange(inputElement) : {start: 0, end: 0};
-        var inputVal = $textarea.val();
-        var leftSubstring = inputVal.substring(0, cursorPosition.start);
-        var rightSubstring = inputVal.substring(cursorPosition.end);
-        var newInputVal  = [leftSubstring , $target.text().trim(), rightSubstring].join("");
-        var newCursorPosition = newInputVal.length - rightSubstring.length;
-        $textarea.val(newInputVal);
-        $textarea.focus();
-        $textarea[0].setSelectionRange(newCursorPosition, newCursorPosition);
+        textInput.value = textInput.value.slice(0, selectionStart) + unicode + textInput.value.slice(selectionStart);
+        textInput.focus();
+        textInput.setSelectionRange(selectionStart + unicode.length, selectionStart + unicode.length);
     },
 
     //--------------------------------------------------------------------------
