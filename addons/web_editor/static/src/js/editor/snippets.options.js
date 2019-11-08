@@ -295,6 +295,27 @@ var SnippetOption = Widget.extend({
         }
     },
     /**
+     * Default option method which allows to select one and only one value in
+     * the option values set and set it on the associated snippet as a data
+     * attribute. The name of the data attribute is given by the closest
+     * ancestor's data value for 'attributeName'.
+     *
+     * @param {boolean} previewMode - @see this.selectClass
+     * @param {Object} value - the data attribute value to set
+     * @param {jQuery} $opt - the related DOMElement option
+     */
+    selectDataAttribute: function (previewMode, value, $opt) {
+        const $ancestor = $opt && $opt.closest('[data-attribute-name]');
+        if (!$ancestor || !$ancestor.length) {
+            return;
+        }
+        const dataName = $ancestor[0].dataset.attributeName;
+        if (!dataName) {
+            return;
+        }
+        this.$target[0].dataset[dataName] = value || '';
+    },
+    /**
      * Default option method which allows to select one or multiple classes in
      * the option classes set and set it on the associated snippet. The common
      * case is having a sub-collapse with each item having a `data-toggle-class`
@@ -527,6 +548,23 @@ var SnippetOption = Widget.extend({
                 .last()
                 .addClass('active');
         }
+
+        // --- SELECT DATA ATTRIBUTE ---
+
+        this.$el.find('[data-select-data-attribute]')
+            .removeClass('active')
+            .filter((i, el) => {
+                const ancestorEl = el.closest('[data-attribute-name]');
+                if (!ancestorEl) {
+                    return false;
+                }
+                const dataName = ancestorEl.dataset.attributeName;
+                const defaultValue = ancestorEl.dataset.attributeDefaultValue;
+                const dataValue = el.dataset.selectDataAttribute;
+                const targetValue = this.$target[0].dataset[dataName] || defaultValue;
+                return (!targetValue && !dataValue) || targetValue === dataValue;
+            })
+            .addClass('active');
 
         // --- SET DATA ATTRIBUTE --- (note: important to be done last because of active removal)
 
