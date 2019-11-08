@@ -25,6 +25,7 @@ class MailTest(models.Model):
     alias_id = fields.Many2one(
         'mail.alias', 'Alias',
         delegate=True)
+    message_bounce = fields.Integer(default=0)
 
     def get_alias_model_name(self, vals):
         return vals.get('alias_model', 'mail.test')
