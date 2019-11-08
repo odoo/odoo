@@ -1096,7 +1096,7 @@ class StockMove(models.Model):
 
     def _should_bypass_reservation(self):
         self.ensure_one()
-        return self.location_id.should_bypass_reservation() or self.product_id.type != 'product'
+        return (self.location_id.should_bypass_reservation() and not self.origin_returned_move_id) or self.product_id.type != 'product'
 
     def _action_assign(self):
         """ Reserve stock moves by creating their stock move lines. A stock move is
@@ -1518,3 +1518,41 @@ class StockMove(models.Model):
                 move.procure_method = rules.procure_method
             else:
                 move.procure_method = 'make_to_stock'
+
+    def _get_returnable_qty(self):
+        """ Gather all the return move chain of a move if any,
+        then compute the returnable quantity based on the quantity done
+        of the incoming and outgoing move lines, relatively to the origin move (self)
+        """
+        self.ensure_one()
+        first_move = self
+        moves = first_move
+        all_moves = first_move
+        while moves.mapped('returned_move_ids'):
+            all_moves |= moves.mapped('returned_move_ids')
+            moves = moves.mapped('returned_move_ids')
+
+        # Ignore cancelled moves
+        relevant_moves = all_moves.filtered(lambda m: m.state != 'cancel' and not m.scrapped)
+
+        # Filter Incoming/Outgoing moves
+        moves_in = relevant_moves.filtered(lambda m: m.location_dest_id == first_move.location_dest_id)
+        moves_out = relevant_moves - moves_in
+
+        # Get returnable quantity based on the done quantities when the move is done,
+        # and based on the initial demand otherwise.
+        returnable_qty = 0
+
+        for m in moves_out:
+            if m.state == 'done':
+                returnable_qty -= m.product_uom._compute_quantity(m.quantity_done, m.product_id.uom_id)
+            else:
+                returnable_qty -= m.product_qty
+
+        for m in moves_in:
+            if m.state == 'done':
+                returnable_qty += m.product_uom._compute_quantity(m.quantity_done, m.product_id.uom_id)
+            else:
+                returnable_qty += m.product_qty
+
+        return returnable_qty
