@@ -51,7 +51,7 @@ class KeyboardUSBDriver(Driver):
             if (self.dev.idVendor == device.info.vendor) and (self.dev.idProduct == device.info.product):
                 self.input_device = device
 
-        if 'barcode' in self._device_name.lower() or 'scanner' in self._device_name.lower():
+        if 'barcode' in self._device_name.lower() or 'scanner' in self._device_name.lower() or self.interface_protocol == '0':
             self._device_type = 'scanner'
             self._barcodes = Queue()
             self._current_barcode = ''
@@ -62,7 +62,8 @@ class KeyboardUSBDriver(Driver):
     def supported(cls, device):
         for cfg in device:
             for itf in cfg:
-                if itf.bInterfaceClass == 3 and itf.bInterfaceProtocol == 1:
+                if itf.bInterfaceClass == 3 and itf.bInterfaceProtocol != 2:
+                    device.interface_protocol = itf.bInterfaceProtocol
                     return True
         return False
 
