@@ -4,6 +4,7 @@
 from odoo import http
 from odoo.http import request
 from odoo.addons.website_form.controllers.main import WebsiteForm
+from odoo.addons.phone_validation.tools import phone_validation
 
 
 class WebsiteForm(WebsiteForm):
@@ -21,7 +22,8 @@ class WebsiteForm(WebsiteForm):
     @http.route('/website_form/<string:model_name>', type='http', auth="public", methods=['POST'], website=True)
     def website_form(self, model_name, **kwargs):
         model_record = request.env['ir.model'].sudo().search([('model', '=', model_name), ('website_form_access', '=', True)])
-        if model_record and hasattr(request.env[model_name], 'phone_format'):
+        # the 'phone_get_sanitized_number' check is only used to limit the amount of checked models to the ones inheriting 'mail.thread.phone'
+        if model_record and hasattr(request.env[model_name], 'phone_get_sanitized_number'):
             try:
                 data = self.extract_data(model_record, request.params)
             except:
@@ -36,7 +38,13 @@ class WebsiteForm(WebsiteForm):
                     if not record.get(phone_field):
                         continue
                     number = record[phone_field]
-                    fmt_number = request.env[model_name].phone_format(number, contact_country)
+                    fmt_number = phone_validation.phone_format(
+                        number,
+                        contact_country.code if contact_country else None,
+                        contact_country.phone_code if contact_country else None,
+                        force_format='INTERNATIONAL',
+                        raise_exception=False
+                    )
                     request.params.update({phone_field: fmt_number})
 
         if model_name == 'crm.lead' and not request.params.get('state_id'):

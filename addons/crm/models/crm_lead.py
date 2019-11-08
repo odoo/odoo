@@ -54,7 +54,7 @@ class Lead(models.Model):
     _description = "Lead/Opportunity"
     _order = "priority desc, id desc"
     _inherit = ['mail.thread.cc', 'mail.thread.blacklist', 'mail.activity.mixin',
-                'utm.mixin', 'format.address.mixin', 'phone.validation.mixin']
+                'utm.mixin', 'format.address.mixin', 'mail.thread.phone']
     _primary_email = 'email_from'
 
     def _auto_init(self):
@@ -392,12 +392,12 @@ class Lead(models.Model):
     @api.onchange('phone', 'country_id', 'company_id')
     def _onchange_phone_validation(self):
         if self.phone:
-            self.phone = self.phone_format(self.phone)
+            self.phone = self.phone_get_sanitized_number(number_fname='phone', force_format='INTERNATIONAL') or self.phone
 
     @api.onchange('mobile', 'country_id', 'company_id')
     def _onchange_mobile_validation(self):
         if self.mobile:
-            self.mobile = self.phone_format(self.mobile)
+            self.mobile = self.phone_get_sanitized_number(number_fname='mobile', force_format='INTERNATIONAL') or self.mobile
 
     # ----------------------------------------
     # ORM override (CRUD, fields_view_get, ...)

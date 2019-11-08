@@ -17,11 +17,10 @@ according to a destination country.
 It also adds phone blacklist management through a specific model storing
 blacklisted phone numbers.
 
-It adds two mixins :
+It adds one mixin :
 
-  * phone.validation.mixin: parsing / formatting helpers on records, to be
-    used for example in number fields onchange;
-  * mail.thread.phone: handle sanitation and blacklist of records numbers;
+  * mail.thread.phone: handles sanitation and blacklist of records numbers and provides
+    parsing / formatting helpers on records, to be used for example in number fields onchange;
 """,
     'data': [
         'security/ir.model.access.csv',
