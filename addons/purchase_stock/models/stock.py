@@ -10,6 +10,11 @@ class StockPicking(models.Model):
     purchase_id = fields.Many2one('purchase.order', related='move_lines.purchase_line_id.order_id',
         string="Purchase Orders", readonly=True)
 
+    def _prepare_return_move_values(self, origin_move, qty, new_picking):
+        vals = super(StockPicking, self)._prepare_return_move_values(origin_move, qty, new_picking)
+        vals['purchase_line_id'] = origin_move.purchase_line_id.id
+        return vals
+
 
 class StockMove(models.Model):
     _inherit = 'stock.move'
@@ -147,16 +152,6 @@ class StockWarehouse(models.Model):
         if warehouse.buy_pull_id and name:
             warehouse.buy_pull_id.write({'name': warehouse.buy_pull_id.name.replace(warehouse.name, name, 1)})
         return res
-
-
-class ReturnPicking(models.TransientModel):
-    _inherit = "stock.return.picking"
-
-    def _prepare_move_default_values(self, return_line, new_picking):
-        vals = super(ReturnPicking, self)._prepare_move_default_values(return_line, new_picking)
-        vals['purchase_line_id'] = return_line.move_id.purchase_line_id.id
-        return vals
-
 
 class Orderpoint(models.Model):
     _inherit = "stock.warehouse.orderpoint"

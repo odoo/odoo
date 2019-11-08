@@ -222,15 +222,9 @@ class StockPicking(models.Model):
                 raise UserError(_('You are shipping different packaging types in the same shipment.\nPackaging Types: %s' % package_names))
         return True
 
-
-class StockReturnPicking(models.TransientModel):
-    _inherit = 'stock.return.picking'
-
-    def _create_returns(self):
+    def _action_return(self):
         # Prevent copy of the carrier and carrier price when generating return picking
         # (we have no integration of returns for now)
-        new_picking, pick_type_id = super(StockReturnPicking, self)._create_returns()
-        picking = self.env['stock.picking'].browse(new_picking)
-        picking.write({'carrier_id': False,
-                       'carrier_price': 0.0})
-        return new_picking, pick_type_id
+        new_picking, pick_type = super(StockPicking, self)._action_return()
+        new_picking.write({'carrier_id': False, 'carrier_price': 0.0})
+        return new_picking, pick_type

@@ -297,13 +297,12 @@ class Picking(models.Model):
     location_id = fields.Many2one(
         'stock.location', "Source Location",
         default=lambda self: self.env['stock.picking.type'].browse(self._context.get('default_picking_type_id')).default_location_src_id,
-        check_company=True, readonly=True, required=True,
-        states={'draft': [('readonly', False)]})
+        check_company=True, required=True)
     location_dest_id = fields.Many2one(
         'stock.location', "Destination Location",
         default=lambda self: self.env['stock.picking.type'].browse(self._context.get('default_picking_type_id')).default_location_dest_id,
-        check_company=True, readonly=True, required=True,
-        states={'draft': [('readonly', False)]})
+        check_company=True, required=True)
+    is_location_readonly = fields.Boolean(string='Is location readonly', compute='_compute_is_location_readonly')
     move_lines = fields.One2many('stock.move', 'picking_id', string="Stock Moves", copy=True)
     move_ids_without_package = fields.One2many('stock.move', 'picking_id', string="Stock moves not in package", compute='_compute_move_without_package', inverse='_set_move_without_package')
     has_scrap_move = fields.Boolean(
@@ -671,23 +670,14 @@ class Picking(models.Model):
     def action_return(self):
         self.ensure_one()
         new_picking, return_picking_type = self._action_return()
-        self.return_picking_ids |= new_picking
-
-        # A backorder on a return does not make sense so the check for it should be skipped on validation
-        ctx = dict(self.env.context)
-        ctx.update({
-            'skip_backorder': True,
-            'picking_ids_not_to_backorder': [new_picking.id],
-            # We want to see detailed operations as a return will populate the move_line_ids
-            'force_detailed_view': True
-        })
+        new_picking.return_origin_picking_id = self
         return {
             'name': _('Returned Picking'),
             'view_mode': 'form,tree,calendar',
             'res_model': 'stock.picking',
             'res_id': new_picking.id,
             'type': 'ir.actions.act_window',
-            'context': ctx,
+            'context': self.env.context,
             'flags': {'mode': 'edit'}
         }
 
@@ -745,8 +735,10 @@ class Picking(models.Model):
                     for lot_id, returnable_qty in returnable_qties_per_lot.items():
                         if not float_is_zero(returnable_qty, precision_rounding=move.product_id.uom_id.rounding):
                             ml_vals.append(r._generate_return_move_line_values(returnable_qty, lot_id=lot_id.id))
-
+            else:
+                raise UserError(_('There is no product left to return'))
         new_picking.action_confirm()
+        new_picking.move_lines.write({'state': 'assigned'})
         self.env['stock.move.line'].create(ml_vals)
 
         return new_picking, return_picking_type
@@ -781,7 +773,6 @@ class Picking(models.Model):
         :rtype: bool
         """
         self._check_company()
-
         todo_moves = self.mapped('move_lines').filtered(lambda self: self.state in ['draft', 'waiting', 'partially_available', 'assigned', 'confirmed'])
         for picking in self:
             if picking.owner_id:

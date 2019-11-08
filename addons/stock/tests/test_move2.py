@@ -2530,3 +2530,65 @@ class TestRoutes(TestStockCommon):
         self.assertEqual(len(activity), 2, 'not enough activity created')
         self.assertTrue(picking_pick_1.name in activity[0].note + activity[1].note, 'Wrong activity message')
         self.assertTrue(picking_pick_2.name in activity[0].note + activity[1].note, 'Wrong activity message')
+
+    def test_return_tracked_move_lines(self):
+
+        supplier = self.env['res.partner'].create({'name': 'Mildiou'})
+
+        product_sn = self.env['product.product'].create({'name': 'Des grosses Houppes', 'type': 'product', 'tracking': 'serial'})
+        wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+
+        sn01 = self.env['stock.production.lot'].create({
+            'name': 'SN01',
+            'product_id': product_sn.id,
+            'company_id': self.env.company.id,
+        })
+        sn02 = self.env['stock.production.lot'].create({
+            'name': 'SN02',
+            'product_id': product_sn.id,
+            'company_id': self.env.company.id,
+        })
+        sn03 = self.env['stock.production.lot'].create({
+            'name': 'SN03',
+            'product_id': product_sn.id,
+            'company_id': self.env.company.id,
+        })
+        sn04 = self.env['stock.production.lot'].create({
+            'name': 'SN04',
+            'product_id': product_sn.id,
+            'company_id': self.env.company.id,
+        })
+
+        sn_lots = sn01 + sn02 + sn03 + sn04
+
+        receipt = self.env['stock.picking'].create({
+            'location_id': supplier.property_stock_supplier.id,
+            'location_dest_id': wh.lot_stock_id.id,
+            'partner_id': supplier.id,
+            'picking_type_id': wh.in_type_id.id,
+            'immediate_transfer': True,
+            'move_lines': [(0, 0, {
+                'name': product_sn.name,
+                'product_id': product_sn.id,
+                'product_uom': product_sn.uom_id.id,
+                'location_id': supplier.property_stock_supplier.id,
+                'location_dest_id': wh.lot_stock_id.id,
+                'quantity_done': 0,
+            })],
+        })
+
+        receipt.write({
+            'move_line_ids': [(0, 0, {
+                'lot_id': lot.id,
+                'qty_done': 1,
+                'product_id': product_sn.id,
+                'product_uom_id': product_sn.uom_id.id,
+                'location_id': wh.lot_stock_id.id,
+                'location_dest_id': wh.lot_stock_id.id,
+            }) for lot in sn_lots]})
+
+        receipt.button_validate()
+        act = receipt.action_return()
+
+        return_pick = self.env['stock.picking'].browse(act['res_id'])
+        self.assertEqual(return_pick.move_lines.product_uom_qty, 0, 'Initial demand should be 0 on the return')

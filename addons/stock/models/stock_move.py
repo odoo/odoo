@@ -1326,7 +1326,7 @@ class StockMove(models.Model):
 
         # Create extra moves where necessary
         for move in moves:
-            if move.state == 'cancel' or move.quantity_done <= 0 or float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding):
+            if move.state == 'cancel' or move.quantity_done <= 0:
                 continue
 
             moves_todo |= move._create_extra_move()
@@ -1337,8 +1337,7 @@ class StockMove(models.Model):
             # To know whether we need to create a backorder or not, round to the general product's
             # decimal precision and not the product's UOM.
             rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-            if float_compare(move.quantity_done, move.product_uom_qty, precision_digits=rounding) < 0 and \
-                    not float_is_zero(move.product_uom_qty, precision_digits=rounding):
+            if float_compare(move.quantity_done, move.product_uom_qty, precision_digits=rounding) < 0:
                 # Need to do some kind of conversion here
                 qty_split = move.product_uom._compute_quantity(move.product_uom_qty - move.quantity_done, move.product_id.uom_id, rounding_method='HALF-UP')
                 new_move = move._split(qty_split)

@@ -110,6 +110,11 @@ class StockPicking(models.Model):
         self._log_activity(_render_note_exception_quantity, documents)
 
         return super(StockPicking, self)._log_less_quantities_than_expected(moves)
+    
+    def _action_return(self):
+        new_picking, pick_type = super(StockPicking, self)._action_return()
+        new_picking.move_lines.to_refund = True
+        return new_picking, pick_type
 
 class ProductionLot(models.Model):
     _inherit = 'stock.production.lot'
