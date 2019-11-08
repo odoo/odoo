@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="l10n_il_report_invoice_document_inherit" inherit_id="account.report_invoice_document">
+        <xpath expr="//h2" position="after">
+            <div t-if="o.consume_original_print()">Original</div>
+            <div t-else="o.state == 'posted'">Copy</div>
+        </xpath>
+    </template>
+</odoo>
