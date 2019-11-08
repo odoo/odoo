@@ -494,7 +494,7 @@ class Lead(models.Model):
 
     def action_set_lost(self, **additional_values):
         """ Lost semantic: probability = 0 or active = False """
-        result = self.write({'active': False, 'probability': 0, **additional_values})
+        result = self.write({'active': False, 'probability': 0, 'automated_probability': 0, **additional_values})
         self._rebuild_pls_frequency_table_threshold()
         return result
 
@@ -512,6 +512,12 @@ class Lead(models.Model):
     def action_set_won_rainbowman(self):
         self.ensure_one()
         self.action_set_won()
+
+    def action_restore(self):
+        """ active = True and recompute automated_probability """
+        for lead in self:
+            lead.write({'active': True})
+            lead._compute_probabilities()
 
         if self.user_id and self.team_id and self.planned_revenue:
             query = """
