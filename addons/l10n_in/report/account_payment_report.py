@@ -92,7 +92,7 @@ class L10nInPaymentReport(models.AbstractModel):
                     ELSE c.account_purchase_tax_id END)
             JOIN res_partner p ON p.id = aml.partner_id
             LEFT JOIN res_country_state ps ON ps.id = p.state_id
-            LEFT JOIN res_partner cp ON cp.id = c.partner_id
+            LEFT JOIN res_partner cp ON cp.id = COALESCE(aj.l10n_in_gstin_partner_id, c.partner_id)
             LEFT JOIN res_country_state cps ON cps.id = cp.state_id
             """
 

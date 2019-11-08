@@ -16,12 +16,15 @@ class L10nInAccountInvoiceReport(models.Model):
     name = fields.Char(string="Invoice Number")
     partner_id = fields.Many2one('res.partner', string="Customer")
     is_reverse_charge = fields.Char("Reverse Charge")
-    l10n_in_export_type = fields.Selection([
-        ('regular', 'Regular'), ('deemed', 'Deemed'),
-        ('sale_from_bonded_wh', 'Sale from Bonded WH'),
-        ('export_with_igst', 'Export with IGST'),
-        ('sez_with_igst', 'SEZ with IGST payment'),
-        ('sez_without_igst', 'SEZ without IGST payment')])
+    l10n_in_gst_treatment = fields.Selection([
+            ('regular', 'Registered Business - Regular'),
+            ('composition', 'Registered Business - Composition'),
+            ('unregistered', 'Unregistered Business'),
+            ('consumer', 'Consumer'),
+            ('overseas', 'Overseas'),
+            ('special_economic_zone', 'Special Economic Zone'),
+            ('deemed_export', 'Deemed Export'),
+        ], string="GST Treatment")
     journal_id = fields.Many2one('account.journal', string="Journal")
     state = fields.Selection([('draft', 'Unposted'), ('posted', 'Posted')], string='Status')
     igst_amount = fields.Float(string="IGST Amount")
@@ -70,7 +73,7 @@ class L10nInAccountInvoiceReport(models.Model):
             sub.state,
             sub.partner_id,
             sub.date,
-            sub.l10n_in_export_type,
+            sub.l10n_in_gst_treatment,
             sub.ecommerce_partner_id,
             sub.shipping_bill_number,
             sub.shipping_bill_date,
@@ -118,7 +121,7 @@ class L10nInAccountInvoiceReport(models.Model):
                 am.name,
                 am.state,
                 am.date,
-                am.l10n_in_export_type AS l10n_in_export_type,
+                am.l10n_in_gst_treatment AS l10n_in_gst_treatment,
                 am.l10n_in_reseller_partner_id AS ecommerce_partner_id,
                 am.l10n_in_shipping_bill_number AS shipping_bill_number,
                 am.l10n_in_shipping_bill_date AS shipping_bill_date,
@@ -128,7 +131,7 @@ class L10nInAccountInvoiceReport(models.Model):
                 aj.company_id,
                 am.move_type AS move_type,
                 am.reversed_entry_id AS reversed_entry_id,
-                p.vat AS partner_vat,
+                am.l10n_in_gstin AS partner_vat,
                 CASE WHEN rp.vat IS NULL THEN '' ELSE rp.vat END AS ecommerce_vat,
                 (CASE WHEN at.l10n_in_reverse_charge = True
                     THEN True
@@ -157,34 +160,32 @@ class L10nInAccountInvoiceReport(models.Model):
                     THEN 'E'
                     ELSE 'OE'
                     END) as b2cs_is_ecommerce,
-                (CASE WHEN ps.id = cp.state_id or p.id IS NULL
+                (CASE WHEN am.l10n_in_state_id = cp.state_id or p.id IS NULL
                     THEN 'Intra State'
-                    WHEN ps.id != cp.state_id and p.id IS NOT NULL
+                    WHEN am.l10n_in_state_id != cp.state_id and p.id IS NOT NULL
                     THEN 'Inter State'
                     END) AS supply_type,
-                (CASE WHEN am.l10n_in_export_type in ('deemed', 'export_with_igst', 'sez_with_igst')
+                (CASE WHEN am.l10n_in_gst_treatment in ('deemed_export', 'overseas') and am.amount_tax > 0.00
                     THEN 'EXPWP'
-                    WHEN am.l10n_in_export_type in ('sale_from_bonded_wh', 'sez_without_igst')
+                    WHEN am.l10n_in_gst_treatment in ('deemed_export', 'overseas') and am.amount_tax <= 0.00
                     THEN 'EXPWOP'
                     ELSE ''
                     END) AS export_type,
-                (CASE WHEN refund_am.l10n_in_export_type in ('deemed', 'export_with_igst', 'sez_with_igst')
+                (CASE WHEN am.l10n_in_gst_treatment in ('deemed_export', 'overseas') and am.amount_tax > 0.00
                     THEN 'EXPWP'
-                    WHEN refund_am.l10n_in_export_type in ('sale_from_bonded_wh', 'sez_without_igst')
+                    WHEN am.l10n_in_gst_treatment in ('deemed_export', 'overseas') and am.amount_tax <= 0.00
                     THEN 'EXPWOP'
                     ELSE 'B2CL'
                     END) AS refund_export_type,
-                (CASE WHEN am.l10n_in_export_type = 'regular'
+                (CASE WHEN am.l10n_in_gst_treatment = 'regular'
                     THEN 'Regular'
-                    WHEN am.l10n_in_export_type = 'deemed'
+                    WHEN am.l10n_in_gst_treatment = 'deemed_export'
                     THEN 'Deemed'
-                    WHEN am.l10n_in_export_type = 'sale_from_bonded_wh'
-                    THEN 'Sale from Bonded WH'
-                    WHEN am.l10n_in_export_type = 'export_with_igst'
+                    WHEN am.l10n_in_gst_treatment = 'overseas' and am.amount_tax > 0.00
                     THEN 'Export with IGST'
-                    WHEN am.l10n_in_export_type = 'sez_with_igst'
+                    WHEN am.l10n_in_gst_treatment = 'special_economic_zone' and am.amount_tax > 0.00
                     THEN 'SEZ with IGST payment'
-                    WHEN am.l10n_in_export_type = 'sez_without_igst'
+                    WHEN am.l10n_in_gst_treatment = 'special_economic_zone' and am.amount_tax <= 0.00
                     THEN 'SEZ without IGST payment'
                     END) AS b2b_type,
                 (CASE WHEN am.move_type = 'out_refund'
@@ -250,11 +251,11 @@ class L10nInAccountInvoiceReport(models.Model):
                 JOIN account_account_tag_account_move_line_rel aat_aml_rel ON aat_aml_rel.account_move_line_id = aml.id
                 JOIN account_account_tag aat ON aat.id = aat_aml_rel.account_account_tag_id
                 JOIN account_tax_report_line_tags_rel tag_rep_ln ON aat.id = tag_rep_ln.account_account_tag_id
-                LEFT JOIN res_partner cp ON cp.id = c.partner_id
+                LEFT JOIN res_partner cp ON cp.id = COALESCE(aj.l10n_in_gstin_partner_id, c.partner_id)
                 LEFT JOIN res_country_state cps ON cps.id = cp.state_id
                 LEFT JOIN account_move refund_am ON refund_am.id = am.reversed_entry_id
                 LEFT JOIN res_partner p ON p.id = aml.partner_id
-                LEFT JOIN res_country_state ps ON ps.id = p.state_id
+                LEFT JOIN res_country_state ps ON ps.id = am.l10n_in_state_id
                 LEFT JOIN res_partner rp ON rp.id = am.l10n_in_reseller_partner_id
                 LEFT JOIN account_tax_filiation_rel atr ON atr.child_tax = at.id
                 LEFT JOIN account_tax parent_at ON parent_at.id = atr.parent_tax
@@ -275,7 +276,7 @@ class L10nInAccountInvoiceReport(models.Model):
             sub.state,
             sub.partner_id,
             sub.date,
-            sub.l10n_in_export_type,
+            sub.l10n_in_gst_treatment,
             sub.ecommerce_partner_id,
             sub.shipping_bill_number,
             sub.shipping_bill_date,
