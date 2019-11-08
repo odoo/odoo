@@ -9,7 +9,27 @@ var options = require('web_editor.snippets.options');
 var _t = core._t;
 var qweb = core.qweb;
 
+// TODO should we refresh public widgets for all option changes by default ?
 options.Class.include({
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    setDataAttribute: function (previewMode, dataName, $opt) {
+        this._super(...arguments);
+        this._refreshPublicWidgets();
+    },
+    /**
+     * @override
+     */
+    selectDataAttribute: function (previewMode, value, $opt) {
+        this._super(...arguments);
+        this._refreshPublicWidgets();
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -689,33 +709,6 @@ options.registry.parallax = options.Class.extend({
      */
     onMove: function () {
         this._refreshPublicWidgets();
-    },
-
-    //--------------------------------------------------------------------------
-    // Options
-    //--------------------------------------------------------------------------
-
-    /**
-     * Changes the scrolling speed of the parallax effect.
-     *
-     * @see this.selectClass for parameters
-     */
-    scroll: function (previewMode, value) {
-        this.$target.attr('data-scroll-background-ratio', value);
-        this._refreshPublicWidgets();
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    _setActive: function () {
-        this._super.apply(this, arguments);
-        this.$el.find('[data-scroll]').removeClass('active')
-            .filter('[data-scroll="' + (this.$target.attr('data-scroll-background-ratio') || 0) + '"]').addClass('active');
     },
 });
 
