@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.sms.tests import common as sms_common
 from odoo.addons.test_mail_full.tests import common as test_mail_full_common
 
 
-class TestSMSWizards(test_mail_full_common.BaseFunctionalTest, sms_common.MockSMS, test_mail_full_common.TestRecipients):
+class TestSMSWizards(test_mail_full_common.TestSMSCommon, test_mail_full_common.TestRecipients):
 
     @classmethod
     def setUpClass(cls):
@@ -34,9 +33,9 @@ class TestSMSWizards(test_mail_full_common.BaseFunctionalTest, sms_common.MockSM
         })
 
     def test_sms_resend(self):
-        self._clear_bus()
+        self._reset_bus()
 
-        with self.sudo('employee'):
+        with self.with_user('employee'):
             wizard = self.env['sms.resend'].with_context(default_mail_message_id=self.msg.id).create({})
             wizard.write({'recipient_ids': [(1, r.id, {'resend': True}) for r in wizard.recipient_ids]})
             with self.mockSMSGateway():
@@ -46,7 +45,7 @@ class TestSMSWizards(test_mail_full_common.BaseFunctionalTest, sms_common.MockSM
             {'partner': self.partner_1, 'state': 'sent'},
             {'partner': self.partner_2, 'state': 'sent'}
         ], 'TEST BODY', self.msg, check_sms=True)
-        self.assertBusNotification(
+        self.assertBusNotifications(
             [(self.cr.dbname, 'res.partner', self.partner_employee.id)],
             [{'type': 'sms_update', 'elements': [{
                 'message_id': self.msg.id,
@@ -56,9 +55,9 @@ class TestSMSWizards(test_mail_full_common.BaseFunctionalTest, sms_common.MockSM
         )
 
     def test_sms_resend_update_number(self):
-        self._clear_bus()
+        self._reset_bus()
 
-        with self.sudo('employee'):
+        with self.with_user('employee'):
             wizard = self.env['sms.resend'].with_context(default_mail_message_id=self.msg.id).create({})
             wizard.write({'recipient_ids': [(1, r.id, {'resend': True, 'sms_number': self.random_numbers[idx]}) for idx, r in enumerate(wizard.recipient_ids.sorted())]})
             with self.mockSMSGateway():
@@ -68,7 +67,7 @@ class TestSMSWizards(test_mail_full_common.BaseFunctionalTest, sms_common.MockSM
             {'partner': self.partner_1, 'state': 'sent', 'number': self.random_numbers_san[0]},
             {'partner': self.partner_2, 'state': 'sent', 'number': self.random_numbers_san[1]}
         ], 'TEST BODY', self.msg, check_sms=True)
-        self.assertBusNotification(
+        self.assertBusNotifications(
             [(self.cr.dbname, 'res.partner', self.partner_employee.id)],
             [{'type': 'sms_update', 'elements': [{
                 'message_id': self.msg.id,
@@ -78,9 +77,9 @@ class TestSMSWizards(test_mail_full_common.BaseFunctionalTest, sms_common.MockSM
         )
 
     def test_sms_resend_cancel(self):
-        self._clear_bus()
+        self._reset_bus()
 
-        with self.sudo('employee'):
+        with self.with_user('employee'):
             wizard = self.env['sms.resend'].with_context(default_mail_message_id=self.msg.id).create({})
             with self.mockSMSGateway():
                 wizard.action_cancel()
@@ -89,7 +88,7 @@ class TestSMSWizards(test_mail_full_common.BaseFunctionalTest, sms_common.MockSM
             {'partner': self.partner_1, 'state': 'canceled', 'number': self.notif_p1.sms_number, 'failure_type': 'sms_number_format'},
             {'partner': self.partner_2, 'state': 'canceled', 'number': self.notif_p2.sms_number, 'failure_type': 'sms_credit'}
         ], 'TEST BODY', self.msg, check_sms=False)
-        self.assertBusNotification(
+        self.assertBusNotifications(
             [(self.cr.dbname, 'res.partner', self.partner_employee.id)],
             [{'type': 'sms_update', 'elements': [{
                 'message_id': self.msg.id,
@@ -99,13 +98,13 @@ class TestSMSWizards(test_mail_full_common.BaseFunctionalTest, sms_common.MockSM
         )
 
     def test_sms_resend_internals(self):
-        self._clear_bus()
+        self._reset_bus()
         self.assertSMSNotification([
             {'partner': self.partner_1, 'state': 'exception', 'number': self.notif_p1.sms_number, 'failure_type': 'sms_number_format'},
             {'partner': self.partner_2, 'state': 'exception', 'number': self.notif_p2.sms_number, 'failure_type': 'sms_credit'}
         ], 'TEST BODY', self.msg, check_sms=False)
 
-        with self.sudo('employee'):
+        with self.with_user('employee'):
             wizard = self.env['sms.resend'].with_context(default_mail_message_id=self.msg.id).create({})
             self.assertTrue(wizard.has_insufficient_credit)
             self.assertEqual(set(wizard.mapped('recipient_ids.partner_name')), set((self.partner_1 | self.partner_2).mapped('display_name')))
@@ -114,9 +113,9 @@ class TestSMSWizards(test_mail_full_common.BaseFunctionalTest, sms_common.MockSM
                 wizard.action_resend()
 
     def test_sms_resend_w_cancel(self):
-        self._clear_bus()
+        self._reset_bus()
 
-        with self.sudo('employee'):
+        with self.with_user('employee'):
             wizard = self.env['sms.resend'].with_context(default_mail_message_id=self.msg.id).create({})
             wizard.write({'recipient_ids': [(1, r.id, {'resend': True if r.partner_id == self.partner_1 else False}) for r in wizard.recipient_ids]})
             with self.mockSMSGateway():
@@ -124,7 +123,7 @@ class TestSMSWizards(test_mail_full_common.BaseFunctionalTest, sms_common.MockSM
 
         self.assertSMSNotification([{'partner': self.partner_1, 'state': 'sent'}], 'TEST BODY', self.msg, check_sms=True)
         self.assertSMSNotification([{'partner': self.partner_2, 'state': 'canceled', 'number': self.notif_p2.sms_number, 'failure_type': 'sms_credit'}], 'TEST BODY', self.msg, check_sms=False)
-        self.assertBusNotification(
+        self.assertBusNotifications(
             [(self.cr.dbname, 'res.partner', self.partner_employee.id)],
             [{'type': 'sms_update', 'elements': [{
                 'message_id': self.msg.id,
@@ -134,15 +133,15 @@ class TestSMSWizards(test_mail_full_common.BaseFunctionalTest, sms_common.MockSM
         )
 
     def test_sms_cancel(self):
-        self._clear_bus()
+        self._reset_bus()
 
-        with self.mockSMSGateway(), self.sudo('employee'):
+        with self.mockSMSGateway(), self.with_user('employee'):
             wizard = self.env['sms.cancel'].with_context(default_model=self.msg.model).create({})
             wizard.action_cancel()
 
             self.assertEqual((self.notif_p1 | self.notif_p2).mapped('notification_status'), ['canceled', 'canceled'])
 
-        self.assertBusNotification(
+        self.assertBusNotifications(
             [(self.cr.dbname, 'res.partner', self.partner_employee.id)],
             [{'type': 'sms_update', 'elements': [{
                 'message_id': self.msg.id,

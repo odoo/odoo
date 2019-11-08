@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 
 from odoo.addons.phone_validation.tools import phone_validation
+from odoo.addons.mass_mailing_sms.tests import common as mass_mailing_sms_common
 from odoo.addons.test_mail.tests import common as test_mail_common
-from odoo.addons.test_mail.tests.common import mail_new_test_user
+from odoo.addons.test_mass_mailing.tests import common as test_mass_mailing_common
 
 
-class BaseFunctionalTest(test_mail_common.BaseFunctionalTest):
+class TestSMSCommon(test_mass_mailing_common.TestMailCommon, mass_mailing_sms_common.MockSMS):
 
     @classmethod
     def setUpClass(cls):
-        super(BaseFunctionalTest, cls).setUpClass()
+        super(TestSMSCommon, cls).setUpClass()
         cls.user_employee.write({'login': 'employee'})
 
         # update country to belgium in order to test sanitization of numbers
@@ -63,14 +64,3 @@ class TestRecipients(test_mail_common.TestRecipients):
             phone_validation.phone_format(partner.mobile, partner.country_id.code, partner.country_id.phone_code, force_format='E164')
             for partner in (cls.partner_1 | cls.partner_2)
         ]
-
-
-class MassSMSBaseFunctionalTest(BaseFunctionalTest):
-
-    @classmethod
-    def setUpClass(cls):
-        super(MassSMSBaseFunctionalTest, cls).setUpClass()
-        cls.user_marketing = mail_new_test_user(
-            cls.env, login='marketing',
-            groups='base.group_user,mass_mailing.group_mass_mailing_user',
-            name='Martial Marketing', signature='--\nMartial')
