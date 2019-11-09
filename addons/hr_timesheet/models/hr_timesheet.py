@@ -67,21 +67,24 @@ class AccountAnalyticLine(models.Model):
     # ORM overrides
     # ----------------------------------------------------
 
-    @api.model
-    def create(self, values):
-        # compute employee only for timesheet lines, makes no sense for other lines
-        if not values.get('employee_id') and values.get('project_id'):
-            if values.get('user_id'):
-                ts_user_id = values['user_id']
-            else:
-                ts_user_id = self._default_user()
-            values['employee_id'] = self.env['hr.employee'].search([('user_id', '=', ts_user_id)], limit=1).id
+    @api.model_create_multi
+    def create(self, vals_list):
+        default_user_id = self._default_user()
+        user_ids = list(map(lambda x: x.get('user_id', default_user_id), filter(lambda x: not x.get('employee_id') and x.get('project_id'), vals_list)))
+        employees = self.env['hr.employee'].search([('user_id', 'in', user_ids)])
+        user_map = {employee.user_id.id: employee.id for employee in employees}
 
-        values = self._timesheet_preprocess(values)
-        result = super(AccountAnalyticLine, self).create(values)
-        if result.project_id:  # applied only for timesheet
-            result._timesheet_postprocess(values)
-        return result
+        for vals in vals_list:
+            # compute employee only for timesheet lines, makes no sense for other lines
+            if not vals.get('employee_id') and vals.get('project_id'):
+                vals['employee_id'] = user_map.get(vals.get('user_id') or default_user_id)
+            vals.update(self._timesheet_preprocess(vals))
+
+        lines = super(AccountAnalyticLine, self).create(vals_list)
+        for line, values in zip(lines, vals_list):
+            if line.project_id:  # applied only for timesheet
+                line._timesheet_postprocess(values)
+        return lines
 
     def write(self, values):
         values = self._timesheet_preprocess(values)
@@ -165,7 +168,7 @@ class AccountAnalyticLine(models.Model):
             :param dict values: values for the model's fields, as a dictionary::
                 {'field_name': field_value, ...}
             :return: a dictionary mapping each record id to its corresponding
-                dictionnary values to write (may be empty).
+                dictionary values to write (may be empty).
         """
         result = {id_: {} for id_ in self.ids}
         sudo_self = self.sudo()  # this creates only one env for all operation that required sudo()

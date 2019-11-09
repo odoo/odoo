@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<odoo><data>
+    <record id="mail_notification_view_tree" model="ir.ui.view">
+        <field name="name">mail.notification.view.tree</field>
+        <field name="model">mail.notification</field>
+        <field name="inherit_id" ref="mail.mail_notification_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='res_partner_id']" position="after">
+                <field name="sms_number"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mail_notification_view_form" model="ir.ui.view">
+        <field name="name">mail.notification.view.form</field>
+        <field name="model">mail.notification</field>
+        <field name="inherit_id" ref="mail.mail_notification_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='res_partner_id']" position="after">
+                <field name="sms_number"/>
+            </xpath>
+            <xpath expr="//field[@name='mail_id']" position="after">
+                <field name="sms_id"/>
+            </xpath>
+        </field>
+    </record>
+</data></odoo>

@@ -15,6 +15,9 @@
                         <div t-attf-class="col-12 col-lg-9 d-flex flex-column #{'offset-lg-3' if slide.channel_id.channel_type == 'training' else ''}">
                             <h2 class="font-weight-medium w-100">
                                 <a t-att-href="'/slides/%s' % (slug(slide.channel_id))" class="text-white text-decoration-none" t-field="slide.channel_id.name"/>
+                                <t t-if="slide.channel_id.completed">
+                                    <small><span class="badge badge-pill badge-success pull-right my-1 py-1 px-2 font-weight-normal"><i class="fa fa-check"/> Completed</span></small>
+                                </t>
                             </h2>
 
                             <div t-if="slide.channel_id.channel_type == 'documentation'" class="mb-3 small">
@@ -22,7 +25,7 @@
                                 <t t-esc="slide.date_published" t-options="{'widget': 'date'}"/>
                             </div>
 
-                            <div t-else="" class="d-flex align-items-center pb-3">
+                            <div t-else="" t-if="not slide.channel_id.completed" class="d-flex align-items-center pb-3">
                                 <div class="progress w-50 bg-black-25" style="height: 10px;">
                                     <div class="progress-bar rounded-left" role="progressbar"
                                         t-att-aria-valuenow="slide.channel_id.completion" aria-valuemin="0" aria-valuemax="100"
@@ -337,9 +340,20 @@
                     The social sharing module will be unlocked when a moderator will allow your publication.
                 </h4>
                 <t t-if="slide.website_published">
-                    <t t-call="website_slides.slide_social_media">
-                        <t t-set="slide" t-value="slide"/>
-                    </t>
+                    <div class="row">
+                        <div class="col-12 col-lg-6">
+                            <h5 class="mt16">Share on Social Networks</h5>
+                            <t t-call="website_slides.slide_share_social">
+                                <t t-set="record" t-value="slide"/>
+                            </t>
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            <t t-call="website_slides.slide_share_link">
+                                <t t-set="record" t-value="slide"/>
+                                <t t-set="website_url" t-value="slide.website_url"/>
+                            </t>
+                        </div>
+                    </div>
                     <div class="row">
                         <div t-attf-class="col-12 #{'col-lg-6' if slide.embed_code else ''}">
                             <t t-call="website_slides.slide_social_email">

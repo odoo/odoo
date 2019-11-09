@@ -441,7 +441,7 @@ class Survey(http.Controller):
     # COMPLETED SURVEY ROUTES
     # ------------------------------------------------------------
 
-    @http.route('/survey/print/<string:survey_token>', type='http', auth='public', website=True)
+    @http.route('/survey/print/<string:survey_token>', type='http', auth='public', website=True, sitemap=False)
     def survey_print(self, survey_token, review=False, answer_token=None, **post):
         '''Display an survey in printable view; if <answer_token> is set, it will
         grab the answers of the user_input_id that has <answer_token>.'''
@@ -560,19 +560,16 @@ class Survey(http.Controller):
     def _prepare_result_dict(self, survey, current_filters=None):
         """Returns dictionary having values for rendering template"""
         current_filters = current_filters if current_filters else []
-        Survey = request.env['survey.survey']
         result = {'page_ids': []}
-        for page in survey.page_ids:
-            page_dict = {'page': page, 'question_ids': []}
-            for question in page.question_ids:
-                question_dict = {
-                    'question': question,
-                    'input_summary': Survey.get_input_summary(question, current_filters),
-                    'prepare_result': Survey.prepare_result(question, current_filters),
-                    'graph_data': self._get_graph_data(question, current_filters),
-                }
+        
+        # First append questions without page
+        questions_without_page = [self._prepare_question_values(question,current_filters) for question in survey.question_ids if not question.page_id]
+        if questions_without_page:
+            result['page_ids'].append({'page': request.env['survey.question'], 'question_ids': questions_without_page})
 
-                page_dict['question_ids'].append(question_dict)
+        # Then, questions in sections
+        for page in survey.page_ids:
+            page_dict = {'page': page, 'question_ids': [self._prepare_question_values(question,current_filters) for question in page.question_ids]}
             result['page_ids'].append(page_dict)
 
         if survey.scoring_type in ['scoring_with_answers', 'scoring_without_answers']:
@@ -581,6 +578,15 @@ class Survey(http.Controller):
             result['scoring_graph_data'] = json.dumps(scoring_data['graph_data'])
 
         return result
+
+    def _prepare_question_values(self, question, current_filters):
+        Survey = request.env['survey.survey']
+        return {
+            'question': question,
+            'input_summary': Survey.get_input_summary(question, current_filters),
+            'prepare_result': Survey.prepare_result(question, current_filters),
+            'graph_data': self._get_graph_data(question, current_filters),
+        }
 
     def _get_filter_data(self, post):
         """Returns data used for filtering the result"""

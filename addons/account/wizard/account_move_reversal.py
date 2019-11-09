@@ -12,6 +12,7 @@ class AccountMoveReversal(models.TransientModel):
 
     move_id = fields.Many2one('account.move', string='Journal Entry',
         domain=[('state', '=', 'posted'), ('type', 'not in', ('out_refund', 'in_refund'))])
+    new_move_ids = fields.Many2many('account.move')
     date = fields.Date(string='Reversal date', default=fields.Date.context_today, required=True)
     reason = fields.Char(string='Reason')
     refund_method = fields.Selection(selection=[
@@ -57,11 +58,15 @@ class AccountMoveReversal(models.TransientModel):
                 'invoice_date': move.is_invoice(include_receipts=True) and (self.date or move.date) or False,
                 'journal_id': self.journal_id and self.journal_id.id or move.journal_id.id,
                 'invoice_payment_term_id': None,
+                'auto_post': True if self.date > fields.Date.context_today(self) else False,
             })
 
         # Handle reverse method.
         if self.refund_method == 'cancel':
-            new_moves = moves._reverse_moves(default_values_list, cancel=True)
+            if any([vals.get('auto_post', False) for vals in default_values_list]):
+                new_moves = moves._reverse_moves(default_values_list)
+            else:
+                new_moves = moves._reverse_moves(default_values_list, cancel=True)
         elif self.refund_method == 'modify':
             moves._reverse_moves(default_values_list, cancel=True)
             moves_vals_list = []
@@ -75,6 +80,8 @@ class AccountMoveReversal(models.TransientModel):
             new_moves = moves._reverse_moves(default_values_list)
         else:
             return
+
+        self.new_move_ids = new_moves
 
         # Create action.
         action = {

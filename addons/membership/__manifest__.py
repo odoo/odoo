@@ -30,7 +30,4 @@ invoice and send propositions for membership renewal.
         'report/report_membership_views.xml',
     ],
     'website': 'https://www.odoo.com/page/community-builder',
-    'test': [
-        '../account/test/account_minimal_test.xml',
-    ],
 }

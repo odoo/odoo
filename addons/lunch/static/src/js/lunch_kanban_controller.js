@@ -174,14 +174,26 @@ var LunchKanbanController = KanbanController.extend({
             },
         };
 
-        this.do_action({
-            res_model: 'lunch.order.temp',
-            name: 'Configure Your Order',
+        // YTI TODO Maybe don't always pass the default_product_id
+        var action = {
+            res_model: 'lunch.order',
+            name: _t('Configure Your Order'),
             type: 'ir.actions.act_window',
             views: [[false, 'form']],
             target: 'new',
-            context: _.extend(ctx, {default_product_id: ev.data.productId, line_id: ev.data.lineId || false}),
-        }, options);
+            context: _.extend(ctx, {default_product_id: ev.data.productId}),
+        };
+
+        if (ev.data.lineId) {
+            action = _.extend(action, {
+                res_id: ev.data.lineId,
+                context: _.extend(action.context, {
+                    active_id: ev.data.lineId,
+                }),
+            });
+        }
+
+        this.do_action(action, options);
     },
     _onOrderNow: function (ev) {
         var self = this;

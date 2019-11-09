@@ -1,5 +1,11 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import odoo
+
+from odoo import tools
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
+
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPoSBasicConfig(TestPoSCommon):
@@ -94,11 +100,11 @@ class TestPoSBasicConfig(TestPoSCommon):
         # picking and stock moves should be in done state
         for order in self.pos_session.order_ids:
             self.assertEqual(
-                order.picking_id.state,
+                order.picking_ids[0].state,
                 'done',
                 'Picking should be in done state.'
             )
-            move_lines = order.picking_id.move_lines
+            move_lines = order.picking_ids[0].move_lines
             self.assertEqual(
                 move_lines.mapped('state'),
                 ['done'] * len(move_lines),
@@ -210,11 +216,11 @@ class TestPoSBasicConfig(TestPoSCommon):
         # no exception for invoiced orders
         for order in self.pos_session.order_ids:
             self.assertEqual(
-                order.picking_id.state,
+                order.picking_ids[0].state,
                 'done',
                 'Picking should be in done state.'
             )
-            move_lines = order.picking_id.move_lines
+            move_lines = order.picking_ids[0].move_lines
             self.assertEqual(
                 move_lines.mapped('state'),
                 ['done'] * len(move_lines),
@@ -228,8 +234,22 @@ class TestPoSBasicConfig(TestPoSCommon):
         self.assertAlmostEqual(invoice.amount_total, 130, msg='Amount total should be 130. Product is untaxed.')
         invoice_receivable_line = invoice.line_ids.filtered(lambda line: line.account_id == self.receivable_account)
 
+        # check state of orders before validating the session.
+        self.assertEqual('invoiced', invoiced_order.state, msg="state should be 'invoiced' for invoiced orders.")
+        uninvoiced_orders = self.pos_session.order_ids - invoiced_order
+        self.assertTrue(
+            all([order.state == 'paid' for order in uninvoiced_orders]),
+            msg="state should be 'paid' for uninvoiced orders before validating the session."
+        )
+
         # close the session
         self.pos_session.action_pos_session_validate()
+
+        # check state of orders after validating the session.
+        self.assertTrue(
+            all([order.state == 'done' for order in uninvoiced_orders]),
+            msg="State should be 'done' for uninvoiced orders after validating the session."
+        )
 
         # check values after the session is closed
         session_move = self.pos_session.move_id
@@ -356,11 +376,11 @@ class TestPoSBasicConfig(TestPoSCommon):
         # no exception of return orders
         for order in self.pos_session.order_ids:
             self.assertEqual(
-                order.picking_id.state,
+                order.picking_ids[0].state,
                 'done',
                 'Picking should be in done state.'
             )
-            move_lines = order.picking_id.move_lines
+            move_lines = order.picking_ids[0].move_lines
             self.assertEqual(
                 move_lines.mapped('state'),
                 ['done'] * len(move_lines),
@@ -374,7 +394,7 @@ class TestPoSBasicConfig(TestPoSCommon):
         session_move = self.pos_session.move_id
 
         sale_lines = session_move.line_ids.filtered(lambda line: line.account_id == self.sale_account)
-        self.assertAlmostEqual(len(sale_lines), 2, 'There should be lines for both sales and refund.')
+        self.assertEqual(len(sale_lines), 2, msg='There should be lines for both sales and refund.')
         self.assertAlmostEqual(sum(sale_lines.mapped('balance')), -110.0)
 
         receivable_line_bank = session_move.line_ids.filtered(lambda line: self.bank_pm.name in line.name)

@@ -40,7 +40,7 @@ class MassMailing(models.Model):
     A mass mailing is an occurence of sending emails. """
     _name = 'mailing.mailing'
     _description = 'Mass Mailing'
-    _inherit = [ 'mail.thread', 'mail.activity.mixin']
+    _inherit = [ 'mail.thread', 'mail.activity.mixin', 'mail.render.mixin']
     # number of periods for tracking mail_mail statistics
     _period_number = 6
     _order = 'sent_date DESC'
@@ -128,7 +128,7 @@ class MassMailing(models.Model):
     replied_ratio = fields.Integer(compute="_compute_statistics", string='Replied Ratio')
     bounced_ratio = fields.Integer(compute="_compute_statistics", string='Bounced Ratio')
     next_departure = fields.Datetime(compute="_compute_next_departure", string='Scheduled date')
-
+     
     def _compute_total(self):
         for mass_mailing in self:
             mass_mailing.total = len(mass_mailing.sudo()._get_recipients())

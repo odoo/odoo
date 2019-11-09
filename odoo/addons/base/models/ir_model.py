@@ -675,9 +675,32 @@ class IrModelFields(models.Model):
         # prevent screwing up fields that depend on these fields
         self._prepare_update()
 
+        # determine registry fields corresponding to self
+        fields = []
+        for record in self:
+            try:
+                fields.append(self.pool[record.model]._fields[record.name])
+            except KeyError:
+                pass
+
         model_names = self.mapped('model')
         self._drop_column()
         res = super(IrModelFields, self).unlink()
+
+        # discard the removed fields from field triggers
+        def discard_fields(tree):
+            # discard fields from the tree's root node
+            tree.get(None, set()).difference_update(fields)
+            # discard subtrees labelled with any of the fields
+            for field in fields:
+                tree.pop(field, None)
+            # discard fields from remaining subtrees
+            for field, subtree in tree.items():
+                if field is not None:
+                    discard_fields(subtree)
+
+        discard_fields(self.pool.field_triggers)
+        self.pool.registry_invalidated = True
 
         # The field we just deleted might be inherited, and the registry is
         # inconsistent in this case; therefore we reload the registry.
@@ -1156,8 +1179,11 @@ class IrModelSelection(models.Model):
 
         result = super().unlink()
 
-        # setup models; this re-initializes model in registry
-        self.pool.setup_models(self._cr)
+        # Reload registry for normal unlink only. For module uninstall, the
+        # reload is done independently in odoo.modules.loading.
+        if not self._context.get(MODULE_UNINSTALL_FLAG):
+            # setup models; this re-initializes model in registry
+            self.pool.setup_models(self._cr)
 
         return result
 
@@ -1175,7 +1201,7 @@ class IrModelConstraint(models.Model):
     definition = fields.Char(help="PostgreSQL constraint definition")
     message = fields.Char(help="Error message returned when the constraint is violated.", translate=True)
     model = fields.Many2one('ir.model', required=True, ondelete="cascade", index=True)
-    module = fields.Many2one('ir.module.module', required=True, index=True)
+    module = fields.Many2one('ir.module.module', required=True, index=True, ondelete='cascade')
     type = fields.Char(string='Constraint Type', required=True, size=1, index=True,
                        help="Type of the constraint: `f` for a foreign key, "
                             "`u` for other constraints.")
@@ -1311,8 +1337,8 @@ class IrModelRelation(models.Model):
 
     name = fields.Char(string='Relation Name', required=True, index=True,
                        help="PostgreSQL table name implementing a many2many relation.")
-    model = fields.Many2one('ir.model', required=True, index=True)
-    module = fields.Many2one('ir.module.module', required=True, index=True)
+    model = fields.Many2one('ir.model', required=True, index=True, ondelete='cascade')
+    module = fields.Many2one('ir.module.module', required=True, index=True, ondelete='cascade')
     write_date = fields.Datetime()
     create_date = fields.Datetime()
 
@@ -1877,9 +1903,13 @@ class IrModelData(models.Model):
         constraints = self.env['ir.model.constraint'].search([('module', 'in', modules.ids)])
         constraints._module_data_uninstall()
 
-        # remove fields, selections and relations
+        # Remove fields, selections and relations. Note that the selections of
+        # removed fields do not require any "data fix", as their corresponding
+        # column no longer exists. We can therefore completely ignore them. That
+        # is why selections are removed after fields: most selections are
+        # deleted on cascade by their corresponding field.
         delete(self.env['ir.model.fields'].browse(field_ids))
-        delete(self.env['ir.model.fields.selection'].browse(selection_ids))
+        delete(self.env['ir.model.fields.selection'].browse(selection_ids).exists())
         relations = self.env['ir.model.relation'].search([('module', 'in', modules.ids)])
         relations._module_data_uninstall()
 

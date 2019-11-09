@@ -1,8 +1,8 @@
-odoo.define("website_sale_product_configurator.tour_shop_custom_attribute_value", function (require) {
+odoo.define("website_sale_product_TESTurator.tour_shop_custom_attribute_value", function (require) {
 "use strict";
 /**
  * Add custom steps to handle the optional products modal introduced
- * by the product configurator module.
+ * by the product TESTurator module.
  */
 var tour = require('web_tour.tour');
 require('website_sale.tour_shop_custom_attribute_value');
@@ -13,7 +13,7 @@ var addCartStepIndex = _.findIndex(tour.tours.shop_custom_attribute_value.steps,
 });
 
 tour.tours.shop_custom_attribute_value.steps.splice(addCartStepIndex + 1, 0, {
-    trigger: 'div:contains(Custom: Wood)',
+    trigger: 'div:contains(Custom TEST: Wood)',
     extra_trigger: '.js_product.in_cart.main_product',
     run: function (){} // checks that Yep, it's wood!
 }, {
@@ -26,14 +26,14 @@ tour.tours.shop_custom_attribute_value.steps.splice(addCartStepIndex + 1, 0, {
     trigger: 'span.oe_price span:contains(600)',
     run: function (){}, // check
 }, {
-    trigger: '.oe_optional_products_modal .js_product:eq(1) div:contains("Conference Chair (CONFIG) (Steel)")',
+    trigger: '.oe_optional_products_modal .js_product:eq(1) div:contains("Conference Chair (TEST) (Steel)")',
     run: function () {
         optionVariantImage = $('.oe_optional_products_modal .js_product:eq(1) img.variant_image').attr('src');
     }
 }, {
     trigger: '.oe_optional_products_modal .js_product:eq(1) input[data-value_name="Aluminium"]',
 }, {
-    trigger: '.oe_optional_products_modal .js_product:eq(1) div:contains("Conference Chair (CONFIG) (Aluminium)")',
+    trigger: '.oe_optional_products_modal .js_product:eq(1) div:contains("Conference Chair (TEST) (Aluminium)")',
     run: function () {
         var newVariantImage = $('.oe_optional_products_modal .js_product:eq(1) img.variant_image').attr('src');
         if (newVariantImage !== optionVariantImage) {

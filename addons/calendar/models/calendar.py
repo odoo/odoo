@@ -454,6 +454,7 @@ class AlarmManager(models.AbstractModel):
             delta = delta.seconds + delta.days * 3600 * 24
 
             return {
+                'alarm_id': alarm.id,
                 'event_id': meeting.id,
                 'title': meeting.name,
                 'message': message,
@@ -1032,6 +1033,9 @@ class Meeting(models.Model):
                     'email': partner.email,
                     'event_id': meeting.id,
                 }
+
+                if self._context.get('google_internal_event_id', False):
+                    values['google_internal_event_id'] = self._context.get('google_internal_event_id')
 
                 # current user don't have to accept his own meeting
                 if partner == self.env.user.partner_id:

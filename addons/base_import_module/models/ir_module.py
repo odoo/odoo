@@ -5,6 +5,7 @@ import logging
 import lxml
 import os
 import sys
+import tempfile
 import zipfile
 from os.path import join as opj
 
@@ -13,7 +14,6 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.modules import load_information_from_description_file
 from odoo.tools import convert_file, exception_to_unicode
-from odoo.tools.osutil import tempdir
 
 _logger = logging.getLogger(__name__)
 
@@ -123,7 +123,7 @@ class IrModule(models.Model):
                 if zf.file_size > MAX_FILE_SIZE:
                     raise UserError(_("File '%s' exceed maximum allowed file size") % zf.filename)
 
-            with tempdir() as module_dir:
+            with tempfile.TemporaryDirectory() as module_dir:
                 import odoo.modules.module as module
                 try:
                     odoo.addons.__path__.append(module_dir)

@@ -5,11 +5,13 @@ from odoo.tests import Form
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.exceptions import UserError
 
-
 class TestUnbuild(TestMrpCommon):
     def setUp(self):
         super(TestUnbuild, self).setUp()
         self.stock_location = self.env.ref('stock.stock_location_stock')
+        self.env.ref('base.group_user').write({
+            'implied_ids': [(4, self.env.ref('stock.group_production_lot').id)]
+        })
 
     def test_unbuild_standart(self):
         """ This test creates a MO and then creates 3 unbuild
@@ -598,7 +600,7 @@ class TestUnbuild(TestMrpCommon):
         # Transfer it
         for ml in picking.move_ids_without_package:
             ml.quantity_done = 1
-        picking.action_done()
+        picking._action_done()
 
         # Check the available quantity of components and final product in stock
         self.assertEqual(StockQuant._get_available_quantity(finshed_product, self.stock_location), 0, 'Table should not be available in stock')

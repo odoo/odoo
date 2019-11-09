@@ -96,24 +96,39 @@
                         </div>
                         <div class="d-flex flex-column flex-grow-1 justify-content-between pl-md-5 p-3 overflow-auto">
                             <div>
-                                <h1 class="mt-3 display-4 font-weight-bold">Amazing!</h1>
+                                <h1 class="o_wslides_quiz_modal_title mt-3 display-4 font-weight-bold">Amazing!</h1>
                                 <div class="pb-3">
-                                    <h4 class="pb-2 d-flex">You gained <span class="badge badge-pill badge-success text-white font-weight-bold ml-2 mr-1"><t t-esc="widget.quiz.quizKarmaWon"/> XP</span> !</h4>
-                                    <div class="progress" style="height: 8px">
-                                        <div class="progress-bar" role="progressbar" t-att-aria-valuenow="widget.quiz.rankProgress.progress" aria-valuemin="0" aria-valuemax="100"
-                                            t-attf-style="width: #{widget.quiz.rankProgress.progress}%"/>
+                                    <h4 class="o_wslides_quiz_modal_xp_gained pb-2 d-flex fade">You gained <span class="badge badge-pill badge-success text-white font-weight-bold ml-2 mr-1"><t t-esc="widget.quiz.quizKarmaWon"/> XP</span> !</h4>
+                                    <div class="mt-5 mb-4">
+                                        <div class="progress">
+                                            <div class="progress-bar" role="progressbar" t-att-aria-valuenow="widget.quiz.rankProgress.previous_rank.progress" aria-valuemin="0" aria-valuemax="100"
+                                                t-attf-style="width: #{widget.quiz.rankProgress.previous_rank.progress}%"/>
+                                            <div class="progress-bar-tooltip" data-toggle="tooltip" data-placement="top" t-att-title="widget.quiz.rankProgress.new_rank.karma" />
+                                        </div>
+                                        <small class="float-left text-primary font-weight-bold o_wslides_quiz_modal_rank_lower_bound">
+                                            <t t-esc="widget.quiz.rankProgress.previous_rank.lower_bound"/>
+                                        </small>
+                                        <small t-if="widget.quiz.rankProgress.previous_rank.upper_bound" class="float-right font-weight-bold o_wslides_quiz_modal_rank_upper_bound">
+                                            <t t-esc="widget.quiz.rankProgress.previous_rank.upper_bound"/>
+                                        </small>
                                     </div>
-                                    <small t-if="widget.quiz.rankProgress.lowerBound" class="float-left text-primary font-weight-bold"><t t-esc="widget.quiz.rankProgress.lowerBound"/></small>
-                                    <small t-if="widget.quiz.rankProgress.upperBound" class="float-right font-weight-bold"><t t-esc="widget.quiz.rankProgress.upperBound"/></small>
                                 </div>
-                                <div class="pb-3" t-raw="widget.quiz.rankProgress.motivational"/>
+                                <div class="pb-3 o_wslides_quiz_modal_rank_motivational">
+                                    <t t-set="showLastRankDescription" t-value="widget.quiz.rankProgress.last_rank &amp;&amp; !widget.quiz.rankProgress.level_up" />
+                                    <t t-raw="showLastRankDescription ? widget.quiz.rankProgress.description : widget.quiz.rankProgress.previous_rank.motivational" />
+                                </div>
                             </div>
-                            <t t-if="widget.slide.hasNext">
-                                <button type="button" class="btn btn-light border o_wslides_quiz_btn align-self-end">Next <i class="fa fa-chevron-right"/></button>
-                            </t>
-                            <t t-else="">
-                                <a type="button" href="/slides" class="btn btn-light border align-self-end">End course</a>
-                            </t>
+                            <div class="o_wslides_quiz_modal_dismiss align-self-end d-none">
+                                <t t-if="widget.quiz.rankProgress.level_up">
+                                    <a type="button" target="_blank" t-attf-href="/profile/user/#{widget.userId}" class="btn btn-light border">Check Profile</a>
+                                </t>
+                                <t t-if="widget.slide.hasNext">
+                                    <button type="button" class="btn btn-light border o_wslides_quiz_modal_btn">Next <i class="fa fa-chevron-right"/></button>
+                                </t>
+                                <t t-else="">
+                                    <a type="button" href="/slides" class="btn btn-light border">End course</a>
+                                </t>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -193,7 +193,12 @@ class Http(models.AbstractModel):
         context['website_id'] = request.website.id
         # This is mainly to avoid access errors in website controllers where there is no
         # context (eg: /shop), and it's not going to propagate to the global context of the tab
-        context['allowed_company_ids'] = [request.website.company_id.id]
+        # If the company of the website is not in the allowed companies of the user, set the main
+        # company of the user.
+        if request.website.company_id in request.env.user.company_ids:
+            context['allowed_company_ids'] = request.website.company_id.ids
+        else:
+            context['allowed_company_ids'] = request.env.user.company_id.ids
 
         # modify bound context
         request.context = dict(request.context, **context)
@@ -253,7 +258,8 @@ class Http(models.AbstractModel):
         parent = super(Http, cls)._serve_fallback(exception)
         if parent:  # attachment
             return parent
-
+        if not request.is_frontend:
+            return False
         website_page = cls._serve_page()
         if website_page:
             return website_page
@@ -270,6 +276,10 @@ class Http(models.AbstractModel):
         if request.website.is_publisher() and isinstance(exception, werkzeug.exceptions.NotFound):
             code = 'page_404'
             values['path'] = request.httprequest.path[1:]
+        if isinstance(exception, werkzeug.exceptions.Forbidden) and \
+           exception.description == "website_visibility_password_required":
+            code = 'protected_403'
+            values['path'] = request.httprequest.path
         return (code, values)
 
     @classmethod
@@ -303,8 +313,8 @@ class Http(models.AbstractModel):
 
     @classmethod
     def _get_error_html(cls, env, code, values):
-        if code == 'page_404':
-            return env['ir.ui.view'].render_template('website.%s' % code, values)
+        if code in ('page_404', 'protected_403'):
+            return code.split('_')[1], env['ir.ui.view'].render_template('website.%s' % code, values)
         return super(Http, cls)._get_error_html(env, code, values)
 
     def binary_content(self, xmlid=None, model='ir.attachment', id=None, field='datas',
@@ -328,7 +338,12 @@ class Http(models.AbstractModel):
     def _xmlid_to_obj(cls, env, xmlid):
         website_id = env['website'].get_current_website()
         if website_id and website_id.theme_id:
-            obj = env['ir.attachment'].search([('key', '=', xmlid), ('website_id', '=', website_id.id)])
+            domain = [('key', '=', xmlid), ('website_id', '=', website_id.id)]
+            Attachment = env['ir.attachment']
+            if request.env.user.share:
+                domain.append(('public', '=', True))
+                Attachment = Attachment.sudo()
+            obj = Attachment.search(domain)
             if obj:
                 return obj[0]
 

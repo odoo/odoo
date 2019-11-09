@@ -177,16 +177,9 @@
                                     <i class="fa fa-ban" style="color: red;" role="img" title="This email is blacklisted for mass mailing"
                                         aria-label="Blacklisted" attrs="{'invisible': ['|', ('partner_is_blacklisted', '=', False), ('partner_address_email', '=', False)]}" groups="base.group_user"/>
                                     <field name="partner_address_email"
-                                        attrs="{'invisible': [('partner_address_email', '==', False)]}" widget="email" string="Email"/>
+                                        attrs="{'invisible': [('partner_address_email', '=', False)]}" widget="email" string="Email"/>
                                 </div>
-                                <field string="Phone"
-                                    name="partner_address_phone"
-                                    widget="phone" options="{'enable_sms': True}"
-                                    readonly="1"
-                                    attrs="{'invisible': [('partner_address_phone', '==', False)]}"/>
-                                <field name="phone"
-                                    widget="phone" options="{'enable_sms': True}"
-                                    attrs="{'invisible':  [('partner_address_phone', '!=', False)]}"/>
+                                <field name="phone" widget="phone" options="{'enable_sms': True}"/>
                             </group>
                             <group attrs="{'invisible': [('type', '=', 'opportunity')]}">
                                 <label for="contact_name"/>
@@ -419,6 +412,19 @@
                         <field name="company_currency" invisible="1"/>
                         <field name="company_id" invisible="1"/>
                         <field name="priority" nolabel="1" widget="priority"/>
+                        <field name="partner_name" invisible="1"/>
+                        <field name="contact_name" invisible="1"/>
+                        <field name="country_id" invisible="1"/>
+                        <field name="state_id" invisible="1"/>
+                        <field name="city" invisible="1"/>
+                        <field name="street" invisible="1"/>
+                        <field name="street2" invisible="1"/>
+                        <field name="zip" invisible="1"/>
+                        <field name="phone" invisible="1"/>
+                        <field name="mobile" invisible="1"/>
+                        <field name="website" invisible="1"/>
+                        <field name="function" invisible="1"/>
+                        <field name="title" invisible="1"/>
                     </group>
                 </form>
             </field>

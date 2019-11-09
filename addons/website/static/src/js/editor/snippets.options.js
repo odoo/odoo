@@ -225,69 +225,53 @@ options.registry.carousel = options.Class.extend({
      * @override
      */
     start: function () {
-        var self = this;
-
-        this.$target.carousel({interval: false});
-        this.id = this.$target.attr('id');
-        this.$inner = this.$target.find('.carousel-inner');
-        this.$indicators = this.$target.find('.carousel-indicators');
         this.$target.carousel('pause');
-        this._rebindEvents();
+        this.$indicators = this.$target.find('.carousel-indicators');
+        this.$controls = this.$target.find('.carousel-control-prev, .carousel-control-next, .carousel-indicators');
+        this.$items = this.$target.find('.carousel-item');
 
-        var def = this._super.apply(this, arguments);
-
-        // set background and prepare to clean for save
-        this.$target.on('slid.bs.carousel', function () {
-            self.$target.carousel('pause');
-            self.trigger_up('option_update', {
-                optionNames: ['background', 'background_position', 'colorpicker', 'sizing_y'],
-                name: 'target',
-                data: self.$target.find('.carousel-item.active'),
-            });
+        let _slideTimestamp;
+        this.$target.on('slide.bs.carousel.carousel_option', () => {
+            _slideTimestamp = window.performance.now();
+            setTimeout(() => this.trigger_up('activate_snippet', {$snippet: this.$target}));
+        });
+        this.$target.on('slid.bs.carousel.carousel_option', () => {
+            // slid.bs.carousel is most of the time fired too soon by bootstrap
+            // since it emulates the transitionEnd with a setTimeout. We wait
+            // here an extra 20% of the time before retargeting edition, which
+            // should be enough...
+            const _slideDuration = (window.performance.now() - _slideTimestamp);
+            setTimeout(() => this._retargetEdition(), 0.2 * _slideDuration);
         });
 
-        return def;
+        return this._super.apply(this, arguments);
     },
     /**
-     * Associates unique ID on slider elements.
-     *
+     * @override
+     */
+    destroy: function () {
+        this._super.apply(this, arguments);
+        this.$target.off('.carousel_option');
+    },
+    /**
      * @override
      */
     onBuilt: function () {
-        this.id = 'myCarousel' + new Date().getTime();
-        this.$target.attr('id', this.id);
-        this.$target.find('[data-target]').attr('data-target', '#' + this.id);
-        this._rebindEvents();
+        this._assignUniqueID();
     },
     /**
-     * @override
-     */
-    onFocus: function () {
-        // Needs to be done on focus, not on start, as all other options are
-        // maybe not all initialized in start
-        this.$target.trigger('slid.bs.carousel');
-    },
-    /**
-     * Associates unique ID on cloned slider elements.
-     *
      * @override
      */
     onClone: function () {
-        var id = 'myCarousel' + new Date().getTime();
-        this.$target.attr('id', id);
-        this.$target.find('[data-slide]').attr('href', '#' + id);
-        this.$target.find('[data-slide-to]').attr('data-target', '#' + id);
+        this._assignUniqueID();
     },
     /**
      * @override
      */
     cleanForSave: function () {
         this._super.apply(this, arguments);
-        this.$target.find('.carousel-item').removeClass('next prev left right active')
-            .first().addClass('active');
-        this.$target.find('.carousel-indicators').find('li').removeClass('active').html('')
-            .first().addClass('active');
-        this.$target.removeClass('oe_img_bg ' + this._class).css('background-image', '');
+        this.$items.removeClass('next prev left right active').first().addClass('active');
+        this.$indicators.find('li').removeClass('active').empty().first().addClass('active');
     },
 
     //--------------------------------------------------------------------------
@@ -300,18 +284,18 @@ options.registry.carousel = options.Class.extend({
      * @see this.selectClass for parameters
      */
     addSlide: function (previewMode) {
-        var self = this;
-        var cycle = this.$inner.find('.carousel-item').length;
-        var $active = this.$inner.find('.carousel-item.active, .carousel-item.prev, .carousel-item.next').first();
-        var index = $active.index();
-        this.$('.carousel-control-prev, .carousel-control-next, .carousel-indicators').removeClass('d-none');
-        this.$indicators.append('<li data-target="#' + this.id + '" data-slide-to="' + cycle + '"></li>');
-        var $clone = $active.clone(true);
-        $clone.removeClass('active').insertAfter($active);
-        _.defer(function () {
-            self.$target.carousel().carousel(++index);
-            self._rebindEvents();
-        });
+        this.$controls.removeClass('d-none');
+        this.$indicators.append($('<li>', {
+            'data-target': '#' + this.$target.attr('id'),
+            'data-slide-to': this.$items.length,
+        }));
+        // Need to remove editor data from the clone so it gets its own.
+        const $active = this.$items.filter('.active');
+        $active.clone(false)
+            .removeClass('active')
+            .insertAfter($active);
+        this.$items = this.$target.find('.carousel-item');
+        this.$target.carousel('next');
     },
     /**
      * Removes the current slide.
@@ -319,33 +303,19 @@ options.registry.carousel = options.Class.extend({
      * @see this.selectClass for parameters.
      */
     removeSlide: function (previewMode) {
-        if (this.remove_process) {
-            return;
-        }
-
-        var self = this;
-
-        var $items = this.$inner.find('.carousel-item');
-        var cycle = $items.length - 1;
-        var $active = $items.filter('.active');
-        var index = $active.index();
-
-        if (cycle > 0) {
-            this.remove_process = true;
-            this.$target.on('slid.bs.carousel.slide_removal', function (event) {
-                $active.remove();
-                self.$indicators.find('li:last').remove();
-                self.$target.off('slid.bs.carousel.slide_removal');
-                self._rebindEvents();
-                self.remove_process = false;
-                if (cycle === 1) {
-                    self.$target.find('.carousel-control-prev, .carousel-control-next, .carousel-indicators').addClass('d-none');
-                }
+        const newLength = this.$items.length - 1;
+        if (!this.removing && newLength > 0) {
+            const $toDelete = this.$items.filter('.active');
+            this.$target.one('slid.bs.carousel', (event) => {
+                $toDelete.remove();
+                this.$indicators.find('li:last').remove();
+                this.$items = this.$target.find('.carousel-item');
+                this.$controls.toggleClass('d-none', newLength === 1);
+                this.$target.find('.carousel').trigger('content_changed');
+                this.removing = false;
             });
-            _.defer(function () {
-                self._refreshPublicWidgets();
-                self.$target.carousel(index > 0 ? --index : cycle);
-            });
+            this.removing = true;
+            this.$target.carousel('prev');
         }
     },
     /**
@@ -366,25 +336,33 @@ options.registry.carousel = options.Class.extend({
      */
     _setActive: function () {
         this._super.apply(this, arguments);
-        this.$el.find('[data-interval]').removeClass('active')
-            .filter('[data-interval=' + this.$target.attr('data-interval') + ']').addClass('active');
+        this.$el.find('[data-interval]')
+            .removeClass('active')
+            .filter(`[data-interval=${this.$target.attr('data-interval')}]`)
+            .addClass('active');
     },
     /**
-     * Rebinds carousel events on indicators.
+     * Activates current slide for edition and vertical padding. Padding on the
+     * carousel itself would mean the slides' backgrounds don't cover the padding.
      *
      * @private
      */
-    _rebindEvents: function () {
-        var self = this;
-        this.$target.find('.carousel-control-prev, .carousel-control-next').off('click').on('click', function () {
-            self.$target.carousel($(this).data('slide'));
+    _retargetEdition: function () {
+        this.trigger_up('activate_snippet', {
+            $snippet: this.$items.filter('.active'),
+            ifInactiveOptions: true,
         });
-        this.$target.find('.carousel-indicators [data-slide-to]').off('click').on('click', function () {
-            self.$target.carousel(+$(this).data('slide-to'));
-        });
-
-        /* Fix: backward compatibility saas-3 */
-        this.$target.find('.item.text_image, .item.image_text, .item.text_only').find('.container > .carousel-caption > div, .container > img.carousel-image').attr('contentEditable', 'true');
+    },
+    /**
+     * Creates a unique ID for the carousel and reassign data-attributes that depend on it.
+     *
+     * @private
+     */
+    _assignUniqueID: function () {
+        const id = 'myCarousel' + Date.now();
+        this.$target.attr('id', id);
+        this.$target.find('[data-target]').attr('data-target', '#' + id);
+        this.$target.find('[data-slide]').attr('href', '#' + id);
     },
 });
 
@@ -1521,15 +1499,13 @@ options.registry.topMenuTransparency = options.Class.extend({
     _setActive: function () {
         this._super.apply(this, arguments);
 
-        var enabled;
         this.trigger_up('action_demand', {
             actionName: 'get_page_option',
             params: ['header_overlay'],
-            onSuccess: function (value) {
-                enabled = value;
+            onSuccess: value => {
+                this.$el.find('[data-transparent]').toggleClass('active', !!value);
             },
         });
-        this.$el.find('[data-transparent]').toggleClass('active', !!enabled);
     },
 });
 
@@ -1549,15 +1525,13 @@ options.registry.topMenuColor = options.registry.colorpicker.extend({
      * @override
      */
     onFocus: function () {
-        var enabled;
         this.trigger_up('action_demand', {
             actionName: 'get_page_option',
             params: ['header_overlay'],
-            onSuccess: function (value) {
-                enabled = value;
+            onSuccess: value => {
+                this.$el.toggleClass('d-none', !value);
             },
         });
-        this.$el.toggleClass('d-none', !enabled);
     },
 
     //--------------------------------------------------------------------------
@@ -1806,6 +1780,28 @@ options.registry.CoverProperties = options.Class.extend({
         this.$target[0].dataset.textAlignClass = this.$el.find('.active[data-cover-opt="text_align"]').data('selectClass') || '';
         this.$target[0].dataset.filterValue = activeFilterValue || 0.0;
         this.$target[0].dataset.filterColor = activeFilterColor || '';
+    },
+});
+
+/**
+ * Whether the section should be full-width (container-fluid) or use a classic container
+ */
+options.registry.SectionStretch = options.Class.extend({
+    /**
+     * Only shows this option if it changes the visual.
+     *
+     * @override
+     */
+    start: function () {
+        const $container = $('<div>', {class: 'container'}).insertAfter(this.$target);
+        const sizeDifference = this.$target.parent().width() / $container.outerWidth() - 1;
+        $container.remove();
+        // The cutoff for the option is 5% difference in width
+        if (sizeDifference < 0.05) {
+            this.$el.addClass('d-none');
+        }
+
+        return this._super.apply(this, arguments);
     },
 });
 });

@@ -105,6 +105,12 @@ var LivechatButton = Widget.extend({
             }
         }
         this.call('bus_service', 'onNotification', this, this._onNotification);
+        if (this.options.button_background_color) {
+            this.$el.css('background-color', this.options.button_background_color);
+        }
+        if (this.options.button_text_color) {
+            this.$el.css('color', this.options.button_text_color);
+        }
         return this._super();
     },
 
@@ -290,7 +296,9 @@ var LivechatButton = Widget.extend({
         var self = this;
         var options = {
             displayStars: false,
+            headerBackgroundColor: this.options.header_background_color,
             placeholder: this.options.input_placeholder || "",
+            titleColor: this.options.title_color,
         };
         this._chatWindow = new WebsiteLivechatWindow(this, this._livechat, options);
         return this._chatWindow.appendTo($('body')).then(function () {

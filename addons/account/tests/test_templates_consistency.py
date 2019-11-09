@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-from odoo.tests.common import HttpCase
+from odoo.tests.common import TransactionCase
 
 
-class AccountingTestTemplConsistency(HttpCase):
+class AccountingTestTemplConsistency(TransactionCase):
     '''Test the templates consistency between some objects like account.account when account.account.template.
     '''
 
@@ -34,7 +34,7 @@ class AccountingTestTemplConsistency(HttpCase):
         self.check_fields_consistency(
             'account.account.template', 'account.account', exceptions=['chart_template_id', 'nocreate'])
         self.check_fields_consistency(
-            'account.account', 'account.account.template', exceptions=['company_id', 'deprecated', 'opening_debit', 'opening_credit'])
+            'account.account', 'account.account.template', exceptions=['company_id', 'deprecated', 'opening_debit', 'opening_credit', 'allowed_journal_ids'])
 
     def test_account_tax_fields(self):
         '''Test fields consistency for ('account.tax', 'account.tax.template')

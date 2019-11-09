@@ -95,6 +95,7 @@ class Website(models.Model):
     google_analytics_key = fields.Char('Google Analytics Key')
     google_management_client_id = fields.Char('Google Client ID')
     google_management_client_secret = fields.Char('Google Client Secret')
+    google_search_console = fields.Char(help='Google key, or Enable to access first reply')
 
     google_maps_api_key = fields.Char('Google Maps API Key')
 
@@ -188,6 +189,7 @@ class Website(models.Model):
     # Page Management
     # ----------------------------------------------------------
     def _bootstrap_homepage(self):
+        Page = self.env['website.page']
         standard_homepage = self.env.ref('website.homepage', raise_if_not_found=False)
         if not standard_homepage:
             return
@@ -200,10 +202,19 @@ class Website(models.Model):
         </t>''' % (self.id)
         standard_homepage.with_context(website_id=self.id).arch_db = new_homepage_view
 
-        self.homepage_id = self.env['website.page'].search([('website_id', '=', self.id),
-                                                            ('key', '=', standard_homepage.key)])
+        homepage_page = Page.search([
+            ('website_id', '=', self.id),
+            ('key', '=', standard_homepage.key),
+        ])
+        if not homepage_page:
+            homepage_page = Page.create({
+                'website_published': True,
+                'url': '/',
+                'view_id': self.with_context(website_id=self.id).viewref('website.homepage').id,
+            })
         # prevent /-1 as homepage URL
-        self.homepage_id.url = '/'
+        homepage_page.url = '/'
+        self.homepage_id = homepage_page
 
         # Bootstrap default menu hierarchy, create a new minimalist one if no default
         default_menu = self.env.ref('website.main_menu')
@@ -639,7 +650,7 @@ class Website(models.Model):
             view_id = View.get_view_id(template)
         if not view_id:
             raise NotFound
-        return View.browse(view_id)
+        return View.sudo().browse(view_id)
 
     @api.model
     def pager(self, url, total, page=1, step=30, scope=5, url_args=None):
@@ -693,7 +704,7 @@ class Website(models.Model):
         sitemap_endpoint_done = set()
 
         for rule in router.iter_rules():
-            if 'sitemap' in rule.endpoint.routing:
+            if 'sitemap' in rule.endpoint.routing and rule.endpoint.routing['sitemap'] is not True:
                 if rule.endpoint in sitemap_endpoint_done:
                     continue
                 sitemap_endpoint_done.add(rule.endpoint)
@@ -708,6 +719,10 @@ class Website(models.Model):
             if not self.rule_is_enumerable(rule):
                 continue
 
+            if 'sitemap' not in rule.endpoint.routing:
+                logger.warning('No Sitemap value provided for controller %s (%s)' %
+                               (rule.endpoint.method, ','.join(rule.endpoint.routing['routes'])))
+
             converters = rule._converters or {}
             if query_string and not converters and (query_string not in rule.build([{}], append_unknown=False)[1]):
                 continue
@@ -719,6 +734,9 @@ class Website(models.Model):
                 key=lambda x: (hasattr(x[1], 'domain') and (x[1].domain != '[]'), rule._trace.index((True, x[0]))))
 
             for (i, (name, converter)) in enumerate(convitems):
+                if 'website_id' in self.env[converter.model]._fields and (not converter.domain or converter.domain == '[]'):
+                    converter.domain = "[('website_id', 'in', (False, current_website_id))]"
+
                 newval = []
                 for val in values:
                     query = i == len(convitems) - 1 and query_string
@@ -727,6 +745,7 @@ class Website(models.Model):
                         query = sitemap_qs2dom(query, r, self.env[converter.model]._rec_name)
                         if query == FALSE_DOMAIN:
                             continue
+
                     for value_dict in converter.generate(uid=self.env.uid, dom=query, args=val):
                         newval.append(val.copy())
                         value_dict[name] = value_dict['loc']
@@ -738,8 +757,6 @@ class Website(models.Model):
                 domain_part, url = rule.build(value, append_unknown=False)
                 if not query_string or query_string.lower() in url.lower():
                     page = {'loc': url}
-                    if url in ('/sitemap.xml',):
-                        continue
                     if url in url_set:
                         continue
                     url_set.add(url)
@@ -747,7 +764,7 @@ class Website(models.Model):
                     yield page
 
         # '/' already has a http.route & is in the routing_map so it will already have an entry in the xml
-        domain = [('url', '!=', '/')]
+        domain = [('url', '!=', '/'), ('visibility', '=', False)]
         if not force:
             domain += [('website_indexed', '=', True)]
             # is_visible

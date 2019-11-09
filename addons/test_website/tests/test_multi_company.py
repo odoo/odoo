@@ -9,7 +9,7 @@ class TestMultiCompany(HttpCase):
 
     def test_company_in_context(self):
         """ Test website company is set in context """
-        website = self.env['website'].browse(1)
+        website = self.env.ref('website.default_website')
         company = self.env['res.company'].create({'name': "Adaa"})
         website.company_id = company
         response = self.url_open('/multi_company_website')

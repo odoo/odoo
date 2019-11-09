@@ -112,7 +112,6 @@ class PosOrder(models.Model):
         :type existing_order: pos.order.
         :returns number pos_order id
         """
-        to_invoice = order['to_invoice'] if not draft else False
         order = order['data']
         pos_session = self.env['pos.session'].browse(order['pos_session_id'])
         if pos_session.state == 'closing_control' or pos_session.state == 'closed':
@@ -138,10 +137,10 @@ class PosOrder(models.Model):
             except Exception as e:
                 _logger.error('Could not fully process the POS Order: %s', tools.ustr(e))
 
-        if to_invoice:
+        pos_order._create_order_picking()
+        if pos_order.to_invoice and pos_order.state == 'paid':
             pos_order.action_pos_order_invoice()
             pos_order.account_move.sudo().with_context(force_company=self.env.user.company_id.id).post()
-
         return pos_order.id
 
 
@@ -194,11 +193,11 @@ class PosOrder(models.Model):
 
     def _get_pos_anglo_saxon_price_unit(self, product, partner_id, quantity):
         moves = self.filtered(lambda o: o.partner_id.id == partner_id)\
-            .mapped('picking_id.move_lines')\
+            .mapped('picking_ids.move_lines')\
             .filtered(lambda m: m.product_id.id == product.id)\
             .sorted(lambda x: x.date)
         price_unit = product._compute_average_price(0, quantity, moves)
-        return - price_unit
+        return price_unit
 
     name = fields.Char(string='Order Ref', required=True, readonly=True, copy=False, default='/')
     date_order = fields.Datetime(string='Date', readonly=True, index=True, default=fields.Datetime.now)
@@ -234,14 +233,11 @@ class PosOrder(models.Model):
         'Status', readonly=True, copy=False, default='draft')
 
     account_move = fields.Many2one('account.move', string='Invoice', readonly=True, copy=False)
-    picking_id = fields.Many2one('stock.picking', string='Picking', readonly=True, copy=False)
+    picking_ids = fields.One2many('stock.picking', 'pos_order_id')
+    picking_count = fields.Integer(compute='_compute_picking_count')
+    failed_pickings = fields.Boolean(compute='_compute_picking_count')
     picking_type_id = fields.Many2one('stock.picking.type', related='session_id.config_id.picking_type_id', string="Operation Type", readonly=False)
-    location_id = fields.Many2one(
-        comodel_name='stock.location',
-        related='picking_id.location_id',
-        string="Location", store=True,
-        readonly=True,
-    )
+
     note = fields.Text(string='Internal Notes')
     nb_print = fields.Integer(string='Number of Print', readonly=True, copy=False, default=0)
     pos_reference = fields.Char(string='Receipt Number', readonly=True, copy=False)
@@ -262,6 +258,11 @@ class PosOrder(models.Model):
         for order in self:
             order.is_invoiced = bool(order.account_move)
 
+    @api.depends('picking_ids', 'picking_ids.state')
+    def _compute_picking_count(self):
+        for order in self:
+            order.picking_count = len(order.picking_ids)
+            order.failed_pickings = bool(order.picking_ids.filtered(lambda p: p.state != 'done'))
 
     @api.depends('date_order', 'company_id', 'currency_id', 'company_id.currency_id')
     def _compute_currency_rate(self):
@@ -334,6 +335,14 @@ class PosOrder(models.Model):
                 vals['name'] = order.config_id.sequence_id._next()
         return super(PosOrder, self).write(vals)
 
+    def action_stock_picking(self):
+        self.ensure_one()
+        action_picking = self.env.ref('stock.action_picking_tree_ready')
+        action = action_picking.read()[0]
+        action['context'] = {}
+        action['domain'] = [('id', 'in', self.picking_ids.ids)]
+        return action
+
     def action_view_invoice(self):
         return {
             'name': _('Customer Invoice'),
@@ -346,10 +355,11 @@ class PosOrder(models.Model):
         }
 
     def action_pos_order_paid(self):
+        self.ensure_one()
         if not float_is_zero(self.amount_total - self.amount_paid, precision_rounding=self.currency_id.rounding):
             raise UserError(_("Order %s is not fully paid.") % self.name)
         self.write({'state': 'paid'})
-        return self.create_picking()
+        return True
 
     def action_pos_order_invoice(self):
         moves = self.env['account.move']
@@ -428,145 +438,19 @@ class PosOrder(models.Model):
 
         return self.env['pos.order'].search_read(domain = [('id', 'in', order_ids)], fields = ['id', 'pos_reference'])
 
-    def create_picking(self):
-        """Create a picking for each order and validate it."""
-        Picking = self.env['stock.picking']
-        Move = self.env['stock.move']
-        StockWarehouse = self.env['stock.warehouse']
-        for order in self:
-            if not order.lines.filtered(lambda l: l.product_id.type in ['product', 'consu']):
-                continue
-            address = order.partner_id.address_get(['delivery']) or {}
-            picking_type = order.picking_type_id
-            return_pick_type = order.picking_type_id.return_picking_type_id or order.picking_type_id
-            order_picking = Picking
-            return_picking = Picking
-            moves = Move
-            location_id = picking_type.default_location_src_id.id
-            if order.partner_id:
-                destination_id = order.partner_id.property_stock_customer.id
-            else:
-                if (not picking_type) or (not picking_type.default_location_dest_id):
-                    customerloc, supplierloc = StockWarehouse._get_partner_locations()
-                    destination_id = customerloc.id
-                else:
-                    destination_id = picking_type.default_location_dest_id.id
-
-            if picking_type:
-                message = _("This transfer has been created from the point of sale session: <a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>") % (order.id, order.name)
-                picking_vals = {
-                    'origin': order.name,
-                    'partner_id': address.get('delivery', False),
-                    'user_id': False,
-                    'date_done': order.date_order,
-                    'picking_type_id': picking_type.id,
-                    'company_id': order.company_id.id,
-                    'move_type': 'direct',
-                    'note': order.note or "",
-                    'location_id': location_id,
-                    'location_dest_id': destination_id,
-                }
-                pos_qty = any([x.qty > 0 for x in order.lines if x.product_id.type in ['product', 'consu']])
-                if pos_qty:
-                    order_picking = Picking.create(picking_vals.copy())
-                    order_picking.message_post(body=message)
-                neg_qty = any([x.qty < 0 for x in order.lines if x.product_id.type in ['product', 'consu']])
-                if neg_qty:
-                    return_vals = picking_vals.copy()
-                    return_vals.update({
-                        'location_id': destination_id,
-                        'location_dest_id': return_pick_type != picking_type and return_pick_type.default_location_dest_id.id or location_id,
-                        'picking_type_id': return_pick_type.id
-                    })
-                    return_picking = Picking.create(return_vals)
-                    return_picking.message_post(body=message)
-
-            for line in order.lines.filtered(lambda l: l.product_id.type in ['product', 'consu'] and not float_is_zero(l.qty, precision_rounding=l.product_id.uom_id.rounding)):
-                moves |= Move.create({
-                    'name': line.name,
-                    'product_uom': line.product_id.uom_id.id,
-                    'picking_id': order_picking.id if line.qty >= 0 else return_picking.id,
-                    'picking_type_id': picking_type.id if line.qty >= 0 else return_pick_type.id,
-                    'product_id': line.product_id.id,
-                    'product_uom_qty': abs(line.qty),
-                    'state': 'draft',
-                    'location_id': location_id if line.qty >= 0 else destination_id,
-                    'location_dest_id': destination_id if line.qty >= 0 else return_pick_type != picking_type and return_pick_type.default_location_dest_id.id or location_id,
-                })
-
-            # prefer associating the regular order picking, not the return
-            order.write({'picking_id': order_picking.id or return_picking.id})
-
-            if return_picking:
-                order._force_picking_done(return_picking)
-            if order_picking:
-                order._force_picking_done(order_picking)
-
-            # when the pos.config has no picking_type_id set only the moves will be created
-            if moves and not return_picking and not order_picking:
-                moves._action_assign()
-                moves.filtered(lambda m: m.product_id.tracking == 'none')._action_done()
-
-        return True
-
-    def _force_picking_done(self, picking):
-        """Force picking in order to be set as done."""
+    def _create_order_picking(self):
         self.ensure_one()
-        picking.action_assign()
-        wrong_lots = self.set_pack_operation_lot(picking)
-        if not wrong_lots:
-            picking.action_done()
+        if not self.session_id.update_stock_at_closing or (self.company_id.anglo_saxon_accounting and self.to_invoice):
+            picking_type = self.config_id.picking_type_id
+            if self.partner_id.property_stock_customer:
+                destination_id = self.partner_id.property_stock_customer.id
+            elif not picking_type or not picking_type.default_location_dest_id:
+                destination_id = self.env['stock.warehouse']._get_partner_locations()[0].id
+            else:
+                destination_id = picking_type.default_location_dest_id.id
 
-    def set_pack_operation_lot(self, picking=None):
-        """Set Serial/Lot number in pack operations to mark the pack operation done."""
-
-        StockProductionLot = self.env['stock.production.lot']
-        PosPackOperationLot = self.env['pos.pack.operation.lot']
-        has_wrong_lots = False
-        for order in self:
-            for move in (picking or self.picking_id).move_lines:
-                picking_type = (picking or self.picking_id).picking_type_id
-                lots_necessary = True
-                if picking_type:
-                    lots_necessary = picking_type and picking_type.use_existing_lots
-                qty_done = 0
-                pack_lots = []
-                pos_pack_lots = PosPackOperationLot.search([('order_id', '=', order.id), ('product_id', '=', move.product_id.id)])
-
-                if pos_pack_lots and lots_necessary:
-                    for pos_pack_lot in pos_pack_lots:
-                        stock_production_lot = StockProductionLot.search([('name', '=', pos_pack_lot.lot_name), ('product_id', '=', move.product_id.id)])
-                        if stock_production_lot:
-                            # a serialnumber always has a quantity of 1 product, a lot number takes the full quantity of the order line
-                            qty = 1.0
-                            if stock_production_lot.product_id.tracking == 'lot':
-                                qty = abs(pos_pack_lot.pos_order_line_id.qty)
-                            qty_done += qty
-                            pack_lots.append({'lot_id': stock_production_lot.id, 'qty': qty})
-                        else:
-                            has_wrong_lots = True
-                elif move.product_id.tracking == 'none' or not lots_necessary:
-                    qty_done = move.product_uom_qty
-                else:
-                    has_wrong_lots = True
-                for pack_lot in pack_lots:
-                    lot_id, qty = pack_lot['lot_id'], pack_lot['qty']
-                    self.env['stock.move.line'].create({
-                        'picking_id': move.picking_id.id,
-                        'move_id': move.id,
-                        'product_id': move.product_id.id,
-                        'product_uom_id': move.product_uom.id,
-                        'qty_done': qty,
-                        'location_id': move.location_id.id,
-                        'location_dest_id': move.location_dest_id.id,
-                        'lot_id': lot_id,
-                    })
-                if not pack_lots and not float_is_zero(qty_done, precision_rounding=move.product_uom.rounding):
-                    if len(move._get_move_lines()) < 2:
-                        move.quantity_done = qty_done
-                    else:
-                        move._set_quantity_done(qty_done)
-        return has_wrong_lots
+            pickings = self.env['stock.picking']._create_picking_from_pos_order_lines(destination_id, self.lines, picking_type, self.partner_id)
+            pickings.write({'pos_session_id': self.session_id.id, 'pos_order_id': self.id, 'origin': self.name})
 
     def add_payment(self, data):
         """Create a new payment for the order"""
@@ -614,19 +498,23 @@ class PosOrder(models.Model):
             'target': 'current',
         }
 
-    @api.model
-    def action_receipt_to_customer(self, name, client, ticket, order_ids=False):
-        template_obj = self.env['mail.mail']
-        message = "<p>Dear %s,<br/>Here is your electronic ticket from the %s. </p>" % (client['name'], name)
-        template_data = {
-            'subject': 'Receipt %s' % name,
+    def action_receipt_to_customer(self, name, client, ticket):
+        if not self:
+            return False
+        if not client.get('email'):
+            return False
+
+        message = _("<p>Dear %s,<br/>Here is your electronic ticket for the %s. </p>") % (client['name'], name)
+        mail_values = {
+            'subject': _('Receipt %s') % name,
             'body_html': message + '<img src="data:image/jpeg;base64,%s"/>' % ticket,
-            'email_from': self.env.company.email,
+            'author_id': self.env.user.partner_id.id,
+            'email_from': self.env.company.email or self.env.user.email_formatted,
             'email_to': client['email']
         }
 
-        if order_ids and self.env['pos.order'].browse(order_ids[0]).account_move:
-            report = self.env.ref('point_of_sale.pos_invoice_report').render_qweb_pdf(order_ids[0])
+        if self.mapped('account_move'):
+            report = self.env.ref('point_of_sale.pos_invoice_report').render_qweb_pdf(self.ids[0])
             filename = name + '.pdf'
             attachment = self.env['ir.attachment'].create({
                 'name': filename,
@@ -635,13 +523,13 @@ class PosOrder(models.Model):
                 'datas_fname': filename,
                 'store_fname': filename,
                 'res_model': 'account.move',
-                'res_id': order_ids[0],
+                'res_id': self.ids[0],
                 'mimetype': 'application/x-pdf'
             })
-            template_data['attachment_ids'] = attachment
+            mail_values['attachment_ids'] = attachment
 
-        template_id = template_obj.create(template_data)
-        template_obj.send(template_id)
+        mail = self.env['mail.mail'].create(mail_values)
+        mail.send()
 
     @api.model
     def remove_from_ui(self, server_ids):
@@ -675,6 +563,10 @@ class PosOrderLine(models.Model):
         if line and 'tax_ids' not in line[2]:
             product = self.env['product.product'].browse(line[2]['product_id'])
             line[2]['tax_ids'] = [(6, 0, [x.id for x in product.taxes_id])]
+        # Clean up fields sent by the JS
+        line = [
+            line[0], line[1], {k: v for k, v in line[2].items() if k in self.env['pos.order.line']._fields}
+        ]
         return line
 
     company_id = fields.Many2one('res.company', string='Company', related="order_id.company_id", store=True)
@@ -924,6 +816,7 @@ class ReportSaleDetails(models.AbstractModel):
             } for (product, price_unit, discount), qty in products_sold.items()], key=lambda l: l['product_name'])
         }
 
+    @api.model
     def _get_report_values(self, docids, data=None):
         data = dict(data or {})
         configs = self.env['pos.config'].browse(data['config_ids'])

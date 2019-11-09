@@ -190,6 +190,7 @@ class TestDateRangeFunction(BaseCase):
 
 class TestFormatLangDate(TransactionCase):
     def test_00_accepted_types(self):
+        self.env.user.tz = 'Europe/Brussels'
         datetime_str = '2017-01-31 12:00:00'
         date_datetime = datetime.datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
         date_date = date_datetime.date()

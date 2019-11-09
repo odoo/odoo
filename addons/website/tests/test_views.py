@@ -897,6 +897,7 @@ class TestCowViewSaving(common.TransactionCase):
         # 3  | Extension 2 |  , extended content 2 |     1      |     5    |  website.extension_view_2
 
 
+@tagged('-at_install', 'post_install')
 class Crawler(HttpCase):
     def setUp(self):
         super(Crawler, self).setUp()

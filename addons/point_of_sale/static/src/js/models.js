@@ -199,7 +199,7 @@ exports.PosModel = Backbone.Model.extend({
     },{
         model:  'res.partner',
         label: 'load_partners',
-        fields: ['name','street','city','state_id','country_id','vat',
+        fields: ['name','street','city','state_id','country_id','vat','lang',
                  'phone','zip','mobile','email','barcode','write_date',
                  'property_account_position_id','property_product_pricelist'],
         loaded: function(self,partners){
@@ -223,6 +223,12 @@ exports.PosModel = Backbone.Model.extend({
                     self.company.country = countries[i];
                 }
             }
+        },
+    },{
+        model:  'res.lang',
+        fields: ['name', 'code'],
+        loaded: function (self, langs){
+            self.langs = langs;
         },
     },{
         model:  'account.tax',
@@ -294,7 +300,7 @@ exports.PosModel = Backbone.Model.extend({
        },
     },{
         model:  'res.users',
-        fields: ['name','company_id', 'id', 'groups_id'],
+        fields: ['name','company_id', 'id', 'groups_id', 'lang'],
         domain: function(self){ return [['company_ids', 'in', self.config.company_id[0]],'|', ['groups_id','=', self.config.group_pos_manager_id[0]],['groups_id','=', self.config.group_pos_user_id[0]]]; },
         loaded: function(self,users){
             users.forEach(function(user) {
@@ -307,7 +313,8 @@ exports.PosModel = Backbone.Model.extend({
                 });
                 if (user.id === session.uid) {
                     self.user = user;
-                    self.employee = user;
+                    self.employee.name = user.name;
+                    self.employee.role = user.role;
                     self.employee.user_id = [user.id, user.name];
                 }
             });
@@ -318,7 +325,13 @@ exports.PosModel = Backbone.Model.extend({
     },{
         model:  'product.pricelist',
         fields: ['name', 'display_name', 'discount_policy'],
-        domain: function(self) { return [['id', 'in', self.config.available_pricelist_ids]]; },
+        domain: function(self) {
+            if (self.config.use_pricelist) {
+                return [['id', 'in', self.config.available_pricelist_ids]];
+            } else {
+                return [['id', '=', self.config.pricelist_id[0]]];
+            }
+        },
         loaded: function(self, pricelists){
             _.map(pricelists, function (pricelist) { pricelist.items = []; });
             self.default_pricelist = _.findWhere(pricelists, {id: self.config.pricelist_id[0]});
@@ -667,9 +680,6 @@ exports.PosModel = Backbone.Model.extend({
         var order = new exports.Order({},{pos:this});
         this.get('orders').add(order);
         this.set('selectedOrder', order);
-        if (this.config.iface_customer_facing_display) {
-            this.send_current_order_to_customer_facing_display();
-        }
         return order;
     },
     /**
@@ -1470,7 +1480,7 @@ exports.Orderline = Backbone.Model.extend({
         return orderline;
     },
     set_product_lot: function(product){
-        this.has_product_lot = product.tracking !== 'none' && this.pos.config.use_existing_lots;
+        this.has_product_lot = product.tracking !== 'none';
         this.pack_lot_lines  = this.has_product_lot && new PacklotlineCollection(null, {'order_line': this});
     },
     // sets a discount [0,100]%
@@ -2146,6 +2156,7 @@ exports.Paymentline = Backbone.Model.extend({
     set_amount: function(value){
         this.order.assert_editable();
         this.amount = round_di(parseFloat(value) || 0, this.pos.currency.decimals);
+        this.pos.send_current_order_to_customer_facing_display();
         this.trigger('change',this);
     },
     // returns the amount of money on this paymentline
@@ -2176,6 +2187,14 @@ exports.Paymentline = Backbone.Model.extend({
     set_payment_status: function(value) {
         this.payment_status = value;
         this.trigger('change', this);
+    },
+
+    /**
+     * Check if paymentline is done.
+     * Paymentline is done if there is no payment status or the payment status is done.
+     */
+    is_done: function() {
+        return this.get_payment_status() ? this.get_payment_status() === 'done' : true;
     },
 
     /**
@@ -2264,8 +2283,7 @@ exports.Order = Backbone.Model.extend({
         this.paymentlines.on('remove', function(){ this.save_to_db("paymentline:rem"); }, this);
 
         if (this.pos.config.iface_customer_facing_display) {
-            this.paymentlines.on('change', this.pos.send_current_order_to_customer_facing_display, this.pos);
-            // removing last paymentline does not trigger change event
+            this.paymentlines.on('add', this.pos.send_current_order_to_customer_facing_display, this.pos);
             this.paymentlines.on('remove', this.pos.send_current_order_to_customer_facing_display, this.pos);
         }
 
@@ -2381,6 +2399,7 @@ exports.Order = Backbone.Model.extend({
             creation_date: this.validation_date || this.creation_date, // todo: rename creation_date in master
             fiscal_position_id: this.fiscal_position ? this.fiscal_position.id : false,
             server_id: this.server_id ? this.server_id : false,
+            to_invoice: this.to_invoice ? this.to_invoice : false,
         };
         if (!this.is_paid && this.user_id) {
             json.user_id = this.user_id;
@@ -2849,11 +2868,7 @@ exports.Order = Backbone.Model.extend({
     },
     get_total_paid: function() {
         return round_pr(this.paymentlines.reduce((function(sum, paymentLine) {
-            if (paymentLine.get_payment_status()) {
-                if (paymentLine.get_payment_status() == 'done') {
-                    sum += paymentLine.get_amount();
-                }
-            } else {
+            if (paymentLine.is_done()) {
                 sum += paymentLine.get_amount();
             }
             return sum;

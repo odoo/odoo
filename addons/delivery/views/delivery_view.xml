@@ -49,6 +49,7 @@
             <field name="arch" type="xml">
                 <form string="Carrier">
                     <sheet>
+                      <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_button_box" name="button_box">
                             <button name="toggle_prod_environment"
                                     attrs="{'invisible': ['|', '|', ('prod_environment', '=', False), ('delivery_type', '=', 'fixed'), ('delivery_type', '=', 'base_on_rule')]}"
@@ -94,17 +95,19 @@
                         </div>
                         <group>
                             <group name="provider_details">
-                                <field name="active"/>
+                                <field name="active" invisible="1"/>
                                 <field name="prod_environment" invisible="1"/>
                                 <field name="debug_logging" invisible="1"/>
                                 <label for="delivery_type"/>
                                 <div>
-                                    <field name="delivery_type" widget="radio"/>
+                                    <field name="delivery_type" />
                                     <button string="Install more Providers" name="install_more_provider" type="object" class="oe_link oe_edit_only"/>
                                 </div>
                                 <field name="integration_level" widget="radio" attrs="{'invisible': ['|', ('delivery_type', '=', 'fixed'), ('delivery_type', '=', 'base_on_rule')]}"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
                             </group>
                             <group name="delivery_details">
+                                <field name="product_id" context="{'default_type': 'service', 'default_sale_ok': False, 'default_purchase_ok': False}" />
                                 <field name="invoice_policy" widget="radio" attrs="{'invisible': ['|', ('delivery_type', 'in', ('fixed', 'base_on_rule')), ('integration_level', '=', 'rate')]}"/>
                                 <label for="margin" string="Margin on Rate"/>
                                 <div>
@@ -112,11 +115,6 @@
                                 </div>
                                 <field name="free_over"/>
                                 <field name="amount" attrs="{'required':[('free_over','!=', False)], 'invisible':[('free_over','=', False)]}"/>
-                                <field name="product_id" context="{'default_type': 'service', 'default_sale_ok': False, 'default_purchase_ok': False}" />
-                                <field name="company_id" groups="base.group_multi_company"/>
-                                <field name="can_generate_return" invisible="1"/>
-                                <field name="return_label_on_delivery" attrs="{'invisible': [('can_generate_return', '=', False)]}"/>
-                                <field name="get_return_label_from_portal" attrs="{'invisible': [('return_label_on_delivery', '=', False)]}"/>
                             </group>
                         </group>
                         <notebook>

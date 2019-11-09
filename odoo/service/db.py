@@ -216,7 +216,7 @@ def dump_db(db_name, stream, backup_format='zip'):
     cmd.append(db_name)
 
     if backup_format == 'zip':
-        with odoo.tools.osutil.tempdir() as dump_dir:
+        with tempfile.TemporaryDirectory() as dump_dir:
             filestore = odoo.tools.config.filestore(db_name)
             if os.path.exists(filestore):
                 shutil.copytree(filestore, os.path.join(dump_dir, 'filestore'))
@@ -266,7 +266,7 @@ def restore_db(db, dump_file, copy=False):
     _create_empty_database(db)
 
     filestore_path = None
-    with odoo.tools.osutil.tempdir() as dump_dir:
+    with tempfile.TemporaryDirectory() as dump_dir:
         if zipfile.is_zipfile(dump_file):
             # v8 format
             with zipfile.ZipFile(dump_file, 'r') as z:

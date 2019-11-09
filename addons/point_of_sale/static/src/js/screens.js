@@ -2129,6 +2129,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
                 'title': _t('Error'),
                 'body':  _t('There is already an electronic payment in progress.'),
             });
+            return false;
         } else {
             order.add_paymentline(payment_method);
             this.reset_input();
@@ -2140,6 +2141,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
 
             this.render_paymentlines();
         }
+        return true;
     },
     render_paymentmethods: function() {
         var self = this;
@@ -2434,6 +2436,14 @@ var PaymentScreenWidget = ScreenWidget.extend({
     // and complete the sale process
     validate_order: function(force_validation) {
         if (this.order_is_valid(force_validation)) {
+            // remove pending payments before finalizing the validation
+            var order = this.pos.get_order();
+            order.get_paymentlines().forEach(line => {
+                if (!line.is_done()) {
+                    order.remove_paymentline(line);
+                }
+            });
+            this.render_paymentlines();
             this.finalize_validation();
         }
     },
@@ -2457,7 +2467,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
                 rpc.query({
                     model: 'pos.order',
                     method: 'action_receipt_to_customer',
-                    args: [order.get_name(), order.get_client(), ticket, order_server_ids],
+                    args: [order_server_ids, order.get_name(), order.get_client(), ticket],
                 }).then(function() {
                   resolve();
                 }).catch(function () {

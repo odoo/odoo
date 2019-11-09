@@ -5,6 +5,7 @@
 import ast
 import collections
 import contextlib
+import copy
 import datetime
 import functools
 import hashlib
@@ -305,8 +306,15 @@ class WebRequest(object):
                 and not isinstance(exception, werkzeug.exceptions.HTTPException):
             odoo.tools.debugger.post_mortem(
                 odoo.tools.config, sys.exc_info())
-        # otherwise "no active exception to reraise"
-        raise pycompat.reraise(type(exception), exception, sys.exc_info()[2])
+
+        # WARNING: do not inline or it breaks: raise...from evaluates strictly
+        # LTR so would first remove traceback then copy lack of traceback
+        new_cause = Exception().with_traceback(exception.__traceback__)
+        # tries to provide good chained tracebacks, just re-raising exception
+        # generates a weird message as stacks just get concatenated, exceptions
+        # not guaranteed to copy.copy cleanly & we want `exception` as leaf (for
+        # callers to check & look at)
+        raise exception.with_traceback(None) from new_cause
 
     def _call_function(self, *args, **kwargs):
         request = self
@@ -1243,7 +1251,7 @@ class DisableCacheMiddleware(object):
         def start_wrapped(status, headers):
             req = werkzeug.wrappers.Request(environ)
             root.setup_session(req)
-            if req.session and req.session.debug:
+            if req.session and req.session.debug and not 'wkhtmltopdf' in req.headers.get('User-Agent'):
                 new_headers = [('Cache-Control', 'no-cache')]
 
                 for k, v in headers:

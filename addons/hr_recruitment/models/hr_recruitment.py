@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, SUPERUSER_ID
+from odoo import api, fields, models, tools, SUPERUSER_ID
 from odoo.tools.translate import _
 from odoo.exceptions import UserError
 
@@ -146,8 +146,8 @@ class Applicant(models.Model):
     partner_mobile = fields.Char("Mobile", size=32)
     type_id = fields.Many2one('hr.recruitment.degree', "Degree")
     department_id = fields.Many2one('hr.department', "Department", domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-    day_open = fields.Float(compute='_compute_day', string="Days to Open")
-    day_close = fields.Float(compute='_compute_day', string="Days to Close")
+    day_open = fields.Float(compute='_compute_day', string="Days to Open", compute_sudo=True)
+    day_close = fields.Float(compute='_compute_day', string="Days to Close", compute_sudo=True)
     delay_close = fields.Float(compute="_compute_day", string='Delay to Close', readonly=True, group_operator="avg", help="Number of days to close", store=True)
     color = fields.Integer("Color Index", default=0)
     emp_id = fields.Many2one('hr.employee', string="Employee", help="Employee linked to the applicant.", copy=False)
@@ -165,6 +165,7 @@ class Applicant(models.Model):
     legend_normal = fields.Char(related='stage_id.legend_normal', string='Kanban Ongoing', readonly=False)
     application_count = fields.Integer(compute='_compute_application_count', help='Applications with the same email')
     meeting_count = fields.Integer(compute='_compute_meeting_count', help='Meeting Count')
+    refuse_reason_id = fields.Many2one('hr.applicant.refuse.reason', string='Refuse Reason', tracking=True)
 
     @api.depends('date_open', 'date_closed')
     def _compute_day(self):
@@ -397,7 +398,7 @@ class Applicant(models.Model):
             elif applicant.email_from:
                 email_from = applicant.email_from
                 if applicant.partner_name:
-                    email_from = '%s<%s>' % (applicant.partner_name, email_from)
+                    email_from = tools.formataddr((applicant.partner_name, email_from))
                 applicant._message_add_suggested_recipient(recipients, email=email_from, reason=_('Contact Email'))
         return recipients
 
@@ -488,12 +489,39 @@ class Applicant(models.Model):
         return dict_act_window
 
     def archive_applicant(self):
-        self.write({'active': False})
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Refuse Reason'),
+            'res_model': 'applicant.get.refuse.reason',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_applicant_ids': self.ids, 'active_test': False},
+            'views': [[False, 'form']]
+        }
 
     def reset_applicant(self):
         """ Reinsert the applicant into the recruitment pipe in the first stage"""
-        default_stage_id = self._default_stage_id()
-        self.write({'active': True, 'stage_id': default_stage_id})
+        default_stage = dict()
+        for job_id in self.mapped('job_id'):
+            default_stage[job_id.id] = self.env['hr.recruitment.stage'].search(
+                ['|',
+                    ('job_ids', '=', False),
+                    ('job_ids', '=', job_id.id),
+                    ('fold', '=', False)
+                ], order='sequence asc', limit=1).id
+        for applicant in self:
+            applicant.write(
+                {'stage_id': default_stage[applicant.job_id.id], 'refuse_reason_id': False})
+
+    def toggle_active(self):
+        res = super(Applicant, self).toggle_active()
+        applicant_active = self.filtered(lambda applicant: applicant.active)
+        if applicant_active:
+            applicant_active.reset_applicant()
+        applicant_inactive = self.filtered(lambda applicant: not applicant.active)
+        if applicant_inactive:
+            return applicant_inactive.archive_applicant()
+        return res
 
 
 class ApplicantCategory(models.Model):
@@ -506,3 +534,11 @@ class ApplicantCategory(models.Model):
     _sql_constraints = [
             ('name_uniq', 'unique (name)', "Tag name already exists !"),
     ]
+
+
+class ApplicantRefuseReason(models.Model):
+    _name = "hr.applicant.refuse.reason"
+    _description = 'Refuse Reason of Applicant'
+
+    name = fields.Char('Description', required=True, translate=True)
+    active = fields.Boolean('Active', default=True)

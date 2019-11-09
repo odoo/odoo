@@ -390,7 +390,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         picking_receipt.action_confirm()
 
         picking_receipt.move_lines.quantity_done = 3.0
-        picking_receipt.action_done()
+        picking_receipt._action_done()
         mo = picking_receipt._get_subcontracted_productions()
         move_comp1 = mo.move_raw_ids.filtered(lambda m: m.product_id == self.comp1)
         move_comp3 = mo.move_raw_ids.filtered(lambda m: m.product_id == comp3)
@@ -526,7 +526,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
 
         picking_receipt.move_lines.quantity_done = 3
         backorder_wiz = picking_receipt.button_validate()
-        backorder_wiz = self.env['stock.backorder.confirmation'].browse(backorder_wiz['res_id'])
+        backorder_wiz = self.env[backorder_wiz['res_model']].browse(backorder_wiz['res_id']).with_context(backorder_wiz['context'])
         backorder_wiz.process()
 
         backorder = self.env['stock.picking'].search([('backorder_id', '=', picking_receipt.id)])
@@ -537,7 +537,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         self.assertEqual(subcontract_order.product_uom_qty, 5)
         self.assertEqual(subcontract_order.qty_produced, 3)
         backorder.move_lines.quantity_done = 2
-        backorder.action_done()
+        backorder._action_done()
         self.assertTrue(picking_receipt.move_lines.move_orig_ids.production_id.state == 'done')
 
 class TestSubcontractingTracking(TransactionCase):

@@ -24,15 +24,16 @@
         <t t-esc='line.name' />
       </t>
     </t>
-    <t t-jquery="tbody tr.paymentline.selected">
+    <!-- if there is payment status, then it is terminal paymentline, so payment-terminal class should be added. -->
+    <t t-jquery=".body div[t-attf-class*='paymentline selected']">
       this.removeAttr('class');
-      this.attr('t-attf-class', 'paymentline selected #{line.mercury_swipe_pending ? \'o_pos_mercury_swipe_pending\' : \'\'}');
+      this.attr('t-attf-class', 'paymentline selected#{(line.get_payment_status() ? \' payment-terminal\' : \'\') + (line.mercury_swipe_pending ? \' o_pos_mercury_swipe_pending\' : \'\')}');
     </t>
-    <t t-jquery="tbody tr.paymentline[t-att-data-cid*='line.cid']">
+    <t t-jquery=".body .paymentline[t-att-data-cid*='line.cid']">
       this.removeAttr('class');
       this.attr('t-attf-class', 'paymentline #{line.mercury_swipe_pending ? \'o_pos_mercury_swipe_pending\' : \'\'}');
     </t>
-    <t t-jquery="tbody tr td.col-tendered.edit">
+    <t t-jquery=".body .col-tendered.edit">
       this.removeAttr('class');
       this.attr('t-attf-class', 'col-tendered edit #{line.mercury_swipe_pending ? \'o_pos_mercury_swipe_pending\' : \'\'}');
     </t>

@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
-from odoo.addons.account.tests.account_test_classes import AccountingTestCase
+from odoo.addons.stock_account.tests.stock_account_minimal_test import StockAccountMinimalTest
 from odoo import fields
 
-class ValuationReconciliationTestCase(AccountingTestCase):
+class ValuationReconciliationTestCase(StockAccountMinimalTest):
     """ Base class for tests checking interim accounts reconciliation works
     in anglosaxon accounting. It sets up everything we need in the tests, and is
     extended in both sale_stock and purchase modules to run the 'true' tests.
@@ -42,7 +42,7 @@ class ValuationReconciliationTestCase(AccountingTestCase):
         for picking in pickings:
             for ml in picking.move_line_ids:
                 ml.qty_done = quantity or ml.product_qty
-        pickings.action_done()
+        pickings._action_done()
         self._change_pickings_date(pickings, date)
 
     def _change_pickings_date(self, pickings, date):
@@ -139,4 +139,6 @@ class ValuationReconciliationTestCase(AccountingTestCase):
         # entries get automatically reconciled (and you cannot modify a reconciled entry).
         # So, we have to make sure that "today"'s rate will always be the last rate we
         # created in order to ensure complete control of the test.
-        self.env.ref('base.rateUSDbis').unlink()
+        rateUSDbis = self.env.ref('base.rateUSDbis', raise_if_not_found=False)
+        if rateUSDbis:
+            rateUSDbis.unlink()

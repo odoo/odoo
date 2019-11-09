@@ -166,6 +166,30 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-12 col-lg-offset-6 col-lg-6 o_setting_box" id="google_console_setting">
+                                <div class="o_setting_left_pane">
+                                    <field name="has_google_search_console"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="has_google_search_console"/>
+                                    <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
+                                    <div class="text-muted">
+                                        Monitor Google Search results data
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('has_google_search_console', '=', False)]}">
+                                        <div class="row mt16">
+                                            <label class="col-lg-3 o_light_label" string="Code" for="google_search_console"/>
+                                            <field name="google_search_console" placeholder="google1234567890123456.html"
+                                                attrs="{'required': [('has_google_search_console', '=', True)]}"/>
+                                        </div>
+                                    </div>
+                                    <div attrs="{'invisible': [('has_google_search_console', '=', False)]}">
+                                        <small class='text-muted'>
+                                            <i class="fa fa-info"/>: type some of the first chars after 'google' is enough, we'll guess the rest.
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="col-12 col-lg-6 o_setting_box" id="google_analytics_dashboard_setting" attrs="{'invisible': [('has_google_analytics', '=', False)]}">
                                 <div class="o_setting_left_pane">
                                     <field name="has_google_analytics_dashboard"/>

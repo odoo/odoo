@@ -9,13 +9,14 @@ from odoo.tests import Form, tagged
 
 @tagged('post_install', '-at_install')
 class TestSaleStock(TestSale):
+
     def _get_new_sale_order(self, amount=10.0):
         """ Creates and returns a sale order with one default order line.
 
         :param float amount: quantity of product for the order line (10 by default)
         """
-        partner = self.env.ref('base.res_partner_1')
-        product = self.env.ref('product.product_delivery_01')
+        partner = self.partner
+        product = self.products['prod_del']
         sale_order_vals = {
             'partner_id': partner.id,
             'partner_invoice_id': partner.id,
@@ -57,7 +58,7 @@ class TestSaleStock(TestSale):
         pick = self.so.picking_ids
         pick.move_lines.write({'quantity_done': 1})
         wiz_act = pick.button_validate()
-        wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id'])
+        wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id']).with_context(wiz_act['context'])
         wiz.process()
         self.assertEqual(self.so.invoice_status, 'to invoice', 'Sale Stock: so invoice_status should be "to invoice" after partial delivery')
         del_qties = [sol.qty_delivered for sol in self.so.order_line]
@@ -74,7 +75,7 @@ class TestSaleStock(TestSale):
         self.assertEqual(len(self.so.picking_ids), 2, 'Sale Stock: number of pickings should be 2')
         pick_2 = self.so.picking_ids.filtered('backorder_id')
         pick_2.move_lines.write({'quantity_done': 1})
-        self.assertIsNone(pick_2.button_validate(), 'Sale Stock: second picking should be final without need for a backorder')
+        self.assertTrue(pick_2.button_validate(), 'Sale Stock: second picking should be final without need for a backorder')
         self.assertEqual(self.so.invoice_status, 'to invoice', 'Sale Stock: so invoice_status should be "to invoice" after complete delivery')
         del_qties = [sol.qty_delivered for sol in self.so.order_line]
         del_qties_truth = [2.0 if sol.product_id.type in ['product', 'consu'] else 0.0 for sol in self.so.order_line]
@@ -121,10 +122,15 @@ class TestSaleStock(TestSale):
         self.assertFalse(self.so.order_line.sorted()[0].product_updatable)
         self.assertTrue(self.so.picking_ids, 'Sale Stock: no picking created for "invoice on order" storable products')
         # let's do an invoice for a deposit of 5%
+
+        advance_product = self.env['product.product'].create({
+            'name': 'Deposit',
+            'type': 'service',
+        })
         adv_wiz = self.env['sale.advance.payment.inv'].with_context(active_ids=[self.so.id]).create({
             'advance_payment_method': 'percentage',
             'amount': 5.0,
-            'product_id': self.env.ref('sale.advance_product_0').id,
+            'product_id': advance_product.id,
         })
         act = adv_wiz.with_context(open_invoices=True).create_invoices()
         inv = self.env['account.move'].browse(act['res_id'])
@@ -137,7 +143,7 @@ class TestSaleStock(TestSale):
         # deliver, check the delivered quantities
         pick = self.so.picking_ids
         pick.move_lines.write({'quantity_done': 2})
-        self.assertIsNone(pick.button_validate(), 'Sale Stock: complete delivery should not need a backorder')
+        self.assertTrue(pick.button_validate(), 'Sale Stock: complete delivery should not need a backorder')
         del_qties = [sol.qty_delivered for sol in self.so.order_line]
         del_qties_truth = [2.0 if sol.product_id.type in ['product', 'consu'] else 0.0 for sol in self.so.order_line]
         self.assertEqual(del_qties, del_qties_truth, 'Sale Stock: delivered quantities are wrong after partial delivery')
@@ -151,8 +157,7 @@ class TestSaleStock(TestSale):
         of the picking. Check that a refund invoice is well generated.
         """
         # intial so
-        self.partner = self.env.ref('base.res_partner_1')
-        self.product = self.env.ref('product.product_delivery_01')
+        self.product = self.products['prod_del']
         so_vals = {
             'partner_id': self.partner.id,
             'partner_invoice_id': self.partner.id,
@@ -223,8 +228,7 @@ class TestSaleStock(TestSale):
         the SO is set on 'done', the SO should be fully invoiced.
         """
         # intial so
-        self.partner = self.env.ref('base.res_partner_1')
-        self.product = self.env.ref('product.product_delivery_01')
+        self.product = self.products['prod_del']
         so_vals = {
             'partner_id': self.partner.id,
             'partner_invoice_id': self.partner.id,
@@ -250,7 +254,7 @@ class TestSaleStock(TestSale):
         pick = self.so.picking_ids
         pick.move_lines.write({'quantity_done': 4})
         res_dict = pick.button_validate()
-        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
+        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id')).with_context(res_dict['context'])
         wizard.process_cancel_backorder()
 
         # Check quantity delivered
@@ -276,6 +280,7 @@ class TestSaleStock(TestSale):
         item1 = self.products['prod_order']  # consumable
         item1.type = 'consu'
         item2 = self.products['prod_del']    # storable
+        item2.type = 'product'    # storable
 
         self.so = self.env['sale.order'].create({
             'partner_id': self.partner.id,
@@ -293,10 +298,10 @@ class TestSaleStock(TestSale):
         # will ask to create a backorder for the unavailable product.
         self.assertEqual(len(self.so.picking_ids), 1)
         res_dict = self.so.picking_ids.sorted()[0].button_validate()
-        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
+        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id')).with_context(res_dict['context'])
         self.assertEqual(wizard._name, 'stock.immediate.transfer')
         res_dict = wizard.process()
-        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
+        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id')).with_context(res_dict['context'])
         self.assertEqual(wizard._name, 'stock.backorder.confirmation')
         wizard.process()
 
@@ -342,7 +347,9 @@ class TestSaleStock(TestSale):
         """
         # sell two products
         item1 = self.products['prod_order']  # consumable
+        item1.type = 'consu'  # consumable
         item2 = self.products['prod_del']    # storable
+        item2.type = 'product'    # storable
 
         self.env['stock.quant']._update_available_quantity(item2, self.env.ref('stock.stock_location_stock'), 2)
         self.so = self.env['sale.order'].create({
@@ -357,7 +364,7 @@ class TestSaleStock(TestSale):
         # deliver them
         self.assertEqual(len(self.so.picking_ids), 1)
         res_dict = self.so.picking_ids.sorted()[0].button_validate()
-        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
+        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id')).with_context(res_dict['context'])
         wizard.process()
         self.assertEqual(self.so.picking_ids.sorted()[0].state, "done")
 
@@ -378,7 +385,7 @@ class TestSaleStock(TestSale):
         """
         item1 = self.products['prod_order']
         partner1 = self.partner.id
-        partner2 = self.env.ref('base.res_partner_2').id
+        partner2 = self.env['res.partner'].create({'name': 'Another Test Partner'})
         so1 = self.env['sale.order'].create({
             'partner_id': partner1,
             'order_line': [(0, 0, {
@@ -399,7 +406,7 @@ class TestSaleStock(TestSale):
         so1.action_confirm()
         self.assertEqual(len(so1.picking_ids), 2)
         picking2 = so1.picking_ids.filtered(lambda p: p.state != 'cancel')
-        self.assertEqual(picking2.partner_id.id, partner2)
+        self.assertEqual(picking2.partner_id.id, partner2.id)
 
     def test_06_uom(self):
         """ Sell a dozen of products stocked in units. Check that the quantities on the sale order
@@ -583,7 +590,7 @@ class TestSaleStock(TestSale):
 
         picking = so1.picking_ids
         wiz_act = picking.button_validate()
-        wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id'])
+        wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id']).with_context(wiz_act['context'])
         wiz.process()
 
         # Return 5 units
@@ -601,7 +608,7 @@ class TestSaleStock(TestSale):
         res = return_wiz.create_returns()
         return_pick = self.env['stock.picking'].browse(res['res_id'])
         wiz_act = return_pick.button_validate()
-        wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id'])
+        wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id']).with_context(wiz_act['context'])
         wiz.process()
 
         self.assertEqual(so1.order_line.qty_delivered, 5)
@@ -628,6 +635,7 @@ class TestSaleStock(TestSale):
         self.env['stock.quant']._update_reserved_quantity(item1, warehouse1.lot_stock_id, 3)
         warehouse2 = self.env['stock.warehouse'].create({
             'partner_id': self.env.ref('base.main_partner').id,
+            'name': 'Zizizatestwarehouse',
             'code': 'Test',
         })
         self.env['stock.quant']._update_available_quantity(item1, warehouse2.lot_stock_id, 5)
@@ -734,3 +742,56 @@ class TestSaleStock(TestSale):
         return_picking.button_validate()
         # Checks the delivery amount (must still be 10).
         self.assertEqual(sale_order.order_line.qty_delivered, 10)
+
+    def test_08_sale_return_qty_and_cancel(self):
+        """
+        Test a SO with a product on delivery with a 5 quantity.
+        Create two invoices: one for 3 quantity and one for 2 quantity
+        Then cancel Sale order, it won't raise any warning, it should be cancelled.
+        """
+        partner = self.partner
+        product = self.products['prod_del']
+        so_vals = {
+            'partner_id': partner.id,
+            'partner_invoice_id': partner.id,
+            'partner_shipping_id': partner.id,
+            'order_line': [(0, 0, {
+                'name': product.name,
+                'product_id': product.id,
+                'product_uom_qty': 5.0,
+                'product_uom': product.uom_id.id,
+                'price_unit': product.list_price})],
+            'pricelist_id': self.env.ref('product.list0').id,
+        }
+        so = self.env['sale.order'].create(so_vals)
+
+        # confirm the so
+        so.action_confirm()
+
+        # deliver partially
+        pick = so.picking_ids
+        pick.move_lines.write({'quantity_done': 3})
+
+        wiz_act = pick.button_validate()
+        wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id']).with_context(wiz_act['context'])
+        wiz.process()
+
+        # create invoice for 3 quantity and post it
+        inv_1 = so._create_invoices()
+        inv_1.post()
+        self.assertEqual(inv_1.state, 'posted', 'invoice should be in posted state')
+
+        pick_2 = so.picking_ids.filtered('backorder_id')
+        pick_2.move_lines.write({'quantity_done': 2})
+        pick_2.button_validate()
+
+        # create invoice for remaining 2 quantity
+        inv_2 = so._create_invoices()
+        self.assertEqual(inv_2.state, 'draft', 'invoice should be in draft state')
+
+        # check the status of invoices after cancelling the order
+        so.action_cancel()
+        wizard = self.env['sale.order.cancel'].with_context({'order_id': so.id}).create({'order_id': so.id})
+        wizard.action_cancel()
+        self.assertEqual(inv_1.state, 'posted', 'A posted invoice state should remain posted')
+        self.assertEqual(inv_2.state, 'cancel', 'A drafted invoice state should be cancelled')

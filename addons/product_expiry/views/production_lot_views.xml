@@ -6,14 +6,15 @@
         <field name="inherit_id" ref="stock.view_production_lot_form" />
         <field name="arch" type="xml">
         <xpath expr="//page[@name='description']" position="before">
-            <page string="Dates">
+            <page string="Dates" attrs="{'invisible': [('use_expiration_date', '=', False)]}">
+                <field name="use_expiration_date" invisible="1"/>
                 <group>
                     <group>
-                        <field name="use_date" />
+                        <field name="expiration_date" />
                         <field name="removal_date" />
                     </group>
                     <group>
-                        <field name="life_date" />
+                        <field name="use_date" />
                         <field name="alert_date" />
                     </group>
                 </group>
@@ -45,7 +46,7 @@
             <xpath expr="//field[@name='create_date']" position="after">
                 <field name="use_date" optional="hide"/>
                 <field name="removal_date" optional="hide"/>
-                <field name="life_date" optional="hide"/>
+                <field name="expiration_date" optional="hide"/>
                 <field name="alert_date" optional="hide"/>
             </xpath>
         </field>

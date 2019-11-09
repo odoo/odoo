@@ -475,6 +475,14 @@ Enterprise Edition: (see :ref:`setup/install/editions` to get access)
 
   $ git clone https://github.com/odoo/enterprise.git
 
+.. note:: Those repositories are quite heavy so you might be interested only fetching the branch
+          you need. See
+          `branch
+           <https://git-scm.com/docs/git-clone#Documentation/git-clone.txt--bltnamegt>`_
+           and
+          `single branch
+           <https://git-scm.com/docs/git-clone#Documentation/git-clone.txt---no-single-branch>`_
+
 .. note:: **The Enterprise git repository does not contain the full Odoo source code**. It is only
           a collection of extra add-ons. The main server code is in the Community version. Running
           the Enterprise version actually means running the server from the Community version with
@@ -525,10 +533,24 @@ Dependencies
 ^^^^^^^^^^^^
 
 Odoo dependencies are listed in the `requirements.txt` file located at the root of the Odoo
-community directory. Most of them can be installed with **pip**.
+community directory. Most of them can be installed with **pip** altough some libraries require
+installing other system package too.
 
 .. tip:: It can be preferable to not mix python modules packages between different instances of Odoo
          or with your system. You can use virtualenv_ to create isolated Python environments.
+
+On Debian/Ubuntu, the requirements file requires the following packages to be installated:
+
+.. code-block:: console
+
+    # apt install libpq-dev libldap2-dev libsasl2-dev libxslt1-dev
+    # apt install python3-setuptools python3-wheel
+
+Some installations require wheel to be installed via pip too:
+
+.. code-block:: console
+
+    $ pip3 install wheel
 
 Navigate to the path of your Odoo Community installation (`YourOdooCommunityPath`) and run **pip**
 on the requirements file:
@@ -541,7 +563,7 @@ on the requirements file:
 .. warning:: For libraries using native code (Pillow, lxml, greenlet, gevent, psycopg2, ldap), it
              may be necessary to install development tools and native dependencies before pip is
              able to install the dependencies themselves. These are available in `-dev` or `-devel`
-             packages for Python, PostgreSQL, libxml2, libxslt, libevent, libsasl2 and libldap2.
+             packages for Python, PostgreSQL, libxml2, libxslt1, libevent, libsasl2 and libldap2.
 
 .. warning:: Some dependencies cannot be installed through pip and require to be installed manually.
              In particular:

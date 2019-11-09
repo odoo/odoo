@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import api, fields, models, exceptions
+from odoo import api, fields, models
 from odoo.tools.translate import html_translate
 
 class KarmaRank(models.Model):
@@ -14,8 +14,13 @@ class KarmaRank(models.Model):
     description_motivational = fields.Html(
         string='Motivational', translate=html_translate, sanitize_attributes=False,
         help="Motivational phrase to reach this rank")
-    karma_min = fields.Integer(string='Required Karma', help='Minimum karma needed to reach this rank')
+    karma_min = fields.Integer(string='Required Karma', required=True, default=1,
+        help='Minimum karma needed to reach this rank')
     user_ids = fields.One2many('res.users', 'rank_id', string='Users', help="Users having this rank")
+
+    _sql_constraints = [
+        ('karma_min_check', "CHECK( karma_min > 0 )", 'The required karma has to be above 0.')
+    ]
 
     @api.model_create_multi
     def create(self, values_list):

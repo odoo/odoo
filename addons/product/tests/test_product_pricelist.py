@@ -11,15 +11,62 @@ class TestProductPricelist(TransactionCase):
     def setUp(self):
         super(TestProductPricelist, self).setUp()
         self.ProductPricelist = self.env['product.pricelist']
-        self.res_partner_4 = self.env.ref('base.res_partner_4')
-        self.computer_SC234 = self.env.ref("product.product_product_3")
-        self.ipad_retina_display = self.env.ref('product.product_product_4')
-        self.custom_computer_kit = self.env.ref("product.product_product_5")
-        self.ipad_mini = self.env.ref("product.product_product_6")
-        self.apple_in_ear_headphones = self.env.ref("product.product_product_7")
-        self.laptop_E5023 = self.env.ref('product.product_delivery_01')
-        self.laptop_S3450 = self.env.ref("product.product_product_25")
-        self.category_5_id = self.ref('product.product_category_5')
+        self.res_partner_4 = self.env['res.partner'].create({'name': 'Ready Mat'})
+        self.res_partner_1 = self.env['res.partner'].create({'name': 'Wood Corner'})
+        self.category_5_id = self.env['product.category'].create({
+            'name': 'Office Furniture',
+            'parent_id': self.env.ref('product.product_category_1').id
+        }).id
+        self.computer_SC234 = self.env['product.product'].create({
+            'name': 'Desk Combination',
+            'categ_id': self.category_5_id,
+        })
+        self.ipad_retina_display = self.env['product.product'].create({
+            'name': 'Customizable Desk',
+        })
+        self.custom_computer_kit = self.env['product.product'].create({
+            'name': 'Corner Desk Right Sit',
+            'categ_id': self.category_5_id,
+        })
+        self.ipad_mini = self.env['product.product'].create({
+            'name': 'Large Cabinet',
+            'categ_id': self.category_5_id,
+            'standard_price': 800.0,
+        })
+        self.env['product.supplierinfo'].create([
+            {
+                'name': self.res_partner_1.id,
+                'product_tmpl_id': self.ipad_mini.product_tmpl_id.id,
+                'delay': 3,
+                'min_qty': 1,
+                'price': 750,
+            }, {
+                'name': self.res_partner_4.id,
+                'product_tmpl_id': self.ipad_mini.product_tmpl_id.id,
+                'delay': 3,
+                'min_qty': 1,
+                'price': 790,
+            }, {
+                'name': self.res_partner_4.id,
+                'product_tmpl_id': self.ipad_mini.product_tmpl_id.id,
+                'delay': 3,
+                'min_qty': 3,
+                'price': 785,
+            }
+        ])
+        self.apple_in_ear_headphones = self.env['product.product'].create({
+            'name': 'Storage Box',
+            'categ_id': self.category_5_id,
+        })
+        self.laptop_E5023 = self.env['product.product'].create({
+            'name': 'Office Chair',
+            'categ_id': self.category_5_id,
+        })
+        self.laptop_S3450 = self.env['product.product'].create({
+            'name': 'Acoustic Bloc Screens',
+            'categ_id': self.category_5_id,
+        })
+
         self.uom_unit_id = self.ref('uom.product_uom_unit')
         self.list0 = self.ref('product.list0')
 

@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo import tools
 import odoo
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 
@@ -7,6 +11,7 @@ class TestPoSStock(TestPoSCommon):
     """
     def setUp(self):
         super(TestPoSStock, self).setUp()
+
         self.config = self.basic_config
         self.product1 = self.create_product('Product 1', self.categ_anglo, 10.0, 5.0)
         self.product2 = self.create_product('Product 2', self.categ_anglo, 20.0, 10.0)
@@ -86,8 +91,8 @@ class TestPoSStock(TestPoSCommon):
 
         # picking and stock moves should be in done state
         for order in self.pos_session.order_ids:
-            self.assertEqual(order.picking_id.state, 'done', 'Picking should be in done state.')
-            self.assertTrue(all(state == 'done' for state in order.picking_id.move_lines.mapped('state')), 'Move Lines should be in done state.' )
+            self.assertEqual(order.picking_ids[0].state, 'done', 'Picking should be in done state.')
+            self.assertTrue(all(state == 'done' for state in order.picking_ids[0].move_lines.mapped('state')), 'Move Lines should be in done state.' )
 
         # close the session
         self.pos_session.action_pos_session_validate()
@@ -98,7 +103,7 @@ class TestPoSStock(TestPoSCommon):
         sales_line = account_move.line_ids.filtered(lambda line: line.account_id == self.sale_account)
         self.assertAlmostEqual(sales_line.balance, -orders_total, msg='Sales line balance should be equal to total orders amount.')
 
-        receivable_line_cash = account_move.line_ids.filtered(lambda line: self.pos_receivable_account == line.account_id and self.cash_pm.name in line.name)
+        receivable_line_cash = account_move.line_ids.filtered(lambda line: line.account_id in self.pos_receivable_account + self.env['account.account'].search([('name', '=', 'Account Receivable (PoS)')]) and self.cash_pm.name in line.name)
         self.assertAlmostEqual(receivable_line_cash.balance, 1010.0, msg='Cash receivable should be equal to the total cash payments.')
 
         expense_line = account_move.line_ids.filtered(lambda line: line.account_id == self.expense_account)
@@ -161,8 +166,8 @@ class TestPoSStock(TestPoSCommon):
 
         # picking and stock moves should be in done state
         for order in self.pos_session.order_ids:
-            self.assertEqual(order.picking_id.state, 'done', 'Picking should be in done state.')
-            self.assertTrue(all(state == 'done' for state in order.picking_id.move_lines.mapped('state')), 'Move Lines should be in done state.' )
+            self.assertEqual(order.picking_ids[0].state, 'done', 'Picking should be in done state.')
+            self.assertTrue(all(state == 'done' for state in order.picking_ids[0].move_lines.mapped('state')), 'Move Lines should be in done state.' )
 
         # close the session
         self.pos_session.action_pos_session_validate()
@@ -176,7 +181,7 @@ class TestPoSStock(TestPoSCommon):
         receivable_line = account_move.line_ids.filtered(lambda line: line.account_id == self.receivable_account)
         self.assertAlmostEqual(receivable_line.balance, -360.0, msg='Receivable line balance should equal the negative of total amount of invoiced orders.')
 
-        receivable_line_cash = account_move.line_ids.filtered(lambda line: self.pos_receivable_account == line.account_id and self.cash_pm.name in line.name)
+        receivable_line_cash = account_move.line_ids.filtered(lambda line: line.account_id in self.pos_receivable_account + self.env['account.account'].search([('name', '=', 'Account Receivable (PoS)')]) and self.cash_pm.name in line.name)
         self.assertAlmostEqual(receivable_line_cash.balance, 1010.0, msg='Cash receivable should be equal to the total cash payments.')
 
         expense_line = account_move.line_ids.filtered(lambda line: line.account_id == self.expense_account)

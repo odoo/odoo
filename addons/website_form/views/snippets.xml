@@ -37,6 +37,7 @@
                       <we-collapse data-no-preview="true">
                           <we-button data-website_form_custom_field="char">Text</we-button>
                           <we-button data-website_form_custom_field="text">Long Text</we-button>
+                          <we-button data-website_form_custom_field="email">Email</we-button>
                           <we-button data-website_form_custom_field="integer">Number</we-button>
                           <we-button data-website_form_custom_field="float">Decimal Number</we-button>
                           <we-button data-website_form_custom_field="boolean">Checkbox</we-button>
@@ -54,6 +55,17 @@
               <div data-js='website_form_editor' data-selector=".form-field" data-drop-near=".form-field">
                     <we-button data-toggle-class="o_website_form_field_hidden" data-no-preview="true">Hidden</we-button>
               </div>
+
+              <!-- Add an option to display radio buttons / checkboxes horizontally or vertically -->
+              <div data-js='website_form_editor_choice_field_display' data-selector=".o_website_form_flex">
+                  <we-collapse-area>
+                      <we-toggler>Display</we-toggler>
+                      <we-collapse data-no-preview="true">
+                          <we-button data-website_form_choice_field_display="horizontal">Horizontal</we-button>
+                          <we-button data-website_form_choice_field_display="vertical">Vertical</we-button>
+                      </we-collapse>
+                  </we-collapse-area>
+               </div>
 
               <!-- Add move, duplicate and remove controllers to checkboxes and radio buttons -->
               <div data-selector=".o_website_form_flex_item" data-drop-near=".o_website_form_flex_item"/>

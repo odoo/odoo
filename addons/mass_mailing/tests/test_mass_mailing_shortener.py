@@ -71,7 +71,7 @@ Email: <a id="url4" href="mailto:test@odoo.com">test@odoo.com</h1>
         sent_mails = self.env['mail.mail'].search([('mailing_id', '=', mass_mailing.id)])
         sent_messages = sent_mails.mapped('mail_message_id')
 
-        self.assertEqual(mailing_list_A.contact_nbr, len(sent_messages),
+        self.assertEqual(len(mailing_list_A.contact_ids), len(sent_messages),
                          'Some message has not been sent')
 
         xbody = etree.fromstring(sent_messages[0].body)

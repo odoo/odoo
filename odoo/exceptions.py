@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-""" OpenERP core exceptions.
+"""The Odoo Exceptions module defines a few core exception types.
 
-This module defines a few exception types. Those types are understood by the
-RPC layer. Any other exception type bubbling until the RPC layer will be
+Those types are understood by the RPC layer.
+Any other exception type bubbling until the RPC layer will be
 treated as a 'Server error'.
 
-If you consider introducing new exceptions, check out the test_exceptions addon.
+.. note::
+    If you consider introducing new exceptions,
+    check out the :mod:`odoo.addons.test_exceptions` module.
 """
 
 import logging
@@ -29,6 +31,11 @@ class except_orm(Exception):
 
 
 class UserError(except_orm):
+    """Generic error managed by the client.
+
+    Typically when the user tries to do something that has no sense given the current
+    state of a record.
+    """
     def __init__(self, msg):
         super(UserError, self).__init__(msg, value='')
 
@@ -41,10 +48,9 @@ class RedirectWarning(Exception):
     """ Warning with a possibility to redirect the user instead of simply
     displaying the warning message.
 
-    Should receive as parameters:
-      :param int action_id: id of the action where to perform the redirection
-      :param string button_text: text to put on the button that will trigger
-          the redirection.
+    :param int action_id: id of the action where to perform the redirection
+    :param str button_text: text to put on the button that will trigger
+        the redirection.
     """
     # using this RedirectWarning won't crash if used as an except_orm
     @property
@@ -53,8 +59,17 @@ class RedirectWarning(Exception):
 
 
 class AccessDenied(Exception):
-    """ Login/password error. no traceback.
-    Example: When you try to log with a wrong password."""
+    """Login/password error.
+
+    .. note::
+
+        No traceback.
+
+    .. admonition:: Example
+
+        When you try to log with a wrong password.
+    """
+
     def __init__(self, message='Access denied'):
         super(AccessDenied, self).__init__(message)
         self.with_traceback(None)
@@ -63,29 +78,49 @@ class AccessDenied(Exception):
 
 
 class AccessError(except_orm):
-    """ Access rights error.
-    Example: When you try to read a record that you are not allowed to."""
+    """Access rights error.
+
+    .. admonition:: Example
+
+        When you try to read a record that you are not allowed to.
+    """
+
     def __init__(self, msg):
         super(AccessError, self).__init__(msg)
 
 
 class CacheMiss(except_orm, KeyError):
-    """ Missing value(s) in cache.
-    Example: When you try to read a value in a flushed cache."""
+    """Missing value(s) in cache.
+
+    .. admonition:: Example
+
+        When you try to read a value in a flushed cache.
+    """
+
     def __init__(self, record, field):
         super(CacheMiss, self).__init__("%s.%s" % (str(record), field.name))
 
 
 class MissingError(except_orm):
-    """ Missing record(s).
-    Example: When you try to write on a deleted record."""
+    """Missing record(s).
+
+    .. admonition:: Example
+
+        When you try to write on a deleted record.
+    """
+
     def __init__(self, msg):
         super(MissingError, self).__init__(msg)
 
 
 class ValidationError(except_orm):
-    """ Violation of python constraints
-    Example: When you try to create a new user with a login which already exist in the db."""
+    """Violation of python constraints.
+
+    .. admonition:: Example
+
+        When you try to create a new user with a login which already exist in the db.
+    """
+
     def __init__(self, msg):
         super(ValidationError, self).__init__(msg)
 

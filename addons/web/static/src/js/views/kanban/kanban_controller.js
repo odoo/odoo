@@ -31,7 +31,6 @@ var KanbanController = BasicController.extend({
         kanban_column_add_record: '_onAddRecordToColumn',
         kanban_column_resequence: '_onColumnResequence',
         kanban_load_more: '_onLoadMore',
-        kanban_load_records: '_onLoadColumnRecords',
         column_toggle_fold: '_onToggleColumn',
         kanban_column_records_toggle_active: '_onToggleActiveRecords',
     }),
@@ -380,25 +379,6 @@ var KanbanController = BasicController.extend({
             });
     },
     /**
-     * Loads the record of a given column (used in mobile, as the columns are
-     * lazy loaded)
-     *
-     * @private
-     * @param {OdooEvent} ev
-     */
-    _onLoadColumnRecords: function (ev) {
-        var self = this;
-        this.model.loadColumnRecords(ev.data.columnID).then(function (dbID) {
-            var data = self.model.get(dbID);
-            return self.renderer.updateColumn(dbID, data).then(function() {
-                self._updateEnv();
-                if (ev.data.onSuccess) {
-                    ev.data.onSuccess();
-                }
-            });
-        });
-    },
-    /**
      * @private
      * @param {OdooEvent} ev
      */
@@ -490,15 +470,21 @@ var KanbanController = BasicController.extend({
      */
     _onToggleColumn: function (ev) {
         var self = this;
-        var column = ev.target;
-        this.model.toggleGroup(column.db_id).then(function (db_id) {
-            var data = self.model.get(db_id);
-            var options = {
-                openQuickCreate: !!ev.data.openQuickCreate,
-            };
-            self.renderer.updateColumn(db_id, data, options);
-            self._updateEnv();
-        });
+        const columnID = ev.target.db_id || ev.data.db_id;
+        this.model.toggleGroup(columnID)
+            .then(function (db_id) {
+                var data = self.model.get(db_id);
+                var options = {
+                    openQuickCreate: !!ev.data.openQuickCreate,
+                };
+                return self.renderer.updateColumn(db_id, data, options);
+            })
+            .then(function () {
+                self._updateEnv();
+                if (ev.data.onSuccess) {
+                    ev.data.onSuccess();
+                }
+            });
     },
     /**
      * @todo should simply use field_changed event...
@@ -523,16 +509,18 @@ var KanbanController = BasicController.extend({
      */
     _onToggleActiveRecords: function (ev) {
         var self = this;
+        var archive = ev.data.archive;
         var column = ev.target;
         var recordIds = _.pluck(column.records, 'db_id');
         if (recordIds.length) {
-            this.model
-                .toggleActive(recordIds, column.db_id)
-                .then(function (dbID) {
-                    var data = self.model.get(dbID);
-                    self.renderer.updateColumn(dbID, data);
-                    self._updateEnv();
-                });
+            var prom = archive ?
+              this.model.actionArchive(recordIds, column.db_id) :
+              this.model.actionUnarchive(recordIds, column.db_id);
+            prom.then(function (dbID) {
+                var data = self.model.get(dbID);
+                self.renderer.updateColumn(dbID, data);
+                self._updateEnv();
+            });
         }
     },
 });

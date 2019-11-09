@@ -28,7 +28,7 @@ tour.register('sale_product_configurator_optional_products_tour', {
         $input.trigger(keyDownEvent);
     }
 }, {
-    trigger: 'ul.ui-autocomplete a:contains("Customizable Desk")',
+    trigger: 'ul.ui-autocomplete a:contains("Customizable Desk (TEST)")',
     run: 'click'
 }, {
     trigger: '.o_sale_product_configurator_add'

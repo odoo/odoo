@@ -7,11 +7,10 @@ import re
 from binascii import Error as binascii_error
 from collections import defaultdict
 from operator import itemgetter
-from email.utils import formataddr
-from odoo.http import request
 
 from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import UserError, AccessError
+from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import groupby
 
@@ -26,8 +25,6 @@ class Message(models.Model):
     _description = 'Message'
     _order = 'id desc'
     _rec_name = 'record_name'
-
-    _message_read_limit = 30
 
     @api.model
     def _get_default_from(self):
@@ -841,7 +838,7 @@ class Message(models.Model):
             else:
                 email_from = self.env.company.catchall
 
-            body_html = tools.append_content_to_html('<div>%s</div>' % tools.ustr(comment), msg.body)
+            body_html = tools.append_content_to_html('<div>%s</div>' % tools.ustr(comment), msg.body, plaintext=False)
             vals = {
                 'subject': subject,
                 'body_html': body_html,

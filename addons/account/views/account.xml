@@ -19,10 +19,6 @@
             <link rel="stylesheet" href="/account/static/src/scss/section_and_note_backend.scss"/>
             <link rel="stylesheet" type="text/scss" href="/account/static/src/scss/account_activity.scss"/>
 
-            <script type="text/javascript" src="/account/static/src/js/reconciliation/reconciliation_action.js"></script>
-            <script type="text/javascript" src="/account/static/src/js/reconciliation/reconciliation_model.js"></script>
-            <script type="text/javascript" src="/account/static/src/js/reconciliation/reconciliation_renderer.js"></script>
-
             <script type="text/javascript" src="/account/static/src/js/account_payment_field.js"></script>
             <script type="text/javascript" src="/account/static/src/js/mail_activity.js"></script>
             <script type="text/javascript" src="/account/static/src/js/tax_group.js"></script>
@@ -43,7 +39,6 @@
 
     <template id="assets_tests" name="Account Assets Tests" inherit_id="web.assets_tests">
         <xpath expr="." position="inside">
-            <script type="text/javascript" src="/account/static/tests/tours/reconciliation.js"></script>
             <script type="text/javascript" src="/account/static/tests/tours/account_dashboard_setup_bar_tests.js"></script>
             <script type="text/javascript" src="/account/static/tests/tours/tax_group_tests.js"></script>
         </xpath>
@@ -51,7 +46,6 @@
 
     <template id="qunit_suite" name="account tests" inherit_id="web.qunit_suite">
         <xpath expr="//script[contains(@src, '/web/static/tests/views/kanban_tests.js')]" position="after">
-            <script type="text/javascript" src="/account/static/tests/reconciliation_tests.js"></script>
             <script type="text/javascript" src="/account/static/tests/account_payment_field_tests.js"></script>
             <script type="text/javascript" src="/account/static/tests/section_and_note_tests.js"></script>
         </xpath>

@@ -59,15 +59,23 @@ class MailMail(models.Model):
     scheduled_date = fields.Char('Scheduled Send Date',
         help="If set, the queue manager will send the email after the date. If not set, the email will be send as soon as possible.")
 
-    @api.model
-    def create(self, values):
+    @api.model_create_multi
+    def create(self, values_list):
         # notification field: if not set, set if mail comes from an existing mail.message
-        if 'notification' not in values and values.get('mail_message_id'):
-            values['notification'] = True
-        new_mail = super(MailMail, self).create(values)
-        if values.get('attachment_ids'):
-            new_mail.attachment_ids.check(mode='read')
-        return new_mail
+        for values in values_list:
+            if 'notification' not in values and values.get('mail_message_id'):
+                values['notification'] = True
+
+        new_mails = super(MailMail, self).create(values_list)
+
+        new_mails_w_attach = self
+        for mail, values in zip(new_mails, values_list):
+            if values.get('attachment_ids'):
+                new_mails_w_attach += mail
+        if new_mails_w_attach:
+            new_mails_w_attach.mapped('attachment_ids').check(mode='read')
+
+        return new_mails
 
     def write(self, vals):
         res = super(MailMail, self).write(vals)
@@ -157,18 +165,20 @@ class MailMail(models.Model):
                 failed = self.env['mail.notification']
                 if failure_type:
                     failed = notifications.filtered(lambda notif: notif.res_partner_id not in success_pids)
+                (notifications - failed).sudo().write({
+                    'notification_status': 'sent',
+                    'failure_type': '',
+                    'failure_reason': '',
+                })
+                if failed:
                     failed.sudo().write({
                         'notification_status': 'exception',
                         'failure_type': failure_type,
                         'failure_reason': failure_reason,
                     })
                     messages = notifications.mapped('mail_message_id').filtered(lambda m: m.is_thread_message())
+                    # TDE TODO: could be great to notify message-based, not notifications-based, to lessen number of notifs
                     messages._notify_mail_failure_update()  # notify user that we have a failure
-                (notifications - failed).sudo().write({
-                    'notification_status': 'sent',
-                    'failure_type': '',
-                    'failure_reason': '',
-                })
         if not failure_type or failure_type == 'RECIPIENT':  # if we have another error, we want to keep the mail.
             mail_to_delete_ids = [mail.id for mail in self if mail.auto_delete]
             self.browse(mail_to_delete_ids).sudo().unlink()

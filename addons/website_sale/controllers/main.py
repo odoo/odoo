@@ -5,7 +5,7 @@ import logging
 from datetime import datetime
 from werkzeug.exceptions import Forbidden, NotFound
 
-from odoo import fields, http, tools, _
+from odoo import fields, http, SUPERUSER_ID, tools, _
 from odoo.http import request
 from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.addons.http_routing.models.ir_http import slug
@@ -110,7 +110,7 @@ class WebsiteSaleForm(WebsiteForm):
                 'no_auto_thread': False,
                 'res_id': order.id,
             }
-            request.env['mail.message'].sudo().create(values)
+            request.env['mail.message'].with_user(SUPERUSER_ID).create(values)
 
         if data['attachments']:
             self.insert_attachment(model_record, order.id, data['attachments'])
@@ -302,7 +302,7 @@ class WebsiteSale(http.Controller):
             values['main_object'] = category
         return request.render("website_sale.products", values)
 
-    @http.route(['/shop/product/<model("product.template"):product>'], type='http', auth="public", website=True)
+    @http.route(['/shop/product/<model("product.template"):product>'], type='http', auth="public", website=True, sitemap=True)
     def product(self, product, category='', search='', **kwargs):
         if not product.can_access_from_current_website():
             raise NotFound()
@@ -371,7 +371,7 @@ class WebsiteSale(http.Controller):
         request.website.sale_get_order(code=promo)
         return request.redirect(redirect)
 
-    @http.route(['/shop/cart'], type='http', auth="public", website=True)
+    @http.route(['/shop/cart'], type='http', auth="public", website=True, sitemap=False)
     def cart(self, access_token=None, revive='', **post):
         """
         Main cart management + abandoned cart revival
@@ -635,7 +635,7 @@ class WebsiteSale(http.Controller):
 
         return new_values, errors, error_msg
 
-    @http.route(['/shop/address'], type='http', methods=['GET', 'POST'], auth="public", website=True)
+    @http.route(['/shop/address'], type='http', methods=['GET', 'POST'], auth="public", website=True, sitemap=False)
     def address(self, **kw):
         Partner = request.env['res.partner'].with_context(show_address=1).sudo()
         order = request.website.sale_get_order()
@@ -722,7 +722,7 @@ class WebsiteSale(http.Controller):
         }
         return request.render("website_sale.address", render_values)
 
-    @http.route(['/shop/checkout'], type='http', auth="public", website=True)
+    @http.route(['/shop/checkout'], type='http', auth="public", website=True, sitemap=False)
     def checkout(self, **post):
         order = request.website.sale_get_order()
 
@@ -749,7 +749,7 @@ class WebsiteSale(http.Controller):
             return 'ok'
         return request.render("website_sale.checkout", values)
 
-    @http.route(['/shop/confirm_order'], type='http', auth="public", website=True)
+    @http.route(['/shop/confirm_order'], type='http', auth="public", website=True, sitemap=False)
     def confirm_order(self, **post):
         order = request.website.sale_get_order()
 
@@ -770,7 +770,7 @@ class WebsiteSale(http.Controller):
     # ------------------------------------------------------
     # Extra step
     # ------------------------------------------------------
-    @http.route(['/shop/extra_info'], type='http', auth="public", website=True)
+    @http.route(['/shop/extra_info'], type='http', auth="public", website=True, sitemap=False)
     def extra_info(self, **post):
         # Check that this option is activated
         extra_step = request.website.viewref('website_sale.extra_info_option')
@@ -836,7 +836,7 @@ class WebsiteSale(http.Controller):
             values['acq_extra_fees'] = acquirers.get_acquirer_extra_fees(order.amount_total, order.currency_id, order.partner_id.country_id.id)
         return values
 
-    @http.route(['/shop/payment'], type='http', auth="public", website=True)
+    @http.route(['/shop/payment'], type='http', auth="public", website=True, sitemap=False)
     def payment(self, **post):
         """ Payment step. This page proposes several payment means based on available
         payment.acquirer. State at this point :
@@ -920,7 +920,7 @@ class WebsiteSale(http.Controller):
         request.session['__website_sale_last_tx_id'] = transaction.id
         return transaction.render_sale_button(order)
 
-    @http.route('/shop/payment/token', type='http', auth='public', website=True)
+    @http.route('/shop/payment/token', type='http', auth='public', website=True, sitemap=False)
     def payment_token(self, pm_id=None, **kwargs):
         """ Method that handles payment using saved tokens
 
@@ -964,7 +964,7 @@ class WebsiteSale(http.Controller):
             })
         }
 
-    @http.route('/shop/payment/validate', type='http', auth="public", website=True)
+    @http.route('/shop/payment/validate', type='http', auth="public", website=True, sitemap=False)
     def payment_validate(self, transaction_id=None, sale_order_id=None, **post):
         """ Method that should be called by the server when receiving an update
         for a transaction. State at this point :
@@ -1000,12 +1000,11 @@ class WebsiteSale(http.Controller):
         PaymentProcessing.remove_payment_transaction(tx)
         return request.redirect('/shop/confirmation')
 
-
-    @http.route(['/shop/terms'], type='http', auth="public", website=True)
+    @http.route(['/shop/terms'], type='http', auth="public", website=True, sitemap=True)
     def terms(self, **kw):
         return request.render("website_sale.terms")
 
-    @http.route(['/shop/confirmation'], type='http', auth="public", website=True)
+    @http.route(['/shop/confirmation'], type='http', auth="public", website=True, sitemap=False)
     def payment_confirmation(self, **post):
         """ End of checkout process controller. Confirmation is basically seing
         the status of a sale.order. State at this point :
@@ -1021,7 +1020,7 @@ class WebsiteSale(http.Controller):
         else:
             return request.redirect('/shop')
 
-    @http.route(['/shop/print'], type='http', auth="public", website=True)
+    @http.route(['/shop/print'], type='http', auth="public", website=True, sitemap=False)
     def print_saleorder(self, **kwargs):
         sale_order_id = request.session.get('sale_last_order_id')
         if sale_order_id:

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from datetime import timedelta, datetime
+from datetime import timedelta, datetime, date
 import calendar
 from dateutil.relativedelta import relativedelta
 
@@ -226,11 +226,19 @@ class ResCompany(models.Model):
     def _validate_fiscalyear_lock(self, values):
         if values.get('fiscalyear_lock_date'):
             nb_draft_entries = self.env['account.move'].search([
-                ('company_id', 'in', [c.id for c in self]),
+                ('company_id', 'in', self.ids),
                 ('state', '=', 'draft'),
                 ('date', '<=', values['fiscalyear_lock_date'])])
             if nb_draft_entries:
                 raise ValidationError(_('There are still unposted entries in the period you want to lock. You should either post or delete them.'))
+
+    def _get_user_fiscal_lock_date(self):
+        """Get the fiscal lock date for this company depending on the user"""
+        self.ensure_one()
+        lock_date = max(self.period_lock_date or date.min, self.fiscalyear_lock_date or date.min)
+        if self.user_has_groups('account.group_account_manager'):
+            lock_date = self.fiscalyear_lock_date or date.min
+        return lock_date
 
     def write(self, values):
         #restrict the closing of FY if there are still unposted entries

@@ -59,7 +59,7 @@ PaymentForm.include({
             return stripe.handleCardSetup(intent_secret, card);
         }).then(function(result) {
             if (result.error) {
-                return Promise.reject({"message": {"data": { "message": result.error.message}}});
+                return Promise.reject({"message": {"data": { "arguments": [result.error.message]}}});
             } else {
                 _.extend(formData, {"payment_method": result.setupIntent.payment_method});
                 return self._rpc({

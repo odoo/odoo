@@ -120,9 +120,7 @@ class Lead(models.Model):
     expected_revenue = fields.Monetary('Prorated Revenue', currency_field='company_currency', store=True, compute="_compute_expected_revenue")
     date_deadline = fields.Date('Expected Closing', help="Estimate of the date on which the opportunity will be won.")
     color = fields.Integer('Color Index', default=0)
-    partner_address_name = fields.Char('Partner Contact Name', related='partner_id.name', readonly=True)
     partner_address_email = fields.Char('Partner Contact Email', related='partner_id.email', readonly=True)
-    partner_address_phone = fields.Char('Partner Contact Phone', related='partner_id.phone', readonly=True)
     partner_is_blacklisted = fields.Boolean('Partner is blacklisted', related='partner_id.is_blacklisted', readonly=True)
     company_currency = fields.Many2one(string='Currency', related='company_id.currency_id', readonly=True, relation="res.currency")
     user_email = fields.Char('User Email', related='user_id.email', readonly=True)
@@ -855,23 +853,22 @@ class Lead(models.Model):
             :param customer : res.partner record
             :param team_id : identifier of the Sales Team to determine the stage
         """
-        if not team_id:
-            team_id = self.team_id.id if self.team_id else False
-        value = {
-            'planned_revenue': self.planned_revenue,
-            'probability': self.probability,
-            'name': self.name,
+        new_team_id = team_id if team_id else self.team_id.id
+        upd_values = {}
+        if customer:
+            upd_values.update(self._onchange_partner_id_values(customer and customer.id))
+        upd_values['email_from'] = upd_values['email_from'] if upd_values.get('email_from') else self.email_from
+        upd_values['phone'] = upd_values['phone'] if upd_values.get('phone') else self.phone
+        upd_values.update({
             'partner_id': customer.id if customer else False,
             'type': 'opportunity',
             'date_open': fields.Datetime.now(),
-            'email_from': customer and customer.email or self.email_from,
-            'phone': customer and customer.phone or self.phone,
             'date_conversion': fields.Datetime.now(),
-        }
+        })
         if not self.stage_id:
-            stage = self._stage_find(team_id=team_id)
-            value['stage_id'] = stage.id
-        return value
+            stage = self._stage_find(team_id=new_team_id)
+            upd_values['stage_id'] = stage.id
+        return upd_values
 
     def convert_opportunity(self, partner_id, user_ids=False, team_id=False):
         customer = False
@@ -953,6 +950,8 @@ class Lead(models.Model):
         """
         partner_ids = {}
         for lead in self:
+            if partner_id:
+                lead.partner_id = partner_id
             if lead.partner_id:
                 partner_ids[lead.id] = lead.partner_id.id
                 continue
@@ -960,8 +959,6 @@ class Lead(models.Model):
                 partner = lead._create_lead_partner()
                 partner_id = partner.id
                 partner.team_id = lead.team_id
-            if partner_id:
-                lead.partner_id = partner_id
             partner_ids[lead.id] = partner_id
         return partner_ids
 
@@ -1177,7 +1174,7 @@ class Lead(models.Model):
             return self.env.ref('crm.mt_lead_lost')
         elif 'stage_id' in init_values:
             return self.env.ref('crm.mt_lead_stage')
-        elif self.active:
+        elif 'active' in init_values and self.active:
             return self.env.ref('crm.mt_lead_restored')
         return super(Lead, self)._track_subtype(init_values)
 
@@ -1287,7 +1284,7 @@ class Lead(models.Model):
                 emails = email_re.findall(partner_info['full_name'] or '')
                 email = emails and emails[0] or ''
                 if email and self.email_from and email.lower() == self.email_from.lower():
-                    partner_info['full_name'] = '%s <%s>' % (self.contact_name or self.partner_name, email)
+                    partner_info['full_name'] = tools.formataddr((self.contact_name or self.partner_name, email))
                     break
         return result
 

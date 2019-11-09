@@ -92,7 +92,7 @@ Nothing
     on the field. Can be used to clear a field, or avoid using a default value
     for the field.
 ``search``
-    for :ref:`relational fields <reference/orm/fields/relational>`, should be
+    for :ref:`relational fields <reference/fields/relational>`, should be
     a :ref:`domain <reference/orm/domains>` on the field's model.
 
     Will evaluate the domain, search the field's model using it and set the

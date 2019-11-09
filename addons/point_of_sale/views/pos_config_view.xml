@@ -35,6 +35,7 @@
                     <field name="selectable_categ_ids" invisible="1"/>
                     <field name="is_installed_account_accountant" invisible="1"/>
                     <field name="company_has_template" invisible="1"/>
+                    <field name="allowed_pricelist_ids" invisible="1"/>
                     <div class="oe_title" id="title">
                         <label for="name" class="oe_edit_only"/>
                         <h1><field name="name"/></h1>
@@ -161,7 +162,7 @@
                                         <field name="proxy_ip"/>
                                     </div>
                                     <div class="row iot_barcode_scanner">
-                                        <label string="Barcode Scanner" for="iface_scan_via_proxy" class="col-lg-4 o_light_label"/>
+                                        <label string="Barcode Scanner/Card Reader" for="iface_scan_via_proxy" class="col-lg-4 o_light_label"/>
                                         <field name="iface_scan_via_proxy"/>
                                     </div>
                                     <div class="row">
@@ -254,7 +255,7 @@
                             <div class="o_setting_right_pane">
                                 <span class="o_form_label">Default Pricelist</span>
                                 <div class="content-group mt16">
-                                    <field name="pricelist_id" domain="[('id', 'in', available_pricelist_ids)]" options="{'no_create': True}"/>
+                                    <field name="pricelist_id" domain="[('id', 'in', allowed_pricelist_ids)]" options="{'no_create': True}"/>
                                 </div>
                                 <div>
                                     <button name="%(product.product_pricelist_action2)d" icon="fa-arrow-right" type="action" string="Pricelists" class="btn-link"/>

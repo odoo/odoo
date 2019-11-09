@@ -93,10 +93,10 @@ class TestUiTranslate(odoo.tests.HttpCase):
 class TestUi(odoo.tests.HttpCase):
 
     def test_01_public_homepage(self):
-        self.phantom_js("/", "console.log('test successful')", "'website.content.snippets.animation' in odoo.__DEBUG__.services")
+        self.browser_js("/", "console.log('test successful')", "'website.content.snippets.animation' in odoo.__DEBUG__.services")
 
     def test_02_admin_tour_banner(self):
-        self.start_tour("/", 'banner', login='admin')
+        self.start_tour("/", 'banner', login='admin', step_delay=100)
 
     def test_03_restricted_editor(self):
         self.restricted_editor = self.env['res.users'].create({

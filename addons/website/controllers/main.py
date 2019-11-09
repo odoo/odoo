@@ -65,7 +65,7 @@ class QueryURL(object):
 
 class Website(Home):
 
-    @http.route('/', type='http', auth="public", website=True)
+    @http.route('/', type='http', auth="public", website=True, sitemap=True)
     def index(self, **kw):
         homepage = request.website.homepage_id
         if homepage and (homepage.sudo().is_visible or request.env.user.has_group('base.group_user')) and homepage.url != '/':
@@ -92,7 +92,7 @@ class Website(Home):
     # while portal users are redirected to the frontend by default
     # ------------------------------------------------------
 
-    @http.route(website=True, auth="public")
+    @http.route(website=True, auth="public", sitemap=False)
     def web_login(self, redirect=None, *args, **kw):
         response = super(Website, self).web_login(redirect=redirect, *args, **kw)
         if not redirect and request.params['login_success']:
@@ -129,7 +129,7 @@ class Website(Home):
     def robots(self, **kwargs):
         return request.render('website.robots', {'url_root': request.httprequest.url_root}, mimetype='text/plain')
 
-    @http.route('/sitemap.xml', type='http', auth="public", website=True, multilang=False)
+    @http.route('/sitemap.xml', type='http', auth="public", website=True, multilang=False, sitemap=False)
     def sitemap_xml_index(self, **kwargs):
         current_website = request.website
         Attachment = request.env['ir.attachment'].sudo()
@@ -197,7 +197,7 @@ class Website(Home):
 
         return request.make_response(content, [('Content-Type', mimetype)])
 
-    @http.route('/website/info', type='http', auth="public", website=True)
+    @http.route('/website/info', type='http', auth="public", website=True, sitemap=True)
     def website_info(self, **kwargs):
         try:
             request.website.get_template('website.website_info').name
@@ -328,6 +328,22 @@ class Website(Home):
             return []
         xmlroot = ET.fromstring(response)
         return json.dumps([sugg[0].attrib['data'] for sugg in xmlroot if len(sugg) and sugg[0].attrib['data']])
+
+    @http.route(['/google<string(length=16):key>.html'], type='http', auth="public", website=True, sitemap=False)
+    def google_console_search(self, key, **kwargs):
+        if not request.website.google_search_console:
+            logger.warning('Google Search Console not enable')
+            raise werkzeug.exceptions.NotFound()
+
+        trusted = request.website.google_search_console.lstrip('google').rstrip('.html')
+        if key != trusted:
+            if key.startswith(trusted):
+                request.website.sudo().google_search_console = "google%s.html" % key
+            else:
+                logger.warning('Google Search Console %s not recognize' % key)
+                raise werkzeug.exceptions.NotFound()
+
+        return request.make_response("google-site-verification: %s" % request.website.google_search_console)
 
     # ------------------------------------------------------
     # Themes
@@ -468,7 +484,7 @@ class WebsiteBinary(http.Controller):
                 kw['unique'] = unique
         return Binary().content_image(**kw)
 
-    @http.route(['/favicon.ico'], type='http', auth='public', website=True)
+    @http.route(['/favicon.ico'], type='http', auth='public', website=True, sitemap=False)
     def favicon(self, **kw):
         # when opening a pdf in chrome, chrome tries to open the default favicon url
         return self.content_image(model='website', id=str(request.website.id), field='favicon', **kw)

@@ -17,8 +17,12 @@ class TestSaleTransaction(AccountingTestCase):
             'name': 'Product A',
         })
 
+        self.env.ref('payment.payment_acquirer_transfer').journal_id = self.cash_journal
+        if not self.env.user.company_id.country_id:
+            self.env.user.company_id.country_id = self.env.ref('base.us')
+
         order = self.env['sale.order'].create({
-            'partner_id': self.env.ref('base.res_partner_1').id,
+            'partner_id': self.env['res.partner'].create({'name': 'A partner'}).id,
             'order_line': [
                 (0, False, {
                     'product_id': product.id,

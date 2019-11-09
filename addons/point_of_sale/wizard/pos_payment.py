@@ -56,6 +56,7 @@ class PosMakePayment(models.TransientModel):
 
         if float_is_zero(order.amount_total - order.amount_paid, precision_rounding=currency.rounding):
             order.action_pos_order_paid()
+            order._create_order_picking()
             return {'type': 'ir.actions.act_window_close'}
 
         return self.launch_payment()

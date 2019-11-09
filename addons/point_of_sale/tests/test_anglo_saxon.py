@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo
 import time
@@ -14,9 +15,8 @@ class TestAngloSaxonCommon(common.TransactionCase):
         self.Statement = self.env['account.bank.statement']
         self.company = self.env.ref('base.main_company')
         self.warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
-        self.product = self.env.ref('product.product_product_3')
-        self.partner = self.env.ref('base.res_partner_1')
-        self.category = self.env.ref('product.product_category_1')
+        self.partner = self.env['res.partner'].create({'name': 'Partner 1'})
+        self.category = self.env.ref('product.product_category_all')
         self.category = self.category.copy({'name': 'New category','property_valuation': 'real_time'})
         account_type_rcv = self.env.ref('account.data_account_type_receivable')
         account_type_inc = self.env.ref('account.data_account_type_revenue')
@@ -35,8 +35,14 @@ class TestAngloSaxonCommon(common.TransactionCase):
         self.category.property_stock_journal = self.env['account.journal'].create({'name': 'Stock journal', 'type': 'sale', 'code': 'STK00'})
         self.pos_config = self.env.ref('point_of_sale.pos_config_main')
         self.pos_config = self.pos_config.copy({'name': 'New POS config'})
-        self.product = self.product.copy({'name': 'New product','standard_price': 100})
+        self.product = self.env['product.product'].create({
+            'name': 'New product',
+            'standard_price': 100,
+            'available_in_pos': True,
+            'type': 'product',
+        })
         self.company.anglo_saxon_accounting = True
+        self.company.point_of_sale_update_stock_quantities = 'real'
         self.product.categ_id = self.category
         self.product.property_account_expense_id = account_expense
         self.product.property_account_income_id = account_income
@@ -61,7 +67,7 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
     def test_create_account_move_line(self):
         # This test will check that the correct journal entries are created when a product in real time valuation
         # is sold in a company using anglo-saxon
-        self.pos_config.open_session_cb()
+        self.pos_config.open_session_cb(check_coa=False)
         current_session = self.pos_config.current_session_id
         self.cash_journal.loss_account_id = self.account
 
@@ -142,7 +148,7 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         self.assertEqual(self.product.quantity_svl, 10)
 
         self.pos_config.module_account = True
-        self.pos_config.open_session_cb()
+        self.pos_config.open_session_cb(check_coa=False)
 
         pos_order_values = {
             'company_id': self.company.id,

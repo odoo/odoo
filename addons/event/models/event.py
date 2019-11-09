@@ -141,7 +141,7 @@ class EventEvent(models.Model):
         store=True, readonly=True, compute='_compute_seats')
     seats_expected = fields.Integer(
         string='Number of Expected Attendees',
-        readonly=True, compute='_compute_seats')
+        compute_sudo=True, readonly=True, compute='_compute_seats')
 
     # Registration fields
     registration_ids = fields.One2many(
@@ -241,7 +241,9 @@ class EventEvent(models.Model):
             # Need to localize because it could begin late and finish early in
             # another timezone
             event = event.with_context(tz=event.date_tz)
-            event.is_one_day = (event.date_begin.date() == event.date_end.date())
+            begin_tz = fields.Datetime.context_timestamp(event, event.date_begin)
+            end_tz = fields.Datetime.context_timestamp(event, event.date_end)
+            event.is_one_day = (begin_tz.date() == end_tz.date())
 
     @api.onchange('is_online')
     def _onchange_is_online(self):

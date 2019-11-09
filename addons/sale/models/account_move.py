@@ -6,6 +6,25 @@ from odoo.exceptions import UserError
 from odoo.tools import float_compare, float_is_zero
 
 
+class AccountMove(models.Model):
+    _inherit = 'account.move'
+
+    def action_post(self):
+        #inherit of the function from account.move to validate a new tax and the priceunit of a downpayment
+        res = super(AccountMove, self).action_post()
+        line_ids = self.mapped('line_ids').filtered(lambda line: line.sale_line_ids.is_downpayment)
+        for line in line_ids:
+            try:
+                line.sale_line_ids.tax_id = line.tax_ids
+                #To keep positive amount on the sale order and to have the right price for the invoice
+                #We need the - before our untaxed_amount_to_invoice
+                line.sale_line_ids.price_unit = -line.sale_line_ids.untaxed_amount_to_invoice
+            except UserError:
+                # a UserError here means the SO was locked, which prevents changing the taxes
+                # just ignore the error - this is a nice to have feature and should not be blocking
+                pass
+        return res
+
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 

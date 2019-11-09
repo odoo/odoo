@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import common
+from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 
-class TestNote(common.TransactionCase):
+
+class TestNote(TransactionCaseWithUserDemo):
 
     def test_bug_lp_1156215(self):
         """ ensure any users can create new users """
-        demo_user = self.env.ref('base.user_demo')
+        demo_user = self.user_demo
         group_erp = self.env.ref('base.group_erp_manager')
 
         demo_user.write({

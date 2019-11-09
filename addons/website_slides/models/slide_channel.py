@@ -16,8 +16,8 @@ class ChannelUsersRelation(models.Model):
 
     channel_id = fields.Many2one('slide.channel', index=True, required=True, ondelete='cascade')
     completed = fields.Boolean('Is Completed', help='Channel validated, even if slides / lessons are added once done.')
-    # Todo master: rename this field to avoid confusion between completion (%) and completed count (#)
-    completion = fields.Integer('# Completed Slides')
+    completion = fields.Integer('% Completed Slides')
+    completed_slides_count = fields.Integer('# Completed Slides')
     partner_id = fields.Many2one('res.partner', index=True, required=True, ondelete='cascade')
     partner_email = fields.Char(related='partner_id.email', readonly=True)
 
@@ -37,9 +37,9 @@ class ChannelUsersRelation(models.Model):
 
         partner_karma = dict.fromkeys(self.mapped('partner_id').ids, 0)
         for record in self:
-            slide_done = mapped_data.get(record.channel_id.id, dict()).get(record.partner_id.id, 0)
-            record.completion = slide_done
-            if not record.completed and record.completion >= record.channel_id.total_slides:
+            record.completed_slides_count = mapped_data.get(record.channel_id.id, dict()).get(record.partner_id.id, 0)
+            record.completion = 100.0 if record.completed else round(100.0 * record.completed_slides_count / (record.channel_id.total_slides or 1))
+            if not record.completed and record.completed_slides_count >= record.channel_id.total_slides:
                 record.completed = True
                 partner_karma[record.partner_id.id] += record.channel_id.karma_gen_channel_finish
 
@@ -261,11 +261,11 @@ class Channel(models.Model):
         current_user_info = self.env['slide.channel.partner'].sudo().search(
             [('channel_id', 'in', self.ids), ('partner_id', '=', self.env.user.partner_id.id)]
         )
-        mapped_data = dict((info.channel_id.id, (info.completed, info.completion)) for info in current_user_info)
+        mapped_data = dict((info.channel_id.id, (info.completed, info.completed_slides_count)) for info in current_user_info)
         for record in self:
-            completed, completion = mapped_data.get(record.id, (False, 0))
+            completed, completed_slides_count = mapped_data.get(record.id, (False, 0))
             record.completed = completed
-            record.completion = round(100.0 * completion / (record.total_slides or 1))
+            record.completion = 100.0 if completed else round(100.0 * completed_slides_count / (record.total_slides or 1))
 
     @api.depends('upload_group_ids', 'user_id')
     @api.depends_context('uid')

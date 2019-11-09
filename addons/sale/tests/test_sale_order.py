@@ -266,11 +266,28 @@ class TestSaleOrder(TestCommonSaleNoChart):
 
     def test_so_create_multicompany(self):
         """Check that only taxes of the right company are applied on the lines."""
-        user_demo = self.env.ref('base.user_demo')
+
+        # Preparing test Data
         company_1 = self.env.ref('base.main_company')
         company_2 = self.env['res.company'].create({
             'name': 'company 2',
             'parent_id': company_1.id,
+        })
+
+        user_demo = self.env['res.users'].create({
+            'login': 'zizizmyuser',
+            'password': 'zizizmyuser',
+            'partner_id': self.env['res.partner'].create({'name': 'Zizizmypartner'}).id,
+            'company_ids': [(6, False, [company_1.id])],
+            'company_id': company_1.id,
+            'groups_id': [(6, 0, [
+                self.env.ref('base.group_user').id,
+                self.env.ref('base.group_partner_manager').id,
+                self.env.ref('sales_team.group_sale_manager').id])]})
+
+        so_partner = self.env['res.partner'].create({'name': 'SO Partner'})
+        so_partner.write({
+            'property_account_position_id': False,
         })
 
         tax_company_1 = self.env['account.tax'].create({
@@ -291,7 +308,7 @@ class TestSaleOrder(TestCommonSaleNoChart):
         })
 
         so_1 = self.env['sale.order'].with_user(user_demo.id).create({
-            'partner_id': self.env.ref('base.res_partner_2').id,
+            'partner_id': self.env['res.partner'].create({'name': 'A partner'}).id,
             'company_id': company_1.id,
         })
         so_1.write({
@@ -300,61 +317,6 @@ class TestSaleOrder(TestCommonSaleNoChart):
 
         self.assertEqual(set(so_1.order_line.tax_id.ids), set([tax_company_1.id]),
             'Only taxes from the right company are put by default')
-
-    def test_reconciliation_with_so(self):
-        # create SO
-        so = self.env['sale.order'].create({
-            'name': 'SO/01/01',
-            'reference': 'Petit suisse',
-            'partner_id': self.partner_customer_usd.id,
-            'partner_invoice_id': self.partner_customer_usd.id,
-            'partner_shipping_id': self.partner_customer_usd.id,
-            'pricelist_id': self.pricelist_usd.id,
-        })
-        self.env['sale.order.line'].create({
-            'name': self.product_order.name,
-            'product_id': self.product_order.id,
-            'product_uom_qty': 2,
-            'product_uom': self.product_order.uom_id.id,
-            'price_unit': self.product_order.list_price,
-            'order_id': so.id,
-            'tax_id': False,
-        })
-        # Mark SO as sent otherwise we won't find any match
-        so.write({'state': 'sent'})
-        # Create bank statement
-        statement = self.env['account.bank.statement'].create({
-            'name': 'Test',
-            'journal_id': self.journal_purchase.id,
-            'user_id': self.user_employee.id,
-        })
-        st_line1 = self.env['account.bank.statement.line'].create({
-            'name': 'should not find anything',
-            'amount': 15,
-            'statement_id': statement.id
-        })
-        st_line2 = self.env['account.bank.statement.line'].create({
-            'name': 'Payment for SO/01/01',
-            'amount': 15,
-            'statement_id': statement.id
-        })
-        st_line3 = self.env['account.bank.statement.line'].create({
-            'name': 'Payment for Petit suisse',
-            'amount': 15,
-            'statement_id': statement.id
-        })
-        # Call get_bank_statement_line_data for st_line_1, should not find any sale order
-        res = self.env['account.reconciliation.widget'].get_bank_statement_line_data([st_line1.id])
-        line = res.get('lines', [{}])[0]
-        self.assertFalse(line.get('sale_order_ids', False))
-        # Call again for st_line_2, it should find sale_order
-        res = self.env['account.reconciliation.widget'].get_bank_statement_line_data([st_line2.id])
-        line = res.get('lines', [{}])[0]
-        self.assertEqual(line.get('sale_order_ids', []), [so.id])
-        # Call again for st_line_3, it should find sale_order based on reference
-        res = self.env['account.reconciliation.widget'].get_bank_statement_line_data([st_line3.id])
-        line = res.get('lines', [{}])[0]
-        self.assertEqual(line.get('sale_order_ids', []), [so.id])
 
     def test_group_invoice(self):
         """ Test that invoicing multiple sales order for the same customer works. """

@@ -1943,7 +1943,7 @@ class StockMove(SavepointCase):
 
         # create the backorder in the uom of the quants
         backorder_wizard_dict = picking_stock_pack.button_validate()
-        backorder_wizard = self.env[backorder_wizard_dict['res_model']].browse(backorder_wizard_dict['res_id'])
+        backorder_wizard = self.env[backorder_wizard_dict['res_model']].browse(backorder_wizard_dict['res_id']).with_context(backorder_wizard_dict['context'])
         backorder_wizard.process()
         self.assertEqual(move_stock_pack.state, 'done')
         self.assertEqual(move_stock_pack.quantity_done, 0.5)
@@ -1970,9 +1970,7 @@ class StockMove(SavepointCase):
             'location_dest_id': backorder.location_dest_id.id,
             'picking_id': backorder.id,
         })]})
-        overprocessed_wizard_dict = backorder.button_validate()
-        overprocessed_wizard = self.env[overprocessed_wizard_dict['res_model']].browse(overprocessed_wizard_dict['res_id'])
-        overprocessed_wizard.action_confirm()
+        backorder.button_validate()
         backorder_move = backorder.move_lines
         self.assertEqual(backorder_move.state, 'done')
         self.assertEqual(backorder_move.quantity_done, 12.0)
@@ -2111,7 +2109,7 @@ class StockMove(SavepointCase):
             if ml.lot_id.name != 'lot3':
                 ml.qty_done = 1
         res_dict_for_back_order = picking_pack_cust.button_validate()
-        backorder_wizard = self.env[(res_dict_for_back_order.get('res_model'))].browse(res_dict_for_back_order.get('res_id'))
+        backorder_wizard = self.env[(res_dict_for_back_order.get('res_model'))].browse(res_dict_for_back_order.get('res_id')).with_context(res_dict_for_back_order['context'])
         backorder_wizard.process()
         backorder = self.env['stock.picking'].search([('backorder_id', '=', picking_pack_cust.id)])
         backordered_move = backorder.move_lines
@@ -2136,9 +2134,7 @@ class StockMove(SavepointCase):
             'move_id': backordered_move.id,
         })]})
 
-        overprocessed_wizard = backorder.button_validate()
-        overprocessed_wizard = self.env['stock.overprocessed.transfer'].browse(overprocessed_wizard['res_id'])
-        overprocessed_wizard.action_confirm()
+        backorder.button_validate()
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.customer_location), 3)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.pack_location), 0)
@@ -3184,7 +3180,7 @@ class StockMove(SavepointCase):
         picking.action_confirm()
         picking.action_assign()
         move1.move_line_ids.qty_done = 10
-        picking.action_done()
+        picking._action_done()
         self.assertEqual(move1.product_uom_qty, 10.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 10.0)
         self.env['stock.move.line'].create({
@@ -3302,7 +3298,7 @@ class StockMove(SavepointCase):
         picking.action_assign()
         res_dict = picking.button_validate()
         self.assertEqual(res_dict.get('res_model'), 'stock.immediate.transfer')
-        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
+        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id')).with_context(res_dict['context'])
         wizard.process()
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 10.0)
 
@@ -3335,10 +3331,10 @@ class StockMove(SavepointCase):
         # Only 5 products are reserved on the move of 10, click on `button_validate`.
         res_dict = picking.button_validate()
         self.assertEqual(res_dict.get('res_model'), 'stock.immediate.transfer')
-        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
+        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id')).with_context(res_dict['context'])
         res_dict_for_back_order = wizard.process()
         self.assertEqual(res_dict_for_back_order.get('res_model'), 'stock.backorder.confirmation')
-        backorder_wizard = self.env[(res_dict_for_back_order.get('res_model'))].browse(res_dict_for_back_order.get('res_id'))
+        backorder_wizard = self.env[(res_dict_for_back_order.get('res_model'))].browse(res_dict_for_back_order.get('res_id')).with_context(res_dict_for_back_order['context'])
         # Chose to create a backorder.
         backorder_wizard.process()
 
@@ -3401,11 +3397,11 @@ class StockMove(SavepointCase):
 
         action = picking.button_validate()
         self.assertEqual(action.get('res_model'), 'stock.immediate.transfer')
-        wizard = self.env[(action.get('res_model'))].browse(action.get('res_id'))
+        wizard = self.env[(action.get('res_model'))].browse(action.get('res_id')).with_context(action.get('context'))
         action = wizard.process()
         self.assertTrue(isinstance(action, dict), 'Should open backorder wizard')
         self.assertEqual(action.get('res_model'), 'stock.backorder.confirmation')
-        wizard = self.env[(action.get('res_model'))].browse(action.get('res_id'))
+        wizard = self.env[(action.get('res_model'))].browse(action.get('res_id')).with_context(action.get('context'))
         wizard.process()
         backorder = self.env['stock.picking'].search([('backorder_id', '=', picking.id)])
         self.assertEqual(len(backorder), 1.0)
@@ -3449,7 +3445,7 @@ class StockMove(SavepointCase):
         # No quantites filled, immediate transfer wizard should pop up.
         immediate_trans_wiz_dict = picking.button_validate()
         self.assertEqual(immediate_trans_wiz_dict.get('res_model'), 'stock.immediate.transfer')
-        immediate_trans_wiz = self.env[immediate_trans_wiz_dict['res_model']].browse(immediate_trans_wiz_dict['res_id'])
+        immediate_trans_wiz = self.env[immediate_trans_wiz_dict['res_model']].browse(immediate_trans_wiz_dict['res_id']).with_context(immediate_trans_wiz_dict['context'])
         immediate_trans_wiz.process()
 
         self.assertEqual(picking.move_lines.quantity_done, 5.0)
@@ -3553,11 +3549,6 @@ class StockMove(SavepointCase):
 
         self.assertTrue(isinstance(action, dict), 'Should open backorder wizard')
         self.assertEqual(action.get('res_model'), 'stock.backorder.confirmation')
-
-        product3_move.move_line_ids[0].qty_done = 2
-        action = picking.button_validate()  # should request confirmation
-        self.assertTrue(isinstance(action, dict), 'Should open overprocessing wizard')
-        self.assertEqual(action.get('res_model'), 'stock.overprocessed.transfer')
 
     def test_immediate_validate_7(self):
         """ In a picking with a single unavailable move, clicking on validate without filling any
@@ -4248,7 +4239,7 @@ class StockMove(SavepointCase):
         picking.action_confirm()
         picking.action_assign()
         move1.quantity_done = 10
-        picking.action_done()
+        picking._action_done()
 
         self.assertEqual(len(picking.move_lines), 1, 'One move should exist for the picking.')
         self.assertEqual(len(picking.move_line_ids), 1, 'One move line should exist for the picking.')

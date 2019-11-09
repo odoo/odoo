@@ -94,10 +94,22 @@
                         </tbody>
                     </table>
                     <p>
-                        <t t-if="o.backorder_ids and o.backorder_ids.filtered(lambda x: x.state not in ('done', 'cancel'))">
+                        <span t-if="o.backorder_ids and o.backorder_ids.filtered(lambda x: x.state not in ('done', 'cancel'))">
                             All items couldn't be shipped, the remaining ones will be shipped as soon as they become available.
-                        </t>
+                        </span>
                     </p>
+
+                    <div t-if="o.signature" class="mt32 ml64 mr4" name="signature">
+                        <div class="offset-8">
+                            <strong>Signature</strong>
+                        </div>
+                        <div class="offset-8">
+                            <img t-att-src="image_data_uri(o.signature)" style="max-height: 4cm; max-width: 8cm;"/>
+                        </div>
+                        <div class="offset-8 text-center">
+                            <p t-field="o.partner_id.name"/>
+                        </div>
+                    </div>
                 </div>
             </t>
          </t>

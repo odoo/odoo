@@ -100,6 +100,8 @@ var PartnerAutocompleteMixin = {
         return this._getBase64Image(url).then(function (base64Image) {
             // base64Image equals "data:" if image not available on given url
             return base64Image ? base64Image.replace(/^data:image[^;]*;base64,?/, '') : false;
+        }).catch(function () {
+            return false;
         });
     },
 
@@ -136,6 +138,11 @@ var PartnerAutocompleteMixin = {
 
                 if (company_data.error && company_data.error_message === 'Insufficient Credit') {
                     self._notifyNoCredits();
+                    company_data = company;
+                }
+
+                if (company_data.error && company_data.error_message === 'No Account Token') {
+                    self._notifyAccountToken();
                     company_data = company;
                 }
 
@@ -322,6 +329,26 @@ var PartnerAutocompleteMixin = {
                 credits_url: url
             });
             self.do_notify(title, content, false, 'o_partner_autocomplete_no_credits_notify');
+        });
+    },
+
+    _notifyAccountToken: function () {
+        var self = this;
+        return this._rpc({
+            model: 'iap.account',
+            method: 'get_config_account_url',
+            args: []
+        }).then(function (url) {
+            var title = _t('IAP Account Token missing');
+            if (url){
+                var content = Qweb.render('partner_autocomplete.account_token', {
+                    account_url: url
+                });
+                self.do_notify(title, content, false, 'o_partner_autocomplete_no_credits_notify');
+            }
+            else {
+                self.do_notify(title);
+            }
         });
     },
 };

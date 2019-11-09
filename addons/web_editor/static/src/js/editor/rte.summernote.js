@@ -14,7 +14,7 @@ var weWidgets = require('wysiwyg.widgets');
 var QWeb = core.qweb;
 var _t = core._t;
 
-ajax.jsonRpc('/web/dataset/call', 'call', {
+ajax.jsonRpc('/web/dataset/call_kw', 'call', {
     'model': 'ir.ui.view',
     'method': 'read_template',
     'args': ['web_editor.colorpicker'],
@@ -1247,6 +1247,7 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
         data.__alreadyDone = true;
         var linkDialog = new weWidgets.LinkDialog(this,
             data.options || {},
+            data.$editable,
             data.linkInfo
         );
         if (data.onSave) {
