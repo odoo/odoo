@@ -286,8 +286,8 @@ class ProductProduct(models.Model):
                 if supplier_info.name.id == product._context.get('partner_id'):
                     product.code = supplier_info.product_code or product.default_code
                     break
-            else:
-                product.code = product.default_code
+                else:
+                    product.code = product.default_code
 
     @api.depends_context('partner_id')
     def _compute_partner_ref(self):
@@ -297,8 +297,8 @@ class ProductProduct(models.Model):
                     product_name = supplier_info.product_name or product.default_code or product.name
                     product.partner_ref = '%s%s' % (product.code and '[%s] ' % product.code or '', product_name)
                     break
-            else:
-                product.partner_ref = product.display_name
+                else:
+                    product.partner_ref = product.display_name
 
     def _compute_variant_item_count(self):
         for product in self:
