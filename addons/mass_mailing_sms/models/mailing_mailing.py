@@ -133,7 +133,7 @@ class Mailing(models.Model):
         self.ensure_one()
         opt_out = []
         target = self.env[self.mailing_model_real]
-        if self.mailing_model_real == "mail.mass_mailing.contact":
+        if self.mailing_model_real == 'mailing.contact':
             # if user is opt_out on One list but not on another
             # or if two user with same email address, one opted in and the other one opted out, send the mail anyway
             # TODO DBE Fixme : Optimise the following to get real opt_out and opt_in

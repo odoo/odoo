@@ -425,7 +425,6 @@ class Channel(models.Model):
                 'recipient_ids': [(4, partner.id)]
             }
             mail = self.env['mail.mail'].create(create_values)
-            mail.send()
         return True
 
     def _update_moderation_email(self, emails, status):
