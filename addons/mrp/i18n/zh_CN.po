@@ -20,6 +20,8 @@
 # 演奏王 <wangwhai@qq.com>, 2019
 # Jeffery CHEN <jeffery9@gmail.com>, 2019
 # liAnGjiA <liangjia@qq.com>, 2019
+# 张宏奎 <zhanghongkui@inspur.com>, 2019
+# Jerry Pan <panjianyu@inspur.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -27,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:21+0000\n"
-"Last-Translator: liAnGjiA <liangjia@qq.com>, 2019\n"
+"Last-Translator: Jerry Pan <panjianyu@inspur.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1475,10 +1477,7 @@ msgid ""
 "If the product is a finished product: When processing a sales\n"
 "                                    order for this product, the delivery order will contain the raw\n"
 "                                    materials, instead of the finished product."
-msgstr ""
-"如果产品是成品：处理销售\n"
-"                                     出库单将包含原料\n"
-"                                     材料，而不是成品。"
+msgstr "如果产品是成品：处理销售出库单将包含原料材料，而不是成品。"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -1487,10 +1486,7 @@ msgid ""
 "                                    manufacturing order that contains that product as component,\n"
 "                                    the raw materials of that product will be added to the\n"
 "                                    manufacturing order of the final product."
-msgstr ""
-"如果产品是半成品：在处理包含该产品作为组件的制造订单时，\n"
-"                                     该产品的原料将被添加到\n"
-"                                     最终产品的生产订单。"
+msgstr "如果产品是半成品：在处理包含该产品作为组件的制造订单时，该产品的原料将被添加到最终产品的生产订单。"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
@@ -2019,7 +2015,7 @@ msgstr "移动完成"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Move forward deadline start dates by"
-msgstr "提前截止日期开始日期"
+msgstr "提前截止日期开始天数"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__move_raw_ids
@@ -2485,7 +2481,7 @@ msgstr "塑料层压板"
 #: code:addons/mrp/wizard/mrp_product_produce.py:103
 #, python-format
 msgid "Please enter a lot or serial number for %s !"
-msgstr "请输入%s的序列号或序列号！"
+msgstr "请输入%s的批号或序列号！"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:297
@@ -2665,7 +2661,6 @@ msgstr "生产文档"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__production_location_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_routing__location_id
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_search_view
 msgid "Production Location"
 msgstr "生产位置"
@@ -2840,6 +2835,7 @@ msgstr "原材料"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__location_src_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing__location_id
 msgid "Raw Materials Location"
 msgstr "原料位置"
 

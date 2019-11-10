@@ -32,9 +32,10 @@
 # liAnGjiA <liangjia@qq.com>, 2019
 # Martin Trigaux, 2019
 # snow wang <147156565@qq.com>, 2019
-# Jerry Pan <panjianyu@inspur.com>, 2019
 # Jeffery CHEN <jeffery9@gmail.com>, 2019
 # guohuadeng <guohuadeng@hotmail.com>, 2019
+# 张宏奎 <zhanghongkui@inspur.com>, 2019
+# Jerry Pan <panjianyu@inspur.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -42,7 +43,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-08 13:35+0000\n"
 "PO-Revision-Date: 2018-08-24 09:24+0000\n"
-"Last-Translator: guohuadeng <guohuadeng@hotmail.com>, 2019\n"
+"Last-Translator: Jerry Pan <panjianyu@inspur.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2023,7 +2024,7 @@ msgstr "销售订单行缺少必要字段"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__multi_sales_price
 msgid "Multiple Sales Prices per Product"
-msgstr " 每个产品的多重销售价格"
+msgstr "每个产品的多种销售价格"
 
 #. module: sale
 #: selection:res.config.settings,multi_sales_price_method:0
@@ -3287,7 +3288,7 @@ msgstr "序号"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__use_invoices
 msgid "Set Invoicing Target"
-msgstr " 集进销存目标"
+msgstr "设定开票目标"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3304,7 +3305,7 @@ msgstr "设置一个开票对象:"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Set multiple prices per product, automated discounts, etc."
-msgstr "每一套产品，多种价格自动折扣，等"
+msgstr "每一套产品，多种价格自动折扣等"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
@@ -3619,6 +3620,14 @@ msgid ""
 "The margin is computed as the sum of product sales prices minus the cost set"
 " in their detail form."
 msgstr "利润率计算计算结果为产品销售价格减去其明细表成本字段的和。"
+
+#. module: sale
+#: code:addons/sale/models/payment.py:97
+#, python-format
+msgid ""
+"The order was not confirmed despite response from the acquirer (%s): order "
+"total is %r but acquirer replied with %r."
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__reference
