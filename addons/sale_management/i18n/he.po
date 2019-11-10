@@ -29,7 +29,7 @@ msgstr ""
 #. module: sale_management
 #: model:sale.order.template.line,name:sale_management.sale_order_template_line_1
 msgid "4 Person Desk"
-msgstr ""
+msgstr "שולחן ל 4 אנשים"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
@@ -93,7 +93,7 @@ msgstr "מאפיינים"
 msgid ""
 "Before archiving \"%s\" please select another default template in the "
 "settings."
-msgstr ""
+msgstr "לפני הוספת \"%s\" לארכיון, נא בחר תבנית ברירת מחדל אחרת בהגדרות."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__product_uom_category_id
@@ -122,7 +122,7 @@ msgstr "אישור"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__mail_template_id
 msgid "Confirmation Mail"
-msgstr ""
+msgstr "דואר אישור"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__product_uom_category_id
@@ -181,6 +181,8 @@ msgid ""
 "Design your quotation templates using building blocks<br/>\n"
 "                            <em attrs=\"{'invisible': [('module_sale_quotation_builder','=',False)]}\">Warning: this option will install the Website app.</em>"
 msgstr ""
+"עצב את תבניות הצעת המחיר שלך באמצעות אבני בניין<br/>\n"
+"                            <em attrs=\"{'invisible': [('module_sale_quotation_builder','=',False)]}\">אזהרה: אפשרות זו תתקין את יישום אתר האינטרנט.</em>"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_digest_digest
@@ -212,7 +214,7 @@ msgstr "הצג שם"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__display_type
 msgid "Display Type"
-msgstr ""
+msgstr "סוג תצוגה"
 
 #. module: sale_management
 #: code:addons/sale_management/models/digest.py:0
@@ -226,16 +228,18 @@ msgid ""
 "Forbidden product, unit price, quantity, and UoM on non-accountable sale "
 "quote line"
 msgstr ""
+"מוצר אסור, מחיר יחידה, כמות ויחידת מידה בשורת הצעות מחיר של מכירה שאינה "
+"מחושבת"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__sequence
 msgid "Gives the sequence order when displaying a list of optional products."
-msgstr ""
+msgstr "נותן את סדר הרצף בעת הצגת רשימת מוצרים אופציונלים."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template_line__sequence
 msgid "Gives the sequence order when displaying a list of sale quote lines."
-msgstr ""
+msgstr "נותן את סדר הרצף בעת הצגת רשימה של שורות הצעת מחיר למכירה."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__id
@@ -250,12 +254,12 @@ msgstr "תעודה מזהה"
 msgid ""
 "If unchecked, it will allow you to hide the quotation template without "
 "removing it."
-msgstr ""
+msgstr "אם לא מסומן, יאפשר להסתיר את תבנית הצעת המחיר מבלי להסיר אותה."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__kpi_all_sale_total_value
 msgid "Kpi All Sale Total Value"
-msgstr ""
+msgstr "Kpi תמורה כוללת למכירה"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option____last_update
@@ -295,7 +299,7 @@ msgstr "שורות"
 #. module: sale_management
 #: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_accountable_product_id_required
 msgid "Missing required product and UoM on accountable sale quote line."
-msgstr ""
+msgstr "חסרים מוצר ויחידת מידה הנדרשים בשורת הצעת מחיר החייבת רישום."
 
 #. module: sale_management
 #: model:ir.model.fields.selection,name:sale_management.selection__sale_order_template_line__display_type__line_note
@@ -306,12 +310,12 @@ msgstr "הערה"
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__number_of_days
 msgid "Number of days for the validity date computation of the quotation"
-msgstr ""
+msgstr "מספר הימים לחישוב תאריך התוקף של הצעת המחיר"
 
 #. module: sale_management
 #: model:sale.order.template.option,name:sale_management.sale_order_template_option_1
 msgid "Office Chair"
-msgstr ""
+msgstr "כיסא משרדי"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__require_payment
@@ -369,12 +373,12 @@ msgstr "כמות:"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_res_config_settings__module_sale_quotation_builder
 msgid "Quotation Builder"
-msgstr ""
+msgstr "בונה הצעות מחיר"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__number_of_days
 msgid "Quotation Duration"
-msgstr ""
+msgstr "משך הצעת מחיר"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_template
@@ -383,28 +387,28 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_tree
 msgid "Quotation Template"
-msgstr ""
+msgstr "תבנית הצעת מחיר"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_template_line
 msgid "Quotation Template Line"
-msgstr ""
+msgstr "שורת תבנית הצעת מחיר"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Quotation Template Lines"
-msgstr ""
+msgstr "שורות תבנית הצעת מחיר"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_template_option
 msgid "Quotation Template Option"
-msgstr ""
+msgstr "אפשרות תבנית הצעת מחיר"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__sale_order_template_id
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__sale_order_template_id
 msgid "Quotation Template Reference"
-msgstr ""
+msgstr "מזהה תבנית הצעת מחיר"
 
 #. module: sale_management
 #: model:ir.actions.act_window,name:sale_management.sale_order_template_action
@@ -413,12 +417,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
 #: model:res.groups,name:sale_management.group_sale_order_template
 msgid "Quotation Templates"
-msgstr ""
+msgstr "תבניות הצעת מחיר"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Quotation expires after"
-msgstr ""
+msgstr "הצעת המחיר פגה לאחר"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
@@ -428,26 +432,26 @@ msgstr "הסר"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
 msgid "Remove one"
-msgstr ""
+msgstr "הסר אחד"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__require_signature
 msgid ""
 "Request a online signature to the customer in order to confirm orders "
 "automatically."
-msgstr ""
+msgstr "בקש חתימה מקוונת מהלקוח על מנת לאשר הזמנות באופן אוטומטי."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__require_payment
 msgid ""
 "Request an online payment to the customer in order to confirm orders "
 "automatically."
-msgstr ""
+msgstr "בקש תשלום מקוון ללקוח על מנת לאשר הזמנות באופן אוטומטי."
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_option
 msgid "Sale Options"
-msgstr ""
+msgstr "אפשרויות מכירה"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.digest_digest_view_form
@@ -472,12 +476,12 @@ msgstr "מזהה הזמנת לקוח"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
 msgid "Sales Quotation Template Lines"
-msgstr ""
+msgstr "שורות תבנית הצעת מחיר"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
 msgid "Search Quotation Template"
-msgstr ""
+msgstr "חפש תבנית הצעת מחיר"
 
 #. module: sale_management
 #: model:ir.model.fields.selection,name:sale_management.selection__sale_order_template_line__display_type__line_section
@@ -494,7 +498,7 @@ msgstr "רצף"
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template_line__display_type
 msgid "Technical field for UX purpose."
-msgstr ""
+msgstr "שדה טכני למטרת חווית משתמש."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__note
@@ -507,13 +511,15 @@ msgid ""
 "The Administrator can set default Terms & Conditions in Sales Settings. "
 "Terms set here will show up instead if you select this quotation template."
 msgstr ""
+"המנהל יכול להגדיר ברירת מחדל לתנאים והגבלות בהגדרות המכירה.תנאים שמוגדרים "
+"כאן יופיעו במקום אם תבחר את תבנית הצעת מחיר זו."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__mail_template_id
 msgid ""
 "This e-mail template will be sent on confirmation. Leave empty to send "
 "nothing."
-msgstr ""
+msgstr "תבנית דואר אלקטרוני זו תישלח בעת האישור. השאר ריק כדי לא לשלוח דבר."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__is_present
@@ -559,6 +565,9 @@ msgid ""
 "                Send these quotes by email and let your customers sign online.\n"
 "                Use cross-selling and discounts to push and boost your sales."
 msgstr ""
+"השתמש בתבניות ליצירת הצעות מחיר מקצועיות ומלוטשות תוך דקות.\n"
+"                שלח הצעות מחיר באמצעות הדוא\"ל ותן ללקוחות שלך לחתום באופן מקוון.\n"
+"                השתמש בקרוס-סל והנחות כדי לדחוף ולהגדיל את המכירות שלך."
 
 #. module: sale_management
 #: code:addons/sale_management/models/sale_order.py:0
@@ -573,6 +582,8 @@ msgid ""
 "You cannot change the type of a sale quote line. Instead you should delete "
 "the current line and create a new line of the proper type."
 msgstr ""
+"אינך יכול לשנות את סוג שורת הצעת המחיר למכירה. במקום זאת עליך למחוק את השורה"
+" הנוכחית וליצור שורה חדשה מהסוג המתאים."
 
 #. module: sale_management
 #: code:addons/sale_management/models/sale_order.py:0
