@@ -456,7 +456,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span name=\"button_import_placeholder\"/> Statements"
-msgstr "<span name=\"button_import_placeholder\"/> Izjave"
+msgstr "<span name=\"button_import_placeholder\"/> Izpiski"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -481,7 +481,7 @@ msgstr "<span title=\"Balance in Odoo\">Bilanca v glavni knjigi</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Latest Statement\">Latest Statement</span>"
-msgstr "<span title=\"Latest Statement\">Najnovejša izjava</span>"
+msgstr "<span title=\"Latest Statement\">Zadnji izpisek</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -1424,7 +1424,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.report,name:account.action_report_aged_partner_balance
 msgid "Aged Partner Balance"
-msgstr "Zapadle odprte postavke"
+msgstr "Stanje zapadlih postavk"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_agedpartnerbalance
@@ -1485,8 +1485,11 @@ msgid ""
 "created by the system on document validation (invoices, bank statements...) "
 "and will be created in 'Posted' status."
 msgstr ""
-"Vse ročne vknjižbe imajo najprej status \"Osnutek\" , lahko pa za določen "
-"dnevnik določite , da se ta status preskoči."
+"Vsi ročno ustvarjeni novi dnevniški vnosi so običajno v stanju 'Neknjiženo',"
+" a lahko nastavite opcijo, da se status na določenem dnevniku preskoči. V "
+"takem primeru se vnosi obnašajo kot samodejno ustvarjeni dnevniški vnosi ob "
+"overjanju dokumentov (računi, bančni izpiski...) in se ustvarijo s statusom "
+"\"Knjiženo\"."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:243
@@ -1495,8 +1498,8 @@ msgid ""
 "All the account entries lines must be processed in order to close the "
 "statement."
 msgstr ""
-"Vsi postavke kontnih vnosov morajo biti obdelane preden se lahko zaključi "
-"napoved."
+"Vsi postavke kontnih vnosov morajo biti obdelane preden se lahko izpisek "
+"zaključi."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__update_posted
@@ -2212,13 +2215,13 @@ msgstr "Postavka bančnega izpiska"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_line
 msgid "Bank Statement Lines"
-msgstr "Postavke izpiska"
+msgstr "Postavke bančnega izpiska"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_tree
 #: model_terms:ir.ui.view,arch_db:account.view_account_bank_journal_form
 msgid "Bank Statements"
-msgstr "Bančni izpisek"
+msgstr "Bančni izpiski"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__bank_account_id
@@ -2577,7 +2580,7 @@ msgstr ""
 #: code:addons/account/models/chart_template.py:340
 #, python-format
 msgid "Cash"
-msgstr "Cash"
+msgstr "Gotovina"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_exigibility
@@ -2649,7 +2652,7 @@ msgstr ""
 #: code:addons/account/models/account_journal_dashboard.py:34
 #, python-format
 msgid "Cash: Balance"
-msgstr ""
+msgstr "Gotovina: saldo"
 
 #. module: account
 #: model:ir.model,name:account.model_account_cashbox_line
@@ -2865,7 +2868,7 @@ msgstr ""
 #: code:addons/account/static/src/js/tour.js:23
 #, python-format
 msgid "Click to <b>send the invoice.</b>"
-msgstr ""
+msgstr "Klikni na <b>pošlji račun.</b>"
 
 #. module: account
 #. openerp-web
@@ -3496,7 +3499,7 @@ msgstr "Ustvarjeno"
 #: model:ir.model.fields,field_description:account.field_account_move_line__credit
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "Credit"
-msgstr "Dobro"
+msgstr "Kredit"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_credit_card
@@ -4265,7 +4268,7 @@ msgstr "Osnutki računov"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_draft_tree
 msgid "Draft statements"
-msgstr "Pripravljeni izpiski"
+msgstr "Osnutki izpiskov"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_line_form
@@ -4820,7 +4823,7 @@ msgstr "Polna uskladitev"
 #: code:addons/account/models/account_journal_dashboard.py:102
 #, python-format
 msgid "Future"
-msgstr "Prihodnost"
+msgstr "V prihodnje"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -4841,7 +4844,7 @@ msgstr "Kreiranje postavk"
 #. module: account
 #: model:ir.ui.menu,name:account.account_reports_legal_statements_menu
 msgid "Generic Statements"
-msgstr ""
+msgstr "Generični izpisi"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -4866,7 +4869,7 @@ msgstr "Poda zaporedje postavke pri prikazu računa."
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__sequence
 msgid ""
 "Gives the sequence order when displaying a list of bank statement lines."
-msgstr "Zaporedje postavk bančnega izpiska"
+msgstr "Določi zaporedje pri prikazu seznama postavk bančnega izpiska."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_tax__sequence
@@ -5330,8 +5333,8 @@ msgid ""
 "In order to delete a bank statement, you must first cancel it to delete "
 "related journal items."
 msgstr ""
-"Za brisanje bančnega izpiska , ga morate najprej preklicati , da boste tako "
-"izbrisali povezane postavke v dnevniku"
+"Za izbris bančnega izpiska, ga je prej potrebno preklicati in izbrisati "
+"povezane dnevniške postavke."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:89
@@ -5502,7 +5505,7 @@ msgstr "Interni prenosi"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__internal_type
 msgid "Internal Type"
-msgstr "Vrsta konta"
+msgstr "Interni tip"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_template_form
@@ -5816,13 +5819,13 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_journal__default_credit_account_id
 #: model:ir.model.fields,help:account.field_res_company__income_currency_exchange_account_id
 msgid "It acts as a default account for credit amount"
-msgstr "Privzeti kreditni konto"
+msgstr "Privzeti konto za znesek terjatev"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__default_debit_account_id
 #: model:ir.model.fields,help:account.field_res_company__expense_currency_exchange_account_id
 msgid "It acts as a default account for debit amount"
-msgstr "Privzeti konto za debetni znesek"
+msgstr "Privzeti konto za znesek obveznosti"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_name
@@ -6366,7 +6369,7 @@ msgstr "Postavitev"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Legal Notes..."
-msgstr ""
+msgstr "Pravna obvestila..."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__note
@@ -7263,7 +7266,7 @@ msgstr "Otvoritvena terjatev"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__opening_credit
 msgid "Opening credit value for this account."
-msgstr "Otvoritvena vrednost terjatev za ta konto."
+msgstr "Otvoritvena vrednost v dobro za ta konto."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__opening_debit
@@ -7548,7 +7551,7 @@ msgstr "Partnerji potrebni ukrepanja"
 #: code:addons/account/models/account_journal_dashboard.py:95
 #, python-format
 msgid "Past"
-msgstr "Pretekli"
+msgstr "Preteklost"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7862,7 +7865,7 @@ msgstr ""
 #: code:addons/account/wizard/pos_box.py:27
 #, python-format
 msgid "Please check that the field 'Journal' is set on the Bank Statement"
-msgstr "Preverite, če je izbran dnevnik."
+msgstr "Preverite, če je polje 'dnevnik' v bančnem izpisku nastavljeno."
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:29
@@ -8298,7 +8301,7 @@ msgstr ""
 #: model:ir.actions.client,name:account.action_bank_reconcile
 #: model:ir.actions.client,name:account.action_bank_reconcile_bank_statements
 msgid "Reconciliation on Bank Statements"
-msgstr "Uskladitev na bančnih izpiskih"
+msgstr "Uskladitev z bančnimi izpiski"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_vendor_bill_template
@@ -9219,7 +9222,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__balance_start
 msgid "Starting Balance"
-msgstr "Začetni Saldo"
+msgstr "Začetno stanje"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__cashbox_start_id
@@ -9287,7 +9290,7 @@ msgstr "Izpisek"
 #: code:addons/account/models/account_bank_statement.py:248
 #, python-format
 msgid "Statement %s confirmed, journal items were created."
-msgstr "Izpisek %s je potrjen."
+msgstr "Izpisek %s je potrjen, dnevniške postavke so ustvarjene."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_line_form
@@ -9444,7 +9447,7 @@ msgstr "Konto davkov"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__refund_account_id
 msgid "Tax Account on Credit Notes"
-msgstr ""
+msgstr "Konto davkov za dobropise"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_template__refund_account_id
@@ -10088,7 +10091,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__currency_id
 msgid "The currency used to enter statement"
-msgstr "Valuta za vnos izjave"
+msgstr "Valuta uporabljena pri vnosu izpiska"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1981
@@ -10277,8 +10280,8 @@ msgid ""
 "The payments which have not been matched with a bank statement will not be "
 "shown in bank reconciliation data if they were made before this date."
 msgstr ""
-"Plačila, ki niso bila usklajena z bančnim izpiskom, ne bodo prikazana v "
-"usklajevalnih podatkih banke, če so bila izvedena pred tem datumom."
+"Plačila, ki se ne ujemajo z bančnim izpiskom, ne bodo prikazana v podatkih "
+"bančnega usklajevanja, če so bila izvedena pred tem datumom."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner_category_ids
@@ -10408,6 +10411,8 @@ msgid ""
 "There are still unposted entries in the period you want to lock. You should "
 "either post or delete them."
 msgstr ""
+"V obdobju, ki ga želite zakleniti, so še vedno neknjiženi vnosi. Morate jih "
+"poknjižiti ali izbrisati."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:452
@@ -10768,7 +10773,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Total Credit"
-msgstr "Skupaj dobro"
+msgstr "Skupaj kredit"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -11566,6 +11571,8 @@ msgstr ""
 msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s"
 msgstr ""
+"Vnosov ne morete dodati/spremeniti pred datumom zaklepanja in vključno z "
+"njim %s"
 
 #. module: account
 #: code:addons/account/models/account_move.py:375
@@ -11574,6 +11581,9 @@ msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s. "
 "Check the company settings or ask someone with the 'Adviser' role"
 msgstr ""
+"Vnosov ne morete dodati/spremeniti pred datumom zaklepanja in vključno z "
+"njim %s. Preverite nastavitve podjetja ali vprašajte nekoga, ki ima vlogo "
+"svetovalca"
 
 #. module: account
 #: code:addons/account/models/company.py:283
@@ -11834,7 +11844,7 @@ msgstr ""
 #: code:addons/account/models/account_invoice.py:1683
 #, python-format
 msgid "You must first select a partner."
-msgstr ""
+msgstr "Najprej morate izbrati partnerja."
 
 #. module: account
 #. openerp-web

@@ -185,7 +185,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -630,7 +630,7 @@ msgstr "הגש מסלול(ים) ספציפי עבור חידוש במקום מס
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_filter
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Archived"
-msgstr "התווסף לארכיון"
+msgstr "בארכיון"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -954,7 +954,7 @@ msgstr "סמן תיבה זו כדי לאפשר שימוש במיקום זה כמ
 #: model:ir.model.fields,help:stock.field_stock_move__scrapped
 msgid ""
 "Check this box to allow using this location to put scrapped/damaged goods."
-msgstr "סמן תיבה זו כדי לאפשר שימוש במיקום זה כדי לשים סחורה תקולה/פגומה."
+msgstr "סמן תיבה זו כדי לאפשר שימוש במיקום זה לשים בו פסולים / פגומים."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__product_qty
@@ -2165,7 +2165,7 @@ msgstr "יש חבילות"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__has_scrap_move
 msgid "Has Scrap Moves"
-msgstr "יש תנועת פסולים"
+msgstr "יש לו תנועות של פסולים"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__has_tracking
@@ -2722,7 +2722,7 @@ msgstr "האם זה מיקום חוזר?"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__scrap_location
 msgid "Is a Scrap Location?"
-msgstr "האם מיקום פגומים?"
+msgstr "האם מיקום פסולים?"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_initial_demand_editable
@@ -3158,7 +3158,7 @@ msgstr "נהל תנועות דחיפה ושחרור של מלאי"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Manage product packagings (e.g. pack of 6 bottles, box of 10 pieces)"
-msgstr "ניהול חבילות מוצרים (למשל: אריזה של 6 בקבוקים, תיבה של 10 חלקים)"
+msgstr "ניהול אריזות מוצרים (למשל: אריזה של 6 בקבוקים, תיבה של 10 חלקים)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -3965,7 +3965,7 @@ msgstr "מיקום מקור "
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__parent_path
 msgid "Parent Path"
-msgstr ""
+msgstr "נתיב אב"
 
 #. module: stock
 #: selection:procurement.group,move_type:0
@@ -4274,7 +4274,7 @@ msgstr "תנועות המוצר (תנועת קו אחסון)"
 #: model:ir.ui.menu,name:stock.menu_product_packagings
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Product Packagings"
-msgstr "חבילות המוצר"
+msgstr "אריזות מוצר"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_replenish
@@ -5040,7 +5040,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #, python-format
 msgid "Scrap"
-msgstr "השמדות"
+msgstr "פסילה"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__scrap_location_id
@@ -5051,12 +5051,12 @@ msgstr "מיקום פסולים"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__move_id
 msgid "Scrap Move"
-msgstr "תנועת השמדה "
+msgstr "תנועת פסילה"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_scrap
 msgid "Scrap Orders"
-msgstr "הוראות השמדה"
+msgstr "הוראות פסילה"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_stock_scrap
@@ -5075,12 +5075,12 @@ msgid ""
 "                end up in a scrap location that can be used for reporting purpose."
 msgstr ""
 "הסרת מוצר תסיר אותו מהמלאי שלך. המוצר יהיה\n"
-"בסופו של דבר יופיע במיקום השמדה, ניתן להשתמש בהם לצורך הדיווח."
+"בסופו של דבר יופיע במיקום פסילה, ניתן להשתמש בהם לצורך הדיווח."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Scraps"
-msgstr "השמדות"
+msgstr "פסולים"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_filter
@@ -6287,7 +6287,7 @@ msgstr "קישור ל USPS"
 #: code:addons/stock/static/src/xml/stock_traceability_report_line.xml:36
 #, python-format
 msgid "Unfold"
-msgstr ""
+msgstr "פרוס"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_production_lot__name
@@ -6895,8 +6895,8 @@ msgid ""
 "You cannot change the location type or its use as a scrap location as there "
 "are products reserved in this location. Please unreserve the products first."
 msgstr ""
-"לא ניתן לשנות את סוג המיקום או את השימוש בו כמיקום השמדות, שכן קיימים מוצרים"
-" השמורים במיקום זה. נדרש להסיר את השמירה על המוצר לפני.. "
+"לא ניתן לשנות את סוג המיקום או את השימוש בו כמיקום פסילה, שכן קיימים מוצרים "
+"השמורים במיקום זה. נדרש להסיר את השמירה על המוצר לפני.. "
 
 #. module: stock
 #: code:addons/stock/models/product.py:647
@@ -6924,7 +6924,7 @@ msgstr ""
 #: code:addons/stock/models/stock_scrap.py:76
 #, python-format
 msgid "You cannot delete a scrap which is done."
-msgstr "אתה לא יכול למחוק השמדות אשר בוצעו."
+msgstr "אתה לא יכול למחוק פסילה שבוצעה."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:105
@@ -7144,7 +7144,7 @@ msgstr "_ביטול"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_bpost
 msgid "bpost Connector"
-msgstr ""
+msgstr "מחבר bpost"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form

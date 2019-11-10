@@ -3661,6 +3661,14 @@ msgstr ""
 "រឹមត្រូវបានគណនាជាផលបូកនៃតម្លៃលក់ផលិតផលដកថ្លៃដើមដែលបានកំណត់ក្នុងទម្រង់លម្អិតរបស់ពួកគេ។"
 
 #. module: sale
+#: code:addons/sale/models/payment.py:97
+#, python-format
+msgid ""
+"The order was not confirmed despite response from the acquirer (%s): order "
+"total is %r but acquirer replied with %r."
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__reference
 msgid "The payment communication of this sale order."
 msgstr "ការទំនាក់ទំនងការទូទាត់នៃលំដាប់នៃការលក់នេះ។"
@@ -4090,7 +4098,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Void Transaction"
-msgstr ""
+msgstr "ប្រតិបតិ្តការអវត្តមាន"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__volume
