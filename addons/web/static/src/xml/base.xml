@@ -1548,6 +1548,19 @@
     </div>
 </t>
 
+<t t-name="ColorPicker">
+    <div class="o_field_color_picker">
+        <ul/>
+    </div>
+</t>
+<t t-name="ColorPickerReadonly">
+    <div class="o_field_color_picker_preview">
+        <li>
+            <a aria-label="No color" href="#" role="menuitem" t-att-class="'oe_kanban_color_'+active_color" t-att-data-color="active_color" title="No color"/>
+        </li>
+    </div>
+</t>
+
 <t t-name="SignButton">
     <button t-attf-class="btn o_sign_button #{widget.node.attrs.highlight?'btn-primary':'btn-secondary'}">
         <span class="o_sign_label"><t t-esc="widget.node.attrs.string"/></span>
