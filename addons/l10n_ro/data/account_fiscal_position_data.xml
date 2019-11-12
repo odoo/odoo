@@ -22,6 +22,18 @@
         <field name="chart_template_id" ref="ro_chart_template"/>
     </record>
 
+    <record id="fiscal_position_template_51" model="account.fiscal.position.template">
+        <field name="name">Regim Scutite - cu drept de deducere</field>
+        <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="note">Pozitia se refera atat la livrari / achizitii intracomunitare cat si extracomunitare care beneficiaza de scutire</field>
+    </record>
+
+    <record id="fiscal_position_template_52" model="account.fiscal.position.template">
+        <field name="name">Regim Scutite - fara drept de deducere</field>
+        <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="note">Pozitia se refera atat la livrari / achizitii intracomunitare cat si extracomunitare care beneficiaza de scutire</field>
+    </record>
+
     <record id="fiscal_position_template_6" model="account.fiscal.position.template">
         <field name="name">Regim Intra-Comunitar Neimpozabile</field>
         <field name="chart_template_id" ref="ro_chart_template"/>
@@ -165,6 +177,93 @@
         <field name="position_id" ref="fiscal_position_template_4"/>
         <field name="tax_src_id" ref="tvad_19"/>
         <field name="tax_dest_id" ref="tvati_intrap19s"/>
+    </record>
+
+    <!-- Scutite - cu drept de deducere -->
+    <!-- Sales -->
+    <record id="afptt_intracomscded_1" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_51"/>
+        <field name="tax_src_id" ref="tvac_00"/>
+        <field name="tax_dest_id" ref="tvatiscded"/>
+    </record>
+    <record id="afptt_intracomscded_2" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_51"/>
+        <field name="tax_src_id" ref="tvac_05"/>
+        <field name="tax_dest_id" ref="tvatiscded"/>
+    </record>
+    <record id="afptt_intracomscded_3" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_51"/>
+        <field name="tax_src_id" ref="tvac_09"/>
+        <field name="tax_dest_id" ref="tvatiscded"/>
+    </record>
+    <record id="afptt_intracomscded_4" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_51"/>
+        <field name="tax_src_id" ref="tvac_19"/>
+        <field name="tax_dest_id" ref="tvatiscded"/>
+    </record>
+    <!-- Purchases -->
+    <record id="afptt_intracomscded_6" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_51"/>
+        <field name="tax_src_id" ref="tvad_00"/>
+        <field name="tax_dest_id" ref="tvatiscdeda"/>
+    </record>
+    <record id="afptt_intracomscded_7" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_51"/>
+        <field name="tax_src_id" ref="tvad_05"/>
+        <field name="tax_dest_id" ref="tvatiscdeda"/>
+    </record>
+    <record id="afptt_intracomscded_8" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_51"/>
+        <field name="tax_src_id" ref="tvad_09"/>
+        <field name="tax_dest_id" ref="tvatiscdeda"/>
+    </record>
+    <record id="afptt_intracomscded_9" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_51"/>
+        <field name="tax_src_id" ref="tvad_19"/>
+        <field name="tax_dest_id" ref="tvatiscdeda"/>
+    </record>
+    <!-- Scutite - fara drept de deducere -->
+    <!-- Sales -->
+    <record id="afptt_intracomscnoded_1" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_52"/>
+        <field name="tax_src_id" ref="tvac_00"/>
+        <field name="tax_dest_id" ref="tvatiscnoded"/>
+    </record>
+    <record id="afptt_intracomscnoded_2" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_52"/>
+        <field name="tax_src_id" ref="tvac_05"/>
+        <field name="tax_dest_id" ref="tvatiscnoded"/>
+    </record>
+    <record id="afptt_intracomscnoded_3" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_52"/>
+        <field name="tax_src_id" ref="tvac_09"/>
+        <field name="tax_dest_id" ref="tvatiscnoded"/>
+    </record>
+    <record id="afptt_intracomscnoded_4" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_52"/>
+        <field name="tax_src_id" ref="tvac_19"/>
+        <field name="tax_dest_id" ref="tvatiscnoded"/>
+    </record>
+    <!-- Purchases -->
+    <record id="afptt_intracomscnoded_6" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_52"/>
+        <field name="tax_src_id" ref="tvad_00"/>
+        <field name="tax_dest_id" ref="tvatiscdeda"/>
+    </record>
+    <record id="afptt_intracomscnoded_7" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_52"/>
+        <field name="tax_src_id" ref="tvad_05"/>
+        <field name="tax_dest_id" ref="tvatiscdeda"/>
+    </record>
+    <record id="afptt_intracomscnoded_8" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_52"/>
+        <field name="tax_src_id" ref="tvad_09"/>
+        <field name="tax_dest_id" ref="tvatiscdeda"/>
+    </record>
+    <record id="afptt_intracomscnoded_9" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_52"/>
+        <field name="tax_src_id" ref="tvad_19"/>
+        <field name="tax_dest_id" ref="tvatiscdeda"/>
     </record>
 
     <!-- Taxare Inversa - Neimpozabile -->
