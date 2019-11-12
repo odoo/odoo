@@ -275,6 +275,14 @@
                                 <span class="o_stat_text">Operations</span>
                             </div>
                         </button>
+                        <field name="return_picking_ids" invisible="1"/>
+                        <button type="object"
+                            name="action_view_returns"
+                            icon="fa-truck"
+                            class="oe_stat_button"
+                            attrs="{'invisible': [('return_pickings_count', '=', 0)]}">
+                            <field string="Returns" name="return_pickings_count" widget="statinfo" />
+                        </button>
                     </div>
                     <h1 class="d-none d-md-block">
                         <field name="name" attrs="{'invisible': [('name','=','/')]}"/>

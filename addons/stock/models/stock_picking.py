@@ -681,6 +681,27 @@ class Picking(models.Model):
             'flags': {'mode': 'edit'}
         }
 
+    def action_view_returns(self):
+        """ Returns an action to show either the linked return in a form view
+        if tere's only one, or a list view with all linked returns.
+        """
+        self.ensure_one()
+        action = self.env.ref('stock.action_picking_tree_all').read()[0]
+
+        returns = self.mapped('return_picking_ids')
+        if len(returns) > 1:
+            action['domain'] = [('id', 'in', returns.ids)]
+        elif returns:
+            form_view = [(self.env.ref('stock.view_picking_form').id, 'form')]
+            if 'views' in action:
+                action['views'] = form_view + [(state, view) for state, view in action['views'] if view != 'form']
+            else:
+                action['views'] = form_view
+            action['res_id'] = returns.id
+
+        action['context'] = dict(self._context, default_picking_id=returns[0].id, default_origin_picking_id=self.id)
+        return action
+
     def _action_return(self):
         self.ensure_one()
         returnable_moves = self.move_lines.filtered(lambda m: not m.scrapped)
