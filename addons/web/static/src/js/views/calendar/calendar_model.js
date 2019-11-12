@@ -715,13 +715,12 @@ return AbstractModel.extend({
         } else if (this.data.scale === 'month' && this.fields[this.mapping.date_start].type !== 'date') {
             // In month, FullCalendar gives the end day as the
             // next day at midnight (instead of 23h59).
-            date_stop.add(1, 'days');
+            r.end = date_stop.clone().add(1, 'days').startOf('day').format('YYYY-MM-DD');
+            r.start = date_start.clone().format('YYYY-MM-DD');
 
             // allow to resize in month mode
             r.reset_allday = r.allDay;
             r.allDay = true;
-            r.start = date_start.format('YYYY-MM-DD');
-            r.end = date_stop.startOf('day').format('YYYY-MM-DD');
         }
 
         return r;
