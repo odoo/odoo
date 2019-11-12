@@ -99,6 +99,7 @@
                         <filter string="Stage" name="stage" context="{'group_by': 'stage_id'}"/>
                         <filter string="Date" name="date" context="{'group_by': 'date'}"/>
                         <filter string="Event" name="event" context="{'group_by': 'event_id'}"/>
+                        <filter string="Room" name="location" context="{'group_by': 'location_id'}"/>
                     </group>
                 </search>
             </field>
@@ -195,6 +196,7 @@
             <field name="name">Event Tracks</field>
             <field name="res_model">event.track</field>
             <field name="view_mode">kanban,tree,form,calendar,graph,activity</field>
+            <field name="context">{'search_default_location': 1}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                   Add a new track
@@ -208,7 +210,7 @@
             <field name="res_model">event.track</field>
             <field name="name">Event Tracks</field>
             <field name="view_mode">kanban,tree,form,calendar,graph,activity</field>
-            <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id, 'group_by': 'stage_id'}</field>
+            <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id, 'search_default_location': 1}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Add a new track
@@ -393,6 +395,7 @@
                                 <field name="fold"/>
                                 <field name="is_done"/>
                                 <field name="is_cancel"/>
+                                <field name="color" widget="color_picker"/>
                             </group>
                         </group>
                     </sheet>
