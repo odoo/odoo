@@ -1,10 +1,18 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import models, api, _
-import stdnum.ar.cbu
+from odoo.exceptions import ValidationError
+import stdnum.ar
+import logging
+_logger = logging.getLogger(__name__)
 
 
 def validate_cbu(cbu):
-    return stdnum.ar.cbu.validate(cbu)
+    try:
+        return stdnum.ar.cbu.validate(cbu)
+    except Exception as error:
+        msg = _("Argentinian CBU was not validated: %s" % repr(error))
+        _logger.log(25, msg)
+        raise ValidationError(msg)
 
 
 class ResPartnerBank(models.Model):
