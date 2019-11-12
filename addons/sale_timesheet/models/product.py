@@ -19,7 +19,7 @@ class ProductTemplate(models.Model):
     service_tracking = fields.Selection([
         ('no', 'Don\'t create task'),
         ('task_global_project', 'Create a task in an existing project'),
-        ('task_in_project', 'Create a task in sale order\'s project'),
+        ('task_in_project', 'Create a task in sales order\'s project'),
         ('project_only', 'Create a new project but no task'),
         ], string="Service Tracking", default="no",
         help="On Sales order confirmation, this product can generate a project and/or task. \
