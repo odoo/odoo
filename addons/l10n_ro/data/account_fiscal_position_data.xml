@@ -12,6 +12,11 @@
         <field name="chart_template_id" ref="ro_chart_template"/>
     </record>
 
+    <record id="fiscal_position_template_8" model="account.fiscal.position.template">
+        <field name="name">Regim TVA la Incasare</field>
+        <field name="chart_template_id" ref="ro_chart_template"/>
+    </record>
+
     <record id="fiscal_position_template_3" model="account.fiscal.position.template">
         <field name="name">Regim Intra-Comunitar Bunuri</field>
         <field name="chart_template_id" ref="ro_chart_template"/>
@@ -308,5 +313,49 @@
         <field name="position_id" ref="fiscal_position_template_6"/>
         <field name="tax_src_id" ref="tvad_19"/>
         <field name="tax_dest_id" ref="tvatinea"/>
+    </record>
+
+    <!-- Tva la incasare -->
+    <!-- Sales -->
+    <record id="afptt_tvainc_1" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_8"/>
+        <field name="tax_src_id" ref="tvac_00"/>
+        <field name="tax_dest_id" ref="tvaic_00"/>
+    </record>
+    <record id="afptt_tvainc_2" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_8"/>
+        <field name="tax_src_id" ref="tvac_05"/>
+        <field name="tax_dest_id" ref="tvaic_05"/>
+    </record>
+    <record id="afptt_tvainc_3" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_8"/>
+        <field name="tax_src_id" ref="tvac_09"/>
+        <field name="tax_dest_id" ref="tvaic_09"/>
+    </record>
+    <record id="afptt_tvainc_4" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_8"/>
+        <field name="tax_src_id" ref="tvac_19"/>
+        <field name="tax_dest_id" ref="tvaic_19"/>
+    </record>
+    <!-- Purchases -->
+    <record id="afptt_tvainc_6" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_8"/>
+        <field name="tax_src_id" ref="tvad_00"/>
+        <field name="tax_dest_id" ref="tvaid_00"/>
+    </record>
+    <record id="afptt_tvainc_8" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_8"/>
+        <field name="tax_src_id" ref="tvad_05"/>
+        <field name="tax_dest_id" ref="tvaid_05"/>
+    </record>
+    <record id="afptt_tvainc_10" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_8"/>
+        <field name="tax_src_id" ref="tvad_09"/>
+        <field name="tax_dest_id" ref="tvaid_09"/>
+    </record>
+    <record id="afptt_tvainc_11" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_8"/>
+        <field name="tax_src_id" ref="tvad_19"/>
+        <field name="tax_dest_id" ref="tvaid_19"/>
     </record>
 </odoo>
