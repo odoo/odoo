@@ -27,7 +27,8 @@
                     <button name="%(action_event_track_from_event)d"
                             type="action"
                             class="oe_stat_button"
-                            icon="fa-inbox">
+                            icon="fa-inbox"
+                            context="{'default_date': date_begin}">
                         <field name="track_count" string="Tracks" widget="statinfo"/>
                     </button>
                     <button name="%(action_event_sponsor_from_event)d"

@@ -44,6 +44,7 @@ class TrackStage(models.Model):
         help='This stage is folded in the kanban view when there are no records in that stage to display.')
     is_done = fields.Boolean(string='Accepted Stage')
     is_cancel = fields.Boolean(string='Canceled Stage')
+    color = fields.Integer(string='Color')
 
 
 class Track(models.Model):
@@ -86,7 +87,7 @@ class Track(models.Model):
     duration = fields.Float('Duration', default=1.5, help="Track duration in hours.")
     location_id = fields.Many2one('event.track.location', 'Room')
     event_id = fields.Many2one('event.event', 'Event', required=True)
-    color = fields.Integer('Color Index')
+    color = fields.Integer('Color', related="stage_id.color")
     priority = fields.Selection([
         ('0', 'Low'), ('1', 'Medium'),
         ('2', 'High'), ('3', 'Highest')],
