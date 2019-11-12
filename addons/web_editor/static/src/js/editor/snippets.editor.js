@@ -720,7 +720,7 @@ var SnippetsMenu = Widget.extend({
     id: 'oe_snippets',
     cacheSnippetTemplate: {},
     events: {
-        'click we-select, we-collapse-area > we-toggler': '_onOptionTogglerClick',
+        'click we-select': '_onOptionTogglerClick',
         'click .o_install_btn': '_onInstallBtnClick',
     },
     custom_events: {
@@ -1732,9 +1732,8 @@ var SnippetsMenu = Widget.extend({
             togglerEl = togglerEl.querySelector('we-toggler');
         }
 
-        var togglerParentSelector = 'we-select, we-collapse-area';
-        var $hierarchyTogglers = $(togglerEl).parents(togglerParentSelector).children('we-toggler');
-        this.$(togglerParentSelector).children('we-toggler').not($hierarchyTogglers).removeClass('active');
+        var $hierarchyTogglers = $(togglerEl).parents('we-select').children('we-toggler');
+        this.$('we-select').children('we-toggler').not($hierarchyTogglers).removeClass('active');
         $hierarchyTogglers.not(togglerEl).addClass('active');
         togglerEl.classList.toggle('active');
     },
