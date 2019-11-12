@@ -25,7 +25,7 @@ class TestConflictMarkers(TransactionCase):
 
         counter = 0
 
-        odoo_path = os.path.dirname(odoo.__file__)
+        odoo_path = os.path.abspath(os.path.dirname(odoo.__file__))
         paths = ad_paths + [odoo_path]
         paths.remove(os.path.join(odoo_path, 'addons'))  # avoid checking odoo/addons twice
 
