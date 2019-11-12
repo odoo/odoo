@@ -177,13 +177,9 @@ class TestWarehouse(TestStockCommon):
 
         quant = self.env['stock.quant'].search([('product_id', '=', productA.id), ('location_id', '=', stock_location.id)])
         self.assertEqual(len(quant), 1)
-        stock_return_picking_form = Form(self.env['stock.return.picking']
-            .with_context(active_ids=picking_out.ids, active_id=picking_out.ids[0],
-            active_model='stock.picking'))
-        stock_return_picking = stock_return_picking_form.save()
-        stock_return_picking.product_return_moves.quantity = 1.0
-        stock_return_picking_action = stock_return_picking.create_returns()
-        return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+        picking_out.action_return()
+        return_pick = picking_out.return_picking_ids[0]
+        return_pick.move_lines[0].product_uom_qty = 1.0
         return_pick.action_assign()
         return_pick.move_lines.quantity_done = 1
         return_pick._action_done()

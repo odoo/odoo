@@ -116,12 +116,10 @@ class TestStockValuationCommon(SavepointCase):
         return dropshipped
 
     def _make_return(self, move, quantity_to_return):
-        stock_return_picking = Form(self.env['stock.return.picking']\
-            .with_context(active_ids=[move.picking_id.id], active_id=move.picking_id.id, active_model='stock.picking'))
-        stock_return_picking = stock_return_picking.save()
-        stock_return_picking.product_return_moves.quantity = quantity_to_return
-        stock_return_picking_action = stock_return_picking.create_returns()
-        return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+        move.picking_id.action_return()
+        return_pick = move.picking_id.return_picking_ids.sorted()[0]
+        return_pick.move_lines[0].product_uom_qty = quantity_to_return
+        return_pick.action_assign()
         return_pick.move_lines[0].move_line_ids[0].qty_done = quantity_to_return
         return_pick._action_done()
         return return_pick.move_lines

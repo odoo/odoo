@@ -904,13 +904,10 @@ class TestStockValuation(SavepointCase):
         self.assertEqual(self.product1.standard_price, 16)
 
         # return
-        stock_return_picking_form = Form(self.env['stock.return.picking']
-            .with_context(active_ids=out_pick.ids, active_id=out_pick.ids[0],
-            active_model='stock.picking'))
-        stock_return_picking = stock_return_picking_form.save()
-        stock_return_picking.product_return_moves.quantity = 1.0 # Return only 2
-        stock_return_picking_action = stock_return_picking.create_returns()
-        return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+        out_pick.action_return()
+        return_pick = out_pick.return_picking_ids.sorted()[0]
+        return_pick.move_lines[0].product_uom_qty = 1.0
+        return_pick.action_assign()
         return_pick.move_lines[0].move_line_ids[0].qty_done = 1.0
         return_pick._action_done()
 
