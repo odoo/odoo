@@ -5,6 +5,7 @@
             <field name="name">sale.order.form.sale.dropshipping</field>
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="groups_id" eval="[(4, ref('purchase.group_purchase_user'))]"/>
             <field name="arch" type="xml">
                 <xpath expr="//page/field[@name='order_line']/form//field[@name='product_updatable']" position="after">
                     <field name="purchase_line_count" invisible="1"/>
