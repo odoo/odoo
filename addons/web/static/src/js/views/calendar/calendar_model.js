@@ -384,10 +384,10 @@ return AbstractModel.extend({
                         authorizedValues[filter.fieldName].push(f.value);
                     }
                 } else {
-                    if (!avoidValues[filter.fieldName])
-                        avoidValues[filter.fieldName] = [];
-
                     if (!f.active) {
+                        if (!avoidValues[filter.fieldName])
+                            avoidValues[filter.fieldName] = [];
+
                         avoidValues[filter.fieldName].push(f.value);
                     }
                 }
