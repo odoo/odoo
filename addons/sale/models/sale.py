@@ -1092,10 +1092,6 @@ class SaleOrderLine(models.Model):
             line.tax_id = fpos.map_tax(taxes, line.product_id, line.order_id.partner_shipping_id)
 
     @api.model
-    def _get_purchase_price(self, pricelist, product, product_uom, date):
-        return {}
-
-    @api.model
     def _prepare_add_missing_fields(self, values):
         """ Deduce missing required fields from the onchange """
         res = {}
