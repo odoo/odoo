@@ -316,14 +316,6 @@ body.editor_enable.editor_has_snippets {
                 }
             }
 
-            we-collapse {
-                position: relative;
-                display: block;
-                max-height: 0;
-                overflow: hidden;
-                transition: max-height 200ms ease 0s;
-            }
-
             we-select {
                 position: relative;
                 display: flex;
@@ -350,9 +342,6 @@ body.editor_enable.editor_has_snippets {
 
             we-toggler.active {
 
-                + we-collapse {
-                    max-height: 500px;
-                }
                 + we-select-menu {
                     display: block;
                 }
