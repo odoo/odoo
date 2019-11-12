@@ -197,14 +197,11 @@ class TestSaleStock(TestSaleCommon):
         self.inv_1.post()
 
         # Create return picking
-        stock_return_picking_form = Form(self.env['stock.return.picking']
-            .with_context(active_ids=pick.ids, active_id=pick.sorted().ids[0],
-            active_model='stock.picking'))
-        return_wiz = stock_return_picking_form.save()
-        return_wiz.product_return_moves.quantity = 2.0 # Return only 2
-        return_wiz.product_return_moves.to_refund = True # Refund these 2
-        res = return_wiz.create_returns()
-        return_pick = self.env['stock.picking'].browse(res['res_id'])
+        pick = pick.sorted()[0]
+        pick.action_return()
+        return_pick = pick.return_picking_ids[0]
+        return_pick.move_lines.product_uom_qty = 2.0
+        return_pick.action_assign()
 
         # Validate picking
         return_pick.move_lines.write({'quantity_done': 2})
@@ -594,19 +591,11 @@ class TestSaleStock(TestSaleCommon):
         wiz.process()
 
         # Return 5 units
-        stock_return_picking_form = Form(self.env['stock.return.picking'].with_context(
-            active_ids=picking.ids,
-            active_id=picking.sorted().ids[0],
-            active_model='stock.picking'
-        ))
-        return_wiz = stock_return_picking_form.save()
-        for return_move in return_wiz.product_return_moves:
-            return_move.write({
-                'quantity': 5,
-                'to_refund': True
-            })
-        res = return_wiz.create_returns()
-        return_pick = self.env['stock.picking'].browse(res['res_id'])
+        pick = picking.sorted()[0]
+        pick.action_return()
+        return_pick = pick.return_picking_ids[0]
+        return_pick.move_lines.product_uom_qty = 5.0
+        return_pick.action_assign()
         wiz_act = return_pick.button_validate()
         wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id']).with_context(wiz_act['context'])
         wiz.process()
@@ -693,17 +682,14 @@ class TestSaleStock(TestSaleCommon):
         # Checks the delivery amount (must be 10).
         self.assertEqual(sale_order.order_line.qty_delivered, 10)
         # Creates a return from the delivery picking.
-        return_picking_form = Form(self.env['stock.return.picking']
-            .with_context(active_ids=picking.ids, active_id=picking.id,
-            active_model='stock.picking'))
-        return_wizard = return_picking_form.save()
-        # Checks the field `to_refund` is checked (must be checked by default).
-        self.assertEqual(return_wizard.product_return_moves.to_refund, True)
-        self.assertEqual(return_wizard.product_return_moves.quantity, 10)
+        picking.action_return()
+        return_picking = picking.return_picking_ids[0]
 
-        # Valids the return picking.
-        res = return_wizard.create_returns()
-        return_picking = self.env['stock.picking'].browse(res['res_id'])
+        # Checks the field `to_refund` is checked (must be checked by default).
+        self.assertEqual(return_picking.move_lines.to_refund, True)
+
+        return_picking.move_lines.product_uom_qty = 10
+        return_picking.action_assign()
         return_picking.move_lines.write({'quantity_done': 10})
         return_picking.button_validate()
         # Checks the delivery amount (must be 0).
@@ -726,18 +712,18 @@ class TestSaleStock(TestSaleCommon):
 
         # Checks the delivery amount (must be 10).
         self.assertEqual(sale_order.order_line.qty_delivered, 10)
-        # Creates a return from the delivery picking.
-        return_picking_form = Form(self.env['stock.return.picking']
-            .with_context(active_ids=picking.ids, active_id=picking.id,
-            active_model='stock.picking'))
-        return_wizard = return_picking_form.save()
+
+        picking.action_return()
+        return_picking = picking.return_picking_ids[0]
+        return_picking.move_lines.product_uom_qty = 10
+
         # Checks the field `to_refund` is checked, then unchecks it.
-        self.assertEqual(return_wizard.product_return_moves.to_refund, True)
-        self.assertEqual(return_wizard.product_return_moves.quantity, 10)
-        return_wizard.product_return_moves.to_refund = False
-        # Valids the return picking.
-        res = return_wizard.create_returns()
-        return_picking = self.env['stock.picking'].browse(res['res_id'])
+        self.assertEqual(return_picking.move_lines.to_refund, True)
+        return_picking.move_lines.to_refund = False
+
+        # Confirm and assign the return picking
+        return_picking.action_assign()
+
         return_picking.move_lines.write({'quantity_done': 10})
         return_picking.button_validate()
         # Checks the delivery amount (must still be 10).

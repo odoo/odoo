@@ -356,17 +356,11 @@ class TestSaleMrpFlow(TransactionCase):
         self.assertEqual(order_line.qty_received, 7.0)
 
         # Return all components processed by backorder_3
-        stock_return_picking_form = Form(self.env['stock.return.picking']
-            .with_context(active_ids=backorder_3.ids, active_id=backorder_3.ids[0],
-            active_model='stock.picking'))
-        return_wiz = stock_return_picking_form.save()
-        for return_move in return_wiz.product_return_moves:
-            return_move.write({
-                'quantity': expected_quantities[return_move.product_id],
-                'to_refund': True
-            })
-        res = return_wiz.create_returns()
-        return_pick = self.env['stock.picking'].browse(res['res_id'])
+        backorder_3.action_return()
+        return_pick = backorder_3.return_picking_ids[0]
+        for move in return_pick.move_lines:
+            move.product_uom_qty = expected_quantities[move.product_id]
+        return_pick.action_assign()
 
         # Process all components and validate the picking
         wiz_act = return_pick.button_validate()
@@ -376,20 +370,17 @@ class TestSaleMrpFlow(TransactionCase):
         # Now quantity received should be 3 again
         self.assertEqual(order_line.qty_received, 3)
 
-        stock_return_picking_form = Form(self.env['stock.return.picking']
-            .with_context(active_ids=return_pick.ids, active_id=return_pick.ids[0],
-            active_model='stock.picking'))
-        return_wiz = stock_return_picking_form.save()
-        for move in return_wiz.product_return_moves:
-            move.quantity = expected_quantities[move.product_id]
-        res = return_wiz.create_returns()
-        return_of_return_pick = self.env['stock.picking'].browse(res['res_id'])
+        # Return the return
+        return_pick.action_return()
+        return_of_return_pick = return_pick.return_picking_ids[0]
+        for move in return_of_return_pick.move_lines:
+            move.product_uom_qty = expected_quantities[move.product_id]
+        return_of_return_pick.action_assign()
 
         # Process all components except one of each
         for move in return_of_return_pick.move_lines:
             move.write({
                 'quantity_done': expected_quantities[move.product_id] - 1,
-                'to_refund': True
             })
 
         wiz_act = return_of_return_pick.button_validate()

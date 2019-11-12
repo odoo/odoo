@@ -76,15 +76,10 @@ class TestFifoReturns(PurchaseTestCommon, StockAccountTestCommon):
 
         # Return the goods of purchase order 2
         picking = purchase_order_2.picking_ids[0]
-        stock_return_picking_form = Form(self.env['stock.return.picking']
-            .with_context(active_ids=picking.ids, active_id=picking.ids[0],
-            active_model='stock.picking'))
-        return_pick_wiz = stock_return_picking_form.save()
-        return_picking_id, dummy = return_pick_wiz.with_context(active_id=picking.id)._create_returns()
-
-        # Important to pass through confirmation and assignation
-        return_picking = self.env['stock.picking'].browse(return_picking_id)
-        return_picking.action_confirm()
+        picking.action_return()
+        return_picking = picking.return_picking_ids.sorted()[0]
+        return_picking.move_lines[0].product_uom_qty = 30.0
+        return_picking.action_assign()
         return_picking.move_lines[0].quantity_done = return_picking.move_lines[0].product_uom_qty
         return_picking._action_done()
 

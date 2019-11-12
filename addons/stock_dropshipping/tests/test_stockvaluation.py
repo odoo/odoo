@@ -317,12 +317,10 @@ class TestStockValuation(StockAccountTestCommon):
         all_amls = self._dropship_product1()
 
         # return what we've done
-        stock_return_picking_form = Form(self.env['stock.return.picking']
-            .with_context(active_ids=self.sale_order1.picking_ids.ids, active_id=self.sale_order1.picking_ids.ids[0],
-            active_model='stock.picking'))
-        stock_return_picking = stock_return_picking_form.save()
-        stock_return_picking_action = stock_return_picking.create_returns()
-        return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+        self.sale_order1.picking_ids.action_return()
+        return_pick = self.sale_order1.picking_ids.return_picking_ids[0]
+        return_pick.move_lines[0].product_uom_qty = 1.0
+        return_pick.action_assign()
         return_pick.move_lines[0].move_line_ids[0].qty_done = 1.0
         return_pick._action_done()
         self.assertEqual(return_pick.move_lines._is_dropshipped_returned(), True)
