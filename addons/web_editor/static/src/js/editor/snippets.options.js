@@ -280,7 +280,7 @@ var SnippetOption = Widget.extend({
      * @param {jQuery} $opt - the related DOMElement option
      */
     selectClass: function (previewMode, value, $opt) {
-        var $group = $opt && $opt.parents('we-collapse-area, we-select').last();
+        var $group = $opt && $opt.parents('we-select').last();
         if (!$group || !$group.length) {
             $group = this.$el;
         }
@@ -498,8 +498,8 @@ var SnippetOption = Widget.extend({
         // --- SELECT CLASS ---
 
         // Get submenus which are not inside submenus
-        var $submenus = this.$el.find('we-collapse-area, we-select')
-            .not('we-collapse-area *, we-select *');
+        var $submenus = this.$el.find('we-select')
+            .not('we-select *');
 
         // Add unique active class for each submenu active item
         _.each($submenus, function (submenu) {
@@ -509,7 +509,7 @@ var SnippetOption = Widget.extend({
 
         // Add unique active class for out-of-submenu active item
         var $externalElements = this.$el.find('[data-select-class]')
-            .not('we-collapse-area *, we-select *');
+            .not('we-select *');
         _processSelectClassElements($externalElements);
 
         function _processSelectClassElements($elements) {
