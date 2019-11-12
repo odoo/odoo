@@ -68,15 +68,19 @@ class TestPhoneBlacklist(test_mail_full_common.TestSMSCommon, test_mail_full_com
             test_record = self.env['mail.test.sms.bl'].browse(self.test_record.id)
             self.assertEqual(test_record.phone_nbr, self.test_numbers[1])
             self.assertEqual(test_record.phone_sanitized, self.test_numbers_san[1])
+            self.assertEqual(test_record.phone_state, 'ok')
 
             test_record.write({'phone_nbr': 'incorrect'})
             self.assertEqual(test_record.phone_nbr, 'incorrect')
             self.assertEqual(test_record.phone_sanitized, self.test_numbers_san[0])
+            self.assertEqual(test_record.phone_state, 'ko')
 
             test_record.write({'mobile_nbr': 'incorrect'})
             self.assertEqual(test_record.mobile_nbr, 'incorrect')
             self.assertEqual(test_record.phone_sanitized, False)
+            self.assertEqual(test_record.phone_state, 'ko')
 
             test_record.write({'phone_nbr': self.test_numbers[1]})
             self.assertEqual(test_record.phone_nbr, self.test_numbers[1])
             self.assertEqual(test_record.phone_sanitized, self.test_numbers_san[1])
+            self.assertEqual(test_record.phone_state, 'ok')

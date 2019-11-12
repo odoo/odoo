@@ -44,8 +44,12 @@ class MailTestSMSBL(models.Model):
     def _sms_get_partner_fields(self):
         return ['customer_id']
 
-    def _sms_get_number_fields(self):
+    def _phone_get_number_fields(self):
         return ['phone_nbr', 'mobile_nbr']
+
+    def _get_phone_state_field(self):
+        """ This method returns the field on which the 'phone_state' field will depend. """
+        return 'phone_nbr'
 
 
 class MailTestSMSSoLike(models.Model):

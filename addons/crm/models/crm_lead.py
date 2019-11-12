@@ -108,9 +108,6 @@ class Lead(models.Model):
     probability = fields.Float('Probability', group_operator="avg", copy=False)
     automated_probability = fields.Float('Automated Probability', readonly=True)
     is_automated_probability = fields.Boolean('Is automated probability?', compute="_compute_is_automated_probability")
-    phone_state = fields.Selection([
-        ('correct', 'Correct'),
-        ('incorrect', 'Incorrect')], string='Phone Quality', compute="_compute_phone_state", store=True)
     email_state = fields.Selection([
         ('correct', 'Correct'),
         ('incorrect', 'Incorrect')], string='Email Quality', compute="_compute_email_state", store=True)
@@ -215,19 +212,6 @@ class Lead(models.Model):
          when automated_probability is modified. """
         for lead in self:
             lead.is_automated_probability = tools.float_compare(lead.probability, lead.automated_probability, 2) == 0
-
-    @api.depends('phone', 'country_id.code')
-    def _compute_phone_state(self):
-        for lead in self:
-            phone_status = False
-            if lead.phone:
-                country_code = lead.country_id.code if lead.country_id and lead.country_id.code else None
-                try:
-                    if phone_validation.phone_parse(lead.phone, country_code):  # otherwise library not installed
-                        phone_status = 'correct'
-                except UserError:
-                    phone_status = 'incorrect'
-            lead.phone_state = phone_status
 
     @api.depends('email_from')
     def _compute_email_state(self):
@@ -1308,6 +1292,9 @@ class Lead(models.Model):
                     partner_info['full_name'] = tools.formataddr((self.contact_name or self.partner_name, email))
                     break
         return result
+
+    def _phone_get_number_fields(self):
+        return ['mobile', 'phone']
 
     @api.model
     def get_import_templates(self):
