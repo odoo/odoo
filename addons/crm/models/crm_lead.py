@@ -136,6 +136,7 @@ class Lead(models.Model):
     lang_id = fields.Many2one('res.lang', string='Language', help="Language of the lead.")
     phone = fields.Char('Phone', tracking=50)
     mobile = fields.Char('Mobile')
+    phone_mobile_search = fields.Char('Phone/Mobile', store=False, search='_search_phone_mobile_search')
     function = fields.Char('Job Position')
     title = fields.Many2one('res.partner.title')
     company_id = fields.Many2one('res.company', string='Company', index=True, default=lambda self: self.env.company.id)
@@ -245,6 +246,31 @@ class Lead(models.Model):
         mapped_data = {m['opportunity_id'][0]: m['opportunity_id_count'] for m in meeting_data}
         for lead in self:
             lead.meeting_count = mapped_data.get(lead.id, 0)
+
+    def _search_phone_mobile_search(self, operator, value):
+        if len(value) <= 2:
+            raise UserError(_('Please enter at least 3 digits when searching on phone / mobile.'))
+
+        query = f"""
+                SELECT model.id
+                FROM {self._table} model
+                WHERE REGEXP_REPLACE(model.phone, '[^\d+]+', '', 'g') SIMILAR TO CONCAT(%s, REGEXP_REPLACE(%s, '\D+', '', 'g'), '%%')
+                  OR REGEXP_REPLACE(model.mobile, '[^\d+]+', '', 'g') SIMILAR TO CONCAT(%s, REGEXP_REPLACE(%s, '\D+', '', 'g'), '%%')
+            """
+
+        # searching on +32485112233 should also finds 00485112233 (00 / + prefix are both valid)
+        # we therefore remove it from input value and search for both of them in db
+        if value.startswith('+') or value.startswith('00'):
+            value = value.replace('+', '').replace('00', '', 1)
+            starts_with = '00|\+'
+        else:
+            starts_with = '%'
+
+        self._cr.execute(query, (starts_with, value, starts_with, value))
+        res = self._cr.fetchall()
+        if not res:
+            return [(0, '=', 1)]
+        return [('id', 'in', [r[0] for r in res])]
 
     def _onchange_partner_id_values(self, partner_id):
         """ returns the new values when partner_id has changed """
