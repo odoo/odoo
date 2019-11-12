@@ -175,7 +175,6 @@ body.editor_enable.editor_has_snippets {
     }
 
     > .o_we_customize_panel {
-        padding: 0 0.5rem;
 
         we-button, we-toggler {
             cursor: pointer;
@@ -199,6 +198,13 @@ body.editor_enable.editor_has_snippets {
                 color: var(--o-we-snippets-color);
                 text-align: center;
 
+                &.fa-times, &.fa-minus {
+                    color: $o-we-color-danger;
+                }
+                &.fa-plus {
+                    color: $o-we-color-success;
+                }
+
                 &.active {
                     padding: 0;
 
@@ -207,6 +213,10 @@ body.editor_enable.editor_has_snippets {
                     }
                 }
             }
+        }
+
+        we-title {
+            text-transform: capitalize;
         }
 
         %we-icon-button {
@@ -233,13 +243,17 @@ body.editor_enable.editor_has_snippets {
 
         we-customizeblock-options {
             display: block;
+            padding: 0.5em;
             color: var(--o-we-snippets-color);
-            margin-top: 0.5rem;
+
+            &:nth-child(2n) {
+                background-color: rgba(0, 0, 0, 0.1);
+            }
 
             > we-title {
                 display: flex;
                 align-items: center;
-                margin: 0.25rem 0;
+                margin-bottom: 0.5em;
                 text-transform: uppercase;
                 font-weight: bold;
                 color: inherit !important;
@@ -263,7 +277,7 @@ body.editor_enable.editor_has_snippets {
 
             > *, > div > * {
                 display: block;
-                margin-top: 0.25rem;
+                margin-top: 0.5em;
             }
 
             we-button {
