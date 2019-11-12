@@ -495,6 +495,7 @@ class SaleOrder(models.Model):
         a clean extension chain).
         """
         self.ensure_one()
+<<<<<<< HEAD
         journal = self.env['account.move'].with_context(force_company=self.company_id.id, default_type='out_invoice')._get_default_journal()
         if not journal:
             raise UserError(_('Please define an accounting sales journal for the company %s (%s).') % (self.company_id.name, self.company_id.id))
@@ -510,14 +511,34 @@ class SaleOrder(models.Model):
             'invoice_user_id': self.user_id and self.user_id.id,
             'team_id': self.team_id.id,
             'partner_id': self.partner_invoice_id.id,
+=======
+        company_id = self.company_id.id
+        journal_id = (self.env['account.invoice'].with_context(company_id=company_id or self.env.user.company_id.id)
+            .default_get(['journal_id'])['journal_id'])
+        if not journal_id:
+            raise UserError(_('Please define an accounting sales journal for this company.'))
+        vinvoice = self.env['account.invoice'].new({'partner_id': self.partner_invoice_id.id})
+        # Get partner extra fields
+        vinvoice._onchange_partner_id()
+        invoice_vals = vinvoice._convert_to_write(vinvoice._cache)
+        invoice_vals.update({
+            'name': self.client_order_ref or '',
+            'origin': self.name,
+            'type': 'out_invoice',
+            'account_id': self.partner_invoice_id.property_account_receivable_id.id,
+>>>>>>> 923b0146335... temp
             'partner_shipping_id': self.partner_shipping_id.id,
             'fiscal_position_id': self.fiscal_position_id.id or self.partner_invoice_id.property_account_position_id.id,
             'invoice_origin': self.name,
             'invoice_payment_term_id': self.payment_term_id.id,
             'invoice_payment_ref': self.reference,
             'transaction_ids': [(6, 0, self.transaction_ids.ids)],
+<<<<<<< HEAD
             'invoice_line_ids': [],
         }
+=======
+        })
+>>>>>>> 923b0146335... temp
         return invoice_vals
 
     def action_view_invoice(self):
@@ -549,7 +570,38 @@ class SaleOrder(models.Model):
         action['context'] = context
         return action
 
+<<<<<<< HEAD
     def _create_invoices(self, grouped=False, final=False):
+=======
+    def _finalize_invoices(self, invoices, references):
+        """
+        Invoked after creating invoices at the end of action_invoice_create.
+        :param invoices: {group_key: invoice}
+        :param references: {invoice: order}
+        """
+        for invoice in invoices.values():
+            invoice.compute_taxes()
+            if not invoice.invoice_line_ids:
+                raise UserError(_(
+                    'There is no invoiceable line. If a product has a Delivered quantities invoicing policy, please make sure that a quantity has been delivered.'))
+            # If invoice is negative, do a refund invoice instead
+            if invoice.amount_total < 0:
+                invoice.type = 'out_refund'
+                for line in invoice.invoice_line_ids:
+                    line.quantity = -line.quantity
+            # Use additional field helper function (for account extensions)
+            for line in invoice.invoice_line_ids:
+                line._set_additional_fields(invoice)
+            # Necessary to force computation of taxes. In account_invoice, they are triggered
+            # by onchanges, which are not triggered when doing a create.
+            invoice.compute_taxes()
+            invoice.message_post_with_view('mail.message_origin_link',
+                values={'self': invoice, 'origin': references[invoice]},
+                subtype_id=self.env.ref('mail.mt_note').id)
+
+    @api.multi
+    def action_invoice_create(self, grouped=False, final=False):
+>>>>>>> 923b0146335... temp
         """
         Create the invoice associated to the SO.
         :param grouped: if True, invoices are grouped by SO id. If False, invoices are grouped by
