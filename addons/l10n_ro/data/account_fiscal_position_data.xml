@@ -62,16 +62,6 @@
         <field name="tax_src_id" ref="tvac_19"/>
         <field name="tax_dest_id" ref="tvati"/>
     </record>
-    <record id="afptt_inverse_4_1" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_2"/>
-        <field name="tax_src_id" ref="tvac_20"/>
-        <field name="tax_dest_id" ref="tvati"/>
-    </record>
-    <record id="afptt_inverse_5" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_2"/>
-        <field name="tax_src_id" ref="tvac_24"/>
-        <field name="tax_dest_id" ref="tvati"/>
-    </record>
     <!-- Purchases -->
     <record id="afptt_inverse_6" model="account.fiscal.position.tax.template">
         <field name="position_id" ref="fiscal_position_template_2"/>
@@ -93,79 +83,49 @@
         <field name="tax_src_id" ref="tvad_19"/>
         <field name="tax_dest_id" ref="tvatip19"/>
     </record>
-    <record id="afptt_inverse_9" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_2"/>
-        <field name="tax_src_id" ref="tvad_20"/>
-        <field name="tax_dest_id" ref="tvatip20"/>
-    </record>
-    <record id="afptt_inverse_10" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_2"/>
-        <field name="tax_src_id" ref="tvad_24"/>
-        <field name="tax_dest_id" ref="tvatip24"/>
-    </record>
 
     <!-- Intracomunitar Bunuri -->
     <!-- Sales -->
     <record id="afptt_intracom_1" model="account.fiscal.position.tax.template">
         <field name="position_id" ref="fiscal_position_template_3"/>
         <field name="tax_src_id" ref="tvac_00"/>
-        <field name="tax_dest_id" ref="tvati_intras"/>
+        <field name="tax_dest_id" ref="tvati_intrab"/>
     </record>
     <record id="afptt_intracom_2" model="account.fiscal.position.tax.template">
         <field name="position_id" ref="fiscal_position_template_3"/>
         <field name="tax_src_id" ref="tvac_05"/>
-        <field name="tax_dest_id" ref="tvati_intras"/>
+        <field name="tax_dest_id" ref="tvati_intrab"/>
     </record>
     <record id="afptt_intracom_3" model="account.fiscal.position.tax.template">
         <field name="position_id" ref="fiscal_position_template_3"/>
         <field name="tax_src_id" ref="tvac_09"/>
-        <field name="tax_dest_id" ref="tvati_intras"/>
+        <field name="tax_dest_id" ref="tvati_intrab"/>
     </record>
     <record id="afptt_intracom_4" model="account.fiscal.position.tax.template">
         <field name="position_id" ref="fiscal_position_template_3"/>
         <field name="tax_src_id" ref="tvac_19"/>
-        <field name="tax_dest_id" ref="tvati_intras"/>
-    </record>
-    <record id="afptt_intracom_4_1" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_3"/>
-        <field name="tax_src_id" ref="tvac_20"/>
-        <field name="tax_dest_id" ref="tvati_intras"/>
-    </record>
-    <record id="afptt_intracom_5" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_3"/>
-        <field name="tax_src_id" ref="tvac_24"/>
-        <field name="tax_dest_id" ref="tvati_intras"/>
+        <field name="tax_dest_id" ref="tvati_intrab"/>
     </record>
     <!-- Purchases -->
     <record id="afptt_intracom_6" model="account.fiscal.position.tax.template">
         <field name="position_id" ref="fiscal_position_template_3"/>
         <field name="tax_src_id" ref="tvad_00"/>
-        <field name="tax_dest_id" ref="tvati_intrap0"/>
+        <field name="tax_dest_id" ref="tvati_intrap0b"/>
     </record>
     <record id="afptt_intracom_8" model="account.fiscal.position.tax.template">
         <field name="position_id" ref="fiscal_position_template_3"/>
         <field name="tax_src_id" ref="tvad_05"/>
-        <field name="tax_dest_id" ref="tvati_intrap5"/>
+        <field name="tax_dest_id" ref="tvati_intrap5b"/>
     </record>
     <record id="afptt_intracom_10" model="account.fiscal.position.tax.template">
         <field name="position_id" ref="fiscal_position_template_3"/>
         <field name="tax_src_id" ref="tvad_09"/>
-        <field name="tax_dest_id" ref="tvati_intrap9"/>
+        <field name="tax_dest_id" ref="tvati_intrap9b"/>
     </record>
     <record id="afptt_intracom_11" model="account.fiscal.position.tax.template">
         <field name="position_id" ref="fiscal_position_template_3"/>
         <field name="tax_src_id" ref="tvad_19"/>
-        <field name="tax_dest_id" ref="tvati_intrap19"/>
-    </record>
-    <record id="afptt_intracom_13" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_3"/>
-        <field name="tax_src_id" ref="tvad_20"/>
-        <field name="tax_dest_id" ref="tvati_intrap20"/>
-    </record>
-    <record id="afptt_intracom_14" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_3"/>
-        <field name="tax_src_id" ref="tvad_24"/>
-        <field name="tax_dest_id" ref="tvati_intrap24"/>
+        <field name="tax_dest_id" ref="tvati_intrap19b"/>
     </record>
 
 
@@ -191,46 +151,26 @@
         <field name="tax_src_id" ref="tvac_19"/>
         <field name="tax_dest_id" ref="tvati_intras"/>
     </record>
-    <record id="afptt_intracoms_4_1" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_4"/>
-        <field name="tax_src_id" ref="tvac_20"/>
-        <field name="tax_dest_id" ref="tvati_intras"/>
-    </record>
-    <record id="afptt_intracoms_5" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_4"/>
-        <field name="tax_src_id" ref="tvac_24"/>
-        <field name="tax_dest_id" ref="tvati_intras"/>
-    </record>
     <!-- Purchases -->
     <record id="afptt_intracoms_6" model="account.fiscal.position.tax.template">
         <field name="position_id" ref="fiscal_position_template_4"/>
         <field name="tax_src_id" ref="tvad_00"/>
-        <field name="tax_dest_id" ref="tvati_intrap0"/>
+        <field name="tax_dest_id" ref="tvati_intrap0s"/>
     </record>
     <record id="afptt_intracoms_8" model="account.fiscal.position.tax.template">
         <field name="position_id" ref="fiscal_position_template_4"/>
         <field name="tax_src_id" ref="tvad_05"/>
-        <field name="tax_dest_id" ref="tvati_intrap5"/>
+        <field name="tax_dest_id" ref="tvati_intrap5s"/>
     </record>
     <record id="afptt_intracoms_10" model="account.fiscal.position.tax.template">
         <field name="position_id" ref="fiscal_position_template_4"/>
         <field name="tax_src_id" ref="tvad_09"/>
-        <field name="tax_dest_id" ref="tvati_intrap9"/>
+        <field name="tax_dest_id" ref="tvati_intrap9s"/>
     </record>
     <record id="afptt_intracoms_11" model="account.fiscal.position.tax.template">
         <field name="position_id" ref="fiscal_position_template_4"/>
         <field name="tax_src_id" ref="tvad_19"/>
-        <field name="tax_dest_id" ref="tvati_intrap19"/>
-    </record>
-    <record id="afptt_intracoms_13" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_4"/>
-        <field name="tax_src_id" ref="tvad_20"/>
-        <field name="tax_dest_id" ref="tvati_intrap20"/>
-    </record>
-    <record id="afptt_intracoms_14" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_4"/>
-        <field name="tax_src_id" ref="tvad_24"/>
-        <field name="tax_dest_id" ref="tvati_intrap24"/>
+        <field name="tax_dest_id" ref="tvati_intrap19s"/>
     </record>
 
     <!-- Scutite -->
@@ -319,16 +259,6 @@
         <field name="tax_src_id" ref="tvac_19"/>
         <field name="tax_dest_id" ref="tvatine"/>
     </record>
-    <record id="afptt_intracomne_4_1" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_6"/>
-        <field name="tax_src_id" ref="tvac_20"/>
-        <field name="tax_dest_id" ref="tvatine"/>
-    </record>
-    <record id="afptt_intracomne_5" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_6"/>
-        <field name="tax_src_id" ref="tvac_24"/>
-        <field name="tax_dest_id" ref="tvatine"/>
-    </record>
     <!-- Purchases -->
     <record id="afptt_intracomne_6" model="account.fiscal.position.tax.template">
         <field name="position_id" ref="fiscal_position_template_6"/>
@@ -348,16 +278,6 @@
     <record id="afptt_intracomne_9" model="account.fiscal.position.tax.template">
         <field name="position_id" ref="fiscal_position_template_6"/>
         <field name="tax_src_id" ref="tvad_19"/>
-        <field name="tax_dest_id" ref="tvatinea"/>
-    </record>
-    <record id="afptt_intracomne_9_1" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_6"/>
-        <field name="tax_src_id" ref="tvad_20"/>
-        <field name="tax_dest_id" ref="tvatinea"/>
-    </record>
-    <record id="afptt_intracomne_10" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_6"/>
-        <field name="tax_src_id" ref="tvad_24"/>
         <field name="tax_dest_id" ref="tvatinea"/>
     </record>
 </odoo>
