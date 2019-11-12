@@ -370,6 +370,7 @@ class Picking(models.Model):
     package_level_ids_details = fields.One2many('stock.package_level', 'picking_id')
     origin_picking_id = fields.Many2one('stock.picking', string="Returned Transfer")
     return_picking_ids = fields.One2many('stock.picking', 'origin_picking_id', string="Returns")
+    return_pickings_count = fields.Integer('# Returns', compute='_compute_return_pickings_count')
 
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per company!'),
@@ -511,6 +512,17 @@ class Picking(models.Model):
                 picking.show_validate = False
             else:
                 picking.show_validate = True
+
+    @api.depends('return_picking_ids')
+    def _compute_return_pickings_count(self):
+        data = self.env['stock.picking'].read_group(
+            [('origin_picking_id', 'in', self.ids)],
+            ['origin_picking_id'],
+            ['origin_picking_id']
+        )
+        count_data = dict((item['origin_picking_id'][0], item['origin_picking_id_count']) for item in data)
+        for picking in self:
+            picking.return_pickings_count = count_data.get(picking.id, 0)
 
     @api.onchange('picking_type_id', 'partner_id')
     def onchange_picking_type(self):
@@ -663,6 +675,27 @@ class Picking(models.Model):
             'context': ctx,
             'flags': {'mode': 'edit'}
         }
+
+    def action_view_returns(self):
+        """ Returns an action to show either the linked return in a form view
+        if tere's only one, or a list view with all linked returns.
+        """
+        self.ensure_one()
+        action = self.env.ref('stock.action_picking_tree_all').read()[0]
+
+        returns = self.mapped('return_picking_ids')
+        if len(returns) > 1:
+            action['domain'] = [('id', 'in', returns.ids)]
+        elif returns:
+            form_view = [(self.env.ref('stock.view_picking_form').id, 'form')]
+            if 'views' in action:
+                action['views'] = form_view + [(state, view) for state, view in action['views'] if view != 'form']
+            else:
+                action['views'] = form_view
+            action['res_id'] = returns.id
+
+        action['context'] = dict(self._context, default_picking_id=returns[0].id, default_origin_picking_id=self.id)
+        return action
 
     def _action_return(self):
         self.ensure_one()
