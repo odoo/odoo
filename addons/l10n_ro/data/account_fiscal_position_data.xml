@@ -22,12 +22,6 @@
         <field name="chart_template_id" ref="ro_chart_template"/>
     </record>
 
-    <record id="fiscal_position_template_5" model="account.fiscal.position.template">
-        <field name="name">Regim Scutite</field>
-        <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="note">Pozitia se refera atat la livrari / achizitii intracomunitare cat si extracomunitare care beneficiaza de scutire</field>
-    </record>
-
     <record id="fiscal_position_template_6" model="account.fiscal.position.template">
         <field name="name">Regim Intra-Comunitar Neimpozabile</field>
         <field name="chart_template_id" ref="ro_chart_template"/>
@@ -171,70 +165,6 @@
         <field name="position_id" ref="fiscal_position_template_4"/>
         <field name="tax_src_id" ref="tvad_19"/>
         <field name="tax_dest_id" ref="tvati_intrap19s"/>
-    </record>
-
-    <!-- Scutite -->
-    <!-- Sales -->
-    <record id="afptt_intracomsc_1" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_5"/>
-        <field name="tax_src_id" ref="tvac_00"/>
-        <field name="tax_dest_id" ref="tvatisc"/>
-    </record>
-    <record id="afptt_intracomsc_2" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_5"/>
-        <field name="tax_src_id" ref="tvac_05"/>
-        <field name="tax_dest_id" ref="tvatisc"/>
-    </record>
-    <record id="afptt_intracomsc_3" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_5"/>
-        <field name="tax_src_id" ref="tvac_09"/>
-        <field name="tax_dest_id" ref="tvatisc"/>
-    </record>
-    <record id="afptt_intracomsc_4" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_5"/>
-        <field name="tax_src_id" ref="tvac_19"/>
-        <field name="tax_dest_id" ref="tvatisc"/>
-    </record>
-    <record id="afptt_intracomsc_4_1" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_5"/>
-        <field name="tax_src_id" ref="tvac_20"/>
-        <field name="tax_dest_id" ref="tvatisc"/>
-    </record>
-    <record id="afptt_intracomsc_5" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_5"/>
-        <field name="tax_src_id" ref="tvac_24"/>
-        <field name="tax_dest_id" ref="tvatisc"/>
-    </record>
-    <!-- Purchases -->
-    <record id="afptt_intracomsc_6" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_5"/>
-        <field name="tax_src_id" ref="tvad_00"/>
-        <field name="tax_dest_id" ref="tvatisca"/>
-    </record>
-    <record id="afptt_intracomsc_7" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_5"/>
-        <field name="tax_src_id" ref="tvad_05"/>
-        <field name="tax_dest_id" ref="tvatisca"/>
-    </record>
-    <record id="afptt_intracomsc_8" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_5"/>
-        <field name="tax_src_id" ref="tvad_09"/>
-        <field name="tax_dest_id" ref="tvatisca"/>
-    </record>
-    <record id="afptt_intracomsc_9" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_5"/>
-        <field name="tax_src_id" ref="tvad_19"/>
-        <field name="tax_dest_id" ref="tvatisca"/>
-    </record>
-    <record id="afptt_intracomsc_9_1" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_5"/>
-        <field name="tax_src_id" ref="tvad_20"/>
-        <field name="tax_dest_id" ref="tvatisca"/>
-    </record>
-    <record id="afptt_intracomsc_10" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_5"/>
-        <field name="tax_src_id" ref="tvad_24"/>
-        <field name="tax_dest_id" ref="tvatisca"/>
     </record>
 
     <!-- Taxare Inversa - Neimpozabile -->
