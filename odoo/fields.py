@@ -1301,10 +1301,14 @@ class Monetary(Field):
     def convert_to_cache(self, value, record, validate=True):
         # cache format: float
         value = float(value or 0.0)
-        if validate and record.sudo()[self.currency_field]:
+        if value and validate:
             # FIXME @rco-odoo: currency may not be already initialized if it is
             # a function or related field!
-            value = record[self.currency_field].round(value)
+            currency = record.sudo()[self.currency_field]
+            if len(currency) > 1:
+                raise ValueError("Got multiple currencies while assigning values of monetary field %s" % str(self))
+            elif currency:
+                value = currency.round(value)
         return value
 
     def convert_to_record(self, value, record):
