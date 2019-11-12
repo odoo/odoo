@@ -3,6 +3,7 @@ odoo.define('web_editor.field.html', function (require) {
 
 var ajax = require('web.ajax');
 var basic_fields = require('web.basic_fields');
+var config = require('web.config');
 var core = require('web.core');
 var Wysiwyg = require('web_editor.wysiwyg.root');
 var field_registry = require('web.field_registry');
@@ -13,6 +14,8 @@ var _lt = core._lt;
 var TranslatableFieldMixin = basic_fields.TranslatableFieldMixin;
 var QWeb = core.qweb;
 var assetsLoaded;
+
+var jinjaRegex = /(^|\n)\s*%\s(end|set\s)/;
 
 /**
  * FieldHtml Widget
@@ -96,6 +99,10 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      */
     commitChanges: function () {
         var self = this;
+        if (config.isDebug() && this.mode === 'edit') {
+            var layoutInfo = $.summernote.core.dom.makeLayoutInfo(this.wysiwyg.$editor);
+            $.summernote.pluginEvents.codeview(undefined, undefined, layoutInfo, false);
+        }
         if (this.mode == "readonly" || !this.isRendered) {
             return this._super();
         }
@@ -199,6 +206,20 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
                 if (para && para[1] && para[1].indexOf('checklist') === -1) {
                     para[1].splice(2, 0, 'checklist');
                 }
+                if (config.isDebug()) {
+                    options.codeview = true;
+                    var view = _.find(options.toolbar, function (item) {
+                        return item[0] === 'view';
+                    });
+                    if (view) {
+                        if (!view[1].includes('codeview')) {
+                            view[1].splice(-1, 0, 'codeview');
+                        }
+                    } else {
+                        options.toolbar.splice(-1, 0, ['view', ['codeview']]);
+                    }
+                }
+                options.prettifyHtml = false;
                 return options;
             },
         });
@@ -341,7 +362,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      */
     _textToHtml: function (text) {
         var value = text || "";
-        if (/%\send/.test(value)) { // is jinja
+        if (jinjaRegex.test(value)) { // is jinja
             return value;
         }
         try {
@@ -464,6 +485,12 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
             top: '+5px',
         });
         this.$el.append($button);
+        // force source editor if it contains multiline Jinja directives
+        if (jinjaRegex.test(this._getValue())) {
+            var layoutInfo = $.summernote.core.dom.makeLayoutInfo(this.wysiwyg.$editor);
+            layoutInfo.toolbar().hide();
+            $.summernote.pluginEvents.codeview(undefined, undefined, layoutInfo, true);
+        }
     },
     /**
      * @private
