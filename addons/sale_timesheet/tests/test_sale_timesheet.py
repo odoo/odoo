@@ -230,6 +230,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
 
         # invoice SO
         invoice1 = sale_order._create_invoices()
+        invoice1.flush()
         self.assertTrue(float_is_zero(invoice1.amount_total - so_line_deliver_global_project.price_unit * 10.5, precision_digits=2), 'Sale: invoice generation on timesheets product is wrong')
         self.assertEqual(timesheet1.timesheet_invoice_id, invoice1, "The timesheet1 should not be linked to the invoice 1, as we are in delivered quantity (even if invoice is in draft")
         with self.assertRaises(UserError):  # We can not modify timesheet linked to invoice (even draft ones)
