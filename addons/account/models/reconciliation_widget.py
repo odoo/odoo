@@ -356,15 +356,21 @@ class AccountReconciliation(models.AbstractModel):
                         AND EXISTS (
                             SELECT NULL
                             FROM account_move_line l
+                            JOIN account_move move ON move.id = l.move_id
+                            JOIN account_journal journal ON journal.id = move.journal_id
                             WHERE l.account_id = a.id
                             {7}
+                            AND (move.state = 'posted' OR (journal.post_at_bank_rec AND move.state = 'draft'))
                             AND l.amount_residual > 0
                         )
                         AND EXISTS (
                             SELECT NULL
                             FROM account_move_line l
+                            JOIN account_move move ON move.id = l.move_id
+                            JOIN account_journal journal ON journal.id = move.journal_id
                             WHERE l.account_id = a.id
                             {7}
+                            AND (move.state = 'posted' OR (journal.post_at_bank_rec AND move.state = 'draft'))
                             AND l.amount_residual < 0
                         )
                         {8}
@@ -553,7 +559,7 @@ class AccountReconciliation(models.AbstractModel):
     @api.model
     def _domain_move_lines_for_manual_reconciliation(self, account_id, partner_id=False, excluded_ids=None, search_str=False):
         """ Create domain criteria that are relevant to manual reconciliation. """
-        domain = ['&', ('reconciled', '=', False), ('account_id', '=', account_id)]
+        domain = ['&', '&', ('reconciled', '=', False), ('account_id', '=', account_id), '|', ('move_id.state', '=', 'posted'), '&', ('move_id.state', '=', 'draft'), ('move_id.journal_id.post_at_bank_rec', '=', True)]
         if partner_id:
             domain = expression.AND([domain, [('partner_id', '=', partner_id)]])
         if excluded_ids:
@@ -731,8 +737,16 @@ class AccountReconciliation(models.AbstractModel):
         # Get pairs
         query = """
             SELECT a.id, b.id
-            FROM account_move_line a, account_move_line b
+            FROM account_move_line a, account_move_line b,
+                 account_move move_a, account_move move_b,
+                 account_journal journal_a, account_journal journal_b
             WHERE a.id != b.id
+            AND move_a.id = a.move_id
+            AND (move_a.state = 'posted' OR (move_a.state = 'draft' AND journal_a.post_at_bank_rec))
+            AND move_a.journal_id = journal_a.id
+            AND move_b.id = b.move_id
+            AND move_b.journal_id = journal_b.id
+            AND (move_b.state = 'posted' OR (move_b.state = 'draft' AND journal_b.post_at_bank_rec))
             AND a.amount_residual = -b.amount_residual
             AND NOT a.reconciled
             AND a.account_id = %s
