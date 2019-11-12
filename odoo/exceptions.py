@@ -29,6 +29,12 @@ class except_orm(Exception):
         self.value = value
         self.args = (name, value)
 
+    def __str__(self):
+        if not self.value:
+            return str(self.name)
+        else:
+            return super().__str__()
+
 
 class UserError(except_orm):
     """Generic error managed by the client.

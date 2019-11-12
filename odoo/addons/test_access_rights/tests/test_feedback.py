@@ -189,11 +189,11 @@ class TestIRRuleFeedback(Feedback):
 
 
         p = self.env['test_access_right.parent'].create({'obj_id': self.record.id})
-        self.assertRaisesRegex(
+        with self.assertRaisesRegex(
             AccessError,
-            r"Implicitly accessed through \\'Object for testing related access rights\\' \(test_access_right.parent\)\.",
-            p.with_user(self.user).write, {'val': 1}
-        )
+            r"Implicitly accessed through 'Object for testing related access rights' \(test_access_right.parent\)\.",
+        ):
+            p.with_user(self.user).write({'val': 1})
 
     def test_locals(self):
         self.env.ref('base.group_no_one').write(
@@ -308,11 +308,11 @@ Note: this might be a multi-company issue.
         p = self.env['test_access_right.parent'].create({'obj_id': self.record.id})
         p.flush()
         p.invalidate_cache()
-        self.assertRaisesRegex(
+        with self.assertRaisesRegex(
             AccessError,
-            r"Implicitly accessed through \\'Object for testing related access rights\\' \(test_access_right.parent\)\.",
-            lambda: p.with_user(self.user).val
-        )
+            r"Implicitly accessed through 'Object for testing related access rights' \(test_access_right.parent\)\.",
+        ):
+            p.with_user(self.user).val
 
 class TestFieldGroupFeedback(Feedback):
 
