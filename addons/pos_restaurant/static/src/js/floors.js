@@ -959,11 +959,9 @@ models.PosModel = models.PosModel.extend({
                         }
                     });
                     server_orders.forEach(function(server_order){
-                        if (server_order.lines.length){
-                            var new_order = new models.Order({},{pos: self, json: server_order});
-                            self.get("orders").add(new_order);
-                            new_order.save_to_db();
-                        }
+                        var new_order = new models.Order({},{pos: self, json: server_order});
+                        self.get("orders").add(new_order);
+                        new_order.save_to_db();
                     })
                     if (!ids_to_remove.length) {
                         self.set_synch('connected');

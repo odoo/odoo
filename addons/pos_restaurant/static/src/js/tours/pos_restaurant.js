@@ -203,6 +203,32 @@ odoo.define('pos_reataurant.tour.synchronized_table_management', function (requi
 
     steps = steps.concat(add_product_to_order('Coca-Cola'));
     steps = steps.concat(verify_order_total('2.20'));
+
+    // Take a synced order with products, remove the products 
+    // and check if the order is still available in the front-end
+    steps = steps.concat([{
+        content: 'back to floor',
+        trigger: '.floor-button',
+        run: 'click',
+    }]);
+    steps = steps.concat(open_table('T4', 1));
+    steps = steps.concat([{
+        content: 'click backspace to set quantity to 0',
+        trigger: '.numpad-backspace',
+        run: 'click',
+    }, {
+        content: 'click backspace to remove line',
+        trigger: '.numpad-backspace',
+        run: 'click',
+    }]);
+    steps = steps.concat([{
+        content: 'back to floor',
+        trigger: '.floor-button',
+        run: 'click',
+    }]);
+    steps = steps.concat(open_table('T4', 1));
+    steps = steps.concat(add_product_to_order('Coca-Cola'));
+    steps = steps.concat(verify_order_total('2.20'));
     steps = steps.concat([{
         content: 'back to floor',
         trigger: '.floor-button',
