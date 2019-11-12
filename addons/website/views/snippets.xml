@@ -272,6 +272,112 @@
     </section>
 </template>
 
+<template id="s_rate" name="Rate">
+    <section class="s_features_rate oe_img_bg pt48 pb48" style="background-image: url('/web/image/website.s_rate_default_image');">
+        <div class="container">
+            <div class="pb24" >
+                <h2>Menu</h2>
+                <h5 class="text-secondary">Add a menu description</h5>
+            </div>
+            <div class="row">
+                <div class="col-lg-6" data-name="Column">
+                    <div class="pt24 pb16">
+                        <h3 class="text-primary">Starter</h3>
+                    </div>
+                    <div class="row">
+                        <div class="s_rate_dish col-lg-12 pt16 pb16" data-name="Box">
+                            <div class="s_rate_content">
+                                <h4>Cheese Onion Rings</h4>
+                                <span class="s_rate_dish-description">Add here a dish description</span>
+                                <div class="s_rate_dish-price pt16">
+                                    <p>$9.00</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="s_rate_dish col-lg-12 pt16 pb16" data-name="Box">
+                            <div class="s_rate_content">
+                                <h4>Chefs Fresh Soup of the Day</h4>
+                                <span class="s_rate_dish-description">Add here a dish description</span>
+                                <div class="s_rate_dish-price pt16">
+                                    <p>$7.50</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="s_rate_dish col-lg-12 pt16 pb16" data-name="Box">
+                            <div class="s_rate_content">
+                                <h4>Beef Carpaccio</h4>
+                                <span class="s_rate_dish-description">Add here a dish description</span>
+                                <div class="s_rate_dish-price pt16">
+                                    <p>$10.50</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6" data-name="Column">
+                    <div class="pt24 pb16">
+                        <h3 class="text-primary">Main Course</h3>
+                    </div>
+                    <div class="row">
+                        <div class="s_rate_dish col-lg-12 pt16 pb16" data-name="Box">
+                            <div class="s_rate_content">
+                                <h4>Filet Mignon 8oz</h4>
+                                <span class="s_rate_dish-description">Add here a dish description</span>
+                                <div class="s_rate_dish-price pt16">
+                                    <p>$15.50</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="s_rate_dish col-lg-12 pt16 pb16" data-name="Box">
+                            <div class="s_rate_content">
+                                <h4>Farm Friendly Chicken Supreme</h4>
+                                <span class="s_rate_dish-description">Add here a dish description</span>
+                                <div class="s_rate_dish-price pt16">
+                                    <p>$15.50</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="s_rate_dish col-lg-12 pt16 pb16" data-name="Box">
+                            <div class="s_rate_content">
+                                <h4>Tuna and Salmon Burger</h4>
+                                <span class="s_rate_dish-description">Add here a dish description</span>
+                                <div class="s_rate_dish-price pt16">
+                                    <p>$12.00</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6" data-name="Column">
+                    <div class="pt24 pb16">
+                        <h3 class="text-primary">Dessert</h3>
+                    </div>
+                    <div class="row">
+                        <div class="s_rate_dish col-lg-12 pt16 pb16" data-name="Box">
+                            <div class="s_rate_content">
+                                <h4>Chocolate Cake</h4>
+                                <span class="s_rate_dish-description">Add here a dish description</span>
+                                <div class="s_rate_dish-price pt16">
+                                    <p>$7.50</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="s_rate_dish col-lg-12 pt16 pb16" data-name="Box">
+                            <div class="s_rate_content">
+                                <h4>Sticky Toffee Pudding</h4>
+                                <span class="s_rate_dish-description">Add here a dish description</span>
+                                <div class="s_rate_dish-price pt16">
+                                    <p>$7.50</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
 <template id="s_alert" name="Alert">
     <div class="s_alert s_alert_md alert-delta w-100 clearfix">
         <i class="fa fa-2x fa-info-circle s_alert_icon"/>
@@ -926,6 +1032,7 @@
                     <t t-snippet="website.s_faq_collapse" t-thumbnail="/website/static/src/img/snippets_thumbs/s_faq.png"/>
                     <t t-snippet="website.s_features_grid" t-thumbnail="/website/static/src/img/snippets_thumbs/s_features_grid.png"/>
                     <t t-snippet="website.s_tabs" t-thumbnail="/website/static/src/img/snippets_thumbs/s_tabs.png"/>
+                    <t t-snippet="website.s_rate" t-thumbnail="/website/static/src/img/snippets_thumbs/s_tabs.png"/>
                 </div>
             </div>
 
@@ -1390,6 +1497,10 @@
         data-selector="section"
         data-target="> .container, > .container-fluid">
         <we-checkbox string="Stretch" data-toggle-container-fluid=""/>
+    </div>
+    <!-- Show description -->
+    <div id="hide_description_snippet_option" data-selector=".s_features_rate">
+        <we-checkbox string="Hide description" data-toggle-class="s_features_hide_description" data-no-preview="true"/>
     </div>
 </template>
 </odoo>
