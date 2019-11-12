@@ -157,6 +157,7 @@ class WebsiteForum(WebsiteProfile):
             'edit_in_backend': not tag,
             'question_ids': question_ids,
             'question_count': question_count,
+            'search_count': question_count,
             'pager': pager,
             'tag': tag,
             'filters': filters,

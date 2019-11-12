@@ -335,6 +335,7 @@ class Website(Home):
             'search': search,
             'sortby': sortby,
             'searchbar_sortings': searchbar_sortings,
+            'search_count': pages_count,
         }
         return request.render("website.list_website_pages", values)
 
