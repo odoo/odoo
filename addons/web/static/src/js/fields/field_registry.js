@@ -62,7 +62,8 @@ registry
     .add('dashboard_graph', basic_fields.JournalDashboardGraph)
     .add('ace', basic_fields.AceEditor)
     .add('color', basic_fields.FieldColor)
-    .add('many2one_reference', basic_fields.FieldInteger);
+    .add('many2one_reference', basic_fields.FieldInteger)
+    .add('color_picker', basic_fields.FieldColorPicker);
 
 // Relational fields
 registry
