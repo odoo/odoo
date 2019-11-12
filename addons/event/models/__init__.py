@@ -6,3 +6,4 @@ from . import event_mail
 from . import event_stage
 from . import res_config_settings
 from . import res_partner
+from . import ir_autovacuum
