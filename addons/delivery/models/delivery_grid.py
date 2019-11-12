@@ -60,9 +60,9 @@ class ProviderGrid(models.Model):
                     'price': 0.0,
                     'error_message': e.name,
                     'warning_message': False}
-        if order.company_id.currency_id.id != order.pricelist_id.currency_id.id:
+        if order.company_id.currency_id.id != order.currency_id.id:
             price_unit = order.company_id.currency_id._convert(
-                price_unit, order.pricelist_id.currency_id, order.company_id, order.date_order or fields.Date.today())
+                price_unit, order.currency_id, order.company_id, order.date_order or fields.Date.today())
 
         return {'success': True,
                 'price': price_unit,
