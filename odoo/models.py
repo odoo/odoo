@@ -4042,9 +4042,8 @@ Record ids: %(records)s
             data['record'] = record
 
         # create or update XMLIDs
-        if to_create or to_update:
-            imd_data_list = [data for data in data_list if data.get('xml_id')]
-            imd._update_xmlids(imd_data_list, update)
+        imd_data_list = [data for data in data_list if data.get('xml_id')]
+        imd._update_xmlids(imd_data_list, update)
 
         return original_self.concat(*(data['record'] for data in data_list))
 
