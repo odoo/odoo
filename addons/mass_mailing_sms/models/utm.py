@@ -30,7 +30,7 @@ class UtmCampaign(models.Model):
         return action
 
     def action_redirect_to_mailing_sms(self):
-        action = self.env.ref('mass_mailing.action_view_mass_mailings_from_campaign').read()[0]
+        action = self.env.ref('mass_mailing_sms.mailing_mailing_action_sms').read()[0]
         action['context'] = {
             'default_campaign_id': self.id,
             'default_mailing_type': 'sms',
