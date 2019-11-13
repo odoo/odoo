@@ -31,6 +31,9 @@
             <field name="active" eval="True"/>
         </record>
 
+        <function model="crm.team" name="message_subscribe"
+            eval="[ref('sales_team.salesteam_website_sales')], [ref('base.partner_admin')]"/>
+
         <record model="website" id="website.default_website">
             <field name="salesteam_id" ref="sales_team.salesteam_website_sales"/>
         </record>

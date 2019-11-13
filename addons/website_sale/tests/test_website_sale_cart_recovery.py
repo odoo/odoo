@@ -47,18 +47,21 @@ class TestWebsiteSaleCartRecoveryServer(TransactionCase):
         })
         self.so0 = self.env['sale.order'].create({
             'partner_id': self.customer.id,
+            'user_id': False,
             'website_id': self.website0.id,
             'is_abandoned_cart': True,
             'cart_recovery_email_sent': False,
         })
         self.so1 = self.env['sale.order'].create({
             'partner_id': self.customer.id,
+            'user_id': False,
             'website_id': self.website1.id,
             'is_abandoned_cart': True,
             'cart_recovery_email_sent': False,
         })
         self.so2 = self.env['sale.order'].create({
             'partner_id': self.customer.id,
+            'user_id': False,
             'website_id': self.website2.id,
             'is_abandoned_cart': True,
             'cart_recovery_email_sent': False,

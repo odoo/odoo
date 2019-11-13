@@ -348,6 +348,15 @@ class SaleOrder(models.Model):
                 sent_orders |= order
         sent_orders.write({'cart_recovery_email_sent': True})
 
+    def _send_order_confirmation_mail(self):
+        affiliate_user = self.env['res.users']
+        if request and request.session.get('affiliate_id'):
+            affiliate_user = self.env['res.users'].sudo().browse(request.session.get('affiliate_id')).exists()
+        for order in self.filtered(lambda l: l.state in ('sent', 'sale') and l.website_id):
+            user = affiliate_user or order.website_id.salesperson_id or order.partner_id.parent_id.user_id.id or order.partner_id.user_id or self.env.ref('base.user_admin')
+            order.user_id = user
+        return super()._send_order_confirmation_mail()
+
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
