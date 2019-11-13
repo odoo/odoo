@@ -62,6 +62,7 @@ class ResCompany(models.Model):
     property_stock_account_input_categ_id = fields.Many2one('account.account', string="Input Account for Stock Valuation")
     property_stock_account_output_categ_id = fields.Many2one('account.account', string="Output Account for Stock Valuation")
     property_stock_valuation_account_id = fields.Many2one('account.account', string="Account Template for Stock Valuation")
+    property_account_creditor_price_difference_categ = fields.Many2one('account.account', string="Account Template for Price Difference Account")
     bank_journal_ids = fields.One2many('account.journal', 'company_id', domain=[('type', '=', 'bank')], string='Bank Journals')
     tax_exigibility = fields.Boolean(string='Use Cash Basis')
     account_bank_reconciliation_start = fields.Date(string="Bank Reconciliation Threshold", help="""The bank reconciliation widget won't ask to reconcile payments older than this date.
