@@ -30,7 +30,7 @@ SectionAndNoteFieldOne2Many.include({
         // even if there isn't any.
         // the only solution would be to use a custom event catched on a new controller
         // on the so/po form (as a js_class).
-        this.getParent().trigger_up('field_changed', {
+        this.trigger_up('field_changed', {
             dataPointID: this.dataPointID,
             changes: {
                 grid: JSON.stringify({changes: changes, product_template_id: productTemplateId}),
@@ -65,7 +65,7 @@ SectionAndNoteFieldOne2Many.include({
         // even if there isn't any.
         // the only solution would be to use a custom event catched on a new controller
         // on the so/po form (as a js_class).
-        this.getParent().trigger_up('field_changed', {
+        this.trigger_up('field_changed', {
             dataPointID: this.dataPointID,
             changes: {
                 grid_product_tmpl_id: {id: productTemplateId}
