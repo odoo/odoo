@@ -45,6 +45,11 @@ class Partner(models.Model):
         for partner in self:
             partner.meeting_count = len(partner.meeting_ids)
 
+    def write(self, vals):
+        if 'email' in vals:
+            self.env['crm.lead'].search([('partner_id', 'in', self.ids)]).write({'email_from': vals['email']})
+        return super(Partner, self).write(vals)
+
     def schedule_meeting(self):
         partner_ids = self.ids
         partner_ids.append(self.env.user.partner_id.id)

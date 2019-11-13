@@ -165,19 +165,13 @@
                                     }"
                                 />
                                 <field name="is_blacklisted" invisible="1"/>
-                                <field name="partner_is_blacklisted" invisible="1"/>
                                 <field name="email_state" invisible="1"/>
                                 <field name="phone_state" invisible="1"/>
                                 <label for="email_from" class="oe_inline"/>
                                 <div class="o_row o_row_readonly">
                                     <i class="fa fa-ban" style="color: red;" role="img" title="This email is blacklisted for mass mailing"
-                                        aria-label="Blacklisted" attrs="{'invisible': ['|', ('is_blacklisted', '=', False), ('partner_address_email', '!=', False)]}" groups="base.group_user"/>
-                                    <field name="email_from"
-                                        attrs="{'invisible': [('partner_address_email', '!=', False)]}" string="Email" widget="email"/>
-                                    <i class="fa fa-ban" style="color: red;" role="img" title="This email is blacklisted for mass mailing"
-                                        aria-label="Blacklisted" attrs="{'invisible': ['|', ('partner_is_blacklisted', '=', False), ('partner_address_email', '=', False)]}" groups="base.group_user"/>
-                                    <field name="partner_address_email"
-                                        attrs="{'invisible': [('partner_address_email', '=', False)]}" widget="email" string="Email"/>
+                                        aria-label="Blacklisted" attrs="{'invisible': ['|', ('is_blacklisted', '=', False), ('partner_id.is_blacklisted', '!=', False)]}" groups="base.group_user"/>
+                                    <field name="email_from" string="Email" widget="email" attrs="{'readonly': [('partner_id', '!=', False)]}"/>
                                 </div>
                                 <field name="phone" widget="phone" options="{'enable_sms': True}"/>
                             </group>
@@ -465,7 +459,6 @@
                     <field name="activity_date_deadline"/>
                     <field name="user_email"/>
                     <field name="user_id"/>
-                    <field name="partner_address_email"/>
                     <field name="message_needaction_counter"/>
                     <field name="partner_id"/>
                     <field name="activity_summary"/>
