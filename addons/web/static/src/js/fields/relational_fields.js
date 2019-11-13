@@ -2571,17 +2571,27 @@ var FieldMany2ManyCheckBoxes = AbstractField.extend({
     /**
      * @private
      */
-    _render: function () {
+    _renderCheckboxes: function () {
         var self = this;
-        this._super.apply(this, arguments);
+        this.m2mValues = this.record.specialData[this.name];
+        this.$el.html(qweb.render(this.template, {widget: this}));
         _.each(this.value.res_ids, function (id) {
             self.$('input[data-record-id="' + id + '"]').prop('checked', true);
         });
     },
     /**
+     * @override
+     * @private
+     */
+    _renderEdit: function () {
+        this._renderCheckboxes();
+    },
+    /**
+     * @override
      * @private
      */
     _renderReadonly: function () {
+        this._renderCheckboxes();
         this.$("input").prop("disabled", true);
     },
 
