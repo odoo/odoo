@@ -8,6 +8,7 @@ import re
 import subprocess
 import sys
 import time
+from contextlib import ExitStack
 
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
@@ -206,6 +207,21 @@ def _eval_xml(self, node, env):
     elif node.tag == "test":
         return node.text
 
+ROOT_LOGGER = logging.getLogger()
+class LocationAnnotator(logging.Filter):
+    def __init__(self, filename, node):
+        super().__init__('')
+        self.node = node
+        self.filename = filename
+
+    def filter(self, record):
+        # needs a leading space
+        record.location = ' [{0}:{1.sourceline}]'.format(
+            self.filename, self.node
+        )
+        if self.node.tag == 'record':
+            record.location = record.location[:-1] + ' ' + self.node.get('id', '') + ']'
+        return True
 
 def str2bool(value):
     return value.lower() not in ('0', 'false', 'off')
@@ -669,13 +685,28 @@ form: module.record_id""" % (xml_id,)
             if f is None:
                 continue
 
-            self.envs.append(self.get_env(el))
-            self._noupdate.append(nodeattr2bool(el, 'noupdate', self.noupdate))
-            try:
+            with ExitStack() as cleanups:
+                self.envs.append(self.get_env(el))
+                cleanups.callback(self.envs.pop)
+
+                self._noupdate.append(nodeattr2bool(el, 'noupdate', self.noupdate))
+                cleanups.callback(self._noupdate.pop)
+
+                [handler] = ROOT_LOGGER.handlers[:1] or [None]
+                path = self._xml_filename_relative()
+                if path and handler:
+                    annotator = LocationAnnotator(path, rec)
+                    handler.addFilter(annotator)
+                    cleanups.callback(handler.removeFilter, annotator)
+
                 f(rec)
-            finally:
-                self._noupdate.pop()
-                self.envs.pop()
+
+    def _xml_filename_relative(self):
+        for p in odoo.addons.__path__:
+            path = os.path.relpath(self.xml_filename, p)
+            if not path.startswith('../'):
+                return path
+        return None
 
     @property
     def env(self):

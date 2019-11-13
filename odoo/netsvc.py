@@ -103,6 +103,7 @@ class ColoredPerfFilter(PerfFilter):
 
 class DBFormatter(logging.Formatter):
     def format(self, record):
+        record.location = getattr(record, 'location', '')
         record.pid = os.getpid()
         record.dbname = getattr(threading.current_thread(), 'dbname', '?')
         return logging.Formatter.format(self, record)
@@ -134,7 +135,7 @@ def init_logger():
     resetlocale()
 
     # create a format for log messages and dates
-    format = '%(asctime)s %(pid)s %(levelname)s %(dbname)s %(name)s: %(message)s %(perf_info)s'
+    format = '%(asctime)s %(pid)s %(levelname)s %(dbname)s%(location)s %(name)s: %(message)s %(perf_info)s'
     # Normal Handler on stderr
     handler = logging.StreamHandler()
 
