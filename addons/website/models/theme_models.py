@@ -162,6 +162,7 @@ class Theme(models.AbstractModel):
                 'navbar-font-number': 'null',
                 'buttons-font-number': 'null',
                 'header-template': 'null',
+                'footer-template': 'null',
             }
         )
 
@@ -169,6 +170,13 @@ class Theme(models.AbstractModel):
         self.disable_view('website.template_header_hamburger')
         self.disable_view('website.template_header_hamburger_left')
         self.disable_view('website.template_header_navbar_text_center')
+
+        # Reinitialize footer templates
+        self.disable_view('website.template_footer_logo_about_us_below')
+        self.disable_view('website.template_footer_links_address_logo')
+        self.disable_view('website.template_footer_name_logo_links_about_us')
+        self.disable_view('website.template_footer_logo_only')
+        self.disable_view('website.template_footer_address_logo')
 
         # Call specific theme post copy
         theme_post_copy = '_%s_post_copy' % mod.name

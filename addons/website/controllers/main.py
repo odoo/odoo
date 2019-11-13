@@ -218,6 +218,13 @@ class Website(Home):
         }
         return request.render('website.website_info', values)
 
+    @http.route(['/website/social/<string:social>'], type='http', auth="public", website=True, sitemap=False)
+    def social(self, social, **kwargs):
+        url = getattr(request.website, 'social_%s' % social, False)
+        if not url:
+            raise werkzeug.exceptions.NotFound()
+        return request.redirect(url)
+
     # ------------------------------------------------------
     # Edit
     # ------------------------------------------------------
