@@ -369,18 +369,16 @@ actual arch.
         for view in self:
             if not view.arch:
                 continue
-            view_arch = etree.fromstring(view.arch.encode('utf-8'))
-            view._valid_inheritance(view_arch)
-            view_def = view.read_combined(['arch'])
-            view_arch_utf8 = view_def['arch']
-            if view.type != 'qweb':
+            try:
+                view_arch = etree.fromstring(view.arch.encode('utf-8'))
+                view._valid_inheritance(view_arch)
+                view_def = view.read_combined(['arch'])
+                view_arch_utf8 = view_def['arch']
+                if view.type == 'qweb':
+                    continue
                 view_doc = etree.fromstring(view_arch_utf8)
                 # verify that all fields used are valid, etc.
-                try:
-                    view.postprocess_and_fields(view_doc, validate=True)
-                except ValueError as e:
-                    raise ValidationError("%s\n\n%s" % (_("Error while validating view"), tools.ustr(e)))
-
+                view.postprocess_and_fields(view_doc, validate=True)
                 # RNG-based validation is not possible anymore with 7.0 forms
                 view_docs = [view_doc]
                 if view_docs[0].tag == 'data':
@@ -393,6 +391,9 @@ actual arch.
                         raise ValidationError(_('Invalid view %s definition in %s') % (view_name, view.arch_fs))
                     if check == "Warning":
                         _logger.warning(_('Invalid view %s definition in %s \n%s'), view_name, view.arch_fs, view.arch)
+            except ValueError as e:
+                raise ValidationError(_("Error while validating view:\n\n%s") % tools.ustr(e)).with_traceback(e.__traceback__) from None
+
         return True
 
     @api.constrains('type', 'groups_id')
@@ -585,27 +586,28 @@ actual arch.
         """ Handle a view error by raising an exception or logging a warning,
         depending on the value of `raise_exception`.
         """
-        if self:
-            self.ensure_one()
-        not_avail = _('n/a')
-        message = (
-            "%(msg)s\n\n" +
-            _("Error context:\nView `%(view_name)s`") +
-            "\n[view_id: %(viewid)s, xml_id: %(xmlid)s, "
-            "model: %(model)s, parent_id: %(parent)s]"
-        ) % {
-            'view_name': self.name or not_avail,
-            'viewid': self.id or not_avail,
-            'xmlid': self.xml_id or not_avail,
-            'model': self.model or not_avail,
-            'parent': self.inherit_id.id or not_avail,
-            'msg': message,
+        lines = [message]
+        if self.name:
+            lines.append("\n%s: %s" % (_('View name'), self.name))
+
+        error_context = {
+            'view': self,
+            'xmlid': self.env.context.get('install_xmlid') or self.xml_id,
+            'view.model': self.model,
+            'view.parent': self.inherit_id,
+            'file': self.env.context.get('install_filename'),
         }
+        if any(error_context.values()):
+            lines.append("%s:" % _("Error context"))
+            lines.extend(" %s: %s" % (k, v) for k, v in error_context.items() if v)
+            lines.append("")
+
+        formatted_message = "\n".join(lines)
         if raise_exception:
-            _logger.info(message)
-            raise ValueError(message) from None
+            _logger.info(formatted_message)
+            raise ValueError(formatted_message) from None
         else:
-            _logger.warning(message)
+            _logger.warning(formatted_message)
 
     def locate_node(self, arch, spec):
         """ Locate a node in a source (parent) architecture.
