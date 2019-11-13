@@ -144,25 +144,23 @@ class UoM(models.Model):
         if not self:
             return qty
         self.ensure_one()
-        if self.category_id.id != to_unit.category_id.id:
-            if raise_if_failure:
-                raise UserError(_('The unit of measure %s defined on the order line doesn\'t belong to the same category than the unit of measure %s defined on the product. Please correct the unit of measure defined on the order line or on the product, they should belong to the same category.') % (self.name, to_unit.name))
-            else:
-                return qty
         amount = qty / self.factor
         if to_unit:
+            if self.category_id.id != to_unit.category_id.id:
+                if raise_if_failure:
+                    raise UserError(_('The unit of measure %s defined on the order line doesn\'t belong to the same category than the unit of measure %s defined on the product. Please correct the unit of measure defined on the order line or on the product, they should belong to the same category.') % (self.name, to_unit.name))
+                else:
+                    return qty
             amount = amount * to_unit.factor
             if round:
                 amount = tools.float_round(amount, precision_rounding=to_unit.rounding, rounding_method=rounding_method)
         return amount
 
     def _compute_price(self, price, to_unit):
-        self.ensure_one()
         if not self or not price or not to_unit or self == to_unit:
             return price
+        self.ensure_one()
         if self.category_id.id != to_unit.category_id.id:
             return price
-        amount = price * self.factor
-        if to_unit:
-            amount = amount / to_unit.factor
+        amount = (price * self.factor) / to_unit.factor
         return amount
