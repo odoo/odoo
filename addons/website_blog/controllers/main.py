@@ -32,8 +32,9 @@ class WebsiteBlog(http.Controller):
             (r, label) = group['post_date']
             start, end = r.split('/')
             group['post_date'] = label
-            group['date_begin'] = start
-            group['date_end'] = end
+            # keep only the date parts of date_begin and date_end
+            group['date_begin'] = start[:10]
+            group['date_end'] = end[:10]
 
             locale = request.context.get('lang') or 'en_US'
             start = pytz.UTC.localize(fields.Datetime.from_string(start))
@@ -113,7 +114,7 @@ class WebsiteBlog(http.Controller):
         if blog:
             domain += [('blog_id', '=', blog.id)]
         if date_begin and date_end:
-            domain += [("post_date", ">=", date_begin), ("post_date", "<=", date_end)]
+            domain += [("post_date", ">", date_begin), ("post_date", "<=", date_end)]
 
         if request.env.user.has_group('website.group_website_designer'):
             count_domain = domain + [("website_published", "=", True), ("post_date", "<=", fields.Datetime.now())]
