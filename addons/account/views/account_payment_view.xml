@@ -124,8 +124,8 @@
                 <form string="Register Payment">
                     <header>
                         <button name="post" class="oe_highlight" states="draft" string="Confirm" type="object"/>
-                        <button name="action_draft" class="btn btn-secondary" states="posted" string="Reset To Draft" type="object"/>
-                        <button name="cancel" attrs="{'invisible': [('state', 'in', ('cancelled', 'posted'))]}" string="Cancel" type="object"/>
+                        <button name="action_draft" class="btn btn-secondary" attrs="{'invisible': [('state', '=', 'draft')]}" string="Reset To Draft" type="object"/>
+                        <button name="cancel" states="draft" string="Cancel" type="object"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,posted,reconciled,cancelled"/>
                     </header>
                     <sheet>
