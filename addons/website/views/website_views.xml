@@ -43,11 +43,21 @@
                             </group>
                         </div>
                     </sheet>
-                    <footer>
-                        <button name="create_and_redirect_to_theme" type="object" string="Choose a theme" class="ml-2 btn btn-primary" icon="fa-paint-brush"/>
-                        <button string="Cancel" class="btn btn-default" special="cancel"/>
-                    </footer>
                 </form>
+            </field>
+        </record>
+        <record id="view_website_form_view_themes_modal" model="ir.ui.view">
+            <field name="name">website.modal.form</field>
+            <field name="model">website</field>
+            <field name="inherit_id" ref="website.view_website_form"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//form" position="inside">
+                    <footer>
+                        <button name="create_and_redirect_to_theme" type="object" string="Choose a theme" class="btn btn-primary" icon="fa-paint-brush"/>
+                        <button string="Cancel" class="btn btn-secondary" special="cancel"/>
+                    </footer>
+                </xpath>
             </field>
         </record>
 
