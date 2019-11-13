@@ -1947,10 +1947,9 @@ var FieldMany2ManyCheckBoxes = AbstractField.extend({
      * @override
      * @private
      */
-    _renderEdit: function () {
+    _render: function () {
         var self = this;
-        this.m2mValues = this.record.specialData[this.name];
-        this.renderElement();
+        this._super.apply(this, arguments);
         _.each(this.value.res_ids, function (id) {
             self.$('input[data-record-id="' + id + '"]').prop('checked', true);
         });
@@ -1959,9 +1958,15 @@ var FieldMany2ManyCheckBoxes = AbstractField.extend({
      * @override
      * @private
      */
-    _renderReadonly: function () {
+    _renderEdit: function () {
         this.m2mValues = this.record.specialData[this.name];
-        this.renderElement();
+        this.$el.html(qweb.render(this.template, {widget: this}));
+    },
+    /**
+     * @override
+     * @private
+     */
+    _renderReadonly: function () {
         this.$("input").prop("disabled", true);
     },
 
