@@ -33,6 +33,7 @@ Romanian accounting chart and localization.
              'data/account_tax_report_data.xml',
              'data/account_tax_data.xml',
              'data/account_fiscal_position_data.xml',
+             'data/account_reconcile_model_template_data.xml',
              'data/account_chart_template_data.xml',
              'data/res.bank.csv',
              ],
