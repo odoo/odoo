@@ -32,15 +32,7 @@ from .safe_eval import safe_eval as s_eval
 safe_eval = lambda expr, ctx={}: s_eval(expr, ctx, nocopy=True)
 
 class ParseError(Exception):
-    def __init__(self, msg, text, filename, lineno):
-        self.msg = msg
-        self.text = text
-        self.filename = filename
-        self.lineno = lineno
-
-    def __str__(self):
-        return '"%s" while parsing %s:%s, near\n%s' \
-            % (self.msg, self.filename, self.lineno, self.text)
+    ...
 
 class RecordDictWrapper(dict):
     """
@@ -493,7 +485,8 @@ form: module.record_id""" % (xml_id,)
         if self.xml_filename and rec_id:
             model = model.with_context(
                 install_module=self.module,
-                install_filename=self.xml_filename
+                install_filename=self.xml_filename,
+                install_xmlid=rec_id,
             )
 
         self._test_xml_id(rec_id)
@@ -673,6 +666,14 @@ form: module.record_id""" % (xml_id,)
             self._noupdate.append(nodeattr2bool(el, 'noupdate', self.noupdate))
             try:
                 f(rec)
+            except ParseError:
+                raise
+            except Exception as e:
+                raise ParseError('while parsing %s:%s, near\n%s' % (
+                    rec.getroottree().docinfo.URL,
+                    rec.sourceline,
+                    etree.tostring(rec, encoding='unicode').rstrip()
+                ))
             finally:
                 self._noupdate.pop()
                 self.envs.pop()
@@ -709,10 +710,7 @@ form: module.record_id""" % (xml_id,)
 
     def parse(self, de):
         assert de.tag in self.DATA_ROOTS, "Root xml tag must be <openerp>, <odoo> or <data>."
-        try:
-            self._tag_root(de)
-        except Exception as e:
-            raise ParseError(ustr(e), etree.tostring(de, encoding='unicode').rstrip(), de.getroottree().docinfo.URL, de.sourceline)
+        self._tag_root(de)
     DATA_ROOTS = ['odoo', 'data', 'openerp']
 
 def convert_file(cr, module, filename, idref, mode='update', noupdate=False, kind=None, report=None, pathname=None):
