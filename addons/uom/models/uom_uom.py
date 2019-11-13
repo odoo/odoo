@@ -144,8 +144,10 @@ class UoM(models.Model):
         if not self:
             return qty
         self.ensure_one()
+        self = self.sudo()
         amount = qty / self.factor
         if to_unit:
+            to_unit = to_unit.sudo()
             if self.category_id.id != to_unit.category_id.id:
                 if raise_if_failure:
                     raise UserError(_('The unit of measure %s defined on the order line doesn\'t belong to the same category than the unit of measure %s defined on the product. Please correct the unit of measure defined on the order line or on the product, they should belong to the same category.') % (self.name, to_unit.name))
@@ -160,6 +162,8 @@ class UoM(models.Model):
         if not self or not price or not to_unit or self == to_unit:
             return price
         self.ensure_one()
+        self = self.sudo()
+        to_unit = to_unit.sudo()
         if self.category_id.id != to_unit.category_id.id:
             return price
         amount = (price * self.factor) / to_unit.factor
