@@ -8,7 +8,7 @@
     'sequence': 1000,
     'version': '1.0',
     'depends': ['website'],
-    'demo': [
+    'data': [
         'data/theme_default_data.xml',
     ],
     'images': [
