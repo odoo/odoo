@@ -334,7 +334,9 @@ class Slide(models.Model):
         if self.url:
             res = self._parse_document_url(self.url)
             if res.get('error'):
-                raise Warning(_('Could not fetch data from url. Document or access right not available:\n%s') % res['error'])
+                raise Warning(res.get('error'))
+
+            values = res['values']
             values = res['values']
             if not values.get('document_id'):
                 raise Warning(_('Please enter valid Youtube or Google Doc URL'))
@@ -556,6 +558,18 @@ class Slide(models.Model):
 
         return (None, False)
 
+    def _extract_google_error_message(self, error):
+        try:
+            error = json.loads(error)
+            error = (error.get('error', {}).get('errors', []) or [{}])[0].get('reason')
+        except json.decoder.JSONDecodeError:
+            error = str(error)
+
+        if error == 'keyInvalid':
+            return _('Your Google API key is invalid, please update it into your settings.\nSettings > Website > Features > API Key')
+
+        return _('Could not fetch data from url. Document or access right not available:\n%s') % error
+
     def _parse_document_url(self, url, only_preview_fields=False):
         document_source, document_id = self._find_document_data_from_url(url)
         if document_source and hasattr(self, '_parse_%s_document' % document_source):
@@ -566,7 +580,7 @@ class Slide(models.Model):
         key = self.env['website'].get_current_website().website_slide_google_app_key
         fetch_res = self._fetch_data('https://www.googleapis.com/youtube/v3/videos', {'id': document_id, 'key': key, 'part': 'snippet', 'fields': 'items(id,snippet)'}, 'json')
         if fetch_res.get('error'):
-            return fetch_res
+            return {'error': self._extract_google_error_message(fetch_res.get('error'))}
 
         values = {'slide_type': 'video', 'document_id': document_id}
         items = fetch_res['values'].get('items')
@@ -617,7 +631,7 @@ class Slide(models.Model):
 
         fetch_res = self._fetch_data('https://www.googleapis.com/drive/v2/files/%s' % document_id, params, "json")
         if fetch_res.get('error'):
-            return fetch_res
+            return {'error': _('Could not fetch data from url. Document or access right not available:\n%s') % fetch_res.get('error')}
 
         google_values = fetch_res['values']
         if only_preview_fields:

@@ -5,6 +5,7 @@ import base64
 import logging
 import werkzeug
 
+from odoo.tools import html_escape
 from odoo import http, _
 from odoo.exceptions import AccessError, UserError
 from odoo.http import request
@@ -261,7 +262,7 @@ class WebsiteSlides(http.Controller):
             return preview
         values = Slide._parse_document_url(data['url'], only_preview_fields=True)
         if values.get('error'):
-            preview['error'] = _('Could not fetch data from url. Document or access right not available.\nHere is the received response: %s') % values['error']
+            preview['error'] = html_escape(values['error']).replace('\n', '<br/>')
             return preview
         return values
 
