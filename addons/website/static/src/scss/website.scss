@@ -787,22 +787,6 @@ header {
     @include make-container-max-widths($-mm-max-widths);
 }
 
-// Copyright
-.o_footer_copyright {
-    padding: 8px;
-    .js_language_selector {
-        display: inline-block;
-    }
-    @include media-breakpoint-up(md) {
-        .row {
-            display: flex;
-            > div {
-                margin: auto 0;
-            }
-        }
-    }
-}
-
 #wrapwrap.o_header_overlay {
     > header:not(.o_header_affix) {
         @include o-position-absolute(0, 0, auto, 0);
@@ -826,6 +810,48 @@ header {
         }
     }
 }
+
+// Footer Templates
+#footer {
+    @if o-website-value('footer-template') != 'products_contacts_about_us' {
+        @if o-website-value('footer-template') == 'logo_about_us_below' {
+            .o_footer_logo {
+                margin-top: $spacer;
+                margin-bottom: $spacer;
+            }
+            .o_footer_about_us {
+                margin-bottom: $spacer;
+            }
+        } @else if o-website-value('footer-template') == 'links_address_logo' {
+            &, p {
+                text-align: center;
+            }
+            &, ul, .o_footer_address, .o_footer_logo {
+                padding-top: $spacer;
+            }
+            li a {
+                text-transform: uppercase;
+            }
+        }
+    }
+}
+
+// Copyright
+.o_footer_copyright {
+    padding: 8px;
+    .js_language_selector {
+        display: inline-block;
+    }
+    @include media-breakpoint-up(md) {
+        .row {
+            display: flex;
+            > div {
+                margin: auto 0;
+            }
+        }
+    }
+}
+
 // Figure with special style
 .o_figure_relative_layout {
     position: relative;
