@@ -3,7 +3,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.tools import float_is_zero, float_compare, safe_eval, date_utils, email_split, email_escape_char, email_re
-from odoo.tools.misc import formatLang, format_date
+from odoo.tools.misc import formatLang, format_date, get_lang
 
 from datetime import date, timedelta
 from itertools import groupby
@@ -115,6 +115,7 @@ class AccountMove(models.Model):
             ('in_receipt', 'Purchase Receipt'),
         ], string='Type', required=True, store=True, index=True, readonly=True, tracking=True,
         default="entry", change_default=True)
+    type_name = fields.Char('Type Name', compute='_compute_type_name')
     to_check = fields.Boolean(string='To Check', default=False,
         help='If this checkbox is ticked, it means that the user was not sure of all the related informations at the time of the creation of the move and that the move needs to be checked again.')
     journal_id = fields.Many2one('account.journal', string='Journal', required=True, readonly=True,
@@ -888,6 +889,16 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
+
+    @api.depends('type')
+    def _compute_type_name(self):
+        type_name_mapping = {k: v for k, v in
+                             self._fields['type']._description_selection(self.env)}
+        replacements = {'out_invoice': _('Invoice'), 'out_refund': _('Credit Note')}
+
+        for record in self:
+            name = type_name_mapping[self.type]
+            record.type_name = replacements.get(self.type, name)
 
     @api.depends('type')
     def _compute_invoice_filter_type_domain(self):
@@ -2171,6 +2182,9 @@ class AccountMove(models.Model):
         """
         self.ensure_one()
         template = self.env.ref('account.email_template_edi_invoice', raise_if_not_found=False)
+        lang = get_lang(self.env)
+        if template and template.lang:
+            lang = template._render_template(template.lang, 'account.move', self.id)
         compose_form = self.env.ref('account.account_invoice_send_wizard_form', raise_if_not_found=False)
         ctx = dict(
             default_model='account.move',
@@ -2180,6 +2194,7 @@ class AccountMove(models.Model):
             default_composition_mode='comment',
             mark_invoice_as_sent=True,
             custom_layout="mail.mail_notification_paynow",
+            model_description=self.with_context(lang=lang).type_name,
             force_email=True
         )
         return {
