@@ -103,24 +103,21 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
         other_lead = self.lead_1.copy()
         other_lead.write({'partner_id': self.contact_1.id})
 
-        # TDE FIXME: default_lead_id should be correctly supported by wizard -> currently completely broken
-        # convert = self.env['crm.lead2opportunity.partner'].with_context({
-        #     'default_lead_id': other_lead.id,
-        # }).create({})
-        # self.assertEqual(convert.lead_id, other_lead)
-        # self.assertEqual(convert.partner_id, self.contact_1)
-        # self.assertEqual(convert.action, 'exist')
+        convert = self.env['crm.lead2opportunity.partner'].with_context({
+            'default_lead_id': other_lead.id,
+        }).create({})
+        self.assertEqual(convert.lead_id, other_lead)
+        self.assertEqual(convert.partner_id, self.contact_1)
+        self.assertEqual(convert.action, 'exist')
 
         convert = self.env['crm.lead2opportunity.partner'].with_context({
             'default_lead_id': other_lead.id,
             'active_model': 'crm.lead',
             'active_id': self.lead_1.id,
         }).create({})
-        # TDE FIXME: active_id should be a fallback, not the only one way to work with a standard wizard
-        self.assertEqual(convert.lead_id, self.lead_1)
-        # self.assertEqual(convert.lead_id, other_lead)
-        # self.assertEqual(convert.partner_id, self.contact_1)
-        # self.assertEqual(convert.action, 'exist')
+        self.assertEqual(convert.lead_id, other_lead)
+        self.assertEqual(convert.partner_id, self.contact_1)
+        self.assertEqual(convert.action, 'exist')
 
     @users('user_sales_manager')
     def test_lead_convert_corner_cases_matching(self):
@@ -160,7 +157,6 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
         self.assertEqual(convert.action, 'create')
 
         convert.write({'user_id': self.user_sales_salesman.id})
-        convert._onchange_user()
         self.assertEqual(convert.user_id, self.user_sales_salesman)
         self.assertEqual(convert.team_id, self.sales_team_convert)
 
@@ -239,7 +235,6 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
         self.assertEqual(convert.action, 'create')
 
         convert.write({'user_id': self.user_sales_salesman.id})
-        convert._onchange_user()
         self.assertEqual(convert.user_id, self.user_sales_salesman)
         self.assertEqual(convert.team_id, self.sales_team_convert)
 
@@ -419,8 +414,6 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
             'user_id': self.user_sales_salesman.id,
             'force_assignment': False,
         })
-        mass_convert.onchange_action()
-        mass_convert._onchange_user()
 
         # default values
         self.assertEqual(mass_convert.name, 'convert')
@@ -476,9 +469,9 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
         }).create({
             'deduplicate': True,
         })
-        mass_convert._onchange_deduplicate()
         self.assertEqual(mass_convert.action, 'each_exist_or_create')
         self.assertEqual(mass_convert.name, 'convert')
+        self.assertEqual(mass_convert.lead_tomerge_ids, self.leads)
         self.assertEqual(mass_convert.duplicated_lead_ids, self.lead_1 | self.lead_w_partner)
 
         mass_convert.action_mass_convert()
