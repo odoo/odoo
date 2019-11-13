@@ -2198,7 +2198,7 @@ class TestViews(ViewCase):
                 'arch': arch,
             })
         message = str(catcher.exception.args[0])
-        self.assertIn('Error context:\nView `%s`' % name, message)
+        self.assertIn('\nView name: %s\nError context:\n' % name, message)
         if expected_message:
             self.assertIn(expected_message, message)
         else:
@@ -2213,7 +2213,7 @@ class TestViews(ViewCase):
             })
         self.assertEqual(len(log_catcher.output), 1, "Exactly one warning should be logged")
         message = log_catcher.output[0]
-        self.assertIn('Error context:\nView `%s`' % name, message)
+        self.assertIn('\nView name: %s\nError context:\n' % name, message)
         if expected_message:
             self.assertIn(expected_message, message)
 
