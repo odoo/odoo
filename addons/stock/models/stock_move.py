@@ -1288,7 +1288,7 @@ class StockMove(models.Model):
                 extra_move = extra_move._action_confirm()
 
             # link it to some move lines. We don't need to do it for move since they should be merged.
-            if not merge_into_self:
+            if not merge_into_self or not extra_move.picking_id:
                 for move_line in self.move_line_ids.filtered(lambda ml: ml.qty_done):
                     if float_compare(move_line.qty_done, extra_move_quantity, precision_rounding=rounding) <= 0:
                         # move this move line to our extra move
