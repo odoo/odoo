@@ -643,7 +643,7 @@ var EditMenuDialog = weWidgets.Dialog.extend({
      */
     _onAddMenuButtonClick: function (ev) {
         var menuType = ev.currentTarget.dataset.type;
-        var dialog = new MenuEntryDialog(this, {}, {
+        var dialog = new MenuEntryDialog(this, {}, null, {
             menuType: menuType,
         });
         dialog.on('save', this, link => {
