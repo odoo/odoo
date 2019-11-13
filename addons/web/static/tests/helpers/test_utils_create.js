@@ -208,6 +208,7 @@ async function createView(params) {
  * @returns {Promise<CalendarController>}
  */
 async function createCalendarView(params, options) {
+    owl.Component.env = testUtilsMock.getMockedOwlEnv(params);
     var calendar = await createView(params);
     if (!options || !options.positionalClicks) {
         return calendar;

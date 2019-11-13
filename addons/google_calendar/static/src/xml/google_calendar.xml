@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+    <t t-name="google.calendar.sidebar" t-inherit="web.Calendar.sidebar" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[@class='o_calendar_sidebar']" position="inside">
+            <button t-if="model === 'calendar.event'" type="button" class="o_google_sync_button oe_button btn btn-secondary" t-on-click="_onSyncCalendar">
+                <img src="/google_calendar/static/src/img/calendar_32.png"/>
+                Sync with <b>Google</b>
+            </button>
+        </xpath>
+    </t>
+</template>

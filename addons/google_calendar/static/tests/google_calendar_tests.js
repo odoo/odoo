@@ -1,12 +1,12 @@
 odoo.define('google_calendar.calendar_tests', function (require) {
 "use strict";
 
-var CalendarView = require('web.CalendarView');
-var testUtils = require('web.test_utils');
+const CalendarView = require('web.CalendarView');
+const testUtils = require('web.test_utils');
 
-var createCalendarView = testUtils.createCalendarView;
+const createCalendarView = testUtils.createCalendarView;
 
-var initialDate = new Date("2016-12-12T08:00:00Z");
+const initialDate = new Date("2016-12-12T08:00:00Z");
 
 
 QUnit.module('Google Calendar', {
@@ -72,7 +72,7 @@ QUnit.module('Google Calendar', {
     QUnit.test('sync google calendar', async function (assert) {
         assert.expect(6);
 
-        var calendar = await createCalendarView({
+        const calendar = await createCalendarView({
             View: CalendarView,
             model: 'calendar.event',
             data: this.data,

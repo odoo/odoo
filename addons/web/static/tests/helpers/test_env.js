@@ -75,6 +75,10 @@ odoo.define('web.test_env', async function (require) {
                     const query = buildQuery(params);
                     return testEnv.session.rpc(query.route, query.params, options);
                 },
+                _rpc(params, options) {
+                    const query = buildQuery(params);
+                    return testEnv.session.rpc(query.route, query.params, options);
+                },
                 local_storage: new RamStorageService(),
                 session_storage: new RamStorageService(),
             }, env.services),

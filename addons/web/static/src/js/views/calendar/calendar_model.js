@@ -125,7 +125,7 @@ return AbstractModel.extend({
         if (filter.value === 'all') {
             Filter.all = filter.active;
         }
-        var f = _.find(Filter.filters, function (f) {
+        var f = Filter.filters.find(f => {
             return f.value === filter.value;
         });
         if (f) {
