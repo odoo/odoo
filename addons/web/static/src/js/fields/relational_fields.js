@@ -1944,19 +1944,24 @@ var FieldMany2ManyCheckBoxes = AbstractField.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * @override
      * @private
      */
-    _render: function () {
+    _renderEdit: function () {
         var self = this;
-        this._super.apply(this, arguments);
+        this.m2mValues = this.record.specialData[this.name];
+        this.renderElement();
         _.each(this.value.res_ids, function (id) {
             self.$('input[data-record-id="' + id + '"]').prop('checked', true);
         });
     },
     /**
+     * @override
      * @private
      */
     _renderReadonly: function () {
+        this.m2mValues = this.record.specialData[this.name];
+        this.renderElement();
         this.$("input").prop("disabled", true);
     },
 
