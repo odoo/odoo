@@ -1002,6 +1002,44 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(move_line_finished.qty_done, 1)
         self.assertEqual(move_line_finished.product_uom_id, unit, 'Should be 1 unit since the tracking is serial.')
 
+    def test_product_produce_12(self):
+        """ Plan 100 products to produce. Produce 50. Do a 'Post Inventory'.
+        Update the quantity to produce to 200. Produce 50 again. Check that
+        the components has been consumed correctly.
+        """
+        self.stock_location = self.env.ref('stock.stock_location_stock')
+        mo, bom, p_final, p1, p2 = self.generate_mo(qty_base_1=2, qty_base_2=2, qty_final=100)
+        self.assertEqual(len(mo), 1, 'MO should have been created')
+
+        self.env['stock.quant']._update_available_quantity(p1, self.stock_location, 200)
+        self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 200)
+
+        produce_form = Form(self.env['mrp.product.produce'].with_context({
+            'active_id': mo.id,
+            'active_ids': [mo.id],
+        }))
+        produce_form.qty_producing = 50.0
+        produce_wizard = produce_form.save()
+        produce_wizard.do_produce()
+
+        mo.post_inventory()
+        update_quantity_wizard = self.env['change.production.qty'].create({
+            'mo_id': mo.id,
+            'product_qty': 200,
+        })
+        update_quantity_wizard.change_prod_qty()
+        produce_form = Form(self.env['mrp.product.produce'].with_context({
+            'active_id': mo.id,
+            'active_ids': [mo.id],
+        }))
+        produce_form.qty_producing = 50.0
+        produce_wizard = produce_form.save()
+        produce_wizard.do_produce()
+
+        self.assertEqual(sum(mo.move_raw_ids.filtered(lambda m: m.product_id == p1).mapped('quantity_done')), 200)
+        self.assertEqual(sum(mo.move_raw_ids.filtered(lambda m: m.product_id == p2).mapped('quantity_done')), 200)
+        self.assertEqual(sum(mo.move_finished_ids.mapped('quantity_done')), 100)
+
     def test_product_produce_uom_2(self):
         """ Create a bom with a serial tracked component and a pair UoM (2 x unit).
         The produce wizard should create 2 line with quantity = 1 and UoM = unit for
