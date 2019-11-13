@@ -617,6 +617,7 @@ var FormController = BasicController.extend({
             parentID: data.parentID,
             readonly: data.readonly,
             deletable: record ? data.deletable : false,
+            disable_multiple_selection: data.disable_multiple_selection,
             recordID: record && record.id,
             res_id: record && record.res_id,
             res_model: data.field.relation,
