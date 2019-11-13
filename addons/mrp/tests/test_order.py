@@ -351,6 +351,33 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(production.routing_id.id, False, 'The routing field should be empty on the mo')
         self.assertEqual(production.move_raw_ids[0].location_id.id, self.warehouse_1.wh_input_stock_loc_id.id, 'Raw moves start location should have altered.')
 
+    def test_split_move_line(self):
+        """ Consume more component quantity than the initial demand.
+        It should create extra move and share the quantity between the two stock
+        moves """
+        mo, _, p_final, p1, p2 = self.generate_mo(qty_base_1=10, qty_final=1, qty_base_2=1)
+        mo.action_assign()
+        produce_form = Form(self.env['mrp.product.produce'].with_context({
+            'active_id': mo.id,
+            'active_ids': [mo.id],
+        }))
+        for i in range(len(produce_form.produce_line_ids)):
+            with produce_form.produce_line_ids.edit(i) as line:
+                line.qty_done += 1
+        product_produce = produce_form.save()
+        product_produce.do_produce()
+        self.assertEqual(len(mo.move_raw_ids), 2)
+        self.assertEqual(len(mo.move_raw_ids.mapped('move_line_ids')), 2)
+        self.assertEqual(mo.move_raw_ids[0].move_line_ids.mapped('qty_done'), [2])
+        self.assertEqual(mo.move_raw_ids[1].move_line_ids.mapped('qty_done'), [11])
+        self.assertEqual(mo.move_raw_ids[0].quantity_done, 2)
+        self.assertEqual(mo.move_raw_ids[1].quantity_done, 11)
+        mo.button_mark_done()
+        self.assertEqual(len(mo.move_raw_ids), 4)
+        self.assertEqual(len(mo.move_raw_ids.mapped('move_line_ids')), 4)
+        self.assertEqual(mo.move_raw_ids.mapped('quantity_done'), [1, 10, 1, 1])
+        self.assertEqual(mo.move_raw_ids.mapped('move_line_ids.qty_done'), [1, 10, 1, 1])
+
     def test_multiple_post_inventory(self):
         """ Check the consumed quants of the produced quants when intermediate calls to `post_inventory` during a MO."""
 
@@ -722,6 +749,44 @@ class TestMrpOrder(TestMrpCommon):
         mo.button_mark_done()
         self.assertTrue(all(s == 'done' for s in mo.move_raw_ids.mapped('state')))
         self.assertEqual(sum(mo.move_raw_ids.mapped('move_line_ids.product_uom_qty')), 0)
+
+    def test_product_produce_7(self):
+        """ Plan 100 products to produce. Produce 50. Do a 'Post Inventory'.
+        Update the quantity to produce to 200. Produce 50 again. Check that
+        the components has been consumed correctly.
+        """
+        self.stock_location = self.env.ref('stock.stock_location_stock')
+        mo, bom, p_final, p1, p2 = self.generate_mo(qty_base_1=2, qty_base_2=2, qty_final=100)
+        self.assertEqual(len(mo), 1, 'MO should have been created')
+
+        self.env['stock.quant']._update_available_quantity(p1, self.stock_location, 200)
+        self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 200)
+
+        produce_form = Form(self.env['mrp.product.produce'].with_context({
+            'active_id': mo.id,
+            'active_ids': [mo.id],
+        }))
+        produce_form.product_qty = 50.0
+        produce_wizard = produce_form.save()
+        produce_wizard.do_produce()
+
+        mo.post_inventory()
+        update_quantity_wizard = self.env['change.production.qty'].create({
+            'mo_id': mo.id,
+            'product_qty': 200,
+        })
+        update_quantity_wizard.change_prod_qty()
+        produce_form = Form(self.env['mrp.product.produce'].with_context({
+            'active_id': mo.id,
+            'active_ids': [mo.id],
+        }))
+        produce_form.product_qty = 50.0
+        produce_wizard = produce_form.save()
+        produce_wizard.do_produce()
+
+        self.assertEqual(sum(mo.move_raw_ids.filtered(lambda m: m.product_id == p1).mapped('quantity_done')), 200)
+        self.assertEqual(sum(mo.move_raw_ids.filtered(lambda m: m.product_id == p2).mapped('quantity_done')), 200)
+        self.assertEqual(sum(mo.move_finished_ids.mapped('quantity_done')), 100)
 
     def test_product_produce_uom(self):
         plastic_laminate = self.env.ref('mrp.product_product_plastic_laminate')
