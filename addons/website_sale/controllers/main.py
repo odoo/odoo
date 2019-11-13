@@ -404,6 +404,7 @@ class WebsiteSale(http.Controller):
             'suggested_products': [],
         })
         if order:
+            order.order_line.filtered(lambda l: not l.product_id.active).unlink()
             _order = order
             if not request.env.context.get('pricelist'):
                 _order = order.with_context(pricelist=order.pricelist_id.id)
