@@ -677,8 +677,8 @@ QUnit.module('fields', {}, function () {
 
             await testUtils.form.clickEdit(form);
 
-            assert.containsNone(form, '.o_field_x2many_list_row_add', "should not have the 'Add an item' link");
-            assert.containsNone(form, '.o_list_record_remove', "should not have the 'Add an item' link");
+            assert.containsOnce(form, '.o_field_x2many_list_row_add', "should have the 'Add an item' link");
+            assert.containsN(form, '.o_list_record_remove', 2, "each record should have the 'Remove Item' link");
 
             form.destroy();
         });
@@ -699,13 +699,71 @@ QUnit.module('fields', {}, function () {
                 res_id: 1,
             });
 
-            assert.ok(!form.$('.o_field_x2many_list_row_add').length,
+            assert.containsNone(form, '.o_field_x2many_list_row_add',
                 '"Add an item" link should not be available in readonly');
 
             await testUtils.form.clickEdit(form);
 
-            assert.ok(!form.$('.o_field_x2many_list_row_add').length,
-                '"Add an item" link should not be available in edit either');
+            assert.containsOnce(form, '.o_field_x2many_list_row_add',
+                '"Add an item" link should be available in edit');
+
+            form.destroy();
+        });
+
+        QUnit.test('fieldmany2many list comodel not writable', async function (assert) {
+            /**
+             * Many2Many List should behave as the m2m_tags
+             * that is, the relation can be altered even if the comodel itself is not CRUD-able
+             * This can happen when someone has read access alone on the comodel
+             * and full CRUD on the current model
+             */
+            assert.expect(12);
+
+            var form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch:`<form string="Partners">
+                        <field name="timmy" widget="many2many" can_create="false" can_write="false"/>
+                    </form>`,
+                archs:{
+                    'partner_type,false,list': `<tree create="false" delete="false" edit="false">
+                                                    <field name="display_name"/>
+                                                </tree>`,
+                    'partner_type,false,search': '<search><field name="display_name"/></search>',
+                },
+                mockRPC: function (route, args) {
+                    if (route === '/web/dataset/call_kw/partner/create') {
+                        assert.deepEqual(args.args[0], {timmy: [[6, false, [12]]]});
+                    }
+                    if (route === '/web/dataset/call_kw/partner/write') {
+                        assert.deepEqual(args.args[1], {timmy: [[6, false, []]]});
+                    }
+                    return this._super.apply(this, arguments);
+                }
+            });
+
+            assert.containsOnce(form, '.o_field_many2many .o_field_x2many_list_row_add');
+            await testUtils.dom.click(form.$('.o_field_many2many .o_field_x2many_list_row_add a'));
+            assert.containsOnce(document.body, '.modal');
+
+            assert.containsN($('.modal-footer'), 'button', 2);
+            assert.containsOnce($('.modal-footer'), 'button.o_select_button');
+            assert.containsOnce($('.modal-footer'), 'button.o_form_button_cancel');
+
+            await testUtils.dom.click($('.modal .o_list_view .o_data_cell:first()'));
+            assert.containsNone(document.body, '.modal');
+
+            assert.containsOnce(form, '.o_field_many2many .o_data_row');
+            assert.equal($('.o_field_many2many .o_data_row').text(), 'gold');
+            assert.containsOnce(form, '.o_field_many2many .o_field_x2many_list_row_add');
+
+            await testUtils.form.clickSave(form);
+            await testUtils.form.clickEdit(form);
+
+            assert.containsOnce(form, '.o_field_many2many .o_data_row .o_list_record_remove');
+            await testUtils.dom.click(form.$('.o_field_many2many .o_data_row .o_list_record_remove'));
+            await testUtils.form.clickSave(form);
 
             form.destroy();
         });
