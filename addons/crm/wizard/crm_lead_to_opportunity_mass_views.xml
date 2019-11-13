@@ -5,6 +5,7 @@
         <field name="model">crm.lead2opportunity.partner.mass</field>
         <field name="arch" type="xml">
             <form string="Convert to Opportunity">
+                <field name="lead_tomerge_ids" invisible="1"/>
                 <separator string="Conversion Options"/>
                 <group>
                     <field name="name" class="oe_inline" widget="radio"/>

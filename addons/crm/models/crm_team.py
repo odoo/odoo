@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from dateutil.relativedelta import relativedelta
-
 from odoo import api, fields, models, _
 from odoo.tools.safe_eval import safe_eval
-from odoo.exceptions import ValidationError
 
 import ast
 
@@ -85,6 +82,38 @@ class Team(models.Model):
         if not self.use_leads and not self.use_opportunities:
             self.alias_name = False
 
+    # ------------------------------------------------------------
+    # ORM
+    # ------------------------------------------------------------
+
+    @api.model
+    def create(self, vals):
+        alias_values = self._synchronize_alias(vals)
+        if alias_values:
+            vals.update(alias_values)
+        return super(Team, self).create(vals)
+
+    def write(self, vals):
+        result = super(Team, self).write(vals)
+        if 'use_leads' in vals or 'alias_defaults' in vals:
+            for team in self:
+                team.alias_id.write(team.get_alias_values())
+        if 'use_leads' in vals or 'use_opportunities' in vals:
+            alias_values = self._synchronize_alias(vals)
+            if alias_values:
+                self.write(alias_values)
+        return result
+
+    def _synchronize_alias(self, values):
+        use_leads = self.use_leads if self else values.get('use_leads', False)
+        use_opportunities = self.use_opportunities if self else values.get('use_opportunities', True)
+        if not use_leads and not use_opportunities:
+            return {'alias_name': False}
+        return {}
+    # ------------------------------------------------------------
+    # MESSAGING
+    # ------------------------------------------------------------
+
     def get_alias_model_name(self, vals):
         return 'crm.lead'
 
@@ -96,12 +125,9 @@ class Team(models.Model):
         defaults['team_id'] = self.id
         return values
 
-    def write(self, vals):
-        result = super(Team, self).write(vals)
-        if 'use_leads' in vals or 'alias_defaults' in vals:
-            for team in self:
-                team.alias_id.write(team.get_alias_values())
-        return result
+    # ------------------------------------------------------------
+    # ACTIONS
+    # ------------------------------------------------------------
 
     #TODO JEM : refactor this stuff with xml action, proper customization,
     @api.model

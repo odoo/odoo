@@ -18,8 +18,9 @@ class TestLeadMerge(TestLeadConvertMassCommon):
         cls.leads = cls.lead_1 + cls.lead_w_partner + cls.lead_w_contact + cls.lead_w_email + cls.lead_w_partner_company + cls.lead_w_email_lost
         # reset some assigned users to test salesmen assign
         (cls.lead_w_partner | cls.lead_w_email_lost).write({
-            'user_id': False
+            'user_id': False,
         })
+        cls.lead_w_partner.write({'stage_id': False})
 
         cls.lead_w_contact.write({'description': 'lead_w_contact'})
         cls.lead_w_email.write({'description': 'lead_w_email'})
@@ -75,8 +76,6 @@ class TestLeadMerge(TestLeadConvertMassCommon):
         }).create({
             'user_id': self.user_sales_leads_convert.id,
         })
-        # check user correctly triggered its sales team
-        merge._onchange_user()
         self.assertEqual(merge.team_id, self.sales_team_convert)
 
         # TDE FIXME: not sure the browse in default get of wizard intended to exlude lost, as it browse ids
@@ -122,7 +121,6 @@ class TestLeadMerge(TestLeadConvertMassCommon):
             'user_id': False,
         })
         # TDE FIXME: see aa44700dccdc2618e0b8bc94252789264104047c -> no user, no team -> strange
-        merge._onchange_user()
         merge.write({'team_id': self.sales_team_convert.id})
 
         # TDE FIXME: not sure the browse in default get of wizard intended to exlude lost, as it browse ids
@@ -139,7 +137,7 @@ class TestLeadMerge(TestLeadConvertMassCommon):
         # merged opportunity has same salesman (not updated in wizard)
         self.assertEqual(merge_opportunity.user_id, self.user_sales_leads)
         # TDE FIXME: as same uer_id is enforced, team is updated through onchange and therefore stage
-        # self.assertEqual(merge_opportunity.team_id, self.sales_team_convert)
-        self.assertEqual(merge_opportunity.team_id, self.sales_team_1)
+        self.assertEqual(merge_opportunity.team_id, self.sales_team_convert)
+        # self.assertEqual(merge_opportunity.team_id, self.sales_team_1)
         # TDE FIXME: BUT team_id is computed after checking stage, based on wizard's team_id
         self.assertEqual(merge_opportunity.stage_id, self.stage_team_convert_1)
