@@ -257,10 +257,10 @@ class ProductProduct(models.Model):
         new_standard_price = 0
         tmp_value = 0  # to accumulate the value taken on the candidates
         for candidate in candidates:
-            new_standard_price = candidate.unit_cost
             qty_taken_on_candidate = min(qty_to_take_on_candidates, candidate.remaining_qty)
 
             candidate_unit_cost = candidate.remaining_value / candidate.remaining_qty
+            new_standard_price = candidate_unit_cost
             value_taken_on_candidate = qty_taken_on_candidate * candidate_unit_cost
             value_taken_on_candidate = candidate.currency_id.round(value_taken_on_candidate)
             new_remaining_value = candidate.remaining_value - value_taken_on_candidate
