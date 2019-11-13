@@ -70,7 +70,8 @@ class MrpBom(models.Model):
         ('flexible', 'Flexible')],
         help="Defines if you can consume more or less components than the quantity defined on the BoM.",
         default='strict',
-        string='Consumption'
+        string='Consumption',
+        required=True
     )
 
     @api.onchange('product_id')
