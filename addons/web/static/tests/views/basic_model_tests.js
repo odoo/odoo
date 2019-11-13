@@ -2,9 +2,11 @@ odoo.define('web.basic_model_tests', function (require) {
     "use strict";
 
     var BasicModel = require('web.BasicModel');
+    var FormView = require('web.FormView');
     var testUtils = require('web.test_utils');
 
     var createModel = testUtils.createModel;
+    var createView = testUtils.createView;
 
     QUnit.module('Views', {
         beforeEach: function () {
@@ -30,7 +32,8 @@ odoo.define('web.basic_model_tests', function (require) {
                 },
                 product: {
                     fields: {
-                        name: { string: "Product Name", type: "char" }
+                        name: { string: "Product Name", type: "char" },
+                        category: { string: "Category M2M", type: 'many2many', relation: 'partner_type' },
                     },
                     records: [
                         { id: 37, display_name: "xphone" },
@@ -61,6 +64,57 @@ odoo.define('web.basic_model_tests', function (require) {
         },
     }, function () {
         QUnit.module('BasicModel');
+
+        QUnit.test('can process x2many commands', async function (assert) {
+            assert.expect(5);
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `
+                    <form>
+                        <field name="product_ids"/>
+                    </form>
+                `,
+                archs: {
+                    'product,false,list': `
+                        <tree>
+                            <field name="display_name"/>
+                        </tree>
+                    `,
+                    'product,false,kanban': `
+                        <kanban>
+                            <templates><t t-name="kanban-box">
+                                <div><field name="display_name"/></div>
+                            </t></templates>
+                        </kanban>
+                    `,
+                },
+                viewOptions: {
+                    mode: 'edit',
+                },
+                mockRPC(route, args) {
+                    assert.step(args.method);
+                    if (args.method === 'default_get' && args.model === 'partner') {
+                        return Promise.resolve({
+                            product_ids: [
+                                [0, 0, {category: []}],
+                            ]
+                        });
+                    }
+                    return this._super.apply(this, arguments);
+                },
+            });
+
+            assert.verifySteps([
+                'load_views',
+                'default_get',
+            ]);
+            assert.containsOnce(form, '.o_field_x2many_list', 'should have rendered a x2many list');
+            assert.containsOnce(form, '.o_field_x2many_list_row_add', 'should have rendered a x2many add row on list');
+            form.destroy();
+        });
 
         QUnit.test('can load a record', async function (assert) {
             assert.expect(7);
