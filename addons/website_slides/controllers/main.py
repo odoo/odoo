@@ -8,6 +8,7 @@ import werkzeug
 import math
 
 from odoo import http, tools, _
+from odoo.tools import html_escape
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.website_profile.controllers.main import WebsiteProfile
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
@@ -812,7 +813,7 @@ class WebsiteSlides(WebsiteProfile):
             return preview
         values = Slide._parse_document_url(data['url'], only_preview_fields=True)
         if values.get('error'):
-            preview['error'] = _('Could not fetch data from url. Document or access right not available.\nHere is the received response: %s') % values['error']
+            preview['error'] = html_escape(values['error']).replace('\n', '<br/>')
             return preview
         return values
 
