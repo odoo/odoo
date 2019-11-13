@@ -3141,6 +3141,8 @@ class AccountMoveLine(models.Model):
                 current_ids = set(line[field_name].ids)
                 after_write_ids = set(r['id'] for r in line.resolve_2many_commands(field_name, vals[field_name], fields=['id']))
                 return current_ids != after_write_ids
+            if field.type == 'monetary' and line[field.currency_field]:
+                return not line[field.currency_field].is_zero(line[field_name] - vals[field_name])
             return line[field_name] != vals[field_name]
 
         ACCOUNTING_FIELDS = ('debit', 'credit', 'amount_currency')

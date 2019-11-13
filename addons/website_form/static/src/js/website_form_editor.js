@@ -62,6 +62,7 @@ odoo.define('website_form_editor', function (require) {
         start: function () {
             this.$target.addClass('o_fake_not_editable').attr('contentEditable', false);
             this.$target.find('label:not(:has(span)), label span').addClass('o_fake_editable').attr('contentEditable', true);
+            return this._super.apply(this, arguments);
         },
 
         // Return the fields promise if we already issued a model
@@ -463,6 +464,7 @@ odoo.define('website_form_editor', function (require) {
                 });
                 select.after(this.editable_select);
             }
+            return this._super.apply(this, arguments);
         },
 
         cleanForSave: function () {
@@ -548,6 +550,7 @@ odoo.define('website_form_editor', function (require) {
     options.registry['website_form_editor_field_model'] = disable_overlay_button_option.extend({
         start: function () {
             this.disable_button('clone', 'You can\'t duplicate a model field.');
+            return this._super.apply(this, arguments);
         }
     });
 
@@ -555,6 +558,7 @@ odoo.define('website_form_editor', function (require) {
     options.registry['website_form_editor_field_required'] = disable_overlay_button_option.extend({
         start: function () {
             this.disable_button('remove', 'You can\'t remove a field that is required by the model itself.');
+            return this._super.apply(this, arguments);
         }
     });
 
@@ -562,6 +566,7 @@ odoo.define('website_form_editor', function (require) {
     options.registry['website_form_editor_field_x2many'] =disable_overlay_button_option.extend({
         start: function () {
             this.disable_button('clone', 'You can\'t duplicate an item which refers to an actual record.');
+            return this._super.apply(this, arguments);
         }
     });
 });
