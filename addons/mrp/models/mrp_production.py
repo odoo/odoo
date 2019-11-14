@@ -434,15 +434,14 @@ class MrpProduction(models.Model):
     def _onchange_date_planned_start(self):
         self.move_raw_ids.update({
             'date': self.date_planned_start,
-            'date_expected': self.date_planned_start,
         })
         if not self.routing_id:
             self.date_planned_finished = self.date_planned_start + datetime.timedelta(hours=1)
 
-    @api.onchange('date_deadline')
-    def _onchange_date_deadline(self):
+    @api.onchange('date_deadline', 'date_planned_start')
+    def _onchange_date_deadline_planned_start(self):
         self.move_raw_ids.update({
-            'date_expected': self.date_deadline,
+            'date_expected': self.date_deadline or self.date_planned_start,
         })
 
     @api.onchange('bom_id', 'product_id', 'product_qty', 'product_uom_id')
@@ -484,12 +483,19 @@ class MrpProduction(models.Model):
 
     def write(self, vals):
         res = super(MrpProduction, self).write(vals)
-        if 'date_deadline' in vals:
-            moves = (self.mapped('move_raw_ids') + self.mapped('move_finished_ids')).filtered(
-                lambda r: r.state not in ['done', 'cancel'])
-            moves.write({
-                'date_expected': fields.Datetime.to_datetime(vals['date_deadline']),
-            })
+        for production in self:
+            if {'date_deadline', 'date_planned_start'} & vals.keys():
+                new_date = (
+                    vals.get('date_deadline')
+                    or production.date_deadline
+                    or vals.get('date_deadline')
+                    or production.date_planned_start
+                )
+                production.mapped('move_raw_ids').filtered(
+                    lambda r: r.state not in ['done', 'cancel']
+                ).write({
+                    'date_expected': new_date,
+                })
         for production in self:
             if 'date_planned_start' in vals:
                 if production.state in ['done', 'cancel']:
