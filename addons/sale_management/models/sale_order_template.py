@@ -30,14 +30,54 @@ class SaleOrderTemplate(models.Model):
         help="This e-mail template will be sent on confirmation. Leave empty to send nothing.")
     active = fields.Boolean(default=True, help="If unchecked, it will allow you to hide the quotation template without removing it.")
 
-    @api.multi
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super(SaleOrderTemplate, self).create(vals_list)
+        records._update_product_translations()
+        return records
+
     def write(self, vals):
         if 'active' in vals and not vals.get('active'):
             template_id = self.env['ir.default'].get('sale.order', 'sale_order_template_id')
             for template in self:
                 if template_id and template_id == template.id:
                     raise UserError(_('Before archiving "%s" please select another default template in the settings.') % template.name)
-        return super(SaleOrderTemplate, self).write(vals)
+        result = super(SaleOrderTemplate, self).write(vals)
+        self._update_product_translations()
+        return result
+
+    def _update_product_translations(self):
+        languages = self.env['res.lang'].search([('active', '=', 'true')])
+        for lang in languages:
+            for line in self.sale_order_template_line_ids:
+                if line.name == line.product_id.get_product_multiline_description_sale():
+                    self.create_or_update_translations(model_name='sale.order.template.line,name', lang_code=lang.code,
+                                                       res_id=line.id,src=line.name,
+                                                       value=line.product_id.with_context(lang=lang.code).get_product_multiline_description_sale())
+            for option in self.sale_order_template_option_ids:
+                if option.name == option.product_id.get_product_multiline_description_sale():
+                    self.create_or_update_translations(model_name='sale.order.template.option,name', lang_code=lang.code,
+                                                       res_id=option.id,src=option.name,
+                                                       value=option.product_id.with_context(lang=lang.code).get_product_multiline_description_sale())
+
+    def create_or_update_translations(self, model_name, lang_code, res_id, src, value):
+        data = {
+            'type': 'model',
+            'name': model_name,
+            'lang': lang_code,
+            'res_id': res_id,
+            'src': src,
+            'value': value,
+            'state': 'inprogress',
+        }
+        existing_trans = self.env['ir.translation'].search([('name', '=', model_name),
+                                                            ('res_id', '=', res_id),
+                                                            ('lang', '=', lang_code)])
+        if not existing_trans:
+            self.env['ir.translation'].create(data)
+        else:
+            existing_trans.write(data)
+
 
 
 class SaleOrderTemplateLine(models.Model):
@@ -64,14 +104,9 @@ class SaleOrderTemplateLine(models.Model):
     def _onchange_product_id(self):
         self.ensure_one()
         if self.product_id:
-            name = self.product_id.name_get()[0][1]
-            if self.product_id.description_sale:
-                name += '\n' + self.product_id.description_sale
-            self.name = name
             self.price_unit = self.product_id.lst_price
             self.product_uom_id = self.product_id.uom_id.id
-            domain = {'product_uom_id': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
-            return {'domain': domain}
+            self.name = self.product_id.get_product_multiline_description_sale()
 
     @api.onchange('product_uom_id')
     def _onchange_product_uom(self):
@@ -118,15 +153,9 @@ class SaleOrderTemplateOption(models.Model):
     def _onchange_product_id(self):
         if not self.product_id:
             return
-        product = self.product_id
-        self.price_unit = product.lst_price
-        name = product.name
-        if self.product_id.description_sale:
-            name += '\n' + self.product_id.description_sale
-        self.name = name
-        self.uom_id = product.uom_id
-        domain = {'uom_id': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
-        return {'domain': domain}
+        self.price_unit = self.product_id.list_price
+        self.uom_id = self.product_id.uom_id
+        self.name = self.product_id.get_product_multiline_description_sale()
 
     @api.onchange('uom_id')
     def _onchange_product_uom(self):
