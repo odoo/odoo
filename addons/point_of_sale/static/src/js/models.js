@@ -1428,7 +1428,7 @@ exports.Orderline = Backbone.Model.extend({
             try {
                 this.init_from_JSON(options.json);
             } catch(error) {
-                console.error('ERROR: attempting to recover product ID', json.product_id,
+                console.error('ERROR: attempting to recover product ID', options.json.product_id,
                     'not available in the point of sale. Correct the product or clean the browser cache.');
             }
             return;
