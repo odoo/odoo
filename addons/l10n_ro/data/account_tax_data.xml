@@ -2,7 +2,7 @@
 <odoo>
     <record id="tvac_00" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="sequence">13</field>
+        <field name="sequence">4</field>
         <field name="description">TVA colectat 0%</field>
         <field name="name">TVA colectat 0%</field>
         <field name="amount">0</field>
@@ -13,7 +13,6 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('account_tax_report_baza_tva_0')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -24,7 +23,6 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('account_tax_report_baza_tva_0')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -35,7 +33,7 @@
 
     <record id="tvac_05" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="sequence">12</field>
+        <field name="sequence">3</field>
         <field name="name">TVA colectat 5%</field>
         <field name="description">TVA colectat 5%</field>
         <field name="amount">5</field>
@@ -46,33 +44,33 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('account_tax_report_baza_tva_5')],
+                'plus_report_line_ids': [ref('account_tax_report_ro_baza_rd11')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_4427'),
-                'plus_report_line_ids': [ref('account_tax_report_tva_5')],
+                'plus_report_line_ids': [ref('account_tax_report_ro_tva_rd11')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('account_tax_report_baza_tva_5')],
+                'minus_report_line_ids': [ref('account_tax_report_ro_baza_rd11')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_4427'),
-                'minus_report_line_ids': [ref('account_tax_report_tva_5')],
+                'minus_report_line_ids': [ref('account_tax_report_ro_tva_rd11')],
             }),
         ]"/>
     </record>
 
     <record id="tvac_09" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="sequence">14</field>
+        <field name="sequence">2</field>
         <field name="name">TVA colectat 9%</field>
         <field name="description">TVA colectat 9%</field>
         <field name="amount">9</field>
@@ -83,33 +81,33 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('account_tax_report_baza_tva_9')],
+                'plus_report_line_ids': [ref('account_tax_report_ro_baza_rd10')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_4427'),
-                'plus_report_line_ids': [ref('account_tax_report_tva_9')],
+                'plus_report_line_ids': [ref('account_tax_report_ro_tva_rd10')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('account_tax_report_baza_tva_9')],
+                'minus_report_line_ids': [ref('account_tax_report_ro_baza_rd10')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_4427'),
-                'minus_report_line_ids': [ref('account_tax_report_tva_9')],
+                'minus_report_line_ids': [ref('account_tax_report_ro_tva_rd10')],
             }),
         ]"/>
     </record>
 
     <record id="tvac_19" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="sequence">9</field>
+        <field name="sequence">1</field>
         <field name="name">TVA colectat 19%</field>
         <field name="description">TVA colectat 19%</field>
         <field name="amount">19</field>
@@ -120,33 +118,33 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('account_tax_report_baza_tva_19')],
+                'plus_report_line_ids': [ref('account_tax_report_ro_baza_rd9')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_4427'),
-                'plus_report_line_ids': [ref('account_tax_report_tva_19')],
+                'plus_report_line_ids': [ref('account_tax_report_ro_tva_rd9')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('account_tax_report_baza_tva_19')],
+                'minus_report_line_ids': [ref('account_tax_report_ro_baza_rd9')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_4427'),
-                'minus_report_line_ids': [ref('account_tax_report_tva_19')],
+                'minus_report_line_ids': [ref('account_tax_report_ro_tva_rd9')],
             }),
         ]"/>
     </record>
 
     <record id="tvad_00" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="sequence">23</field>
+        <field name="sequence">43</field>
         <field name="name">TVA deductibil 0%</field>
         <field name="description">TVA deductibil 0%</field>
         <field name="amount">0</field>
@@ -157,7 +155,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('account_tax_report_baza_tva_deducbl_0')],
+                'plus_report_line_ids': [ref('account_tax_report_ro_baza_rd28')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -168,7 +166,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('account_tax_report_baza_tva_deducbl_0')],
+                'minus_report_line_ids': [ref('account_tax_report_ro_baza_rd28')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -179,7 +177,7 @@
 
     <record id="tvad_05" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="sequence">22</field>
+        <field name="sequence">42</field>
         <field name="name">TVA deductibil 5%</field>
         <field name="description">TVA deductibil 5%</field>
         <field name="amount">5</field>
@@ -190,33 +188,33 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('account_tax_report_baza_tva_deducbl_5')],
+                'plus_report_line_ids': [ref('account_tax_report_ro_baza_rd24')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_4426'),
-                'plus_report_line_ids': [ref('account_tax_report_ro_tva_decucible_5')],
+                'plus_report_line_ids': [ref('account_tax_report_ro_tva_rd24')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('account_tax_report_baza_tva_deducbl_5')],
+                'minus_report_line_ids': [ref('account_tax_report_ro_baza_rd24')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_4426'),
-                'minus_report_line_ids': [ref('account_tax_report_ro_tva_decucible_5')],
+                'minus_report_line_ids': [ref('account_tax_report_ro_tva_rd24')],
             }),
         ]"/>
     </record>
 
     <record id="tvad_09" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="sequence">21</field>
+        <field name="sequence">41</field>
         <field name="name">TVA deductibil 9%</field>
         <field name="description">TVA deductibil 9%</field>
         <field name="amount">9</field>
@@ -227,63 +225,63 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('account_tax_report_baza_tva_deducbl_9')],
+                'plus_report_line_ids': [ref('account_tax_report_ro_baza_rd23')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_4426'),
-                'plus_report_line_ids': [ref('account_tax_report_ro_tva_decucible_9')],
+                'plus_report_line_ids': [ref('account_tax_report_ro_tva_rd23')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('account_tax_report_baza_tva_deducbl_9')],
+                'minus_report_line_ids': [ref('account_tax_report_ro_baza_rd23')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_4426'),
-                'minus_report_line_ids': [ref('account_tax_report_ro_tva_decucible_9')],
+                'minus_report_line_ids': [ref('account_tax_report_ro_tva_rd23')],
             }),
         ]"/>
     </record>
 
     <record id="tvad_19" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="sequence">19</field>
+        <field name="sequence">40</field>
         <field name="name">TVA deductibil 19%</field>
         <field name="description">TVA deductibil 19%</field>
         <field name="amount">19</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
-        <field name="tax_group_id" ref="tax_group_tva_0"/>
+        <field name="tax_group_id" ref="tax_group_tva_19"/>
         <field name="invoice_repartition_line_ids" eval="[(5,0,0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('account_tax_report_baza_tva_deducbl_19')],
+                'plus_report_line_ids': [ref('account_tax_report_ro_baza_rd22')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_4426'),
-                'plus_report_line_ids': [ref('account_tax_report_ro_tva_decucible_19')],
+                'plus_report_line_ids': [ref('account_tax_report_ro_tva_rd22')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('account_tax_report_baza_tva_deducbl_19')],
+                'minus_report_line_ids': [ref('account_tax_report_ro_baza_rd22')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_4426'),
-                'minus_report_line_ids': [ref('account_tax_report_ro_tva_decucible_19')],
+                'minus_report_line_ids': [ref('account_tax_report_ro_tva_rd22')],
             }),
         ]"/>
     </record>
@@ -592,7 +590,7 @@
 
     <record id="tvati" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="sequence">30</field>
+        <field name="sequence">20</field>
         <field name="name">TVA Taxare Inversa</field>
         <field name="description">TVA Taxare Inversa</field>
         <field name="amount">0</field>
@@ -603,7 +601,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('account_tax_report_baza_tva_tx_invrsa')],
+                'plus_report_line_ids': [ref('account_tax_report_ro_baza_rd13')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -614,7 +612,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('account_tax_report_baza_tva_tx_invrsa')],
+                'minus_report_line_ids': [ref('account_tax_report_ro_baza_rd13')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -625,7 +623,7 @@
 
     <record id="tvatip00" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="sequence">34</field>
+        <field name="sequence">63</field>
         <field name="name">TVA Taxare Inversa 0%</field>
         <field name="description">TVA Taxare Inversa 0%</field>
         <field name="amount">0</field>
@@ -636,8 +634,6 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('account_tax_report_baza_tva_tx_invrsa')],
-                'minus_report_line_ids': [ref('account_tax_report_ro_baza_tva_tx_invrsa')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -648,8 +644,6 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('account_tax_report_baza_tva_tx_invrsa')],
-                'plus_report_line_ids': [ref('account_tax_report_ro_baza_tva_tx_invrsa')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -660,145 +654,153 @@
 
     <record id="tvatip05" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="sequence">33</field>
+        <field name="sequence">62</field>
         <field name="name">TVA Taxare Inversa 5%</field>
         <field name="description">TVA Taxare Inversa 5%</field>
         <field name="amount">5</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
-        <field name="tax_group_id" ref="tax_group_tva_0"/>
+        <field name="tax_group_id" ref="tax_group_tva_5"/>
         <field name="invoice_repartition_line_ids" eval="[(5,0,0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('account_tax_report_baza_tva_tx_invrsa'),
-                ref('account_tax_report_ro_baza_tva_tx_invrsa')],
+                'plus_report_line_ids': [ref('account_tax_report_ro_baza_rd123'),
+                                         ref('account_tax_report_ro_baza_rd253')],
             }),
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_4427'),
-                'plus_report_line_ids': [ref('account_tax_report_tva_tx_invrsa')],
+                'minus_report_line_ids': [ref('account_tax_report_ro_tva_rd123')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_4426'),
-                'plus_report_line_ids': [ref('account_tax_report_ro_tva_tx_invrsa')],
+                'plus_report_line_ids': [ref('account_tax_report_ro_tva_rd253')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('account_tax_report_baza_tva_tx_invrsa'),
-                ref('account_tax_report_ro_baza_tva_tx_invrsa')],
+                'minus_report_line_ids': [ref('account_tax_report_ro_baza_rd123'),
+                                          ref('account_tax_report_ro_baza_rd253')],
             }),
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_4427'),
-                'minus_report_line_ids': [ref('account_tax_report_ro_tva_tx_invrsa')],
+                'plus_report_line_ids': [ref('account_tax_report_ro_tva_rd123')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_4426'),
-                'minus_report_line_ids': [ref('account_tax_report_tva_tx_invrsa')],
+                'minus_report_line_ids': [ref('account_tax_report_ro_tva_rd253')],
             }),
         ]"/>
     </record>
 
     <record id="tvatip09" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="sequence">32</field>
+        <field name="sequence">61</field>
         <field name="name">TVA Taxare Inversa 9%</field>
         <field name="description">TVA Taxare Inversa 9%</field>
         <field name="amount">9</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
-        <field name="tax_group_id" ref="tax_group_tva_0"/>
+        <field name="tax_group_id" ref="tax_group_tva_9"/>
         <field name="invoice_repartition_line_ids" eval="[(5,0,0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('account_tax_report_ro_baza_tva_tx_invrsa'),
-                ref('account_tax_report_baza_tva_tx_invrsa')],
+                'plus_report_line_ids': [ref('account_tax_report_ro_baza_rd122'),
+                                         ref('account_tax_report_ro_baza_rd252')],
             }),
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_4427'),
-                'plus_report_line_ids': [ref('account_tax_report_tva_tx_invrsa')],
+                'minus_report_line_ids': [ref('account_tax_report_ro_tva_rd122')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_4426'),
-                'plus_report_line_ids': [ref('account_tax_report_ro_tva_tx_invrsa')],
+                'plus_report_line_ids': [ref('account_tax_report_ro_tva_rd252')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('account_tax_report_ro_baza_tva_tx_invrsa'),
-                ref('account_tax_report_baza_tva_tx_invrsa')],
+                'minus_report_line_ids': [ref('account_tax_report_ro_baza_rd122'),
+                                          ref('account_tax_report_ro_baza_rd252')],
             }),
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_4426'),
-                'minus_report_line_ids': [ref('account_tax_report_ro_tva_tx_invrsa')],
+                'account_id': ref('pcg_4427'),
+                'plus_report_line_ids': [ref('account_tax_report_ro_tva_rd122')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_4427'),
-                'minus_report_line_ids': [ref('account_tax_report_tva_tx_invrsa')],
+                'account_id': ref('pcg_4426'),
+                'minus_report_line_ids': [ref('account_tax_report_ro_tva_rd252')],
             }),
         ]"/>
     </record>
 
     <record id="tvatip19" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="sequence">32</field>
+        <field name="sequence">60</field>
         <field name="name">TVA Taxare Inversa 19%</field>
         <field name="description">TVA Taxare Inversa 19%</field>
         <field name="amount">19</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
-        <field name="tax_group_id" ref="tax_group_tva_0"/>
+        <field name="tax_group_id" ref="tax_group_tva_19"/>
         <field name="invoice_repartition_line_ids" eval="[(5,0,0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
+                'plus_report_line_ids': [ref('account_tax_report_ro_baza_rd121'),
+                                         ref('account_tax_report_ro_baza_rd251')],
             }),
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_4427'),
+                'minus_report_line_ids': [ref('account_tax_report_ro_tva_rd121')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_4426'),
+                'plus_report_line_ids': [ref('account_tax_report_ro_tva_rd251')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
+                'minus_report_line_ids': [ref('account_tax_report_ro_baza_rd121'),
+                                          ref('account_tax_report_ro_baza_rd251')],
             }),
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_4426'),
+                'account_id': ref('pcg_4427'),
+                'plus_report_line_ids': [ref('account_tax_report_ro_tva_rd121')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('pcg_4427'),
+                'account_id': ref('pcg_4426'),
+                'minus_report_line_ids': [ref('account_tax_report_ro_tva_rd251')],
             }),
         ]"/>
     </record>
@@ -906,7 +908,7 @@
 
     <record id="tvatine" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="sequence">50</field>
+        <field name="sequence">33</field>
         <field name="name">TVA Taxare Neimpozabila Livrari</field>
         <field name="description">Neimpozabil-L</field>
         <field name="amount">0</field>
@@ -917,7 +919,6 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('account_tax_report_ro_baza_tva_tx_intracmutr_nempzbl_vnzari')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -928,7 +929,6 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('account_tax_report_ro_baza_tva_tx_intracmutr_nempzbl_vnzari')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -939,7 +939,7 @@
 
     <record id="tvatinea" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="sequence">51</field>
+        <field name="sequence">62</field>
         <field name="name">TVA Taxare Neimpozabila Achizitii</field>
         <field name="description">Neimpozabil-A</field>
         <field name="amount">0</field>
@@ -950,7 +950,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('account_tax_report_ro_baza_tva_tx_intracmutr_nempzbl_achzti')],
+                'plus_report_line_ids': [ref('account_tax_report_ro_baza_rd28')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -961,7 +961,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('account_tax_report_ro_baza_tva_tx_intracmutr_nempzbl_achzti')],
+                'minus_report_line_ids': [ref('account_tax_report_ro_baza_rd28')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -1004,8 +1004,8 @@
 
     <record id="tvati_intras" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="sequence">60</field>
-        <field name="name">TVA Intracomunitara Livrari</field>
+        <field name="sequence">34</field>
+        <field name="name">TVA Intracomunitara Livrari Servicii</field>
         <field name="amount">0</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -1014,6 +1014,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
+                'plus_report_line_ids': [ref('account_tax_report_ro_baza_rd3')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -1024,6 +1025,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
+                'minus_report_line_ids': [ref('account_tax_report_ro_baza_rd3')],
             }),
             (0,0, {
                 'factor_percent': 100,
