@@ -112,7 +112,6 @@ class PosOrder(models.Model):
         :type existing_order: pos.order.
         :returns number pos_order id
         """
-        to_invoice = order['to_invoice'] if not draft else False
         order = order['data']
         pos_session = self.env['pos.session'].browse(order['pos_session_id'])
         if pos_session.state == 'closing_control' or pos_session.state == 'closed':
@@ -138,7 +137,7 @@ class PosOrder(models.Model):
             except Exception as e:
                 _logger.error('Could not fully process the POS Order: %s', tools.ustr(e))
 
-        if to_invoice:
+        if pos_order.to_invoice and pos_order.state == 'paid':
             pos_order.action_pos_order_invoice()
             pos_order.account_move.sudo().with_context(force_company=self.env.user.company_id.id).post()
 
@@ -693,6 +692,10 @@ class PosOrderLine(models.Model):
         if line and 'tax_ids' not in line[2]:
             product = self.env['product.product'].browse(line[2]['product_id'])
             line[2]['tax_ids'] = [(6, 0, [x.id for x in product.taxes_id])]
+        # Clean up fields sent by the JS
+        line = [
+            line[0], line[1], {k: v for k, v in line[2].items() if k in self.env['pos.order.line']._fields}
+        ]
         return line
 
     company_id = fields.Many2one('res.company', string='Company', related="order_id.company_id", store=True)

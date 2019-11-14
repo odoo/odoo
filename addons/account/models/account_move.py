@@ -3,7 +3,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.tools import float_is_zero, float_compare, safe_eval, date_utils, email_split, email_escape_char, email_re
-from odoo.tools.misc import formatLang, format_date
+from odoo.tools.misc import formatLang, format_date, get_lang
 
 from datetime import date, timedelta
 from itertools import groupby
@@ -107,6 +107,7 @@ class AccountMove(models.Model):
             ('in_receipt', 'Purchase Receipt'),
         ], string='Type', required=True, store=True, index=True, readonly=True, tracking=True,
         default="entry", change_default=True)
+    type_name = fields.Char('Type Name', compute='_compute_type_name')
     to_check = fields.Boolean(string='To Check', default=False,
         help='If this checkbox is ticked, it means that the user was not sure of all the related informations at the time of the creation of the move and that the move needs to be checked again.')
     journal_id = fields.Many2one('account.journal', string='Journal', required=True, readonly=True,
@@ -875,6 +876,16 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
+
+    @api.depends('type')
+    def _compute_type_name(self):
+        type_name_mapping = {k: v for k, v in
+                             self._fields['type']._description_selection(self.env)}
+        replacements = {'out_invoice': _('Invoice'), 'out_refund': _('Credit Note')}
+
+        for record in self:
+            name = type_name_mapping[self.type]
+            record.type_name = replacements.get(self.type, name)
 
     @api.depends('type')
     def _compute_invoice_filter_type_domain(self):
@@ -2153,6 +2164,9 @@ class AccountMove(models.Model):
         """
         self.ensure_one()
         template = self.env.ref('account.email_template_edi_invoice', raise_if_not_found=False)
+        lang = get_lang(self.env)
+        if template and template.lang:
+            lang = template._render_template(template.lang, 'account.move', self.id)
         compose_form = self.env.ref('account.account_invoice_send_wizard_form', raise_if_not_found=False)
         ctx = dict(
             default_model='account.move',
@@ -2162,6 +2176,7 @@ class AccountMove(models.Model):
             default_composition_mode='comment',
             mark_invoice_as_sent=True,
             custom_layout="mail.mail_notification_paynow",
+            model_description=self.with_context(lang=lang).type_name,
             force_email=True
         )
         return {
@@ -2953,12 +2968,6 @@ class AccountMoveLine(models.Model):
             # A constraint on account.tax.repartition.line ensures both those fields are mutually exclusive
             record.tax_line_id = rep_line.invoice_tax_id or rep_line.refund_tax_id
 
-    @api.depends('account_id.user_type_id')
-    def _compute_is_unaffected_earnings_line(self):
-        for record in self:
-            unaffected_earnings_type = self.env.ref("account.data_unaffected_earnings")
-            record.is_unaffected_earnings_line = unaffected_earnings_type == record.account_id.user_type_id
-
     @api.depends('tag_ids', 'debit', 'credit', 'journal_id')
     def _compute_tax_audit(self):
         separator = '        '
@@ -2984,6 +2993,13 @@ class AccountMoveLine(models.Model):
     # -------------------------------------------------------------------------
     # CONSTRAINT METHODS
     # -------------------------------------------------------------------------
+
+    @api.constrains('currency_id', 'account_id')
+    def _check_account_currency(self):
+        for line in self:
+            account_currency = line.account_id.currency_id
+            if account_currency and account_currency != line.company_currency_id and account_currency != line.currency_id:
+                raise UserError(_('The account selected on your journal entry forces to provide a secondary currency. You should remove the secondary currency on the account.'))
 
     @api.constrains('account_id')
     def _check_constrains_account_id(self):
@@ -3140,6 +3156,8 @@ class AccountMoveLine(models.Model):
                 current_ids = set(line[field_name].ids)
                 after_write_ids = set(r['id'] for r in line.resolve_2many_commands(field_name, vals[field_name], fields=['id']))
                 return current_ids != after_write_ids
+            if field.type == 'monetary' and line[field.currency_field]:
+                return not line[field.currency_field].is_zero(line[field_name] - vals[field_name])
             return line[field_name] != vals[field_name]
 
         ACCOUNTING_FIELDS = ('debit', 'credit', 'amount_currency')
@@ -3897,9 +3915,42 @@ class AccountPartialReconcile(models.Model):
 
     @api.model
     def _prepare_exchange_diff_partial_reconcile(self, aml, line_to_reconcile, currency):
+        """
+        Prepares the values for the partial reconciliation between an account.move.line
+        that needs to be fixed by an exchange rate entry and the account.move.line that fixes it
+
+        @param {account.move.line} aml:
+            The line that needs fixing with exchange difference entry
+            (e.g. a receivable/payable from an invoice)
+        @param {account.move.line} line_to_reconcile:
+            The line that fixes the aml. it is the receivable/payable line
+            of the exchange difference entry move
+        @param {res.currency} currency
+
+        @return {dict} values of account.partial.reconcile; ready for create()
+        """
+
+        # the exhange rate difference that will be fixed may be of opposite direction
+        # than the original move line (i.e. the exchange difference may be negative whereas
+        # the move line on which it applies may be a debit -- positive)
+        # So we need to register both the move line and the exchange line
+        # to either debit_move or credit_move as a function of whether the direction (debit VS credit)
+        # of the exchange loss/gain is the same (or not) as the direction of the line that is fixed here
+        if aml.currency_id:
+            residual_same_sign = aml.amount_currency * aml.amount_residual_currency >= 0
+        else:
+            residual_same_sign = aml.balance * aml.amount_residual >= 0
+
+        if residual_same_sign:
+            debit_move_id = line_to_reconcile.id if aml.credit else aml.id
+            credit_move_id = line_to_reconcile.id if aml.debit else aml.id
+        else:
+            debit_move_id = aml.id if aml.credit else line_to_reconcile.id
+            credit_move_id = aml.id if aml.debit else line_to_reconcile.id
+
         return {
-            'debit_move_id': aml.credit and line_to_reconcile.id or aml.id,
-            'credit_move_id': aml.debit and line_to_reconcile.id or aml.id,
+            'debit_move_id': debit_move_id,
+            'credit_move_id': credit_move_id,
             'amount': abs(aml.amount_residual),
             'amount_currency': abs(aml.amount_residual_currency),
             'currency_id': currency and currency.id or False,

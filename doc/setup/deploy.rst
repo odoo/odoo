@@ -273,12 +273,6 @@ just about any SSL termination proxy, but requires the following setup:
 * Your SSL termination proxy should also automatically redirect non-secure
   connections to the secure port
 
-.. warning::
-
-  In case you are using the Point of Sale module in combination with a `POSBox`_,
-  you must disable the HTTPS configuration for the route ``/pos/web`` to avoid
-  mixed-content errors.
-
 Configuration sample
 --------------------
 

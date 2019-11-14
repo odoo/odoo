@@ -674,9 +674,6 @@ exports.PosModel = Backbone.Model.extend({
         var order = new exports.Order({},{pos:this});
         this.get('orders').add(order);
         this.set('selectedOrder', order);
-        if (this.config.iface_customer_facing_display) {
-            this.send_current_order_to_customer_facing_display();
-        }
         return order;
     },
     /**
@@ -2153,6 +2150,7 @@ exports.Paymentline = Backbone.Model.extend({
     set_amount: function(value){
         this.order.assert_editable();
         this.amount = round_di(parseFloat(value) || 0, this.pos.currency.decimals);
+        this.pos.send_current_order_to_customer_facing_display();
         this.trigger('change',this);
     },
     // returns the amount of money on this paymentline
@@ -2271,8 +2269,7 @@ exports.Order = Backbone.Model.extend({
         this.paymentlines.on('remove', function(){ this.save_to_db("paymentline:rem"); }, this);
 
         if (this.pos.config.iface_customer_facing_display) {
-            this.paymentlines.on('change', this.pos.send_current_order_to_customer_facing_display, this.pos);
-            // removing last paymentline does not trigger change event
+            this.paymentlines.on('add', this.pos.send_current_order_to_customer_facing_display, this.pos);
             this.paymentlines.on('remove', this.pos.send_current_order_to_customer_facing_display, this.pos);
         }
 
@@ -2388,6 +2385,7 @@ exports.Order = Backbone.Model.extend({
             creation_date: this.validation_date || this.creation_date, // todo: rename creation_date in master
             fiscal_position_id: this.fiscal_position ? this.fiscal_position.id : false,
             server_id: this.server_id ? this.server_id : false,
+            to_invoice: this.to_invoice ? this.to_invoice : false,
         };
         if (!this.is_paid && this.user_id) {
             json.user_id = this.user_id;

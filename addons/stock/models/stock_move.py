@@ -907,8 +907,16 @@ class StockMove(models.Model):
         """ return create values for new picking that will be linked with group
         of moves in self.
         """
-        origins = set(self.filtered(lambda m: m.origin).mapped('origin'))
-        origin = len(origins) == 1 and origins.pop() or False
+        origins = self.filtered(lambda m: m.origin).mapped('origin')
+        origins = list(dict.fromkeys(origins)) # create a list of unique items
+        # Will display source document if any, when multiple different origins
+        # are found display a maximum of 5
+        if len(origins) == 0:
+            origin = False
+        else:
+            origin = ','.join(origins[:5])
+            if len(origins) > 5:
+                origin += "..."
         partners = self.mapped('partner_id')
         partner = len(partners) == 1 and partners.id or False
         return {
@@ -1280,7 +1288,7 @@ class StockMove(models.Model):
                 extra_move = extra_move._action_confirm()
 
             # link it to some move lines. We don't need to do it for move since they should be merged.
-            if not merge_into_self:
+            if not merge_into_self or not extra_move.picking_id:
                 for move_line in self.move_line_ids.filtered(lambda ml: ml.qty_done):
                     if float_compare(move_line.qty_done, extra_move_quantity, precision_rounding=rounding) <= 0:
                         # move this move line to our extra move

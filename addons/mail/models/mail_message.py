@@ -1187,7 +1187,7 @@ class Message(models.Model):
             else:
                 email_from = self.env.company.catchall
 
-            body_html = tools.append_content_to_html('<div>%s</div>' % tools.ustr(comment), msg.body)
+            body_html = tools.append_content_to_html('<div>%s</div>' % tools.ustr(comment), msg.body, plaintext=False)
             vals = {
                 'subject': subject,
                 'body_html': body_html,

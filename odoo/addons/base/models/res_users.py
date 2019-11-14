@@ -548,7 +548,10 @@ class Users(models.Model):
         if operator == 'ilike' and not (name or '').strip():
             domain = []
         else:
-            domain = [('login', '=', name)]
+            if operator not in expression.NEGATIVE_TERM_OPERATORS:
+                domain = [('login', '=', name)]
+            else:
+                domain = [('login', '!=', name)]
         user_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
         if not user_ids:
             user_ids = self._search(expression.AND([[('name', operator, name)], args]), limit=limit, access_rights_uid=name_get_uid)
@@ -1137,7 +1140,7 @@ class GroupsView(models.Model):
             xml_content = etree.tostring(xml, pretty_print=True, encoding="unicode")
 
             new_context = dict(view._context)
-            new_context.pop('install_mode_data', None)  # don't set arch_fs for this computed view
+            new_context.pop('install_filename', None)  # don't set arch_fs for this computed view
             new_context['lang'] = None
             view.with_context(new_context).write({'arch': xml_content})
 

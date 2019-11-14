@@ -235,6 +235,7 @@ class AccountBankStatement(models.Model):
         return True
 
     def unlink(self):
+
         for statement in self:
             if statement.state != 'open':
                 raise UserError(_('In order to delete a bank statement, you must first cancel it to delete related journal items.'))

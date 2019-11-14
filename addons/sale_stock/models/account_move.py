@@ -32,7 +32,7 @@ class AccountMove(models.Model):
 
         # Get the other customer invoices and refunds.
         ordered_invoice_ids = sale_orders.mapped('invoice_ids')\
-            .filtered(lambda i: i.state != 'draft')\
+            .filtered(lambda i: i.state not in ['draft', 'cancel'])\
             .sorted(lambda i: (i.invoice_date, i.id))
 
         # Get the position of self in other customer invoices and refunds.
