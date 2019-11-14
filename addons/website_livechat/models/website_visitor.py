@@ -74,32 +74,3 @@ class WebsiteVisitor(models.Model):
             mail_channels_info = mail_channels.channel_info('channel_minimize')
             for mail_channel_info in mail_channels_info:
                 self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', operator.partner_id.id), mail_channel_info)
-
-    def _handle_website_page_visit(self, response, website_page, visitor_sudo):
-        """ Called when the visitor navigates to a website page.
-         This checks if there is a chat request for the visitor.
-         It will set the livechat session cookie of the visitor with the mail channel information
-         to make the usual livechat mechanism do the rest.
-         (opening the chatter if a livechat session exist for the visitor)
-         This will only happen if the mail channel linked to the chat request already has a message.
-         So that empty livechat channel won't pop up at client side. """
-        super(WebsiteVisitor, self)._handle_website_page_visit(response, website_page, visitor_sudo)
-        visitor_id = visitor_sudo.id or self.env['website.visitor']._get_visitor_from_request().id
-        if visitor_id:
-            # get active chat_request linked to visitor
-            chat_request_channel = self.env['mail.channel'].sudo().search([('livechat_visitor_id', '=', visitor_id), ('livechat_active', '=', True)], order='create_date desc', limit=1)
-            if chat_request_channel and chat_request_channel.channel_message_ids:
-                livechat_session = json.dumps({
-                    "folded": False,
-                    "id": chat_request_channel.id,
-                    "message_unread_counter": 0,
-                    "operator_pid": [
-                        chat_request_channel.livechat_operator_id.id,
-                        chat_request_channel.livechat_operator_id.display_name
-                    ],
-                    "name": chat_request_channel.name,
-                    "uuid": chat_request_channel.uuid,
-                    "type": "chat_request"
-                })
-                expiration_date = datetime.now() + timedelta(days=100 * 365)  # never expire
-                response.set_cookie('im_livechat_session', livechat_session, expires=expiration_date.timestamp())
