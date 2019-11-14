@@ -871,9 +871,9 @@
         ]"/>
     </record>
 
-    <record id="tvatisca" model="account.tax.template">
+    <record id="tvatiscdeda" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="sequence">41</field>
+        <field name="sequence">61</field>
         <field name="name">TVA Taxare Scutita Achizitii</field>
         <field name="description">Scutit-A</field>
         <field name="amount">0</field>
@@ -884,8 +884,8 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('account_tax_report_ro_baza_tva_tx_scutita_achizt')],
-                'minus_report_line_ids': [ref('account_tax_report_ro_baza_tva_tx_scutita_vnzari')],
+                'plus_report_line_ids': [ref('account_tax_report_ro_baza_rd28'),
+                                         ref('account_tax_report_ro_baza_rd281')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -896,8 +896,8 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('account_tax_report_ro_baza_tva_tx_scutita_achizt')],
-                'plus_report_line_ids': [ref('account_tax_report_ro_baza_tva_tx_scutita_vnzari')],
+                'minus_report_line_ids': [ref('account_tax_report_ro_baza_rd28'),
+                                          ref('account_tax_report_ro_baza_rd281')],
             }),
             (0,0, {
                 'factor_percent': 100,
