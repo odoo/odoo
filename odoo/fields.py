@@ -745,7 +745,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
     @property
     def _description_sortable(self):
-        return self.store or (self.inherited and self.related_field._description_sortable)
+        return (self.column_type and self.store) or (self.inherited and self.related_field._description_sortable)
 
     def _description_string(self, env):
         if self.string and env.lang:
