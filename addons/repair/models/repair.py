@@ -306,6 +306,7 @@ class Repair(models.Model):
                 else:
                     if not repair.partner_id.property_account_receivable_id:
                         raise UserError(_('No account defined for partner "%s".') % repair.partner_id.name)
+                    fp_id = repair.partner_id.property_account_position_id.id or self.env['account.fiscal.position'].get_fiscal_position(repair.partner_id.id, delivery_id=repair.address_id.id)
                     invoice = Invoice.create({
                         'name': repair.name,
                         'origin': repair.name,
@@ -314,7 +315,7 @@ class Repair(models.Model):
                         'partner_id': repair.partner_invoice_id.id or repair.partner_id.id,
                         'currency_id': repair.pricelist_id.currency_id.id,
                         'comment': repair.quotation_notes,
-                        'fiscal_position_id': repair.partner_id.property_account_position_id.id
+                        'fiscal_position_id': fp_id
                     })
                     invoices_group[repair.partner_invoice_id.id] = invoice
                 repair.write({'invoiced': True, 'invoice_id': invoice.id})
@@ -591,7 +592,12 @@ class RepairLine(models.Model):
             self.product_uom = self.product_id.uom_id.id
         if self.type != 'remove':
             if partner and self.product_id:
-                self.tax_id = partner.property_account_position_id.map_tax(self.product_id.taxes_id, self.product_id, partner).ids
+                fp = partner.property_account_position_id
+                if not fp:
+                    # Check automatic detection
+                    fp_id = self.env['account.fiscal.position'].get_fiscal_position(partner.id, delivery_id=self.repair_id.address_id.id)
+                    fp = self.env['account.fiscal.position'].browse(fp_id)
+                self.tax_id = fp.map_tax(self.product_id.taxes_id, self.product_id, partner).ids
             warning = False
             if not pricelist:
                 warning = {
@@ -652,7 +658,12 @@ class RepairFee(models.Model):
         pricelist = self.repair_id.pricelist_id
 
         if partner and self.product_id:
-            self.tax_id = partner.property_account_position_id.map_tax(self.product_id.taxes_id, self.product_id, partner).ids
+            fp = partner.property_account_position_id
+            if not fp:
+                # Check automatic detection
+                fp_id = self.env['account.fiscal.position'].get_fiscal_position(partner.id, delivery_id=self.repair_id.address_id.id)
+                fp = self.env['account.fiscal.position'].browse(fp_id)
+            self.tax_id = fp.map_tax(self.product_id.taxes_id, self.product_id, partner).ids
         if self.product_id:
             self.name = self.product_id.display_name
             self.product_uom = self.product_id.uom_id.id
