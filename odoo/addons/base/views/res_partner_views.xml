@@ -84,8 +84,8 @@
                         <field name="function" placeholder="e.g. Sales Director" attrs="{'invisible': [('is_company','=', True)]}"/>
                         <field name="user_ids" invisible="1"/>
                         <field name="email" widget="email" context="{'gravatar_image': True}" required="context.get('force_email', False)" attrs="{'required': [('user_ids','!=', [])]}"/>
-                        <field name="phone" widget="phone"/>
-                        <field name="mobile" widget="phone"/>
+                        <field name="phone" widget="phone" options="{'enable_sms': false}"/>
+                        <field name="mobile" widget="phone" options="{'enable_sms': false}"/>
                     </group>
                 </form>
             </field>
@@ -184,8 +184,8 @@
                         <group>
                             <field name="function" placeholder="e.g. Sales Director"
                                 attrs="{'invisible': [('is_company','=', True)]}"/>
-                            <field name="phone" widget="phone"/>
-                            <field name="mobile" widget="phone"/>
+                            <field name="phone" widget="phone" options="{'enable_sms': false}"/>
+                            <field name="mobile" widget="phone" options="{'enable_sms': false}"/>
                             <field name="email" widget="email" context="{'gravatar_image': True}"/>
                         </group>
                     </group>
@@ -441,8 +441,8 @@
                                 </div>
                             </group>
                             <group>
-                                <field name="phone" widget="phone"/>
-                                <field name="mobile" widget="phone"/>
+                                <field name="phone" widget="phone" options="{'enable_sms': false}"/>
+                                <field name="mobile" widget="phone" options="{'enable_sms': false}"/>
                                 <field name="email"/>
                             </group>
                         </group>

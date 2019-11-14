@@ -179,7 +179,7 @@
                                     <field name="partner_address_email"
                                         attrs="{'invisible': [('partner_address_email', '=', False)]}" widget="email" string="Email"/>
                                 </div>
-                                <field name="phone" widget="phone" options="{'enable_sms': True}"/>
+                                <field name="phone" widget="phone"/>
                             </group>
                             <group name="lead_info" attrs="{'invisible': [('type', '=', 'opportunity')]}">
                                 <label for="contact_name"/>
@@ -198,8 +198,8 @@
                                 </div>
                                 <field name="email_cc" groups="base.group_no_one"/>
                                 <field name="function"/>
-                                <field name="phone" widget="phone" options="{'enable_sms': True}"/>
-                                <field name="mobile" widget="phone" options="{'enable_sms': True}"/>
+                                <field name="phone" widget="phone"/>
+                                <field name="mobile" widget="phone"/>
                             </group>
                             <group attrs="{'invisible': [('type', '=', 'lead')]}">
                                 <field name="date_deadline"/>
@@ -271,7 +271,7 @@
                                             <field name="title" placeholder="Title" domain="[]" options='{"no_open": True}'/>
                                         </div>
                                         <field name="function"/>
-                                        <field name="mobile" widget="phone" options="{'enable_sms': True}"/>
+                                        <field name="mobile" widget="phone"/>
                                     </group>
                                     <group string="Marketing">
                                         <field name="campaign_id" />
