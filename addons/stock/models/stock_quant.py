@@ -109,11 +109,41 @@ class Quant(models.Model):
         # TDE FIXME: why not storing the inventory_value field ? company_id is required, stored, and should not create issues
         res = super(Quant, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
         if 'inventory_value' in fields:
+            # search quants in domain and group them
+            quants = self.search(domain)
+            if groupby:
+                if lazy:
+                    res_groupby = [groupby[0]]
+                else:
+                    res_groupby = groupby
+                quants_by = {}
+                for quant in quants:
+                    quants_key = []
+                    for field in res_groupby:
+                        value = quant[field]
+                        if isinstance(value, models.BaseModel):
+                            value = value.id
+                        quants_key.append(value)
+                    quants_key = tuple(quants_key)
+                    if quants_key not in quants_by:
+                        quants_by[quants_key] = []
+                    quants_by[quants_key].append(quant)
+            # compute inventory value of grouped quants
             for line in res:
-                lines = self.search(line.get('__domain', domain))
+                if groupby:
+                    quants_key = []
+                    for field in res_groupby:
+                        value = line[field]
+                        if isinstance(value, tuple):
+                            value = value[0]
+                        quants_key.append(value)
+                    quants_key = tuple(quants_key)
+                    group_quants = quants_by[quants_key]
+                else:
+                    group_quants = quants
                 inv_value = 0.0
-                for line2 in lines:
-                    inv_value += line2.inventory_value
+                for quant in group_quants:
+                    inv_value += quant.inventory_value
                 line['inventory_value'] = inv_value
         return res
 
