@@ -5,7 +5,6 @@ import json
 import re
 import uuid
 from functools import partial
-from stdnum.iso7064 import mod_97_10
 from itertools import zip_longest
 
 from lxml import etree
@@ -39,6 +38,14 @@ TYPE2REFUND = {
 }
 
 MAGIC_COLUMNS = ('id', 'create_uid', 'create_date', 'write_uid', 'write_date')
+
+def calc_check_digits(number):
+    """Calculate the extra digits that should be appended to the number to make it a valid number.
+    Source: python-stdnum iso7064.mod_97_10.calc_check_digits
+    """
+    number_base10 = ''.join(str(int(x, 36)) for x in number)
+    checksum = int(number_base10) % 97
+    return '%02d' % ((98 - 100 * checksum) % 97)
 
 
 class AccountInvoice(models.Model):
@@ -454,7 +461,7 @@ class AccountInvoice(models.Model):
         """
         self.ensure_one()
         base = self.id
-        check_digits = mod_97_10.calc_check_digits('{}RF'.format(base))
+        check_digits = calc_check_digits('{}RF'.format(base))
         reference = 'RF{} {}'.format(check_digits, " ".join(["".join(x) for x in zip_longest(*[iter(str(base))]*4, fillvalue="")]))
         return reference
 
@@ -473,7 +480,7 @@ class AccountInvoice(models.Model):
         partner_ref = self.partner_id.ref
         partner_ref_nr = re.sub('\D', '', partner_ref or '')[-21:] or str(self.partner_id.id)[-21:]
         partner_ref_nr = partner_ref_nr[-21:]
-        check_digits = mod_97_10.calc_check_digits('{}RF'.format(partner_ref_nr))
+        check_digits = calc_check_digits('{}RF'.format(partner_ref_nr))
         reference = 'RF{} {}'.format(check_digits, " ".join(["".join(x) for x in zip_longest(*[iter(partner_ref_nr)]*4, fillvalue="")]))
         return reference
 
