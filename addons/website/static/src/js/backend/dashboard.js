@@ -13,7 +13,9 @@ var web_client = require('web.web_client');
 var _t = core._t;
 var QWeb = core.qweb;
 
-var DATE_FORMAT = time.getLangDateFormat();
+function DATE_FORMAT(){
+    return time.getLangDateFormat();
+}
 var COLORS = ["#1f77b4", "#aec7e8"];
 var FORMAT_OPTIONS = {
     // allow to decide if utils.human_number should be used
@@ -214,7 +216,7 @@ var Dashboard = AbstractAction.extend({
                     xAxes: [{
                         ticks: {
                             callback: function (moment) {
-                                return moment.format(DATE_FORMAT);
+                                return moment.format(DATE_FORMAT());
                             },
                         }
                     }],
@@ -237,7 +239,7 @@ var Dashboard = AbstractAction.extend({
                             var date = tooltipItem.datasetIndex === 0 ?
                                         moment :
                                         moment.subtract(1, self.date_range);
-                            return date.format(DATE_FORMAT) + ': ' + self.formatValue(tooltipItem.yLabel);
+                            return date.format(DATE_FORMAT()) + ': ' + self.formatValue(tooltipItem.yLabel);
                         },
                         labelColor: function (tooltipItem, chart) {
                             var dataset = chart.data.datasets[tooltipItem.datasetIndex];
