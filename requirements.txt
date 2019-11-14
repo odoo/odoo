@@ -21,7 +21,7 @@ mock==2.0.0
 num2words==0.5.6
 ofxparse==0.16
 passlib==1.6.5
-Pillow==5.4.1
+Pillow==5.4.1 ; python_version < '3.7' or sys_platform != 'win32'
 Pillow==6.1.0 ; sys_platform == 'win32' and python_version >= '3.7'
 polib==1.1.0
 psutil==4.3.1; sys_platform != 'win32'
