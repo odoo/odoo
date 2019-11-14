@@ -366,6 +366,11 @@ class PaymentAcquirer(models.Model):
                 'res_id': self.ids[0],
                 'context': context,
             }
+    
+    @api.model
+    def get_disabled_s2s_providers(self):
+        """Returns the list of providers that no longer support s2s in payment forms."""
+        return []
 
 
 class PaymentTransaction(models.Model):
@@ -530,6 +535,14 @@ class PaymentTransaction(models.Model):
             reference = init_ref + 'x' + str(ref_suffix)
             ref_suffix += 1
         return reference
+
+    def _get_json_info(self):
+        self.ensure_one()
+        return {
+            'state': self.state,
+            'acquirer_reference': self.acquirer_reference,
+            'reference': self.reference,
+        }
 
     # --------------------------------------------------
     # FORM RELATED METHODS

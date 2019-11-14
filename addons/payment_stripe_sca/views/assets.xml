@@ -1,0 +1,17 @@
+<odoo>
+    <template id="assets_frontend" inherit_id="web.assets_frontend" name="Payment Stripe SCA Assets" priority="999">
+        <xpath expr="." position="inside">
+            <!-- DBO NOTE: the following conditions are there to avoid 2 link modules that would contain
+            a single JS file and assets inclusion. It's a bit ugly, but should be fine functionnaly.-->
+            <t t-if="request.env.ref('base.module_website_sale', False).sudo().state in ('installed', 'to_upgrade')">
+                <script type="text/javascript" src="/payment_stripe_sca/static/src/js/website_sale_payment.js"></script>
+            </t>
+            <t t-if="request.env.ref('base.module_website_quote', False).sudo().state in ('installed', 'to_upgrade')">
+                <script type="text/javascript" src="/payment_stripe_sca/static/src/js/website_quote.js"></script>
+            </t>
+            <script type="text/javascript" src="/payment_stripe_sca/static/src/js/payment_form.js"></script>
+            <script type="text/javascript" src="/payment_stripe_sca/static/src/js/stripe_sca.js"></script>
+            <script type="text/javascript" src="/payment_stripe_sca/static/src/js/portal_mixin.js"></script>
+        </xpath>
+    </template>
+</odoo>

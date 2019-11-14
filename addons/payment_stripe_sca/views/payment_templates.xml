@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+       <template id="stripe_acquirer_button" inherit_id="payment_stripe.stripe_acquirer_button">
+            <xpath expr="//script" position="before">
+                <input type='hidden' name='session_id' t-att-value='session_id'/>
+            </xpath>
+            <xpath expr="//script" position="replace">
+                <script type="text/javascript" src="https://js.stripe.com/v3/"/>
+            </xpath>
+            <xpath expr="//script[last()]" position="replace">
+            </xpath>
+            <xpath expr="//button[@id='pay_stripe']" position="replace">
+                <button id="pay_stripe" width="100px" t-att-class="submit_class" type="submit">
+                    <img t-if="not submit_txt" src="/payment_stripe/static/src/img/stripe_icon.png"/>
+                    <span t-if="submit_txt"><t t-esc="submit_txt"/> <span class="fa fa-long-arrow-right"/></span>
+                </button>
+            </xpath>
+        </template>
+
+        <template id="stripe_s2s_form" inherit_id="payment_stripe.stripe_s2s_form">
+            <xpath expr="//form" position="replace">
+                <form method="post" action="/payment/stripe/s2s/create_json_3ds" data-prevent-old-json='1'>
+                    <input type="hidden" name="data_set" value="/payment/stripe/s2s/create_json_3ds"/>
+                    <input type="hidden" name="acquirer_id" t-att-value="id"/>
+                    <input type="hidden" name="stripe_publishable_key" t-att-value="stripe_publishable_key"/>
+                    <input t-if="return_url" type="hidden" name="return_url" t-att-value="return_url"/>
+                    <input t-if="partner_id" type="hidden" name="partner_id" t-att-value="partner_id"/>
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div id="payment-form">
+                                <div id="card-element" class="m-3"/>
+                                <div id="card-errors" class="m-3 text-danger"/>
+                            </div>
+                        </div>
+                    </div>
+                    <button t-att-class="submit_class" class="btn btn-primary" type="submit">
+                        <span t-if="not submit_txt">Confirm <span class="fa fa-long-arrow-right"></span></span>
+                        <span t-if="submit_txt"><t t-esc="submit_txt"/></span>
+                    </button>
+                    </form>
+            </xpath>
+        </template>
+    </data>
+</odoo>

@@ -53,10 +53,4 @@ $(document).ready(function () {
         }
     });
 
-    $('select[name="pm_acquirer_id"]').on('change', function() {
-        var acquirer_id = $(this).val();
-        $('.acquirer').addClass('hidden');
-        $('.acquirer[data-acquirer-id="'+acquirer_id+'"]').removeClass('hidden');
-    });
-
 });
