@@ -42,8 +42,8 @@ class WebsiteVisitor(models.Model):
     country_flag = fields.Binary(related="country_id.image", string="Country Flag")
     lang_id = fields.Many2one('res.lang', string='Language', help="Language from the website when visitor has been created")
     timezone = fields.Selection(_tz_get, string='Timezone')
-    email = fields.Char(string='Email', compute='_compute_email_phone')
-    mobile = fields.Char(string='Mobile Phone', compute='_compute_email_phone')
+    email = fields.Char(string='Email', compute='_compute_email_phone', store=True)
+    mobile = fields.Char(string='Mobile Phone', compute='_compute_email_phone', store=True)
 
     # Visit fields
     visit_count = fields.Integer('Number of visits', default=1, readonly=True, help="A new visit is considered if last connection was more than 8 hours ago.")

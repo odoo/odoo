@@ -27,7 +27,8 @@ MASS_MAILING_BUSINESS_MODELS = [
     'event.track',
     'sale.order',
     'mailing.list',
-    'mailing.contact'
+    'mailing.contact',
+    'website.visitor',
 ]
 
 # Syntax of the data URL Scheme: https://tools.ietf.org/html/rfc2397#section-3
