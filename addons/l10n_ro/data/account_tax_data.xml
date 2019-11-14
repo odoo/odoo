@@ -1440,4 +1440,187 @@
         ]"/>
     </record>
 
+    <record id="tva_ned_5_50" model="account.tax.template">
+        <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="sequence">72</field>
+        <field name="name">TVA 5% Nedeductibil 50%</field>
+        <field name="description">TVA 5% Nedeductibil 50%</field>
+        <field name="amount">5</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_group_id" ref="tax_group_tva_5"/>
+        <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('account_tax_report_ro_baza_rd24'),
+                                         ref('account_tax_report_ro_baza_rd11')],
+            }),
+            (0,0, {
+                'factor_percent': -50,
+                'repartition_type': 'tax',
+                'account_id': ref('pcg_4427'),
+                'minus_report_line_ids': [ref('account_tax_report_ro_tva_rd11')],
+            }),
+            (0,0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('pcg_6352'),
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('pcg_4426'),
+                'plus_report_line_ids': [ref('account_tax_report_ro_tva_rd24')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('account_tax_report_ro_baza_rd24'),
+                                          ref('account_tax_report_ro_baza_rd11')],
+            }),
+            (0,0, {
+                'factor_percent': -50,
+                'repartition_type': 'tax',
+                'account_id': ref('pcg_4427'),
+                'plus_report_line_ids': [ref('account_tax_report_ro_tva_rd11')],
+            }),
+            (0,0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('pcg_6352'),
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('pcg_4426'),
+                'minus_report_line_ids': [ref('account_tax_report_ro_tva_rd24')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tva_ned_9_50" model="account.tax.template">
+        <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="sequence">71</field>
+        <field name="name">TVA 9% Nedeductibil 50%</field>
+        <field name="description">TVA 9% Nedeductibil 50%</field>
+        <field name="amount">9</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_group_id" ref="tax_group_tva_9"/>
+        <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('account_tax_report_ro_baza_rd23'),
+                                         ref('account_tax_report_ro_baza_rd10')],
+            }),
+            (0,0, {
+                'factor_percent': -50,
+                'repartition_type': 'tax',
+                'account_id': ref('pcg_4427'),
+                'minus_report_line_ids': [ref('account_tax_report_ro_tva_rd10')],
+            }),
+            (0,0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('pcg_6352'),
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('pcg_4426'),
+                'plus_report_line_ids': [ref('account_tax_report_ro_tva_rd23')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('account_tax_report_ro_baza_rd23'),
+                                          ref('account_tax_report_ro_baza_rd10')],
+            }),
+            (0,0, {
+                'factor_percent': -50,
+                'repartition_type': 'tax',
+                'account_id': ref('pcg_4427'),
+                'plus_report_line_ids': [ref('account_tax_report_ro_tva_rd10')],
+            }),
+            (0,0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('pcg_6352'),
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('pcg_4426'),
+                'minus_report_line_ids': [ref('account_tax_report_ro_tva_rd23')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tva_ned_19_50" model="account.tax.template">
+        <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="sequence">70</field>
+        <field name="name">TVA 19% Nedeductibil 50%</field>
+        <field name="description">TVA 19% Nedeductibil 50%</field>
+        <field name="amount">19</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_group_id" ref="tax_group_tva_19"/>
+        <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('account_tax_report_ro_baza_rd22'),
+                                         ref('account_tax_report_ro_baza_rd9')],
+            }),
+            (0,0, {
+                'factor_percent': -50,
+                'repartition_type': 'tax',
+                'account_id': ref('pcg_4427'),
+                'minus_report_line_ids': [ref('account_tax_report_ro_tva_rd9')],
+            }),
+            (0,0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('pcg_6352'),
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('pcg_4426'),
+                'plus_report_line_ids': [ref('account_tax_report_ro_tva_rd22')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('account_tax_report_ro_baza_rd22'),
+                                          ref('account_tax_report_ro_baza_rd9')],
+            }),
+            (0,0, {
+                'factor_percent': -50,
+                'repartition_type': 'tax',
+                'account_id': ref('pcg_4427'),
+                'plus_report_line_ids': [ref('account_tax_report_ro_tva_rd9')],
+            }),
+            (0,0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('pcg_6352'),
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('pcg_4426'),
+                'minus_report_line_ids': [ref('account_tax_report_ro_tva_rd22')],
+            }),
+        ]"/>
+    </record>
+
 </odoo>
