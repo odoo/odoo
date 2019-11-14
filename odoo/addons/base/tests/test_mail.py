@@ -3,10 +3,15 @@
 
 
 from unittest.mock import patch
+import email.policy
+import email.message
+import threading
 
-from odoo.tests.common import BaseCase
-from odoo.tests.common import SavepointCase
-from odoo.tools import html_sanitize, append_content_to_html, plaintext2html, email_split, misc
+from odoo.tests.common import BaseCase, SavepointCase, TransactionCase
+from odoo.tools import (
+    html_sanitize, append_content_to_html, plaintext2html, email_split,
+    misc, formataddr,
+)
 
 from . import test_mail_examples
 
@@ -328,6 +333,28 @@ class TestEmailTools(BaseCase):
         for text, expected in cases:
             self.assertEqual(email_split(text), expected, 'email_split is broken')
 
+    def test_email_formataddr(self):
+        email = 'joe@example.com'
+        cases = [
+            # (name, address),          charsets            expected
+            (('', email),               ['ascii', 'utf-8'], 'joe@example.com'),
+            (('joe', email),            ['ascii', 'utf-8'], '"joe" <joe@example.com>'),
+            (('joe doe', email),        ['ascii', 'utf-8'], '"joe doe" <joe@example.com>'),
+            (('joe"doe', email),        ['ascii', 'utf-8'], '"joe\\"doe" <joe@example.com>'),
+            (('joé', email),            ['ascii'],          '=?utf-8?b?am/DqQ==?= <joe@example.com>'),
+            (('joé', email),            ['utf-8'],          '"joé" <joe@example.com>'),
+            (('', 'joé@example.com'),   ['ascii', 'utf-8'], UnicodeEncodeError),  # need SMTPUTF8 support
+            (('', 'joe@examplé.com'),   ['ascii', 'utf-8'], UnicodeEncodeError),  # need IDNA support
+        ]
+
+        for pair, charsets, expected in cases:
+            for charset in charsets:
+                with self.subTest(pair=pair, charset=charset):
+                    if isinstance(expected, str):
+                        self.assertEqual(formataddr(pair, charset), expected)
+                    else:
+                        self.assertRaises(expected, formataddr, pair, charset)
+
 
 class EmailConfigCase(SavepointCase):
     @patch.dict("odoo.tools.config.options", {"email_from": "settings@example.com"})
@@ -349,3 +376,31 @@ class EmailConfigCase(SavepointCase):
             "The body of an email",
         )
         self.assertEqual(message["From"], "settings@example.com")
+
+
+class TestEmailMessage(TransactionCase):
+    def test_as_string(self):
+        """Ensure all email sent are bpo-34424 free"""
+
+        class FakeSMTP:
+            """SMTP stub"""
+            def __init__(this):
+                this.email_sent = False
+
+            def sendmail(this, smtp_from, smtp_to_list, message_str):
+                this.email_sent = True
+                message_truth = (
+                    r'From: .+? <joe@example\.com>\r\n'
+                    r'To: .+? <joe@example\.com>\r\n'
+                    r'\r\n'
+                )
+                self.assertRegex(message_str, message_truth)
+
+        msg = email.message.EmailMessage(policy=email.policy.SMTP)
+        msg['From'] = '"Joé Doe" <joe@example.com>'
+        msg['To'] = '"Joé Doe" <joe@example.com>'
+
+        smtp = FakeSMTP()
+        self.patch(threading.currentThread(), 'testing', False)
+        self.env['ir.mail_server'].send_email(msg, smtp_session=smtp)
+        self.assertTrue(smtp.email_sent)

@@ -516,9 +516,10 @@ def email_escape_char(email_address):
 def decode_message_header(message, header, separator=' '):
     return separator.join(h for h in message.get_all(header, []) if h)
 
-def formataddr(pair):
-    """Takes a 2-tuple of the form (realname, email_address) and returns
-    the string value suitable for an RFC 2822 From, To or Cc header.
+def formataddr(pair, charset='utf-8'):
+    """Pretty format a 2-tuple of the form (realname, email_address).
+
+    Set the charset to ascii to get a RFC-2822 compliant email.
 
     The email address is considered valid and is left unmodified.
 
@@ -535,11 +536,11 @@ def formataddr(pair):
     address.encode('ascii')
     if name:
         try:
-            name.encode('ascii')
+            name.encode(charset)
         except UnicodeEncodeError:
-            # non-ascii name, transcode the name in a safe format
+            # charset mismatch, encode as utf-8/base64
             # rfc2047 - MIME Message Header Extensions for Non-ASCII Text
-            return "=?utf-8?b?{name}?= {addr}".format(
+            return "=?utf-8?b?{name}?= <{addr}>".format(
                 name=base64.b64encode(name.encode('utf-8')).decode('ascii'),
                 addr=address)
         else:
