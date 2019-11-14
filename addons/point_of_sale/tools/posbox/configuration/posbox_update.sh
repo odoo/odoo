@@ -8,4 +8,4 @@ localremote=$(git config branch.$localbranch.remote)
 git fetch "${localremote}" "${localbranch}" --depth=1
 git reset "${localremote}"/"${localbranch}" --hard
 sudo mount -o remount,ro /
-(sleep 5 && sudo reboot) &
+(sleep 5 && sudo service odoo restart) &

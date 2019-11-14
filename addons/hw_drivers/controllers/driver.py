@@ -414,6 +414,7 @@ class Manager(Thread):
         """
         Thread that will check connected/disconnected device, load drivers if needed and contact the odoo server with the updates
         """
+        helpers.check_git_branch()
         helpers.check_certificate()
         updated_devices = {}
         self.send_alldevices()
