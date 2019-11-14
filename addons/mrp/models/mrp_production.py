@@ -439,6 +439,12 @@ class MrpProduction(models.Model):
         if not self.routing_id:
             self.date_planned_finished = self.date_planned_start + datetime.timedelta(hours=1)
 
+    @api.onchange('date_deadline')
+    def _onchange_date_deadline(self):
+        self.move_raw_ids.update({
+            'date_expected': self.date_deadline,
+        })
+
     @api.onchange('bom_id', 'product_id', 'product_qty', 'product_uom_id')
     def _onchange_move_raw(self):
         if self.bom_id and self.product_qty > 0:
@@ -478,11 +484,11 @@ class MrpProduction(models.Model):
 
     def write(self, vals):
         res = super(MrpProduction, self).write(vals)
-        if 'date_planned_start' in vals:
+        if 'date_deadline' in vals:
             moves = (self.mapped('move_raw_ids') + self.mapped('move_finished_ids')).filtered(
                 lambda r: r.state not in ['done', 'cancel'])
             moves.write({
-                'date_expected': fields.Datetime.to_datetime(vals['date_planned_start']),
+                'date_expected': fields.Datetime.to_datetime(vals['date_deadline']),
             })
         for production in self:
             if 'date_planned_start' in vals:
@@ -587,7 +593,7 @@ class MrpProduction(models.Model):
             'name': self.name,
             'reference': self.name,
             'date': self.date_planned_start,
-            'date_expected': self.date_planned_start,
+            'date_expected': self.date_deadline,
             'bom_line_id': bom_line.id,
             'picking_type_id': self.picking_type_id.id,
             'product_id': bom_line.product_id.id,
