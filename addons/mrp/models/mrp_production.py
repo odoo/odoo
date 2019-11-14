@@ -599,7 +599,7 @@ class MrpProduction(models.Model):
             'name': self.name,
             'reference': self.name,
             'date': self.date_planned_start,
-            'date_expected': self.date_deadline,
+            'date_expected': self.date_deadline or self.date_planned_start,
             'bom_line_id': bom_line.id,
             'picking_type_id': self.picking_type_id.id,
             'product_id': bom_line.product_id.id,
