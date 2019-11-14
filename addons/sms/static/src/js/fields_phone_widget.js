@@ -8,11 +8,35 @@ var session = require('web.session');
 var _t = core._t;
 
 /**
- * Override of FieldPhone to use add a button calling SMS composer if option activated
+ * Override of FieldPhone to add a button calling SMS composer if option activated (default)
  */
 
 var Phone = basic_fields.FieldPhone;
 Phone.include({
+    /**
+     * By default, enable_sms is activated
+     *
+     * @override
+     */
+    init() {
+        this._super.apply(this, arguments);
+        this.enableSMS = 'enable_sms' in this.attrs.options ? this.attrs.options.enable_sms : true;
+        // reinject in nodeOptions (and thus in this.attrs) to signal the property
+        this.attrs.options.enable_sms = this.enableSMS;
+    },
+    /**
+     * When the send SMS button is displayed, $el becomes a div wrapping
+     * the original links.
+     * This method makes sure we always focus the phone number
+     *
+     * @override
+     */
+    getFocusableElement() {
+        if (this.enableSMS && this.mode === 'readonly') {
+            return this.$('.' + this.className);
+        }
+        return this._super.apply(this, arguments);
+    },
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -24,6 +48,7 @@ Phone.include({
      */
     _onClickSMS: function (ev) {
         ev.preventDefault();
+        ev.stopPropagation();
 
         var context = session.user_context;
         context = _.extend({}, context, {
@@ -54,7 +79,7 @@ Phone.include({
      */
     _renderReadonly: function () {
         var def = this._super.apply(this, arguments);
-        if (this.nodeOptions.enable_sms) {
+        if (this.enableSMS) {
             var $composerButton = $('<a>', {
                 title: _t('Send SMS Text Message'),
                 href: '',
