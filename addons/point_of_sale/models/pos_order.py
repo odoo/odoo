@@ -520,7 +520,6 @@ class PosOrder(models.Model):
                 'name': filename,
                 'type': 'binary',
                 'datas': base64.b64encode(report[0]),
-                'datas_fname': filename,
                 'store_fname': filename,
                 'res_model': 'account.move',
                 'res_id': self.ids[0],
