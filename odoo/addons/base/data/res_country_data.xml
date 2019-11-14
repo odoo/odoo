@@ -1033,7 +1033,7 @@
             <field eval="692" name="phone_code" />
         </record>
         <record id="mk" model="res.country">
-            <field name="name">Macedonia, the former Yugoslav Republic of</field>
+            <field name="name">North Macedonia</field>
             <field name="code">mk</field>
             <field file="base/static/img/country_flags/mk.png" name="image" type="base64" />
             <field name="currency_id" ref="MKD" />
@@ -1819,6 +1819,21 @@
                 ref('ar'),ref('bo'),ref('br'),ref('cl'),ref('co'),
                 ref('ec'),ref('fk'),ref('gs'),ref('gf'),ref('gy'),
                 ref('py'),ref('pe'),ref('sr'),ref('uy'),ref('ve')])]"/>
+        </record>
+
+        <record id="sepa_zone" model="res.country.group">
+            <field name="name">SEPA Countries</field>
+            <field name="country_ids" eval="[(6,0,[
+                ref('ad'),ref('at'),ref('ax'),ref('be'),ref('bg'),
+                ref('bl'),ref('ch'),ref('cy'),ref('cz'),ref('de'),
+                ref('dk'),ref('ee'),ref('es'),ref('fi'),ref('fr'),
+                ref('uk'),ref('gf'),ref('gg'),ref('gi'),ref('gp'),
+                ref('gr'),ref('hr'),ref('hu'),ref('ie'),ref('im'),
+                ref('is'),ref('it'),ref('je'),ref('li'),ref('lt'),
+                ref('lu'),ref('lv'),ref('mc'),ref('mf'),ref('mq'),
+                ref('mt'),ref('nl'),ref('no'),ref('pl'),ref('pm'),
+                ref('pt'),ref('re'),ref('ro'),ref('se'),ref('si'),
+                ref('sk'),ref('sm'),ref('va'),ref('yt')])]"/>
         </record>
     </data>
 </odoo>
