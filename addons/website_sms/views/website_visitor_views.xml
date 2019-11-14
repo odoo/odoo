@@ -9,6 +9,9 @@
                 <button name="action_send_sms" type="object" class="btn btn-primary"
                         attrs="{'invisible': [('mobile', '=', False)]}" string="Send SMS"/>
             </xpath>
+            <xpath expr="//field[@name='mobile']" position="replace">
+                <field name="mobile" widget="phone" options="{'enable_sms': True}"/>
+            </xpath>
         </field>
     </record>
 

@@ -26,6 +26,7 @@ class WebsiteTrack(models.Model):
 
 class WebsiteVisitor(models.Model):
     _name = 'website.visitor'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = 'Website Visitor'
     _order = 'last_connection_datetime DESC'
 
@@ -33,7 +34,7 @@ class WebsiteVisitor(models.Model):
     access_token = fields.Char(required=True, default=lambda x: uuid.uuid4().hex, index=True, copy=False, groups='base.group_website_publisher')
     active = fields.Boolean('Active', default=True)
     website_id = fields.Many2one('website', "Website", readonly=True)
-    partner_id = fields.Many2one('res.partner', string="Linked Partner", help="Partner of the last logged in user.")
+    partner_id = fields.Many2one('res.partner', string="Linked Partner", help="Partner of the last logged in user.", index=True)
     partner_image = fields.Binary(related='partner_id.image_1920')
 
     # localisation and info
@@ -129,8 +130,8 @@ class WebsiteVisitor(models.Model):
 
     def _prepare_message_composer_context(self):
         return {
-            'default_model': 'res.partner',
-            'default_res_id': self.partner_id.id,
+            'default_model': 'website.visitor',
+            'default_res_id': self.id,
             'default_partner_ids': [self.partner_id.id],
         }
 
@@ -140,6 +141,7 @@ class WebsiteVisitor(models.Model):
             raise UserError(_("There is no contact and/or no email linked this visitor."))
         visitor_composer_ctx = self._prepare_message_composer_context()
         compose_form = self.env.ref('mail.email_compose_message_wizard_form', False)
+
         compose_ctx = dict(
             default_use_template=False,
             default_composition_mode='comment',
@@ -264,3 +266,19 @@ class WebsiteVisitor(models.Model):
                 self.env.cr.execute(query, (date_now, self.id), log_exceptions=False)
         except Exception:
             pass
+
+    def _message_get_suggested_recipients(self):
+        recipients = super(WebsiteVisitor, self)._message_get_suggested_recipients()
+        for visitor in self:
+            if visitor.email:
+                visitor._message_add_suggested_recipient(recipients, email=visitor.email, reason=_('Visitor Email'))
+        return recipients
+
+    def _message_post_after_hook(self, message, msg_vals):
+        if self.email and not self.partner_id:
+            new_partner = message.partner_ids.filtered(lambda partner: partner.email == self.email)
+            if new_partner:
+                self.search([
+                    ('partner_id', '=', False),
+                    ('email', '=', new_partner.email)]).write({'partner_id': new_partner.id})
+        return super(WebsiteVisitor, self)._message_post_after_hook(message, msg_vals)

@@ -16,8 +16,9 @@ class WebsiteVisitor(models.Model):
 
     def _prepare_sms_composer_context(self):
         return {
-            'default_res_model': 'res.partner',
-            'default_res_id': self.partner_id.id,
+            'res_model': 'website.visitor',
+            'res_id': self.id,
+            'partner_ids': [self.partner_id.id],
             'default_composition_mode': 'comment',
             'default_number_field_name': 'mobile' if self.partner_id.mobile else 'phone',
         }
