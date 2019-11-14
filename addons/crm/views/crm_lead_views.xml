@@ -591,7 +591,14 @@
                                         <field name="title" placeholder="Title" domain="[]" options='{"no_open": True}'/>
                                     </div>
                                     <field name="function"/>
-                                    <field name="mobile"/>
+                                    <field name="partner_address_mobile"
+                                       attrs="{'invisible': [('partner_address_mobile', '=', False)]}"
+                                       readonly="1"
+                                       widget="phone"
+                                       string="Mobile"/>
+                                    <field name="mobile"
+                                        attrs="{'invisible': [('partner_address_mobile', '!=', False)]}"
+                                        widget="phone"/>
                                 </group>
                                 <group string="Marketing">
                                     <field name="campaign_id" />
