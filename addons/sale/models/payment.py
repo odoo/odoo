@@ -1,8 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import logging
 import re
 
 from odoo import api, fields, models, _
+from odoo.tools import float_compare
+
+
+_logger = logging.getLogger(__name__)
 
 
 class PaymentAcquirer(models.Model):
@@ -66,14 +71,33 @@ class PaymentTransaction(models.Model):
             # send order confirmation mail
             sales_orders._send_order_confirmation_mail()
 
+    def _check_amount_and_confirm_order(self):
+        self.ensure_one()
+        for order in self.sale_order_ids.filtered(lambda so: so.state in ('draft', 'sent')):
+            if float_compare(self.amount, order.amount_total, 2) == 0:
+                order.with_context(send_email=True).action_confirm()
+            else:
+                _logger.warning(
+                    '<%s> transaction AMOUNT MISMATCH for order %s (ID %s): expected %r, got %r',
+                    self.acquirer_id.provider,order.name, order.id,
+                    order.amount_total, self.amount,
+                )
+                order.message_post(
+                    subject=_("Amount Mismatch (%s)") % self.acquirer_id.provider,
+                    body=_("The order was not confirmed despite response from the acquirer (%s): order total is %r but acquirer replied with %r.") % (
+                        self.acquirer_id.provider,
+                        order.amount_total,
+                        self.amount,
+                    )
+                )
+
     def _set_transaction_authorized(self):
         # Override of '_set_transaction_authorized' in the 'payment' module
         # to confirm the quotations automatically.
         super(PaymentTransaction, self)._set_transaction_authorized()
-        sales_orders = self.mapped('sale_order_ids').filtered(lambda so: so.state in ['draft', 'sent'])
-        for so in sales_orders:
-            # For loop because some override of action_confirm are ensure_one.
-            so.action_confirm()
+        sales_orders = self.mapped('sale_order_ids').filtered(lambda so: so.state in ('draft', 'sent'))
+        for tx in self:
+            tx._check_amount_and_confirm_order()
 
         # send order confirmation mail
         sales_orders._send_order_confirmation_mail()
@@ -82,9 +106,8 @@ class PaymentTransaction(models.Model):
         # Override of '_set_transaction_done' in the 'payment' module
         # to confirm the quotations automatically and to generate the invoices if needed.
         sales_orders = self.mapped('sale_order_ids').filtered(lambda so: so.state in ('draft', 'sent'))
-        for so in sales_orders:
-            # For loop because some override of action_confirm are ensure_one.
-            so.action_confirm()
+        for tx in self:
+            tx._check_amount_and_confirm_order()
         # send order confirmation mail
         sales_orders._send_order_confirmation_mail()
         # invoice the sale orders if needed
