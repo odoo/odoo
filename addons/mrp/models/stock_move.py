@@ -280,6 +280,10 @@ class StockMove(models.Model):
             else:
                 return super(StockMove, self)._get_upstream_documents_and_responsibles(visited)
 
+    def _should_be_assigned(self):
+        res = super(StockMove, self)._should_be_assigned()
+        return bool(res and not (self.production_id or self.raw_material_production_id))
+
 
 class PushedFlow(models.Model):
     _inherit = "stock.location.path"
