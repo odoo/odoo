@@ -4812,7 +4812,8 @@ QUnit.module('basic_fields', {
     });
 
     QUnit.test('phone field in editable list view on normal screens', async function (assert) {
-        assert.expect(8);
+        assert.expect(11);
+        var doActionCount = 0;
 
         var list = await createView({
             View: ListView,
@@ -4824,11 +4825,18 @@ QUnit.module('basic_fields', {
                     size_class: config.device.SIZES.LG,
                 },
             },
+            intercepts: {
+                do_action(ev) {
+                    assert.equal(ev.data.action.res_model, 'sms.composer',
+                        'The action to send an SMS should have been executed');
+                    doActionCount += 1;
+                }
+            }
         });
 
         assert.containsN(list, 'tbody td:not(.o_list_record_selector)', 5);
-        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text(), 'yop',
-            "value should be displayed properly");
+        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text(), 'yopSMS',
+            "value should be displayed properly with a link to send SMS");
 
         assert.containsN(list, 'a.o_field_widget.o_form_uri', 5,
             "should have the correct classnames");
@@ -4845,10 +4853,15 @@ QUnit.module('basic_fields', {
         await testUtils.dom.click(list.$buttons.find('.o_list_button_save'));
         $cell = list.$('tbody td:not(.o_list_record_selector)').first();
         assert.doesNotHaveClass($cell.parent(), 'o_selected_row', 'should not be in edit mode anymore');
-        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text(), 'new',
+        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text(), 'newSMS',
             "value should be properly updated");
         assert.containsN(list, 'a.o_field_widget.o_form_uri', 5,
             "should still have links with correct classes");
+
+        await testUtils.dom.click(list.$('tbody td:not(.o_list_record_selector) .o_field_phone_sms').first());
+        assert.equal(doActionCount, 1, 'Only one action should have been executed');
+        assert.containsNone(list, '.o_selected_row',
+            'None of the list element should have been activated');
 
         list.destroy();
     });
