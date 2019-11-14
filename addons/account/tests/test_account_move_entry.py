@@ -285,10 +285,8 @@ class TestAccountMove(InvoiceTestCommon):
 
         (lines[0] + lines[2]).reconcile()
 
-        draft_moves.flush()
-        self.cr.execute('SAVEPOINT test_misc_draft_reconciled_entries_1')
-
-        with self.assertRaises(UserError):
+        # You can't write something impacting the reconciliation on an already reconciled line.
+        with self.assertRaises(UserError), self.cr.savepoint():
             draft_moves[0].write({
                 'line_ids': [
                     (1, lines[1].id, {'credit': lines[1].credit + 100.0}),
@@ -296,12 +294,17 @@ class TestAccountMove(InvoiceTestCommon):
                 ]
             })
 
-        with self.assertRaises(UserError):
-            draft_moves.unlink()
+        # The write must not raise anything because the rounding of the monetary field should ignore such tiny amount.
+        draft_moves[0].write({
+            'line_ids': [
+                (1, lines[1].id, {'credit': lines[1].credit + 0.0000001}),
+                (1, lines[2].id, {'debit': lines[2].debit + 0.0000001}),
+            ]
+        })
 
-        draft_moves.flush()
-        draft_moves.invalidate_cache()
-        self.cr.execute('ROLLBACK TO SAVEPOINT test_misc_draft_reconciled_entries_1')
+        # You can't unlink an already reconciled line.
+        with self.assertRaises(UserError), self.cr.savepoint():
+            draft_moves.unlink()
 
     def test_misc_unique_sequence_number(self):
         ''' Ensure two journal entries can't share the same name when using the same sequence. '''

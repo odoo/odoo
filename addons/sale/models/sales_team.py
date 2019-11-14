@@ -76,7 +76,7 @@ class CrmTeam(models.Model):
         query = '''
             SELECT
                 move.team_id         AS team_id,
-                SUM(line.balance)    AS amount_untaxed_signed
+                SUM(-line.balance)   AS amount_untaxed_signed
             FROM account_move move
             LEFT JOIN account_move_line line ON line.move_id = move.id
             WHERE move.type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')
@@ -90,7 +90,7 @@ class CrmTeam(models.Model):
             GROUP BY move.team_id
         '''
         today = fields.Date.today()
-        params = [tuple(self.ids), fields.Date.to_string(today), fields.Date.to_string(today.replace(day=1))]
+        params = [tuple(self.ids), fields.Date.to_string(today.replace(day=1)), fields.Date.to_string(today)]
         self._cr.execute(query, params)
 
         data_map = dict((v[0], v[1]) for v in self._cr.fetchall())
