@@ -159,7 +159,7 @@ class Attendee(models.Model):
     def copy(self, default=None):
         raise UserError(_('You cannot duplicate a calendar attendee.'))
 
-    def _send_mail_to_attendees(self, template_xmlid, force_send=False):
+    def _send_mail_to_attendees(self, template_xmlid, force_send=False, force_event_id=None):
         """ Send mail for event invitation to event attendees.
             :param template_xmlid: xml id of the email template to use to send the invitation
             :param force_send: if set to True, the mail(s) will be sent immediately (instead of the next queue processing)
@@ -173,7 +173,7 @@ class Attendee(models.Model):
         invitation_template = self.env.ref(template_xmlid)
 
         # get ics file for all meetings
-        ics_files = self.mapped('event_id')._get_ics_file()
+        ics_files = force_event_id._get_ics_file() if force_event_id else self.mapped('event_id')._get_ics_file()
 
         # prepare rendering context for mail template
         colors = {
@@ -187,7 +187,8 @@ class Attendee(models.Model):
             'color': colors,
             'action_id': self.env['ir.actions.act_window'].search([('view_id', '=', calendar_view.id)], limit=1).id,
             'dbname': self._cr.dbname,
-            'base_url': self.env['ir.config_parameter'].sudo().get_param('web.base.url', default='http://localhost:8069')
+            'base_url': self.env['ir.config_parameter'].sudo().get_param('web.base.url', default='http://localhost:8069'),
+            'force_event_id': force_event_id,
         })
         invitation_template = invitation_template.with_context(rendering_context)
 
@@ -196,7 +197,8 @@ class Attendee(models.Model):
         for attendee in self:
             if attendee.email or attendee.partner_id.email:
                 # FIXME: is ics_file text or bytes?
-                ics_file = ics_files.get(attendee.event_id.id)
+                event_id = force_event_id.id if force_event_id else attendee.event_id.id
+                ics_file = ics_files.get(event_id)
 
                 email_values = {
                     'model': None,  # We don't want to have the mail in the tchatter while in queue!
@@ -440,7 +442,7 @@ class AlarmManager(models.AbstractModel):
 
         result = False
         if alarm.alarm_type == 'email':
-            result = meeting.attendee_ids.filtered(lambda r: r.state != 'declined')._send_mail_to_attendees('calendar.calendar_template_meeting_reminder', force_send=True)
+            result = meeting.attendee_ids.filtered(lambda r: r.state != 'declined')._send_mail_to_attendees('calendar.calendar_template_meeting_reminder', force_send=True, force_event_id=meeting)
         return result
 
     def do_notif_reminder(self, alert):
