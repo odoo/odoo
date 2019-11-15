@@ -522,7 +522,8 @@ actual arch.
         :return: id of the default view of False if none found
         :rtype: int
         """
-        domain = [('model', '=', model), ('type', '=', view_type), ('mode', '=', 'primary')]
+        domain = [('model', '=', model), ('type', '=', view_type), ('mode', '=', 'primary'),
+                  '|', ('groups_id', 'in', self.env.user.groups_id.ids), ('groups_id', '=', False)]
         return self.search(domain, limit=1).id
 
     #------------------------------------------------------
