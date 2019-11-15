@@ -94,7 +94,7 @@
                                     <label for="free_over"/>
                                 </div>
                                 <field nolabel="1" name="amount" attrs="{'required':[('free_over','!=', False)], 'invisible':[('free_over','=', False)]}"/>
-                                <field name="product_id" context="{'default_type': 'service', 'default_sale_ok': False, 'default_purchase_ok': False}" />
+                                <field name="product_id" context="{'default_type': 'service', 'default_sale_ok': False, 'default_purchase_ok': False, 'default_invoice_policy': 'order'}" />
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="can_generate_return" invisible="1"/>
                                 <field name="return_label_on_delivery" attrs="{'invisible': [('can_generate_return', '=', False)]}"/>
