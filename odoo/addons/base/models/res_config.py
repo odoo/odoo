@@ -597,7 +597,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         # other fields: execute method 'set_values'
         # Methods that start with `set_` are now deprecated
         for method in dir(self):
-            if method.startswith('set_') and method is not 'set_values':
+            if method.startswith('set_') and method != 'set_values':
                 _logger.warning(_('Methods that start with `set_` are deprecated. Override `set_values` instead (Method %s)') % method)
 
     def execute(self):
