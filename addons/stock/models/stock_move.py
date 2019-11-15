@@ -1232,7 +1232,7 @@ class StockMove(models.Model):
 
     def _action_cancel(self):
         if any(move.state == 'done' and not move.scrapped for move in self):
-            raise UserError(_('You cannot cancel a stock move that has been set to \'Done\'.'))
+            raise UserError(_('You cannot cancel a stock move that has been set to \'Done\'. Create a return in order to reverse the moves which took place.'))
         moves_to_cancel = self.filtered(lambda m: m.state != 'cancel')
         # self cannot contain moves that are either cancelled or done, therefore we can safely
         # unlink all associated move_line_ids
