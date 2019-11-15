@@ -6,6 +6,7 @@ from io import BytesIO
 from odoo import api, fields, models, _
 from PIL import Image
 import babel
+import babel.dates
 from lxml import etree
 import math
 
