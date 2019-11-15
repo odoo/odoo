@@ -8,6 +8,7 @@
     'depends': [
         'iap',
         'crm',
+        'partner_autocomplete'
     ],
     'data': [
         'data/ir_cron.xml',
