@@ -91,16 +91,15 @@ customer or partner to download the Enterprise packages).
 Windows
 -------
 
-* Download the installer from our nightly_ server (Community only)
-  or the Windows installer from the download_ page (any edition)
-* Run the downloaded file
+#. Download the installer from our nightly_ server (Community only) or the Windows installer from
+   the download_ page (any edition).
+#. Execute the downloaded file.
 
-  .. warning:: on Windows 8, you may see a warning titled "Windows protected
-               your PC". Click :guilabel:`More Info` then
-               :guilabel:`Run anyway`
+   .. warning:: | On Windows 8 and later you may see a warning titled "Windows protected your PC".
+                | Click on **More Info** and then on **Run anyway**.
 
-* Accept the UAC_ prompt
-* Go through the various installation steps
+#. Accept the UAC_ prompt.
+#. Go through the various installation steps.
 
 Odoo will automatically be started at the end of the installation.
 
@@ -117,28 +116,22 @@ Prepare
 
 Odoo needs a `PostgreSQL`_ server to run properly. The default configuration for
 the Odoo 'deb' package is to use the PostgreSQL server on the same host as your
-Odoo instance. Execute the following command as root in order to install
-PostgreSQL server :
+Odoo instance. Execute the following command in order to install the PostgreSQL server:
 
 .. code-block:: console
 
-  # apt-get install postgresql -y
+  $ sudo apt install postgresql -y
 
-In order to print PDF reports, you must install wkhtmltopdf_ yourself:
-the version of wkhtmltopdf_ available in Debian repositories does
-not support headers and footers so it is not used as a direct dependency.
-The recommended version is 0.12.5 and is available on
-`the wkhtmltopdf download page`_, in the archive section. Previously
-recommended version 0.12.1 is a good alternative.
-More details on the various versions and their respective quirks can be
-found in our `wiki <https://github.com/odoo/odoo/wiki/Wkhtmltopdf>`_.
+.. warning:: `wkhtmltopdf` is not installed through **pip** and must be installed manually in
+             version `0.12.5 <the wkhtmltopdf download page_>`_ for it to support headers and
+             footers. See our `wiki <https://github.com/odoo/odoo/wiki/Wkhtmltopdf>`_ for more
+             details on the various versions.
 
 Repository
 ^^^^^^^^^^
 
-Odoo S.A. provides a repository that can be used with  Debian and Ubuntu
-distributions. It can be used to install Odoo Community Edition by executing the
-following commands as root:
+Odoo S.A. provides a repository that can be used with  Debian and Ubuntu distributions. It can be
+used to install *Odoo Community Edition* by executing the following commands **as root**:
 
 .. code-block:: console
 
@@ -146,26 +139,17 @@ following commands as root:
     # echo "deb http://nightly.odoo.com/13.0/nightly/deb/ ./" >> /etc/apt/sources.list.d/odoo.list
     # apt-get update && apt-get install odoo
 
-You can then use the usual ``apt-get upgrade`` command to keep your installation up-to-date.
+You can then use the usual `apt-get upgrade` command to keep your installation up-to-date.
 
-At this moment, there is no repository for the Enterprise Edition.
+At this moment, there is no nightly repository for the Enterprise Edition.
 
 Deb Package
 ^^^^^^^^^^^
 
-Instead of using the repository as described above, the 'deb' package can be
-downloaded here:
+Instead of using the repository as described above, the 'deb' packages for both the *Community* and
+*Enterprise* editions can be downloaded from the `official download page <download_>`_.
 
-* Community Edition: `nightly`_
-* Enterprise Edition `Download`_
-
-You can then use ``gdebi``:
-
-.. code-block:: console
-
-    # gdebi <path_to_installation_package>
-
-Or ``dpkg``:
+Next, execute the following commands **as root**:
 
 .. code-block:: console
 
@@ -176,26 +160,24 @@ Or ``dpkg``:
 This will install Odoo as a service, create the necessary PostgreSQL_ user
 and automatically start the server.
 
-.. warning:: The python3-xlwt Debian package does not exists in Debian Buster nor Ubuntu 18.04.
+.. warning:: The `python3-xlwt` Debian package does not exists in Debian Buster nor Ubuntu 18.04.
              This python module is needed to export into xls format.
 
-If you need the feature, you can install it manually.
-One way to do it, is simply using pip3 like this:
+             If you need the feature, you can install it manually with:
 
-.. code-block:: console
+             .. code-block:: console
 
-    $ sudo pip3 install xlwt
+                $ sudo pip3 install xlwt
 
-.. warning:: Debian 9 and Ubuntu do not provide a package for the python module
-             num2words.
-             Textual amounts will not be rendered by Odoo and this could cause
-             problems with the "l10n_mx_edi" module.
+.. warning:: The `num2words` python package does not exists in Debian Buster nor Ubuntu 18.04.
+             Textual amounts will not be rendered by Odoo and this could cause problems with the
+             `l10n_mx_edi` module.
 
-If you need this feature, you can install the python module like this:
+             If you need this feature, you can install manually with:
 
-.. code-block:: console
+             .. code-block:: console
 
-    $ sudo pip3 install num2words
+                $ sudo pip3 install num2words
 
 Fedora
 ''''''
@@ -204,8 +186,9 @@ Odoo 13.0 'rpm' package supports Fedora 30.
 
 Prepare
 ^^^^^^^
-Odoo needs a `PostgreSQL`_ server to run properly. Assuming that the 'sudo'
-command is available and configured properly, run the following commands :
+Odoo needs a `PostgreSQL`_ server to run properly. Make sure that the `sudo` command is available
+and well configured and, only then, execute the following command in order to install the PostgreSQL
+server:
 
 .. code-block:: console
 
@@ -214,20 +197,16 @@ command is available and configured properly, run the following commands :
     $ sudo systemctl enable postgresql
     $ sudo systemctl start postgresql
 
-In order to print PDF reports, you must install wkhtmltopdf_ yourself:
-the version of wkhtmltopdf_ available in Debian repositories does
-not support headers and footers so it is not used as a direct dependency.
-The recommended version is 0.12.5 and is available on
-`the wkhtmltopdf download page`_, in the archive section. Previously
-recommended version 0.12.1 is a good alternative.
-More details on the various versions and their respective quirks can be
-found in our `wiki <https://github.com/odoo/odoo/wiki/Wkhtmltopdf>`_.
+.. warning:: `wkhtmltopdf` is not installed through **pip** and must be installed manually in
+             version `0.12.5 <the wkhtmltopdf download page_>`_ for it to support headers and
+             footers. See our `wiki <https://github.com/odoo/odoo/wiki/Wkhtmltopdf>`_ for more
+             details on the various versions.
 
 Repository
 ^^^^^^^^^^
 
-Odoo S.A. provides a repository that can be used with the Fedora distibutions.
-It can be used to install Odoo Community Edition by executing the following
+Odoo S.A. provides a repository that can be used with the Fedora distributions.
+It can be used to install *Odoo Community Edition* by executing the following
 commands:
 
 .. code-block:: console
@@ -240,11 +219,8 @@ commands:
 RPM package
 ^^^^^^^^^^^
 
-Instead of using the repository as described above, the 'rpm' package can be
-downloaded here:
-
-* Community Edition: `nightly`_
-* Enterprise Edition `Download`_
+Instead of using the repository as described above, the 'rpm' packages for both the *Community* and
+*Enterprise* editions can be downloaded from the `official download page <download_>`_.
 
 Once downloaded, the package can be installed using the 'dnf' package manager:
 
@@ -328,30 +304,30 @@ Prepare
 Python
 ^^^^^^
 
-Odoo requires Python 3.6 or later to run. Use the the official `Python 3 installer
-<https://www.python.org/downloads/windows/>`_ to download and install Python 3 on your machine.
+Odoo requires Python 3.6 or later to run. Visit `Python's download page <https://www.python.org/downloads/windows/>`_
+to download and install the latest version of Python 3 on your machine.
 
 During installation, check **Add Python 3 to PATH**, then click **Customize Installation** and make
 sure that **pip** is checked.
 
-.. note:: If Python 3 is already installed, make sure that it is 3.6 or above, as previous versions
-          are not compatible with Odoo.
+.. note:: If Python 3 is already installed, make sure that the version is 3.6 or above, as previous
+          versions are not compatible with Odoo.
 
           .. code-block:: doscon
 
-              C:\> python3 --version
+              C:\> python --version
 
           Verify also that pip_ is installed for this version.
 
           .. code-block:: doscon
 
-              C:\> pip3 --version
+              C:\> pip --version
 
 PostgreSQL
 ^^^^^^^^^^
 
 Odoo uses PostgreSQL as database management system. Download and install the `latest version of
-PostgreSQL <https://www.postgresql.org/download/windows/>`_.
+PostgreSQL <https://www.enterprisedb.com/downloads/postgres-postgresql-downloads>`_.
 
 By default, the only user is `postgres` but Odoo forbids connecting as `postgres`, so you need to
 create a new PostgreSQL user:
@@ -360,38 +336,39 @@ create a new PostgreSQL user:
    your `PATH`.
 #. Create a postgres user with a password using the pg admin gui:
 
-   * Open **pgAdminIII**.
-   * Double-click the server to create a connection.
-   * Select :menuselection:`Edit --> New Object --> New Login Role`.
-   * Enter the username in the **Role Name** field (e.g. `odoo`).
-   * Open the **Definition** tab and enter the password (e.g. ``odoo``), then click **OK**.
+   1. Open **pgAdmin**.
+   2. Double-click the server to create a connection.
+   3. Select :menuselection:`Object --> Create --> Login/Group Role`.
+   4. Enter the username in the **Role Name** field (e.g. `odoo`).
+   5. Open the **Definition** tab and enter the password (e.g. ``odoo``), then click **Save**.
+   6. Open the **Privileges** tab and switch **Can login?** to `Yes` and **Create database?** to
+      `Yes`.
 
 Dependencies
 ^^^^^^^^^^^^
 
+Before installing the dependencies, you must download and install the
+`Build Tools for Visual Studio <https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2019>`_.
+When prompted, select **C++ build tools** in the **Workloads** tab and install them.
+
 Odoo dependencies are listed in the `requirements.txt` file located at the root of the Odoo
-community directory. Most of them can be installed with **pip**.
+community directory.
 
 .. tip:: It can be preferable to not mix python modules packages between different instances of Odoo
          or with your system. You can use virtualenv_ to create isolated Python environments.
 
-Navigate to the path of your Odoo Community installation (`YourOdooCommunityPath`) and run **pip**
-on the requirements file:
+Navigate to the path of your Odoo Community installation (`CommunityPath`) and run **pip**
+on the requirements file in a terminal **with Administrator privileges**:
 
 .. code-block:: doscon
 
-    C:\> cd \YourOdooCommunityPath
-    C:\YourOdooCommunityPath> C:\Python35\Scripts\pip.exe install -r requirements.txt
+    C:\> cd \CommunityPath
+    C:\> pip install wheel -r requirements.txt
 
-.. warning:: Some dependencies cannot be installed through pip and require to be installed manually.
-             In particular:
-
-             * `psycopg` must be installed with
-               `this installer <http://www.stickpeople.com/projects/python/win-psycopg/>`_.
-             * `wkhtmltopdf` must be installed in version `0.12.5 <the wkhtmltopdf download page_>`_
-               for it to support headers and footers. See our
-               `wiki <https://github.com/odoo/odoo/wiki/Wkhtmltopdf>`_ for more details on the
-               various versions.
+.. warning:: `wkhtmltopdf` is not installed through **pip** and must be installed manually in
+             version `0.12.5 <the wkhtmltopdf download page_>`_ for it to support headers and
+             footers. See our `wiki <https://github.com/odoo/odoo/wiki/Wkhtmltopdf>`_ for more
+             details on the various versions.
 
 For languages with right-to-left interface (such as Arabic or Hebrew), the package `rtlcss` is
 needed:
@@ -428,11 +405,12 @@ A typical way to run the server would be:
 
 .. code-block:: doscon
 
-    C:\YourOdooCommunityPath> python3 odoo-bin -r dbuser -w dbpassword --addons-path=addons,../mymodules --db-filter=mydb$
+    C:\> cd CommunityPath/
+    C:\> python odoo-bin -r dbuser -w dbpassword --addons-path=addons,../mymodules --db-filter=mydb$
 
-Where `YourOdooCommunityPath` is the path of the Odoo Community installation, `dbuser` is the
+Where `CommunityPath` is the path of the Odoo Community installation, `dbuser` is the
 PostgreSQL login, `dbpassword` is the PostgreSQL password, `../mymodules` is a directory with
-additional addons and `mydb` is the default database to serve on `localhost:8069`.
+additional addons (if any) and `mydb` is the default database to serve on `localhost:8069`.
 
 Linux
 -----
@@ -475,14 +453,6 @@ Enterprise Edition: (see :ref:`setup/install/editions` to get access)
 
   $ git clone https://github.com/odoo/enterprise.git
 
-.. note:: Those repositories are quite heavy so you might be interested only fetching the branch
-          you need. See
-          `branch
-           <https://git-scm.com/docs/git-clone#Documentation/git-clone.txt--bltnamegt>`_
-           and
-          `single branch
-           <https://git-scm.com/docs/git-clone#Documentation/git-clone.txt---no-single-branch>`_
-
 .. note:: **The Enterprise git repository does not contain the full Odoo source code**. It is only
           a collection of extra add-ons. The main server code is in the Community version. Running
           the Enterprise version actually means running the server from the Community version with
@@ -499,8 +469,8 @@ Python
 Odoo requires Python 3.6 or later to run. Use your package manager to download and install Python 3
 on your machine if it is not already done.
 
-.. note:: If Python 3 is already installed, make sure that it is 3.6 or above, as previous versions
-          are not compatible with Odoo.
+.. note:: If Python 3 is already installed, make sure that the version is 3.6 or above, as previous
+          versions are not compatible with Odoo.
 
           .. code-block:: console
 
@@ -518,6 +488,12 @@ PostgreSQL
 Odoo uses PostgreSQL as database management system. Use your package manager to download and install
 the latest version of PostgreSQL.
 
+On Debian/Unbuntu, it can be achieved by executing the following:
+
+.. code-block:: console
+
+    $ sudo apt install postgresql postgresql-client
+
 By default, the only user is `postgres` but Odoo forbids connecting as `postgres`, so you need to
 create a new PostgreSQL user:
 
@@ -532,46 +508,34 @@ create a new PostgreSQL user:
 Dependencies
 ^^^^^^^^^^^^
 
+For libraries using native code, it is necessary to install development tools and native
+dependencies before the Python dependencies of Odoo. They are available in `-dev` or `-devel`
+packages for Python, PostgreSQL, libxml2, libxslt1, libevent, libsasl2 and libldap2.
+
+On Debian/Unbuntu, the following command should install all the required libraries:
+
+.. code-block:: console
+
+    $ sudo apt install python3-dev libxml2-dev libxslt1-dev libldap2-dev libsasl2-dev
+
 Odoo dependencies are listed in the `requirements.txt` file located at the root of the Odoo
-community directory. Most of them can be installed with **pip** altough some libraries require
-installing other system package too.
+community directory.
 
 .. tip:: It can be preferable to not mix python modules packages between different instances of Odoo
          or with your system. You can use virtualenv_ to create isolated Python environments.
 
-On Debian/Ubuntu, the requirements file requires the following packages to be installated:
-
-.. code-block:: console
-
-    # apt install libpq-dev libldap2-dev libsasl2-dev libxslt1-dev
-    # apt install python3-setuptools python3-wheel
-
-Some installations require wheel to be installed via pip too:
-
-.. code-block:: console
-
-    $ pip3 install wheel
-
-Navigate to the path of your Odoo Community installation (`YourOdooCommunityPath`) and run **pip**
+Navigate to the path of your Odoo Community installation (`CommunityPath`) and run **pip**
 on the requirements file:
 
 .. code-block:: console
 
-    $ cd /YourOdooCommunityPath
-    /YourOdooCommunityPath$ pip3 install -r requirements.txt
+    $ cd /CommunityPath
+    $ pip3 install wheel -r requirements.txt
 
-.. warning:: For libraries using native code (Pillow, lxml, greenlet, gevent, psycopg2, ldap), it
-             may be necessary to install development tools and native dependencies before pip is
-             able to install the dependencies themselves. These are available in `-dev` or `-devel`
-             packages for Python, PostgreSQL, libxml2, libxslt1, libevent, libsasl2 and libldap2.
-
-.. warning:: Some dependencies cannot be installed through pip and require to be installed manually.
-             In particular:
-
-             * `wkhtmltopdf` must be installed in version `0.12.5 <the wkhtmltopdf download page_>`_
-               for it to support headers and footers. See our
-               `wiki <https://github.com/odoo/odoo/wiki/Wkhtmltopdf>`_ for more details on the
-               various versions.
+.. warning:: `wkhtmltopdf` is not installed through **pip** and must be installed manually in
+             version `0.12.5 <the wkhtmltopdf download page_>`_ for it to support headers and
+             footers. See our `wiki <https://github.com/odoo/odoo/wiki/Wkhtmltopdf>`_ for more
+             details on the various versions.
 
 For languages with right-to-left interface (such as Arabic or Hebrew), the package `rtlcss` is
 needed:
@@ -607,10 +571,11 @@ A typical way to run the server would be:
 
 .. code-block:: console
 
-    /YourOdooCommunityPath$ python3 odoo-bin --addons-path=addons,../mymodules --db-filter=mydb$
+    $ cd /CommunityPath
+    $ python3 odoo-bin --addons-path=addons,../mymodules --db-filter=mydb$
 
-Where `YourOdooCommunityPath` is the path of the Odoo Community installation, `../mymodules` is a
-directory with additional addons and `mydb` is the default database to serve on `localhost:8069`.
+Where `CommunityPath` is the path of the Odoo Community installation, `../mymodules` is a
+directory with additional addons (if any) and `mydb` is the default database to serve on `localhost:8069`.
 
 Mac OS
 ------
@@ -669,8 +634,8 @@ Python
 Odoo requires Python 3.6 or later to run. Use your preferred package manager (homebrew_, macports_)
 to download and install Python 3 on your machine if it is not already done.
 
-.. note:: If Python 3 is already installed, make sure that it is 3.6 or above, as previous versions
-          are not compatible with Odoo.
+.. note:: If Python 3 is already installed, make sure that the version is 3.6 or above, as previous
+          versions are not compatible with Odoo.
 
           .. code-block:: console
 
@@ -703,18 +668,18 @@ Dependencies
 ^^^^^^^^^^^^
 
 Odoo dependencies are listed in the `requirements.txt` file located at the root of the Odoo
-community directory. Most of them can be installed with **pip**.
+community directory.
 
 .. tip:: It can be preferable to not mix python modules packages between different instances of Odoo
          or with your system. You can use virtualenv_ to create isolated Python environments.
 
-Navigate to the path of your Odoo Community installation (`YourOdooCommunityPath`) and run **pip**
+Navigate to the path of your Odoo Community installation (`CommunityPath`) and run **pip**
 on the requirements file:
 
 .. code-block:: console
 
-   $ cd /YourOdooCommunityPath
-   /YourOdooCommunityPath$ pip3 install -r requirements.txt
+   $ cd /CommunityPath
+   /CommunityPath$ pip3 install -r requirements.txt
 
 .. warning:: Non-Python dependencies need to be installed with a package manager:
 
@@ -727,13 +692,10 @@ on the requirements file:
              #. Download and install the package manager of your choice (homebrew_, macports_).
              #. Install non-python dependencies.
 
-.. warning:: Some dependencies cannot be installed through pip and require to be installed manually.
-             In particular:
-
-             * `wkhtmltopdf` must be installed in version `0.12.5 <the wkhtmltopdf download page_>`_
-               for it to support headers and footers. See our
-               `wiki <https://github.com/odoo/odoo/wiki/Wkhtmltopdf>`_ for more details on the
-               various versions.
+.. warning:: `wkhtmltopdf` is not installed through **pip** and must be installed manually in
+             version `0.12.5 <the wkhtmltopdf download page_>`_ for it to support headers and
+             footers. See our `wiki <https://github.com/odoo/odoo/wiki/Wkhtmltopdf>`_ for more
+             details on the various versions.
 
 For languages with right-to-left interface (such as Arabic or Hebrew), the package `rtlcss` is
 needed:
@@ -744,6 +706,36 @@ needed:
    .. code-block:: console
 
        $ sudo npm install -g rtlcss
+
+Running Odoo
+''''''''''''
+
+Once all dependencies are set up, Odoo can be launched by running `odoo-bin`, the
+command-line interface of the server. It is located at the root of the Odoo Community directory.
+
+To configure the server, you can either specify :ref:`command-line arguments <reference/cmdline/server>` or a
+:ref:`configuration file <reference/cmdline/config>`.
+
+.. tip:: For the Enterprise edition, you must add the path to the `enterprise` addons to the
+         `addons-path` argument. Note that it must come before the other paths in `addons-path` for
+         addons to be loaded correctly.
+
+Common necessary configurations are:
+
+* PostgreSQL user and password. Odoo has no defaults beyond
+  `psycopg2's defaults <http://initd.org/psycopg/docs/module.html>`_: connects over a UNIX socket on
+  port `5432` with the current user and no password.
+* Custom addon paths beyond the defaults, to load your own modules.
+
+A typical way to run the server would be:
+
+.. code-block:: console
+
+    $ cd /CommunityPath
+    $ python3 odoo-bin --addons-path=addons,../mymodules --db-filter=mydb$
+
+Where `CommunityPath` is the path of the Odoo Community installation, `../mymodules` is a
+directory with additional addons (if any) and `mydb` is the default database to serve on `localhost:8069`.
 
 
 .. _setup/install/docker:

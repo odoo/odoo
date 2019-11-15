@@ -1093,17 +1093,17 @@ take the following attributes:
 
   Example: tasks have a field user_id that reference res.users. The res.users model has a field image that holds the avatar,
   then:
-.. code-block:: xml
 
-      <gantt
+  .. code-block:: xml
+
+     <gantt
         date_start="date_start"
         date_stop="date_stop"
         thumbnails="{'user_id': 'image_128'}"
       >
       </gantt>
 
-
-will display the users avatars next to their names when grouped by user_id
+  will display the users avatars next to their names when grouped by user_id.
 
 .. _reference/views/dashboard:
 
