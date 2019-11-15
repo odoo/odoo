@@ -55,9 +55,7 @@
 </template>
 
 <template id="newsletter_subscribe_options" name="Newsletter Subscribe Options" inherit_id="website.snippet_options">
-    <xpath expr="//*[@id='so_snippet_addition']" position="attributes">
-        <attribute name="data-selector" add=".o_newsletter_popup" separator=","/>
-    </xpath>
+    <xpath expr="//*[@t-set='so_snippet_addition_selector']" position="inside">, .o_newsletter_popup</xpath>
     <xpath expr="//*[@id='row_valign_snippet_option']" position="attributes">
         <attribute name="data-selector" separator="," add=".s_newsletter_block"/>
     </xpath>

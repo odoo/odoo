@@ -14,14 +14,22 @@
     </div>
 
     <div id="o_scroll">
-        <div id="snippet_structure" class="o_panel">
+        <div id="snippet_custom" class="o_panel d-none">
             <div class="o_panel_header">
-                <i class="fa fa-th-large"/> First Panel
+                <i class="fa fa-fw fa-save"/> Custom
             </div>
-            <div class="o_panel_body">
-                <t t-snippet="web_editor.s_hr" t-thumbnail="/website/static/src/img/snippets_thumbs/s_separator.png"/>
-            </div>
+            <div id="snippet_custom_body" class="o_panel_body"/>
         </div>
+        <t id="default_snippets">
+            <div id="snippet_structure" class="o_panel">
+                <div class="o_panel_header">
+                    <i class="fa fa-th-large"/> First Panel
+                </div>
+                <div class="o_panel_body">
+                    <t t-snippet="web_editor.s_hr" t-thumbnail="/website/static/src/img/snippets_thumbs/s_separator.png"/>
+                </div>
+            </div>
+        </t>
     </div>
 
     <div id="snippet_options" class="d-none">

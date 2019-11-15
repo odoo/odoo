@@ -2,11 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-import werkzeug
+import os
 import uuid
+import werkzeug
 
 from odoo import api, fields, models
 from odoo import tools
+from odoo.addons import website
 from odoo.addons.http_routing.models.ir_http import url_for
 from odoo.osv import expression
 from odoo.http import request
@@ -462,3 +464,23 @@ class View(models.Model):
             if website_specific_view:
                 self = website_specific_view
         super(View, self).save(value, xpath=xpath)
+
+    # --------------------------------------------------------------------------
+    # Snippet saving
+    # --------------------------------------------------------------------------
+
+    @api.model
+    def _get_default_snippet_thumbnail(self, snippet_class=None):
+        if snippet_class:
+            for path in website.__path__:
+                if os.path.isfile(path + '/static/src/img/snippets_thumbs/%s.png' % snippet_class):
+                    return '/website/static/src/img/snippets_thumbs/%s.png' % snippet_class
+        return super()._get_default_snippet_thumbnail()
+
+    @api.model
+    def _snippet_save_view_values_hook(self):
+        res = super()._snippet_save_view_values_hook()
+        website_id = self.env.context.get('website_id')
+        if website_id:
+            res['website_id'] = website_id
+        return res

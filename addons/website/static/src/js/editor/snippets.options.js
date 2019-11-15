@@ -3,7 +3,6 @@ odoo.define('website.editor.snippets.options', function (require) {
 
 var core = require('web.core');
 var Dialog = require('web.Dialog');
-var weWidgets = require('wysiwyg.widgets');
 const wUtils = require('website.utils');
 var options = require('web_editor.snippets.options');
 

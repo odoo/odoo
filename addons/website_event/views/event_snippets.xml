@@ -59,9 +59,7 @@
 </template>
 
 <template id="snippet_options" inherit_id="website.snippet_options">
-    <xpath expr="//div[@id='so_content_addition']" position="attributes">
-        <attribute name="data-selector" add=".oe_country_events, .s_speaker_bio" separator=","/>
-    </xpath>
+    <xpath expr="//*[@t-set='so_content_addition_selector']" position="inside">, .oe_country_events, .s_speaker_bio</xpath>
 </template>
 
 <!-- Snippet - Speaker Bio -->

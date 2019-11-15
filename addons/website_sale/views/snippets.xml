@@ -106,10 +106,7 @@
             <we-button data-no-preview="true" data-open-searchbar-settings="">Products Search Bar</we-button>
         </div>
     </xpath>
-    <xpath expr="//div[@id='so_content_addition']" position="attributes">
-        <attribute name="data-selector" add=".s_wsale_products_searchbar_input" separator=","/>
-        <attribute name="data-drop-near" add=".s_wsale_products_searchbar_input" separator=","/>
-    </xpath>
+    <xpath expr="//*[@t-set='so_content_addition_selector']" position="inside">, .s_wsale_products_searchbar_input</xpath>
 </template>
 
 </odoo>
