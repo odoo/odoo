@@ -92,6 +92,8 @@ var PivotModel = AbstractModel.extend({
                         model: self.modelName,
                         method: 'read_group',
                         context: self.data.context,
+                        // by now, header.domain should be always set here.
+                        // We let the line below as it is by precaution.
                         domain: header.domain ||
                                     self.data.domain.concat(self.data.timeRange),
                         fields: measures,
@@ -108,6 +110,7 @@ var PivotModel = AbstractModel.extend({
                         model: self.modelName,
                         method: 'read_group',
                         context: self.data.context,
+                        // by now, header.comparisonDomain should be always set here.
                         domain: header.comparisonDomain ||
                                     self.data.domain.concat(self.data.comparisonTimeRange),
                         fields: measures,
@@ -883,6 +886,12 @@ var PivotModel = AbstractModel.extend({
                         comparisonData: 0,
                         variation: computeVariation(dataPoint.__count, 0)
                     };
+                    // The current dataPoint might not have a counterpart in 'comparisonData'
+                    // This is why dataPoint.__comparisonDomain is set to [[0, '=', 1]].
+                    // This is as if a corresponding dataPoint representing an empty group had been provided
+                    // by the read_groups. The default value will be eventually replaced if there really is
+                    // a counterpart to the current dataPoint.
+                    dataPoint.__comparisonDomain = [[0, '=', 1]];
                     dataPoints[groupIdentifier] = dataPoint;
                 }
             }
@@ -927,11 +936,17 @@ var PivotModel = AbstractModel.extend({
                         };
                         dataPoint.__comparisonCount = dataPoint.__count;
                         dataPoint.__comparisonDomain = dataPoint.__domain;
-                        dataPoints[groupIdentifier] = _.omit(dataPoint, '__domain');
+                        // Here we are sure that the dataPoint has no counterpart in 'data'.
+                        // this means that dataPoint.__domain won't be modified.
+                        // The same remark applies for the other default values attributed to 'data'
+                        // (e.g. dataPoint.__count.data).
+                        dataPoint.__domain = [[0, '=', 1]];
+                        dataPoints[groupIdentifier] = dataPoint;
                     } else {
                         // Here we know that the group is represented in 'data'.
                         // Therefore we modify the corresonding dataPoint:
-                        // we modify the key 'comparisonData' and recompute 'variation'.
+                        // we modify the key 'comparisonData', recompute 'variation', and set correctly
+                        // the key comparisonDomain.
                         for (m=0; m < this.data.measures.length; m++) {
                             measureName = this.data.measures[m];
                             measureComparisonValue = dataPoint[measureName];
@@ -1020,6 +1035,8 @@ var PivotModel = AbstractModel.extend({
                     }
                     if (i + j === 0) {
                         this.data.has_data = attrs.length > 0 || attrs.comparisonLength > 0;
+                        row.domain = col.domain = this.data.domain.concat(this.data.timeRange);
+                        row.comparisonDomain = col.comparisonDomain = this.data.domain.concat(this.data.comparisonTimeRange);
                         main_row_header = row;
                         main_col_header = col;
                     }
