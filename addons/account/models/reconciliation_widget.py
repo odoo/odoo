@@ -62,7 +62,7 @@ class AccountReconciliation(models.AbstractModel):
                 result
             :param search_str: optional search (can be the amout, display_name,
                 partner name, move line name)
-            :param offset: offset of the search result (to display pager)
+            :param offset: useless but kept in stable to preserve api
             :param limit: number of the result to search
             :param mode: 'rp' for receivable/payable or 'other'
         """
@@ -88,15 +88,13 @@ class AccountReconciliation(models.AbstractModel):
                 "account_move_line".date_maturity ASC,
                 "account_move_line".id ASC
             {limit_str}
-            {offset_str}
         '''.format(
             from_clause=from_clause,
             where_str=where_clause and (" WHERE %s" % where_clause) or '',
             amount=st_line.amount,
             limit_str=limit and ' LIMIT %s' or '',
-            offset_str=offset and ' OFFSET %s' or '',
         )
-        params = where_clause_params + (limit and [limit] or []) + (offset and [offset] or [])
+        params = where_clause_params + (limit and [limit] or [])
         self.env['account.move'].flush()
         self.env['account.move.line'].flush()
         self.env['account.bank.statement'].flush()
@@ -282,7 +280,7 @@ class AccountReconciliation(models.AbstractModel):
 
         domain = self._domain_move_lines_for_manual_reconciliation(account_id, partner_id, excluded_ids, search_str)
         recs_count = Account_move_line.search_count(domain)
-        lines = Account_move_line.search(domain, offset=offset, limit=limit, order="date_maturity desc, id desc")
+        lines = Account_move_line.search(domain, limit=limit, order="date_maturity desc, id desc")
         if target_currency_id:
             target_currency = Currency.browse(target_currency_id)
         else:
