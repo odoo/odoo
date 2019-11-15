@@ -1125,7 +1125,7 @@ class SaleOrderLine(models.Model):
         orders = self.mapped('order_id')
         for order in orders:
             order_lines = self.filtered(lambda x: x.order_id == order)
-            msg = "<b>The ordered quantity has been updated.</b><ul>"
+            msg = "<b>" + _("The ordered quantity has been updated.") + "</b><ul>"
             for line in order_lines:
                 msg += "<li> %s:" % (line.product_id.display_name,)
                 msg += "<br/>" + _("Ordered Quantity") + ": %s -> %s <br/>" % (
