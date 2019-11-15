@@ -356,12 +356,20 @@ class CRMRevealRule(models.Model):
             # Does not create a lead if the reveal_id is already known
             return False
         lead_vals = rule._lead_vals_from_response(result)
+
         lead = self.env['crm.lead'].create(lead_vals)
+
+        template_values = result['reveal_data']
+        template_values.update({
+            'flavor_text': _("Opportunity created by Odoo Lead Generation"),
+            'people_data': result.get('people_data'),
+        })
         lead.message_post_with_view(
-            'crm_iap_lead.lead_message_template',
-            values=self.env['crm.iap.lead.helpers'].format_data_for_message_post(result['reveal_data'], result.get('people_data')),
+            'partner_autocomplete.enrich_service_information',
+            values=template_values,
             subtype_id=self.env.ref('mail.mt_note').id
         )
+
         return lead
 
     # Methods responsible for format response data in to valid odoo lead data
