@@ -2633,11 +2633,7 @@ class AccountMoveLine(models.Model):
         if self.company_id and tax_ids:
             tax_ids = tax_ids.filtered(lambda tax: tax.company_id == self.company_id)
 
-        fiscal_position = self.move_id.fiscal_position_id
-        if tax_ids and fiscal_position:
-            return fiscal_position.map_tax(tax_ids, partner=self.partner_id)
-        else:
-            return tax_ids
+        return self.move_id.fiscal_position_id.map_tax(tax_ids, partner=self.partner_id)
 
     def _get_computed_uom(self):
         self.ensure_one()

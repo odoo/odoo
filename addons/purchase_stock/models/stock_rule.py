@@ -212,7 +212,7 @@ class StockRule(models.Model):
 
         taxes = product_id.supplier_taxes_id
         fpos = po.fiscal_position_id
-        taxes_id = fpos.map_tax(taxes, product_id, seller.name) if fpos else taxes
+        taxes_id = fpos.map_tax(taxes, product_id, seller.name)
         if taxes_id:
             taxes_id = taxes_id.filtered(lambda x: x.company_id.id == company_id.id)
 
