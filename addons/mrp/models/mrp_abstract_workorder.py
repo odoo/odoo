@@ -405,9 +405,10 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
         # reservation is made, so it is still possible to change it afterwards.
         for quant in quants:
             quantity = quant.quantity - quant.reserved_quantity
+            quantity = self.product_id.uom_id._compute_quantity(quantity, self.product_uom_id, rounding_method='HALF-UP')
             rounding = quant.product_uom_id.rounding
             if (float_compare(quant.quantity, 0, precision_rounding=rounding) <= 0 or
-                    float_compare(quantity, 0, precision_rounding=rounding) <= 0):
+                    float_compare(quantity, 0, precision_rounding=self.product_uom_id.rounding) <= 0):
                 continue
             vals = {
                 'move_id': self.move_id.id,
@@ -415,7 +416,7 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
                 'location_id': quant.location_id.id,
                 'location_dest_id': self.move_id.location_dest_id.id,
                 'product_uom_qty': 0,
-                'product_uom_id': quant.product_uom_id.id,
+                'product_uom_id': self.product_uom_id.id,
                 'qty_done': min(quantity, self.qty_done),
                 'lot_produced_ids': self._get_produced_lots(),
             }
@@ -425,10 +426,10 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
             vals_list.append(vals)
             self.qty_done -= vals['qty_done']
             # If all the qty_done is distributed, we can close the loop
-            if float_compare(self.qty_done, 0, precision_rounding=self.product_uom_id.rounding) <= 0:
+            if float_compare(self.qty_done, 0, precision_rounding=self.product_id.uom_id.rounding) <= 0:
                 break
 
-        if float_compare(self.qty_done, 0, precision_rounding=self.product_uom_id.rounding) > 0:
+        if float_compare(self.qty_done, 0, precision_rounding=self.product_id.uom_id.rounding) > 0:
             vals = {
                 'move_id': self.move_id.id,
                 'product_id': self.product_id.id,
