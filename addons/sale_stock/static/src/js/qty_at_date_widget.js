@@ -83,6 +83,7 @@ var QtyAtDateWidget = Widget.extend({
                     var additional_context = {};
                     additional_context.grid_anchor = self.data.delivery_date_grid;
                     additional_context.search_default_warehouse_id = [self.data.warehouse_id.data.id];
+                    additional_context.search_default_below_warehouse = false;
                     action.context = new Context(action.context, additional_context);
                     action.domain = [
                         ['product_id', 'in', res]
