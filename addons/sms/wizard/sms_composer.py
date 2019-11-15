@@ -72,10 +72,16 @@ class SendSMS(models.TransientModel):
     mass_force_send = fields.Boolean('Send directly', default=False)
     mass_use_blacklist = fields.Boolean('Use blacklist', default=True)
     # recipients
-    recipient_single_description = fields.Text('Recipients (Partners)', compute='_compute_recipients', compute_sudo=False)
     recipient_valid_count = fields.Integer('# Valid recipients', compute='_compute_recipients', compute_sudo=False)
     recipient_invalid_count = fields.Integer('# Invalid recipients', compute='_compute_recipients', compute_sudo=False)
-    number_field_name = fields.Char(string='Field holding number')
+    recipient_single_description = fields.Text('Recipients (Partners)', compute='_compute_recipient_single', compute_sudo=False)
+    recipient_single_number = fields.Char('Stored Recipient Number', compute='_compute_recipient_single', compute_sudo=False)
+    recipient_single_number_itf = fields.Char(
+        'Recipient Number', compute='_compute_recipient_single',
+        readonly=False, compute_sudo=False, store=True,
+        help='UX field allowing to edit the recipient number. If changed it will be stored onto the recipient.')
+    recipient_single_valid = fields.Boolean("Is valid", compute='_compute_recipient_single_valid', compute_sudo=False)
+    number_field_name = fields.Char('Number Field')
     numbers = fields.Char('Recipients (Numbers)')
     sanitized_numbers = fields.Char('Sanitized Number', compute='_compute_sanitized_numbers', compute_sudo=False)
     # content
@@ -99,28 +105,50 @@ class SendSMS(models.TransientModel):
     @api.depends('res_model', 'res_id', 'res_ids', 'use_active_domain', 'composition_mode', 'number_field_name', 'sanitized_numbers')
     def _compute_recipients(self):
         for composer in self:
-            composer.recipient_single_description = False
             composer.recipient_valid_count = 0
             composer.recipient_invalid_count = 0
 
-            if composer.composition_mode in ('comment', 'mass') and composer.res_model:
-                records = composer._get_records()
+            if composer.composition_mode not in ('comment', 'mass') or not composer.res_model:
+                continue
 
-                if records and issubclass(type(records), self.pool['mail.thread']):
-                    res = records._sms_get_recipients_info(force_field=composer.number_field_name)
-                    valid_ids = [rid for rid, rvalues in res.items() if rvalues['sanitized']]
-                    invalid_ids = [rid for rid, rvalues in res.items() if not rvalues['sanitized']]
-                    composer.recipient_valid_count = len(valid_ids)
-                    composer.recipient_invalid_count = len(invalid_ids)
-                    if len(records) == 1:
-                        composer.recipient_single_description = '%s (%s)' % (
-                            res[records.id]['partner'].name or records.display_name,
-                            res[records.id]['sanitized'] or _("Invalid number")
-                        )
-                else:
-                    composer.recipient_invalid_count = 0 if (
-                        composer.sanitized_numbers or (composer.composition_mode == 'mass' and composer.use_active_domain)
-                    ) else 1
+            records = composer._get_records()
+            if records and issubclass(type(records), self.pool['mail.thread']):
+                res = records._sms_get_recipients_info(force_field=composer.number_field_name, partner_fallback=not composer.comment_single_recipient)
+                composer.recipient_valid_count = len([rid for rid, rvalues in res.items() if rvalues['sanitized']])
+                composer.recipient_invalid_count = len([rid for rid, rvalues in res.items() if not rvalues['sanitized']])
+            else:
+                composer.recipient_invalid_count = 0 if (
+                    composer.sanitized_numbers or (composer.composition_mode == 'mass' and composer.use_active_domain)
+                ) else 1
+
+    @api.depends('res_model', 'number_field_name')
+    def _compute_recipient_single(self):
+        for composer in self:
+            records = composer._get_records()
+            if not records or not issubclass(type(records), self.pool['mail.thread']) or not composer.comment_single_recipient:
+                composer.recipient_single_description = False
+                composer.recipient_single_number = ''
+                composer.recipient_single_number_itf = ''
+                continue
+            records.ensure_one()
+            res = records._sms_get_recipients_info(force_field=composer.number_field_name, partner_fallback=False)
+            composer.recipient_single_description = res[records.id]['partner'].name or records.display_name
+            composer.recipient_single_number = res[records.id]['number'] or ''
+            if not composer.recipient_single_number_itf:
+                composer.recipient_single_number_itf = res[records.id]['number'] or ''
+            if not composer.number_field_name:
+                composer.number_field_name = res[records.id]['field_store']
+
+    @api.depends('recipient_single_number', 'recipient_single_number_itf')
+    def _compute_recipient_single_valid(self):
+        for composer in self:
+            value = composer.recipient_single_number_itf or composer.recipient_single_number
+            if value:
+                records = composer._get_records()
+                sanitized = phone_validation.phone_sanitize_numbers_w_record([value], records)[value]['sanitized']
+                composer.recipient_single_valid = bool(sanitized)
+            else:
+                composer.recipient_single_valid = False
 
     @api.depends('numbers', 'res_model', 'res_id')
     def _compute_sanitized_numbers(self):
@@ -149,8 +177,11 @@ class SendSMS(models.TransientModel):
     # ------------------------------------------------------------
 
     def action_send_sms(self):
-        if self.composition_mode in ('numbers', 'comment') and self.recipient_invalid_count:
-            raise UserError(_('%s invalid recipients') % self.recipient_invalid_count)
+        if self.composition_mode in ('numbers', 'comment'):
+            if self.comment_single_recipient and not self.recipient_single_valid:
+                raise UserError(_('Invalid recipient number. Please update it.'))
+            elif not self.comment_single_recipient and self.recipient_invalid_count:
+                raise UserError(_('%s invalid recipients') % self.recipient_invalid_count)
         self._action_send_sms()
         return False
 
@@ -164,9 +195,12 @@ class SendSMS(models.TransientModel):
         if self.composition_mode == 'numbers':
             return self._action_send_sms_numbers()
         elif self.composition_mode == 'comment':
-            if records is not None and issubclass(type(records), self.pool['mail.thread']):
+            if records is None or not issubclass(type(records), self.pool['mail.thread']):
+                return self._action_send_sms_numbers()
+            if self.comment_single_recipient:
+                return self._action_send_sms_comment_single(records)
+            else:
                 return self._action_send_sms_comment(records)
-            return self._action_send_sms_numbers()
         else:
             return self._action_send_sms_mass(records)
 
@@ -177,6 +211,16 @@ class SendSMS(models.TransientModel):
             'content': self.body,
         } for number in self.sanitized_numbers.split(',')])
         return True
+
+    def _action_send_sms_comment_single(self, records=None):
+        # If we have a recipient_single_original number, it's possible this number has been corrected in the popup
+        # if invalid. As a consequence, the test cannot be based on recipient_invalid_count, which count is based
+        # on the numbers in the database.
+        records = records if records is not None else self._get_records()
+        records.ensure_one()
+        if self.recipient_single_number_itf and self.recipient_single_number_itf != self.recipient_single_number:
+            records.write({self.number_field_name: self.recipient_single_number_itf})
+        return self._action_send_sms_comment(records=records)
 
     def _action_send_sms_comment(self, records=None):
         records = records if records is not None else self._get_records()

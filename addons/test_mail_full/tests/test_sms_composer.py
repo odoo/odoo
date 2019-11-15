@@ -131,9 +131,29 @@ class TestSMSComposerComment(test_mail_full_common.TestSMSCommon, test_mail_full
         self.assertEqual(composer.res_id, self.test_record.id)
         self.assertEqual(composer.number_field_name, 'phone_nbr')
         self.assertTrue(composer.comment_single_recipient)
-        self.assertEqual(composer.recipient_single_description, '%s (%s)' % (self.test_record.customer_id.display_name, self.test_numbers_san[1]))
+        self.assertEqual(composer.recipient_single_description, self.test_record.customer_id.display_name)
+        self.assertEqual(composer.recipient_single_number, self.test_numbers[1])
+        self.assertEqual(composer.recipient_single_number_itf, self.test_numbers[1])
+        self.assertTrue(composer.recipient_single_valid)
         self.assertEqual(composer.recipient_valid_count, 1)
         self.assertEqual(composer.recipient_invalid_count, 0)
+
+        with self.with_user('employee'):
+            composer.update({'recipient_single_number_itf': '0123456789'})
+
+        self.assertFalse(composer.recipient_single_valid)
+
+        with self.with_user('employee'):
+            composer.update({'recipient_single_number_itf': self.random_numbers[0]})
+
+        self.assertTrue(composer.recipient_single_valid)
+
+        with self.with_user('employee'):
+            with self.mockSMSGateway():
+                composer.action_send_sms()
+
+        self.test_record.flush()
+        self.assertEqual(self.test_record.phone_nbr, self.random_numbers[0])
 
     def test_composer_numbers_no_model(self):
         with self.with_user('employee'):

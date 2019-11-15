@@ -128,11 +128,8 @@ class MailThread(models.AbstractModel):
                     'partner_store': True,
                     'field_store': fname,
                 }
-            elif all_numbers:
-                result[record.id] = {'partner': self.env['res.partner'], 'sanitized': False, 'number': all_numbers[0]}
             else:
-                idx, value = next(((idx, val) for idx, val in enumerate(all_numbers)), (0, False))
-                fname = tocheck_fields[idx] if tocheck_fields else False
+                value, fname = next(((value, fname) for value, fname in zip(all_numbers, tocheck_fields) if value), (0, False))
                 result[record.id] = {
                     'partner': self.env['res.partner'],
                     'sanitized': False,
