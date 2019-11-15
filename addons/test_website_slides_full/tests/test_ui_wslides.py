@@ -24,7 +24,7 @@ class TestUi(TestUICommon):
             'email': 'admin@yourcompany.example.com',
         })
 
-        # Specify Accounting Data 
+        # Specify Accounting Data
         cash_journal = self.env['account.journal'].create({'name': 'Cash - Test', 'type': 'cash', 'code': 'CASH - Test'})
         self.env['payment.acquirer'].search([('journal_id', '=', False)]).journal_id = cash_journal
         a_recv = self.env['account.account'].create({
@@ -39,17 +39,10 @@ class TestUi(TestUICommon):
             'user_type_id': self.env.ref('account.data_account_type_payable').id,
             'reconcile': True,
         })
-        self.env['ir.property'].create([{
-            'name': 'property_account_receivable_id',
-            'fields_id': self.env['ir.model.fields'].search([('model', '=', 'res.partner'), ('name', '=', 'property_account_receivable_id')], limit=1).id,
-            'value': 'account.account,%s' % (a_recv.id),
-            'company_id': self.env.company.id,
-        }, {
-            'name': 'property_account_payable_id',
-            'fields_id': self.env['ir.model.fields'].search([('model', '=', 'res.partner'), ('name', '=', 'property_account_payable_id')], limit=1).id,
-            'value': 'account.account,%s' % (a_pay.id),
-            'company_id': self.env.company.id,
-        }])
+
+        Property = self.env['ir.property']
+        Property.set_default('property_account_receivable_id', 'res.partner', a_recv, self.env.company)
+        Property.set_default('property_account_payable_id', 'res.partner', a_pay, self.env.company)
 
         product_course_channel_6 = self.env['product.product'].create({
             'name': 'DIY Furniture Course',

@@ -29,11 +29,13 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
                                                  'user_type_id': env.ref('account.data_account_type_receivable').id,
                                                  'reconcile': True})
         self.env.company.account_default_pos_receivable_account_id = account_receivable
-        field = env['ir.model.fields']._get('res.partner', 'property_account_receivable_id')
-        env['ir.property'].create({'name': 'property_account_receivable_id',
-                                   'company_id': main_company.id,
-                                   'fields_id': field.id,
-                                   'value': 'account.account,' + str(account_receivable.id)})
+
+        self.env['ir.property'].set_default(
+            'property_account_receivable_id',
+            'res.partner',
+            account_receivable,
+            main_company,
+        )
 
         cash_journal = journal_obj.create({
             'name': 'Cash Test',

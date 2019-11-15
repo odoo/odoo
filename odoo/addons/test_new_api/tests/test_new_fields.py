@@ -951,12 +951,9 @@ class TestFields(TransactionCaseWithUserDemo):
         tag2 = self.env['test_new_api.multi.tag'].create({'name': 'Quuz'})
 
         # create default values for the company-dependent fields
-        field_foo = self.env['ir.model.fields']._get('test_new_api.company', 'foo')
-        self.env['ir.property'].create({'name': 'foo', 'fields_id': field_foo.id,
-                                        'value': 'default', 'type': 'char'})
-        field_tag_id = self.env['ir.model.fields']._get('test_new_api.company', 'tag_id')
-        self.env['ir.property'].create({'name': 'foo', 'fields_id': field_tag_id.id,
-                                        'value': tag0, 'type': 'many2one'})
+        self.env['ir.property'].set_default('foo', 'test_new_api.company', 'default')
+        self.env['ir.property'].set_default('foo', 'test_new_api.company', 'default1', company1)
+        self.env['ir.property'].set_default('tag_id', 'test_new_api.company', tag0)
 
         # assumption: users don't have access to 'ir.property'
         accesses = self.env['ir.model.access'].search([('model_id.model', '=', 'ir.property')])
@@ -970,7 +967,7 @@ class TestFields(TransactionCaseWithUserDemo):
             'tag_id': tag1.id,
         })
         self.assertEqual(record.with_user(user0).foo, 'main')
-        self.assertEqual(record.with_user(user1).foo, 'default')
+        self.assertEqual(record.with_user(user1).foo, 'default1')
         self.assertEqual(record.with_user(user2).foo, 'default')
         self.assertEqual(str(record.with_user(user0).date), '1932-11-09')
         self.assertEqual(record.with_user(user1).date, False)
