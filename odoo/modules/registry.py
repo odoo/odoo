@@ -292,6 +292,9 @@ class Registry(Mapping):
         env = odoo.api.Environment(cr, SUPERUSER_ID, context)
         models = [env[model_name] for model_name in model_names]
 
+        # make sure the queue does not contain some leftover from a former call
+        self._post_init_queue.clear()
+
         for model in models:
             model._auto_init()
             model.init()
