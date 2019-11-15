@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import babel
+import babel.dates
 import collections
 import datetime
 import pytz
