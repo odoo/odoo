@@ -137,10 +137,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 if self.product_id.type != 'service':
                     raise UserError(_("The product used to invoice a down payment should be of type 'Service'. Please use another product or update this product."))
                 taxes = self.product_id.taxes_id.filtered(lambda r: not order.company_id or r.company_id == order.company_id)
-                if order.fiscal_position_id and taxes:
-                    tax_ids = order.fiscal_position_id.map_tax(taxes, self.product_id, order.partner_shipping_id).ids
-                else:
-                    tax_ids = taxes.ids
+                tax_ids = order.fiscal_position_id.map_tax(taxes, self.product_id, order.partner_shipping_id).ids
                 context = {'lang': order.partner_id.lang}
                 analytic_tag_ids = []
                 for line in order.order_line:

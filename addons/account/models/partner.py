@@ -44,28 +44,21 @@ class AccountFiscalPosition(models.Model):
             if self.zip_from and self.zip_to and position.zip_from > position.zip_to:
                 raise ValidationError(_('Invalid "Zip Range", please configure it properly.'))
 
-    @api.model     # noqa
     def map_tax(self, taxes, product=None, partner=None):
-        result = self.env['account.tax'].browse()
+        if not self:
+            return taxes
+        result = self.env['account.tax']
         for tax in taxes:
-            tax_count = 0
-            for t in self.tax_ids:
-                if t.tax_src_id == tax:
-                    tax_count += 1
-                    if t.tax_dest_id:
-                        result |= t.tax_dest_id
-            if not tax_count:
-                result |= tax
+            taxes_correspondance = self.tax_ids.filtered(lambda t: t.tax_src_id == tax)
+            result |= taxes_correspondance.tax_dest_id if taxes_correspondance else tax
         return result
 
-    @api.model
     def map_account(self, account):
         for pos in self.account_ids:
             if pos.account_src_id == account:
                 return pos.account_dest_id
         return account
 
-    @api.model
     def map_accounts(self, accounts):
         """ Receive a dictionary having accounts in values and try to replace those accounts accordingly to the fiscal position.
         """

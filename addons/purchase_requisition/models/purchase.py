@@ -56,10 +56,7 @@ class PurchaseOrder(models.Model):
                 name += '\n' + product_lang.description_purchase
 
             # Compute taxes
-            if fpos:
-                taxes_ids = fpos.map_tax(line.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id == requisition.company_id)).ids
-            else:
-                taxes_ids = line.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id == requisition.company_id).ids
+            taxes_ids = fpos.map_tax(line.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id == requisition.company_id)).ids
 
             # Compute quantity and price_unit
             if line.product_uom_id != line.product_id.uom_po_id:
