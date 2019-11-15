@@ -1304,6 +1304,8 @@ class AccountTax(models.Model):
     def onchange_amount_type(self):
         if self.amount_type is not 'group':
             self.children_tax_ids = [(5,)]
+        if self.amount_type == 'group':
+            self.description = None
 
     @api.onchange('price_include')
     def onchange_price_include(self):
