@@ -200,11 +200,47 @@
         <field name="country_id" ref="base.ro"/>
     </record>
 
+    <record id="account_tax_report_ro_baza_rd91" model="account.tax.report.line">
+        <field name="name">9.1 - BAZA - Livrări de bunuri şi prestări de servicii taxabile cu cota 19%</field>
+        <field name="tag_name">9.1 - BAZA - Livrări de bunuri şi prestări de servicii taxabile cu cota 19%</field>
+        <field name="code">tax_ro_baza_rd91</field>
+        <field name="sequence" eval="23"/>
+        <field name="parent_id" ref="account_tax_report_ro_baza_rd9"/>
+        <field name="country_id" ref="base.ro"/>
+    </record>
+
+    <record id="account_tax_report_ro_tva_rd91" model="account.tax.report.line">
+        <field name="name">9.1 - TVA - Livrări de bunuri şi prestări de servicii taxabile cu cota 19%</field>
+        <field name="tag_name">9.1 - TVA - Livrări de bunuri şi prestări de servicii taxabile cu cota 19%</field>
+        <field name="code">tax_ro_tva_rd91</field>
+        <field name="sequence" eval="24"/>
+        <field name="parent_id" ref="account_tax_report_ro_tva_rd9"/>
+        <field name="country_id" ref="base.ro"/>
+    </record>
+
+    <record id="account_tax_report_ro_baza_rd92" model="account.tax.report.line">
+        <field name="name">9.2 - BAZA - Achizitii de bunuri şi prestări de servicii nedeductibile 50% taxabile cu cota 19%</field>
+        <field name="code">tax_ro_baza_rd92</field>
+        <field name="sequence" eval="25"/>
+        <field name="parent_id" ref="account_tax_report_ro_baza_rd9"/>
+        <field name="formula">0.5 * tax_ro_baza_rd222</field>
+        <field name="country_id" ref="base.ro"/>
+    </record>
+
+    <record id="account_tax_report_ro_tva_rd92" model="account.tax.report.line">
+        <field name="name">9.2 - TVA - Achizitii de bunuri şi prestări de servicii nedeductibile 50% taxabile cu cota 19%</field>
+        <field name="tag_name">9.2 - TVA - Achizitii de bunuri şi prestări de servicii nedeductibile 50% taxabile cu cota 19%</field>
+        <field name="code">tax_ro_tva_rd92</field>
+        <field name="sequence" eval="26"/>
+        <field name="parent_id" ref="account_tax_report_ro_tva_rd9"/>
+        <field name="country_id" ref="base.ro"/>
+    </record>
+
     <record id="account_tax_report_ro_baza_rd10" model="account.tax.report.line">
         <field name="name">10 - BAZA - Livrări de bunuri şi prestări de servicii taxabile cu cota 9%</field>
         <field name="tag_name">10 - BAZA - Livrări de bunuri şi prestări de servicii taxabile cu cota 9%</field>
         <field name="code">tax_ro_baza_rd10</field>
-        <field name="sequence" eval="23"/>
+        <field name="sequence" eval="27"/>
         <field name="parent_id" ref="account_tax_report_ro_baza_livrari"/>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -213,8 +249,44 @@
         <field name="name">10 - TVA - Livrări de bunuri şi prestări de servicii taxabile cu cota 9%</field>
         <field name="tag_name">10 - TVA - Livrări de bunuri şi prestări de servicii taxabile cu cota 9%</field>
         <field name="code">tax_ro_tva_rd10</field>
-        <field name="sequence" eval="24"/>
+        <field name="sequence" eval="28"/>
         <field name="parent_id" ref="account_tax_report_ro_tva_livrari"/>
+        <field name="country_id" ref="base.ro"/>
+    </record>
+
+    <record id="account_tax_report_ro_baza_rd101" model="account.tax.report.line">
+        <field name="name">10.1 - BAZA - Livrări de bunuri şi prestări de servicii taxabile cu cota 9%</field>
+        <field name="tag_name">10.1 - BAZA - Livrări de bunuri şi prestări de servicii taxabile cu cota 9%</field>
+        <field name="code">tax_ro_baza_rd101</field>
+        <field name="sequence" eval="29"/>
+        <field name="parent_id" ref="account_tax_report_ro_baza_rd10"/>
+        <field name="country_id" ref="base.ro"/>
+    </record>
+
+    <record id="account_tax_report_ro_tva_rd101" model="account.tax.report.line">
+        <field name="name">10.1 - TVA - Livrări de bunuri şi prestări de servicii taxabile cu cota 9%</field>
+        <field name="tag_name">10.1 - TVA - Livrări de bunuri şi prestări de servicii taxabile cu cota 9%</field>
+        <field name="code">tax_ro_tva_rd101</field>
+        <field name="sequence" eval="30"/>
+        <field name="parent_id" ref="account_tax_report_ro_tva_rd10"/>
+        <field name="country_id" ref="base.ro"/>
+    </record>
+
+    <record id="account_tax_report_ro_baza_rd102" model="account.tax.report.line">
+        <field name="name">10.2 - BAZA - Achizitii de bunuri şi prestări de servicii nedeductibile 50% taxabile cu cota 9%</field>
+        <field name="code">tax_ro_baza_rd102</field>
+        <field name="sequence" eval="31"/>
+        <field name="formula">0.5 * tax_ro_baza_rd232</field>
+        <field name="parent_id" ref="account_tax_report_ro_baza_rd10"/>
+        <field name="country_id" ref="base.ro"/>
+    </record>
+
+    <record id="account_tax_report_ro_tva_rd102" model="account.tax.report.line">
+        <field name="name">10.2 - TVA - Achizitii de bunuri şi prestări de servicii nedeductibile 50% taxabile cu cota 9%</field>
+        <field name="tag_name">10.2 - TVA - Achizitii de bunuri şi prestări de servicii nedeductibile 50% taxabile cu cota 9%</field>
+        <field name="code">tax_ro_tva_rd102</field>
+        <field name="sequence" eval="32"/>
+        <field name="parent_id" ref="account_tax_report_ro_tva_rd10"/>
         <field name="country_id" ref="base.ro"/>
     </record>
 
@@ -222,7 +294,7 @@
         <field name="name">11 - BAZA - Livrări de bunuri taxabile cu cota 5%</field>
         <field name="tag_name">11 - BAZA - Livrări de bunuri taxabile cu cota 5%</field>
         <field name="code">tax_ro_baza_rd11</field>
-        <field name="sequence" eval="25"/>
+        <field name="sequence" eval="33"/>
         <field name="parent_id" ref="account_tax_report_ro_baza_livrari"/>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -231,15 +303,51 @@
         <field name="name">11 - TVA - Livrări de bunuri taxabile cu cota 5%</field>
         <field name="tag_name">11 - TVA - Livrări de bunuri taxabile cu cota 5%</field>
         <field name="code">tax_ro_tva_rd11</field>
-        <field name="sequence" eval="26"/>
+        <field name="sequence" eval="34"/>
         <field name="parent_id" ref="account_tax_report_ro_tva_livrari"/>
+        <field name="country_id" ref="base.ro"/>
+    </record>
+
+    <record id="account_tax_report_ro_baza_rd111" model="account.tax.report.line">
+        <field name="name">11.1 - BAZA - Livrări de bunuri şi prestări de servicii taxabile cu cota 5%</field>
+        <field name="tag_name">11.1 - BAZA - Livrări de bunuri şi prestări de servicii taxabile cu cota 5%</field>
+        <field name="code">tax_ro_baza_rd111</field>
+        <field name="sequence" eval="35"/>
+        <field name="parent_id" ref="account_tax_report_ro_baza_rd11"/>
+        <field name="country_id" ref="base.ro"/>
+    </record>
+
+    <record id="account_tax_report_ro_tva_rd111" model="account.tax.report.line">
+        <field name="name">11.1 - TVA - Livrări de bunuri şi prestări de servicii taxabile cu cota 5%</field>
+        <field name="tag_name">11.1 - TVA - Livrări de bunuri şi prestări de servicii taxabile cu cota 5%</field>
+        <field name="code">tax_ro_tva_rd111</field>
+        <field name="sequence" eval="36"/>
+        <field name="parent_id" ref="account_tax_report_ro_tva_rd11"/>
+        <field name="country_id" ref="base.ro"/>
+    </record>
+
+    <record id="account_tax_report_ro_baza_rd112" model="account.tax.report.line">
+        <field name="name">11.2 - BAZA - Achizitii de bunuri şi prestări de servicii nedeductibile 50% taxabile cu cota 5%</field>
+        <field name="code">tax_ro_baza_rd112</field>
+        <field name="sequence" eval="37"/>
+        <field name="formula">0.5 * tax_ro_baza_rd242</field>
+        <field name="parent_id" ref="account_tax_report_ro_baza_rd11"/>
+        <field name="country_id" ref="base.ro"/>
+    </record>
+
+    <record id="account_tax_report_ro_tva_rd112" model="account.tax.report.line">
+        <field name="name">11.2 - TVA - Achizitii de bunuri şi prestări de servicii nedeductibile 50% taxabile cu cota 5%</field>
+        <field name="tag_name">11.2 - TVA - Achizitii de bunuri şi prestări de servicii nedeductibile 50% taxabile cu cota 5%</field>
+        <field name="code">tax_ro_tva_rd112</field>
+        <field name="sequence" eval="38"/>
+        <field name="parent_id" ref="account_tax_report_ro_tva_rd11"/>
         <field name="country_id" ref="base.ro"/>
     </record>
 
     <record id="account_tax_report_ro_baza_rd12" model="account.tax.report.line">
         <field name="name">12 - BAZA - Achiziţii de bunuri şi servicii supuse măsurilor de simplificare pentru care beneficiarul este obligat la plata TVA (taxare inversă) , din care:</field>
         <field name="code">tax_ro_baza_rd12</field>
-        <field name="sequence" eval="27"/>
+        <field name="sequence" eval="39"/>
         <field name="parent_id" ref="account_tax_report_ro_baza_livrari"/>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -247,7 +355,7 @@
     <record id="account_tax_report_ro_tva_rd12" model="account.tax.report.line">
         <field name="name">12 - TVA - Achiziţii de bunuri şi servicii supuse măsurilor de simplificare pentru care beneficiarul este obligat la plata TVA (taxare inversă) , din care:</field>
         <field name="code">tax_ro_tva_rd12</field>
-        <field name="sequence" eval="28"/>
+        <field name="sequence" eval="40"/>
         <field name="parent_id" ref="account_tax_report_ro_tva_livrari"/>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -256,7 +364,7 @@
         <field name="name">12.1 - BAZA - Achizitii de bunuri si servicii, taxabile cu cota 19%</field>
         <field name="tag_name">12.1 - BAZA - Achizitii de bunuri si servicii, taxabile cu cota 19%</field>
         <field name="code">tax_ro_baza_rd121</field>
-        <field name="sequence" eval="29"/>
+        <field name="sequence" eval="41"/>
         <field name="parent_id" ref="account_tax_report_ro_baza_rd12"/>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -265,7 +373,7 @@
         <field name="name">12.1 - TVA - Achizitii de bunuri si servicii, taxabile cu cota 19%</field>
         <field name="tag_name">12.1 - TVA - Achizitii de bunuri si servicii, taxabile cu cota 19%</field>
         <field name="code">tax_ro_tva_rd121</field>
-        <field name="sequence" eval="30"/>
+        <field name="sequence" eval="42"/>
         <field name="parent_id" ref="account_tax_report_ro_tva_rd12"/>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -274,7 +382,7 @@
         <field name="name">12.2 - BAZA - Achizitii de bunuri si servicii, taxabile cu cota 9%</field>
         <field name="tag_name">12.2 - BAZA - Achizitii de bunuri si servicii, taxabile cu cota 9%</field>
         <field name="code">tax_ro_baza_rd122</field>
-        <field name="sequence" eval="31"/>
+        <field name="sequence" eval="43"/>
         <field name="parent_id" ref="account_tax_report_ro_baza_rd12"/>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -283,7 +391,7 @@
         <field name="name">12.2 - TVA - Achizitii de bunuri si servicii, taxabile cu cota 9%</field>
         <field name="tag_name">12.2 - TVA - Achizitii de bunuri si servicii, taxabile cu cota 9%</field>
         <field name="code">tax_ro_tva_rd122</field>
-        <field name="sequence" eval="32"/>
+        <field name="sequence" eval="44"/>
         <field name="parent_id" ref="account_tax_report_ro_tva_rd12"/>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -292,7 +400,7 @@
         <field name="name">12.3 - BAZA - Achizitii de bunuri si servicii, taxabile cu cota 5%</field>
         <field name="tag_name">12.3 - BAZA - Achizitii de bunuri si servicii, taxabile cu cota 5%</field>
         <field name="code">tax_ro_baza_rd123</field>
-        <field name="sequence" eval="33"/>
+        <field name="sequence" eval="45"/>
         <field name="parent_id" ref="account_tax_report_ro_baza_rd12"/>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -301,7 +409,7 @@
         <field name="name">12.3 - TVA - Achizitii de bunuri si servicii, taxabile cu cota 5%</field>
         <field name="tag_name">12.3 - TVA - Achizitii de bunuri si servicii, taxabile cu cota 5%</field>
         <field name="code">tax_ro_tva_rd123</field>
-        <field name="sequence" eval="34"/>
+        <field name="sequence" eval="46"/>
         <field name="parent_id" ref="account_tax_report_ro_tva_rd12"/>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -310,7 +418,7 @@
         <field name="name">13 - BAZA - Livrări de bunuri şi prestări de servicii supuse masurilor de simplificare (taxare inversa)</field>
         <field name="tag_name">13 - BAZA - Livrări de bunuri şi prestări de servicii supuse masurilor de simplificare (taxare inversa)</field>
         <field name="code">tax_ro_baza_rd13</field>
-        <field name="sequence" eval="35"/>
+        <field name="sequence" eval="47"/>
         <field name="parent_id" ref="account_tax_report_ro_baza_livrari"/>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -319,7 +427,7 @@
         <field name="name">14 - BAZA - Livrări de bunuri şi prestări de servicii scutite cu drept de deducere, altele decat cele de la rd. 1-3</field>
         <field name="tag_name">14 - BAZA - Livrări de bunuri şi prestări de servicii scutite cu drept de deducere, altele decat cele de la rd. 1-3</field>
         <field name="code">tax_ro_baza_rd14</field>
-        <field name="sequence" eval="36"/>
+        <field name="sequence" eval="48"/>
         <field name="parent_id" ref="account_tax_report_ro_baza_livrari"/>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -328,7 +436,7 @@
         <field name="name">15 - BAZA - Livrări de bunuri şi prestări de servicii scutite fără drept de deducere</field>
         <field name="tag_name">15 - BAZA - Livrări de bunuri şi prestări de servicii scutite fără drept de deducere</field>
         <field name="code">tax_ro_baza_rd15</field>
-        <field name="sequence" eval="37"/>
+        <field name="sequence" eval="49"/>
         <field name="parent_id" ref="account_tax_report_ro_baza_livrari"/>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -337,7 +445,7 @@
         <field name="name">16 - BAZA - Regularizări taxă colectată</field>
         <field name="tag_name">16 - BAZA - Regularizări taxă colectată</field>
         <field name="code">tax_ro_baza_rd16</field>
-        <field name="sequence" eval="38"/>
+        <field name="sequence" eval="50"/>
         <field name="parent_id" ref="account_tax_report_ro_baza_livrari"/>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -346,7 +454,7 @@
         <field name="name">16 - TVA - Regularizări taxă colectată</field>
         <field name="tag_name">16 - TVA - Regularizări taxă colectată</field>
         <field name="code">tax_ro_tva_rd16</field>
-        <field name="sequence" eval="39"/>
+        <field name="sequence" eval="51"/>
         <field name="parent_id" ref="account_tax_report_ro_tva_livrari"/>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -354,7 +462,7 @@
     <record id="account_tax_report_ro_baza_col" model="account.tax.report.line">
         <field name="name">Baza Total Taxa COLECTATĂ</field>
         <field name="code">total_tax_ro_baza_col</field>
-        <field name="sequence" eval="40"/>
+        <field name="sequence" eval="52"/>
         <field name="formula">tax_ro_baza_intracom_eu + tax_ro_baza_livrari</field>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -362,7 +470,7 @@
     <record id="account_tax_report_ro_tva_col" model="account.tax.report.line">
         <field name="name">TVA Total Taxa COLECTATĂ</field>
         <field name="code">total_tax_ro_tva_col</field>
-        <field name="sequence" eval="41"/>
+        <field name="sequence" eval="53"/>
         <field name="formula">tax_ro_tva_intracom_eu + tax_ro_tva_livrari</field>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -370,14 +478,14 @@
     <record id="account_tax_report_ro_baza_intracom_eu_achiz" model="account.tax.report.line">
         <field name="name">BAZA ACHIZIŢII INTRACOMUNITARE DE BUNURI ŞI ALTE ACHIZIŢII DE BUNURI ŞI SERVICII IMPOZABILE ÎN ROMÂNIA</field>
         <field name="code">tax_ro_baza_intracom_eu_a</field>
-        <field name="sequence" eval="42"/>
+        <field name="sequence" eval="54"/>
         <field name="country_id" ref="base.ro"/>
     </record>
 
     <record id="account_tax_report_ro_tva_intracom_eu_achiz" model="account.tax.report.line">
         <field name="name">TVA ACHIZIŢII INTRACOMUNITARE DE BUNURI ŞI ALTE ACHIZIŢII DE BUNURI ŞI SERVICII IMPOZABILE ÎN ROMÂNIA</field>
         <field name="code">tax_ro_tva_intracom_eu_a</field>
-        <field name="sequence" eval="43"/>
+        <field name="sequence" eval="55"/>
         <field name="country_id" ref="base.ro"/>
     </record>
 
@@ -385,7 +493,7 @@
         <field name="name">18 - BAZA - Achiziţii intracomunitare de bunuri pentru care cumpărătorul este obligat la plata TVA (taxare inversă) (rd.18=rd.5), din care:</field>
         <field name="tag_name">18 - BAZA - Achiziţii intracomunitare de bunuri pentru care cumpărătorul este obligat la plata TVA (taxare inversă) (rd.18=rd.5), din care:</field>
         <field name="code">tax_ro_baza_rd18</field>
-        <field name="sequence" eval="44"/>
+        <field name="sequence" eval="56"/>
         <field name="parent_id" ref="account_tax_report_ro_baza_intracom_eu_achiz"/>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -394,7 +502,7 @@
         <field name="name">18 - TVA - Achiziţii intracomunitare de bunuri pentru care cumpărătorul este obligat la plata TVA (taxare inversă) (rd.18=rd.5), din care:</field>
         <field name="tag_name">18 - TVA - Achiziţii intracomunitare de bunuri pentru care cumpărătorul este obligat la plata TVA (taxare inversă) (rd.18=rd.5), din care:</field>
         <field name="code">tax_ro_tva_rd18</field>
-        <field name="sequence" eval="45"/>
+        <field name="sequence" eval="57"/>
         <field name="parent_id" ref="account_tax_report_ro_tva_intracom_eu_achiz"/>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -403,7 +511,7 @@
         <field name="name">18.1 - BAZA - Achiziţii intracomunitare pentru care cumpărătorul este obligat la plata TVA (taxare inversă), iar furnizorul este înregistrat în scopuri de TVA în statul membru din care a avut loc livrarea (rd.18.1=rd.5.1)</field>
         <field name="tag_name">18.1 - BAZA - Achiziţii intracomunitare pentru care cumpărătorul este obligat la plata TVA (taxare inversă), iar furnizorul este înregistrat în scopuri de TVA în statul membru din care a avut loc livrarea (rd.18.1=rd.5.1)</field>
         <field name="code">tax_ro_baza_rd181</field>
-        <field name="sequence" eval="46"/>
+        <field name="sequence" eval="58"/>
         <field name="parent_id" ref="account_tax_report_ro_baza_rd18"/>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -412,7 +520,7 @@
         <field name="name">18.1 - TVA - Achiziţii intracomunitare pentru care cumpărătorul este obligat la plata TVA (taxare inversă), iar furnizorul este înregistrat în scopuri de TVA în statul membru din care a avut loc livrarea (rd.18.1=rd.5.1)</field>
         <field name="tag_name">18.1 - TVA - Achiziţii intracomunitare pentru care cumpărătorul este obligat la plata TVA (taxare inversă), iar furnizorul este înregistrat în scopuri de TVA în statul membru din care a avut loc livrarea (rd.18.1=rd.5.1)</field>
         <field name="code">tax_ro_tva_rd181</field>
-        <field name="sequence" eval="47"/>
+        <field name="sequence" eval="59"/>
         <field name="parent_id" ref="account_tax_report_ro_tva_rd18"/>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -421,7 +529,7 @@
         <field name="name">19 - BAZA - Regularizări privind achiziţiile intracomunitare de bunuri pentru care cumparatorul este obligat la plata TVA (taxare inversa) (rd.19=rd.6)</field>
         <field name="tag_name">19 - BAZA - Regularizări privind achiziţiile intracomunitare de bunuri pentru care cumparatorul este obligat la plata TVA (taxare inversa) (rd.19=rd.6)</field>
         <field name="code">tax_ro_baza_rd19</field>
-        <field name="sequence" eval="48"/>
+        <field name="sequence" eval="60"/>
         <field name="parent_id" ref="account_tax_report_ro_baza_intracom_eu_achiz"/>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -430,7 +538,7 @@
         <field name="name">19 - TVA - Regularizări privind achiziţiile intracomunitare de bunuri pentru care cumparatorul este obligat la plata TVA (taxare inversa) (rd.19=rd.6)</field>
         <field name="tag_name">19 - TVA - Regularizări privind achiziţiile intracomunitare de bunuri pentru care cumparatorul este obligat la plata TVA (taxare inversa) (rd.19=rd.6)</field>
         <field name="code">tax_ro_tva_rd19</field>
-        <field name="sequence" eval="49"/>
+        <field name="sequence" eval="61"/>
         <field name="parent_id" ref="account_tax_report_ro_tva_intracom_eu_achiz"/>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -439,7 +547,7 @@
         <field name="name">20 - BAZA - Achiziţii de bunuri, altele decat cele de la rd. 18 şi 19, si achizitii de servicii pentru care beneficiarul din Romania este obligat la plata TVA (taxare inversa) (rd.20=rd.7), din care:</field>
         <field name="tag_name">20 - BAZA - Achiziţii de bunuri, altele decat cele de la rd. 18 şi 19, si achizitii de servicii pentru care beneficiarul din Romania este obligat la plata TVA (taxare inversa) (rd.20=rd.7), din care:</field>
         <field name="code">tax_ro_baza_rd20</field>
-        <field name="sequence" eval="50"/>
+        <field name="sequence" eval="62"/>
         <field name="parent_id" ref="account_tax_report_ro_baza_intracom_eu_achiz"/>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -448,7 +556,7 @@
         <field name="name">20 - TVA - Achiziţii de bunuri, altele decat cele de la rd. 18 şi 19, si achizitii de servicii pentru care beneficiarul din Romania este obligat la plata TVA (taxare inversa) (rd.20=rd.7), din care:</field>
         <field name="tag_name">20 - TVA - Achiziţii de bunuri, altele decat cele de la rd. 18 şi 19, si achizitii de servicii pentru care beneficiarul din Romania este obligat la plata TVA (taxare inversa) (rd.20=rd.7), din care:</field>
         <field name="code">tax_ro_tva_rd20</field>
-        <field name="sequence" eval="51"/>
+        <field name="sequence" eval="63"/>
         <field name="parent_id" ref="account_tax_report_ro_tva_intracom_eu_achiz"/>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -457,7 +565,7 @@
         <field name="name">20.1 - BAZA - Achizitii de servicii intracomunitare pentru care beneficiarul este obligat la plata TVA (taxare inversa) (rd.20.1=rd.7.1)</field>
         <field name="tag_name">20.1 - BAZA - Achizitii de servicii intracomunitare pentru care beneficiarul este obligat la plata TVA (taxare inversa) (rd.20.1=rd.7.1)</field>
         <field name="code">tax_ro_baza_rd201</field>
-        <field name="sequence" eval="52"/>
+        <field name="sequence" eval="64"/>
         <field name="parent_id" ref="account_tax_report_ro_baza_rd20"/>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -466,7 +574,7 @@
         <field name="name">20.1 - TVA - Achizitii de servicii intracomunitare pentru care beneficiarul este obligat la plata TVA (taxare inversa) (rd.20.1=rd.7.1)</field>
         <field name="tag_name">20.1 - TVA - Achizitii de servicii intracomunitare pentru care beneficiarul este obligat la plata TVA (taxare inversa) (rd.20.1=rd.7.1)</field>
         <field name="code">tax_ro_tva_rd201</field>
-        <field name="sequence" eval="53"/>
+        <field name="sequence" eval="65"/>
         <field name="parent_id" ref="account_tax_report_ro_tva_rd20"/>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -475,7 +583,7 @@
         <field name="name">21 - BAZA - Regularizari privind achizitii de servicii intracomunitare pentru care beneficiarul din Romania este obligat la plata TVA (taxare inversa) (rd.21=rd.8)</field>
         <field name="tag_name">21 - BAZA - Regularizari privind achizitii de servicii intracomunitare pentru care beneficiarul din Romania este obligat la plata TVA (taxare inversa) (rd.21=rd.8)</field>
         <field name="code">tax_ro_baza_rd21</field>
-        <field name="sequence" eval="54"/>
+        <field name="sequence" eval="66"/>
         <field name="parent_id" ref="account_tax_report_ro_baza_intracom_eu_achiz"/>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -484,7 +592,7 @@
         <field name="name">21 - TVA - Regularizari privind achizitii de servicii intracomunitare pentru care beneficiarul din Romania este obligat la plata TVA (taxare inversa) (rd.21=rd.8)</field>
         <field name="tag_name">21 - TVA - Regularizari privind achizitii de servicii intracomunitare pentru care beneficiarul din Romania este obligat la plata TVA (taxare inversa) (rd.21=rd.8)</field>
         <field name="code">tax_ro_tva_rd21</field>
-        <field name="sequence" eval="55"/>
+        <field name="sequence" eval="67"/>
         <field name="parent_id" ref="account_tax_report_ro_tva_intracom_eu_achiz"/>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -492,14 +600,14 @@
     <record id="account_tax_report_ro_baza_achiz" model="account.tax.report.line">
         <field name="name">BAZA ACHIZIŢII DE BUNURI/ SERVICII ÎN INTERIORUL ŢĂRII ŞI IMPORTURI, ACHIZIŢII INTRACOMUNITARE, SCUTITE SAU NEIMPOZABILE</field>
         <field name="code">tax_ro_baza_achiz</field>
-        <field name="sequence" eval="56"/>
+        <field name="sequence" eval="68"/>
         <field name="country_id" ref="base.ro"/>
     </record>
 
     <record id="account_tax_report_ro_tva_achiz" model="account.tax.report.line">
         <field name="name">TVA ACHIZIŢII DE BUNURI/ SERVICII ÎN INTERIORUL ŢĂRII ŞI IMPORTURI, ACHIZIŢII INTRACOMUNITARE, SCUTITE SAU NEIMPOZABILE</field>
         <field name="code">tax_ro_tva_achiz</field>
-        <field name="sequence" eval="57"/>
+        <field name="sequence" eval="69"/>
         <field name="country_id" ref="base.ro"/>
     </record>
 
@@ -507,7 +615,7 @@
         <field name="name">22 - BAZA - Achiziţii de bunuri şi servicii taxabile cu cota de 19%, altele decat cele de la rd.25</field>
         <field name="tag_name">22 - BAZA - Achiziţii de bunuri şi servicii taxabile cu cota de 19%, altele decat cele de la rd.25</field>
         <field name="code">tax_ro_baza_rd22</field>
-        <field name="sequence" eval="58"/>
+        <field name="sequence" eval="70"/>
         <field name="parent_id" ref="account_tax_report_ro_baza_achiz"/>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -516,8 +624,44 @@
         <field name="name">22 - TVA - Achiziţii de bunuri şi servicii taxabile cu cota de 19%, altele decat cele de la rd.25</field>
         <field name="tag_name">22 - TVA - Achiziţii de bunuri şi servicii taxabile cu cota de 19%, altele decat cele de la rd.25</field>
         <field name="code">tax_ro_tva_rd22</field>
-        <field name="sequence" eval="59"/>
+        <field name="sequence" eval="71"/>
         <field name="parent_id" ref="account_tax_report_ro_tva_achiz"/>
+        <field name="country_id" ref="base.ro"/>
+    </record>
+
+    <record id="account_tax_report_ro_baza_rd221" model="account.tax.report.line">
+        <field name="name">22.1 - BAZA - Achiziţii de bunuri şi servicii taxabile cu cota de 19%, altele decat cele de la rd.25</field>
+        <field name="tag_name">22.1 - BAZA - Achiziţii de bunuri şi servicii taxabile cu cota de 19%, altele decat cele de la rd.25</field>
+        <field name="code">tax_ro_baza_rd221</field>
+        <field name="sequence" eval="72"/>
+        <field name="parent_id" ref="account_tax_report_ro_baza_rd22"/>
+        <field name="country_id" ref="base.ro"/>
+    </record>
+
+    <record id="account_tax_report_ro_tva_rd221" model="account.tax.report.line">
+        <field name="name">22.1 - TVA - Achiziţii de bunuri şi servicii taxabile cu cota de 19%, altele decat cele de la rd.25</field>
+        <field name="tag_name">22.1 - TVA - Achiziţii de bunuri şi servicii taxabile cu cota de 19%, altele decat cele de la rd.25</field>
+        <field name="code">tax_ro_tva_rd221</field>
+        <field name="sequence" eval="73"/>
+        <field name="parent_id" ref="account_tax_report_ro_tva_rd22"/>
+        <field name="country_id" ref="base.ro"/>
+    </record>
+
+    <record id="account_tax_report_ro_baza_rd222" model="account.tax.report.line">
+        <field name="name">22.2 - BAZA - Achiziţii de bunuri şi servicii taxabile cu cota de 19%, nedeductibile 50%</field>
+        <field name="tag_name">22.2 - BAZA - Achiziţii de bunuri şi servicii taxabile cu cota de 19%, nedeductibile 50%</field>
+        <field name="code">tax_ro_baza_rd222</field>
+        <field name="sequence" eval="74"/>
+        <field name="parent_id" ref="account_tax_report_ro_baza_rd22"/>
+        <field name="country_id" ref="base.ro"/>
+    </record>
+
+    <record id="account_tax_report_ro_tva_rd222" model="account.tax.report.line">
+        <field name="name">22.2 - TVA - Achiziţii de bunuri şi servicii taxabile cu cota de 19%, nedeductibile 50%</field>
+        <field name="tag_name">22.2 - TVA - Achiziţii de bunuri şi servicii taxabile cu cota de 19%, nedeductibile 50%</field>
+        <field name="code">tax_ro_tva_rd222</field>
+        <field name="sequence" eval="75"/>
+        <field name="parent_id" ref="account_tax_report_ro_tva_rd22"/>
         <field name="country_id" ref="base.ro"/>
     </record>
 
@@ -525,7 +669,7 @@
         <field name="name">23 - BAZA - Achiziţii de bunuri şi servicii taxabile cu cota de 9%</field>
         <field name="tag_name">23 - BAZA - Achiziţii de bunuri şi servicii taxabile cu cota de 9%</field>
         <field name="code">tax_ro_baza_rd23</field>
-        <field name="sequence" eval="60"/>
+        <field name="sequence" eval="76"/>
         <field name="parent_id" ref="account_tax_report_ro_baza_achiz"/>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -534,8 +678,44 @@
         <field name="name">23 - TVA - Achiziţii de bunuri şi servicii taxabile cu cota de 9%</field>
         <field name="tag_name">23 - TVA - Achiziţii de bunuri şi servicii taxabile cu cota de 9%</field>
         <field name="code">tax_ro_tva_rd23</field>
-        <field name="sequence" eval="61"/>
+        <field name="sequence" eval="77"/>
         <field name="parent_id" ref="account_tax_report_ro_tva_achiz"/>
+        <field name="country_id" ref="base.ro"/>
+    </record>
+
+    <record id="account_tax_report_ro_baza_rd231" model="account.tax.report.line">
+        <field name="name">23.1 - BAZA - Achiziţii de bunuri şi servicii taxabile cu cota de 9%</field>
+        <field name="tag_name">23.1 - BAZA - Achiziţii de bunuri şi servicii taxabile cu cota de 9%</field>
+        <field name="code">tax_ro_baza_rd231</field>
+        <field name="sequence" eval="78"/>
+        <field name="parent_id" ref="account_tax_report_ro_baza_rd23"/>
+        <field name="country_id" ref="base.ro"/>
+    </record>
+
+    <record id="account_tax_report_ro_tva_rd231" model="account.tax.report.line">
+        <field name="name">23.1 - TVA - Achiziţii de bunuri şi servicii taxabile cu cota de 9%</field>
+        <field name="tag_name">23.1 - TVA - Achiziţii de bunuri şi servicii taxabile cu cota de 9%</field>
+        <field name="code">tax_ro_tva_rd231</field>
+        <field name="sequence" eval="79"/>
+        <field name="parent_id" ref="account_tax_report_ro_tva_rd23"/>
+        <field name="country_id" ref="base.ro"/>
+    </record>
+
+    <record id="account_tax_report_ro_baza_rd232" model="account.tax.report.line">
+        <field name="name">23.2 - BAZA - Achiziţii de bunuri şi servicii taxabile cu cota de 9%, nedeductibile 50%</field>
+        <field name="tag_name">23.2 - BAZA - Achiziţii de bunuri şi servicii taxabile cu cota de 9%, nedeductibile 50%</field>
+        <field name="code">tax_ro_baza_rd232</field>
+        <field name="sequence" eval="80"/>
+        <field name="parent_id" ref="account_tax_report_ro_baza_rd23"/>
+        <field name="country_id" ref="base.ro"/>
+    </record>
+
+    <record id="account_tax_report_ro_tva_rd232" model="account.tax.report.line">
+        <field name="name">23.2 - TVA - Achiziţii de bunuri şi servicii taxabile cu cota de 9%, nedeductibile 50%</field>
+        <field name="tag_name">23.2 - TVA - Achiziţii de bunuri şi servicii taxabile cu cota de 9%, nedeductibile 50%</field>
+        <field name="code">tax_ro_tva_rd232</field>
+        <field name="sequence" eval="81"/>
+        <field name="parent_id" ref="account_tax_report_ro_tva_rd23"/>
         <field name="country_id" ref="base.ro"/>
     </record>
 
@@ -543,7 +723,7 @@
         <field name="name">24 - BAZA - Achiziţii de bunuri taxabile cu cota de 5%</field>
         <field name="tag_name">24 - BAZA - Achiziţii de bunuri taxabile cu cota de 5%</field>
         <field name="code">tax_ro_baza_rd24</field>
-        <field name="sequence" eval="62"/>
+        <field name="sequence" eval="82"/>
         <field name="parent_id" ref="account_tax_report_ro_baza_achiz"/>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -552,8 +732,44 @@
         <field name="name">24 - TVA - Achiziţii de bunuri taxabile cu cota de 5%</field>
         <field name="tag_name">24 - TVA - Achiziţii de bunuri taxabile cu cota de 5%</field>
         <field name="code">tax_ro_tva_rd24</field>
-        <field name="sequence" eval="63"/>
+        <field name="sequence" eval="83"/>
         <field name="parent_id" ref="account_tax_report_ro_tva_achiz"/>
+        <field name="country_id" ref="base.ro"/>
+    </record>
+
+    <record id="account_tax_report_ro_baza_rd241" model="account.tax.report.line">
+        <field name="name">24.1 - BAZA - Achiziţii de bunuri taxabile cu cota de 5%</field>
+        <field name="tag_name">24.1 - BAZA - Achiziţii de bunuri taxabile cu cota de 5%</field>
+        <field name="code">tax_ro_baza_rd241</field>
+        <field name="sequence" eval="84"/>
+        <field name="parent_id" ref="account_tax_report_ro_baza_rd24"/>
+        <field name="country_id" ref="base.ro"/>
+    </record>
+
+    <record id="account_tax_report_ro_tva_rd241" model="account.tax.report.line">
+        <field name="name">24.1 - TVA - Achiziţii de bunuri taxabile cu cota de 5%</field>
+        <field name="tag_name">24.1 - TVA - Achiziţii de bunuri taxabile cu cota de 5%</field>
+        <field name="code">tax_ro_tva_rd241</field>
+        <field name="sequence" eval="85"/>
+        <field name="parent_id" ref="account_tax_report_ro_tva_rd24"/>
+        <field name="country_id" ref="base.ro"/>
+    </record>
+
+    <record id="account_tax_report_ro_baza_rd242" model="account.tax.report.line">
+        <field name="name">24.2 - BAZA - Achiziţii de bunuri taxabile cu cota de 5%, nedeductibile 50%</field>
+        <field name="tag_name">24.2 - BAZA - Achiziţii de bunuri taxabile cu cota de 5%, nedeductibile 50%</field>
+        <field name="code">tax_ro_baza_rd242</field>
+        <field name="sequence" eval="86"/>
+        <field name="parent_id" ref="account_tax_report_ro_baza_rd24"/>
+        <field name="country_id" ref="base.ro"/>
+    </record>
+
+    <record id="account_tax_report_ro_tva_rd242" model="account.tax.report.line">
+        <field name="name">24.2 - TVA - Achiziţii de bunuri taxabile cu cota de 5%, nedeductibile 50%</field>
+        <field name="tag_name">24.2 - TVA - Achiziţii de bunuri taxabile cu cota de 5%, nedeductibile 50%</field>
+        <field name="code">tax_ro_tva_rd242</field>
+        <field name="sequence" eval="87"/>
+        <field name="parent_id" ref="account_tax_report_ro_tva_rd24"/>
         <field name="country_id" ref="base.ro"/>
     </record>
 
@@ -561,7 +777,7 @@
         <field name="name">25 - BAZA - Achiziţii de bunuri şi servicii supuse masurilor de simplificare pentru care beneficiarul este obligat la plata TVA (taxare inversa),din care (rd.25=rd.12)</field>
         <field name="tag_name">25 - BAZA - Achiziţii de bunuri şi servicii supuse masurilor de simplificare pentru care beneficiarul este obligat la plata TVA (taxare inversa),din care (rd.25=rd.12)</field>
         <field name="code">tax_ro_baza_rd25</field>
-        <field name="sequence" eval="64"/>
+        <field name="sequence" eval="88"/>
         <field name="parent_id" ref="account_tax_report_ro_baza_achiz"/>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -570,7 +786,7 @@
         <field name="name">25 - TVA - Achiziţii de bunuri şi servicii supuse masurilor de simplificare pentru care beneficiarul este obligat la plata TVA (taxare inversa),din care (rd.25=rd.12)</field>
         <field name="tag_name">25 - TVA - Achiziţii de bunuri şi servicii supuse masurilor de simplificare pentru care beneficiarul este obligat la plata TVA (taxare inversa),din care (rd.25=rd.12)</field>
         <field name="code">tax_ro_tva_rd25</field>
-        <field name="sequence" eval="65"/>
+        <field name="sequence" eval="89"/>
         <field name="parent_id" ref="account_tax_report_ro_tva_achiz"/>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -579,7 +795,7 @@
         <field name="name">25.1 - BAZA - Achizitii de bunuri si servicii, taxabile cu cota 19% (rd.25.1=rd.12.1)</field>
         <field name="tag_name">25.1 - BAZA - Achizitii de bunuri si servicii, taxabile cu cota 19% (rd.25.1=rd.12.1)</field>
         <field name="code">tax_ro_baza_rd251</field>
-        <field name="sequence" eval="66"/>
+        <field name="sequence" eval="90"/>
         <field name="parent_id" ref="account_tax_report_ro_baza_rd25"/>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -588,7 +804,7 @@
         <field name="name">25.1 - TVA - Achizitii de bunuri si servicii, taxabile cu cota 19% (rd.25.1=rd.12.1)</field>
         <field name="tag_name">25.1 - TVA - Achizitii de bunuri si servicii, taxabile cu cota 19% (rd.25.1=rd.12.1)</field>
         <field name="code">tax_ro_tva_rd251</field>
-        <field name="sequence" eval="67"/>
+        <field name="sequence" eval="91"/>
         <field name="parent_id" ref="account_tax_report_ro_tva_rd25"/>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -597,7 +813,7 @@
         <field name="name">25.2 - BAZA - Achizitii de bunuri, taxabile cu cota 9% (rd.25.2=rd.12.2)</field>
         <field name="tag_name">25.2 - BAZA - Achizitii de bunuri, taxabile cu cota 9% (rd.25.2=rd.12.2)</field>
         <field name="code">tax_ro_baza_rd252</field>
-        <field name="sequence" eval="68"/>
+        <field name="sequence" eval="92"/>
         <field name="parent_id" ref="account_tax_report_ro_baza_rd25"/>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -606,7 +822,7 @@
         <field name="name">25.2 - TVA - Achizitii de bunuri, taxabile cu cota 9% (rd.25.2=rd.12.2)</field>
         <field name="tag_name">25.2 - TVA - Achizitii de bunuri, taxabile cu cota 9% (rd.25.2=rd.12.2)</field>
         <field name="code">tax_ro_tva_rd252</field>
-        <field name="sequence" eval="69"/>
+        <field name="sequence" eval="93"/>
         <field name="parent_id" ref="account_tax_report_ro_tva_rd25"/>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -615,7 +831,7 @@
         <field name="name">25.3 - BAZA - Achizitii de bunuri, taxabile cu cota 5% (rd.25.3=rd.12.3)</field>
         <field name="tag_name">25.3 - BAZA - Achizitii de bunuri, taxabile cu cota 5% (rd.25.3=rd.12.3)</field>
         <field name="code">tax_ro_baza_rd253</field>
-        <field name="sequence" eval="70"/>
+        <field name="sequence" eval="94"/>
         <field name="parent_id" ref="account_tax_report_ro_baza_rd25"/>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -624,7 +840,7 @@
         <field name="name">25.3 - TVA - Achizitii de bunuri, taxabile cu cota 5% (rd.25.3=rd.12.3)</field>
         <field name="tag_name">25.3 - TVA - Achizitii de bunuri, taxabile cu cota 5% (rd.25.3=rd.12.3)</field>
         <field name="code">tax_ro_tva_rd253</field>
-        <field name="sequence" eval="71"/>
+        <field name="sequence" eval="95"/>
         <field name="parent_id" ref="account_tax_report_ro_tva_rd25"/>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -633,7 +849,7 @@
         <field name="name">26 - TVA - Compensația în cotă forfetară pentru achiziții de produse și servicii agricole de la furnizori care aplică regimul special pentru agricultori</field>
         <field name="tag_name">26 - TVA - Compensația în cotă forfetară pentru achiziții de produse și servicii agricole de la furnizori care aplică regimul special pentru agricultori</field>
         <field name="code">tax_ro_tva_rd26</field>
-        <field name="sequence" eval="72"/>
+        <field name="sequence" eval="96"/>
         <field name="parent_id" ref="account_tax_report_ro_tva_achiz"/>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -642,7 +858,7 @@
         <field name="name">27 - TVA - Regularizări privind compensația în cotă forfetară</field>
         <field name="tag_name">27 - TVA - Regularizări privind compensația în cotă forfetară</field>
         <field name="code">tax_ro_tva_rd27</field>
-        <field name="sequence" eval="73"/>
+        <field name="sequence" eval="97"/>
         <field name="parent_id" ref="account_tax_report_ro_tva_achiz"/>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -651,7 +867,7 @@
         <field name="name">28 - BAZA - Achiziţii de bunuri şi servicii scutite de taxă sau neimpozabile, din care:</field>
         <field name="tag_name">28 - BAZA - Achiziţii de bunuri şi servicii scutite de taxă sau neimpozabile, din care:</field>
         <field name="code">tax_ro_baza_rd28</field>
-        <field name="sequence" eval="74"/>
+        <field name="sequence" eval="98"/>
         <field name="parent_id" ref="account_tax_report_ro_baza_achiz"/>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -660,7 +876,7 @@
         <field name="name">28.1 - BAZA - Achizitii de servicii intracomunitare scutite de taxa (nu se completeaza la metoda simplificata)</field>
         <field name="tag_name">28.1 - BAZA - Achizitii de servicii intracomunitare scutite de taxa (nu se completeaza la metoda simplificata)</field>
         <field name="code">tax_ro_baza_rd281</field>
-        <field name="sequence" eval="75"/>
+        <field name="sequence" eval="99"/>
         <field name="parent_id" ref="account_tax_report_ro_baza_rd28"/>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -668,7 +884,7 @@
     <record id="account_tax_report_ro_baza_rd29" model="account.tax.report.line">
         <field name="name">29 - BAZA - TOTAL TAXĂ DEDUCTIBILĂ ( sumă de la rd.18 până la rd.27, cu excepţia celor de la rd.18.1,20.1, 25.1, 25.2, 25.3)</field>
         <field name="code">tax_ro_baza_rd29</field>
-        <field name="sequence" eval="76"/>
+        <field name="sequence" eval="100"/>
         <field name="formula">tax_ro_baza_intracom_eu_a + tax_ro_baza_achiz</field>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -676,7 +892,7 @@
     <record id="account_tax_report_ro_tva_rd29" model="account.tax.report.line">
         <field name="name">29 - TVA - TOTAL TAXĂ DEDUCTIBILĂ ( sumă de la rd.18 până la rd.27, cu excepţia celor de la rd.18.1,20.1, 25.1, 25.2, 25.3)</field>
         <field name="code">tax_ro_tva_rd29</field>
-        <field name="sequence" eval="77"/>
+        <field name="sequence" eval="101"/>
         <field name="formula">tax_ro_tva_intracom_eu_a + tax_ro_tva_achiz</field>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -685,7 +901,7 @@
         <field name="name">30 - TVA - SUB-TOTAL TAXĂ DEDUSĂ CONFORM ART. 297 ŞI ART. 298 SAU ART. 300 ŞI ART. 298 (rd.30&lt;=rd.29)</field>
         <field name="code">tax_ro_tva_rd30</field>
         <field name="formula">tax_ro_tva_intracom_eu_a + tax_ro_tva_achiz</field>
-        <field name="sequence" eval="78"/>
+        <field name="sequence" eval="102"/>
         <field name="country_id" ref="base.ro"/>
     </record>
 
@@ -693,7 +909,7 @@
         <field name="name">31 - TVA - TVA efectiv restituită cumpărătorilor straini, inclusiv comisionul unităţilor autorizate</field>
         <field name="tag_name">31 - TVA - TVA efectiv restituită cumpărătorilor straini, inclusiv comisionul unităţilor autorizate</field>
         <field name="code">tax_ro_tva_rd31</field>
-        <field name="sequence" eval="79"/>
+        <field name="sequence" eval="103"/>
         <field name="country_id" ref="base.ro"/>
     </record>
 
@@ -701,7 +917,7 @@
         <field name="name">32 - BAZA - Regularizări taxă dedusă</field>
         <field name="tag_name">32 - BAZA - Regularizări taxă dedusă</field>
         <field name="code">tax_ro_baza_rd32</field>
-        <field name="sequence" eval="80"/>
+        <field name="sequence" eval="104"/>
         <field name="country_id" ref="base.ro"/>
     </record>
 
@@ -709,7 +925,7 @@
         <field name="name">32 - TVA - Regularizări taxă dedusă</field>
         <field name="tag_name">32 - TVA - Regularizări taxă dedusă</field>
         <field name="code">tax_ro_tva_rd32</field>
-        <field name="sequence" eval="81"/>
+        <field name="sequence" eval="105"/>
         <field name="country_id" ref="base.ro"/>
     </record>
 
@@ -717,14 +933,14 @@
         <field name="name">33 - TVA - Ajustări conform pro-rata / ajustări pentru bunurile de capital</field>
         <field name="tag_name">33 - TVA - Ajustări conform pro-rata / ajustări pentru bunurile de capital</field>
         <field name="code">tax_ro_tva_rd33</field>
-        <field name="sequence" eval="82"/>
+        <field name="sequence" eval="106"/>
         <field name="country_id" ref="base.ro"/>
     </record>
 
     <record id="account_tax_report_ro_tva_rd34" model="account.tax.report.line">
         <field name="name">34 - TVA - TOTAL TAXA DEDUSA (rd.30+rd.31+rd.32+rd.33)</field>
         <field name="code">tax_ro_tva_rd34</field>
-        <field name="sequence" eval="83"/>
+        <field name="sequence" eval="107"/>
         <field name="formula">tax_ro_tva_intracom_eu_a + tax_ro_tva_achiz + tax_ro_tva_rd31 + tax_ro_tva_rd32 + tax_ro_tva_rd33</field>
         <field name="country_id" ref="base.ro"/>
     </record>
