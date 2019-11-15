@@ -38,7 +38,7 @@ class Property(models.Model):
     name = fields.Char(index=True)
     res_id = fields.Char(string='Resource', index=True, help="If not set, acts as a default value for new resources",)
     company_id = fields.Many2one('res.company', string='Company', index=True)
-    fields_id = fields.Many2one('ir.model.fields', string='Field', ondelete='cascade', required=True, index=True)
+    fields_id = fields.Many2one('ir.model.fields', string='Field', ondelete='cascade', required=True)
     value_float = fields.Float()
     value_integer = fields.Integer()
     value_text = fields.Text()  # will contain (char, text)
@@ -59,6 +59,14 @@ class Property(models.Model):
                             required=True,
                             default='many2one',
                             index=True)
+
+    def init(self):
+        # Ensure there is at most one active variant for each combination.
+        query = """
+            CREATE UNIQUE INDEX IF NOT EXISTS ir_property_unique_index
+            ON %s (fields_id, COALESCE(company_id, 0), COALESCE(res_id, ''))
+        """
+        self.env.cr.execute(query % self._table)
 
     def _update_values(self, values):
         if 'value' not in values:
@@ -166,6 +174,34 @@ class Property(models.Model):
                 return False
             return fields.Date.to_string(fields.Datetime.from_string(self.value_datetime))
         return False
+
+    @api.model
+    def set_default(self, name, model, value, company=False):
+        """ Set the given field's generic value for the given company.
+
+        :param name: the field's name
+        :param model: the field's model name
+        :param value: the field's value
+        :param company: the company (record or id)
+        """
+        field_id = self.env['ir.model.fields']._get(model, name).id
+        company_id = int(company) if company else False
+        prop = self.search([
+            ('fields_id', '=', field_id),
+            ('company_id', '=', company_id),
+            ('res_id', '=', False),
+        ])
+        if prop:
+            prop.write({'value': value})
+        else:
+            self.create({
+                'fields_id': field_id,
+                'company_id': company_id,
+                'res_id': False,
+                'name': name,
+                'value': value,
+                'type': self.env[model]._fields[name].type,
+            })
 
     @api.model
     def get(self, name, model, res_id=False):

@@ -34,16 +34,12 @@ def _configure_journals(cr, registry):
                     'company_id': company_id.id,
                     'show_on_dashboard': False
                 }).id
-            vals = {
-                'name': 'property_stock_journal',
-                'fields_id': env['ir.model.fields'].search([
-                    ('name', '=', 'property_stock_journal'),
-                    ('model', '=', 'product.category'),
-                    ('relation', '=', 'account.journal')], limit=1).id,
-                'company_id': company_id.id,
-                'value': 'account.journal,' + str(journal_id)
-            }
-            env['ir.property'].create(vals)
+            env['ir.property'].set_default(
+                'property_stock_journal',
+                'product.category',
+                journal_id,
+                company_id,
+            )
 
         # Property Stock Accounts
         todo_list = [
@@ -52,43 +48,12 @@ def _configure_journals(cr, registry):
             'property_stock_valuation_account_id',
         ]
 
-        for record in todo_list:
-            account = getattr(company_id, record)
-            value = account and 'account.account,' + str(account.id) or False
-            if value:
-                field_id = env['ir.model.fields'].search([
-                  ('name', '=', record),
-                  ('model', '=', 'product.category'),
-                  ('relation', '=', 'account.account')
-                ], limit=1).id
-                vals = {
-                    'name': record,
-                    'company_id': company_id.id,
-                    'fields_id': field_id,
-                    'value': value,
-                }
-                properties = env['ir.property'].search([
-                    ('name', '=', record),
-                    ('company_id', '=', company_id.id),
-                ])
-                if properties:
-                    properties.write(vals)
-                else:
-                    # create the property
-                    env['ir.property'].create(vals)
-
-    stock_account = env.ref('account.demo_stock_account', False)
-    if stock_account:
-        account_id = env['account.account'].search([('tag_ids', '=', stock_account.id)], limit=1).id
-        fields_id = env['ir.model.fields'].search([('model', '=', 'product.category'), ('name', '=', 'property_stock_valuation_account_id')], limit=1).id
-        if not account_id:
-            account_id = env['account.account'].search([('user_type_id', '=', env.ref('account.data_account_type_current_assets').id)], limit=1).id
-        if account_id:
-            xml_id = 'stock_account.property_stock_valuation_account_id'
-            vals = {
-                'name': 'property_stock_valuation_account_id',
-                'fields_id': fields_id,
-                'value': 'account.account,'+str(account_id),
-                'company_id': env.ref('base.main_company').id,
-            }
-            env['ir.property']._load_records([dict(xml_id=xml_id, values=vals, noupdate=True)])
+        for name in todo_list:
+            account = getattr(company_id, name)
+            if account:
+                env['ir.property'].set_default(
+                    name,
+                    'product.category',
+                    account,
+                    company_id,
+                )
