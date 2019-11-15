@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import babel
+import babel.dates
 
 from datetime import datetime, timedelta, time
 

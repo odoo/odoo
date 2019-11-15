@@ -7,6 +7,7 @@ Miscellaneous tools used by OpenERP.
 """
 from functools import wraps
 import babel
+import babel.dates
 from contextlib import contextmanager
 import datetime
 import math
