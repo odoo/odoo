@@ -517,7 +517,6 @@ class Product(models.Model):
         action = self.env.ref('stock.report_stock_quantity_action_product').read()[0]
         action['domain'] = [
             ('product_id', '=', self.id),
-            ('warehouse_id', '!=', False),
         ]
         return action
 
@@ -793,7 +792,6 @@ class ProductTemplate(models.Model):
         action = self.env.ref('stock.report_stock_quantity_action_product').read()[0]
         action['domain'] = [
             ('product_id', 'in', self.product_variant_ids.ids),
-            ('warehouse_id', '!=', False),
         ]
         return action
 
