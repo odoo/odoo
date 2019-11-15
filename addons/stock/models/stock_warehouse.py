@@ -439,7 +439,7 @@ class Warehouse(models.Model):
         def_values = self.default_get(['reception_steps', 'delivery_steps'])
         reception_steps = vals.get('reception_steps', def_values['reception_steps'])
         delivery_steps = vals.get('delivery_steps', def_values['delivery_steps'])
-        code = vals.get('code') or self.code
+        code = vals.get('code') or self.code or ''
         code = code.replace(' ', '').upper()
         company_id = vals.get('company_id', self.default_get(['company_id'])['company_id'])
         sub_locations = {

@@ -5,6 +5,7 @@ from itertools import chain
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools import float_repr
 
 from odoo.addons import decimal_precision as dp
 
@@ -487,7 +488,13 @@ class PricelistItem(models.Model):
             self.name = _("All Products")
 
         if self.compute_price == 'fixed':
-            self.price = ("%s %s") % (self.fixed_price, self.pricelist_id.currency_id.name)
+            self.price = ("%s %s") % (
+                float_repr(
+                    self.fixed_price,
+                    self.pricelist_id.currency_id.decimal_places,
+                ),
+                self.pricelist_id.currency_id.name
+            )
         elif self.compute_price == 'percentage':
             self.price = _("%s %% discount") % (self.percent_price)
         else:
