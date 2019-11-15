@@ -50,9 +50,10 @@ class QWeb(models.AbstractModel):
         view_id = View.get_view_id(el.attrib.get('t-call'))
         name = View.browse(view_id).name
         thumbnail = el.attrib.pop('t-thumbnail', "oe-thumbnail")
-        div = u'<div name="%s" data-oe-type="snippet" data-oe-thumbnail="%s">' % (
+        div = u'<div name="%s" data-oe-type="snippet" data-oe-thumbnail="%s" data-oe-snippet-id="%s">' % (
             escape(pycompat.to_text(name)),
-            escape(pycompat.to_text(thumbnail))
+            escape(pycompat.to_text(thumbnail)),
+            escape(pycompat.to_text(view_id)),
         )
         return [self._append(ast.Str(div))] + self._compile_node(el, options) + [self._append(ast.Str(u'</div>'))]
 

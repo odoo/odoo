@@ -24,9 +24,7 @@
         </template>
 
         <template id="snippet_options" inherit_id="website.snippet_options">
-            <xpath expr="//*[@id='so_snippet_addition']" position="attributes">
-                <attribute name="data-selector" add=".s_website_form" separator=","/>
-            </xpath>
+            <xpath expr="//*[@t-set='so_snippet_addition_selector']" position="inside">, .s_website_form</xpath>
             <xpath expr="//div" position="after">
                 <!-- Form -->
                 <div data-js="website_form_editor" data-selector=".s_website_form">
