@@ -56,11 +56,14 @@ class TestFrontend(odoo.tests.HttpCase):
                                                  'name': 'Account Receivable - Test',
                                                  'user_type_id': env.ref('account.data_account_type_receivable').id,
                                                  'reconcile': True})
-        field = env['ir.model.fields']._get('res.partner', 'property_account_receivable_id')
-        env['ir.property'].create({'name': 'property_account_receivable_id',
-                                   'company_id': main_company.id,
-                                   'fields_id': field.id,
-                                   'value': 'account.account,' + str(account_receivable.id)})
+
+        self.env['ir.property'].set_default(
+            'property_account_receivable_id',
+            'res.partner',
+            account_receivable,
+            main_company,
+        )
+
         test_sale_journal = env['account.journal'].create({
             'name': 'Sales Journal - Test',
             'code': 'TSJ',
