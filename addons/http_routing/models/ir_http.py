@@ -393,11 +393,11 @@ class IrHttp(models.AbstractModel):
             cook_lang = request.httprequest.cookies.get('frontend_lang')
             cook_lang = cook_lang in lang_codes and cook_lang
 
-            if nearest_lang:
+            if nearest_lang and nearest_lang in lang_codes:
                 lang = Lang._lang_get(nearest_lang)
             else:
                 nearest_ctx_lg = not is_a_bot and cls.get_nearest_lang(request.env.context['lang'])
-                preferred_lang = Lang._lang_get(cook_lang or nearest_ctx_lg) or cls._get_default_lang()
+                preferred_lang = Lang._lang_get(cook_lang or nearest_ctx_lg in lang_codes and nearest_ctx_lg ) or cls._get_default_lang()
                 lang = preferred_lang
 
             request.lang = lang
