@@ -76,7 +76,7 @@
         <record id="project_task_action_sub_task" model="ir.actions.act_window">
             <field name="name">Sub-tasks</field>
             <field name="res_model">project.task</field>
-            <field name="view_mode">kanban,tree,form,calendar,pivot,graph,activity</field>
+            <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
             <field name="search_view_id" ref="project.view_task_search_form"/>
         </record>
 
@@ -451,9 +451,8 @@
                     </header>
                     <sheet string="Task">
                     <div class="oe_button_box" name="button_box">
-                        <button class="oe_stat_button" icon="fa-tasks" type="object" name="action_open_parent_task" string="Parent Task" attrs="{'invisible' : [('parent_id', '=', False)]}" groups="project.group_subtask_project"/>
                         <button name="action_subtask" type="object" class="oe_stat_button" icon="fa-tasks"
-                            attrs="{'invisible' : ['|', ('parent_id', '!=', False), ('id', '=', False)]}" context="{'default_user_id': user_id, 'default_parent_id': id, 'default_project_id': subtask_project_id}" groups="project.group_subtask_project">
+                            attrs="{'invisible' : [('id', '=', False)]}" context="{'default_user_id': user_id, 'default_parent_id': id, 'default_project_id': subtask_project_id}" groups="project.group_subtask_project">
                             <field string="Sub-tasks" name="subtask_count" widget="statinfo"/>
                         </button>
                         <button name="%(rating_rating_action_task)d" type="action" attrs="{'invisible': [('rating_count', '=', 0)]}" class="oe_stat_button" icon="fa-smile-o" groups="project.group_project_rating">
@@ -483,14 +482,17 @@
                             <field name="user_id"
                                 class="o_task_user_field"
                                 options='{"no_open": True}'/>
+                            <field
+                                name="parent_id"
+                                domain="[('parent_id', '=', False)]"
+                                groups="project.group_subtask_project"
+                            />
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                         </group>
                         <group name="sales_order_group">
                         </group>
-                        <group>
-                            <group name="dates">
-                                <field name="date_deadline"/>
-                            </group>
-                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
+                        <group name="dates">
+                            <field name="date_deadline"/>
                         </group>
                     </group>
                     <notebook>
@@ -504,12 +506,6 @@
                                     <field name="sequence" groups="base.group_no_one"/>
                                     <field name="email_from" invisible="1"/>
                                     <field name="email_cc" groups="base.group_no_one"/>
-                                    <field
-                                        name="parent_id"
-                                        domain="[('parent_id', '=', False)]"
-                                        attrs="{'invisible' : [('subtask_count', '>', 0)]}"
-                                        groups="project.group_subtask_project"
-                                    />
                                     <field name="child_ids" invisible="1" />
                                     <field name="subtask_project_id" invisible="1" />
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
@@ -678,9 +674,11 @@
                 <tree decoration-bf="message_needaction==True" decoration-danger="date_deadline and (date_deadline&lt;current_date)" string="Tasks">
                     <field name="message_needaction" invisible="1"/>
                     <field name="sequence" invisible="not context.get('seq_visible', False)"/>
-                    <field name="name"/>
+                    <field name="name"/> 
+                    <!-- YTI TODO user_invisible and seq_visible seem to be useless -->
                     <field name="project_id" invisible="context.get('user_invisible', False)" optional="show"/>
                     <field name="partner_id" optional="hide"/>
+                    <field name="parent_id" groups="project.group_subtask_project" optional="show"/>
                     <field name="user_id" invisible="context.get('user_invisible', False)" optional="show"/>
                     <field name="date_deadline" optional="hide"/>
                     <field name="stage_id" invisible="context.get('set_visible',False)" optional="show"/>
