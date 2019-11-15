@@ -3,6 +3,7 @@ odoo.define('web_editor.snippets.options', function (require) {
 
 var core = require('web.core');
 const ColorpickerDialog = require('web.ColorpickerDialog');
+const Dialog = require('web.Dialog');
 const time = require('web.time');
 var Widget = require('web.Widget');
 var ColorPaletteWidget = require('web_editor.ColorPalette').ColorPaletteWidget;
@@ -2972,6 +2973,60 @@ registry.many2one = SnippetOptionWidget.extend({
         });
     }
 });
+
+/**
+ * Handle the save of a snippet as a template that can be reused later
+ */
+registry.SnippetSave = SnippetOptionWidget.extend({
+    xmlDependencies: ['/web_editor/static/src/xml/editor.xml'],
+    isTopOption: true,
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * @see this.selectClass for parameters
+     */
+    saveSnippet: function (previewMode, widgetValue, params) {
+        return new Promise(resolve => {
+            const dialog = new Dialog(this, {
+                title: _t("Save Your Block"),
+                size: 'small',
+                $content: $(qweb.render('web_editor.dialog.save_snippet', {
+                    currentSnippetName: _.str.sprintf(_t("Custom %s"), this.data.snippetName),
+                })),
+                buttons: [{
+                    text: _t("Save"),
+                    classes: 'btn-primary',
+                    close: true,
+                    click: async () => {
+                        const snippetName = dialog.el.querySelector('.o_we_snippet_name_input').value;
+                        const targetCopyEl = this.$target[0].cloneNode(true);
+                        delete targetCopyEl.dataset.name;
+                        await this._rpc({
+                            model: 'ir.ui.view',
+                            method: 'save_snippet',
+                            kwargs: {
+                                'name': snippetName,
+                                'arch': targetCopyEl.outerHTML,
+                                'template_key': this.options.snippets,
+                                'snippet_class': [...this.$target[0].classList].filter(x => /\bs_./g.test(x))[0],
+                            },
+                        });
+                        this.trigger_up('reload_snippet_template');
+                        resolve();
+                    },
+                }, {
+                    text: _t("Discard"),
+                    close: true,
+                    click: () => resolve(),
+                }],
+            }).open();
+        });
+    },
+});
+
 
 return {
     SnippetOptionWidget: SnippetOptionWidget,
