@@ -10,12 +10,12 @@
 # Alexander Klockhaus <a.klockhaus@gmail.com>, 2019
 # darenkster <inactive+darenkster@transifex.com>, 2019
 # DE T2 <e2f48d4s5vd1s2@outlook.com>, 2019
+# Silvan Wyden <silvan.wyden@braintec-group.com>, 2019
 # Niki Waibel, 2019
 # Jan Meyer, 2019
 # Ralf Hilgenstock <rh@dialoge.info>, 2019
 # Felix Schubert <felix.schubert@go-erp.com>, 2019
 # Ermin Trevisan <trevi@twanda.com>, 2019
-# Silvan Wyden <silvan.wyden@braintec-group.com>, 2019
 # e2f <projects@e2f.com>, 2019
 # Wolfgang Taferner, 2019
 # Thorsten Vocks <thorsten.vocks@openbig.org>, 2019
@@ -30,6 +30,7 @@
 # Martin Trigaux, 2019
 # Leon Grill <leg@odoo.com>, 2019
 # Chris Egal <sodaswed@web.de>, 2019
+# Patrick Heuel <patrick.heuel@odoo-bs.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -37,7 +38,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-07 07:11+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Chris Egal <sodaswed@web.de>, 2019\n"
+"Last-Translator: Patrick Heuel <patrick.heuel@odoo-bs.com>, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1446,7 +1447,7 @@ msgstr "Eine neue Lagerbuchung erstellen"
 #: model_terms:ir.actions.act_window,help:stock.action_picking_type_list
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_action_picking_type
 msgid "Create a new transfer"
-msgstr ""
+msgstr "Neue Lagerbewegung erstellen"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint_form
@@ -1611,7 +1612,7 @@ msgstr "Kundenlagerorte"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
 msgid "DHL Connector"
-msgstr "DHL Konektor"
+msgstr "DHL Konnektor"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__date
@@ -2195,7 +2196,7 @@ msgstr "FIFO, LIFO"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_fedex
 msgid "FedEx Connector"
-msgstr "FedEx Konektor"
+msgstr "FedEx Konnektor"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__filtered_location
@@ -2296,7 +2297,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:stock.report_stock_quantity_action_product
 #: model:ir.ui.menu,name:stock.menu_forecast_inventory
 msgid "Forecasted Inventory"
-msgstr ""
+msgstr "Prognostizierter Bestand"
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -2609,6 +2610,9 @@ msgid ""
 "operations with the corresponding products, locations and lot/serial "
 "numbers."
 msgstr ""
+"Wenn dieses Kontrollkästchen angekreuzt ist, wird Odoo die detaillierten "
+"Bestandsvorgänge automatisch mit den entsprechenden Produkt-, Lagerort- und "
+"Chargen-/Seriennummerinformationen befüllen."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__show_operations
@@ -4283,7 +4287,7 @@ msgstr "Positiver Bestand"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_reserved
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__show_reserved
 msgid "Pre-fill Detailed Operations"
-msgstr ""
+msgstr "Detaillierte Vorgänge automatisch ausfüllen"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__route_ids
@@ -4874,12 +4878,12 @@ msgstr "Anlieferungsroute"
 #: model:stock.picking.type,name:stock.picking_type_in
 #, python-format
 msgid "Receipts"
-msgstr "Kassenbelege"
+msgstr "Anlieferungen"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Receive From"
-msgstr ""
+msgstr "Partner"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__reception_steps__one_step
@@ -6233,6 +6237,8 @@ msgid ""
 "The stock will be reserved for operations waiting for availability and the "
 "reordering rules will be triggered."
 msgstr ""
+"Bestände werden für Vorgänge reserviert, die auf Verfügbarkeit warten und "
+"die Meldebestands-Regeln werden ausgelöst."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__propagate_warehouse_id
@@ -6595,6 +6601,8 @@ msgstr "Bewegungen"
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_action_picking_type
 msgid "Transfers allow you to move products from one location to another."
 msgstr ""
+"Lagerbewegungen erlauben es Ihnen, Produkte von einem zum anderen Lagerort "
+"zu bewegen."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.do_view_pickings
@@ -7573,7 +7581,7 @@ msgstr "ist nicht in ausreichender Menge verfügbar"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
 msgid "manually to trigger the reordering rules right now."
-msgstr ""
+msgstr "um die Meldebestands-Regeln jetzt manuell zu starten. "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking

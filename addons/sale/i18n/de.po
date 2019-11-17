@@ -28,6 +28,7 @@
 # Leon Grill <leg@odoo.com>, 2019
 # Chris Egal <sodaswed@web.de>, 2019
 # Oliver Roch <oliver.roch@d9t.de>, 2019
+# Patrick Heuel <patrick.heuel@odoo-bs.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -35,7 +36,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-07 07:13+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Oliver Roch <oliver.roch@d9t.de>, 2019\n"
+"Last-Translator: Patrick Heuel <patrick.heuel@odoo-bs.com>, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -405,6 +406,8 @@ msgid ""
 "<span class=\"o_stat_text\">Customer</span>\n"
 "                                <span class=\"o_stat_text\">Preview</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Kunden-</span> <span "
+"class=\"o_stat_text\">ansicht</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
@@ -737,6 +740,8 @@ msgstr "Einen Abschnitt hinzufügen"
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Add several variants to an order from a grid"
 msgstr ""
+"Fügen Sie mehrere Produktvarianten mittels einer Tabelle zum Verkaufsauftrag"
+" hinzu"
 
 #. module: sale
 #: model:res.groups,name:sale.group_delivery_invoice_address
@@ -764,7 +769,7 @@ msgstr "Ermöglicht es Ihnen, eine Proformarechnung zu versenden."
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_amazon
 msgid "Amazon Sync"
-msgstr ""
+msgstr "Amazon Schnittstelle"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -861,6 +866,8 @@ msgstr "Automatische Rechnung"
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Automatic email sent after the customer has signed or paid online"
 msgstr ""
+"Automatische Bestätigungs-E-Mail nachdem der Kunde online unterzeichnet oder"
+" bezahlt hat"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__journal_name
@@ -944,7 +951,7 @@ msgstr "Wählen Sie, wie Sie Angebote bestätigen möchten"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
 msgid "Choose your default customer payment method."
-msgstr ""
+msgstr "Wählen Sie die Standard Kunden-Zahlungsmethode."
 
 #. module: sale
 #. openerp-web
@@ -1265,7 +1272,7 @@ msgstr "Passen Sie das Aussehen Ihrer Angebote an."
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
 msgid "DHL Connector"
-msgstr "DHL Konektor"
+msgstr "DHL Konnektor"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1588,7 +1595,7 @@ msgstr "Weitere Zeile mit %s "
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_fedex
 msgid "FedEx Connector"
-msgstr "FedEx Konektor"
+msgstr "FedEx Konnektor"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__fiscal_position_id
@@ -1775,7 +1782,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Import Amazon orders and sync deliveries"
-msgstr ""
+msgstr "Bestellungen von Amazon importieren und Lieferungen synchronisieren"
 
 #. module: sale
 #: code:addons/sale/models/product_template.py:0
@@ -3335,6 +3342,8 @@ msgstr "Wählen Sie ein Produkt aus oder erstellen Sie spontan ein neues."
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Select product attributes and optional products from the sales order"
 msgstr ""
+"Selektieren Sie Produktattribute und optionale Produkte auf dem "
+"Verkaufsauftrag"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3370,6 +3379,7 @@ msgstr "Produkte nach Maßeinheiten # pro Paket verkaufen"
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell variants of a product using attributes (size, color, etc.)"
 msgstr ""
+"Verkaufen Sie Produktvarianten basierend auf Attributen (Größe, Farbe, etc.)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3749,6 +3759,14 @@ msgstr ""
 "des Kunden erfordert."
 
 #. module: sale
+#: code:addons/sale/models/payment.py:97
+#, python-format
+msgid ""
+"The order was not confirmed despite response from the acquirer (%s): order "
+"total is %r but acquirer replied with %r."
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__reference
 msgid "The payment communication of this sale order."
 msgstr "Die Zahlungsmitteilung dieses Verkaufsauftrags."
@@ -4060,7 +4078,7 @@ msgstr "Mengeneinheiten"
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_uom_categ_form_action
 msgid "Units of Measure Categories"
-msgstr ""
+msgstr "Mengeneinheit Kategorien"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_auto_done_setting
@@ -4155,7 +4173,7 @@ msgstr "Bestätige Bestellung"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Variant Grid Entry"
-msgstr ""
+msgstr "Varianten-Matrix"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
@@ -4271,7 +4289,7 @@ msgid ""
 "                ordered quantities."
 msgstr ""
 "Sie können einen Auftrag weiterverkaufen, wenn Sie mehr Mengen geliefert haben\n"
-"                than initially ordered, als ursprünglich bestellt, mit einer Fakturierungsrichtlinie,\n"
+"                als ursprünglich bestellt, mit einer Fakturierungsrichtlinie,\n"
 "                die auf bestellten Mengen basiert."
 
 #. module: sale

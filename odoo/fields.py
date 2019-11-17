@@ -2845,7 +2845,9 @@ class One2many(_RelationalMulti):
                     to_create.clear()
                 if to_inverse:
                     for record, inverse_ids in to_inverse.items():
-                        comodel.browse(inverse_ids)[inverse] = record
+                        lines = comodel.browse(inverse_ids)
+                        lines = lines.filtered(lambda line: int(line[inverse]) != record.id)
+                        lines[inverse] = record
 
             for recs, commands in records_commands_list:
                 for command in (commands or ()):

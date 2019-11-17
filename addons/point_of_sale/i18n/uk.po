@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-07 07:12+0000\n"
+"POT-Creation-Date: 2019-11-14 09:46+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
@@ -499,6 +499,11 @@ msgid "Allow global discounts on orders"
 msgstr "Дозвольте глобальні знижки на замовленнях"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__allowed_pricelist_ids
+msgid "Allowed Pricelists"
+msgstr "Дозволені прайслисти"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment__amount
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__amount
 msgid "Amount"
@@ -657,6 +662,7 @@ msgstr "Рядок банківської виписки"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_res_partner__barcode
+#: model:ir.model.fields,field_description:point_of_sale.field_res_users__barcode
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_userlabel
 #, python-format
 msgid "Barcode"
@@ -2719,8 +2725,8 @@ msgstr "Замовлення"
 #: code:addons/point_of_sale/static/src/js/models.js:0
 #: code:addons/point_of_sale/static/src/js/models.js:0
 #, python-format
-msgid "Order "
-msgstr "Замовлення "
+msgid "Order %s"
+msgstr "Замовлення %s"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
@@ -4077,8 +4083,27 @@ msgstr "Маленька полиця"
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/gui.js:0
 #, python-format
-msgid "Some orders could not be submitted to"
-msgstr "Деякі замовлення не можна надіслати"
+msgid ""
+"Some orders could not be submitted to the server due to configuration "
+"errors. You can exit the Point of Sale, but do not close the session before "
+"the issue has been resolved."
+msgstr ""
+"Деякі замовлення не вдалося надіслати на сервер через помилки налаштування. "
+"Ви можете вийти з Точки продажу, але не закривайте сесію до того, як "
+"проблема не буде вирішена."
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/gui.js:0
+#, python-format
+msgid ""
+"Some orders could not be submitted to the server due to internet connection "
+"issues. You can exit the Point of Sale, but do not close the session before "
+"the issue has been resolved."
+msgstr ""
+"Деякі замовлення не вдалося надіслати на сервер через проблеми з "
+"підключенням до Інтернету. Ви можете вийти з Торгової точки, але не "
+"закривайте сесію до того, як проблема буде вирішена."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_pack_operation_lot
@@ -4482,9 +4507,9 @@ msgstr "Неможливо прочитати наданий файл через
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__currency_rate
 msgid ""
-"The rate of the currency to the currency of rate applicable at the date of "
-"the order"
-msgstr "Курс валюти, що застосовується на дату замовлення"
+"The rate of the currency to the currency of rate 1 applicable at the date of"
+" the order"
+msgstr "Ставка валюти до курсу 1 застосовується на дату замовлення"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_print_skip_screen
@@ -4684,6 +4709,11 @@ msgid ""
 msgstr ""
 "Цей рахунок був створений із сесії точки продажу: <a href=# data-oe-"
 "model=pos.order data-oe-id=%d>%s</a>"
+
+#. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__allowed_pricelist_ids
+msgid "This is a technical field used for the domain of pricelist_id."
+msgstr "Це технічне поле, яке використовується для домену pricelist_id."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__fiscal_position_ids
@@ -5018,6 +5048,7 @@ msgstr "Використовувати термінал оплати"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_partner__barcode
+#: model:ir.model.fields,help:point_of_sale.field_res_users__barcode
 msgid "Use a barcode to identify this contact from the Point of Sale."
 msgstr ""
 "Використовуйте штрих-код для ідентифікації цього контакту з точки продажу."

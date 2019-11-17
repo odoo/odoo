@@ -141,11 +141,23 @@ class AccountTaxReportLine(models.Model):
         return super(AccountTaxReportLine, self).unlink()
 
     def _delete_tags_from_taxes(self, tag_ids_to_delete):
-        """ Based on a list of tag ids, delete them all from database, removing them
-        first from the repartition lines they are linked to.
+        """ Based on a list of tag ids, removes them first from the
+        repartition lines they are linked to, then deletes them
+        from the account move lines.
         """
-        repartition_lines = self.env['account.tax.repartition.line'].search([('tag_ids', 'in', tag_ids_to_delete)])
-        repartition_lines.write({'tag_ids': [(3, tag_id, 0) for tag_id in tag_ids_to_delete]})
+        if not tag_ids_to_delete:
+            # Nothing to do, then!
+            return
+
+        self.env.cr.execute("""
+            delete from account_account_tag_account_tax_repartition_line_rel
+            where account_account_tag_id in %(tag_ids_to_delete)s;
+            delete from account_account_tag_account_move_line_rel
+            where account_account_tag_id in %(tag_ids_to_delete)s;
+        """, {'tag_ids_to_delete': tuple(tag_ids_to_delete)})
+
+        self.env['account.move.line'].invalidate_cache(fnames=['tag_ids'])
+        self.env['account.tax.repartition.line'].invalidate_cache(fnames=['tag_ids'])
 
     @api.constrains('formula', 'tag_name')
     def _validate_formula(self):
@@ -1304,6 +1316,8 @@ class AccountTax(models.Model):
     def onchange_amount_type(self):
         if self.amount_type is not 'group':
             self.children_tax_ids = [(5,)]
+        if self.amount_type == 'group':
+            self.description = None
 
     @api.onchange('price_include')
     def onchange_price_include(self):

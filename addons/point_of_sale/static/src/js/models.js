@@ -1422,7 +1422,7 @@ exports.Orderline = Backbone.Model.extend({
             try {
                 this.init_from_JSON(options.json);
             } catch(error) {
-                console.error('ERROR: attempting to recover product ID', json.product_id,
+                console.error('ERROR: attempting to recover product ID', options.json.product_id,
                     'not available in the point of sale. Correct the product or clean the browser cache.');
             }
             return;
@@ -2253,7 +2253,7 @@ exports.Order = Backbone.Model.extend({
         } else {
             this.sequence_number = this.pos.pos_session.sequence_number++;
             this.uid  = this.generate_unique_id();
-            this.name = _t("Order ") + this.uid;
+            this.name = _.str.sprintf(_t("Order %s"), this.uid);
             this.validation_date = undefined;
             this.fiscal_position = _.find(this.pos.fiscal_positions, function(fp) {
                 return fp.id === self.pos.config.default_fiscal_position_id[0];
@@ -2302,7 +2302,7 @@ exports.Order = Backbone.Model.extend({
         }
         this.session_id = this.pos.pos_session.id;
         this.uid = json.uid;
-        this.name = _t("Order ") + this.uid;
+        this.name = _.str.sprintf(_t("Order %s"), this.uid);
         this.validation_date = json.creation_date;
         this.server_id = json.server_id ? json.server_id : false;
         this.user_id = json.user_id;

@@ -3900,6 +3900,16 @@ msgid "The order is not in a state requiring customer signature."
 msgstr "Замовлення не знаходиться в стані, що вимагає підпису клієнта."
 
 #. module: sale
+#: code:addons/sale/models/payment.py:97
+#, python-format
+msgid ""
+"The order was not confirmed despite response from the acquirer (%s): order "
+"total is %r but acquirer replied with %r."
+msgstr ""
+"Замовлення не підтверджено, незважаючи на відповідь еквайєра (%s): сума "
+"замовлення %r але еквайєр відповів з %r."
+
+#. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__reference
 msgid "The payment communication of this sale order."
 msgstr "Платіжне повідомлення цього замовлення на продаж."
