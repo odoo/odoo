@@ -9,9 +9,7 @@
 # Eloïse Stilmant <est@odoo.com>, 2018
 # Nathan Noël <nathan070@me.com>, 2018
 # Martin Trigaux, 2019
-# Mohamed BENKIRANE <benkirane.med.ali@gmail.com>, 2019
 # Rémi CAZENAVE <remi@le-filament.com>, 2019
-# Moka Tourisme <hello@mokatourisme.fr>, 2019
 # Damien Bouvy <dbo@odoo.com>, 2019
 # Ayoub Zahid <azahid@agilorg.com>, 2019
 # Cécile Collart <cco@odoo.com>, 2019
@@ -19,14 +17,17 @@
 # thomas quertinmont <tqu@odoo.com>, 2019
 # gdp Odoo <gdp@odoo.com>, 2019
 # Florian Hatat, 2019
+# Nancy Bolognesi <nb@microcom.ca>, 2019
+# Mohamed BENKIRANE <benkirane.med.ali@gmail.com>, 2019
+# Moka Tourisme <hello@mokatourisme.fr>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-29 10:09+0000\n"
+"POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:22+0000\n"
-"Last-Translator: Florian Hatat, 2019\n"
+"Last-Translator: Moka Tourisme <hello@mokatourisme.fr>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -95,11 +96,6 @@ msgstr "(mise à jour)"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "+ Transactions"
 msgstr "+ Transactions"
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.customer_facing_display_snippets
-msgid "<b>Set Custom Image...</b>"
-msgstr "<b>Placer une image personalisée<b>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -805,7 +801,7 @@ msgstr "Catégorie utilisé sur le Point de Vente"
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pos_category_chairs
 msgid "Chairs"
-msgstr ""
+msgstr "Sièges"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1063,7 +1059,7 @@ msgstr "Connexion au Proxy"
 #: code:addons/point_of_sale/static/src/js/models.js:121
 #, python-format
 msgid "Connecting to the IoT Box"
-msgstr ""
+msgstr "Connexion à l'IoT Box"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_partner
@@ -1301,7 +1297,7 @@ msgstr "Effacer les commandes payées"
 #: code:addons/point_of_sale/static/src/js/chrome.js:264
 #, python-format
 msgid "Delete Paid Orders ?"
-msgstr "Effacer les commandes payées?"
+msgstr "Effacer les commandes payées ?"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1315,7 +1311,7 @@ msgstr "Effacer les commandes non-payées"
 #: code:addons/point_of_sale/static/src/js/chrome.js:274
 #, python-format
 msgid "Delete Unpaid Orders ?"
-msgstr "Effacer les commandes non-payées?"
+msgstr "Effacer les commandes non-payées ?"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1384,7 +1380,7 @@ msgstr "Rem."
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Disc:"
-msgstr "Remise:"
+msgstr "Remise :"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1746,14 +1742,21 @@ msgstr "Regrouper les produits dans le PdV"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1372
+#: code:addons/point_of_sale/static/src/js/models.js:142
+#, python-format
+msgid "HTTPS connection to IoT Box failed"
+msgstr "La connexion HTTPS au boitier IOT a échouée"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1375
 #, python-format
 msgid "Hardware Events"
 msgstr "Évènements matériels"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1367
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1370
 #, python-format
 msgid "Hardware Status"
 msgstr "État du matériel"
@@ -2152,6 +2155,17 @@ msgstr ""
 "formulaire de contact (onglet Ventes). Pour être valide, cette liste de prix"
 " doit être répertoriée ici en tant que liste de prix disponible. Autrement, "
 "la liste de prix par défaut sera appliquée."
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/models.js:144
+#, python-format
+msgid ""
+"Make sure you are using IoT Box v18.12 or higher. Navigate to %s to accept "
+"the certificate of your IoT Box."
+msgstr ""
+"Assurez-vous d'utiliser la version v18.12 ou supérieur du boitier IoT. "
+"Rendez-vous sur %s afin d'accepter le certificat de votre boitier IoT."
 
 #. module: point_of_sale
 #: model:res.groups,name:point_of_sale.group_pos_manager
@@ -2654,7 +2668,7 @@ msgstr "Logo du partenaire"
 #: code:addons/point_of_sale/static/src/js/gui.js:274
 #, python-format
 msgid "Password ?"
-msgstr "Mot de passe? "
+msgstr "Mot de passe ? "
 
 #. module: point_of_sale
 #. openerp-web
@@ -3110,7 +3124,14 @@ msgstr "Imprimer"
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:716
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1375
+#, python-format
+msgid "Print Invoice"
+msgstr "Imprimer la facture"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:719
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1378
 #, python-format
 msgid "Print Receipt"
 msgstr "Imprimer le ticket"
@@ -3611,7 +3632,7 @@ msgstr "Id. de session"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1225
 #, python-format
 msgid "Session ids:"
-msgstr "Session ids:"
+msgstr "Ids de session :"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -3629,8 +3650,13 @@ msgid "Sessions"
 msgstr "Sessions"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.customer_facing_display_snippets
+msgid "Set Custom Image..."
+msgstr ""
+
+#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1218
+#: code:addons/point_of_sale/static/src/js/screens.js:1277
 #, python-format
 msgid "Set Customer"
 msgstr "Définir le client"
@@ -3741,10 +3767,23 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/gui.js:333
+#: code:addons/point_of_sale/static/src/js/gui.js:324
 #, python-format
-msgid "Some orders could not be submitted to"
-msgstr "Certaines commandes n'ont pas pu être soumisses à"
+msgid ""
+"Some orders could not be submitted to the server due to configuration "
+"errors. You can exit the Point of Sale, but do not close the session before "
+"the issue has been resolved."
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/gui.js:329
+#, python-format
+msgid ""
+"Some orders could not be submitted to the server due to internet connection "
+"issues. You can exit the Point of Sale, but do not close the session before "
+"the issue has been resolved."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_pack_operation_lot

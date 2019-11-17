@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-08 13:50+0000\n"
+"POT-Creation-Date: 2019-11-14 07:34+0000\n"
 "PO-Revision-Date: 2018-08-24 09:20+0000\n"
 "Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -5407,19 +5407,21 @@ msgstr "延遲類別"
 msgid ""
 "Type of server action. The following values are available:\n"
 "- 'Execute Python Code': a block of python code that will be executed\n"
-"- 'Create or Copy a new Record': create a new record with new values, or copy an existing record in your database\n"
-"- 'Write on a Record': update the values of a record\n"
+"- 'Create': create a new record with new values\n"
+"- 'Update a Record': update the values of a record\n"
 "- 'Execute several actions': define an action that triggers several other server actions\n"
-"- 'Add Followers': add followers to a record (available in Discuss)\n"
-"- 'Send Email': automatically send an email (available in email_template)"
+"- 'Send Email': automatically send an email (Discuss)\n"
+"- 'Add Followers': add followers to a record (Discuss)\n"
+"- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
-"伺服器操作的類型。 以下值可用：\n"
-"- 「執行Python代碼」：將被執行的一段python代碼\n"
-"- 「創建或複製新記錄」：用新值創建新記錄，或複製資料庫中的現有記錄\n"
-"- '在記錄上寫'：更新記錄的值\n"
-"- 「執行幾個動作」：定義觸發其他幾個伺服器動作的動作\n"
-"- 「添加追隨者」：將追隨者添加到記錄中（在討論中可用）\n"
-"- 「發送電子信件」：自動發送電子信件（在email_template中提供）"
+"伺服器操作的類型。以下值可用：\n"
+"- \"執行 Python 代碼\"：將執行的 Python 代碼塊\n"
+"- \"創建\"：使用新值創建新記錄\n"
+"- \"更新記錄\"：更新記錄的值\n"
+"- \"執行多個操作\"：定義觸發其他幾個伺服器操作的操作\n"
+"- \"發送電子郵件\"：自動發送電子郵件（討論）\n"
+"- \"添加關注者\"：將關注者添加到記錄（討論）\n"
+"- \"創建下一個活動\"：創建活動（討論）"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__uuid
@@ -6314,16 +6316,24 @@ msgid "to close for"
 msgstr "關閉於"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:1074
+#: code:addons/mail/models/mail_thread.py:1081
 #, python-format
 msgid "unknown error"
 msgstr "未知錯誤"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:1014
+#: code:addons/mail/models/mail_thread.py:1021
 #, python-format
 msgid "unknown target model %s"
 msgstr "未知目標模型 %s"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/attachment_box.js:40
+#: code:addons/mail/static/src/js/models/messages/abstract_message.js:52
+#, python-format
+msgid "unnamed"
+msgstr "未命名"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_email

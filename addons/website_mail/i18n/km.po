@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"POT-Creation-Date: 2019-11-14 07:35+0000\n"
 "PO-Revision-Date: 2018-08-24 09:34+0000\n"
 "Last-Translator: Lux Sok <sok.lux@gmail.com>, 2019\n"
 "Language-Team: Khmer (https://www.transifex.com/odoo/teams/41243/km/)\n"
@@ -25,6 +25,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_mail.field_mail_compose_message__description
 #: model:ir.model.fields,field_description:website_mail.field_mail_mail__description
 #: model:ir.model.fields,field_description:website_mail.field_mail_message__description
+#: model:ir.model.fields,field_description:website_mail.field_survey_mail_compose_message__description
 msgid "Description"
 msgstr "ការពិពណ៌​នា​"
 
@@ -43,6 +44,7 @@ msgstr "សារ"
 #: model:ir.model.fields,help:website_mail.field_mail_compose_message__description
 #: model:ir.model.fields,help:website_mail.field_mail_mail__description
 #: model:ir.model.fields,help:website_mail.field_mail_message__description
+#: model:ir.model.fields,help:website_mail.field_survey_mail_compose_message__description
 msgid "Message description: either the subject, or the beginning of the body"
 msgstr "ការពិពណ៌នាសារ: ទាំងប្រធានបទឬការចាប់ផ្តើមនៃរាងកាយ"
 
@@ -53,6 +55,7 @@ msgstr "ការពិពណ៌នាសារ: ទាំងប្រធាន�
 #: model:ir.model.fields,field_description:website_mail.field_mail_compose_message__website_published
 #: model:ir.model.fields,field_description:website_mail.field_mail_mail__website_published
 #: model:ir.model.fields,field_description:website_mail.field_mail_message__website_published
+#: model:ir.model.fields,field_description:website_mail.field_survey_mail_compose_message__website_published
 #, python-format
 msgid "Published"
 msgstr "ចេញផ្សាយ"
@@ -63,12 +66,18 @@ msgid "Publisher Warranty Contract"
 msgstr "កិច្ចសន្យាការធានារបស់អ្នកបោះពុម្ពផ្សាយ"
 
 #. module: website_mail
+#: code:addons/website_mail/models/mail_message.py:64
+#, python-format
+msgid "Records:"
+msgstr ""
+
+#. module: website_mail
 #: model_terms:ir.ui.view,arch_db:website_mail.follow
 msgid "Subscribe"
 msgstr "ការបរិយាយ"
 
 #. module: website_mail
-#: code:addons/website_mail/models/mail_message.py:57
+#: code:addons/website_mail/models/mail_message.py:63
 #, python-format
 msgid ""
 "The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n"
@@ -92,10 +101,17 @@ msgid "Unsubscribe"
 msgstr "ឈប់ជាវ"
 
 #. module: website_mail
+#: code:addons/website_mail/models/mail_message.py:64
+#, python-format
+msgid "User:"
+msgstr ""
+
+#. module: website_mail
 #: model:ir.model.fields,help:website_mail.field_account_invoice_send__website_published
 #: model:ir.model.fields,help:website_mail.field_mail_compose_message__website_published
 #: model:ir.model.fields,help:website_mail.field_mail_mail__website_published
 #: model:ir.model.fields,help:website_mail.field_mail_message__website_published
+#: model:ir.model.fields,help:website_mail.field_survey_mail_compose_message__website_published
 msgid "Visible on the website as a comment"
 msgstr "មើលឃើញនៅលើគេហទំព័រដូចជាមតិយោបល់"
 

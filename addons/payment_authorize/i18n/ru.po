@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"POT-Creation-Date: 2019-11-14 07:34+0000\n"
 "PO-Revision-Date: 2018-08-24 09:21+0000\n"
 "Last-Translator: Vasiliy Korobatov <korobatov@gmail.com>, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
@@ -32,6 +32,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_login
 msgid "API Login Id"
 msgstr "API логина Id"
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_signature_key
+msgid "API Signature Key"
+msgstr ""
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_transaction_key
@@ -94,15 +99,7 @@ msgid "How to get paid with Authorize.Net"
 msgstr ""
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/controllers/main.py:64
-#, python-format
-msgid ""
-"If you don't have any account, please ask your salesperson to update your "
-"profile. "
-msgstr ""
-
-#. module: payment_authorize
-#: code:addons/payment_authorize/models/payment.py:261
+#: code:addons/payment_authorize/models/payment.py:292
 #, python-format
 msgid ""
 "Invalid token found: the Authorize profile is missing.Please make sure the "
