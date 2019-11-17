@@ -47,6 +47,8 @@
 # Martin Trigaux, 2019
 # Florian Hatat, 2019
 # Vincent Luba <vincent@biz-4-africa.com>, 2019
+# nle_odoo, 2019
+# Daniel Deyris <daniel.deyris@phidias.fr>, 2019
 # 
 msgid ""
 msgstr ""
@@ -54,7 +56,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-07 07:11+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Vincent Luba <vincent@biz-4-africa.com>, 2019\n"
+"Last-Translator: Daniel Deyris <daniel.deyris@phidias.fr>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -288,7 +290,7 @@ msgstr ""
 "           facture <strong>${object.name}</strong>\n"
 "        % else:\n"
 "            facture\n"
-"        %eendif\n"
+"        % endif\n"
 "        % if object.invoice_origin:\n"
 "            (avec la référence: ${object.invoice_origin})\n"
 "        % endif\n"
@@ -2852,7 +2854,7 @@ msgstr "Arrondis d'espèces"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Cash Statement"
-msgstr ""
+msgstr "Relevé de caisse"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
