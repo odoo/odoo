@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-29 10:09+0000\n"
+"POT-Creation-Date: 2019-11-14 07:34+0000\n"
 "PO-Revision-Date: 2018-08-24 09:16+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
@@ -24,20 +24,6 @@ msgstr ""
 #: model:mail.template,body_html:base_automation.test_mail_template_automation
 msgid "<div>Email automation</div>"
 msgstr "<div>Автоматизація електронної пошти</div>"
-
-#. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__website_published
-msgid ""
-"A code server action can be executed from the website, using a dedicated "
-"controller. The address is <base>/website/action/<website_path>. Set this "
-"field as True to allow users to run this action. If it is set to False the "
-"action cannot be run through the website."
-msgstr ""
-"Дія кодового сервера може бути виконана з веб-сайту, використовуючи "
-"спеціальний контролер. Адресою є <base>/website/action/<website_path>. "
-"Встановіть це поле як Вірно, щоб дозволити користувачам запускати цю дію. "
-"Якщо встановлено значення Неправильно, дія не може бути виконана через веб-"
-"сайт."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__help
@@ -121,11 +107,6 @@ msgstr "Автоматичний тест правила"
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_tree
 msgid "Automation"
 msgstr "Автоматизація"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_published
-msgid "Available on the Website"
-msgstr "Доступно на сайті"
 
 #. module: base_automation
 #: model:ir.actions.server,name:base_automation.ir_cron_data_base_automation_check_ir_actions_server
@@ -332,11 +313,6 @@ msgstr "Години"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__id
 msgid "ID"
 msgstr "ID"
-
-#. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__xml_id
-msgid "ID of the action if defined in a XML file"
-msgstr "ID дії, якщо зазначене у файлі XML "
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_domain
@@ -597,11 +573,6 @@ msgstr ""
 "\"%(state_value)s\" типом дії"
 
 #. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__website_url
-msgid "The full URL to access the server action through the website."
-msgstr "Повна URL-адреса для доступу до сервера через сайт"
-
-#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
 msgid "Trigger Condition"
 msgstr "Умова тригера"
@@ -616,19 +587,21 @@ msgstr "Дата початку"
 msgid ""
 "Type of server action. The following values are available:\n"
 "- 'Execute Python Code': a block of python code that will be executed\n"
-"- 'Create or Copy a new Record': create a new record with new values, or copy an existing record in your database\n"
-"- 'Write on a Record': update the values of a record\n"
+"- 'Create': create a new record with new values\n"
+"- 'Update a Record': update the values of a record\n"
 "- 'Execute several actions': define an action that triggers several other server actions\n"
-"- 'Add Followers': add followers to a record (available in Discuss)\n"
-"- 'Send Email': automatically send an email (available in email_template)"
+"- 'Send Email': automatically send an email (Discuss)\n"
+"- 'Add Followers': add followers to a record (Discuss)\n"
+"- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
 "Тип дії сервера. Доступні наступні значення:\n"
-"- 'Execute Python Code': блок коду python, який буде виконуватися\n"
-"- \"Створити або скопіювати новий запис\": створити новий запис із новими значеннями або скопіювати існуючий запис у вашу базу даних\n"
-"- \"Написати на запис\": оновіть значення запису\n"
-"- \"Виконати кілька дій\": визначити дію, яка запускає кілька інших дій сервера\n"
-"- \"Додати підписників\": додавати підписників до запису (доступно в Обговоренні)\n"
-"- \"Надіслати електронний лист\": автоматично надсилатиме електронний лист (доступний в email_template)"
+"- 'Виконати код Python': блок коду python, який буде виконано\n"
+"- 'Створити': створити запис з новими значеннями\n"
+"- 'Оновити запис': оновити значення запису\n"
+"- 'Виконати кілька дій': визначити дію, яка запускає кілька інших дій сервера\n"
+"- 'Надіслати Email': автоматично надіслати електронний лист (Обговорення)\n"
+"- 'Додати підписників': додати підписників до запису (Обговорення)\n"
+"- 'Створити наступну дію': створити дію (Обговорення)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__usage
@@ -687,16 +660,6 @@ msgstr "Картографічне значення"
 #, python-format
 msgid "Warning"
 msgstr "Попередження"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_path
-msgid "Website Path"
-msgstr "Перехід на сайт"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_url
-msgid "Website Url"
-msgstr "Url-адреса веб-сайту"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_calendar_id

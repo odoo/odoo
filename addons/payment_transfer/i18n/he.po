@@ -3,7 +3,6 @@
 # * payment_transfer
 # 
 # Translators:
-# Martin Trigaux, 2018
 # ExcaliberX <excaliberx@gmail.com>, 2018
 # Yihya Hugirat <hugirat@gmail.com>, 2018
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2019
@@ -26,13 +25,13 @@ msgstr ""
 #: code:addons/payment_transfer/models/payment.py:83
 #, python-format
 msgid "; multiple order found"
-msgstr ""
+msgstr "נמצאו הזמנות מרובות; "
 
 #. module: payment_transfer
 #: code:addons/payment_transfer/models/payment.py:81
 #, python-format
 msgid "; no order found"
-msgstr ""
+msgstr "לא נמצאה הזמנה; "
 
 #. module: payment_transfer
 #: code:addons/payment_transfer/models/payment.py:41
@@ -46,16 +45,23 @@ msgid ""
 "<p>Please use the order name as communication reference.</p>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"<h3>אנא השתמש בפרטי ההעברה הבאים</h3>\n"
+"<h4>%(bank_title)s</h4>\n"
+"%(bank_accounts)s\n"
+"<h4>תקשורת</h4>\n"
+"<p>אנא השתמש בשם ההזמנה כמזהה לתקשורת.</p>\n"
+"</div>"
 
 #. module: payment_transfer
 #: selection:payment.acquirer,provider:0
 msgid "Adyen"
-msgstr ""
+msgstr "Adyen"
 
 #. module: payment_transfer
 #: selection:payment.acquirer,provider:0
 msgid "Authorize.Net"
-msgstr ""
+msgstr "Authorize.Net"
 
 #. module: payment_transfer
 #: code:addons/payment_transfer/models/payment.py:39
@@ -72,27 +78,27 @@ msgstr "חשבונות בנק"
 #. module: payment_transfer
 #: selection:payment.acquirer,provider:0
 msgid "Buckaroo"
-msgstr ""
+msgstr "Buckaroo"
 
 #. module: payment_transfer
 #: selection:payment.acquirer,provider:0
 msgid "Manual Configuration"
-msgstr ""
+msgstr "תצורה ידנית"
 
 #. module: payment_transfer
 #: selection:payment.acquirer,provider:0
 msgid "Ogone"
-msgstr ""
+msgstr "Ogone"
 
 #. module: payment_transfer
 #: selection:payment.acquirer,provider:0
 msgid "PayUmoney"
-msgstr ""
+msgstr "PayUmoney"
 
 #. module: payment_transfer
 #: model:ir.model,name:payment_transfer.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "תשלום נקלט"
+msgstr ""
 
 #. module: payment_transfer
 #: model:ir.model,name:payment_transfer.model_payment_transaction
@@ -102,7 +108,7 @@ msgstr "עסקת תשלום"
 #. module: payment_transfer
 #: selection:payment.acquirer,provider:0
 msgid "Paypal"
-msgstr ""
+msgstr "Paypal"
 
 #. module: payment_transfer
 #: model:ir.model.fields,field_description:payment_transfer.field_payment_acquirer__provider
@@ -112,7 +118,7 @@ msgstr "ספק"
 #. module: payment_transfer
 #: selection:payment.acquirer,provider:0
 msgid "Sips"
-msgstr ""
+msgstr "Sips"
 
 #. module: payment_transfer
 #: selection:payment.acquirer,provider:0
@@ -128,4 +134,4 @@ msgstr "העברה בנקאית"
 #: code:addons/payment_transfer/models/payment.py:79
 #, python-format
 msgid "received data for reference %s"
-msgstr ""
+msgstr "התקבלו נתונים לעיון %s"

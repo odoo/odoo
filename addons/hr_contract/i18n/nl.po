@@ -4,18 +4,18 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2018
 # Cas Vissers <c.vissers@brahoo.nl>, 2018
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"POT-Creation-Date: 2019-11-14 07:34+0000\n"
 "PO-Revision-Date: 2018-08-24 09:18+0000\n"
-"Last-Translator: Cas Vissers <c.vissers@brahoo.nl>, 2018\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -218,6 +218,7 @@ msgid "Edit Contract"
 msgstr "Contact bewerken"
 
 #. module: hr_contract
+#: model:hr.contract.type,name:hr_contract.hr_contract_type_emp
 #: model:ir.model,name:hr_contract.model_hr_employee
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__employee_id
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
@@ -556,6 +557,11 @@ msgid "Status of the contract"
 msgstr "Status van het contract"
 
 #. module: hr_contract
+#: model:hr.contract.type,name:hr_contract.hr_contract_type_sub
+msgid "Subcontractor"
+msgstr "Onderaannemer"
+
+#. module: hr_contract
 #: selection:hr.contract,state:0
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 #: model:mail.message.subtype,name:hr_contract.mt_contract_pending
@@ -611,6 +617,11 @@ msgstr "Website communicatie geschiedenis"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__permit_no
 msgid "Work Permit No"
 msgstr "Werkvergunning nr."
+
+#. module: hr_contract
+#: model:hr.contract.type,name:hr_contract.hr_contract_type_wrkr
+msgid "Worker"
+msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__resource_calendar_id

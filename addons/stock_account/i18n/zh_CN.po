@@ -13,16 +13,17 @@
 # snow wang <147156565@qq.com>, 2018
 # keecome <7017511@qq.com>, 2018
 # inspur qiuguodong <qiuguodong@inspur.com>, 2018
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
+# Jeffery CHEN <jeffery9@gmail.com>, 2019
 # Maie <m@maie.name>, 2019
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-29 10:09+0000\n"
+"POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: Maie <m@maie.name>, 2019\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,6 +47,11 @@ msgstr "科目表模版"
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__account_move_ids
 msgid "Account Move"
 msgstr "会计凭证"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_account_reconciliation_widget
+msgid "Account Reconciliation widget"
+msgstr "会计核销挂账"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
@@ -258,7 +264,6 @@ msgid "Inventory Locations"
 msgstr "库存位置"
 
 #. module: stock_account
-#: code:addons/stock_account/wizard/stock_quantity_history.py:25
 #: model:ir.actions.act_window,name:stock_account.action_stock_inventory_valuation
 #: model:ir.actions.act_window,name:stock_account.product_valuation_action
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_valuation
@@ -267,7 +272,6 @@ msgstr "库存位置"
 #: model:ir.ui.menu,name:stock_account.menu_valuation
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
-#, python-format
 msgid "Inventory Valuation"
 msgstr "库存计价"
 
@@ -332,17 +336,19 @@ msgstr ""
 "自动化：当产品进入或离开公司时，自动创建一个会计分录来评估库存。"
 
 #. module: stock_account
-#: code:addons/stock_account/models/product.py:129
+#: code:addons/stock_account/models/product.py:139
 #, python-format
 msgid "No difference between the standard price and the new price."
 msgstr "标准价和新价格之间没有差异。"
 
 #. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 #: selection:product.template,property_valuation:0
 msgid "Periodic (manual)"
 msgstr "定期（手工）"
 
 #. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 #: selection:product.template,property_valuation:0
 msgid "Perpetual (automated)"
 msgstr "永续（自动）"

@@ -11,17 +11,16 @@
 # Zuhair Hammadi <zuhair12@gmail.com>, 2018
 # Shaima Safar <shaima.safar@open-inside.com>, 2018
 # Yihya Hugirat <hugirat@gmail.com>, 2019
-# Akram Alfusayal <akram_ma@hotmail.com>, 2019
-# Abdulmajeed Alomar <majeeed87@gmail.com>, 2019
 # Mustafa Rawi <mustafa@cubexco.com>, 2019
+# Akram Alfusayal <akram_ma@hotmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-29 10:09+0000\n"
+"POT-Creation-Date: 2019-11-14 07:34+0000\n"
 "PO-Revision-Date: 2018-08-24 09:16+0000\n"
-"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2019\n"
+"Last-Translator: Akram Alfusayal <akram_ma@hotmail.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,19 +32,6 @@ msgstr ""
 #: model:mail.template,body_html:base_automation.test_mail_template_automation
 msgid "<div>Email automation</div>"
 msgstr ""
-
-#. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__website_published
-msgid ""
-"A code server action can be executed from the website, using a dedicated "
-"controller. The address is <base>/website/action/<website_path>. Set this "
-"field as True to allow users to run this action. If it is set to False the "
-"action cannot be run through the website."
-msgstr ""
-"يمكن تنفيذ إجراء سيرفر من نوع كود من الموقع، باستخدام متحكم مخصص لهذا. "
-"العنوان هو <base>/website/action/<website_path>. اجعل قيمة هذا الحقل 'صحيح' "
-"للسماح للمستخدمين بتنفيذ هذا الإجراء. إذا كانت قيمته 'خطأ' لا يمكن تنفيذ هذا"
-" الإجراء من خلال الموقع."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__help
@@ -129,11 +115,6 @@ msgstr "اختبار قاعدة التشغيل الآلي"
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_tree
 msgid "Automation"
 msgstr "تشغيل آلي"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_published
-msgid "Available on the Website"
-msgstr "متوفر في الموقع"
 
 #. module: base_automation
 #: model:ir.actions.server,name:base_automation.ir_cron_data_base_automation_check_ir_actions_server
@@ -340,11 +321,6 @@ msgstr "الساعات"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__id
 msgid "ID"
 msgstr "المُعرف"
-
-#. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__xml_id
-msgid "ID of the action if defined in a XML file"
-msgstr "معرف الإجراء إن كان معرفًا في ملف XML"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_domain
@@ -603,11 +579,6 @@ msgstr ""
 "\"%(state_value)s\""
 
 #. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__website_url
-msgid "The full URL to access the server action through the website."
-msgstr "الرابط الكامل المستخدم للوصول لإجراءات السيرفر من خلال الموقع."
-
-#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
 msgid "Trigger Condition"
 msgstr "شرط التفعيل"
@@ -622,19 +593,13 @@ msgstr "تاريخ التفعيل"
 msgid ""
 "Type of server action. The following values are available:\n"
 "- 'Execute Python Code': a block of python code that will be executed\n"
-"- 'Create or Copy a new Record': create a new record with new values, or copy an existing record in your database\n"
-"- 'Write on a Record': update the values of a record\n"
+"- 'Create': create a new record with new values\n"
+"- 'Update a Record': update the values of a record\n"
 "- 'Execute several actions': define an action that triggers several other server actions\n"
-"- 'Add Followers': add followers to a record (available in Discuss)\n"
-"- 'Send Email': automatically send an email (available in email_template)"
+"- 'Send Email': automatically send an email (Discuss)\n"
+"- 'Add Followers': add followers to a record (Discuss)\n"
+"- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
-"نوع إجراء السيرفر. القيم التالية متاحة:\n"
-"- 'تنفيذ كود بايثون': فقرة كود بايثون سيتم تنفيذها\n"
-"- 'إنشاء أو نسخ سجل جديد': ينشئ سجل جديد بقيم جديدة، أو ينسخ سجل موجود في قاعدة بياناتك\n"
-"- 'الكتابة في سجل': يحدث قيم سجل\n"
-"- 'تنفيذ عدة إجراءات': يحدد إجراء سيفعل عدة إجراءات سيرفر أخرى\n"
-"- 'إضافة تابعين': يضيف تابعين لسجل (متاح في المناقشة)\n"
-"- 'إرسال بريد إلكتروني': يرسل رسالة بريد إلكتروني تلقائيًا (متاح في email_template)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__usage
@@ -691,16 +656,6 @@ msgstr "ربط القيمة"
 #, python-format
 msgid "Warning"
 msgstr "تحذير"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_path
-msgid "Website Path"
-msgstr "مسار الموقع"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_url
-msgid "Website Url"
-msgstr "رابط الموقع"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_calendar_id
