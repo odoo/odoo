@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 import math
 
+from dateutil.relativedelta import relativedelta
+
+from odoo import fields
 from odoo.addons.website_slides.tests import common
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import UserError
 from odoo.tests import tagged
 from odoo.tests.common import users
 from odoo.tools import mute_logger, float_compare
@@ -13,6 +15,26 @@ from odoo.tools import mute_logger, float_compare
 
 @tagged('functional')
 class TestChannelStatistics(common.SlidesCase):
+
+    @mute_logger('odoo.models')
+    def test_channel_new_content(self):
+        (self.slide | self.slide_2).write({'date_published': fields.Datetime.now() + relativedelta(days=-6)})
+        self.slide_3.write({'date_published': fields.Datetime.now() + relativedelta(days=-8)})
+        self.assertTrue(all(slide.is_new_slide for slide in (self.slide | self.slide_2)))
+        self.assertFalse(self.slide_3.is_new_slide)
+
+        channel_aspublisher = self.channel.with_user(self.user_publisher)
+        self.assertTrue(channel_aspublisher.partner_has_new_content)
+        (self.slide | self.slide_2).with_user(self.user_publisher).action_set_completed()
+        self.assertFalse(channel_aspublisher.partner_has_new_content)
+
+        channel_aspublisher._action_add_members(self.user_portal.partner_id)
+        channel_asportal = self.channel.with_user(self.user_portal)
+        self.assertTrue(channel_asportal.partner_has_new_content)
+
+        (self.slide | self.slide_2).write({'date_published': fields.Datetime.now() + relativedelta(days=-8)})
+        channel_asportal.invalidate_cache(['partner_has_new_content'])
+        self.assertFalse(channel_asportal.partner_has_new_content)
 
     @mute_logger('odoo.models')
     def test_channel_statistics(self):

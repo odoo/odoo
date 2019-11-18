@@ -3,6 +3,8 @@
 
 import uuid
 
+from dateutil.relativedelta import relativedelta
+
 from odoo import api, fields, models, tools, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.exceptions import UserError, AccessError
@@ -161,6 +163,7 @@ class Channel(models.Model):
     completed = fields.Boolean('Done', compute='_compute_user_statistics', compute_sudo=False)
     completion = fields.Integer('Completion', compute='_compute_user_statistics', compute_sudo=False)
     can_upload = fields.Boolean('Can Upload', compute='_compute_can_upload', compute_sudo=False)
+    partner_has_new_content = fields.Boolean(compute='_compute_partner_has_new_content', compute_sudo=False)
     # karma generation
     karma_gen_slide_vote = fields.Integer(string='Lesson voted', default=1)
     karma_gen_channel_rank = fields.Integer(string='Course ranked', default=5)
@@ -296,6 +299,25 @@ class Channel(models.Model):
     @api.model
     def _get_can_publish_error_message(self):
         return _("Publishing is restricted to the responsible of training courses or members of the publisher group for documentation courses")
+
+    @api.depends('slide_partner_ids')
+    @api.depends_context('uid')
+    def _compute_partner_has_new_content(self):
+        new_published_slides = self.env['slide.slide'].sudo().search([
+            ('is_published', '=', True),
+            ('date_published', '>', fields.Datetime.now() - relativedelta(days=7)),
+            ('channel_id', 'in', self.ids),
+            ('is_category', '=', False)
+        ])
+        slide_partner_completed = self.env['slide.slide.partner'].sudo().search([
+            ('channel_id', 'in', self.ids),
+            ('partner_id', '=', self.env.user.partner_id.id),
+            ('slide_id', 'in', new_published_slides.ids),
+            ('completed', '=', True)
+        ]).mapped('slide_id')
+        for channel in self:
+            new_slides = new_published_slides.filtered(lambda slide: slide.channel_id == channel)
+            channel.partner_has_new_content = any(slide not in slide_partner_completed for slide in new_slides)
 
     @api.depends('name', 'website_id.domain')
     def _compute_website_url(self):
