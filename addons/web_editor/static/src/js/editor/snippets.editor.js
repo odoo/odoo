@@ -145,6 +145,15 @@ var SnippetEditor = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Checks whether the snippet options are shown or not.
+     *
+     * @returns {boolean}
+     */
+    areOptionsShown: function () {
+        const lastIndex = this._customize$Elements.length - 1;
+        return !!this._customize$Elements[lastIndex].parent().length;
+    },
+    /**
      * Notifies all the associated snippet options that the snippet has just
      * been dropped in the page.
      */
@@ -163,6 +172,17 @@ var SnippetEditor = Widget.extend({
         }
         _.each(this.styles, function (option) {
             option.cleanForSave();
+        });
+    },
+    /**
+     * Closes all widgets of all options.
+     */
+    closeWidgets: function () {
+        if (!this.areOptionsShown()) {
+            return;
+        }
+        Object.keys(this.styles).forEach(key => {
+            this.styles[key].closeWidgets();
         });
     },
     /**
@@ -288,9 +308,7 @@ var SnippetEditor = Widget.extend({
             return;
         }
 
-        var lastIndex = this._customize$Elements.length - 1;
-        var optionsAlreadyShown = !!this._customize$Elements[lastIndex].parent().length;
-        if (optionsAlreadyShown === show) {
+        if (this.areOptionsShown() === show) {
             return;
         }
         this.trigger_up('update_customize_elements', {
@@ -666,7 +684,6 @@ var SnippetsMenu = Widget.extend({
     id: 'oe_snippets',
     cacheSnippetTemplate: {},
     events: {
-        'click we-select': '_onOptionTogglerClick',
         'click .o_install_btn': '_onInstallBtnClick',
     },
     custom_events: {
@@ -684,6 +701,7 @@ var SnippetsMenu = Widget.extend({
         'hide_overlay': '_onHideOverlay',
         'block_preview_overlays': '_onBlockPreviewOverlays',
         'unblock_preview_overlays': '_onUnblockPreviewOverlays',
+        'user_value_widget_opening': '_onUserValueWidgetOpening',
     },
 
     /**
@@ -1669,21 +1687,6 @@ var SnippetsMenu = Widget.extend({
         this.cleanForSave();
     },
     /**
-     * @private
-     * @param {*} ev
-     */
-    _onOptionTogglerClick: function (ev) {
-        var togglerEl = ev.currentTarget;
-        if (togglerEl.tagName !== 'WE-TOGGLER') {
-            togglerEl = togglerEl.querySelector('we-toggler');
-        }
-
-        var $hierarchyTogglers = $(togglerEl).parents('we-select').children('we-toggler');
-        this.$('we-select').children('we-toggler').not($hierarchyTogglers).removeClass('active');
-        $hierarchyTogglers.not(togglerEl).addClass('active');
-        togglerEl.classList.toggle('active');
-    },
-    /**
      * Called when the overlay dimensions/positions should be recomputed.
      *
      * @private
@@ -1835,6 +1838,13 @@ var SnippetsMenu = Widget.extend({
         this.$('.o_we_add_snippet_btn').toggleClass('active', !customize);
         this.customizePanel.classList.toggle('d-none', !customize);
         this.$('.o_we_customize_snippet_btn').toggleClass('active', customize);
+    },
+    /**
+     * Called when an user value widget is being opened -> close all the other
+     * user value widgets of all editors.
+     */
+    _onUserValueWidgetOpening: function () {
+        this.snippetEditors.forEach(editor => editor.closeWidgets());
     },
 });
 

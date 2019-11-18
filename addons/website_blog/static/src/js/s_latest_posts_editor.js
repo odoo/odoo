@@ -5,44 +5,6 @@ var sOptions = require('web_editor.snippets.options');
 var wUtils = require('website.utils');
 
 sOptions.registry.js_get_posts_selectBlog = sOptions.Class.extend({
-    /**
-     * @override
-     */
-    start: function () {
-        var def = this._rpc({
-            model: 'blog.blog',
-            method: 'search_read',
-            args: [wUtils.websiteDomain(this), ['name']],
-        }).then(blogs => {
-            var allBlogsEl = this.el.querySelector('[data-filter-by-blog-id="0"]');
-            var menuEl = allBlogsEl.parentNode;
-            for (const blog of blogs) {
-                let el = allBlogsEl.cloneNode();
-                el.dataset.filterByBlogId = blog.id;
-                el.textContent = blog.name;
-                menuEl.appendChild(el);
-            }
-            this._updateUI();
-        });
-
-        return Promise.all([this._super.apply(this, arguments), def]);
-    },
-
-    //--------------------------------------------------------------------------
-    // Options
-    //--------------------------------------------------------------------------
-
-    /**
-     * @see this.selectClass for parameters
-     */
-    filterByBlogId: function (previewMode, value, $opt) {
-        value = parseInt(value);
-        this.$target.attr('data-filter-by-blog-id', value).data('filterByBlogId', value);
-        this.trigger_up('widgets_start_request', {
-            editableMode: true,
-            $target: this.$target,
-        });
-    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -51,13 +13,21 @@ sOptions.registry.js_get_posts_selectBlog = sOptions.Class.extend({
     /**
      * @override
      */
-    _setActive: function () {
-        this._super.apply(this, arguments);
-
-        var activeBlogId = this.$target.data('filterByBlogId') || 0;
-
-        this.$el.find('[data-filter-by-blog-id]').removeClass('active');
-        this.$el.find('[data-filter-by-blog-id=' + activeBlogId + ']').addClass('active');
+    _renderCustomXML: function (uiFragment) {
+        return this._rpc({
+            model: 'blog.blog',
+            method: 'search_read',
+            args: [wUtils.websiteDomain(this), ['name']],
+        }).then(blogs => {
+            const menuEl = uiFragment.querySelector('[name="blog_selection"]');
+            for (const blog of blogs) {
+                const el = document.createElement('we-button');
+                el.dataset.selectDataAttribute = blog.id;
+                el.textContent = blog.name;
+                menuEl.appendChild(el);
+            }
+            return this._updateUI();
+        });
     },
 });
 });
