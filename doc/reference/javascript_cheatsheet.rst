@@ -283,7 +283,7 @@ using the view in the kanban arch (a specific example is the helpdesk dashboard)
 Promises and asynchronous code
 ===============================
 
-For a very good and complete introduction to promises, please read this excellent article https://github.com/getify/You-Dont-Know-JS/blob/master/async%20%26%20performance/ch3.md
+For a very good and complete introduction to promises, please read this excellent article https://github.com/getify/You-Dont-Know-JS/blob/1st-ed/async%20%26%20performance/ch3.md
 
 Creating new Promises
 -----------------------
