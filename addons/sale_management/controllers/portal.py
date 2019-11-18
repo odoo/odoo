@@ -31,9 +31,6 @@ class CustomerPortal(CustomerPortal):
         order_line = request.env['sale.order.line'].sudo().browse(int(line_id))
         if order_line.order_id != order_sudo:
             return False
-        if unlink:
-            order_line.unlink()
-            return False  # return False to reload the page, the line must move back to options and the JS doesn't handle it
 
         if input_quantity is not False:
             quantity = input_quantity
@@ -41,8 +38,9 @@ class CustomerPortal(CustomerPortal):
             number = -1 if remove else 1
             quantity = order_line.product_uom_qty + number
 
-        if quantity < 0:
-            quantity = 0.0
+        if quantity <= 0 or unlink:
+            order_line.unlink()
+            return False  # return False to reload the page, the line must move back to options and the JS doesn't handle it
         order_line.write({'product_uom_qty': quantity})
         currency = order_sudo.currency_id
         format_price = partial(formatLang, request.env, digits=currency.decimal_places)
