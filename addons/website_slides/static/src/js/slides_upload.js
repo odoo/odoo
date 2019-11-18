@@ -145,7 +145,7 @@ var SlideUploadDialog = Dialog.extend({
 
         if (this.file.type === 'application/pdf') {
             _.extend(values, {
-                'image': canvas.toDataURL().split(',')[1],
+                'image_1920': canvas.toDataURL().split(',')[1],
                 'slide_type': canvas.height > canvas.width ? 'document' : 'presentation',
                 'mime_type': this.file.type,
                 'datas': this.file.data
@@ -153,7 +153,7 @@ var SlideUploadDialog = Dialog.extend({
         } else if (values['slide_type'] === 'webpage') {
             _.extend(values, {
                 'mime_type': 'text/html',
-                'image': this.file.type === 'image/svg+xml' ? this._svgToPng() : this.file.data,
+                'image_1920': this.file.type === 'image/svg+xml' ? this._svgToPng() : this.file.data,
             });
         } else if (/^image\/.*/.test(this.file.type)) {
             if (values['slide_type'] === 'presentation') {
@@ -164,7 +164,7 @@ var SlideUploadDialog = Dialog.extend({
                 });
             } else {
                 _.extend(values, {
-                    'image': this.file.type === 'image/svg+xml' ? this._svgToPng() : this.file.data,
+                    'image_1920': this.file.type === 'image/svg+xml' ? this._svgToPng() : this.file.data,
                 });
             }
         }
