@@ -113,3 +113,8 @@ class ProductProduct(models.Model):
             self.project_template_id = False
         elif self.service_tracking in ['task_in_project', 'project_only']:
             self.project_id = False
+
+    def _is_delivered_timesheet(self):
+        """ Check if the product is a delivered timesheet """
+        self.ensure_one()
+        return self.type == 'service' and self.service_policy == 'delivered_timesheet'
