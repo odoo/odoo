@@ -104,27 +104,31 @@ def get_domain_identifiers(expr):
         if not condition:
             raise ValueError("Expression is not a valid domain")
 
-    check(isinstance(expr, ast.List))
     fnames = set()
     vnames = set()
-    leaves = list(ast.iter_child_nodes(expr))
-    check(isinstance(leaves.pop(), ast.Load))
-    for leaf in leaves:
-        if isinstance(leaf, ast.Str):
-            # note: this doesn't check the and/or structure
-            check(leaf.s in ('&', '|', '!'))
-        else:
-            check(isinstance(leaf, (ast.List, ast.Tuple)))
-            tuple_ = list(ast.iter_child_nodes(leaf))
-            check(isinstance(tuple_.pop(), ast.Load) and len(tuple_) == 3)
-            lhs, operator, rhs = tuple_
-            if isinstance(lhs, ast.Str):
-                fnames.add(lhs.s)
+
+    if isinstance(expr, ast.List):
+        leaves = list(ast.iter_child_nodes(expr))
+        check(isinstance(leaves.pop(), ast.Load))
+        for leaf in leaves:
+            if isinstance(leaf, ast.Str):
+                # note: this doesn't check the and/or structure
+                check(leaf.s in ('&', '|', '!'))
             else:
-                # limitation: we do not list fnames in this case
-                vnames.update(get_variable_names(lhs))
-            check(isinstance(operator, ast.Str))
-            vnames.update(get_variable_names(rhs))
+                check(isinstance(leaf, (ast.List, ast.Tuple)))
+                tuple_ = list(ast.iter_child_nodes(leaf))
+                check(isinstance(tuple_.pop(), ast.Load) and len(tuple_) == 3)
+                lhs, operator, rhs = tuple_
+                if isinstance(lhs, ast.Str):
+                    fnames.add(lhs.s)
+                else:
+                    # limitation: we do not list fnames in this case
+                    vnames.update(get_variable_names(lhs))
+                check(isinstance(operator, ast.Str))
+                vnames.update(get_variable_names(rhs))
+    else:
+        # limitation: we do not list fnames in this case
+        vnames.update(get_variable_names(expr))
 
     return (fnames, vnames)
 
