@@ -100,3 +100,23 @@ class test_inherits(common.TransactionCase):
         unit5 = UnitModel.create({'val1': 7})
         with self.assertRaises(ValidationError):
             box.write({'another_unit_id': unit5.id, 'val1': 8, 'val2': 7})
+
+    def test_display_name(self):
+        """ Check the 'display_name' of an inherited translated 'name'. """
+        self.env['res.lang'].load_lang('fr_FR')
+
+        # concrete check
+        pallet_en = self.env['test.pallet'].create({'name': 'Bread'})
+        pallet_fr = pallet_en.with_context(lang='fr_FR')
+        pallet_fr.box_id.unit_id.name = 'Pain'
+        self.assertEqual(pallet_en.display_name, 'Bread')
+        self.assertEqual(pallet_fr.display_name, 'Pain')
+
+        # check model
+        Unit = type(self.env['test.unit'])
+        Box = type(self.env['test.box'])
+        Pallet = type(self.env['test.pallet'])
+        self.assertTrue(Unit.name.translate)
+        self.assertIn('lang', Unit.display_name.depends_context)
+        self.assertIn('lang', Box.display_name.depends_context)
+        self.assertIn('lang', Pallet.display_name.depends_context)
