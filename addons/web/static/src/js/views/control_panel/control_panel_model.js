@@ -229,12 +229,15 @@ var ControlPanelModel = mvc.Model.extend({
         var favorites = [];
         Object.keys(this.filters).forEach(function (filterId) {
             var filter = _.extend({}, self.filters[filterId]);
+            if (filter.invisible) {
+                return;
+            }
             var group = self.groups[filter.groupId];
             filter.isActive = group.activeFilterIds.some(id => id[0] === filterId);
             if (filter.type === 'field') {
                 filterFields.push(filter);
             }
-            if (filter.type === 'filter' && !filter.invisible) {
+            if (filter.type === 'filter') {
                 filters.push(filter);
             }
             if (filter.type === 'groupBy') {

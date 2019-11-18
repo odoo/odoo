@@ -31,7 +31,7 @@ class l10n_eu_service(models.TransientModel):
         user = self.env.user
         return self.env['account.tax'].search(
             [('company_id', '=', user.company_id.id), ('type_tax_use', '=', 'sale'),
-             ('amount_type', '=', 'percent'), ('account_id', '!=', False)], limit=1, order='amount desc')
+             ('amount_type', '=', 'percent')], limit=1, order='amount desc')
 
     def _default_done_country_ids(self):
         user = self.env.user
