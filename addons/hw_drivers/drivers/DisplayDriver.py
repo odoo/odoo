@@ -35,8 +35,9 @@ class DisplayDriver(Driver):
         self.event_data = threading.Event()
         self.owner = False
         self.rendered_html = ''
-        self.load_url()
-        self.call_xdotools('F11')
+        if self.device_identifier != 'distant_display':
+            self._x_screen = device.get('x_screen', '0')
+            self.load_url()
 
     @property
     def device_identifier(self):
@@ -68,20 +69,22 @@ class DisplayDriver(Driver):
             event_manager.device_changed(self)
 
     def run(self):
-        while True:
+        while self.device_identifier != 'distant_display':
             time.sleep(60)
             if self.url != 'http://localhost:8069/point_of_sale/display/':
                 # Refresh the page every minute
                 self.call_xdotools('F5')
 
     def update_url(self, url=None):
+        os.environ['DISPLAY'] = ":0." + self._x_screen
+        os.environ['XAUTHORITY'] = '/run/lightdm/pi/xauthority'
         firefox_env = os.environ.copy()
-        firefox_env['HOME'] = '/tmp'
-        firefox_env['DISPLAY'] = ':0.0'
-        firefox_env['XAUTHORITY'] = '/run/lightdm/pi/xauthority'
+        firefox_env['HOME'] = '/tmp/' + self._x_screen
         self.url = url or 'http://localhost:8069/point_of_sale/display/'
-        if self.device_identifier != 'distant_display':
-            subprocess.Popen(['firefox', self.url], env=firefox_env)
+        new_window = subprocess.call(['xdotool', 'search', '--onlyvisible', '--screen', self._x_screen, '--class', 'Firefox'])
+        subprocess.Popen(['firefox', self.url], env=firefox_env)
+        if new_window:
+            self.call_xdotools('F11')
 
     def load_url(self):
         url = None
@@ -101,10 +104,10 @@ class DisplayDriver(Driver):
         return self.update_url(url)
 
     def call_xdotools(self, keystroke):
-        os.environ['DISPLAY'] = ":0.0"
+        os.environ['DISPLAY'] = ":0." + self._x_screen
         os.environ['XAUTHORITY'] = "/run/lightdm/pi/xauthority"
         try:
-            subprocess.call(['xdotool', 'search', '--sync', '--onlyvisible', '--class', 'Firefox', 'windowactivate', 'key', keystroke])
+            subprocess.call(['xdotool', 'search', '--sync', '--onlyvisible', '--screen', self._x_screen, '--class', 'Firefox', 'key', keystroke])
             return "xdotool succeeded in stroking " + keystroke
         except:
             return "xdotool threw an error, maybe it is not installed on the IoTBox"

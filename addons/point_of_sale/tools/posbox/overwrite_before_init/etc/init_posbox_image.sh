@@ -50,6 +50,7 @@ PKGS_TO_INSTALL="
     xdotool \
     unclutter \
     x11-utils \
+    xserver-xorg-video-dummy \
     openbox \
     rpi-update \
     adduser \
@@ -158,6 +159,9 @@ systemctl disable hostapd.service
 # This option disables any black strips around the screen
 # cf: https://www.raspberrypi.org/documentation/configuration/raspi-config.md
 echo "disable_overscan=1" >> /boot/config.txt
+
+# Separate framebuffers for both screens on RPI4
+sed -i '/dtoverlay/d' /boot/config.txt
 
 # exclude /drivers folder from git info to be able to load specific drivers
 echo "addons/hw_drivers/drivers/" > /home/pi/odoo/.git/info/exclude
