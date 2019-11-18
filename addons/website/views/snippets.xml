@@ -1108,7 +1108,7 @@
             <we-divider/>
             <we-button data-select-class="s_carousel_default">Default</we-button>
         </we-select>
-        <we-input string="Speed" data-set-data-attribute="interval" data-unit="s" data-save-unit="ms" data-step="0.1"/>
+        <we-input string="Speed" data-select-data-attribute="0s" data-attribute-name="interval" data-unit="s" data-save-unit="ms" data-step="0.1"/>
     </div>
 
     <div data-js="CarouselItem"
@@ -1238,8 +1238,10 @@
             <we-button class="fas fa-fw fa-expand-arrows-alt" title="Background Position"
                        data-background-position-overlay="true" data-no-preview="true"/>
         </we-row>
-        <we-input string="Background width" data-set-style="background-size" data-default-value="auto"/>
-        <we-input string="Background height" data-set-style="background-size" data-default-value="auto"/>
+        <we-multi data-css-property="background-size">
+            <we-input string="Width" data-select-style="auto" data-unit="px"/>
+            <we-input string="Height" data-select-style="auto" data-unit="px"/>
+        </we-multi>
     </div>
 
     <!-- Parallax -->
@@ -1275,9 +1277,9 @@
 
     <div data-selector="section .row > div"
         data-exclude=".s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .o_gallery .row > div">
-        <we-input string="Border" data-set-style="border-width" data-extra-class="border"/>
-        <we-input string="Rounded" data-set-style="border-radius" data-extra-class="rounded"/>
-        <we-checkbox string="Shadow" data-toggle-class="shadow"/>
+        <we-input string="Border" data-select-style="0" data-css-property="border-width" data-unit="px" data-extra-class="border"/>
+        <we-input string="Rounded" data-select-style="0" data-css-property="border-radius" data-unit="px" data-extra-class="rounded"/>
+        <we-checkbox string="Shadow" data-select-class="shadow"/>
     </div>
 
     <div data-js="sizing_y"
@@ -1301,7 +1303,7 @@
 
     <div data-js="ul"
          data-selector=":not(li) > ul:has(ul,ol), :not(li) > ol:has(ul,ol)">
-        <we-checkbox string="Folded list" data-toggle-class="o_ul_folded"/>
+        <we-checkbox string="Folded list" data-select-class="o_ul_folded"/>
     </div>
 
     <div data-js="menu_data"
@@ -1391,7 +1393,7 @@
     <div data-js="SectionStretch"
         data-selector="section"
         data-target="> .container, > .container-fluid">
-        <we-checkbox string="Stretch" data-toggle-container-fluid=""/>
+        <we-checkbox string="Stretch" data-select-class="container|container-fluid" data-no-preview="true"/>
     </div>
 </template>
 </odoo>

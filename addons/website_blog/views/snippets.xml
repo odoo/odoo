@@ -11,8 +11,8 @@
 <template id="s_latest_posts_options" inherit_id="website.snippet_options">
     <xpath expr="//div[@data-js='background']" position="before">
         <div data-js="js_get_posts_selectBlog" data-selector=".s_latest_posts, .s_latest_posts_big_picture" data-target=".js_get_posts" data-no-check="true">
-            <we-select string="Choose a blog" data-no-preview="true">
-                <we-button data-filter-by-blog-id="0">All blogs</we-button>
+            <we-select string="Choose a blog" data-no-preview="true" name="blog_selection" data-attribute-name="filterByBlogId">
+                <we-button data-select-data-attribute="0">All blogs</we-button>
                 <!-- the blog list will be generated in js -->
             </we-select>
         </div>
