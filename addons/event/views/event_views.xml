@@ -346,41 +346,43 @@
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) : ''}} oe_kanban_card oe_kanban_global_click">
-                                <div class="o_event_left text-center">
-                                    <div class="o_day"><t t-esc="record.date_begin.raw_value.getDate()"/></div>
-                                    <div>
-                                        <t t-esc="moment(record.date_begin.raw_value).format('MMM')"/>
-                                        <t t-esc="record.date_begin.raw_value.getFullYear()"/>
-                                    </div>
-                                    <div><t t-esc="moment(record.date_begin.raw_value).format('LT')"/></div>
-                                </div>
-                                <div class="o_event_right d-flex flex-column justify-content-between">
-                                    <div>
-                                        <h1 class="o_kanban_record_title"><field name="name"/></h1>
-                                        <p t-esc="record.address_id.value"/>
-                                    </div>
-                                    <div class="o_event_duration_str">Duration <field name="duration_str"/></div>
-                                    <div class="o_event_stat text-left d-flex justify-content-between">
-                                        <div class="text-left inline-block mr-2">
-                                            <button
-                                                type="action"
-                                                class="btn btn-link p-0"
-                                                name="%(event_registration_action_tree)d"
-                                                t-esc="record.seats_expected.raw_value"/>
-                                            <p>Expected</p>
+                                <div class="o_event_kanban_content d-flex flex-row">
+                                    <div class="o_event_left text-center">
+                                        <div class="o_day"><t t-esc="record.date_begin.raw_value.getDate()"/></div>
+                                        <div>
+                                            <t t-esc="moment(record.date_begin.raw_value).format('MMM')"/>
+                                            <t t-esc="record.date_begin.raw_value.getFullYear()"/>
                                         </div>
-                                        <div class="text-left inline-block">
-                                            <button
-                                                type="action"
-                                                class="btn btn-link my-0 p-0"
-                                                name="%(event_registration_action_tree)d"
-                                                context="{'search_default_confirmed': True}"
-                                                t-esc="record.seats_reserved.raw_value"/>
-                                            <p>Confirmed</p>
+                                        <div><t t-esc="moment(record.date_begin.raw_value).format('LT')"/></div>
+                                    </div>
+                                    <div class="o_event_right d-flex flex-column justify-content-between">
+                                        <div>
+                                            <h1 class="o_kanban_record_title"><field name="name"/></h1>
+                                            <p t-esc="record.address_id.value"/>
+                                        </div>
+                                        <div class="o_event_duration_str">Duration <field name="duration_str"/></div>
+                                        <div class="o_event_stat text-left d-flex justify-content-between">
+                                            <div class="text-left inline-block mr-2">
+                                                <button
+                                                    type="action"
+                                                    class="btn btn-link p-0"
+                                                    name="%(event_registration_action_tree)d"
+                                                    t-esc="record.seats_expected.raw_value"/>
+                                                <p>Expected</p>
+                                            </div>
+                                            <div class="text-left inline-block">
+                                                <button
+                                                    type="action"
+                                                    class="btn btn-link my-0 p-0"
+                                                    name="%(event_registration_action_tree)d"
+                                                    context="{'search_default_confirmed': True}"
+                                                    t-esc="record.seats_reserved.raw_value"/>
+                                                <p>Confirmed</p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="o_event_bottom_right d-flex justify-content-between align-items-center position-absolute">
+                                <div class="o_event_bottom_right oe_kanban_bottom_right d-flex justify-content-end align-items-center w-100">
                                     <field name="activity_ids" widget="kanban_activity"/>
                                     <field name="kanban_state" widget="state_selection"/>
                                     <img t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value"/>

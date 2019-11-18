@@ -3,6 +3,8 @@
         position: relative;
         padding: 0;
         display: flex;
+        flex-direction: column;
+
         .o_kanban_record_title {
             font-size: 1.2em;
         }
@@ -32,12 +34,17 @@
         }
         .o_event_bottom_right {
             width: 60px;
-            right: 8px;
-            bottom: 8px;
+            height: 20px;
+            margin-top: -28px;
+            padding: 8px;
+            margin-bottom: 8px;
             img {
                 width: 20px;
                 height: 20px;
                 object-fit: cover;
+            }
+            &>* {
+                margin-left: 6px;
             }
         }
     }
