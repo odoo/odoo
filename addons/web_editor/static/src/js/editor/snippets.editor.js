@@ -322,62 +322,6 @@ var SnippetEditor = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Transforms option UI description into actual DOM.
-     *
-     * @private
-     * @param {jQuery} $el
-     */
-    _createOptionUI: function ($el) {
-        const $optionSection = $(core.qweb.render('web_editor.customize_block_option'));
-        $optionSection.append($el);
-        const uiEl = $optionSection[0];
-
-        // Build group first as their internal components will be built after
-        uiEl.querySelectorAll('we-row').forEach(el => {
-            const infos = this._extraInfoFromDescriptionElement(el);
-            const groupEl = options.Class.prototype.buildRowElement(infos.title, infos.options);
-            el.parentNode.insertBefore(groupEl, el);
-            el.parentNode.removeChild(el);
-        });
-
-        // Build standard components
-        uiEl.querySelectorAll('we-select').forEach(el => {
-            const infos = this._extraInfoFromDescriptionElement(el);
-            const selectEl = options.Class.prototype.buildSelectElement(infos.title, infos.options);
-            el.parentNode.insertBefore(selectEl, el);
-            el.parentNode.removeChild(el);
-        });
-        uiEl.querySelectorAll('we-checkbox').forEach(el => {
-            const infos = this._extraInfoFromDescriptionElement(el);
-            const checkboxEl = options.Class.prototype.buildCheckboxElement(infos.title, infos.options);
-            el.parentNode.insertBefore(checkboxEl, el);
-            el.parentNode.removeChild(el);
-        });
-        uiEl.querySelectorAll('we-input').forEach(el => {
-            const infos = this._extraInfoFromDescriptionElement(el);
-            const inputEl = options.Class.prototype.buildInputElement(infos.title, infos.options);
-            el.parentNode.insertBefore(inputEl, el);
-            el.parentNode.removeChild(el);
-        });
-
-        return $optionSection;
-    },
-    /**
-     * @private
-     * @param {HTMLElement} el
-     * @returns {Object}
-     */
-    _extraInfoFromDescriptionElement: function (el) {
-        return {
-            title: el.getAttribute('string'),
-            options: {
-                classes: el.classList,
-                dataAttributes: el.dataset,
-                childNodes: [...el.childNodes],
-            },
-        };
-    },
-    /**
      * DOMElements have a default name which appears in the overlay when they
      * are being edited. This method retrieves this name; it can be defined
      * directly in the DOM thanks to the `data-name` attribute.
@@ -418,7 +362,8 @@ var SnippetEditor = Widget.extend({
         var $optionsSection = $(core.qweb.render('web_editor.customize_block_options_section', {
             name: this._getName(),
         })).data('editor', this);
-        $optionsSection.find('we-button-group').contents().each((i, node) => {
+        const $optionsSectionBtnGroup = $optionsSection.find('we-button-group');
+        $optionsSectionBtnGroup.contents().each((i, node) => {
             if (node.nodeType === Node.TEXT_NODE) {
                 node.parentNode.removeChild(node);
             }
@@ -447,13 +392,15 @@ var SnippetEditor = Widget.extend({
             }
 
             var optionName = val.option;
-
-            var $ui = val.$el.children().clone(true);
             var option = new (options.registry[optionName] || options.Class)(
                 this,
+                val.$el.children(),
                 val.base_target ? this.$target.find(val.base_target).eq(0) : this.$target,
                 this.$el,
-                _.extend({snippetName: this._getName()}, val.data),
+                _.extend({
+                    optionName: optionName,
+                    snippetName: this._getName(),
+                }, val.data),
                 this.options
             );
             var key = optionName || _.uniqueId('option');
@@ -465,8 +412,7 @@ var SnippetEditor = Widget.extend({
             }
             this.styles[key] = option;
             option.__order = i++;
-            const $option = this._createOptionUI($ui).addClass('snippet-option-' + optionName);
-            return option.attachTo($option);
+            return option.appendTo(document.createDocumentFragment());
         });
 
         this.isTargetMovable = (this.selectorSiblings.length > 0 || this.selectorChildren.length > 0);
@@ -476,8 +422,8 @@ var SnippetEditor = Widget.extend({
         return Promise.all(defs).then(() => {
             const options = _.sortBy(this.styles, '__order');
             options.forEach(option => {
-                if (option.isTopOption()) {
-                    $optionsSection.find('we-button-group').first().prepend(option.$el);
+                if (option.isTopOption) {
+                    $optionsSectionBtnGroup.prepend(option.$el);
                 } else {
                     $optionsSection.append(option.$el);
                 }
