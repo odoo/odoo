@@ -688,6 +688,13 @@ class TestMailgateway(TestMail):
         mail_test_model = self.env['ir.model']._get('mail.test')
         mail_channel_model = self.env['ir.model']._get('mail.channel')
 
+        self.bounce_alias = 'test_bounce'
+        self.catchall_alias = 'test_catchall'
+        self.catchall_domain = 'example.com'
+        self.env['ir.config_parameter'].set_param('mail.bounce.alias', self.bounce_alias)
+        self.env['ir.config_parameter'].set_param('mail.catchall.alias', self.catchall_alias)
+        self.env['ir.config_parameter'].set_param('mail.catchall.domain', self.catchall_domain)
+
         # groups@.. will cause the creation of new mail.test
         self.alias = self.env['mail.alias'].create({
             'alias_name': 'groups',
