@@ -485,12 +485,6 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
             top: '+5px',
         });
         this.$el.append($button);
-        // force source editor if it contains multiline Jinja directives
-        if (jinjaRegex.test(this._getValue())) {
-            var layoutInfo = $.summernote.core.dom.makeLayoutInfo(this.wysiwyg.$editor);
-            layoutInfo.toolbar().hide();
-            $.summernote.pluginEvents.codeview(undefined, undefined, layoutInfo, true);
-        }
     },
     /**
      * @private
