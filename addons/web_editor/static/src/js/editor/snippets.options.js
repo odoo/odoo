@@ -59,6 +59,7 @@ function _computePxByRem(toRem) {
  * referenced thanks to the data-js key in the web_editor options template.
  */
 var SnippetOption = Widget.extend({
+    tagName: 'we-customizeblock-option',
     events: {
         'mouseenter we-button': '_onOptionPreview',
         'click we-button': '_onOptionSelection',
@@ -69,6 +70,13 @@ var SnippetOption = Widget.extend({
         'click we-input': '_onOptionInputClick',
         'keydown we-input input': '_onOptionInputKeydown',
     },
+    /**
+     * Indicates if the option should be displayed in the button group at the
+     * top of the options panel, next to the clone/remove button.
+     *
+     * @type {boolean}
+     */
+    isTopOption: false,
 
     /**
      * The option `$el` is supposed to be the associated DOM UI element.
@@ -78,14 +86,62 @@ var SnippetOption = Widget.extend({
      *
      * @constructor
      */
-    init: function (parent, $target, $overlay, data, options) {
+    init: function (parent, $uiElements, $target, $overlay, data, options) {
         this._super.apply(this, arguments);
+
+        this.uiFragment = document.createDocumentFragment();
+        $uiElements.clone(true).appendTo(this.uiFragment);
+
         this.$target = $target;
         this.$overlay = $overlay;
         this.data = data;
         this.options = options;
+
+        this.className = 'snippet-option-' + this.data.optionName;
+
         this.ownerDocument = this.$target[0].ownerDocument;
         this.__methodNames = [];
+    },
+    /**
+     * @override
+     */
+    willStart: function () {
+        // Build group first as their internal components will be built after
+        this.uiFragment.querySelectorAll('we-row').forEach(el => {
+            const infos = this._extraInfoFromDescriptionElement(el);
+            const groupEl = this._buildRowElement(infos.title, infos.options);
+            el.parentNode.insertBefore(groupEl, el);
+            el.parentNode.removeChild(el);
+        });
+
+        // Build standard components
+        this.uiFragment.querySelectorAll('we-select').forEach(el => {
+            const infos = this._extraInfoFromDescriptionElement(el);
+            const selectEl = this._buildSelectElement(infos.title, infos.options);
+            el.parentNode.insertBefore(selectEl, el);
+            el.parentNode.removeChild(el);
+        });
+        this.uiFragment.querySelectorAll('we-checkbox').forEach(el => {
+            const infos = this._extraInfoFromDescriptionElement(el);
+            const checkboxEl = this._buildCheckboxElement(infos.title, infos.options);
+            el.parentNode.insertBefore(checkboxEl, el);
+            el.parentNode.removeChild(el);
+        });
+        this.uiFragment.querySelectorAll('we-input').forEach(el => {
+            const infos = this._extraInfoFromDescriptionElement(el);
+            const inputEl = this._buildInputElement(infos.title, infos.options);
+            el.parentNode.insertBefore(inputEl, el);
+            el.parentNode.removeChild(el);
+        });
+
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    renderElement: function () {
+        this._super(...arguments);
+        this.el.appendChild(this.uiFragment);
     },
     /**
      * Called when the option is initialized (i.e. the parent edition overlay is
@@ -96,15 +152,6 @@ var SnippetOption = Widget.extend({
     start: function () {
         this._updateUI();
         return this._super.apply(this, arguments);
-    },
-    /**
-     * Indicates if the option should be displayed in the button group at the
-     * top of the options panel, next to the clone/remove button.
-     *
-     * @returns {boolean}
-     */
-    isTopOption: function () {
-        return false;
     },
     /**
      * Called when the parent edition overlay is covering the associated snippet
@@ -383,6 +430,148 @@ var SnippetOption = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Build the correct DOM for an element according to the given options.
+     *
+     * @private
+     * @param {string} tagName
+     * @param {string} [title]
+     * @param {Object} [options]
+     * @param {string[]} [options.classes]
+     * @param {Object} [options.dataAttributes]
+     * @returns {HTMLElement}
+     */
+    _buildElement: function (tagName, title, options) {
+        const el = document.createElement(tagName);
+
+        if (title) {
+            const titleEl = this._buildTitleElement(title);
+            el.appendChild(titleEl);
+        }
+
+        if (options && options.classes) {
+            el.classList.add(...options.classes);
+        }
+        if (options && options.dataAttributes) {
+            for (const key in options.dataAttributes) {
+                el.dataset[key] = options.dataAttributes[key];
+            }
+        }
+
+        return el;
+    },
+    /**
+     * Build the correct DOM for a we-checkbox element.
+     *
+     * @private
+     * @param {string} [title]
+     * @param {Object} [options] - @see this._buildElement
+     * @returns {HTMLElement}
+     */
+    _buildCheckboxElement: function (title, options) {
+        const buttonEl = this._buildElement('we-button', title, options);
+        buttonEl.classList.add('o_we_checkbox_wrapper');
+
+        const checkboxEl = document.createElement('we-checkbox');
+        buttonEl.appendChild(checkboxEl);
+
+        return buttonEl;
+    },
+    /**
+     * Build the correct DOM for a we-row element.
+     *
+     * @private
+     * @param {string} [title]
+     * @param {Object} [options] - @see this._buildElement
+     * @param {HTMLElement[]} [options.childNodes]
+     * @returns {HTMLElement}
+     */
+    _buildRowElement: function (title, options) {
+        const groupEl = this._buildElement('we-row', title, options);
+
+        const rowEl = document.createElement('div');
+        groupEl.appendChild(rowEl);
+
+        if (options && options.childNodes) {
+            options.childNodes.forEach(node => rowEl.appendChild(node));
+        }
+
+        return groupEl;
+    },
+    /**
+     * Build the correct DOM for a we-input element.
+     *
+     * @private
+     * @param {string} [title]
+     * @param {Object} [options] - @see this._buildElement
+     */
+    _buildInputElement: function (title, options) {
+        const inputWrapperEl = this._buildElement('we-input', title, options);
+
+        var unit = inputWrapperEl.dataset.unit;
+        if (unit === undefined) {
+            unit = 'px';
+        }
+        inputWrapperEl.dataset.unit = unit;
+        if (inputWrapperEl.dataset.saveUnit === undefined) {
+            inputWrapperEl.dataset.saveUnit = unit;
+        }
+
+        var defaultValue = inputWrapperEl.dataset.defaultValue;
+        if (defaultValue === undefined) {
+            defaultValue = ('0' + unit);
+        }
+        inputWrapperEl.dataset.defaultValue = defaultValue;
+
+        var inputEl = document.createElement('input');
+        inputEl.setAttribute('type', 'text');
+        inputEl.setAttribute('placeholder', defaultValue.replace(unit, ''));
+        inputWrapperEl.appendChild(inputEl);
+
+        var unitEl = document.createElement('span');
+        unitEl.textContent = unit;
+        inputWrapperEl.appendChild(unitEl);
+
+        return inputWrapperEl;
+    },
+    /**
+     * Build the correct DOM for a we-select element.
+     *
+     * @private
+     * @param {string} [title]
+     * @param {Object} [options] - @see this._buildElement
+     * @param {HTMLElement[]} [options.childNodes]
+     * @param {HTMLElement} [options.valueEl]
+     * @returns {HTMLElement}
+     */
+    _buildSelectElement: function (title, options) {
+        const selectEl = this._buildElement('we-select', title, options);
+
+        if (options && options.valueEl) {
+            selectEl.appendChild(options.valueEl);
+        }
+
+        const menuTogglerEl = document.createElement('we-toggler');
+        selectEl.appendChild(menuTogglerEl);
+
+        var menuEl = document.createElement('we-select-menu');
+        if (options && options.childNodes) {
+            options.childNodes.forEach(node => menuEl.appendChild(node));
+        }
+        selectEl.appendChild(menuEl);
+
+        return selectEl;
+    },
+    /**
+     * @private
+     * @param {string} title
+     * @returns {HTMLElement}
+     */
+    _buildTitleElement: function (title) {
+        const titleEl = document.createElement('we-title');
+        titleEl.textContent = title;
+        return titleEl;
+    },
+    /**
      * Converts the given (value + unit) string to a numeric value expressed in
      * the given css unit.
      *
@@ -423,6 +612,21 @@ var SnippetOption = Widget.extend({
             throw new Error(`Cannot convert ${unitFrom} into ${unitTo} !`);
         }
         return value * converter(cssProp, this.$target);
+    },
+    /**
+     * @statis
+     * @param {HTMLElement} el
+     * @returns {Object}
+     */
+    _extraInfoFromDescriptionElement: function (el) {
+        return {
+            title: el.getAttribute('string'),
+            options: {
+                classes: el.classList,
+                dataAttributes: el.dataset,
+                childNodes: [...el.childNodes],
+            },
+        };
     },
     /**
      * Reactivate the options that were activated before previews.
@@ -778,153 +982,6 @@ var SnippetOption = Widget.extend({
         }
         this._reset();
     },
-
-    //--------------------------------------------------------------------------
-    // Static
-    //--------------------------------------------------------------------------
-
-    /**
-     * Build the correct DOM for an element according to the given options.
-     *
-     * @static
-     * @param {string} tagName
-     * @param {string} [title]
-     * @param {Object} [options]
-     * @param {string[]} [options.classes]
-     * @param {Object} [options.dataAttributes]
-     * @returns {HTMLElement}
-     */
-    buildElement: function (tagName, title, options) {
-        const el = document.createElement(tagName);
-
-        if (title) {
-            const titleEl = SnippetOption.prototype.buildTitleElement(title);
-            el.appendChild(titleEl);
-        }
-
-        if (options && options.classes) {
-            el.classList.add(...options.classes);
-        }
-        if (options && options.dataAttributes) {
-            for (const key in options.dataAttributes) {
-                el.dataset[key] = options.dataAttributes[key];
-            }
-        }
-
-        return el;
-    },
-    /**
-     * Build the correct DOM for a we-checkbox element.
-     *
-     * @static
-     * @param {string} [title]
-     * @param {Object} [options] - @see this.buildElement
-     * @returns {HTMLElement}
-     */
-    buildCheckboxElement: function (title, options) {
-        const buttonEl = SnippetOption.prototype.buildElement('we-button', title, options);
-        buttonEl.classList.add('o_we_checkbox_wrapper');
-
-        const checkboxEl = document.createElement('we-checkbox');
-        buttonEl.appendChild(checkboxEl);
-
-        return buttonEl;
-    },
-    /**
-     * Build the correct DOM for a we-row element.
-     *
-     * @static
-     * @param {string} [title]
-     * @param {Object} [options] - @see this.buildElement
-     * @param {HTMLElement[]} [options.childNodes]
-     * @returns {HTMLElement}
-     */
-    buildRowElement: function (title, options) {
-        const groupEl = SnippetOption.prototype.buildElement('we-row', title, options);
-
-        const rowEl = document.createElement('div');
-        groupEl.appendChild(rowEl);
-
-        if (options && options.childNodes) {
-            options.childNodes.forEach(node => rowEl.appendChild(node));
-        }
-
-        return groupEl;
-    },
-    /**
-     * Build the correct DOM for a we-input element.
-     *
-     * @static
-     * @param {string} [title]
-     * @param {Object} [options] - @see this.buildElement
-     */
-    buildInputElement: function (title, options) {
-        const inputWrapperEl = SnippetOption.prototype.buildElement('we-input', title, options);
-
-        var unit = inputWrapperEl.dataset.unit;
-        if (unit === undefined) {
-            unit = 'px';
-        }
-        inputWrapperEl.dataset.unit = unit;
-        if (inputWrapperEl.dataset.saveUnit === undefined) {
-            inputWrapperEl.dataset.saveUnit = unit;
-        }
-
-        var defaultValue = inputWrapperEl.dataset.defaultValue;
-        if (defaultValue === undefined) {
-            defaultValue = ('0' + unit);
-        }
-        inputWrapperEl.dataset.defaultValue = defaultValue;
-
-        var inputEl = document.createElement('input');
-        inputEl.setAttribute('type', 'text');
-        inputEl.setAttribute('placeholder', defaultValue.replace(unit, ''));
-        inputWrapperEl.appendChild(inputEl);
-
-        var unitEl = document.createElement('span');
-        unitEl.textContent = unit;
-        inputWrapperEl.appendChild(unitEl);
-
-        return inputWrapperEl;
-    },
-    /**
-     * Build the correct DOM for a we-select element.
-     *
-     * @static
-     * @param {string} [title]
-     * @param {Object} [options] - @see this.buildElement
-     * @param {HTMLElement[]} [options.childNodes]
-     * @param {HTMLElement} [options.valueEl]
-     * @returns {HTMLElement}
-     */
-    buildSelectElement: function (title, options) {
-        const selectEl = SnippetOption.prototype.buildElement('we-select', title, options);
-
-        if (options && options.valueEl) {
-            selectEl.appendChild(options.valueEl);
-        }
-
-        const menuTogglerEl = document.createElement('we-toggler');
-        selectEl.appendChild(menuTogglerEl);
-
-        var menuEl = document.createElement('we-select-menu');
-        if (options && options.childNodes) {
-            options.childNodes.forEach(node => menuEl.appendChild(node));
-        }
-        selectEl.appendChild(menuEl);
-
-        return selectEl;
-    },
-    /**
-     * @static
-     * @param {string} title
-     * @returns {HTMLElement}
-     */
-    buildTitleElement: function (title) {
-        const titleEl = document.createElement('we-title');
-        titleEl.textContent = title;
-        return titleEl;
-    },
 });
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -1219,7 +1276,7 @@ registry.colorpicker = SnippetOption.extend({
 
         // Build the select element with a custom span to hold the color preview
         this.colorPreviewEl = document.createElement('span');
-        const selectEl = this.buildSelectElement(this.data.string, {
+        const selectEl = this._buildSelectElement(this.data.string, {
             classes: ['o_we_so_color_palette'],
             childNodes: [this.colorPalette.el],
             valueEl: this.colorPreviewEl,
@@ -1343,7 +1400,7 @@ registry.background = SnippetOption.extend({
         this.removeBgEl.dataset.background = '';
         this.removeBgEl.dataset.noPreview = 'true';
 
-        this.$el.append(this.buildRowElement(this.data.string, {
+        this.$el.append(this._buildRowElement(this.data.string, {
             childNodes: [editBgEl, this.removeBgEl],
         }));
 

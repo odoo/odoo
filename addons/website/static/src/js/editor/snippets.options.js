@@ -329,6 +329,8 @@ options.registry.Carousel = options.Class.extend({
 });
 
 options.registry.CarouselItem = options.Class.extend({
+    isTopOption: true,
+
     /**
      * @override
      */
@@ -352,12 +354,6 @@ options.registry.CarouselItem = options.Class.extend({
     destroy: function () {
         this._super(...arguments);
         this.$carousel.off('.carousel_item_option');
-    },
-    /**
-     * @override
-     */
-    isTopOption: function () {
-        return true;
     },
     /**
      * Updates the slide counter.
@@ -1597,6 +1593,7 @@ options.registry.topMenuColor = options.registry.colorpicker.extend({
  */
 options.registry.anchor = options.Class.extend({
     xmlDependencies: ['/website/static/src/xml/website.editor.xml'],
+    isTopOption: true,
 
     //--------------------------------------------------------------------------
     // Public
@@ -1619,12 +1616,6 @@ options.registry.anchor = options.Class.extend({
         });
 
         return this._super.apply(this, arguments);
-    },
-    /**
-     * @override
-     */
-    isTopOption: function () {
-        return true;
     },
     /**
      * @override

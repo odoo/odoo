@@ -184,7 +184,7 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
         }).then(data => {
             var $menu = this.$el.find('[name="style"]');
             for (var k in data) {
-                $menu.append(this.buildCheckboxElement(data[k]['name'], {
+                $menu.append(this._buildCheckboxElement(data[k]['name'], {
                     dataAttributes: {
                         'style': data[k]['id'],
                         'toggleClass': data[k]['html_class'],
