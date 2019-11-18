@@ -9,16 +9,19 @@
                 <button class="btn btn-link o_switch_theme">
                     Choose another theme
                 </button>
-                <button class="o_switch_mode_button"></button>
             </div>
         </div>
     </t>
 
     <t t-name="website.ThemePreview.SwitchModeButton">
-        <button class="o_switch_mode_button btn btn-light d-none d-md-inline">
-            <i t-attf-class="fa #{icon or 'fa-refresh'} mr-1"></i>
-            <t t-esc="PreviewType"/> Preview
-        </button>
+        <div class="btn-group btn-group-toggle ml-1" data-toggle="buttons">
+            <label class="btn btn-secondary active">
+                <input type="radio" name="viewer" data-mode='desktop' autocomplete="off" checked='checked'/> Desktop
+            </label>
+            <label class="btn btn-secondary">
+                <input type="radio" name="viewer" data-mode='mobile' autocomplete="off"/> Mobile
+            </label>
+        </div>
     </t>
     <t t-name="website.ThemePreview.Loader">
         <div class="o_theme_install_loader_container position-fixed fixed-top fixed-left h-100 w-100 bg-white d-flex justify-content-center align-items-center">
