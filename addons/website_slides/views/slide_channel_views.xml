@@ -100,7 +100,8 @@
                                     </group>
                                     <group name="display" string="Display">
                                         <field name="visibility" widget="radio"/>
-                                        <field name="promote_strategy" widget="radio"/>
+                                        <field name="promote_strategy" widget="radio"
+                                        attrs="{'invisible': [('channel_type', '=', 'training')]}"/>
                                     </group>
                                 </group>
                                 <div attrs="{'invisible': [('enroll', '!=', 'invite')]}">

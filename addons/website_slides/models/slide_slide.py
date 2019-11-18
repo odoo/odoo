@@ -8,6 +8,7 @@ import re
 import requests
 import PyPDF2
 
+from dateutil.relativedelta import relativedelta
 from PIL import Image
 from werkzeug import urls
 
@@ -123,6 +124,7 @@ class Slide(models.Model):
     channel_id = fields.Many2one('slide.channel', string="Course", required=True)
     tag_ids = fields.Many2many('slide.tag', 'rel_slide_tag', 'slide_id', 'tag_id', string='Tags')
     is_preview = fields.Boolean('Allow Preview', default=False, help="The course is accessible by anyone : the users don't need to join the channel to access the content of the course.")
+    is_new_slide = fields.Boolean('Is New Slide', compute='_compute_is_new_slide')
     completion_time = fields.Float('Duration', digits=(10, 4), help="The estimated completion time for this slide")
     # Categories
     is_category = fields.Boolean('Is a category', default=False)
@@ -188,6 +190,11 @@ class Slide(models.Model):
     _sql_constraints = [
         ('exclusion_html_content_and_url', "CHECK(html_content IS NULL OR url IS NULL)", "A slide is either filled with a document url or HTML content. Not both.")
     ]
+
+    @api.depends('date_published', 'is_published')
+    def _compute_is_new_slide(self):
+        for slide in self:
+            slide.is_new_slide = slide.date_published > fields.Datetime.now() - relativedelta(days=7) if slide.is_published else False
 
     @api.depends('channel_id.slide_ids.is_category', 'channel_id.slide_ids.sequence')
     def _compute_category_id(self):
