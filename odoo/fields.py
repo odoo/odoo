@@ -439,7 +439,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
         # display_name may depend on context['lang'] (`test_lp1071710`)
         if self.automatic and self.name == 'display_name' and model._rec_name:
-            if model._fields[model._rec_name].translate:
+            if model._fields[model._rec_name].base_field.translate:
                 self.depends_context += ('lang',)
 
     #
