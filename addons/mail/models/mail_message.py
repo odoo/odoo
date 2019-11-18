@@ -669,11 +669,22 @@ class Message(models.Model):
         final_ids = author_ids | partner_ids | channel_ids | allowed_ids
 
         if count:
-            return len(final_ids)
+            res = len(final_ids)
         else:
             # re-construct a list based on ids, because set did not keep the original order
-            id_list = [id for id in ids if id in final_ids]
-            return id_list
+            res = [id for id in ids if id in final_ids]
+
+        # if some found records have been removed, try to reach limit
+        if limit and len(ids) == limit > len(final_ids):
+            res += self._search(
+                self, args, offset=offset + len(ids), limit=None, order=order, count=count,
+                access_rights_uid=access_rights_uid):
+            if count:
+                return min(res, limit)
+            else:
+                return res[:limit]
+
+        return res
 
     @api.multi
     def check_access_rule(self, operation):
