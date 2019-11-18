@@ -127,6 +127,7 @@ class ProjectTask(models.Model):
 
     # override sale_order_id and make it computed stored field instead of regular field.
     sale_order_id = fields.Many2one(compute='_compute_sale_order_id', store=True, readonly=False)
+    analytic_account_id = fields.Many2one('account.analytic.account', related='sale_order_id.analytic_account_id')
     billable_type = fields.Selection([
         ('task_rate', 'At Task Rate'),
         ('employee_rate', 'At Employee Rate'),
@@ -160,6 +161,12 @@ class ProjectTask(models.Model):
                 'title': _("Warning"),
                 'message': message
             }}
+
+    @api.depends('analytic_account_id.active')
+    def _compute_analytic_account_active(self):
+        super()._compute_analytic_account_active()
+        for task in self:
+            task.analytic_account_active = task.analytic_account_active or task.analytic_account_id.active
 
     @api.depends('sale_line_id', 'project_id', 'billable_type')
     def _compute_sale_order_id(self):
