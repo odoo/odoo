@@ -881,7 +881,7 @@ registry.gallery = publicWidget.Widget.extend({
             srcs: urls,
             index: idx,
             dim: dimensions,
-            interval: milliseconds,
+            interval: milliseconds || 0,
             id: _.uniqueId('slideshow_'),
         }));
         $modal.modal({
