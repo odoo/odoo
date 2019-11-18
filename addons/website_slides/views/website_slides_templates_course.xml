@@ -420,15 +420,18 @@
         </div>
 
         <div class="d-flex flex-row">
+            <a t-if="channel.can_upload" href="#">
+                <span t-att-data-slide-id="slide.id" t-attf-class="o_wslides_js_slide_toggle_is_preview badge #{'badge-success py-1' if slide.is_preview else 'badge-light badge-hide border'} font-weight-normal px-2 m-1">Free preview</span>
+            </a>
+            <span t-elif="slide.is_preview and not channel.is_member" class="badge badge-success font-weight-normal px-2 py-1 m-1">Free preview</span>
+            <span t-if="slide.is_new_slide and not channel_progress[slide.id].get('completed')" class="badge badge-info badge-arrow-right font-weight-normal px-2 py-1 m-1">
+                New
+            </span>
             <span t-if="slide.question_ids" t-att-class="'badge font-weight-bold px-2 py-1 m-1 %s' % ('badge-success' if channel_progress[slide.id].get('completed') else 'badge-warning')">
                 <i t-attf-class="fa fa-fw #{'fa-check' if channel_progress[slide.id].get('completed') else 'fa-flag'}"/>
                 <t t-esc="channel_progress[slide.id].get('quiz_karma_won', 0) if channel_progress[slide.id].get('completed') else channel_progress[slide.id].get('quiz_karma_gain', 0)"/> xp
             </span>
             <span class="badge badge-danger font-weight-normal px-2 py-1 m-1" t-if="not slide.website_published">Unpublished</span>
-            <a t-if="channel.can_upload" href="#">
-                <span t-att-data-slide-id="slide.id" t-attf-class="o_wslides_js_slide_toggle_is_preview badge #{'badge-success' if slide.is_preview else 'badge-light badge-hide border'} font-weight-normal px-2 py-1 m-1">Free preview</span>
-            </a>
-            <span t-elif="slide.is_preview and not channel.is_member" class="badge badge-success font-weight-normal px-2 py-1 m-1">Free preview</span>
         </div>
 
         <div t-if="channel.is_member or channel.can_publish" class="pt-2 pb-2 border-left ml-2 mr-2 pl-2 d-flex flex-row align-items-center o_wslides_slides_list_slide_controls">
@@ -615,6 +618,7 @@
 
 <template id='lesson_card' name="Lesson Card">
     <div class="card w-100 o_wslides_lesson_card mb-4">
+            <t t-if="slide.is_new_slide and not channel_progress[slide.id].get('completed')" t-call="website_slides.course_card_information"/>
         <t t-set="can_access" t-value="slide.is_preview or channel.is_member or channel.can_publish"/>
 
         <t t-if="slide.image_1024">
