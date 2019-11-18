@@ -657,7 +657,7 @@
             <field name="model">product.supplierinfo</field>
             <field name="arch" type="xml">
                 <tree string="Vendor Information" multi_edit="1">
-                    <field name="sequence" widget="handle" readonly="1"/>
+                    <field name="sequence" widget="handle"/>
                     <field name="name" readonly="1"/>
                     <field name="product_id" readonly="1" optional="hide"
                         invisible="context.get('product_template_invisible_variant', False)"
