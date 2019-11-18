@@ -72,7 +72,7 @@ class StockMoveLine(models.Model):
     @api.constrains('lot_id', 'product_id')
     def _check_lot_product(self):
         for line in self:
-            if line.lot_id and line.product_id != line.lot_id.product_id:
+            if line.lot_id and line.product_id != line.lot_id.sudo().product_id:
                 raise ValidationError(_('This lot %s is incompatible with this product %s' % (line.lot_id.name, line.product_id.display_name)))
 
     @api.one
