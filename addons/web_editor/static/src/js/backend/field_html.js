@@ -183,7 +183,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
             recordInfo: {
                 context: this.record.getContext(this.recordParams),
                 res_model: this.model,
-                res_id: this.res_id,
+                res_id: this.res_id || this.record.getContext(this.recordParams).default_res_id,
             },
             noAttachment: this.nodeOptions['no-attachment'],
             inIframe: !!this.nodeOptions.cssEdit,
