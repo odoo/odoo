@@ -56,7 +56,7 @@ renderer.createPalette = function ($container, options) {
                     selectedColor: $(targetElement).css(eventName === "foreColor" ? 'color' : 'backgroundColor'),
                     targetClasses: [...targetElement.classList],
                 });
-                colorpicker.on('color_picked custom_color_picked', null, ev => applyColor(ev.data.target, eventName, ev.data.cssColor));
+                colorpicker.on('color_picked', null, ev => applyColor(ev.data.target, eventName, ev.data.cssColor));
                 colorpicker.on('color_reset', null, ev => applyColor(ev.data.target, eventName, 'inherit'));
                 return colorpicker.replace(hookEl).then(() => {
                     if (oldColorpicker) {
