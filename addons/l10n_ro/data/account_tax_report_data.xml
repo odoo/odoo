@@ -33,8 +33,8 @@
     </record>
     
     <record id="account_tax_report_ro_baza_rd3" model="account.tax.report.line">
-        <field name="name">3 - BAZA - Livrări de bunuri sau prestări de servicii pentru care locul livrării/locul prestării este în afara României (în UE sau în afara UE), precum şi livrări intracomunitare de bunuri, scutite conform art. 294 alin.(2) lit.b) şi c) din Codul fiscal, din care:</field>
-        <field name="tag_name">3 - BAZA - Livrări de bunuri sau prestări de servicii pentru care locul livrării/locul prestării este în afara României (în UE sau în afara UE), precum şi livrări intracomunitare de bunuri, scutite conform art. 294 alin.(2) lit.b) şi c) din Codul fiscal, din care:</field>
+        <field name="name">3 - BAZA - Livrări de bunuri/prestări de servicii pentru care locul livrării/prestării este în afara României, precum şi livrări intracom. de bunuri, scut. conf. art. 294 alin.(2) lit.b) şi c) din CF, din care: </field>
+        <field name="tag_name">3 - BAZA - Livrări de bunuri/prestări de servicii pentru care locul livrării/prestării este în afara României, precum şi livrări intracom. de bunuri, scut. conf. art. 294 alin.(2) lit.b) şi c) din CF, din care: </field>
         <field name="code">tax_ro_baza_rd3</field>
         <field name="sequence" eval="4"/>
         <field name="parent_id" ref="account_tax_report_ro_baza_intracom_eu"/>
@@ -77,16 +77,16 @@
     </record>
     
     <record id="account_tax_report_ro_baza_rd51" model="account.tax.report.line">
-        <field name="name">5.1 - BAZA - Achiziţii intracomunitare pentru care cumpărătorul este obligat la plata TVA (taxare inversă), iar furnizorul este înregistrat în scopuri de TVA în statul membru din care a avut loc livrarea intracomunitară</field>
-        <field name="tag_name">5.1 - BAZA - Achiziţii intracomunitare pentru care cumpărătorul este obligat la plata TVA (taxare inversă), iar furnizorul este înregistrat în scopuri de TVA în statul membru din care a avut loc livrarea intracomunitară</field>
+        <field name="name">5.1 - BAZA - Achiziţii intracom. pentru care cumpărătorul este obligat la plata TVA (TI), iar furnizorul este înregistrat în scopuri de TVA în statul membru din care a avut loc livrarea intracom.</field>
+        <field name="tag_name">5.1 - BAZA - Achiziţii intracom. pentru care cumpărătorul este obligat la plata TVA (TI), iar furnizorul este înregistrat în scopuri de TVA în statul membru din care a avut loc livrarea intracom.</field>
         <field name="code">tax_ro_baza_rd51</field>
         <field name="sequence" eval="9"/>
         <field name="parent_id" ref="account_tax_report_ro_baza_rd5"/>
         <field name="country_id" ref="base.ro"/>
     </record>
     <record id="account_tax_report_ro_tva_rd51" model="account.tax.report.line">
-        <field name="name">5.1 - TVA - Achiziţii intracomunitare pentru care cumpărătorul este obligat la plata TVA (taxare inversă), iar furnizorul este înregistrat în scopuri de TVA în statul membru din care a avut loc livrarea intracomunitară</field>
-        <field name="tag_name">5.1 - TVA - Achiziţii intracomunitare pentru care cumpărătorul este obligat la plata TVA (taxare inversă), iar furnizorul este înregistrat în scopuri de TVA în statul membru din care a avut loc livrarea intracomunitară</field>
+        <field name="name">5.1 - TVA - Achiziţii intracom. pentru care cumpărătorul este obligat la plata TVA (TI), iar furnizorul este înregistrat în scopuri de TVA în statul membru din care a avut loc livrarea intracom.</field>
+        <field name="tag_name">5.1 - TVA - Achiziţii intracom. pentru care cumpărătorul este obligat la plata TVA (TI), iar furnizorul este înregistrat în scopuri de TVA în statul membru din care a avut loc livrarea intracom.</field>
         <field name="code">tax_ro_tva_rd51</field>
         <field name="sequence" eval="10"/>
         <field name="parent_id" ref="account_tax_report_ro_tva_rd5"/>
@@ -483,16 +483,16 @@
     </record>
     
     <record id="account_tax_report_ro_baza_rd181" model="account.tax.report.line">
-        <field name="name">18.1 - BAZA - Achiziţii intracomunitare pentru care cumpărătorul este obligat la plata TVA (taxare inversă), iar furnizorul este înregistrat în scopuri de TVA în statul membru din care a avut loc livrarea (rd.18.1=rd.5.1)</field>
-        <field name="tag_name">18.1 - BAZA - Achiziţii intracomunitare pentru care cumpărătorul este obligat la plata TVA (taxare inversă), iar furnizorul este înregistrat în scopuri de TVA în statul membru din care a avut loc livrarea (rd.18.1=rd.5.1)</field>
+        <field name="name">18.1 - BAZA - Achiziţii intracom. pentru care cumpărătorul este obligat la plata TVA (TI), iar furnizorul este înregistrat în scopuri de TVA în statul membru din care a avut loc livrarea (rd.18.1=rd.5.1)</field>
+        <field name="tag_name">18.1 - BAZA - Achiziţii intracom. pentru care cumpărătorul este obligat la plata TVA (TI), iar furnizorul este înregistrat în scopuri de TVA în statul membru din care a avut loc livrarea (rd.18.1=rd.5.1)</field>
         <field name="code">tax_ro_baza_rd181</field>
         <field name="sequence" eval="58"/>
         <field name="parent_id" ref="account_tax_report_ro_baza_rd18"/>
         <field name="country_id" ref="base.ro"/>
     </record>
     <record id="account_tax_report_ro_tva_rd181" model="account.tax.report.line">
-        <field name="name">18.1 - TVA - Achiziţii intracomunitare pentru care cumpărătorul este obligat la plata TVA (taxare inversă), iar furnizorul este înregistrat în scopuri de TVA în statul membru din care a avut loc livrarea (rd.18.1=rd.5.1)</field>
-        <field name="tag_name">18.1 - TVA - Achiziţii intracomunitare pentru care cumpărătorul este obligat la plata TVA (taxare inversă), iar furnizorul este înregistrat în scopuri de TVA în statul membru din care a avut loc livrarea (rd.18.1=rd.5.1)</field>
+        <field name="name">18.1 - TVA - Achiziţii intracom. pentru care cumpărătorul este obligat la plata TVA (TI), iar furnizorul este înregistrat în scopuri de TVA în statul membru din care a avut loc livrarea (rd.18.1=rd.5.1)</field>
+        <field name="tag_name">18.1 - TVA - Achiziţii intracom. pentru care cumpărătorul este obligat la plata TVA (TI), iar furnizorul este înregistrat în scopuri de TVA în statul membru din care a avut loc livrarea (rd.18.1=rd.5.1)</field>
         <field name="code">tax_ro_tva_rd181</field>
         <field name="sequence" eval="59"/>
         <field name="parent_id" ref="account_tax_report_ro_tva_rd18"/>
