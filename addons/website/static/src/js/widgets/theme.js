@@ -522,7 +522,7 @@ var ThemeCustomizeDialog = Dialog.extend({
                 excludeSectionOf: colorName,
             });
             var chosenColor = undefined;
-            colorpicker.on('color_picked custom_color_picked', self, function (ev) {
+            colorpicker.on('color_picked', self, function (ev) {
                 ev.stopPropagation();
                 chosenColor = ev.data.cssColor;
                 colorpicker.close();

@@ -1,6 +1,8 @@
 odoo.define('web_editor.utils', function (require) {
 'use strict';
 
+const ColorpickerDialog = require('web.ColorpickerDialog');
+
 /**
  * window.getComputedStyle cannot work properly with CSS shortcuts (like
  * 'border-width' which is a shortcut for the top + right + bottom + left border
@@ -116,6 +118,10 @@ function _getNumericAndUnit(value) {
  * @returns {boolean}
  */
 function _areCssValuesEqual(value1, value2, cssProp, $target) {
+    // If not colors, they will be left untouched
+    value1 = ColorpickerDialog.normalizeCSSColor(value1);
+    value2 = ColorpickerDialog.normalizeCSSColor(value2);
+
     // String comparison first
     if (value1 === value2) {
         return true;
