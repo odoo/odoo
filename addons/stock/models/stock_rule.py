@@ -39,10 +39,12 @@ class StockRule(models.Model):
         required=True)
     sequence = fields.Integer('Sequence', default=20)
     company_id = fields.Many2one('res.company', 'Company',
-        default=lambda self: self.env.company)
+        default=lambda self: self.env.company,
+        domain=[('company_id', '?=', 'route_company_id')])
     location_id = fields.Many2one('stock.location', 'Destination Location', required=True, check_company=True)
     location_src_id = fields.Many2one('stock.location', 'Source Location', check_company=True)
     route_id = fields.Many2one('stock.location.route', 'Route', required=True, ondelete='cascade')
+    route_company_id = fields.Many2one(related='route_id.company_id', string='Route Company')
     procure_method = fields.Selection([
         ('make_to_stock', 'Take From Stock'),
         ('make_to_order', 'Trigger Another Rule'),
@@ -54,7 +56,9 @@ class StockRule(models.Model):
     route_sequence = fields.Integer('Route Sequence', related='route_id.sequence', store=True, readonly=False, compute_sudo=True)
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type',
-        required=True, check_company=True)
+        required=True, check_company=True,
+        domain=[('code', '?=', 'picking_type_code_domain')])
+    picking_type_code_domain = fields.Char(compute='_compute_picking_type_code_domain')
     delay = fields.Integer('Delay', default=0, help="The expected date of the created transfer will be computed based on this delay.")
     partner_address_id = fields.Many2one(
         'res.partner', 'Partner Address',
@@ -101,8 +105,6 @@ class StockRule(models.Model):
             self.company_id = self.route_id.company_id
         if self.picking_type_id.warehouse_id.company_id != self.route_id.company_id:
             self.picking_type_id = False
-        domain = {'company_id': self.route_id.company_id and [('id', '=', self.route_id.company_id.id)] or []}
-        return {'domain': domain}
 
     def _get_message_values(self):
         """ Return the source, destination and picking_type applied on a stock
@@ -147,6 +149,10 @@ class StockRule(models.Model):
                 message = message_dict['pull'] + "<br/><br/>" + message_dict['push']
             rule.rule_message = message
         (self - action_rules).rule_message = None
+
+    @api.depends('action')
+    def _compute_picking_type_code_domain(self):
+        self.picking_type_code_domain = False
 
     def _run_push(self, move):
         """ Apply a push rule on a move.
