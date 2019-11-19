@@ -13,15 +13,7 @@ class TestSurveyFlow(common.TestSurveyCommon, HttpCase):
         post_data['page_id'] = page.id
         for question_id, answer_vals in answer_data.items():
             question = page.question_ids.filtered(lambda q: q.id == question_id)
-            if question.question_type == 'multiple_choice':
-                values = answer_vals['value']
-                for value in values:
-                    key = "%s_%s_%s" % (page.survey_id.id, question.id, value)
-                    post_data[key] = value
-            else:
-                [value] = answer_vals['value']
-                key = "%s_%s" % (page.survey_id.id, question.id)
-                post_data[key] = value
+            post_data.update(self._prepare_post_data(question, answer_vals['value'], post_data))
         post_data.update(**additional_post_data)
         return post_data
 
@@ -96,7 +88,7 @@ class TestSurveyFlow(common.TestSurveyCommon, HttpCase):
         # Customer submit first page answers
         answer_data = {
             page0_q0.id: {'value': ['Alfred Poilvache']},
-            page0_q1.id: {'value': [44.0]},
+            page0_q1.id: {'value': ['44.0']},
         }
         post_data = self._format_submission_data(page_0, answer_data, {'csrf_token': csrf_token, 'token': answer_token, 'button_submit': 'next'})
         r = self._access_submit(survey, answer_token, post_data)

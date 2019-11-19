@@ -62,7 +62,7 @@ var failSteps = [{ // Page-1
     }
 }, {
     content: "Finish Survey",
-    trigger: 'button[value="finish"]',
+    trigger: 'button[type="submit"]',
 }];
 
 var retrySteps = [{
