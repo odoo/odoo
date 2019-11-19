@@ -21,6 +21,18 @@ class WebsiteSaleDelivery(WebsiteSale):
 
         return super(WebsiteSaleDelivery, self).payment(**post)
 
+    @http.route(['/shop/payment/transaction/',
+                 '/shop/payment/transaction/<int:so_id>',
+                 '/shop/payment/transaction/<int:so_id>/<string:access_token>'],
+                type='json', auth="public", website=True)
+    def payment_transaction(self, acquirer_id, save_token=False, so_id=None, access_token=None, token=None, **kwargs):
+        order = request.website.sale_get_order()
+        # no force; check case cart was concurrently updated (by _cart_update)
+        order._check_carrier_quotation()
+        return super(WebsiteSaleDelivery, self).payment_transaction(
+            acquirer_id, save_token=save_token, so_id=so_id, access_token=access_token, token=token, **kwargs
+        )
+
     def order_lines_2_google_api(self, order_lines):
         """ Transforms a list of order lines into a dict for google analytics """
         order_lines_not_delivery = order_lines.filtered(lambda line: not line.is_delivery)
