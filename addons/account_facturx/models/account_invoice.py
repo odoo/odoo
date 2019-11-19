@@ -105,8 +105,8 @@ class AccountInvoice(models.Model):
             if elements:
                 total_amount = float(elements[0].text)
 
-                # Handle 'b' refund mode.
-                if total_amount < 0 and type_code == '380':
+                # Handle 'a & b' refund mode.
+                if (total_amount < 0 and type_code == '380') or type_code == '381':
                     refund_sign = -1
 
                 # Currency.
