@@ -247,7 +247,8 @@ class TestTranslation(TransactionCase):
 
     def setUp(self):
         super(TestTranslation, self).setUp()
-        self.env['ir.translation']._load_module_terms(['base'], ['fr_FR'])
+        lang = self.env['res.lang']._activate_lang('fr_FR')
+        self.env.ref('base.module_base')._update_translations(['fr_FR'])
         self.customers = self.env['res.partner.category'].create({'name': 'Customers'})
         self.env['ir.translation'].create({
             'type': 'model',
@@ -436,7 +437,7 @@ class TestTranslationWrite(TransactionCase):
         self.assertEqual(source_name[0]['name'], "English Name", "Reference field not updated")
 
     def test_03_fr_single(self):
-        self.env['res.lang'].load_lang('fr_FR')
+        self.env['res.lang']._activate_lang('fr_FR')
         self.env['res.users'].with_context(active_test=False).search([]).write({'lang': 'fr_FR'})
         self.env.ref('base.lang_en').active = False
 
@@ -454,7 +455,7 @@ class TestTranslationWrite(TransactionCase):
         self.assertEqual(len(translations), 0, "No French translation should be created when writing in French")
 
     def test_04_fr_multi(self):
-        self.env['res.lang'].load_lang('fr_FR')
+        self.env['res.lang']._activate_lang('fr_FR')
 
         langs = self.env['res.lang'].get_installed()
         self.assertEqual([('en_US', 'English (US)'), ('fr_FR', 'French / Français')], langs,
@@ -481,9 +482,9 @@ class TestTranslationWrite(TransactionCase):
         ])
 
     def test_04_fr_multi_no_en(self):
-        self.env['res.lang'].load_lang('fr_FR')
+        self.env['res.lang']._activate_lang('fr_FR')
+        self.env['res.lang']._activate_lang('es_ES')
         self.env['res.users'].with_context(active_test=False).search([]).write({'lang': 'fr_FR'})
-        self.env['res.lang'].load_lang('es_ES')
         self.env.ref('base.lang_en').active = False
 
         langs = self.env['res.lang'].get_installed()
@@ -504,7 +505,7 @@ class TestTranslationWrite(TransactionCase):
         ])
 
     def test_05_remove_multi(self):
-        self.env['res.lang'].load_lang('fr_FR')
+        self.env['res.lang']._activate_lang('fr_FR')
 
         langs = self.env['res.lang'].get_installed()
         self.assertEqual([('en_US', 'English (US)'), ('fr_FR', 'French / Français')], langs,
@@ -576,7 +577,9 @@ class TestTranslationWrite(TransactionCase):
 class TestXMLTranslation(TransactionCase):
     def setUp(self):
         super(TestXMLTranslation, self).setUp()
-        self.env['ir.translation']._load_module_terms(['base'], ['fr_FR', 'nl_NL'])
+        self.env['res.lang']._activate_lang('fr_FR')
+        self.env['res.lang']._activate_lang('nl_NL')
+        self.env.ref('base.module_base')._update_translations(['fr_FR', 'nl_NL'])
 
     def create_view(self, archf, terms, **kwargs):
         view = self.env['ir.ui.view'].create({

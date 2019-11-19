@@ -27,7 +27,8 @@ class TestUiTranslation(odoo.tests.HttpCase):
     @mute_logger('odoo.sql_db', 'odoo.http')
     def test_01_sql_constraints(self):
         # Raise an SQL constraint and test the message
-        self.env['ir.translation']._load_module_terms(['test_new_api'], ['fr_FR'])
+        self.env['res.lang']._activate_lang('fr_FR')
+        self.env.ref('base.module_test_new_api')._update_translations(['fr_FR'])
         constraint = self.env.ref('test_new_api.constraint_test_new_api_category_positive_color')
         message = constraint.with_context(lang='fr_FR').message
         self.assertEqual(message, "La couleur doit être une valeur positive !")

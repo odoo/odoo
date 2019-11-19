@@ -672,11 +672,13 @@ class TestExpression(SavepointCaseWithUserDemo):
     def test_lp1071710(self):
         """ Check that we can exclude translated fields (bug lp:1071710) """
         # first install french language
-        self.env['ir.translation']._load_module_terms(['base'], ['fr_FR'])
+        self.env['res.lang']._activate_lang('fr_FR')
         self.env['res.partner'].search([('name', '=', 'Pepper Street')]).country_id = self.env.ref('base.be')
         # actual test
         Country = self.env['res.country'].with_context(lang='fr_FR')
         be = self.env.ref('base.be')
+        be.with_context(lang='fr_FR').name = "Belgique"
+        self.assertNotEqual(be.name, "Belgique", "Setting a translation should not impact other languages")
         not_be = self._search(Country, [('name', '!=', 'Belgique')])
         self.assertNotIn(be, not_be)
 

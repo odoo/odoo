@@ -873,7 +873,7 @@ class Module(models.Model):
             cat_id = modules.db.create_categories(self._cr, categs)
             self.write({'category_id': cat_id})
 
-    def _update_translations(self, filter_lang=None):
+    def _update_translations(self, filter_lang=None, overwrite=False):
         if not filter_lang:
             langs = self.env['res.lang'].get_installed()
             filter_lang = [code for code, _ in langs]
@@ -886,7 +886,7 @@ class Module(models.Model):
             for mod in update_mods
         }
         mod_names = topological_sort(mod_dict)
-        self.env['ir.translation']._load_module_terms(mod_names, filter_lang)
+        self.env['ir.translation']._load_module_terms(mod_names, filter_lang, overwrite)
 
     def _check(self):
         for module in self:
