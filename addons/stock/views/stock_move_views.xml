@@ -243,6 +243,7 @@
                     <field name="picking_id" invisible="1" force_save="1"/>
                     <field name="move_id" invisible="1" force_save="1" />
                     <field name="picking_code" invisible="1"/>
+                    <field name="product_uom_category_id" invisible="1"/>
                     <field name="product_id" invisible="1"/>
                     <field name="package_level_id" invisible="1"/>
                     <field name="location_id" options="{'no_create': True}" attrs="{'readonly': ['&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}" invisible="not context.get('show_source_location')" domain="[('id', 'child_of', parent.location_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]" groups="stock.group_stock_multi_locations"/>
@@ -285,6 +286,7 @@
                     <field name="company_id" invisible="1"/>
                     <field name="move_id" invisible="1"/>
                     <field name="picking_id" invisible="1"/>
+                    <field name="product_uom_category_id" invisible="1"/>
                     <field name="location_id" options="{'no_create': True}" attrs="{'column_invisible': [('parent.picking_type_code', '=', 'incoming')]}" groups="stock.group_stock_multi_locations" domain="[('id', 'child_of', parent.location_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]"/>
                     <field name="location_dest_id" options="{'no_create': True}" attrs="{'column_invisible': [('parent.picking_type_code', '=', 'outgoing')]}" groups="stock.group_stock_multi_locations" domain="[('id', 'child_of', parent.location_dest_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]"/>
                     <field name="package_id" groups="stock.group_tracking_lot"/>
