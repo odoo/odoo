@@ -814,7 +814,7 @@ class AccountMoveLine(models.Model):
             unaffected_earnings_type = self.env.ref("account.data_unaffected_earnings")
             record.is_unaffected_earnings_line = unaffected_earnings_type == record.account_id.user_type_id
 
-    @api.depends('tag_ids', 'debit', 'credit', 'journal_id', 'invoice_id')
+    @api.depends('tag_ids', 'debit', 'credit', 'journal_id.type', 'invoice_id.type')
     def _compute_tax_audit(self):
         separator = '        '
 
