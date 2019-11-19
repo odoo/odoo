@@ -44,7 +44,7 @@ class MrpUnbuild(models.Model):
         required=True, states={'done': [('readonly', True)]}, check_company=True)
     mo_id = fields.Many2one(
         'mrp.production', 'Manufacturing Order',
-        domain="[('state', 'in', ['done', 'cancel']), ('company_id', '=', company_id)]",
+        domain="[('id', 'in', allowed_mo_ids)]",
         states={'done': [('readonly', True)]}, check_company=True)
     lot_id = fields.Many2one(
         'stock.production.lot', 'Lot/Serial Number',
@@ -70,6 +70,27 @@ class MrpUnbuild(models.Model):
     state = fields.Selection([
         ('draft', 'Draft'),
         ('done', 'Done')], string='Status', default='draft', index=True)
+    allowed_mo_ids = fields.One2many('mrp.production', compute='_compute_allowed_mo_ids')
+
+    @api.depends('company_id', 'product_id')
+    def _compute_allowed_mo_ids(self):
+        for unbuild in self:
+            if unbuild.product_id:
+                domain = [
+                    ('state', '=', 'done'),
+                    ('product_id', '=', unbuild.product_id.id),
+                    ('company_id', '=', unbuild.company_id.id)
+                ]
+            else:
+                domain = [
+                    ('state', 'in', ['done', 'cancel']),
+                    ('company_id', '=', unbuild.company_id.id)
+                ]
+            allowed_mos = self.env['mrp.production'].search_read(domain, ['id'])
+            if allowed_mos:
+                unbuild.allowed_mo_ids = [mo['id'] for mo in allowed_mos]
+            else:
+                unbuild.allowed_mo_ids = False
 
     @api.onchange('company_id')
     def _onchange_company_id(self):
@@ -92,8 +113,6 @@ class MrpUnbuild(models.Model):
         if self.product_id:
             self.bom_id = self.env['mrp.bom']._bom_find(product=self.product_id, company_id=self.company_id.id)
             self.product_uom_id = self.product_id.uom_id.id
-            if self.company_id:
-                return {'domain': {'mo_id': [('state', '=', 'done'), ('product_id', '=', self.product_id.id), ('company_id', '=', self.company_id.id)]}}
 
     @api.constrains('product_qty')
     def _check_qty(self):

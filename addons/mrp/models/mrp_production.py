@@ -73,7 +73,8 @@ class MrpProduction(models.Model):
     product_uom_id = fields.Many2one(
         'uom.uom', 'Product Unit of Measure',
         readonly=True, required=True,
-        states={'draft': [('readonly', False)]})
+        states={'draft': [('readonly', False)]}, domain="[('category_id', '=', product_uom_category_id)]")
+    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     product_uom_qty = fields.Float(string='Total Quantity', compute='_compute_product_uom_qty', store=True)
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type',
@@ -432,7 +433,6 @@ class MrpProduction(models.Model):
             else:
                 self.bom_id = False
                 self.product_uom_id = self.product_id.uom_id.id
-            return {'domain': {'product_uom_id': [('category_id', '=', self.product_id.uom_id.category_id.id)]}}
 
     @api.onchange('bom_id')
     def _onchange_bom_id(self):
