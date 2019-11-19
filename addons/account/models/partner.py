@@ -147,12 +147,17 @@ class AccountFiscalPosition(models.Model):
         if not fpos:
             # Fallback on catchall (no country, no group)
             fpos = self.search(base_domain + null_country_dom, limit=1)
-        return fpos or False
+        return fpos
 
     @api.model
     def get_fiscal_position(self, partner_id, delivery_id=None):
+        """
+        :return: fiscal position found (recordset)
+        :rtype: :class:`account.fiscal.position`
+        """
         if not partner_id:
-            return False
+            return self.env['account.fiscal.position']
+
         # This can be easily overridden to apply more complex fiscal rules
         PartnerObj = self.env['res.partner']
         partner = PartnerObj.browse(partner_id)
@@ -165,7 +170,7 @@ class AccountFiscalPosition(models.Model):
 
         # partner manually set fiscal position always win
         if delivery.property_account_position_id or partner.property_account_position_id:
-            return delivery.property_account_position_id.id or partner.property_account_position_id.id
+            return delivery.property_account_position_id or partner.property_account_position_id
 
         # First search only matching VAT positions
         vat_required = bool(partner.vat)
@@ -175,7 +180,7 @@ class AccountFiscalPosition(models.Model):
         if not fp and vat_required:
             fp = self._get_fpos_by_region(delivery.country_id.id, delivery.state_id.id, delivery.zip, False)
 
-        return fp.id if fp else False
+        return fp or self.env['account.fiscal.position']
 
 
 class AccountFiscalPositionTax(models.Model):
