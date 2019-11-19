@@ -33,6 +33,9 @@ class Team(models.Model):
         compute='_compute_overdue_opportunities',
         string='Overdue Opportunities Revenues')
 
+    lead_ids = fields.One2many('crm.lead', 'team_id', string='Leads of the team')
+    number_of_leads = fields.Integer(compute='_compute_number_of_leads')
+
     # Since we are in a _inherits case, this is not an override
     # but a plain definition of a field
     # So we need to reset the property related of that field
@@ -78,6 +81,11 @@ class Team(models.Model):
         for team in self:
             team.overdue_opportunities_count = counts.get(team.id, 0)
             team.overdue_opportunities_amount = amounts.get(team.id, 0)
+
+    @api.depends('lead_ids')
+    def _compute_number_of_leads(self):
+        for team in self:
+            team.number_of_leads = len(team.lead_ids)
 
     @api.onchange('use_leads', 'use_opportunities')
     def _onchange_use_leads_opportunities(self):

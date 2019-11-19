@@ -10,6 +10,7 @@ from odoo import api, fields, models, tools, SUPERUSER_ID
 from odoo.tools.translate import _
 from odoo.tools import email_re, email_split
 from odoo.exceptions import UserError, AccessError
+from odoo.tools import html_escape
 from odoo.addons.phone_validation.tools import phone_validation
 from collections import OrderedDict
 
@@ -107,6 +108,7 @@ class Lead(models.Model):
     # Probability - Only used for type opportunity
     probability = fields.Float('Probability', group_operator="avg", copy=False)
     automated_probability = fields.Float('Automated Probability', readonly=True)
+    automated_probability_description = fields.Html(readonly=True, help='')
     is_automated_probability = fields.Boolean('Is automated probability?', compute="_compute_is_automated_probability")
     phone_state = fields.Selection([
         ('correct', 'Correct'),
@@ -303,9 +305,10 @@ class Lead(models.Model):
             'country_id', 'state_id', 'phone_state', 'email_state', 'source_id' """
         if optional_field_name and optional_field_name not in self._pls_get_safe_fields():
             return
-        lead_probabilities = self._pls_get_naive_bayes_probabilities()
+        lead_probabilities, lead_probabilities_description = self._pls_get_naive_bayes_probabilities()
         if self.id in lead_probabilities:
             self.automated_probability = lead_probabilities[self.id]
+            self.automated_probability_description = lead_probabilities_description.get(self.id)
             if self._origin.is_automated_probability:
                 self.probability = self.automated_probability
 
@@ -430,11 +433,11 @@ class Lead(models.Model):
         return write_result
 
     def _update_probability(self):
-        lead_probabilities = self._pls_get_naive_bayes_probabilities()
+        lead_probabilities, lead_probabilities_description = self._pls_get_naive_bayes_probabilities()
         for lead in self:
             if lead.id in lead_probabilities:
                 lead_proba = lead_probabilities[lead.id]
-                proba_vals = {'automated_probability': lead_proba}
+                proba_vals = {'automated_probability': lead_proba, 'automated_probability_description': lead_probabilities_description.get(lead.id)}
                 if tools.float_compare(lead.probability, lead.automated_probability, 2) == 0:
                     proba_vals['probability'] = lead_proba
                 super(Lead, lead).write(proba_vals)
@@ -1323,8 +1326,9 @@ class Lead(models.Model):
         :return: probability in percent (and integer rounded) that the lead will be won at the current stage.
         """
         lead_probabilities = {}
+        lead_probabilities_description = {}
         if len(self) == 0:
-            return lead_probabilities
+            return lead_probabilities, lead_probabilities_description
 
         LeadScoringFrequency = self.env['crm.lead.scoring.frequency']
 
@@ -1334,8 +1338,9 @@ class Lead(models.Model):
 
         # Get all leads values, no matter the team_id
         leads_values_dict = self._pls_get_lead_pls_values(batch_mode=batch_mode)
+
         if not leads_values_dict:
-            return lead_probabilities
+            return lead_probabilities, lead_probabilities_description
 
         # Get unique couples to search in frequency table
         leads_values = set()
@@ -1390,12 +1395,14 @@ class Lead(models.Model):
         for lead_id, lead_values in leads_values_dict.items():
             # if stage_id is null, return 0 and bypass computation
             lead_fields = [value[0] for value in lead_values.get('values', [])]
-            if not 'stage_id' in lead_fields:
+            if 'stage_id' not in lead_fields:
                 lead_probabilities[lead_id] = 0
+                lead_probabilities_description[lead_id] = False
                 continue
             # if lead stage is won, return 100
             elif lead_id in won_leads:
                 lead_probabilities[lead_id] = 100
+                lead_probabilities_description[lead_id] = False
                 continue
 
             lead_team_id = lead_values['team_id'] if lead_values['team_id'] else 0  # team_id = None -> Convert to 0
@@ -1412,7 +1419,7 @@ class Lead(models.Model):
                 p_lost = team_lost / team_total
 
             # 2. Compute won and lost score using each variable's individual probability
-            s_lead_won, s_lead_lost = p_won, p_lost
+            lead_stats = []
             for field, value in lead_values['values']:
                 field_result = result.get(save_team_id, {}).get(field)
                 value_result = field_result.get(str(value)) if field_result else False
@@ -1420,12 +1427,86 @@ class Lead(models.Model):
                     total_won = team_won if field == 'stage_id' else field_result['won_total']
                     total_lost = team_lost if field == 'stage_id' else field_result['lost_total']
 
-                    s_lead_won *= value_result['won'] / total_won
-                    s_lead_lost *= value_result['lost'] / total_lost
+                    lead_stats.append((field, value, value_result['won'],
+                                      total_won, value_result['lost'],
+                                      total_lost))
 
             # 3. Compute Probability to win
-            lead_probabilities[lead_id] = 100 * s_lead_won / (s_lead_won + s_lead_lost)
-        return lead_probabilities
+            lead_probabilities[lead_id] = self._compute_get_naive_bayes_probabilities(p_won, p_lost, lead_stats)
+            lead_probabilities_description[lead_id] = self._compute_get_naive_bayes_description(lead_team_id, p_won, p_lost, lead_stats)
+
+        return lead_probabilities, lead_probabilities_description
+
+    def _compute_get_naive_bayes_probabilities(self, p_won, p_lost, lead_stats):
+        s_lead_won, s_lead_lost = p_won, p_lost
+        for field, value, won, total_won, lost, total_lost in lead_stats:
+            s_lead_won *= won / total_won
+            s_lead_lost *= lost / total_lost
+        # Probability to win
+        return 100 * s_lead_won / (s_lead_won + s_lead_lost)
+
+    def _compute_get_naive_bayes_description(self, team_id, p_won, p_lost, lead_stats):
+        def _get_field_value_string(field, value):
+            """
+            Convert the raw value of a field to a printable value
+
+            e.g.:
+                tag(id=1) -> 'Information'
+            """
+            if field == 'tag_id':
+                return self.env['crm.lead.tag'].browse(value).name
+            elif field in self._fields and hasattr(self._fields[field], 'selection'):
+                return dict(self._fields[field].selection)[value]
+            elif field in self._fields and hasattr(self._fields[field], 'comodel_name'):
+                return self.env[self._fields[field].comodel_name].browse(value).name
+            return value
+
+        def _parse_integer(n):
+            number_convertion = [
+                (1000 ** 8, 'Y'),
+                (1000 ** 7, 'Z'),
+                (1000 ** 6, 'E'),
+                (1000 ** 5, 'P'),
+                (1000 ** 4, 'T'),
+                (1000 ** 3, 'G'),
+                (1000 ** 2, 'M'),
+                (1000 ** 1, 'K'),
+            ]
+            for scale, letter in number_convertion:
+                if n >= scale:
+                    return str(int(n // scale)) + letter
+            return str(int(n))
+
+        def _compute_stats_string(n_won, total_win):
+            return _('%i%% (%s Won on %s)') % (int(100 * n_won / total_win), _parse_integer(n_won), _parse_integer(total_win))
+
+        description = '<table class="table o_crm_probability_description">'
+        if team_id > 0:
+            description += '<tr><td><b>%s</b></td><td>%s</td><td>%s %s</td>' % (
+                html_escape(_('For the Sales Team')),
+                html_escape(self.env['crm.team'].browse(team_id).name),
+                _parse_integer(self.env['crm.team'].browse(team_id).number_of_leads),
+                _('leads'))
+
+        tags_stats = []
+        for field, value, n_won, total_win, n_lost, total_lost in lead_stats:
+            if field != 'tag_id':
+                description += '<tr><td><b>%s</b></td><td>%s</td><td>%s</td></tr>' % (
+                    html_escape(self._fields[field].string),
+                    html_escape(_get_field_value_string(field, value)),
+                    html_escape(_compute_stats_string(n_won, total_win))
+                )
+            else:
+                tags_stats.append((field, value, n_won, total_win, n_lost, total_lost))
+
+        for i, (field, value, n_won, total_win, n_lost, total_lost) in enumerate(tags_stats):
+            description += '<tr><td><b>%s</b></td><td>%s</td><td>%s</td></tr>' % (
+                    _('Tags') if not i else '',
+                    html_escape(_get_field_value_string(field, value)),
+                    html_escape(_compute_stats_string(n_won, total_win)))
+
+        description += '</table>'
+        return description
 
     def _cron_update_automated_probabilities(self):
         # Clear the frequencies table (in sql to speed up the cron)
@@ -1458,18 +1539,19 @@ class Lead(models.Model):
             pending_lead_domain = ['&', '&', ('stage_id', '!=', False), ('create_date', '>', pls_start_date),
                                    '|', ('probability', '=', False), '&', ('probability', '<', 100), ('probability', '>', 0)]
             leads_to_update = self.env['crm.lead'].search(pending_lead_domain)
-            lead_probabilities = leads_to_update._pls_get_naive_bayes_probabilities(batch_mode=True)
+            lead_probabilities, lead_probabilities_description = leads_to_update._pls_get_naive_bayes_probabilities(batch_mode=True)
 
             # Update in execute batch to avoid server roundtrips + page_size to 10000 to avoid memory errors
             # Update both probability and automated_probability if they were equal, else, update only automated_probability
             sql = """UPDATE crm_lead
                         SET automated_probability = %s,
+                            automated_probability_description = %s,
                             probability = CASE WHEN (ROUND(probability::numeric, 2) = ROUND(automated_probability::numeric, 2) or probability is null)
                                                THEN (%s)
                                                ELSE (probability)
                                                END
                         WHERE id = %s"""
-            batch_params = [(lead_probabilities[lead.id], lead_probabilities[lead.id], lead.id) for lead in leads_to_update if lead.id in lead_probabilities]
+            batch_params = [(lead_probabilities[lead.id], lead_probabilities_description.get(lead.id), lead_probabilities[lead.id], lead.id) for lead in leads_to_update if lead.id in lead_probabilities]
             extras.execute_batch(self._cr, sql, batch_params, page_size=10000)
             _logger.info("Predictive Lead Scoring : all automated probability updated (count: %d)" % (len(leads_to_update)))
 
@@ -1519,7 +1601,7 @@ class Lead(models.Model):
             for param, result in value.items():
                 # To avoid that a tag take to much importance if his subset is too small,
                 # we include the tag frequencies in the frequency table only if at least 50 won or lost leads had this tag.
-                if field != 'tag_id' or (result['won'] + result['lost']) >= 50:
+                if field != 'tag_id' or (result['won'] + result['lost']) >= 1:
                     # We add + 0.1 in won and lost counts to avoid zero frequency issues
                     # should be +1 but it weights too much on small recordset.
                     values_to_create.append({
@@ -1624,6 +1706,7 @@ class Lead(models.Model):
         """
         leads_values_dict = OrderedDict()
         fields = ["stage_id", "team_id"] + self._pls_get_safe_fields()
+
         if batch_mode:
             # get all info on leads
             #   Prepare fields injection
@@ -1646,7 +1729,6 @@ class Lead(models.Model):
                         WHERE ((l.probability > 0 AND l.probability < 100) OR l.probability is null) AND l.active = True AND l.id in %s order by l.team_id asc"""
             self._cr.execute(query, [tuple(self.ids)])
             tag_results = self._cr.dictfetchall()
-
             # get all (variable, value) couple for all in self
             for lead in lead_results:
                 lead_values = []
@@ -1661,6 +1743,7 @@ class Lead(models.Model):
             for tag in tag_results:
                 if tag['tag_id']:
                     leads_values_dict[tag['lead_id']]['values'].append(('tag_id', tag['tag_id']))
+
             return leads_values_dict
         else:
             for lead in self:

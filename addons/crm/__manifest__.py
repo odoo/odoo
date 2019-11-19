@@ -54,7 +54,10 @@
         'data/mail_activity_demo.xml',
         'data/crm_lead_demo.xml',
     ],
-    'css': ['static/src/css/crm.css'],
+    'qweb': [
+        "static/src/xml/crm_tooltip_fields.xml",
+    ],
+    'css': ['static/src/css/crm.scss'],
     'installable': True,
     'application': True,
     'auto_install': False
