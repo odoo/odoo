@@ -472,6 +472,11 @@ function _formatAST(ast, lbp) {
             // real lbp is not accessible, it is inside a closure
             var actualBP = BINDING_POWERS[ast.id] || 130;
             return ast.id + _formatAST(ast.first, actualBP);
+        case "if":
+            var t = _formatAST(ast.ifTrue)
+                + ' if ' + _formatAST(ast.condition)
+                + ' else ' + _formatAST(ast.ifFalse);
+            return ast.lbp < lbp ? '(' + t + ')' : t;
         case ".":
             return _formatAST(ast.first, ast.lbp) + '.' + _formatAST(ast.second);
         case "not":
