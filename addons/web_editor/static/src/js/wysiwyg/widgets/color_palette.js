@@ -27,8 +27,6 @@ const ColorPaletteWidget = Widget.extend({
      *
      * @param {Object} [options]
      * @param {string} [options.selectedColor] The class or css attribute color selected by default.
-     * @param {string[]} [options.targetClasses]
-     * @param {string} [options.colorPrefix='bg-'] Used for the class based colors (theme).
      * @param {boolean} [options.resetButton=true] Whether to display or not the reset button.
      * @param {string[]} [options.excluded=[]] Sections not to display.
      * @param {string[]} [options.excludeSectionOf] Extra section to exclude: the one containing the named color.
@@ -39,8 +37,6 @@ const ColorPaletteWidget = Widget.extend({
         this.summernoteCustomColorsArray = [].concat(...summernoteCustomColors);
         this.options = _.extend({
             selectedColor: false,
-            targetClasses: [],
-            colorPrefix: 'bg-',
             resetButton: true,
             excluded: [],
             excludeSectionOf: null,
@@ -124,31 +120,26 @@ const ColorPaletteWidget = Widget.extend({
         this.$el.append($('<button/>', {'class': 'd-none', 'data-color': 'secondary'}));
 
         // Compute class colors
-        this.classes = [];
+        this.colorNames = [];
+        const style = window.getComputedStyle(document.documentElement);
         this.el.querySelectorAll('button[data-color]').forEach(elem => {
-            const color = elem.dataset.color;
+            const colorName = elem.dataset.color;
+            const color = ColorpickerDialog.normalizeCSSColor(style.getPropertyValue('--' + colorName).trim());
             const $color = $(elem);
-            $color.addClass('bg-' + color);
-            const className = this.options.colorPrefix + color;
-            if (this.options.targetClasses.includes(className)) {
+            $color.addClass('bg-' + colorName);
+            if (this.options.selectedColor && (this.options.selectedColor === colorName || this.options.selectedColor === color)) {
                 $color.addClass('selected');
             }
-            this.classes.push(className);
+            this.colorNames.push(colorName);
         });
 
         return res;
     },
     /**
-     * Return a list of the color classes used in the color palette
+     * Return a list of the color names used in the color palette
      */
-    getClasses: function () {
-        return this.classes;
-    },
-    /**
-     * Reloads the color palette to get other custom colors on the page
-     */
-    reloadColorPalette: function () {
-        this._buildCustomColors();
+    getColorNames: function () {
+        return this.colorNames;
     },
 
     //--------------------------------------------------------------------------
@@ -215,10 +206,9 @@ const ColorPaletteWidget = Widget.extend({
      */
     _getButtonInfo: function (buttonEl) {
         const bgColor = buttonEl.style.backgroundColor;
-        const cssColor = bgColor ? ColorpickerDialog.normalizeCSSColor(bgColor) : (this.options.colorPrefix + buttonEl.dataset.color);
+        const color = bgColor ? ColorpickerDialog.normalizeCSSColor(bgColor) : buttonEl.dataset.color;
         return {
-            cssColor: cssColor,
-            isClass: !!buttonEl.dataset.color,
+            color: color,
             target: buttonEl,
         };
     },
@@ -263,8 +253,7 @@ const ColorPaletteWidget = Widget.extend({
             params = this._getButtonInfo(selected);
         } else {
             params = {
-                cssColor: '',
-                isClass: false,
+                color: '',
             };
         }
         params.target = ev.target;
@@ -297,8 +286,7 @@ const ColorPaletteWidget = Widget.extend({
         colorpicker.on('colorpicker:saved', this, ev => {
             this._addCustomColorButton(ev.data.cssColor, ['selected']);
             this.trigger_up('color_picked', {
-                cssColor: ev.data.cssColor,
-                isClass: false,
+                color: ev.data.cssColor,
                 target: target,
             });
         });
