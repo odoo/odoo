@@ -779,6 +779,55 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('many2one with co-model whose name field is a many2one', function (assert) {
+        var done = assert.async();
+        assert.expect(4);
+
+        var M2O_DELAY = relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY;
+        relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = 0;
+
+        this.data.product.fields.name = {
+            string: 'User Name',
+            type: 'many2one',
+            relation: 'user',
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form><field name="product_id"/></form>',
+            archs: {
+                'product,false,form': '<form><field name="name"/></form>',
+            },
+        });
+
+        // click on 'Create and Edit' in m2o dropdown
+        var $input = form.$('.o_field_many2one input');
+        $input.click();
+        $input.autocomplete('widget').find('.o_m2o_dropdown_option').focus().click();
+
+        assert.containsOnce(document.body, '.modal .o_form_view');
+
+        // quick create 'new value'
+        var $dialogInput = $('.modal .o_field_many2one input');
+        $dialogInput.val('new value').trigger('keydown');
+        concurrency.delay(0).then(function () {
+            $dialogInput.autocomplete('widget').find('li:first()').click();
+
+            assert.strictEqual($('.modal .o_field_many2one input').val(), 'new value');
+
+            $('.modal .modal-footer .btn-primary').click(); // save in modal
+
+            assert.containsNone(document.body, '.modal .o_form_view');
+            assert.strictEqual(form.$('.o_field_many2one input').val(), 'new value');
+
+            relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;
+            form.destroy();
+            done();
+        });
+    });
+
     QUnit.test('many2one searches with correct value', function (assert) {
         var done = assert.async();
         assert.expect(6);
