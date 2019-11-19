@@ -109,6 +109,10 @@ class MailBlackListMixin(models.AbstractModel):
         help="If the email address is on the blacklist, the contact won't receive mass mailing anymore, from any list")
     # messaging
     message_bounce = fields.Integer('Bounce', help="Counter of the number of bounced emails for this contact", default=0)
+    email_state = fields.Selection([
+        ('ok', 'Correct'),
+        ('ko', 'Incorrect')], string='State of the email address', compute="_compute_email_state", compute_sudo=True, store=True,
+        help="Used for processes that need to check the validity of the email address (e.g: The blacklist /  The CRM predictive lead scoring)")
 
     @api.model
     def _search_is_blacklisted(self, operator, value):
@@ -151,6 +155,14 @@ class MailBlackListMixin(models.AbstractModel):
             ('email', 'in', self.mapped('email_normalized'))]).mapped('email'))
         for record in self:
             record.is_blacklisted = record.email_normalized in blacklist
+
+    @api.depends(lambda self: [self._primary_email, 'email_normalized'])
+    def _compute_email_state(self):
+        for record in self:
+            email_state = False
+            if record[self._primary_email]:
+                email_state = 'ok' if record.email_normalized else 'ko'
+            record.email_state = email_state
 
     def _message_receive_bounce(self, email, partner):
         """ Override of mail.thread generic method. Purpose is to increment the

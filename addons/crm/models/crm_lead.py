@@ -108,9 +108,6 @@ class Lead(models.Model):
     probability = fields.Float('Probability', group_operator="avg", copy=False)
     automated_probability = fields.Float('Automated Probability', readonly=True)
     is_automated_probability = fields.Boolean('Is automated probability?', compute="_compute_is_automated_probability")
-    email_state = fields.Selection([
-        ('correct', 'Correct'),
-        ('incorrect', 'Incorrect')], string='Email Quality', compute="_compute_email_state", store=True)
 
     # Only used for type opportunity
     planned_revenue = fields.Monetary('Expected Revenue', currency_field='company_currency', tracking=True)
@@ -212,18 +209,6 @@ class Lead(models.Model):
          when automated_probability is modified. """
         for lead in self:
             lead.is_automated_probability = tools.float_compare(lead.probability, lead.automated_probability, 2) == 0
-
-    @api.depends('email_from')
-    def _compute_email_state(self):
-        for lead in self:
-            email_state = False
-            if lead.email_from:
-                email_state = 'incorrect'
-                for email in email_split(lead.email_from):
-                    if tools.email_normalize(email):
-                        email_state = 'correct'
-                        break
-            lead.email_state = email_state
 
     def _compute_meeting_count(self):
         meeting_data = self.env['calendar.event'].read_group([('opportunity_id', 'in', self.ids)], ['opportunity_id'], ['opportunity_id'])

@@ -69,3 +69,14 @@ class TestBLMixin(common.TestMailCommon):
 
         search_res = self.env['mass.mail.test.bl'].search([('is_blacklisted', '=', True)])
         self.assertEqual(search_res, record1)
+
+    @users('emp')
+    def test_bl_mixin_email_state(self):
+        """ Test email_state field and normalization mechanics """
+        record1 = self.env['mass.mail.test.bl'].create({'email_from': 'Arya Stark <arya.stark@example.com>'})
+        self.assertEqual(record1.email_normalized, 'arya.stark@example.com')
+        self.assertEqual(record1.email_state, 'ok')
+
+        record2 = self.env['mass.mail.test.bl'].create({'email_from': 'blorg.company.com'})
+        self.assertEqual(record2.email_normalized, False)
+        self.assertEqual(record2.email_state, 'ko')
