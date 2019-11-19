@@ -2,6 +2,9 @@
 
 .. queue:: backend/series
 
+.. _howto/base:
+.. _howto/module:
+
 =================
 Building a Module
 =================
