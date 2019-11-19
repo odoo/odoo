@@ -21,8 +21,8 @@ odoo.define('account.bills.tree', function (require) {
                 var self = this;
                 this.$buttons.on('click', '.o_button_upload_bill', function () {
                     var state = self.model.get(self.handle, {raw: true});
-                    var context = state.getContext()
-                    context['type'] = 'in_invoice'
+                    var context = state.getContext();
+                    context['type'] = context.default_type || 'in_invoice';
                     self.do_action({
                         type: 'ir.actions.act_window',
                         res_model: 'account.invoice.import.wizard',
