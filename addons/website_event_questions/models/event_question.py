@@ -28,18 +28,6 @@ class EventQuestion(models.Model):
         if any(question.event_type_id and question.event_id for question in self):
             raise UserError(_('Question cannot belong to both the event category and itself.'))
 
-    @api.model
-    def create(self, vals):
-        event_id = vals.get('event_id', False)
-        if event_id:
-            event = self.env['event.event'].browse([event_id])
-            if event.event_type_id.use_questions and event.event_type_id.question_ids:
-                vals['answer_ids'] = vals.get('answer_ids', []) + [(0, 0, {
-                    'name': answer.name,
-                    'sequence': answer.sequence,
-                }) for answer in event.event_type_id.question_ids.filtered(lambda question: question.title == vals.get('title')).mapped('answer_ids')]
-        return super(EventQuestion, self).create(vals)
-
     def write(self, vals):
         """ We add a check to prevent changing the question_type of a question that already has answers.
         Indeed, it would mess up the event.registration.answer (answer type not matching the question type). """
