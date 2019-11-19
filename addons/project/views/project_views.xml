@@ -132,6 +132,8 @@
                                 <group>
                                     <field name="analytic_account_id" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" context="{'default_partner_id': partner_id}" groups="analytic.group_analytic_accounting"/>
                                     <field name="privacy_visibility" widget="radio"/>
+                                    <field name="allowed_internal_user_ids" widget="many2many_tags" attrs="{'invisible': [('privacy_visibility', '!=', 'followers')]}"/>
+                                    <field name="allowed_portal_user_ids" widget="many2many_tags" attrs="{'invisible': [('privacy_visibility', '!=', 'portal')]}"/>
 
                                     <field name="subtask_project_id" groups="project.group_subtask_project"/>
                                     <field name="company_id" groups="base.group_multi_company"/>
@@ -506,6 +508,9 @@
                                     <field name="sequence" groups="base.group_no_one"/>
                                     <field name="email_from" invisible="1"/>
                                     <field name="email_cc" groups="base.group_no_one"/>
+                                    <field name="project_privacy_visibility" groups="base.group_no_one"/>
+                                    <field name="allowed_user_ids" widget="many2many_tags"
+                                           groups="base.group_no_one" attrs="{'invisible': [('project_privacy_visibility', 'not in', ('followers', 'portal'))]}"/>
                                     <field name="child_ids" invisible="1" />
                                     <field name="subtask_project_id" invisible="1" />
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
