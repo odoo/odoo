@@ -94,7 +94,7 @@ class Product(models.Model):
     @api.depends('stock_move_ids.product_qty', 'stock_move_ids.state')
     @api.depends_context(
         'lot_id', 'owner_id', 'package_id', 'from_date', 'to_date',
-        'company_owned', 'force_company',
+        'company_owned', 'location', 'warehouse',
     )
     def _compute_quantities(self):
         products = self.filtered(lambda p: p.type != 'service')
