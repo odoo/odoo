@@ -110,7 +110,7 @@ class TestComposerForm(TestMailComposer):
             'MailComposer: comment mode should have default subject Re: record_name')
         # record name not displayed currently in view
         # self.assertEqual(composer_form.record_name, self.test_record.name, 'MailComposer: comment mode should compute record name')
-        self.assertFalse(composer_form.no_auto_thread)
+        self.assertFalse(composer_form.reply_to_force_new)
         self.assertEqual(composer_form.composition_mode, 'comment')
         self.assertEqual(composer_form.model, self.test_record._name)
 
@@ -172,7 +172,7 @@ class TestComposerForm(TestMailComposer):
         self.assertFalse(composer_form.subject, 'MailComposer: mass mode should have void default subject if no template')
         # record name not displayed currently in view
         # self.assertFalse(composer_form.record_name, 'MailComposer: mass mode should have void record name')
-        self.assertFalse(composer_form.no_auto_thread)
+        self.assertFalse(composer_form.reply_to_force_new)
         self.assertEqual(composer_form.composition_mode, 'mass_mail')
         self.assertEqual(composer_form.model, self.test_records._name)
 
@@ -186,7 +186,7 @@ class TestComposerForm(TestMailComposer):
                          'MailComposer: mass mode should have template raw body if template')
         # record name not displayed currently in view
         # self.assertFalse(composer_form.record_name, 'MailComposer: mass mode should have void record name')
-        self.assertFalse(composer_form.no_auto_thread)
+        self.assertFalse(composer_form.reply_to_force_new)
         self.assertEqual(composer_form.composition_mode, 'mass_mail')
         self.assertEqual(composer_form.model, self.test_records._name)
 
