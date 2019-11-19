@@ -402,6 +402,16 @@ behavior is desired:
 
   :class:`~odoo.fields.Char`
 
+.. attribute:: company_id
+
+  Main field name used for Odoo multi-company behavior.
+
+  Used by `:meth:~odoo.models._check_company` to check multi company consistency.
+  Defines whether a record is shared between companies (no value) or only
+  accessible by the users of a given company.
+
+  :class:`~odoo.fields.Many2one`
+  :type: :class:`~odoo.addons.base.models.res_company`
 
 Recordsets
 ==========

@@ -3106,7 +3106,19 @@ Fields:
                 raise ValidationError(_('A document was modified since you last viewed it (%s:%d)') % (self._description, res[0]))
 
     def _check_company(self, fnames=None):
-        """ Check the companies of the values of the given field names. """
+        """ Check the companies of the values of the given field names.
+
+        :param list fnames: names of relational fields to check
+        :raises UserError: if the `company_id` of the value of any field is not
+            in `[False, self.company_id]` (or `self` if
+            :class:`~odoo.addons.base.models.res_company`).
+
+        For :class:`~odoo.addons.base.models.res_users` relational fields,
+        verifies record company is in `company_ids` fields.
+
+        User with main company A, having access to company A and B, could be
+        assigned or linked to records in company B.
+        """
         if fnames is None:
             fnames = self._fields
 
