@@ -252,7 +252,7 @@ function formatInteger(value, field, options) {
  * return an empty string.  Note that it accepts two types of input parameters:
  * an array, in that case we assume that the many2one value is of the form
  * [id, nameget], and we return the nameget, or it can be an object, and in that
- * case, we assume that it is a record from a BasicModel.
+ * case, we assume that it is a record datapoint from a BasicModel.
  *
  * @param {Array|Object|false} value
  * @param {Object} [field]
@@ -262,7 +262,18 @@ function formatInteger(value, field, options) {
  * @returns {string}
  */
 function formatMany2one(value, field, options) {
-    value = value && (_.isArray(value) ? value[1] : value.data.display_name) || '';
+    if (!value) {
+        value = '';
+    } else if (_.isArray(value)) {
+        // value is a pair [id, nameget]
+        value = value[1];
+    } else {
+        // value is a datapoint, so we read its display_name field, which
+        // may in turn be a datapoint (if the name field is a many2one)
+        while (value.data) {
+            value = value.data.display_name || '';
+        }
+    }
     if (options && options.escape) {
         value = _.escape(value);
     }
