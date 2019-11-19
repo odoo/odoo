@@ -220,7 +220,8 @@ class TestFormatLangDate(TransactionCase):
         lang = self.env['res.lang']
 
         # Activate French and Simplified Chinese (test with non-ASCII characters)
-        lang.search([('active', '=', False), ('code', 'in', ['fr_FR', 'zh_CN'])]).write({'active': True})
+        lang._activate_lang('fr_FR')
+        lang._activate_lang('zh_CN')
 
         # -- test `date`
         # Change a single parameter

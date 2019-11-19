@@ -285,7 +285,7 @@ class test_selection(CreatorCase):
             [[u"Bar"]])
 
     def test_localized_export(self):
-        self.env['res.lang'].load_lang('fr_FR')
+        self.env['res.lang']._activate_lang('fr_FR')
         ir_field = self.env['ir.model.fields']._get('export.selection', 'value')
         selection = ir_field.selection_ids
         translations = dict(self.translations_fr)

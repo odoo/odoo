@@ -522,10 +522,8 @@ class TestQWebNS(TransactionCase):
         current_lang = 'en_US'
         other_lang = 'fr_FR'
 
-        self.env['res.lang'].load_lang(lang=other_lang)
-
-        self.env['res.lang']._lang_get(other_lang).write({
-            'active': True,
+        lang = self.env['res.lang']._activate_lang(other_lang)
+        lang.write({
             'decimal_point': '*',
             'thousands_sep': '/'
         })
