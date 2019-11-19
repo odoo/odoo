@@ -93,7 +93,7 @@ odoo.define('website_form_editor', function (require) {
                 model: "ir.model",
                 method: "search_read",
                 args: [
-                    [['website_form_access', '=', true], ['website_form_key', '!=', false]],
+                    [['website_form_access', '=', true]],
                     ['id', 'model', 'name', 'website_form_label', 'website_form_key']
                 ],
             }).then(function (models) {
