@@ -62,7 +62,7 @@ tour.register('test_certification_success', {
         }
     }, {
         content: "Finish Survey",
-        trigger: 'button[value="finish"]',
+        trigger: 'button[type="submit"]',
     }, {
         content: "Thank you",
         trigger: 'h1:contains("Thank you!")',

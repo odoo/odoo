@@ -169,6 +169,7 @@ class Survey(models.Model):
     def _onchange_scoring_type(self):
         if self.scoring_type == 'no_scoring':
             self.certificate = False
+            self.is_time_limited = False
 
     @api.onchange('users_login_required', 'access_mode')
     def _onchange_access_mode(self):
@@ -347,19 +348,42 @@ class Survey(models.Model):
     # ------------------------------------------------------------
     # ACTIONS
     # ------------------------------------------------------------
+    @api.model
+    def _get_pages_or_questions(self, user_input):
+        if self.questions_layout == 'one_page':
+            return None
+        elif self.questions_layout == 'page_per_question' and self.questions_selection == 'random':
+            return list(enumerate(
+                user_input.question_ids
+            ))
+        else:
+            return list(enumerate(
+                self.question_ids if self.questions_layout == 'page_per_question' else self.page_ids
+            ))
 
     @api.model
-    def next_page_or_question(self, user_input, page_or_question_id, go_back=False):
+    def _previous_page_or_question_id(self, user_input, page_or_question_id):
+        survey = user_input.survey_id
+        pages_or_questions = survey._get_pages_or_questions(user_input)
+
+        current_page_index = pages_or_questions.index(next(p for p in pages_or_questions if p[1].id == page_or_question_id))
+        # is first page
+        if current_page_index == 0:
+            return None
+
+        previous_page_id = pages_or_questions[current_page_index - 1][1].id
+
+        return previous_page_id
+
+
+    @api.model
+    def next_page_or_question(self, user_input, page_or_question_id):
         """ The next page to display to the user, knowing that page_id is the id
             of the last displayed page.
 
             If page_id == 0, it will always return the first page of the survey.
 
-            If all the pages have been displayed and go_back == False, it will
-            return None
-
-            If go_back == True, it will return the *previous* page instead of the
-            next page.
+            If all the pages have been displayed, it will return None
 
             .. note::
                 It is assumed here that a careful user will not try to set go_back
@@ -368,16 +392,9 @@ class Survey(models.Model):
         """
         survey = user_input.survey_id
 
-        if survey.questions_layout == 'one_page':
+        pages_or_questions = survey._get_pages_or_questions(user_input)
+        if not pages_or_questions:
             return (None, False)
-        elif survey.questions_layout == 'page_per_question' and survey.questions_selection == 'random':
-            pages_or_questions = list(enumerate(
-                user_input.question_ids
-            ))
-        else:
-            pages_or_questions = list(enumerate(
-                survey.question_ids if survey.questions_layout == 'page_per_question' else survey.page_ids
-            ))
 
         # First page
         if page_or_question_id == 0:
@@ -386,18 +403,35 @@ class Survey(models.Model):
         current_page_index = pages_or_questions.index(next(p for p in pages_or_questions if p[1].id == page_or_question_id))
 
         # All the pages have been displayed
-        if current_page_index == len(pages_or_questions) - 1 and not go_back:
+        if current_page_index == len(pages_or_questions) - 1:
             return (None, False)
-        # Let's get back, baby!
-        elif go_back and survey.users_can_go_back:
-            return (pages_or_questions[current_page_index - 1][1], False)
         else:
-            # This will show the last page
-            if current_page_index == len(pages_or_questions) - 2:
-                return (pages_or_questions[current_page_index + 1][1], True)
-            # This will show a regular page
-            else:
-                return (pages_or_questions[current_page_index + 1][1], False)
+            show_last = current_page_index == len(pages_or_questions) - 2
+            return (pages_or_questions[current_page_index + 1][1], show_last)
+
+    def _get_survey_questions(self, answer=None, page_id=None, question_id=None):
+        questions, page_or_question_id = None, None
+
+        if self.questions_layout == 'page_per_section':
+            if not page_id:
+                raise ValueError("Page id is needed for question layout 'page_per_section'")
+            page_id = int(page_id)
+            questions = self.env['survey.question'].sudo().search([('survey_id', '=', self.id), ('page_id', '=', page_id)])
+            page_or_question_id = page_id
+        elif self.questions_layout == 'page_per_question':
+            if not question_id:
+                raise ValueError("Question id is needed for question layout 'page_per_question'")
+            question_id = int(question_id)
+            questions = self.env['survey.question'].sudo().browse(question_id)
+            page_or_question_id = question_id
+        else:
+            questions = self.question_ids
+
+        # we need the intersection of the questions of this page AND the questions prepared for that user_input
+        # (because randomized surveys do not use all the questions of every page)
+        if answer:
+            questions = questions & answer.question_ids
+        return questions, page_or_question_id
 
     def action_draft(self):
         self.write({'state': 'draft'})
