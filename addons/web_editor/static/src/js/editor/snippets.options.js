@@ -3,6 +3,7 @@ odoo.define('web_editor.snippets.options', function (require) {
 
 var core = require('web.core');
 const concurrency = require('web.concurrency');
+const ColorpickerDialog = require('web.ColorpickerDialog');
 var Widget = require('web.Widget');
 var ColorPaletteWidget = require('web_editor.ColorPalette').ColorPaletteWidget;
 const weUtils = require('web_editor.utils');
@@ -1193,6 +1194,15 @@ const SnippetOptionWidget = Widget.extend({
         };
     },
     /**
+     * @param {*}
+     * @returns {string}
+     */
+    _normalizeWidgetValue: function (value) {
+        value = `${value}`; // Force to string
+        value = ColorpickerDialog.normalizeCSSColor(value); // If is a css color, normalize it
+        return value;
+    },
+    /**
      * @private
      * @param {string} widgetName
      * @param {UserValueWidget|this|null} parent
@@ -1359,7 +1369,8 @@ const SnippetOptionWidget = Widget.extend({
             const methodsNames = widget.getMethodsNames();
             const proms = methodsNames.map(async methodName => {
                 const value = await this._computeWidgetState(methodName, widget.getMethodsParams(methodName));
-                widget.setValue(value, methodName);
+                const normalizedValue = this._normalizeWidgetValue(value);
+                widget.setValue(normalizedValue, methodName);
             });
             await Promise.all(proms);
 
@@ -1678,7 +1689,6 @@ registry.colorpicker = SnippetOptionWidget.extend({
     xmlDependencies: ['/web_editor/static/src/xml/snippets.xml'],
     custom_events: {
         'color_picked': '_onColorPicked',
-        'custom_color_picked': '_onCustomColor',
         'color_hover': '_onColorHovered',
         'color_leave': '_onColorLeft',
         'color_reset': '_onColorReset',
@@ -1762,19 +1772,12 @@ registry.colorpicker = SnippetOptionWidget.extend({
      * @private
      * @param {Event} ev
      */
-    _onColorPicked: function () {
+    _onColorPicked: function (ev) {
+        this._changeTargetColor(ev.data.cssColor);
         this._updateUI().then(() => {
             this.$target.closest('.o_editable').trigger('content_changed');
             this.$target.trigger('background-color-event', false);
         });
-    },
-    /**
-     * Called when a custom color is selected
-     * @param {*} ev
-     */
-    _onCustomColor: function (ev) {
-        this._changeTargetColor(ev.data.cssColor);
-        this._onColorPicked();
     },
     /**
      * Called when a color button is entered -> preview the background color.
