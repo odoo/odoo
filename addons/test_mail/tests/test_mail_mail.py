@@ -25,16 +25,6 @@ class TestMailMail(TestMailCommon):
         self.assertSentEmail(mail.env.user.partner_id, ['test@example.com'])
         self.assertEqual(len(self._mails), 1)
 
-    @mute_logger('odoo.addons.mail.models.mail_mail')
-    def test_mail_message_values_unicode(self):
-        mail = self.env['mail.mail'].sudo().create({
-            'body_html': '<p>Test</p>',
-            'email_to': 'test.😊@example.com',
-            'partner_ids': [(4, self.user_employee.partner_id.id)]
-        })
-
-        self.assertRaises(MailDeliveryException, lambda: mail.send(raise_exception=True))
-
 
 class TestMailMailRace(common.TransactionCase):
 
