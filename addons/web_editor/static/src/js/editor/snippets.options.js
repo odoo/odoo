@@ -567,6 +567,7 @@ const SelectUserValueWidget = UserValueWidget.extend({
                 return;
             }
         }
+        this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -827,15 +828,168 @@ const MultiUserValueWidget = UserValueWidget.extend({
     },
 });
 
+const ColorpickerUserValueWidget = SelectUserValueWidget.extend({ // FIXME should be reloaded on focus
+    custom_events: {
+        'color_picked': '_onColorPicked',
+        'color_hover': '_onColorHovered',
+        'color_leave': '_onColorLeft',
+        'color_reset': '_onColorReset',
+    },
+
+    /**
+     * @override
+     */
+    init: function () {
+        this._super(...arguments);
+        if (!this.title) {
+            this.title = ' ';
+        }
+    },
+    /**
+     * @override
+     */
+    start: async function () {
+        const _super = this._super.bind(this);
+        const args = arguments;
+
+        this.el.classList.add('o_we_so_color_palette');
+
+        // Pre-instanciate the color palette widget
+        await this._renderColorPalette();
+
+        // Build the select element with a custom span to hold the color preview
+        this.colorPreviewEl = document.createElement('span');
+        this.options.childNodes = [this.colorPalette.el];
+        this.options.valueEl = this.colorPreviewEl;
+
+        return _super(...args);
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    getMethodsParams: function () {
+        return _.extend(this._super(...arguments), {
+            colorNames: this.colorPalette.getColorNames(),
+        });
+    },
+    /**
+     * @override
+     */
+    getValue: function (methodName) {
+        return this._previewColor || this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    isContainer: function () {
+        return false;
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @returns {Promise}
+     */
+    _renderColorPalette: function () {
+        const options = {};
+        options.selectedColor = this._value;
+        if (this.options.dataAttributes.excluded) {
+            options.excluded = this.options.dataAttributes.excluded.replace(/ /g, '').split(',');
+        }
+        const oldColorPalette = this.colorPalette;
+        this.colorPalette = new ColorPaletteWidget(this, options);
+        if (oldColorPalette) {
+            return this.colorPalette.insertAfter(oldColorPalette.el).then(() => {
+                oldColorPalette.destroy();
+            });
+        }
+        return this.colorPalette.appendTo(document.createDocumentFragment());
+    },
+    /**
+     * Updates the color preview + re-render the whole color palette widget.
+     *
+     * @override
+     */
+    _updateUI: async function (color) {
+        await this._super(...arguments);
+
+        this.colorPreviewEl.classList.remove(...this.colorPalette.getColorNames().map(c => 'bg-' + c));
+        this.colorPreviewEl.style.removeProperty('background-color');
+
+        if (this._value) {
+            if (ColorpickerDialog.isCSSColor(this._value)) {
+                this.colorPreviewEl.style.backgroundColor = this._value;
+            } else {
+                this.colorPreviewEl.classList.add('bg-' + this._value);
+            }
+        }
+
+        await this._renderColorPalette();
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Called when a color button is clicked -> confirms the preview.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onColorPicked: function (ev) {
+        this._previewColor = false;
+        this._value = ev.data.color;
+        this._notifyValueChange(false);
+    },
+    /**
+     * Called when a color button is entered -> previews the background color.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onColorHovered: function (ev) {
+        this._previewColor = ev.data.color;
+        this._notifyValueChange(true);
+    },
+    /**
+     * Called when a color button is left -> cancels the preview.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onColorLeft: function (ev) {
+        this._previewColor = false;
+        this._notifyValueChange('reset');
+    },
+    /**
+     * Called when the color reset button is clicked -> removes all color
+     * classes and color styles.
+     *
+     * @private
+     */
+    _onColorReset: function () {
+        this._value = '';
+        this._notifyValueChange(false);
+    },
+});
+
 const userValueWidgetsRegistry = {
     'we-button': ButtonUserValueWidget,
     'we-checkbox': CheckboxUserValueWidget,
     'we-select': SelectUserValueWidget,
     'we-input': InputUserValueWidget,
     'we-multi': MultiUserValueWidget,
+    'we-colorpicker': ColorpickerUserValueWidget,
 };
-
-//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 /**
  * Handles a set of options for one snippet. The registry returned by this
@@ -1024,7 +1178,54 @@ const SnippetOptionWidget = Widget.extend({
      * @param {Object} params
      */
     selectStyle: function (previewMode, widgetValue, params) {
+        if (params.cssProperty === 'background-color') {
+            this.$target.trigger('background-color-event', previewMode);
+        }
+
         const cssProps = weUtils.CSS_SHORTHANDS[params.cssProperty] || [params.cssProperty];
+        for (const cssProp of cssProps) {
+            // Always reset the inline style first to not put inline style on an
+            // element which already have this style through css stylesheets.
+            this.$target[0].style.setProperty(cssProp, '');
+        }
+        if (params.extraClass) {
+            this.$target.removeClass(params.extraClass);
+        }
+
+        // Only allow to use a color name as a className if we know about the
+        // other potential color names (to remove) and if we know about a prefix
+        // (otherwise we suppose that we should use the actual related color).
+        if (params.colorNames && params.colorPrefix) {
+            const classes = params.colorNames.map(c => params.colorPrefix + c);
+            this.$target[0].classList.remove(...classes);
+
+            if (params.colorNames.includes(widgetValue)) {
+                const originalCSSValue = window.getComputedStyle(this.$target[0])[cssProps[0]];
+                const className = params.colorPrefix + widgetValue;
+                this.$target[0].classList.add(className);
+                if (originalCSSValue !== window.getComputedStyle(this.$target[0])[cssProps[0]]) {
+                    // If applying the class did indeed changed the css
+                    // property we are editing, nothing more has to be done.
+                    // (except adding the extra class)
+                    this.$target.addClass(params.extraClass);
+                    return;
+                }
+                // Otherwise, it means that class probably does not exist,
+                // we remove it and continue. Especially useful for some
+                // prefixes which only work with some color names but not all.
+                this.$target[0].classList.remove(className);
+            }
+        }
+
+        // At this point, the widget value is either a property/color name or
+        // an actual css property value. If it is a property/color name, we will
+        // apply a css variable as style value.
+        const htmlStyle = window.getComputedStyle(document.documentElement);
+        const htmlPropValue = htmlStyle.getPropertyValue('--' + widgetValue);
+        if (htmlPropValue) {
+            widgetValue = `var(--${widgetValue})`;
+        }
+
         const values = widgetValue.split(/\s+/g);
         while (values.length < cssProps.length) {
             switch (values.length) {
@@ -1041,15 +1242,6 @@ const SnippetOptionWidget = Widget.extend({
                     values.push(values[values.length - 1]);
                 }
             }
-        }
-
-        for (const cssProp of cssProps) {
-            // Always reset the inline style first to not put inline style on an
-            // element which already have this style through css stylesheets.
-            this.$target[0].style.setProperty(cssProp, '');
-        }
-        if (params.extraClass) {
-            this.$target.removeClass(params.extraClass);
         }
 
         const styles = window.getComputedStyle(this.$target[0]);
@@ -1160,6 +1352,14 @@ const SnippetOptionWidget = Widget.extend({
                 return dataValue || params.attributeDefaultValue || '';
             }
             case 'selectStyle': {
+                if (params.colorPrefix && params.colorNames) {
+                    for (const c of params.colorNames) {
+                        if (this.$target[0].classList.contains(params.colorPrefix + c)) {
+                            return c;
+                        }
+                    }
+                }
+
                 const styles = window.getComputedStyle(this.$target[0]);
                 const cssProps = weUtils.CSS_SHORTHANDS[params.cssProperty] || [params.cssProperty];
                 const cssValues = cssProps.map(cssProp => {
@@ -1198,7 +1398,7 @@ const SnippetOptionWidget = Widget.extend({
      * @returns {string}
      */
     _normalizeWidgetValue: function (value) {
-        value = `${value}`; // Force to string
+        value = `${value}`.trim(); // Force to a trimmed string
         value = ColorpickerDialog.normalizeCSSColor(value); // If is a css color, normalize it
         return value;
     },
@@ -1679,137 +1879,6 @@ registry['sizing_y'] = registry.sizing.extend({
             s: [grid.map(v => sClass + v), grid, sProp],
         };
         return this.grid;
-    },
-});
-
-/**
- * Handles the edition of snippet's background color classes.
- */
-registry.colorpicker = SnippetOptionWidget.extend({
-    xmlDependencies: ['/web_editor/static/src/xml/snippets.xml'],
-    custom_events: {
-        'color_picked': '_onColorPicked',
-        'color_hover': '_onColorHovered',
-        'color_leave': '_onColorLeft',
-        'color_reset': '_onColorReset',
-    },
-
-    /**
-     * @override
-     */
-    start: async function () {
-        const _super = this._super.bind(this);
-        const args = arguments;
-
-        // Pre-instanciate the color palette widget
-        const options = {
-            selectedColor: this.$target.css('background-color'),
-            targetClasses: [...this.$target[0].classList],
-        };
-        if (this.data.paletteExclude) {
-            options.excluded = this.data.paletteExclude.replace(/ /g, '').split(',');
-        }
-        if (this.data.colorPrefix) {
-            options.colorPrefix = this.data.colorPrefix;
-        }
-        this.colorPalette = new ColorPaletteWidget(this, options);
-        await this.colorPalette.appendTo(document.createDocumentFragment());
-
-        // Build the select element with a custom span to hold the color preview
-        this.colorPreviewEl = document.createElement('span');
-        const selectWidget = new SelectUserValueWidget(this, this.data.string, {
-            classes: ['o_we_so_color_palette'],
-            childNodes: [this.colorPalette.el],
-            valueEl: this.colorPreviewEl,
-        });
-        await selectWidget.appendTo(document.createDocumentFragment());
-
-        // Replace the colorpicker UI with the select element
-        this.$el.empty().append(selectWidget.el);
-        return _super(...args);
-    },
-    /**
-     * @override
-     */
-    onFocus: function () {
-        this.colorPalette.reloadColorPalette();
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * Change the color of the targeted background
-     *
-     * @private
-     * @param {string} cssColor
-     * @param {boolean} isClass
-     */
-    _changeTargetColor: function (cssColor, isClass) {
-        this.$target[0].classList.remove(...this.colorPalette.getClasses());
-        if (isClass) {
-            this.$target.addClass(cssColor);
-        } else {
-            this.$target.css('background-color', cssColor);
-        }
-    },
-    /**
-     * @override
-     */
-    _updateUI: async function () {
-        await this._super.apply(this, arguments);
-        this.colorPreviewEl.style.backgroundColor = this.$target.css('background-color');
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * Called when a color button is clicked -> confirm the preview.
-     *
-     * @private
-     * @param {Event} ev
-     */
-    _onColorPicked: function (ev) {
-        this._changeTargetColor(ev.data.cssColor);
-        this._updateUI().then(() => {
-            this.$target.closest('.o_editable').trigger('content_changed');
-            this.$target.trigger('background-color-event', false);
-        });
-    },
-    /**
-     * Called when a color button is entered -> preview the background color.
-     *
-     * @private
-     * @param {Event} ev
-     */
-    _onColorHovered: function (ev) {
-        this._changeTargetColor(ev.data.cssColor, ev.data.isClass);
-        this.$target.trigger('background-color-event', true);
-    },
-    /**
-     * Called when a color button is left -> cancel the preview.
-     *
-     * @private
-     * @param {Event} ev
-     */
-    _onColorLeft: function (ev) {
-        this._changeTargetColor(ev.data.cssColor, ev.data.isClass);
-        this.$target.trigger('background-color-event', 'reset');
-    },
-    /**
-     * Called when the color reset button is clicked -> remove all background
-     * color classes.
-     *
-     * @private
-     */
-    _onColorReset: function () {
-        this._changeTargetColor('');
-        this._updateUI().then(() => {
-            this.$target.trigger('content_changed');
-        });
     },
 });
 

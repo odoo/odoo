@@ -78,7 +78,9 @@ MockServer.include({
                         '    <div data-js="content" data-selector=".s_hr, .test_option_all" ' +
                         'data-drop-in=".note-editable" data-drop-near="p, h1, h2, h3, blockquote, .s_hr"></div>' +
                         '    <div data-js="sizing_y" data-selector=".s_hr, .test_option_all"></div>' +
-                        '    <div data-js="colorpicker" string="Background Color" data-selector=".test_option_all"></div>' +
+                        '    <div data-selector=".test_option_all">' +
+                        '        <we-colorpicker string="Background Color" data-select-style="true" data-css-property="background-color" data-color-prefix="bg-"/>' +
+                        '    </div>' +
                         '    <div data-js="background" data-selector=".test_option_all">' +
                         '       <we-button data-choose-image="true" data-no-preview="true"><i class="far fa-image"/> Background Image</we-button>' +
                         '    </div>' +
@@ -245,7 +247,9 @@ function wysiwygData(data) {
                         '    <div data-js="content" data-selector=".s_hr, .test_option_all" ' +
                         'data-drop-in=".note-editable" data-drop-near="p, h1, h2, h3, blockquote, .s_hr"></div>' +
                         '    <div data-js="sizing_y" data-selector=".s_hr, .test_option_all"></div>' +
-                        '    <div data-js="colorpicker" string="Background Color" data-selector=".test_option_all"></div>' +
+                        '    <div data-selector=".test_option_all">' +
+                        '        <we-colorpicker string="Background Color" data-select-style="true" data-css-property="background-color" data-color-prefix="bg-"/>' +
+                        '    </div>' +
                         '    <div data-js="background" data-selector=".test_option_all">' +
                         '       <we-button data-choose-image="true" data-no-preview="true"><i class="far fa-image"/> Background Image</we-button>' +
                         '    </div>' +

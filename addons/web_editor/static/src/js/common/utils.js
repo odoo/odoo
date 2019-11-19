@@ -14,6 +14,7 @@ const ColorpickerDialog = require('web.ColorpickerDialog');
 const CSS_SHORTHANDS = {
     'border-width': ['border-top-width', 'border-right-width', 'border-bottom-width', 'border-left-width'],
     'border-radius': ['border-top-left-radius', 'border-top-right-radius', 'border-bottom-right-radius', 'border-bottom-left-radius'],
+    'border-color': ['border-top-color', 'border-right-color', 'border-bottom-color', 'border-left-color'],
 };
 /**
  * Key-value mapping to list converters from an unit A to an unit B.

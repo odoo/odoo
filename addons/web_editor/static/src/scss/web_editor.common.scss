@@ -2,6 +2,12 @@
 /// This file regroups basic style rules for web_editor enable page edition and backend utils.
 ///
 
+:root {
+    @each $color, $value in $grays {
+        --#{$color}: #{$value};
+    }
+}
+
 html, body {
     position: relative;
     width: 100%;
