@@ -313,6 +313,7 @@ class Repair(models.Model):
             current_invoices_list = grouped_invoices_vals[(partner_invoice.id, currency.id, company.id)]
 
             if not group or len(current_invoices_list) == 0:
+                fpos = self.env['account.fiscal.position'].get_fiscal_position(partner_invoice.id, delivery_id=repair.address_id.id)
                 invoice_vals = {
                     'type': 'out_invoice',
                     'partner_id': partner_invoice.id,
@@ -322,6 +323,7 @@ class Repair(models.Model):
                     'invoice_origin': repair.name,
                     'repair_ids': [(4, repair.id)],
                     'invoice_line_ids': [],
+                    'fiscal_position_id': fpos.id
                 }
                 current_invoices_list.append(invoice_vals)
             else:
@@ -648,6 +650,7 @@ class RepairLine(models.Model):
             return
         self = self.with_company(self.company_id)
         partner = self.repair_id.partner_id
+        partner_invoice = self.repair_id.partner_invoice_id or partner
         if partner:
             self = self.with_context(lang=partner.lang)
         product = self.product_id
@@ -657,7 +660,7 @@ class RepairLine(models.Model):
         self.product_uom = product.uom_id.id
         if self.type != 'remove':
             if partner:
-                fpos = self.env['account.fiscal.position'].get_fiscal_position(partner.id)
+                fpos = self.env['account.fiscal.position'].get_fiscal_position(partner_invoice.id, delivery_id=self.repair_id.address_id.id)
                 self.tax_id = fpos.map_tax(self.product_id.taxes_id, self.product_id, partner)
             warning = False
             pricelist = self.repair_id.pricelist_id
@@ -727,10 +730,11 @@ class RepairFee(models.Model):
         self = self.with_company(self.company_id)
 
         partner = self.repair_id.partner_id
+        partner_invoice = self.repair_id.partner_invoice_id or partner
         pricelist = self.repair_id.pricelist_id
 
         if partner and self.product_id:
-            fpos = self.env['account.fiscal.position'].get_fiscal_position(partner.id)
+            fpos = self.env['account.fiscal.position'].get_fiscal_position(partner_invoice.id, delivery_id=self.repair_id.address_id.id)
             self.tax_id = fpos.map_tax(self.product_id.taxes_id, self.product_id, partner).ids
         self.name = self.product_id.display_name
         self.product_uom = self.product_id.uom_id.id
