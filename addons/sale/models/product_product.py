@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import timedelta
+from datetime import timedelta, time
 from odoo import api, fields, models
 from odoo.tools.float_utils import float_round
 
@@ -44,12 +44,18 @@ class ProductProduct(models.Model):
 
     @api.multi
     def action_view_sales(self):
-        action = self.env.ref('sale.report_all_channels_sales_action').read()[0]
-        action['domain'] = [('product_id', 'in', self.ids)]
+        date_from = fields.Datetime.to_string(fields.datetime.combine(fields.datetime.now() - timedelta(days=365), time.min))
+        done_states = self.env['sale.report']._get_done_states()
+
+        action = self.env.ref('sale.action_order_report_all').read()[0]
+        action['domain'] = [
+            ('state', 'in', done_states),
+            ('product_id', 'in', self.ids),
+            ('date', '>=', date_from),
+        ]
         action['context'] = {
             'search_default_last_year': 1,
-            'pivot_measures': ['product_qty'],
-            'search_default_team_id': 1
+            'pivot_measures': ['product_uom_qty'],
         }
         return action
 
