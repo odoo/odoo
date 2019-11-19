@@ -582,9 +582,20 @@ actual arch.
 
         return self.browse(view_ids).sudo().filtered(accessible)
 
-    def handle_view_error(self, message, raise_exception=True):
+    def handle_view_error(self, message, *, raise_exception=True, from_exception=None, from_traceback=None):
         """ Handle a view error by raising an exception or logging a warning,
         depending on the value of `raise_exception`.
+
+        :param str message: message to raise or log, augmented with contextual
+                            view information
+        :param bool raise_exception:
+            whether to raise an exception (the default) or just log a warning
+        :param BaseException from_exception:
+            when raising an exception, chain it to the provided one (default:
+            disable chaining)
+        :param types.TracebackType from_traceback:
+            when raising an exception, start with this traceback (default: start
+            at exception creation)
         """
         lines = [message]
         if self.name:
@@ -605,7 +616,7 @@ actual arch.
         formatted_message = "\n".join(lines)
         if raise_exception:
             _logger.info(formatted_message)
-            raise ValueError(formatted_message) from None
+            raise ValueError(formatted_message).with_traceback(from_traceback) from from_exception
         else:
             _logger.warning(formatted_message)
 
@@ -1387,9 +1398,9 @@ actual arch.
         """
         try:
             (field_names, var_names) = get_domain_identifiers(domain)
-        except ValueError:
+        except ValueError as e:
             msg = _('Invalid domain format while checking %s in %s')
-            self.handle_view_error(msg % (domain, key))
+            self.handle_view_error(msg % (domain, key), from_traceback=e.__traceback__)
 
         # checking field names
         for name_seq in field_names:

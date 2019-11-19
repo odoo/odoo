@@ -89,6 +89,11 @@ def get_dict_asts(expr):
     return {key.s: val for key, val in zip(expr.keys, expr.values)}
 
 
+def _check(condition, explanation):
+    if not condition:
+        raise ValueError("Expression is not a valid domain: %s" % explanation)
+
+
 def get_domain_identifiers(expr):
     """ Check that the given string or AST node represents a domain expression,
     and return a pair of sets ``(fields, vars)`` where ``fields`` are the field
@@ -100,31 +105,28 @@ def get_domain_identifiers(expr):
     if isinstance(expr, str):
         expr = ast.parse(expr.strip(), mode='eval').body
 
-    def check(condition):
-        if not condition:
-            raise ValueError("Expression is not a valid domain")
-
     fnames = set()
     vnames = set()
 
     if isinstance(expr, ast.List):
-        leaves = list(ast.iter_child_nodes(expr))
-        check(isinstance(leaves.pop(), ast.Load))
-        for leaf in leaves:
-            if isinstance(leaf, ast.Str):
+        for elem in expr.elts:
+            if isinstance(elem, ast.Str):
                 # note: this doesn't check the and/or structure
-                check(leaf.s in ('&', '|', '!'))
+                _check(elem.s in ('&', '|', '!'),
+                       f"logical operators should be '&', '|', or '!', found {elem.s!r}")
             else:
-                check(isinstance(leaf, (ast.List, ast.Tuple)))
-                tuple_ = list(ast.iter_child_nodes(leaf))
-                check(isinstance(tuple_.pop(), ast.Load) and len(tuple_) == 3)
-                lhs, operator, rhs = tuple_
+                _check(isinstance(elem, (ast.List, ast.Tuple)),
+                       f"segment should be a list or tuple, found {type(elem).__name__}")
+                _check(len(elem.elts) == 3,
+                       f"segments should have 3 elements, found {len(elem.elts)}")
+                lhs, operator, rhs = elem.elts
                 if isinstance(lhs, ast.Str):
                     fnames.add(lhs.s)
                 else:
                     # limitation: we do not list fnames in this case
                     vnames.update(get_variable_names(lhs))
-                check(isinstance(operator, ast.Str))
+                _check(isinstance(operator, ast.Str),
+                       f"operator should be a string, found {type(operator).__name__}")
                 vnames.update(get_variable_names(rhs))
     else:
         # limitation: we do not list fnames in this case
