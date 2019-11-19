@@ -992,9 +992,7 @@ class Orderpoint(models.Model):
         'product.product', 'Product',
         domain="[('type', '=', 'product'), '|', ('company_id', '=', False), ('company_id', '=', company_id)]", ondelete='cascade', required=True, check_company=True)
     product_uom = fields.Many2one(
-        'uom.uom', 'Unit of Measure', related='product_id.uom_id',
-        readonly=True, required=True,
-        default=lambda self: self._context.get('product_uom', False))
+        'uom.uom', 'Unit of Measure', related='product_id.uom_id')
     product_uom_name = fields.Char(string='Product unit of measure label', related='product_uom.display_name', readonly=True)
     product_min_qty = fields.Float(
         'Minimum Quantity', digits='Product Unit of Measure', required=True,
@@ -1060,8 +1058,6 @@ class Orderpoint(models.Model):
     def _onchange_product_id(self):
         if self.product_id:
             self.product_uom = self.product_id.uom_id.id
-            return {'domain':  {'product_uom': [('category_id', '=', self.product_id.uom_id.category_id.id)]}}
-        return {'domain': {'product_uom': []}}
 
     @api.onchange('company_id')
     def _onchange_company_id(self):
