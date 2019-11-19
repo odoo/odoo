@@ -83,7 +83,7 @@ class AccountAnalyticAccount(models.Model):
         Curr = self.env['res.currency']
         analytic_line_obj = self.env['account.analytic.line']
         domain = [
-            ('account_id', 'in', self.ids)
+            ('account_id', 'in', self.ids),
             ('company_id', 'in', [False] + self.env.companies.ids)
         ]
         if self._context.get('from_date', False):
