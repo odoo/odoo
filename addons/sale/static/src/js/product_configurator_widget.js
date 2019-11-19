@@ -15,7 +15,7 @@ var _t = core._t;
  * This widget is only designed for sale_order_line creation/updates.
  * !!! It should only be used on a product_product or product_template field !!!
  */
-var ProductConfiguratorWidget = relationalFields.FieldMany2One.extend({
+var ProductConfiguratorWidget = relationalFields.ListFieldMany2One.extend({
     events: _.extend({}, relationalFields.FieldMany2One.prototype.events, {
         'click .o_edit_product_configuration': '_onEditConfiguration'
     }),
