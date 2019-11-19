@@ -117,10 +117,10 @@ class IrDefault(models.Model):
         return json.loads(default.json_value) if default else None
 
     @api.model
-    @tools.ormcache('self.env.uid', 'model_name', 'condition')
+    @tools.ormcache('self.env.uid', 'tuple(self.env.context.get("allowed_company_ids",[]))', 'model_name', 'condition')
     # Note about ormcache invalidation: it is not needed when deleting a field,
     # a user, or a company, as the corresponding defaults will no longer be
-    # requested. It must only be done when a user's company is modified.
+    # requested.
     def get_model_defaults(self, model_name, condition=False):
         """ Return the available default values for the given model (for the
             current user), as a dict mapping field names to values.
@@ -128,19 +128,28 @@ class IrDefault(models.Model):
         cr = self.env.cr
         query = """ SELECT f.name, d.json_value FROM ir_default d
                     JOIN ir_model_fields f ON d.field_id=f.id
-                    JOIN res_users u ON u.id=%s
                     WHERE f.model=%s
-                        AND (d.user_id IS NULL OR d.user_id=u.id)
-                        AND (d.company_id IS NULL OR d.company_id=u.company_id)
-                        AND {}
+                        AND (d.user_id IS NULL OR d.user_id=%s)
+                        AND {company_where}
+                        AND {condition_where}
                     ORDER BY d.user_id, d.company_id, d.id
                 """
-        params = [self.env.uid, model_name]
+        params = [model_name, self.env.uid]
+        # in some cases (e.g. init db, install), there might not be a company
+        # in that case, only check for global ir_defaults
+        allowed_companies = self.env.context.get("allowed_company_ids")
+        company_id = allowed_companies and allowed_companies[0]
+        if company_id:
+            company_where = "(d.company_id IS NULL OR d.company_id=%s)"
+            params.append(company_id)
+        else:
+            company_where =  "d.company_id IS NULL"
         if condition:
-            query = query.format("d.condition=%s")
+            condition_where = "d.condition=%s"
             params.append(condition)
         else:
-            query = query.format("d.condition IS NULL")
+            condition_where = "d.condition IS NULL"
+        query = query.format(condition_where=condition_where, company_where=company_where)
         cr.execute(query, params)
         result = {}
         for row in cr.fetchall():

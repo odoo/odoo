@@ -2,25 +2,29 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.exceptions import ValidationError
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import SavepointCase
 
 
-class TestIrDefault(TransactionCase):
+class TestIrDefault(SavepointCase):
+
+    @classmethod
+    def setUpClass(cls):
+        res = super(TestIrDefault, cls).setUpClass()
+        cls.companyA = cls.env.company
+        cls.companyB = cls.companyA.create({'name': 'CompanyB'})
+        cls.user1 = cls.env.user
+        cls.user2 = cls.user1.create({'name': 'u2', 'login': 'u2'})
+        cls.user3 = cls.user1.create({'name': 'u3', 'login': 'u3',
+                              'company_id': cls.companyB.id,
+                              'company_ids': cls.companyB.ids})
+        return res
 
     def test_defaults(self):
         """ check the mechanism of user-defined defaults """
-        companyA = self.env.company
-        companyB = companyA.create({'name': 'CompanyB'})
-        user1 = self.env.user
-        user2 = user1.create({'name': 'u2', 'login': 'u2'})
-        user3 = user1.create({'name': 'u3', 'login': 'u3',
-                              'company_id': companyB.id,
-                              'company_ids': companyB.ids})
-
         # create some default value for some model
-        IrDefault1 = self.env['ir.default']
-        IrDefault2 = IrDefault1.with_user(user2)
-        IrDefault3 = IrDefault1.with_user(user3)
+        IrDefault1 = self.env['ir.default'].with_context(allowed_company_ids=[self.companyA.id])
+        IrDefault2 = IrDefault1.with_user(self.user2).with_context(allowed_company_ids=[self.companyA.id])
+        IrDefault3 = IrDefault1.with_user(self.user3).with_context(allowed_company_ids=[self.companyB.id])
 
         # set a default value for all users
         IrDefault1.search([('field_id.model', '=', 'res.partner')]).unlink()
@@ -106,3 +110,19 @@ class TestIrDefault(TransactionCase):
         # delete the record, and check the presence of the default value
         title.unlink()
         self.assertEqual(IrDefault.get_model_defaults('res.partner'), {})
+
+    def test_company(self):
+        """ check company-dependent defaults """
+        # create some defaults in 2 different companies (no bound to a user)
+        IrDefault = self.env['ir.default']
+        IrDefault.set('res.partner', 'ref', 'foo', company_id=self.companyA.id)
+        IrDefault.set('res.partner', 'ref', 'bar', company_id=self.companyB.id)
+        # read defaults with 'main allowed company' and check it matches
+        defaultA = IrDefault.with_context(allowed_company_ids=[self.companyA.id, self.companyB.id]).get('res.partner', 'ref', company_id=True)
+        self.assertEqual(defaultA, 'foo')
+        defaultB = IrDefault.with_context(allowed_company_ids=[self.companyB.id, self.companyA.id]).get('res.partner', 'ref', company_id=True)
+        self.assertEqual(defaultB, 'bar')
+        defaultsA = IrDefault.with_context(allowed_company_ids=[self.companyA.id, self.companyB.id]).get_model_defaults('res.partner')
+        self.assertEqual(defaultsA['ref'], 'foo')
+        defaultsB = IrDefault.with_context(allowed_company_ids=[self.companyB.id, self.companyA.id]).get_model_defaults('res.partner')
+        self.assertEqual(defaultsB['ref'], 'bar')
