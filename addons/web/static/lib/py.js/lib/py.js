@@ -133,10 +133,10 @@ var py = {};
         return this;
     };
     infix('if', 20, function (left) {
-        this.first = left;
-        this.second = expression();
+        this.ifTrue = left;
+        this.condition = expression();
         advance('else');
-        this.third = expression();
+        this.ifFalse = expression();
         return this;
     });
 
@@ -1385,6 +1385,13 @@ var py = {};
                 return or_first
             }
             return py.evaluate(expr.second, context);
+        case 'if':
+            var cond = py.evaluate(expr.condition, context);
+            if (py.PY_isTrue(cond)) {
+                return py.evaluate(expr.ifTrue, context);
+            } else {
+                return py.evaluate(expr.ifFalse, context);
+            }
         case '(':
             if (expr.second) {
                 var callable = py.evaluate(expr.first, context);

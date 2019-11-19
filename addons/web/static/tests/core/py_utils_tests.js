@@ -528,6 +528,18 @@ QUnit.module('core', function () {
         assert.strictEqual(result, "2012-02-15 00:00:00");
     });
 
+    QUnit.test('conditional expressions', function (assert) {
+        assert.expect(2);
+        assert.strictEqual(
+            py.eval('1 if a else 2', {a: true}),
+            1
+        );
+        assert.strictEqual(
+            py.eval('1 if a else 2', {a: false}),
+            2
+        );
+    });
+
     QUnit.module('py_utils (eval domain contexts)', {
         beforeEach: function() {
             this.user_context = {
@@ -1206,6 +1218,11 @@ QUnit.module('core', function () {
         assert.checkAST("not False", "not prefix");
         assert.checkAST("not foo", "not prefix with variable");
         assert.checkAST("not a in b", "not prefix with expression");
+    });
+
+    QUnit("conditional expression", function (assert) {
+        assert.checkAST("1 if a else 2");
+        assert.checkAST("[] if a else 2");
     });
 
     QUnit.test("other operators", function (assert) {
