@@ -111,7 +111,9 @@ class SaleOrder(models.Model):
     def action_view_timesheet(self):
         self.ensure_one()
         action = self.env.ref('hr_timesheet.timesheet_action_all').read()[0]
-        action['context'] = self.env.context  # erase default filters
+        ctx = dict(self.env.context or {})
+        ctx.pop('group_by', None)
+        action['context'] = ctx  # erase default filters
 
         if self.timesheet_count > 0:
             action['domain'] = [('so_line', 'in', self.order_line.ids)]
