@@ -901,7 +901,8 @@ class DataSet(http.Controller):
                 'length': 0,
                 'records': []
             }
-        if limit and len(records) == limit:
+        discontinuous = request.env.context.get('discontinuous_search_read')
+        if limit and (len(records) == limit or discontinuous):
             length = Model.search_count(domain)
         else:
             length = len(records) + (offset or 0)
