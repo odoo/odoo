@@ -66,6 +66,15 @@ class RestaurantTable(models.Model):
             table_id = self.create(table).id
         return table_id
 
+    def unlink(self):
+        confs = self.mapped('floor_id').mapped('pos_config_id').filtered(lambda c: c.is_table_management == True)
+        opened_session = self.env['pos.session'].search([('config_id', 'in', confs.ids), ('state', '!=', 'closed')])
+        if opened_session:
+            error_msg = _("You cannot remove a table that is used in a PoS session, close the session(s) first.")
+            if confs:
+                raise UserError(error_msg)
+        return super(RestaurantTable, self).unlink()
+
 
 class RestaurantPrinter(models.Model):
 
