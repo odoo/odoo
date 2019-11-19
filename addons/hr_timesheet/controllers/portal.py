@@ -74,7 +74,7 @@ class TimesheetCustomerPortal(CustomerPortal):
         # pager
         pager = portal_pager(
             url="/my/timesheets",
-            url_args={'sortby': sortby, 'search_in': search_in, 'search': search, 'filterby': filterby},
+            url_args={'sortby': sortby, 'search_in': search_in, 'search': search, 'filterby': filterby, 'groupby': groupby},
             total=timesheet_count,
             page=page,
             step=self._items_per_page
@@ -96,6 +96,7 @@ class TimesheetCustomerPortal(CustomerPortal):
             'pager': pager,
             'searchbar_sortings': searchbar_sortings,
             'search_in': search_in,
+            'search': search,
             'sortby': sortby,
             'groupby': groupby,
             'searchbar_inputs': searchbar_inputs,
