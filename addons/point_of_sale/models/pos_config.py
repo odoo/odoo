@@ -217,6 +217,7 @@ class PosConfig(models.Model):
     rounding_method = fields.Many2one('account.cash.rounding', string="Cash rounding")
     cash_rounding = fields.Boolean(string="Cash Rounding")
     only_round_cash_method = fields.Boolean(string="Only apply rounding on cash")
+    has_active_session = fields.Boolean(compute='_compute_current_session')
 
     @api.depends('use_pricelist', 'available_pricelist_ids')
     def _compute_allowed_pricelist_ids(self):
@@ -252,8 +253,10 @@ class PosConfig(models.Model):
         """If there is an open session, store it to current_session_id / current_session_State.
         """
         for pos_config in self:
+            opened_sessions = pos_config.session_ids.filtered(lambda s: not s.state == 'closed')
             session = pos_config.session_ids.filtered(lambda s: not s.state == 'closed' and not s.rescue)
             # sessions ordered by id desc
+            pos_config.has_active_session = opened_sessions and True or False
             pos_config.current_session_id = session and session[0].id or False
             pos_config.current_session_state = session and session[0].state or False
 
@@ -462,13 +465,25 @@ class PosConfig(models.Model):
     def write(self, vals):
         opened_session = self.mapped('session_ids').filtered(lambda s: s.state != 'closed')
         if opened_session:
-            raise UserError(_('Unable to modify this PoS Configuration because there is an open PoS Session based on it.'))
+            str = []
+            for key in self._get_forbidden_change_fields():
+                if key in vals.keys():
+                    str.append(key)
+            if len(str) > 0:
+                raise UserError(
+                    _("Unable to modify this PoS Configuration because you can't modify " + ", ".join(str)) + " while a session is open.")
         result = super(PosConfig, self).write(vals)
 
         self.sudo()._set_fiscal_position()
         self.sudo()._check_modules_to_install()
         self.sudo()._check_groups_implied()
         return result
+
+    def _get_forbidden_change_fields(self):
+        forbidden_keys = ['module_pos_hr', 'cash_control', 'module_pos_restaurant', 'available_pricelist_ids',
+                          'limit_categories', 'iface_available_categ_ids', 'use_pricelist', 'module_pos_discount',
+                          'payment_method_ids', 'iface_tipproduc']
+        return forbidden_keys
 
     def unlink(self):
         # Delete the pos.config records first then delete the sequences linked to them

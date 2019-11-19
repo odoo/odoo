@@ -36,9 +36,13 @@
                     <field name="is_installed_account_accountant" invisible="1"/>
                     <field name="company_has_template" invisible="1"/>
                     <field name="allowed_pricelist_ids" invisible="1"/>
+                    <field name="has_active_session" invisible="1"/>
                     <div class="oe_title" id="title">
                         <label for="name" class="oe_edit_only"/>
                         <h1><field name="name"/></h1>
+                    </div>
+                    <div class="o_notification_alert alert alert-warning" attrs="{'invisible':[('has_active_session','=', False)]}" role="alert">
+                      A session is currently opened for this PoS. Some settings can only be changed after the session is closed.
                     </div>
                     <div class="row mt16 o_settings_container">
                         <div id="company" class="col-12 col-lg-6 o_setting_box" groups="base.group_multi_company">
@@ -54,7 +58,7 @@
                     <div class="row mt16 o_settings_container">
                       <div class="col-12 col-lg-6 o_setting_box">
                         <div class="o_setting_left_pane">
-                          <field name="module_pos_restaurant"/>
+                          <field name="module_pos_restaurant" attrs="{'readonly': [('has_active_session','=', True)]}"/>
                         </div>
                         <div class="o_setting_right_pane">
                           <label for="module_pos_restaurant"/>
@@ -64,7 +68,7 @@
                         <div class="col-12 col-lg-6 o_setting_box"
                              title="Employees can scan their badge or enter a PIN to log in to a PoS session. These credentials are configurable in the *HR Settings* tab of the employee form.">
                             <div class="o_setting_left_pane">
-                                <field name="module_pos_hr"/>
+                                <field name="module_pos_hr" attrs="{'readonly': [('has_active_session','=', True)]}"/>
                             </div>
                             <div class="o_setting_right_pane" id="login_with_employees">
                                 <span class="o_form_label">Login with Employees</span>
@@ -93,7 +97,7 @@
                         </div>
                         <div class="col-12 col-lg-6 o_setting_box" >
                             <div class="o_setting_left_pane">
-                                <field name="limit_categories"/>
+                                <field name="limit_categories" attrs="{'readonly': [('has_active_session','=', True)]}"/>
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="limit_categories"/>
@@ -101,7 +105,7 @@
                                     Available Product Categories
                                 </div>
                                 <div class="content-group mt16" attrs="{'invisible': [('limit_categories', '=', False)]}">
-                                    <field name="iface_available_categ_ids" widget="many2many_tags"/>
+                                    <field name="iface_available_categ_ids" widget="many2many_tags" attrs="{'readonly': [('has_active_session','=', True)]}"/>
                                 </div>
                                 <div class="content-group mt16" attrs="{'invisible': [('limit_categories', '=', False)]}">
                                     <button name="%(product_pos_category_action)d" icon="fa-arrow-right" type="action" string="PoS Product Categories" class="btn-link"/>
@@ -264,7 +268,7 @@
                         </div>
                         <div class="col-12 col-lg-6 o_setting_box" id="pricelist_setting" groups="product.group_product_pricelist">
                             <div class="o_setting_left_pane">
-                                <field name="use_pricelist"/>
+                                <field name="use_pricelist" attrs="{'readonly': [('has_active_session','=', True)]}"/>
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="use_pricelist" string="Advanced Pricelists"/>
@@ -274,7 +278,7 @@
                                 <div class="content-group mt16" attrs="{'invisible': [('use_pricelist','=',False)], 'required' : [('use_pricelist', '=', True)]}">
                                     <div class="row mt16">
                                         <label string="Available Pricelists" for="available_pricelist_ids" class="col-lg-3 o_light_label"/>
-                                        <field name="available_pricelist_ids" widget="many2many_tags" domain="['|',('company_id', '=', company_id),('company_id', '=', False)]"/>
+                                        <field name="available_pricelist_ids" widget="many2many_tags" domain="['|',('company_id', '=', company_id),('company_id', '=', False)]" attrs="{'readonly': [('has_active_session','=', True)]}"/>
                                     </div>
                                 </div>
                             </div>
@@ -295,7 +299,7 @@
                         </div>
                         <div class="col-xs-12 col-lg-6 o_setting_box" >
                             <div class="o_setting_left_pane">
-                                <field name="module_pos_discount"/>
+                                <field name="module_pos_discount" attrs="{'readonly': [('has_active_session','=', True)]}"/>
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="module_pos_discount"/>
@@ -335,7 +339,7 @@
                                     Payment methods available
                                 </div>
                                 <div class="content-group mt16">
-                                    <field name="payment_method_ids" colspan="4" nolabel="1" widget="many2many_tags" required="1"/>
+                                    <field name="payment_method_ids" colspan="4" nolabel="1" widget="many2many_tags" required="1" attrs="{'readonly': [('has_active_session','=', True)]}"/>
                                 </div>
                                 <div>
                                     <button name="%(action_payment_methods_tree)d" icon="fa-arrow-right" type="action" string="Payment Methods" class="btn-link"/>
@@ -361,7 +365,7 @@
                         </div>
                         <div class="col-12 col-lg-6 o_setting_box">
                             <div class="o_setting_left_pane">
-                                <field name="cash_control"/>
+                                <field name="cash_control" attrs="{'readonly': [('has_active_session','=', True)]}"/>
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="cash_control"/>
@@ -395,7 +399,7 @@
                              id="iface_tipproduct"
                              title="This product is used as reference on customer receipts.">
                             <div class="o_setting_left_pane">
-                                <field name="iface_tipproduct"/>
+                                <field name="iface_tipproduct" attrs="{'readonly': [('has_active_session','=', True)]}"/>
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="iface_tipproduct" string="Tips"/>

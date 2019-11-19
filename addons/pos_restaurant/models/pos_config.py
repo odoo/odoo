@@ -48,3 +48,9 @@ class PosConfig(models.Model):
         for table in tables:
             result.append({'id': table.id, 'orders': orders_map.get(table.id, 0)})
         return result
+
+    def _get_forbidden_change_fields(self):
+        forbidden_keys = super(PosConfig, self)._get_forbidden_change_fields()
+        forbidden_keys.append('is_table_management')
+        forbidden_keys.append('floor_ids')
+        return forbidden_keys

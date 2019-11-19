@@ -67,7 +67,7 @@
                      id="is_table_management"
                      attrs="{'invisible': [('module_pos_restaurant', '=', False)]}">
                     <div class="o_setting_left_pane">
-                        <field name="is_table_management"/>
+                        <field name="is_table_management" attrs="{'readonly': [('has_active_session','=', True)]}"/>
                     </div>
                     <div class="o_setting_right_pane">
                         <label for="is_table_management"/>
@@ -78,7 +78,7 @@
                         <div class="content-group" attrs="{'invisible': [('is_table_management','=',False)]}">
                             <div class="mt16">
                                 <label string="Floors" for="floor_ids" class="o_light_label"/>
-                                <field name="floor_ids" widget="many2many_tags"/>
+                                <field name="floor_ids" widget="many2many_tags" attrs="{'readonly': [('has_active_session','=', True)]}"/>
                             </div>
                             <div>
                                 <button name="%(pos_restaurant.action_restaurant_floor_form)d" icon="fa-arrow-right" type="action" string="Floors" class="btn-link"/>
