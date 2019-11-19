@@ -69,7 +69,7 @@ var MediaPlugin = AbstractPlugin.extend({
         var mediaDialog = new weWidgets.MediaDialog(this.options.parent, {
             onlyImages: $mediaParent.data('oeField') === 'image' || $mediaParent.data('oeType') === 'image',
         },
-            $(media).clone(true, true)[0]
+            $(media).clone(true, true).removeData('snippetEditor')[0]
         );
 
         mediaDialog.on('saved', this, function (data) {
