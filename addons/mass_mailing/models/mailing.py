@@ -631,7 +631,7 @@ class MassMailing(models.Model):
                 'composition_mode': 'mass_mail',
                 'mass_mailing_id': mailing.id,
                 'mailing_list_ids': [(4, l.id) for l in mailing.contact_list_ids],
-                'no_auto_thread': mailing.reply_to_mode != 'thread',
+                'reply_to_force_new': mailing.reply_to_mode != 'thread',
                 'template_id': None,
                 'mail_server_id': mailing.mail_server_id.id,
             }
