@@ -26,7 +26,7 @@ class RegistrationEditor(models.TransientModel):
         for so_line in [l for l in sale_order.order_line if l.event_ticket_id]:
             existing_registrations = [r for r in registrations if r.event_ticket_id == so_line.event_ticket_id]
             for reg in existing_registrations:
-                attendee_list.append({
+                attendee_list.append([0, 0, {
                     'event_id': reg.event_id.id,
                     'event_ticket_id': reg.event_ticket_id.id,
                     'registration_id': reg.id,
@@ -35,7 +35,7 @@ class RegistrationEditor(models.TransientModel):
                     'phone': reg.phone,
                     'mobile': reg.mobile,
                     'sale_order_line_id': so_line.id,
-                })
+                }])
             for count in range(int(so_line.product_uom_qty) - len(existing_registrations)):
                 attendee_list.append([0, 0, {
                     'event_id': so_line.event_id.id,
