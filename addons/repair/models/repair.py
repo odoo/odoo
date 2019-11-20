@@ -644,22 +644,23 @@ class RepairLine(models.Model):
     def onchange_product_id(self):
         """ On change of product it sets product quantity, tax account, name,
         uom of product, unit price and price subtotal. """
-        partner = self.repair_id.partner_id
-        pricelist = self.repair_id.pricelist_id
         if not self.product_id or not self.product_uom_qty:
             return
-        if self.product_id:
-            if partner:
-                self.name = self.product_id.with_context(lang=partner.lang).display_name
-            else:
-                self.name = self.product_id.display_name
-            if self.product_id.description_sale:
-                self.name += '\n' + self.product_id.description_sale
-            self.product_uom = self.product_id.uom_id.id
+        self = self.with_company(self.company_id)
+        partner = self.repair_id.partner_id
+        if partner:
+            self = self.with_context(lang=partner.lang)
+        product = self.product_id
+        self.name = product.display_name
+        if product.description_sale:
+            self.name += '\n' + product.description_sale
+        self.product_uom = product.uom_id.id
         if self.type != 'remove':
-            if partner and self.product_id:
-                self.tax_id = partner.property_account_position_id.map_tax(self.product_id.taxes_id, self.product_id, partner).ids
+            if partner:
+                fpos = self.env['account.fiscal.position'].get_fiscal_position(partner.id)
+                self.tax_id = fpos.map_tax(self.product_id.taxes_id, self.product_id, partner)
             warning = False
+            pricelist = self.repair_id.pricelist_id
             if not pricelist:
                 warning = {
                     'title': _('No pricelist found.'),
@@ -723,16 +724,18 @@ class RepairFee(models.Model):
         if not self.product_id:
             return
 
+        self = self.with_company(self.company_id)
+
         partner = self.repair_id.partner_id
         pricelist = self.repair_id.pricelist_id
 
         if partner and self.product_id:
-            self.tax_id = partner.property_account_position_id.map_tax(self.product_id.taxes_id, self.product_id, partner).ids
-        if self.product_id:
-            self.name = self.product_id.display_name
-            self.product_uom = self.product_id.uom_id.id
-            if self.product_id.description_sale:
-                self.name += '\n' + self.product_id.description_sale
+            fpos = self.env['account.fiscal.position'].get_fiscal_position(partner.id)
+            self.tax_id = fpos.map_tax(self.product_id.taxes_id, self.product_id, partner).ids
+        self.name = self.product_id.display_name
+        self.product_uom = self.product_id.uom_id.id
+        if self.product_id.description_sale:
+            self.name += '\n' + self.product_id.description_sale
 
         warning = False
         if not pricelist:

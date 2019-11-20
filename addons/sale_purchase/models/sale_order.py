@@ -177,7 +177,7 @@ class SaleOrderLine(models.Model):
         self.ensure_one()
         self = self.with_company(self.company_id)
         partner_supplier = supplierinfo.name
-        fiscal_position_id = self.env['account.fiscal.position'].sudo().get_fiscal_position(partner_supplier.id)
+        fpos = self.env['account.fiscal.position'].sudo().get_fiscal_position(partner_supplier.id)
         date_order = self._purchase_get_date_order(supplierinfo)
         return {
             'partner_id': partner_supplier.id,
@@ -188,7 +188,7 @@ class SaleOrderLine(models.Model):
             'origin': self.order_id.name,
             'payment_term_id': partner_supplier.property_supplier_payment_term_id.id,
             'date_order': date_order,
-            'fiscal_position_id': fiscal_position_id,
+            'fiscal_position_id': fpos.id,
         }
 
     def _purchase_service_prepare_line_values(self, purchase_order, quantity=False):

@@ -418,7 +418,8 @@ class SaleOrderLine(models.Model):
         # as the product is the generic discount line.
         # In case of a free product, retrieving the tax on the line instead of the product won't affect the behavior.
         for line in reward_lines:
-            fpos = line.order_id.fiscal_position_id or line.order_id.partner_id.property_account_position_id
+            line = line.with_company(line.company_id)
+            fpos = line.order_id.fiscal_position_id or line.order_id.fiscal_position_id.get_fiscal_position(line.order_partner_id.id)
             # If company_id is set, always filter taxes by the company
             taxes = line.tax_id.filtered(lambda r: not line.company_id or r.company_id == line.company_id)
             line.tax_id = fpos.map_tax(taxes, line.product_id, line.order_id.partner_shipping_id)

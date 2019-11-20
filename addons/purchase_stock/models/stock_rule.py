@@ -282,7 +282,7 @@ class StockRule(models.Model):
             'origin': ', '.join(origins),
             'payment_term_id': partner.with_company(company_id).property_supplier_payment_term_id.id,
             'date_order': purchase_date,
-            'fiscal_position_id': fpos,
+            'fiscal_position_id': fpos.id,
             'group_id': group
         }
 
