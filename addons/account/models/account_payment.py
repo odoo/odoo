@@ -262,8 +262,8 @@ class account_abstract_payment(models.AbstractModel):
             else:
                 # Here there is no chance we will reconcile on amount_currency
                 # Hence, we need to compute with the amount in company currency as the base
-                total += self.journal_id.company_id.currency_id._convert(
-                    amount_total_company_signed,
+                total += invoice_currency._convert(
+                    amount_total,
                     payment_currency,
                     self.env.user.company_id,
                     self.payment_date or fields.Date.today()
