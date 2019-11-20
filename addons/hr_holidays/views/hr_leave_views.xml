@@ -516,6 +516,16 @@
         </field>
     </record>
 
+    <record id="hr_leave_action_employee" model="ir.actions.act_window">
+        <field name="name">Time Off Employee</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.leave</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,kanban,form,calendar,activity</field>
+        <field name="context">{}</field>
+        <field name="domain">[('employee_id', '=', active_id)]</field>
+    </record>
+
     <record id="hr_leave_action_action_approve_department" model="ir.actions.act_window">
         <field name="name">Department Time Off</field>
         <field name="res_model">hr.leave</field>
