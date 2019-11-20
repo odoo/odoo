@@ -42,8 +42,6 @@ class AccountMove(models.Model):
         res = super()._get_tax_grouping_key_from_base_line(base_line, tax_vals)
         res.update({
             'product_id': base_line.product_id.id,
-            'product_uom_id': base_line.product_uom_id.id,
-            'quantity': base_line.quantity,
         })
         return res
 
