@@ -6,8 +6,9 @@
 import base64
 import io
 
+import odoo
+
 from odoo import api, fields, models, _
-from odoo.exceptions import Warning
 from odoo.tools import float_is_zero, pycompat
 
 
@@ -87,10 +88,10 @@ class AccountFrFec(models.TransientModel):
         dom_tom_group = self.env.ref('l10n_fr.dom-tom')
         is_dom_tom = company.country_id.code in dom_tom_group.country_ids.mapped('code')
         if not is_dom_tom and not company.vat:
-            raise Warning(
+            raise odoo.exceptions.UserError(
                 _("Missing VAT number for company %s") % company.name)
         if not is_dom_tom and company.vat[0:2] != 'FR':
-            raise Warning(
+            raise odoo.exceptions.UserError(
                 _("FEC is for French companies only !"))
 
         return {
