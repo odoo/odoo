@@ -129,6 +129,14 @@ class AccountMove(models.Model):
             # Total amount.
             elements = tree.xpath('//ram:GrandTotalAmount', namespaces=tree.nsmap)
             if elements:
+<<<<<<< HEAD:addons/account_facturx/models/account_move.py
+=======
+                total_amount = float(elements[0].text)
+
+                # Handle 'a & b' refund mode.
+                if (total_amount < 0 and type_code == '380') or type_code == '381':
+                    refund_sign = -1
+>>>>>>> 1426e67b95e... temp:addons/account_facturx/models/account_invoice.py
 
                 # Currency.
                 if elements[0].attrib.get('currencyID'):
