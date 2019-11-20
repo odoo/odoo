@@ -31,8 +31,8 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
     @api.model
     def _default_has_down_payment(self):
-        if self._context.get('active_model') == 'sale.order' and self._context.get('active_id', False):
-            sale_order = self.env['sale.order'].browse(self._context.get('active_id'))
+        if self.env.context.get('active_model') == 'sale.order' and self.env.context.get('active_ids'):
+            sale_order = self.env['sale.order'].browse(self.env.context['active_ids'][0])
             return sale_order.order_line.filtered(
                 lambda sale_order_line: sale_order_line.is_downpayment
             )
