@@ -362,9 +362,6 @@ class Slide(models.Model):
                     url = '%s/slides/slide/%s' % (base_url, slug(slide))
                 slide.website_url = url
 
-    def get_backend_menu_id(self):
-        return self.env.ref('website_slides.website_slides_menu_root').id
-
     @api.depends('channel_id.can_publish')
     def _compute_can_publish(self):
         for record in self:
@@ -806,3 +803,10 @@ class Slide(models.Model):
         res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = self.env['website'].image_url(self, 'image_1024')
         res['default_meta_description'] = self.description
         return res
+
+    # ---------------------------------------------------------
+    # Data / Misc
+    # ---------------------------------------------------------
+
+    def get_backend_menu_id(self):
+        return self.env.ref('website_slides.website_slides_menu_root').id
