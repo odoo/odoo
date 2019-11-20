@@ -175,6 +175,7 @@ class SaleOrderLine(models.Model):
             :rtype: dict
         """
         self.ensure_one()
+        self = self.with_company(self.company_id)
         partner_supplier = supplierinfo.name
         fiscal_position_id = self.env['account.fiscal.position'].sudo().get_fiscal_position(partner_supplier.id)
         date_order = self._purchase_get_date_order(supplierinfo)
@@ -255,7 +256,7 @@ class SaleOrderLine(models.Model):
         supplier_po_map = {}
         sale_line_purchase_map = {}
         for line in self:
-            line = line.with_context(force_company=line.company_id.id)
+            line = line.with_company(line.company_id)
             # determine vendor of the order (take the first matching company and product)
             # VFE fixme why isn't the _select_seller function used ???
             suppliers = line.product_id.seller_ids.filtered(lambda vendor: (not vendor.company_id or vendor.company_id == line.company_id) and (not vendor.product_id or vendor.product_id == line.product_id))

@@ -113,9 +113,9 @@ class StockQuant(models.Model):
             if diff_float_compared == 0:
                 continue
             elif diff_float_compared > 0:
-                move_vals = quant._get_inventory_move_values(diff, quant.product_id.with_context(force_company=quant.company_id.id or self.env.company.id).property_stock_inventory, quant.location_id)
+                move_vals = quant._get_inventory_move_values(diff, quant.product_id.with_company(quant.company_id).property_stock_inventory, quant.location_id)
             else:
-                move_vals = quant._get_inventory_move_values(-diff, quant.location_id, quant.product_id.with_context(force_company=quant.company_id.id or self.env.company.id).property_stock_inventory, out=True)
+                move_vals = quant._get_inventory_move_values(-diff, quant.location_id, quant.product_id.with_company(quant.company_id).property_stock_inventory, out=True)
             move = quant.env['stock.move'].with_context(inventory_mode=False).create(move_vals)
             move._action_done()
 

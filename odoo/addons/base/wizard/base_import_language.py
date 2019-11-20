@@ -28,7 +28,6 @@ class BaseLanguageImport(models.TransientModel):
 
     def import_lang(self):
         this = self[0]
-        this = this.with_context(overwrite=this.overwrite)
         with TemporaryFile('wb+') as buf:
             try:
                 buf.write(base64.decodebytes(this.data))
@@ -37,8 +36,14 @@ class BaseLanguageImport(models.TransientModel):
                 buf.seek(0)
                 fileformat = os.path.splitext(this.filename)[-1][1:].lower()
 
-                tools.trans_load_data(this._cr, buf, fileformat, this.code,
-                                      lang_name=this.name, context=this._context)
+                Lang = self.env["res.lang"]
+                lang = Lang._activate_lang(self.code) or Lang._create_lang(
+                    self.code, lang_name=self.name
+                )
+
+                tools.trans_load_data(
+                    this._cr, buf, fileformat, this.code, overwrite=self.overwrite
+                )
             except Exception as e:
                 _logger.exception('File unsuccessfully imported, due to format mismatch.')
                 raise UserError(

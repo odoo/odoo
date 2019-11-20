@@ -119,11 +119,10 @@ class AccountFiscalPosition(models.Model):
     def _get_fpos_by_region(self, country_id=False, state_id=False, zipcode=False, vat_required=False):
         if not country_id:
             return False
-        company_id = self.env.context.get('force_company', self.env.company.id)
         base_domain = [
             ('auto_apply', '=', True),
             ('vat_required', '=', vat_required),
-            ('company_id', '=', company_id),
+            ('company_id', '=', self.env.company.id),
         ]
         null_state_dom = state_domain = [('state_ids', '=', False)]
         null_zip_dom = zip_domain = [('zip_from', '=', False), ('zip_to', '=', False)]
@@ -226,7 +225,7 @@ class ResPartner(models.Model):
     _name = 'res.partner'
     _inherit = 'res.partner'
 
-    @api.depends_context('force_company')
+    @api.depends_context('company')
     def _credit_debit_get(self):
         tables, where_clause, where_params = self.env['account.move.line'].with_context(state='posted', company_id=self.env.company.id)._query_get()
         where_params = [tuple(self.ids)] + where_params
@@ -371,7 +370,7 @@ class ResPartner(models.Model):
 
     def mark_as_reconciled(self):
         self.env['account.partial.reconcile'].check_access_rights('write')
-        return self.sudo().with_context(company_id=self.env.company.id).write({'last_time_entries_checked': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
+        return self.sudo().write({'last_time_entries_checked': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
 
     def _get_company_currency(self):
         for partner in self:
@@ -425,7 +424,7 @@ class ResPartner(models.Model):
     invoice_warn = fields.Selection(WARNING_MESSAGE, 'Invoice', help=WARNING_HELP, default="no-message")
     invoice_warn_msg = fields.Text('Message for Invoice')
     # Computed fields to order the partners as suppliers/customers according to the
-    # amount of their generated incoming/outgoing account moves 
+    # amount of their generated incoming/outgoing account moves
     supplier_rank = fields.Integer(default=0)
     customer_rank = fields.Integer(default=0)
 

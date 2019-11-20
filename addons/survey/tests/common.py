@@ -12,9 +12,9 @@ from odoo.tests import common, new_test_user
 survey_new_test_user = partial(new_test_user, context={'mail_create_nolog': True, 'mail_create_nosubscribe': True, 'mail_notrack': True, 'no_reset_password': True})
 
 
-class SurveyCase(common.SavepointCase):
+class TestSurveyCommon(common.SavepointCase):
     def setUp(self):
-        super(SurveyCase, self).setUp()
+        super(TestSurveyCommon, self).setUp()
 
         """ Some custom stuff to make the matching between questions and answers
           :param dict _type_match: dict
@@ -137,7 +137,10 @@ class SurveyCase(common.SavepointCase):
             else:
                 [value] = user_input['value']
                 answer_fname = self._type_match[question.question_type][1]
-                self.assertEqual(getattr(answer_lines, answer_fname), value)
+                if question.question_type == 'numerical_box':
+                    self.assertEqual(getattr(answer_lines, answer_fname), float(value))
+                else:
+                    self.assertEqual(getattr(answer_lines, answer_fname), value)
 
     def assertResponse(self, response, status_code, text_bits=None):
         self.assertEqual(response.status_code, status_code)
@@ -215,8 +218,27 @@ class SurveyCase(common.SavepointCase):
         return self.url_open('/survey/fill/%s/%s' % (survey.access_token, token))
 
     def _access_submit(self, survey, token, post_data):
-        return self.url_open('/survey/submit/%s/%s' % (survey.access_token, token), data=post_data)
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        url = base_url + '/survey/submit/%s/%s' % (survey.access_token, token)
+        return self.opener.post(url=url, json={'params': post_data})
 
     def _find_csrf_token(self, text):
         csrf_token_re = re.compile("(input.+csrf_token.+value=\")([_a-zA-Z0-9]{51})", re.MULTILINE)
         return csrf_token_re.search(text).groups()[1]
+
+    def _prepare_post_data(self, question, answers, post_data):
+        values = answers if isinstance(answers, list) else [answers]
+        if question.question_type == 'multiple_choice':
+            for value in values:
+                value = str(value)
+                if question.id in post_data:
+                    if isinstance(post_data[question.id], list):
+                        post_data[question.id].append(value)
+                    else:
+                        post_data[question.id] = [post_data[question.id], value]
+                else:
+                    post_data[question.id] = value
+        else:
+            [values] = values
+            post_data[question.id] = str(values)
+        return post_data

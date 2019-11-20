@@ -18,7 +18,8 @@ class TestTermCount(common.TransactionCase):
         """
         Just make sure we have as many translation entries as we wanted.
         """
-        odoo.tools.trans_load(self.cr, 'test_translation_import/i18n/fr.po', 'fr_FR', module_name='test_translation_import', verbose=False)
+        self.env['res.lang']._activate_lang('fr_FR')
+        odoo.tools.trans_load(self.cr, 'test_translation_import/i18n/fr.po', 'fr_FR', verbose=False)
         translations = self.env['ir.translation'].search([
             ('lang', '=', 'fr_FR'),
             ('src', '=', '1XBUO5PUYH2RYZSA1FTLRYS8SPCNU1UYXMEYMM25ASV7JC2KTJZQESZYRV9L8CGB'),
@@ -40,6 +41,7 @@ class TestTermCount(common.TransactionCase):
         """
         Just make sure we have as many translation entries as we wanted and module deducted from file content
         """
+        self.env['res.lang']._activate_lang('fr_FR')
         odoo.tools.trans_load(self.cr, 'test_translation_import/i18n/fr.po', 'fr_FR', verbose=False)
         translations = self.env['ir.translation'].search([
             ('lang', '=', 'fr_FR'),
@@ -56,10 +58,11 @@ class TestTermCount(common.TransactionCase):
         menu = self.env.ref('test_translation_import.menu_test_translation_import')
         menu.name = "New Name"
         # install french and change translation content
-        odoo.tools.trans_load(self.cr, 'test_translation_import/i18n/fr.po', 'fr_FR', module_name='test_translation_import', verbose=False)
+        self.env['res.lang']._activate_lang('fr_FR')
+        odoo.tools.trans_load(self.cr, 'test_translation_import/i18n/fr.po', 'fr_FR', verbose=False)
         menu.with_context(lang='fr_FR').name = "Nouveau nom"
         # reload with overwrite
-        odoo.tools.trans_load(self.cr, 'test_translation_import/i18n/fr.po', 'fr_FR', module_name='test_translation_import', verbose=False, context={'overwrite': True})
+        odoo.tools.trans_load(self.cr, 'test_translation_import/i18n/fr.po', 'fr_FR', verbose=False, overwrite=True)
 
         # trans_load invalidates ormcache but not record cache
         menu.env.cache.invalidate()
@@ -67,8 +70,9 @@ class TestTermCount(common.TransactionCase):
         self.assertEqual(menu.with_context(lang='fr_FR').name, "Nouveau nom")
 
     def test_lang_with_base(self):
-        odoo.tools.trans_load(self.cr, 'test_translation_import/i18n/fr.po', 'fr_BE', module_name='test_translation_import', verbose=False)
-        odoo.tools.trans_load(self.cr, 'test_translation_import/i18n/fr_BE.po', 'fr_BE', module_name='test_translation_import', verbose=False, context={'overwrite': True})
+        self.env['res.lang']._activate_lang('fr_BE')
+        odoo.tools.trans_load(self.cr, 'test_translation_import/i18n/fr.po', 'fr_BE', verbose=False)
+        odoo.tools.trans_load(self.cr, 'test_translation_import/i18n/fr_BE.po', 'fr_BE', verbose=False, overwrite=True)
 
         # language override base language
         translations = self.env['ir.translation'].search([
@@ -95,7 +99,8 @@ class TestTermCount(common.TransactionCase):
         """
         Just make sure we do not create duplicated translation with 'code' type
         """
-        odoo.tools.trans_load(self.cr, 'test_translation_import/i18n/fr.po', 'fr_FR', module_name='test_translation_import', verbose=False)
+        self.env['res.lang']._activate_lang('fr_FR')
+        odoo.tools.trans_load(self.cr, 'test_translation_import/i18n/fr.po', 'fr_FR', verbose=False)
         ids = self.env['ir.translation'].search([
             ('lang', '=', 'fr_FR'),
             ('src', '=', 'Test translation with two code lines'),
@@ -118,12 +123,15 @@ class TestTermCount(common.TransactionCase):
     def test_export_empty_string(self):
         """When the string and the translation is equal the translation is empty"""
         # Export the translations
-        def update_translations(context=None):
-            context = dict(context or {}, overwrite=True)
+        def update_translations(create_empty_translation=False):
+            self.env['res.lang']._activate_lang('fr_FR')
             with closing(io.BytesIO()) as bufferobj:
                 odoo.tools.trans_export('fr_FR', ['test_translation_import'], bufferobj, 'po', self.cr)
                 bufferobj.name = 'test_translation_import/i18n/fr.po'
-                odoo.tools.trans_load_data(self.cr, bufferobj, 'po', 'fr_FR', verbose=False, context=context)
+                odoo.tools.trans_load_data(self.cr, bufferobj, 'po', 'fr_FR',
+                                           verbose=False,
+                                           create_empty_translation=create_empty_translation,
+                                           overwrite=True)
 
         # Check that the not translated key is not created
         update_translations()
@@ -131,7 +139,7 @@ class TestTermCount(common.TransactionCase):
         self.assertFalse(translation, 'An empty translation is not imported')
 
         # Check that "Generate Missing Terms" create empty string for not translated key
-        update_translations({'create_empty_translation': True})
+        update_translations(create_empty_translation=True)
         translation = self.env['ir.translation'].search_count([('src', '=', 'Efgh'), ('value', '=', '')])
         self.assertTrue(translation, 'The translation of "Efgh" should be empty')
 
@@ -232,7 +240,8 @@ class TestTranslationFlow(common.TransactionCase):
 
         translations = self.env["ir.translation"].search([
             ('lang', '=', 'fr_FR'),
-            ('module', '=', 'test_translation_import')
+            ('module', '=', 'test_translation_import'),
+            ('value', '!=', ''),
         ])
 
         # minus 3 as the original fr.po contains 3 fake code translations (cf
@@ -259,10 +268,12 @@ class TestTranslationFlow(common.TransactionCase):
             'overwrite': False,
         })
         with mute_logger('odoo.addons.base.models.res_lang'):
-            import_fr.with_context(create_empty_translation=True).import_lang()
+            import_fr.import_lang()
 
         import_translation = self.env["ir.translation"].search([
             ('lang', '=', 'fr_FR'),
-            ('module', '=', 'test_translation_import')
+            ('module', '=', 'test_translation_import'),
+            ('value', '!=', ''),
         ])
+
         self.assertEqual(init_translation_count, len(import_translation))

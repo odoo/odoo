@@ -56,7 +56,7 @@ class Digest(models.Model):
             digest.available_fields = ', '.join(kpis_values_fields)
 
     def _get_kpi_compute_parameters(self):
-        return fields.Date.to_string(self._context.get('start_date')), fields.Date.to_string(self._context.get('end_date')), self._context.get('company')
+        return fields.Date.to_string(self._context.get('start_date')), fields.Date.to_string(self._context.get('end_date')), self.env.company
 
     def _compute_kpi_res_users_connected_value(self):
         for record in self:
@@ -105,8 +105,8 @@ class Digest(models.Model):
         self.ensure_one()
         res = {}
         for tf_name, tf in self._compute_timeframes(company).items():
-            digest = self.with_context(start_date=tf[0][0], end_date=tf[0][1], company=company).with_user(user)
-            previous_digest = self.with_context(start_date=tf[1][0], end_date=tf[1][1], company=company).with_user(user)
+            digest = self.with_context(start_date=tf[0][0], end_date=tf[0][1]).with_user(user).with_company(company)
+            previous_digest = self.with_context(start_date=tf[1][0], end_date=tf[1][1]).with_user(user).with_company(company)
             kpis = {}
             for field_name, field in self._fields.items():
                 if field.type == 'boolean' and field_name.startswith(('kpi_', 'x_kpi_', 'x_studio_kpi_')) and self[field_name]:

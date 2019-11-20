@@ -1,7 +1,7 @@
 # Make sure / performs a floating point division even if environment is python 2
 from __future__ import division
 
-from odoo.addons.account.tests.account_test_classes import AccountingTestCase
+from odoo.addons.account.tests.common import AccountTestCommon
 from odoo.addons.account_check_printing.models.account_payment import INV_LINES_PER_STUB
 from odoo.tests import tagged
 from odoo.tests.common import Form
@@ -11,7 +11,7 @@ import math
 
 
 @tagged('post_install', '-at_install')
-class TestPrintCheck(AccountingTestCase):
+class TestPrintCheck(AccountTestCommon):
 
     @classmethod
     def setUpClass(cls):

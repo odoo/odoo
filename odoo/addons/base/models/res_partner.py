@@ -42,7 +42,7 @@ def _tz_get(self):
 
 class FormatAddressMixin(models.AbstractModel):
     _name = "format.address.mixin"
-    _description = 'Fomat Address'
+    _description = 'Address Format'
 
     def _fields_view_get_address(self, arch):
         # consider the country of the user, not the country of the partner we want to display
@@ -59,7 +59,7 @@ class FormatAddressMixin(models.AbstractModel):
                 #(e.g fields not present on the model). In that case we just return arch
                 if self._name != 'res.partner':
                     try:
-                        self.env['ir.ui.view'].postprocess_and_fields(self._name, sub_view_node, None)
+                        self.env['ir.ui.view'].postprocess_and_fields(sub_view_node, model=self._name)
                     except ValueError:
                         return arch
                 address_node.getparent().replace(address_node, sub_view_node)

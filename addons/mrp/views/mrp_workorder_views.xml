@@ -155,7 +155,7 @@
                         </group>
                     </group>
                     <h4 attrs="{'invisible': [('raw_workorder_line_ids', '=', [])]}">Components</h4>
-                    <field name="raw_workorder_line_ids" attrs="{'invisible': [('raw_workorder_line_ids', '=', [])], 'readonly': [('state', 'in', 'cancel', 'done')]}">
+                    <field name="raw_workorder_line_ids" attrs="{'invisible': [('raw_workorder_line_ids', '=', [])], 'readonly': [('state', 'in', ('cancel', 'done'))]}">
                         <tree editable="bottom" create="0" delete="0">
                             <field name="product_id"/>
                             <field name="product_tracking" invisible="1"/>
@@ -169,7 +169,7 @@
                         </tree>
                     </field>
                     <h4 attrs="{'invisible': [('finished_workorder_line_ids', '=', [])]}">Finished Products</h4>
-                    <field name="finished_workorder_line_ids" attrs="{'invisible': [('finished_workorder_line_ids', '=', [])], 'readonly': [('state', 'in', 'cancel', 'done')]}">
+                    <field name="finished_workorder_line_ids" attrs="{'invisible': [('finished_workorder_line_ids', '=', [])], 'readonly': [('state', 'in', ('cancel', 'done'))]}">
                         <tree editable="bottom" create="0" delete="0">
                             <field name="product_id"/>
                             <field name="product_tracking" invisible="1"/>

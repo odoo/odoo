@@ -25,7 +25,7 @@ class TestSmsTemplate(test_mail_full_common.BaseFunctionalTest, sms_common.MockS
         self.assertEqual(rendered_body[self.test_record.id], 'Dear %s this is an SMS.' % self.test_record.display_name)
 
     def test_sms_template_lang(self):
-        self.env.ref('base.lang_fr').write({'active': True})
+        self.env['res.lang']._activate_lang('fr_FR')
         self.user_admin.write({'lang': 'en_US'})
         self.env['ir.translation'].create({
             'type': 'model',

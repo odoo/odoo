@@ -38,6 +38,15 @@ options.registry.background.include({
     /**
      * @override
      */
+    _getDefaultTextContent: function () {
+        if (this._getMediaDialogOptions().noVideos) {
+            return this._super(...arguments);
+        }
+        return _t("Choose a picture or a video");
+    },
+    /**
+     * @override
+     */
     _getEditableMedia: function () {
         if (!this._hasBgvideo()) {
             return this._super(...arguments);
@@ -84,7 +93,7 @@ options.registry.background.include({
             delete target.dataset.bgVideoSrc;
         }
         this._refreshPublicWidgets();
-        this._setActive();
+        this._updateUI();
     },
     /**
      * Returns whether the current target has a background video or not.
@@ -217,10 +226,7 @@ options.registry.company_data = options.Class.extend({
     },
 });
 
-/**
- * @todo should be refactored / reviewed
- */
-options.registry.carousel = options.Class.extend({
+options.registry.Carousel = options.Class.extend({
     /**
      * @override
      */
@@ -228,12 +234,16 @@ options.registry.carousel = options.Class.extend({
         this.$target.carousel('pause');
         this.$indicators = this.$target.find('.carousel-indicators');
         this.$controls = this.$target.find('.carousel-control-prev, .carousel-control-next, .carousel-indicators');
-        this.$items = this.$target.find('.carousel-item');
+
+        // Prevent enabling the carousel overlay when clicking on the carousel
+        // controls (indeed we want it to change the carousel slide then enable
+        // the slide overlay) + See "CarouselItem" option.
+        this.$controls.addClass('o_we_no_overlay');
 
         let _slideTimestamp;
         this.$target.on('slide.bs.carousel.carousel_option', () => {
             _slideTimestamp = window.performance.now();
-            setTimeout(() => this.trigger_up('activate_snippet', {$snippet: this.$target}));
+            setTimeout(() => this.trigger_up('hide_overlay'));
         });
         this.$target.on('slid.bs.carousel.carousel_option', () => {
             // slid.bs.carousel is most of the time fired too soon by bootstrap
@@ -241,7 +251,13 @@ options.registry.carousel = options.Class.extend({
             // here an extra 20% of the time before retargeting edition, which
             // should be enough...
             const _slideDuration = (window.performance.now() - _slideTimestamp);
-            setTimeout(() => this._retargetEdition(), 0.2 * _slideDuration);
+            setTimeout(() => {
+                this.trigger_up('activate_snippet', {
+                    $snippet: this.$target.find('.carousel-item.active'),
+                    ifInactiveOptions: true,
+                });
+                this.$target.trigger('active_slide_targeted');
+            }, 0.2 * _slideDuration);
         });
 
         return this._super.apply(this, arguments);
@@ -269,9 +285,70 @@ options.registry.carousel = options.Class.extend({
      * @override
      */
     cleanForSave: function () {
-        this._super.apply(this, arguments);
-        this.$items.removeClass('next prev left right active').first().addClass('active');
+        const $items = this.$target.find('.carousel-item');
+        $items.removeClass('next prev left right active').first().addClass('active');
         this.$indicators.find('li').removeClass('active').empty().first().addClass('active');
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Creates a unique ID for the carousel and reassign data-attributes that
+     * depend on it.
+     *
+     * @private
+     */
+    _assignUniqueID: function () {
+        const id = 'myCarousel' + Date.now();
+        this.$target.attr('id', id);
+        this.$target.find('[data-target]').attr('data-target', '#' + id);
+        this.$target.find('[data-slide]').attr('href', '#' + id);
+    },
+});
+
+options.registry.CarouselItem = options.Class.extend({
+    /**
+     * @override
+     */
+    start: function () {
+        this.$carousel = this.$target.closest('.carousel');
+        this.$indicators = this.$carousel.find('.carousel-indicators');
+        this.$controls = this.$carousel.find('.carousel-control-prev, .carousel-control-next, .carousel-indicators');
+
+        var leftPanelEl = this.$overlay.data('$optionsSection')[0];
+        var titleTextEl = leftPanelEl.querySelector('we-title > span');
+        this.counterEl = document.createElement('span');
+        titleTextEl.appendChild(this.counterEl);
+
+        leftPanelEl.querySelector('.oe_snippet_remove').classList.add('d-none'); // TODO improve the way to do that
+
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    destroy: function () {
+        this._super(...arguments);
+        this.$carousel.off('.carousel_item_option');
+    },
+    /**
+     * @override
+     */
+    isTopOption: function () {
+        return true;
+    },
+    /**
+     * Updates the slide counter.
+     *
+     * @override
+     */
+    onFocus: function () {
+        const $items = this.$carousel.find('.carousel-item');
+        const $activeSlide = $items.filter('.active');
+        const updatedText = ` (${$activeSlide.index() + 1}/${$items.length})`;
+        this.counterEl.textContent = updatedText;
     },
 
     //--------------------------------------------------------------------------
@@ -284,18 +361,18 @@ options.registry.carousel = options.Class.extend({
      * @see this.selectClass for parameters
      */
     addSlide: function (previewMode) {
+        const $items = this.$carousel.find('.carousel-item');
         this.$controls.removeClass('d-none');
         this.$indicators.append($('<li>', {
             'data-target': '#' + this.$target.attr('id'),
-            'data-slide-to': this.$items.length,
+            'data-slide-to': $items.length,
         }));
         // Need to remove editor data from the clone so it gets its own.
-        const $active = this.$items.filter('.active');
+        const $active = $items.filter('.active');
         $active.clone(false)
             .removeClass('active')
             .insertAfter($active);
-        this.$items = this.$target.find('.carousel-item');
-        this.$target.carousel('next');
+        this.$carousel.carousel('next');
     },
     /**
      * Removes the current slide.
@@ -303,66 +380,35 @@ options.registry.carousel = options.Class.extend({
      * @see this.selectClass for parameters.
      */
     removeSlide: function (previewMode) {
-        const newLength = this.$items.length - 1;
+        const $items = this.$carousel.find('.carousel-item');
+        const newLength = $items.length - 1;
         if (!this.removing && newLength > 0) {
-            const $toDelete = this.$items.filter('.active');
-            this.$target.one('slid.bs.carousel', (event) => {
+            const $toDelete = $items.filter('.active');
+            this.$carousel.one('active_slide_targeted.carousel_item_option', () => {
                 $toDelete.remove();
                 this.$indicators.find('li:last').remove();
-                this.$items = this.$target.find('.carousel-item');
                 this.$controls.toggleClass('d-none', newLength === 1);
-                this.$target.find('.carousel').trigger('content_changed');
+                this.$carousel.trigger('content_changed');
                 this.removing = false;
             });
             this.removing = true;
-            this.$target.carousel('prev');
+            this.$carousel.carousel('prev');
         }
     },
     /**
-     * Changes the interval for autoplay.
+     * Goes to next slide or previous slide.
      *
      * @see this.selectClass for parameters
      */
-    interval: function (previewMode, value) {
-        this.$target.attr('data-interval', value);
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    _setActive: function () {
-        this._super.apply(this, arguments);
-        this.$el.find('[data-interval]')
-            .removeClass('active')
-            .filter(`[data-interval=${this.$target.attr('data-interval')}]`)
-            .addClass('active');
-    },
-    /**
-     * Activates current slide for edition and vertical padding. Padding on the
-     * carousel itself would mean the slides' backgrounds don't cover the padding.
-     *
-     * @private
-     */
-    _retargetEdition: function () {
-        this.trigger_up('activate_snippet', {
-            $snippet: this.$items.filter('.active'),
-            ifInactiveOptions: true,
-        });
-    },
-    /**
-     * Creates a unique ID for the carousel and reassign data-attributes that depend on it.
-     *
-     * @private
-     */
-    _assignUniqueID: function () {
-        const id = 'myCarousel' + Date.now();
-        this.$target.attr('id', id);
-        this.$target.find('[data-target]').attr('data-target', '#' + id);
-        this.$target.find('[data-slide]').attr('href', '#' + id);
+    slide: function (previewMode, value) {
+        switch (value) {
+            case 'left':
+                this.$controls.filter('.carousel-control-prev')[0].click();
+                break;
+            case 'right':
+                this.$controls.filter('.carousel-control-next')[0].click();
+                break;
+        }
     },
 });
 
@@ -426,7 +472,7 @@ options.registry.navTabs = options.Class.extend({
             $activeLink.parent().remove();
             $activePane.remove();
             self._findLinksAndPanes();
-            self._setActive(); // TODO forced to do this because we do not return deferred for options
+            self._updateUI(); // TODO forced to do this because we do not return deferred for options
         });
         $next.tab('show');
     },
@@ -469,7 +515,7 @@ options.registry.navTabs = options.Class.extend({
      * @private
      * @override
      */
-    _setActive: function () {
+    _updateUI: function () {
         this._super.apply(this, arguments);
         this.$el.filter('[data-remove-tab]').toggleClass('d-none', this.$tabPanes.length <= 2);
     },
@@ -628,7 +674,7 @@ options.registry.parallax = options.Class.extend({
      */
     onFocus: function () {
         this.trigger_up('option_update', {
-            optionNames: ['background', 'background_position'],
+            optionNames: ['background', 'BackgroundPosition'],
             name: 'target',
             data: this.$target.find('> .s_parallax_bg'),
         });
@@ -1088,7 +1134,7 @@ options.registry.gallery = options.Class.extend({
             }
             self._reset();
             self.trigger_up('cover_update');
-            this._setActive();
+            this._updateUI();
         });
         dialog.open();
     },
@@ -1393,7 +1439,7 @@ options.registry.gallery = options.Class.extend({
         $intervalOptions.removeClass('active')
             .filter('[data-interval="' + activeInterval + '"]')
             .addClass('active');
-        $intervalOptions.closest('we-collapse-area')[0]
+        $intervalOptions.closest('we-select')[0]
             .classList.toggle('d-none', activeMode !== 'slideshow');
 
         var columns = this._getColumns();
@@ -1401,7 +1447,7 @@ options.registry.gallery = options.Class.extend({
         $columnOptions.removeClass('active')
             .filter('[data-columns="' + columns + '"]')
             .addClass('active');
-        $columnOptions.closest('we-collapse-area')[0]
+        $columnOptions.closest('we-select')[0]
             .classList.toggle('d-none', !(activeMode === 'grid' || activeMode === 'masonry'));
 
         this.el.querySelector('.o_w_image_spacing_option')
@@ -1556,7 +1602,7 @@ options.registry.topMenuColor = options.registry.colorpicker.extend({
 /**
  * Handles the edition of snippet's anchor name.
  */
-options.registry.anchorName = options.Class.extend({
+options.registry.anchor = options.Class.extend({
     xmlDependencies: ['/website/static/src/xml/website.editor.xml'],
 
     //--------------------------------------------------------------------------
@@ -1566,25 +1612,48 @@ options.registry.anchorName = options.Class.extend({
     /**
      * @override
      */
+    start: function () {
+        // Generate anchor and copy it to clipboard on click, show the tooltip on success
+        this.$button = this.$el.find('we-button');
+        const clipboard = new ClipboardJS(this.$button[0], {text: () => this._getAnchorLink()});
+        clipboard.on('success', () => {
+            const anchor = decodeURIComponent(this._getAnchorLink());
+            this.displayNotification({
+              title: _t("Copied !"),
+              message: _.str.sprintf(_t("The anchor has been copied to your clipboard.<br>Link: %s"), anchor),
+              buttons: [{text: _t("edit"), click: () => this.openAnchorDialog()}],
+            });
+        });
+
+        return this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    isTopOption: function () {
+        return true;
+    },
+    /**
+     * @override
+     */
     onClone: function () {
         this.$target.removeAttr('id data-anchor');
     },
 
     //--------------------------------------------------------------------------
-    // Options
+    // Private
     //--------------------------------------------------------------------------
-
     /**
      * @see this.selectClass for parameters
      */
     openAnchorDialog: function (previewMode, value, $opt) {
         var self = this;
         var buttons = [{
-            text: _t("Save"),
+            text: _t("Save & copy"),
             classes: 'btn-primary',
             click: function () {
                 var $input = this.$('.o_input_anchor_name');
-                var anchorName = $input.val().trim().replace(/\s/g, '_');
+                var anchorName = self._text2Anchor($input.val());
                 if (self.$target[0].id === anchorName) {
                     // If the chosen anchor name is already the one used by the
                     // element, close the dialog and do nothing else
@@ -1592,15 +1661,13 @@ options.registry.anchorName = options.Class.extend({
                     return;
                 }
 
-                var isValid = /^[\w-]+$/.test(anchorName);
-                var alreadyExists = isValid && $('#' + anchorName).length > 0;
-                var anchorOK = isValid && !alreadyExists;
-                this.$('.o_anchor_not_valid').toggleClass('d-none', isValid);
+                const alreadyExists = !!document.getElementById(anchorName);
                 this.$('.o_anchor_already_exists').toggleClass('d-none', !alreadyExists);
-                $input.toggleClass('is-invalid', !anchorOK);
-                if (anchorOK) {
+                $input.toggleClass('is-invalid', alreadyExists);
+                if (!alreadyExists) {
                     self._setAnchorName(anchorName);
                     this.close();
+                    self.$button[0].click();
                 }
             },
         }, {
@@ -1621,16 +1688,11 @@ options.registry.anchorName = options.Class.extend({
         new Dialog(this, {
             title: _t("Link Anchor"),
             $content: $(qweb.render('website.dialog.anchorName', {
-                currentAnchor: this.$target.attr('id'),
+                currentAnchor: decodeURIComponent(this.$target.attr('id')),
             })),
             buttons: buttons,
         }).open();
     },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
     /**
      * @private
      * @param {String} value
@@ -1645,6 +1707,35 @@ options.registry.anchorName = options.Class.extend({
             this.$target.removeAttr('id data-anchor');
         }
         this.$target.trigger('content_changed');
+    },
+    /**
+     * Returns anchor text.
+     *
+     * @private
+     * @returns {string}
+     */
+    _getAnchorLink: function () {
+        if (!this.$target[0].id) {
+            const $titles = this.$target.find('h1, h2, h3, h4, h5, h6');
+            const title = $titles.length > 0 ? $titles[0].innerText : this.data.snippetName;
+            const anchorName = this._text2Anchor(title);
+            let n = '';
+            while (document.getElementById(anchorName + n)) {
+                n = (n || 1) + 1;
+            }
+            this._setAnchorName(anchorName + n);
+        }
+        return `#${this.$target[0].id}`;
+    },
+    /**
+     * Creates a safe id/anchor from text.
+     *
+     * @private
+     * @param {string} text
+     * @returns {string}
+     */
+    _text2Anchor: function (text) {
+        return encodeURIComponent(text.trim().replace(/\s+/g, '-'));
     },
 });
 
@@ -1708,7 +1799,7 @@ options.registry.CoverProperties = options.Class.extend({
                 var $opt = this.$el.find('.o_record_cover_opt_size_default[data-select-class]');
                 this.selectClass(previewMode, $opt.data('selectClass'), $opt);
             }
-            this._setActive();
+            this._updateUI();
         });
     },
     /**
@@ -1766,12 +1857,12 @@ options.registry.CoverProperties = options.Class.extend({
         this.$filterColorOpts.removeClass('active');
 
         var activeFilterValue = this.$filterValueOpts
-            .filter(el => {
+            .filter((i, el) => {
                 return (parseFloat($(el).data('filterValue')).toFixed(1) === parseFloat(this.$filter.css('opacity')).toFixed(1));
             }).addClass('active').data('filterValue');
 
         var activeFilterColor = this.$filterColorOpts
-            .filter(el => {
+            .filter((i, el) => {
                 return this.$filter.hasClass($(el).data('filterColor'));
             }).addClass('active').data('filterColor');
 
@@ -1802,6 +1893,76 @@ options.registry.SectionStretch = options.Class.extend({
         }
 
         return this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * @see this.selectClass for parameters
+     */
+    toggleContainerFluid: function (previewMode, value, $opt) {
+        var isFluid = this.$el.find('[data-toggle-container-fluid]').hasClass('active');
+        this.$target.toggleClass('container', !isFluid)
+                    .toggleClass('container-fluid', isFluid);
+        if (previewMode !== 'reset') {
+            this.$target.toggleClass('container').toggleClass('container-fluid');
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _setActive: function () {
+        this._super.apply(this, arguments);
+        var isFluid = this.$target.hasClass('container-fluid');
+        this.$el.find('[data-toggle-container-fluid]').toggleClass('active', isFluid);
+    },
+});
+
+/**
+ * Allows snippets to be moved before the preceding element or after the following.
+ */
+options.registry.SnippetMove = options.Class.extend({
+    /**
+     * @override
+     */
+    start: function () {
+        var $buttons = this.$el.find('we-button');
+        var $overlayArea = this.$overlay.find('.o_overlay_options');
+        $overlayArea.prepend($buttons[0]);
+        $overlayArea.append($buttons[1]);
+
+        // TODO this is kinda hack but not worth a complex system while no
+        // other use case is implemented.
+        $buttons.on('click', this._onOptionSelection.bind(this));
+
+        return this._super(...arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Moves the snippet around.
+     *
+     * @see this.selectClass for parameters
+     */
+    moveSnippet: function (previewMode, value, $opt) {
+        switch (value) {
+            case 'prev':
+                this.$target.prev().before(this.$target);
+                break;
+            case 'next':
+                this.$target.next().after(this.$target);
+                break;
+        }
     },
 });
 });

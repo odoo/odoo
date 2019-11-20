@@ -78,25 +78,17 @@ MockServer.include({
                         '    <div data-js="content" data-selector=".s_hr, .test_option_all" ' +
                         'data-drop-in=".note-editable" data-drop-near="p, h1, h2, h3, blockquote, .s_hr"></div>' +
                         '    <div data-js="sizing_y" data-selector=".s_hr, .test_option_all"></div>' +
-                        '    <div data-js="colorpicker" data-selector=".test_option_all">' +
-                        '       <we-collapse-area>' +
-                        '           <we-toggler><i class="fa fa-eyedropper"/> Background Color</we-toggler>' +
-                        '           <we-collapse/>' +
-                        '       </we-collapse-area>' +
-                        '    </div>' +
+                        '    <div data-js="colorpicker" string="Background Color" data-selector=".test_option_all"></div>' +
                         '    <div data-js="background" data-selector=".test_option_all">' +
                         '       <we-button data-choose-image="true" data-no-preview="true"><i class="fa fa-picture-o"/> Background Image</we-button>' +
                         '    </div>' +
                         '    <div data-js="option_test" data-selector=".s_hr">' +
-                        '        <we-collapse-area>' +
-                        '            <we-toggler><i class="fa fa-arrows-v"/> Alignment</we-toggler>' +
-                        '            <we-collapse>' +
-                        '                <we-button data-select-class="align-items-start">Top</we-button>' +
-                        '                <we-button data-select-class="align-items-center">Middle</we-button>' +
-                        '                <we-button data-select-class="align-items-end">Bottom</we-button>' +
-                        '                <we-button data-select-class="align-items-stretch">Equal height</we-button>' +
-                        '            </we-collapse>' +
-                        '        </we-collapse-area>' +
+                        '        <we-select string="Alignment">' +
+                        '            <we-button data-select-class="align-items-start">Top</we-button>' +
+                        '            <we-button data-select-class="align-items-center">Middle</we-button>' +
+                        '            <we-button data-select-class="align-items-end">Bottom</we-button>' +
+                        '            <we-button data-select-class="align-items-stretch">Equal height</we-button>' +
+                        '        </we-select>' +
                         '    </div>' +
                         '</div>';
                 return Promise.resolve(template);
@@ -253,25 +245,17 @@ function wysiwygData(data) {
                         '    <div data-js="content" data-selector=".s_hr, .test_option_all" ' +
                         'data-drop-in=".note-editable" data-drop-near="p, h1, h2, h3, blockquote, .s_hr"></div>' +
                         '    <div data-js="sizing_y" data-selector=".s_hr, .test_option_all"></div>' +
-                        '    <div data-js="colorpicker" data-selector=".test_option_all">' +
-                        '       <we-collapse-area>' +
-                        '           <we-toggler><i class="fa fa-eyedropper"/>Background Color</we-toggler>' +
-                        '           <we-collapse/>' +
-                        '       </we-collapse-area>' +
-                        '    </div>' +
+                        '    <div data-js="colorpicker" string="Background Color" data-selector=".test_option_all"></div>' +
                         '    <div data-js="background" data-selector=".test_option_all">' +
                         '       <we-button data-choose-image="true" data-no-preview="true"><i class="fa fa-picture-o"/> Background Image</we-button>' +
                         '    </div>' +
                         '    <div data-js="option_test" data-selector=".s_hr">' +
-                        '        <we-collapse-area>' +
-                        '            <we-toggler><i class="fa fa-arrows-v"/> Alignment</we-toggler>' +
-                        '            <we-collapse>' +
-                        '                <we-button data-select-class="align-items-start">Top</we-button>' +
-                        '                <we-button data-select-class="align-items-center">Middle</we-button>' +
-                        '                <we-button data-select-class="align-items-end">Bottom</we-button>' +
-                        '                <we-button data-select-class="align-items-stretch">Equal height</we-button>' +
-                        '            </we-collapse>' +
-                        '        </we-collapse-area>' +
+                        '        <we-select string="Alignment">' +
+                        '            <we-button data-select-class="align-items-start">Top</we-button>' +
+                        '            <we-button data-select-class="align-items-center">Middle</we-button>' +
+                        '            <we-button data-select-class="align-items-end">Bottom</we-button>' +
+                        '            <we-button data-select-class="align-items-stretch">Equal height</we-button>' +
+                        '        </we-select>' +
                         '    </div>' +
                         '</div>';
                 }

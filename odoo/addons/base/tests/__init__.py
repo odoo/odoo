@@ -35,7 +35,6 @@ from . import test_search
 from . import test_translate
 #import test_uninstall  # loop
 from . import test_user_has_group
-from . import test_view_validation
 from . import test_views
 from . import test_xmlrpc
 from . import test_res_partner

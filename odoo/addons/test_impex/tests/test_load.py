@@ -73,7 +73,7 @@ class ImporterCase(common.TransactionCase):
         return '__test__.' + name
 
     def add_translations(self, name, type, code, *tnx):
-        self.env['res.lang'].load_lang(code)
+        self.env['res.lang']._activate_lang(code)
         Translations = self.env['ir.translation']
         for source, value in tnx:
             Translations.create({

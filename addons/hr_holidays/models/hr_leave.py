@@ -13,11 +13,13 @@ from dateutil.rrule import rrule, DAILY
 from pytz import timezone, UTC
 
 from odoo import api, fields, models, SUPERUSER_ID, tools
+from odoo.addons.base.models.res_partner import _tz_get
 from odoo.addons.resource.models.resource import float_to_time, HOURS_PER_DAY
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools import float_compare
 from odoo.tools.float_utils import float_round
 from odoo.tools.translate import _
+from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
 
@@ -101,7 +103,8 @@ class HolidaysRequest(models.Model):
         return new_values
 
     # description
-    name = fields.Char('Description')
+    name = fields.Char('Description', compute='_compute_description', inverse='_inverse_description', search='_search_description', compute_sudo=False)
+    private_name = fields.Char('Time Off Description', groups='hr_holidays.group_hr_holidays_user')
     state = fields.Selection([
         ('draft', 'To Submit'),
         ('cancel', 'Cancelled'),
@@ -128,6 +131,8 @@ class HolidaysRequest(models.Model):
     employee_id = fields.Many2one(
         'hr.employee', string='Employee', index=True, readonly=True, ondelete="restrict",
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, default=_default_employee, tracking=True)
+    tz_mismatch = fields.Boolean(compute='_compute_tz_mismatch')
+    tz = fields.Selection(_tz_get, compute='_compute_tz')
     department_id = fields.Many2one(
         'hr.department', string='Department', readonly=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
@@ -261,6 +266,36 @@ class HolidaysRequest(models.Model):
                            self._table, ['date_to', 'date_from'])
         return res
 
+    @api.depends_context('uid')
+    def _compute_description(self):
+        self.check_access_rights('read')
+        self.check_access_rule('read')
+
+        is_officer = self.user_has_groups('hr_holidays.group_hr_holidays_user')
+
+        for leave in self:
+            if is_officer or leave.user_id == self.env.user or leave.manager_id == self.env.user:
+                leave.name = leave.sudo().private_name
+            else:
+                leave.name = '*****'
+
+    def _inverse_description(self):
+        is_officer = self.user_has_groups('hr_holidays.group_hr_holidays_user')
+
+        for leave in self:
+            if is_officer or leave.user_id == self.env.user or leave.manager_id == self.env.user:
+                leave.sudo().private_name = leave.name
+
+    def _search_description(self, operator, value):
+        is_officer = self.user_has_groups('hr_holidays.group_hr_holidays_user')
+        domain = [('private_name', operator, value)]
+
+        if not is_officer:
+            domain = expression.AND([domain, [('user_id', '=', self.env.user.id)]])
+
+        leaves = self.search(domain)
+        return [('id', 'in', leaves.ids)]
+
     @api.onchange('holiday_status_id')
     def _onchange_holiday_status_id(self):
         self.request_unit_half = False
@@ -338,9 +373,8 @@ class HolidaysRequest(models.Model):
             hour_from = float_to_time(attendance_from.hour_from)
             hour_to = float_to_time(attendance_to.hour_to)
 
-        tz = self.env.user.tz if self.env.user.tz and not self.request_unit_custom else 'UTC'  # custom -> already in UTC
-        self.date_from = timezone(tz).localize(datetime.combine(self.request_date_from, hour_from)).astimezone(UTC).replace(tzinfo=None)
-        self.date_to = timezone(tz).localize(datetime.combine(self.request_date_to, hour_to)).astimezone(UTC).replace(tzinfo=None)
+        self.date_from = timezone(self.tz).localize(datetime.combine(self.request_date_from, hour_from)).astimezone(UTC).replace(tzinfo=None)
+        self.date_to = timezone(self.tz).localize(datetime.combine(self.request_date_to, hour_to)).astimezone(UTC).replace(tzinfo=None)
         self._onchange_leave_dates()
 
     @api.onchange('request_unit_half')
@@ -405,6 +439,25 @@ class HolidaysRequest(models.Model):
             self.number_of_days = self._get_number_of_days(self.date_from, self.date_to, self.employee_id.id)['days']
         else:
             self.number_of_days = 0
+
+    @api.depends('tz')
+    @api.depends_context('uid')
+    def _compute_tz_mismatch(self):
+        for leave in self:
+            leave.tz_mismatch = leave.tz != self.env.user.tz
+
+    @api.depends('request_unit_custom', 'employee_id', 'holiday_type', 'department_id.company_id.resource_calendar_id.tz', 'mode_company_id.resource_calendar_id.tz')
+    def _compute_tz(self):
+        for leave in self:
+            if leave.request_unit_custom:
+                tz = 'UTC' # custom -> already in UTC
+            elif leave.holiday_type == 'employee':
+                tz = leave.employee_id.tz
+            elif leave.holiday_type == 'department':
+                tz= leave.department_id.company_id.resource_calendar_id.tz
+            elif leave.holiday_type == 'company':
+                tz = leave.mode_company_id.resource_calendar_id.tz
+            leave.tz = tz or self.env.company.resource_calendar_id.tz or self.env.user.tz or 'UTC'
 
     @api.depends('number_of_days')
     def _compute_number_of_days_display(self):
@@ -618,26 +671,8 @@ class HolidaysRequest(models.Model):
                 holiday_sudo.activity_update()
         return holiday
 
-    def _read(self, fields):
-        if 'name' in fields and 'employee_id' not in fields:
-            fields.add('employee_id')
-        super(HolidaysRequest, self)._read(fields)
-        if 'name' in fields:
-            if self.user_has_groups('hr_holidays.group_hr_holidays_user'):
-                return
-            current_employee = self.env['hr.employee'].sudo().search([('user_id', '=', self.env.uid)], limit=1)
-            for record in self:
-                emp_id = record._cache.get('employee_id') or False
-                if emp_id != current_employee.id:
-                    try:
-                        record._cache['name']
-                        record._cache['name'] = '*****'
-                    except Exception:
-                        # skip SpecialValue (e.g. for missing record or access right)
-                        pass
-
     def write(self, values):
-        is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
+        is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user') or self.env.is_superuser()
 
         if not is_officer:
             if any(hol.date_from.date() < fields.Date.today() for hol in self):
@@ -688,6 +723,12 @@ class HolidaysRequest(models.Model):
 
     def _get_mail_redirect_suggested_company(self):
         return self.holiday_status_id.company_id
+
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        if not self.user_has_groups('hr_holidays.group_hr_holidays_user') and 'private_name' in groupby:
+            raise UserError(_('Such grouping is not allowed.'))
+        return super(HolidaysRequest, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
     ####################################################
     # Business methods
@@ -929,7 +970,9 @@ class HolidaysRequest(models.Model):
     def activity_update(self):
         to_clean, to_do = self.env['hr.leave'], self.env['hr.leave']
         for holiday in self:
-            note = _('New %s Request created by %s from %s to %s') % (holiday.holiday_status_id.name, holiday.create_uid.name, fields.Datetime.to_string(holiday.date_from), fields.Datetime.to_string(holiday.date_to))
+            start = UTC.localize(holiday.date_from).astimezone(timezone(holiday.employee_id.tz or 'UTC'))
+            end = UTC.localize(holiday.date_to).astimezone(timezone(holiday.employee_id.tz or 'UTC'))
+            note = _('New %s Request created by %s from %s to %s') % (holiday.holiday_status_id.name, holiday.create_uid.name, start, end)
             if holiday.state == 'draft':
                 to_clean |= holiday
             elif holiday.state == 'confirm':

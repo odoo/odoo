@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import time
 
-from .common import TestPurchase
-from odoo.addons.stock_account.tests.stock_account_minimal_test import StockAccountMinimalTest
+from .common import PurchaseTestCommon
+from odoo.addons.stock_account.tests.common import StockAccountTestCommon
 
-class TestFifoPrice(TestPurchase, StockAccountMinimalTest):
+class TestFifoPrice(PurchaseTestCommon, StockAccountTestCommon):
 
     def test_00_test_fifo(self):
         """ Test product cost price with fifo removal strategy."""

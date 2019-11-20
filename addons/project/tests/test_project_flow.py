@@ -3,7 +3,7 @@
 
 import base64
 
-from .test_project_base import TestProjectBase
+from .test_project_base import TestProjectCommon
 from odoo.tools import mute_logger
 from odoo.modules.module import get_resource_path
 
@@ -34,7 +34,7 @@ Raoul Boitempoils
 Integrator at Agrolait"""
 
 
-class TestProjectFlow(TestProjectBase):
+class TestProjectFlow(TestProjectCommon):
 
     def test_project_process_project_manager_duplicate(self):
         pigs = self.project_pigs.with_user(self.user_projectmanager)
@@ -135,8 +135,7 @@ class TestProjectFlow(TestProjectBase):
 
         self.assertEqual(first_task.rating_count, 0, "Task should have no rating associated with it")
 
-        Rating = self.env['rating.rating']
-        rating_good = Rating.create({
+        rating_good = self.env['rating.rating'].create({
             'res_model_id': self.env['ir.model']._get('project.task').id,
             'res_id': first_task.id,
             'parent_res_model_id': self.env['ir.model']._get('project.project').id,
@@ -147,7 +146,7 @@ class TestProjectFlow(TestProjectBase):
             'consumed': False,
         })
 
-        rating_bad = Rating.create({
+        rating_bad = self.env['rating.rating'].create({
             'res_model_id': self.env['ir.model']._get('project.task').id,
             'res_id': first_task.id,
             'parent_res_model_id': self.env['ir.model']._get('project.project').id,

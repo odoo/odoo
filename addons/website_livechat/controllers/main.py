@@ -23,7 +23,7 @@ class WebsiteLivechat(http.Controller):
             ('res_model', '=', 'mail.channel'), ('res_id', 'in', channel.sudo().channel_ids.ids),
             ('consumed', '=', True), ('rating', '>=', 1),
         ]
-        ratings = request.env['rating.rating'].search(domain, order='create_date desc', limit=100)
+        ratings = request.env['rating.rating'].sudo().search(domain, order='create_date desc', limit=100)
         repartition = channel.sudo().channel_ids.rating_get_grades(domain=domain)
 
         # compute percentage

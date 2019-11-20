@@ -88,15 +88,24 @@ class Lang(models.Model):
         if not self.search_count([]):
             _logger.error("No language is active.")
 
-    @api.model
+    # TODO remove me after v14
     def load_lang(self, lang, lang_name=None):
-        """ Create the given language if necessary, and make it active. """
-        # if the language exists, simply make it active
-        language = self.with_context(active_test=False).search([('code', '=', lang)], limit=1)
-        if language:
-            language.write({'active': True})
-            return language.id
+        _logger.warning("Call to deprecated method load_lang, use _create_lang or _activate_lang instead")
+        language = self._activate_lang(lang) or self._create_lang(lang, lang_name)
+        return language.id
 
+    def _activate_lang(self, code):
+        """ Activate languages
+        :param code: code of the language to activate
+        :return: the language matching 'code' activated
+        """
+        lang = self.with_context(active_test=False).search([('code', '=', code)])
+        if lang and not lang.active:
+            lang.active = True
+        return lang
+
+    def _create_lang(self, lang, lang_name=None):
+        """ Create the given language and make it active. """
         # create the language with locale information
         fail = True
         iso_lang = tools.get_iso_codes(lang)
@@ -149,7 +158,7 @@ class Lang(models.Model):
             'grouping' : str(conv.get('grouping', [])),
         }
         try:
-            return self.create(lang_info).id
+            return self.create(lang_info)
         finally:
             tools.resetlocale()
 
@@ -157,18 +166,16 @@ class Lang(models.Model):
     def install_lang(self):
         """
 
-        This method is called from odoo/addons/base/base_data.xml to load
+        This method is called from odoo/addons/data/res_lang_data.xml to load
         some language and set it as the default for every partners. The
-        language is set via tools.config by the RPC 'create' method on the
+        language is set via tools.config by the '_initialize_db' method on the
         'db' object. This is a fragile solution and something else should be
         found.
 
         """
         # config['load_language'] is a comma-separated list or None
         lang_code = (tools.config.get('load_language') or 'en_US').split(',')[0]
-        lang = self._lang_get(lang_code)
-        if not lang:
-            self.load_lang(lang_code)
+        lang = self._activate_lang(lang_code) or self._create_lang(lang_code)
         IrDefault = self.env['ir.default']
         default_value = IrDefault.get('res.partner', 'lang')
         if default_value is None:
@@ -219,7 +226,7 @@ class Lang(models.Model):
         active_lang = [lang.code for lang in self.filtered(lambda l: l.active)]
         if active_lang:
             mods = self.env['ir.module.module'].search([('state', '=', 'installed')])
-            mods._update_translations(filter_lang=active_lang)
+            mods._update_translations(active_lang)
 
     @api.model_create_multi
     def create(self, vals_list):

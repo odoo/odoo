@@ -152,9 +152,15 @@ class ResConfigSettings(models.TransientModel):
     def action_website_create_new(self):
         return {
             'view_mode': 'form',
-            'view_id': self.env.ref('website.view_website_form').id,
+            'view_id': self.env.ref('website.view_website_form_view_themes_modal').id,
             'res_model': 'website',
             'type': 'ir.actions.act_window',
             'target': 'new',
             'res_id': False,
         }
+
+    def install_theme_on_current_website(self):
+        self.website_id._force()
+        action = self.env.ref('website.theme_install_kanban_action').read()[0]
+        action['target'] = 'main'
+        return action

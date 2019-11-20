@@ -423,6 +423,10 @@ var RTEWidget = Widget.extend({
      * @param {boolean} internal_history
      */
     historyRecordUndo: function ($target, event, internal_history) {
+        const initialActiveElement = document.activeElement;
+        const initialSelectionStart = initialActiveElement && initialActiveElement.selectionStart;
+        const initialSelectionEnd = initialActiveElement && initialActiveElement.selectionEnd;
+
         $target = $($target);
         var rng = range.create();
         var $editable = $(rng && rng.sc).closest('.o_editable');
@@ -442,6 +446,12 @@ var RTEWidget = Widget.extend({
             console.log('error', e);
         }
         history.recordUndo($editable, event, internal_history);
+
+        if (initialActiveElement && initialActiveElement !== document.activeElement) {
+            initialActiveElement.focus();
+            initialActiveElement.selectionStart = initialSelectionStart;
+            initialActiveElement.selectionEnd = initialSelectionEnd;
+        }
     },
     /**
      * Searches all the dirty element on the page and saves them one by one. If

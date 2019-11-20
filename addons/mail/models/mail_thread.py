@@ -616,7 +616,7 @@ class MailThread(models.AbstractModel):
                                             getattr(self._fields[col_name], 'track_sequence', 100))  # backward compatibility with old parameter name
                 if tracking_sequence is True:
                     tracking_sequence = 100
-                tracking = self.env['mail.tracking.value'].create_tracking_values(initial_value, new_value, col_name, col_info, tracking_sequence)
+                tracking = self.env['mail.tracking.value'].create_tracking_values(initial_value, new_value, col_name, col_info, tracking_sequence, self._name)
                 if tracking:
                     tracking_value_ids.append([0, 0, tracking])
                 changes.add(col_name)
@@ -1483,7 +1483,7 @@ class MailThread(models.AbstractModel):
         if partner and partner.id in [val[0] for val in result[self.ids[0]]]:  # already existing partner ID -> skip
             return result
         if partner and partner.email:  # complete profile: id, name <email>
-            result[self.ids[0]].append((partner.id, tools.formataddr((partner.name, partner.email)), reason))
+            result[self.ids[0]].append((partner.id, partner.email_formatted, reason))
         elif partner:  # incomplete profile: id, name
             result[self.ids[0]].append((partner.id, '%s' % (partner.name), reason))
         else:  # unknown partner, we are probably managing an email address

@@ -2,12 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import tools
-from odoo.addons.account.tests.account_minimal_test import AccountMinimalTest
+from odoo.addons.account.tests.common import AccountTestCommon
 from odoo.tests import Form
 from odoo.modules.module import get_resource_path
 
 
-class TestProductMargin(AccountMinimalTest):
+class TestProductMargin(AccountTestCommon):
 
     def create_account_invoice(self, invoice_type, partner, product, quantity=0.0, price_unit=0.0):
         """ Create an invoice as in a view by triggering its onchange methods"""

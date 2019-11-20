@@ -265,18 +265,10 @@ class IrSequence(models.Model):
             If several sequences with the correct code are available to the user
             (multi-company cases), the one from the user's current company will
             be used.
-
-            :param dict context: context dictionary may contain a
-                ``force_company`` key with the ID of the company to
-                use instead of the user's current company for the
-                sequence selection. A matching sequence for that
-                specific company will get higher priority.
         """
         self.check_access_rights('read')
-        force_company = self._context.get('force_company')
-        if not force_company:
-            force_company = self.env.company.id
-        seq_ids = self.search([('code', '=', sequence_code), ('company_id', 'in', [force_company, False])], order='company_id')
+        company_id = self.env.company.id
+        seq_ids = self.search([('code', '=', sequence_code), ('company_id', 'in', [company_id, False])], order='company_id')
         if not seq_ids:
             _logger.debug("No ir.sequence has been found for code '%s'. Please make sure a sequence is set for current company." % sequence_code)
             return False

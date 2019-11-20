@@ -6,13 +6,13 @@
 from odoo.tests import Form, tagged
 from odoo.addons.stock_account.tests.test_stockvaluationlayer import TestStockValuationCommon
 from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounting_data
-from odoo.addons.stock_account.tests.stock_account_minimal_test import StockAccountMinimalTest
+from odoo.addons.stock_account.tests.common import StockAccountTestCommon
 
 
-class TestStockValuationLC(TestStockValuationCommon, StockAccountMinimalTest):
+class TestStockValuationLCCommon(TestStockValuationCommon, StockAccountTestCommon):
     @classmethod
     def setUpClass(cls):
-        super(TestStockValuationLC, cls).setUpClass()
+        super(TestStockValuationLCCommon, cls).setUpClass()
         cls.productlc1 = cls.env['product.product'].create({
             'name': 'product1',
             'type': 'service',
@@ -77,7 +77,7 @@ class TestStockValuationLC(TestStockValuationCommon, StockAccountMinimalTest):
         return lc
 
 
-class TestStockValuationLCFIFO(TestStockValuationLC):
+class TestStockValuationLCFIFO(TestStockValuationLCCommon):
     def setUp(self):
         super(TestStockValuationLCFIFO, self).setUp()
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
@@ -91,6 +91,7 @@ class TestStockValuationLCFIFO(TestStockValuationLC):
 
         self.assertEqual(self.product1.value_svl, 380)
         self.assertEqual(self.product1.quantity_svl, 19)
+        self.assertEqual(self.product1.standard_price, 20)
 
     def test_negative_1(self):
         self.product1.standard_price = 10
@@ -179,7 +180,7 @@ class TestStockValuationLCFIFO(TestStockValuationLC):
         self.assertEqual(self.product1.quantity_svl, 0)
 
 
-class TestStockValuationLCAVCO(TestStockValuationLC):
+class TestStockValuationLCAVCO(TestStockValuationLCCommon):
     def setUp(self):
         super(TestStockValuationLCAVCO, self).setUp()
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
@@ -221,7 +222,7 @@ class TestStockValuationLCAVCO(TestStockValuationLC):
         self.assertEqual(self.product1.quantity_svl, 19)
 
 
-class TestStockValuationLCFIFOVB(TestStockValuationLC):
+class TestStockValuationLCFIFOVB(TestStockValuationLCCommon):
     @classmethod
     def setUpClass(cls):
         super(TestStockValuationLCFIFOVB, cls).setUpClass()

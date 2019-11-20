@@ -1495,17 +1495,17 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 * if some tag other than 'position' is found in parent view
         :raise Invalid ArchitectureError: if there is view type other than form, tree, calendar, search etc defined on the structure
         """
-        View = self.env['ir.ui.view']
+        view = self.env['ir.ui.view'].browse(view_id)
 
         # Get the view arch and all other attributes describing the composition of the view
         result = self._fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
 
         # Override context for postprocessing
         if view_id and result.get('base_model', self._name) != self._name:
-            View = View.with_context(base_model_name=result['base_model'])
+            view = view.with_context(base_model_name=result['base_model'])
 
         # Apply post processing, groups and modifiers etc...
-        xarch, xfields = View.postprocess_and_fields(self._name, etree.fromstring(result['arch']), view_id)
+        xarch, xfields = view.postprocess_and_fields(etree.fromstring(result['arch']), model=self._name)
         result['arch'] = xarch
         result['fields'] = xfields
 
@@ -3142,11 +3142,8 @@ Fields:
             # The second part of the check (for property / company-dependent fields) verifies that the records
             # linked via those relation fields are compatible with the company that owns the property value, i.e.
             # the company for which the value is being assigned, i.e:
-            #      `self.property_account_payable_id.company_id == self.env.context['force_company']`
-            if self.env.context.get('force_company'):
-                company = self.env['res.company'].browse(self.env.context['force_company'])
-            else:
-                company = self.env.company
+            #      `self.property_account_payable_id.company_id == self.env.company
+            company = self.env.company
             for name in property_fields:
                 # Special case with `res.users` since an user can belong to multiple companies.
                 if record[name]._name == 'res.users' and record[name].company_ids:
@@ -5011,6 +5008,40 @@ Record ids: %(records)s
         """
         return self.with_env(self.env(user=user, su=False))
 
+    def with_company(self, company):
+        """ with_company(company)
+
+        Return a new version of this recordset with a modified context, such that::
+
+            result.env.company = company
+            result.env.companies = self.env.companies | company
+
+        :param company: main company of the new environment.
+        :type company: :class:`~odoo.addons.base.models.res_company` or int
+
+        .. warning::
+
+            When using an unauthorized company for current user,
+            accessing the company(ies) on the environment may trigger
+            an AccessError if not done in a sudoed environment.
+        """
+        if not company:
+            # With company = None/False/0/[]/empty recordset: keep current environment
+            return self
+
+        company_id = int(company)
+        allowed_company_ids = self.env.context.get('allowed_company_ids', [])
+        if allowed_company_ids and company_id == allowed_company_ids[0]:
+            return self
+        # Copy the allowed_company_ids list
+        # to avoid modifying the context of the current environment.
+        allowed_company_ids = list(allowed_company_ids)
+        if company_id in allowed_company_ids:
+            allowed_company_ids.remove(company_id)
+        allowed_company_ids.insert(0, company_id)
+
+        return self.with_context(allowed_company_ids=allowed_company_ids)
+
     def with_context(self, *args, **kwargs):
         """ with_context([context][, **overrides]) -> records
 
@@ -5031,9 +5062,23 @@ Record ids: %(records)s
 
             The returned recordset has the same prefetch object as ``self``.
         """
-        if args and 'allowed_company_ids' not in args[0] and 'allowed_company_ids' in self._context:
-            args[0]['allowed_company_ids'] = self._context.get('allowed_company_ids') 
+        if (args and 'force_company' in args[0]) or 'force_company' in kwargs:
+            _logger.warning(
+                "Context key 'force_company' is no longer supported. "
+                "Use with_company(company) instead.",
+                stack_info=True,
+            )
+        if (args and 'company' in args[0]) or 'company' in kwargs:
+            _logger.warning(
+                "Context key 'company' is not recommended, because "
+                "of its special meaning in @depends_context.",
+                stack_info=True,
+            )
         context = dict(args[0] if args else self._context, **kwargs)
+        if 'allowed_company_ids' not in context and 'allowed_company_ids' in self._context:
+            # Force 'allowed_company_ids' to be kept when context is overridden
+            # without 'allowed_company_ids'
+            context['allowed_company_ids'] = self._context['allowed_company_ids']
         return self.with_env(self.env(context=context))
 
     def with_prefetch(self, prefetch_ids=None):

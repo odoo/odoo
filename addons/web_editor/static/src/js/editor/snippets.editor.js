@@ -97,7 +97,7 @@ var SnippetEditor = Widget.extend({
             $customize.find('.oe_snippet_clone').addClass('d-none');
         }
 
-        if (!this.isTargetParentEditable || this.$target.is('.carousel-item')) { // TODO get rid of the carousel-item hack somehow
+        if (!this.isTargetParentEditable) {
             $customize.find('.oe_snippet_remove').addClass('d-none');
         }
 
@@ -299,13 +299,10 @@ var SnippetEditor = Widget.extend({
         this._customize$Elements.forEach(($el, i) => {
             var editor = $el.data('editor');
             var styles = _.values(editor.styles);
-            $el.toggleClass('d-none', styles.length === 0);
             _.sortBy(styles, '__order').forEach(style => {
                 if (show) {
-                    style.$el.appendTo($el);
                     style.onFocus();
                 } else {
-                    style.$el.detach();
                     style.onBlur();
                 }
             });
@@ -324,6 +321,62 @@ var SnippetEditor = Widget.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * Transforms option UI description into actual DOM.
+     *
+     * @private
+     * @param {jQuery} $el
+     */
+    _createOptionUI: function ($el) {
+        const $optionSection = $(core.qweb.render('web_editor.customize_block_option'));
+        $optionSection.append($el);
+        const uiEl = $optionSection[0];
+
+        // Build group first as their internal components will be built after
+        uiEl.querySelectorAll('we-row').forEach(el => {
+            const infos = this._extraInfoFromDescriptionElement(el);
+            const groupEl = options.Class.prototype.buildRowElement(infos.title, infos.options);
+            el.parentNode.insertBefore(groupEl, el);
+            el.parentNode.removeChild(el);
+        });
+
+        // Build standard components
+        uiEl.querySelectorAll('we-select').forEach(el => {
+            const infos = this._extraInfoFromDescriptionElement(el);
+            const selectEl = options.Class.prototype.buildSelectElement(infos.title, infos.options);
+            el.parentNode.insertBefore(selectEl, el);
+            el.parentNode.removeChild(el);
+        });
+        uiEl.querySelectorAll('we-checkbox').forEach(el => {
+            const infos = this._extraInfoFromDescriptionElement(el);
+            const checkboxEl = options.Class.prototype.buildCheckboxElement(infos.title, infos.options);
+            el.parentNode.insertBefore(checkboxEl, el);
+            el.parentNode.removeChild(el);
+        });
+        uiEl.querySelectorAll('we-input').forEach(el => {
+            const infos = this._extraInfoFromDescriptionElement(el);
+            const inputEl = options.Class.prototype.buildInputElement(infos.title, infos.options);
+            el.parentNode.insertBefore(inputEl, el);
+            el.parentNode.removeChild(el);
+        });
+
+        return $optionSection;
+    },
+    /**
+     * @private
+     * @param {HTMLElement} el
+     * @returns {Object}
+     */
+    _extraInfoFromDescriptionElement: function (el) {
+        return {
+            title: el.getAttribute('string'),
+            options: {
+                classes: el.classList,
+                dataAttributes: el.dataset,
+                childNodes: [...el.childNodes],
+            },
+        };
+    },
     /**
      * DOMElements have a default name which appears in the overlay when they
      * are being edited. This method retrieves this name; it can be defined
@@ -365,6 +418,11 @@ var SnippetEditor = Widget.extend({
         var $optionsSection = $(core.qweb.render('web_editor.customize_block_options_section', {
             name: this._getName(),
         })).data('editor', this);
+        $optionsSection.find('we-button-group').contents().each((i, node) => {
+            if (node.nodeType === Node.TEXT_NODE) {
+                node.parentNode.removeChild(node);
+            }
+        });
         $optionsSection.on('mouseover', this._onOptionsSectionMouseOver.bind(this));
         $optionsSection.on('mouseleave', this._onOptionsSectionMouseLeave.bind(this));
         $optionsSection.on('click', 'we-title > span', this._onOptionsSectionClick.bind(this));
@@ -389,12 +447,13 @@ var SnippetEditor = Widget.extend({
             }
 
             var optionName = val.option;
-            var $el = val.$el.children().clone(true).addClass('snippet-option-' + optionName);
+
+            var $ui = val.$el.children().clone(true);
             var option = new (options.registry[optionName] || options.Class)(
                 this,
                 val.base_target ? this.$target.find(val.base_target).eq(0) : this.$target,
                 this.$el,
-                val.data,
+                _.extend({snippetName: this._getName()}, val.data),
                 this.options
             );
             var key = optionName || _.uniqueId('option');
@@ -406,16 +465,25 @@ var SnippetEditor = Widget.extend({
             }
             this.styles[key] = option;
             option.__order = i++;
-            var $optionSection = $(core.qweb.render('web_editor.customize_block_option'));
-            $optionSection.append($el);
-            return option.attachTo($optionSection);
+            const $option = this._createOptionUI($ui).addClass('snippet-option-' + optionName);
+            return option.attachTo($option);
         });
 
         this.isTargetMovable = (this.selectorSiblings.length > 0 || this.selectorChildren.length > 0);
 
         this.$el.find('[data-toggle="dropdown"]').dropdown();
 
-        return Promise.all(defs);
+        return Promise.all(defs).then(() => {
+            const options = _.sortBy(this.styles, '__order');
+            options.forEach(option => {
+                if (option.isTopOption()) {
+                    $optionsSection.find('we-button-group').first().prepend(option.$el);
+                } else {
+                    $optionsSection.append(option.$el);
+                }
+            });
+            $optionsSection.toggleClass('d-none', options.length === 0);
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -652,7 +720,7 @@ var SnippetsMenu = Widget.extend({
     id: 'oe_snippets',
     cacheSnippetTemplate: {},
     events: {
-        'click we-collapse-area > we-toggler': '_onCollapseTogglerClick',
+        'click we-select': '_onOptionTogglerClick',
         'click .o_install_btn': '_onInstallBtnClick',
     },
     custom_events: {
@@ -667,6 +735,9 @@ var SnippetsMenu = Widget.extend({
         'snippet_removed': '_onSnippetRemoved',
         'reload_snippet_dropzones': '_disableUndroppableSnippets',
         'update_customize_elements': '_onUpdateCustomizeElements',
+        'hide_overlay': '_onHideOverlay',
+        'block_preview_overlays': '_onBlockPreviewOverlays',
+        'unblock_preview_overlays': '_onUnblockPreviewOverlays',
     },
 
     /**
@@ -745,7 +816,7 @@ var SnippetsMenu = Widget.extend({
             if (!$target.closest('body > *').length) {
                 return;
             }
-            if ($target.closest('#web_editor-top-edit, #oe_snippets, #oe_manipulators, .o_technical_modal, .oe_drop_zone').length) {
+            if ($target.closest('#web_editor-top-edit, #oe_snippets, #oe_manipulators, .o_technical_modal, .oe_drop_zone, .o_notification_manager, .o_we_no_overlay').length) {
                 return;
             }
             this._activateSnippet($target);
@@ -1054,6 +1125,9 @@ var SnippetsMenu = Widget.extend({
      *          (might be async when an editor must be created)
      */
     _activateSnippet: function ($snippet, previewMode, ifInactiveOptions) {
+        if (this._blockPreviewOverlays && previewMode) {
+            return Promise.resolve();
+        }
         return this._activateSnippetMutex.exec(() => {
             return new Promise(resolve => {
                 // Take the first parent of the provided DOM (or itself) which
@@ -1103,6 +1177,7 @@ var SnippetsMenu = Widget.extend({
         _.each(this.snippetEditors, function (snippetEditor) {
             snippetEditor.destroy();
         });
+        this.snippetEditors.splice(0);
     },
     /**
      * Calls a given callback 'on' the given snippet and all its child ones if
@@ -1264,7 +1339,7 @@ var SnippetsMenu = Widget.extend({
                 '$el': $style,
                 'drop-near': $style.data('drop-near') && self._computeSelectorFunctions($style.data('drop-near'), '', false, noCheck, true),
                 'drop-in': $style.data('drop-in') && self._computeSelectorFunctions($style.data('drop-in'), '', false, noCheck),
-                'data': $style.data(),
+                'data': _.extend({string: $style.attr('string')}, $style.data()),
             };
             self.templateOptions.push(option);
             selectors.push(option.selector);
@@ -1651,11 +1726,16 @@ var SnippetsMenu = Widget.extend({
      * @private
      * @param {*} ev
      */
-    _onCollapseTogglerClick: function (ev) {
-        var $hierarchyTogglers = $(ev.currentTarget).parents('we-collapse-area').children('we-toggler');
-        this.$('we-collapse-area > we-toggler').not($hierarchyTogglers).removeClass('active');
-        $hierarchyTogglers.not(ev.currentTarget).addClass('active');
-        ev.currentTarget.classList.toggle('active');
+    _onOptionTogglerClick: function (ev) {
+        var togglerEl = ev.currentTarget;
+        if (togglerEl.tagName !== 'WE-TOGGLER') {
+            togglerEl = togglerEl.querySelector('we-toggler');
+        }
+
+        var $hierarchyTogglers = $(togglerEl).parents('we-select').children('we-toggler');
+        this.$('we-select').children('we-toggler').not($hierarchyTogglers).removeClass('active');
+        $hierarchyTogglers.not(togglerEl).addClass('active');
+        togglerEl.classList.toggle('active');
     },
     /**
      * Called when the overlay dimensions/positions should be recomputed.
@@ -1696,6 +1776,14 @@ var SnippetsMenu = Widget.extend({
     _onGoToParent: function (ev) {
         ev.stopPropagation();
         this._activateSnippet(ev.data.$snippet.parent());
+    },
+    /**
+     * @private
+     */
+    _onHideOverlay: function () {
+        for (const editor of this.snippetEditors) {
+            editor.toggleOverlay(false);
+        }
     },
     /**
      * @private
@@ -1753,6 +1841,18 @@ var SnippetsMenu = Widget.extend({
                 close: true,
             }],
         }).open();
+    },
+    /**
+     * @private
+     */
+    _onBlockPreviewOverlays: function (ev) {
+        this._blockPreviewOverlays = true;
+    },
+    /**
+     * @private
+     */
+    _onUnblockPreviewOverlays: function (ev) {
+        this._blockPreviewOverlays = false;
     },
     /**
      * @private

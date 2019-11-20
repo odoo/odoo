@@ -158,6 +158,34 @@ class TestMrpOrder(TestMrpCommon):
         production = production_form.save()
         self.assertEqual(production.routing_id.id, False, 'The routing field should be empty on the mo')
 
+    def test_split_move_line(self):
+        """ Consume more component quantity than the initial demand.
+        It should create extra move and share the quantity between the two stock
+        moves """
+        mo, bom, p_final, p1, p2 = self.generate_mo(qty_base_1=10, qty_final=1, qty_base_2=1)
+        bom.consumption = 'flexible'
+        mo.action_assign()
+        produce_form = Form(self.env['mrp.product.produce'].with_context({
+            'active_id': mo.id,
+            'active_ids': [mo.id],
+        }))
+        for i in range(len(produce_form.raw_workorder_line_ids)):
+            with produce_form.raw_workorder_line_ids.edit(i) as line:
+                line.qty_done += 1
+        product_produce = produce_form.save()
+        product_produce.do_produce()
+        self.assertEqual(len(mo.move_raw_ids), 2)
+        self.assertEqual(len(mo.move_raw_ids.mapped('move_line_ids')), 2)
+        self.assertEqual(mo.move_raw_ids[0].move_line_ids.mapped('qty_done'), [2])
+        self.assertEqual(mo.move_raw_ids[1].move_line_ids.mapped('qty_done'), [11])
+        self.assertEqual(mo.move_raw_ids[0].quantity_done, 2)
+        self.assertEqual(mo.move_raw_ids[1].quantity_done, 11)
+        mo.button_mark_done()
+        self.assertEqual(len(mo.move_raw_ids), 4)
+        self.assertEqual(len(mo.move_raw_ids.mapped('move_line_ids')), 4)
+        self.assertEqual(mo.move_raw_ids.mapped('quantity_done'), [1, 10, 1, 1])
+        self.assertEqual(mo.move_raw_ids.mapped('move_line_ids.qty_done'), [1, 10, 1, 1])
+
     def test_multiple_post_inventory(self):
         """ Check the consumed quants of the produced quants when intermediate calls to `post_inventory` during a MO."""
 

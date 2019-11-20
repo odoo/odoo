@@ -10,10 +10,10 @@ from odoo.tests.common import SavepointCase
 from odoo.tools import mute_logger
 
 
-class TestProductAttributeValueSetup(SavepointCase):
+class TestProductAttributeValueCommon(SavepointCase):
     @classmethod
     def setUpClass(cls):
-        super(TestProductAttributeValueSetup, cls).setUpClass()
+        super(TestProductAttributeValueCommon, cls).setUpClass()
 
         cls.computer = cls.env['product.template'].create({
             'name': 'Super Computer',
@@ -178,7 +178,7 @@ class TestProductAttributeValueSetup(SavepointCase):
 
 
 @tagged('post_install', '-at_install')
-class TestProductAttributeValueConfig(TestProductAttributeValueSetup):
+class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
 
     def test_product_template_attribute_values_creation(self):
         self.assertEqual(len(self.computer_ssd_attribute_lines.product_template_value_ids), 2,

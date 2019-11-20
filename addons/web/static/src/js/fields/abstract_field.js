@@ -281,7 +281,7 @@ var AbstractField = Widget.extend({
      * value was changed by the user. This is checked before saving a record, by
      * the view.
      *
-     * Note: this is the responsability of the view to check that required
+     * Note: this is the responsibility of the view to check that required
      * fields have a set value.
      *
      * @returns {boolean} true/false if the widget is valid

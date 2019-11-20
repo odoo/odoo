@@ -8,7 +8,7 @@ from unittest.mock import patch
 from odoo import fields
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase, tagged
-from odoo.addons.account.tests.account_test_classes import AccountingTestCase
+from odoo.addons.account.tests.common import AccountTestCommon
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 
@@ -290,7 +290,7 @@ class TestStockValuation(TransactionCase):
 
 
 @tagged('post_install', '-at_install')
-class TestStockValuationWithCOA(AccountingTestCase):
+class TestStockValuationWithCOA(AccountTestCommon):
     def setUp(self):
         super(TestStockValuationWithCOA, self).setUp()
         self.supplier_location = self.env.ref('stock.stock_location_suppliers')

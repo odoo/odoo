@@ -494,12 +494,22 @@
         </t>
     </template>
 
-    <template id="portal_404" inherit_id="http_routing.404">
-        <xpath expr="//p" position="after">
-            <p>Maybe you were looking for one of these popular pages ?</p>
-            <ul>
-                <li><a href="/my">Documents</a></li>
-            </ul>
+    <template id="404_oe_structure_404_2" inherit_id="http_routing.404" name="Portal 404 Popular Pages">
+        <xpath expr="//div[@id='oe_structure_404_2']" position="replace">
+            <div class="oe_structure oe_empty" id="oe_structure_404_2">
+                <section>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <p class="text-center pt24">Maybe you were looking for one of these <b>popular pages?</b></p>
+                                <ul class="list-inline text-center">
+                                    <li class="list-inline-item mb-2"><a href="/my" class="btn btn-secondary">My Account</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
         </xpath>
     </template>
 </odoo>

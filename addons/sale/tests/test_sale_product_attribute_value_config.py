@@ -2,11 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields
-from odoo.addons.product.tests.test_product_attribute_value_config import TestProductAttributeValueSetup
+from odoo.addons.product.tests.test_product_attribute_value_config import TestProductAttributeValueCommon
 from odoo.tests import tagged
 
 
-class TestSaleProductAttributeValueSetup(TestProductAttributeValueSetup):
+class TestSaleProductAttributeValueCommon(TestProductAttributeValueCommon):
 
     @classmethod
     def _setup_currency(cls, currency_ratio=2):
@@ -59,7 +59,7 @@ class TestSaleProductAttributeValueSetup(TestProductAttributeValueSetup):
 
 
 @tagged('post_install', '-at_install')
-class TestSaleProductAttributeValueConfig(TestSaleProductAttributeValueSetup):
+class TestSaleProductAttributeValueConfig(TestSaleProductAttributeValueCommon):
     def _setup_pricelist(self, currency_ratio=2):
         to_currency = self._setup_currency(currency_ratio)
 

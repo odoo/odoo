@@ -190,7 +190,7 @@ class TestPoSProductsWithTax(TestPoSCommon):
         # check receivable line
         # should be equivalent to receivable in the invoice
         # should also be fully-reconciled
-        receivable_line = session_move.line_ids.filtered(lambda line: line.account_id in self.receivable_account + self.env['account.account'].search([('name', '=', 'Account Receivable (PoS)')]) and line.name == 'From invoiced orders')
+        receivable_line = session_move.line_ids.filtered(lambda line: line.account_id in self.receivable_account + self.env['account.account'].search([('name', '=', 'Account Receivable')]) and line.name == 'From invoiced orders')
         self.assertAlmostEqual(receivable_line.balance, -426.09)
         self.assertTrue(receivable_line.full_reconcile_id, msg='Receivable line for invoices should be fully reconciled.')
 

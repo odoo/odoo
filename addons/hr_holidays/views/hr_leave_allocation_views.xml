@@ -80,7 +80,7 @@
                             </div>
                         </button>
                     </div>
-                    <div class="oe_title">
+                    <div class="oe_title oe_read_only">
                         <h2><field name="display_name"/></h2>
                     </div>
                     <group>
@@ -279,8 +279,8 @@
                             <div class="row no-gutters" t-if="['validate', 'refuse'].includes(record.state.raw_value)">
                                 <div class="col-2"/>
                                 <div class="col-10">
-                                    <span t-if="record.state.raw_value === 'validate'" class="fa fa-check text-muted"/>
-                                    <span t-else="" class="fa fa-ban text-muted"/>
+                                    <span t-if="record.state.raw_value === 'validate'" class="fa fa-check text-muted" aria-label="validated"/>
+                                    <span t-else="" class="fa fa-ban text-muted" aria-label="refused"/>
                                     <span class="text-muted"><t t-esc="record.state.value"/></span>
                                 </div>
                             </div>

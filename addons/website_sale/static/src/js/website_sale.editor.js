@@ -94,8 +94,8 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
      * @override
      */
     start: function () {
-        this.ppg = this.$target.closest('[data-ppg]').data('ppg');
-        this.ppr = this.$target.closest('[data-ppr]').data('ppr');
+        this.ppg = parseInt(this.$target.closest('[data-ppg]').data('ppg'));
+        this.ppr = parseInt(this.$target.closest('[data-ppr]').data('ppr'));
         return this._super.apply(this, arguments);
     },
     /**
@@ -113,29 +113,24 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
     /**
      * @see this.selectClass for params
      */
-    choosePpg: function (previewMode, value, $opt) {
-        var self = this;
-        new Dialog(this, {
-            title: _t("Choose number of products"),
-            $content: $(qweb.render('website_sale.dialog.choosePPG', {widget: this})),
-            buttons: [
-                {text: _t("Save"), classes: 'btn-primary', click: function () {
-                    var $input = this.$('input');
-                    var def = self._setPPG($input.val());
-                    if (!def) {
-                        $input.addClass('is-invalid');
-                        return;
-                    }
-                    return def.then(this.close.bind(this));
-                }},
-                {text: _t("Discard"), close: true},
-            ],
-        }).open();
+    setPpg: function (previewMode, value, $opt) {
+        const ppg = parseInt($opt.find('input').val());
+        if (!ppg || ppg < 1) {
+            return false;
+        }
+        this.ppg = ppg;
+        return this._rpc({
+            route: '/shop/change_ppg',
+            params: {
+                'ppg': ppg,
+            },
+        }).then(() => reload());
     },
     /**
      * @see this.selectClass for params
      */
     setPpr: function (previewMode, value, $opt) {
+        this.ppr = parseInt(value);
         this._rpc({
             route: '/shop/change_ppr',
             params: {
@@ -152,33 +147,17 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
      * @override
      */
     _setActive: function () {
-        var self = this;
-        this._super.apply(this, arguments);
+        this._super(...arguments);
+
         this.$el.find('[data-set-ppr]')
-            .addBack('[data-set-ppr]')
             .removeClass('active')
-            .filter(function () {
-                var nbColumns = $(this).data('setPpr');
-                return nbColumns === self.ppr;
+            .filter((i, el) => {
+                var nbColumns = parseInt($(el).data('setPpr'));
+                return nbColumns === this.ppr;
             })
             .addClass('active');
-    },
-    /**
-     * @private
-     * @param {integer} ppg
-     * @returns {Promise|false}
-     */
-    _setPPG: function (ppg) {
-        ppg = parseInt(ppg);
-        if (!ppg || ppg < 1) {
-            return false;
-        }
-        return this._rpc({
-            route: '/shop/change_ppg',
-            params: {
-                'ppg': ppg,
-            },
-        }).then(reload);
+
+        this.$el.find('[data-set-ppg] > input').val(this.ppg);
     },
 });
 
@@ -194,8 +173,6 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
      * @override
      */
     start: function () {
-        var self = this;
-
         this.ppr = this.$target.closest('[data-ppr]').data('ppr');
         this.productTemplateID = parseInt(this.$target.find('[data-oe-model="product.template"]').data('oe-id'));
 
@@ -204,15 +181,17 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
         defs.push(this._rpc({
             model: 'product.style',
             method: 'search_read',
-        }).then(function (data) {
-            var $ul = self.$el.find('[name="style"]');
+        }).then(data => {
+            var $menu = this.$el.find('[name="style"]');
             for (var k in data) {
-                $ul.append(
-                    $('<we-button data-style="' + data[k]['id'] + '" data-toggle-class="' + data[k]['html_class'] + '"/>')
-                        .append(data[k]['name'])
-                );
+                $menu.append(this.buildCheckboxElement(data[k]['name'], {
+                    dataAttributes: {
+                        'style': data[k]['id'],
+                        'toggleClass': data[k]['html_class'],
+                    },
+                }));
             }
-            self._setActive();
+            this._updateUI();
         }));
 
         return $.when.apply($, defs);
@@ -222,7 +201,7 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
      */
     onFocus: function () {
         var listLayoutEnabled = this.$target.closest('#products_grid').hasClass('o_wsale_layout_list');
-        this.$el.find('.o_wsale_soptions_menu_sizes').closest('we-collapse-area')
+        this.$el.find('.o_wsale_soptions_menu_sizes')
             .toggleClass('d-none', listLayoutEnabled);
     },
 
@@ -262,7 +241,9 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
     /**
      * @override
      */
-    _setActive: function () {
+    _updateUI: function () {
+        this._super.apply(this, arguments);
+
         var sizeX = parseInt(this.$target.attr('colspan') || 1);
         var sizeY = parseInt(this.$target.attr('rowspan') || 1);
 
@@ -272,8 +253,6 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
 
         // Adapt size array preview to fit ppr
         $size.find('tr td:nth-child(n + ' + parseInt(this.ppr + 1) + ')').hide();
-
-        return this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------

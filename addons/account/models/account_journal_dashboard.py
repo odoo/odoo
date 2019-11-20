@@ -50,7 +50,7 @@ class account_journal(models.Model):
             '''
             self.env.cr.execute(sql_query, (journal.id,))
             for activity in self.env.cr.dictfetchall():
-                activities.append({
+                act = {
                     'id': activity.get('id'),
                     'res_id': activity.get('res_id'),
                     'res_model': activity.get('res_model'),
@@ -58,7 +58,13 @@ class account_journal(models.Model):
                     'name': (activity.get('summary') or activity.get('act_type_name')),
                     'activity_category': activity.get('activity_category'),
                     'date': odoo_format_date(self.env, activity.get('date_deadline'))
-                })
+                }
+                if activity.get('activity_category') == 'tax_report' and activity.get('res_model') == 'account.move':
+                    if self.env['account.move'].browse(activity.get('res_id')).company_id.account_tax_periodicity == 'monthly':
+                        act['name'] += ' (' + format_date(activity.get('date'), 'MMM', locale=get_lang(self.env).code) + ')'
+                    else:
+                        act['name'] += ' (' + format_date(activity.get('date'), 'QQQ', locale=get_lang(self.env).code) + ')'
+                activities.append(act)
             journal.json_activity_data = json.dumps({'activities': activities})
 
     kanban_dashboard = fields.Text(compute='_kanban_dashboard')

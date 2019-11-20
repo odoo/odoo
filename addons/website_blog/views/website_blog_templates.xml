@@ -26,6 +26,12 @@
 </template>
 
 
+<template id="portal_404" inherit_id="portal.404_oe_structure_404_2" name="Blog 404 Popular Page Entry">
+    <xpath expr="//li[last()]" position="before">
+        <li class="list-inline-item mb-2"><a href="/blog" class="btn btn-secondary">Blog</a></li>
+    </xpath>
+</template>
+
 <!-- ======   Overall pages layout   ===========================================
 ============================================================================ -->
 <template id="index" name="Blog Navigation">

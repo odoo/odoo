@@ -257,7 +257,7 @@ class Warehouse(models.Model):
         ResCompany = self.env['res.company']
         if company_id:
             transit_loc = ResCompany.browse(company_id).internal_transit_location_id.id
-            self.env['res.partner'].browse(partner_id).with_context(force_company=company_id).write({'property_stock_customer': transit_loc, 'property_stock_supplier': transit_loc})
+            self.env['res.partner'].browse(partner_id).with_company(company_id).write({'property_stock_customer': transit_loc, 'property_stock_supplier': transit_loc})
         else:
             transit_loc = self.env.company.internal_transit_location_id.id
             self.env['res.partner'].browse(partner_id).write({'property_stock_customer': transit_loc, 'property_stock_supplier': transit_loc})
@@ -516,7 +516,7 @@ class Warehouse(models.Model):
         def_values = self.default_get(['reception_steps', 'delivery_steps'])
         reception_steps = vals.get('reception_steps', def_values['reception_steps'])
         delivery_steps = vals.get('delivery_steps', def_values['delivery_steps'])
-        code = vals.get('code') or code
+        code = vals.get('code') or code or ''
         code = code.replace(' ', '').upper()
         company_id = vals.get('company_id', self.default_get(['company_id'])['company_id'])
         sub_locations = {

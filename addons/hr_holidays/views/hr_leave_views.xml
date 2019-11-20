@@ -78,7 +78,6 @@
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
                 <group expand="0" string="Group By">
-                    <filter name="group_name" string="Description" context="{'group_by':'name'}"/>
                     <filter name="group_employee" string="Employee" context="{'group_by':'employee_id'}"/>
                     <filter name="group_category" string="Category" context="{'group_by':'category_id'}"/>
                     <filter name="group_second_approver_id" string="Validator" context="{'group_by':'second_approver_id'}"/>
@@ -142,8 +141,8 @@
                             <div class="row no-gutters" t-if="['validate', 'refuse'].includes(record.state.raw_value)">
                                 <div class="col-2"/>
                                 <div class="col-10">
-                                    <span t-if="record.state.raw_value === 'validate'" class="fa fa-check text-muted"/>
-                                    <span t-else="" class="fa fa-ban text-muted"/>
+                                    <span t-if="record.state.raw_value === 'validate'" class="fa fa-check text-muted" aria-label="validated"/>
+                                    <span t-else="" class="fa fa-ban text-muted" aria-label="refused"/>
                                     <span class="text-muted"><t t-esc="record.state.value"/></span>
                                 </div>
                             </div>
@@ -207,6 +206,20 @@
                 <field name="state" widget="statusbar" statusbar_visible="confirm,validate"/>
             </header>
             <sheet>
+                <div class="alert alert-info" role="alert" attrs="{'invisible': ['|', ('tz_mismatch', '=', False), ('holiday_type', '=', 'category')]}">
+                    <span attrs="{'invisible': [('holiday_type', '!=', 'employee')]}">
+                        The employee has a different timezone than yours! Here dates and times are displayed in the employee's timezone
+                    </span>
+                    <span attrs="{'invisible': [('holiday_type', '!=', 'department')]}">
+                        The department's company has a different timezone than yours! Here dates and times are displayed in the company's timezone
+                    </span>
+                    <span attrs="{'invisible': [('holiday_type', '!=', 'company')]}">
+                        The company has a different timezone than yours! Here dates and times are displayed in the company's timezone
+                    </span>
+                    (<field name="tz"/>).
+                </div>
+                <field name="tz_mismatch" invisible="1"/>
+                <field name="holiday_type" invisible="1"/>
                 <field name="leave_type_request_unit" invisible="1"/>
                 <div class="oe_title oe_read_only" attrs="{'invisible': [('display_name', '=', False)]}" name="title">
                     <h1>

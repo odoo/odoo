@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.sale.tests.test_sale_common import TestSale
+from odoo.addons.sale.tests.test_sale_common import TestSaleCommon
 from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install')
-class TestSaleExpense(TestSale):
+class TestSaleExpense(TestSaleCommon):
     def test_sale_expense(self):
         """ Test the behaviour of sales orders when managing expenses """
         # force the pricelist to have the same currency as the company

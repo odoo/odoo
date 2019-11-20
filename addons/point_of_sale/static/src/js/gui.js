@@ -277,16 +277,20 @@ var Gui = core.Class.extend({
                     self._close();
                 } else {
                     var reason = self.pos.get('failed') ?
-                                 'configuration errors' :
-                                 'internet connection issues';
+                                 _t('Some orders could not be submitted to '+
+                                     'the server due to configuration errors. '+
+                                     'You can exit the Point of Sale, but do '+
+                                     'not close the session before the issue '+
+                                     'has been resolved.') :
+                                 _t('Some orders could not be submitted to '+
+                                     'the server due to internet connection issues. '+
+                                     'You can exit the Point of Sale, but do '+
+                                     'not close the session before the issue '+
+                                     'has been resolved.');
 
                     self.show_popup('confirm', {
                         'title': _t('Offline Orders'),
-                        'body':  _t(['Some orders could not be submitted to',
-                                     'the server due to ' + reason + '.',
-                                     'You can exit the Point of Sale, but do',
-                                     'not close the session before the issue',
-                                     'has been resolved.'].join(' ')),
+                        'body':  reason,
                         'confirm': function() {
                             self._close();
                         },

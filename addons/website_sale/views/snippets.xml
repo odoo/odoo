@@ -60,63 +60,50 @@
         <div data-js="WebsiteSaleGridLayout"
             data-selector="#products_grid .o_wsale_products_grid_table_wrapper > table"
             data-no-check="true">
-            <we-button data-no-preview="true" data-choose-ppg="1">
-                <i class="fa fa-cart-plus"/> Choose number of products
-            </we-button>
-            <we-collapse-area class="o_wsale_ppr_submenu">
-                <we-toggler>
-                    <i class="fa fa-columns"/> Number of Columns
-                </we-toggler>
-                <we-collapse data-no-preview="true">
-                    <we-button data-set-ppr="2">2</we-button>
-                    <we-button data-set-ppr="3">3</we-button>
-                    <we-button data-set-ppr="4">4</we-button>
-                </we-collapse>
-            </we-collapse-area>
+            <we-input string="Number of products" data-set-ppg="" data-unit="" data-no-preview="true"/>
+            <we-select string="Number of Columns" class="o_wsale_ppr_submenu" data-no-preview="true">
+                <we-button data-set-ppr="2">2</we-button>
+                <we-button data-set-ppr="3">3</we-button>
+                <we-button data-set-ppr="4">4</we-button>
+            </we-select>
         </div>
 
         <div data-js="WebsiteSaleProductsItem"
             data-selector="#products_grid .oe_product"
             data-no-check="true">
-            <we-collapse-area>
-                <we-toggler>Size</we-toggler>
-                <we-collapse class="o_wsale_soptions_menu_sizes">
-                    <table>
-                        <tr>
-                            <td/><td/><td/><td/>
-                        </tr>
-                        <tr>
-                            <td/><td/><td/><td/>
-                        </tr>
-                        <tr>
-                            <td/><td/><td/><td/>
-                        </tr>
-                        <tr>
-                            <td/><td/><td/><td/>
-                        </tr>
-                    </table>
-                </we-collapse>
-            </we-collapse-area>
-            <we-collapse-area>
-                <we-toggler>Styles</we-toggler>
-                <we-collapse data-no-preview="true" name="style"/>
-            </we-collapse-area>
-            <we-collapse-area>
-                <we-toggler>Promote</we-toggler>
-                <we-collapse data-no-preview="true">
-                    <we-button data-change-sequence="top">Push to top</we-button>
-                    <we-button data-change-sequence="up">Push up</we-button>
-                    <we-button data-change-sequence="down">Push down</we-button>
-                    <we-button data-change-sequence="bottom">Push to bottom</we-button>
-                </we-collapse>
-            </we-collapse-area>
+            <div class="o_wsale_soptions_menu_sizes">
+                <we-title>Size</we-title>
+                <table>
+                    <tr>
+                        <td/><td/><td/><td/>
+                    </tr>
+                    <tr>
+                        <td/><td/><td/><td/>
+                    </tr>
+                    <tr>
+                        <td/><td/><td/><td/>
+                    </tr>
+                    <tr>
+                        <td/><td/><td/><td/>
+                    </tr>
+                </table>
+            </div>
+
+            <div name="style" data-no-preview="true">
+                <!-- Placeholder to be filled in JS -->
+            </div>
+
+            <div name="reordering" data-no-preview="true">
+                <we-button data-change-sequence="top">Push to top</we-button>
+                <we-button data-change-sequence="up">Push up</we-button>
+                <we-button data-change-sequence="down">Push down</we-button>
+                <we-button data-change-sequence="bottom">Push to bottom</we-button>
+            </div>
         </div>
 
         <div data-js="ProductsSearchBar"
             data-selector=".s_wsale_products_searchbar_input">
-            <we-button data-no-preview="true" data-open-searchbar-settings="">
-                <i class="fa fa-search"/> Products Search Bar
-            </we-button>
+            <we-button data-no-preview="true" data-open-searchbar-settings="">Products Search Bar</we-button>
         </div>
     </xpath>
     <xpath expr="//div[@id='so_content_addition']" position="attributes">

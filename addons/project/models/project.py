@@ -216,7 +216,7 @@ class Project(models.Model):
 
     # rating fields
     rating_request_deadline = fields.Datetime(compute='_compute_rating_request_deadline', store=True)
-    rating_status = fields.Selection([('stage', 'Rating when changing stage'), ('periodic', 'Periodical Rating'), ('no','No rating')], 'Customer(s) Ratings', help="How to get customer feedback?\n"
+    rating_status = fields.Selection([('stage', 'Rating when changing stage'), ('periodic', 'Periodical Rating'), ('no','No rating')], 'Customer Ratings', help="How to get customer feedback?\n"
                     "- Rating when changing stage: an email will be sent when a task is pulled in another stage.\n"
                     "- Periodical Rating: email will be sent periodically.\n\n"
                     "Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks.", default="no", required=True)
@@ -499,6 +499,10 @@ class Task(models.Model):
         string='Customer',
         compute='_compute_partner_id', store=True, readonly=False,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    partner_is_company = fields.Boolean(related='partner_id.is_company', readonly=True)
+    commercial_partner_id = fields.Many2one(related='partner_id.commercial_partner_id')
+    partner_email = fields.Char(related='partner_id.email', string='Customer Email')
+    partner_phone = fields.Char(related='partner_id.phone')
     partner_city = fields.Char(related='partner_id.city', readonly=False)
     manager_id = fields.Many2one('res.users', string='Project Manager', related='project_id.user_id', readonly=True, related_sudo=False)
     company_id = fields.Many2one('res.company', string='Company', required=True, default=_default_company_id)

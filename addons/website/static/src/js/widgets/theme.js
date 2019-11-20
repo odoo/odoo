@@ -6,8 +6,8 @@ var core = require('web.core');
 var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
 var weWidgets = require('wysiwyg.widgets');
-var ColorpickerDialog = require('web.ColorpickerDialog');
 var websiteNavbarData = require('website.navbar');
+var ColorPaletteDialog = require('web_editor.ColorPalette').ColorPaletteDialog;
 
 var _t = core._t;
 
@@ -160,6 +160,10 @@ var ThemeCustomizeDialog = Dialog.extend({
         this.PX_BY_REM = parseFloat($(document.documentElement).css('font-size'));
 
         this.$modal.addClass('o_theme_customize_modal');
+        this.$modal.find('.modal-footer').append($('<a/>', {
+            href: '/web#action=website.theme_install_kanban_action',
+            text: _t("Choose another theme..."),
+        }));
 
         this.style = window.getComputedStyle(document.documentElement);
         this.nbFonts = parseInt(this.style.getPropertyValue('--number-of-fonts'));
@@ -511,13 +515,17 @@ var ThemeCustomizeDialog = Dialog.extend({
         var colorType = $color.data('colorType');
 
         return new Promise(function (resolve, reject) {
-            var colorpicker = new ColorpickerDialog(self, {
+            var colorpicker = new ColorPaletteDialog(self, {
+                resetButton: false,
                 defaultColor: $color.css('background-color'),
+                excluded: ['transparent_grayscale'],
+                excludeSectionOf: colorName,
             });
             var chosenColor = undefined;
-            colorpicker.on('colorpicker:saved', self, function (ev) {
+            colorpicker.on('color_picked custom_color_picked', self, function (ev) {
                 ev.stopPropagation();
                 chosenColor = ev.data.cssColor;
+                colorpicker.close();
             });
             colorpicker.on('closed', self, function (ev) {
                 if (chosenColor === undefined) {

@@ -360,7 +360,7 @@ class Field(MetaField('DummyField', (object,), {})):
             if not attrs.get('readonly'):
                 attrs['inverse'] = self._inverse_company_dependent
             attrs['search'] = self._search_company_dependent
-            attrs['depends_context'] = attrs.get('depends_context', ()) + ('force_company',)
+            attrs['depends_context'] = attrs.get('depends_context', ()) + ('company',)
         if attrs.get('translate'):
             # by default, translatable fields are context-dependent
             attrs['depends_context'] = attrs.get('depends_context', ()) + ('lang',)
@@ -599,22 +599,14 @@ class Field(MetaField('DummyField', (object,), {})):
 
     def _compute_company_dependent(self, records):
         # read property as superuser, as the current user may not have access
-        context = records.env.context
-        if 'force_company' not in context:
-            company = records.env.company
-            context = dict(context, force_company=company.id)
-        Property = records.env(context=context, su=True)['ir.property']
+        Property = records.env['ir.property'].sudo()
         values = Property.get_multi(self.name, self.model_name, records.ids)
         for record in records:
             record[self.name] = values.get(record.id)
 
     def _inverse_company_dependent(self, records):
         # update property as superuser, as the current user may not have access
-        context = records.env.context
-        if 'force_company' not in context:
-            company = records.env.company
-            context = dict(context, force_company=company.id)
-        Property = records.env(context=context, su=True)['ir.property']
+        Property = records.env['ir.property'].sudo()
         values = {
             record.id: self.convert_to_write(record[self.name], record)
             for record in records
@@ -634,8 +626,8 @@ class Field(MetaField('DummyField', (object,), {})):
         get_context = env.context.get
 
         def get(key):
-            if key == 'force_company':
-                return get_context('force_company') or env.company.id
+            if key == 'company':
+                return env.company.id
             elif key == 'uid':
                 return (env.uid, env.su)
             elif key == 'active_test':
@@ -730,6 +722,12 @@ class Field(MetaField('DummyField', (object,), {})):
             field_help = env['ir.translation'].get_field_help(model_name)
             return field_help.get(self.name) or self.help
         return self.help
+
+    def is_editable(self):
+        """ Return whether the field can be editable in a view. """
+        return not self.readonly or self.states and any(
+            'readonly' in item for items in self.states.values() for item in items
+        )
 
     ############################################################################
     #
@@ -1301,10 +1299,14 @@ class Monetary(Field):
     def convert_to_cache(self, value, record, validate=True):
         # cache format: float
         value = float(value or 0.0)
-        if validate and record.sudo()[self.currency_field]:
+        if value and validate:
             # FIXME @rco-odoo: currency may not be already initialized if it is
             # a function or related field!
-            value = record[self.currency_field].round(value)
+            currency = record.sudo()[self.currency_field]
+            if len(currency) > 1:
+                raise ValueError("Got multiple currencies while assigning values of monetary field %s" % str(self))
+            elif currency:
+                value = currency.round(value)
         return value
 
     def convert_to_record(self, value, record):
@@ -2890,7 +2892,9 @@ class One2many(_RelationalMulti):
                     to_create.clear()
                 if to_inverse:
                     for record, inverse_ids in to_inverse.items():
-                        comodel.browse(inverse_ids)[inverse] = record
+                        lines = comodel.browse(inverse_ids)
+                        lines = lines.filtered(lambda line: int(line[inverse]) != record.id)
+                        lines[inverse] = record
 
             for recs, commands in records_commands_list:
                 for command in (commands or ()):

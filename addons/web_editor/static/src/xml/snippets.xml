@@ -10,7 +10,9 @@
                 <div class="o_handle s readonly"/>
 
                 <!-- Overlay button-like handle to drag and drop -->
-                <div class="o_move_handle"/>
+                <div class="o_overlay_options">
+                    <div class="o_move_handle"/>
+                </div>
             </div>
         </div>
     </t>
@@ -19,10 +21,10 @@
             <we-title>
                 <span t-esc="name"/>
                 <we-button-group>
-                    <we-button class="fa fa-files-o oe_snippet_clone"
+                    <we-button class="fa fa-fw fa-clone oe_snippet_clone"
                                 title="Duplicate Container"
                                 aria-label="Duplicate Container"/>
-                    <we-button class="fa fa-trash-o oe_snippet_remove"
+                    <we-button class="fa fa-fw fa-trash oe_snippet_remove"
                                 title="Remove Block"
                                 aria-label="Remove Block"/>
                 </we-button-group>
@@ -35,12 +37,16 @@
 
     <!-- options -->
     <div t-name="web_editor.snippet.option.colorpicker" class="colorpicker">
-        <div class="btn-group palette-reset">
-            <div class="note-color-reset" data-event="foreColor" data-value="inherit" title="None" role="img" aria-label="No color">
-                <i class="fa fa-ban"/>
-            </div>
-        </div>
+
         <div class="o_colorpicker_sections px-1 pb8">
+            <div class="o_colorpicker_section">
+                <a class="btn w-50 float-left o_colorpicker_reset d-none">
+                    <i class="fa fa-ban"/> Reset
+                </a>
+                <a class="btn w-50 o_add_custom_color" data-name="custom">
+                    <i class="fa fa-plus"/> Custom
+                </a>
+            </div>
             <div class="tab-content o_colorpicker_section_tabs"/>
         </div>
     </div>

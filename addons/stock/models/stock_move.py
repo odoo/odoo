@@ -399,8 +399,9 @@ class StockMove(models.Model):
     @api.model
     def default_get(self, fields_list):
         # We override the default_get to make stock moves created after the picking was confirmed
-        # directly as available. This allows to create extra move lines in
-        # the fp view.
+        # directly as available in immediate transfer mode. This allows to create extra move lines
+        # in the fp view. In planned transfer, the stock move are marked as `additional` and will be
+        # auto-confirmed.
         defaults = super(StockMove, self).default_get(fields_list)
         if self.env.context.get('default_picking_id'):
             picking_id = self.env['stock.picking'].browse(self.env.context['default_picking_id'])
@@ -408,10 +409,11 @@ class StockMove(models.Model):
                 defaults['state'] = 'done'
                 defaults['product_uom_qty'] = 0.0
                 defaults['additional'] = True
-            elif picking_id.state not in ['draft', 'confirmed']:
-                defaults['state'] = 'assigned'
+            elif picking_id.state not in ['cancel', 'draft', 'done']:
+                if picking_id.immediate_transfer:
+                    defaults['state'] = 'assigned'
                 defaults['product_uom_qty'] = 0.0
-                defaults['additional'] = True
+                defaults['additional'] = True  # to trigger `_autoconfirm_picking`
         return defaults
 
     def name_get(self):
@@ -665,7 +667,7 @@ class StockMove(models.Model):
             domain = [('location_src_id', '=', move.location_dest_id.id), ('action', 'in', ('push', 'pull_push'))]
             # first priority goes to the preferred routes defined on the move itself (e.g. coming from a SO line)
             warehouse_id = move.warehouse_id or move.picking_id.picking_type_id.warehouse_id
-            if not self.env.context.get('force_company', False) and move.location_dest_id.company_id == self.env.user.company_id:
+            if move.location_dest_id.company_id == self.env.company:
                 rules = self.env['procurement.group']._search_rule(move.route_ids, move.product_id, warehouse_id, domain)
             else:
                 rules = self.sudo().env['procurement.group']._search_rule(move.route_ids, move.product_id, warehouse_id, domain)
@@ -907,8 +909,16 @@ class StockMove(models.Model):
         """ return create values for new picking that will be linked with group
         of moves in self.
         """
-        origins = set(self.filtered(lambda m: m.origin).mapped('origin'))
-        origin = len(origins) == 1 and origins.pop() or False
+        origins = self.filtered(lambda m: m.origin).mapped('origin')
+        origins = list(dict.fromkeys(origins)) # create a list of unique items
+        # Will display source document if any, when multiple different origins
+        # are found display a maximum of 5
+        if len(origins) == 0:
+            origin = False
+        else:
+            origin = ','.join(origins[:5])
+            if len(origins) > 5:
+                origin += "..."
         partners = self.mapped('partner_id')
         partner = len(partners) == 1 and partners.id or False
         return {
@@ -1280,7 +1290,7 @@ class StockMove(models.Model):
                 extra_move = extra_move._action_confirm()
 
             # link it to some move lines. We don't need to do it for move since they should be merged.
-            if not merge_into_self:
+            if not merge_into_self or not extra_move.picking_id:
                 for move_line in self.move_line_ids.filtered(lambda ml: ml.qty_done):
                     if float_compare(move_line.qty_done, extra_move_quantity, precision_rounding=rounding) <= 0:
                         # move this move line to our extra move

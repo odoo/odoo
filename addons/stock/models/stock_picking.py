@@ -473,6 +473,7 @@ class Picking(models.Model):
         for picking in self:
             picking.has_packages = picking.move_line_ids.filtered(lambda ml: ml.result_package_id)
 
+    @api.depends('immediate_transfer', 'is_locked', 'state')
     def _compute_show_check_availability(self):
         """ According to `picking.show_check_availability`, the "check availability" button will be
         displayed in the form view of a picking.
@@ -589,18 +590,7 @@ class Picking(models.Model):
         if after_vals:
             self.mapped('move_lines').filtered(lambda move: not move.scrapped).write(after_vals)
         if vals.get('move_lines'):
-            # Do not run autoconfirm if any of the moves has an initial demand. If an initial demand
-            # is present in any of the moves, it means the picking was created through the "planned
-            # transfer" mechanism.
-            pickings_to_not_autoconfirm = self.env['stock.picking']
-            for picking in self:
-                if picking.state != 'draft':
-                    continue
-                for move in picking.move_lines:
-                    if not float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding):
-                        pickings_to_not_autoconfirm |= picking
-                        break
-            (self - pickings_to_not_autoconfirm)._autoconfirm_picking()
+            self._autoconfirm_picking()
         return res
 
     def unlink(self):
@@ -906,8 +896,20 @@ class Picking(models.Model):
         return immediate_pickings
 
     def _autoconfirm_picking(self):
-        for picking in self.filtered(lambda picking: picking.immediate_transfer and picking.state not in ('done', 'cancel') and (picking.move_lines or picking.package_level_ids)):
-            picking.action_confirm()
+        """ Automatically run `action_confirm` on `self` if the picking is an immediate transfer or
+        if the picking is a planned transfer and one of its move was added after the initial
+        call to `action_confirm`. Note that `action_confirm` will only work on draft moves.
+        """
+        for picking in self:
+            if picking.state in ('done', 'cancel'):
+                continue
+            if not picking.move_lines and not picking.package_level_ids:
+                continue
+            if picking.immediate_transfer or any(move.additional for move in picking.move_lines):
+                picking.action_confirm()
+                # Make sure the reservation is bypassed in immediate transfer mode.
+                if picking.immediate_transfer:
+                    picking.move_lines.write({'state': 'assigned'})
 
     def _create_backorder(self):
         """ This method is called when the user chose to create a backorder. It will create a new

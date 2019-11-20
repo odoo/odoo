@@ -12,8 +12,14 @@ class RatingParentMixin(models.AbstractModel):
     _description = "Rating Parent Mixin"
     _rating_satisfaction_days = False  # Number of last days used to compute parent satisfaction. Set to False to include all existing rating.
 
-    rating_ids = fields.One2many('rating.rating', 'parent_res_id', string='Ratings', domain=lambda self: [('parent_res_model', '=', self._name)], auto_join=True)
-    rating_percentage_satisfaction = fields.Integer("Rating Satisfaction", compute="_compute_rating_percentage_satisfaction", store=False, help="Percentage of happy ratings")
+    rating_ids = fields.One2many(
+        'rating.rating', 'parent_res_id', string='Ratings',
+        auto_join=True, groups='base.group_user',
+        domain=lambda self: [('parent_res_model', '=', self._name)])
+    rating_percentage_satisfaction = fields.Integer(
+        "Rating Satisfaction",
+        compute="_compute_rating_percentage_satisfaction", compute_sudo=True,
+        store=False, help="Percentage of happy ratings")
 
     @api.depends('rating_ids.rating', 'rating_ids.consumed')
     def _compute_rating_percentage_satisfaction(self):
@@ -46,12 +52,12 @@ class RatingMixin(models.AbstractModel):
     _name = 'rating.mixin'
     _description = "Rating Mixin"
 
-    rating_ids = fields.One2many('rating.rating', 'res_id', string='Rating', domain=lambda self: [('res_model', '=', self._name)], auto_join=True)
-    rating_last_value = fields.Float('Rating Last Value', compute='_compute_rating_last_value', compute_sudo=True, store=True)
-    rating_last_feedback = fields.Text('Rating Last Feedback', related='rating_ids.feedback')
-    rating_last_image = fields.Binary('Rating Last Image', related='rating_ids.rating_image')
-    rating_count = fields.Integer('Rating count', compute="_compute_rating_stats")
-    rating_avg = fields.Float("Rating Average", compute='_compute_rating_stats')
+    rating_ids = fields.One2many('rating.rating', 'res_id', string='Rating', groups='base.group_user', domain=lambda self: [('res_model', '=', self._name)], auto_join=True)
+    rating_last_value = fields.Float('Rating Last Value', groups='base.group_user', compute='_compute_rating_last_value', compute_sudo=True, store=True)
+    rating_last_feedback = fields.Text('Rating Last Feedback', groups='base.group_user', related='rating_ids.feedback')
+    rating_last_image = fields.Binary('Rating Last Image', groups='base.group_user', related='rating_ids.rating_image')
+    rating_count = fields.Integer('Rating count', compute="_compute_rating_stats", compute_sudo=True)
+    rating_avg = fields.Float("Rating Average", compute='_compute_rating_stats', compute_sudo=True)
 
     @api.depends('rating_ids.rating')
     def _compute_rating_last_value(self):
@@ -59,7 +65,7 @@ class RatingMixin(models.AbstractModel):
             ratings = self.env['rating.rating'].search([('res_model', '=', self._name), ('res_id', '=', record.id)], limit=1)
             record.rating_last_value = ratings and ratings.rating or 0
 
-    @api.depends('rating_ids')
+    @api.depends('rating_ids.res_id', 'rating_ids.rating')
     def _compute_rating_stats(self):
         """ Compute avg and count in one query, as thoses fields will be used together most of the time. """
         domain = self._rating_domain()
@@ -79,7 +85,7 @@ class RatingMixin(models.AbstractModel):
                     res_name_field = self.env['rating.rating']._fields['res_name']
                     self.env.add_to_compute(res_name_field, record.rating_ids)
                 if record._rating_get_parent_field_name() in values:
-                    record.rating_ids.write({'parent_res_id': record[record._rating_get_parent_field_name()].id})
+                    record.rating_ids.sudo().write({'parent_res_id': record[record._rating_get_parent_field_name()].id})
 
         return result
 
@@ -112,13 +118,19 @@ class RatingMixin(models.AbstractModel):
         return self.env['res.partner']
 
     def rating_get_access_token(self, partner=None):
+        """ Return access token linked to existing ratings, or create a new rating
+        that will create the asked token. An explicit call to access rights is
+        performed as sudo is used afterwards as this method could be used from
+        different sources, notably templates. """
+        self.check_access_rights('read')
+        self.check_access_rule('read')
         if not partner:
             partner = self.rating_get_partner_id()
         rated_partner = self.rating_get_rated_partner_id()
-        ratings = self.rating_ids.filtered(lambda x: x.partner_id.id == partner.id and not x.consumed)
+        ratings = self.rating_ids.sudo().filtered(lambda x: x.partner_id.id == partner.id and not x.consumed)
         if not ratings:
             record_model_id = self.env['ir.model'].sudo().search([('model', '=', self._name)], limit=1).id
-            rating = self.env['rating.rating'].create({
+            rating = self.env['rating.rating'].sudo().create({
                 'partner_id': partner.id,
                 'rated_partner_id': rated_partner.id,
                 'res_model_id': record_model_id,
@@ -158,21 +170,23 @@ class RatingMixin(models.AbstractModel):
 
     def rating_apply(self, rate, token=None, feedback=None, subtype=None):
         """ Apply a rating given a token. If the current model inherits from
-        mail.thread mixing, a message is posted on its chatter.
-        :param rate : the rating value to apply
-        :type rate : float
-        :param token : access token
-        :param feedback : additional feedback
-        :type feedback : string
-        :param subtype : subtype for mail
-        :type subtype : string
+        mail.thread mixin, a message is posted on its chatter. User going through
+        this method should have at least employee rights because of rating
+        manipulation (either employee, either sudo-ed in public controllers after
+        security check granting access).
+
+        :param float rate : the rating value to apply
+        :param string token : access token
+        :param string feedback : additional feedback
+        :param string subtype : xml id of a valid mail.message.subtype
+
         :returns rating.rating record
         """
-        Rating, rating = self.env['rating.rating'], None
+        rating = None
         if token:
             rating = self.env['rating.rating'].search([('access_token', '=', token)], limit=1)
         else:
-            rating = Rating.search([('res_model', '=', self._name), ('res_id', '=', self.ids[0])], limit=1)
+            rating = self.env['rating.rating'].search([('res_model', '=', self._name), ('res_id', '=', self.ids[0])], limit=1)
         if rating:
             rating.write({'rating': rate, 'feedback': feedback, 'consumed': True})
             if hasattr(self, 'message_post'):
@@ -190,7 +204,7 @@ class RatingMixin(models.AbstractModel):
                     self.write({'kanban_state': 'blocked'})
         return rating
 
-    def rating_get_repartition(self, add_stats=False, domain=None):
+    def _rating_get_repartition(self, add_stats=False, domain=None):
         """ get the repatition of rating grade for the given res_ids.
             :param add_stats : flag to add stat to the result
             :type add_stats : boolean
@@ -228,7 +242,7 @@ class RatingMixin(models.AbstractModel):
                                                 31-69%: Okay
                                                 70-100%: Great
         """
-        data = self.rating_get_repartition(domain=domain)
+        data = self._rating_get_repartition(domain=domain)
         res = dict.fromkeys(['great', 'okay', 'bad'], 0)
         for key in data:
             if key >= RATING_LIMIT_SATISFIED:
@@ -247,7 +261,7 @@ class RatingMixin(models.AbstractModel):
                 - value is statistic value : 'percent' contains the repartition in percentage, 'avg' is the average rate
                   and 'total' is the number of rating
         """
-        data = self.rating_get_repartition(domain=domain, add_stats=True)
+        data = self._rating_get_repartition(domain=domain, add_stats=True)
         result = {
             'avg': data['avg'],
             'total': data['total'],

@@ -1,11 +1,11 @@
 from unittest.mock import patch
 
-from odoo.addons.account.tests.account_test_users import AccountTestUsers
+from odoo.addons.account.tests.common import AccountTestUsersCommon
 from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install')
-class TestAccountJournalDashboard(AccountTestUsers):
+class TestAccountJournalDashboard(AccountTestUsersCommon):
     def test_customer_invoice_dashboard(self):
         def patched_today(*args, **kwargs):
             return '2019-01-22'

@@ -267,240 +267,96 @@ class SurveyUserInputLine(models.Model):
             vals.update({'answer_score': self.env['survey.label'].browse(int(value_suggested)).answer_score})
         return super(SurveyUserInputLine, self).write(vals)
 
+    def _get_save_line_values(self, answer, answer_type):
+        if not answer or (isinstance(answer, str) and not answer.strip()):
+            return {'answer_type': None, 'skipped': True}
+        if answer_type == 'suggestion':
+            return {'answer_type': answer_type, 'value_suggested': answer}
+        value = float(answer) if answer_type == 'number' else answer
+        return {'answer_type': answer_type, 'value_' + answer_type: value}
+
     @api.model
-    def save_lines(self, user_input_id, question, post, answer_tag):
+    def save_lines(self, user_input_id, question, answer, comment=None):
         """ Save answers to questions, depending on question type
 
             If an answer already exists for question and user_input_id, it will be
-            overwritten (in order to maintain data consistency).
+            overwritten (or deleted for 'choice' questions) (in order to maintain data consistency).
         """
-        try:
-            saver = getattr(self, 'save_line_' + question.question_type)
-        except AttributeError:
-            _logger.error(question.question_type + ": This type of question has no saving function")
-            return False
-        else:
-            saver(user_input_id, question, post, answer_tag)
-
-    @api.model
-    def save_line_free_text(self, user_input_id, question, post, answer_tag):
         vals = {
             'user_input_id': user_input_id,
             'question_id': question.id,
             'survey_id': question.survey_id.id,
             'skipped': False,
         }
-        if answer_tag in post and post[answer_tag].strip():
-            vals.update({'answer_type': 'free_text', 'value_free_text': post[answer_tag]})
-        else:
-            vals.update({'answer_type': None, 'skipped': True})
-        old_uil = self.search([
+        old_answers = self.search([
             ('user_input_id', '=', user_input_id),
             ('survey_id', '=', question.survey_id.id),
             ('question_id', '=', question.id)
         ])
-        if old_uil:
-            old_uil.write(vals)
+
+        if question.question_type in ['textbox', 'free_text', 'numerical_box', 'date', 'datetime']:
+            self._save_line_simple_answer(vals, old_answers, question, answer)
+        elif question.question_type in ['simple_choice', 'multiple_choice']:
+            self._save_line_choice(vals, old_answers, question, answer, comment)
+        elif question.question_type == 'matrix':
+            self._save_line_matrix(vals, old_answers, answer, comment)
         else:
-            old_uil.create(vals)
-        return True
+            raise AttributeError(question.question_type + ": This type of question has no saving function")
 
     @api.model
-    def save_line_textbox(self, user_input_id, question, post, answer_tag):
-        vals = {
-            'user_input_id': user_input_id,
-            'question_id': question.id,
-            'survey_id': question.survey_id.id,
-            'skipped': False
-        }
-        if answer_tag in post and post[answer_tag].strip():
-            vals.update({'answer_type': 'text', 'value_text': post[answer_tag]})
+    def _save_line_simple_answer(self, vals, old_answers, question, answer):
+        answer_type = question.question_type
+        if question.question_type == 'textbox':
+            answer_type = 'text'
+        elif question.question_type == 'numerical_box':
+            answer_type = 'number'
+
+        vals.update(self._get_save_line_values(answer, answer_type))
+        if old_answers:
+            old_answers.write(vals)
         else:
-            vals.update({'answer_type': None, 'skipped': True})
-        old_uil = self.search([
-            ('user_input_id', '=', user_input_id),
-            ('survey_id', '=', question.survey_id.id),
-            ('question_id', '=', question.id)
-        ])
-        if old_uil:
-            old_uil.write(vals)
-        else:
-            old_uil.create(vals)
-        return True
-
-    @api.model
-    def save_line_numerical_box(self, user_input_id, question, post, answer_tag):
-        vals = {
-            'user_input_id': user_input_id,
-            'question_id': question.id,
-            'survey_id': question.survey_id.id,
-            'skipped': False
-        }
-        if answer_tag in post and post[answer_tag].strip():
-            vals.update({'answer_type': 'number', 'value_number': float(post[answer_tag])})
-        else:
-            vals.update({'answer_type': None, 'skipped': True})
-        old_uil = self.search([
-            ('user_input_id', '=', user_input_id),
-            ('survey_id', '=', question.survey_id.id),
-            ('question_id', '=', question.id)
-        ])
-        if old_uil:
-            old_uil.write(vals)
-        else:
-            old_uil.create(vals)
-        return True
-
-    @api.model
-    def save_line_date(self, user_input_id, question, post, answer_tag):
-        vals = {
-            'user_input_id': user_input_id,
-            'question_id': question.id,
-            'survey_id': question.survey_id.id,
-            'skipped': False
-        }
-        if answer_tag in post and post[answer_tag].strip():
-            vals.update({'answer_type': 'date', 'value_date': post[answer_tag]})
-        else:
-            vals.update({'answer_type': None, 'skipped': True})
-        old_uil = self.search([
-            ('user_input_id', '=', user_input_id),
-            ('survey_id', '=', question.survey_id.id),
-            ('question_id', '=', question.id)
-        ])
-        if old_uil:
-            old_uil.write(vals)
-        else:
-            old_uil.create(vals)
-        return True
-
-    @api.model
-    def save_line_datetime(self, user_input_id, question, post, answer_tag):
-        vals = {
-            'user_input_id': user_input_id,
-            'question_id': question.id,
-            'survey_id': question.survey_id.id,
-            'skipped': False
-        }
-        if answer_tag in post and post[answer_tag].strip():
-            vals.update({'answer_type': 'datetime', 'value_datetime': post[answer_tag]})
-        else:
-            vals.update({'answer_type': None, 'skipped': True})
-        old_uil = self.search([
-            ('user_input_id', '=', user_input_id),
-            ('survey_id', '=', question.survey_id.id),
-            ('question_id', '=', question.id)
-        ])
-        if old_uil:
-            old_uil.write(vals)
-        else:
-            old_uil.create(vals)
-        return True
-
-    @api.model
-    def save_line_simple_choice(self, user_input_id, question, post, answer_tag):
-        vals = {
-            'user_input_id': user_input_id,
-            'question_id': question.id,
-            'survey_id': question.survey_id.id,
-            'skipped': False
-        }
-        old_uil = self.search([
-            ('user_input_id', '=', user_input_id),
-            ('survey_id', '=', question.survey_id.id),
-            ('question_id', '=', question.id)
-        ])
-        old_uil.sudo().unlink()
-
-        if answer_tag in post and post[answer_tag].strip():
-            vals.update({'answer_type': 'suggestion', 'value_suggested': int(post[answer_tag])})
-        else:
-            vals.update({'answer_type': None, 'skipped': True})
-
-        # '-1' indicates 'comment count as an answer' so do not need to record it
-        if post.get(answer_tag) and post.get(answer_tag) != '-1':
-            self.create(vals)
-
-        comment_answer = post.pop(("%s_%s" % (answer_tag, 'comment')), '').strip()
-        if comment_answer:
-            vals.update({'answer_type': 'text', 'value_text': comment_answer, 'skipped': False, 'value_suggested': False})
-            self.create(vals)
-
-        return True
-
-    @api.model
-    def save_line_multiple_choice(self, user_input_id, question, post, answer_tag):
-        vals = {
-            'user_input_id': user_input_id,
-            'question_id': question.id,
-            'survey_id': question.survey_id.id,
-            'skipped': False
-        }
-        old_uil = self.search([
-            ('user_input_id', '=', user_input_id),
-            ('survey_id', '=', question.survey_id.id),
-            ('question_id', '=', question.id)
-        ])
-        old_uil.sudo().unlink()
-
-        ca_dict = dict_keys_startswith(post, answer_tag + '_')
-        comment_answer = ca_dict.pop(("%s_%s" % (answer_tag, 'comment')), '').strip()
-        if len(ca_dict) > 0:
-            for key in ca_dict:
-                # '-1' indicates 'comment count as an answer' so do not need to record it
-                if key != ('%s_%s' % (answer_tag, '-1')):
-                    val = ca_dict[key]
-                    vals.update({'answer_type': 'suggestion', 'value_suggested': bool(val) and int(val)})
-                    self.create(vals)
-        if comment_answer:
-            vals.update({'answer_type': 'text', 'value_text': comment_answer, 'value_suggested': False})
-            self.create(vals)
-        if not ca_dict and not comment_answer:
-            vals.update({'answer_type': None, 'skipped': True})
             self.create(vals)
         return True
 
     @api.model
-    def save_line_matrix(self, user_input_id, question, post, answer_tag):
-        vals = {
-            'user_input_id': user_input_id,
-            'question_id': question.id,
-            'survey_id': question.survey_id.id,
-            'skipped': False
-        }
-        old_uil = self.search([
-            ('user_input_id', '=', user_input_id),
-            ('survey_id', '=', question.survey_id.id),
-            ('question_id', '=', question.id)
-        ])
-        old_uil.sudo().unlink()
+    def _save_line_choice(self, vals, old_answers, question, answers, comment):
+        if not (isinstance(answers, list)):
+            answers = [answers]
 
-        no_answers = True
-        ca_dict = dict_keys_startswith(post, answer_tag + '_')
+        vals_list = []
+        if question.question_type == 'simple_choice':
+            if not (question.comment_count_as_answer and question.comments_allowed and comment):
+                for answer in answers:
+                    vals.update(self._get_save_line_values(answer, 'suggestion'))
+                    vals_list.append(vals.copy())
+        elif question.question_type == 'multiple_choice':
+            for answer in answers:
+                vals.update(self._get_save_line_values(answer, 'suggestion'))
+                vals_list.append(vals.copy())
 
-        comment_answer = ca_dict.pop(("%s_%s" % (answer_tag, 'comment')), '').strip()
-        if comment_answer:
-            vals.update({'answer_type': 'text', 'value_text': comment_answer})
-            self.create(vals)
-            no_answers = False
+        if comment:
+            vals.update({'answer_type': 'text', 'value_text': comment, 'skipped': False, 'value_suggested': False})
+            vals_list.append(vals.copy())
 
-        if question.matrix_subtype == 'simple':
-            for row in question.labels_ids_2:
-                a_tag = "%s_%s" % (answer_tag, row.id)
-                if a_tag in ca_dict:
-                    no_answers = False
-                    vals.update({'answer_type': 'suggestion', 'value_suggested': ca_dict[a_tag], 'value_suggested_row': row.id})
-                    self.create(vals)
+        old_answers.sudo().unlink()
+        self.create(vals_list)
 
-        elif question.matrix_subtype == 'multiple':
-            for col in question.labels_ids:
-                for row in question.labels_ids_2:
-                    a_tag = "%s_%s_%s" % (answer_tag, row.id, col.id)
-                    if a_tag in ca_dict:
-                        no_answers = False
-                        vals.update({'answer_type': 'suggestion', 'value_suggested': col.id, 'value_suggested_row': row.id})
-                        self.create(vals)
-        if no_answers:
-            vals.update({'answer_type': None, 'skipped': True})
-            self.create(vals)
+        return True
+
+    @api.model
+    def _save_line_matrix(self, vals, old_answers, answers, comment):
+        vals_list = []
+
+        for row_key, row_answer in answers.items():
+            for answer in row_answer:
+                vals.update({'answer_type': 'suggestion', 'value_suggested': answer, 'value_suggested_row': row_key})
+                vals_list.append(vals.copy())
+
+        if comment:
+            vals.update({'answer_type': 'text', 'value_text': comment, 'skipped': False, 'value_suggested': False})
+            vals_list.append(vals.copy())
+
+        old_answers.sudo().unlink()
+        self.create(vals_list)
+
         return True

@@ -15,7 +15,6 @@
                     </div>
                     <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div name="title" class="oe_left">
-                        <label class="oe_edit_only" for="name" string="Program Name"/>
                     </div>
                     <group>
                         <group name="conditions" string="Conditions">
@@ -94,6 +93,7 @@
                 </button>
             </xpath>
             <xpath expr="//div[@name='title']" position="inside">
+                <label class="oe_edit_only" for="name" string="Coupon Program Name"/>
                 <h1><field name="name" class="oe_title" placeholder="Coupon Program Name..." height="20px"/></h1>
             </xpath>
             <xpath expr="//group[@name='validity']" position="inside">
@@ -200,6 +200,7 @@
         <field name="mode">primary</field>
         <field name="arch" type="xml">
             <xpath expr="//div[@name='title']" position="inside">
+                <label class="oe_edit_only" for="name" string="Promotion Program Name"/>
                 <h1><field name="name" class="oe_title" placeholder="Promotion Program Name..." height="20px"/></h1>
             </xpath>
             <xpath expr="//field[@name='order_count']/.." position="before">

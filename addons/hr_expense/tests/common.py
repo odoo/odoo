@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.account.tests.account_test_no_chart import TestAccountNoChartCommon
+from odoo.addons.account.tests.common import AccountTestNoChartCommon
 
 
-class TestExpenseCommon(TestAccountNoChartCommon):
+class TestExpenseCommon(AccountTestNoChartCommon):
 
     @classmethod
     def setUpClass(cls):

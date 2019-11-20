@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
-from odoo.addons.account.tests.account_test_users import AccountTestUsers
+from odoo.addons.account.tests.common import AccountTestUsersCommon
 from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install')
-class TestTax(AccountTestUsers):
+class TestTaxCommon(AccountTestUsersCommon):
 
     @classmethod
     def setUpClass(cls):
-        super(TestTax, cls).setUpClass()
+        super(TestTaxCommon, cls).setUpClass()
 
         cls.fixed_tax = cls.tax_model.create({
             'name': "Fixed tax",
@@ -117,6 +117,14 @@ class TestTax(AccountTestUsers):
         for i in range(0, len(taxes)):
             self.assertAlmostEqual(res['taxes'][i]['base'], taxes[i][0])
             self.assertAlmostEqual(res['taxes'][i]['amount'], taxes[i][1])
+
+
+@tagged('post_install', '-at_install')
+class TestTax(TestTaxCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestTax, cls).setUpClass()
 
     def test_tax_group_of_group_tax(self):
         self.fixed_tax.include_base_amount = True

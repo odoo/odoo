@@ -162,6 +162,7 @@ class TestTracking(common.BaseFunctionalTest, common.MockEmails):
     def test_unlinked_field(self):
         record_sudo = self.record.sudo()
         record_sudo.write({'email_from': 'X'})  # create a tracking value
+        record_sudo.flush()
         self.assertEqual(len(record_sudo.message_ids.tracking_value_ids), 1)
         ir_model_field = self.env['ir.model.fields'].search([
             ('model', '=', 'mail.test.full'),

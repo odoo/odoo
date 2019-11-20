@@ -5,6 +5,7 @@ from itertools import chain
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools import float_repr
 from odoo.tools.misc import get_lang
 
 
@@ -331,7 +332,7 @@ class Pricelist(models.Model):
         # as we will do a search() later (real case for website public user).
         Partner = self.env['res.partner'].with_context(active_test=False)
 
-        Property = self.env['ir.property'].with_context(force_company=company_id or self.env.company.id)
+        Property = self.env['ir.property'].with_company(company_id)
         Pricelist = self.env['product.pricelist']
         pl_domain = self._get_partner_pricelist_multi_search_domain_hook()
 
@@ -495,9 +496,21 @@ class PricelistItem(models.Model):
 
             if item.compute_price == 'fixed':
                 if item.currency_id.position == 'after':
-                    item.price = "%s %s" % (item.fixed_price, item.currency_id.symbol)
+                    item.price = "%s %s" % (
+                        float_repr(
+                            item.fixed_price,
+                            item.currency_id.decimal_places,
+                        ),
+                        item.currency_id.symbol,
+                    )
                 else:
-                    item.price = "%s %s" % (item.currency_id.symbol, item.fixed_price)
+                    item.price = "%s %s" % (
+                        item.currency_id.symbol,
+                        float_repr(
+                            item.fixed_price,
+                            item.currency_id.decimal_places,
+                        ),
+                    )
             elif item.compute_price == 'percentage':
                 item.price = _("%s %% discount") % (item.percent_price)
             else:

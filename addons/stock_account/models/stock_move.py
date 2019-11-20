@@ -148,7 +148,7 @@ class StockMove(models.Model):
         """
         svl_vals_list = []
         for move in self:
-            move = move.with_context(force_company=move.company_id.id)
+            move = move.with_company(move.company_id)
             valued_move_lines = move._get_in_move_lines()
             valued_quantity = 0
             for valued_move_line in valued_move_lines:
@@ -171,7 +171,7 @@ class StockMove(models.Model):
         """
         svl_vals_list = []
         for move in self:
-            move = move.with_context(force_company=move.company_id.id)
+            move = move.with_company(move.company_id)
             valued_move_lines = move._get_out_move_lines()
             valued_quantity = 0
             for valued_move_line in valued_move_lines:
@@ -193,7 +193,7 @@ class StockMove(models.Model):
         """
         svl_vals_list = []
         for move in self:
-            move = move.with_context(force_company=move.company_id.id)
+            move = move.with_company(move.company_id)
             valued_move_lines = move.move_line_ids
             valued_quantity = 0
             for valued_move_line in valued_move_lines:
@@ -303,8 +303,8 @@ class StockMove(models.Model):
         tmpl_dict = defaultdict(lambda: 0.0)
         # adapt standard price on incomming moves if the product cost_method is 'average'
         std_price_update = {}
-        for move in self.filtered(lambda move: move._is_in() and move.with_context(force_company=move.company_id.id).product_id.cost_method == 'average'):
-            product_tot_qty_available = move.product_id.with_context(force_company=move.company_id.id).quantity_svl + tmpl_dict[move.product_id.id]
+        for move in self.filtered(lambda move: move._is_in() and move.with_company(move.company_id).product_id.cost_method == 'average'):
+            product_tot_qty_available = move.product_id.with_company(move.company_id).quantity_svl + tmpl_dict[move.product_id.id]
             rounding = move.product_id.uom_id.rounding
 
             valued_move_lines = move._get_in_move_lines()
@@ -320,19 +320,19 @@ class StockMove(models.Model):
                 new_std_price = move._get_price_unit()
             else:
                 # Get the standard price
-                amount_unit = std_price_update.get((move.company_id.id, move.product_id.id)) or move.product_id.with_context(force_company=move.company_id.id).standard_price
+                amount_unit = std_price_update.get((move.company_id.id, move.product_id.id)) or move.product_id.with_company(move.company_id).standard_price
                 new_std_price = ((amount_unit * product_tot_qty_available) + (move._get_price_unit() * qty)) / (product_tot_qty_available + qty)
 
             tmpl_dict[move.product_id.id] += qty_done
             # Write the standard price, as SUPERUSER_ID because a warehouse manager may not have the right to write on products
-            move.product_id.with_context(force_company=move.company_id.id).sudo().write({'standard_price': new_std_price})
+            move.product_id.with_company(move.company_id.id).sudo().write({'standard_price': new_std_price})
             std_price_update[move.company_id.id, move.product_id.id] = new_std_price
 
     def _get_accounting_data_for_valuation(self):
         """ Return the accounts and journal to use to post Journal Entries for
         the real-time valuation of the quant. """
         self.ensure_one()
-        self = self.with_context(force_company=self.company_id.id)
+        self = self.with_company(self.company_id)
         accounts_data = self.product_id.product_tmpl_id.get_product_accounts()
 
         if self.location_id.valuation_out_account_id:
@@ -473,34 +473,34 @@ class StockMove(models.Model):
         if self._is_in():
             journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation()
             if location_from and location_from.usage == 'customer':  # goods returned from customer
-                self.with_context(force_company=company_to.id)._create_account_move_line(acc_dest, acc_valuation, journal_id, qty, description, svl_id, cost)
+                self.with_company(company_to)._create_account_move_line(acc_dest, acc_valuation, journal_id, qty, description, svl_id, cost)
             else:
-                self.with_context(force_company=company_to.id)._create_account_move_line(acc_src, acc_valuation, journal_id, qty, description, svl_id, cost)
+                self.with_company(company_to)._create_account_move_line(acc_src, acc_valuation, journal_id, qty, description, svl_id, cost)
 
         # Create Journal Entry for products leaving the company
         if self._is_out():
             cost = -1 * cost
             journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation()
             if location_to and location_to.usage == 'supplier':  # goods returned to supplier
-                self.with_context(force_company=company_from.id)._create_account_move_line(acc_valuation, acc_src, journal_id, qty, description, svl_id, cost)
+                self.with_company(company_from)._create_account_move_line(acc_valuation, acc_src, journal_id, qty, description, svl_id, cost)
             else:
-                self.with_context(force_company=company_from.id)._create_account_move_line(acc_valuation, acc_dest, journal_id, qty, description, svl_id, cost)
+                self.with_company(company_from)._create_account_move_line(acc_valuation, acc_dest, journal_id, qty, description, svl_id, cost)
 
         if self.company_id.anglo_saxon_accounting:
             # Creates an account entry from stock_input to stock_output on a dropship move. https://github.com/odoo/odoo/issues/12687
             journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation()
             if self._is_dropshipped():
                 if cost > 0:
-                    self.with_context(force_company=self.company_id.id)._create_account_move_line(acc_src, acc_valuation, journal_id, qty, description, svl_id, cost)
+                    self.with_company(self.company_id)._create_account_move_line(acc_src, acc_valuation, journal_id, qty, description, svl_id, cost)
                 else:
                     cost = -1 * cost
-                    self.with_context(force_company=self.company_id.id)._create_account_move_line(acc_valuation, acc_dest, journal_id, qty, description, svl_id, cost)
+                    self.with_company(self.company_id)._create_account_move_line(acc_valuation, acc_dest, journal_id, qty, description, svl_id, cost)
             elif self._is_dropshipped_returned():
                 if cost > 0:
-                    self.with_context(force_company=self.company_id.id)._create_account_move_line(acc_valuation, acc_src, journal_id, qty, description, svl_id, cost)
+                    self.with_company(self.company_id)._create_account_move_line(acc_valuation, acc_src, journal_id, qty, description, svl_id, cost)
                 else:
                     cost = -1 * cost
-                    self.with_context(force_company=self.company_id.id)._create_account_move_line(acc_dest, acc_valuation, journal_id, qty, description, svl_id, cost)
+                    self.with_company(self.company_id)._create_account_move_line(acc_dest, acc_valuation, journal_id, qty, description, svl_id, cost)
 
         if self.company_id.anglo_saxon_accounting:
             #eventually reconcile together the invoice and valuation accounting entries on the stock interim accounts
@@ -511,4 +511,3 @@ class StockMove(models.Model):
         to the way they mix stock moves with invoices.
         """
         return self.env['account.move']
-

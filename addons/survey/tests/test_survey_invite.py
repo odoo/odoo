@@ -11,7 +11,7 @@ from odoo.tests import Form
 from odoo.tests.common import users
 
 
-class TestSurveyInvite(common.SurveyCase):
+class TestSurveyInvite(common.TestSurveyCommon):
 
     def setUp(self):
         res = super(TestSurveyInvite, self).setUp()

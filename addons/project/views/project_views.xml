@@ -146,7 +146,7 @@
                                         <div class="text-muted">
                                             Get customer feedback
                                         </div>
-                                        <div>
+                                        <div class="mt16">
                                             <field name="rating_status" widget="radio"/>
                                             <p attrs="{'invisible': [('rating_status','not in',('periodic','stage'))]}" class="text-muted oe_edit_only">
                                                 Edit project's stages and set an email template on the stages on which you want to activate the rating.
@@ -218,13 +218,18 @@
             <field name="model">project.project</field>
             <field name="arch" type="xml">
                 <tree decoration-bf="message_needaction==True" decoration-muted="active == False" string="Projects">
-                    <field name="sequence" widget="handle"/>
+                    <field name="sequence" optional="show" widget="handle"/>
                     <field name="message_needaction" invisible="1"/>
                     <field name="active" invisible="1"/>
                     <field name="name" string="Project Name"/>
-                    <field name="user_id" string="Project Manager"/>
-                    <field name="partner_id" string="Contact"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="user_id" optional="show" string="Project Manager"/>
+                    <field name="partner_id" optional="show" string="Contact"/>
+                    <field name="analytic_account_id" optional="hide"/>
+                    <field name="privacy_visibility" optional="hide"/>
+                    <field name="subtask_project_id" optional="hide"/>
+                    <field name="resource_calendar_id" optional="hide"/>
+                    <field name="label_tasks" optional="hide"/>
+                    <field name="company_id" optional="show"  groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -442,7 +447,7 @@
                     <header>
                         <button name="action_assign_to_me" string="Assign to Me" type="object" class="oe_highlight"
                             attrs="{'invisible' : [('user_id', '!=', False)]}"/>
-                        <field name="stage_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}"/>
+                        <field name="stage_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" attrs="{'invisible': [('project_id', '=', False)]}"/>
                     </header>
                     <sheet string="Task">
                     <div class="oe_button_box" name="button_box">
@@ -465,17 +470,26 @@
                     </div>
                     <group>
                         <group>
-                            <field name="project_id" domain="[('active', '=', True), ('company_id', '=', company_id)]"/>
                             <field name="active" invisible="1"/>
-                            <field name="user_id"
-                                class="o_task_user_field"
-                                options='{"no_open": True}'/>
+                            <field name="partner_id" class="o_task_customer_field"/>
+                            <field name="partner_phone" widget="phone" attrs="{'invisible': [('partner_id', '=', False)]}"/>
+                            <field name="partner_email" string="Email" widget="email" attrs="{'invisible': [('partner_id', '=', False)]}"/>
                             <field name="legend_blocked" invisible="1"/>
                             <field name="legend_normal" invisible="1"/>
                             <field name="legend_done" invisible="1"/>
                         </group>
                         <group>
-                            <field name="date_deadline"/>
+                            <field name="project_id" domain="[('active', '=', True), ('company_id', '=', company_id)]"/>
+                            <field name="user_id"
+                                class="o_task_user_field"
+                                options='{"no_open": True}'/>
+                        </group>
+                        <group name="sales_order_group">
+                        </group>
+                        <group>
+                            <group name="dates">
+                                <field name="date_deadline"/>
+                            </group>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                         </group>
                     </group>
@@ -488,7 +502,6 @@
                             <group>
                                 <group>
                                     <field name="sequence" groups="base.group_no_one"/>
-                                    <field name="partner_id"/>
                                     <field name="email_from" invisible="1"/>
                                     <field name="email_cc" groups="base.group_no_one"/>
                                     <field
@@ -545,6 +558,8 @@
                     <group>
                         <field name="name" string = "Task Title"/>
                         <field name="user_id" options="{'no_open': True,'no_create': True}"/>
+                        <field name="project_id" invisible="context.get('all_task', 1)"/>
+                        <field name="company_id" invisible="1"/>
                         <field name="parent_id" invisible="1"/>
                     </group>
                 </form>
@@ -564,6 +579,7 @@
                     <field name="partner_id"/>
                     <field name="sequence"/>
                     <field name="date_deadline"/>
+                    <field name="partner_is_company"/>
                     <field name="message_needaction_counter"/>
                     <field name="displayed_image_id"/>
                     <field name="active"/>
@@ -585,7 +601,10 @@
                                         <span  invisible="context.get('default_project_id', False) or context.get('fsm_mode', False)"><br/><field name="project_id"/></span>
                                         <br />
                                         <t t-if="record.partner_id.value">
-                                            <span>
+                                            <span t-if="!record.partner_is_company.raw_value">
+                                                <field name="commercial_partner_id"/>
+                                            </span>
+                                            <span t-else="">
                                                 <field name="partner_id"/>
                                             </span>
                                         </t>
@@ -635,7 +654,7 @@
                                         </t>
                                         <!-- Date value -->
                                         <t t-if="record.date_deadline.raw_value" t-set="date" t-value="moment(record.date_deadline.raw_value.toISOString()).format(date_format)" />
-                                        <span name="date" t-attf-class="#{deadline_class || ''}"><t t-esc="date" /></span>
+                                        <span name="date" title="Deadline" t-attf-class="#{deadline_class || ''}"><t t-esc="date" /></span>
                                     </div>
                                     <div class="oe_kanban_bottom_right" t-if="!selection_mode">
                                         <field name="kanban_state" widget="state_selection" groups="base.group_user" invisible="context.get('fsm_mode', False)"/>
@@ -661,11 +680,11 @@
                     <field name="sequence" invisible="not context.get('seq_visible', False)"/>
                     <field name="name"/>
                     <field name="project_id" invisible="context.get('user_invisible', False)" optional="show"/>
+                    <field name="partner_id" optional="hide"/>
                     <field name="user_id" invisible="context.get('user_invisible', False)" optional="show"/>
                     <field name="date_deadline" optional="hide"/>
-                    <field name="partner_id" optional="hide"/>
-                    <field name="tag_ids" optional="hide" widget="many2many_tags"/>
                     <field name="stage_id" invisible="context.get('set_visible',False)" optional="show"/>
+                    <field name="tag_ids" optional="hide" widget="many2many_tags"/>
                     <field name="company_id" groups="base.group_multi_company" optional="show"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
                 </tree>
@@ -758,6 +777,23 @@
                 </p>
             </field>
         </record>
+
+        <record id="action_view_all_task" model="ir.actions.act_window">
+            <field name="name">Tasks</field>
+            <field name="res_model">project.task</field>
+            <field name="view_mode">kanban,tree,form,calendar,pivot,graph,activity</field>
+            <field name="context">{'search_default_my_tasks': 1, 'all_task': 0}</field>
+            <field name="search_view_id" ref="view_task_search_form"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new task
+                </p><p>
+                    Odoo's project management allows you to manage the pipeline of your tasks efficiently.<br/>
+                    You can track progress, discuss on tasks, attach documents, etc.
+                </p>
+            </field>
+        </record>
+
         <record id="open_view_task_list_kanban" model="ir.actions.act_window.view">
             <field name="sequence" eval="0"/>
             <field name="view_mode">kanban</field>
@@ -770,7 +806,7 @@
         </record>
 
         <menuitem name="All Tasks" id="menu_project_management" parent="menu_main_pm"
-            action="action_view_task" sequence="2" groups="base.group_no_one,group_project_user"/>
+            action="action_view_all_task" sequence="2" groups="base.group_no_one,group_project_user"/>
 
         <record id="project_task_action_from_partner" model="ir.actions.act_window">
             <field name="name">Tasks</field>

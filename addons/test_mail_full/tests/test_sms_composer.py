@@ -368,7 +368,7 @@ class TestSMSComposerMass(test_mail_full_common.BaseFunctionalTest, sms_common.M
             self.assertSMSOutgoing(record.customer_id, None, 'Dear %s this is an SMS.' % record.display_name)
 
     def test_composer_mass_active_ids_w_template_and_lang(self):
-        self.env.ref('base.lang_fr').write({'active': True})
+        self.env['res.lang']._activate_lang('fr_FR')
         self.env['ir.translation'].create({
             'type': 'model',
             'name': 'sms.template,body',
@@ -425,7 +425,7 @@ class TestSMSComposerMass(test_mail_full_common.BaseFunctionalTest, sms_common.M
         """ Test the context action from a SMS template (Add context action button)
         and the usage with the sms composer """
         # Create the lang info
-        self.env.ref('base.lang_fr').write({'active': True})
+        self.env['res.lang']._activate_lang('fr_FR')
         self.env['ir.translation'].create({
             'type': 'model',
             'name': 'sms.template,body',

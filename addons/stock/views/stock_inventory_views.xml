@@ -123,9 +123,8 @@
                 <field name="date"/>
                 <field name="location_ids" widget="many2many_tags" optional="hide" groups="stock.group_stock_multi_locations"/>
                 <field name="product_ids" widget="many2many_tags" optional="hide"/>
-                <field name="company_id" groups="base.group_multi_company" optional="show"/>
                 <field name="state"/>
-                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
             </tree>
         </field>
     </record>

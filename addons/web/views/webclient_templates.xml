@@ -45,7 +45,6 @@
     <!-- boot.js script needs to work -->
     <template id="_assets_common_minimal_js">
         <script type="text/javascript" src="/web/static/lib/es6-promise/es6-promise-polyfill.js"></script>
-        <script type="text/javascript" src="/web/static/lib/unhandled-rejection-polyfill/unhandled-rejection-polyfill.js"></script>
         <script type="text/javascript" src="/web/static/src/js/promise_extension.js"></script>
         <script type="text/javascript" src="/web/static/src/js/boot.js"></script>
     </template>
@@ -439,6 +438,9 @@
     </template>
 
     <template id="web.frontend_layout" name="Frontend Layout" inherit_id="web.layout" primary="True">
+        <xpath expr="//head/meta[last()]" position="after">
+            <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+        </xpath>
         <xpath expr="//head/link[last()]" position="after">
             <t t-call-assets="web.assets_common" t-js="false"/>
             <t t-call-assets="web.assets_frontend" t-js="false"/>

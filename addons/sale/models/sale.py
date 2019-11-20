@@ -318,10 +318,7 @@ class SaleOrder(models.Model):
         """
         Trigger the change of fiscal position when the shipping address is modified.
         """
-        self.fiscal_position_id = self.env['account.fiscal.position'].with_context(
-            force_company=self.company_id.id).get_fiscal_position(
-                self.partner_id.id,
-                self.partner_shipping_id.id)
+        self.fiscal_position_id = self.env['account.fiscal.position'].with_company(self.company_id).get_fiscal_position(self.partner_id.id, self.partner_shipping_id.id)
         return {}
 
     @api.onchange('partner_id')
@@ -412,7 +409,7 @@ class SaleOrder(models.Model):
             if 'date_order' in vals:
                 seq_date = fields.Datetime.context_timestamp(self, fields.Datetime.to_datetime(vals['date_order']))
             if 'company_id' in vals:
-                vals['name'] = self.env['ir.sequence'].with_context(force_company=vals['company_id']).next_by_code(
+                vals['name'] = self.env['ir.sequence'].with_company(vals['company_id']).next_by_code(
                     'sale.order', sequence_date=seq_date) or _('New')
             else:
                 vals['name'] = self.env['ir.sequence'].next_by_code('sale.order', sequence_date=seq_date) or _('New')
@@ -492,7 +489,7 @@ class SaleOrder(models.Model):
         a clean extension chain).
         """
         self.ensure_one()
-        journal = self.env['account.move'].with_context(force_company=self.company_id.id, default_type='out_invoice')._get_default_journal()
+        journal = self.env['account.move'].with_company(self.company_id).with_context(default_type='out_invoice')._get_default_journal()
         if not journal:
             raise UserError(_('Please define an accounting sales journal for the company %s (%s).') % (self.company_id.name, self.company_id.id))
 
