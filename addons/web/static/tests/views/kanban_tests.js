@@ -5264,8 +5264,15 @@ QUnit.module('Views', {
                 return this._super.apply(this, arguments);
             },
         });
+        var images = kanban.el.querySelectorAll('img');
+        var placeholders = [];
+        for (var [index, img] of images.entries()) {
+            if (img.dataset.src.indexOf(this.data.partner.records[index].image) === -1) {
+                // Then we display a placeholder
+                placeholders.push(img);
+            }
+        }
 
-        var placeholders = kanban.$('img[data-src$="/web/static/src/img/placeholder.png"]');
         assert.strictEqual(placeholders.length, this.data.partner.records.length - 1,
             "partner with no image should display the placeholder");
 

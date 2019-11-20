@@ -6152,6 +6152,13 @@ Record ids: %(records)s
 
         return result
 
+    def _get_placeholder_filename(self, field=None):
+        """ Returns the filename of the placeholder to use,
+            set on web/static/src/img by default, or the
+            complete path to access it (eg: module/path/to/image.png).
+        """
+        return 'placeholder.png'
+
 collections.Set.register(BaseModel)
 # not exactly true as BaseModel doesn't have __reversed__, index or count
 collections.Sequence.register(BaseModel)
