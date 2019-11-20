@@ -71,6 +71,7 @@ class Holidays(models.Model):
                     'date': fields.Date.to_string(day_date),
                     'holiday_id': holiday.id,
                     'employee_id': holiday.employee_id.id,
+                    'company_id': holiday_task.company_id.id or holiday_project.company_id.id,
                 })
 
         return super(Holidays, self)._validate_leave_request()
