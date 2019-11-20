@@ -19,6 +19,7 @@ System</span>]]></field>
             <field name="company_id" ref="main_company"/>
             <field name="company_ids" eval="[(4, ref('main_company'))]"/>
             <field name="groups_id" eval="[(6,0,[])]"/>
+            <field name="image_1920" type="base64" file="base/static/img/avatar_grey.png"/>
             <field name="signature"><![CDATA[<span>-- <br/>
 Administrator</span>]]></field>
         </record>
@@ -29,7 +30,7 @@ Administrator</span>]]></field>
             <field name="login">default</field>
             <field name="active" eval="False"/>
         </record>
-        
+
         <record id="public_user" model="res.users">
             <field name="name">Public user</field>
             <field name="login">public</field>

@@ -184,14 +184,13 @@ var KanbanRecord = Widget.extend({
      * @returns {string} the url of the image
      */
     _getImageURL: function (model, field, id, placeholder) {
-        id = (_.isArray(id) ? id[0] : id) || false;
-        placeholder = placeholder || "/web/static/src/img/placeholder.png";
+        id = (_.isArray(id) ? id[0] : id) || null;
         var isCurrentRecord = this.modelName === model && this.recordData.id === id;
         var url;
         if (isCurrentRecord && this.record[field] && this.record[field].raw_value && !utils.is_bin_size(this.record[field].raw_value)) {
             // Use magic-word technique for detecting image type
             url = 'data:image/' + this.file_type_magic_word[this.record[field].raw_value[0]] + ';base64,' + this.record[field].raw_value;
-        } else if (!model || !field || !id || (isCurrentRecord && this.record[field] && !this.record[field].raw_value)) {
+        } else if (placeholder && (!model || !field || !id || (isCurrentRecord && this.record[field] && !this.record[field].raw_value))) {
             url = placeholder;
         } else {
             var session = this.getSession();

@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import contextlib
 
+import base64
 import pytz
 import datetime
 import ipaddress
@@ -21,7 +22,8 @@ from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationErro
 from odoo.http import request
 from odoo.osv import expression
 from odoo.service.db import check_super
-from odoo.tools import partition, collections, frozendict, lazy_property
+from odoo.tools import partition, collections, frozendict, lazy_property, image_process
+from odoo.modules.module import get_module_resource
 
 _logger = logging.getLogger(__name__)
 
@@ -214,6 +216,17 @@ class Users(models.Model):
     def _companies_count(self):
         return self.env['res.company'].sudo().search_count([])
 
+    @api.model
+    def _get_default_image(self):
+        """ Get a default image when the user is created without image
+
+            Inspired to _get_default_image method in
+            https://github.com/odoo/odoo/blob/11.0/odoo/addons/base/res/res_partner.py
+        """
+        image_path = get_module_resource('base', 'static/img', 'avatar.png')
+        image = base64.b64encode(open(image_path, 'rb').read())
+        return image_process(image, colorize=True)
+
     partner_id = fields.Many2one('res.partner', required=True, ondelete='restrict', auto_join=True,
         string='Related Partner', help='Partner-related data of the user')
     login = fields.Char(required=True, help="Used to log into the system")
@@ -258,6 +271,7 @@ class Users(models.Model):
                                  compute='_compute_accesses_count')
     groups_count = fields.Integer('# Groups', help='Number of groups that apply to the current user',
                                   compute='_compute_accesses_count')
+    image_1920 = fields.Image(related='partner_id.image_1920', inherited=True, readonly=False, default=_get_default_image)
 
     _sql_constraints = [
         ('login_key', 'UNIQUE (login)',  'You can not have two users with the same login !')
@@ -913,6 +927,13 @@ class Users(models.Model):
     def _register_hook(self):
         if hasattr(self, 'check_credentials'):
             _logger.warning("The check_credentials method of res.users has been renamed _check_credentials. One of your installed modules defines one, but it will not be called anymore.")
+
+    def _get_placeholder_filename(self, field=None):
+        image_fields = ['image_%s' % size for size in [1920, 1024, 512, 256, 128]]
+        if field in image_fields and not self:
+            return 'base/static/img/user-slash.png'
+        return super()._get_placeholder_filename(field=field)
+
 #
 # Implied groups
 #
