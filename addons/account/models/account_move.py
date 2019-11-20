@@ -2079,7 +2079,7 @@ class AccountMove(models.Model):
             # When the accounting date is prior to the tax lock date, move it automatically to the next available date.
             # /!\ 'check_move_validity' must be there since the dynamic lines will be recomputed outside the 'onchange'
             # environment.
-            if move.company_id.tax_lock_date and move.date <= move.company_id.tax_lock_date:
+            if (move.company_id.tax_lock_date and move.date <= move.company_id.tax_lock_date) and (move.line_ids.tax_ids or move.line_ids.tag_ids):
                 move.date = move.company_id.tax_lock_date + timedelta(days=1)
                 move.with_context(check_move_validity=False)._onchange_currency()
 
