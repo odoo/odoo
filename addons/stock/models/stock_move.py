@@ -187,7 +187,7 @@ class StockMove(models.Model):
         for move in self:
             move.display_assign_serial = (
                 move.has_tracking == 'serial' and
-                move.state in ('partially_available', 'assigned') and
+                move.state in ('partially_available', 'assigned', 'confirmed') and
                 move.picking_type_id.use_create_lots and
                 not move.picking_type_id.use_existing_lots and
                 not move.picking_type_id.show_reserved
