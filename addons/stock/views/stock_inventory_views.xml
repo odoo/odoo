@@ -148,7 +148,9 @@
                             </div>
                             <div class="o_kanban_record_bottom">
                                 <div class="oe_kanban_bottom_left">
-                                    <i class="fa fa-clock-o" role="img" aria-label="Date" title="Date"/> <t t-esc="record.date.value"/>
+                                </div>
+                                <div class="oe_kanban_bottom_right">
+                                    <field name="date" widget="date"/>
                                 </div>
                             </div>
                         </div>
