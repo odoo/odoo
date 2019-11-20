@@ -5,6 +5,7 @@ import itertools
 import json
 
 from odoo import fields, _, models
+from odoo.osv import expression
 from odoo.tools import float_round
 from odoo.tools.misc import get_lang
 
@@ -103,7 +104,8 @@ class Project(models.Model):
         employee_ids.extend(list(map(lambda x: x['employee_id'][0], aal_employee_ids)))
 
         # Retrieve the employees for which the current user can see theirs timesheets
-        employees = self.env['hr.employee'].sudo().browse(employee_ids).filtered_domain(self.env['account.analytic.line']._domain_employee_id())
+        employee_domain = expression.AND([[('company_id', 'in', self.env.companies.ids)], self.env['account.analytic.line']._domain_employee_id()])
+        employees = self.env['hr.employee'].sudo().browse(employee_ids).filtered_domain(employee_domain)
         repartition_domain = [('project_id', 'in', self.ids), ('employee_id', '!=', False), ('timesheet_invoice_type', '!=', False)]  # force billable type
         # repartition data, without timesheet on cancelled so
         repartition_data = self.env['account.analytic.line'].read_group(repartition_domain + ['|', ('so_line', '=', False), ('so_line.state', '!=', 'cancel')], ['employee_id', 'timesheet_invoice_type', 'unit_amount'], ['employee_id', 'timesheet_invoice_type'], lazy=False)
