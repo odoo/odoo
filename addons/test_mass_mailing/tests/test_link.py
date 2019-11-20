@@ -5,7 +5,7 @@ from odoo.tests.common import users
 from odoo.addons.test_mass_mailing.tests import common
 
 
-class TestLinkTracker(common.MassMailingCase):
+class TestLinkTracker(common.TestMailCommon):
 
     def setUp(self):
         super(TestLinkTracker, self).setUp()
