@@ -89,7 +89,7 @@ def check(f):
         while True:
             try:
                 if odoo.registry(dbname)._init and not odoo.tools.config['test_enable']:
-                    raise odoo.exceptions.Warning('Currently, this database is not fully loaded and can not be used.')
+                    raise odoo.exceptions.UserError('Currently, this database is not fully loaded and can not be used.')
                 return f(dbname, *args, **kwargs)
             except (OperationalError, QWebException) as e:
                 if isinstance(e, QWebException):

@@ -17,34 +17,45 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
-class UserError(Exception):
-    def __init__(self, msg):
-        super(UserError, self).__init__(msg)
+class OdooException(Exception):
 
-    @property
-    def name(self):
-        return self.args[0]
+    def __init__(self, *args, **kwargs):
+        """
+        Base exception for all Odoo-related exceptions, shouldn't be instantiated manually.
+
+        :param List[str] args: args[0] is a message to display whereas args[1:] are assumed to be
+            arguments to interpolate into the message.
+        :param kwargs: any "technical" arguments that may be necessary for post-processing of
+            the error but are not necessary to display the message and thus won't be interpolated
+            into it.
+        """
+        # TODO: def __init__(self, message, *args, **kwargs) ?
+        if type(self) is OdooException:
+            raise NotImplementedError("OdooException should not be manually instanced")
+        super().__init__(*args)
+        self.args = args
+        self.kwargs = kwargs
+
+    def __str__(self):
+        return self.args[0] % tuple(self.args[1:])
 
 
-# deprecated due to collision with builtins, kept for compatibility
-Warning = UserError
+class UserError(OdooException):
+    """Used for invalid user-submitted input"""
+    pass
 
 
-class RedirectWarning(Exception):
+class RedirectWarning(OdooException):
     """ Warning with a possibility to redirect the user instead of simply
     displaying the warning message.
 
     :param int action_id: id of the action where to perform the redirection
-    :param str button_text: text to put on the button that will trigger
-        the redirection.
+    :param str button_text: text to put on the button that will trigger the redirection.
     """
-    # using this RedirectWarning won't crash if used as an user_error
-    @property
-    def name(self):
-        return self.args[0]
+    pass
 
 
-class AccessDenied(Exception):
+class AccessDenied(OdooException):
     """Login/password error.
 
     .. note::
@@ -56,43 +67,36 @@ class AccessDenied(Exception):
         When you try to log with a wrong password.
     """
 
-    def __init__(self, message='Access denied'):
-        super(AccessDenied, self).__init__(message)
+    def __init__(self, message='Access denied', *args):
+        super().__init__(message, *args)
         self.with_traceback(None)
         self.__cause__ = None
         self.traceback = ('', '', '')
 
 
-class AccessError(Exception):
+class AccessError(OdooException):
     """ Access rights error.
     Example: When you try to read a record that you are not allowed to."""
-    def __init__(self, msg):
-        super(AccessError, self).__init__(msg)
-
-    @property
-    def name(self):
-        return self.args[0]
+    pass
 
 
-class MissingError(Exception):
+class MissingError(OdooException):
     """ Missing record(s).
     Example: When you try to write on a deleted record."""
-    def __init__(self, msg):
-        super(MissingError, self).__init__(msg)
+    pass
 
 
-class ValidationError(Exception):
+class ValidationError(OdooException):
     """ Violation of python constraints
     Example: When you try to create a new user with a login which already exist in the db."""
-    def __init__(self, msg):
-        super(ValidationError, self).__init__(msg)
+    pass
 
 
-class CacheMiss(UserError, ValidationError, KeyError):
+class CacheMiss(OdooException, KeyError):
+    # XXX: Possibly shouldn't inherit from OdooException?
     """ Missing value(s) in cache.
     Example: When you try to read a value in a flushed cache."""
-    def __init__(self, record, field):
-        super(CacheMiss, self).__init__("%s.%s" % (str(record), field.name))
+    pass
 
 
 class DeferredException(Exception):
@@ -110,5 +114,5 @@ class DeferredException(Exception):
         self.traceback = tb
 
 
-class QWebException(Exception):
+class QWebException(OdooException):
     pass

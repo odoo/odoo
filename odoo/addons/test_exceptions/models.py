@@ -14,9 +14,6 @@ class m(models.Model):
     _name = 'test.exceptions.model'
     _description = 'Test Exception Model'
 
-    def generate_warning(self):
-        raise odoo.exceptions.Warning('description')
-
     def generate_redirect_warning(self):
         action = self.env.ref('test_exceptions.action_test_exceptions')
         raise odoo.exceptions.RedirectWarning('description', action.id, 'Go to the redirection')
@@ -41,9 +38,6 @@ class m(models.Model):
 
     def generate_validation_error(self):
         raise odoo.exceptions.ValidationError('description')
-
-    def generate_warning_safe_eval(self):
-        self.generate_safe_eval(self.generate_warning)
 
     def generate_redirect_warning_safe_eval(self):
         self.generate_safe_eval(self.generate_redirect_warning)
