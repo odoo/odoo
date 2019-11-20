@@ -190,16 +190,16 @@ models.Order = models.Order.extend({
         this.trigger('change',this);
     },
     computeChanges: function(categories){
-        var current_res = this.build_line_resume();
-        var old_res     = this.saved_resume || {};
+        var curr_list   = Object.values(this.build_line_resume());
+        var old_list    = this.saved_resume? Object.values(this.saved_resume): [];
         var json        = this.export_as_JSON();
         var add = [];
         var rem = [];
         var line_hash;
 
-        for ( line_hash in current_res) {
-            var curr = current_res[line_hash];
-            var old  = old_res[line_hash];
+        for (var id in curr_list) {
+            var curr = curr_list[id];
+            var old = old_list.find(function(line) {return curr.product_id === line.product_id});
 
             if (typeof old === 'undefined') {
                 add.push({
@@ -228,9 +228,10 @@ models.Order = models.Order.extend({
             }
         }
 
-        for (line_hash in old_res) {
-            if (typeof current_res[line_hash] === 'undefined') {
-                var old = old_res[line_hash];
+        for (id in old_list) {
+            var old = old_list[id];
+            var curr = curr_list.find(function(line) {return old.product_id === line.product_id});
+            if (typeof curr === 'undefined' && old.qty != 0) {
                 rem.push({
                     'id':       old.product_id,
                     'name':     this.pos.db.get_product_by_id(old.product_id).display_name,
@@ -315,12 +316,12 @@ models.Order = models.Order.extend({
     },
     export_as_JSON: function(){
         var json = _super_order.export_as_JSON.apply(this,arguments);
-        json.multiprint_resume = this.saved_resume;
+        json.multiprint_resume = JSON.stringify(this.saved_resume);
         return json;
     },
     init_from_JSON: function(json){
         _super_order.init_from_JSON.apply(this,arguments);
-        this.saved_resume = json.multiprint_resume;
+        this.saved_resume = JSON.parse(json.multiprint_resume);
     },
 });
 

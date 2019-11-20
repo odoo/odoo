@@ -18,6 +18,7 @@ class PosOrder(models.Model):
 
     table_id = fields.Many2one('restaurant.table', string='Table', help='The table where this order was served')
     customer_count = fields.Integer(string='Guests', help='The amount of customers that have been served by this order.')
+    multiprint_resume = fields.Char()
 
     def _get_pack_lot_lines(self, order_lines):
         """Add pack_lot_lines to the order_lines.
@@ -131,6 +132,7 @@ class PosOrder(models.Model):
                     'create_uid',
                     'create_date',
                     'customer_count',
+                    'multiprint_resume',
                     'fiscal_position_id',
                     'table_id',
                     'to_invoice',
@@ -171,4 +173,5 @@ class PosOrder(models.Model):
         order_fields = super(PosOrder, self)._order_fields(ui_order)
         order_fields['table_id'] = ui_order.get('table_id', False)
         order_fields['customer_count'] = ui_order.get('customer_count', 0)
+        order_fields['multiprint_resume'] = ui_order.get('multiprint_resume')
         return order_fields
