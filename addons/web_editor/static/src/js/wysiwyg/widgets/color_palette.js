@@ -157,10 +157,12 @@ const ColorPaletteWidget = Widget.extend({
         const existingColors = new Set(this.summernoteCustomColorsArray.concat(Array.from(this.el.querySelectorAll('.o_custom_color')).map(el => el.style.backgroundColor)));
         if (!this.options.excluded.includes('custom')) {
             Array.from(this.options.$editable.find('[style*="color"]')).forEach(el => {
-                const color = el.style.color || el.style.backgroundColor;
-                if (color && !existingColors.has(color)) {
-                    this._addCustomColorButton(color);
-                    existingColors.add(color);
+                for (const colorProp of ['color', 'backgroundColor']) {
+                    const color = el.style[colorProp];
+                    if (color && !existingColors.has(color)) {
+                        this._addCustomColorButton(color);
+                        existingColors.add(color);
+                    }
                 }
             });
         }
