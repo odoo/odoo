@@ -152,7 +152,7 @@ class Channel(models.Model):
         string='Members', help="All members of the channel.", context={'active_test': False}, copy=False, depends=['channel_partner_ids'])
     members_count = fields.Integer('Attendees count', compute='_compute_members_count')
     members_done_count = fields.Integer('Attendees Done Count', compute='_compute_members_done_count')
-    is_member = fields.Boolean(string='Is Member', compute='_compute_is_member')
+    is_member = fields.Boolean(string='Is Member', compute='_compute_is_member', compute_sudo=False)
     channel_partner_ids = fields.One2many('slide.channel.partner', 'channel_id', string='Members Information', groups='website.group_website_publisher', depends=['partner_ids'])
     upload_group_ids = fields.Many2many(
         'res.groups', 'rel_upload_groups', 'channel_id', 'group_id', string='Upload Groups',
@@ -193,6 +193,7 @@ class Channel(models.Model):
             channel.members_done_count = data.get(channel.id, 0)
 
     @api.depends('channel_partner_ids.partner_id')
+    @api.depends_context('uid')
     @api.model
     def _compute_is_member(self):
         channel_partners = self.env['slide.channel.partner'].sudo().search([
@@ -279,6 +280,7 @@ class Channel(models.Model):
                 record.can_upload = self.env.user.has_group('website.group_website_publisher')
 
     @api.depends('channel_type', 'user_id', 'can_upload')
+    @api.depends_context('uid')
     def _compute_can_publish(self):
         """ For channels of type 'training', only the responsible (see user_id field) can publish slides.
         The 'sudo' user needs to be handled because he's the one used for uploads done on the front-end when the
@@ -303,6 +305,8 @@ class Channel(models.Model):
                 base_url = channel.get_base_url()
                 channel.website_url = '%s/slides/%s' % (base_url, slug(channel))
 
+    @api.depends('can_publish', 'is_member', 'karma_review', 'karma_slide_comment', 'karma_slide_vote')
+    @api.depends_context('uid')
     def _compute_action_rights(self):
         user_karma = self.env.user.karma
         for channel in self:
