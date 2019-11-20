@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.base.tests.test_ir_actions import TestServerActionsBase
-from odoo.addons.test_mail.tests.common import BaseFunctionalTest
+from odoo.addons.test_mail.tests.common import TestMailCommon
 
 
-class TestServerActionsEmail(BaseFunctionalTest, TestServerActionsBase):
+class TestServerActionsEmail(TestMailCommon, TestServerActionsBase):
 
     def test_action_email(self):
         email_template = self._create_template('res.partner', {'partner_to': '%s' % self.test_partner.id})

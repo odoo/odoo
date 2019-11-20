@@ -12,6 +12,7 @@ contains models used only to perform tests independently to functional aspects o
 real applications. """,
     'depends': [
         'test_mail',
+        'test_mass_mailing',
         'mail',
         'mail_bot',
         # 'snailmail',

@@ -1,16 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from unittest.mock import patch
 from werkzeug import urls
 
-from odoo.addons.test_mass_mailing.tests.common import MassMailingCase
-from odoo.addons.base.models.ir_config_parameter import IrConfigParameter
+from odoo.addons.test_mass_mailing.tests.common import TestMailCommon
 from odoo.tests.common import TransactionCase, users
 from odoo.tools import mute_logger
 
 
-class TestMassMail(MassMailingCase):
+class TestMassMail(TestMailCommon):
 
     def setUp(self):
         """ In this setup we prepare 20 blacklist entries. We therefore add

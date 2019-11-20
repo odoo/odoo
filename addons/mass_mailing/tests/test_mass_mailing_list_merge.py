@@ -4,7 +4,7 @@
 from odoo.tests import common
 
 
-class TestMassMailingCommon(common.TransactionCase):
+class TestMailingListMerge(common.TransactionCase):
 
     def test_00_test_mass_mailing_list_merge(self):
         # Data set up

@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from unittest.mock import patch
-from odoo.addons.test_mail.tests import common
-from odoo.tools import formataddr
+
+from odoo.addons.test_mail.tests.common import TestMailCommon
 
 
-class TestTracking(common.BaseFunctionalTest, common.MockEmails):
+class TestTracking(TestMailCommon):
 
     def setUp(self):
         super(TestTracking, self).setUp()
@@ -25,10 +27,11 @@ class TestTracking(common.BaseFunctionalTest, common.MockEmails):
     def test_message_track_no_subtype(self):
         """ Update some tracked fields not linked to some subtype -> message with onchange """
         customer = self.env['res.partner'].create({'name': 'Customer', 'email': 'cust@example.com'})
-        self.record.write({
-            'name': 'Test2',
-            'customer_id': customer.id,
-        })
+        with self.mock_mail_gateway():
+            self.record.write({
+                'name': 'Test2',
+                'customer_id': customer.id,
+            })
 
         # one new message containing tracking; without subtype linked to tracking, a note is generated
         self.assertEqual(len(self.record.message_ids), 1)
@@ -37,7 +40,7 @@ class TestTracking(common.BaseFunctionalTest, common.MockEmails):
         # no specific recipients except those following notes, no email
         self.assertEqual(self.record.message_ids.partner_ids, self.env['res.partner'])
         self.assertEqual(self.record.message_ids.notified_partner_ids, self.env['res.partner'])
-        self.assertEqual(self._mails, [])
+        self.assertNotSentEmail()
 
         # verify tracked value
         self.assertTracking(
@@ -77,10 +80,11 @@ class TestTracking(common.BaseFunctionalTest, common.MockEmails):
         self.record.write({'mail_template': self.env.ref('test_mail.mail_test_full_tracking_tpl').id})
         self.assertEqual(self.record.message_ids, self.env['mail.message'])
 
-        self.record.write({
-            'name': 'Test2',
-            'customer_id': self.user_admin.partner_id.id,
-        })
+        with self.mock_mail_gateway():
+            self.record.write({
+                'name': 'Test2',
+                'customer_id': self.user_admin.partner_id.id,
+            })
 
         self.assertEqual(len(self.record.message_ids), 2, 'should have 2 new messages: one for tracking, one for template')
 
@@ -89,9 +93,7 @@ class TestTracking(common.BaseFunctionalTest, common.MockEmails):
         self.assertEqual(self.record.message_ids[0].body, '<p>Hello Test2</p>')
 
         # one email send due to template
-        self.assertEqual(len(self._mails), 1)
-        self.assertEqual(set(self._mails[0]['email_to']), set([formataddr((self.user_admin.name, self.user_admin.email))]))
-        self.assertHtmlEqual(self._mails[0]['body'], '<p>Hello Test2</p>')
+        self.assertSentEmail(self.record.env.user.partner_id, [self.partner_admin], body='<p>Hello Test2</p>')
 
         # one new message containing tracking; without subtype linked to tracking
         self.assertEqual(self.record.message_ids[1].subtype_id, self.env.ref('mail.mt_note'))
@@ -105,18 +107,19 @@ class TestTracking(common.BaseFunctionalTest, common.MockEmails):
 
         Model = self.env['mail.test.full'].with_user(self.user_employee).with_context(self._test_context)
         Model = Model.with_context(mail_notrack=False)
-        record = Model.create({
-            'name': 'Test',
-            'customer_id': self.user_admin.partner_id.id,
-            'mail_template': self.env.ref('test_mail.mail_test_full_tracking_tpl').id,
-        })
+        with self.mock_mail_gateway():
+            record = Model.create({
+                'name': 'Test',
+                'customer_id': self.user_admin.partner_id.id,
+                'mail_template': self.env.ref('test_mail.mail_test_full_tracking_tpl').id,
+            })
 
         self.assertEqual(len(record.message_ids), 1, 'should have 1 new messages for template')
         # one new message containing the template linked to tracking
         self.assertEqual(record.message_ids[0].subject, 'Test Template')
         self.assertEqual(record.message_ids[0].body, '<p>Hello Test</p>')
         # one email send due to template
-        self.assertEqual(len(self._mails), 1)
+        self.assertSentEmail(self.record.env.user.partner_id, [self.partner_admin], body='<p>Hello Test</p>')
 
     def test_message_tracking_sequence(self):
         """ Update some tracked fields and check that the mail.tracking.value are ordered according to their tracking_sequence"""
