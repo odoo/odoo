@@ -64,7 +64,7 @@ class TestFiscalPosition(common.SavepointCase):
     def test_10_fp_country(self):
         def assert_fp(partner, expected_pos, message):
             self.assertEqual(
-                self.fp.get_fiscal_position(partner.id),
+                self.fp.get_fiscal_position(partner.id).id,
                 expected_pos.id,
                 message)
 

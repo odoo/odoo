@@ -24,7 +24,6 @@ class PurchaseOrder(models.Model):
 
         FiscalPosition = self.env['account.fiscal.position']
         fpos = FiscalPosition.with_company(self.company_id).get_fiscal_position(partner.id)
-        fpos = FiscalPosition.browse(fpos)
 
         self.partner_id = partner.id
         self.fiscal_position_id = fpos.id
