@@ -32,9 +32,6 @@
                                 domain="[('model_id', '=', res_model_id)]"
                                 attrs="{'invisible': [('res_model_id', '=', False)]}"
                                 context="{'default_model_id': res_model_id}"/>
-                        </group>
-                        <group>
-                            <field name="default_description"/>
                             <label for="delay_count"/>
                             <div>
                                 <div class="o_row">
@@ -44,6 +41,9 @@
                                 <field name="delay_from"/>
                             </div>
                         </group>
+                    </group>
+                    <group>
+                        <field name="default_description"/>
                     </group>
                     <p class="alert alert-info" role="alert" attrs="{'invisible': [('res_model_change', '=', False)]}">Modifying the model can have an impact on existing activities using this activity type, be careful.</p>
                 </sheet>
