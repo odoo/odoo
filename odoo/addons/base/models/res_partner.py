@@ -228,7 +228,6 @@ class Partner(models.Model):
             self._cr.execute("""CREATE INDEX res_partner_vat_index ON res_partner (regexp_replace(upper(vat), '[^A-Z0-9]+', '', 'g'))""")
 
     @api.depends('is_company', 'name', 'parent_id.name', 'type', 'company_name')
-    @api.depends_context('show_address', 'show_address_only', 'show_email', 'html_format', 'show_vat')
     def _compute_display_name(self):
         diff = dict(show_address=None, show_address_only=None, show_email=None, html_format=None, show_vat=None)
         names = dict(self.with_context(**diff).name_get())
