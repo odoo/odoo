@@ -4,9 +4,8 @@
 import logging
 import werkzeug
 import uuid
-from itertools import groupby
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo import tools
 from odoo.addons.http_routing.models.ir_http import url_for
 from odoo.osv import expression
@@ -25,9 +24,9 @@ class View(models.Model):
     page_ids = fields.One2many('website.page', 'view_id')
     first_page_id = fields.Many2one('website.page', string='Website Page', help='First page linked to this view', compute='_compute_first_page_id')
     track = fields.Boolean(string='Track', default=False, help="Allow to specify for one page of the website to be trackable or not")
-    visibility = fields.Selection([('', 'All'), ('connected', 'Connected'), ('restricted_group', 'Restricted Group'), ('password', 'With Password'), ('employee', 'Internal Users')], default='')
+    visibility = fields.Selection([('', 'All'), ('connected', 'Signed In'), ('restricted_group', 'Restricted Group'), ('password', 'With Password')], default='')
     visibility_group = fields.Many2one('res.groups')
-    visibility_password = fields.Char(groups='base.group_system')
+    visibility_password = fields.Char(groups='website.group_website_publisher')
 
     def _compute_first_page_id(self):
         for view in self:
@@ -314,22 +313,22 @@ class View(models.Model):
 
     def handle_visibility(self, do_raise=True):
         """ Check the visibility set on the main view and raise 403 if you should not have access.
-            Order is: Public, Connected, Has group, Password, Employee
-            An user type can see all previous type. So an employee can see password page withtout
-            know the password.
+            Order is: Public, Connected, Has group, Password
 
-            It only check the visibility on the main content, others views called stay available in
-            rpc or via other way.
+            It only check the visibility on the main content, others views called stay available in rpc.
         """
         error = False
         self = self.sudo()
         if self.visibility and not request.env.user.has_group('website.group_website_designer'):
-            if (self.visibility == 'connected' and request.website.is_public_user()) or \
-               (self.visibility == 'employee' and request.env.user.share) or \
-               (self.visibility == 'restricted_group' and request.env.user.share and self.visibility_group and
-                    request.env.user.id not in self.visibility_group.sudo().users.ids):
+            if (self.visibility == 'connected' and request.website.is_public_user()):
                 error = werkzeug.exceptions.Forbidden()
-            elif self.visibility == 'password' and request.env.user.share and (request.website.is_public_user() or self.id not in request.session.get('views_unlock', [])):
+            elif self.visibility == 'restricted_group' and self.visibility_group:
+                # special case, to avoid employee.user_ids
+                if (self.visibility_group.get_external_id() == 'base.group_user' and not request.env.user.share) or \
+                        request.env.user.id not in self.visibility_group.sudo().users.ids:
+                    error = werkzeug.exceptions.Forbidden()
+            elif self.visibility == 'password' and \
+                    (request.website.is_public_user() or self.id not in request.session.get('views_unlock', [])):
                 if self.sudo().visibility_password == request.params.get('visibility_password'):
                     request.session.setdefault('views_unlock', list()).append(self.id)
                 else:
