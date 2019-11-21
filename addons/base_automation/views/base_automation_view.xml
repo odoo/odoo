@@ -66,6 +66,11 @@
                     <field name="trg_date_calendar_id"
                         attrs="{'invisible': ['|', ('trg_date_id','=',False), ('trg_date_range_type', '!=', 'day')]}"/>
                 </xpath>
+                <xpath expr="//group[@name='action_wrapper']" position="after">
+                    <div class="alert alert-info" role="alert" attrs="{'invisible': [('trigger', '!=', 'on_time')]}">
+                        <field name="least_delay_msg"/>
+                    </div>
+                </xpath>
             </field>
         </record>
 

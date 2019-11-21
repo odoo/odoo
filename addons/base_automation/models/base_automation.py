@@ -25,6 +25,14 @@ DATE_RANGE_FUNCTION = {
     False: lambda interval: relativedelta(0),
 }
 
+DATE_RANGE_FACTOR = {
+    'minutes': 1,
+    'hour': 60,
+    'day': 24 * 60,
+    'month': 30 * 24 * 60,
+    False: 0,
+}
+
 
 class BaseAutomation(models.Model):
     _name = 'base.automation'
@@ -64,9 +72,11 @@ class BaseAutomation(models.Model):
     trigger_field_ids = fields.Many2many('ir.model.fields', string='Trigger Fields',
                                         help="The action will be triggered if and only if one of these fields is updated."
                                              "If empty, all fields are watched.")
+    least_delay_msg = fields.Char(compute='_compute_least_delay_msg')
 
-    # which fields have an impact on the registry
+    # which fields have an impact on the registry and the cron
     CRITICAL_FIELDS = ['model_id', 'active', 'trigger', 'on_change_field_ids']
+    RANGE_FIELDS = ['trg_date_range', 'trg_date_range_type']
 
     @api.onchange('model_id')
     def onchange_model_id(self):
@@ -109,6 +119,8 @@ class BaseAutomation(models.Model):
         if set(vals).intersection(self.CRITICAL_FIELDS):
             self._update_cron()
             self._update_registry()
+        elif set(vals).intersection(self.RANGE_FIELDS):
+            self._update_cron()
         return res
 
     def unlink(self):
@@ -119,10 +131,18 @@ class BaseAutomation(models.Model):
 
     def _update_cron(self):
         """ Activate the cron job depending on whether there exists action rules
-            based on time conditions.
+            based on time conditions.  Also update its frequency according to
+            the smallest action delay, or restore the default 4 hours if there
+            is no time based action.
         """
         cron = self.env.ref('base_automation.ir_cron_data_base_automation_check', raise_if_not_found=False)
-        return cron and cron.toggle(model=self._name, domain=[('trigger', '=', 'on_time')])
+        if cron:
+            actions = self.with_context(active_test=True).search([('trigger', '=', 'on_time')])
+            cron.try_write({
+                'active': bool(actions),
+                'interval_type': 'minutes',
+                'interval_number': self._get_cron_interval(actions),
+            })
 
     def _update_registry(self):
         """ Update the registry after a modification on action rules. """
@@ -153,6 +173,22 @@ class BaseAutomation(models.Model):
             'uid': self.env.uid,
             'user': self.env.user,
         }
+
+    def _get_cron_interval(self, actions=None):
+        """ Return the expected time interval used by the cron, in minutes. """
+        def get_delay(rec):
+            return rec.trg_date_range * DATE_RANGE_FACTOR[rec.trg_date_range_type]
+
+        if actions is None:
+            actions = self.with_context(active_test=True).search([('trigger', '=', 'on_time')])
+
+        # Minimum 1 minute, maximum 4 hours, 10% tolerance
+        delay = min(actions.mapped(get_delay), default=0)
+        return min(max(1, delay // 10), 4 * 60) if delay else 4 * 60
+
+    def _compute_least_delay_msg(self):
+        msg = _("Note that this action can be trigged up to %d minutes after its schedule.")
+        self.least_delay_msg = msg % self._get_cron_interval()
 
     def _filter_pre(self, records):
         """ Filter the records that satisfy the precondition of action ``self``. """
