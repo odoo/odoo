@@ -658,7 +658,7 @@
         <t t-if="!paymentlines.length">
             <div class='paymentlines-empty'>
                 <div class='total'>
-                    <t t-esc="widget.format_currency(order.get_total_with_tax())"/>
+                    <t t-esc="widget.format_currency(order.get_total_with_tax() + order.get_rounding_applied())"/>
                 </div>
                 <div class='message'>
                     Please select a payment method.
@@ -678,7 +678,7 @@
                     <div class="payment-status-total-due">
                         <span class="label">Total Due</span>
                         <span>
-                            <t t-esc="widget.format_currency(order.get_total_with_tax())" />
+                            <t t-esc="widget.format_currency(order.get_total_with_tax() + order.get_rounding_applied())" />
                         </span>
                     </div>
                 </div>
@@ -994,6 +994,12 @@
                 TOTAL
                 <span t-esc='widget.format_currency(receipt.total_with_tax)' class="pos-receipt-right-align"/>
             </div>
+            <t t-if="receipt.total_rounded != receipt.total_with_tax">
+                <div class="pos-receipt-amount">
+                    ROUNDED
+                    <span t-esc='widget.format_currency(receipt.total_rounded)' class="pos-receipt-right-align"/>
+                </div>
+            </t>
             <br/><br/>
 
             <!-- Payment Lines -->

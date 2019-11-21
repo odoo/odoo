@@ -6,7 +6,7 @@ from datetime import timedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import float_is_zero
+from odoo.tools import float_is_zero, float_compare
 
 
 class PosSession(models.Model):
@@ -375,6 +375,7 @@ class PosSession(models.Model):
         taxes = defaultdict(tax_amounts)
         stock_expense = defaultdict(amounts)
         stock_output = defaultdict(amounts)
+        rounding_difference = {'amount': 0.0, 'amount_converted': 0.0}
         # Track the receivable lines of the invoiced orders' account moves for reconciliation
         # These receivable lines are reconciled to the corresponding invoice receivable lines
         # of this session's move_id.
@@ -400,7 +401,10 @@ class PosSession(models.Model):
             if order.is_invoiced:
                 # Combine invoice receivable lines
                 key = order.partner_id.property_account_receivable_id.id
-                invoice_receivables[key] = self._update_amounts(invoice_receivables[key], {'amount': order.amount_total}, order.date_order)
+                if self.config_id.cash_rounding:
+                    invoice_receivables[key] = self._update_amounts(invoice_receivables[key], {'amount': order.amount_paid}, order.date_order)
+                else:
+                    invoice_receivables[key] = self._update_amounts(invoice_receivables[key], {'amount': order.amount_total}, order.date_order)
                 # side loop to gather receivable lines by account for reconciliation
                 for move_line in order.account_move.line_ids.filtered(lambda aml: aml.account_id.internal_type == 'receivable'):
                     order_account_move_receivable_lines[move_line.account_id.id] |= move_line
@@ -447,6 +451,10 @@ class PosSession(models.Model):
                         stock_expense[exp_key] = self._update_amounts(stock_expense[exp_key], {'amount': amount}, move.picking_id.date)
                         stock_output[out_key] = self._update_amounts(stock_output[out_key], {'amount': amount}, move.picking_id.date)
 
+                if self.config_id.cash_rounding:
+                    diff = order.amount_paid - order.amount_total
+                    rounding_difference = self._update_amounts(rounding_difference, {'amount': diff}, order.date_order)
+
         if self.company_id.anglo_saxon_accounting:
             global_session_pickings = self.picking_ids.filtered(lambda p: not p.pos_order_id)
             if global_session_pickings:
@@ -480,6 +488,10 @@ class PosSession(models.Model):
                 'Please set corresponding tax account in each repartition line of the following taxes: \n%s'
             ) % ', '.join(tax_names_no_account)
             raise UserError(error_message)
+        rounding_vals = []
+
+        if not float_is_zero(rounding_difference['amount'], precision_rounding=self.currency_id.rounding) or not float_is_zero(rounding_difference['amount_converted'], precision_rounding=self.currency_id.rounding):
+            rounding_vals = [self._get_rounding_difference_vals(rounding_difference['amount'], rounding_difference['amount_converted'])]
 
         MoveLine.create(
             tax_vals
@@ -487,6 +499,7 @@ class PosSession(models.Model):
             + [self._get_stock_expense_vals(key, amounts['amount'], amounts['amount_converted']) for key, amounts in stock_expense.items()]
             + [self._get_split_receivable_vals(key, amounts['amount'], amounts['amount_converted']) for key, amounts in split_receivables.items()]
             + [self._get_combine_receivable_vals(key, amounts['amount'], amounts['amount_converted']) for key, amounts in combine_receivables.items()]
+            + rounding_vals
         )
 
         ## SECTION: Create cash statement lines and cash move lines
@@ -602,6 +615,20 @@ class PosSession(models.Model):
             'amount': order_line.price_subtotal,
             'taxes': taxes,
         }
+
+    def _get_rounding_difference_vals(self, amount, amount_converted):
+        if self.config_id.cash_rounding:
+            partial_args = {
+                'name': 'Rounding line',
+                'move_id': self.move_id.id,
+            }
+            if float_compare(0.0, amount, precision_rounding=self.currency_id.rounding) > 0:    # loss
+                partial_args['account_id'] = self.config_id.rounding_method.loss_account_id.id
+                return self._debit_amounts(partial_args, -amount, -amount_converted)
+
+            if float_compare(0.0, amount, precision_rounding=self.currency_id.rounding) < 0:   # profit
+                partial_args['account_id'] = self.config_id.rounding_method.profit_account_id.id
+                return self._credit_amounts(partial_args, amount, amount_converted)
 
     def _get_split_receivable_vals(self, payment, amount, amount_converted):
         partial_vals = {

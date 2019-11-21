@@ -8,8 +8,8 @@ import psycopg2
 import pytz
 
 from odoo import api, fields, models, tools, _
-from odoo.tools import float_is_zero
-from odoo.exceptions import UserError
+from odoo.tools import float_is_zero, float_round
+from odoo.exceptions import ValidationError, UserError
 from odoo.http import request
 from odoo.osv.expression import AND
 import base64
@@ -271,7 +271,6 @@ class PosOrder(models.Model):
         for order in self:
             order.currency_rate = self.env['res.currency']._get_conversion_rate(order.company_id.currency_id, order.currency_id, order.company_id, order.date_order)
 
-
     @api.onchange('payment_ids', 'lines')
     def _onchange_amount_all(self):
         for order in self:
@@ -358,8 +357,15 @@ class PosOrder(models.Model):
 
     def action_pos_order_paid(self):
         self.ensure_one()
-        if not float_is_zero(self.amount_total - self.amount_paid, precision_rounding=self.currency_id.rounding):
+
+        if not self.config_id.cash_rounding:
+            total = self.amount_total
+        else:
+            total = float_round(self.amount_total, precision_rounding=self.config_id.rounding_method.rounding, rounding_method=self.config_id.rounding_method.rounding_method)
+
+        if not float_is_zero(total - self.amount_paid, precision_rounding=self.currency_id.rounding):
             raise UserError(_("Order %s is not fully paid.") % self.name)
+
         self.write({'state': 'paid'})
         return True
 
@@ -389,6 +395,7 @@ class PosOrder(models.Model):
                 'invoice_date': order.date_order.date(),
                 'fiscal_position_id': order.fiscal_position_id.id,
                 'invoice_line_ids': [(0, None, order._prepare_invoice_line(line)) for line in order.lines],
+                'invoice_cash_rounding_id': order.config_id.rounding_method.id if order.config_id.cash_rounding else False
             }
             new_move = moves.sudo()\
                             .with_company(order.company_id)\
@@ -824,3 +831,13 @@ class ReportSaleDetails(models.AbstractModel):
         configs = self.env['pos.config'].browse(data['config_ids'])
         data.update(self.get_sale_details(data['date_start'], data['date_stop'], configs))
         return data
+
+    class AccountCashRounding(models.Model):
+        _inherit = 'account.cash.rounding'
+
+        @api.constrains('rounding', 'rounding_method', 'strategy')
+        def _check_session_state(self):
+            open_session = self.env['pos.session'].search([('config_id.rounding_method', '=', self.id), ('state', '!=', 'closed')])
+            if open_session:
+                raise ValidationError(
+                    _("You are not allowed to change the cash rounding configuration while a pos session using it is already opened."))

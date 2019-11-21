@@ -21,6 +21,7 @@ class TestPoSBasicConfig(TestPoSCommon):
         self.product1 = self.create_product('Product 1', self.categ_basic, 10.0, 5)
         self.product2 = self.create_product('Product 2', self.categ_basic, 20.0, 10)
         self.product3 = self.create_product('Product 3', self.categ_basic, 30.0, 15)
+        self.product4 = self.create_product('Product_4', self.categ_basic, 9.96, 4.98)
         self.adjust_inventory([self.product1, self.product2, self.product3], [100, 50, 50])
 
     def test_orders_no_invoiced(self):
@@ -441,3 +442,79 @@ class TestPoSBasicConfig(TestPoSCommon):
 
         for line in cash_receivable_lines:
             self.assertTrue(line.full_reconcile_id, msg='Each cash receivable line should be fully-reconciled.')
+
+    def test_rounding_method(self):
+        # set the cash rounding method
+        self.config.cash_rounding = True
+        self.config.rounding_method = self.env['account.cash.rounding'].create({
+            'name': 'add_invoice_line',
+            'rounding': 0.05,
+            'strategy': 'add_invoice_line',
+            'profit_account_id': self.company['default_cash_difference_income_account_id'].copy().id,
+            'loss_account_id': self.company['default_cash_difference_expense_account_id'].copy().id,
+            'rounding_method': 'HALF-UP',
+        })
+
+        self.open_new_session()
+
+        """ Test for orders: one with invoice
+
+        3 orders
+        - order 1, paid by cash
+        - order 2, paid by bank
+        - order 3, paid by bank, invoiced
+
+        Orders
+        ======
+        +---------+----------+---------------+----------+-----+-------+
+        | order   | payments | invoiced?     | product  | qty | total |
+        +---------+----------+---------------+----------+-----+-------+
+        | order 1 | bank     | no            | product1 |   6 |    60 |
+        |         |          |               | product4 |   4 | 39.84 |
+        +---------+----------+---------------+----------+-----+-------+
+        | order 2 | bank     | yes           | product4 |   3 | 29.88 |
+        |         |          |               | product2 |  20 |   400 |
+        +---------+----------+---------------+----------+-----+-------+
+
+        Expected Result
+        ===============
+        +---------------------+---------+
+        | account             | balance |
+        +---------------------+---------+
+        | sale                | -596,56 |
+        | pos receivable bank |  516,64 |
+        | Rounding applied    |   -0,01 |
+        +---------------------+---------+
+        | Total balance       |     0.0 |
+        +---------------------+---------+
+        """
+
+        # create orders
+        orders = []
+
+        # create orders
+        orders = []
+        orders.append(self.create_ui_order_data(
+            [(self.product4, 3), (self.product2, 20)],
+            payments=[(self.bank_pm, 429.90)]
+        ))
+
+        orders.append(self.create_ui_order_data(
+            [(self.product1, 6), (self.product4, 4)],
+            payments=[(self.bank_pm, 99.85)]
+        ))
+
+        # sync orders
+        order = self.env['pos.order'].create_from_ui(orders)
+
+        self.assertEqual(orders[0]['data']['amount_return'], 0, msg='The amount return should be 0')
+        self.assertEqual(orders[1]['data']['amount_return'], 0, msg='The amount return should be 0')
+
+        # close the session
+        self.pos_session.action_pos_session_validate()
+
+        # check values after the session is closed
+        session_account_move = self.pos_session.move_id
+
+        rounding_line = session_account_move.line_ids.filtered(lambda line: line.name == 'Rounding line')
+        self.assertAlmostEqual(rounding_line.credit, 0.03, msg='The credit should be equals to 0.03')

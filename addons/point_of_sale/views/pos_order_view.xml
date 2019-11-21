@@ -84,6 +84,11 @@
                                    nolabel="1"
                                    class="oe_subtotal_footer_separator"
                                    widget="monetary"/>
+                            <field name="amount_paid"
+                                string="Total Paid (with rounding)"
+                                class="oe_subtotal_footer_separator"
+                                widget="monetary"
+                                attrs="{'invisible': [('amount_paid','=', 'amount_total')]}"/>
                         </group>
                         <div class="oe_clear"/>
                     </page>
@@ -345,6 +350,19 @@
                     <filter string="Order Date" name="order_month" domain="[]" context="{'group_by': 'date_order'}"/>
                 </group>
             </search>
+        </field>
+    </record>
+
+    <record id="pos_rounding_form_view_inherited" model="ir.ui.view">
+        <field name="name">pos.cash.rounding.form.inherited</field>
+        <field name="model">account.cash.rounding</field>
+        <field name="inherit_id" ref="account.rounding_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_title')]" position="before">
+                <div class="o_notification_alert alert alert-warning" role="alert">
+                  The Point of Sale only support the "add a rounding line" rounding strategy.
+                </div>
+            </xpath>
         </field>
     </record>
 </odoo>
