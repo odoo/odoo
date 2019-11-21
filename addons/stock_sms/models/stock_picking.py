@@ -11,7 +11,7 @@ class Picking(models.Model):
 
     def _pre_action_done_hook(self):
         res = super()._pre_action_done_hook()
-        if res is True:
+        if res is True and not self.env.context.get('skip_sms'):
             pickings_to_warn_sms = self._check_warn_sms()
             if pickings_to_warn_sms:
                 return pickings_to_warn_sms._action_generate_warn_sms_wizard()
@@ -52,7 +52,7 @@ class Picking(models.Model):
 
     def _send_confirmation_email(self):
         super(Picking, self)._send_confirmation_email()
-        if not getattr(threading.currentThread(), 'testing', False) and not self.env.registry.in_test_mode():
+        if not self.env.context.get('skip_sms') and not getattr(threading.currentThread(), 'testing', False) and not self.env.registry.in_test_mode():
             pickings = self.filtered(lambda p: p.company_id.stock_move_sms_validation and p.picking_type_id.code == 'outgoing' and (p.partner_id.mobile or p.partner_id.phone))
 
             for picking in pickings:
