@@ -64,7 +64,6 @@ class TestUi(TestUICommon):
             'is_attempts_limited': True,
             'attempts_limit': 3,
             'description': "<p>Test your furniture knowledge!</p>",
-            'thank_you_message': "<p></p>",
             'question_and_page_ids': [
                 (0, 0, {
                     'title': 'Furniture',
