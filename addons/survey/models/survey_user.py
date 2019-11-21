@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import datetime
 import logging
 import uuid
 
@@ -24,9 +23,6 @@ class SurveyUserInput(models.Model):
     scoring_type = fields.Selection(string="Scoring", related="survey_id.scoring_type")
     start_datetime = fields.Datetime('Start date and time', readonly=True)
     deadline = fields.Datetime('Deadline', help="Datetime until customer can open the survey and submit answers")
-    input_type = fields.Selection([
-        ('manually', 'Manual'), ('link', 'Invitation')],
-        string='Answer Type', default='manually', required=True, readonly=True)
     state = fields.Selection([
         ('new', 'Not started yet'),
         ('skip', 'Partially completed'),
@@ -113,16 +109,6 @@ class SurveyUserInput(models.Model):
 
                 user_input.attempt_number = attempt_number
 
-    @api.model
-    def do_clean_emptys(self):
-        """ Remove empty user inputs that have been created manually
-            (used as a cronjob declared in data/survey_cron.xml)
-        """
-        an_hour_ago = fields.Datetime.to_string(datetime.datetime.now() - datetime.timedelta(hours=1))
-        self.search([('input_type', '=', 'manually'),
-                     ('state', '=', 'new'),
-                     ('create_date', '<', an_hour_ago)]).unlink()
-
     def action_resend(self):
         partners = self.env['res.partner']
         emails = []
@@ -175,9 +161,13 @@ class SurveyUserInput(models.Model):
             if challenges:
                 Challenge._cron_update(ids=challenges.ids, commit=False)
 
-    def _get_survey_url(self):
+    def get_start_url(self):
         self.ensure_one()
-        return '/survey/start/%s?answer_token=%s' % (self.survey_id.access_token, self.token)
+        return '%s?answer_token=%s' % (self.survey_id.get_start_url(), self.token)
+
+    def get_print_url(self):
+        self.ensure_one()
+        return '%s?answer_token=%s' % (self.survey_id.get_print_url(), self.access_token)
 
 
 class SurveyUserInputLine(models.Model):
