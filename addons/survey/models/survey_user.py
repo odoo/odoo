@@ -63,10 +63,10 @@ class SurveyUserInput(models.Model):
                 score = (sum(user_input.user_input_line_ids.mapped('answer_score')) / total_possible_score) * 100
                 user_input.quizz_score = round(score, 2) if score > 0 else 0
 
-    @api.depends('quizz_score', 'survey_id.passing_score')
+    @api.depends('quizz_score', 'survey_id.scoring_success_min')
     def _compute_quizz_passed(self):
         for user_input in self:
-            user_input.quizz_passed = user_input.quizz_score >= user_input.survey_id.passing_score
+            user_input.quizz_passed = user_input.quizz_score >= user_input.survey_id.scoring_success_min
 
     @api.depends('start_datetime', 'survey_id.is_time_limited', 'survey_id.time_limit')
     def _compute_is_time_limit_reached(self):
@@ -150,7 +150,7 @@ class SurveyUserInput(models.Model):
         Challenge = self.env['gamification.challenge'].sudo()
         badge_ids = []
         for user_input in self:
-            if user_input.survey_id.certificate and user_input.quizz_passed:
+            if user_input.survey_id.certification and user_input.quizz_passed:
                 if user_input.survey_id.certification_mail_template_id and not user_input.test_entry:
                     user_input.survey_id.certification_mail_template_id.send_mail(user_input.id, notif_layout="mail.mail_notification_light")
                 if user_input.survey_id.certification_give_badge:
