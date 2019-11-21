@@ -449,7 +449,7 @@ class Survey(http.Controller):
         """ The certification document can be downloaded as long as the user has succeeded the certification """
         survey = request.env['survey.survey'].sudo().search([
             ('id', '=', survey_id),
-            ('certificate', '=', True)
+            ('certification', '=', True)
         ])
 
         if not survey:
@@ -574,7 +574,7 @@ class Survey(http.Controller):
         values = {'survey': survey, 'answer': answer}
         if token:
             values['token'] = token
-        if survey.scoring_type != 'no_scoring' and survey.certificate:
+        if survey.scoring_type != 'no_scoring' and survey.certification:
             answer_perf = survey._get_answers_correctness(answer)[answer]
             values['graph_data'] = json.dumps([
                 {"text": "Correct", "count": answer_perf['correct']},

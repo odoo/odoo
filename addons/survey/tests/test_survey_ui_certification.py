@@ -1,7 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo.tests
+
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+
 
 @odoo.tests.common.tagged('post_install', '-at_install')
 class TestUiCertification(HttpCaseWithUserDemo):
@@ -17,14 +19,13 @@ class TestUiCertification(HttpCaseWithUserDemo):
             'users_can_go_back': True,
             'users_login_required': True,
             'scoring_type': 'scoring_with_answers',
-            'certificate': True,
+            'certification': True,
             'certification_mail_template_id': self.env.ref('survey.mail_template_certification').id,
             'is_time_limited': 'limited',
             'time_limit': 10.0,
             'is_attempts_limited': True,
             'attempts_limit': 2,
             'description': """&lt;p&gt;Test your vendor skills!.&lt;/p&gt;""",
-            'thank_you_message': """&lt;p&gt;&lt;/p&gt;""",
             'question_and_page_ids': [
                 (0, 0, {
                     'title': 'Products',

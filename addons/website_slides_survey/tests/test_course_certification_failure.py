@@ -14,9 +14,9 @@ class TestCourseCertificationFailureFlow(TestSurveyCommon):
                 'access_mode': 'public',
                 'users_login_required': True,
                 'scoring_type': 'scoring_with_answers',
-                'certificate': True,
+                'certification': True,
                 'is_attempts_limited': True,
-                'passing_score': 100.0,
+                'scoring_success_min': 100.0,
                 'attempts_limit': 2,
                 'state': 'open',
             })

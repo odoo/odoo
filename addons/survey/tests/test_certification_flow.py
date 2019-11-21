@@ -28,7 +28,7 @@ class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
         post_data.update(**additional_post_data)
         return post_data
 
-    def test_flow_certificate(self):
+    def test_flow_certification(self):
         # Step: survey user creates the certification
         # --------------------------------------------------
         with self.with_user(self.survey_user):
@@ -39,8 +39,8 @@ class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
                 'questions_layout': 'page_per_question',
                 'users_can_go_back': True,
                 'scoring_type': 'scoring_with_answers',
-                'passing_score': 85.0,
-                'certificate': True,
+                'scoring_success_min': 85.0,
+                'certification': True,
                 'certification_mail_template_id': self.env.ref('survey.mail_template_certification').id,
                 'is_time_limited': True,
                 'time_limit': 10,

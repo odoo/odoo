@@ -77,7 +77,7 @@
                     <t t-if="answer.test_entry" t-call="survey.survey_button_form_view" />
                     <div class="jumbotron mt32">
                         <h1>Thank you!</h1>
-                        <div t-field="survey.thank_you_message" class="oe_no_empty" />
+                        <div t-field="survey.description_done" class="oe_no_empty" />
                         <div class="row">
                             <div class="col">
                                 <t t-if="survey.scoring_type != 'no_scoring'">
@@ -85,7 +85,7 @@
                                     <t t-if="answer.quizz_passed">
                                         <div>Congratulations, you have passed the test!</div>
 
-                                        <div t-if="survey.certificate" class="mt16 mb16">
+                                        <div t-if="survey.certification" class="mt16 mb16">
                                             <a role="button"
                                                 class="btn btn-primary btn-lg"
                                                 t-att-href="'/survey/%s/get_certification' % survey.id">

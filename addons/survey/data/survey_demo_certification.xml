@@ -17,14 +17,13 @@
             <field name="users_can_go_back" eval="True" />
             <field name="users_login_required" eval="True" />
             <field name="scoring_type" >scoring_with_answers</field>
-            <field name="certificate" eval="True"></field>
+            <field name="certification" eval="True"/>
             <field name="certification_mail_template_id" ref="mail_template_certification"></field>
             <field name="is_time_limited" >limited</field>
             <field name="time_limit" >10.0</field>
             <field name="is_attempts_limited" eval="True" />
             <field name="attempts_limit">2</field>
-            <field name="description">&lt;p&gt;Test your vendor skills!&lt;/p&gt;</field>
-            <field name="thank_you_message">&lt;p&gt;&lt;/p&gt;</field>
+            <field name="description" type="html"><p>Test your vendor skills!</p></field>
             <field name="certification_give_badge">True</field>
             <field name="certification_badge_id" ref="vendor_certification_badge"/>
         </record>
@@ -35,7 +34,7 @@
             <field name="sequence">1</field>
             <field name="is_page" eval="True"/>
             <field name="question_type" eval="False" />
-            <field name="description">&lt;p&gt;Test your knowledge of your products!&lt;/p&gt;</field>
+            <field name="description" type="html"><p>Test your knowledge of your products!</p></field>
         </record>
         <!-- Question and predefined answer 1 -->
         <record model="survey.question" id="vendor_certification_page_1_question_1">
