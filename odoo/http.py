@@ -700,7 +700,8 @@ def serialize_exception(e):
         "debug": traceback.format_exc(),
         "message": ustr(e),
         "arguments": e.args,
-        "exception_type": EXCEPTION_MAP.get(type(e), "internal_error")
+        "exception_type": EXCEPTION_MAP.get(type(e), "internal_error"),
+        **e.kwargs
     }
 
 

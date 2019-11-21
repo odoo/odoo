@@ -556,8 +556,8 @@ class IrHttp(models.AbstractModel):
             exception=exception,
             traceback=traceback.format_exc(),
         )
-        if isinstance(exception, (exceptions.UserError, exceptions.AccessError, exceptions.MissingError, exceptions.ValidationError)):
-            values['error_message'] = exception.args[0]
+        if isinstance(exception, exceptions.OdooException):
+            values['error_message'] = str(exception)
             code = 400
             if isinstance(exception, exceptions.AccessError):
                 code = 403

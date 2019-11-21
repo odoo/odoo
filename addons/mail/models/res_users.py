@@ -84,7 +84,8 @@ GROUP BY channel_moderator.res_users_id""", [tuple(self.ids)])
         if not values.get('login', False):
             action = self.env.ref('base.action_res_users')
             msg = _("You cannot create a new user from here.\n To create new user please go to configuration panel.")
-            raise exceptions.RedirectWarning(msg, action.id, _('Go to the configuration panel'))
+            raise exceptions.RedirectWarning(
+                msg, act_id=action.id, label=_('Go to the configuration panel'))
 
         user = super(Users, self).create(values)
         # Auto-subscribe to channels

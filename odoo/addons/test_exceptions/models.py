@@ -16,7 +16,8 @@ class m(models.Model):
 
     def generate_redirect_warning(self):
         action = self.env.ref('test_exceptions.action_test_exceptions')
-        raise odoo.exceptions.RedirectWarning('description', action.id, 'Go to the redirection')
+        raise odoo.exceptions.RedirectWarning(
+            'description', act_id=action.id, label='Go to the redirection')
 
     def generate_access_denied(self):
         raise odoo.exceptions.AccessDenied()

@@ -2197,7 +2197,7 @@ class TestViews(ViewCase):
                 'model': 'ir.ui.view',
                 'arch': arch,
             })
-        message = str(catcher.exception.args[0])
+        message = str(catcher.exception)
         self.assertIn('\nView name: %s\nError context:\n' % name, message)
         if expected_message:
             self.assertIn(expected_message, message)

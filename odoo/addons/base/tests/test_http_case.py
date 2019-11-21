@@ -14,7 +14,7 @@ class TestHttpCase(HttpCase):
             with patch('odoo.tests.common.ChromeBrowser.take_screenshot', return_value=None):
                 self.browser_js(url_path='about:blank', code=code)
         # second line must contains error message
-        self.assertEqual(error_catcher.exception.args[0].split('\n', 1)[1], "test error message")
+        self.assertEqual(str(error_catcher.exception).split('\n', 1)[1], "test error message")
 
     def test_console_error_object(self):
         with self.assertRaises(AssertionError) as error_catcher:
@@ -22,7 +22,7 @@ class TestHttpCase(HttpCase):
             with patch('odoo.tests.common.ChromeBrowser.take_screenshot', return_value=None):
                 self.browser_js(url_path='about:blank', code=code)
         # second line must contains error message
-        self.assertEqual(error_catcher.exception.args[0].split('\n', 1)[1],
+        self.assertEqual(str(error_catcher.exception).split('\n', 1)[1],
         'TypeError: test error message\n    at <anonymous>:1:15')
 
     def test_console_log_object(self):

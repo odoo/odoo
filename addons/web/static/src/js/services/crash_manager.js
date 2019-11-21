@@ -180,7 +180,6 @@ var CrashManager = AbstractService.extend({
             missing_error: _lt("Missing Record"),
             user_error: _lt("User Error"),
             validation_error: _lt("Validation Error"),
-            warning: _lt("Warning"),
         };
         if (!active) {
             return;
@@ -200,7 +199,6 @@ var CrashManager = AbstractService.extend({
         if (_.has(map_title, error.data.exception_type)) {
             error = _.extend({}, error, {
                 data: _.extend({}, error.data, {
-                    message: error.data.arguments[0],
                     title: map_title[error.data.exception_type] !== 'Warning' ? (" - " + map_title[error.data.exception_type]) : '',
                 })
             });
@@ -327,9 +325,9 @@ var RedirectWarningHandler = Widget.extend(ExceptionHandler, {
         new WarningDialog(this, {
             title: _.str.capitalize(error.type) || _t("Odoo Warning"),
             buttons: [
-                {text: error.data.arguments[2], classes : "btn-primary", click: function() {
+                {text: error.data.label, classes : "btn-primary", click: function() {
                     $.bbq.pushState({
-                        'action': error.data.arguments[1],
+                        'action': error.data.act_id,
                         'cids': $.bbq.getState().cids,
                     }, 2);
                     self.destroy();
@@ -338,7 +336,7 @@ var RedirectWarningHandler = Widget.extend(ExceptionHandler, {
                 {text: _t("Cancel"), click: function() { self.destroy(); }, close: true}
             ]
         }, {
-            message: error.data.arguments[0],
+            message: error.data.message,
         }).open();
     }
 });

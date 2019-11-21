@@ -271,8 +271,8 @@ class AccountMove(models.Model):
                             self._import_facturx_invoice(tree)
                             self._remove_ocr_option()
                             buffer.close()
-            except (AccessError, UserError) as e:
-                raise e
+            except (AccessError, UserError):
+                raise
             except Exception as e:
                 # Malformed pdf
                 _logger.exception(e)

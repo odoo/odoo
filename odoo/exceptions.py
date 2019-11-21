@@ -39,6 +39,12 @@ class OdooException(Exception):
     def __str__(self):
         return self.args[0] % tuple(self.args[1:])
 
+    def __getattr__(self, key):
+        try:
+            return self.kwargs[key]
+        except KeyError:
+            raise AttributeError
+
 
 class UserError(OdooException):
     """Used for invalid user-submitted input"""
@@ -49,10 +55,11 @@ class RedirectWarning(OdooException):
     """ Warning with a possibility to redirect the user instead of simply
     displaying the warning message.
 
-    :param int action_id: id of the action where to perform the redirection
-    :param str button_text: text to put on the button that will trigger the redirection.
+    :param int act_id: id of the action where to perform the redirection
+    :param str label: text to put on the button that will trigger the redirection.
     """
-    pass
+    def __init__(self, message, *args, act_id, label):
+        super().__init__(message, *args, act_id=act_id, label=label)
 
 
 class AccessDenied(OdooException):
@@ -114,5 +121,5 @@ class DeferredException(Exception):
         self.traceback = tb
 
 
-class QWebException(OdooException):
+class QWebException(Exception):
     pass
