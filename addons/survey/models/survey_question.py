@@ -1,23 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
-import re
-import datetime
-
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
-
-email_validator = re.compile(r"[^@]+@[^@]+\.[^@]+")
-_logger = logging.getLogger(__name__)
-
-
-def dict_keys_startswith(dictionary, string):
-    """Returns a dictionary containing the elements of <dict> whose keys start with <string>.
-        .. note::
-            This function uses dictionary comprehensions (Python >= 2.7)
-    """
-    return {k: v for k, v in dictionary.items() if k.startswith(string)}
 
 
 class SurveyQuestion(models.Model):
@@ -220,7 +205,7 @@ class SurveyQuestion(models.Model):
         # Email format validation
         # all the strings of the form "<something>@<anything>.<extension>" will be accepted
         if self.validation_email:
-            if not email_validator.match(answer):
+            if not tools.email_normalize(answer):
                 return {self.id: _('This answer must be an email address')}
 
         # Answer validation (if properly defined)
