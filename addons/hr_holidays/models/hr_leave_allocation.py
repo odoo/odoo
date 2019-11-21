@@ -365,14 +365,12 @@ class HolidaysAllocation(models.Model):
     @api.constrains('holiday_status_id')
     def _check_leave_type_validity(self):
         for allocation in self:
-            if allocation.holiday_status_id.validity_start and allocation.holiday_status_id.validity_stop:
-                vstart = allocation.holiday_status_id.validity_start
+            if allocation.holiday_status_id.validity_stop:
                 vstop = allocation.holiday_status_id.validity_stop
                 today = fields.Date.today()
 
-                if vstart > today or vstop < today:
-                    raise ValidationError(_('You can allocate %s only between %s and %s') % (allocation.holiday_status_id.display_name,
-                                                                                  allocation.holiday_status_id.validity_start, allocation.holiday_status_id.validity_stop))
+                if vstop < today:
+                    raise ValidationError(_('You can allocate %s only before %s') % (allocation.holiday_status_id.display_name, allocation.holiday_status_id.validity_stop))
 
     @api.model
     def create(self, values):
