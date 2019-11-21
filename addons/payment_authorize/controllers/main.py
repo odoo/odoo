@@ -40,7 +40,7 @@ class AuthorizeController(http.Controller):
                 kwargs = dict(kwargs, partner_id=request.env.user.partner_id.id)
             token = acquirer.s2s_process(kwargs)
         except ValidationError as e:
-            message = e.args[0]
+            message = str(e)
             if isinstance(message, dict) and 'missing_fields' in message:
                 if request.env.user._is_public():
                     message = _("Please sign in to complete the payment.")
@@ -57,7 +57,7 @@ class AuthorizeController(http.Controller):
             }
         except UserError as e:
             return {
-                'error': e.name,
+                'error': str(e),
             }
 
         if not token:

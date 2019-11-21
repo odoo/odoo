@@ -835,7 +835,7 @@ class WebsiteSlides(WebsiteProfile):
             can_publish = channel.can_publish
         except (UserError, AccessError) as e:
             _logger.error(e)
-            return {'error': e.name}
+            return {'error': str(e)}
         else:
             if not can_upload:
                 return {'error': _('You cannot upload on this channel.')}
@@ -865,7 +865,7 @@ class WebsiteSlides(WebsiteProfile):
             slide = request.env['slide.slide'].sudo().create(values)
         except (UserError, AccessError) as e:
             _logger.error(e)
-            return {'error': e.name}
+            return {'error': str(e)}
         except Exception as e:
             _logger.error(e)
             return {'error': _('Internal server error, please try again later or contact administrator.\nHere is the error message: %s') % e}
