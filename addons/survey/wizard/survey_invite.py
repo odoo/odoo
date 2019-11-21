@@ -150,9 +150,9 @@ class SurveyInvite(models.TransientModel):
                 values['body'] = template.body_html
         return super(SurveyInvite, self).create(values)
 
-    #------------------------------------------------------
+    # ------------------------------------------------------
     # Wizard validation and send
-    #------------------------------------------------------
+    # ------------------------------------------------------
 
     def _prepare_answers(self, partners, emails):
         answers = self.env['survey.user_input']
