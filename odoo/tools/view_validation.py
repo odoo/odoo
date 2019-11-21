@@ -114,23 +114,20 @@ def get_domain_identifiers(expr):
                 # note: this doesn't check the and/or structure
                 _check(elem.s in ('&', '|', '!'),
                        f"logical operators should be '&', '|', or '!', found {elem.s!r}")
-            else:
-                _check(isinstance(elem, (ast.List, ast.Tuple)),
-                       f"segment should be a list or tuple, found {type(elem).__name__}")
-                _check(len(elem.elts) == 3,
-                       f"segments should have 3 elements, found {len(elem.elts)}")
-                lhs, operator, rhs = elem.elts
-                if isinstance(lhs, ast.Str):
-                    fnames.add(lhs.s)
-                else:
-                    # limitation: we do not list fnames in this case
-                    vnames.update(get_variable_names(lhs))
-                _check(isinstance(operator, ast.Str),
-                       f"operator should be a string, found {type(operator).__name__}")
-                vnames.update(get_variable_names(rhs))
-    else:
-        # limitation: we do not list fnames in this case
-        vnames.update(get_variable_names(expr))
+                continue
+
+            if not isinstance(elem, (ast.List, ast.Tuple)):
+                continue
+
+            _check(len(elem.elts) == 3,
+                   f"segments should have 3 elements, found {len(elem.elts)}")
+            lhs, operator, rhs = elem.elts
+            _check(isinstance(operator, ast.Str),
+                   f"operator should be a string, found {type(operator).__name__}")
+            if isinstance(lhs, ast.Str):
+                fnames.add(lhs.s)
+
+    vnames.update(get_variable_names(expr))
 
     return (fnames, vnames)
 
