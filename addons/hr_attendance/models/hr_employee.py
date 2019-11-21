@@ -42,9 +42,9 @@ class HrEmployee(models.Model):
         for employee in self:
             if employee.user_id:
                 if employee.manual_attendance:
-                    manual_attendance_group.users = [(4, employee.user_id.id, 0)]
+                    manual_attendance_group.sudo().users = [(4, employee.user_id.id, 0)]
                 else:
-                    manual_attendance_group.users = [(3, employee.user_id.id, 0)]
+                    manual_attendance_group.sudo().users = [(3, employee.user_id.id, 0)]
 
     @api.depends('attendance_ids')
     def _compute_last_attendance_id(self):
