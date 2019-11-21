@@ -62,6 +62,16 @@ class Page(models.Model):
         """ Get identifier of this page view that may be used to render it """
         return self.view_id.id
 
+    def get_page_properties(self):
+        self.ensure_one()
+        res = self.read([
+            'id', 'name', 'url', 'website_published', 'website_indexed', 'date_publish',
+            'menu_ids', 'is_homepage', 'website_id', 'visibility', 'visibility_password', 'visibility_group'
+        ])[0]
+        if not res['visibility_group']:
+            res['visibility_group'] = self.env.ref('base.group_user').name_get()[0]
+        return res
+
     @api.model
     def save_page_info(self, website_id, data):
         website = self.env['website'].browse(website_id)
