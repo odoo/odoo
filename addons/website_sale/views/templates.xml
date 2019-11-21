@@ -72,12 +72,6 @@
         </xpath>
     </template>
 
-    <template id="portal_404" inherit_id="portal.404_oe_structure_404_2" name="Shop 404 Popular Page Entry">
-        <xpath expr="//li[last()]" position="before">
-            <li class="list-inline-item mb-2"><a href="/shop" class="btn btn-secondary">Shop</a></li>
-        </xpath>
-    </template>
-
     <template id="header" inherit_id="website.layout" name="Header Shop My Cart Link">
         <xpath expr="//header//ul[@id='top_menu']/li" position="before">
             <t t-set="website_sale_order" t-value="website.sale_get_order()" />

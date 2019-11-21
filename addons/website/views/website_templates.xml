@@ -930,15 +930,6 @@
     </xpath>
 </template>
 
-<template id="portal_404" inherit_id="portal.404_oe_structure_404_2" name="Website 404 Popular Page Entry">
-    <xpath expr="//li" position="after">
-        <li class="list-inline-item mb-2"><a href="/contactus" class="btn btn-secondary">Contact Us</a></li>
-    </xpath>
-    <xpath expr="//li" position="before">
-        <li class="list-inline-item mb-2"><a href="/" class="btn btn-secondary">Home</a></li>
-    </xpath>
-</template>
-
 <template id="robots">
 User-agent: *
 Sitemap: <t t-esc="url_root"/>sitemap.xml

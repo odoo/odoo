@@ -101,48 +101,36 @@
     </template>
 
     <template id="404" name="Page Not Found">
-        <!-- This template needs this odd `oe_structure_xyz` structure to be
-             fully editable (drag & dropable) by the editor. -->
         <t t-call="web.frontend_layout">
             <div id="wrap">
                 <t t-raw="0"/>
-                <div class="oe_structure" id="oe_structure_404_1"/>
-                <div class="oe_structure" id="oe_structure_404_2"/>
-                <div class="oe_structure" id="oe_structure_404_3"/>
-            </div>
-        </t>
-    </template>
-
-    <template id="404_oe_structure_404_1" inherit_id="http_routing.404">
-        <xpath expr="//div[@id='oe_structure_404_1']" position="replace">
-            <div class="oe_structure oe_empty" id="oe_structure_404_1">
-                <section class="pt128">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-6 text-center text-md-right my-auto mb-sm-5">
-                                <img src="/http_routing/static/src/img/404.svg"/>
-                            </div>
-                            <div class="col-md-6 text-center text-md-left my-auto">
-                                <h1 class="sr-only">Error 404</h1>
-                                <h2 class="mb16">We couldn't find the page you're looking for!</h2>
-                                <p><b>Don't panic.</b> If you think it's our mistake, please send us a message on <a href="/contactus">this page</a>.</p>
-                            </div>
-                            <div class="col-md-12 pt40 pb24">
-                                <hr/>
+                <div class="oe_structure oe_empty">
+                    <section class="pt128 pb104">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-6 text-center text-md-right my-md-auto mb-5 mb-md-0">
+                                    <img class="img img-fluid" src="/http_routing/static/src/img/404.svg"/>
+                                </div>
+                                <div class="col-md-6 text-center text-md-left my-auto">
+                                    <h1 class="sr-only">Error 404</h1>
+                                    <h2 class="mb16">We couldn't find the page you're looking for!</h2>
+                                    <p><b>Don't panic.</b> If you think it's our mistake, please send us a message on <a href="/contactus">this page</a>.</p>
+                                </div>
+                                <div class="col-12 pt40 pb24">
+                                    <hr/>
+                                </div>
+                                <div class="col-12">
+                                    <p class="text-center pt24">Maybe you were looking for one of these <b>popular pages?</b></p>
+                                    <ul class="list-inline text-center">
+                                        <li class="list-inline-item mb-2"><a href="/" class="btn btn-secondary">Home</a></li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </section>
+                    </section>
+                </div>
             </div>
-        </xpath>
-    </template>
-
-    <template id="404_oe_structure_404_3" inherit_id="http_routing.404">
-        <xpath expr="//div[@id='oe_structure_404_3']" position="replace">
-            <div class="oe_structure oe_empty" id="oe_structure_404_3">
-                <section class="pt104"/>
-            </div>
-        </xpath>
+        </t>
     </template>
 
     <template id="500">
