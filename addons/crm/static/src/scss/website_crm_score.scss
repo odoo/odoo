@@ -1,0 +1,33 @@
+.o_kanban_view .o_kanban_record.o_assignation_kanban_record {
+    .o_kanban_record_top {
+        width: 100%;
+
+        > .o_assignation_body {
+            flex: 1 1 auto;
+            padding: 0;
+            list-style: none;
+        }
+
+    }
+    .nav-link {
+        padding-top: 0;
+        padding-bottom: 0;
+        color: black;
+    }
+
+    // ported straight from HTML
+    .o_assignation_button_active, .o_assignation_button_inactive {
+        a {
+            color: green;
+            font-size: 1.3em;
+        }
+    }
+    .o_assignation_button_inactive a {
+        color: lightgray
+    }
+    .o_assignation_leads_count div.oe_gauge {
+        width: 108px;
+        height: 81px;
+        cursor: pointer;
+    }
+}

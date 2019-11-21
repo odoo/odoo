@@ -131,6 +131,73 @@
                         attrs="{'invisible': [('use_leads', '=', False), ('use_opportunities', '=', False)]}"/>
                     <field name="alias_user_id" string="Assign to"/>
                 </xpath>
+                <xpath expr="//group[@name='right']" position="inside">
+                    <field name="score_team_domain" widget="domain" options="{'model': 'crm.lead', 'in_dialog': True}"/>
+                    <label for="assigned_leads_count"/>
+                    <div>
+                        <field name="assigned_leads_count" class="oe_inline"/> /
+                        <field name="capacity" class="oe_inline"/>
+                    </div>
+                </xpath>
+                <xpath expr="//page[@name='members']" position="replace">
+                    <page string="Assignation">
+                        <field name="team_user_ids" widget="one2many" mode="kanban" context="{'default_team_id': active_id, 'ro_team': True}">
+                            <kanban>
+                                <field name="user_id"/>
+                                <field name="active"/>
+                                <templates>
+                                    <t t-name="kanban-box">
+                                        <t t-set="active" t-value="record.active.raw_value"/>
+                                        <t t-set="button_state">
+                                            <t t-if="active">o_assignation_button_active</t>
+                                            <t t-if="!active">o_assignation_button_inactive</t>
+                                        </t>
+
+                                        <div class="o_assignation_kanban_record pb-0">
+                                            <div class="o_kanban_record_top mb-0">
+                                                <ul class="nav">
+                                                    <li class="nav-item">
+                                                        <a type="open" class="nav-link">
+                                                            <img t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)" class="o_kanban_image o_image_64_cover" alt="Avatar"/>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                                <ul class="nav o_assignation_body">
+                                                    <li class="nav-item"><a type="open" class="nav-link"><b><field name="name"/></b></a></li>
+                                                    <li class="nav-item"><field name="team_user_domain" widget="filters"/></li>
+						                            <li t-attf-class="nav-item #{button_state}">
+                                                        <a type="object" name="toggle_active" t-attf-class="nav-link fa fa-check-square" title="Toggle active"/>
+						                            </li>
+                                                </ul>
+                                                <div class="o_assignation_leads_count">
+                                                    <field name="maximum_user_leads" invisible="1"/>
+                                                    <field name="leads_count" widget="gauge"
+                                                           options="{'max_field': 'maximum_user_leads'}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </templates>
+                            </kanban>
+                            <form>
+                                <sheet>
+                                    <h1>
+                                        <field name="user_id"/>
+                                        <field name="leads_count" invisible="1"/>
+                                    </h1>
+                                    <group>
+                                        <label for="maximum_user_leads" string="Maximum Leads / 30 days"/>
+                                        <div>
+                                            <field name="maximum_user_leads" class="oe_inline"/>
+                                        </div>
+                                        <!--<field name="team_user_domain" widget="domain" options="{'model': 'crm.lead'}"/>-->
+                                        <field name="team_user_domain"/>
+                                    </group>
+                                </sheet>
+                            </form>
+                        </field>
+                    </page>
+               </xpath>
             </field>
         </record>
 
@@ -279,4 +346,124 @@
             <field name="context">{'default_res_model': 'crm.lead'}</field>
         </record>
 
+        <!--
+        TEAM USER
+         -->
+        <!-- Team User Form View -->
+        <record model="ir.ui.view" id="view_crm_team_user_form">
+            <field name="name">Team User Form</field>
+            <field name="model">team.user</field>
+            <field name="arch" type="xml">
+                <form string="Sales Men">
+                    <sheet>
+                        <h1>
+                            <field name="user_id"/>
+                            <field name="leads_count" invisible="1"/>
+                        </h1>
+                        <group>
+                            <field name="team_id" kanban_view_ref="%(sales_team.crm_team_view_kanban)s" readonly="context.get('ro_team', False)"/>
+                            <label for="maximum_user_leads" string="Maximum Leads / 30 days" />
+                            <div>
+                                <field name="maximum_user_leads" class="oe_inline"/>
+                            </div>
+                            <field name="team_user_domain" widget="domain" options="{'model': 'crm.lead'}"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- team User Tree View -->
+        <record model="ir.ui.view" id="view_crm_team_user_tree">
+            <field name="name">Team User Tree</field>
+            <field name="model">team.user</field>
+            <field name="arch" type="xml">
+                <tree string="Sales Men">
+                    <field name="team_id"/>
+                    <field name="user_id"/>
+                    <field name="maximum_user_leads"/>
+                    <field name="leads_count"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Team User Kanban View -->
+        <record model="ir.ui.view" id="team_user_kanban">
+            <field name="name">team.user.kanban</field>
+            <field name="model">team.user</field>
+            <field name="arch" type="xml">
+                <kanban quick_create="false" create="true">
+                    <field name="user_id"/>
+                    <field name="active"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <t t-set="active" t-value="record.active.raw_value"/>
+                            <t t-set="button_state">
+                                <t t-if="active">o_assignation_button_active</t>
+                                <t t-if="!active">o_assignation_button_inactive</t>
+                            </t>
+
+                            <div class="o_assignation_kanban_record oe_kanban_global_click pb-0">
+                                <div class="o_kanban_record_top mb-0">
+                                    <ul class="nav">
+                                        <li class="nav-item">
+                                            <a type="open" class="nav-link">
+                                                <img t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)" class="o_kanban_image o_image_64_cover" alt="Avatar"/>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <ul class="nav o_assignation_body">
+                                        <li class="nav-item"><a type="open" class="nav-link"><b><field name="name"/></b></a></li>
+                                        <li class="nav-item w-100"><a type="open" class="nav-link"><field name="team_id"/></a></li>
+                                        <li t-attf-class="nav-item #{button_state}">
+                                            <a type="object" name="toggle_active" t-attf-class="nav-link fa fa-check-square" title="Toggle active"/>
+                                        </li>
+                                    </ul>
+                                    <div class="o_assignation_leads_count">
+                                        <field name="maximum_user_leads" invisible="1"/>
+                                        <field name="leads_count" widget="gauge"
+                                               options="{'max_field': 'maximum_user_leads'}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="team_user_view_search" model="ir.ui.view">
+            <field name="name">team.user.view.search</field>
+            <field name="model">team.user</field>
+            <field name="arch" type="xml">
+                <search string="Sales Person">
+                    <field name="name"/>
+                    <field name="team_id"/>
+                    <separator/>
+                    <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Sales Team" name="groupby_team_id" context="{'group_by': 'team_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Team User Action - form - tree -->
+        <record model="ir.actions.act_window" id="team_user_action">
+            <field name="name">Salespersons</field>
+            <field name="res_model">team.user</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new salesman
+                </p><p>
+                    Link users to salesteam, set a per 30 days lead capacity for each of them and set filters to auto assign your leads.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="team_user" name="Leads Assignation" parent="crm.crm_menu_leads" action="team_user_action" sequence="4" groups="sales_team.group_sale_manager"/>
 </odoo>

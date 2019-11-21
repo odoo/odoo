@@ -103,6 +103,7 @@ class Lead(models.Model):
     day_close = fields.Float(compute='_compute_day_close', string='Days to Close', store=True)
     date_last_stage_update = fields.Datetime(string='Last Stage Update', index=True, default=fields.Datetime.now)
     date_conversion = fields.Datetime('Conversion Date', readonly=True)
+    assign_date = fields.Datetime(string='Auto Assign Date', help="Date when the lead has been assigned via the auto-assignation mechanism")
 
     # Probability - Only used for type opportunity
     probability = fields.Float('Probability', group_operator="avg", copy=False)
@@ -285,7 +286,7 @@ class Lead(models.Model):
             return {}
         if user_id and self._context.get('team_id'):
             team = self.env['crm.team'].browse(self._context['team_id'])
-            if user_id in team.member_ids.ids or user_id == team.user_id.id:
+            if user_id in team.member_ids.ids or user_id == team.user_id.id or user_id in team.team_user_ids.mapped('user_id').ids:
                 return {}
         team_id = self._default_team_id(user_id)
         return {'team_id': team_id}
@@ -391,8 +392,10 @@ class Lead(models.Model):
         if vals.get('team_id') and not self._context.get('default_team_id'):
             context['default_team_id'] = vals.get('team_id')
 
-        if vals.get('user_id') and 'date_open' not in vals:
-            vals['date_open'] = fields.Datetime.now()
+        if vals.get('user_id'):
+            vals['assign_date'] = vals.get('user_id') and fields.Datetime.now() or False
+            if 'date_open' not in vals:
+                vals['date_open'] = fields.Datetime.now()
 
         partner_id = vals.get('partner_id') or context.get('default_partner_id')
         onchange_values = self._onchange_partner_id_values(partner_id)
@@ -419,8 +422,10 @@ class Lead(models.Model):
             vals['date_closed'] = fields.Datetime.now()
         elif 'probability' in vals:
             vals['date_closed'] = False
-        if vals.get('user_id') and 'date_open' not in vals:
-            vals['date_open'] = fields.Datetime.now()
+        if vals.get('user_id'):
+            vals['assign_date'] = vals.get('user_id') and fields.Datetime.now() or False
+            if 'date_open' not in vals:
+                vals['date_open'] = fields.Datetime.now()
 
         write_result = super(Lead, self).write(vals)
         # Compute new automated_probability (and, eventually, probability) for each lead separately
