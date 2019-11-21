@@ -420,6 +420,13 @@ exports.PosModel = Backbone.Model.extend({
             }));
         },
     },{
+        model: 'account.cash.rounding',
+        fields: ['name', 'rounding', 'rounding_method'],
+        domain: function(self){return [['id', '=', self.config.rounding_method[0]]]; },
+        loaded: function(self, cash_rounding) {
+            self.cash_rounding = cash_rounding;
+        }
+    },{
         model:  'pos.payment.method',
         fields: ['name', 'is_cash_count', 'use_payment_terminal'],
         domain: function(self, tmp) {
@@ -2446,10 +2453,12 @@ exports.Order = Backbone.Model.extend({
             paymentlines: paymentlines,
             subtotal: this.get_subtotal(),
             total_with_tax: this.get_total_with_tax(),
+            total_rounded: this.get_total_with_tax() + this.get_rounding_applied(),
             total_without_tax: this.get_total_without_tax(),
             total_tax: this.get_total_tax(),
             total_paid: this.get_total_paid(),
             total_discount: this.get_total_discount(),
+            rounding_applied: this.get_rounding_applied(),
             tax_details: this.get_tax_details(),
             change: this.get_change(),
             name : this.get_name(),
@@ -2734,7 +2743,7 @@ exports.Order = Backbone.Model.extend({
         this.assert_editable();
         var newPaymentline = new exports.Paymentline({},{order: this, payment_method:payment_method, pos: this.pos});
         if(!payment_method.is_cash_count || this.pos.config.iface_precompute_cash){
-            newPaymentline.set_amount( this.get_due() );
+            newPaymentline.set_amount(this.get_due() );
         };
         this.paymentlines.add(newPaymentline);
         this.select_paymentline(newPaymentline);
@@ -2812,7 +2821,7 @@ exports.Order = Backbone.Model.extend({
         }
     },
     /* ---- Payment Status --- */
-    get_subtotal : function(){
+    get_subtotal: function(){
         return round_pr(this.orderlines.reduce((function(sum, orderLine){
             return sum + orderLine.get_display_price();
         }), 0), this.pos.currency.rounding);
@@ -2942,7 +2951,7 @@ exports.Order = Backbone.Model.extend({
     },
     get_change: function(paymentline) {
         if (!paymentline) {
-            var change = this.get_total_paid() - this.get_total_with_tax();
+            var change = this.get_total_paid() - this.get_total_with_tax() - this.get_rounding_applied();
         } else {
             var change = -this.get_total_with_tax();
             var lines  = this.paymentlines.models;
@@ -2957,7 +2966,7 @@ exports.Order = Backbone.Model.extend({
     },
     get_due: function(paymentline) {
         if (!paymentline) {
-            var due = this.get_total_with_tax() - this.get_total_paid();
+            var due = this.get_total_with_tax() - this.get_total_paid() + this.get_rounding_applied();
         } else {
             var due = this.get_total_with_tax();
             var lines = this.paymentlines.models;
@@ -2970,6 +2979,35 @@ exports.Order = Backbone.Model.extend({
             }
         }
         return round_pr(due, this.pos.currency.rounding);
+    },
+    get_rounding_applied: function() {
+        if(this.pos.config.cash_rounding) {
+            var total = round_pr(this.get_total_with_tax(), this.pos.cash_rounding[0].rounding);
+
+            var rounding_applied = total - (this.pos.config['iface_tax_included'] === "total"? this.get_subtotal(): this.get_total_with_tax());
+            // because floor and ceil doesn't include decimals in calculation, we reuse the value of the half-up and adapt it.
+            if(this.pos.cash_rounding[0].rounding_method === "UP" && rounding_applied < 0) {
+                rounding_applied += this.pos.cash_rounding[0].rounding;
+            }
+            else if(this.pos.cash_rounding[0].rounding_method === "DOWN" && rounding_applied > 0){
+                rounding_applied -= this.pos.cash_rounding[0].rounding;
+            }
+            return rounding_applied;
+        }
+        return 0;
+    },
+    has_not_valid_rounding: function() {
+        if(!this.pos.config.cash_rounding)
+            return false;
+
+        var lines = this.paymentlines.models;
+
+        for(var i = 0; i < lines.length; i++) {
+            var line = lines[i];
+            if(!utils.float_is_zero(line.amount - round_pr(line.amount, this.pos.cash_rounding[0].rounding), 6))
+                return line;
+        }
+        return false;
     },
     is_paid: function(){
         return this.get_due() <= 0;
