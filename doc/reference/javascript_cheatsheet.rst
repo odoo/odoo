@@ -493,8 +493,6 @@ Testing asynchronous code
         In the tests code, we support the latest version of Javascript, including primitives like `async` and `await`. This makes using and waiting for promises very easy.
         Most helper methods also return a promise (either by being marked `async` or by returning a promise directly.
 
-        .. note:: Version 12 and 13 of Odoo supports IE11, for which it is not possible to polyfill async and await. We do not consider that it is important that the tests runs on these browser though.
-
         .. code-block:: javascript
 
                 var testUtils = require('web.test_utils');
