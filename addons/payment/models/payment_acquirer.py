@@ -1140,7 +1140,8 @@ class PaymentToken(models.Model):
         'ILS': 8.00,
         'PHP': 100.00,
         'TWD': 70.00,
-        'THB': 70.00
+        'THB': 70.00,
+        'USD': 1.00,
         }
 
     @api.model

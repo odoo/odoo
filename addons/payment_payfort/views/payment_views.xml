@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="acquirer_form_payfort" model="ir.ui.view">
+        <field name="name">acquirer.form.payfort</field>
+        <field name="model">payment.acquirer</field>
+        <field name="inherit_id" ref="payment.acquirer_form"/>
+        <field name="arch" type="xml">
+            <xpath expr='//group[@name="acquirer"]' position='inside'>
+                <group attrs="{'invisible': [('provider', '!=', 'payfort')]}">
+                    <field
+                        name="payfort_merchant_identifier"
+                        attrs="{'required':[('provider', '=', 'payfort'), ('state', '!=', 'disabled')]}"
+                    />
+                    <field
+                        name="payfort_access_code"
+                        attrs="{'required':[('provider', '=', 'payfort'), ('state', '!=', 'disabled')]}"
+                        password="True"
+                    />
+                    <field
+                        name="payfort_request_sha"
+                        attrs="{'required':[('provider', '=', 'payfort'), ('state', '!=', 'disabled')]}"
+                        password="True"
+                    />
+                    <field
+                        name="payfort_response_sha"
+                        attrs="{'required':[('provider', '=', 'payfort'), ('state', '!=', 'disabled')]}"
+                        password="True"
+                    />
+                </group>
+            </xpath>
+            <xpath expr="//field[@name='capture_manually']" position="after">
+                <div attrs="{'invisible': ['|', '|', ('capture_manually', '=', False), ('provider', '!=', 'payfort'), ('payment_flow', '!=', 's2s')]}" class="alert alert-warning oe_inline" role="alert">
+                    Manual capture will only apply to transactions done through the redirection flow. This setting will have no effect with the currently selected payment flow.
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

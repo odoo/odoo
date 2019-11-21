@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="payfort.iframe">
+        <div role="dialog" class="modal fade oe-payfort-modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <header class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
+                    </header>
+                    <main class="modal-body">
+                        <div class="loader">
+                            <i class="fa fa-3x fa-spin fa-circle-o-notch"/>
+                        </div>
+                        <iframe t-attf-id="oe_payfort_iframe_{{id}}" t-attf-name="oe_payfort_iframe_{{id}}" class="oe_payfort_iframe">
+                        </iframe>
+                        <form t-att-action="url" t-attf-id="oe_payfort_merchant_page_{{id}}" t-attf-target="oe_payfort_iframe_{{id}}" method="POST">
+                            <input type="hidden" name="service_command" t-att-value="values.service_command"/>
+                            <input type="hidden" name="access_code" t-att-value="values.access_code" />
+                            <input type="hidden" name="merchant_identifier" t-att-value="values.merchant_identifier" />
+                            <input type="hidden" name="merchant_reference" t-att-value="values.merchant_reference" />
+                            <input type="hidden" name="language" t-att-value="values.language" />
+                            <input type="hidden" name="token_name" t-att-value="values.token_name" />
+                            <input type="hidden" name="return_url" t-att-value="values.return_url" />
+                            <input type="hidden" name="signature" t-att-value="values.signature" />
+                        </form>
+                    </main>
+                    <footer class="modal-footer">
+                        <a role="button" href="#" class="btn btn-link btn-sm" data-dismiss="modal">Cancel</a>
+                    </footer>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <template id="payfort_form">
+            <input type="hidden" name="data_set" t-att-data-action-url="tx_url" data-remove-me=""/>
+            <input type="hidden" name="command" t-att-value="command" />
+            <input type="hidden" name="access_code" t-att-value="access_code" />
+            <input type="hidden" name="merchant_identifier" t-att-value="merchant_identifier" />
+            <input type="hidden" name="merchant_reference" t-att-value="merchant_reference" />
+            <input type="hidden" name="amount" t-att-value="amount" />
+            <input type="hidden" name="currency" t-att-value="currency" />
+            <input type="hidden" name="language" t-att-value="language" />
+            <input type="hidden" name="customer_email" t-att-value="customer_email" />
+            <input type="hidden" name="customer_name" t-att-value="customer_name" />
+            <input type="hidden" name="signature" t-att-value="signature" />
+            <input t-if="token_name" type="hidden" name="token_name" t-att-value="token_name" />
+            <input type="hidden" name="eci" t-att-value="eci" />
+            <input type="hidden" name="return_url" t-att-value="return_url" />
+            <input type="hidden" name="merchant_extra" t-att-value="merchant_extra" />
+        </template>
+
+        <template id="payfort_registration_form">
+            <div class="oe_payfort_merchant_page">
+                <!-- will be handled in js -->
+                <p>You will be prompted for your card details upon payment.</p>
+                <small>This operation will trigger a small payment on your card that
+                will be refunded immediately.</small>
+            </div>
+        </template>
+    </data>
+
+    <template id="payfort_merchant_page_return">
+        <t t-call="web.frontend_layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            <t t-set="title" t-value="'Payfort Feedback'"/>
+            <div id="wrap">
+                <div class="container">
+                    <div class="row">
+                        <div id="oe_payfort_merchant_page_return" class="text-center mt64 mb64 col"
+                            t-att-data-token-id="token.id" t-att-data-auth-url="validation_tx.html_3ds"
+                            t-att-data-is-token-verified="token.verified">
+                            <t t-if="token">
+                                <t t-if="validation_tx.html_3ds and not token.verified">
+                                    <i class="fa fa-circle-o-notch fa-3x fa-spin"/>
+                                    <p>You must authenticate this transaction with your financial institution.</p>
+                                    <p>This window will close automatically once you have authenticated in the window that just opened.</p>
+                                    <p>If the authentication window did not open, click here:</p>
+                                    <button class="oe_payfort_open_3ds btn btn-primary">Authenticate</button>
+                                    <p>
+                                        <small class="text-muted">Please do not close this window until the
+                                        authentication process is complete.</small>
+                                    </p>
+                                </t>
+                                <t t-else="">
+                                    <i class="fa fa-check fa-3x text-success"/>
+                                    <p>Your payment data has been saved; your request will proceed in just
+                                    a moment.</p>
+                                    <small class="text-muted">Please do not close this window.</small>
+                                </t>
+                            </t>
+                            <t t-else="">
+                                <i class="fa fa-warning fa-3x text-danger"/>
+                                <p>We were unable to save your payment data. You can try again, or use
+                                another card.</p>
+                                <button class="oe_payfort_close_modal btn btn-secondary">Close</button>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="assets_frontend" inherit_id="web.assets_frontend">
+        <xpath expr="link[last()]" position="after">
+            <link rel="stylesheet" type="text/scss"
+                href="/payment_payfort/static/src/scss/payment_payfort.scss"/>
+        </xpath>
+        <xpath expr="script[last()]" position="after">
+            <script type="text/javascript"
+                src="/payment_payfort/static/src/js/payment_form.js"/>
+            <script type="text/javascript"
+                src="/payment_payfort/static/src/js/payfort_merchant_page.js"/>
+        </xpath>
+    </template>
+</odoo>

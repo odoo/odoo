@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="payment_acquirer_payfort" model="payment.acquirer">
+            <field name="name">Payfort</field>
+            <field name="display_as">Credit Card (powered by Payfort)</field>
+            <field name="provider">payfort</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="view_template_id" ref="payfort_form"/>
+            <field name="registration_view_template_id" ref="payfort_registration_form"/>
+            <field name="image_128" type="base64" file="payment_payfort/static/src/img/payfort_icon.png"/>
+            <field name="module_id" ref="base.module_payment_payfort"/>
+            <field name="description" type="html">
+                <p>
+                    A payment gateway to accept online payments via credit cards in the MENA region.
+                </p>
+                <ul class="list-inline">
+                    <li class="list-inline-item"><i class="fa fa-check"/>Online Payment</li>
+                    <li class="list-inline-item"><i class="fa fa-check"/>Payment Status Tracking</li>
+                    <li class="list-inline-item"><i class="fa fa-check"/>Subscriptions</li>
+                    <li class="list-inline-item"><i class="fa fa-check"/>Save Cards</li>
+                    <li class="list-inline-item"><i class="fa fa-check"/>Embedded Credit Card Form</li>
+                </ul>
+            </field>
+            <field name="payment_icon_ids" eval='[(6, 0, [ref("payment.payment_icon_cc_mastercard"),
+                                                            ref("payment.payment_icon_cc_visa")])]'/>
+        </record>
+    </data>
+
+    <record id="payment_icon_edirham" model="payment.icon">
+        <field name="name">e-Dirham</field>
+        <field name="image" type="base64" file="payment_payfort/static/src/img/edirham_icon.png"/>
+    </record>
+
+    <record id="payment_icon_knet" model="payment.icon">
+        <field name="name">Knet</field>
+        <field name="image" type="base64" file="payment_payfort/static/src/img/knet_icon.png"/>
+    </record>
+
+    <record id="payment_icon_mada" model="payment.icon">
+        <field name="name">MADA</field>
+        <field name="image" type="base64" file="payment_payfort/static/src/img/mada_icon.png"/>
+    </record>
+
+    <record id="payment_icon_naps" model="payment.icon">
+        <field name="name">NAPS</field>
+        <field name="image" type="base64" file="payment_payfort/static/src/img/naps_icon.png"/>
+    </record>
+
+    <record id="payment_icon_sadad" model="payment.icon">
+        <field name="name">Sadad</field>
+        <field name="image" type="base64" file="payment_payfort/static/src/img/sadad_icon.png"/>
+    </record>
+
+</odoo>
