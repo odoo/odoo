@@ -21,7 +21,6 @@ except ImportError:
 
 from collections import namedtuple
 from email.message import Message
-from email.utils import formataddr
 from lxml import etree
 from werkzeug import url_encode
 from werkzeug import urls
@@ -2644,7 +2643,7 @@ class MailThread(models.AbstractModel):
             company_name = company.name if company else self.env.company.name
             for res_id in result_email.keys():
                 name = '%s%s%s' % (company_name, ' ' if doc_names.get(res_id) else '', doc_names.get(res_id, ''))
-                result[res_id] = formataddr((name, result_email[res_id]))
+                result[res_id] = tools.formataddr((name, result_email[res_id]))
 
         left_ids = set(_res_ids) - set(result_email)
         if left_ids:
