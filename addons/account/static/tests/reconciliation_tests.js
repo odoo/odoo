@@ -709,7 +709,13 @@ QUnit.module('account', {
                         position: "before",
                         symbol: "$"
                     }
-                }
+                },
+                user_has_group: function (group) {
+                    if (group === 'analytic.group_analytic_tags' || group === 'analytic.group_analytic_accounting') {
+                        return $.when(true);
+                    }
+                    return this._super.apply(this, arguments);
+                },
             },
         });
         await clientAction.appendTo($('#qunit-fixture'));
@@ -2083,7 +2089,13 @@ QUnit.module('account', {
                         position: "before",
                         symbol: "$"
                     }
-                }
+                },
+                user_has_group: function (group) {
+                    if (group === 'analytic.group_analytic_tags' || group === 'analytic.group_analytic_accounting') {
+                        return $.when(true);
+                    }
+                    return this._super.apply(this, arguments);
+                },
             },
         });
 
