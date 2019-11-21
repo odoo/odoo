@@ -26,11 +26,13 @@ class Survey(models.Model):
 
     # description
     title = fields.Char('Survey Title', required=True, translate=True)
+    color = fields.Integer('Color Index', default=0)
     description = fields.Html(
         "Description", translate=True,
         help="The description will be displayed on the home page of the survey. You can use this to give the purpose and guidelines to your candidates before they start it.")
-    color = fields.Integer('Color Index', default=0)
-    thank_you_message = fields.Html("Thanks Message", translate=True, help="This message will be displayed when survey is completed")
+    description_done = fields.Html(
+        "End Message", translate=True,
+        help="This message will be displayed when survey is completed")
     active = fields.Boolean("Active", default=True)
     state = fields.Selection(selection=[
         ('draft', 'Draft'), ('open', 'In Progress'), ('closed', 'Closed')

@@ -1,7 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo.tests
+
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+
 
 @odoo.tests.common.tagged('post_install', '-at_install')
 class TestUiCertification(HttpCaseWithUserDemo):
@@ -24,7 +26,6 @@ class TestUiCertification(HttpCaseWithUserDemo):
             'is_attempts_limited': True,
             'attempts_limit': 2,
             'description': """&lt;p&gt;Test your vendor skills!.&lt;/p&gt;""",
-            'thank_you_message': """&lt;p&gt;&lt;/p&gt;""",
             'question_and_page_ids': [
                 (0, 0, {
                     'title': 'Products',
