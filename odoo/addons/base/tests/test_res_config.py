@@ -70,8 +70,8 @@ class TestResConfig(TransactionCase):
         self.assertIsInstance(res, exceptions.RedirectWarning)
 
         # Check returned value
-        self.assertEqual(res.args[0], self.expected_final_error_msg)
-        self.assertEqual(res.args[1], self.expected_action_id)
+        self.assertEqual(str(res), self.expected_final_error_msg)
+        self.assertEqual(res.act_id, self.expected_action_id)
 
     def test_30_get_config_warning_wo_menu(self):
         """ The get_config_warning() method should return a Warning exception """
