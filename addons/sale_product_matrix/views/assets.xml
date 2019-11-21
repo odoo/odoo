@@ -11,4 +11,10 @@
             <script type="text/javascript" src="/sale_product_matrix/static/tests/section_and_note_widget_tests.js"></script>
         </xpath>
     </template>
+
+    <template id="assets_tests" name="Sale Product Matrix Assets Tests" inherit_id="web.assets_tests">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/sale_product_matrix/static/tests/tours/sale_product_matrix_tour.js"/>
+        </xpath>
+    </template>
 </odoo>
