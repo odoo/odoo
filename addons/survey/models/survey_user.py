@@ -3,24 +3,14 @@
 
 import datetime
 import logging
-import re
 import uuid
+
+from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
-from dateutil.relativedelta import relativedelta
-
-email_validator = re.compile(r"[^@]+@[^@]+\.[^@]+")
 _logger = logging.getLogger(__name__)
-
-
-def dict_keys_startswith(dictionary, string):
-    """Returns a dictionary containing the elements of <dict> whose keys start with <string>.
-        .. note::
-            This function uses dictionary comprehensions (Python >= 2.7)
-    """
-    return {k: v for k, v in dictionary.items() if k.startswith(string)}
 
 
 class SurveyUserInput(models.Model):
