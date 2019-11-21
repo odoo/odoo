@@ -10,5 +10,11 @@ class Users(models.Model):
 
     target_sales_won = fields.Integer('Won in Opportunities Target')
     target_sales_done = fields.Integer('Activities Done Target')
-    team_user_ids = fields.One2many('team.user', 'user_id', string="Sales Records")
-    sale_team_id = fields.Many2one('crm.team', 'User Sales Team', related='team_user_ids.team_id', readonly=False, store=True)
+    team_member_ids = fields.One2many('crm.team.member', 'user_id', string="Sales Records")
+    sale_team_id = fields.Many2one('crm.team', 'User Sales Team', related='team_member_ids.team_id', readonly=False, store=True)
+    team_ids = fields.Many2many('crm.team', string='Sales Teams', compute='_compute_team_ids', store=True)
+
+    @api.depends('team_member_ids')
+    def _compute_team_ids(self):
+        for user in self:
+            user.team_ids = user.team_member_ids.mapped('team_id')

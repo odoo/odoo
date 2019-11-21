@@ -19,47 +19,49 @@ evaluation_context = {
 }
 
 
-class team_user(models.Model):
-    _name = 'team.user'
+class CrmTeamMember(models.Model):
+    _name = 'crm.team.member'
     _inherit = ['mail.thread']
     _description = 'Salesperson (Team Member)'
 
-    def _count_leads(self):
-        for rec in self:
-            if rec.id:
+    team_id = fields.Many2one('crm.team', string='Sales Team', required=True)
+    user_id = fields.Many2one('res.users', string='Saleman', required=True, domain=lambda self:
+        [('groups_id', 'in', self.env.ref('base.group_user').ids), ('team_ids', 'not in', [self.env.context.get('default_team_id')])])
+    name = fields.Char(string="Name", related='user_id.partner_id.display_name', readonly=False)
+    email = fields.Char(string="Email", related='user_id.partner_id.email')
+    phone = fields.Char(string="Phone", related='user_id.partner_id.phone')
+    mobile = fields.Char(string="Mobile", related='user_id.partner_id.mobile')
+    company_id = fields.Many2one(string="Company", related='user_id.partner_id.company_id')
+    active = fields.Boolean(string='Running', default=True)
+    team_member_domain = fields.Char('Domain', tracking=True)
+    maximum_user_leads = fields.Integer('Leads Per Month')
+    leads_count = fields.Integer('Assigned Leads', compute='_compute_count_leads', help='Assigned Leads this last month')
+    percentage_leads = fields.Float(compute='_compute_percentage_leads', string='Percentage leads')
+
+    def _compute_count_leads(self):
+        for member in self:
+            if member.id:
                 limit_date = datetime.datetime.now() - datetime.timedelta(days=30)
-                domain = [('user_id', '=', rec.user_id.id),
-                          ('team_id', '=', rec.team_id.id),
+                domain = [('user_id', '=', member.user_id.id),
+                          ('team_id', '=', member.team_id.id),
                           ('assign_date', '>', fields.Datetime.to_string(limit_date))
                           ]
-                rec.leads_count = self.env['crm.lead'].search_count(domain)
+                member.leads_count = self.env['crm.lead'].search_count(domain)
             else:
-                rec.leads_count = 0
+                member.leads_count = 0
 
-    def _get_percentage(self):
-        for rec in self:
-            try:
-                rec.percentage_leads = round(100 * rec.leads_count / float(rec.maximum_user_leads), 2)
-            except ZeroDivisionError:
-                rec.percentage_leads = 0.0
+    def _compute_percentage_leads(self):
+        for member in self:
+            member.percentage_leads = round(100 * member.leads_count / float(member.maximum_user_leads), 2) if member.maximum_user_leads else 0.0
 
-    @api.constrains('team_user_domain')
+    @api.constrains('team_member_domain')
     def _assert_valid_domain(self):
-        for rec in self:
+        for member in self:
             try:
-                domain = safe_eval(rec.team_user_domain or '[]', evaluation_context)
+                domain = safe_eval(member.team_member_domain or '[]', evaluation_context)
                 self.env['crm.lead'].search(domain, limit=1)
             except Exception:
-                raise Warning('The domain is incorrectly formatted')
-
-    team_id = fields.Many2one('crm.team', string='Sales Team', required=True)
-    user_id = fields.Many2one('res.users', string='Saleman', required=True)
-    name = fields.Char(string="Name", related='user_id.partner_id.display_name', readonly=False)
-    active = fields.Boolean(string='Running', default=True)
-    team_user_domain = fields.Char('Domain', tracking=True)
-    maximum_user_leads = fields.Integer('Leads Per Month')
-    leads_count = fields.Integer('Assigned Leads', compute='_count_leads', help='Assigned Leads this last month')
-    percentage_leads = fields.Float(compute='_get_percentage', string='Percentage leads')
+                raise ValidationError('The domain is incorrectly formatted')
 
 
 class Team(models.Model):
@@ -92,21 +94,31 @@ class Team(models.Model):
     # So we need to reset the property related of that field
     alias_user_id = fields.Many2one('res.users', related='alias_id.alias_user_id', inherited=True, domain=lambda self: [
         ('groups_id', 'in', self.env.ref('sales_team.group_sale_salesman_all_leads').id)])
-    score_team_domain = fields.Char('Domain', tracking=True)
-    leads_count = fields.Integer(compute='_count_leads')
-    assigned_leads_count = fields.Integer(compute='_assigned_leads_count')
-    capacity = fields.Integer(compute='_capacity')
-    team_user_ids = fields.One2many('team.user', 'team_id', string='Salesman')
+    team_domain = fields.Char('Domain', tracking=True)
+    leads_count = fields.Integer(compute='_compute_leads_count')
+    assigned_leads_count = fields.Integer(compute='_compute_assigned_leads_count')
+    capacity = fields.Integer(compute='_compute_capacity')
+    team_member_ids = fields.One2many('crm.team.member', 'team_id', string='Salesman')
+    user_ids = fields.Many2many('res.users', string='Salesman User', compute='_compute_user_ids', store=True)
 
     @api.model
     @api.returns('self', lambda value: value.id if value else False)
     def _get_default_team_id(self, user_id=None, domain=None):
         if user_id is None:
             user_id = self.env.user.id
-        team_id = self.sudo().search([('team_user_ids.user_id', '=', user_id)], limit=1)
+        team_id = self.sudo().search([('team_member_ids.user_id', '=', user_id)], limit=1)
         if not team_id:
             team_id = super(Team, self)._get_default_team_id(user_id=user_id, domain=domain)
         return team_id
+
+    @api.constrains('team_domain')
+    def _assert_valid_domain(self):
+        for team in self:
+            try:
+                domain = safe_eval(team.team_domain or '[]', evaluation_context)
+                self.env['crm.lead'].search(domain, limit=1)
+            except Exception:
+                raise ValidationError('The domain is incorrectly formatted')
 
     def _compute_unassigned_leads_count(self):
         leads_data = self.env['crm.lead'].read_group([
@@ -148,34 +160,30 @@ class Team(models.Model):
             team.overdue_opportunities_count = counts.get(team.id, 0)
             team.overdue_opportunities_amount = amounts.get(team.id, 0)
 
-    def _count_leads(self):
-        for rec in self:
-            if rec.id:
-                rec.leads_count = self.env['crm.lead'].search_count([('team_id', '=', rec.id)])
+    def _compute_leads_count(self):
+        for team in self:
+            if team.id:
+                team.leads_count = self.env['crm.lead'].search_count([('team_id', '=', team.id)])
             else:
-                rec.leads_count = 0
+                team.leads_count = 0
 
-    def _assigned_leads_count(self):
-        for rec in self:
+    def _compute_assigned_leads_count(self):
+        for team in self:
             limit_date = datetime.datetime.now() - datetime.timedelta(days=30)
             domain = [('assign_date', '>=', fields.Datetime.to_string(limit_date)),
-                      ('team_id', '=', rec.id),
+                      ('team_id', '=', team.id),
                       ('user_id', '!=', False)
                       ]
-            rec.assigned_leads_count = self.env['crm.lead'].search_count(domain)
+            team.assigned_leads_count = self.env['crm.lead'].search_count(domain)
 
-    def _capacity(self):
-        for rec in self:
-            rec.capacity = sum(s.maximum_user_leads for s in rec.team_user_ids)
+    def _compute_capacity(self):
+        for team in self:
+            team.capacity = sum(s.maximum_user_leads for s in team.team_member_ids)
 
-    @api.constrains('score_team_domain')
-    def _assert_valid_domain(self):
-        for rec in self:
-            try:
-                domain = safe_eval(rec.score_team_domain or '[]', evaluation_context)
-                self.env['crm.lead'].search(domain, limit=1)
-            except Exception:
-                raise Warning('The domain is incorrectly formatted')
+    @api.depends('team_member_ids')
+    def _compute_user_ids(self):
+        for team in self:
+            team.user_ids = team.team_member_ids.mapped('user_id')
 
     @api.onchange('use_leads', 'use_opportunities')
     def _onchange_use_leads_opportunities(self):
@@ -271,7 +279,7 @@ class Team(models.Model):
             for salesteam in all_salesteams:
                 if salesteam['id'] in salesteams_done:
                     continue
-                domain = safe_eval(salesteam['score_team_domain'], evaluation_context)
+                domain = safe_eval(salesteam['team_domain'], evaluation_context)
                 limit_date = fields.Datetime.to_string(datetime.datetime.now() - datetime.timedelta(hours=1))
                 domain.extend([('create_date', '<', limit_date), ('team_id', '=', False), ('user_id', '=', False)])
                 domain.extend(['|', ('stage_id.is_won', '=', False), '&', ('probability', '!=', 0), ('probability', '!=', 100)])
@@ -314,7 +322,7 @@ class Team(models.Model):
         for su in all_team_users:
             if (su.maximum_user_leads - su.leads_count) <= 0:
                 continue
-            domain = safe_eval(su.team_user_domain or '[]', evaluation_context)
+            domain = safe_eval(su.team_member_domain or '[]', evaluation_context)
             domain.extend([
                 ('user_id', '=', False),
                 ('assign_date', '=', False)
@@ -325,7 +333,7 @@ class Team(models.Model):
 
             domain.append(('team_id', '=', su.team_id.id))
 
-            leads = self.env["crm.lead"].search(domain, limit=limit * len(su.team_id.team_user_ids))
+            leads = self.env["crm.lead"].search(domain, limit=limit * len(su.team_id.team_member_ids))
             users.append({
                 "su": su,
                 "nbr": min(su.maximum_user_leads - su.leads_count, limit),
@@ -371,9 +379,9 @@ class Team(models.Model):
     def _assign_leads(self):
         _logger.info('### START leads assignation')
 
-        all_salesteams = self.search_read(fields=['score_team_domain'], domain=[('score_team_domain', '!=', False)])
+        all_salesteams = self.search_read(fields=['team_domain'], domain=[('team_domain', '!=', False)])
 
-        all_team_users = self.env['team.user'].search([])
+        all_team_users = self.env['crm.team.member'].search([])
 
         _logger.info('Start assign_leads_to_salesteams for %s teams' % len(all_salesteams))
 

@@ -286,7 +286,7 @@ class Lead(models.Model):
             return {}
         if user_id and self._context.get('team_id'):
             team = self.env['crm.team'].browse(self._context['team_id'])
-            if user_id in team.member_ids.ids or user_id == team.user_id.id or user_id in team.team_user_ids.mapped('user_id').ids:
+            if user_id in team.member_ids.ids or user_id == team.user_id.id or user_id in team.user_ids.ids:
                 return {}
         team_id = self._default_team_id(user_id)
         return {'team_id': team_id}
