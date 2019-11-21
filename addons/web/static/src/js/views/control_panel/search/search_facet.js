@@ -44,7 +44,7 @@ var SearchFacet = Widget.extend({
     _getFilterDescription: function (filter) {
         if (filter.type === 'field') {
             var values = _.pluck(filter.autoCompleteValues, 'label');
-            return values.join(_t(' or '));
+            return values.join(_t(' and '));
         }
         var description = filter.description;
         if (filter.hasOptions) {

@@ -128,7 +128,7 @@ var Field = FilterInterface.extend(ServicesMixin, {
         var domains = values.map(valueToDomain);
 
         domains = domains.map(Domain.prototype.arrayToString);
-        return pyUtils.assembleDomains(domains, 'OR');
+        return pyUtils.assembleDomains(domains, 'AND');
     },
 
     //--------------------------------------------------------------------------
