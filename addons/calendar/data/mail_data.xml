@@ -55,7 +55,7 @@
                     <li>Description: ${object.event_id.description}</li>
                 % endif
                 % if not object.event_id.allday and object.event_id.duration
-                    <li>Duration: ${('%dH%02d' % (object.event_id.duration,(object.event_id.duration*60)%60))}</li>
+                    <li>Duration: ${('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60))}</li>
                 % endif
                 <li>Attendees
                 <ul>
@@ -140,7 +140,7 @@
                     <li>Description: ${object.event_id.description}</li>
                 % endif
                 % if not object.event_id.allday and object.event_id.duration
-                    <li>Duration: ${('%dH%02d' % (object.event_id.duration,(object.event_id.duration*60)%60))}</li>
+                    <li>Duration: ${('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60))}</li>
                 % endif
                 <li>Attendees
                 <ul>
