@@ -26,11 +26,13 @@ class Survey(models.Model):
 
     # description
     title = fields.Char('Survey Title', required=True, translate=True)
+    color = fields.Integer('Color Index', default=0)
     description = fields.Html(
         "Description", translate=True,
         help="The description will be displayed on the home page of the survey. You can use this to give the purpose and guidelines to your candidates before they start it.")
-    color = fields.Integer('Color Index', default=0)
-    thank_you_message = fields.Html("Thanks Message", translate=True, help="This message will be displayed when survey is completed")
+    description_done = fields.Html(
+        "End Message", translate=True,
+        help="This message will be displayed when survey is completed")
     active = fields.Boolean("Active", default=True)
     state = fields.Selection(selection=[
         ('draft', 'Draft'), ('open', 'In Progress'), ('closed', 'Closed')
@@ -67,18 +69,20 @@ class Survey(models.Model):
     answer_score_avg = fields.Float("Avg Score %", compute="_compute_survey_statistic")
     success_count = fields.Integer("Success", compute="_compute_survey_statistic")
     success_ratio = fields.Integer("Success Ratio", compute="_compute_survey_statistic")
-    # scoring / certification
+    # scoring
     scoring_type = fields.Selection([
         ('no_scoring', 'No scoring'),
         ('scoring_with_answers', 'Scoring with answers at the end'),
         ('scoring_without_answers', 'Scoring without answers at the end')],
         string="Scoring", required=True, default='no_scoring')
-    passing_score = fields.Float('Passing score (%)', required=True, default=80.0)
+    scoring_success_min = fields.Float('Success %', default=80.0)
+    # attendees context: attempts and time limitation
     is_attempts_limited = fields.Boolean('Limited number of attempts', help="Check this option if you want to limit the number of attempts per user")
     attempts_limit = fields.Integer('Number of attempts', default=1)
     is_time_limited = fields.Boolean('The survey is limited in time')
     time_limit = fields.Float("Time limit (minutes)")
-    certificate = fields.Boolean('Certificate')
+    # certification
+    certification = fields.Boolean('Is a Certification')
     certification_mail_template_id = fields.Many2one(
         'mail.template', 'Email Template',
         domain="[('model', '=', 'survey.user_input')]",
@@ -102,7 +106,7 @@ class Survey(models.Model):
 
     _sql_constraints = [
         ('access_token_unique', 'unique(access_token)', 'Access token should be unique'),
-        ('certificate_check', "CHECK( scoring_type!='no_scoring' OR certificate=False )",
+        ('certification_check', "CHECK( scoring_type!='no_scoring' OR certification=False )",
             'You can only create certifications for surveys that have a scoring mechanism.'),
         ('time_limit_check', "CHECK( (is_time_limited=False) OR (time_limit is not null AND time_limit > 0) )",
             'The time limit needs to be a positive number if the survey is time limited.'),
@@ -151,15 +155,15 @@ class Survey(models.Model):
             survey.page_ids = survey.question_and_page_ids.filtered(lambda question: question.is_page)
             survey.question_ids = survey.question_and_page_ids - survey.page_ids
 
-    @api.onchange('passing_score')
-    def _onchange_passing_score(self):
-        if self.passing_score < 0 or self.passing_score > 100:
-            self.passing_score = 80.0
+    @api.onchange('scoring_success_min')
+    def _onchange_scoring_success_min(self):
+        if self.scoring_success_min < 0 or self.scoring_success_min > 100:
+            self.scoring_success_min = 80.0
 
     @api.onchange('scoring_type')
     def _onchange_scoring_type(self):
         if self.scoring_type == 'no_scoring':
-            self.certificate = False
+            self.certification = False
             self.is_time_limited = False
 
     @api.onchange('users_login_required', 'access_mode')
@@ -181,9 +185,9 @@ class Survey(models.Model):
         selection = self.env['survey.survey'].fields_get(allfields=['state'])['state']['selection']
         return [s[0] for s in selection]
 
-    @api.onchange('users_login_required', 'certificate')
+    @api.onchange('users_login_required', 'certification')
     def _onchange_set_certification_give_badge(self):
-        if not self.users_login_required or not self.certificate:
+        if not self.users_login_required or not self.certification:
             self.certification_give_badge = False
 
     # ------------------------------------------------------------
@@ -730,7 +734,7 @@ class Survey(models.Model):
             'batch_user_expression': 'user.partner_id.id'
         })
         challenge = self.env['gamification.challenge'].create({
-            'name': _('%s challenge certificate' % self.title),
+            'name': _('%s challenge certification' % self.title),
             'reward_id': self.certification_badge_id.id,
             'state': 'inprogress',
             'period': 'once',

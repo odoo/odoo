@@ -1,7 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo.tests
+
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+
 
 @odoo.tests.common.tagged('post_install', '-at_install')
 class TestUiFeedback(HttpCaseWithUserDemo):
@@ -17,7 +19,6 @@ class TestUiFeedback(HttpCaseWithUserDemo):
             'questions_layout': 'page_per_section',
             'description': """<p>This survey allows you to give a feedback about your experience with our eCommerce solution.
     Filling it helps us improving your experience.</p></field>""",
-            'thank_you_message': """&lt;p&gt;&lt;/p&gt;""",
             'question_and_page_ids': [
                 (0, 0, {
                     'title': 'General information',
