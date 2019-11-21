@@ -830,6 +830,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         ModelData.clear_caches()
         extracted = self._extract_records(fields, data, log=messages.append)
         converted = self._convert_records(extracted, log=messages.append)
+        unknown_msg = _(u"Unknown database error: '%s'")
         for id, xid, record, info in converted:
             try:
                 cr.execute('SAVEPOINT model_load_save')
@@ -837,7 +838,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 # broken transaction, exit and hope the source error was
                 # already logged
                 if not any(message['type'] == 'error' for message in messages):
-                    messages.append(dict(info, type='error',message=u"Unknown database error: '%s'" % e))
+                    messages.append(dict(info, type='error', message=unknown_msg % e))
                 break
             try:
                 ids.append(ModelData._update(self._name, current_module, record, mode=mode,
@@ -847,18 +848,18 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 messages.append(dict(info, type='warning', message=str(e)))
                 cr.execute('ROLLBACK TO SAVEPOINT model_load_save')
             except psycopg2.Error as e:
-                messages.append(dict(info, type='error', **PGERROR_TO_OE[e.pgcode](self, fg, info, e)))
                 # Failed to write, log to messages, rollback savepoint (to
                 # avoid broken transaction) and keep going
                 cr.execute('ROLLBACK TO SAVEPOINT model_load_save')
+                messages.append(dict(info, type='error', **PGERROR_TO_OE[e.pgcode](self, fg, info, e)))
             except Exception as e:
                 _logger.exception("Error while loading record")
-                message = (_(u'Unknown error during import:') + u' %s: %s' % (type(e), e))
-                moreinfo = _('Resolve other errors first')
-                messages.append(dict(info, type='error', message=message, moreinfo=moreinfo))
                 # Failed for some reason, perhaps due to invalid data supplied,
                 # rollback savepoint and keep going
                 cr.execute('ROLLBACK TO SAVEPOINT model_load_save')
+                message = (_(u'Unknown error during import:') + u' %s: %s' % (type(e), e))
+                moreinfo = _('Resolve other errors first')
+                messages.append(dict(info, type='error', message=message, moreinfo=moreinfo))
         if any(message['type'] == 'error' for message in messages):
             cr.execute('ROLLBACK TO SAVEPOINT model_load')
             ids = False
@@ -5350,8 +5351,8 @@ def convert_pgerror_not_null(model, fields, info, e):
         return {'message': tools.ustr(e)}
 
     field_name = e.diag.column_name
-    field = fields[field_name]
-    message = _(u"Missing required value for the field '%s' (%s)") % (field['string'], field_name)
+    field_description = _get_translated_field_name(model, field_name)
+    message = _(u"Missing required value for the field '%s' (%s)") % (field_description, field_name)
     return {
         'message': message,
         'field': field_name,
@@ -5360,8 +5361,8 @@ def convert_pgerror_not_null(model, fields, info, e):
 def convert_pgerror_unique(model, fields, info, e):
     # new cursor since we're probably in an error handler in a blown
     # transaction which may not have been rollbacked/cleaned yet
-    with closing(model.env.registry.cursor()) as cr:
-        cr.execute("""
+    with closing(model.env.registry.cursor()) as cr_tmp:
+        cr_tmp.execute("""
             SELECT
                 conname AS "constraint name",
                 t.relname AS "table name",
@@ -5374,7 +5375,7 @@ def convert_pgerror_unique(model, fields, info, e):
             JOIN pg_class t ON t.oid = conrelid
             WHERE conname = %s
         """, [e.diag.constraint_name])
-        constraint, table, ufields = cr.fetchone() or (None, None, None)
+        constraint, table, ufields = cr_tmp.fetchone() or (None, None, None)
     # if the unique constraint is on an expression or on an other table
     if not ufields or model._table != table:
         return {'message': tools.ustr(e)}
@@ -5382,18 +5383,29 @@ def convert_pgerror_unique(model, fields, info, e):
     # TODO: add stuff from e.diag.message_hint? provides details about the constraint & duplication values but may be localized...
     if len(ufields) == 1:
         field_name = ufields[0]
-        field = fields[field_name]
-        message = _(u"The value for the field '%s' already exists (this is probably '%s' in the current model).") % (field_name, field['string'])
+        field_description = _get_translated_field_name(model, field_name)
+        message = _(u"The value for the field '%s' already exists (this is probably '%s' in the current model).") % (field_name, field_description)
         return {
             'message': message,
             'field': field_name,
         }
-    field_strings = [fields[fname]['string'] for fname in ufields]
+    field_strings = [_get_translated_field_name(model, fname) for fname in ufields]
     message = _(u"The values for the fields '%s' already exist (they are probably '%s' in the current model).") % (', '.join(ufields), ', '.join(field_strings))
     return {
         'message': message,
         # no field, unclear which one we should pick and they could be in any order
     }
+
+def _get_translated_field_name(model, field_name):
+    """From a lang-free environment, build a new one with the information from
+       the current user, to get the field(_name)'s description in its language.
+    """
+    field = model._fields[field_name]
+    ctx = model.env.user.context_get()  # get the lang
+    ctx.update(model.env.context)  # only overwrite it if not already there
+    env = model.with_context(ctx).env
+    return field._description_string(env)
+
 
 PGERROR_TO_OE = defaultdict(
     # shape of mapped converters
