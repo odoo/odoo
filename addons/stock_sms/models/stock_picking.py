@@ -19,6 +19,8 @@ class Picking(models.Model):
 
     def _check_warn_sms(self):
         warn_sms_pickings = self.browse()
+        if self.env.context.get('skip_sms'):
+            return warn_sms_pickings
         for picking in self:
             is_delivery = picking.company_id.stock_move_sms_validation \
                     and picking.picking_type_id.code == 'outgoing' \
@@ -52,7 +54,7 @@ class Picking(models.Model):
 
     def _send_confirmation_email(self):
         super(Picking, self)._send_confirmation_email()
-        if not getattr(threading.currentThread(), 'testing', False) and not self.env.registry.in_test_mode():
+        if not self.env.context.get('skip_sms') and not getattr(threading.currentThread(), 'testing', False) and not self.env.registry.in_test_mode():
             pickings = self.filtered(lambda p: p.company_id.stock_move_sms_validation and p.picking_type_id.code == 'outgoing' and (p.partner_id.mobile or p.partner_id.phone))
 
             for picking in pickings:
