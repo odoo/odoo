@@ -1310,6 +1310,7 @@ class _String(Field):
     """ Abstract class for string fields. """
     _slots = {
         'translate': False,             # whether the field is translated
+        'prefetch': None,
     }
 
     def __init__(self, string=Default, **kwargs):
@@ -1317,6 +1318,12 @@ class _String(Field):
         if 'translate' in kwargs and not callable(kwargs['translate']):
             kwargs['translate'] = bool(kwargs['translate'])
         super(_String, self).__init__(string=string, **kwargs)
+
+    def _setup_attrs(self, model, name):
+        super()._setup_attrs(model, name)
+        if self.prefetch is None:
+            # do not prefetch complex translated fields by default
+            self.prefetch = not callable(self.translate)
 
     _related_translate = property(attrgetter('translate'))
 
@@ -1446,11 +1453,13 @@ class Html(_String):
         'strip_classes': False,         # whether to strip classes attributes
     }
 
-    def _setup_attrs(self, model, name):
-        super(Html, self)._setup_attrs(model, name)
+    def _get_attrs(self, model, name):
+        # called by _setup_attrs(), working together with _String._setup_attrs()
+        attrs = super()._get_attrs(model, name)
         # Translated sanitized html fields must use html_translate or a callable.
-        if self.translate is True and self.sanitize:
-            self.translate = html_translate
+        if attrs.get('translate') is True and attrs.get('sanitize', True):
+            attrs['translate'] = html_translate
+        return attrs
 
     _related_sanitize = property(attrgetter('sanitize'))
     _related_sanitize_tags = property(attrgetter('sanitize_tags'))
