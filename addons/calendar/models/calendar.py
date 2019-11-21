@@ -738,7 +738,7 @@ class Meeting(models.Model):
         if zallday:
             display_time = _("AllDay , %s") % (date_str)
         elif zduration < 24:
-            duration = date + timedelta(hours=zduration)
+            duration = date + timedelta(minutes=round(zduration*60))
             duration_time = to_text(duration.strftime(format_time))
             display_time = _(u"%s at (%s To %s) (%s)") % (
                 date_str,
@@ -963,7 +963,11 @@ class Meeting(models.Model):
         if self.start_datetime:
             start = self.start_datetime
             self.start = self.start_datetime
-            self.stop = start + timedelta(hours=self.duration) - timedelta(seconds=1)
+            # Round the duration (in hours) to the minute to avoid weird situations where the event
+            # stops at 4:19:59, later displayed as 4:19.
+            self.stop = start + timedelta(minutes=round(self.duration * 60))
+            if self.allday:
+                self.stop -= timedelta(seconds=1)
 
     @api.onchange('start_date')
     def _onchange_start_date(self):
