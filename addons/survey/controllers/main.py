@@ -524,7 +524,7 @@ class Survey(http.Controller):
         Survey = request.env['survey.survey']
         result = []
         if question.question_type == 'multiple_choice':
-            result.append({'key': ustr(question.question),
+            result.append({'key': ustr(question.title),
                            'values': Survey.prepare_result(question, current_filters)['answers']
                            })
         if question.question_type == 'simple_choice':
