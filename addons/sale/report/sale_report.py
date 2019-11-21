@@ -12,6 +12,10 @@ class SaleReport(models.Model):
     _rec_name = 'date'
     _order = 'date desc'
 
+    @api.model
+    def _get_done_states(self):
+        return ['sale', 'done', 'paid']
+
     name = fields.Char('Order Reference', readonly=True)
     date = fields.Datetime('Order Date', readonly=True)
     confirmation_date = fields.Datetime('Confirmation Date', readonly=True)
