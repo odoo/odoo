@@ -214,6 +214,9 @@ class PosConfig(models.Model):
     company_has_template = fields.Boolean(string="Company has chart of accounts", compute="_compute_company_has_template")
     current_user_id = fields.Many2one('res.users', string='Current Session Responsible', compute='_compute_current_session_user')
     other_devices = fields.Boolean(string="Other Devices", help="Connect devices to your PoS without an IoT Box.")
+    rounding_method = fields.Many2one('account.cash.rounding', string="Cash rounding")
+    cash_rounding = fields.Boolean(string="Cash Rounding")
+    only_round_cash_method = fields.Boolean(string="Only apply rounding on cash")
 
     @api.depends('use_pricelist', 'available_pricelist_ids')
     def _compute_allowed_pricelist_ids(self):
@@ -306,6 +309,11 @@ class PosConfig(models.Model):
         open_session = self.env['pos.session'].search([('config_id', '=', self.id), ('state', '!=', 'closed')])
         if open_session:
             raise ValidationError(_("You are not allowed to change the cash control status while a session is already opened."))
+
+    @api.constrains('rounding_method')
+    def _check_rounding_method_strategy(self):
+        if self.cash_rounding and self.rounding_method.strategy != 'add_invoice_line':
+            raise ValidationError(_("Cash rounding strategy must be: 'Add a rounding line'"))
 
     @api.constrains('company_id', 'journal_id')
     def _check_company_journal(self):

@@ -2093,7 +2093,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
         var extradue = this.compute_extradue(order);
 
         this.$('.paymentlines-container').empty();
-        var lines = $(QWeb.render('PaymentScreen-Paymentlines', { 
+        var lines = $(QWeb.render('PaymentScreen-Paymentlines', {
             widget: this, 
             order: order,
             paymentlines: lines,
@@ -2299,6 +2299,15 @@ var PaymentScreenWidget = ScreenWidget.extend({
         }
 
         if (!order.is_paid() || this.invoicing) {
+            return false;
+        }
+
+        if(order.has_not_valid_rounding()) {
+            var line = order.has_not_valid_rounding();
+            this.gui.show_popup('error',{
+                    title: _t('Incorrect rounding'),
+                    body:  _t('You have to round your payments lines.' + line.amount + ' is not rounded.'),
+                });
             return false;
         }
 
