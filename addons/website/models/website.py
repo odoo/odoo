@@ -769,11 +769,14 @@ class Website(models.Model):
                     yield page
 
         # '/' already has a http.route & is in the routing_map so it will already have an entry in the xml
-        domain = [('url', '!=', '/'), ('visibility', '=', False)]
+        domain = [('url', '!=', '/')]
         if not force:
-            domain += [('website_indexed', '=', True)]
+            domain += [('website_indexed', '=', True), ('visibility', '=', False)]
             # is_visible
-            domain += [('website_published', '=', True), '|', ('date_publish', '=', False), ('date_publish', '<=', fields.Datetime.now())]
+            domain += [
+                ('website_published', '=', True), ('visibility', '=', False),
+                '|', ('date_publish', '=', False), ('date_publish', '<=', fields.Datetime.now())
+            ]
 
         if query_string:
             domain += [('url', 'like', query_string)]
