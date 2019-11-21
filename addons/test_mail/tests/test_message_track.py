@@ -1,9 +1,15 @@
 # -*- coding: utf-8 -*-
+<<<<<<< HEAD
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from unittest.mock import patch
 
 from odoo.addons.test_mail.tests.common import TestMailCommon
+=======
+from unittest.mock import patch
+from odoo.addons.test_mail.tests import common
+from odoo.tools import formataddr
+>>>>>>> 42347b86f35... temp
 
 
 class TestTracking(TestMailCommon):

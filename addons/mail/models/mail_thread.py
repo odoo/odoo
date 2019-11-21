@@ -21,7 +21,11 @@ except ImportError:
     import xmlrpclib
 
 from collections import namedtuple
+<<<<<<< HEAD
 from email.message import EmailMessage
+=======
+from email.message import Message
+>>>>>>> 42347b86f35... temp
 from lxml import etree
 from werkzeug import url_encode
 from werkzeug import urls

@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+<<<<<<< HEAD
 
+=======
+>>>>>>> 42347b86f35... temp
 from odoo.addons.test_mail.tests import common
 from odoo.tools import formataddr
 

@@ -11,6 +11,10 @@ import socket
 import threading
 import time
 
+<<<<<<< HEAD
+=======
+from email.header import decode_header, Header
+>>>>>>> 42347b86f35... temp
 from email.utils import getaddresses
 from lxml import etree
 
@@ -514,7 +518,11 @@ def email_escape_char(email_address):
 
 # was mail_thread.decode_header()
 def decode_message_header(message, header, separator=' '):
+<<<<<<< HEAD
     return separator.join(h for h in message.get_all(header, []) if h)
+=======
+    return separator.join(decode_smtp_header(h) for h in message.get_all(header, []) if h)
+>>>>>>> 42347b86f35... temp
 
 def formataddr(pair, charset='utf-8'):
     """Pretty format a 2-tuple of the form (realname, email_address).

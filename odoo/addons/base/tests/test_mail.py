@@ -7,7 +7,12 @@ import email.policy
 import email.message
 import threading
 
+<<<<<<< HEAD
 from odoo.tests.common import BaseCase, SavepointCase, TransactionCase
+=======
+from odoo.tests.common import BaseCase
+from odoo.tests.common import SavepointCase
+>>>>>>> 42347b86f35... temp
 from odoo.tools import (
     html_sanitize, append_content_to_html, plaintext2html, email_split,
     misc, formataddr,

@@ -2,7 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 
+<<<<<<< HEAD
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
+=======
+>>>>>>> 42347b86f35... temp
 from odoo.tests.common import TransactionCase, users, warmup
 from odoo.tests import tagged
 from odoo.tools import mute_logger, formataddr

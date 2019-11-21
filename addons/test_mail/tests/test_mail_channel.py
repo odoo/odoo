@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
+<<<<<<< HEAD
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+=======
+>>>>>>> 42347b86f35... temp
 from odoo.tests import tagged
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.test_mail.tests.common import TestMailCommon

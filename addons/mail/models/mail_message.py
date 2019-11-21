@@ -7,6 +7,10 @@ import re
 from binascii import Error as binascii_error
 from collections import defaultdict
 from operator import itemgetter
+<<<<<<< HEAD
+=======
+from odoo.http import request
+>>>>>>> 42347b86f35... temp
 
 from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import UserError, AccessError
@@ -1181,11 +1185,29 @@ class Message(models.Model):
             notifications = msgid_to_notif[message.id]
             if not any(notification.notification_type == 'email' for notification in notifications):
                 continue
+<<<<<<< HEAD
             info = dict(message._get_mail_failure_dict(),
                         failure_type='mail',
                         notifications=dict((notif.res_partner_id.id, (notif.notification_status, notif.res_partner_id.name)) for notif in notifications))
             failures_infos.append(info)
         return failures_infos
+=======
+            if self.env.user.partner_id.email:
+                email_from = tools.formataddr((self.env.user.partner_id.name, self.env.user.partner_id.email))
+            else:
+                email_from = self.env.company.catchall
+
+            body_html = tools.append_content_to_html('<div>%s</div>' % tools.ustr(comment), msg.body, plaintext=False)
+            vals = {
+                'subject': subject,
+                'body_html': body_html,
+                'email_from': email_from,
+                'email_to': msg.email_from,
+                'auto_delete': True,
+                'state': 'outgoing'
+            }
+            self.env['mail.mail'].sudo().create(vals)
+>>>>>>> 42347b86f35... temp
 
     def _notify_mail_failure_update(self):
         messages = self.env['mail.message']

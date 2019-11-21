@@ -13,7 +13,11 @@ from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE
 from odoo.addons.test_mail.models.test_mail_models import MailTestGateway
 from odoo.addons.test_mail.tests.common import TestMailCommon
 from odoo.tests import tagged
+<<<<<<< HEAD
 from odoo.tools import email_split_and_format, formataddr, mute_logger
+=======
+from odoo.tools import email_split_and_format, mute_logger, pycompat, formataddr
+>>>>>>> 42347b86f35... temp
 
 
 @tagged('mail_gateway')
@@ -27,7 +31,11 @@ class TestEmailParsing(TestMailCommon):
 
         # test multipart / text and html -> html has priority
         multipart = self.format(MAIL_TEMPLATE, email_from='"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>')
+<<<<<<< HEAD
         res = self.env['mail.thread'].message_parse(self.from_string(multipart))
+=======
+        res = self.env['mail.thread'].message_parse(email.message_from_string(pycompat.to_text(multipart)))
+>>>>>>> 42347b86f35... temp
         self.assertIn('<p>Please call me as soon as possible this afternoon!</p>', res['body'])
 
         # test multipart / mixed
@@ -57,12 +65,20 @@ class TestEmailParsing(TestMailCommon):
     def test_message_parse_eml(self):
         # Test that the parsing of mail with embedded emails as eml(msg) which generates empty attachments, can be processed.
         mail = self.format(test_mail_data.MAIL_EML_ATTACHMENT, email_from='"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>', to='generic@test.com')
+<<<<<<< HEAD
         self.env['mail.thread'].message_parse(self.from_string(mail))
+=======
+        self.env['mail.thread'].message_parse(email.message_from_string(pycompat.to_text(mail)))
+>>>>>>> 42347b86f35... temp
 
     def test_message_parse_plaintext(self):
         """ Incoming email in plaintext should be stored as html """
         mail = self.format(test_mail_data.MAIL_TEMPLATE_PLAINTEXT, email_from='"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>', to='generic@test.com')
+<<<<<<< HEAD
         res = self.env['mail.thread'].message_parse(self.from_string(mail))
+=======
+        res = self.env['mail.thread'].message_parse(email.message_from_string(pycompat.to_text(mail)))
+>>>>>>> 42347b86f35... temp
         self.assertIn('<pre>\nPlease call me as soon as possible this afternoon!\n\n--\nSylvie\n</pre>', res['body'])
 
     def test_message_parse_xhtml(self):
@@ -263,7 +279,16 @@ class TestMailgateway(TestMailCommon):
         with self.mock_mail_gateway():
             record = self.format_and_process(MAIL_TEMPLATE, self.email_from, 'groups@test.com', subject='Should Bounce')
         self.assertFalse(record)
+<<<<<<< HEAD
         self.assertSentEmail('"MAILER-DAEMON" <bounce.test@test.com>', ['whatever-2a840@postmaster.twitter.com'], subject='Re: Should Bounce')
+=======
+        self.assertEqual(len(self._mails), 1,
+                         'message_process: incoming email on Partners alias should send a bounce email')
+        # Test bounce email
+        self.assertEqual(self._mails[0].get('subject'), 'Re: Should Bounce')
+        self.assertEqual(self._mails[0].get('email_to')[0], 'whatever-2a840@postmaster.twitter.com')
+        self.assertEqual(self._mails[0].get('email_from'), 'MAILER-DAEMON <bounce.test@test.com>')
+>>>>>>> 42347b86f35... temp
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_message_process_alias_followers_bounce(self):
@@ -278,14 +303,30 @@ class TestMailgateway(TestMailCommon):
         with self.mock_mail_gateway():
             record = self.format_and_process(MAIL_TEMPLATE, self.email_from, 'groups@test.com', subject='Should Bounce')
         self.assertFalse(record, 'message_process: should have bounced')
+<<<<<<< HEAD
         self.assertSentEmail('"MAILER-DAEMON" <bounce.test@test.com>', ['whatever-2a840@postmaster.twitter.com'], subject='Re: Should Bounce')
+=======
+        self.assertEqual(len(self._mails), 1,
+                         'message_process: incoming email on Followers alias should send a bounce email')
+        self.assertEqual(self._mails[0].get('subject'), 'Re: Should Bounce')
+        self.assertEqual(self._mails[0].get('email_to')[0], 'whatever-2a840@postmaster.twitter.com')
+        self.assertEqual(self._mails[0].get('email_from'), 'MAILER-DAEMON <bounce.test@test.com>')
+>>>>>>> 42347b86f35... temp
 
         # Test: partner on followers alias -> bounce
         self._init_mail_mock()
         with self.mock_mail_gateway():
             record = self.format_and_process(MAIL_TEMPLATE, self.partner_1.email_formatted, 'groups@test.com', subject='Should Bounce')
         self.assertFalse(record, 'message_process: should have bounced')
+<<<<<<< HEAD
         self.assertSentEmail('"MAILER-DAEMON" <bounce.test@test.com>', ['whatever-2a840@postmaster.twitter.com'], subject='Re: Should Bounce')
+=======
+        self.assertEqual(len(self._mails), 1,
+                         'message_process: incoming email on Followers alias should send a bounce email')
+        self.assertEqual(self._mails[0].get('subject'), 'Re: Should Bounce')
+        self.assertEqual(self._mails[0].get('email_to')[0], 'whatever-2a840@postmaster.twitter.com')
+        self.assertEqual(self._mails[0].get('email_from'), 'MAILER-DAEMON <bounce.test@test.com>')
+>>>>>>> 42347b86f35... temp
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_process_alias_partner(self):
@@ -406,7 +447,16 @@ class TestMailgateway(TestMailCommon):
         with self.mock_mail_gateway():
             record = self.format_and_process(MAIL_TEMPLATE, self.partner_1.email_formatted, '"My Super Catchall" <catchall.test@test.com>', subject='Should Bounce')
         self.assertFalse(record)
+<<<<<<< HEAD
         self.assertSentEmail('"MAILER-DAEMON" <bounce.test@test.com>', ['whatever-2a840@postmaster.twitter.com'], subject='Re: Should Bounce')
+=======
+        self.assertEqual(len(self._mails), 1,
+                         'message_process: writing directly to catchall should bounce')
+        # Test bounce email
+        self.assertEqual(self._mails[0].get('subject'), 'Re: Should Bounce')
+        self.assertEqual(self._mails[0].get('email_to')[0], 'whatever-2a840@postmaster.twitter.com')
+        self.assertEqual(self._mails[0].get('email_from'), 'MAILER-DAEMON <bounce.test@test.com>')
+>>>>>>> 42347b86f35... temp
 
     @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_message_process_bounce_alias(self):
