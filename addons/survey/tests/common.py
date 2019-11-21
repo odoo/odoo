@@ -191,7 +191,6 @@ class TestSurveyCommon(common.SavepointCase):
             'survey_id': survey.id,
             'partner_id': partner.id if partner else False,
             'email': kwargs.pop('email', False),
-            'input_type': 'manually',
         }
         base_avals.update(kwargs)
         return self.env['survey.user_input'].create(base_avals)

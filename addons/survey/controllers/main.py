@@ -182,7 +182,6 @@ class Survey(http.Controller):
 
     def _prepare_retry_additional_values(self, answer):
         return {
-            'input_type': answer.input_type,
             'deadline': answer.deadline,
         }
 
