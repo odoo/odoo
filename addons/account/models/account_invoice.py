@@ -761,6 +761,10 @@ class AccountInvoice(models.Model):
                             biggest_tax_line = tax_line
                     biggest_tax_line.amount_rounding += rounding_amount
                 elif self.cash_rounding_id.strategy == 'add_invoice_line':
+                    if rounding_amount > 0.0:
+                        account_id = self.cash_rounding_id._get_loss_account_id().id
+                    else:
+                        account_id = self.cash_rounding_id._get_profit_account_id().id
                     # Create a new invoice line to perform the rounding
                     rounding_line = self.env['account.invoice.line'].new({
                         'name': self.cash_rounding_id.name,

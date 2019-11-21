@@ -2558,20 +2558,24 @@ exports.Order = Backbone.Model.extend({
 
         return total;
     },
+    get_change_value: function(paymentline){
+      if (!paymentline) {
+          var change = this.get_total_paid() - this.get_total_with_tax();
+      } else {
+          var change = -this.get_total_with_tax();
+          var lines  = this.paymentlines.models;
+          for (var i = 0; i < lines.length; i++) {
+              change += lines[i].get_amount();
+              if (lines[i] === paymentline) {
+                  break;
+              }
+          }
+      }
+      return round_pr(change, this.pos.currency.rounding);
+    },
     get_change: function(paymentline) {
-        if (!paymentline) {
-            var change = this.get_total_paid() - this.get_total_with_tax();
-        } else {
-            var change = -this.get_total_with_tax();
-            var lines  = this.paymentlines.models;
-            for (var i = 0; i < lines.length; i++) {
-                change += lines[i].get_amount();
-                if (lines[i] === paymentline) {
-                    break;
-                }
-            }
-        }
-        return round_pr(Math.max(0,change), this.pos.currency.rounding);
+        var change = this.get_change_value(paymentline);
+        return Math.max(0,change);
     },
     get_due: function(paymentline) {
         if (!paymentline) {
