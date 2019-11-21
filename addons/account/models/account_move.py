@@ -672,10 +672,17 @@ class AccountMove(models.Model):
                 })
 
             elif self.invoice_cash_rounding_id.strategy == 'add_invoice_line':
+<<<<<<< HEAD
                 if diff_balance > 0.0 and self.invoice_cash_rounding_id.loss_account_id:
                     account_id = self.invoice_cash_rounding_id.loss_account_id.id
                 else:
                     account_id = self.invoice_cash_rounding_id.profit_account_id.id
+=======
+                if diff_balance > 0.0:
+                    account_id = self.invoice_cash_rounding_id._get_loss_account_id().id
+                else:
+                    account_id = self.invoice_cash_rounding_id._get_profit_account_id().id
+>>>>>>> 42371ec22ec... temp
                 rounding_line_vals.update({
                     'name': self.invoice_cash_rounding_id.name,
                     'account_id': account_id,

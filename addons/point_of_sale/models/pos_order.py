@@ -354,7 +354,11 @@ class PosOrder(models.Model):
             'res_id': self.account_move.id,
         }
 
+    def _is_pos_order_paid(self):
+        return float_is_zero(self.amount_total - self.amount_paid, precision_rounding=self.currency_id.rounding)
+
     def action_pos_order_paid(self):
+<<<<<<< HEAD
         self.ensure_one()
 
         if not self.config_id.cash_rounding:
@@ -363,10 +367,36 @@ class PosOrder(models.Model):
             total = float_round(self.amount_total, precision_rounding=self.config_id.rounding_method.rounding, rounding_method=self.config_id.rounding_method.rounding_method)
 
         if not float_is_zero(total - self.amount_paid, precision_rounding=self.currency_id.rounding):
+=======
+        if not self._is_pos_order_paid():
+>>>>>>> 42371ec22ec... temp
             raise UserError(_("Order %s is not fully paid.") % self.name)
 
         self.write({'state': 'paid'})
         return True
+
+    def _get_amount_receivable(self):
+        return self.amount_total
+
+
+    def _prepare_invoice_vals(self):
+        self.ensure_one()
+        vals = {
+            'invoice_payment_ref': self.name,
+            'invoice_origin': self.name,
+            'journal_id': self.session_id.config_id.invoice_journal_id.id,
+            'type': 'out_invoice' if self.amount_total >= 0 else 'out_refund',
+            'ref': self.name,
+            'partner_id': self.partner_id.id,
+            'narration': self.note or '',
+            # considering partner's sale pricelist's currency
+            'currency_id': self.pricelist_id.currency_id.id,
+            'invoice_user_id': self.user_id.id,
+            'invoice_date': self.date_order.date(),
+            'fiscal_position_id': self.fiscal_position_id.id,
+            'invoice_line_ids': [(0, None, self._prepare_invoice_line(line)) for line in self.lines],
+        }
+        return vals
 
     def action_pos_order_invoice(self):
         moves = self.env['account.move']
@@ -380,6 +410,7 @@ class PosOrder(models.Model):
             if not order.partner_id:
                 raise UserError(_('Please provide a partner for the sale.'))
 
+<<<<<<< HEAD
             move_vals = {
                 'invoice_payment_ref': order.name,
                 'invoice_origin': order.name,
@@ -396,6 +427,9 @@ class PosOrder(models.Model):
                 'invoice_line_ids': [(0, None, order._prepare_invoice_line(line)) for line in order.lines],
                 'invoice_cash_rounding_id': order.config_id.rounding_method.id if order.config_id.cash_rounding else False
             }
+=======
+            move_vals = order._prepare_invoice_vals()
+>>>>>>> 42371ec22ec... temp
             new_move = moves.sudo()\
                             .with_company(order.company_id)\
                             .with_context(default_type=move_vals['type'])\
