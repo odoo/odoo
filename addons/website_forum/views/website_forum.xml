@@ -26,12 +26,6 @@
     </xpath>
 </template>
 
-<template id="portal_404" inherit_id="portal.404_oe_structure_404_2" name="Forum 404 Popular Page Entry">
-    <xpath expr="//li[last()]" position="before">
-        <li class="list-inline-item mb-2"><a href="/forum" class="btn btn-secondary">Forum</a></li>
-    </xpath>
-</template>
-
 <!-- helper -->
 <template id="link_button">
     <form  t-attf-method="#{form_method or 'POST'}" t-att-action="url" t-attf-class="#{form_classes} #{not inDropdown and 'btn btn-sm border'}">
