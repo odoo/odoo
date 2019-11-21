@@ -895,10 +895,11 @@ class Home(http.Controller):
                 return http.redirect_with_hash(self._login_redirect(uid, redirect=redirect))
             except odoo.exceptions.AccessDenied as e:
                 request.uid = old_uid
-                if e.args == odoo.exceptions.AccessDenied().args:
+                # Change error message if it's the default message
+                if str(e) == str(odoo.exceptions.AccessDenied()):
                     values['error'] = _("Wrong login/password")
                 else:
-                    values['error'] = e.args[0]
+                    values['error'] = str(e)
         else:
             if 'error' in request.params and request.params.get('error') == 'access':
                 values['error'] = _('Only employee can access this database. Please contact the administrator.')

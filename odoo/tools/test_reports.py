@@ -219,7 +219,7 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
                     })
             except Exception as e:
                 _logger.warning("Cannot resolve the view arch and locate the buttons!", exc_info=True)
-                raise AssertionError(e.args[0])
+                raise AssertionError(str(e))
 
             if not datas['res_id']:
                 # it is probably an orm_memory object, we need to create

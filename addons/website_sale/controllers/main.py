@@ -96,7 +96,7 @@ class WebsiteSaleForm(WebsiteForm):
         try:
             data = self.extract_data(model_record, kwargs)
         except ValidationError as e:
-            return json.dumps({'error_fields': e.args[0]})
+            return json.dumps({'error_fields': str(e)})
 
         order = request.website.sale_get_order()
         if data['record']:
