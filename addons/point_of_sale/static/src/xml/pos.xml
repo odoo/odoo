@@ -1275,6 +1275,7 @@
             <div class="popup popup-text">
                 <header class="title"><t t-esc=" widget.options.title || '' " /></header>
                 <main class='packlot-lines'>
+                    <t t-set="errors" t-value="widget.lot_errors or {}"/>
                     <t t-if="widget.options.pack_lot_lines">
                         <t t-set="focus_lot_line" t-value="widget.focus_model || widget.options.pack_lot_lines.get_empty_model()"/>
                         <t t-foreach='widget.options.pack_lot_lines.models' t-as='lot_line'>
@@ -1284,12 +1285,19 @@
                                 class="popup-input packlot-line-input"
                                 placeholder="Serial/Lot Number"/>
                             <i class="oe_link_icon remove-lot fa fa-trash-o" role="img" aria-label="Remove" title="Remove"></i>
+                            <div class="lot_warning" t-att-cid="lot_line.cid" t-if="errors[lot_line.cid]">
+                                <i class="fa fa-exclamation-triangle"></i>
+                                <t t-esc="errors[lot_line.cid]"/>
+                            </div>
                         </t>
                     </t>
                 </main>
                 <footer class="footer">
-                    <div class="button confirm">
+                    <div t-attf-class="button confirm #{_.isEmpty(errors) and ' ' or 'oe_hidden'}">
                         Ok
+                    </div>
+                    <div t-attf-class="button warning ignore-lot #{_.isEmpty(errors) and 'oe_hidden' or ' '}">
+                        Ignore
                     </div>
                     <div class="button cancel">
                         Cancel

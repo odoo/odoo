@@ -29,7 +29,7 @@ class StockPicking(models.Model):
             location_id = picking_type.default_location_src_id.id
             positive_picking = self.env['stock.picking'].create({
                 'partner_id': partner.id if partner else False,
-                'user_id': False,
+                'user_id': self.env.user.id,
                 'picking_type_id': picking_type.id,
                 'move_type': 'direct',
                 'location_id': location_id,

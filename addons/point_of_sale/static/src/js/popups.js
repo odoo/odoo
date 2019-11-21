@@ -8,6 +8,7 @@ odoo.define('point_of_sale.popups', function (require) {
 
 var PosBaseWidget = require('point_of_sale.BaseWidget');
 var gui = require('point_of_sale.gui');
+var rpc = require('web.rpc');
 var _t  = require('web.core')._t;
 
 
@@ -221,6 +222,7 @@ var PackLotLinePopupWidget = PopupWidget.extend({
     template: 'PackLotLinePopupWidget',
     events: _.extend({}, PopupWidget.prototype.events, {
         'click .remove-lot': 'remove_lot',
+        'click .ignore-lot':  'click_ignore',
         'keydown': 'add_lot',
         'blur .packlot-line-input': 'lose_input_focus'
     }),
@@ -231,25 +233,75 @@ var PackLotLinePopupWidget = PopupWidget.extend({
     },
 
     click_confirm: function(){
+        var self = this;
+        var lots = [];
         var pack_lot_lines = this.options.pack_lot_lines;
-        this.$('.packlot-line-input').each(function(index, el){
-            var cid = $(el).attr('cid'),
-                lot_name = $(el).val();
+        var existing_lots = this.options.order.get_existing_lots();
+        this.lot_errors = {};
+
+        this.$('.packlot-line-input').each(function(index, el) {
+            var cid = $(el).attr('cid');
+            var lot_name = $(el).val();
             var pack_line = pack_lot_lines.get({cid: cid});
+
+            if (lots.indexOf(lot_name) > -1) {
+                lot_errors[cid] = _("This Lot/Serial number is already added in the order.");
+            }
+            lots.push(lot_name);
             pack_line.set_lot_name(lot_name);
         });
-        pack_lot_lines.remove_empty_model();
-        pack_lot_lines.set_quantity_by_lot();
+        rpc.query({
+            model: "product.product",
+            method: "get_lots_quantity",
+            args: [pack_lot_lines.order_line.product.id, lots],
+        }).then(function (result) {
+            var tracking_type = self.options.order_line.product.tracking;
+            var line_qty = self.options.order_line.quantity;
+
+            pack_lot_lines.forEach(function(lot) {
+                var unique_lot_name = lot.get_unique_lot_name();
+                if (!unique_lot_name) return;
+                if (!result.hasOwnProperty(unique_lot_name)) {
+                    lot_errors[lot.cid] = _("This Lot/Serial number could not be found.");
+                    return;
+                }
+                var lot_quantity = self.pos.db.load("lot_quantity", {});
+                var existing_qty = existing_lots[unique_lot_name] || 0;
+                var available_qty = result[unique_lot_name];
+
+                lot_quantity[unique_lot_name] = available_qty;
+                self.pos.db.save("lot_quantity", lot_quantity);
+                if (tracking_type == 'serial' && available_qty <= 0) {
+                    self.lot_errors[lot.cid] = _("This Lot/Serial number has already been sold.");
+                } else if (tracking_type == 'lot' && line_qty > available_qty - existing_qty) {
+                    self.lot_errors[lot.cid] = _("This Lot/Serial has a too low available quantity.");
+                }
+            });
+            if (_.isEmpty(self.lot_errors) ) {
+                self.process_lots();
+            } else {
+                self.renderElement();
+                self.focus();
+            }
+        }).guardedCatch(this.process_lots.bind(this));
+
+    },
+    click_ignore: function () {
+        this.process_lots();
+    },
+    process_lots: function () {
+        this.options.pack_lot_lines.remove_empty_model();
+        this.options.pack_lot_lines.set_quantity_by_lot();
         this.options.order.save_to_db();
         this.options.order_line.trigger('change', this.options.order_line);
         this.gui.close_popup();
     },
 
     add_lot: function(ev) {
+        var $input = $(ev.target);
+        var cid = $input.attr('cid');
         if (ev.keyCode === $.ui.keyCode.ENTER && this.options.order_line.product.tracking == 'serial'){
             var pack_lot_lines = this.options.pack_lot_lines,
-                $input = $(ev.target),
-                cid = $input.attr('cid'),
                 lot_name = $input.val();
 
             var lot_model = pack_lot_lines.get({cid: cid});
@@ -262,6 +314,9 @@ var PackLotLinePopupWidget = PopupWidget.extend({
             this.renderElement();
             this.focus();
         }
+        this.$(`.lot_warning[cid="${cid}"]`).remove();
+        this.$('.confirm').removeClass('oe_hidden');
+        this.$('.warning').addClass('oe_hidden');
     },
 
     remove_lot: function(ev){
@@ -271,6 +326,7 @@ var PackLotLinePopupWidget = PopupWidget.extend({
         var lot_model = pack_lot_lines.get({cid: cid});
         lot_model.remove();
         pack_lot_lines.set_quantity_by_lot();
+        if (this.lot_errors) delete this.lot_errors[cid];
         this.renderElement();
     },
 

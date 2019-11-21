@@ -621,6 +621,11 @@ td {
     cursor: default;
     color: inherit;
 }
+.pos .control-button.warning,
+.pos .button.warning {
+    background: #FFA726 !important;;
+    color: white !important;
+}
 
 /*  ********* The actionpad (payment, set customer) ********* */
 
@@ -2285,7 +2290,17 @@ td {
 .pos .popup .packlot-lines{
     overflow: auto;
     height: 250px;
-    margin: 10px;
+    padding: 10px;
+}
+.pos .popup .packlot-lines .lot_warning{
+    text-align: left;
+    width: 80%;
+    margin: auto;
+    font-size: 14px;
+    margin-bottom: 11px;
+    color: #EF5350;
+    font-weight: normal;
+    padding-right: 10px;
 }
 .pos .popup .packlot-line-input {
     margin: 3px;
