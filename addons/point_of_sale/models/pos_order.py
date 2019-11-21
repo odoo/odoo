@@ -443,8 +443,11 @@ class PosOrder(models.Model):
             cur = order.pricelist_id.currency_id
             cur_company = order.company_id.currency_id
             amount_cur_company = 0.0
+            move_lines = []
             for line in order.lines:
-                for move_line in self._prepare_account_move_line(line, partner_id, current_company, cur, rounding_method):
+                new_lines = self._prepare_account_move_line(line, partner_id, current_company, cur, rounding_method)
+                move_lines += new_lines
+                for move_line in new_lines:
                     if cur != cur_company:
                         amount_cur_company += move_line['values']['credit'] - move_line['values']['debit']
                     insert_data(move_line['data_type'], move_line['values'])
@@ -459,25 +462,18 @@ class PosOrder(models.Model):
                             if line.get('currency_id'):
                                 line['amount_currency'] = cur.round(line.get('amount_currency', 0.0))
 
-            # counterpart
-            if cur != cur_company:
-                # 'amount_cur_company' contains the sum of the AML converted in the company
-                # currency. This makes the logic consistent with 'compute_invoice_totals' from
-                # 'account.invoice'. It ensures that the counterpart line is the same amount than
-                # the sum of the product and taxes lines.
-                amount_total = amount_cur_company
-            else:
-                amount_total = order.amount_total
+            receivable_amounts = order._get_amount_receivable(move_lines)
+
             data = {
                 'name': _("Trade Receivables"),  # order.name,
                 'account_id': order_account.id,
-                'credit': ((amount_total < 0) and -amount_total) or 0.0,
-                'debit': ((amount_total > 0) and amount_total) or 0.0,
+                'credit': ((receivable_amounts['amount'] < 0) and -receivable_amounts['amount']) or 0.0,
+                'debit': ((receivable_amounts['amount'] > 0) and receivable_amounts['amount']) or 0.0,
                 'partner_id': partner_id
             }
-            if cur != cur_company:
+            if receivable_amounts['amount_currency']:
                 data['currency_id'] = cur.id
-                data['amount_currency'] = -abs(order.amount_total) if data.get('credit') else abs(order.amount_total)
+                data['amount_currency'] = -abs(receivable_amounts['amount_currency']) if data.get('credit') else abs(receivable_amounts['amount_currency'])
             insert_data('counter_part', data)
 
             order.write({'state': 'done', 'account_move': move.id})
@@ -489,6 +485,28 @@ class PosOrder(models.Model):
             'grouped_data': grouped_data,
             'move': move,
         }
+
+    def _get_amount_receivable(self, move_lines):
+        self.ensure_one()
+        cur = self.pricelist_id.currency_id
+        cur_company = self.company_id.currency_id
+        # counterpart
+        res = {}
+        if cur != cur_company:
+            # 'amount_cur_company' contains the sum of the AML converted in the company
+            # currency. This makes the logic consistent with 'compute_invoice_totals' from
+            # 'account.invoice'. It ensures that the counterpart line is the same amount than
+            # the sum of the product and taxes lines.
+            amount_total = 0.0
+            for move_line in move_lines:
+                    amount_total +=  move_line['values']['credit'] - move_line['values']['debit']
+            res['amount'] = amount_total
+            res['amount_currency'] = self.amount_total
+        else:
+            res['amount'] = self.amount_total
+            res['amount_currency'] = False
+        return res
+
 
     def _create_account_move_line(self, session=None):
         vals = self._prepare_account_move_and_lines(session)
@@ -692,36 +710,39 @@ class PosOrder(models.Model):
         self.write({'state': 'paid'})
         return self.create_picking()
 
+    def _create_invoice(self):
+        self.ensure_one()
+        Invoice = self.env['account.invoice']
+        # Force company for all SUPERUSER_ID action
+        local_context = dict(self.env.context, force_company=self.company_id.id, company_id=self.company_id.id)
+        if self.invoice_id:
+            return self.invoice_id
+
+        if not self.partner_id:
+            raise UserError(_('Please provide a partner for the sale.'))
+
+        invoice = Invoice.new(self._prepare_invoice())
+        invoice._onchange_partner_id()
+        invoice.fiscal_position_id = self.fiscal_position_id
+
+        inv = invoice._convert_to_write({name: invoice[name] for name in invoice._cache})
+        new_invoice = Invoice.with_context(local_context).sudo().create(inv)
+        message = _("This invoice has been created from the point of sale session: <a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>") % (self.id, self.name)
+        new_invoice.message_post(body=message)
+        self.write({'invoice_id': new_invoice.id, 'state': 'invoiced'})
+
+        for line in self.lines:
+            self.with_context(local_context)._action_create_invoice_line(line, new_invoice.id)
+
+        new_invoice.with_context(local_context).sudo().compute_taxes()
+        self.sudo().write({'state': 'invoiced'})
+        return new_invoice
+
     @api.multi
     def action_pos_order_invoice(self):
         Invoice = self.env['account.invoice']
-
         for order in self:
-            # Force company for all SUPERUSER_ID action
-            local_context = dict(self.env.context, force_company=order.company_id.id, company_id=order.company_id.id)
-            if order.invoice_id:
-                Invoice += order.invoice_id
-                continue
-
-            if not order.partner_id:
-                raise UserError(_('Please provide a partner for the sale.'))
-
-            invoice = Invoice.new(order._prepare_invoice())
-            invoice._onchange_partner_id()
-            invoice.fiscal_position_id = order.fiscal_position_id
-
-            inv = invoice._convert_to_write({name: invoice[name] for name in invoice._cache})
-            new_invoice = Invoice.with_context(local_context).sudo().create(inv)
-            message = _("This invoice has been created from the point of sale session: <a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>") % (order.id, order.name)
-            new_invoice.message_post(body=message)
-            order.write({'invoice_id': new_invoice.id, 'state': 'invoiced'})
-            Invoice += new_invoice
-
-            for line in order.lines:
-                order.with_context(local_context)._action_create_invoice_line(line, new_invoice.id)
-
-            new_invoice.with_context(local_context).sudo().compute_taxes()
-            order.sudo().write({'state': 'invoiced'})
+            Invoice |= order._create_invoice()
 
         if not Invoice:
             return {}
