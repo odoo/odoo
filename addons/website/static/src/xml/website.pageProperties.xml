@@ -145,10 +145,9 @@
                         <div class="input-group">
                             <select id="visibility" class="form-control col-md-4">
                                 <option value="" t-att-selected="widget.page.visibility == ''">Public</option>
-                                <option value="connected" t-att-selected="widget.page.visibility == 'connected' ? 'selected' : undefined">Connected</option>
-                                <option value="restricted_group" t-att-selected="widget.page.visibility == 'restricted_group' ? 'selected' : undefined">Has Group</option>
+                                <option value="connected" t-att-selected="widget.page.visibility == 'connected' ? 'selected' : undefined">Signed In</option>
+                                <option value="restricted_group" t-att-selected="widget.page.visibility == 'restricted_group' ? 'selected' : undefined">Some Users</option>
                                 <option value="password" t-att-selected="widget.page.visibility == 'password' ? 'selected' : undefined">Password</option>
-                                <option value="employee" t-att-selected="widget.page.visibility == 'employee' ? 'selected' : undefined">Internal users</option>
                             </select>
                             <div class="ml-1 input-group-prepend show_visibility_password" >
                                 <div class="input-group-text"><i class="fa fa-key"></i></div>

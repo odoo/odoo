@@ -79,15 +79,11 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
 
         defs.push(this._rpc({
             model: 'website.page',
-            method: 'read',
-            args: [
-                this.page_id,
-                ['id', 'name', 'url', 'website_published', 'website_indexed', 'date_publish',
-                'menu_ids', 'is_homepage', 'website_id', 'visibility', 'visibility_password', 'visibility_group']
-            ],
+            method: 'get_page_properties',
+            args: [this.page_id],
         }).then(function (page) {
-            page[0].url = _.str.startsWith(page[0].url, '/') ? page[0].url.substring(1) : page[0].url;
-            self.page = page[0];
+            page.url = _.str.startsWith(page.url, '/') ? page.url.substring(1) : page.url;
+            self.page = page;
         }));
 
         return Promise.all(defs);
@@ -206,13 +202,13 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
         });
         var url = this.$('#page_url').val();
 
-        var $date_publish = this.$("#date_publish");
-        $date_publish.closest(".form-group").removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
-        var date_publish = $date_publish.val();
-        if (date_publish !== "") {
-            date_publish = this._parse_date(date_publish);
-            if (!date_publish) {
-                $date_publish.closest(".form-group").addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
+        var $datePublish = this.$("#date_publish");
+        $datePublish.closest(".form-group").removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
+        var datePublish = $datePublish.val();
+        if (datePublish !== "") {
+            datePublish = this._parse_date(datePublish);
+            if (!datePublish) {
+                $datePublish.closest(".form-group").addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
                 return;
             }
         }
@@ -228,9 +224,9 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
             redirect_type: this.$('#redirect_type').val(),
             website_indexed: this.$('#is_indexed').prop('checked'),
             visibility: this.$('#visibility').val(),
-            visibility_password: this.$('#visibility_password').val(),
-            visibility_group: this.$('#visibility_group').data('group-id'),
-            date_publish: date_publish,
+            visibility_password: this.$('#visibility').val() === 'password' ? this.$('#visibility_password').val() : false,
+            visibility_group: this.$('#visibility').val() === 'restricted_group' ? this.$('#visibility_group').data('group-id') : false,
+            date_publish: datePublish,
         };
         this._rpc({
             model: 'website.page',
