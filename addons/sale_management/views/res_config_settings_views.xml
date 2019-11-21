@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="sale.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@id='confirmation_email_setting']" position="after">
-                <div class="col-12 col-lg-6 o_setting_box">
+                <div class="col-12 col-lg-6 o_setting_box" id="standardized_offers_setting">
                     <div class="o_setting_left_pane">
                         <field name="group_sale_order_template"/>
                         <field name="module_sale_quotation_builder" invisible="1"/>
@@ -28,7 +28,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('group_sale_order_template','=',False)]}">
+                <div class="col-12 col-lg-6 o_setting_box"
+                    id="design_quotation_template_setting"
+                    attrs="{'invisible': [('group_sale_order_template','=',False)]}">
                     <div class="o_setting_left_pane">
                         <field name="module_sale_quotation_builder"/>
                     </div>
