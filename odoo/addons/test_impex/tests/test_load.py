@@ -172,11 +172,11 @@ class test_boolean_field(ImporterCase):
                   # Problem: OpenOffice (and probably excel) output localized booleans
                   ['VRAI'], ['ok'], ['true'], ['yes'], ['1'], ]
         result = self.import_(['value'], trues)
-        self.assertEqual(len(result['ids']), False)
+        self.assertEqual(result['ids'], False)
         self.assertEqual(result['messages'], [
             message(u"Unknown value '%s' for boolean field 'Value', assuming 'yes'" % v[0],
                     moreinfo=u"Use '1' for yes and '0' for no",
-                    type='warning', from_=i, to_=i, record=i)
+                    type='error', from_=i, to_=i, record=i)
             for i, v in enumerate(trues)
             if v[0] not in ('true', 'yes', '1')
         ])
@@ -599,7 +599,7 @@ class test_m2o(ImporterCase):
             result['messages'],
             [message(u"Found multiple matches for field 'Value' (2 matches)",
                      type='error')])
-        self.assertEqual(len(result['ids']), 1)
+        self.assertEqual(result['ids'], False)
         self.assertEqual([
             (record1.id, name1)
         ], values(self.read()))
