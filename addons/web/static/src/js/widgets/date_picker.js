@@ -200,7 +200,7 @@ var DateWidget = Widget.extend({
             this.$warning.attr('title', title);
             this.$input.after(this.$warning);
         }
-        if (currentDate && currentDate.isAfter(moment())) {
+        if (currentDate && (currentDate.dayOfYear() > moment().dayOfYear())) {
             this.$warning.show();
         } else {
             this.$warning.hide();
