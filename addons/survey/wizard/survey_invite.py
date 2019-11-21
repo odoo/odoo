@@ -190,7 +190,6 @@ class SurveyInvite(models.TransientModel):
 
     def _get_answers_values(self):
         return {
-            'input_type': 'link',
             'deadline': self.deadline,
         }
 
