@@ -609,7 +609,7 @@ class Survey(models.Model):
                     labels = label
                 else:
                     labels = Label.browse([row_id, answer_id])
-                filter_display_data.append({'question_text': question.question,
+                filter_display_data.append({'question_text': question.title,
                                             'labels': labels.mapped('value')})
         return filter_display_data
 
