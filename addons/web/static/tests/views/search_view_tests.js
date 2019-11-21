@@ -1470,6 +1470,58 @@ QUnit.module('Search View', {
         actionManager.destroy();
     });
 
+    QUnit.test('should do "OR" operation on Enter key and "AND" operation on Shift + Enter key', async function (assert) {
+        assert.expect(5);
+
+        let searchRead = 0;
+        const actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/search_read') {
+                    if (searchRead === 1) {
+                        assert.deepEqual(args.domain, [["foo", "ilike", "a"]]);
+                    } else if (searchRead === 2) {
+                        assert.deepEqual(args.domain, ["|", ["foo", "ilike", "a"], ["foo", "ilike", "p"]]);
+                    } else if (searchRead === 3) {
+                        assert.deepEqual(args.domain, ["&", "|", ["foo", "ilike", "a"], ["foo", "ilike", "p"], ["foo", "ilike", "y"]]);
+                    }
+                    searchRead++;
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        await actionManager.doAction(11);
+
+        // enter 'a' key on searchbar and press Enter key
+        $('.o_searchview_input').val('a');
+        $('.o_searchview_input').trigger($.Event('keypress', { which: 97, keyCode: 97 }));
+        await testUtils.nextTick();
+        $('.o_searchview_input').trigger($.Event('keyup', { which: $.ui.keyCode.ENTER, keyCode: $.ui.keyCode.ENTER }));
+        await testUtils.nextTick();
+
+        // enter 'p' key on searchbar and press Enter key, should do OR operation
+        $('.o_searchview_input').val('p');
+        $('.o_searchview_input').trigger($.Event('keypress', { which: 112, keyCode: 112 }));
+        await testUtils.nextTick();
+        $('.o_searchview_input').trigger($.Event('keydown', { which: $.ui.keyCode.ENTER, keyCode: $.ui.keyCode.ENTER }));
+        await testUtils.nextTick();
+
+        // enter 'y' key on searchbar and press Shift + Enter key, should do AND operation with previous domain
+        $('.o_searchview_input').val('y');
+        $('.o_searchview_input').trigger($.Event('keypress', { which: 121, keyCode: 121 }));
+        await testUtils.nextTick();
+        $('.o_searchview_input').trigger($.Event('keydown', { keyCode: $.ui.keyCode.ENTER, which: $.ui.keyCode.ENTER, shiftKey: true }));
+        await testUtils.nextTick();
+
+        assert.strictEqual($('tr.o_data_row').length, 1, "should display 1 record");
+        assert.strictEqual(searchRead, 4, "there should be 3 search_read");
+
+        actionManager.destroy();
+    });
+
     QUnit.test('no search text triggers a reload', async function (assert) {
         assert.expect(2);
         var rpcs = 0;

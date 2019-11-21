@@ -128,7 +128,20 @@ var Field = FilterInterface.extend(ServicesMixin, {
         var domains = values.map(valueToDomain);
 
         domains = domains.map(Domain.prototype.arrayToString);
-        return pyUtils.assembleDomains(domains, 'OR');
+        var domainToAssemble = [];
+        var assembledDomain = [];
+        domains.forEach((domain, index) => {
+            if (index === 0) {
+                domainToAssemble.push(domain);
+                assembledDomain = pyUtils.assembleDomains(domainToAssemble);
+            } else {
+                domainToAssemble.push(domain);
+                const operator = values[index].operator || 'OR';
+                assembledDomain = pyUtils.assembleDomains(domainToAssemble, operator);
+                domainToAssemble = [assembledDomain];
+            }
+        });
+        return assembledDomain;
     },
 
     //--------------------------------------------------------------------------
@@ -407,7 +420,7 @@ var ManyToOneField = CharField.extend({
     _getFacetValue: function (value) {
         return {
             filter: this.filter,
-            values: [{label: value, value: value, operator: 'ilike'}],
+            values: [{label: value, value: value, default_operator: 'ilike'}],
         };
     },
     /**
@@ -447,7 +460,7 @@ var ManyToOneField = CharField.extend({
      * @override
      */
     _makeDomain: function (name, operator, facetValue) {
-        operator = facetValue.operator || operator;
+        operator = facetValue.default_operator || operator;
 
         switch(operator){
         case this.default_operator:
