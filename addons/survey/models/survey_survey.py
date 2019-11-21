@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import random
 import uuid
 
 from collections import Counter, OrderedDict
 from itertools import product
 from werkzeug import urls
-import random
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
