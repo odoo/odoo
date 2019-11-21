@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="tax_report_title_tax_settlements" model="account.tax.report.line">
+            <field name="name">Tax Settlements</field>
+            <field name="country_id" ref="base.it"/>
+            <field name="sequence">1</field>
+            <field name="formula">tax_it_iv&gt;tax_it_v and tax_it_iv-tax_it_v or tax_it_v-tax_it_iv</field>
+        </record>
+
+        <record id="tax_report_title_tax_settlements_vp2" model="account.tax.report.line">
+            <field name="name">VP2 Total active operations (without VAT)</field>
+            <field name="country_id" ref="base.it"/>
+            <field name="sequence">1</field>
+            <field name="tag_name">VP2</field>
+            <field name="parent_id" ref="tax_report_title_tax_settlements"/>
+        </record>
+
+        <record id="tax_report_title_tax_settlements_vp3" model="account.tax.report.line">
+            <field name="name">VP3 Total passive operations (without VAT)</field>
+            <field name="country_id" ref="base.it"/>
+            <field name="sequence">2</field>
+            <field name="tag_name">VP3</field>
+            <field name="parent_id" ref="tax_report_title_tax_settlements"/>
+        </record>
+
+        <record id="tax_report_title_tax_settlements_vp4" model="account.tax.report.line">
+            <field name="name">VP4 Collectable VAT</field>
+            <field name="code">tax_it_iv</field>
+            <field name="country_id" ref="base.it"/>
+            <field name="sequence">3</field>
+            <field name="tag_name">VP4</field>
+            <field name="parent_id" ref="tax_report_title_tax_settlements"/>
+        </record>
+
+        <record id="tax_report_title_tax_settlements_vp5" model="account.tax.report.line">
+            <field name="name">VP5 Deducted VAT</field>
+            <field name="code">tax_it_v</field>
+            <field name="country_id" ref="base.it"/>
+            <field name="sequence">4</field>
+            <field name="tag_name">VP5</field>
+            <field name="parent_id" ref="tax_report_title_tax_settlements"/>
+        </record>
+
+        <record id="tax_report_title_tax_settlements_vp6_debt" model="account.tax.report.line">
+            <field name="name">VP6 VAT due</field>
+            <field name="formula">tax_it_iv&gt;tax_it_v and tax_it_iv-tax_it_v or 0</field>
+            <field name="country_id" ref="base.it"/>
+            <field name="sequence">5</field>
+            <field name="parent_id" ref="tax_report_title_tax_settlements"/>
+        </record>
+
+        <record id="tax_report_title_tax_settlements_vp6_credit" model="account.tax.report.line">
+            <field name="name">VP6 VAT to credit</field>
+            <field name="formula">tax_it_iv&lt;tax_it_v and tax_it_v-tax_it_iv or 0</field>
+            <field name="country_id" ref="base.it"/>
+            <field name="sequence">6</field>
+            <field name="parent_id" ref="tax_report_title_tax_settlements"/>
+        </record>
+
+    </data>
+</odoo>
