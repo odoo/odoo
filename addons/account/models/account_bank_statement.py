@@ -280,7 +280,7 @@ class AccountBankStatement(models.Model):
                     st_number = SequenceObj.with_context(**context).next_by_code('account.bank.statement')
                 statement.name = st_number
             statement.state = 'open'
-            
+
     @api.multi
     def action_bank_reconcile_bank_statements(self):
         self.ensure_one()
