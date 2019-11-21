@@ -103,7 +103,7 @@ class Slide(models.Model):
                     last_user_input = next(user_input for user_input in user_membership_id_sudo.user_input_ids.sorted(
                         lambda user_input: user_input.create_date, reverse=True
                     ))
-                    certification_urls[slide.id] = last_user_input._get_survey_url()
+                    certification_urls[slide.id] = last_user_input.get_start_url()
                 else:
                     user_input = slide.survey_id.sudo()._create_answer(
                         partner=self.env.user.partner_id,
@@ -114,7 +114,7 @@ class Slide(models.Model):
                         },
                         invite_token=self.env['survey.user_input']._generate_invite_token()
                     )
-                    certification_urls[slide.id] = user_input._get_survey_url()
+                    certification_urls[slide.id] = user_input.get_start_url()
             else:
                 user_input = slide.survey_id.sudo()._create_answer(
                     partner=self.env.user.partner_id,
@@ -123,5 +123,5 @@ class Slide(models.Model):
                         'slide_id': slide.id
                     }
                 )
-                certification_urls[slide.id] = user_input._get_survey_url()
+                certification_urls[slide.id] = user_input.get_start_url()
         return certification_urls

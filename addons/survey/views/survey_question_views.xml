@@ -167,7 +167,7 @@
         <field name="arch" type="xml">
             <tree string="Survey Question" create="false">
                 <field name="sequence" widget="handle"/>
-                <field name="question"/>
+                <field name="title"/>
                 <field name="survey_id"/>
                 <field name="question_type"/>
             </tree>
@@ -178,11 +178,11 @@
         <field name="model">survey.question</field>
         <field name="arch" type="xml">
             <search string="Search Question">
-                <field name="question" string="Question"/>
+                <field name="title"/>
                 <field name="survey_id" string="Survey"/>
                 <field name="question_type" string="Type"/>
                 <group expand="1" string="Group By">
-                    <filter name="group_by_type" string="Type" domain="[]"  context="{'group_by':'question_type'}"/>
+                    <filter name="group_by_type" string="Type" domain="[]" context="{'group_by':'question_type'}"/>
                 </group>
             </search>
         </field>
@@ -221,8 +221,10 @@
         <field name="model">survey.label</field>
         <field name="arch" type="xml">
             <search string="Search Label">
-                <field name="question_id" string="Question"/>
-                <filter name="group_by_question" string="Question" domain="[]" context="{'group_by':'question_id'}"/>
+                <field name="question_id"/>
+                <group expand="1" string="Group By">
+                    <filter name="group_by_question" string="Question" domain="[]" context="{'group_by':'question_id'}"/>
+                </group>
             </search>
         </field>
     </record>

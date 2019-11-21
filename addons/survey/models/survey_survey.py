@@ -3,10 +3,10 @@
 
 import random
 import uuid
+import werkzeug
 
 from collections import Counter, OrderedDict
 from itertools import product
-from werkzeug import urls
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
@@ -36,10 +36,6 @@ class Survey(models.Model):
         ('draft', 'Draft'), ('open', 'In Progress'), ('closed', 'Closed')
     ], string="Survey Stage", default='draft', required=True,
         group_expand='_read_group_states')
-    category = fields.Selection([
-        ('default', 'Generic Survey')], string='Category',
-        default='default', required=True,
-        help='Category is used to know in which context the survey is used. Various apps may define their own categories when they use survey like jobs recruitment or employee appraisal surveys.')
     # questions
     question_and_page_ids = fields.One2many('survey.question', 'survey_id', string='Sections and Questions', copy=True)
     page_ids = fields.One2many('survey.question', string='Pages', compute="_compute_page_and_question_ids")
@@ -65,7 +61,6 @@ class Survey(models.Model):
     users_login_required = fields.Boolean('Login Required', help="If checked, users have to login before answering even with a valid token.")
     users_can_go_back = fields.Boolean('Users can go back', help="If checked, users can go back to previous pages.")
     users_can_signup = fields.Boolean('Users can signup', compute='_compute_users_can_signup')
-    public_url = fields.Char("Public link", compute="_compute_survey_url")
     # statistics
     answer_count = fields.Integer("Registered", compute="_compute_survey_statistic")
     answer_done_count = fields.Integer("Attempts", compute="_compute_survey_statistic")
@@ -149,12 +144,6 @@ class Survey(models.Model):
 
         for survey in self:
             survey.update(stat.get(survey._origin.id, default_vals))
-
-    def _compute_survey_url(self):
-        """ Computes a public URL for the survey """
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        for survey in self:
-            survey.public_url = urls.url_join(base_url, "survey/start/%s" % (survey.access_token))
 
     @api.depends('question_and_page_ids')
     def _compute_page_and_question_ids(self):
@@ -448,18 +437,6 @@ class Survey(models.Model):
     def action_close(self):
         self.write({'state': 'closed'})
 
-    def action_start_survey(self):
-        """ Open the website page with the survey form """
-        self.ensure_one()
-        token = self.env.context.get('survey_token')
-        trail = "?answer_token=%s" % token if token else ""
-        return {
-            'type': 'ir.actions.act_url',
-            'name': "Start Survey",
-            'target': 'self',
-            'url': self.public_url + trail
-        }
-
     def action_send_survey(self):
         """ Open a window to compose an email, pre-filled with the survey message """
         # Ensure that this survey has at least one page with at least one question.
@@ -486,16 +463,26 @@ class Survey(models.Model):
             'context': local_context,
         }
 
-    def action_print_survey(self):
+    def action_start_survey(self, answer=None):
+        """ Open the website page with the survey form """
+        self.ensure_one()
+        url = '%s?%s' % (self.get_start_url(), werkzeug.urls.url_encode({'answer_token': answer.token or None}))
+        return {
+            'type': 'ir.actions.act_url',
+            'name': "Start Survey",
+            'target': 'self',
+            'url': url,
+        }
+
+    def action_print_survey(self, answer=None):
         """ Open the website page with the survey printable view """
         self.ensure_one()
-        token = self.env.context.get('survey_token')
-        trail = "?answer_token=%s" % token if token else ""
+        url = '%s?%s' % (self.get_print_url(), werkzeug.urls.url_encode({'answer_token': answer.token or None}))
         return {
             'type': 'ir.actions.act_url',
             'name': "Print Survey",
             'target': 'self',
-            'url': '/survey/print/%s%s' % (self.access_token, trail)
+            'url': url
         }
 
     def action_result_survey(self):
@@ -555,6 +542,12 @@ class Survey(models.Model):
             'url': '/survey/%s/get_certification_preview' % (self.id)
         }
 
+    def get_start_url(self):
+        return 'survey/start/%s' % self.access_token
+
+    def get_print_url(self):
+        return 'survey/print/%s' % self.access_token
+
     # ------------------------------------------------------------
     # GRAPH / RESULTS
     # ------------------------------------------------------------
@@ -609,7 +602,7 @@ class Survey(models.Model):
                     labels = label
                 else:
                     labels = Label.browse([row_id, answer_id])
-                filter_display_data.append({'question_text': question.question,
+                filter_display_data.append({'question_text': question.title,
                                             'labels': labels.mapped('value')})
         return filter_display_data
 

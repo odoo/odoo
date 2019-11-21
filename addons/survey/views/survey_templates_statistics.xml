@@ -50,7 +50,7 @@
                         <t t-set="question_with_correct_answers" t-value="survey.scoring_type in ['scoring_with_answers', 'scoring_without_answers'] and question.question_type in ['simple_choice', 'multiple_choice']" />
                         <h4>
                             <b>Question </b>
-                            <span t-field='question.question'></span>
+                            <span t-field='question.title'></span>
                             <t t-if="question.question_type == 'matrix'">
                                 <small><span class="badge badge-secondary">Matrix: <span t-field='question.matrix_subtype'/></span></small>
                             </t>

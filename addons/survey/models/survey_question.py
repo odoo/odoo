@@ -37,7 +37,7 @@ class SurveyQuestion(models.Model):
     """
     _name = 'survey.question'
     _description = 'Survey Question'
-    _rec_name = 'question'
+    _rec_name = 'title'
     _order = 'sequence,id'
 
     @api.model
@@ -49,7 +49,6 @@ class SurveyQuestion(models.Model):
 
     # question generic data
     title = fields.Char('Title', required=True, translate=True)
-    question = fields.Char('Question', related="title")
     description = fields.Html('Description', help="Use this field to add additional explanations about your question", translate=True)
     survey_id = fields.Many2one('survey.survey', string='Survey', ondelete='cascade')
     scoring_type = fields.Selection(related='survey_id.scoring_type', string='Scoring Type', readonly=True)
