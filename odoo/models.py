@@ -1115,7 +1115,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         convert = self.env['ir.fields.converter'].for_model(self)
 
         def _log(base, record, field, exception):
-            type = 'warning' if isinstance(exception, UserError) else 'error'
+            type = 'warning' if isinstance(exception, Warning) else 'error'
             # logs the logical (not human-readable) field name for automated
             # processing of response, but injects human readable in message
             exc_vals = dict(base, record=record, field=field_names[field])
