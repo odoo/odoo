@@ -556,7 +556,6 @@ class ProductTemplate(models.Model):
 
     responsible_id = fields.Many2one(
         'res.users', string='Responsible', default=lambda self: self.env.uid, company_dependent=True, check_company=True,
-        domain="['|', ('company_id', '=', False), ('company_ids', 'in', allowed_company_ids[0])]",
         help="This user will be responsible of the next activities related to logistic operations for this product.")
     type = fields.Selection(selection_add=[('product', 'Storable Product')])
     property_stock_production = fields.Many2one(
