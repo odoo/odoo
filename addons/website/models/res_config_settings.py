@@ -4,6 +4,7 @@
 from ast import literal_eval
 
 from odoo import api, fields, models
+from odoo.tools.translate import _
 
 
 class ResConfigSettings(models.TransientModel):
@@ -166,6 +167,15 @@ class ResConfigSettings(models.TransientModel):
             'res_model': 'website.robots',
             'type': 'ir.actions.act_window',
             "views": [[False, "form"]],
+            'target': 'new',
+        }
+
+    def action_ping_sitemap(self):
+        if not self.website_id._get_http_domain():
+            raise Warning(_("You don't have defined your domain"))
+        return {
+            'type': 'ir.actions.act_url',
+            'url': 'http://www.google.com/ping?sitemap=%s/sitemap.xml' % self.website_id._get_http_domain(),
             'target': 'new',
         }
 

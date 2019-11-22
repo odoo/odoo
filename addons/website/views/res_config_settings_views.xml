@@ -141,88 +141,7 @@
                                     <field name="website_logo" widget="image" class="w-25 mt-2"/>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-offset-6 col-lg-6 o_setting_box" id="google_analytics_setting">
-                                <div class="o_setting_left_pane">
-                                    <field name="has_google_analytics"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="has_google_analytics"/>
-                                    <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
-                                    <div class="text-muted">
-                                        Track visits in Google Analytics
-                                    </div>
-                                    <div class="content-group" attrs="{'invisible': [('has_google_analytics', '=', False)]}">
-                                        <div class="row mt16">
-                                            <label class="col-lg-3 o_light_label" string="Tracking ID" for="google_analytics_key"/>
-                                            <field name="google_analytics_key" placeholder="UA-XXXXXXXX-Y"
-                                                attrs="{'required': [('has_google_analytics', '=', True)]}"/>
-                                        </div>
-                                    </div>
-                                    <div attrs="{'invisible': [('has_google_analytics', '=', False)]}">
-                                        <a href="https://www.odoo.com/documentation/user/13.0/website/optimize/google_analytics.html"
-                                                class="oe_link" target="_blank">
-                                            <i class="fa fa-arrow-right"/>
-                                            How to get my Tracking ID
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-offset-6 col-lg-6 o_setting_box" id="google_console_setting">
-                                <div class="o_setting_left_pane">
-                                    <field name="has_google_search_console"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="has_google_search_console"/>
-                                    <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
-                                    <div class="text-muted">
-                                        Monitor Google Search results data
-                                    </div>
-                                    <div class="content-group" attrs="{'invisible': [('has_google_search_console', '=', False)]}">
-                                        <div class="row mt16">
-                                            <label class="col-lg-3 o_light_label" string="Code" for="google_search_console"/>
-                                            <field name="google_search_console" placeholder="google1234567890123456.html"
-                                                attrs="{'required': [('has_google_search_console', '=', True)]}"/>
-                                        </div>
-                                    </div>
-                                    <div attrs="{'invisible': [('has_google_search_console', '=', False)]}">
-                                        <small class='text-muted'>
-                                            <i class="fa fa-info"/>: type some of the first chars after 'google' is enough, we'll guess the rest.
-                                        </small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box" id="google_analytics_dashboard_setting" attrs="{'invisible': [('has_google_analytics', '=', False)]}">
-                                <div class="o_setting_left_pane">
-                                    <field name="has_google_analytics_dashboard"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="has_google_analytics_dashboard"/>
-                                    <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
-                                    <div class="text-muted">
-                                        Follow your website traffic in Odoo.
-                                    </div>
-                                    <div class="content-group" attrs="{'invisible': [('has_google_analytics_dashboard', '=', False)]}">
-                                        <div class="row mt16">
-                                            <label class="col-lg-3 o_light_label" string="Client ID" for="google_management_client_id"/>
-                                            <field name="google_management_client_id" attrs="{'required': [('has_google_analytics_dashboard', '=', True)]}"/>
-                                        </div>
-                                        <div class="row">
-                                            <label class="col-lg-3 o_light_label" string="Client Secret" for="google_management_client_secret"/>
-                                            <field name="google_management_client_secret" attrs="{'required': [('has_google_analytics_dashboard', '=', True)]}"/>
-                                        </div>
-                                    </div>
-                                    <div attrs="{'invisible': [('has_google_analytics_dashboard', '=', False)]}">
-                                        <a href="https://www.odoo.com/documentation/user/online/website/optimize/google_analytics_dashboard.html"
-                                            class="oe_link" target="_blank">
-                                            <i class="fa fa-arrow-right"/>
-                                            How to get my Client ID
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box"
-                                id="force_account_per_website_setting"
-                                groups="website.group_multi_website">
+                            <div class="col-12 col-lg-6 o_setting_box" id="force_account_per_website_setting" groups="website.group_multi_website">
                                 <div class="o_setting_left_pane">
                                     <field name="specific_user_account"/>
                                 </div>
@@ -309,18 +228,6 @@
                                     <field name="social_default_image" widget="image" class="w-25 mt-2"/>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box" id="robots_setting">
-                                <div class="o_setting_right_pane">
-                                    <span class="o_form_label">Robots.txt</span>
-                                    <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
-                                    <div class="text-muted">
-                                        Tells to search engine crawlers which pages or files the crawler can or can't request from your site
-                                    </div>
-                                    <div class="mt8">
-                                        <button type="object" name="action_open_robots" string="Edit robots.txt" class="btn-link" icon="fa-android"/>
-                                    </div>
-                                </div>
-                            </div>
 
                         </div>
                         <h2>Features</h2>
@@ -370,6 +277,114 @@
                                     <div class="text-muted">
                                         Track clicks on UTM links
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h2>SEO</h2>
+                        <div class="row mt16 o_settings_container" id="seo_settings">
+                            <div class="col-12 col-lg-offset-6 col-lg-6 o_setting_box" id="google_analytics_setting">
+                                <div class="o_setting_left_pane">
+                                    <field name="has_google_analytics"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="has_google_analytics"/>
+                                    <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
+                                    <div class="text-muted">
+                                        Track visits in Google Analytics
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('has_google_analytics', '=', False)]}">
+                                        <div class="row mt16">
+                                            <label class="col-lg-3 o_light_label" string="Tracking ID" for="google_analytics_key"/>
+                                            <field name="google_analytics_key" placeholder="UA-XXXXXXXX-Y"
+                                                attrs="{'required': [('has_google_analytics', '=', True)]}"/>
+                                        </div>
+                                    </div>
+                                    <div attrs="{'invisible': [('has_google_analytics', '=', False)]}">
+                                        <a href="https://www.odoo.com/documentation/user/13.0/website/optimize/google_analytics.html"
+                                                class="oe_link" target="_blank">
+                                            <i class="fa fa-arrow-right"/>
+                                            How to get my Tracking ID
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-offset-6 col-lg-6 o_setting_box" id="google_console_setting">
+                                <div class="o_setting_left_pane">
+                                    <field name="has_google_search_console"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="has_google_search_console"/>
+                                    <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
+                                    <div class="text-muted">
+                                        Monitor Google Search results data
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('has_google_search_console', '=', False)]}">
+                                        <div class="row mt16">
+                                            <label class="col-lg-3 o_light_label" string="Code" for="google_search_console"/>
+                                            <field name="google_search_console" placeholder="google1234567890123456.html"
+                                                attrs="{'required': [('has_google_search_console', '=', True)]}"/>
+                                        </div>
+                                    </div>
+                                    <div attrs="{'invisible': [('has_google_search_console', '=', False)]}">
+                                        <small class='text-muted'>
+                                            <i class="fa fa-info"/>: type some of the first chars after 'google' is enough, we'll guess the rest.
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box" id="google_analytics_dashboard_setting" attrs="{'invisible': [('has_google_analytics', '=', False)]}">
+                                <div class="o_setting_left_pane">
+                                    <field name="has_google_analytics_dashboard"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="has_google_analytics_dashboard"/>
+                                    <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
+                                    <div class="text-muted">
+                                        Follow your website traffic in Odoo.
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('has_google_analytics_dashboard', '=', False)]}">
+                                        <div class="row mt16">
+                                            <label class="col-lg-3 o_light_label" string="Client ID" for="google_management_client_id"/>
+                                            <field name="google_management_client_id" attrs="{'required': [('has_google_analytics_dashboard', '=', True)]}"/>
+                                        </div>
+                                        <div class="row">
+                                            <label class="col-lg-3 o_light_label" string="Client Secret" for="google_management_client_secret"/>
+                                            <field name="google_management_client_secret" attrs="{'required': [('has_google_analytics_dashboard', '=', True)]}"/>
+                                        </div>
+                                    </div>
+                                    <div attrs="{'invisible': [('has_google_analytics_dashboard', '=', False)]}">
+                                        <a href="https://www.odoo.com/documentation/user/online/website/optimize/google_analytics_dashboard.html"
+                                            class="oe_link" target="_blank">
+                                            <i class="fa fa-arrow-right"/>
+                                            How to get my Client ID
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box" id="robots_setting">
+                                <div class="o_setting_right_pane">
+                                    <span class="o_form_label">Robots.txt</span>
+                                    <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
+                                    <div class="text-muted">
+                                        Robots.txt: Tells to search engine crawlers which pages or files the crawler can or can't request from your site.<br/>
+                                    </div>
+                                    <div class="mt4">
+                                        <button type="object" name="action_open_robots" string="Edit robots.txt" class="btn-link" icon="fa-android"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box" id="robots_setting">
+                                <div class="o_setting_right_pane">
+                                    <span class="o_form_label">Sitemap</span>
+                                    <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
+                                    <div class="text-muted mt8">
+                                        Sitemap.xml: Help search engine crawlers to find out what pages are present and which have recently changed, and to crawl your site accordingly (This file is automatically generated by Odoo).
+                                    </div>
+                                    <div class="mt4">
+                                        <button type="object" name="action_ping_sitemap" string="Submit sitemap to Google" class='btn-link' icon="fa-google"/>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
