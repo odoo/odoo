@@ -215,6 +215,27 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
     },
 
     //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    updateUI: async function () {
+        await this._super.apply(this, arguments);
+
+        var sizeX = parseInt(this.$target.attr('colspan') || 1);
+        var sizeY = parseInt(this.$target.attr('rowspan') || 1);
+
+        var $size = this.$el.find('.o_wsale_soptions_menu_sizes');
+        $size.find('tr:nth-child(-n + ' + sizeY + ') td:nth-child(-n + ' + sizeX + ')')
+             .addClass('selected');
+
+        // Adapt size array preview to fit ppr
+        $size.find('tr td:nth-child(n + ' + parseInt(this.ppr + 1) + ')').hide();
+    },
+
+    //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
@@ -243,22 +264,6 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
                 menuEl.appendChild(checkbox.el);
             }
         });
-    },
-    /**
-     * @override
-     */
-    _updateUI: async function () {
-        await this._super.apply(this, arguments);
-
-        var sizeX = parseInt(this.$target.attr('colspan') || 1);
-        var sizeY = parseInt(this.$target.attr('rowspan') || 1);
-
-        var $size = this.$el.find('.o_wsale_soptions_menu_sizes');
-        $size.find('tr:nth-child(-n + ' + sizeY + ') td:nth-child(-n + ' + sizeX + ')')
-             .addClass('selected');
-
-        // Adapt size array preview to fit ppr
-        $size.find('tr td:nth-child(n + ' + parseInt(this.ppr + 1) + ')').hide();
     },
 
     //--------------------------------------------------------------------------
