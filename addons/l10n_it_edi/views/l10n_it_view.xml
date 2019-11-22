@@ -153,7 +153,6 @@
         <data>
             <xpath expr="//button[@name='preview_invoice']" position="after">
                 <button name="invoice_validate" type="object" icon="fa-envelope-o" attrs="{'invisible': [('l10n_it_send_state', '!=', 'invalid')]}" class="btn btn-primary" string="Resend"/>
-                <button name="invoice_validate" type="object" icon="fa-envelope-o" attrs="{'invisible': ['|',('state', 'in', ['draft', 'cancel']),('l10n_it_send_state', 'not in', ['to_send', False])]}" class="btn btn-primary" string="Send"/>
             </xpath>
             <xpath expr="//field[@name='type']" position="before">
                 <div class="alert alert-success" role="alert" attrs="{'invisible': [('l10n_it_send_state', 'not in', ['delivered', 'delivered_accepted', 'delivered_refused', 'delivered_expired', 'failed_delivery'])]}">
