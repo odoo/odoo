@@ -37,6 +37,13 @@ class CrmTeamMember(models.Model):
     maximum_user_leads = fields.Integer('Leads Per Month')
     leads_count = fields.Integer('Assigned Leads', compute='_compute_count_leads', help='Assigned Leads this last month')
     percentage_leads = fields.Float(compute='_compute_percentage_leads', string='Percentage leads')
+    has_auto_lead_assignation = fields.Boolean(compute='_compute_has_auto_lead_assignation')
+
+    @api.model
+    def default_get(self, fields):
+        result = super(CrmTeamMember, self).default_get(fields)
+        result['has_auto_lead_assignation'] = self.env['ir.config_parameter'].sudo().get_param('crm.auto_lead_assignation', False)
+        return result
 
     def _compute_count_leads(self):
         for member in self:
@@ -53,6 +60,11 @@ class CrmTeamMember(models.Model):
     def _compute_percentage_leads(self):
         for member in self:
             member.percentage_leads = round(100 * member.leads_count / float(member.maximum_user_leads), 2) if member.maximum_user_leads else 0.0
+
+    def _compute_has_auto_lead_assignation(self):
+        auto_lead_assignation = self.env['ir.config_parameter'].sudo().get_param('crm.auto_lead_assignation', False)
+        for record in self:
+            record.has_auto_lead_assignation = auto_lead_assignation
 
     @api.constrains('team_member_domain')
     def _assert_valid_domain(self):
@@ -274,15 +286,18 @@ class Team(models.Model):
         shuffle(all_salesteams)
         haslead = True
         salesteams_done = []
+        execution_interval_unit = self.env['ir.config_parameter'].sudo().get_param('crm.auto_lead_assignation_interval_unit')
         while haslead:
             haslead = False
             for salesteam in all_salesteams:
                 if salesteam['id'] in salesteams_done:
                     continue
                 domain = safe_eval(salesteam['team_domain'], evaluation_context)
-                limit_date = fields.Datetime.to_string(datetime.datetime.now() - datetime.timedelta(hours=1))
-                domain.extend([('create_date', '<', limit_date), ('team_id', '=', False), ('user_id', '=', False)])
-                domain.extend(['|', ('stage_id.is_won', '=', False), '&', ('probability', '!=', 0), ('probability', '!=', 100)])
+
+                if execution_interval_unit != 'manual':
+                    limit_date = fields.Datetime.to_string(datetime.datetime.now() - datetime.timedelta(**{execution_interval_unit: 1}))
+                    domain.append(('create_date', '<', limit_date))
+                domain.extend([('team_id', '=', False), ('user_id', '=', False), '|', ('stage_id.is_won', '=', False), '&', ('probability', '!=', 0), ('probability', '!=', 100)])
                 leads = self.env["crm.lead"].search(domain, limit=BUNDLE_LEADS)
                 haslead = haslead or (len(leads) == BUNDLE_LEADS)
                 _logger.info('Assignation of %s leads for team %s' % (len(leads), salesteam['id']))

@@ -146,6 +146,7 @@
                                 <field name="user_id"/>
                                 <field name="name"/>
                                 <field name="active"/>
+                                <field name="has_auto_lead_assignation"/>
                                 <templates>
                                     <t t-name="kanban-box">
                                     <div class="o_assignation_kanban_record oe_kanban_global_click pb-0">
@@ -160,7 +161,7 @@
                                             <ul class="nav o_assignation_body">
                                                 <li class="nav-item"><b><field name="name"/></b></li>
                                             </ul>
-                                            <div class="o_assignation_leads_count">
+                                            <div class="o_assignation_leads_count" t-if="record.has_auto_lead_assignation.raw_value">
                                                 <field name="maximum_user_leads" invisible="1"/>
                                                 <field name="leads_count" widget="gauge" options="{'max_field': 'maximum_user_leads'}"/>
                                             </div>
@@ -353,7 +354,8 @@
                                 <field name="mobile"/>
                             </group>
                         </group>
-                        <group>
+                        <field name="has_auto_lead_assignation" invisible="1"/>
+                        <group attrs="{'invisible': [('has_auto_lead_assignation', '=', False)]}">
                             <label for="maximum_user_leads" string="Maximum Leads / 30 days" />
                             <div>
                                 <field name="maximum_user_leads" class="oe_inline"/>
@@ -392,6 +394,7 @@
                     <field name="user_id"/>
                     <field name="name"/>
                     <field name="active"/>
+                    <field name="has_auto_lead_assignation"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div class="o_assignation_kanban_record oe_kanban_global_click pb-0">
@@ -407,7 +410,7 @@
                                         <li class="nav-item"><b><field name="name"/></b></li>
                                         <li class="nav-item"><field name="team_id"/></li>
                                     </ul>
-                                    <div class="o_assignation_leads_count">
+                                    <div class="o_assignation_leads_count" t-if="record.has_auto_lead_assignation.raw_value">
                                         <field name="maximum_user_leads" invisible="1"/>
                                         <field name="leads_count" widget="gauge" options="{'max_field': 'maximum_user_leads'}"/>
                                     </div>

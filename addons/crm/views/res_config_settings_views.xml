@@ -70,6 +70,30 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('group_use_lead', '=', False)]}">
+                            <div class="o_setting_left_pane">
+                                <field name="auto_lead_assignation"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="auto_lead_assignation"/>
+                                <div class="text-muted">
+                                    Automatically assign leads based on rules.
+                                </div>
+                                <div class="content-group" attrs="{'invisible': [('auto_lead_assignation', '=', False)]}">
+                                    <div class="row mt16">
+                                        <label string="Interval" for="auto_lead_assignation_interval_unit" class="col-lg-3 o_light_label"/>
+                                        <field name="auto_lead_assignation_interval_unit"/>
+                                    </div>
+                                    <div class="row mt8">
+                                        <label string="Next Run" for="auto_lead_assignation_next_execution" class="col-lg-3 o_light_label"/>
+                                        <field name="auto_lead_assignation_next_execution"/>
+                                        <button name="action_execute_lead_assignation" type="object" class="btn-link">
+                                            <i title="Assign now" role="img" aria-label="Assign now" class="fa fa-fw fa-refresh"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <h2>Lead Generation</h2>
                     <div class="row mt16 o_settings_container">

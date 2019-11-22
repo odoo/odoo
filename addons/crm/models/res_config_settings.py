@@ -2,7 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-from datetime import date
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 
 class ResConfigSettings(models.TransientModel):
@@ -23,6 +24,15 @@ class ResConfigSettings(models.TransientModel):
     predictive_lead_scoring_start_date_str = fields.Char(string='Lead Scoring Starting Date in String', config_parameter='crm.pls_start_date')
     predictive_lead_scoring_fields = fields.Many2many('crm.lead.scoring.frequency.field', string='Lead Scoring Frequency Fields', compute="_compute_pls_fields", inverse="_inverse_pls_fields_str")
     predictive_lead_scoring_fields_str = fields.Char(string='Lead Scoring Frequency Fields in String', config_parameter='crm.pls_fields')
+    auto_lead_assignation = fields.Boolean(string='Automatic Lead Assignation', config_parameter='crm.auto_lead_assignation')
+    auto_lead_assignation_interval_unit = fields.Selection([
+        ('manual', 'Manually'),
+        ('hours', 'Hourly'),
+        ('days', 'Daily'),
+        ('weeks', 'Weekly'),
+        ('months', 'Monthly')
+    ], default='manual', config_parameter='crm.auto_lead_assignation_interval_unit')
+    auto_lead_assignation_next_execution = fields.Datetime(compute='_compute_auto_lead_assignation_next_execution', store=True, readonly=False)
 
     def _find_default_lead_alias_id(self):
         alias = self.env.ref('crm.mail_alias_lead_info', False)
@@ -71,6 +81,14 @@ class ResConfigSettings(models.TransientModel):
             if setting.predictive_lead_scoring_start_date:
                 setting.predictive_lead_scoring_start_date_str = fields.Date.to_string(setting.predictive_lead_scoring_start_date)
 
+    @api.depends('auto_lead_assignation', 'auto_lead_assignation_interval_unit')
+    def _compute_auto_lead_assignation_next_execution(self):
+        for setting in self:
+            if not setting.auto_lead_assignation or setting.auto_lead_assignation_interval_unit == 'manual':
+                setting.auto_lead_assignation_next_execution = False
+            else:
+                setting.auto_lead_assignation_next_execution = datetime.now() + relativedelta(**{setting.auto_lead_assignation_interval_unit: 1})
+
     @api.onchange('group_use_lead')
     def _onchange_group_use_lead(self):
         """ Reset alias / leads configuration if leads are not used """
@@ -99,3 +117,17 @@ class ResConfigSettings(models.TransientModel):
             self.env['mail.alias'].with_context(
                 alias_model_name='crm.lead',
                 alias_parent_model_name='crm.team').create({'alias_name': self.crm_alias_prefix})
+        cron = self.env.ref('crm.ir_cron_lead_assign')
+        if not self.auto_lead_assignation or self.auto_lead_assignation_interval_unit == 'manual':
+            cron.active = False
+        else:
+            cron.write({
+                'active': True,
+                'interval_type': self.auto_lead_assignation_interval_unit,
+                'nextcall': self.auto_lead_assignation_next_execution
+            })
+
+    @api.model
+    def action_execute_lead_assignation(self, ids=[]):
+        self.env.ref('crm.ir_cron_lead_assign').method_direct_trigger()
+        self._compute_auto_lead_assignation_next_execution()
