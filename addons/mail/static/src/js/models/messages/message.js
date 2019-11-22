@@ -606,7 +606,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
         _.each(emojis, function (emoji) {
             var unicode = emoji.unicode;
             var regexp = new RegExp("(?:^|\\s|<[a-z]*>)(" + unicode + ")(?=\\s|$|</[a-z]*>)", 'g');
-            var originalBody = self.body;
+            var originalBody = self._body;
             self._body = self._body.replace(regexp,
                 ' <span class="o_mail_emoji">' + unicode + '</span> ');
             // Idiot-proof limit. If the user had the amazing idea of
