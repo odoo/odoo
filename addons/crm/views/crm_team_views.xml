@@ -340,11 +340,16 @@
                             <field name="user_id"/>
                             <field name="leads_count" invisible="1"/>
                         </h1>
-                        <group>
-                            <group invisible="context.get('default_team_id')">
-                                <field name="team_id"/>
+                        <h3 class="alert alert-warning" role="status" rowspan="2" attrs="{'invisible': [('user_current_team', '=', False)]}">
+                            <i class="fa fa-exclamation-triangle"></i> This user already belongs to the team "<field name="user_current_team" class="oe_inline"/>"!
+                            If you save now it will belong to the current team.
+                        </h3>
+                        <group invisible="context.get('default_team_id')">
+                            <group>
+                                <field name="team_id" colspan="1"/>
                             </group>
-                            <newline/>
+                        </group>
+                        <group>
                             <group>
                                 <field name="company_id"/>
                                 <field name="phone"/>

@@ -33,6 +33,7 @@ class ResConfigSettings(models.TransientModel):
         ('months', 'Monthly')
     ], default='manual', config_parameter='crm.auto_lead_assignation_interval_unit')
     auto_lead_assignation_next_execution = fields.Datetime(compute='_compute_auto_lead_assignation_next_execution', store=True, readonly=False)
+    multi_sales_team = fields.Boolean(string='Multi-sales', config_parameter='crm.multi_sales_team')
 
     def _find_default_lead_alias_id(self):
         alias = self.env.ref('crm.mail_alias_lead_info', False)

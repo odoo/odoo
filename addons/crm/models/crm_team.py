@@ -38,6 +38,7 @@ class CrmTeamMember(models.Model):
     leads_count = fields.Integer('Assigned Leads', compute='_compute_count_leads', help='Assigned Leads this last month')
     percentage_leads = fields.Float(compute='_compute_percentage_leads', string='Percentage leads')
     has_auto_lead_assignation = fields.Boolean(compute='_compute_has_auto_lead_assignation')
+    user_current_team = fields.Many2one('crm.team', compute='_compute_user_current_team')
 
     @api.model
     def default_get(self, fields):
@@ -66,6 +67,18 @@ class CrmTeamMember(models.Model):
         for record in self:
             record.has_auto_lead_assignation = auto_lead_assignation
 
+    @api.depends('user_id')
+    def _compute_user_current_team(self):
+        for member in self:
+            if self.env['ir.config_parameter'].sudo().get_param('crm.multi_sales_team', False):
+                member.user_current_team = False
+            else:
+                team_id = self.env.context.get('default_team_id') or member.team_id.id
+                if member.user_id and member.user_id.sale_team_id and member.user_id.sale_team_id.id not in [False, team_id]:
+                    member.user_current_team = member.user_id.sale_team_id
+                else:
+                    member.user_current_team = False
+
     @api.constrains('team_member_domain')
     def _assert_valid_domain(self):
         for member in self:
@@ -75,6 +88,14 @@ class CrmTeamMember(models.Model):
             except Exception:
                 raise ValidationError('The domain is incorrectly formatted')
 
+    @api.model
+    def create(self, vals):
+        if not self.env['ir.config_parameter'].sudo().get_param('crm.multi_sales_team', False):
+            user = self.search([('user_id', '=', vals.get('user_id'))])
+            if user and user.team_id.id != vals.get('team_id'):
+                user.team_id = vals.get('team_id')
+                return user
+        return super(CrmTeamMember, self).create(vals)
 
 class Team(models.Model):
     _name = 'crm.team'
