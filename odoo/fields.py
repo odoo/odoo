@@ -2265,6 +2265,8 @@ class _Relational(Field):
 
     def _description_domain(self, env):
         if self.check_company and not self.domain:
+            if self.comodel_name == 'res.users':
+                return "['|', ('company_ids', 'in', [company_id]), ('company_ids', 'in', [allowed_company_ids[0]])]"
             return "['|', ('company_id', '=', company_id), ('company_id', '=', False)]"
         return self.domain(env[self.model_name]) if callable(self.domain) else self.domain
 
