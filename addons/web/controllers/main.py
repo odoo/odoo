@@ -1469,7 +1469,7 @@ class Binary(http.Controller):
 
     @http.route('/web/binary/upload', type='http', auth="user")
     @serialize_exception
-    def upload(self, callback, ufile):
+    def upload(self, ufile, callback=None):
         # TODO: might be useful to have a configuration flag for max-length file uploads
         out = """<script language="javascript" type="text/javascript">
                     var win = window.top.window;
@@ -1481,11 +1481,11 @@ class Binary(http.Controller):
                     ufile.content_type, base64.b64encode(data)]
         except Exception as e:
             args = [False, str(e)]
-        return out % (json.dumps(callback), json.dumps(args))
+        return out % (json.dumps(callback), json.dumps(args)) if callback else json.dumps(args)
 
     @http.route('/web/binary/upload_attachment', type='http', auth="user")
     @serialize_exception
-    def upload_attachment(self, callback, model, id, ufile):
+    def upload_attachment(self, model, id, ufile, callback=None):
         files = request.httprequest.files.getlist('ufile')
         Model = request.env['ir.attachment']
         out = """<script language="javascript" type="text/javascript">
@@ -1519,7 +1519,7 @@ class Binary(http.Controller):
                     'id': attachment.id,
                     'size': attachment.file_size
                 })
-        return out % (json.dumps(callback), json.dumps(args))
+        return out % (json.dumps(callback), json.dumps(args)) if callback else json.dumps(args)
 
     @http.route([
         '/web/binary/company_logo',
