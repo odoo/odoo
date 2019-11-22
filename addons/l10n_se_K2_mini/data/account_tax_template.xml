@@ -11,8 +11,28 @@
             <field name="description">ST25</field>
             <field name="amount">25</field>
             <field name="type_tax_use">sale</field>
-            <field name="account_id" ref="coa_2611" />
-            <field name="refund_account_id" ref="coa_2611" />
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2611'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2611'),
+                }),
+            ]"/>
         </record>
         <record id="sale_tax_25_services" model="account.tax.template">
             <field name="chart_template_id" ref="se_chart_template" />
@@ -20,8 +40,28 @@
             <field name="description">ST25</field>
             <field name="amount">25</field>
             <field name="type_tax_use">sale</field>
-            <field name="account_id" ref="coa_2611" />
-            <field name="refund_account_id" ref="coa_2611" />
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2611'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2611'),
+                }),
+            ]"/>
         </record>
         <record id="purchase_tax_25_goods" model="account.tax.template">
             <field name="chart_template_id" ref="se_chart_template" />
@@ -29,8 +69,28 @@
             <field name="description">PT25</field>
             <field name="amount">25</field>
             <field name="type_tax_use">purchase</field>
-            <field name="account_id" ref="coa_2641" />
-            <field name="refund_account_id" ref="coa_2641" />
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2641'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2641'),
+                }),
+            ]"/>
         </record>
         <record id="purchase_tax_25_services" model="account.tax.template">
             <field name="chart_template_id" ref="se_chart_template" />
@@ -38,8 +98,28 @@
             <field name="description">PT25</field>
             <field name="amount">25</field>
             <field name="type_tax_use">purchase</field>
-            <field name="account_id" ref="coa_2641" />
-            <field name="refund_account_id" ref="coa_2641" />
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2641'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2641'),
+                }),
+            ]"/>
         </record>
         <record id="sale_tax_12_goods" model="account.tax.template">
             <field name="chart_template_id" ref="se_chart_template" />
@@ -47,8 +127,28 @@
             <field name="description">ST12</field>
             <field name="amount">12</field>
             <field name="type_tax_use">sale</field>
-            <field name="account_id" ref="coa_2621" />
-            <field name="refund_account_id" ref="coa_2621" />
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2621'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2621'),
+                }),
+            ]"/>
         </record>
         <record id="sale_tax_12_services" model="account.tax.template">
             <field name="chart_template_id" ref="se_chart_template" />
@@ -56,8 +156,28 @@
             <field name="description">ST12</field>
             <field name="amount">12</field>
             <field name="type_tax_use">sale</field>
-            <field name="account_id" ref="coa_2621" />
-            <field name="refund_account_id" ref="coa_2621" />
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2621'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2621'),
+                }),
+            ]"/>
         </record>
         <record id="purchase_tax_12_goods" model="account.tax.template">
             <field name="chart_template_id" ref="se_chart_template" />
@@ -65,8 +185,28 @@
             <field name="description">PT12</field>
             <field name="amount">12</field>
             <field name="type_tax_use">purchase</field>
-            <field name="account_id" ref="coa_2641" />
-            <field name="refund_account_id" ref="coa_2641" />
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2641'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2641'),
+                }),
+            ]"/>
         </record>
         <record id="purchase_tax_12_services" model="account.tax.template">
             <field name="chart_template_id" ref="se_chart_template" />
@@ -74,8 +214,28 @@
             <field name="description">PT12</field>
             <field name="amount">12</field>
             <field name="type_tax_use">purchase</field>
-            <field name="account_id" ref="coa_2641" />
-            <field name="refund_account_id" ref="coa_2641" />
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2641'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2641'),
+                }),
+            ]"/>
         </record>
         <record id="sale_tax_6_goods" model="account.tax.template">
             <field name="chart_template_id" ref="se_chart_template" />
@@ -83,8 +243,28 @@
             <field name="description">ST6</field>
             <field name="amount">6</field>
             <field name="type_tax_use">sale</field>
-            <field name="account_id" ref="coa_2631" />
-            <field name="refund_account_id" ref="coa_2631" />
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2631'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2631'),
+                }),
+            ]"/>
         </record>
         <record id="sale_tax_6_services" model="account.tax.template">
             <field name="chart_template_id" ref="se_chart_template" />
@@ -92,8 +272,28 @@
             <field name="description">ST6</field>
             <field name="amount">6</field>
             <field name="type_tax_use">sale</field>
-            <field name="account_id" ref="coa_2631" />
-            <field name="refund_account_id" ref="coa_2631" />
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2631'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2631'),
+                }),
+            ]"/>
         </record>
         <record id="purchase_tax_6_goods" model="account.tax.template">
             <field name="chart_template_id" ref="se_chart_template" />
@@ -101,8 +301,28 @@
             <field name="description">PT6</field>
             <field name="amount">6</field>
             <field name="type_tax_use">purchase</field>
-            <field name="account_id" ref="coa_2641" />
-            <field name="refund_account_id" ref="coa_2641" />
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2641'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2641'),
+                }),
+            ]"/>
         </record>
         <record id="purchase_tax_6_services" model="account.tax.template">
             <field name="chart_template_id" ref="se_chart_template" />
@@ -110,9 +330,30 @@
             <field name="description">PT6</field>
             <field name="amount">6</field>
             <field name="type_tax_use">purchase</field>
-            <field name="account_id" ref="coa_2641" />
-            <field name="refund_account_id" ref="coa_2641" />
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2641'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2641'),
+                }),
+            ]"/>
         </record>
+
         <!-- Tax template VAT in EC goods -->
         <record id="sale_tax_services_EC" model="account.tax.template">
             <field name="chart_template_id" ref="se_chart_template" />
@@ -134,8 +375,28 @@
             <field name="description">PE25F</field>
             <field name="amount">25</field>
             <field name="type_tax_use">none</field>
-            <field name="account_id" ref="coa_2645" />
-            <field name="refund_account_id" ref="coa_2645" />
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2645'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2645'),
+                }),
+            ]"/>
         </record>
         <record id="tax_goods_25_EC_reverse" model="account.tax.template">
             <field name="chart_template_id" ref="se_chart_template" />
@@ -143,8 +404,28 @@
             <field name="description">PE25R</field>
             <field name="amount">-25</field>
             <field name="type_tax_use">none</field>
-            <field name="account_id" ref="coa_2614" />
-            <field name="refund_account_id" ref="coa_2614" />
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2614'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2614'),
+                }),
+            ]"/>
         </record>
         <record id="purchase_goods_tax_25_EC" model="account.tax.template">
             <field name="chart_template_id" ref="se_chart_template" />
@@ -161,8 +442,28 @@
             <field name="description">PE12F</field>
             <field name="amount">12</field>
             <field name="type_tax_use">none</field>
-            <field name="account_id" ref="coa_2645" />
-            <field name="refund_account_id" ref="coa_2645" />
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2645'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2645'),
+                }),
+            ]"/>
         </record>
         <record id="tax_goods_12_EC_reverse" model="account.tax.template">
             <field name="chart_template_id" ref="se_chart_template" />
@@ -170,8 +471,28 @@
             <field name="description">PE12R</field>
             <field name="amount">-12</field>
             <field name="type_tax_use">none</field>
-            <field name="account_id" ref="coa_2624" />
-            <field name="refund_account_id" ref="coa_2624" />
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2624'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2624'),
+                }),
+            ]"/>
         </record>
         <record id="purchase_goods_tax_12_EC" model="account.tax.template">
             <field name="chart_template_id" ref="se_chart_template" />
@@ -188,8 +509,28 @@
             <field name="description">PE6F</field>
             <field name="amount">6</field>
             <field name="type_tax_use">none</field>
-            <field name="account_id" ref="coa_2645" />
-            <field name="refund_account_id" ref="coa_2645" />
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2645'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2645'),
+                }),
+            ]"/>
         </record>
         <record id="tax_goods_6_EC_reverse" model="account.tax.template">
             <field name="chart_template_id" ref="se_chart_template" />
@@ -197,8 +538,28 @@
             <field name="description">PE6R</field>
             <field name="amount">-6</field>
             <field name="type_tax_use">none</field>
-            <field name="account_id" ref="coa_2634" />
-            <field name="refund_account_id" ref="coa_2634" />
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2634'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2634'),
+                }),
+            ]"/>
         </record>
         <record id="purchase_goods_tax_6_EC" model="account.tax.template">
             <field name="chart_template_id" ref="se_chart_template" />
@@ -216,8 +577,28 @@
             <field name="description">PE25F</field>
             <field name="amount">25</field>
             <field name="type_tax_use">none</field>
-            <field name="account_id" ref="coa_2645" />
-            <field name="refund_account_id" ref="coa_2645" />
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2645'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2645'),
+                }),
+            ]"/>
         </record>
         <record id="tax_services_25_EC_reverse" model="account.tax.template">
             <field name="chart_template_id" ref="se_chart_template" />
@@ -225,8 +606,28 @@
             <field name="description">PE25R</field>
             <field name="amount">-25</field>
             <field name="type_tax_use">none</field>
-            <field name="account_id" ref="coa_2614" />
-            <field name="refund_account_id" ref="coa_2614" />
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2614'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2614'),
+                }),
+            ]"/>
         </record>
         <record id="purchase_services_tax_25_EC" model="account.tax.template">
             <field name="chart_template_id" ref="se_chart_template" />
@@ -243,8 +644,28 @@
             <field name="description">PE12F</field>
             <field name="amount">12</field>
             <field name="type_tax_use">none</field>
-            <field name="account_id" ref="coa_2645" />
-            <field name="refund_account_id" ref="coa_2645" />
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2645'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2645'),
+                }),
+            ]"/>
         </record>
         <record id="tax_services_12_EC_reverse" model="account.tax.template">
             <field name="chart_template_id" ref="se_chart_template" />
@@ -252,8 +673,28 @@
             <field name="description">PE12R</field>
             <field name="amount">-12</field>
             <field name="type_tax_use">none</field>
-            <field name="account_id" ref="coa_2624" />
-            <field name="refund_account_id" ref="coa_2624" />
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2624'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2624'),
+                }),
+            ]"/>
         </record>
         <record id="purchase_services_tax_12_EC" model="account.tax.template">
             <field name="chart_template_id" ref="se_chart_template" />
@@ -270,8 +711,28 @@
             <field name="description">PE6F</field>
             <field name="amount">6</field>
             <field name="type_tax_use">none</field>
-            <field name="account_id" ref="coa_2645" />
-            <field name="refund_account_id" ref="coa_2645" />
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2645'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2645'),
+                }),
+            ]"/>
         </record>
         <record id="tax_services_6_EC_reverse" model="account.tax.template">
             <field name="chart_template_id" ref="se_chart_template" />
@@ -279,8 +740,28 @@
             <field name="description">PE6R</field>
             <field name="amount">-6</field>
             <field name="type_tax_use">none</field>
-            <field name="account_id" ref="coa_2634" />
-            <field name="refund_account_id" ref="coa_2634" />
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2634'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2634'),
+                }),
+            ]"/>
         </record>
         <record id="purchase_services_tax_6_EC" model="account.tax.template">
             <field name="chart_template_id" ref="se_chart_template" />
@@ -312,8 +793,28 @@
             <field name="description">PN25F</field>
             <field name="amount">25</field>
             <field name="type_tax_use">none</field>
-            <field name="account_id" ref="coa_2645" />
-            <field name="refund_account_id" ref="coa_2645" />
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2645'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2645'),
+                }),
+            ]"/>
         </record>
         <record id="tax_goods_25_NEC_reverse" model="account.tax.template">
             <field name="chart_template_id" ref="se_chart_template" />
@@ -321,8 +822,28 @@
             <field name="description">PN25R</field>
             <field name="amount">-25</field>
             <field name="type_tax_use">none</field>
-            <field name="account_id" ref="coa_2615" />
-            <field name="refund_account_id" ref="coa_2615" />
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2615'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2615'),
+                }),
+            ]"/>
         </record>
         <record id="purchase_goods_tax_25_NEC" model="account.tax.template">
             <field name="chart_template_id" ref="se_chart_template" />
@@ -339,8 +860,28 @@
             <field name="description">PN12F</field>
             <field name="amount">12</field>
             <field name="type_tax_use">none</field>
-            <field name="account_id" ref="coa_2645" />
-            <field name="refund_account_id" ref="coa_2645" />
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2645'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2645'),
+                }),
+            ]"/>
         </record>
         <record id="tax_goods_12_NEC_reverse" model="account.tax.template">
             <field name="chart_template_id" ref="se_chart_template" />
@@ -348,8 +889,28 @@
             <field name="description">PN12R</field>
             <field name="amount">-12</field>
             <field name="type_tax_use">none</field>
-            <field name="account_id" ref="coa_2625" />
-            <field name="refund_account_id" ref="coa_2625" />
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2625'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2625'),
+                }),
+            ]"/>
         </record>
         <record id="purchase_goods_tax_12_NEC" model="account.tax.template">
             <field name="chart_template_id" ref="se_chart_template" />
@@ -366,8 +927,28 @@
             <field name="description">PN6F</field>
             <field name="amount">6</field>
             <field name="type_tax_use">none</field>
-            <field name="account_id" ref="coa_2645" />
-            <field name="refund_account_id" ref="coa_2645" />
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2645'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2645'),
+                }),
+            ]"/>
         </record>
         <record id="tax_goods_6_NEC_reverse" model="account.tax.template">
             <field name="chart_template_id" ref="se_chart_template" />
@@ -375,8 +956,28 @@
             <field name="description">PN6R</field>
             <field name="amount">-6</field>
             <field name="type_tax_use">none</field>
-            <field name="account_id" ref="coa_2635" />
-            <field name="refund_account_id" ref="coa_2635" />
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2635'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2635'),
+                }),
+            ]"/>
         </record>
         <record id="purchase_goods_tax_6_NEC" model="account.tax.template">
             <field name="chart_template_id" ref="se_chart_template" />
@@ -393,8 +994,28 @@
             <field name="description">PN25F</field>
             <field name="amount">25</field>
             <field name="type_tax_use">none</field>
-            <field name="account_id" ref="coa_2645" />
-            <field name="refund_account_id" ref="coa_2645" />
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2645'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2645'),
+                }),
+            ]"/>
         </record>
         <record id="tax_services_25_NEC_reverse" model="account.tax.template">
             <field name="chart_template_id" ref="se_chart_template" />
@@ -402,8 +1023,28 @@
             <field name="description">PN25R</field>
             <field name="amount">-25</field>
             <field name="type_tax_use">none</field>
-            <field name="account_id" ref="coa_2614" />
-            <field name="refund_account_id" ref="coa_2614" />
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2614'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2614'),
+                }),
+            ]"/>
         </record>
         <record id="purchase_services_tax_25_NEC" model="account.tax.template">
             <field name="chart_template_id" ref="se_chart_template" />
@@ -420,8 +1061,28 @@
             <field name="description">PN12F</field>
             <field name="amount">12</field>
             <field name="type_tax_use">none</field>
-            <field name="account_id" ref="coa_2645" />
-            <field name="refund_account_id" ref="coa_2645" />
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2645'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2645'),
+                }),
+            ]"/>
         </record>
         <record id="tax_services_12_NEC_reverse" model="account.tax.template">
             <field name="chart_template_id" ref="se_chart_template" />
@@ -429,8 +1090,28 @@
             <field name="description">PN12R</field>
             <field name="amount">-12</field>
             <field name="type_tax_use">none</field>
-            <field name="account_id" ref="coa_2624" />
-            <field name="refund_account_id" ref="coa_2624" />
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2624'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2624'),
+                }),
+            ]"/>
         </record>
         <record id="purchase_services_tax_12_NEC" model="account.tax.template">
             <field name="chart_template_id" ref="se_chart_template" />
@@ -447,8 +1128,28 @@
             <field name="description">PN6F</field>
             <field name="amount">6</field>
             <field name="type_tax_use">none</field>
-            <field name="account_id" ref="coa_2645" />
-            <field name="refund_account_id" ref="coa_2645" />
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2645'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2645'),
+                }),
+            ]"/>
         </record>
         <record id="tax_services_6_NEC_reverse" model="account.tax.template">
             <field name="chart_template_id" ref="se_chart_template" />
@@ -456,8 +1157,28 @@
             <field name="description">PN6R</field>
             <field name="amount">-6</field>
             <field name="type_tax_use">none</field>
-            <field name="account_id" ref="coa_2634" />
-            <field name="refund_account_id" ref="coa_2634" />
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2634'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('coa_2634'),
+                }),
+            ]"/>
         </record>
         <record id="purchase_services_tax_6_NEC" model="account.tax.template">
             <field name="chart_template_id" ref="se_chart_template" />
