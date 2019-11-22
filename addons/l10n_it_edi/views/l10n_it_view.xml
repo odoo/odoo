@@ -154,8 +154,6 @@
             <xpath expr="//button[@name='preview_invoice']" position="after">
                 <button name="post" type="object" icon="fa-envelope-o" class="btn btn-primary" string="Resend"
                         attrs="{'invisible': ['|', ('type', 'not in', ('out_invoice', 'out_refund')), ('l10n_it_send_state', '!=', 'invalid')]}"/>
-                <button name="post" type="object" icon="fa-envelope-o" class="btn btn-primary" string="Send"
-                        attrs="{'invisible': ['|', '|', ('type', 'not in', ('out_invoice', 'out_refund')), ('state', 'in', ['draft', 'cancel']),('l10n_it_send_state', 'not in', ['to_send', False])]}"/>
             </xpath>
             <xpath expr="//field[@name='type']" position="before">
                 <div class="alert alert-success" role="alert"
