@@ -1142,7 +1142,6 @@ class MailThread(models.AbstractModel):
         fallback_model = model
 
         # get email.message.Message variables for future processing
-        local_hostname = socket.gethostname()
         message_id = message.get('Message-Id')
 
         # compute references to find if message is a reply to an existing thread
@@ -1155,7 +1154,10 @@ class MailThread(models.AbstractModel):
         email_from = tools.decode_message_header(message, 'From')
         email_from_localpart = (tools.email_split(email_from) or [''])[0].split('@', 1)[0].lower()
         email_to = tools.decode_message_header(message, 'To')
-        email_to_localpart = (tools.email_split(email_to) or [''])[0].split('@', 1)[0].lower()
+        email_to_localparts = [
+            e.split('@', 1)[0].lower()
+            for e in (tools.email_split(email_to) or [''])
+        ]
 
         # Delivered-To is a safe bet in most modern MTAs, but we have to fallback on To + Cc values
         # for all the odd MTAs out there, as there is no standard header for the envelope's `rcpt_to` value.
@@ -1165,10 +1167,13 @@ class MailThread(models.AbstractModel):
             tools.decode_message_header(message, 'Cc'),
             tools.decode_message_header(message, 'Resent-To'),
             tools.decode_message_header(message, 'Resent-Cc')])
-        rcpt_tos_localparts = [e.split('@')[0].lower() for e in tools.email_split(rcpt_tos)]
+        rcpt_tos_localparts = [
+            e.split('@')[0].lower()
+            for e in tools.email_split(rcpt_tos)
+        ]
 
         # 0. Verify whether this is a bounced email and use it to collect bounce data and update notifications for customers
-        if bounce_alias and bounce_alias in email_to_localpart:
+        if bounce_alias and any(email.startswith(bounce_alias) for email in email_to_localparts):
             # Bounce regex: typical form of bounce is bounce_alias+128-crm.lead-34@domain
             # group(1) = the mail ID; group(2) = the model (if any); group(3) = the record ID
             bounce_re = re.compile("%s\+(\d+)-?([\w.]+)?-?(\d+)?" % re.escape(bounce_alias), re.UNICODE)
@@ -1226,19 +1231,21 @@ class MailThread(models.AbstractModel):
         is_a_reply = bool(mail_messages)
 
         # 1.1 Handle forward to an alias with a different model: do not consider it as a reply
-        if reply_model and reply_thread_id:
-            other_alias = Alias.search([
-                '&',
+        if is_a_reply and reply_model and reply_thread_id:
+            alias_count = Alias.search_count([
                 ('alias_name', '!=', False),
-                ('alias_name', '=', email_to_localpart)
+                ('alias_name', 'in', email_to_localparts),
+                ("alias_model_id.model", "!=", reply_model),
             ])
-            if other_alias and other_alias.alias_model_id.model != reply_model:
-                is_a_reply = False
+            is_a_reply = alias_count == 0
 
         if is_a_reply:
             model, thread_id = mail_messages.model, mail_messages.res_id
             if not reply_private:  # TDE note: not sure why private mode as no alias search, copying existing behavior
-                dest_aliases = Alias.search([('alias_name', 'in', rcpt_tos_localparts)], limit=1)
+                dest_aliases = Alias.search([
+                    ('alias_name', 'in', rcpt_tos_localparts),
+                    ('alias_model_id.model', '=', model),
+                ], limit=1)
 
             route = self.message_route_verify(
                 message, message_dict,
@@ -1259,7 +1266,7 @@ class MailThread(models.AbstractModel):
             message_dict.pop('parent_id', None)
 
             # check it does not directly contact catchall
-            if catchall_alias and catchall_alias in email_to_localpart:
+            if catchall_alias and all(email_localpart == catchall_alias for email_localpart in email_to_localparts):
                 _logger.info('Routing mail from %s to %s with Message-Id %s: direct write to catchall, bounce', email_from, email_to, message_id)
                 body = self.env.ref('mail.mail_bounce_catchall').render({
                     'message': message,
