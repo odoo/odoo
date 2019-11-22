@@ -271,6 +271,31 @@
     </xpath>
 </template>
 
+<template id="cookies_bar" inherit_id="website.footer_custom" name="Cookies Bar">
+    <xpath expr="//div[@id='footer']" position="before">
+        <div id="website_cookies_bar" t-if="website.cookies_bar" class="s_popup o_snippet_invisible" data-name="Cookies Bar">
+            <div class='s_popup_main s_popup_fixed popup_backdrop d-none o_cookies_discrete'
+                 data-show-after="500" data-display="afterDelay" data-consents-duration="999">
+                <div class='s_popup_frame s_popup_full'>
+                    <div class='oe_structure s_popup_content bg-white'>
+                        <section class="pt4 pb4">
+                            <div class="container text-600 d-flex align-items-center">
+                                <div class="mb0">
+                                    <div class="o_cookies_bar_text_primary">
+                                        We use cookies to provide you a better user experience.
+                                    </div>
+                                </div>
+                                <a href="/cookie-policy" class="o_cookies_bar_text_policy btn btn-link btn-sm text-nowrap ml-auto">Cookie Policy</a>
+                                <a href="#" role="button" class="js_close_popup o_cookies_bar_text_button btn btn-primary btn-sm text-nowrap">I agree</a>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </xpath>
+</template>
+
 <template id="language_selector" name="Language Selector">
     <ul class="js_language_selector mb0 list-inline" t-if="(request and request.is_frontend_multilang and len(languages) &gt; 1) or (website and (editable or translatable))">
         <li class="list-inline-item">
