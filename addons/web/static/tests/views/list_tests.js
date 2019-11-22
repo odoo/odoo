@@ -2462,18 +2462,18 @@ QUnit.module('Views', {
         assert.isNotVisible(list.sidebar.$el, 'sidebar should be invisible');
         assert.containsN(list, 'tbody td.o_list_record_selector', 4, "should have 4 records");
 
-        testUtils.dom.click(list.$('tbody td.o_list_record_selector:first input'));
+        await testUtils.dom.click(list.$('tbody td.o_list_record_selector:first input'));
 
         assert.isVisible(list.sidebar.$el, 'sidebar should be visible');
 
         assert.verifySteps(['/web/dataset/search_read']);
-        testUtils.dom.click(list.sidebar.$('.o_dropdown_toggler_btn:contains(Action)'));
+        await testUtils.dom.click(list.sidebar.$('.o_dropdown_toggler_btn:contains(Action)'));
         await testUtils.dom.click(list.sidebar.$('a:contains(Archive)'));
         assert.strictEqual($('.modal').length, 1, 'a confirm modal should be displayed');
-        testUtils.dom.click($('.modal-footer .btn-secondary'));
+        await testUtils.dom.click($('.modal-footer .btn-secondary'));
         assert.containsN(list, 'tbody td.o_list_record_selector', 4, "still should have 4 records");
 
-        testUtils.dom.click(list.sidebar.$('.o_dropdown_toggler_btn:contains(Action)'));
+        await testUtils.dom.click(list.sidebar.$('.o_dropdown_toggler_btn:contains(Action)'));
         await testUtils.dom.click(list.sidebar.$('a:contains(Archive)'));
         assert.strictEqual($('.modal').length, 1, 'a confirm modal should be displayed');
         await testUtils.dom.click($('.modal-footer .btn-primary'));
