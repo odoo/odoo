@@ -33,7 +33,6 @@ class OdooException(Exception):
         if type(self) is OdooException:
             raise NotImplementedError("OdooException should not be manually instanced")
         super().__init__(*args)
-        self.args = args
         self.kwargs = kwargs
 
     def __str__(self):
@@ -99,8 +98,7 @@ class ValidationError(OdooException):
     pass
 
 
-class CacheMiss(OdooException, KeyError):
-    # XXX: Possibly shouldn't inherit from OdooException?
+class CacheMiss(Exception):
     """ Missing value(s) in cache.
     Example: When you try to read a value in a flushed cache."""
     pass
