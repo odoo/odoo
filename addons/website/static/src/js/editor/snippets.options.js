@@ -1,6 +1,7 @@
 odoo.define('website.editor.snippets.options', function (require) {
 'use strict';
 
+require('website.s_popup_options');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 const wUtils = require('website.utils');
@@ -910,6 +911,63 @@ options.registry.anchor = options.Class.extend({
      */
     _text2Anchor: function (text) {
         return encodeURIComponent(text.trim().replace(/\s+/g, '-'));
+    },
+});
+
+options.registry.CookiesBar = options.registry.SnippetPopup.extend({
+    xmlDependencies: (options.registry.SnippetPopup.prototype.xmlDependencies || []).concat(
+        ['/website/static/src/xml/website.cookies_bar.xml']
+    ),
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Change the cookies bar layout.
+     *
+     * @see this.selectClass for parameters
+     */
+    selectLayout: function (previewMode, widgetValue, params) {
+        let websiteId;
+        this.trigger_up('context_get', {
+            callback: function (ctx) {
+                websiteId = ctx['website_id'];
+            },
+        });
+
+        const $template = $(qweb.render(`website.cookies_bar.${widgetValue}`, {
+            websiteId: websiteId,
+        }));
+
+        const $content = this.$target.find('.s_popup_content');
+        const selectorsToKeep = [
+            '.o_cookies_bar_text_button',
+            '.o_cookies_bar_text_policy',
+            '.o_cookies_bar_text_title',
+            '.o_cookies_bar_text_primary',
+            '.o_cookies_bar_text_secondary',
+        ];
+
+        if (this.$savedSelectors === undefined) {
+            this.$savedSelectors = [];
+        }
+
+        for (const selector of selectorsToKeep) {
+            const $currentLayoutEls = $content.find(selector).contents();
+            const $newLayoutEl = $template.find(selector);
+            if ($currentLayoutEls.length) {
+                // save value before change, eg 'title' is not inside 'discrete' template
+                // but we want to preserve it in case of select another layout later
+                this.$savedSelectors[selector] = $currentLayoutEls;
+            }
+            const $savedSelector = this.$savedSelectors[selector];
+            if ($newLayoutEl.length && $savedSelector && $savedSelector.length) {
+                $newLayoutEl.empty().append($savedSelector);
+            }
+        }
+
+        $content.empty().append($template);
     },
 });
 

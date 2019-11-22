@@ -107,6 +107,132 @@
         </record>
     </data>
 
+    <template id="cookie_policy" name="Cookie Policy">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure">
+                <section class="pt8 pb8">
+                    <div class="container">
+                        <h2 class="pt16">Cookie Policy</h2>
+                        <p>
+                            Cookies are small bits of text sent by our servers to your computer or device when you access our services.
+                            They are stored in your browser and later sent back to our servers so that we can provide contextual content.
+                            Without cookies, using the web would be a much more frustrating experience.
+                            We use them to support your activities on our website. For example, your session (so you don't have to login again) or your shopping cart.
+                            <br/>
+                            Cookies are also used to help us understand your preferences based on previous or current activity on our website (the pages you have
+                            visited), your language and country, which enables us to provide you with improved services.
+                            We also use cookies to help us compile aggregate data about site traffic and site interaction so that we can offer
+                            better site experiences and tools in the future.
+                        </p>
+                        <p>
+                            Here is an overview of the cookies that may be stored on your device when you visit our website:
+                        </p>
+                        <div class="table-responsive">
+                            <table class="small table table-bordered text-center">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th scope="col" style="width: 20%">Category of Cookie</th>
+                                        <th scope="col" style="width: 50%; min-width: 200px;">Purpose</th>
+                                        <th scope="col" style="width: 30%">Examples</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <p>Session &amp; Security</p>
+                                        </td>
+                                        <td>
+                                            <p>
+                                                Authenticate users, protect user data and allow the website to deliver the services users expects,
+                                                such as maintaining the content of their cart, or allowing file uploads.
+                                            </p>
+                                            <p>The website will not work properly if you reject or discard those cookies.</p>
+                                        </td>
+                                        <td>
+                                            session_id (Odoo)<br/>
+                                            fileToken (Odoo)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <p>Preferences</p>
+                                        </td>
+                                        <td>
+                                            <p>Remember information about the preferred look or behavior of the website, such as your preferred language or region.</p>
+                                            <p>Your experience may be degraded if you discard those cookies, but the website will still work.</p>
+                                        </td>
+                                        <td>
+                                            frontend_lang (Odoo)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Interaction History</td>
+                                        <td>
+                                            <p>
+                                                Users to collect information about your interactions with the website, the pages you've seen,
+                                                and any specific marketing campaign that brought you to the website.
+                                            </p>
+                                            <p>We may not be able to provide the best service to you if you reject those cookies, but the website will work.</p>
+                                        </td>
+                                        <td>
+                                            im_livechat_previous_operator_pid (Odoo)<br/>
+                                            utm_campaign (Odoo)<br/>
+                                            utm_source (Odoo)<br/>
+                                            utm_medium (Odoo)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <p>Advertising &amp; Marketing</p>
+                                        </td>
+                                        <td>
+                                            <p>
+                                                Used to make advertising more engaging to users and more valuable to publishers and advertisers,
+                                                such as providing more relevant ads when you visit other websites that display ads or to improve reporting on ad campaign performance.
+                                            </p>
+                                            <p>Note that some third-party services may install additional cookies on your browser in order to identify you.</p>
+                                            <p>
+                                                You may opt-out of a third-party's use of cookies by visiting the <a href="https://optout.networkadvertising.org/?c=1" rel="nofollow">Network Advertising Initiative opt-out page</a>.
+                                                The website will still work if you reject or discard those cookies.
+                                            </p>
+                                        </td>
+                                        <td>
+                                            __gads (Google)<br/>
+                                            __gac (Google)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <p>Analytics</p>
+                                        </td>
+                                        <td>
+                                            <p>
+                                                Understand how visitors engage with our website, via Google Analytics.
+                                                Learn more about <a href="https://developers.google.com/analytics/resources/concepts/gaConceptsCookies?hl=en">Analytics cookies and privacy information.</a>
+                                            </p>
+                                            <p>The website will still work if you reject or discard those cookies.</p>
+                                        </td>
+                                        <td>
+                                            _ga (Google)<br/>
+                                            _gat (Google)<br/>
+                                            _gid (Google)<br/>
+                                            _gac_* (Google)
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p>
+                            You can choose to have your computer warn you each time a cookie is being sent, or you can choose to turn off all cookies.
+                            Each browser is a little different, so look at your browser's Help menu to learn the correct way to modify your cookies.
+                        </p>
+                        <p>We do not currently support Do Not Track signals, as there is no industry standard for compliance.</p>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
     <data noupdate="1">
         <record id="homepage_page" model="website.page">
             <field name="is_published">True</field>

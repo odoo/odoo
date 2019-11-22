@@ -1,7 +1,8 @@
 // s_popup
 .s_popup_main {
     .s_popup_content {
-        min-height: var(--o-we-toolbar-height);
+        // keep lower than <p> height (cookies bar)
+        min-height: $o-font-size-base * $o-line-height-base;
         box-shadow: $modal-content-box-shadow-sm-up;
         .container {
             // keep margin when fixed bottom
