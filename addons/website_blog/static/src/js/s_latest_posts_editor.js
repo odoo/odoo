@@ -26,7 +26,6 @@ sOptions.registry.js_get_posts_selectBlog = sOptions.Class.extend({
                 el.textContent = blog.name;
                 menuEl.appendChild(el);
             }
-            return this._updateUI();
         });
     },
 });
