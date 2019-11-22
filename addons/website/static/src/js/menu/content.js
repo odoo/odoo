@@ -583,11 +583,14 @@ var EditMenuDialog = widget.Dialog.extend({
      */
     _onDeleteMenuButtonClick: function (ev) {
         var $menu = $(ev.currentTarget).closest('[data-menu-id]');
+        var children= $menu.children().find('li').clone();
+        var parent=$menu.parent();
         var menuID = $menu.data('menu-id')|0;
         if (menuID) {
             this.to_delete.push(menuID);
         }
         $menu.remove();
+        parent.append(children);
     },
     /**
      * Called when the "edit menu" button is clicked -> Opens the appropriate
