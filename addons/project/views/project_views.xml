@@ -487,12 +487,12 @@
                                 domain="[('parent_id', '=', False)]"
                                 groups="project.group_subtask_project"
                             />
-                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                         </group>
-                        <group name="sales_order_group">
-                        </group>
+                        <!-- YTI FIXME: Clean these fake groups -->
+                        <group name="sales_order_group"/>
                         <group name="dates">
                             <field name="date_deadline"/>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                         </group>
                     </group>
                     <notebook>
