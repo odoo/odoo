@@ -2233,7 +2233,18 @@ class _Relational(Field):
 
     def _description_domain(self, env):
         if self.check_company and not self.domain:
-            return "['|', ('company_id', '=', company_id), ('company_id', '=', False)]"
+            if self.company_dependent:
+                if self.comodel_name == "res.users":
+                    # user needs access to current company (self.env.company)
+                    return "[('company_ids', 'in', allowed_company_ids[0])]"
+                else:
+                    return "[('company_id', 'in', [allowed_company_ids[0], False])]"
+            else:
+                if self.comodel_name == "res.users":
+                    # User allowed company ids = user.company_ids
+                    return "['|', (not company_id, '=', True), ('company_ids', 'in', [company_id])]"
+                else:
+                    return "[('company_id', 'in', [company_id, False])]"
         return self.domain(env[self.model_name]) if callable(self.domain) else self.domain
 
     def null(self, record):
