@@ -1,6 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
+<!-- Owl Templates -->
+
+<t t-name="DialogButton.tooltip" owl="1">
+    <div class="oe_tooltip_string" role="tooltip">
+        <div class="tooltip-inner">
+            Hit ENTER to <t t-esc="title"/>
+        </div>
+    </div>
+</t>
+
+<t t-name="OwlDialog" owl="1">
+    <Portal target="'body'">
+        <div class="o_dialog" t-on-focus="_onFocus">
+            <div t-if="props.backdrop" class="modal-backdrop show" t-on-click="_onBackdropClick"/>
+            <div role="dialog" class="modal"
+                tabindex="-1"
+                t-att-class="{ o_technical_modal: props.technical, o_modal_full: props.fullscreen }"
+                t-ref="modal"
+                t-on-close_dialog.stop="_close"
+                >
+                <div class="modal-dialog" t-att-class="size">
+                    <div class="modal-content" t-att-class="props.contentClass">
+                        <header t-if="props.renderHeader" class="modal-header">
+                            <h4 class="modal-title">
+                                <t t-esc="props.title"/>
+                                <span t-if="props.subtitle" class="o_subtitle text-muted small" t-esc="props.subtitle"/>
+                            </h4>
+                            <button type="button" class="close" aria-label="Close" tabindex="-1" t-on-click="_close">×</button>
+                        </header>
+                        <main class="modal-body">
+                            <t t-slot="default"/>
+                        </main>
+                        <footer t-if="props.renderFooter" class="modal-footer" t-ref="modal-footer">
+                            <t t-slot="buttons">
+                                <button class="btn btn-primary" t-on-click.prevent="_close">
+                                    Ok
+                                </button>
+                            </t>
+                        </footer>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </Portal>
+</t>
+
+<!-- Legacy Templates -->
+
 <div t-name="EmptyComponent"/>
 
 <div t-name="Loading" class="o_loading"/>
