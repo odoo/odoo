@@ -85,8 +85,12 @@ rte.Class.include({
     /**
      * @override
      */
-    _saveElement: function ($el, context) {
+    _saveElement: function ($el, context, withLang) {
         var defs = [this._super.apply(this, arguments)];
+        // do not save cover in translation mode
+        if (withLang) {
+            return defs[0];
+        }
         // TODO the o_dirty class is not put on the right element for blog cover
         // edition. For some strange reason, it was forcly put (even if not
         // dirty) in <= saas-16 but this is not the case anymore.
