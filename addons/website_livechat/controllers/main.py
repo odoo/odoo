@@ -3,9 +3,10 @@
 
 from odoo import http, _
 from odoo.http import request
+from odoo.addons.im_livechat.controllers.main import LivechatController
 
 
-class WebsiteLivechat(http.Controller):
+class WebsiteLivechat(LivechatController):
 
     @http.route('/livechat', type='http', auth="public", website=True)
     def channel_list(self, **kw):
@@ -56,6 +57,14 @@ class WebsiteLivechat(http.Controller):
             'ratings_per_user': ratings_per_partner
         }
         return request.render("website_livechat.channel_page", values)
+
+    @http.route('/im_livechat/get_session', type="json", auth='public', cors="*")
+    def get_session(self, channel_id, anonymous_name, previous_operator_id=None, **kwargs):
+        """ Override to use visitor name instead of 'Visitor' whenever a visitor start a livechat session. """
+        visitor_sudo = request.env['website.visitor']._get_visitor_from_request()
+        if visitor_sudo:
+            anonymous_name = visitor_sudo.display_name
+        return super(WebsiteLivechat, self).get_session(channel_id, anonymous_name, previous_operator_id=previous_operator_id, **kwargs)
 
     @http.route('/im_livechat/visitor_leave_session', type='json', auth="public")
     def visitor_leave_session(self, uuid):
