@@ -187,7 +187,7 @@ class StockMove(models.Model):
         for move in self:
             move.display_assign_serial = (
                 move.has_tracking == 'serial' and
-                move.state in ('partially_available', 'assigned') and
+                move.state in ('partially_available', 'assigned', 'confirmed') and
                 move.picking_type_id.use_create_lots and
                 not move.picking_type_id.use_existing_lots and
                 not move.picking_type_id.show_reserved
@@ -1033,10 +1033,6 @@ class StockMove(models.Model):
             )
         return vals
 
-    def _update_next_serial_count(self):
-        self.next_serial = None
-        self.next_serial_count = len(self.move_line_ids)
-
     def _update_reserved_quantity(self, need, available_quantity, location_id, lot_id=None, package_id=None, owner_id=None, strict=True):
         """ Create or update move lines.
         """
@@ -1221,7 +1217,7 @@ class StockMove(models.Model):
                             break
                         partially_available_moves |= move
             if move.product_id.tracking == 'serial':
-                move._update_next_serial_count()
+                move.next_serial_count = move.product_uom_qty
 
         self.env['stock.move.line'].create(move_line_vals_list)
         partially_available_moves.write({'state': 'partially_available'})

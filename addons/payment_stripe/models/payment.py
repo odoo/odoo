@@ -69,7 +69,6 @@ class PaymentAcquirerStripe(models.Model):
                           "Request data:\n%s\n"
                           "Response body:\n%s",
                           url, pprint.pformat(data), resp.text)
-            raise
         return resp.json()
 
     def _create_stripe_session(self, kwargs):
