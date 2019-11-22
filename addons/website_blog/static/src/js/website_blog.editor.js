@@ -86,8 +86,16 @@ WysiwygMultizone.include({
     /**
      * @override
      */
+<<<<<<< HEAD
     _saveElement: function (outerHTML, recordInfo, editable) {
+=======
+    _saveElement: function ($el, context, withLang) {
+>>>>>>> 0762d90fcd5... temp
         var defs = [this._super.apply(this, arguments)];
+        // do not save cover in translation mode
+        if (withLang) {
+            return defs[0];
+        }
         // TODO the o_dirty class is not put on the right element for blog cover
         // edition. For some strange reason, it was forcly put (even if not
         // dirty) in <= saas-16 but this is not the case anymore.
