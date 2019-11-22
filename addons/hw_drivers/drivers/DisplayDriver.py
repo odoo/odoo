@@ -71,7 +71,7 @@ class DisplayDriver(Driver):
     def run(self):
         while self.device_identifier != 'distant_display':
             time.sleep(60)
-            if self.url != 'http://localhost:8069/point_of_sale/display/':
+            if self.url != 'http://localhost:8069/point_of_sale/display/' + self.device_identifier:
                 # Refresh the page every minute
                 self.call_xdotools('F5')
 
@@ -80,7 +80,7 @@ class DisplayDriver(Driver):
         os.environ['XAUTHORITY'] = '/run/lightdm/pi/xauthority'
         firefox_env = os.environ.copy()
         firefox_env['HOME'] = '/tmp/' + self._x_screen
-        self.url = url or 'http://localhost:8069/point_of_sale/display/'
+        self.url = url or 'http://localhost:8069/point_of_sale/display/' + self.device_identifier
         new_window = subprocess.call(['xdotool', 'search', '--onlyvisible', '--screen', self._x_screen, '--class', 'Firefox'])
         subprocess.Popen(['firefox', self.url], env=firefox_env)
         if new_window:
@@ -169,9 +169,13 @@ class DisplayController(http.Controller):
             return {'status': 'OWNER'}
         return {'status': 'NOWNER'}
 
-    @http.route(['/point_of_sale/get_serialized_order'], type='json', auth='none')
-    def get_serialized_order(self):
-        display = DisplayDriver.get_default_display()
+    @http.route(['/point_of_sale/get_serialized_order', '/point_of_sale/get_serialized_order/<string:display_identifier>'], type='json', auth='none')
+    def get_serialized_order(self, display_identifier=None):
+        if display_identifier:
+            display = iot_devices.get(display_identifier)
+        else:
+            display = DisplayDriver.get_default_display()
+
         if display:
             return display.get_serialized_order()
         return {
@@ -179,8 +183,8 @@ class DisplayController(http.Controller):
             'error': "No display found",
         }
 
-    @http.route(['/point_of_sale/display'], type='http', auth='none')
-    def display(self):
+    @http.route(['/point_of_sale/display', '/point_of_sale/display/<string:display_identifier>'], type='http', auth='none')
+    def display(self, display_identifier=None):
         cust_js = None
         interfaces = ni.interfaces()
 
@@ -200,9 +204,13 @@ class DisplayController(http.Controller):
                             'icon': 'sitemap' if 'eth' in iface_id else 'wifi',
                         })
 
+        if not display_identifier:
+            display_identifier = DisplayDriver.get_default_display().device_identifier
+
         return pos_display_template.render({
             'title': "Odoo -- Point of Sale",
             'breadcrumb': 'POS Client display',
             'cust_js': cust_js,
             'display_ifaces': display_ifaces,
+            'display_identifier': display_identifier,
         })
