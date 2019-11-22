@@ -315,6 +315,24 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('field titles are not escaped', async function (assert) {
+        assert.expect(2);
+
+        this.data.foo.records[0].foo = '<div>Hello</div>';
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="foo"/></tree>',
+        });
+
+        assert.strictEqual(list.$('tbody tr:first .o_data_cell').text(), "<div>Hello</div>");
+        assert.strictEqual(list.$('tbody tr:first .o_data_cell').attr('title'), "<div>Hello</div>");
+
+        list.destroy();
+    });
+
     QUnit.test('record-depending invisible lines are correctly aligned', async function (assert) {
         assert.expect(4);
 
