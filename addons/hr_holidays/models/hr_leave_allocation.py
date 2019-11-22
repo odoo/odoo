@@ -13,6 +13,7 @@ from odoo.addons.resource.models.resource import HOURS_PER_DAY
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools.translate import _
 from odoo.tools.float_utils import float_round
+from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
 
@@ -40,7 +41,8 @@ class HolidaysAllocation(models.Model):
             return [('valid', '=', True), ('allocation_type', '!=', 'no')]
         return [('valid', '=', True), ('allocation_type', '=', 'fixed_allocation')]
 
-    name = fields.Char('Description')
+    name = fields.Char('Description', compute='_compute_description', inverse='_inverse_description', search='_search_description', compute_sudo=False)
+    private_name = fields.Char('Allocation Description', groups='hr_holidays.group_hr_holidays_user')
     state = fields.Selection([
         ('draft', 'To Submit'),
         ('cancel', 'Cancelled'),
@@ -207,6 +209,35 @@ class HolidaysAllocation(models.Model):
                 values['number_of_days'] = min(values['number_of_days'], holiday.accrual_limit)
 
             holiday.write(values)
+
+    @api.depends_context('uid')
+    def _compute_description(self):
+        self.check_access_rights('read')
+        self.check_access_rule('read')
+
+        is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
+
+        for allocation in self:
+            if is_officer or allocation.employee_id.user_id == self.env.user or allocation.manager_id == self.env.user:
+                allocation.name = allocation.sudo().private_name
+            else:
+                allocation.name = '*****'
+
+    def _inverse_description(self):
+        is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
+        for allocation in self:
+            if is_officer or allocation.employee_id.user_id == self.env.user or allocation.manager_id == self.env.user:
+                allocation.sudo().private_name = allocation.name
+
+    def _search_description(self, operator, value):
+        is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
+        domain = [('private_name', operator, value)]
+
+        if not is_officer:
+            domain = expression.AND([domain, [('employee_id.user_id', '=', self.env.user.id)]])
+
+        allocations = self.sudo().search(domain)
+        return [('id', 'in', allocations.ids)]
 
     @api.depends('employee_id', 'holiday_status_id')
     def _compute_leaves(self):
