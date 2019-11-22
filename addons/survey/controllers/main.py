@@ -124,9 +124,9 @@ class Survey(http.Controller):
         answer_sudo = access_data['answer_sudo']
 
         if error_key == 'survey_void' and access_data['can_answer']:
-            return request.render("survey.survey_void", {'survey': survey_sudo, 'answer': answer_sudo})
+            return request.render("survey.survey_void_content", {'survey': survey_sudo, 'answer': answer_sudo})
         elif error_key == 'survey_closed' and access_data['can_answer']:
-            return request.render("survey.survey_expired", {'survey': survey_sudo})
+            return request.render("survey.survey_closed_expired", {'survey': survey_sudo})
         elif error_key == 'survey_auth' and answer_sudo.token:
             if answer_sudo.partner_id and (answer_sudo.partner_id.user_ids or survey_sudo.users_can_signup):
                 if answer_sudo.partner_id.user_ids:
@@ -136,11 +136,11 @@ class Survey(http.Controller):
                 redirect_url = answer_sudo.partner_id._get_signup_url_for_action(url='/survey/start/%s?answer_token=%s' % (survey_sudo.access_token, answer_sudo.token))[answer_sudo.partner_id.id]
             else:
                 redirect_url = '/web/login?redirect=%s' % ('/survey/start/%s?answer_token=%s' % (survey_sudo.access_token, answer_sudo.token))
-            return request.render("survey.auth_required", {'survey': survey_sudo, 'redirect_url': redirect_url})
+            return request.render("survey.survey_auth_required", {'survey': survey_sudo, 'redirect_url': redirect_url})
         elif error_key == 'answer_deadline' and answer_sudo.token:
-            return request.render("survey.survey_expired", {'survey': survey_sudo})
+            return request.render("survey.survey_closed_expired", {'survey': survey_sudo})
         elif error_key == 'answer_done' and answer_sudo.token:
-            return request.render("survey.sfinished", self._prepare_survey_finished_values(survey_sudo, answer_sudo, token=answer_sudo.token))
+            return request.render("survey.survey_closed_finished", self._prepare_survey_finished_values(survey_sudo, answer_sudo, token=answer_sudo.token))
 
         return werkzeug.utils.redirect("/")
 
@@ -214,12 +214,12 @@ class Survey(http.Controller):
             except:
                 return werkzeug.utils.redirect("/")
             else:
-                return request.render("survey.403", {'survey': survey_sudo})
+                return request.render("survey.survey_403_page", {'survey': survey_sudo})
 
         # Select the right page
         if answer_sudo.state == 'new':  # Intro page
             data = {'survey': survey_sudo, 'answer': answer_sudo, 'page': 0}
-            return request.render('survey.survey_init', data)
+            return request.render('survey.survey_page_start', data)
         else:
             return request.redirect('/survey/fill/%s/%s' % (survey_sudo.access_token, answer_sudo.token))
 
@@ -248,7 +248,7 @@ class Survey(http.Controller):
                 'answer': answer_sudo,
                 'previous_page_id': new_previous_id
             })
-            return request.render('survey.survey', data)
+            return request.render('survey.survey_page_main', data)
 
         if survey_sudo.is_time_limited and not answer_sudo.start_datetime:
             # init start date when user starts filling in the survey
@@ -266,9 +266,9 @@ class Survey(http.Controller):
             })
             if is_last:
                 data.update({'last': True})
-            return request.render('survey.survey', data)
+            return request.render('survey.survey_page_main', data)
         elif answer_sudo.state == 'done':  # Display success message
-            return request.render('survey.sfinished', self._prepare_survey_finished_values(survey_sudo, answer_sudo))
+            return request.render('survey.survey_closed_finished', self._prepare_survey_finished_values(survey_sudo, answer_sudo))
         elif answer_sudo.state == 'skip':
             page_or_question_id, is_last = survey_sudo.next_page_or_question(answer_sudo, answer_sudo.last_displayed_page_id.id)
             previous_id = survey_sudo._previous_page_or_question_id(answer_sudo, page_or_question_id.id)
@@ -282,9 +282,9 @@ class Survey(http.Controller):
             if is_last:
                 data.update({'last': True})
 
-            return request.render('survey.survey', data)
+            return request.render('survey.survey_page_main', data)
         else:
-            return request.render("survey.403", {'survey': survey_sudo})
+            return request.render("survey.survey_403_page", {'survey': survey_sudo})
 
     @http.route('/survey/submit/<string:survey_token>/<string:answer_token>', type='json', auth='public', website=True)
     def survey_submit(self, survey_token, answer_token, **post):
@@ -366,9 +366,9 @@ class Survey(http.Controller):
         survey_sudo, answer_sudo = access_data['survey_sudo'], access_data['answer_sudo']
 
         if survey_sudo.scoring_type == 'scoring_without_answers':
-            return request.render("survey.403", {'survey': survey_sudo})
+            return request.render("survey.survey_403_page", {'survey': survey_sudo})
 
-        return request.render('survey.survey_print', {
+        return request.render('survey.survey_page_print', {
             'review': review,
             'survey': survey_sudo,
             'answer': answer_sudo,
@@ -379,7 +379,6 @@ class Survey(http.Controller):
     @http.route('/survey/results/<model("survey.survey"):survey>', type='http', auth='user', website=True)
     def survey_report(self, survey, answer_token=None, **post):
         '''Display survey Results & Statistics for given survey.'''
-        result_template = 'survey.result'
         current_filters = []
         filter_display_data = []
 
@@ -389,7 +388,7 @@ class Survey(http.Controller):
             filter_data = self._get_filter_data(post)
             current_filters = survey.filter_input_ids(filter_data, filter_finish)
             filter_display_data = survey.get_filter_display_data(filter_data)
-        return request.render(result_template,
+        return request.render('survey.survey_page_statistics',
                                       {'survey': survey,
                                        'answers': answers,
                                        'survey_dict': self._prepare_result_dict(survey, current_filters),
