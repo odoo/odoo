@@ -294,10 +294,15 @@ class Module(models.Model):
     icon = fields.Char('Icon URL')
     icon_image = fields.Binary(string='Icon', compute='_get_icon_image')
     to_buy = fields.Boolean('Odoo Enterprise Module', default=False)
+    has_iap = fields.Boolean(compute='_compute_has_iap')
 
     _sql_constraints = [
         ('name_uniq', 'UNIQUE (name)', 'The name of the module must be unique!'),
     ]
+
+    def _compute_has_iap(self):
+        for module in self:
+            module.has_iap = 'iap' in module.upstream_dependencies(exclude_states=('',)).mapped('name')
 
     def unlink(self):
         if not self:
