@@ -2,7 +2,8 @@
 <odoo>
     <template id="assets_backend" name="crm assets" inherit_id="web.assets_backend">
         <xpath expr="." position="inside">
-            <link rel="stylesheet" href="/crm/static/src/css/crm.css"/>
+            <link rel="stylesheet" href="/crm/static/src/css/crm.scss"/>
+            <script type="text/javascript" src="/crm/static/src/js/crm_tooltip_fields.js"/>
         </xpath>
     </template>
     <template id="assets_tests" name="CRM Assets Tests" inherit_id="web.assets_tests">
