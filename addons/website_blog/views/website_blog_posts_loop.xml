@@ -183,10 +183,10 @@ according to the enabled options.
 
         <t t-call="website.record_cover">
             <t t-set="_record" t-value="blog_post"/>
-            <t t-set="additionnal_classes" t-value="'o_list_cover' + (not opt_blog_cards_design and ' rounded overflow-hidden shadow mb-3' or '')"/>
+            <t t-set="additionnal_classes" t-value="'o_list_cover o_not_editable ' + (not opt_blog_cards_design and ' rounded overflow-hidden shadow mb-3' or '')"/>
 
             <t t-if="opt_posts_loop_show_author" t-call="website_blog.post_author">
-                <t t-set="additionnal_classes" t-value="'o_wblog_post_list_author o_list_cover d-flex text-white w-100 ' + ('p-3 h5 m-0' if opt_blog_list_view else 'px-2 pb-2 pt-3') "/>
+                <t t-set="additionnal_classes" t-value="'o_wblog_post_list_author o_list_cover d-flex text-white w-100 o_not_editable ' + ('p-3 h5 m-0' if opt_blog_list_view else 'px-2 pb-2 pt-3') "/>
                 <t t-set="hide_date" t-value="True"/>
             </t>
         </t>
