@@ -98,7 +98,7 @@ class ValidationError(OdooException):
     pass
 
 
-class CacheMiss(Exception):
+class CacheMiss(KeyError):
     """ Missing value(s) in cache.
     Example: When you try to read a value in a flushed cache."""
     pass
