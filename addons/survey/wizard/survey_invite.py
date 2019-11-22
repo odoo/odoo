@@ -59,7 +59,7 @@ class SurveyInvite(models.TransientModel):
     mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing mail server')
     # survey
     survey_id = fields.Many2one('survey.survey', string='Survey', required=True)
-    survey_url = fields.Char(related="survey_id.public_url", readonly=True)
+    survey_start_url = fields.Char('Survey URL', compute='_compute_survey_start_url')
     survey_access_mode = fields.Selection(related="survey_id.access_mode", readonly=True)
     survey_users_login_required = fields.Boolean(related="survey_id.users_login_required", readonly=True)
     deadline = fields.Datetime(string="Answer deadline")
@@ -91,6 +91,11 @@ class SurveyInvite(models.TransientModel):
             )
 
         self.existing_text = existing_text
+
+    @api.depends('survey_id')
+    def _compute_survey_start_url(self):
+        for invite in self:
+            invite.survey_start_url = invite.survey_id.get_start_url() if invite.survey_id else False
 
     @api.onchange('emails')
     def _onchange_emails(self):

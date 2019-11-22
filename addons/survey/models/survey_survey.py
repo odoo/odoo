@@ -65,7 +65,6 @@ class Survey(models.Model):
     users_login_required = fields.Boolean('Login Required', help="If checked, users have to login before answering even with a valid token.")
     users_can_go_back = fields.Boolean('Users can go back', help="If checked, users can go back to previous pages.")
     users_can_signup = fields.Boolean('Users can signup', compute='_compute_users_can_signup')
-    public_url = fields.Char("Public link", compute="_compute_survey_url")
     # statistics
     answer_count = fields.Integer("Registered", compute="_compute_survey_statistic")
     answer_done_count = fields.Integer("Attempts", compute="_compute_survey_statistic")
@@ -149,12 +148,6 @@ class Survey(models.Model):
 
         for survey in self:
             survey.update(stat.get(survey._origin.id, default_vals))
-
-    def _compute_survey_url(self):
-        """ Computes a public URL for the survey """
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        for survey in self:
-            survey.public_url = urls.url_join(base_url, "survey/start/%s" % (survey.access_token))
 
     @api.depends('question_and_page_ids')
     def _compute_page_and_question_ids(self):
@@ -448,18 +441,6 @@ class Survey(models.Model):
     def action_close(self):
         self.write({'state': 'closed'})
 
-    def action_start_survey(self):
-        """ Open the website page with the survey form """
-        self.ensure_one()
-        token = self.env.context.get('survey_token')
-        trail = "?answer_token=%s" % token if token else ""
-        return {
-            'type': 'ir.actions.act_url',
-            'name': "Start Survey",
-            'target': 'self',
-            'url': self.public_url + trail
-        }
-
     def action_send_survey(self):
         """ Open a window to compose an email, pre-filled with the survey message """
         # Ensure that this survey has at least one page with at least one question.
@@ -486,16 +467,26 @@ class Survey(models.Model):
             'context': local_context,
         }
 
-    def action_print_survey(self):
+    def action_start_survey(self, answer=None):
+        """ Open the website page with the survey form """
+        self.ensure_one()
+        trail = "?answer_token=%s" % answer.token if answer and answer.token else ''
+        return {
+            'type': 'ir.actions.act_url',
+            'name': "Start Survey",
+            'target': 'self',
+            'url': self.get_start_url() + trail
+        }
+
+    def action_print_survey(self, answer=None):
         """ Open the website page with the survey printable view """
         self.ensure_one()
-        token = self.env.context.get('survey_token')
-        trail = "?answer_token=%s" % token if token else ""
+        trail = "?answer_token=%s" % answer.token if answer and answer.token else ''
         return {
             'type': 'ir.actions.act_url',
             'name': "Print Survey",
             'target': 'self',
-            'url': '/survey/print/%s%s' % (self.access_token, trail)
+            'url': self.get_print_url() + trail
         }
 
     def action_result_survey(self):
@@ -554,6 +545,16 @@ class Survey(models.Model):
             'target': '_blank',
             'url': '/survey/%s/get_certification_preview' % (self.id)
         }
+
+    def get_start_url(self):
+        self.ensure_one()
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        return urls.url_join(base_url, "survey/start/%s" % (self.access_token))
+
+    def get_print_url(self):
+        self.ensure_one()
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        return urls.url_join(base_url, "survey/print/%s" % (self.access_token))
 
     # ------------------------------------------------------------
     # GRAPH / RESULTS
