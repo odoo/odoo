@@ -107,7 +107,7 @@ options.registry.background.include({
             delete target.dataset.bgVideoSrc;
         }
         this._refreshPublicWidgets();
-        await this._updateUI();
+        await this.updateUI();
     },
     /**
      * Returns whether the current target has a background video or not.
@@ -350,12 +350,18 @@ options.registry.CarouselItem = options.Class.extend({
         this._super(...arguments);
         this.$carousel.off('.carousel_item_option');
     },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
     /**
      * Updates the slide counter.
      *
      * @override
      */
-    onFocus: function () {
+    updateUI: function () {
+        this._super(...arguments);
         const $items = this.$carousel.find('.carousel-item');
         const $activeSlide = $items.filter('.active');
         const updatedText = ` (${$activeSlide.index() + 1}/${$items.length})`;
@@ -483,9 +489,21 @@ options.registry.navTabs = options.Class.extend({
             $activeLink.parent().remove();
             $activePane.remove();
             self._findLinksAndPanes();
-            self._updateUI(); // TODO forced to do this because we do not return deferred for options
+            self.updateUI(); // TODO forced to do this because we do not return deferred for options
         });
         $next.tab('show');
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    updateUI: async function () {
+        await this._super(...arguments);
+        this.$el.filter('[data-remove-tab]').toggleClass('d-none', this.$tabPanes.length <= 2);
     },
 
     //--------------------------------------------------------------------------
@@ -521,14 +539,6 @@ options.registry.navTabs = options.Class.extend({
                 'aria-labelledby': idLink,
             });
         }
-    },
-    /**
-     * @private
-     * @override
-     */
-    _updateUI: async function () {
-        await this._super.apply(this, arguments);
-        this.$el.filter('[data-remove-tab]').toggleClass('d-none', this.$tabPanes.length <= 2);
     },
 });
 
@@ -1120,7 +1130,7 @@ options.registry.gallery = options.Class.extend({
             }
             this.mode('reset', this.getMode());
             this.trigger_up('cover_update');
-            this._updateUI();
+            this.updateUI();
         });
         dialog.open();
     },
@@ -1352,6 +1362,21 @@ options.registry.gallery = options.Class.extend({
             this.mode('reset', this.getMode());
         }
     },
+    /**
+     * @override
+     */
+    updateUI: async function () {
+        await this._super(...arguments);
+
+        this.$el.find('[data-interval]').closest('we-select')[0]
+            .classList.toggle('d-none', this.activeMode !== 'slideshow');
+
+        this.$el.find('[data-columns]').closest('we-select')[0]
+            .classList.toggle('d-none', !(this.activeMode === 'grid' || this.activeMode === 'masonry'));
+
+        this.el.querySelector('.o_w_image_spacing_option')
+            .classList.toggle('d-none', this.activeMode === 'slideshow');
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -1439,21 +1464,6 @@ options.registry.gallery = options.Class.extend({
         var $container = this.$('.container:first');
         $container.empty().append($content);
         return $container;
-    },
-    /**
-     * @override
-     */
-    _updateUI: async function () {
-        await this._super(...arguments);
-
-        this.$el.find('[data-interval]').closest('we-select')[0]
-            .classList.toggle('d-none', this.activeMode !== 'slideshow');
-
-        this.$el.find('[data-columns]').closest('we-select')[0]
-            .classList.toggle('d-none', !(this.activeMode === 'grid' || this.activeMode === 'masonry'));
-
-        this.el.querySelector('.o_w_image_spacing_option')
-            .classList.toggle('d-none', this.activeMode === 'slideshow');
     },
 });
 
@@ -1553,10 +1563,16 @@ options.registry.topMenuColor = options.Class.extend({
         });
         return def;
     },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
     /**
      * @override
      */
-    onFocus: function () {
+    updateUI: function () {
+        this._super(...arguments);
         this.trigger_up('action_demand', {
             actionName: 'get_page_option',
             params: ['header_overlay'],
@@ -1779,7 +1795,7 @@ options.registry.CoverProperties = options.Class.extend({
             if (!this.$target.hasClass('o_record_has_cover')) {
                 this.$el.find('.o_record_cover_opt_size_default[data-select-class]').click();
             }
-            this._updateUI();
+            this.updateUI();
         });
     },
     /**
@@ -1804,33 +1820,13 @@ options.registry.CoverProperties = options.Class.extend({
     },
 
     //--------------------------------------------------------------------------
-    // Private
+    // Public
     //--------------------------------------------------------------------------
 
     /**
-     * @override
-     */
-    _computeWidgetState: function (methodName, params) {
-        switch (methodName) {
-            case 'filterValue': {
-                return parseFloat(this.$filter.css('opacity')).toFixed(1);
-            }
-            case 'filterColor': {
-                const classes = this.filterColorClasses.split(' ');
-                for (const className of classes) {
-                    if (this.$filter.hasClass(className)) {
-                        return className;
-                    }
-                }
-                return '';
-            }
-        }
-        return this._super(...arguments);
-    },
-    /**
      * @private
      */
-    _updateUI: async function () {
+    updateUI: async function () {
         await this._super(...arguments);
 
         // Only show options which are useful to the current cover
@@ -1858,6 +1854,31 @@ options.registry.CoverProperties = options.Class.extend({
         this.$target[0].dataset.textAlignClass = this.$el.find('.active[data-cover-opt="text_align"]').data('selectClass') || '';
         this.$target[0].dataset.filterValue = this.$filterValueOpts.filter('.active').data('filterValue') || 0.0;
         this.$target[0].dataset.filterColor = this.$filterColorOpts.filter('.active').data('filterColor') || '';
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _computeWidgetState: function (methodName, params) {
+        switch (methodName) {
+            case 'filterValue': {
+                return parseFloat(this.$filter.css('opacity')).toFixed(1);
+            }
+            case 'filterColor': {
+                const classes = this.filterColorClasses.split(' ');
+                for (const className of classes) {
+                    if (this.$filter.hasClass(className)) {
+                        return className;
+                    }
+                }
+                return '';
+            }
+        }
+        return this._super(...arguments);
     },
 });
 
