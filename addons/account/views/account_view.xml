@@ -356,6 +356,8 @@ action = model.setting_init_bank_account_action()
             </field>
         </record>
 
+        <menuitem action="action_new_bank_setting" id="menu_action_account_bank_journal_form" parent="root_payment_menu" groups="account.group_account_manager" sequence="1"/>
+
         <record id="action_account_journal_form" model="ir.actions.act_window">
             <field name="name">Journals</field>
             <field name="res_model">account.journal</field>
