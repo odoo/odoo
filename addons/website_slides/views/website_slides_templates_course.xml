@@ -309,7 +309,7 @@
                     </div>
                 </t>
             </div>
-            <button class="btn btn-sm d-md-none bg-white ml-1 border" type="button" data-toggle="collapse" data-target="#o_wslides_sidebar_collapse" aria-expanded="false" aria-controls="o_wslides_sidebar_collapse">More info</button>
+            <button t-attf-class="btn d-md-none bg-white ml-1 border #{'alert' if channel.is_member else ''} #{'align-self-start' if channel.is_member or channel.enroll == 'invite' else 'align-self-end'}" type="button" data-toggle="collapse" data-target="#o_wslides_sidebar_collapse" aria-expanded="false" aria-controls="o_wslides_sidebar_collapse">More info</button>
         </div>
 
         <div id="o_wslides_sidebar_collapse" class="collapse d-md-block">
@@ -453,88 +453,92 @@
 
 <!-- ======= Documentation Course content: cards / categories=======  -->
 <template id="course_slides_cards" name="Documentation Course content: cards / categories">
-    <nav class="navbar navbar-expand-lg navbar-light mb-4 border-bottom">
+    <div class="o_wslides_lesson_nav mb-4 border-bottom">
         <div class="container">
-            <a class="navbar-brand d-lg-none" href="#">Filter &amp; order</a>
+            <div class="row">
+                <nav class="navbar navbar-expand-lg navbar-light col d-flex align-items-start">
+                    <a class="navbar-brand d-lg-none" href="#">Filter &amp; order</a>
 
-            <div class="form-inline ml-auto d-lg-none" t-if="search_slide_type or search">
-                <a t-att-href="'/slides/%s' % (slug(channel))" class="btn btn-info mr-3">
-                    <i class="fa fa-eraser mr-1"/>Clear filters
-                </a>
-            </div>
-
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mr-lg-auto align-items-lg-center">
-
-                    <t t-set="slide_type_keys" t-value="slide_types.keys()"/>
-                    <t t-foreach="slide_type_keys" t-as="slide_type_key">
-                        <t t-if="search_category">
-                            <li t-if="search_category['nbr_%s' % slide_type_key] > 0" class="nav-item">
-                                <a t-att-href="'/slides/%s/category/%s?%s' % (slug(channel), slug(search_category), keep_query(slide_type=slide_type_key))"
-                                   t-att-class="'nav-link d-flex align-items-center justify-content-between pl-0 mr-1 %s' % ('active' if search_slide_type == slide_type_key else '')">
-                                   <t t-esc="slide_types[slide_type_key]"/>
-                                   <span t-attf-class="badge badge-pill ml-1 #{'badge-info' if search_slide_type == slide_type_key else 'bg-400'}" t-esc="search_category['nbr_%s' % slide_type_key]"/>
-                                </a>
-                            </li>
-                        </t>
-                        <t t-else="">
-                            <li t-if="channel['nbr_%s' % slide_type_key] > 0" class="nav-item">
-                                <a t-att-href="'/slides/%s?%s' % (slug(channel), keep_query(slide_type=slide_type_key))"
-                                   t-att-class="'nav-link d-flex align-items-center justify-content-between pl-0 mr-1 %s' % ('active' if search_slide_type == slide_type_key else '')">
-                                   <t t-esc="slide_types[slide_type_key]"/>
-                                   <span t-attf-class="badge badge-pill ml-1 #{'badge-info' if search_slide_type == slide_type_key else 'bg-400'}" t-esc="channel['nbr_%s' % slide_type_key]"/>
-                                </a>
-                            </li>
-                        </t>
-                    </t>
-                </ul>
-
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item dropdown ml-lg-auto">
-                        <a class="nav-link dropdown-toggle dropdown-toggle align-items-center d-flex" type="button" id="slidesChannelDropdownSort"
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#">
-                            <b>Order by</b>
-                            <span class="d-none d-xl-inline">:
-                                <t t-if="sorting == 'most_voted'">Most Voted</t>
-                                <t t-elif="sorting == 'most_viewed'">Most Viewed</t>
-                                <t t-else="">Newest</t>
-                            </span>
+                    <div class="form-inline ml-auto d-lg-none" t-if="search_slide_type or search">
+                        <a t-att-href="'/slides/%s' % (slug(channel))" class="btn btn-info mr-3">
+                            <i class="fa fa-eraser mr-1"/>Clear filters
                         </a>
-                        <div class="dropdown-menu" aria-labelledby="slidesChannelDropdownSort" role="menu">
-                            <h6 class="dropdown-header">Sort by</h6>
-                            <a role="menuitem" t-att-href="'/slides/%s?%s' % (slug(channel), keep_query('slide_type', sorting='latest'))"
-                               t-att-class="'dropdown-item %s' % ('active' if sorting and sorting == 'latest' else '')">Newest</a>
-                            <a role="menuitem" t-att-href="'/slides/%s?%s' % (slug(channel), keep_query('slide_type', sorting='most_voted'))"
-                               t-att-class="'dropdown-item %s' % ('active' if sorting and sorting == 'most_voted' else '')">Most Voted</a>
-                            <a role="menuitem" t-att-href="'/slides/%s?%s' % (slug(channel), keep_query('slide_type', sorting='most_viewed'))"
-                               t-att-class="'dropdown-item %s' % ('active' if sorting and sorting == 'most_viewed' else '')">Most Viewed</a>
-                        </div>
-                    </li>
-                </ul>
-
-                <div class="form-inline mr-3">
-                    <a t-if="search_slide_type or search" t-att-href="'/slides/%s' % (slug(channel))" class="btn btn-sm btn-info ml-1">
-                        <i class="fa fa-eraser mr-1"/>Clear filters
-                    </a>
-                </div>
-
-                <form t-attf-action="/slides/#{slug(channel)}" role="search" method="get" class="form-inline my-2 my-lg-0">
-                    <div class="input-group position-relative">
-                        <input type="text" class="form-control border" name="search" placeholder="Search in content" t-att-value="search"/>
-                        <div class="input-group-append">
-                            <button class="btn border" type="submit" aria-label="Search" title="Search">
-                                <i class="fa fa-search"/>
-                            </button>
-                        </div>
                     </div>
-                </form>
+
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav mr-lg-auto align-items-lg-center">
+
+                            <t t-set="slide_type_keys" t-value="slide_types.keys()"/>
+                            <t t-foreach="slide_type_keys" t-as="slide_type_key">
+                                <t t-if="search_category">
+                                    <li t-if="search_category['nbr_%s' % slide_type_key] > 0" class="nav-item">
+                                        <a t-att-href="'/slides/%s/category/%s?%s' % (slug(channel), slug(search_category), keep_query(slide_type=slide_type_key))"
+                                           t-att-class="'nav-link d-flex align-items-center justify-content-between pl-0 mr-1 %s' % ('active' if search_slide_type == slide_type_key else '')">
+                                           <t t-esc="slide_types[slide_type_key]"/>
+                                           <span t-attf-class="badge badge-pill ml-1 #{'badge-info' if search_slide_type == slide_type_key else 'bg-400'}" t-esc="search_category['nbr_%s' % slide_type_key]"/>
+                                        </a>
+                                    </li>
+                                </t>
+                                <t t-else="">
+                                    <li t-if="channel['nbr_%s' % slide_type_key] > 0" class="nav-item">
+                                        <a t-att-href="'/slides/%s?%s' % (slug(channel), keep_query(slide_type=slide_type_key))"
+                                           t-att-class="'nav-link d-flex align-items-center justify-content-between pl-0 mr-1 %s' % ('active' if search_slide_type == slide_type_key else '')">
+                                           <t t-esc="slide_types[slide_type_key]"/>
+                                           <span t-attf-class="badge badge-pill ml-1 #{'badge-info' if search_slide_type == slide_type_key else 'bg-400'}" t-esc="channel['nbr_%s' % slide_type_key]"/>
+                                        </a>
+                                    </li>
+                                </t>
+                            </t>
+                        </ul>
+
+                        <ul class="navbar-nav mr-auto">
+                            <li class="nav-item dropdown ml-lg-auto">
+                                <a class="nav-link dropdown-toggle dropdown-toggle align-items-center d-flex" type="button" id="slidesChannelDropdownSort"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#">
+                                    <b>Order by</b>
+                                    <span class="d-none d-xl-inline">:
+                                        <t t-if="sorting == 'most_voted'">Most Voted</t>
+                                        <t t-elif="sorting == 'most_viewed'">Most Viewed</t>
+                                        <t t-else="">Newest</t>
+                                    </span>
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="slidesChannelDropdownSort" role="menu">
+                                    <h6 class="dropdown-header">Sort by</h6>
+                                    <a role="menuitem" t-att-href="'/slides/%s?%s' % (slug(channel), keep_query('slide_type', sorting='latest'))"
+                                       t-att-class="'dropdown-item %s' % ('active' if sorting and sorting == 'latest' else '')">Newest</a>
+                                    <a role="menuitem" t-att-href="'/slides/%s?%s' % (slug(channel), keep_query('slide_type', sorting='most_voted'))"
+                                       t-att-class="'dropdown-item %s' % ('active' if sorting and sorting == 'most_voted' else '')">Most Voted</a>
+                                    <a role="menuitem" t-att-href="'/slides/%s?%s' % (slug(channel), keep_query('slide_type', sorting='most_viewed'))"
+                                       t-att-class="'dropdown-item %s' % ('active' if sorting and sorting == 'most_viewed' else '')">Most Viewed</a>
+                                </div>
+                            </li>
+                        </ul>
+
+                        <div class="form-inline mr-3 d-none d-lg-inline-block">
+                            <a t-if="search_slide_type or search" t-att-href="'/slides/%s' % (slug(channel))" class="btn btn-sm btn-info ml-1">
+                                <i class="fa fa-eraser mr-1"/>Clear filters
+                            </a>
+                        </div>
+
+                        <form t-attf-action="/slides/#{slug(channel)}" role="search" method="get" class="form-inline my-2 my-lg-0">
+                            <div class="input-group position-relative">
+                                <input type="text" class="form-control border" name="search" placeholder="Search in content" t-att-value="search"/>
+                                <div class="input-group-append">
+                                    <button class="btn border" type="submit" aria-label="Search" title="Search">
+                                        <i class="fa fa-search"/>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </nav>
             </div>
         </div>
-    </nav>
+    </div>
 
     <div t-if="channel.can_upload" class="text-right container pb-2">
         <a class="btn btn-primary py-1 o_wslides_js_slide_upload"
