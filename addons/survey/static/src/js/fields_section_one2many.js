@@ -5,6 +5,7 @@ var Context = require('web.Context');
 var FieldOne2Many = require('web.relational_fields').FieldOne2Many;
 var FieldRegistry = require('web.field_registry');
 var ListRenderer = require('web.ListRenderer');
+var config = require('web.config');
 
 var SectionListRenderer = ListRenderer.extend({
     init: function (parent, state, params) {
@@ -168,12 +169,13 @@ var SectionFieldOne2Many = FieldOne2Many.extend({
      * @param {*} ev
      */
     _onAddRecord: function (ev) {
-        var context_str = ev.data.context && ev.data.context[0];
-        var context = new Context(context_str).eval();
-        if (context['default_' + this.sectionFieldName]){
-            this.editable = "bottom";
-        } else {
-            this.editable = null;
+        this.editable = null;
+        if (!config.device.isMobile){
+            var context_str = ev.data.context && ev.data.context[0];
+            var context = new Context(context_str).eval();
+            if (context['default_' + this.sectionFieldName]){
+                this.editable = "bottom";
+            }
         }
         this._super.apply(this, arguments);
     },
