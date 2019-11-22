@@ -159,6 +159,16 @@ class ResConfigSettings(models.TransientModel):
             'res_id': False,
         }
 
+    def action_open_robots(self):
+        return {
+            'name': _("Robots.txt"),
+            'view_mode': 'form',
+            'res_model': 'website.robots',
+            'type': 'ir.actions.act_window',
+            "views": [[False, "form"]],
+            'target': 'new',
+        }
+
     def install_theme_on_current_website(self):
         self.website_id._force()
         action = self.env.ref('website.theme_install_kanban_action').read()[0]

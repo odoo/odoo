@@ -46,6 +46,19 @@
                 </form>
             </field>
         </record>
+
+        <record id="view_arch_only" model="ir.ui.view">
+            <field name="name">website.ir_ui_view.arch_only</field>
+            <field name="model">ir.ui.view</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <field name="arch"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
         <record id="view_website_form_view_themes_modal" model="ir.ui.view">
             <field name="name">website.modal.form</field>
             <field name="model">website</field>
