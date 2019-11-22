@@ -507,7 +507,7 @@ options.registry.navTabs = options.Class.extend({
      * @private
      */
     _generateUniqueIDs: function () {
-        for (var i = 0 ; i < this.$navLinks.length ; i++) {
+        for (var i = 0; i < this.$navLinks.length; i++) {
             var id = _.now() + '_' + _.uniqueId();
             var idLink = 'nav_tabs_link_' + id;
             var idContent = 'nav_tabs_content_' + id;
@@ -558,8 +558,8 @@ options.registry.sizing_x = options.registry.sizing.extend({
         var gridE = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
         var gridW = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
         this.grid = {
-            e: [_.map(gridE, function (v) { return 'col-lg-' + v; }), _.map(gridE, function (v) { return width/12*v; }), 'width'],
-            w: [_.map(gridW, function (v) { return 'offset-lg-' + v; }), _.map(gridW, function (v) { return width/12*v; }), 'margin-left'],
+            e: [_.map(gridE, v => ('col-lg-' + v)), _.map(gridE, v => width / 12 * v), 'width'],
+            w: [_.map(gridW, v => ('offset-lg-' + v)), _.map(gridW, v => width / 12 * v), 'margin-left'],
         };
         return this.grid;
     },
@@ -580,7 +580,7 @@ options.registry.sizing_x = options.registry.sizing.extend({
                 colSize = 1;
                 offset = beginOffset + beginCol - 1;
             }
-            this.$target.attr('class',this.$target.attr('class').replace(/\s*(offset-xl-|offset-lg-|col-lg-)([0-9-]+)/g, ''));
+            this.$target.attr('class', this.$target.attr('class').replace(/\s*(offset-xl-|offset-lg-|col-lg-)([0-9-]+)/g, ''));
 
             this.$target.addClass('col-lg-' + (colSize > 12 ? 12 : colSize));
             if (offset > 0) {
@@ -636,7 +636,7 @@ options.registry.layout_column = options.Class.extend({
 
         if (count > 0) {
             var $lastColumn = this.$target.children().last();
-            for (var i = 0 ; i < count ; i++) {
+            for (var i = 0; i < count; i++) {
                 $lastColumn.clone().insertAfter($lastColumn);
             }
         } else {
@@ -746,7 +746,7 @@ var FacebookPageDialog = weWidgets.Dialog.extend({
      */
     _renderPreview: function () {
         var self = this;
-        var match = this.fbData.href.match(/^(?:https?:\/\/)?(?:www\.)?(?:fb|facebook)\.com\/(?:([\w.]+)|[^/?#]+-([0-9]{15,16}))(?:$|[\/?# ])/);
+        var match = this.fbData.href.match(/^(?:https?:\/\/)?(?:www\.)?(?:fb|facebook)\.com\/(?:([\w.]+)|[^/?#]+-([0-9]{15,16}))(?:$|[/?# ])/);
         if (match) {
             // Check if the page exists on Facebook or not
             $.ajax({
@@ -801,7 +801,7 @@ var FacebookPageDialog = weWidgets.Dialog.extend({
     _onOptionChange: function () {
         var self = this;
         // Update values in fbData
-        this.fbData.tabs = _.map(this.$('.o_facebook_tabs input:checked'), function (tab) { return tab.name; }).join(',');
+        this.fbData.tabs = _.map(this.$('.o_facebook_tabs input:checked'), tab => tab.name).join(',');
         this.fbData.href = this.$('.o_facebook_page_url').val();
         _.each(this.$('.o_facebook_options input'), function (el) {
             self.fbData[el.name] = $(el).prop('checked');
@@ -938,8 +938,8 @@ options.registry.ul = options.Class.extend({
         this.$target.find('.o_ul_toggle_self, .o_ul_toggle_next').remove();
         this.$target.find('li:has(>ul,>ol)').map(function () {
             // get if the li contain a text label
-            var texts = _.filter(_.toArray(this.childNodes), function (a) { return a.nodeType === 3;});
-            if (!texts.length || !texts.reduce(function (a,b) { return a.textContent + b.textContent;}).match(/\S/)) {
+            var texts = _.filter(_.toArray(this.childNodes), a => (a.nodeType === 3));
+            if (!texts.length || !texts.reduce((a, b) => (a.textContent + b.textContent)).match(/\S/)) {
                 return;
             }
             $(this).children('ul,ol').addClass('o_close');
@@ -948,7 +948,7 @@ options.registry.ul = options.Class.extend({
         .prepend('<a href="#" class="o_ul_toggle_self fa" />');
         var $li = this.$target.find('li:has(+li:not(>.o_ul_toggle_self)>ul, +li:not(>.o_ul_toggle_self)>ol)');
         $li.css('list-style', this.$target.hasClass('o_ul_folded') ? 'none' : '');
-        $li.map(function () { return $(this).children()[0] || this; })
+        $li.map((i, el) => ($(el).children()[0] || el))
             .prepend('<a href="#" class="o_ul_toggle_next fa" />');
         $li.removeClass('o_open').next().addClass('o_close');
         this.$target.find('li').removeClass('o_open');
@@ -989,7 +989,7 @@ options.registry.collapse = options.Class.extend({
         var $panel = this.$target.find('.collapse').removeData('bs.collapse');
         if ($panel.attr('aria-expanded') === 'true') {
             $panel.closest('.accordion').find('.collapse[aria-expanded="true"]')
-                .filter(function () {return this !== $panel[0];})
+                .filter((i, el) => (el !== $panel[0]))
                 .collapse('hide')
                 .one('hidden.bs.collapse', function () {
                     $panel.trigger('shown.bs.collapse');
@@ -1017,20 +1017,20 @@ options.registry.collapse = options.Class.extend({
             tablist_id = 'myCollapse' + time;
             $tablist.attr('id', tablist_id);
         }
-        $tab.attr('data-parent', '#'+tablist_id);
-        $tab.data('parent', '#'+tablist_id);
+        $tab.attr('data-parent', '#' + tablist_id);
+        $tab.data('parent', '#' + tablist_id);
 
         // link to the collapse
         var $panel = this.$target.find('.collapse');
         var panel_id = $panel.attr('id');
         if (!panel_id) {
-            while ($('#'+(panel_id = 'myCollapseTab' + time)).length) {
+            while ($('#' + (panel_id = 'myCollapseTab' + time)).length) {
                 time++;
             }
             $panel.attr('id', panel_id);
         }
-        $tab.attr('data-target', '#'+panel_id);
-        $tab.data('target', '#'+panel_id);
+        $tab.attr('data-target', '#' + panel_id);
+        $tab.data('target', '#' + panel_id);
     },
 });
 
@@ -1111,7 +1111,7 @@ options.registry.gallery = options.Class.extend({
         var lastImage = _.last(this._getImages());
         var index = lastImage ? this._getIndex(lastImage) : -1;
         dialog.on('save', this, function (attachments) {
-            for (var i = 0 ; i < attachments.length; i++) {
+            for (var i = 0; i < attachments.length; i++) {
                 $('<img/>', {
                     class: 'img img-fluid',
                     src: attachments[i].image_src,
@@ -1280,10 +1280,10 @@ options.registry.gallery = options.Class.extend({
         });
         var currentInterval = this.$target.find('.carousel:first').attr('data-interval');
         var params = {
-            srcs : urls,
+            srcs: urls,
             index: 0,
             title: "",
-            interval : currentInterval || this.$target.data('interval') || 0,
+            interval: currentInterval || this.$target.data('interval') || 0,
             id: 'slideshow_' + new Date().getTime(),
             userStyle: imgStyle,
         },
