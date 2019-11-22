@@ -8,14 +8,14 @@ const utils = require('web.utils');
 const PopupWidget = publicWidget.Widget.extend({
     selector: '.s_popup',
     events: {
-        'click .s_popup_close': '_onCloseClick',
+        'click .js_close_popup': '_onCloseClick',
     },
 
     /**
      * @override
      */
     start: function () {
-        if (!utils.get_cookie(this.$target.attr('id'))) {
+        if (!utils.get_cookie(this.$el.attr('id'))) {
             this._bindPopup();
         }
         return this._super(...arguments);
@@ -77,8 +77,8 @@ const PopupWidget = publicWidget.Widget.extend({
      * @private
      */
     _onCloseClick: function () {
-        const nbDays = this.$target.find('.s_popup_main').data('consentsDelay');
-        utils.set_cookie(this.$target.attr('id'), true, nbDays * 24 * 60 * 60);
+        const nbDays = this.$el.find('.s_popup_main').data('consentsDuration');
+        utils.set_cookie(this.$el.attr('id'), true, nbDays * 24 * 60 * 60);
         this._hidePopup();
     },
 });

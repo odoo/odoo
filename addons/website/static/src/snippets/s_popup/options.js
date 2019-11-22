@@ -8,7 +8,10 @@ options.registry.SnippetPopup = options.Class.extend({
      * @override
      */
     start: function () {
-        this.$target.find('.s_popup_close').on('click', () => {
+        // Note: the link are excluded here so that internal modal buttons do
+        // not close the popup as we want to allow edition of those buttons.
+        this.$target.find('.js_close_popup:not(a, .btn)').on('click', ev => {
+            ev.stopPropagation();
             this.onTargetHide();
             this.trigger_up('snippet_option_visibility_update', {show: false});
         });

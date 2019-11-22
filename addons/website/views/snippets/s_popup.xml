@@ -4,10 +4,10 @@
 <template id="s_popup" name="Popup">
     <div class="s_popup o_snippet_invisible">
         <div class='modal s_popup_main popup_backdrop s_popup_center o_one_page bg-black-25 '
-             data-show-after="5000" data-display="afterDelay" data-consents-delay="7">
+             data-show-after="5000" data-display="afterDelay" data-consents-duration="7">
             <div class='modal-dialog modal-dialog-centered s_popup_frame modal-md'>
                 <div class='oe_structure modal-content s_popup_content oe_img_bg oe_custom_bg' style="background-color: #FFFFFF">
-                    <div class='s_popup_close o_we_no_overlay o_not_editable'>&amp;times;</div>
+                    <div class='js_close_popup s_popup_close o_we_no_overlay o_not_editable'>&amp;times;</div>
                     <section class="s_banner parallax pt96 pb96">
                         <span class="s_parallax_bg oe_img_bg oe_custom_bg" style="background-image: url('/web/image/website.s_banner_default_image');"></span>
                         <div class="container">
@@ -37,24 +37,27 @@
         <div data-js="SnippetPopup" data-selector=".s_popup" data-target=".s_popup_main">
             <we-select string="Position">
                 <we-button data-set-layout="modal" data-name="position_centered">Center</we-button>
-                <we-button data-set-layout="fixed">Bottom</we-button>
+                <we-button data-set-layout="fixed" data-name="position_bottom">Bottom</we-button>
             </we-select>
             <we-select string="Size" data-apply-to=".s_popup_frame">
                 <we-button data-select-class="modal-sm">Small</we-button>
-                <we-button data-select-class="modal-md">Medium</we-button>
+                <we-button data-select-class="modal-md" data-name="s_popup_size_md">Medium</we-button>
                 <we-button data-select-class="modal-lg">Large</we-button>
                 <we-button data-select-class="modal-xl">Big</we-button>
-                <we-button data-select-class="s_popup_full">Full</we-button>
+                <we-button data-select-class="s_popup_full" data-name="s_popup_size_full">Full</we-button>
             </we-select>
             <we-colorpicker string="Backdrop Color" data-select-style="true"
                 data-css-property="background-color" data-color-prefix="bg-" data-dependencies="position_centered"/>
+        </div>
+        <div data-js="SnippetPopup" data-selector=".s_popup" data-exclude="#website_cookies_bar" data-target=".s_popup_main">
             <we-colorpicker string="Text Color" data-select-style="true" data-css-property="color" data-color-prefix="text-"/>
             <we-select string="Display" data-attribute-name="display" data-attribute-default-value="always">
                 <we-button data-select-data-attribute="afterDelay" data-name="show_delay">Delay</we-button>
                 <we-button data-select-data-attribute="mouseExit">On Exit</we-button>
             </we-select>
             <we-input string="Delay" data-select-data-attribute="" data-attribute-name="showAfter" data-unit="s" data-save-unit="ms" data-dependencies="show_delay"/>
-            <we-input string="Period between consents" data-select-data-attribute="7days" data-attribute-name="consentsDelay" data-unit="days"/>
+            <t t-set="unit_popup_duration">days</t>
+            <we-input string="Hide For" title="Once the user closes the popup, it won't be shown again for that period of time." t-attf-data-select-data-attribute="7#{unit_popup_duration}" data-attribute-name="consentsDuration" t-att-data-unit="unit_popup_duration"/>
             <we-select string="Show on" data-no-preview="true">
                 <we-button data-move-block="moveToBody">This page</we-button>
                 <we-button data-move-block="moveToFooter">All pages</we-button>
