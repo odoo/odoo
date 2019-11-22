@@ -123,7 +123,7 @@
                                 </div>
                             </group>
                             <group string="Category" groups="base.group_no_one">
-                                <field name="category" widget="radio" />
+                                <field name="challenge_category" widget="radio" />
                             </group>
                         </page>
                     </notebook>
@@ -218,7 +218,7 @@
                 <filter name="inprogress" string="Running Challenges"
                     domain="[('state', '=', 'inprogress')]"/>
                 <filter name="hr_challenges" string="HR Challenges"
-                    domain="[('category', '=', 'hr')]"/>
+                    domain="[('challenge_category', '=', 'hr')]"/>
                 <field name="name"/>
                 <group expand="0" string="Group By">
                     <filter string="State" name="state" domain="[]" context="{'group_by':'state'}"/>

@@ -168,11 +168,10 @@ class WebsiteProfile(http.Controller):
         """
         domain = [('website_published', '=', True)]
         if 'badge_category' in kwargs:
-            domain = expression.AND([[('challenge_ids.category', '=', kwargs.get('badge_category'))], domain])
+            domain = expression.AND([[('challenge_ids.challenge_category', '=', kwargs.get('badge_category'))], domain])
         return domain
 
-    @http.route('/profile/ranks_badges', type='http', auth="public", website=True, sitemap=True)
-    def view_ranks_badges(self, **kwargs):
+    def _prepare_ranks_badges_values(self, **kwargs):
         ranks = []
         if 'badge_category' not in kwargs:
             Rank = request.env['gamification.karma.rank']
@@ -180,7 +179,7 @@ class WebsiteProfile(http.Controller):
 
         Badge = request.env['gamification.badge']
         badges = Badge.sudo().search(self._prepare_badges_domain(**kwargs))
-        badges = sorted(badges, key=lambda b: b.stat_count_distinct, reverse=True)
+        badges = badges.sorted("granted_users_count", reverse=True)
         values = self._prepare_user_values(searches={'badges': True})
 
         values.update({
@@ -188,6 +187,11 @@ class WebsiteProfile(http.Controller):
             'badges': badges,
             'user': request.env.user,
         })
+        return values
+
+    @http.route('/profile/ranks_badges', type='http', auth="public", website=True, sitemap=True)
+    def view_ranks_badges(self, **kwargs):
+        values = self._prepare_ranks_badges_values(**kwargs)
         return request.render("website_profile.rank_badge_main", values)
 
     # All Users Page

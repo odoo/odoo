@@ -423,33 +423,40 @@
     </template>
 
     <template id="badge_content" name="Badges Page content">
-        <div class="row">
-            <div class="col-12">
-                <h1 class="mt-4 mt-lg-2">Badges</h1>
-                <p class="lead">
-                    Besides gaining reputation with your questions and answers,
-                    you receive badges for being especially helpful.<br class="d-none d-lg-inline-block"/>Badges
-                    appear on your profile page, and your posts.
-                </p>
+        <div id="website_profile_badges">
+            <div class="row">
+                <div class="col-12">
+                    <h1 class="mt-4 mt-lg-2">Badges</h1>
+                    <p class="lead">
+                        Besides gaining reputation with your questions and answers,
+                        you receive badges for being especially helpful.<br class="d-none d-lg-inline-block"/>Badges
+                        appear on your profile page, and your posts.
+                    </p>
+                </div>
+            </div>
+            <div class="row col-12 align-items-center p-0" t-foreach="badges" t-as="badge">
+                <div class="col-3 d-flex align-items-center">
+                    <t t-call="website_profile.badge_header"/>
+                </div>
+                <div class="col-6">
+                    <span t-field="badge.description"/>
+                </div>
+                <div class="col-3 text-right">
+                    <b t-esc="badge.granted_users_count"/>
+                    <i class="text-muted"> awarded users</i>
+                </div>
             </div>
         </div>
-        <table class="table table-sm mb64">
-            <tr t-foreach="badges" t-as="badge">
-                <td class="align-middle">
-                    <img t-if="not badge.image_1920 and badge.level" t-attf-src="/website_profile/static/src/img/badge_#{badge.level}.svg"
-                         class="my-1" style="height:2.5em" t-att-alt="badge.name"/>
-                    <img t-else="" t-att-src="website.image_url(badge, 'image_1024')" class="my-1" style="height:2.5em" t-att-alt="badge.name"/>
-                    <h6 t-field="badge.name" class="d-inline my-0"/>
-                </td>
-                <td class="align-middle d-none d-md-table-cell">
-                    <b t-esc="badge.stat_count_distinct"/>
-                    <i class="text-muted"> awarded users</i>
-                </td>
-                <td class="align-middle">
-                    <span t-field="badge.description"/>
-                </td>
-            </tr>
-        </table>
+    </template>
+
+    <template id="badge_header">
+        <img t-if="not badge.image_1920 and badge.level" t-attf-src="/website_profile/static/src/img/badge_#{badge.level}.svg"
+                class="my-1 mr-1 wprofile_badge_img" t-att-alt="badge.name"/>
+        <img t-else="" t-att-src="website.image_url(badge, 'image_1024')" class="my-1 mr-1 wprofile_badge_img" t-att-alt="badge.name"/>
+        <a t-if="badge_url" t-att-href="badge_url">
+            <h6 t-field="badge.name" class="d-inline my-0"/>
+        </a>
+        <h6 t-else="" t-field="badge.name" class="d-inline my-0"/>
     </template>
 
     <!--Private profile-->

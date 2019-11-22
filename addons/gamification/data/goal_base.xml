@@ -297,7 +297,7 @@ Thank you,
             <field name="report_message_frequency">never</field>
             <field name="user_domain" eval="str([('groups_id.id', '=', ref('base.group_user'))])" />
             <field name="state">inprogress</field>
-            <field name="category">other</field>
+            <field name="challenge_category">other</field>
         </record>
 
         <record model="gamification.challenge" id="challenge_base_configure">
@@ -307,7 +307,7 @@ Thank you,
             <field name="report_message_frequency">never</field>
             <field name="user_domain" eval="str([('groups_id.id', '=', ref('base.group_erp_manager'))])" />
             <field name="state">inprogress</field>
-            <field name="category">other</field>
+            <field name="challenge_category">other</field>
         </record>
 
         <!-- lines -->
