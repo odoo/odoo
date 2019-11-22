@@ -934,6 +934,13 @@
 <t t-translation="off">
 User-agent: *
 Sitemap: <t t-esc="url_root"/>sitemap.xml
+
+
+##############
+#   custom   #
+##############
+
+<t t-raw="request.website.sudo().robots_txt" />
 </t>
 </template>
 
