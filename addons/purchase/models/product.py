@@ -26,7 +26,7 @@ class ProductTemplate(models.Model):
 
     def _compute_purchased_product_qty(self):
         for template in self:
-            template.purchased_product_qty = float_round(sum([p.purchased_product_qty for p in template.product_variant_ids]), precision_rounding=template.uom_id.rounding)
+            template.purchased_product_qty = float_round(sum(template.product_variant_ids.mapped('purchased_product_qty')), precision_rounding=template.uom_id.rounding)
 
     @api.model
     def get_import_templates(self):
@@ -62,7 +62,6 @@ class ProductProduct(models.Model):
             ('product_id', 'in', self.ids),
             ('date_order', '>', date_from)
         ]
-        PurchaseOrderLines = self.env['purchase.order.line'].search(domain)
         order_lines = self.env['purchase.order.line'].read_group(domain, ['product_id', 'product_uom_qty'], ['product_id'])
         purchased_data = dict([(data['product_id'][0], data['product_uom_qty']) for data in order_lines])
         for product in self:
