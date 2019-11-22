@@ -531,6 +531,11 @@ class Task(models.Model):
     # customer portal: include comment and incoming emails in communication history
     website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', 'in', ['email', 'comment'])])
 
+    @api.constrains('parent_id')
+    def _check_parent_id(self):
+        if not self._check_recursion():
+            raise ValidationError(_('Error! You cannot create recursive hierarchy of tasks.'))
+
     @api.depends('date_deadline')
     def _compute_date_deadline_formatted(self):
         for task in self:
@@ -699,6 +704,8 @@ class Task(models.Model):
 
     def write(self, vals):
         now = fields.Datetime.now()
+        if 'parent_id' in vals and vals['parent_id'] in self.ids:
+            raise UserError(_("Sorry. You can't set a task as its parent task."))
         # stage change: update date_last_stage_update
         if 'stage_id' in vals:
             vals.update(self.update_date_end(vals['stage_id']))
