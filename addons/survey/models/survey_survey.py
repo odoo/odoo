@@ -705,6 +705,8 @@ class Survey(models.Model):
     # ------------------------------------------------------------
     # GAMIFICATION / BADGES
     # ------------------------------------------------------------
+    def _prepare_challenge_category(self):
+        return 'certification'
 
     def _create_certification_badge_trigger(self):
         self.ensure_one()
@@ -725,7 +727,7 @@ class Survey(models.Model):
             'reward_id': self.certification_badge_id.id,
             'state': 'inprogress',
             'period': 'once',
-            'category': 'certification',
+            'challenge_category': self._prepare_challenge_category(),
             'reward_realtime': True,
             'report_message_frequency': 'never',
             'user_domain': [('karma', '>', 0)],

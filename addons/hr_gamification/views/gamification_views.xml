@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="gamification.badge_form_view"/>
             <field name="arch" type="xml">
                 <div name="button_box" position="inside">
-                    <button class="oe_stat_button" type="object" name="get_granted_employees" attrs="{'invisible': [('stat_count','=',0)]}" icon="fa-user">
+                    <button class="oe_stat_button" type="object" name="get_granted_employees" attrs="{'invisible': [('granted_count','=',0)]}" icon="fa-user">
                         <field name="granted_employees_count" string="Granted" widget="statinfo"/>
                     </button>
                 </div>
@@ -19,7 +19,7 @@
             <field name="name">Goals History</field>
             <field name="view_mode">tree,kanban</field>
             <field name="context">{'search_default_group_by_user': True, 'search_default_group_by_definition': True}</field>
-            <field name="domain">[('challenge_id.category', '=', 'hr')]</field>
+            <field name="domain">[('challenge_id.challenge_category', '=', 'hr')]</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Create a new goal
@@ -35,7 +35,7 @@
             <field name="name">Challenges</field>
             <field name="res_model">gamification.challenge</field>
             <field name="view_mode">kanban,tree,form</field>
-            <field name="domain">[('category', '=', 'hr')]</field>
+            <field name="domain">[('challenge_category', '=', 'hr')]</field>
             <field name="context">{'search_default_inprogress':True, 'default_inprogress':True}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
