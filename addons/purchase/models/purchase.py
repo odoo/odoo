@@ -165,7 +165,7 @@ class PurchaseOrder(models.Model):
     def write(self, vals):
         res = super(PurchaseOrder, self).write(vals)
         if vals.get('date_planned'):
-            self.order_line.write({'date_planned': vals['date_planned']})
+            self.order_line.filtered(lambda line: not line.display_type).date_planned = vals['date_planned']
         return res
 
     def unlink(self):
