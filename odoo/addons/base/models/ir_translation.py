@@ -160,8 +160,8 @@ class IrTranslation(models.Model):
     res_id = fields.Integer(string='Record ID', index=True)
     lang = fields.Selection(selection='_get_languages', string='Language', validate=False)
     type = fields.Selection(TRANSLATION_TYPE, string='Type', index=True)
-    src = fields.Text(string='Internal Source')  # stored in database, kept for backward compatibility
-    value = fields.Text(string='Translation Value')
+    src = fields.Text(string='Source Term')  # stored in database, kept for backward compatibility
+    value = fields.Text(string='Translation')
     module = fields.Char(index=True, help="Module this term belongs to")
 
     state = fields.Selection([('to_translate', 'To Translate'),
