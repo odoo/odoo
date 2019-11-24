@@ -10,11 +10,11 @@
 # Marcelo Pereira <marcelo.pereira@arxi.pt>, 2019
 # Martin Trigaux, 2019
 # Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2019
-# Manuela Silva <manuelarodsilva@gmail.com>, 2019
 # Pedro Castro Silva <pedrocs@exo.pt>, 2019
 # Nuno Silva <nuno.silva@arxi.pt>, 2019
 # Diogo Fonseca <dsf@thinkopensolutions.pt>, 2019
 # Pedro Filipe <pedro2.10@hotmail.com>, 2019
+# Manuela Silva <manuelarodsilva@gmail.com>, 2019
 # Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2019
 # 
 msgid ""
@@ -292,7 +292,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Quantity to Produce:</strong><br/>"
-msgstr ""
+msgstr "<strong>Quantidade a Produzir:</strong><br/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_productivity_loss_kanban
@@ -564,7 +564,7 @@ msgstr "Disponível"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "Avatar"
-msgstr ""
+msgstr "Avatar"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_product_product__produce_delay
@@ -855,12 +855,12 @@ msgstr ""
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_change_production_qty
 msgid "Change Quantity To Produce"
-msgstr ""
+msgstr "Alterar a Quantidade a Produzir"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Check availability"
-msgstr ""
+msgstr "Verificar Disponibilidade"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__checksum
@@ -1457,7 +1457,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.actions.report,name:mrp.action_report_finished_product
 msgid "Finished Product Label (PDF)"
-msgstr ""
+msgstr "Etiqueta do Produto Acabado (PDF)"
 
 #. module: mrp
 #: model:ir.actions.report,name:mrp.label_manufacture_template
@@ -3109,7 +3109,7 @@ msgstr "Quantidade Reservada"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_remaining
 msgid "Quantity To Be Produced"
-msgstr ""
+msgstr "Quantidade a Produzir"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_product_produce_line_kanban
@@ -3120,7 +3120,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty__product_qty
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__product_qty
 msgid "Quantity To Produce"
-msgstr ""
+msgstr "Quantidade a Produzir"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -3853,7 +3853,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_production_qty_positive
 msgid "The quantity to produce must be positive!"
-msgstr ""
+msgstr "A quantidade a produzir tem que ser positiva!"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_document__res_id
@@ -4313,6 +4313,8 @@ msgid ""
 "Use the Produce button or process the work orders to create some finished "
 "products."
 msgstr ""
+"Use o botão Produzir ou processe as ordens de produção para criar alguns "
+"artigos acabados."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
@@ -4757,6 +4759,12 @@ msgstr ""
 msgid ""
 "You cannot consume the same serial number twice. Please correct the serial "
 "numbers encoded."
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid "You cannot create a new Bill of Material from here."
 msgstr ""
 
 #. module: mrp
