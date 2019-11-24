@@ -8,6 +8,7 @@
 # Dejan Sraka <dejan.sraka@picolabs.si>, 2018
 # Matjaz Mozetic <m.mozetic@matmoz.si>, 2019
 # Jasmina Macur <jasmina@hbs.si>, 2019
+# Tadej Lupšina <tadej@hbs.si>, 2019
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-19 13:43+0000\n"
 "PO-Revision-Date: 2017-09-20 10:15+0000\n"
-"Last-Translator: Jasmina Macur <jasmina@hbs.si>, 2019\n"
+"Last-Translator: Tadej Lupšina <tadej@hbs.si>, 2019\n"
 "Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -78,12 +79,12 @@ msgstr "Vedno"
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule_name
 msgid "An internal identification for this barcode nomenclature rule"
-msgstr ""
+msgstr "Notranja identifikacija tega pravila nomenklature črtne kode"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature_name
 msgid "An internal identification of the barcode nomenclature"
-msgstr ""
+msgstr "Notranja identifikacija nomenklature črtne kode"
 
 #. module: barcodes
 #: code:addons/barcodes/models/barcodes.py:177
@@ -96,7 +97,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule_barcode_nomenclature_id
 #: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid "Barcode Nomenclature"
-msgstr ""
+msgstr "Nomenklatura črtne kode"
 
 #. module: barcodes
 #: model:ir.actions.act_window,name:barcodes.action_barcode_nomenclature_form
@@ -107,22 +108,22 @@ msgstr "Nomenklatura črtne kode"
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule_pattern
 msgid "Barcode Pattern"
-msgstr ""
+msgstr "Vzorec črtne kode"
 
 #. module: barcodes
 #: model:ir.ui.view,arch_db:barcodes.view_barcode_rule_form
 msgid "Barcode Rule"
-msgstr ""
+msgstr "Pravilo črtne kode"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin__barcode_scanned
 msgid "Barcode Scanned"
-msgstr ""
+msgstr "Skenirana črtna koda"
 
 #. module: barcodes
 #: selection:barcode.rule,type:0
 msgid "Cashier"
-msgstr ""
+msgstr "Prodajalec"
 
 #. module: barcodes
 #: model:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
@@ -161,7 +162,7 @@ msgstr "Opusti"
 #. module: barcodes
 #: selection:barcode.rule,type:0
 msgid "Discounted Product"
-msgstr ""
+msgstr "Izdelek s popustom"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_display_name
@@ -178,17 +179,17 @@ msgstr "EAN-13"
 #. module: barcodes
 #: selection:barcode.nomenclature,upc_ean_conv:0
 msgid "EAN-13 to UPC-A"
-msgstr ""
+msgstr "EAN-13 do UPC-A"
 
 #. module: barcodes
 #: selection:barcode.rule,encoding:0
 msgid "EAN-8"
-msgstr ""
+msgstr "EAN-8"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule_encoding
 msgid "Encoding"
-msgstr ""
+msgstr "Kodiranje"
 
 #. module: barcodes
 #. openerp-web
@@ -281,7 +282,7 @@ msgstr ""
 #. module: barcodes
 #: selection:barcode.rule,type:0
 msgid "Priced Product"
-msgstr ""
+msgstr "Cenovni izdelek"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule_name
@@ -310,27 +311,27 @@ msgstr "Zaporedje"
 #: code:addons/barcodes/static/src/js/barcode_form_view.js:351
 #, python-format
 msgid "Set quantity"
-msgstr ""
+msgstr "Nastavite količino"
 
 #. module: barcodes
 #: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid "Tables"
-msgstr ""
+msgstr "Razpredelnice"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule_pattern
 msgid "The barcode matching pattern"
-msgstr ""
+msgstr "Vzorec ujemanja črtne kode"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature_rule_ids
 msgid "The list of barcode rules"
-msgstr ""
+msgstr "Seznam pravil črtne kode"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule_alias
 msgid "The matched pattern will alias to this barcode"
-msgstr ""
+msgstr "Ujemajoči se vzorec bo vzporeden s to črtno kodo"
 
 #. module: barcodes
 #: code:addons/barcodes/models/barcodes.py:196
@@ -345,21 +346,21 @@ msgstr ""
 msgid ""
 "This rule will apply only if the barcode is encoded with the specified "
 "encoding"
-msgstr ""
+msgstr "To pravilo velja samo, če je črtna koda kodirana s podano kodiranjem"
 
 #. module: barcodes
 #. openerp-web
 #: code:addons/barcodes/static/src/js/barcode_form_view.js:64
 #, python-format
 msgid "To modify this document, please first start edition."
-msgstr ""
+msgstr "Če želite spremeniti ta dokument, najprej začnite izdajo."
 
 #. module: barcodes
 #. openerp-web
 #: code:addons/barcodes/static/src/js/barcode_form_view.js:333
 #, python-format
 msgid "To set the quantity please scan a barcode first."
-msgstr ""
+msgstr "Če želite nastaviti količino, najprej skenirajte črtno kodo."
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule_type
@@ -377,39 +378,41 @@ msgstr ""
 #. module: barcodes
 #: selection:barcode.rule,encoding:0
 msgid "UPC-A"
-msgstr ""
+msgstr "UPC-A"
 
 #. module: barcodes
 #: selection:barcode.nomenclature,upc_ean_conv:0
 msgid "UPC-A to EAN-13"
-msgstr ""
+msgstr "UPC-A do EAN-13"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_upc_ean_conv
 msgid "UPC/EAN Conversion"
-msgstr ""
+msgstr "UPC/EAN pretvorba"
 
 #. module: barcodes
 #: code:addons/barcodes/models/barcodes.py:184 selection:barcode.rule,type:0
 #, python-format
 msgid "Unit Product"
-msgstr ""
+msgstr "Enota izdelka"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule_sequence
 msgid ""
 "Used to order rules such that rules with a smaller sequence match first"
 msgstr ""
+"Uporablja se za naročanje takšnih pravil, da se pravila z manjšim zaporedjem"
+" najprej ujemajo"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcodes_barcode_events_mixin__barcode_scanned
 msgid "Value of the last barcode scanned."
-msgstr ""
+msgstr "Vrednost zadnje skenirane črtne kode."
 
 #. module: barcodes
 #: selection:barcode.rule,type:0
 msgid "Weighted Product"
-msgstr ""
+msgstr "Uteženi izdelek"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcode_nomenclature
