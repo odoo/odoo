@@ -19,6 +19,7 @@
 # inspur qiuguodong <qiuguodong@inspur.com>, 2019
 # Jeffery CHEN <jeffery9@gmail.com>, 2019
 # 张宏奎 <zhanghongkui@inspur.com>, 2019
+# tian tian <qq32150218@gmail.com>, 2019
 # Jerry Pan <panjianyu@inspur.com>, 2019
 # 
 msgid ""
@@ -199,6 +200,9 @@ msgid ""
 "<span class=\"o_form_label\" attrs=\"{'invisible': [('state','not in',('draft','sent'))]}\">Request for Quotation </span>\n"
 "                        <span class=\"o_form_label\" attrs=\"{'invisible': [('state','in',('draft','sent'))]}\">Purchase Order </span>"
 msgstr ""
+"<span class=\"o_form_label\" attrs=\"{'invisible': "
+"[('state','in',('draft','sent'))]}\">采购单<span class=\"o_form_label\" "
+"attrs=\"{'invisible': [('state','not in',('draft','sent'))]}\">询价单"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
@@ -2027,7 +2031,7 @@ msgstr "供应商账单"
 #: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_account_buttons
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 msgid "Vendor Bills"
-msgstr "供应商帐单"
+msgstr "供应商账单"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search

@@ -4,7 +4,7 @@
 # 
 # Translators:
 # William Surya Permana <zarambie_game@yahoo.com>, 2019
-# oon arfiandwi (OonID) <oon.arfiandwi@gmail.com>, 2019
+# oon arfiandwi <oon.arfiandwi@gmail.com>, 2019
 # Edy Kend <edy@azmall.co.id>, 2019
 # Febrasari Almania <febrasari.almania@gmail.com>, 2019
 # Muhammad Syarif <mhdsyarif.ms@gmail.com>, 2019
@@ -148,7 +148,7 @@ msgid ""
 "                    <li>Description: ${object.event_id.description}</li>\n"
 "                % endif\n"
 "                % if not object.event_id.allday and object.event_id.duration\n"
-"                    <li>Duration: ${('%dH%02d' % (object.event_id.duration,(object.event_id.duration*60)%60))}</li>\n"
+"                    <li>Duration: ${('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60))}</li>\n"
 "                % endif\n"
 "                <li>Attendees\n"
 "                <ul>\n"
@@ -221,7 +221,7 @@ msgid ""
 "                    <li>Description: ${object.event_id.description}</li>\n"
 "                % endif\n"
 "                % if not object.event_id.allday and object.event_id.duration\n"
-"                    <li>Duration: ${('%dH%02d' % (object.event_id.duration,(object.event_id.duration*60)%60))}</li>\n"
+"                    <li>Duration: ${('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60))}</li>\n"
 "                % endif\n"
 "                <li>Attendees\n"
 "                <ul>\n"
