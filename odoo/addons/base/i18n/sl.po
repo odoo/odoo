@@ -11,10 +11,10 @@
 # matjaz k <matjaz@mentis.si>, 2019
 # jl2035 <jaka.luthar@gmail.com>, 2019
 # Boris Kodelja <boris@hbs.si>, 2019
-# Tadej Lupšina <tadej@hbs.si>, 2019
 # Grega Vavtar <grega@hbs.si>, 2019
 # Martin Trigaux, 2019
 # Matjaz Mozetic <m.mozetic@matmoz.si>, 2019
+# Tadej Lupšina <tadej@hbs.si>, 2019
 # Jasmina Macur <jasmina@hbs.si>, 2019
 # 
 msgid ""
@@ -2249,54 +2249,6 @@ msgid ""
 "\n"
 "    "
 msgstr ""
-"\n"
-"EU Mini One Stop Shop (MOSS) VAT for telecommunications, broadcasting and electronic services\n"
-"=============================================================================================\n"
-"\n"
-"As of January 1rst, 2015, telecommunications, broadcasting\n"
-"and electronic services sold within the European Union\n"
-"have to be always taxed in the country where the customer\n"
-"belongs. In order to simplify the application of this EU\n"
-"directive, the Mini One Stop Shop (MOSS) registration scheme\n"
-"allows businesses to make a unique tax declaration.\n"
-"\n"
-"This module makes it possible by helping with the creation\n"
-"of the required EU fiscal positions and taxes in order to\n"
-"automatically apply and record the required taxes.\n"
-"\n"
-"This module installs a wizard to help setup fiscal positions\n"
-"and taxes for selling electronic services inside EU.\n"
-"\n"
-"The wizard lets you select:\n"
-" - the EU countries to which you are selling these\n"
-"   services\n"
-" - your national VAT tax for services, to be mapped\n"
-"   to the target country's tax\n"
-" - optionally: a template fiscal position, in order\n"
-"   to copy the account mapping. Should be your\n"
-"   existing B2C Intra-EU fiscal position. (defaults\n"
-"   to no account mapping)\n"
-" - optionally: an account to use for collecting the\n"
-"   tax amounts (defaults to the account used by your\n"
-"   national VAT tax for services)\n"
-"\n"
-"It creates the corresponding fiscal positions and taxes,\n"
-"automatically applicable for EU sales with a customer\n"
-"in the selected countries.\n"
-"The wizard can be run again for adding more countries.\n"
-"\n"
-"The wizard creates a separate Chart of Taxes for collecting the\n"
-"VAT amounts of the MOSS declaration, so extracting the MOSS\n"
-"data should be easy.\n"
-"Look for a Chart of Taxes named \"EU MOSS VAT Chart\" in the\n"
-"Taxes Report menu (Generic Accounting Report).\n"
-"\n"
-"References\n"
-"++++++++++\n"
-"- Directive 2008/8/EC\n"
-"- Council Implementing Regulation (EU) No 1042/2013\n"
-"\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_utm
@@ -4842,6 +4794,8 @@ msgid ""
 "\n"
 "This module allows you to set a deferred revenue on your subscriptions.\n"
 msgstr ""
+"\n"
+"Ta modul omogoča nastavitev odloženega dohodka oz. časovne razmejitve za naročnine.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_mass_mailing
@@ -5027,13 +4981,6 @@ msgid ""
 "from sales order. It adds sales name and sales Reference on production order.\n"
 "    "
 msgstr ""
-"\n"
-"This module provides facility to the user to install mrp and sales modulesat a time.\n"
-"====================================================================================\n"
-"\n"
-"It is basically used when we want to keep track of production orders generated\n"
-"from sales order. It adds sales name and sales Reference on production order.\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_iot
@@ -5832,8 +5779,7 @@ msgid ""
 "<span class=\"o_form_label\">Click on Update below to start the "
 "process...</span>"
 msgstr ""
-"<span class=\"o_form_label\">Za začetek postopka kliknite Posodobi spodaj "
-"...</span>"
+"<span class=\"o_form_label\">Kliknite posodobi za zagon procesa ...</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_language_install
@@ -8367,7 +8313,7 @@ msgstr ""
 #: code:addons/base/models/ir_translation.py:256
 #, python-format
 msgid "Cannot be translated; record not accessible."
-msgstr ""
+msgstr "Ni mogoče prevesti; zapis ni dostopen."
 
 #. module: base
 #: code:addons/base/models/res_lang.py:228
@@ -9396,7 +9342,7 @@ msgstr "Ustvari novo banko"
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_res_company_form
 msgid "Create a new company"
-msgstr ""
+msgstr "Ustvari novo podjetje"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_category_form
@@ -9412,12 +9358,12 @@ msgstr "Ustvarite novo stranko v svojem imeniku"
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.res_partner_industry_action
 msgid "Create a new industry"
-msgstr ""
+msgstr "Ustvari novo industrijo"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_supplier_form
 msgid "Create a new vendor in your address book"
-msgstr ""
+msgstr "Ustvarite novega dobavitelja v svojem imeniku"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_web_studio
@@ -10089,7 +10035,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_deferred_revenue
 msgid "Deferred Revenues"
-msgstr "Odloženi prihodki"
+msgstr "Časovne razmejitve"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_subscription_asset
@@ -10672,6 +10618,7 @@ msgstr "Spustni seznam"
 msgid ""
 "Duplicating a company is not allowed. Please create a new company instead."
 msgstr ""
+"Podvajanje podjetja ni dovoljeno. Namesto tega ustvarite novo podjetje."
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_E
@@ -11063,7 +11010,7 @@ msgstr "Kadri"
 #. module: base
 #: selection:ir.attachment,type:0
 msgid "Empty"
-msgstr ""
+msgstr "Prazno"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:479
@@ -12914,7 +12861,7 @@ msgid ""
 "Helps you manage your inventory and main stock operations: delivery orders, "
 "receptions, etc."
 msgstr ""
-"Pomaga pri upravljanju inventarja in glavnih operacij zaloge: dostavni "
+"Pomaga pri upravljanju inventarja in glavnih operacij zaloge: dobavni "
 "nalogi, sprejemi, itd."
 
 #. module: base
@@ -18712,7 +18659,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_sale_timesheet
 msgid "Project, Helpdesk, Timesheet and Sale Orders"
-msgstr "Projekt, Služb aza pomoč, Časovnice in Prodajni nalog"
+msgstr "Projekt, služba za pomoč, časovnice in prodajni nalogi"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_timesheet

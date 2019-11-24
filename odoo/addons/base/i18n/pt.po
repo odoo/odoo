@@ -19,9 +19,9 @@
 # Nuno Silva <nuno.silva@arxi.pt>, 2019
 # Martin Trigaux, 2019
 # Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2019
-# Manuela Silva <manuelarodsilva@gmail.com>, 2019
 # Pedro Castro Silva <pedrocs@exo.pt>, 2019
 # Pedro Filipe <pedro2.10@hotmail.com>, 2019
+# Manuela Silva <manuelarodsilva@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -29,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 08:02+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Pedro Filipe <pedro2.10@hotmail.com>, 2019\n"
+"Last-Translator: Manuela Silva <manuelarodsilva@gmail.com>, 2019\n"
 "Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5042,6 +5042,18 @@ msgid ""
 "project.\n"
 "        "
 msgstr ""
+"\n"
+"Integração com Transifex\n"
+"=====================\n"
+"This module will add a link to the Transifex project in the translation view.\n"
+"The purpose of this module is to speed up translations of the main modules.\n"
+"\n"
+"To work, Odoo uses Transifex configuration files `.tx/config` to detec the\n"
+"project source. Custom modules will not be translated (as not published on\n"
+"the main Transifex project).\n"
+"\n"
+"O idioma que o utilizador tenta traduzir deve ser be ativado no projeto Transifex.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_tr
@@ -5729,6 +5741,10 @@ msgid ""
 "                                <span colspan=\"2\">Minute: %(min)s</span>\n"
 "                                <span colspan=\"2\">Second: %(sec)s</span>"
 msgstr ""
+"<span colspan=\"2\">Horas 00-&gt;24: %(h24)s</span>\n"
+"                                <span colspan=\"2\">Horas 00-&gt;12: %(h12)s</span>\n"
+"                                <span colspan=\"2\">Minuto: %(min)s</span>\n"
+"                                <span colspan=\"2\">Segundo: %(sec)s</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
@@ -6437,7 +6453,7 @@ msgstr "Conta TaxCloud"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_account_taxcloud
 msgid "Account TaxCloud - Ecommerce"
-msgstr ""
+msgstr "Conta TaxCloud - Ecommerce"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_account_taxcloud
@@ -6590,7 +6606,7 @@ msgstr "Utilização da Ação"
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_act_window
 msgid "Action Window"
-msgstr ""
+msgstr "Janela de Ação"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_act_window_close
@@ -7465,7 +7481,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
 msgid "Avatar"
-msgstr ""
+msgstr "Avatar"
 
 #. module: base
 #: model:res.country,name:base.az
@@ -7683,7 +7699,7 @@ msgstr "Campo Base"
 #: code:addons/base/models/res_lang.py:240
 #, python-format
 msgid "Base Language 'en_US' can not be deleted."
-msgstr ""
+msgstr "O idioma base 'en_US' não pode ser eliminado."
 
 #. module: base
 #: selection:ir.model,state:0
@@ -8070,7 +8086,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_enterprise
 msgid "CRM enterprise"
-msgstr ""
+msgstr "CRM empresa"
 
 #. module: base
 #: selection:base.language.export,format:0
@@ -8204,6 +8220,7 @@ msgstr ""
 #, python-format
 msgid "Cannot deactivate a language that is currently used by users."
 msgstr ""
+"Não é possível desativar um idioma utilizado atualmente pelos utilizadores."
 
 #. module: base
 #: code:addons/base/models/res_config.py:388
@@ -8510,7 +8527,7 @@ msgstr "Cidade"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_address_city
 msgid "City Addresses"
-msgstr ""
+msgstr "Moradas"
 
 #. module: base
 #: selection:ir.logging,type:0
@@ -8877,7 +8894,7 @@ msgstr "Assistentes de Configuração"
 #. module: base
 #: model:ir.module.module,summary:base.module_timesheet_grid_sale
 msgid "Configure timesheet invoicing"
-msgstr ""
+msgstr "Configurar faturação do registo de horas"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
@@ -9220,7 +9237,7 @@ msgstr "criar uma conta bancária "
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_ui_view_custom
 msgid "Create a customized view"
-msgstr ""
+msgstr "Criar uma visualização personalizada"
 
 #. module: base
 #: selection:ir.actions.server,state:0
@@ -9733,7 +9750,7 @@ msgstr "Data for xml conversion tests"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Data to Write"
-msgstr ""
+msgstr "Dados a Gravar"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_search_view
@@ -12191,7 +12208,7 @@ msgstr "Configurações Gerais"
 #: model:ir.ui.menu,name:base.menu_wizard_update_translations
 #: model_terms:ir.ui.view,arch_db:base.wizard_update_translations
 msgid "Generate Missing Terms"
-msgstr ""
+msgstr "Gerar Termos em Falta"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm
@@ -12526,7 +12543,7 @@ msgstr "Grupos (sem grupo = global)"
 #. module: base
 #: model:res.country,name:base.gp
 msgid "Guadeloupe"
-msgstr ""
+msgstr "Guadalupe"
 
 #. module: base
 #: model:res.country,name:base.gu
@@ -14148,7 +14165,7 @@ msgstr "Idioma"
 #. module: base
 #: model:ir.model,name:base.model_base_language_export
 msgid "Language Export"
-msgstr ""
+msgstr "Exportar Idioma"
 
 #. module: base
 #: model:ir.model,name:base.model_base_language_import
@@ -14811,7 +14828,7 @@ msgstr "Subprodutos MRP"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_workorder
 msgid "MRP II"
-msgstr ""
+msgstr "MRP II"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_quality_mrp
@@ -15055,7 +15072,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_fleet
 msgid "Manage your fleet and track car costs"
-msgstr ""
+msgstr "Controle a sua frota e acompanhe os custos de automóveis"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_hr_recruitment
@@ -18498,7 +18515,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__print_page_width
 msgid "Print page width (mm)"
-msgstr ""
+msgstr "Largura da página de impressão (mm)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__print_report_name
@@ -18745,7 +18762,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event
 msgid "Publish events, sell tickets"
-msgstr ""
+msgstr "Eventos públicos, vender bilhetes"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_slides
@@ -19148,7 +19165,7 @@ msgstr "Referência"
 #: code:addons/base/models/ir_qweb_fields.py:567
 #, python-format
 msgid "Reference date"
-msgstr ""
+msgstr "Data de referência"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__parent_id
@@ -23222,7 +23239,7 @@ msgstr "Registo histórico do utilizador"
 #. module: base
 #: model:ir.module.category,name:base.module_category_user_type
 msgid "User types"
-msgstr ""
+msgstr "Tipos de utilizador"
 
 #. module: base
 #: model:ir.model,name:base.model_change_password_user
@@ -23628,7 +23645,7 @@ msgstr "Avisos"
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_E
 msgid "Water supply"
-msgstr ""
+msgstr "Fornecimento de água"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_web
@@ -24046,7 +24063,7 @@ msgstr ""
 #: code:addons/base/models/res_lang.py:243
 #, python-format
 msgid "You cannot delete the language which is the user's preferred language."
-msgstr ""
+msgstr "Não pode eliminar o idioma que é o idioma preferido do utilizador."
 
 #. module: base
 #: code:addons/base/wizard/base_partner_merge.py:277
@@ -24478,7 +24495,7 @@ msgstr ""
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "reference"
-msgstr ""
+msgstr "referência"
 
 #. module: base
 #: selection:ir.model.fields,ttype:0
