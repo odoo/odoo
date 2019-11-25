@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="fleet_vehicle_view_form_inherit_account" model="ir.ui.view">
+        <field name="name">fleet.vehicle.form.inherit.account</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='contract']" position="after">
+                <group string="Accounting">
+                    <label for="analytic_account_id" string="Analytic Account"/>
+                    <div>
+                        <field name="analytic_account_id" class="oe_inline"/>
+                        <button string="Generate Analytic Account" name="action_generate_analytic_account" type="object" class="btn-link oe_inline" attrs="{'invisible': [('analytic_account_id', '!=', False)]}"/>
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
