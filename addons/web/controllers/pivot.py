@@ -2,28 +2,31 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import deque
+import io
 import json
 
 from odoo import http
 from odoo.http import request
 from odoo.tools import ustr
-from odoo.tools.misc import xlwt
+from odoo.tools.misc import xlsxwriter
 
 
 class TableExporter(http.Controller):
 
-    @http.route('/web/pivot/check_xlwt', type='json', auth='none')
-    def check_xlwt(self):
-        return xlwt is not None
+    @http.route('/web/pivot/check_xlsxwriter', type='json', auth='none')
+    def check_xlsxwriter(self):
+        return xlsxwriter is not None
 
-    @http.route('/web/pivot/export_xls', type='http', auth="user")
-    def export_xls(self, data, token):
+    @http.route('/web/pivot/export_xlsx', type='http', auth="user")
+    def export_xlsx(self, data, token):
         jdata = json.loads(data)
-        workbook = xlwt.Workbook()
-        worksheet = workbook.add_sheet(jdata['title'])
-        header_bold = xlwt.easyxf("font: bold on; pattern: pattern solid, fore_colour gray25;")
-        header_plain = xlwt.easyxf("pattern: pattern solid, fore_colour gray25;")
-        bold = xlwt.easyxf("font: bold on;")
+        output = io.BytesIO()
+        workbook = xlsxwriter.Workbook(output, {'in_memory': True})
+        worksheet = workbook.add_worksheet(jdata['title'])
+
+        header_bold = workbook.add_format({'bold': True, 'pattern': 1, 'bg_color': '#AAAAAA'})
+        header_plain = workbook.add_format({'pattern': 1, 'bg_color': '#AAAAAA'})
+        bold = workbook.add_format({'bold': True})
 
         measure_count = jdata['measure_count']
         origin_count = jdata['origin_count']
@@ -71,6 +74,8 @@ class TableExporter(http.Controller):
                     worksheet.write(y, x+i, '', header_plain)
                 x = x + (2 * origin_count - 1)
             x, y = 1, y + 1
+            # set minimum width of cells to 16 which is around 88px
+            worksheet.set_column(0, len(measure_headers), 16)
 
         # Step 3: writing origin headers
         origin_headers = jdata['origin_headers']
@@ -95,10 +100,11 @@ class TableExporter(http.Controller):
                     worksheet.write(y, x, cell['value'])
             x, y = 0, y + 1
 
-        response = request.make_response(None,
-            headers=[('Content-Type', 'application/vnd.ms-excel'),
-                    ('Content-Disposition', 'attachment; filename=table.xls')],
+        workbook.close()
+        xlsx_data = output.getvalue()
+        response = request.make_response(xlsx_data,
+            headers=[('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
+                    ('Content-Disposition', 'attachment; filename=table.xlsx')],
             cookies={'fileToken': token})
-        workbook.save(response.stream)
 
         return response
