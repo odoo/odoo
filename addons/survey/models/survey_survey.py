@@ -36,10 +36,6 @@ class Survey(models.Model):
         ('draft', 'Draft'), ('open', 'In Progress'), ('closed', 'Closed')
     ], string="Survey Stage", default='draft', required=True,
         group_expand='_read_group_states')
-    category = fields.Selection([
-        ('default', 'Generic Survey')], string='Category',
-        default='default', required=True,
-        help='Category is used to know in which context the survey is used. Various apps may define their own categories when they use survey like jobs recruitment or employee appraisal surveys.')
     # questions
     question_and_page_ids = fields.One2many('survey.question', 'survey_id', string='Sections and Questions', copy=True)
     page_ids = fields.One2many('survey.question', string='Pages', compute="_compute_page_and_question_ids")
