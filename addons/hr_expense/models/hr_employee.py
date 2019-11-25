@@ -30,6 +30,8 @@ class Employee(models.Model):
             manager = employee.parent_id.user_id
             if manager and manager.has_group('hr_expense.group_hr_expense_user') and (employee.expense_manager_id == previous_manager or not employee.expense_manager_id):
                 employee.expense_manager_id = manager
+            elif not employee.expense_manager_id:
+                employee.expense_manager_id = False
 
 
 class EmployeePublic(models.Model):

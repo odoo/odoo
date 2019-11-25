@@ -86,3 +86,5 @@ class HrEmployeeBase(models.AbstractModel):
             previous_manager = employee._origin.parent_id
             if manager and (employee.coach_id == previous_manager or not employee.coach_id):
                 employee.coach_id = manager
+            elif not employee.coach_id:
+                employee.coach_id = False
