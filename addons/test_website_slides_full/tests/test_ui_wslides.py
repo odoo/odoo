@@ -59,7 +59,7 @@ class TestUi(TestUICommon):
             'users_can_go_back': True,
             'users_login_required': True,
             'scoring_type': 'scoring_with_answers',
-            'certificate': True,
+            'certification': True,
             'certification_mail_template_id': self.env.ref('survey.mail_template_certification').id,
             'is_attempts_limited': True,
             'attempts_limit': 3,

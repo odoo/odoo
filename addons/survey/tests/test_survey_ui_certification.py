@@ -19,7 +19,7 @@ class TestUiCertification(HttpCaseWithUserDemo):
             'users_can_go_back': True,
             'users_login_required': True,
             'scoring_type': 'scoring_with_answers',
-            'certificate': True,
+            'certification': True,
             'certification_mail_template_id': self.env.ref('survey.mail_template_certification').id,
             'is_time_limited': 'limited',
             'time_limit': 10.0,
