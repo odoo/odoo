@@ -147,9 +147,9 @@ class WebsiteForm(http.Controller):
             elif field_name != 'context':
                 data['custom'] += u"%s : %s\n" % (field_name, field_value)
 
-        # Add metadata if enabled
-        environ = request.httprequest.headers.environ
-        if(request.website.website_form_enable_metadata):
+        # Add metadata if enabled  # ICP for retrocompatibility
+        if request.env['ir.config_parameter'].sudo().get_param('website_form_enable_metadata'):
+            environ = request.httprequest.headers.environ
             data['meta'] += "%s : %s\n%s : %s\n%s : %s\n%s : %s\n" % (
                 "IP"                , environ.get("REMOTE_ADDR"),
                 "USER_AGENT"        , environ.get("HTTP_USER_AGENT"),
