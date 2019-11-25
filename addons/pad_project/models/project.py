@@ -24,4 +24,4 @@ class ProjectTask(models.Model):
 class ProjectProject(models.Model):
     _inherit = "project.project"
 
-    use_pads = fields.Boolean("Use collaborative pads", help="Use collaborative pad for the tasks on this project.")
+    use_pads = fields.Boolean("Use collaborative pads", default=True, help="Use collaborative pad for the tasks on this project.")

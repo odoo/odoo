@@ -20,9 +20,19 @@
         <field name="model">project.project</field>
         <field name="inherit_id" ref="project.edit_project"/>
         <field name="arch" type="xml">
-            <field name="partner_id" position="after">
-                <field name="use_pads"/>
-            </field>
+            <xpath expr="//div[@id='rating_settings']" position="after">
+                <div class="col-lg-6 o_setting_box" id="pad_settings">
+                    <div class="o_setting_left_pane">
+                        <field name="use_pads"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="use_pads" string="Collaborative Pads"/>
+                        <div class="text-muted">
+                            Use collaborative rich text pads on tasks
+                        </div>
+                    </div>
+                </div>
+            </xpath>
         </field>
     </record>
 
