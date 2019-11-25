@@ -77,7 +77,7 @@ class TestUi(TestUICommon):
                     'question_type': 'simple_choice',
                     'display_mode': 'dropdown',
                     'constr_mandatory': True,
-                    'labels_ids': [
+                    'suggested_answer_ids': [
                         (0, 0, {
                             'value': 'Fir',
                             'sequence': 1,
@@ -99,7 +99,7 @@ class TestUi(TestUICommon):
                     'sequence': 3,
                     'question_type': 'multiple_choice',
                     'column_nb': '4',
-                    'labels_ids': [
+                    'suggested_answer_ids': [
                         (0, 0, {
                             'value': 'Chair',
                             'sequence': 1,

@@ -130,10 +130,10 @@ class TestSurveyInternals(common.TestSurveyCommon):
         for i in range(3):
             answer = self._add_answer(self.survey, False, email='public@example.com')
             self._add_answer_line(
-                question, answer, random.choice(question.labels_ids.ids),
+                question, answer, random.choice(question.suggested_answer_ids.ids),
                 answer_type='suggestion', answer_fname='value_suggested')
         lines = [line.value_suggested.id for line in question.user_input_line_ids]
-        answers = [{'text': label.value, 'count': lines.count(label.id), 'answer_id': label.id, 'answer_score': label.answer_score} for label in question.labels_ids]
+        answers = [{'text': label.value, 'count': lines.count(label.id), 'answer_id': label.id, 'answer_score': label.answer_score} for label in question.suggested_answer_ids]
         prp_result = self.env['survey.survey'].prepare_result(question)['answers']
         self.assertItemsEqual(prp_result, answers)
 
@@ -147,12 +147,12 @@ class TestSurveyInternals(common.TestSurveyCommon):
         for i in range(3):
             answer = self._add_answer(self.survey, False, email='public@example.com')
             self._add_answer_line(
-                question, answer, random.choice(question.labels_ids.ids),
-                answer_type='suggestion', answer_fname='value_suggested', value_suggested_row=random.choice(question.labels_ids_2.ids)
+                question, answer, random.choice(question.suggested_answer_ids.ids),
+                answer_type='suggestion', answer_fname='value_suggested', value_suggested_row=random.choice(question.matrix_row_ids.ids)
             )
         lines = [(line.value_suggested_row.id, line.value_suggested.id) for line in question.user_input_line_ids]
         res = {}
-        for i in product(question.labels_ids_2.ids, question.labels_ids.ids):
+        for i in product(question.matrix_row_ids.ids, question.suggested_answer_ids.ids):
             res[i] = lines.count((i))
         self.assertEqual(self.env['survey.survey'].prepare_result(question)['result'], res)
 

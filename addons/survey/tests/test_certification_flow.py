@@ -116,13 +116,13 @@ class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
         csrf_token = self._find_csrf_token(response.text)
 
         with patch.object(IrMailServer, 'connect'):
-            self._answer_question(q01, q01.labels_ids.ids[3], answer_token, csrf_token)
-            self._answer_question(q02, q02.labels_ids.ids[1], answer_token, csrf_token)
+            self._answer_question(q01, q01.suggested_answer_ids.ids[3], answer_token, csrf_token)
+            self._answer_question(q02, q02.suggested_answer_ids.ids[1], answer_token, csrf_token)
             self._answer_question(q03, "I think they're great!", answer_token, csrf_token)
-            self._answer_question(q04, q04.labels_ids.ids[0], answer_token, csrf_token, button_submit='previous')
+            self._answer_question(q04, q04.suggested_answer_ids.ids[0], answer_token, csrf_token, button_submit='previous')
             self._answer_question(q03, "Just kidding, I don't like it...", answer_token, csrf_token)
-            self._answer_question(q04, q04.labels_ids.ids[0], answer_token, csrf_token)
-            self._answer_question(q05, [q05.labels_ids.ids[0], q05.labels_ids.ids[1], q05.labels_ids.ids[3]], answer_token, csrf_token)
+            self._answer_question(q04, q04.suggested_answer_ids.ids[0], answer_token, csrf_token)
+            self._answer_question(q05, [q05.suggested_answer_ids.ids[0], q05.suggested_answer_ids.ids[1], q05.suggested_answer_ids.ids[3]], answer_token, csrf_token)
 
         user_inputs.invalidate_cache()
         # Check that certification is successfully passed

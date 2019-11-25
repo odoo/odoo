@@ -241,7 +241,7 @@
                 <select class="form-control o_survey_form_choice_item">
                     <option disabled="1" selected="1" value=""
                             t-att-selected="not answer_line and (not comment_line or not question.comment_count_as_answer) and 'selected' or None">Choose...</option>
-                    <t t-foreach='question.labels_ids' t-as='label'>
+                    <t t-foreach='question.suggested_answer_ids' t-as='label'>
                         <option t-att-value='label.id'
                                 t-att-selected="answer_line and answer_line.value_suggested == label and 'selected' or None"><t t-esc='label.value'/></option>
                     </t>
@@ -265,7 +265,7 @@
         <div t-if="question.display_mode == 'columns'" class="row o_survey_form_choice o_survey_question_simple_choice_radio"
              t-att-data-name="question.id"
              data-question-type="simple_choice_radio">
-            <div t-foreach='question.labels_ids' t-as='label' t-attf-class="col-lg-#{question.column_nb}">
+            <div t-foreach='question.suggested_answer_ids' t-as='label' t-attf-class="col-lg-#{question.column_nb}">
                 <label t-att-class="' bg-success ' if quizz_correction and label.answer_score > 0.0 else None">
                     <input type="radio" t-att-value='label.id' class="o_survey_form_choice_item"
                            t-att-checked="answer_line and answer_line.value_suggested.id == label.id and 'checked' or None"/>
@@ -293,7 +293,7 @@
         <div class="row o_survey_form_choice o_survey_question_multiple_choice"
              t-att-data-name="question.id"
              t-att-data-question-type="question.question_type">
-            <div t-foreach='question.labels_ids' t-as='label' t-attf-class="col-lg-#{question.column_nb}">
+            <div t-foreach='question.suggested_answer_ids' t-as='label' t-attf-class="col-lg-#{question.column_nb}">
                 <t t-set="answer_line" t-value="answer_lines.filtered(lambda line: line.value_suggested == label)"/>
                 <label t-att-class="' bg-success ' if quizz_correction and label.answer_score > 0.0 else None">
                     <input type="checkbox" t-att-value='label.id' class="o_survey_form_choice_item"
@@ -326,13 +326,13 @@
             <thead>
                 <tr>
                     <th> </th>
-                    <th t-foreach="question.labels_ids" t-as="col_label"><span t-field="col_label.value" /></th>
+                    <th t-foreach="question.suggested_answer_ids" t-as="col_label"><span t-field="col_label.value" /></th>
                 </tr>
             </thead>
             <tbody>
-                <tr t-foreach="question.labels_ids_2" t-as="row_label">
+                <tr t-foreach="question.matrix_row_ids" t-as="row_label">
                     <th><span t-field="row_label.value" /></th>
-                    <td t-foreach="question.labels_ids" t-as="col_label">
+                    <td t-foreach="question.suggested_answer_ids" t-as="col_label">
                         <t t-set="answer" t-value="answer_lines.filtered(lambda line: line.value_suggested == col_label and line.value_suggested_row == row_label)"/>
                         <input t-att-type="'checkbox' if question.matrix_subtype == 'multiple' else 'radio'"
                                t-att-name="'%s_%s' % (question_id, row_label.id)" t-att-value='col_label.id'

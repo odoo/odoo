@@ -108,7 +108,7 @@ class TestCourseCertificationFailureFlow(TestSurveyCommon):
     def fill_in_answer(self, answer, questions, good_answers=False):
         """ Fills in the user_input with answers for all given questions.
         You can control whether the answer will be correct or not with the 'good_answers' param.
-        (It's assumed that wrong answers are at index 0 of question.labels_ids and good answers at index 1) """
+        (It's assumed that wrong answers are at index 0 of question.suggested_answer_ids and good answers at index 1) """
         answer.write({
             'state': 'done',
             'user_input_line_ids': [
@@ -116,7 +116,7 @@ class TestCourseCertificationFailureFlow(TestSurveyCommon):
                     'question_id': question.id,
                     'answer_type': 'suggestion',
                     'answer_score': 1 if good_answers else 0,
-                    'value_suggested': question.labels_ids[1 if good_answers else 0].id
+                    'value_suggested': question.suggested_answer_ids[1 if good_answers else 0].id
                 }) for question in questions
             ]
         })

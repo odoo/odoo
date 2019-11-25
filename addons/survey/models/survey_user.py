@@ -54,7 +54,7 @@ class SurveyUserInput(models.Model):
         for user_input in self:
             total_possible_score = sum([
                 answer_score if answer_score > 0 else 0
-                for answer_score in user_input.question_ids.mapped('labels_ids.answer_score')
+                for answer_score in user_input.question_ids.mapped('suggested_answer_ids.answer_score')
             ])
 
             if total_possible_score == 0:
@@ -196,8 +196,8 @@ class SurveyUserInputLine(models.Model):
     value_date = fields.Date('Date answer')
     value_datetime = fields.Datetime('Datetime answer')
     value_free_text = fields.Text('Free Text answer')
-    value_suggested = fields.Many2one('survey.label', string="Suggested answer")
-    value_suggested_row = fields.Many2one('survey.label', string="Row answer")
+    value_suggested = fields.Many2one('survey.question.answer', string="Suggested answer")
+    value_suggested_row = fields.Many2one('survey.question.answer', string="Row answer")
     answer_score = fields.Float('Score')
     answer_is_correct = fields.Boolean('Correct', compute='_compute_answer_is_correct')
 
@@ -233,13 +233,13 @@ class SurveyUserInputLine(models.Model):
         for vals in vals_list:
             value_suggested = vals.get('value_suggested')
             if value_suggested:
-                vals.update({'answer_score': self.env['survey.label'].browse(int(value_suggested)).answer_score})
+                vals.update({'answer_score': self.env['survey.question.answer'].browse(int(value_suggested)).answer_score})
         return super(SurveyUserInputLine, self).create(vals_list)
 
     def write(self, vals):
         value_suggested = vals.get('value_suggested')
         if value_suggested:
-            vals.update({'answer_score': self.env['survey.label'].browse(int(value_suggested)).answer_score})
+            vals.update({'answer_score': self.env['survey.question.answer'].browse(int(value_suggested)).answer_score})
         return super(SurveyUserInputLine, self).write(vals)
 
     def _get_save_line_values(self, answer, answer_type):
