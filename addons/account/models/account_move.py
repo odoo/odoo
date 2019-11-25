@@ -2983,7 +2983,7 @@ class AccountMoveLine(models.Model):
             # A constraint on account.tax.repartition.line ensures both those fields are mutually exclusive
             record.tax_line_id = rep_line.invoice_tax_id or rep_line.refund_tax_id
 
-    @api.depends('tag_ids', 'debit', 'credit', 'journal_id')
+    @api.depends('tag_ids', 'debit', 'credit')
     def _compute_tax_audit(self):
         separator = '        '
 
