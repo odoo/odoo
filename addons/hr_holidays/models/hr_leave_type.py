@@ -70,21 +70,25 @@ class HolidaysType(models.Model):
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
     responsible_id = fields.Many2one('res.users', 'Responsible',
         domain=lambda self: [('groups_id', 'in', self.env.ref('hr_holidays.group_hr_holidays_user').id)],
-        help="This user will be responsible for approving this type of times off"
+        help="This user will be responsible for approving this type of times off. "
         "This is only used when validation is 'hr' or 'both'",)
-    validation_type = fields.Selection([
+    leave_validation_type = fields.Selection([
         ('no_validation', 'No Validation'),
-        ('hr', 'Time Off Officer'),
-        ('manager', 'Team Leader'),
-        ('both', 'Team Leader and Time Off Officer')], default='hr', string='Validation')
+        ('hr', 'By Time Off Officer'),
+        ('manager', "By Employee's Manager"),
+        ('both', "By Employee's Manager and Time Off Officer")], default='hr', string='Leave Validation')
+    allocation_validation_type = fields.Selection([
+        ('hr', 'By Time Off Officer'),
+        ('manager', "By Employee's Manager"),
+        ('both', "By Employee's Manager and Time Off Officer")], default='manager', string='Allocation Validation')
     allocation_type = fields.Selection([
-        ('no', 'No Allocation Needed'),
-        ('fixed_allocation', 'Free Allocation Request'),
-        ('fixed', 'Allocated by HR only')],
+        ('no', 'No Limit'),
+        ('fixed_allocation', 'Allow Employees Requests'),
+        ('fixed', 'Fixed by Time Off Officer')],
         default='no', string='Mode',
-        help='\tNo Allocation Needed: no allocation by default, users can freely request time off;'
-             '\tFree Allocation Request: allocated by HR and users can request time off and allocations;'
-             '\tAllocated by HR only: allocated by HR and cannot be bypassed; users can request time off;')
+        help='\tNo Limit: no allocation by default, users can freely request time off; '
+             '\tAllow Employees Requests: allocated by HR and users can request time off and allocations; '
+             '\tFixed by Time Off Officer: allocated by HR and cannot be bypassed; users can request time off;')
     validity_start = fields.Date("From",
                                  help='Adding validity to types of time off so that it cannot be selected outside this time period')
     validity_stop = fields.Date("To")
