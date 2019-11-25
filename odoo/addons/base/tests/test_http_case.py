@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import HttpCase, tagged
-from odoo.tools import mute_logger
+from odoo.tools import mute_logger, logging
 from unittest.mock import patch
 
 @tagged('-at_install', 'post_install')
@@ -26,6 +26,11 @@ class TestHttpCase(HttpCase):
         'TypeError: test error message\n    at <anonymous>:1:15')
 
     def test_console_log_object(self):
+        logger = logging.getLogger('odoo')
+        level = logger.level
+        logger.setLevel(logging.INFO)
+        self.addCleanup(logger.setLevel, level)
+
         with self.assertLogs() as log_catcher:
             code = "console.log({custom:{1:'test', 2:'a'}, value:1, description:'dummy'});console.log('test successful');"
             self.browser_js(url_path='about:blank', code=code)
