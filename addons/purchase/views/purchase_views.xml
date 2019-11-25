@@ -32,11 +32,11 @@
 
         <menuitem
              action="uom.product_uom_categ_form_action" id="menu_purchase_uom_categ_form_action"
-             parent="purchase.menu_product_in_config_purchase" sequence="10" />
+             parent="purchase.menu_product_in_config_purchase" sequence="10" groups="uom.group_uom"/>
 
         <menuitem
               action="uom.product_uom_form_action" id="menu_purchase_uom_form_action"
-              parent="purchase.menu_product_in_config_purchase" sequence="5"/>
+              parent="purchase.menu_product_in_config_purchase" sequence="5" groups="uom.group_uom"/>
 
     <!-- Products Control Menu -->
     <menuitem id="menu_purchase_products" name="Products" parent="purchase.menu_purchase_root" sequence="5"/>
