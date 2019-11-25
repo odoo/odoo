@@ -6,15 +6,14 @@
         <field name="inherit_id" ref="project.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <div name="pad_project_right_pane" position="inside">
-                <div class="content-group">
-                    <field name='company_id' invisible="1"/>
+                <div class="content-group" attrs="{'invisible': [('module_pad', '=', False)]}">
                     <div class="row mt16">
                         <label for="pad_server" class="col-lg-3 o_light_label"/>
-                        <field name="pad_server"/>
+                        <field name="pad_server" attrs="{'required': [('module_pad', '!=', False)]}"/>
                     </div>
                     <div class="row">
                         <label for="pad_key" class="col-lg-3 o_light_label"/>
-                        <field name="pad_key"/>
+                        <field name="pad_key" attrs="{'required': [('module_pad', '!=', False)]}"/>
                     </div>
                 </div>
             </div>

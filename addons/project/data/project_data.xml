@@ -103,19 +103,19 @@
 
         <record forcecreate="False" id="project_stage_data_0" model="project.task.type">
             <field name="sequence">1</field>
-            <field name="name">New</field>
+            <field name="name">Basic</field>
             <field name="project_ids" eval="[(4, ref('project_project_data'))]"/>
         </record>
 
         <record forcecreate="False" id="project_stage_data_1" model="project.task.type">
             <field name="sequence">2</field>
-            <field name="name">Basic</field>
+            <field name="name">Advanced</field>
             <field name="project_ids" eval="[(4, ref('project_project_data'))]"/>
         </record>
 
         <record forcecreate="False" id="project_stage_data_2" model="project.task.type">
             <field name="sequence">3</field>
-            <field name="name">Advanced</field>
+            <field name="name">Expert</field>
             <field name="project_ids" eval="[(4, ref('project_project_data'))]"/>
         </record>
 
