@@ -45,12 +45,12 @@ SELECT
     END AS warehouse_id
 FROM
     stock_move m
-LEFT JOIN stock_location ls on (ls.id=m.location_id)
-LEFT JOIN stock_location ld on (ld.id=m.location_dest_id)
+INNER JOIN stock_location ls on (ls.id=m.location_id)
+INNER JOIN stock_location ld on (ld.id=m.location_dest_id)
 LEFT JOIN stock_warehouse whs ON ls.parent_path like concat('%/', whs.view_location_id, '/%')
 LEFT JOIN stock_warehouse whd ON ld.parent_path like concat('%/', whd.view_location_id, '/%')
-LEFT JOIN product_product pp on pp.id=m.product_id
-LEFT JOIN product_template pt on pt.id=pp.product_tmpl_id
+INNER JOIN product_product pp on pp.id=m.product_id
+INNER JOIN product_template pt on pt.id=pp.product_tmpl_id
 WHERE
     pt.type = 'product' AND
     product_qty != 0 AND (
@@ -70,7 +70,7 @@ FROM
     GENERATE_SERIES((now() at time zone 'utc')::date - interval '3month',
     (now() at time zone 'utc')::date + interval '3 month', '1 day'::interval) date,
     stock_quant q
-LEFT JOIN stock_location l on (l.id=q.location_id)
+INNER JOIN stock_location l on (l.id=q.location_id)
 LEFT JOIN stock_warehouse wh ON l.parent_path like concat('%/', wh.view_location_id, '/%')
 WHERE
     l.usage = 'internal'
@@ -101,12 +101,12 @@ SELECT
     END AS warehouse_id
 FROM
     stock_move m
-LEFT JOIN stock_location ls on (ls.id=m.location_id)
-LEFT JOIN stock_location ld on (ld.id=m.location_dest_id)
+INNER JOIN stock_location ls on (ls.id=m.location_id)
+INNER JOIN stock_location ld on (ld.id=m.location_dest_id)
 LEFT JOIN stock_warehouse whs ON ls.parent_path like concat('%/', whs.view_location_id, '/%')
 LEFT JOIN stock_warehouse whd ON ld.parent_path like concat('%/', whd.view_location_id, '/%')
-LEFT JOIN product_product pp on pp.id=m.product_id
-LEFT JOIN product_template pt on pt.id=pp.product_tmpl_id
+INNER JOIN product_product pp on pp.id=m.product_id
+INNER JOIN product_template pt on pt.id=pp.product_tmpl_id
 WHERE
     pt.type = 'product' AND
     product_qty != 0 AND (
