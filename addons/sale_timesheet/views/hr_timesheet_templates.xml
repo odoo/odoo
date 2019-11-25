@@ -4,6 +4,7 @@
     <template id="assets_backend" name="sale timesheet assets" inherit_id="web.assets_backend">
         <xpath expr="." position="inside">
             <link rel="stylesheet" type="text/scss" href="/sale_timesheet/static/src/scss/sale_timesheet.scss"/>
+                <script type="text/javascript" src="/sale_timesheet/static/src/js/project_overview.js"></script>
         </xpath>
     </template>
 
@@ -12,6 +13,7 @@
         <field name="type">qweb</field>
         <field name="model">project.project</field>
         <field name="arch" type="xml">
+        <qweb js_class="project_overview">
         <nav class="o_qweb_cp_buttons" t-if="actions">
             <button t-foreach="actions" t-as="action"
                     type="action" class="btn btn-primary"
@@ -289,15 +291,28 @@
                                         </thead>
                                         <tbody>
                                             <t t-set="row_is_milestone" t-value="False"/>
+                                            <t t-set="current_order" t-value="False"/>
+                                            <t t-set="current_order_line" t-value="False"/>
                                             <t t-foreach="timesheet_forecast_table['rows']" t-as="row">
                                                 <t t-set="row_type" t-value="row[0].get('type')"/>
                                                 <t t-if="row_type == 'sale_order_line'">
                                                     <t t-set="row_is_milestone" t-value="row[0].get('is_milestone')"/>
                                                 </t>
-                                                <tr t-att-class="'o_timesheet_forecast_' + row_type">
+                                                <t t-if="row_type == 'sale_order'">
+                                                    <t t-set="current_order" t-value="False"/>
+                                                    <t t-set="current_order_line" t-value="False"/>
+                                                </t>
+                                                <t t-if="row_type == 'sale_order_line'">
+                                                    <t t-set="current_order_line" t-value="False"/>
+                                                </t>
+                                                <t t-set="foldable" t-value="row_type in ('sale_order', 'sale_order_line')"/>
+                                                <tr t-att-class="'o_timesheet_forecast_' + row_type + ' sale_order_' + str(current_order) + ' sale_order_line_' + str(current_order_line)"
+                                                    t-att-style="'display: none;' if row_type != 'sale_order' else ''">
                                                     <t t-foreach="row" t-as="row_value">
                                                         <td t-att-class="'o_right_bordered' if row_value_index in [5,10] else '' + ' text-center' if row_value_index != 0 else ''">
                                                             <t t-if="row_value_index == 0">
+                                                                <span t-if="foldable" t-att-class="'fa fa-caret-right' + (' project_overview_foldable' if foldable else '')" style="cursor: pointer;"
+                                                                      t-att-data-model="row[0].get('res_model')" t-att-data-res-id="row[0].get('res_id')"/>
                                                                 <t t-if="row_type == 'sale_order'">
                                                                     <a type="action" t-att-data-model="row_value['res_model']" t-att-data-res-id="row_value['res_id']" t-att-class="'o_timesheet_plan_redirect' if row_value['res_id'] else ''">
                                                                         <t t-esc="row_value.get('label')"/>
@@ -333,6 +348,12 @@
                                                         </td>
                                                     </t>
                                                 </tr>
+                                                <t t-if="row_type == 'sale_order_line'">
+                                                    <t t-set="current_order_line" t-value="row[0].get('res_id')"/>
+                                                </t>
+                                                <t t-if="row_type == 'sale_order'">
+                                                    <t t-set="current_order" t-value="row[0].get('res_id')"/>
+                                                </t>
                                             </t>
                                         </tbody>
                                     </table>
@@ -344,6 +365,7 @@
                 </div>
             </div>
         </div>
+        </qweb>
         </field>
     </record>
 
