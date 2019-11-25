@@ -281,6 +281,17 @@
             </field>
         </record>
 
+        <record id="project_task_view_search" model="ir.ui.view">
+            <field name="name">project.task.view.search.inherit.sale.timesheet.enterprise</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_search_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='late']" position='after'>
+                    <filter string="Tasks in Overtime" name="overtime" domain="[('overtime', '&gt;', 0)]"/>
+                </xpath>
+            </field>
+        </record>
+
         <!-- Improve the task kanban in Project -->
         <record id="project_task_view_kanban" model="ir.ui.view">
             <field name="name">project.task.kanban.timer</field>
