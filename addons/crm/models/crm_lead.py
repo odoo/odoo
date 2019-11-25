@@ -1271,9 +1271,51 @@ class Lead(models.Model):
         The more we have records to analyse, the more the estimation will be precise.
         :return: probability in percent (and integer rounded) that the lead will be won at the current stage.
         """
+        lead_statistics = self._pls_get_statistics(batch_mode=batch_mode)
+
         lead_probabilities = {}
+
+        for lead_id, lead_info in lead_statistics.items():
+            if lead_info.get('probability') is None:
+                s_lead_won, s_lead_lost = lead_info['p_won'], lead_info['p_lost']
+
+                for field, value, won, total_won, lost, total_lost in lead_info['statistics']:
+                    s_lead_won *= won / total_won
+                    s_lead_lost *= lost / total_lost
+                lead_probabilities[lead_id] = 100 * s_lead_won / (s_lead_won + s_lead_lost)
+            else:
+                lead_probabilities[lead_id] = lead_info['probability']
+
+        return lead_probabilities
+
+    def _pls_get_statistics(self, batch_mode=False):
+        """
+        Return all the statistics useful for the probability calculation
+
+
+        e.g.:
+            {
+                'lead_id_1': {
+                    probability : 100,
+                }, # The lead is won
+                'lead_id_2': {
+                    probability: 0,
+                }, # The lead probability is forced to 0 because no stage_id
+                'lead_id_3': {
+                    probability: None,
+                    statistics: [
+                       (field, value, #won, total_won, #lost, total_lost),
+                       ...
+                       (field, value, #won, total_won, #lost, total_lost),
+                   ],
+                   'p_won': 0.87,
+                   'p_lost': 0.13,
+                }, # The lead is ongoing
+            }
+        """
+        lead_statistics = {}
         if len(self) == 0:
-            return lead_probabilities
+            return lead_statistics
 
         LeadScoringFrequency = self.env['crm.lead.scoring.frequency']
 
@@ -1284,7 +1326,7 @@ class Lead(models.Model):
         # Get all leads values, no matter the team_id
         leads_values_dict = self._pls_get_lead_pls_values(batch_mode=batch_mode)
         if not leads_values_dict:
-            return lead_probabilities
+            return lead_statistics
 
         # Get unique couples to search in frequency table
         leads_values = set()
@@ -1339,17 +1381,19 @@ class Lead(models.Model):
         for lead_id, lead_values in leads_values_dict.items():
             # if stage_id is null, return 0 and bypass computation
             lead_fields = [value[0] for value in lead_values.get('values', [])]
-            if not 'stage_id' in lead_fields:
-                lead_probabilities[lead_id] = 0
+            if 'stage_id' not in lead_fields:
+                lead_statistics[lead_id] = {'probability': 0}
                 continue
             # if lead stage is won, return 100
             elif lead_id in won_leads:
-                lead_probabilities[lead_id] = 100
+                lead_statistics[lead_id] = {'probability': 100}
                 continue
 
             lead_team_id = lead_values['team_id'] if lead_values['team_id'] else 0  # team_id = None -> Convert to 0
             lead_team_id = lead_team_id if lead_team_id in result else -1  # team_id not in frequency Table -> convert to -1
             if lead_team_id != save_team_id:
+                # we need to compute the new ``p_won`` and ``p_lost`` for the new team
+                # ``leads_values_dict`` is sorted by team, thanks to the SQL query
                 save_team_id = lead_team_id
                 team_won = result[save_team_id]['team_won']
                 team_lost = result[save_team_id]['team_lost']
@@ -1361,7 +1405,8 @@ class Lead(models.Model):
                 p_lost = team_lost / team_total
 
             # 2. Compute won and lost score using each variable's individual probability
-            s_lead_won, s_lead_lost = p_won, p_lost
+            lead_statistics[lead_id] = {'statistics': [], 'p_won': p_won, 'p_lost': p_lost}
+
             for field, value in lead_values['values']:
                 field_result = result.get(save_team_id, {}).get(field)
                 value_result = field_result.get(str(value)) if field_result else False
@@ -1369,12 +1414,11 @@ class Lead(models.Model):
                     total_won = team_won if field == 'stage_id' else field_result['won_total']
                     total_lost = team_lost if field == 'stage_id' else field_result['lost_total']
 
-                    s_lead_won *= value_result['won'] / total_won
-                    s_lead_lost *= value_result['lost'] / total_lost
+                    lead_statistics[lead_id]['statistics'].append((
+                        field, value, value_result['won'], total_won,
+                        value_result['lost'], total_lost))
 
-            # 3. Compute Probability to win
-            lead_probabilities[lead_id] = 100 * s_lead_won / (s_lead_won + s_lead_lost)
-        return lead_probabilities
+        return lead_statistics
 
     def _cron_update_automated_probabilities(self):
         # Clear the frequencies table (in sql to speed up the cron)
