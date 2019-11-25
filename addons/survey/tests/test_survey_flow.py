@@ -61,9 +61,9 @@ class TestSurveyFlow(common.TestSurveyCommon, HttpCase):
 
         # fetch starting data to check only newly created data during this flow
         answers = self.env['survey.user_input'].search([('survey_id', '=', survey.id)])
-        answer_lines = self.env['survey.user_input_line'].search([('survey_id', '=', survey.id)])
+        answer_lines = self.env['survey.user_input.line'].search([('survey_id', '=', survey.id)])
         self.assertEqual(answers, self.env['survey.user_input'])
-        self.assertEqual(answer_lines, self.env['survey.user_input_line'])
+        self.assertEqual(answer_lines, self.env['survey.user_input.line'])
 
         # Step: customer takes the survey
         # --------------------------------------------------
