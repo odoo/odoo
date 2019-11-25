@@ -344,6 +344,10 @@ class IrHttp(models.AbstractModel):
             return any(bot in user_agent.encode('ascii', 'ignore') for bot in cls.bots)
 
     @classmethod
+    def _get_frontend_langs(cls):
+        return [code for code, _ in request.env['res.lang'].get_installed()]
+
+    @classmethod
     def get_nearest_lang(cls, lang_code):
         """ Try to find a similar lang. Eg: fr_BE and fr_FR
             :param lang_code: the lang `code` (en_US)
@@ -352,7 +356,7 @@ class IrHttp(models.AbstractModel):
             return False
         short_match = False
         short = lang_code.partition('_')[0]
-        for (code, _) in request.env['res.lang'].get_installed():
+        for code in cls._get_frontend_langs():
             if code == lang_code:
                 return code
             if not short_match and code.startswith(short):

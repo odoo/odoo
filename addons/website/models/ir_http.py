@@ -209,6 +209,13 @@ class Http(models.AbstractModel):
             request.website = request.website.with_context(request.context)
 
     @classmethod
+    def _get_frontend_langs(cls):
+        if get_request_website():
+            return [code for code, _, _ in request.env['res.lang'].get_available()]
+        else:
+            return super()._get_frontend_langs()
+
+    @classmethod
     def _get_default_lang(cls):
         if getattr(request, 'website', False):
             return request.website.default_lang_id
