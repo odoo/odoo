@@ -198,7 +198,7 @@
     <xpath expr="//h2[@t-field='blog_post.name']/.." position="before">
         <t t-call="website_blog.blog_cover">
             <t t-set="cover_properties" t-value="blog_posts_cover_properties[blog_post_index]"/>
-            <t t-set="additionnal_classes" t-value="'o_list_cover mt16 mb32'"/>
+            <t t-set="additionnal_classes" t-value="'o_list_cover mt16 mb32 o_not_editable'"/>
         </t>
     </xpath>
 </template>
