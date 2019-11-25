@@ -31,6 +31,11 @@ _logger = logging.getLogger(__name__)
 from .safe_eval import safe_eval as s_eval
 safe_eval = lambda expr, ctx={}: s_eval(expr, ctx, nocopy=True)
 
+
+# Match any QUOTED first cell of a row that starts with #, regardless of newlines
+INVALID_CSV_CELL_RE = re.compile(b'^"#', re.MULTILINE)
+
+
 class ParseError(Exception):
     ...
 
@@ -733,6 +738,26 @@ def convert_file(cr, module, filename, idref, mode='update', noupdate=False, kin
 def convert_sql_import(cr, fp):
     cr.execute(fp.read())
 
+
+def _process_raw_csv(csvcontent, filename):
+    if INVALID_CSV_CELL_RE.search(csvcontent):
+        raise ValueError(f"Invalid cell in CSV file {filename}: "
+                          "Quoted cells cannot start with #, this is limitation of the ORM, "
+                          "you can use a zero-width character or whitespace before the # instead")
+
+    reader = pycompat.csv_reader(io.BytesIO(csvcontent), quotechar='"', delimiter=',')
+    fields = next(reader)
+
+    # filter out empty lines (any([]) == False), lines containing only empty cells and
+    # unquoted cells whose first character is # if they're the first cell of the row (comments)
+    datas = [
+        line for line in reader
+        if (any(line) and line[0][0] != '#')
+    ]
+
+    return fields, datas
+
+
 def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
         noupdate=False):
     '''Import csv file :
@@ -742,18 +767,11 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
     filename, _ext = os.path.splitext(os.path.basename(fname))
     model = filename.split('-')[0]
 
-    reader = pycompat.csv_reader(io.BytesIO(csvcontent), quotechar='"', delimiter=',')
-    fields = next(reader)
+    fields, datas = _process_raw_csv(csvcontent, fname)
 
     if not (mode == 'init' or 'id' in fields):
         _logger.error("Import specification does not contain 'id' and we are in init mode, Cannot continue.")
         return
-
-    # filter out empty lines (any([]) == False) and lines containing only empty cells
-    datas = [
-        line for line in reader
-        if any(line)
-    ]
 
     context = {
         'mode': mode,

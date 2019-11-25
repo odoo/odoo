@@ -9,7 +9,7 @@ from lxml.builder import E
 
 import odoo
 from odoo.tests import common
-from odoo.tools.convert import xml_import, _eval_xml
+from odoo.tools.convert import xml_import, _eval_xml, _process_raw_csv
 
 Field = E.field
 Value = E.value
@@ -214,3 +214,63 @@ class TestEvalXML(common.TransactionCase):
     @unittest.skip("not tested")
     def test_html(self):
         pass
+
+
+@common.tagged('csv_comments')
+class TestCSVProcessing(common.TransactionCase):
+
+    def setUp(self):
+        super().setUp()
+        self.csv = b"""field1,field2,field3\n"""
+
+    def test_invalid_00(self):
+        self.csv += b""""#this",should,be,invalid"""
+        with self.assertRaises(ValueError):
+            _process_raw_csv(self.csv, 'test_invalid_00.csv')
+
+    def test_valid_00(self):
+        self.csv += b"""" # this is valid though",no,problem"""
+        _, datas = _process_raw_csv(self.csv, 'test_valid_00.csv')
+        self.assertEqual(len(datas), 1)
+        self.assertEqual(len(datas[0]), 3)
+        self.assertEqual(datas[0][0], " # this is valid though")
+
+    def test_valid_10(self):
+        self.csv += b"""# this is a very valid comment"""
+        _, datas = _process_raw_csv(self.csv, 'test_valid_10.csv')
+        self.assertFalse(any(datas))
+
+    def test_valid_20(self):
+        self.csv += b"""what,about,"this"\n# this should still be a valid comment"""
+        _, datas = _process_raw_csv(self.csv, 'test_valid_20.csv')
+        self.assertEqual(len(datas), 1)
+        self.assertEqual(datas[0], ["what", "about", "this"])
+
+    def test_valid_30(self):
+        self.csv += b"""# this comment has lots of , and, also, ","," and #,#,#"""
+        _, datas = _process_raw_csv(self.csv, 'test_valid_30.csv')
+        self.assertFalse(any(datas))
+
+    def test_valid_40(self):
+        self.csv += b"""#this\n#is\n#a\n#valid\n#multi-line\n#comment"""
+        _, datas = _process_raw_csv(self.csv, 'test_valid_40.csv')
+        self.assertFalse(any(datas))
+
+    def test_valid_50(self):
+        self.csv += b"""these,are,multiple\n#comments\nscattered,accross,"multiple"\n#different\nlines,ok,boomer"""
+        _, datas = _process_raw_csv(self.csv, 'test_valid_50.csv')
+        self.assertEqual(len(datas), 3)
+        self.assertEqual(datas[0], ['these', 'are', 'multiple'])
+        self.assertEqual(' '.join(datas[-1][1:]), "ok boomer")
+
+    def test_valid_60(self):
+        self.csv += b""""\n#this should",be,valid"""
+        _, datas = _process_raw_csv(self.csv, 'test_valid_60')
+        self.assertEqual(len(datas), 1)
+        self.assertEqual(datas[0][0], "\n#this should")
+
+    def test_valid_70(self):
+        self.csv += b""""\n\n\n\n#this should also",be,valid"""
+        _, datas = _process_raw_csv(self.csv, 'test_valid_70.csv')
+        self.assertEqual(len(datas), 1)
+        self.assertEqual(datas[0][0], "\n\n\n\n#this should also")
