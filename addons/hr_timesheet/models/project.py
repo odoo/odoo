@@ -135,6 +135,16 @@ class Task(models.Model):
         for task in self:
             task.display_timesheet_timer = task.allow_timesheets and task.project_id.allow_timesheet_timer and task.analytic_account_active
 
+    def action_view_subtask_timesheet(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Timesheets'),
+            'res_model': 'account.analytic.line',
+            'view_mode': 'list,form',
+            'domain': [('project_id', '!=', False), ('task_id', 'in', self.child_ids.ids)],
+        }
+
     def write(self, values):
         # a timesheet must have an analytic account (and a project)
         if 'project_id' in values and self and not values.get('project_id'):

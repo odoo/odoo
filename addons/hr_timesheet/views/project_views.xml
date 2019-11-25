@@ -178,7 +178,8 @@
                     <group attrs="{'invisible': [('analytic_account_active', '=', False)]}">
                         <group class="oe_subtotal_footer oe_right" name="project_hours">
                             <field name="effective_hours" widget="float_time" />
-                            <field name="subtask_effective_hours" widget="float_time" attrs="{'invisible' : [('subtask_effective_hours', '=', 0.0)]}" />
+                            <button name="action_view_subtask_timesheet" string="Sub-tasks Hours Spent:" type="object" class="oe_inline oe_link pl-0" attrs="{'invisible' : [('subtask_effective_hours', '=', 0.0)]}"/>
+                            <field name="subtask_effective_hours" widget="float_time" attrs="{'invisible' : [('subtask_effective_hours', '=', 0.0)]}" nolabel="1"/>
                             <field name="total_hours_spent" widget="float_time" class="oe_subtotal_footer_separator" attrs="{'invisible' : [('subtask_effective_hours', '=', 0.0)]}" />
                             <field name="remaining_hours" widget="float_time" class="oe_subtotal_footer_separator" attrs="{'invisible' : [('planned_hours', '=', 0.0)]}"/>
                         </group>
@@ -194,6 +195,9 @@
             <field name="inherit_id" ref="project.view_task_tree2" />
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="decoration-warning">planned_hours and (effective_hours&gt;planned_hours)</attribute>
+                </xpath>
                 <field name="user_id" position="after">
                     <field name="planned_hours" widget="float_time" sum="Initially Planned Hours" optional="show"/>
                     <field name="effective_hours" widget="float_time" sum="Effective Hours" optional="show"/>
