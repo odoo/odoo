@@ -158,6 +158,10 @@ class FleetVehicle(models.Model):
             record.contract_renewal_total = total - 1  # we remove 1 from the real total for display purposes
             record.contract_renewal_name = name
 
+    def _get_analytic_name(self):
+        # This function is used in fleet_account and is overrided in l10n_be_hr_payroll_fleet
+        return self.license_plate or _('No plate')
+
     def _search_contract_renewal_due_soon(self, operator, value):
         params = self.env['ir.config_parameter'].sudo()
         delay_alert_contract = int(params.get_param('hr_fleet.delay_alert_contract', default=30))
