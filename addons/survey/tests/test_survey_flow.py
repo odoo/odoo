@@ -106,7 +106,7 @@ class TestSurveyFlow(common.TestSurveyCommon, HttpCase):
 
         # Customer submit second page answers
         answer_data = {
-            page1_q0.id: {'value': [page1_q0.labels_ids.ids[0], page1_q0.labels_ids.ids[1]]},
+            page1_q0.id: {'value': [page1_q0.suggested_answer_ids.ids[0], page1_q0.suggested_answer_ids.ids[1]]},
         }
         post_data = self._format_submission_data(page_1, answer_data, {'csrf_token': csrf_token, 'token': answer_token, 'button_submit': 'next'})
         r = self._access_submit(survey, answer_token, post_data)

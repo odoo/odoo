@@ -38,7 +38,7 @@ class TestUiCertification(HttpCaseWithUserDemo):
                     'question_type': 'simple_choice',
                     'display_mode': 'dropdown',
                     'constr_mandatory': True,
-                    'labels_ids': [
+                    'suggested_answer_ids': [
                         (0, 0, {
                             'value': 'No',
                             'sequence': 1,
@@ -54,7 +54,7 @@ class TestUiCertification(HttpCaseWithUserDemo):
                     'sequence': 3,
                     'question_type': 'multiple_choice',
                     'column_nb': '4',
-                    'labels_ids': [
+                    'suggested_answer_ids': [
                         (0, 0, {
                             'value': 'Chair floor protection',
                             'sequence': 1,
@@ -85,7 +85,7 @@ class TestUiCertification(HttpCaseWithUserDemo):
                     'sequence': 4,
                     'question_type': 'multiple_choice',
                     'column_nb': '4',
-                    'labels_ids': [
+                    'suggested_answer_ids': [
                         (0, 0, {
                             'value': 'Color',
                             'sequence': 1,
@@ -117,7 +117,7 @@ class TestUiCertification(HttpCaseWithUserDemo):
                     'question_type': 'simple_choice',
                     'display_mode': 'dropdown',
                     'constr_mandatory': True,
-                    'labels_ids': [
+                    'suggested_answer_ids': [
                         (0, 0, {
                             'value': 1,
                             'sequence': 1,
@@ -150,7 +150,7 @@ class TestUiCertification(HttpCaseWithUserDemo):
                     'question_type': 'simple_choice',
                     'display_mode': 'dropdown',
                     'constr_mandatory': True,
-                    'labels_ids': [
+                    'suggested_answer_ids': [
                         (0, 0, {
                             'value': '20$',
                             'sequence': 1,
@@ -178,7 +178,7 @@ class TestUiCertification(HttpCaseWithUserDemo):
                     'sequence': 9,
                     'question_type': 'multiple_choice',
                     'column_nb': '2',
-                    'labels_ids': [
+                    'suggested_answer_ids': [
                         (0, 0, {
                             'value': 'Corner Desk Right Sit',
                             'sequence': 1,
@@ -214,7 +214,7 @@ class TestUiCertification(HttpCaseWithUserDemo):
                     'question_type': 'simple_choice',
                     'display_mode': 'dropdown',
                     'constr_mandatory': True,
-                    'labels_ids': [
+                    'suggested_answer_ids': [
                         (0, 0, {
                             'value': 'Very underpriced',
                             'sequence': 1,
