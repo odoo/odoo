@@ -31,7 +31,7 @@ class PaymentProcessing(http.Controller):
         if not transactions:
             return False
         tx_ids_list = set(request.session.get("__payment_tx_ids__", [])) | set(transactions.ids)
-        request.session["__payment_tx_ids__"] = tx_ids_list
+        request.session["__payment_tx_ids__"] = list(tx_ids_list)
         return True
 
     @staticmethod
