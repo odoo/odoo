@@ -13,4 +13,6 @@ class AccountAnalyticLine(models.Model):
         for analytic_line in self.sudo().filtered(lambda aal: not aal.so_line and aal.product_id and aal.product_id.expense_policy not in [False, 'no']):
             if analytic_line.move_id.expense_id.sale_order_id:
                 mapping[analytic_line.id] = analytic_line.move_id.expense_id.sale_order_id
+            else:
+                mapping[analytic_line.id] = False
         return mapping
