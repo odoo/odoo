@@ -1310,6 +1310,7 @@ class Lead(models.Model):
                    ],
                    'p_won': 0.87,
                    'p_lost': 0.13,
+                   'team_total': 778,
                 }, # The lead is ongoing
             }
         """
@@ -1405,7 +1406,7 @@ class Lead(models.Model):
                 p_lost = team_lost / team_total
 
             # 2. Compute won and lost score using each variable's individual probability
-            lead_statistics[lead_id] = {'statistics': [], 'p_won': p_won, 'p_lost': p_lost}
+            lead_statistics[lead_id] = {'statistics': [], 'p_won': p_won, 'p_lost': p_lost, 'team_total': team_total}
 
             for field, value in lead_values['values']:
                 field_result = result.get(save_team_id, {}).get(field)

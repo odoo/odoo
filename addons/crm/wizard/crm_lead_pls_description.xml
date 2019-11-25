@@ -1,0 +1,32 @@
+<odoo>
+    <record id="crm_lead_pls_description_view_form" model="ir.ui.view">
+        <field name="name">crm.lead.pls.description.wizard.form</field>
+        <field name="model">crm.lead.pls.description</field>
+        <field name="arch" type="xml">
+            <form string="PLS Description">
+                <div class="o_crm_lead_pls_description_tree w-100 text-left">
+                    <field name="lead_fields">
+                        <tree default_order="winning">
+                            <field name="name"/>
+                            <field name="value"/>
+                            <field name="winning" invisible="1"/>
+                            <button class="text-success" icon="fa-arrow-up" attrs="{'invisible': [('winning', '=', False)]}" title="up"/>
+                            <button class="text-danger" icon="fa-arrow-down" attrs="{'invisible': [('winning', '=', True)]}" title="down"/>
+                        </tree>
+                    </field>
+                </div>
+                <footer>
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="crm_lead_pls_description_action" model="ir.actions.act_window">
+        <field name="name">Probability Computation Breakdown</field>
+        <field name="res_model">crm.lead.pls.description</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="crm_lead_pls_description_view_form"/>
+        <field name="target">new</field>
+    </record>
+</odoo>
