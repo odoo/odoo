@@ -143,7 +143,7 @@ class TestSurveyInvite(common.SurveyCase):
         self.assertEqual(len(answers), 3)
         self.assertEqual(
             set(answers.mapped('email')),
-            set(['test1@example.com', 'Raoulette Vignolette <test2@example.com>', self.customer.email]))
+            set(['test1@example.com', '"Raoulette Vignolette" <test2@example.com>', self.customer.email]))
         self.assertEqual(answers.mapped('partner_id'), self.customer)
 
     @users('survey_manager')
@@ -164,7 +164,7 @@ class TestSurveyInvite(common.SurveyCase):
         self.assertEqual(len(answers), 3)
         self.assertEqual(
             set(answers.mapped('email')),
-            set(['test1@example.com', 'Raoulette Vignolette <test2@example.com>', self.customer.email]))
+            set(['test1@example.com', '"Raoulette Vignolette" <test2@example.com>', self.customer.email]))
         self.assertEqual(answers.mapped('partner_id'), self.customer)
 
     @users('survey_manager')

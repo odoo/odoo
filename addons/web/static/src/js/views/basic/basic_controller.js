@@ -823,12 +823,13 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
             await this._confirmChange(ev.data.id, updatedFields, ev);
         }
         var record = this.model.get(ev.data.id, { raw: true });
+        var res_id = record.res_id || record.res_ids[0];
         var result = await this._rpc({
             route: '/web/dataset/call_button',
             params: {
                 model: 'ir.translation',
                 method: 'translate_fields',
-                args: [record.model, record.res_id, ev.data.fieldName],
+                args: [record.model, res_id, ev.data.fieldName],
                 kwargs: { context: record.getContext() },
             }
         });

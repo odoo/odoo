@@ -501,16 +501,23 @@ class AccountMove(models.Model):
         taxes_map = {}
 
         # ==== Add tax lines ====
+        to_remove = self.env['account.move.line']
         for line in self.line_ids.filtered('tax_repartition_line_id'):
             grouping_dict = self._get_tax_grouping_key_from_tax_line(line)
             grouping_key = _serialize_tax_grouping_key(grouping_dict)
-            taxes_map[grouping_key] = {
-                'tax_line': line,
-                'balance': 0.0,
-                'amount_currency': 0.0,
-                'tax_base_amount': 0.0,
-                'grouping_dict': False,
-            }
+            if grouping_key in taxes_map:
+                # A line with the same key does already exist, we only need one
+                # to modify it; we have to drop this one.
+                to_remove += line
+            else:
+                taxes_map[grouping_key] = {
+                    'tax_line': line,
+                    'balance': 0.0,
+                    'amount_currency': 0.0,
+                    'tax_base_amount': 0.0,
+                    'grouping_dict': False,
+                }
+        self.line_ids -= to_remove
 
         # ==== Mount base lines ====
         for line in self.line_ids.filtered(lambda line: not line.exclude_from_invoice_tab):
@@ -2062,7 +2069,7 @@ class AccountMove(models.Model):
             # When the accounting date is prior to the tax lock date, move it automatically to the next available date.
             # /!\ 'check_move_validity' must be there since the dynamic lines will be recomputed outside the 'onchange'
             # environment.
-            if move.company_id.tax_lock_date and move.date <= move.company_id.tax_lock_date:
+            if (move.company_id.tax_lock_date and move.date <= move.company_id.tax_lock_date) and (move.line_ids.tax_ids or move.line_ids.tag_ids):
                 move.date = move.company_id.tax_lock_date + timedelta(days=1)
                 move.with_context(check_move_validity=False)._onchange_currency()
 

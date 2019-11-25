@@ -19,9 +19,9 @@
 # Vitor Fernandes <vmlf01@gmail.com>, 2019
 # Pedro Castro Silva <pedrocs@exo.pt>, 2019
 # Martin Trigaux, 2019
-# Manuela Silva <manuelarodsilva@gmail.com>, 2019
 # Nuno Silva <nuno.silva@arxi.pt>, 2019
 # Pedro Filipe <pedro2.10@hotmail.com>, 2019
+# Manuela Silva <manuelarodsilva@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -29,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-01 12:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Pedro Filipe <pedro2.10@hotmail.com>, 2019\n"
+"Last-Translator: Manuela Silva <manuelarodsilva@gmail.com>, 2019\n"
 "Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1475,12 +1475,12 @@ msgid ""
 "have real delivered quantities in sales orders.\n"
 msgstr ""
 "\n"
-"Permite vender folha de horas na encomenda de venda\n"
+"Permite registos de horas de venda na encomenda de venda\n"
 "============================================\n"
 "\n"
-"Este módulo define o produto certo em todas as linhas da folha de horas\n"
-"de acordo com a encomenda/contrato em que está a trabalhar. Isto permite que faça\n"
-"as entregas com quantidades verdadeiras nas encomendas de venda.\n"
+"Este módulo define o produto certo em todas as linhas do registo de horas\n"
+"de acordo com a encomenda/contrato em que está a trabalhar. Isto permite ter\n"
+"as quantidades de entrega reais nas encomendas de venda.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_amazon_delivery
@@ -5149,6 +5149,18 @@ msgid ""
 "project.\n"
 "        "
 msgstr ""
+"\n"
+"Integração com Transifex\n"
+"=====================\n"
+"This module will add a link to the Transifex project in the translation view.\n"
+"The purpose of this module is to speed up translations of the main modules.\n"
+"\n"
+"To work, Odoo uses Transifex configuration files `.tx/config` to detec the\n"
+"project source. Custom modules will not be translated (as not published on\n"
+"the main Transifex project).\n"
+"\n"
+"O idioma que o utilizador tenta traduzir deve ser be ativado no projeto Transifex.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_tr
@@ -5475,7 +5487,7 @@ msgstr "%Y - Ano com século.\""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "%a - Abbreviated weekday name."
-msgstr "%a - Nome da Semana Abreviado."
+msgstr "%a - Nome da semana abreviado."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -5938,6 +5950,10 @@ msgid ""
 "                                <span colspan=\"2\">Minute: %(min)s</span>\n"
 "                                <span colspan=\"2\">Second: %(sec)s</span>"
 msgstr ""
+"<span colspan=\"2\">Horas 00-&gt;24: %(h24)s</span>\n"
+"                                <span colspan=\"2\">Horas 00-&gt;12: %(h12)s</span>\n"
+"                                <span colspan=\"2\">Minuto: %(min)s</span>\n"
+"                                <span colspan=\"2\">Segundo: %(sec)s</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.layout_preview
@@ -6521,7 +6537,7 @@ msgstr "Conta TaxCloud"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_account_taxcloud
 msgid "Account TaxCloud - Ecommerce"
-msgstr ""
+msgstr "Conta TaxCloud - Ecommerce"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_account_taxcloud
@@ -6672,7 +6688,7 @@ msgstr "Utilização da Ação"
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_act_window
 msgid "Action Window"
-msgstr ""
+msgstr "Janela de Ação"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_act_window_close
@@ -6696,7 +6712,7 @@ msgstr "Ações"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_tree
 msgid "Activate Language and Update Translations"
-msgstr ""
+msgstr "Ativar Idioma e Atualizar Traduções"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -7516,7 +7532,7 @@ msgstr "Gestão de associações"
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid "At least one language must be active."
-msgstr "Pelo menos uma linguagem deve estar ativa."
+msgstr "Deve estar ativo pelo menos um idioma."
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_attachment
@@ -7696,7 +7712,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
 msgid "Avatar"
-msgstr ""
+msgstr "Avatar"
 
 #. module: base
 #: model:res.country,name:base.az
@@ -7896,7 +7912,7 @@ msgstr "Campo Base"
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid "Base Language 'en_US' can not be deleted."
-msgstr ""
+msgstr "O idioma base 'en_US' não pode ser eliminado."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment
@@ -8306,7 +8322,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_enterprise
 msgid "CRM enterprise"
-msgstr ""
+msgstr "CRM empresa"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_crm
@@ -8447,6 +8463,7 @@ msgstr ""
 #, python-format
 msgid "Cannot deactivate a language that is currently used by users."
 msgstr ""
+"Não é possível desativar um idioma utilizado atualmente pelos utilizadores."
 
 #. module: base
 #: code:addons/base/models/res_config.py:0
@@ -8459,7 +8476,8 @@ msgstr "Não se pode duplicar a configuração!"
 #, python-format
 msgid "Cannot rename/delete fields that are still present in views:"
 msgstr ""
-"Não é possível renomear/eliminar camops que ainda estão presentes em vistas:"
+"Não é possível renomear/eliminar campos que ainda estão presentes nas "
+"visualizações:"
 
 #. module: base
 #: model:res.country,name:base.cv
@@ -8729,7 +8747,7 @@ msgstr "Cidade"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_address_city
 msgid "City Addresses"
-msgstr ""
+msgstr "Moradas"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_logging__type__client
@@ -8829,7 +8847,7 @@ msgstr "Índice de Cor"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_document_layout
 msgid "Colors"
-msgstr ""
+msgstr "Cores"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__column1
@@ -9004,7 +9022,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_project_timesheet_forecast
 msgid "Compare timesheets and plannings"
-msgstr ""
+msgstr "Compare os registos de horas e os planeamentos"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__contact_address
@@ -9108,7 +9126,7 @@ msgstr "Assistentes de Configuração"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_timesheet_enterprise
 msgid "Configure timesheet invoicing"
-msgstr ""
+msgstr "Configurar faturação do registo de horas"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_base_document_layout_configurator
@@ -9477,7 +9495,7 @@ msgstr "criar uma conta bancária "
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_ui_view_custom
 msgid "Create a customized view"
-msgstr ""
+msgstr "Criar uma visualização personalizada"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__state__object_create
@@ -9879,7 +9897,7 @@ msgstr "Personalizado"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_document_layout__custom_colors
 msgid "Custom Colors"
-msgstr ""
+msgstr "Cores Personalizadas"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__state__manual
@@ -9997,7 +10015,7 @@ msgstr "Data for xml conversion tests"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Data to Write"
-msgstr ""
+msgstr "Dados a Gravar"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_search_view
@@ -11253,7 +11271,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__state__multi
 msgid "Execute several actions"
-msgstr "Executar diversas ações"
+msgstr "Executar várias ações"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_view_search
@@ -11902,8 +11920,8 @@ msgid ""
 "For more details about translating Odoo in your language, please refer to "
 "the"
 msgstr ""
-"Para mais informações acerca da tradução do Odoo para o seu idioma, por "
-"favor, veja em"
+"Para mais informações sobre a tradução do Odoo para o seu idioma, por favor,"
+" consulte"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__relation_field
@@ -11958,7 +11976,7 @@ msgstr "Formato do endereço de email \"Nome <email@domínio>\""
 #: model:ir.model.fields,field_description:base.field_res_partner__email_formatted
 #: model:ir.model.fields,field_description:base.field_res_users__email_formatted
 msgid "Formatted Email"
-msgstr "Email formatado"
+msgstr "Email Formatado"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_forum
@@ -12068,7 +12086,7 @@ msgstr "Caminho completo"
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window__target__fullscreen
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_client__target__fullscreen
 msgid "Full Screen"
-msgstr "Ecrã completo"
+msgstr "Ecrã Completo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_mrp_workorder_quality
@@ -12194,7 +12212,7 @@ msgstr "Configurações Gerais"
 #: model:ir.ui.menu,name:base.menu_wizard_update_translations
 #: model_terms:ir.ui.view,arch_db:base.wizard_update_translations
 msgid "Generate Missing Terms"
-msgstr ""
+msgstr "Gerar Termos em Falta"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm
@@ -12447,7 +12465,7 @@ msgstr "Granada"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_grid
 msgid "Grid View"
-msgstr "Vista Grelha"
+msgstr "Visualização em Grelha"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_access__group_id
@@ -12529,7 +12547,7 @@ msgstr "Grupos (sem grupo = global)"
 #. module: base
 #: model:res.country,name:base.gp
 msgid "Guadeloupe"
-msgstr ""
+msgstr "Guadalupe"
 
 #. module: base
 #: model:res.country,name:base.gu
@@ -12743,7 +12761,7 @@ msgstr "Ajuda na gestão de orçamentos, encomendas de venda e faturação."
 #. module: base
 #: model:ir.module.category,description:base.module_category_operations_timesheets
 msgid "Helps you manage the timesheets."
-msgstr "Ajuda-o a gerir as folhas de tempos."
+msgstr "Ajuda-o a gerir os registos de horas."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_user_type
@@ -13108,7 +13126,7 @@ msgstr "Código ISO"
 #. module: base
 #: model:ir.model.fields,help:base.field_base_language_import__code
 msgid "ISO Language and Country code, e.g. en_US"
-msgstr "Idioma ISO e Código de País, p.ex. en_US"
+msgstr "Código do País e Idioma ISO, por exemplo, pt_PT"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__iso_code
@@ -13713,7 +13731,7 @@ msgstr "Grupos Internos"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Internal Notes"
-msgstr "Notas internas"
+msgstr "Notas Internas"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_translation__src
@@ -13803,7 +13821,7 @@ msgid ""
 "allowed directives, displayed when you edit a language."
 msgstr ""
 "A diretiva data/hora especificada é invalida. Por favor, consulte a lista de"
-" diretivas permitidas, exibida quando se edita uma linguagem."
+" diretivas permitidas, exibida quando se edita um idioma."
 
 #. module: base
 #: code:addons/base/models/ir_default.py:0
@@ -14205,7 +14223,7 @@ msgstr "Idioma"
 #. module: base
 #: model:ir.model,name:base.model_base_language_export
 msgid "Language Export"
-msgstr ""
+msgstr "Exportar Idioma"
 
 #. module: base
 #: model:ir.model,name:base.model_base_language_import
@@ -14221,7 +14239,7 @@ msgstr "Nome do Idioma"
 #: code:addons/base/wizard/base_language_install.py:0
 #, python-format
 msgid "Language Pack"
-msgstr "Pacote do idioma"
+msgstr "Pacote de idioma"
 
 #. module: base
 #: code:addons/base/models/res_lang.py:0
@@ -14854,7 +14872,7 @@ msgstr "Logótipo"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_document_layout__logo_primary_color
 msgid "Logo Primary Color"
-msgstr ""
+msgstr "Cor Principal do Logótipo"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_document_layout__logo_secondary_color
@@ -14906,7 +14924,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_workorder
 msgid "MRP II"
-msgstr ""
+msgstr "MRP II"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_quality_mrp
@@ -15220,7 +15238,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_fleet
 msgid "Manage your fleet and track car costs"
-msgstr ""
+msgstr "Controle a sua frota e acompanhe os custos de automóveis"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_hr_recruitment
@@ -15870,7 +15888,7 @@ msgid ""
 "Module loading %s failed: file %s could not be processed:\n"
 " %s"
 msgstr ""
-"O carregamento do módulo %s falhou: o ficheiro %s não pode ser processado:\n"
+"O carregamento do módulo %s falhou: não foi possível processar o ficheiro %s:\n"
 " %s"
 
 #. module: base
@@ -15940,7 +15958,7 @@ msgstr "Montserrat"
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "More languages"
-msgstr ""
+msgstr "Mais idiomas"
 
 #. module: base
 #: model:res.country,name:base.ma
@@ -16087,12 +16105,12 @@ msgstr ""
 #: code:addons/base/wizard/base_export_language.py:0
 #, python-format
 msgid "New Language (Empty translation template)"
-msgstr "Novo idioma (modelo de tradução limpo)"
+msgstr "Novo Idioma (limpar modelo de tradução)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_change_password_user__new_passwd
 msgid "New Password"
-msgstr "Nova Senha"
+msgstr "Nova Palavra-passe"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_url__target__new
@@ -16363,7 +16381,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_update__added
 msgid "Number of modules added"
-msgstr "Número de Módulos Adicionados"
+msgstr "Número de módulos adicionados"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_update__updated
@@ -16517,7 +16535,7 @@ msgid ""
 "etc) and directly following Odoo's standard access rights management, so you do\n"
 "not have to configure things twice.\n"
 msgstr ""
-"Odoo Blogs\n"
+"Odoo Blogues\n"
 "----------\n"
 "\n"
 "Escreva, Desenhe, Promova e Participe com <a href=\"https://www.odoo.com/page/blog-engine\">Odoo - Blogues</a>.\n"
@@ -17694,7 +17712,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_marketing_online_appointment
 msgid "Online Appointment"
-msgstr ""
+msgstr "Marcação On-line"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_sale
@@ -18510,7 +18528,7 @@ msgstr "Acompanhamento do Pagamento"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.layout_preview
 msgid "Payment Terms:"
-msgstr ""
+msgstr "Termos de pagamento:"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_payment
@@ -18845,7 +18863,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__print_page_width
 msgid "Print page width (mm)"
-msgstr ""
+msgstr "Largura da página de impressão (mm)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__print_report_name
@@ -19107,7 +19125,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event
 msgid "Publish events, sell tickets"
-msgstr ""
+msgstr "Eventos públicos, vender bilhetes"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_customer
@@ -19535,7 +19553,7 @@ msgstr "Referência"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Reference date"
-msgstr ""
+msgstr "Data de referência"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_referrals
@@ -19714,7 +19732,7 @@ msgstr "Rodapé do relatório"
 #: model:ir.model,name:base.model_report_layout
 #: model:ir.model.fields,field_description:base.field_base_document_layout__report_layout_id
 msgid "Report Layout"
-msgstr ""
+msgstr "Layout do Relatório"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_search_view
@@ -19896,7 +19914,7 @@ msgstr "Regra"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
 msgid "Rule Definition (Domain Filter)"
-msgstr "Definição de regra (filtro de domínio)"
+msgstr "Definição de Regra (Filtro de Domínio)"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_rule_no_access_rights
@@ -20145,7 +20163,7 @@ msgstr "Equipas de vendas"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_timesheet
 msgid "Sales Timesheet"
-msgstr "Folha de Horas"
+msgstr "Registo de Horas das Vendas"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_timesheet_purchase
@@ -20453,7 +20471,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_timesheet
 msgid "Sell based on timesheets"
-msgstr "Baseado na Folha de Horas"
+msgstr "Venda baseada nos registos de horas"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_digital
@@ -21700,7 +21718,7 @@ msgid ""
 "You can use this field for quick search."
 msgstr ""
 "O código ISO do país em dois carateres.\n"
-"Pode usar este campo para procura rápida."
+"Pode utilizar este campo para a procura rápida."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang__url_code
@@ -21973,7 +21991,7 @@ msgstr "O nome do grupo deve ser único dentro de cada aplicação!"
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_lang_name_uniq
 msgid "The name of the language must be unique !"
-msgstr "O nome da língua deve ser único!"
+msgstr "O nome do idioma deve ser único!"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_module_module_name_uniq
@@ -22471,12 +22489,12 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_operations_timesheets
 #: model:ir.module.module,shortdesc:base.module_timesheet_grid
 msgid "Timesheets"
-msgstr "Folhas de horas"
+msgstr "Registos de Horas"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet_attendance
 msgid "Timesheets/attendances reporting"
-msgstr "Relatórios de Folhas de Horas/Assiduidades"
+msgstr "Relatórios dos registos de horas/assiduidades"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__tz
@@ -23363,7 +23381,7 @@ msgstr "Registo histórico do utilizador"
 #. module: base
 #: model:ir.module.category,name:base.module_category_user_type
 msgid "User types"
-msgstr ""
+msgstr "Tipos de utilizador"
 
 #. module: base
 #: model:ir.model,name:base.model_change_password_user
@@ -23698,7 +23716,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__inherit_children_ids
 msgid "Views which inherit from this one"
-msgstr "Vista que herdam desta"
+msgstr "Visualizações que herdam desta"
 
 #. module: base
 #: model:res.country,name:base.vg
@@ -23758,7 +23776,7 @@ msgstr "Avisos"
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_E
 msgid "Water supply"
-msgstr ""
+msgstr "Fornecimento de água"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web
@@ -24227,14 +24245,14 @@ msgid ""
 "You cannot delete the language which is Active!\n"
 "Please de-activate the language first."
 msgstr ""
-"Não pode eliminar a linguagem que está ativa!\n"
-"Terá que desativá-la primeiro."
+"Não pode eliminar o idioma que está ativo!\n"
+"Por favor, reative-o primeiro."
 
 #. module: base
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid "You cannot delete the language which is the user's preferred language."
-msgstr ""
+msgstr "Não pode eliminar o idioma que é o idioma preferido do utilizador."
 
 #. module: base
 #: code:addons/base/wizard/base_partner_merge.py:0
@@ -24489,7 +24507,7 @@ msgstr "p. ex. Diretor de vendas"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "e.g. Update order quantity"
-msgstr "p. ex. Atualizar quantidade da encomenda"
+msgstr "por exemplo, atualizar a quantidade da encomenda"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_import_language
@@ -24712,7 +24730,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__reference
 msgid "reference"
-msgstr ""
+msgstr "referência"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__selection

@@ -60,15 +60,14 @@ class PaypalController(http.Controller):
         tx = None
         if reference:
             tx = request.env['payment.transaction'].search([('reference', '=', reference)])
-        paypal_urls = tx.acquirer_id.paypal_get_form_action_url()
-        pdt_request = bool(post.get('amt'))  # check for spefific pdt param
+        paypal_url = tx.acquirer_id.paypal_get_form_action_url()
+        pdt_request = bool(post.get('amt'))  # check for specific pdt param
         if pdt_request:
             # this means we are in PDT instead of DPN like before
             # fetch the PDT token
             post['at'] = tx and tx.acquirer_id.paypal_pdt_token or ''
             post['cmd'] = '_notify-synch'  # command is different in PDT than IPN/DPN
-        validate_url = paypal_urls['paypal_form_url']
-        urequest = requests.post(validate_url, post)
+        urequest = requests.post(paypal_url, post)
         urequest.raise_for_status()
         resp = urequest.text
         if pdt_request:

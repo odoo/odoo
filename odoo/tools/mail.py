@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 import collections
 import logging
 from lxml.html import clean
@@ -11,7 +12,7 @@ import threading
 import time
 
 from email.header import decode_header, Header
-from email.utils import getaddresses, formataddr
+from email.utils import getaddresses
 from lxml import etree
 
 import odoo
@@ -413,6 +414,8 @@ single_email_re = re.compile(r"""^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6
 
 mail_header_msgid_re = re.compile('<[^<>]+>')
 
+email_addr_escapes_re = re.compile(r'[\\"]')
+
 
 def generate_tracking_message_id(res_id):
     """Returns a string that can be used in the Message-ID RFC822 header field
@@ -526,3 +529,39 @@ def decode_smtp_header(smtp_header):
 # was mail_thread.decode_header()
 def decode_message_header(message, header, separator=' '):
     return separator.join(decode_smtp_header(h) for h in message.get_all(header, []) if h)
+
+def formataddr(pair, charset='utf-8'):
+    """Pretty format a 2-tuple of the form (realname, email_address).
+
+    Set the charset to ascii to get a RFC-2822 compliant email.
+
+    The email address is considered valid and is left unmodified.
+
+    If the first element of pair is falsy then only the email address
+    is returned.
+
+    >>> formataddr(('John Doe', 'johndoe@example.com'))
+    '"John Doe" <johndoe@example.com>'
+
+    >>> formataddr(('', 'johndoe@example.com'))
+    'johndoe@example.com'
+    """
+    name, address = pair
+    address.encode('ascii')
+    if name:
+        try:
+            name.encode(charset)
+        except UnicodeEncodeError:
+            # charset mismatch, encode as utf-8/base64
+            # rfc2047 - MIME Message Header Extensions for Non-ASCII Text
+            return "=?utf-8?b?{name}?= <{addr}>".format(
+                name=base64.b64encode(name.encode('utf-8')).decode('ascii'),
+                addr=address)
+        else:
+            # ascii name, escape it if needed
+            # rfc2822 - Internet Message Format
+            #   #section-3.4 - Address Specification
+            return '"{name}" <{addr}>'.format(
+                name=email_addr_escapes_re.sub(r'\\\g<0>', name),
+                addr=address)
+    return address

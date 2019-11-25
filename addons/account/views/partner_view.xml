@@ -76,6 +76,7 @@
             <field name="model">account.fiscal.position</field>
             <field name="arch" type="xml">
                 <search string="Search Fiscal Positions">
+                    <field name="name" string="Fiscal Position"/>
                     <filter name="active" string="Archived" domain="[('active', '=', False)]"/>
                 </search>
             </field>

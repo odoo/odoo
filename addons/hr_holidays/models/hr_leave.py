@@ -688,6 +688,12 @@ class HolidaysRequest(models.Model):
     def _get_mail_redirect_suggested_company(self):
         return self.holiday_status_id.company_id
 
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        if not self.user_has_groups('hr_holidays.group_hr_holidays_user') and 'name' in groupby:
+            raise UserError(_('Such grouping is not allowed.'))
+        return super(HolidaysRequest, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
+
     ####################################################
     # Business methods
     ####################################################
