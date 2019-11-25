@@ -58,6 +58,9 @@ class Contract(models.Model):
     hr_responsible_id = fields.Many2one('res.users', 'HR Responsible', tracking=True,
         help='Person responsible for validating the employee\'s contracts.')
     calendar_mismatch = fields.Boolean(compute='_compute_calendar_mismatch')
+    contract_type = fields.Selection([
+        ('employee', 'Employee'),
+        ('worker', 'Worker')], string="Contract Type", default="employee")
 
     @api.depends('employee_id.resource_calendar_id', 'resource_calendar_id')
     def _compute_calendar_mismatch(self):
