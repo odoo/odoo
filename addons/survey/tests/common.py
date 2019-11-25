@@ -163,7 +163,7 @@ class TestSurveyCommon(common.SavepointCase):
             'constr_error_msg': constr_error_msg,
         }
         if qtype in ('simple_choice', 'multiple_choice'):
-            base_qvalues['labels_ids'] = [
+            base_qvalues['suggested_answer_ids'] = [
                 (0, 0, {
                     'value': label['value'],
                     'answer_score': label.get('answer_score', 0),
@@ -172,11 +172,11 @@ class TestSurveyCommon(common.SavepointCase):
             ]
         elif qtype == 'matrix':
             base_qvalues['matrix_subtype'] = kwargs.pop('matrix_subtype', 'simple')
-            base_qvalues['labels_ids'] = [
+            base_qvalues['suggested_answer_ids'] = [
                 (0, 0, {'value': label['value'], 'answer_score': label.get('answer_score', 0)})
                 for label in kwargs.pop('labels')
             ]
-            base_qvalues['labels_ids_2'] = [
+            base_qvalues['matrix_row_ids'] = [
                 (0, 0, {'value': label['value'], 'answer_score': label.get('answer_score', 0)})
                 for label in kwargs.pop('labels_2')
             ]

@@ -74,15 +74,15 @@ class SurveyQuestion(models.Model):
         ('multiple_choice', 'Multiple choice: multiple answers allowed'),
         ('matrix', 'Matrix')], string='Question Type')
     # -- simple choice / multiple choice / matrix
-    labels_ids = fields.One2many(
-        'survey.label', 'question_id', string='Types of answers', copy=True,
+    suggested_answer_ids = fields.One2many(
+        'survey.question.answer', 'question_id', string='Types of answers', copy=True,
         help='Labels used for proposed choices: simple choice, multiple choice and columns of matrix')
     # -- matrix
     matrix_subtype = fields.Selection([
         ('simple', 'One choice per row'),
         ('multiple', 'Multiple choices per row')], string='Matrix Type', default='simple')
-    labels_ids_2 = fields.One2many(
-        'survey.label', 'question_id_2', string='Rows of the Matrix', copy=True,
+    matrix_row_ids = fields.One2many(
+        'survey.question.answer', 'matrix_question_id', string='Matrix Rows', copy=True,
         help='Labels used for proposed choices: rows of matrix')
     # -- display options
     column_nb = fields.Selection([
@@ -261,7 +261,7 @@ class SurveyQuestion(models.Model):
 
     def _validate_matrix(self, answers):
         # Validate that each line has been answered
-        if self.constr_mandatory and len(self.labels_ids_2) != len(answers):
+        if self.constr_mandatory and len(self.matrix_row_ids) != len(answers):
             return {self.id: self.constr_error_msg}
         return {}
 
@@ -276,26 +276,33 @@ class SurveyQuestion(models.Model):
     def get_correct_answer_ids(self):
         self.ensure_one()
 
-        return self.labels_ids.filtered(lambda label: label.is_correct)
+        return self.suggested_answer_ids.filtered(lambda label: label.is_correct)
 
 
-class SurveyLabel(models.Model):
-    """ A suggested answer for a question """
-    _name = 'survey.label'
+class SurveyQuestionAnswer(models.Model):
+    """ A preconfigured answer for a question. This model stores values used
+    for
+
+      * simple choice, multiple choice: proposed values for the selection /
+        radio;
+      * matrix: row and column values;
+
+    """
+    _name = 'survey.question.answer'
     _rec_name = 'value'
-    _order = 'sequence,id'
+    _order = 'sequence, id'
     _description = 'Survey Label'
 
     question_id = fields.Many2one('survey.question', string='Question', ondelete='cascade')
-    question_id_2 = fields.Many2one('survey.question', string='Question 2', ondelete='cascade')
+    matrix_question_id = fields.Many2one('survey.question', string='Question (as matrix row)', ondelete='cascade')
     sequence = fields.Integer('Label Sequence order', default=10)
     value = fields.Char('Suggested value', translate=True, required=True)
     is_correct = fields.Boolean('Is a correct answer')
     answer_score = fields.Float('Score for this choice', help="A positive score indicates a correct choice; a negative or null score indicates a wrong answer")
 
-    @api.constrains('question_id', 'question_id_2')
+    @api.constrains('question_id', 'matrix_question_id')
     def _check_question_not_empty(self):
-        """Ensure that field question_id XOR field question_id_2 is not null"""
+        """Ensure that field question_id XOR field matrix_question_id is not null"""
         for label in self:
-            if not bool(label.question_id) != bool(label.question_id_2):
+            if not bool(label.question_id) != bool(label.matrix_question_id):
                 raise ValidationError(_("A label must be attached to only one question."))
