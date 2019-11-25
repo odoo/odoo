@@ -208,7 +208,7 @@ class TestSurveyCommon(common.SavepointCase):
         }
         base_alvals[answer_fname] = answer_value
         base_alvals.update(kwargs)
-        return self.env['survey.user_input_line'].create(base_alvals)
+        return self.env['survey.user_input.line'].create(base_alvals)
 
     def _access_start(self, survey):
         return self.url_open('/survey/start/%s' % survey.access_token)
