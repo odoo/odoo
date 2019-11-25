@@ -328,7 +328,7 @@ class Survey(http.Controller):
             for question in questions:
                 answer = prepared_questions[question.id]['answer']
                 comment = prepared_questions[question.id]['comment']
-                request.env['survey.user_input_line'].sudo().save_lines(answer_sudo.id, question, answer, comment)
+                request.env['survey.user_input.line'].sudo().save_lines(answer_sudo.id, question, answer, comment)
 
         if answer_sudo.is_time_limit_reached or survey_sudo.questions_layout == 'one_page':
             answer_sudo._mark_done()

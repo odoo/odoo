@@ -112,7 +112,7 @@ class SurveyQuestion(models.Model):
     constr_error_msg = fields.Char('Error message', translate=True, default=lambda self: _("This question requires an answer."))
     # answers
     user_input_line_ids = fields.One2many(
-        'survey.user_input_line', 'question_id', string='Answers',
+        'survey.user_input.line', 'question_id', string='Answers',
         domain=[('skipped', '=', False)], groups='survey.group_survey_user')
 
     _sql_constraints = [

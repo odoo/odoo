@@ -27,6 +27,6 @@
     'demo': [
         'data/survey_demo.xml',
         'data/slide_slide_demo.xml',
-        'data/survey.user_input_line.csv',
+        'data/survey.user_input.line.csv',
     ],
 }

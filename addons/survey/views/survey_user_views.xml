@@ -148,9 +148,9 @@
 
     <!-- USER INPUT LINES
         .. note:: these views are useful mainly for technical users/administrators -->
-    <record model="ir.ui.view" id="survey_user_input_line_form">
-        <field name="name">survey_user_input_line_form</field>
-        <field name="model">survey.user_input_line</field>
+    <record id="survey_user_input_line_view_form" model="ir.ui.view">
+        <field name="name">survey.user_input.line.view.form</field>
+        <field name="model">survey.user_input.line</field>
         <field name="arch" type="xml">
             <form string="User input line details" create="false">
                 <sheet>
@@ -174,9 +174,9 @@
             </form>
         </field>
     </record>
-    <record model="ir.ui.view" id="survey_response_line_tree">
-        <field name="name">survey_response_line_tree</field>
-        <field name="model">survey.user_input_line</field>
+    <record id="survey_response_line_view_tree" model="ir.ui.view">
+        <field name="name">survey.user_input.line.view.tree</field>
+        <field name="model">survey.user_input.line</field>
         <field name="arch" type="xml">
             <tree string="Survey Answer Line" create="false">
                 <field name="survey_id"/>
@@ -189,9 +189,9 @@
             </tree>
         </field>
     </record>
-    <record id="survey_response_line_search" model="ir.ui.view">
-        <field name="name">survey_response_line_search</field>
-        <field name="model">survey.user_input_line</field>
+    <record id="survey_user_input_line_view_search" model="ir.ui.view">
+        <field name="name">survey.user_input.line.view.search</field>
+        <field name="model">survey.user_input.line</field>
         <field name="arch" type="xml">
             <search string="Search User input lines">
                 <field name="user_input_id"/>
@@ -204,11 +204,11 @@
         </field>
     </record>
 
-    <record model="ir.actions.act_window" id="action_survey_user_input_line">
+    <record id="survey_user_input_line_action" model="ir.actions.act_window">
         <field name="name">Detailed Answers</field>
-        <field name="res_model">survey.user_input_line</field>
+        <field name="res_model">survey.user_input.line</field>
         <field name="view_mode">tree,form</field>
-        <field name="search_view_id" ref="survey_response_line_search"/>
+        <field name="search_view_id" ref="survey_user_input_line_view_search"/>
         <field name="context">{'search_default_group_by_survey': True, 'search_default_group_by_user_input': True}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_empty_folder">
@@ -224,7 +224,7 @@
         sequence="1"/>
     <menuitem name="Detailed Answers"
         id="menu_survey_response_line_form"
-        action="action_survey_user_input_line"
+        action="survey_user_input_line_action"
         parent="survey_menu_user_inputs"
         sequence="4"
         groups="base.group_no_one"/>

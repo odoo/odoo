@@ -572,7 +572,7 @@ class Survey(models.Model):
                 domain_filter.insert(0, ('value_suggested.id', 'in', choice))
             else:
                 domain_filter = domain_filter[1:]
-            input_lines = self.env['survey.user_input_line'].search(domain_filter)
+            input_lines = self.env['survey.user_input.line'].search(domain_filter)
             filtered_input_ids = [input_line.user_input_id.id for input_line in input_lines]
         else:
             filtered_input_ids = []

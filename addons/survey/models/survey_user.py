@@ -40,7 +40,7 @@ class SurveyUserInput(models.Model):
     partner_id = fields.Many2one('res.partner', string='Partner', readonly=True)
     email = fields.Char('E-mail', readonly=True)
     # questions / answers
-    user_input_line_ids = fields.One2many('survey.user_input_line', 'user_input_id', string='Answers', copy=True)
+    user_input_line_ids = fields.One2many('survey.user_input.line', 'user_input_id', string='Answers', copy=True)
     question_ids = fields.Many2many('survey.question', string='Predefined Questions', readonly=True)
     quizz_score = fields.Float("Score (%)", compute="_compute_quizz_score", store=True, compute_sudo=True)  # stored for perf reasons
     quizz_passed = fields.Boolean('Quizz Passed', compute='_compute_quizz_passed', store=True, compute_sudo=True)  # stored for perf reasons
@@ -171,10 +171,10 @@ class SurveyUserInput(models.Model):
 
 
 class SurveyUserInputLine(models.Model):
-    _name = 'survey.user_input_line'
+    _name = 'survey.user_input.line'
     _description = 'Survey User Input Line'
     _rec_name = 'user_input_id'
-    _order = 'question_sequence,id'
+    _order = 'question_sequence, id'
 
     # survey data
     user_input_id = fields.Many2one('survey.user_input', string='User Input', ondelete='cascade', required=True)
