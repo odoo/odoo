@@ -27,7 +27,10 @@ class ProductTemplate(models.Model):
         else:
             err_msg = _('You must define at least one product category in order to be able to create products.')
             redir_msg = _('Go to Internal Categories')
-            raise RedirectWarning(err_msg, self.env.ref('product.product_category_action_form').id, redir_msg)
+            raise RedirectWarning(
+                err_msg, act_id=self.env.ref('product.product_category_action_form').id,
+                label=redir_msg,
+            )
 
     def _get_default_uom_id(self):
         return self.env["uom.uom"].search([], limit=1, order='id').id

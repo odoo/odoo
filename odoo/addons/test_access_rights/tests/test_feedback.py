@@ -116,7 +116,7 @@ class TestACLFeedback(Feedback):
         with self.assertRaises(AccessError) as ctx:
             self.record.with_user(self.user).write({'val': 10})
         self.assertEqual(
-            ctx.exception.args[0],
+            str(ctx.exception),
             """Sorry, you are not allowed to modify documents of type 'Object For Test Access Right' (test_access_right.some_obj). No group currently allows this operation. - (Operation: write, User: %d)""" % self.user.id
         )
 
@@ -126,7 +126,7 @@ class TestACLFeedback(Feedback):
                 'val': 1
             })
         self.assertEqual(
-            ctx.exception.args[0],
+            str(ctx.exception),
             """Sorry, you are not allowed to create documents of type 'Object For Test Access Right' (test_access_right.some_obj). This operation is allowed for the groups:\n\t- Group 0 - (Operation: create, User: %d)""" % self.user.id
         )
 
@@ -136,10 +136,10 @@ class TestACLFeedback(Feedback):
         with self.assertRaises(AccessError) as ctx:
             # noinspection PyStatementEffect
             r.val
-        self.assertEqual(ctx.exception.args[0], expected)
+        self.assertEqual(str(ctx.exception), expected)
         with self.assertRaises(AccessError) as ctx:
             r.read(['val'])
-        self.assertEqual(ctx.exception.args[0], expected)
+        self.assertEqual(str(ctx.exception), expected)
 
 class TestIRRuleFeedback(Feedback):
     """ Tests that proper feedback is returned on ir.rule errors
@@ -170,7 +170,7 @@ class TestIRRuleFeedback(Feedback):
         with self.assertRaises(AccessError) as ctx:
             self.record.write({'val': 1})
         self.assertEqual(
-            ctx.exception.args[0],
+            str(ctx.exception),
             'The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: "Object For Test Access Right" (test_access_right.some_obj), Operation: write)'
         )
 
@@ -179,7 +179,7 @@ class TestIRRuleFeedback(Feedback):
         with self.assertRaises(AccessError) as ctx:
             self.record.write({'val': 1})
         self.assertEqual(
-            ctx.exception.args[0],
+            str(ctx.exception),
             """The requested operation ("write" on "Object For Test Access Right" (test_access_right.some_obj)) was rejected because of the following rules:
 - rule 0
 
@@ -203,7 +203,7 @@ class TestIRRuleFeedback(Feedback):
         with self.assertRaises(AccessError) as ctx:
             self.record.write({'val': 1})
         self.assertEqual(
-            ctx.exception.args[0],
+            str(ctx.exception),
             """The requested operation ("write" on "Object For Test Access Right" (test_access_right.some_obj)) was rejected because of the following rules:
 - rule 0
 - rule 1
@@ -219,7 +219,7 @@ class TestIRRuleFeedback(Feedback):
         with self.assertRaises(AccessError) as ctx:
             self.record.write({'val': 1})
         self.assertEqual(
-            ctx.exception.args[0],
+            str(ctx.exception),
             """The requested operation ("write" on "Object For Test Access Right" (test_access_right.some_obj)) was rejected because of the following rules:
 - rule 0
 - rule 1
@@ -238,7 +238,7 @@ class TestIRRuleFeedback(Feedback):
         with self.assertRaises(AccessError) as ctx:
             self.record.write({'val': 1})
         self.assertEqual(
-            ctx.exception.args[0],
+            str(ctx.exception),
             """The requested operation ("write" on "Object For Test Access Right" (test_access_right.some_obj)) was rejected because of the following rules:
 - rule 0
 
@@ -255,7 +255,7 @@ class TestIRRuleFeedback(Feedback):
         with self.assertRaises(AccessError) as ctx:
             self.record.write({'val': 1})
         self.assertEqual(
-            ctx.exception.args[0],
+            str(ctx.exception),
             """The requested operation ("write" on "Object For Test Access Right" (test_access_right.some_obj)) was rejected because of the following rules:
 - rule 0
 - rule 2
@@ -275,7 +275,7 @@ class TestIRRuleFeedback(Feedback):
         with self.assertRaises(AccessError) as ctx:
             self.record.write({'val': 1})
         self.assertEqual(
-            ctx.exception.args[0],
+            str(ctx.exception),
             """The requested operation ("write" on "Object For Test Access Right" (test_access_right.some_obj)) was rejected because of the following rules:
 - rule 0
 
@@ -295,7 +295,7 @@ Note: this might be a multi-company issue.
         with self.assertRaises(AccessError) as ctx:
             _ = self.record.val
         self.assertEqual(
-            ctx.exception.args[0],
+            str(ctx.exception),
             """The requested operation ("read" on "Object For Test Access Right" (test_access_right.some_obj)) was rejected because of the following rules:
 - rule 0
 - rule 1
@@ -330,7 +330,7 @@ class TestFieldGroupFeedback(Feedback):
             _ = self.record.forbidden
 
         self.assertEqual(
-            ctx.exception.args[0],
+            str(ctx.exception),
             """The requested operation can not be completed due to security restrictions.
 
 Document type: Object For Test Access Right (test_access_right.some_obj)
@@ -349,7 +349,7 @@ Fields:
             self.record.write({'forbidden': 1, 'forbidden2': 2})
 
         self.assertEqual(
-            ctx.exception.args[0],
+            str(ctx.exception),
             """The requested operation can not be completed due to security restrictions.
 
 Document type: Object For Test Access Right (test_access_right.some_obj)

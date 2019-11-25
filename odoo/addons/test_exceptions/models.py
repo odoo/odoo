@@ -14,20 +14,10 @@ class m(models.Model):
     _name = 'test.exceptions.model'
     _description = 'Test Exception Model'
 
-    def generate_except_osv(self):
-        # title is ignored in the new (6.1) exceptions
-        raise odoo.osv.osv.except_osv('title', 'description')
-
-    def generate_except_orm(self):
-        # title is ignored in the new (6.1) exceptions
-        raise odoo.exceptions.except_orm('title', 'description')
-
-    def generate_warning(self):
-        raise odoo.exceptions.Warning('description')
-
     def generate_redirect_warning(self):
         action = self.env.ref('test_exceptions.action_test_exceptions')
-        raise odoo.exceptions.RedirectWarning('description', action.id, 'Go to the redirection')
+        raise odoo.exceptions.RedirectWarning(
+            'description', act_id=action.id, label='Go to the redirection')
 
     def generate_access_denied(self):
         raise odoo.exceptions.AccessDenied()
@@ -49,15 +39,6 @@ class m(models.Model):
 
     def generate_validation_error(self):
         raise odoo.exceptions.ValidationError('description')
-
-    def generate_except_osv_safe_eval(self):
-        self.generate_safe_eval(self.generate_except_osv)
-
-    def generate_except_orm_safe_eval(self):
-        self.generate_safe_eval(self.generate_except_orm)
-
-    def generate_warning_safe_eval(self):
-        self.generate_safe_eval(self.generate_warning)
 
     def generate_redirect_warning_safe_eval(self):
         self.generate_safe_eval(self.generate_redirect_warning)

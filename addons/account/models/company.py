@@ -452,7 +452,7 @@ class ResCompany(models.Model):
                 action = self.env.ref('account.action_account_journal_form')
                 msg = _("We cannot find any journal for this company. You should create one."
                         "\nPlease go to Configuration > Journals.")
-                raise RedirectWarning(msg, action.id, _("Go to the journal configuration"))
+                raise RedirectWarning(msg, act_id=action.id, label=_("Go to the journal configuration"))
 
             sample_invoice = self.env['account.move'].with_context(default_type='out_invoice', default_journal_id=journal.id).create({
                 'invoice_payment_ref': _('Sample invoice'),
@@ -510,7 +510,7 @@ class ResCompany(models.Model):
             msg = _(
                 "We cannot find a chart of accounts for this company, you should configure it. \n"
                 "Please go to Account Configuration and select or install a fiscal localization.")
-            raise RedirectWarning(msg, action.id, _("Go to the configuration panel"))
+            raise RedirectWarning(msg, act_id=action.id, label=_("Go to the configuration panel"))
         return account
 
     @api.model

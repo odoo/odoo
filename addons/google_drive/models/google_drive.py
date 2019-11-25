@@ -56,7 +56,7 @@ class GoogleDrive(models.Model):
             if user_is_admin:
                 dummy, action_id = self.env['ir.model.data'].get_object_reference('base_setup', 'action_general_configuration')
                 msg = _("There is no refresh code set for Google Drive. You can set it up from the configuration panel.")
-                raise RedirectWarning(msg, action_id, _('Go to the configuration panel'))
+                raise RedirectWarning(msg, act_id=action_id, label=_('Go to the configuration panel'))
             else:
                 raise UserError(_("Google Drive is not yet configured. Please contact your administrator."))
         google_drive_client_id = Config.get_param('google_drive_client_id')
@@ -77,7 +77,7 @@ class GoogleDrive(models.Model):
             if user_is_admin:
                 dummy, action_id = self.env['ir.model.data'].get_object_reference('base_setup', 'action_general_configuration')
                 msg = _("Something went wrong during the token generation. Please request again an authorization code .")
-                raise RedirectWarning(msg, action_id, _('Go to the configuration panel'))
+                raise RedirectWarning(msg, act_id=action_id, label=_('Go to the configuration panel'))
             else:
                 raise UserError(_("Google Drive is not yet configured. Please contact your administrator."))
         return req.json().get('access_token')

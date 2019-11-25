@@ -301,6 +301,8 @@ _BUILTINS = {
     'zip': zip,
     'Exception': Exception,
 }
+
+
 def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=False, locals_builtins=False):
     """safe_eval(expression[, globals[, locals[, mode[, nocopy]]]]) -> result
 
@@ -346,15 +348,7 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
     c = test_expr(expr, _SAFE_OPCODES, mode=mode)
     try:
         return unsafe_eval(c, globals_dict, locals_dict)
-    except odoo.exceptions.except_orm:
-        raise
-    except odoo.exceptions.Warning:
-        raise
-    except odoo.exceptions.RedirectWarning:
-        raise
-    except odoo.exceptions.AccessDenied:
-        raise
-    except odoo.exceptions.AccessError:
+    except odoo.exceptions.OdooException:
         raise
     except werkzeug.exceptions.HTTPException:
         raise
@@ -364,10 +358,10 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
         # Do not hide PostgreSQL low-level exceptions, to let the auto-replay
         # of serialized transactions work its magic
         raise
-    except odoo.exceptions.MissingError:
-        raise
     except Exception as e:
         raise ValueError('%s: "%s" while evaluating\n%r' % (ustr(type(e)), ustr(e), expr))
+
+
 def test_python_expr(expr, mode="eval"):
     try:
         test_expr(expr, _SAFE_OPCODES, mode=mode)

@@ -298,7 +298,7 @@ class AccountMove(models.Model):
             if not rec_account and not pay_account:
                 action = self.env.ref('account.action_account_config')
                 msg = _('Cannot find a chart of accounts for this company, You should configure it. \nPlease go to Account Configuration.')
-                raise RedirectWarning(msg, action.id, _('Go to the configuration panel'))
+                raise RedirectWarning(msg, act_id=action.id, label=_('Go to the configuration panel'))
             p = self.partner_id
             if p.invoice_warn == 'no-message' and p.parent_id:
                 p = p.parent_id

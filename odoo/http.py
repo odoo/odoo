@@ -83,6 +83,16 @@ babel.core.LOCALE_ALIASES['nb'] = 'nb_NO'
 """
 ALLOWED_DEBUG_MODES = ['', '1', 'assets', 'tests']
 
+# Serialization of exception types for client-side handling
+EXCEPTION_MAP = {
+    odoo.exceptions.UserError: 'user_error',
+    odoo.exceptions.RedirectWarning: 'warning',
+    odoo.exceptions.AccessError: 'access_error',
+    odoo.exceptions.MissingError: 'missing_error',
+    odoo.exceptions.AccessDenied: 'access_denied',
+    odoo.exceptions.ValidationError: 'validation_error',
+}
+
 #----------------------------------------------------------
 # RequestHandler
 #----------------------------------------------------------
@@ -93,6 +103,7 @@ request = _request_stack()
     A global proxy that always redirect to the current request object.
 """
 
+
 def replace_request_password(args):
     # password is always 3rd argument in a request, we replace it in RPC logs
     # so it's easier to forward logs for diagnostics/debugging purposes...
@@ -100,15 +111,6 @@ def replace_request_password(args):
         args = list(args)
         args[2] = '*'
     return tuple(args)
-
-
-# don't trigger debugger for those exceptions, they carry user-facing warnings
-# and indications, they're not necessarily indicative of anything being
-# *broken*
-NO_POSTMORTEM = (odoo.exceptions.except_orm,
-                 odoo.exceptions.AccessDenied,
-                 odoo.exceptions.Warning,
-                 odoo.exceptions.RedirectWarning)
 
 
 def dispatch_rpc(service_name, method, params):
@@ -150,7 +152,7 @@ def dispatch_rpc(service_name, method, params):
                 odoo.netsvc.log(rpc_request, logging.DEBUG, logline, replace_request_password(params), depth=1)
 
         return result
-    except NO_POSTMORTEM:
+    except odoo.exceptions.OdooException:
         raise
     except odoo.exceptions.DeferredException as e:
         _logger.exception(odoo.tools.exception_to_unicode(e))
@@ -302,7 +304,7 @@ class WebRequest(object):
            to abitrary responses. Anything returned (except None) will
            be used as response."""
         self._failed = exception  # prevent tx commit
-        if not isinstance(exception, NO_POSTMORTEM) \
+        if not isinstance(exception, odoo.exceptions.OdooException) \
                 and not isinstance(exception, werkzeug.exceptions.HTTPException):
             odoo.tools.debugger.post_mortem(
                 odoo.tools.config, sys.exc_info())
@@ -634,8 +636,7 @@ class JsonRequest(WebRequest):
             if not isinstance(exception, SessionExpiredException):
                 if exception.args and exception.args[0] == "bus.Bus not available in test mode":
                     _logger.info(exception)
-                elif isinstance(exception, (odoo.exceptions.Warning, odoo.exceptions.except_orm,
-                                          werkzeug.exceptions.NotFound)):
+                elif isinstance(exception, (odoo.exceptions.OdooException, werkzeug.exceptions.NotFound)):
                     _logger.warning(exception)
                 else:
                     _logger.exception("Exception during JSON request handling.")
@@ -694,30 +695,14 @@ class JsonRequest(WebRequest):
 
 
 def serialize_exception(e):
-    tmp = {
+    return {
         "name": type(e).__module__ + "." + type(e).__name__ if type(e).__module__ else type(e).__name__,
         "debug": traceback.format_exc(),
         "message": ustr(e),
         "arguments": e.args,
-        "exception_type": "internal_error"
+        "exception_type": EXCEPTION_MAP.get(type(e), "internal_error"),
+        **getattr(e, 'kwargs', {}),
     }
-    if isinstance(e, odoo.exceptions.UserError):
-        tmp["exception_type"] = "user_error"
-    elif isinstance(e, odoo.exceptions.Warning):
-        tmp["exception_type"] = "warning"
-    elif isinstance(e, odoo.exceptions.RedirectWarning):
-        tmp["exception_type"] = "warning"
-    elif isinstance(e, odoo.exceptions.AccessError):
-        tmp["exception_type"] = "access_error"
-    elif isinstance(e, odoo.exceptions.MissingError):
-        tmp["exception_type"] = "missing_error"
-    elif isinstance(e, odoo.exceptions.AccessDenied):
-        tmp["exception_type"] = "access_denied"
-    elif isinstance(e, odoo.exceptions.ValidationError):
-        tmp["exception_type"] = "validation_error"
-    elif isinstance(e, odoo.exceptions.except_orm):
-        tmp["exception_type"] = "except_orm"
-    return tmp
 
 
 class HttpRequest(WebRequest):

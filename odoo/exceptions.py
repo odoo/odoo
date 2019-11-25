@@ -13,58 +13,55 @@ treated as a 'Server error'.
 """
 
 import logging
-from inspect import currentframe
-from .tools.func import frame_codeinfo
 
 _logger = logging.getLogger(__name__)
 
 
-# kept for backward compatibility
-class except_orm(Exception):
-    def __init__(self, name, value=None):
-        if type(self) == except_orm:
-            caller = frame_codeinfo(currentframe(), 1)
-            _logger.warning('except_orm is deprecated. Please use specific exceptions like UserError or AccessError. Caller: %s:%s', *caller)
-        self.name = name
-        self.value = value
-        self.args = (name, value)
+class OdooException(Exception):
+
+    def __init__(self, *args, **kwargs):
+        """
+        Base exception for all Odoo-related exceptions, shouldn't be instantiated manually.
+
+        :param List[str] args: args[0] is a message to display whereas args[1:] are assumed to be
+            arguments to interpolate into the message.
+        :param kwargs: any "technical" arguments that may be necessary for post-processing of
+            the error but are not necessary to display the message and thus won't be interpolated
+            into it.
+        """
+        # TODO: def __init__(self, message, *args, **kwargs) ?
+        if type(self) is OdooException:
+            raise NotImplementedError("OdooException should not be manually instanced")
+        super().__init__(*args)
+        self.kwargs = kwargs
 
     def __str__(self):
-        if not self.value:
-            return str(self.name)
-        else:
-            return super().__str__()
+        return self.args[0] % tuple(self.args[1:])
+
+    def __getattr__(self, key):
+        try:
+            return self.kwargs[key]
+        except KeyError:
+            raise AttributeError
 
 
-class UserError(except_orm):
-    """Generic error managed by the client.
-
-    Typically when the user tries to do something that has no sense given the current
-    state of a record.
-    """
-    def __init__(self, msg):
-        super(UserError, self).__init__(msg, value='')
+class UserError(OdooException):
+    """Used for invalid user-submitted input"""
+    pass
 
 
-# deprecated due to collision with builtins, kept for compatibility
-Warning = UserError
-
-
-class RedirectWarning(Exception):
+class RedirectWarning(OdooException):
     """ Warning with a possibility to redirect the user instead of simply
     displaying the warning message.
 
-    :param int action_id: id of the action where to perform the redirection
-    :param str button_text: text to put on the button that will trigger
-        the redirection.
+    :param int act_id: id of the action where to perform the redirection
+    :param str label: text to put on the button that will trigger the redirection.
     """
-    # using this RedirectWarning won't crash if used as an except_orm
-    @property
-    def name(self):
-        return self.args[0]
+    def __init__(self, message, *args, act_id, label):
+        super().__init__(message, *args, act_id=act_id, label=label)
 
 
-class AccessDenied(Exception):
+class AccessDenied(OdooException):
     """Login/password error.
 
     .. note::
@@ -76,59 +73,35 @@ class AccessDenied(Exception):
         When you try to log with a wrong password.
     """
 
-    def __init__(self, message='Access denied'):
-        super(AccessDenied, self).__init__(message)
+    def __init__(self, message='Access denied', *args):
+        super().__init__(message, *args)
         self.with_traceback(None)
         self.__cause__ = None
         self.traceback = ('', '', '')
 
 
-class AccessError(except_orm):
-    """Access rights error.
-
-    .. admonition:: Example
-
-        When you try to read a record that you are not allowed to.
-    """
-
-    def __init__(self, msg):
-        super(AccessError, self).__init__(msg)
+class AccessError(OdooException):
+    """ Access rights error.
+    Example: When you try to read a record that you are not allowed to."""
+    pass
 
 
-class CacheMiss(except_orm, KeyError):
-    """Missing value(s) in cache.
-
-    .. admonition:: Example
-
-        When you try to read a value in a flushed cache.
-    """
-
-    def __init__(self, record, field):
-        super(CacheMiss, self).__init__("%s.%s" % (str(record), field.name))
+class MissingError(OdooException):
+    """ Missing record(s).
+    Example: When you try to write on a deleted record."""
+    pass
 
 
-class MissingError(except_orm):
-    """Missing record(s).
-
-    .. admonition:: Example
-
-        When you try to write on a deleted record.
-    """
-
-    def __init__(self, msg):
-        super(MissingError, self).__init__(msg)
+class ValidationError(OdooException):
+    """ Violation of python constraints
+    Example: When you try to create a new user with a login which already exist in the db."""
+    pass
 
 
-class ValidationError(except_orm):
-    """Violation of python constraints.
-
-    .. admonition:: Example
-
-        When you try to create a new user with a login which already exist in the db.
-    """
-
-    def __init__(self, msg):
-        super(ValidationError, self).__init__(msg)
+class CacheMiss(KeyError):
+    """ Missing value(s) in cache.
+    Example: When you try to read a value in a flushed cache."""
+    pass
 
 
 class DeferredException(Exception):

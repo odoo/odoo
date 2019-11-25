@@ -30,7 +30,7 @@ class WebsiteForm(http.Controller):
         # If we encounter an issue while extracting data
         except ValidationError as e:
             # I couldn't find a cleaner way to pass data to an exception
-            return json.dumps({'error_fields' : e.args[0]})
+            return json.dumps({'error_fields' : str(e)})
 
         try:
             id_record = self.insert_record(request, model_record, data['record'], data['custom'], data.get('meta'))

@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import odoo
+
 from odoo import api, fields, models, _
-from odoo.exceptions import Warning
 
 
 class l10n_eu_service(models.TransientModel):
@@ -13,8 +14,10 @@ class l10n_eu_service(models.TransientModel):
     def _get_eu_res_country_group(self):
         eu_group = self.env.ref("base.europe", raise_if_not_found=False)
         if not eu_group:
-            raise Warning(_('The Europe country group cannot be found. '
-                            'Please update the base module.'))
+            raise odoo.exceptions.UserError(_(
+                'The Europe country group cannot be found. '
+                'Please update the base module.'
+            ))
         return eu_group
 
     def _get_default_company_id(self):

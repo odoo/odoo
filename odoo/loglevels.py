@@ -95,6 +95,9 @@ def ustr(value, hint_encoding='utf-8', errors='strict'):
 
 
 def exception_to_unicode(e):
+    import odoo
+    if isinstance(e, odoo.exceptions.OdooException):
+        return str(e)
     if getattr(e, 'args', ()):
         return "\n".join((ustr(a) for a in e.args))
     try:

@@ -354,7 +354,7 @@ class Module(models.Model):
                 msg = _('Unable to upgrade module "%s" because an external dependency is not met: %s')
             else:
                 msg = _('Unable to process module "%s" because an external dependency is not met: %s')
-            raise UserError(msg % (module_name, e.args[0]))
+            raise UserError(msg, module_name, str(e))
 
     def _state_update(self, newstate, states_to_update, level=100):
         if level < 1:

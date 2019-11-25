@@ -61,7 +61,7 @@ class AccountJournal(models.Model):
         if not self.company_id.l10n_ar_afip_responsibility_type_id:
             action = self.env.ref('base.action_res_company_form')
             msg = _('Can not create chart of account until you configure your company AFIP Responsibility and VAT.')
-            raise RedirectWarning(msg, action.id, _('Go to Companies'))
+            raise RedirectWarning(msg, act_id=action.id, label=_('Go to Companies'))
 
         letters = letters_data['issued' if self.type == 'sale' else 'received'][
             self.company_id.l10n_ar_afip_responsibility_type_id.code]

@@ -736,5 +736,6 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
 
         # 3/ substitute and return the result
         if (action_id):
-            return RedirectWarning(msg % values, action_id, _('Go to the configuration panel'))
+            return RedirectWarning(
+                msg % values, act_id=action_id, label=_('Go to the configuration panel'))
         return UserError(msg % values)

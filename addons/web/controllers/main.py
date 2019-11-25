@@ -895,10 +895,11 @@ class Home(http.Controller):
                 return http.redirect_with_hash(self._login_redirect(uid, redirect=redirect))
             except odoo.exceptions.AccessDenied as e:
                 request.uid = old_uid
-                if e.args == odoo.exceptions.AccessDenied().args:
+                # Change error message if it's the default message
+                if str(e) == str(odoo.exceptions.AccessDenied()):
                     values['error'] = _("Wrong login/password")
                 else:
-                    values['error'] = e.args[0]
+                    values['error'] = str(e)
         else:
             if 'error' in request.params and request.params.get('error') == 'access':
                 values['error'] = _('Only employee can access this database. Please contact the administrator.')
@@ -1198,10 +1199,10 @@ class Session(http.Controller):
             if request.env['res.users'].change_password(old_password, new_password):
                 return {'new_password':new_password}
         except UserError as e:
-            msg = e.name
+            msg = str(e)
         except AccessDenied as e:
-            msg = e.args[0]
-            if msg == AccessDenied().args[0]:
+            msg = str(e)
+            if msg == str(AccessDenied()):
                 msg = _('The old password you provided is incorrect, your password was not changed.')
         return {'title': _('Change Password'), 'error': msg}
 

@@ -3532,7 +3532,7 @@ Record ids: %(records)s
                         description = self.env['ir.model']._get(self._name).name
                         raise AccessError(
                             _("%(previous_message)s\n\nImplicitly accessed through '%(document_kind)s' (%(document_model)s).") % {
-                                'previous_message': e.args[0],
+                                'previous_message': str(e),
                                 'document_kind': description,
                                 'document_model': self._name,
                             }
