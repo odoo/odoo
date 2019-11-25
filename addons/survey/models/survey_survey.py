@@ -593,7 +593,7 @@ class Survey(models.Model):
         """
         filter_display_data = []
         if filters:
-            Label = self.env['survey.label']
+            Label = self.env['survey.question.answer']
             for current_filter in filters:
                 row_id, answer_id = current_filter['row_id'], current_filter['answer_id']
                 label = Label.browse(answer_id)
@@ -616,7 +616,7 @@ class Survey(models.Model):
         # Calculate and return statistics for choice
         if question.question_type in ['simple_choice', 'multiple_choice']:
             comments = []
-            answers = OrderedDict((label.id, {'text': label.value, 'count': 0, 'answer_id': label.id, 'answer_score': label.answer_score}) for label in question.labels_ids)
+            answers = OrderedDict((label.id, {'text': label.value, 'count': 0, 'answer_id': label.id, 'answer_score': label.answer_score}) for label in question.suggested_answer_ids)
             for input_line in input_lines:
                 if input_line.answer_type == 'suggestion' and answers.get(input_line.value_suggested.id) and (not(current_filters) or input_line.user_input_id.id in current_filters):
                     answers[input_line.value_suggested.id]['count'] += 1
@@ -630,8 +630,8 @@ class Survey(models.Model):
             answers = OrderedDict()
             res = dict()
             comments = []
-            [rows.update({label.id: label.value}) for label in question.labels_ids_2]
-            [answers.update({label.id: label.value}) for label in question.labels_ids]
+            [rows.update({label.id: label.value}) for label in question.matrix_row_ids]
+            [answers.update({label.id: label.value}) for label in question.suggested_answer_ids]
             for cell in product(rows, answers):
                 res[cell] = 0
             for input_line in input_lines:
@@ -692,7 +692,7 @@ class Survey(models.Model):
         )
 
         for question in scored_questions:
-            question_answer_correct = question.labels_ids.filtered(lambda answer: answer.is_correct)
+            question_answer_correct = question.suggested_answer_ids.filtered(lambda answer: answer.is_correct)
             for user_answer in user_answers:
                 user_answer_lines_question = user_answer.user_input_line_ids.filtered(lambda line: line.question_id == question)
                 user_answer_correct = user_answer_lines_question.filtered(lambda line: line.answer_is_correct and not line.skipped).mapped('value_suggested')

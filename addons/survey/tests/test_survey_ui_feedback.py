@@ -43,7 +43,7 @@ class TestUiFeedback(HttpCaseWithUserDemo):
                     'comments_allowed': True,
                     'comment_count_as_answer': True,
                     'constr_mandatory': True,
-                    'labels_ids': [
+                    'suggested_answer_ids': [
                         (0, 0, {
                             'value': 'Once a day',
                             'sequence': 1,
@@ -78,7 +78,7 @@ class TestUiFeedback(HttpCaseWithUserDemo):
                     'constr_mandatory': True,
                     'comments_allowed': True,
                     'comment_count_as_answer': False,
-                    'labels_ids': [
+                    'suggested_answer_ids': [
                         (0, 0, {
                             'value': 'High quality',
                             'sequence': 1,
@@ -113,7 +113,7 @@ class TestUiFeedback(HttpCaseWithUserDemo):
                     'question_type': 'matrix',
                     'matrix_subtype': 'multiple',
                     'constr_mandatory': True,
-                    'labels_ids': [(0, 0, {
+                    'suggested_answer_ids': [(0, 0, {
                         'value': 'Totally disagree',
                         'sequence': 1
                     }), (0, 0, {
@@ -126,7 +126,7 @@ class TestUiFeedback(HttpCaseWithUserDemo):
                         'value': 'Totally agree',
                         'sequence': 4,
                     })],
-                    'labels_ids_2': [(0, 0, {
+                    'matrix_row_ids': [(0, 0, {
                         'value': 'The new layout and design is fresh and up-to-date',
                         'sequence': 1,
                     }), (0, 0, {

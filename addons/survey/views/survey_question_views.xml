@@ -102,8 +102,8 @@
                             <field name="survey_id" invisible="1" readonly="1"/>
                             <field name="scoring_type" invisible="1"/>
                             <separator />
-                            <label for="labels_ids" string="Columns of the Matrix" attrs="{'invisible': [('question_type', '!=', 'matrix')]}" />
-                            <field name="labels_ids" string="Type of answers" context="{'default_question_id': active_id}" attrs="{'invisible': [('question_type', 'not in', ['simple_choice', 'multiple_choice', 'matrix'])]}">
+                            <label for="suggested_answer_ids" string="Columns of the Matrix" attrs="{'invisible': [('question_type', '!=', 'matrix')]}" />
+                            <field name="suggested_answer_ids" string="Type of answers" context="{'default_question_id': active_id}" attrs="{'invisible': [('question_type', 'not in', ['simple_choice', 'multiple_choice', 'matrix'])]}">
                                 <tree editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="value" string="Choices"/>
@@ -112,8 +112,8 @@
                                 </tree>
                             </field>
                             <separator />
-                            <label for="labels_ids_2" attrs="{'invisible': [('question_type', '!=', 'matrix')]}" />
-                            <field name="labels_ids_2" context="{'default_question_id_2': active_id}" attrs="{'invisible': [('question_type', '!=', 'matrix')]}">
+                            <label for="matrix_row_ids" attrs="{'invisible': [('question_type', '!=', 'matrix')]}" />
+                            <field name="matrix_row_ids" context="{'default_matrix_question_id': active_id}" attrs="{'invisible': [('question_type', '!=', 'matrix')]}">
                                 <tree editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="value" string="Rows"/>
@@ -203,22 +203,22 @@
     </record>
 
     <!-- LABELS -->
-    <record model="ir.ui.view" id="survey_label_tree">
-        <field name="name">survey_label_tree</field>
-        <field name="model">survey.label</field>
+    <record id="survey_question_answer_view_tree" model="ir.ui.view">
+        <field name="name">survey.question.answer.view.tree</field>
+        <field name="model">survey.question.answer</field>
         <field name="arch" type="xml">
             <tree string="Survey Label" create="false">
                 <field name="sequence" widget="handle"/>
                 <field name="question_id"/>
-                <field name="question_id_2"/>
+                <field name="matrix_question_id"/>
                 <field name="value"/>
                 <field name="answer_score" groups="base.group_no_one"/>
             </tree>
         </field>
     </record>
-    <record id="survey_label_search" model="ir.ui.view">
-        <field name="name">survey_label_search</field>
-        <field name="model">survey.label</field>
+    <record id="survey_question_answer_view_search" model="ir.ui.view">
+        <field name="name">survey.question.answer.view.search</field>
+        <field name="model">survey.question.answer</field>
         <field name="arch" type="xml">
             <search string="Search Label">
                 <field name="question_id"/>
@@ -229,11 +229,11 @@
         </field>
     </record>
 
-    <record model="ir.actions.act_window" id="action_survey_label_form">
+    <record id="survey_question_answer_action" model="ir.actions.act_window">
         <field name="name">Suggested Values</field>
-        <field name="res_model">survey.label</field>
+        <field name="res_model">survey.question.answer</field>
         <field name="view_mode">tree,form</field>
-        <field name="search_view_id" ref="survey_label_search"/>
+        <field name="search_view_id" ref="survey_question_answer_view_search"/>
         <field name="context">{'search_default_group_by_question': True}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_empty_folder">
@@ -249,7 +249,7 @@
         sequence="2"/>
     <menuitem name="Suggested Values"
         id="menu_survey_label_form1"
-        action="action_survey_label_form"
+        action="survey_question_answer_action"
         parent="survey_menu_questions"
         sequence="3"/>
 </data>
