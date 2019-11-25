@@ -158,6 +158,8 @@ class HrEmployeeBase(models.AbstractModel):
             manager = employee.parent_id.user_id
             if manager and employee.leave_manager_id == previous_manager or not employee.leave_manager_id:
                 employee.leave_manager_id = manager
+            elif not employee.leave_manager_id:
+                employee.leave_manager_id = False
 
     def _compute_show_leaves(self):
         show_leaves = self.env['res.users'].has_group('hr_holidays.group_hr_holidays_user')
