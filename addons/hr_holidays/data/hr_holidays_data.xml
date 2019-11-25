@@ -5,7 +5,8 @@
         <record id="holiday_status_cl" model="hr.leave.type">
             <field name="name">Paid Time Off</field>
             <field name="allocation_type">fixed</field>
-            <field name="validation_type">both</field>
+            <field name="leave_validation_type">both</field>
+            <field name="allocation_validation_type">both</field>
             <field name="color_name">black</field>
             <field name="leave_notif_subtype_id" eval="ref('mt_leave')"/>
             <field name="allocation_notif_subtype_id" eval="ref('mt_leave_allocation')"/>
@@ -27,7 +28,8 @@
         <record id="holiday_status_comp" model="hr.leave.type">
             <field name="name">Compensatory Days</field>
             <field name="allocation_type">fixed_allocation</field>
-            <field name="validation_type">both</field>
+            <field name="leave_validation_type">manager</field>
+            <field name="allocation_validation_type">manager</field>
             <field name="request_unit">hour</field>
             <field name="color_name">lavender</field>
             <field name="validity_start" eval="False"/>
@@ -39,7 +41,8 @@
         <record id="holiday_status_unpaid" model="hr.leave.type">
             <field name="name">Unpaid</field>
             <field name="allocation_type">no</field>
-            <field name="validation_type">both</field>
+            <field name="leave_validation_type">both</field>
+            <field name="allocation_validation_type">both</field>
             <field name="color_name">brown</field>
             <field name="request_unit">hour</field>
             <field name="unpaid" eval="True"/>

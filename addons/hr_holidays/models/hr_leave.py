@@ -77,7 +77,7 @@ class HolidaysRequest(models.Model):
         lt = LeaveType.search([('valid', '=', True)], limit=1)
 
         defaults['holiday_status_id'] = lt.id if lt else defaults.get('holiday_status_id')
-        defaults['state'] = 'confirm' if lt and lt.validation_type != 'no_validation' else 'draft'
+        defaults['state'] = 'confirm' if lt and lt.leave_validation_type != 'no_validation' else 'draft'
         return defaults
 
     def _default_employee(self):
@@ -126,7 +126,7 @@ class HolidaysRequest(models.Model):
         "hr.leave.type", string="Time Off Type", required=True, readonly=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
         domain=[('valid', '=', True)])
-    validation_type = fields.Selection('Validation Type', related='holiday_status_id.validation_type', readonly=False)
+    validation_type = fields.Selection('Validation Type', related='holiday_status_id.leave_validation_type', readonly=False)
     # HR data
     employee_id = fields.Many2one(
         'hr.employee', string='Employee', index=True, readonly=True, ondelete="restrict",
@@ -501,7 +501,7 @@ class HolidaysRequest(models.Model):
     def _compute_can_approve(self):
         for holiday in self:
             try:
-                if holiday.state == 'confirm' and holiday.holiday_status_id.validation_type == 'both':
+                if holiday.state == 'confirm' and holiday.validation_type == 'both':
                     holiday._check_approval_update('validate1')
                 else:
                     holiday._check_approval_update('validate')
@@ -637,11 +637,11 @@ class HolidaysRequest(models.Model):
                 values.update({'department_id': self.env['hr.employee'].browse(employee_id).department_id.id})
 
             # Handle no_validation
-            if leave_type.validation_type == 'no_validation':
+            if leave_type.leave_validation_type == 'no_validation':
                 values.update({'state': 'confirm'})
 
             # Handle double validation
-            if leave_type.validation_type == 'both':
+            if leave_type.leave_validation_type == 'both':
                 self._check_double_validation_rules(employee_id, values.get('state', False))
 
         holiday = super(HolidaysRequest, self.with_context(mail_create_nosubscribe=True)).create(values)
@@ -662,7 +662,7 @@ class HolidaysRequest(models.Model):
             holiday_sudo.add_follower(employee_id)
             if holiday.validation_type == 'manager':
                 holiday_sudo.message_subscribe(partner_ids=holiday.employee_id.leave_manager_id.partner_id.ids)
-            if leave_type.validation_type == 'no_validation':
+            if holiday.validation_type == 'no_validation':
                 # Automatic validation should be done in sudo, because user might not have the rights to do it by himself
                 holiday_sudo.action_validate()
                 holiday_sudo.message_subscribe(partner_ids=[holiday._get_responsible_for_approval().partner_id.id])
@@ -924,16 +924,16 @@ class HolidaysRequest(models.Model):
         is_manager = self.env.user.has_group('hr_holidays.group_hr_holidays_manager')
 
         for holiday in self:
-            val_type = holiday.holiday_status_id.validation_type
+            val_type = holiday.validation_type
 
             if not is_manager and state != 'confirm':
                 if state == 'draft':
                     if holiday.state == 'refuse':
-                        raise UserError(_('Only a Leave Manager can reset a refused leave.'))
+                        raise UserError(_('Only a Time Off Manager can reset a refused leave.'))
                     if holiday.date_from.date() <= fields.Date.today():
-                        raise UserError(_('Only a Leave Manager can reset a started leave.'))
+                        raise UserError(_('Only a Time Off Manager can reset a started leave.'))
                     if holiday.employee_id != current_employee:
-                        raise UserError(_('Only a Leave Manager can reset other people leaves.'))
+                        raise UserError(_('Only a Time Off Manager can reset other people leaves.'))
                 else:
                     if val_type == 'no_validation' and current_employee == holiday.employee_id:
                         continue
@@ -942,11 +942,11 @@ class HolidaysRequest(models.Model):
 
                     # This handles states validate1 validate and refuse
                     if holiday.employee_id == current_employee:
-                        raise UserError(_('Only a Leave Manager can approve/refuse its own requests.'))
+                        raise UserError(_('Only a Time Off Manager can approve/refuse its own requests.'))
 
                     if (state == 'validate1' and val_type == 'both') or (state == 'validate' and val_type == 'manager') and holiday.holiday_type == 'employee':
                         if not is_officer and self.env.user != holiday.employee_id.leave_manager_id:
-                            raise UserError(_('You must be either %s\'s manager or Leave manager to approve this leave') % (holiday.employee_id.name))
+                            raise UserError(_('You must be either %s\'s manager or Time off Manager to approve this leave') % (holiday.employee_id.name))
 
     # ------------------------------------------------------------
     # Activity methods
@@ -954,7 +954,11 @@ class HolidaysRequest(models.Model):
 
     def _get_responsible_for_approval(self):
         self.ensure_one()
-        responsible = self.env['res.users'].browse(SUPERUSER_ID)
+
+        responsible = self.env.user
+
+        if self.holiday_type != 'employee':
+            return responsible
 
         if self.validation_type == 'manager' or (self.validation_type == 'both' and self.state == 'confirm'):
             if self.employee_id.leave_manager_id:

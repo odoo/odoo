@@ -13,6 +13,7 @@ from odoo.addons.resource.models.resource import HOURS_PER_DAY
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools.translate import _
 from odoo.tools.float_utils import float_round
+from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
 
@@ -40,7 +41,8 @@ class HolidaysAllocation(models.Model):
             return [('valid', '=', True), ('allocation_type', '!=', 'no')]
         return [('valid', '=', True), ('allocation_type', '=', 'fixed_allocation')]
 
-    name = fields.Char('Description')
+    name = fields.Char('Description', compute='_compute_description', inverse='_inverse_description', search='_search_description', compute_sudo=False)
+    private_name = fields.Char('Allocation Description', groups='hr_holidays.group_hr_holidays_user')
     state = fields.Selection([
         ('draft', 'To Submit'),
         ('cancel', 'Cancelled'),
@@ -86,11 +88,11 @@ class HolidaysAllocation(models.Model):
     linked_request_ids = fields.One2many('hr.leave.allocation', 'parent_id', string='Linked Requests')
     first_approver_id = fields.Many2one(
         'hr.employee', string='First Approval', readonly=True, copy=False,
-        help='This area is automatically filled by the user who validate the allocation')
+        help='This area is automatically filled by the user who validates the allocation')
     second_approver_id = fields.Many2one(
         'hr.employee', string='Second Approval', readonly=True, copy=False,
-        help='This area is automatically filled by the user who validate the allocation with second level (If allocation type need second validation)')
-    validation_type = fields.Selection('Validation Type', related='holiday_status_id.validation_type', readonly=True)
+        help='This area is automaticly filled by the user who validates the allocation with second level (If allocation type need second validation)')
+    validation_type = fields.Selection('Validation Type', related='holiday_status_id.allocation_validation_type', readonly=True)
     can_reset = fields.Boolean('Can reset', compute='_compute_can_reset')
     can_approve = fields.Boolean('Can Approve', compute='_compute_can_approve')
     type_request_unit = fields.Selection(related='holiday_status_id.request_unit', readonly=True)
@@ -208,6 +210,35 @@ class HolidaysAllocation(models.Model):
 
             holiday.write(values)
 
+    @api.depends_context('uid')
+    def _compute_description(self):
+        self.check_access_rights('read')
+        self.check_access_rule('read')
+
+        is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
+
+        for allocation in self:
+            if is_officer or allocation.employee_id.user_id == self.env.user or allocation.manager_id == self.env.user:
+                allocation.name = allocation.sudo().private_name
+            else:
+                allocation.name = '*****'
+
+    def _inverse_description(self):
+        is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
+        for allocation in self:
+            if is_officer or allocation.employee_id.user_id == self.env.user or allocation.manager_id == self.env.user:
+                allocation.sudo().private_name = allocation.name
+
+    def _search_description(self, operator, value):
+        is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
+        domain = [('private_name', operator, value)]
+
+        if not is_officer:
+            domain = expression.AND([domain, [('employee_id.user_id', '=', self.env.user.id)]])
+
+        allocations = self.sudo().search(domain)
+        return [('id', 'in', allocations.ids)]
+
     @api.depends('employee_id', 'holiday_status_id')
     def _compute_leaves(self):
         for allocation in self:
@@ -251,7 +282,7 @@ class HolidaysAllocation(models.Model):
     def _compute_can_approve(self):
         for allocation in self:
             try:
-                if allocation.state == 'confirm' and allocation.holiday_status_id.validation_type == 'both':
+                if allocation.state == 'confirm' and allocation.validation_type == 'both':
                     allocation._check_approval_update('validate1')
                 else:
                     allocation._check_approval_update('validate')
@@ -489,7 +520,7 @@ class HolidaysAllocation(models.Model):
                 ).create(self._prepare_holiday_values(employee))
             # TODO is it necessary to interleave the calls?
             childs.action_approve()
-            if childs and self.holiday_status_id.validation_type == 'both':
+            if childs and self.validation_type == 'both':
                 childs.action_validate()
         return childs
 
@@ -518,7 +549,7 @@ class HolidaysAllocation(models.Model):
         is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
         is_manager = self.env.user.has_group('hr_holidays.group_hr_holidays_manager')
         for holiday in self:
-            val_type = holiday.holiday_status_id.validation_type
+            val_type = holiday.holiday_status_id.allocation_validation_type
             if state == 'confirm':
                 continue
 
@@ -541,12 +572,12 @@ class HolidaysAllocation(models.Model):
                 if self.env.user == holiday.employee_id.leave_manager_id and self.env.user != holiday.employee_id.user_id:
                     continue
                 manager = holiday.employee_id.parent_id or holiday.employee_id.department_id.manager_id
-                if (manager and manager != current_employee) and not self.env.user.has_group('hr_holidays.group_hr_holidays_manager'):
+                if (manager != current_employee) and not is_manager:
                     raise UserError(_('You must be either %s\'s manager or time off manager to approve this time off') % (holiday.employee_id.name))
 
             if state == 'validate' and val_type == 'both':
-                if not self.env.user.has_group('hr_holidays.group_hr_holidays_manager'):
-                    raise UserError(_('Only a Time off Manager can apply the second approval on allocation requests.'))
+                if not is_officer:
+                    raise UserError(_('Only a Time off Approver can apply the second approval on allocation requests.'))
 
     # ------------------------------------------------------------
     # Activity methods
@@ -554,15 +585,14 @@ class HolidaysAllocation(models.Model):
 
     def _get_responsible_for_approval(self):
         self.ensure_one()
-        responsible = self.env['res.users']
+        responsible = self.env.user
 
-        if self.validation_type == 'hr' or (self.validation_type == 'both' and self.state == 'validate1'):
+        if self.validation_type == 'manager' or (self.validation_type == 'both' and self.state == 'confirm'):
+            if self.employee_id.leave_manager_id:
+                responsible = self.employee_id.leave_manager_id
+        elif self.validation_type == 'hr' or (self.validation_type == 'both' and self.state == 'validate1'):
             if self.holiday_status_id.responsible_id:
                 responsible = self.holiday_status_id.responsible_id
-        if self.state == 'confirm' and self.employee_id.parent_id.user_id:
-            responsible = self.employee_id.parent_id.user_id
-        elif self.department_id.manager_id.user_id:
-            responsible = self.department_id.manager_id.user_id
 
         return responsible
 
