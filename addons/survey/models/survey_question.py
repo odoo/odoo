@@ -1,23 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
-import re
-import datetime
-
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
-
-email_validator = re.compile(r"[^@]+@[^@]+\.[^@]+")
-_logger = logging.getLogger(__name__)
-
-
-def dict_keys_startswith(dictionary, string):
-    """Returns a dictionary containing the elements of <dict> whose keys start with <string>.
-        .. note::
-            This function uses dictionary comprehensions (Python >= 2.7)
-    """
-    return {k: v for k, v in dictionary.items() if k.startswith(string)}
 
 
 class SurveyQuestion(models.Model):
@@ -50,7 +35,6 @@ class SurveyQuestion(models.Model):
 
         That makes the use and display of these information at view and controller levels easier to understand.
     """
-
     _name = 'survey.question'
     _description = 'Survey Question'
     _rec_name = 'question'
@@ -63,23 +47,24 @@ class SurveyQuestion(models.Model):
             defaults['question_type'] = False if defaults.get('is_page') == True else 'free_text'
         return defaults
 
-    # Question metadata
+    # question generic data
+    title = fields.Char('Title', required=True, translate=True)
+    question = fields.Char('Question', related="title")
+    description = fields.Html('Description', help="Use this field to add additional explanations about your question", translate=True)
     survey_id = fields.Many2one('survey.survey', string='Survey', ondelete='cascade')
-    page_id = fields.Many2one('survey.question', string='Page', compute="_compute_page_id", store=True)
-    question_ids = fields.One2many('survey.question', string='Questions', compute="_compute_question_ids")
     scoring_type = fields.Selection(related='survey_id.scoring_type', string='Scoring Type', readonly=True)
     sequence = fields.Integer('Sequence', default=10)
-    # Question
+    # page specific
     is_page = fields.Boolean('Is a page?')
+    question_ids = fields.One2many('survey.question', string='Questions', compute="_compute_question_ids")
     questions_selection = fields.Selection(
         related='survey_id.questions_selection', readonly=True,
         help="If randomized is selected, add the number of random questions next to the section.")
     random_questions_count = fields.Integer(
         'Random questions count', default=1,
         help="Used on randomized sections to take X random questions from all the questions of that section.")
-    title = fields.Char('Title', required=True, translate=True)
-    question = fields.Char('Question', related="title")
-    description = fields.Html('Description', help="Use this field to add additional explanations about your question", translate=True)
+    # question specific
+    page_id = fields.Many2one('survey.question', string='Page', compute="_compute_page_id", store=True)
     question_type = fields.Selection([
         ('free_text', 'Multiple Lines Text Box'),
         ('textbox', 'Single Line Text Box'),
@@ -89,18 +74,18 @@ class SurveyQuestion(models.Model):
         ('simple_choice', 'Multiple choice: only one answer'),
         ('multiple_choice', 'Multiple choice: multiple answers allowed'),
         ('matrix', 'Matrix')], string='Question Type')
-    # simple choice / multiple choice / matrix
+    # -- simple choice / multiple choice / matrix
     labels_ids = fields.One2many(
         'survey.label', 'question_id', string='Types of answers', copy=True,
         help='Labels used for proposed choices: simple choice, multiple choice and columns of matrix')
-    # matrix
+    # -- matrix
     matrix_subtype = fields.Selection([
         ('simple', 'One choice per row'),
         ('multiple', 'Multiple choices per row')], string='Matrix Type', default='simple')
     labels_ids_2 = fields.One2many(
         'survey.label', 'question_id_2', string='Rows of the Matrix', copy=True,
         help='Labels used for proposed choices: rows of matrix')
-    # Display options
+    # -- display options
     column_nb = fields.Selection([
         ('12', '1'), ('6', '2'), ('4', '3'), ('3', '4'), ('2', '6')],
         string='Number of columns', default='12',
@@ -108,11 +93,11 @@ class SurveyQuestion(models.Model):
     display_mode = fields.Selection(
         [('columns', 'Radio Buttons'), ('dropdown', 'Selection Box')],
         string='Display Mode', default='columns', help='Display mode of simple choice questions.')
-    # Comments
+    # -- comments
     comments_allowed = fields.Boolean('Show Comments Field')
     comments_message = fields.Char('Comment Message', translate=True, default=lambda self: _("If other, please specify:"))
     comment_count_as_answer = fields.Boolean('Comment Field is an Answer Choice')
-    # Validation
+    # question validation
     validation_required = fields.Boolean('Validate entry')
     validation_email = fields.Boolean('Input must be an email')
     validation_length_min = fields.Integer('Minimum Text Length')
@@ -124,10 +109,9 @@ class SurveyQuestion(models.Model):
     validation_min_datetime = fields.Datetime('Minimum Datetime')
     validation_max_datetime = fields.Datetime('Maximum Datetime')
     validation_error_msg = fields.Char('Validation Error message', translate=True, default=lambda self: _("The answer you entered is not valid."))
-    # Constraints on number of answers (matrices)
     constr_mandatory = fields.Boolean('Mandatory Answer')
     constr_error_msg = fields.Char('Error message', translate=True, default=lambda self: _("This question requires an answer."))
-    # Answer
+    # answers
     user_input_line_ids = fields.One2many(
         'survey.user_input_line', 'question_id', string='Answers',
         domain=[('skipped', '=', False)], groups='survey.group_survey_user')
@@ -150,6 +134,39 @@ class SurveyQuestion(models.Model):
     def _onchange_is_page(self):
         if self.is_page:
             self.question_type = False
+
+    @api.depends('survey_id.question_and_page_ids.is_page', 'survey_id.question_and_page_ids.sequence')
+    def _compute_question_ids(self):
+        """Will take all questions of the survey for which the index is higher than the index of this page
+        and lower than the index of the next page."""
+        for question in self:
+            if question.is_page:
+                next_page_index = False
+                for page in question.survey_id.page_ids:
+                    if page._index() > question._index():
+                        next_page_index = page._index()
+                        break
+
+                question.question_ids = question.survey_id.question_ids.filtered(lambda q:
+                    q._index() > question._index() and (not next_page_index or q._index() < next_page_index))
+            else:
+                question.question_ids = self.env['survey.question']
+
+    @api.depends('survey_id.question_and_page_ids.is_page', 'survey_id.question_and_page_ids.sequence')
+    def _compute_page_id(self):
+        """Will find the page to which this question belongs to by looking inside the corresponding survey"""
+        for question in self:
+            if question.is_page:
+                question.page_id = None
+            else:
+                question.page_id = next(
+                    (iter(question
+                        .survey_id
+                        .question_and_page_ids
+                        .filtered(lambda q: q.is_page and q.sequence < question.sequence)
+                        .sorted(reverse=True))),
+                    None
+                )
 
     # Validation methods
     def validate_question(self, answer, comment=None):
@@ -188,7 +205,7 @@ class SurveyQuestion(models.Model):
         # Email format validation
         # all the strings of the form "<something>@<anything>.<extension>" will be accepted
         if self.validation_email:
-            if not email_validator.match(answer):
+            if not tools.email_normalize(answer):
                 return {self.id: _('This answer must be an email address')}
 
         # Answer validation (if properly defined)
@@ -249,39 +266,6 @@ class SurveyQuestion(models.Model):
             return {self.id: self.constr_error_msg}
         return {}
 
-    @api.depends('survey_id.question_and_page_ids.is_page', 'survey_id.question_and_page_ids.sequence')
-    def _compute_question_ids(self):
-        """Will take all questions of the survey for which the index is higher than the index of this page
-        and lower than the index of the next page."""
-        for question in self:
-            if question.is_page:
-                next_page_index = False
-                for page in question.survey_id.page_ids:
-                    if page._index() > question._index():
-                        next_page_index = page._index()
-                        break
-
-                question.question_ids = question.survey_id.question_ids.filtered(lambda q:
-                    q._index() > question._index() and (not next_page_index or q._index() < next_page_index))
-            else:
-                question.question_ids = self.env['survey.question']
-
-    @api.depends('survey_id.question_and_page_ids.is_page', 'survey_id.question_and_page_ids.sequence')
-    def _compute_page_id(self):
-        """Will find the page to which this question belongs to by looking inside the corresponding survey"""
-        for question in self:
-            if question.is_page:
-                question.page_id = None
-            else:
-                question.page_id = next(
-                    (iter(question
-                        .survey_id
-                        .question_and_page_ids
-                        .filtered(lambda q: q.is_page and q.sequence < question.sequence)
-                        .sorted(reverse=True))),
-                    None
-                )
-
     def _index(self):
         """We would normally just use the 'sequence' field of questions BUT, if the pages and questions are
         created without ever moving records around, the sequence field can be set to 0 for all the questions.
@@ -295,6 +279,7 @@ class SurveyQuestion(models.Model):
 
         return self.labels_ids.filtered(lambda label: label.is_correct)
 
+
 class SurveyLabel(models.Model):
     """ A suggested answer for a question """
     _name = 'survey.label'
@@ -307,8 +292,7 @@ class SurveyLabel(models.Model):
     sequence = fields.Integer('Label Sequence order', default=10)
     value = fields.Char('Suggested value', translate=True, required=True)
     is_correct = fields.Boolean('Is a correct answer')
-    answer_score = fields.Float('Score for this choice',
-    help="A positive score indicates a correct choice; a negative or null score indicates a wrong answer")
+    answer_score = fields.Float('Score for this choice', help="A positive score indicates a correct choice; a negative or null score indicates a wrong answer")
 
     @api.constrains('question_id', 'question_id_2')
     def _check_question_not_empty(self):
