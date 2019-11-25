@@ -16,6 +16,16 @@ class Employee(models.Model):
     calendar_mismatch = fields.Boolean(related='contract_id.calendar_mismatch')
     contracts_count = fields.Integer(compute='_compute_contracts_count', string='Contract Count')
     contract_warning = fields.Boolean(string='Contract Warning', store=True, compute='_compute_contract_warning', groups="hr.group_hr_user")
+    first_contract_date = fields.Date(compute='_compute_first_contract_date', groups="hr.group_hr_user")
+
+    @api.depends('contract_ids.state')
+    def _compute_first_contract_date(self):
+        for employee in self:
+            contracts = employee.contract_ids.filtered(lambda c: c.state != 'cancel')
+            if contracts:
+                employee.first_contract_date = min(contracts.mapped('date_start'))
+            else:
+                employee.first_contract_date = False
 
     @api.depends('contract_id', 'contract_id.state', 'contract_id.kanban_state')
     def _compute_contract_warning(self):
