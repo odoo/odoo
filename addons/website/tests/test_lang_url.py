@@ -13,9 +13,9 @@ class TestLangUrl(HttpCase):
 
         # Simulate multi lang without loading translations
         self.website = self.env['website'].browse(1)
-        lang_fr = self.env.ref('base.lang_fr')
-        lang_fr.write({'active': True, 'url_code': 'fr'})
-        self.website.language_ids = self.env.ref('base.lang_en') + lang_fr
+        self.lang_fr = self.env.ref('base.lang_fr')
+        self.lang_fr.write({'active': True, 'url_code': 'fr'})
+        self.website.language_ids = self.env.ref('base.lang_en') + self.lang_fr
         self.website.default_lang_id = self.env.ref('base.lang_en')
 
     def test_01_url_lang(self):
@@ -32,3 +32,31 @@ class TestLangUrl(HttpCase):
         r = self.url_open(url)
         self.assertEqual(r.status_code, 200)
         self.assertTrue(r.url.endswith('/fr/contactus'), "lang in url should use url_code ('fr' in this case)")
+
+    def test_03_url_cook_lang_not_available(self):
+        """ An activated res.lang should not be displayed in the frontend if not a website lang. """
+        self.website.language_ids = self.env.ref('base.lang_en')
+        r = self.url_open('/fr/contactus')
+        self.assertTrue('lang="en-US"' in r.text, "french should not be displayed as not a frontend lang")
+
+    def test_04_url_cook_lang_not_available(self):
+        """ `nearest_lang` should filter out lang not available in frontend.
+        Eg: 1. go in backend in english -> request.context['lang'] = `en_US`
+            2. go in frontend, the request.context['lang'] is passed through
+               `nearest_lang` which should not return english. More then a
+               misbehavior it will crash in website language selector template.
+        """
+        # 1. Load backend
+        self.authenticate('admin', 'admin')
+        r = self.url_open('/web')
+        self.assertTrue('"lang": "en_US"' in r.text, "ensure english was loaded")
+
+        # 2. Remove en_US from frontend
+        self.website.language_ids = self.lang_fr
+        self.website.default_lang_id = self.lang_fr
+
+        # 3. Ensure visiting /contactus do not crash
+        url = '/contactus'
+        r = self.url_open(url)
+        self.assertEqual(r.status_code, 200)
+        self.assertTrue('lang="fr-FR"' in r.text, "Ensure contactus did not soft crash + loaded in correct lang")
