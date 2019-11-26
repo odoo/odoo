@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import common
-from odoo.addons.calendar.models.calendar import calendar_id2real_id
+from odoo.addons.calendar.models.calendar_event import calendar_id2real_id
 
 
 class TestRecurrentEvent(common.TransactionCase):
