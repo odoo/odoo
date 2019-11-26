@@ -60,21 +60,20 @@ class EventRegistration(models.Model):
             }
         return {}
 
-    def summary(self):
-        res = super(EventRegistration, self).summary()
-        if self.event_ticket_id.product_id.image_128:
-            res['image'] = '/web/image/product.product/%s/image_128' % self.event_ticket_id.product_id.id
-        information = res.setdefault('information', {})
-        information.append((_('Name'), self.name))
-        information.append((_('Ticket'), self.event_ticket_id.name or _('None')))
+    def _get_registration_summary(self):
+        res = super(EventRegistration, self)._get_registration_summary()
         order = self.sale_order_id.sudo()
         order_line = self.sale_order_line_id.sudo()
+        has_to_pay = False
         if not order or float_is_zero(order_line.price_total, precision_digits=order.currency_id.rounding):
             payment_status = _('Free')
         elif not order.invoice_ids or any(invoice.payment_state != 'paid' for invoice in order.invoice_ids):
             payment_status = _('To pay')
-            res['alert'] = _('The registration must be paid')
+            has_to_pay = True
         else:
             payment_status = _('Paid')
-        information.append((_('Payment'), payment_status))
+        res.update({
+            'payment_status': payment_status,
+            'has_to_pay': has_to_pay
+        })
         return res
