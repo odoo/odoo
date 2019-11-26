@@ -30,7 +30,7 @@ class ProductPricelist(models.Model):
         domain = [('company_id', '=', company_id)]
         return self.env['website'].search(domain, limit=1)
 
-    website_id = fields.Many2one('website', string="Website", ondelete='restrict', default=_default_website)
+    website_id = fields.Many2one('website', string="Website", ondelete='restrict', default=_default_website, domain="[('company_id', '=?', company_id)]")
     code = fields.Char(string='E-commerce Promotional Code', groups="base.group_user")
     selectable = fields.Boolean(help="Allow the end user to choose this price list")
 
@@ -118,12 +118,6 @@ class ProductPricelist(models.Model):
         if not company_id and website:
             company_id = website.company_id.id
         return super(ProductPricelist, self)._get_partner_pricelist_multi(partner_ids, company_id)
-
-    @api.onchange('company_id')
-    def _onchange_company_id(self):
-        ''' Show only the company's website '''
-        domain = self.company_id and [('company_id', '=', self.company_id.id)] or []
-        return {'domain': {'website_id': domain}}
 
     @api.constrains('company_id', 'website_id')
     def _check_websites_in_company(self):
