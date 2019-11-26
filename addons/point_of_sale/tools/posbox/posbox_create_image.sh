@@ -18,13 +18,12 @@ require_command () {
 }
 
 require_command kpartx
-require_command qemu-system-arm
+require_command qemu-arm-static
 require_command zerofree
 
 __dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 __file="${__dir}/$(basename "${BASH_SOURCE[0]}")"
 __base="$(basename ${__file} .sh)"
-
 
 MOUNT_POINT="${__dir}/root_mount"
 OVERWRITE_FILES_BEFORE_INIT_DIR="${__dir}/overwrite_before_init"
@@ -32,8 +31,9 @@ OVERWRITE_FILES_AFTER_INIT_DIR="${__dir}/overwrite_after_init"
 VERSION=13.0
 REPO=https://github.com/odoo/odoo.git
 
-if [ ! -f kernel-qemu ] || ! file_exists *raspbian*.img ; then
-    ./posbox_download_images.sh
+if ! file_exists *raspbian*.img ; then
+    wget 'http://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2019-09-30/2019-09-26-raspbian-buster-lite.zip' -O raspbian.img.zip
+    unzip raspbian.img.zip
 fi
 
 cp -a *raspbian*.img posbox.img
@@ -84,8 +84,12 @@ START_OF_ROOT_PARTITION=$(fdisk -l posbox.img | tail -n 1 | awk '{print $2}')
  echo 'p';                          # print
  echo 'w') | fdisk posbox.img       # write and quit
 
-LOOP_MAPPER_PATH=$(kpartx -avs posbox.img | tail -n 1 | cut -d ' ' -f 3)
+LOOP=$(kpartx -avs posbox.img)
+LOOP_MAPPER_PATH=$(echo "${LOOP}" | tail -n 1 | awk '{print $3}')
 LOOP_MAPPER_PATH="/dev/mapper/${LOOP_MAPPER_PATH}"
+LOOP_MAPPER_BOOT=$(echo "${LOOP}" | tail -n 2 | awk 'NR==1 {print $3}')
+LOOP_MAPPER_BOOT="/dev/mapper/${LOOP_MAPPER_BOOT}"
+
 sleep 5
 
 # resize filesystem
@@ -94,30 +98,19 @@ resize2fs "${LOOP_MAPPER_PATH}"
 
 mkdir -p "${MOUNT_POINT}" #-p: no error if existing
 mount "${LOOP_MAPPER_PATH}" "${MOUNT_POINT}"
+mount "${LOOP_MAPPER_BOOT}" "${MOUNT_POINT}/boot/"
+
+QEMU_ARM_STATIC="/usr/bin/qemu-arm-static"
+cp "${QEMU_ARM_STATIC}" "${MOUNT_POINT}/usr/bin/"
 
 # 'overlay' the overwrite directory onto the mounted image filesystem
 cp -a "${OVERWRITE_FILES_BEFORE_INIT_DIR}"/* "${MOUNT_POINT}"
+chroot "${MOUNT_POINT}" /bin/bash -c "sudo /etc/init_posbox_image.sh"
 
 # get rid of the git clone
 rm -rf "${CLONE_DIR}"
 # and the ngrok usr/bin
 rm -rf "${OVERWRITE_FILES_BEFORE_INIT_DIR}/usr"
-
-# get rid of the mount, we have to remount it anyway because we have
-# to "refresh" the filesystem after qemu modified it
-sleep 2
-umount "${MOUNT_POINT}"
-
-# from http://paulscott.co.za/blog/full-raspberry-pi-raspbian-emulation-with-qemu/
-# ssh pi@localhost -p10022
-# as of stretch with newer kernels, the versatile-pb.dtb file is necessary
-QEMU_OPTS=(-kernel kernel-qemu -cpu arm1176 -m 256 -M versatilepb -dtb versatile-pb.dtb -no-reboot -serial stdio -append 'root=/dev/sda2 rootfstype=ext4 rw' -hda posbox.img -net user,hostfwd=tcp::10022-:22,hostfwd=tcp::18069-:8069 -net nic)
-if [ -z ${DISPLAY:-} ] ; then
-    QEMU_OPTS+=(-nographic)
-fi
-qemu-system-arm "${QEMU_OPTS[@]}"
-
-mount "${LOOP_MAPPER_PATH}" "${MOUNT_POINT}"
 cp -av "${OVERWRITE_FILES_AFTER_INIT_DIR}"/* "${MOUNT_POINT}"
 
 find "${MOUNT_POINT}"/ -type f -name "*.iotpatch"|while read iotpatch; do
@@ -129,11 +122,11 @@ find "${MOUNT_POINT}"/ -type f -name "*.iotpatch"|while read iotpatch; do
 done
 
 # cleanup
-sleep 2
-umount "${MOUNT_POINT}"
-rm -r "${MOUNT_POINT}"
+umount -f "${MOUNT_POINT}"/boot
+umount -f "${MOUNT_POINT}"
 
 echo "Running zerofree..."
 zerofree -v "${LOOP_MAPPER_PATH}" || true
 
 kpartx -d posbox.img
+rm -rf "${MOUNT_POINT}"
