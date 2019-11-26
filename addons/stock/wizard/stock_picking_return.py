@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools.float_utils import float_round
@@ -17,6 +19,7 @@ class ReturnPickingLine(models.TransientModel):
     wizard_id = fields.Many2one('stock.return.picking', string="Wizard")
     move_id = fields.Many2one('stock.move', "Move")
     lot_id = fields.Many2one('stock.production.lot', 'Lot/Serial Number')
+    package_id = fields.Many2one('stock.quant.package', 'Package')
 
 
 class ReturnPicking(models.TransientModel):
@@ -76,22 +79,41 @@ class ReturnPicking(models.TransientModel):
                 location_id = self.picking_id.picking_type_id.return_picking_type_id.default_location_dest_id.id
             self.location_id = location_id
 
-    @api.model
+    def _get_returnable_quantity(self, move_lines):
+        # Filter Incoming/Outgoing move lines.
+        move_lines_in = move_lines.filtered(lambda m: m.location_dest_id == self.picking_id.location_dest_id)
+        move_lines_out = move_lines - move_lines_in
+        # Keep only tracked move lines.
+        lot_sml_in = move_lines_in.filtered(lambda m: m.lot_id)
+        lot_sml_out = move_lines_out.filtered(lambda m: m.lot_id)
+        # Get returnable quantities per SN.
+        qties_per_lot = defaultdict(lambda: 0)
+        for ml in lot_sml_out:
+            qties_per_lot[ml.lot_id.id] -= ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_id)
+        for ml in lot_sml_in:
+            qties_per_lot[ml.lot_id.id] += ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_id)
+        return qties_per_lot
+
     def _prepare_stock_return_picking_line_vals_from_move(self, stock_move):
         # If move tracked by serial, iterates on move lines to get values for
         # each line (a return line for each move lines).
-        if stock_move.has_tracking == 'serial':
-            move_lines = stock_move.move_line_ids.filtered(lambda l: l.qty_done > 0)
+        move_lines = stock_move.move_line_ids
+        # if stock_move.has_tracking == 'serial':
+        if move_lines.lot_id or move_lines.result_package_id:
+            return_moves = stock_move.returned_move_ids
+            move_lines = (stock_move + return_moves).move_line_ids
+            qties_per_lot = self._get_returnable_quantity(move_lines)
             vals = []
             for line in move_lines:
-                line_vals = {
-                    'product_id': line.product_id.id,
-                    'quantity': line.qty_done,
-                    'move_id': stock_move.id,
-                    'uom_id': line.product_id.uom_id.id,
-                    'lot_id': line.lot_id.id,
-                }
-                vals.append((0, 0, line_vals))
+                if qties_per_lot[line.lot_id.id] > 0:
+                    line_vals = {
+                        'product_id': line.product_id.id,
+                        'quantity': qties_per_lot[line.lot_id.id],
+                        'move_id': stock_move.id,
+                        'uom_id': line.product_id.uom_id.id,
+                        'lot_id': line.lot_id.id,
+                    }
+                    vals.append((0, 0, line_vals))
             return vals
         # Otherwise, return values for the move only (a return line for a move).
         quantity = stock_move.product_qty - sum(
