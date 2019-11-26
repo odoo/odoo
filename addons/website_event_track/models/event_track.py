@@ -66,14 +66,14 @@ class Track(models.Model):
     date = fields.Datetime('Track Date')
     date_end = fields.Datetime('Track End Date', compute='_compute_end_date', store=True)
     duration = fields.Float('Duration', default=1.5, help="Track duration in hours.")
-    location_id = fields.Many2one('event.track.location', 'Room')
+    location_id = fields.Many2one('event.track.location', 'Location')
     event_id = fields.Many2one('event.event', 'Event', required=True)
     color = fields.Integer('Color', related="stage_id.color")
     priority = fields.Selection([
         ('0', 'Low'), ('1', 'Medium'),
         ('2', 'High'), ('3', 'Highest')],
         'Priority', required=True, default='1')
-    image = fields.Image("Image", related='partner_id.image_128', store=True, readonly=False)
+    image = fields.Image("Image", max_width=128, max_height=128)
 
     @api.depends('name')
     def _compute_website_url(self):
@@ -88,7 +88,6 @@ class Track(models.Model):
             self.partner_name = self.partner_id.name
             self.partner_email = self.partner_id.email
             self.partner_phone = self.partner_id.phone
-            self.partner_biography = self.partner_id.website_description
 
     @api.depends('date', 'duration')
     def _compute_end_date(self):
