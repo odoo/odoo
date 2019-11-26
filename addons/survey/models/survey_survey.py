@@ -560,6 +560,40 @@ class Survey(models.Model):
     # GRAPH / RESULTS
     # ------------------------------------------------------------
 
+    def _prepare_global_results(self, user_input_domain=None):
+        """ Extract global statistics on the survey user inputs, with an
+        optional domain to fetch user inputs. """
+        user_input_domain = user_input_domain if user_input_domain else [
+            ('state', '=', 'done'),
+            ('test_entry', '=', False)
+        ]
+        user_input_domain = expression.AND([[('survey_id', 'in', self.ids)], user_input_domain])
+        count_data = self.env['survey.user_input'].sudo().read_group(user_input_domain, ['quizz_passed', 'id:count_distinct'], ['quizz_passed'])
+
+        quizz_passed_count = 0
+        quizz_failed_count = 0
+        for count_data_item in count_data:
+            if count_data_item['quizz_passed']:
+                quizz_passed_count = count_data_item['quizz_passed_count']
+            else:
+                quizz_failed_count = count_data_item['quizz_passed_count']
+
+        graph_data = [{
+            'text': _('Passed'),
+            'count': quizz_passed_count,
+            'color': '#2E7D32'
+        }, {
+            'text': _('Missed'),
+            'count': quizz_failed_count,
+            'color': '#C62828'
+        }]
+
+        total_quizz_passed = quizz_passed_count + quizz_failed_count
+        return {
+            'global_success_rate': round((quizz_passed_count / total_quizz_passed) * 100, 1) if total_quizz_passed > 0 else 0,
+            'global_graph_data': graph_data
+        }
+
     def filter_input_ids(self, filters, finished=False):
         """If user applies any filters, then this function returns list of
            filtered user_input_id and label's strings for display data in web.

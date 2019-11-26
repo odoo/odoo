@@ -7,12 +7,12 @@ import werkzeug
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from math import ceil
 
 from odoo import fields, http, _
 from odoo.addons.base.models.ir_ui_view import keep_query
 from odoo.exceptions import UserError
 from odoo.http import request, content_disposition
+from odoo.osv import expression
 from odoo.tools import ustr, format_datetime, format_date
 
 _logger = logging.getLogger(__name__)
@@ -490,6 +490,32 @@ class Survey(http.Controller):
     def survey_report(self, survey, answer_token=None, **post):
         """ Display survey Results & Statistics for given survey.
 
+        New structure: {
+            'search': {},
+            'statistics': [{  # page list
+                'page_id': survey.question br (may be void),
+                'questions': [{  # page question list
+                    'question_id': survey.question br (required),
+                    'line_ids': survey.user_input.line that are answers to that specific question with filter applied,
+                    'comment_line_ids': survey.user_input.line that are comments not counting as answers,
+                    'statistics': { # question type dependent
+                        'answered_count': 0, # all
+                        'skipped_count': 0, # all
+                        'average': 0,  # numeric
+                        'min': 0,  # numeric
+                        'max': 0,  # numeric
+                        'sum': 0,  # numeric
+                    },
+                    'graph_data': {
+                    },
+                }, {...}
+                ],
+            }, {...}
+            ]
+        }
+        Graph data: template will call _get_graph_data_<type>(line_ids)
+        Table data: template will call _get_table_data_<type>(line_ids)
+
         Quick retroengineering of what is injected into the template for now:
         (TODO: flatten and simplify this)
 
@@ -522,29 +548,93 @@ class Survey(http.Controller):
                     ]
                 }
 
-            page_range: pager helper function
             current_filters: a list of ids
             filter_display_data: [{'labels': ['a', 'b'], question_text} ...  ]
             filter_finish: boolean => only finished surveys or not
         """
+        user_input_lines, search_filters = self._extract_filters_data(survey, post)
+        print(user_input_lines)
+        print(search_filters)
+        question_and_page_data = survey.question_and_page_ids._prepare_statistics(user_input_lines)
+        for a in question_and_page_data:
+            print(a)
+
         current_filters = []
         filter_display_data = []
 
         answers = survey.user_input_ids.filtered(lambda answer: answer.state != 'new' and not answer.test_entry)
         filter_finish = post.get('finished') == 'true'
         if post or filter_finish:
-            filter_data = self._get_filter_data(post)
+            filter_data = self._parse_post_filters(post)
             current_filters = survey.filter_input_ids(filter_data, filter_finish)
             filter_display_data = survey.get_filter_display_data(filter_data)
         return request.render('survey.survey_page_statistics', {
             'survey': survey,
+            'question_and_page_data': question_and_page_data,
             'answers': answers,
             'survey_dict': self._prepare_result_dict(survey, current_filters),
-            'page_range': self.page_range,
             'current_filters': current_filters,
             'filter_display_data': filter_display_data,
             'filter_finish': filter_finish
         })
+
+    def _extract_filters_data(self, survey, post):
+        search_filters = []
+        line_filter_domain, line_choices = [], []
+        for data in post.get('filters', '').split('|'):
+            try:
+                row_id, answer_id = data.split(',')
+                row_id = int(row_id)
+                answer_id = int(answer_id)
+            except:
+                pass
+            else:
+                if row_id and answer_id:
+                    new_domain = ['&', ('matrix_row_id', '=', row_id), ('suggested_answer_id', '=', answer_id)]
+                    line_filter_domain = expression.AND([new_domain, line_filter_domain])
+                    answers = request.env['survey.question.answer'].browse([row_id, answer_id])
+                elif answer_id:
+                    line_choices.append(answer_id)
+                    answers = request.env['survey.question.answer'].browse([answer_id])
+                if answer_id:
+                    search_filters.append({
+                        'question': answers[0].question_id.title,
+                        'answers': '%s%s' % (answers[0].value, ': %s' % answers[1].value if len(answers) > 1 else '')
+                    })
+        if line_choices:
+            line_filter_domain = expression.AND([('suggested_answer_id', 'in', line_choices)], line_filter_domain)
+
+        if line_filter_domain:
+            # here we go from input lines to user input to avoid a domain like
+            # ('user_input.survey_id', '=', survey.id) which would return a lot of data
+            # on huge surveys, especially with test entries and draft entries in mind
+            matching_user_inputs = request.env['survey.user_input.line'].sudo().search(line_filter_domain).mapped('user_input_id')
+            if post.get('finished'):
+                user_input_lines = matching_user_inputs.filtered(lambda ui: not ui.test_entry and ui.state == 'done').mapped('user_input_line_ids')
+            else:
+                user_input_lines = matching_user_inputs.filtered(lambda ui: not ui.test_entry and ui.state != 'new').mapped('user_input_line_ids')
+        else:
+            user_input_domain = ['&', ('test_entry', '=', False), ('survey_id', '=', survey.id)]
+            if post.get('finished'):
+                user_input_domain = expression.AND([[('state', '=', 'done')], user_input_domain])
+            else:
+                user_input_domain = expression.AND([[('state', '!=', 'new')], user_input_domain])
+            user_input_lines = request.env['survey.user_input'].sudo().search(user_input_domain).mapped('user_input_line_ids')
+
+        return user_input_lines, search_filters
+
+    def _parse_post_filters(self, post):
+        """Returns data used for filtering the result"""
+        filters = []
+        filters_data = post.get('filters')
+        if filters_data:
+            for data in filters_data.split('|'):
+                try:
+                    row_id, answer_id = data.split(',')
+                    filters.append({'row_id': int(row_id), 'answer_id': int(answer_id)})
+                except:
+                    return filters
+        return filters
 
     def _prepare_result_dict(self, survey, current_filters=None):
         """Returns dictionary having values for rendering template"""
@@ -570,30 +660,16 @@ class Survey(http.Controller):
 
     def _prepare_question_values(self, question, current_filters):
         Survey = request.env['survey.survey']
+        print('-------------------')
+        print(question.title)
+        print(self._get_graph_data(question, current_filters))
+        print('-------------------')
         return {
             'question': question,
             'input_summary': Survey.get_input_summary(question, current_filters),
             'prepare_result': Survey.prepare_result(question, current_filters),
             'graph_data': self._get_graph_data(question, current_filters),
         }
-
-    def _get_filter_data(self, post):
-        """Returns data used for filtering the result"""
-        filters = []
-        filters_data = post.get('filters')
-        if filters_data:
-            for data in filters_data.split('|'):
-                try:
-                    row_id, answer_id = data.split(',')
-                    filters.append({'row_id': int(row_id), 'answer_id': int(answer_id)})
-                except:
-                    return filters
-        return filters
-
-    def page_range(self, total_record, limit):
-        '''Returns number of pages required for pagination'''
-        total = ceil(total_record / float(limit))
-        return range(1, int(total + 1))
 
     def _get_graph_data(self, question, current_filters=None):
         '''Returns formatted data required by graph library on basis of filter'''
