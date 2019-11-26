@@ -485,11 +485,22 @@
             </field>
         </record>
 
+        <record id="event_event_view_graph" model="ir.ui.view" >
+            <field name="name">event.event.view.graph</field>
+            <field name="model">event.event</field>
+            <field name="arch" type="xml">
+                <graph string="Events">
+                    <field name="name" type="row"/>
+                    <field name="seats_available" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
         <record model="ir.actions.act_window" id="action_event_view">
            <field name="name">Events</field>
            <field name="type">ir.actions.act_window</field>
            <field name="res_model">event.event</field>
-           <field name="view_mode">kanban,calendar,tree,form,pivot</field>
+           <field name="view_mode">kanban,calendar,tree,form,pivot,graph</field>
            <field name="search_view_id" ref="view_event_search"/>
            <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -658,6 +669,8 @@
                 <search string="Event Registration">
                     <field name="id" string="Registration ID"/>
                     <field name="name" string="Participant" filter_domain="['|', '|', ('name', 'ilike', self), ('email', 'ilike', self), ('origin', 'ilike', self)]"/>
+                    <filter string="Ongoing Events" name="filter_is_ongoing" domain="[('event_id.is_ongoing', '=', True)]"/>
+                    <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <filter string="Expected" name="expected" domain="[('state', 'in', ['draft', 'open', 'done'])]"/>
                     <separator/>
