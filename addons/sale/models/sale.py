@@ -1517,7 +1517,11 @@ class SaleOrderLine(models.Model):
     def name_get(self):
         result = []
         for so_line in self.sudo():
+<<<<<<< HEAD
             name = '%s - %s' % (so_line.order_id.name, so_line.name and so_line.name.split('\n')[0] or so_line.product_id.name)
+=======
+            name = '%s - %s' % (so_line.order_id.name, (so_line.name and so_line.name.split('\n')[0]) or so_line.product_id.name)
+>>>>>>> a316f627ab7... temp
             if so_line.order_partner_id.ref:
                 name = '%s (%s)' % (name, so_line.order_partner_id.ref)
             result.append((so_line.id, name))
