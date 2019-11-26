@@ -470,7 +470,7 @@ class Survey(models.Model):
     def action_start_survey(self, answer=None):
         """ Open the website page with the survey form """
         self.ensure_one()
-        trail = "?answer_token=%s" % answer.token if answer and answer.token else ''
+        trail = "?answer_token=%s" % answer.access_token if answer and answer.access_token else ''
         return {
             'type': 'ir.actions.act_url',
             'name': "Start Survey",
@@ -481,7 +481,7 @@ class Survey(models.Model):
     def action_print_survey(self, answer=None):
         """ Open the website page with the survey printable view """
         self.ensure_one()
-        trail = "?answer_token=%s" % answer.token if answer and answer.token else ''
+        trail = "?answer_token=%s" % answer.access_token if answer and answer.access_token else ''
         return {
             'type': 'ir.actions.act_url',
             'name': "Print Survey",
