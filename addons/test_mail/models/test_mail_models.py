@@ -170,3 +170,14 @@ class MailTrackingModel(models.Model):
     field_0 = fields.Char(tracking=True)
     field_1 = fields.Char(tracking=True)
     field_2 = fields.Char(tracking=True)
+
+
+class MailCompute(models.Model):
+    _name = 'mail.test.compute'
+    _description = "Test model with several tracked computed fields"
+    _inherit = ['mail.thread']
+
+    partner_id = fields.Many2one('res.partner', tracking=True)
+    partner_name = fields.Char(related='partner_id.name', store=True, tracking=True)
+    partner_email = fields.Char(related='partner_id.email', store=True, tracking=True)
+    partner_phone = fields.Char(related='partner_id.phone', tracking=True)

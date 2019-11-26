@@ -27,6 +27,7 @@ from lxml import etree
 from werkzeug import urls
 
 from odoo import _, api, exceptions, fields, models, tools, registry, SUPERUSER_ID
+from odoo.exceptions import MissingError
 from odoo.osv import expression
 
 from odoo.tools import pycompat, ustr
@@ -257,7 +258,9 @@ class MailThread(models.AbstractModel):
             - log a creation message
         """
         if self._context.get('tracking_disable'):
-            return super(MailThread, self).create(vals_list)
+            threads = super(MailThread, self).create(vals_list)
+            threads._discard_tracking()
+            return threads
 
         threads = super(MailThread, self).create(vals_list)
         # subscribe uid unless asked not to
@@ -294,6 +297,7 @@ class MailThread(models.AbstractModel):
                 threads_no_subtype._message_log_batch(bodies={t.id: body for t in threads_no_subtype})
 
         # post track template if a tracked field changed
+        threads._discard_tracking()
         if not self._context.get('mail_notrack'):
             fnames = self._get_tracked_fields()
             for thread in threads:
@@ -310,14 +314,8 @@ class MailThread(models.AbstractModel):
         if self._context.get('tracking_disable'):
             return super(MailThread, self).write(values)
 
-        tracked_fields = None
         if not self._context.get('mail_notrack'):
-            tracked_fields = self._get_tracked_fields()
-        if tracked_fields:
-            initial_values = {
-                record.id: {name: record[name] for name in tracked_fields}
-                for record in self
-            }
+            self._prepare_tracking(self._fields)
 
         # Perform write
         result = super(MailThread, self).write(values)
@@ -325,20 +323,21 @@ class MailThread(models.AbstractModel):
         # update followers
         self._message_auto_subscribe(values)
 
-        # Perform the tracking
-        if tracked_fields:
-            context = clean_context(self._context)
-            tracking = self.with_context(context).message_track(tracked_fields, initial_values)
-            if any(change for rec_id, (change, tracking_value_ids) in tracking.items()):
-                (changes, tracking_value_ids) = tracking[self[0].id]
-                self._message_track_post_template(changes)
         return result
+
+    def _compute_field_value(self, field):
+        if not self._context.get('tracking_disable') and not self._context.get('mail_notrack'):
+            self._prepare_tracking(f.name for f in self._field_computed[field] if f.store)
+
+        return super()._compute_field_value(field)
 
     def unlink(self):
         """ Override unlink to delete messages and followers. This cannot be
         cascaded, because link is done through (res_model, res_id). """
         if not self:
             return True
+        # discard pending tracking
+        self._discard_tracking()
         self.env['mail.message'].search([('model', '=', self._name), ('res_id', 'in', self.ids), ('message_type', '!=', 'user_notification')]).unlink()
         res = super(MailThread, self).unlink()
         self.env['mail.followers'].sudo().search(
@@ -425,6 +424,49 @@ class MailThread(models.AbstractModel):
     # ------------------------------------------------------
     # Technical methods / wrappers / tools
     # ------------------------------------------------------
+
+    def _prepare_tracking(self, fields):
+        """ Prepare the tracking of ``fields`` for ``self``.
+
+        :param fields: iterable of fields names to potentially track
+        """
+        fnames = self._get_tracked_fields().intersection(fields)
+        if not fnames:
+            return
+        func = self.browse()._finalize_tracking
+        [initial_values] = self.env.cr.precommit.add(func, dict)
+        for record in self:
+            if not record.id:
+                continue
+            values = initial_values.setdefault(record.id, {})
+            if values is not None:
+                for fname in fnames:
+                    values.setdefault(fname, record[fname])
+
+    def _discard_tracking(self):
+        """ Prevent any tracking of fields on ``self``. """
+        if not self._get_tracked_fields():
+            return
+        func = self.browse()._finalize_tracking
+        [initial_values] = self.env.cr.precommit.add(func, dict)
+        # disable tracking by setting initial values to None
+        for id_ in self.ids:
+            initial_values[id_] = None
+
+    def _finalize_tracking(self, initial_values):
+        """ Generate the tracking messages for the records that have been
+        prepared with ``_prepare_tracking``.
+        """
+        ids = [id_ for id_, vals in initial_values.items() if vals]
+        if not ids:
+            return
+        records = self.browse(ids).sudo()
+        fnames = self._get_tracked_fields()
+        context = clean_context(self._context)
+        tracking = records.with_context(context).message_track(fnames, initial_values)
+        for record in records:
+            changes, tracking_value_ids = tracking.get(record.id, (None, None))
+            record._message_track_post_template(changes)
 
     def with_lang(self):
         if not self._context.get("lang"):
@@ -542,12 +584,12 @@ class MailThread(models.AbstractModel):
 
     @tools.ormcache()
     def _get_tracked_fields(self):
-        """ Return the name of the tracked fields for the current model. """
-        return [
+        """ Return the set of tracked fields names for the current model. """
+        return {
             name
             for name, field in self._fields.items()
             if getattr(field, 'tracking', None) or getattr(field, 'track_visibility', None)
-        ]
+        }
 
     def _creation_subtype(self):
         """ Give the subtypes triggered by the creation of a record
@@ -616,6 +658,8 @@ class MailThread(models.AbstractModel):
 
         # generate tracked_values data structure: {'col_name': {col_info, new_value, old_value}}
         for col_name, col_info in tracked_fields.items():
+            if col_name not in initial:
+                continue
             initial_value = initial[col_name]
             new_value = record[col_name]
 
@@ -648,6 +692,7 @@ class MailThread(models.AbstractModel):
         :param tracked_fields: iterable of field names to track
         :param initial_values: mapping {record_id: {field_name: value}}
         :return: mapping {record_id: (changed_field_names, tracking_value_ids)}
+            containing existing records only
         """
         if not tracked_fields:
             return True
@@ -655,10 +700,13 @@ class MailThread(models.AbstractModel):
         tracked_fields = self.fields_get(tracked_fields)
         tracking = dict()
         for record in self:
-            tracking[record.id] = record._message_track(tracked_fields, initial_values[record.id])
+            try:
+                tracking[record.id] = record._message_track(tracked_fields, initial_values[record.id])
+            except MissingError:
+                continue
 
         for record in self:
-            changes, tracking_value_ids = tracking[record.id]
+            changes, tracking_value_ids = tracking.get(record.id, (None, None))
             if not changes:
                 continue
 
