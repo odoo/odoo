@@ -12,27 +12,40 @@ class AccountPayment(models.Model):
     payment_transaction_id = fields.Many2one('payment.transaction', string='Payment Transaction', readonly=True)
     payment_token_id = fields.Many2one(
         'payment.token', string="Saved payment token",
-        domain="[('acquirer_id.capture_manually', '=', False), ('company_id', '=', company_id)]",
+        domain="""[
+            (payment_method_code == 'electronic', '=', 1),
+            ('company_id', '=', company_id),
+            ('acquirer_id.capture_manually', '=', False),
+            ('acquirer_id.journal_id', '=', journal_id),
+            ('partner_id', 'in', related_partner_ids),
+        ]""",
         help="Note that tokens from acquirers set to only authorize transactions (instead of capturing the amount) are not available.")
+    related_partner_ids = fields.Many2many('res.partner', compute='_compute_related_partners')
 
     def _get_payment_chatter_link(self):
         self.ensure_one()
         return '<a href=# data-oe-model=account.payment data-oe-id=%d>%s</a>' % (self.id, self.name)
 
+    @api.depends('partner_id.commercial_partner_id.child_ids')
+    def _compute_related_partners(self):
+        for p in self:
+            p.related_partner_ids = (
+                p.partner_id
+              | p.partner_id.commercial_partner_id
+              | p.partner_id.commercial_partner_id.child_ids
+            )._origin
+
     @api.onchange('partner_id', 'payment_method_id', 'journal_id')
     def _onchange_set_payment_token_id(self):
-        res = {}
-
-        if not self.payment_method_code == 'electronic' or not self.partner_id or not self.journal_id:
+        if not (self.payment_method_code == 'electronic' and self.partner_id and self.journal_id):
             self.payment_token_id = False
-            return res
+            return
 
-        partners = self.partner_id | self.partner_id.commercial_partner_id | self.partner_id.commercial_partner_id.child_ids
-        domain = [('partner_id', 'in', partners.ids), ('acquirer_id.journal_id', '=', self.journal_id.id)]
-        self.payment_token_id = self.env['payment.token'].search(domain, limit=1)
-
-        res['domain'] = {'payment_token_id': domain}
-        return res
+        self.payment_token_id = self.env['payment.token'].search([
+            ('partner_id', 'in', self.related_partner_ids.ids),
+            ('acquirer_id.capture_manually', '=', False),
+            ('acquirer_id.journal_id', '=', self.journal_id.id),
+         ], limit=1)
 
     def _prepare_payment_transaction_vals(self):
         self.ensure_one()
