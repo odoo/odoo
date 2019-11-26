@@ -5,7 +5,7 @@
             <field name="context">{'search_default_confirmed': 1}</field>
             <field name="name">Manufacturing Orders</field>
             <field name="res_model">mrp.production</field>
-            <field name="view_mode">tree,form,gantt</field>
+            <field name="view_mode">tree,kanban,form,gantt</field>
             <field name="domain">[('routing_id', '!=', False),('routing_id.operation_ids.workcenter_id','=', active_id)]</field>
         </record>
 
