@@ -367,8 +367,8 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
         var row_id = cell.data('row_id') | 0;
         var answer_id = cell.data('answer_id');
 
-        var params = new URLSearchParams(window.location.search)
-        var filters = params.get('filters') ? params.get('filters') + "|" + row_id + ',' + answer_id : row_id + ',' + answer_id
+        var params = new URLSearchParams(window.location.search);
+        var filters = params.get('filters') ? params.get('filters') + "|" + row_id + ',' + answer_id : row_id + ',' + answer_id;
         params.set('filters', filters);
 
         window.location.href = window.location.pathname + '?' + params.toString();
@@ -379,7 +379,7 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onClearFilterClick: function (ev) {
-        var params = new URLSearchParams(window.location.search)
+        var params = new URLSearchParams(window.location.search);
         params.delete('filters');
         params.delete('finished');
         window.location.href = window.location.pathname + '?' + params.toString();
@@ -390,7 +390,7 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onFilterAllClick: function (ev) {
-        var params = new URLSearchParams(window.location.search)
+        var params = new URLSearchParams(window.location.search);
         params.delete('finished');
         window.location.href = window.location.pathname + '?' + params.toString();
     },
@@ -400,7 +400,7 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onFilterFinishedClick: function (ev) {
-        var params = new URLSearchParams(window.location.search)
+        var params = new URLSearchParams(window.location.search);
         params.set('finished', true);
         window.location.href = window.location.pathname + '?' + params.toString();
     },
