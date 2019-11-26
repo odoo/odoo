@@ -18,3 +18,4 @@ from . import test_search
 from . import test_setup_bar
 from . import test_tax
 from . import test_templates_consistency
+from . import test_reconciliation_heavy_load
