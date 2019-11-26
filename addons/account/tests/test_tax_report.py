@@ -167,7 +167,7 @@ class TaxReportTest(AccountTestInvoicingCommon):
         })
         test_invoice.post()
 
-        self.assertTrue(any(line.tag_ids == self.tax_report_line_1_55.tag_ids[0] for line in test_invoice.line_ids), "The test invoice should contain a tax line with tag 55")
+        self.assertTrue(any(line.tax_tag_ids == self.tax_report_line_1_55.tag_ids[0] for line in test_invoice.line_ids), "The test invoice should contain a tax line with tag 55")
         tag_name_before = self.tax_report_line_1_55.tag_name
         tag_nber_before = len(self._get_tax_tags())
         self.tax_report_line_1_55.tag_name = None
@@ -175,7 +175,7 @@ class TaxReportTest(AccountTestInvoicingCommon):
         self.assertEqual(len(self._get_tax_tags(tag_name_before)), 0, "None of the original tags for this line should be left after setting tag_name to None if no other line was using this tag_name.")
         self.assertEqual(len(self._get_tax_tags()), tag_nber_before - 2, "No new tag should have been created, and the two that were assigned to the report line should have been removed.")
         self.assertFalse(test_tax.mapped('invoice_repartition_line_ids.tag_ids'), "There should be no tag left on test tax's repartition lines after the removal of tag 55.")
-        self.assertFalse(test_invoice.mapped('line_ids.tag_ids'), "The link between test invoice and tag 55 should have been broken. There should be no tag left on the invoice's lines.")
+        self.assertFalse(test_invoice.mapped('line_ids.tax_tag_ids'), "The link between test invoice and tag 55 should have been broken. There should be no tag left on the invoice's lines.")
 
     def test_write_multi_no_change(self):
         """ Writing the same tag_name as they already use on a set of tax report
