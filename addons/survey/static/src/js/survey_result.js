@@ -14,7 +14,7 @@ var D3_COLORS = ["#1f77b4","#ff7f0e","#aec7e8","#ffbb78","#2ca02c","#98df8a","#d
 // -> this is ugly / not efficient, needs to be refactored
 publicWidget.registry.SurveyResultPagination = publicWidget.Widget.extend({
     events: {
-        'click li a': '_onPageClick',
+        'click li.o_survey_js_results_pagination a': '_onPageClick',
     },
 
     //--------------------------------------------------------------------------
@@ -38,7 +38,6 @@ publicWidget.registry.SurveyResultPagination = publicWidget.Widget.extend({
         var self = this;
         return this._super.apply(this, arguments).then(function () {
             self.limit = self.$el.data("record_limit");
-            self._changePage(1);
         });
     },
 
@@ -52,24 +51,9 @@ publicWidget.registry.SurveyResultPagination = publicWidget.Widget.extend({
      */
     _onPageClick: function (ev) {
         ev.preventDefault();
+        this.$('li.o_survey_js_results_pagination').removeClass('active');
 
-        var pageNumber = $(ev.currentTarget).text();
-        this._changePage(pageNumber);
-    },
-
-    // -------------------------------------------------------------------------
-    // Private
-    // -------------------------------------------------------------------------
-
-    /**
-     * Shows / hides the records based on the selected page.
-     *
-     * @private
-     * @param {string} pageNumber
-     */
-    _changePage: function (pageNumber) {
-        this.$('li').removeClass('active');
-        var $target = this.$(_.str.sprintf('li:contains("%s")', pageNumber));
+        var $target = $(ev.currentTarget);
         $target.closest('li').addClass('active');
         this.$questionsEl.find('tbody tr').addClass('d-none');
 
@@ -82,6 +66,7 @@ publicWidget.registry.SurveyResultPagination = publicWidget.Widget.extend({
             this.$questionsEl.find('tbody tr:lt('+ this.limit * num +'):gt(' + min + ')')
                 .removeClass('d-none');
         }
+
     },
 });
 
@@ -343,7 +328,7 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
             self.$('.pagination').each(function (){
                 var questionId = $(this).data("question_id");
                 new publicWidget.registry.SurveyResultPagination(self, {
-                    'questionsEl': self.$('#table_question_'+ questionId)
+                    'questionsEl': self.$('#survey_table_question_'+ questionId)
                 }).attachTo($(this));
             });
 

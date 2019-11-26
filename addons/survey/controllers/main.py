@@ -7,13 +7,13 @@ import werkzeug
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from math import ceil
 
 from odoo import fields, http, _
 from odoo.addons.base.models.ir_ui_view import keep_query
 from odoo.exceptions import UserError
 from odoo.http import request, content_disposition
-from odoo.tools import ustr, format_datetime, format_date
+from odoo.osv import expression
+from odoo.tools import format_datetime, format_date
 
 _logger = logging.getLogger(__name__)
 
@@ -484,161 +484,65 @@ class Survey(http.Controller):
     def survey_report(self, survey, answer_token=None, **post):
         """ Display survey Results & Statistics for given survey.
 
-        Quick retroengineering of what is injected into the template for now:
-        (TODO: flatten and simplify this)
-
-            survey: a browse record of the survey
-            survey_dict: very messy dict containing all the info to display answers
-                {'page_ids': [
-
-                    ...
-
-                        {'page': browse record of the page,
-                         'question_ids': [
-
-                            ...
-
-                            {'graph_data': data to be displayed on the graph
-                             'input_summary': number of answered, skipped...
-                             'prepare_result': {
-                                                answers displayed in the tables
-                                                }
-                             'question': browse record of the question_ids
-                            }
-
-                            ...
-
-                            ]
-                        }
-
-                    ...
-
-                    ]
-                }
-
-            page_range: pager helper function
-            current_filters: a list of ids
-            filter_display_data: [{'labels': ['a', 'b'], question_text} ...  ]
-            filter_finish: boolean => only finished surveys or not
+        New structure: {
+            'survey': current survey browse record,
+            'question_and_page_data': see ``SurveyQuestion._prepare_statistics()``,
+            'survey_data'= see ``SurveySurvey._prepare_statistics()``
+            'search_filters': [],
+            'search_finished': either filter on finished inputs only or not,
+        }
         """
-        current_filters = []
-        filter_display_data = []
+        user_input_lines, search_filters = self._extract_filters_data(survey, post)
+        survey_data = survey._prepare_statistics(user_input_lines)
+        question_and_page_data = survey.question_and_page_ids._prepare_statistics(user_input_lines)
 
-        answers = survey.user_input_ids.filtered(lambda answer: answer.state != 'new' and not answer.test_entry)
-        filter_finish = post.get('finished') == 'true'
-        if post or filter_finish:
-            filter_data = self._get_filter_data(post)
-            current_filters = survey.filter_input_ids(filter_data, filter_finish)
-            filter_display_data = survey.get_filter_display_data(filter_data)
         return request.render('survey.survey_page_statistics', {
+            # survey and its statistics
             'survey': survey,
-            'answers': answers,
-            'survey_dict': self._prepare_result_dict(survey, current_filters),
-            'page_range': self.page_range,
-            'current_filters': current_filters,
-            'filter_display_data': filter_display_data,
-            'filter_finish': filter_finish
+            'question_and_page_data': question_and_page_data,
+            'survey_data': survey_data,
+            # search
+            'search_filters': search_filters,
+            'search_finished': post.get('finished') == 'true',
         })
 
-    def _prepare_result_dict(self, survey, current_filters=None):
-        """Returns dictionary having values for rendering template"""
-        current_filters = current_filters if current_filters else []
-        result = {'page_ids': []}
-
-        # First append questions without page
-        questions_without_page = [self._prepare_question_values(question,current_filters) for question in survey.question_ids if not question.page_id]
-        if questions_without_page:
-            result['page_ids'].append({'page': request.env['survey.question'], 'question_ids': questions_without_page})
-
-        # Then, questions in sections
-        for page in survey.page_ids:
-            page_dict = {'page': page, 'question_ids': [self._prepare_question_values(question,current_filters) for question in page.question_ids]}
-            result['page_ids'].append(page_dict)
-
-        if survey.scoring_type in ['scoring_with_answers', 'scoring_without_answers']:
-            scoring_data = self._get_scoring_data(survey)
-            result['success_rate'] = scoring_data['success_rate']
-            result['scoring_graph_data'] = json.dumps(scoring_data['graph_data'])
-
-        return result
-
-    def _prepare_question_values(self, question, current_filters):
-        Survey = request.env['survey.survey']
-        return {
-            'question': question,
-            'input_summary': Survey.get_input_summary(question, current_filters),
-            'prepare_result': Survey.prepare_result(question, current_filters),
-            'graph_data': self._get_graph_data(question, current_filters),
-        }
-
-    def _get_filter_data(self, post):
-        """Returns data used for filtering the result"""
-        filters = []
-        filters_data = post.get('filters')
-        if filters_data:
-            for data in filters_data.split('|'):
-                try:
-                    row_id, answer_id = data.split(',')
-                    filters.append({'row_id': int(row_id), 'answer_id': int(answer_id)})
-                except:
-                    return filters
-        return filters
-
-    def page_range(self, total_record, limit):
-        '''Returns number of pages required for pagination'''
-        total = ceil(total_record / float(limit))
-        return range(1, int(total + 1))
-
-    def _get_graph_data(self, question, current_filters=None):
-        '''Returns formatted data required by graph library on basis of filter'''
-        # TODO refactor this terrible method and merge it with _prepare_result_dict
-        current_filters = current_filters if current_filters else []
-        Survey = request.env['survey.survey']
-        result = []
-        if question.question_type == 'multiple_choice':
-            result.append({'key': ustr(question.title),
-                           'values': Survey.prepare_result(question, current_filters)['answers']
-                           })
-        if question.question_type == 'simple_choice':
-            result = Survey.prepare_result(question, current_filters)['answers']
-        if question.question_type == 'matrix':
-            data = Survey.prepare_result(question, current_filters)
-            for answer in data['answers']:
-                values = []
-                for row in data['rows']:
-                    values.append({'text': data['rows'].get(row), 'count': data['result'].get((row, answer))})
-                result.append({'key': data['answers'].get(answer), 'values': values})
-        return json.dumps(result)
-
-    def _get_scoring_data(self, survey):
-        """Performs a read_group to fetch the count of failed/passed tests in a single query."""
-
-        count_data = request.env['survey.user_input'].read_group(
-            [('survey_id', '=', survey.id), ('state', '=', 'done'), ('test_entry', '=', False)],
-            ['scoring_success', 'id:count_distinct'],
-            ['scoring_success']
-        )
-
-        scoring_success_count = 0
-        scoring_failed_count = 0
-        for count_data_item in count_data:
-            if count_data_item['scoring_success']:
-                scoring_success_count = count_data_item['scoring_success_count']
+    def _extract_filters_data(self, survey, post):
+        search_filters = []
+        line_filter_domain, line_choices = [], []
+        for data in post.get('filters', '').split('|'):
+            try:
+                row_id, answer_id = (int(item) for item in data.split(','))
+            except:
+                pass
             else:
-                scoring_failed_count = count_data_item['scoring_success_count']
+                if row_id and answer_id:
+                    line_filter_domain = expression.AND([
+                        ['&', ('matrix_row_id', '=', row_id), ('suggested_answer_id', '=', answer_id)],
+                        line_filter_domain
+                    ])
+                    answers = request.env['survey.question.answer'].browse([row_id, answer_id])
+                elif answer_id:
+                    line_choices.append(answer_id)
+                    answers = request.env['survey.question.answer'].browse([answer_id])
+                if answer_id:
+                    search_filters.append({
+                        'question': answers[0].question_id.title,
+                        'answers': '%s%s' % (answers[0].value, ': %s' % answers[1].value if len(answers) > 1 else '')
+                    })
+        if line_choices:
+            line_filter_domain = expression.AND([[('suggested_answer_id', 'in', line_choices)], line_filter_domain])
 
-        graph_data = [{
-            'text': _('Passed'),
-            'count': scoring_success_count,
-            'color': '#2E7D32'
-        }, {
-            'text': _('Missed'),
-            'count': scoring_failed_count,
-            'color': '#C62828'
-        }]
+        user_input_domain = ['&', ('test_entry', '=', False), ('survey_id', '=', survey.id)]
+        if line_filter_domain:
+            matching_line_ids = request.env['survey.user_input.line'].sudo().search(line_filter_domain).ids
+            user_input_domain = expression.AND([
+                [('user_input_line_ids', 'in', matching_line_ids)],
+                user_input_domain
+            ])
+            if post.get('finished'):
+                user_input_domain = expression.AND([[('state', '=', 'done')], user_input_domain])
+            else:
+                user_input_domain = expression.AND([[('state', '!=', 'new')], user_input_domain])
+        user_input_lines = request.env['survey.user_input'].sudo().search(user_input_domain).mapped('user_input_line_ids')
 
-        total_scoring_success = scoring_success_count + scoring_failed_count
-        return {
-            'success_rate': round((scoring_success_count / total_scoring_success) * 100, 1) if total_scoring_success > 0 else 0,
-            'graph_data': graph_data
-        }
+        return user_input_lines, search_filters
