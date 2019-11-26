@@ -32,7 +32,11 @@ class HrExpenseSheetRegisterPaymentWizard(models.TransientModel):
     partner_bank_account_id = fields.Many2one('res.partner.bank', string="Recipient Bank Account", domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     journal_id = fields.Many2one('account.journal', string='Payment Method', required=True, domain="[('type', 'in', ('bank', 'cash')), ('company_id', '=', company_id)]")
     company_id = fields.Many2one('res.company', related='expense_sheet_id.company_id', string='Company', readonly=True)
-    payment_method_id = fields.Many2one('account.payment.method', string='Payment Type', required=True)
+    payment_method_id = fields.Many2one('account.payment.method', string='Payment Type', required=True, domain="""[
+        ('payment_type', '=', 'outbound'),
+        ('id', 'in', available_payment_methods),
+    ]""")
+    available_payment_methods = fields.Many2many(related='journal_id.outbound_payment_method_ids')
     amount = fields.Monetary(string='Payment Amount', required=True)
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, default=lambda self: self.env.company.currency_id)
     payment_date = fields.Date(string='Payment Date', default=fields.Date.context_today, required=True)
@@ -80,11 +84,7 @@ class HrExpenseSheetRegisterPaymentWizard(models.TransientModel):
     def _onchange_journal(self):
         if self.journal_id:
             # Set default payment method (we consider the first to be the default one)
-            payment_methods = self.journal_id.outbound_payment_method_ids
-            self.payment_method_id = payment_methods and payment_methods[0] or False
-            # Set payment method domain (restrict to methods enabled for the journal and to selected payment type)
-            return {'domain': {'payment_method_id': [('payment_type', '=', 'outbound'), ('id', 'in', payment_methods.ids)]}}
-        return {}
+            self.payment_method_id = self.journal_id.outbound_payment_method_ids[:1]
 
     def _get_payment_vals(self):
         """ Hook for extension """
