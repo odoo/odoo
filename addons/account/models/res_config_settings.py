@@ -59,6 +59,14 @@ class ResConfigSettings(models.TransientModel):
              '-This installs the account_batch_payment module.')
     module_account_sepa = fields.Boolean(string='SEPA Credit Transfer (SCT)')
     module_account_sepa_direct_debit = fields.Boolean(string='Use SEPA Direct Debit')
+    module_account_dwolla = fields.Boolean(string='ACH',
+        help='This allows to pay vendors using ACH (Automated Clearing House, used only in the US).\n'
+              'To set it up follow these steps:\n'
+              '1. Create a Dwolla account on dwolla.com,\n'
+              '2. Copy the Dwolla Key and Dwolla Secret into the Odoo settings,\n'
+              '3. Set your bank account in your bank journal in Odoo,\n'
+              '4. Click the "Sync to Dwolla" button on your bank account,\n'
+              '5. Verify your bank account in Dwolla by entering the correct amounts.')
     module_account_plaid = fields.Boolean(string="Plaid Connector")
     module_account_yodlee = fields.Boolean("Bank Interface - Sync your bank feeds automatically")
     module_account_bank_statement_import_qif = fields.Boolean("Import .qif files")
