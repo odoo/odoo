@@ -81,39 +81,8 @@ class ReturnPicking(models.TransientModel):
                 location_id = self.picking_id.picking_type_id.return_picking_type_id.default_location_dest_id.id
             self.location_id = location_id
 
-    def _get_returnable_quantity(self, stock_move):
-        """Return the quantities of `stock_move`  still returnable.
-
-        When computing the quantities to return, this method handles the existing returns, returns
-        of returns, and so on.
-
-        :param stock_move: `stock.move` record to return
-        :return: a dict of the quantities of `stock_move` stille returnable, indexed by
-            `stock.production.lot` and `stock.quant.package`
-        :rtype: dict
-        """
-        moves = stock_move
-        return_moves = stock_move.returned_move_ids
-        while return_moves:
-            moves |= return_moves
-            return_moves = return_moves.returned_move_ids
-        move_lines = moves.filtered(lambda m: m.state != 'cancel' and not m.scrapped).move_line_ids
-
-        # Filter Incoming/Outgoing move lines.
-        move_lines_in = move_lines.filtered(lambda m: m.location_dest_id == self.picking_id.location_dest_id)
-        move_lines_out = move_lines - move_lines_in
-
-        qty_per_lot_and_package = defaultdict(lambda: 0)
-        for move_line in move_lines_out:
-            qty = move_line.product_uom_id._compute_quantity(move_line.qty_done, move_line.product_id.uom_id)
-            qty_per_lot_and_package[(move_line.lot_id, move_line.package_id)] -= qty
-        for move_line in move_lines_in:
-            qty = move_line.product_uom_id._compute_quantity(move_line.qty_done, move_line.product_id.uom_id)
-            qty_per_lot_and_package[(move_line.lot_id, move_line.result_package_id)] += qty
-        return qty_per_lot_and_package
-
     def _prepare_stock_return_picking_line_vals_from_move(self, stock_move):
-        qty_to_return = self._get_returnable_quantity(stock_move)
+        qty_to_return = stock_move._get_returnable_quantities() 
         vals = []
         for (lot, package), quantity in qty_to_return.items():
             if float_is_zero(quantity, precision_rounding=stock_move.product_id.uom_id.rounding):

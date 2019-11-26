@@ -794,6 +794,47 @@ class StockMove(models.Model):
             else:
                 return moves_todo[-1].state or 'draft'
 
+    def _get_returnable_quantities(self, lot=None, package=None, seen=None):
+        """Return the `stock.move.line` of `self` still returnable.
+
+        When computing the quantities to return, this method handles the existing returns, returns
+        of returns, and so on.
+
+        :param lot: `stock.production.lot` record to filter candidate move lines
+        :param package: `stock.quant.package` record to filter candidate move lines
+        :return: a dict of the quantities of `stock_move` stille returnable, indexed by
+            `stock.production.lot` and `stock.quant.package`
+        :rtype: dict
+        """
+        self.ensure_one()
+        if seen is None:
+            seen = self.browse()
+
+        qty_per_lot_and_package = defaultdict(lambda: 0)
+
+        if self in seen:
+            return qty_per_lot_and_package
+        seen |= self
+
+        if self.state == 'cancel' or self.scrapped:
+            return qty_per_lot_and_package
+        if self.state != 'done':
+            return qty_per_lot_and_package
+
+        outgoing_mls = self.move_line_ids
+        if lot is not None:
+            outgoing_mls = outgoing_mls.filtered(lambda ml: ml.lot_id == lot)
+
+        for outgoing_ml in outgoing_mls:
+            qty = outgoing_ml.product_uom_id._compute_quantity(outgoing_ml.qty_done, outgoing_ml.product_id.uom_id)
+            qty_per_lot_and_package[(outgoing_ml.lot_id, outgoing_ml.package_id)] += qty
+
+        for next_move in self.move_dest_ids:
+            for (lot, package), quantity in next_move._get_returnable_quantities(lot=lot, package=package, seen=seen).items():
+                qty_per_lot_and_package[(lot, package)] -= quantity
+
+        return qty_per_lot_and_package
+
     @api.onchange('product_id', 'product_qty')
     def onchange_quantity(self):
         if not self.product_id or self.product_qty < 0.0:
