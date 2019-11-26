@@ -1088,6 +1088,56 @@ class LastOrderedSet(OrderedSet):
         OrderedSet.add(self, elem)
 
 
+class GroupCalls:
+    """ A collection of callbacks with support for aggregated arguments.  Upon
+    call, every registered function is called once with positional arguments.
+    When registering a function, a tuple of positional arguments is returned, so
+    that the caller can modify the arguments in place.  This allows to
+    accumulate some data to process once::
+
+        callbacks = GroupCalls()
+
+        # register print (by default with a list)
+        [args] = callbacks.register(print, list)
+        args.append(42)
+
+        # add an element to the list to print
+        [args] = callbacks.register(print, list)
+        args.append(43)
+
+        # print "[42, 43]"
+        callbacks()
+    """
+    def __init__(self):
+        self._func_args = {}            # {func: args}
+
+    def __call__(self):
+        """ Call all the registered functions (in first addition order) with
+        their respective arguments.  Only recurrent functions remain registered
+        after the call.
+        """
+        func_args = self._func_args
+        while func_args:
+            func = next(iter(func_args))
+            args = func_args.pop(func)
+            func(*args)
+
+    def add(self, func, *types):
+        """ Register the given function, and return the tuple of positional
+        arguments to call the function with.  If the function is not registered
+        yet, the list of arguments is made up by invoking the given types.
+        """
+        try:
+            return self._func_args[func]
+        except KeyError:
+            args = self._func_args[func] = [type_() for type_ in types]
+            return args
+
+    def clear(self):
+        """ Remove all callbacks from self. """
+        self._func_args.clear()
+
+
 class IterableGenerator:
     """ An iterable object based on a generator function, which is called each
         time the object is iterated over.
