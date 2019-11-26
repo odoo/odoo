@@ -119,8 +119,8 @@ class ir_cron(models.Model):
         :param cron_cr: cursor holding lock on the cron job row, to use to update the next exec date,
             must not be committed/rolled back!
         """
-        try:
-            with api.Environment.manage():
+        with api.Environment.manage():
+            try:
                 cron = api.Environment(job_cr, job['user_id'], {
                     'lastcall': fields.Datetime.from_string(job['lastcall'])
                 })[cls._name]
@@ -153,9 +153,9 @@ class ir_cron(models.Model):
                 cron.flush()
                 cron.invalidate_cache()
 
-        finally:
-            job_cr.commit()
-            cron_cr.commit()
+            finally:
+                job_cr.commit()
+                cron_cr.commit()
 
     @classmethod
     def _process_jobs(cls, db_name):
