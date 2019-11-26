@@ -499,7 +499,6 @@ class MPDManager(Thread):
 
     def run(self):
         eftapi.EFT_CreateSession(ctypes.byref(self.mpd_session))
-        eftapi.EFT_PutDeviceId(self.mpd_session, terminal_id.encode())
         while True:
             if self.terminal_connected(terminal_id):
                 self.devices[terminal_id] = IoTDevice(terminal_id, 'mpd')
@@ -509,7 +508,6 @@ class MPDManager(Thread):
 
     def terminal_connected(self, terminal_id):
         eftapi.EFT_QueryStatus(self.mpd_session)
-        eftapi.EFT_Complete(self.mpd_session, 1)  # Needed to read messages from driver
         device_status = ctypes.c_long()
         eftapi.EFT_GetDeviceStatusCode(self.mpd_session, ctypes.byref(device_status))
         return device_status.value in [0, 1]
@@ -522,19 +520,12 @@ cups_lock = Lock()  # We can only make one call to Cups at a time
 
 mpdm = MPDManager()
 terminal_id = helpers.read_file_first_line('odoo-six-payment-terminal.conf')
+subprocess.call(["pkill", "-9", "eftdvs"])  # Kill any running MPD server
 if terminal_id:
-    try:
-        subprocess.check_output(["pidof", "eftdvs"])  # Check if MPD server is running
-    except subprocess.CalledProcessError:
-        subprocess.Popen(["eftdvs", "/ConfigDir", "/usr/share/eftdvs/"])  # Start MPD server
+    subprocess.Popen(["eftdvs", "/ConfigDir", "/usr/share/eftdvs/", "/TID", terminal_id])  # Start MPD server
     eftapi = ctypes.CDLL("eftapi.so")  # Library given by Six
     mpdm.daemon = True
     mpdm.start()
-else:
-    try:
-        subprocess.check_call(["pkill", "-9", "eftdvs"])  # Check if MPD server is running
-    except subprocess.CalledProcessError:
-        pass
 
 m = Manager()
 m.daemon = True
