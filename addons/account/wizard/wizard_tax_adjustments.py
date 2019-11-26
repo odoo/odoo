@@ -37,7 +37,7 @@ class TaxAdjustments(models.TransientModel):
             'debit': is_debit and abs(self.amount) or 0,
             'credit': not is_debit and abs(self.amount) or 0,
             'account_id': is_debit and self.debit_account_id.id or self.credit_account_id.id,
-            'tag_ids': [(6, False, [adjustment_tag.id])],
+            'tax_tag_ids': [(6, False, [adjustment_tag.id])],
         }))
 
         # Vals for the counterpart line

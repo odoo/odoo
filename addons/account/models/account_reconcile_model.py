@@ -228,14 +228,14 @@ class AccountReconcileModel(models.Model):
                 'tax_exigible': tax_res['tax_exigibility'],
                 'tax_repartition_line_id': tax_res['tax_repartition_line_id'],
                 'tax_ids': [(6, 0, tax_res['tax_ids'])],
-                'tag_ids': [(6, 0, tax_res['tag_ids'])],
+                'tax_tag_ids': [(6, 0, tax_res['tag_ids'])],
                 'reconcile_model_id': self.id,
             })
 
             # Handle price included taxes.
             base_line_dict['debit'] = tax_res['base'] > 0 and tax_res['base'] or base_line_dict['debit']
             base_line_dict['credit'] = tax_res['base'] < 0 and -tax_res['base'] or base_line_dict['credit']
-        base_line_dict['tag_ids'] = [(6, 0, res['base_tags'])]
+        base_line_dict['tax_tag_ids'] = [(6, 0, res['base_tags'])]
         return new_aml_dicts
 
     def _get_write_off_move_lines_dict(self, st_line, move_lines=None, residual_balance=None):

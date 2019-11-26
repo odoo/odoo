@@ -393,7 +393,7 @@ class HrExpense(models.Model):
                 'expense_id': expense.id,
                 'partner_id': partner_id,
                 'tax_ids': [(6, 0, expense.tax_ids.ids)],
-                'tag_ids': [(6, 0, taxes['base_tags'])],
+                'tax_tag_ids': [(6, 0, taxes['base_tags'])],
                 'currency_id': expense.currency_id.id if different_currency else False,
             }
             move_line_values.append(move_line_src)
@@ -415,7 +415,7 @@ class HrExpense(models.Model):
                     'amount_currency': amount_currency if different_currency else 0.0,
                     'account_id': tax['account_id'] or move_line_src['account_id'],
                     'tax_repartition_line_id': tax['tax_repartition_line_id'],
-                    'tag_ids': tax['tag_ids'],
+                    'tax_tag_ids': tax['tag_ids'],
                     'tax_base_amount': tax['base'],
                     'expense_id': expense.id,
                     'partner_id': partner_id,

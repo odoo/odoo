@@ -152,7 +152,7 @@
                     <field name="debit" sum="Total Debit"/>
                     <field name="credit" sum="Total Credit"/>
                     <field name="amount_currency" groups="base.group_multi_currency" optional="hide"/>
-                    <field name="tag_ids" widget="many2many_tags" width="0.5" optional="hide"/>
+                    <field name="tax_tag_ids" widget="many2many_tags" width="0.5" optional="hide"/>
                     <field name="matching_number" optional="show"/>
                     <field name="reconcile_model_id" invisible="1"/>
                     <field name="reconciled" invisible="1"/>
@@ -192,7 +192,7 @@
                     <field name="company_currency_id" invisible="1"/>
                     <field name="parent_state" invisible="1"/>
                     <field name="tax_ids" widget="many2many_tags" width="0.5" optional="hide" readonly="1"/>
-                    <field name="tag_ids" widget="many2many_tags" width="0.5" optional="hide" string="Tax Grids"
+                    <field name="tax_tag_ids" widget="many2many_tags" width="0.5" optional="hide" string="Tax Grids"
                            options="{'no_open': True, 'no_create': True}"
                            domain="[('applicability', '=', 'taxes')]"/>
                     <groupby name="move_id">
@@ -217,7 +217,7 @@
                 <field name="partner_id" position="attributes"><attribute name="optional">hide</attribute></field>
                 <field name="matching_number" position="attributes"><attribute name="optional">hide</attribute></field>
                 <field name="tax_ids" position="attributes"><attribute name="optional">show</attribute></field>
-                <field name="tag_ids" position="attributes"><attribute name="optional">show</attribute></field>
+                <field name="tax_tag_ids" position="attributes"><attribute name="optional">show</attribute></field>
             </field>
         </record>
 
@@ -715,7 +715,7 @@
 
                                         <field name="tax_line_id" invisible="1"/>
                                         <field name="tax_repartition_line_id" invisible="1"/>
-                                        <field name="tag_ids" invisible="1"/>
+                                        <field name="tax_tag_ids" invisible="1"/>
                                         <field name="tax_base_amount" invisible="1"/>
                                         <field name="tax_exigible" invisible="1"/>
                                         <field name="company_id" invisible="1"/>
@@ -793,7 +793,7 @@
 
                                         <field name="tax_line_id" invisible="1"/>
                                         <field name="tax_repartition_line_id" invisible="1"/>
-                                        <field name="tag_ids" invisible="1"/>
+                                        <field name="tax_tag_ids" invisible="1"/>
                                         <field name="tax_base_amount" invisible="1"/>
                                         <field name="tax_exigible" invisible="1"/>
                                         <field name="company_id" invisible="1"/>
@@ -918,7 +918,7 @@
                                                sum="Total Credit"
                                                attrs="{'invisible': [('display_type', 'in', ('line_section', 'line_note'))]}"/>
                                         <field name="country_id" invisible="1"/>
-                                        <field name="tag_ids" widget="many2many_tags" string="Tax Grids" optional="show" domain="[('country_id', '=', country_id), ('applicability', '=', 'taxes')]"/>
+                                        <field name="tax_tag_ids" widget="many2many_tags" string="Tax Grids" optional="show" domain="[('country_id', '=', country_id), ('applicability', '=', 'taxes')]"/>
 
                                         <!-- Others fields -->
                                         <field name="payment_id" invisible="1"/>
