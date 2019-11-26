@@ -75,7 +75,7 @@ class TestSurveyFlow(common.TestSurveyCommon, HttpCase):
         # -> this should have generated a new answer with a token
         answers = self.env['survey.user_input'].search([('survey_id', '=', survey.id)])
         self.assertEqual(len(answers), 1)
-        answer_token = answers.token
+        answer_token = answers.access_token
         self.assertTrue(answer_token)
         self.assertAnswer(answers, 'new', self.env['survey.question'])
 
