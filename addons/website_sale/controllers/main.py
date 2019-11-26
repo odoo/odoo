@@ -386,7 +386,7 @@ class WebsiteSale(http.Controller):
         if access_token:
             abandoned_order = request.env['sale.order'].sudo().search([('access_token', '=', access_token)], limit=1)
             if not abandoned_order:  # wrong token (or SO has been deleted)
-                return request.render('website.404')
+                raise NotFound()
             if abandoned_order.state != 'draft':  # abandoned cart already finished
                 values.update({'abandoned_proceed': True})
             elif revive == 'squash' or (revive == 'merge' and not request.session.get('sale_order_id')):  # restore old cart or merge with unexistant
