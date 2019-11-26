@@ -15,11 +15,10 @@
             <field name="state_id" position="attributes">
                 <attribute name="placeholder">Región</attribute>
             </field>
-            <field name="country_id" position="after">
-                <field name="l10n_cl_sii_taxpayer_type"/>
+            <field name="vat" position="after">
+                <field name="l10n_cl_sii_taxpayer_type" attrs="{'readonly': [('parent_id', '!=', False)]}" placeholder="Tax Payer Type"/>
             </field>
         </field>
-
     </record>
 
 </odoo>
