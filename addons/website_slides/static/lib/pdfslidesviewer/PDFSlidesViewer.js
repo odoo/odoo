@@ -5,7 +5,7 @@
     DOC : http://mozilla.github.io/pdf.js/api/draft/api.js.html
 */
 
-// !!!!!!!!! use window.PDFJS and not PDFJS
+// !!!!!!!!! use window.pdfjsLib and not pdfjsLib
 
 var PDFSlidesViewer = (function(){
 
@@ -34,7 +34,6 @@ var PDFSlidesViewer = (function(){
          * @see http://en.wikipedia.org/wiki/Cross-origin_resource_sharing.
          * this is equivalent to the use_cors option in openerpframework.js
          */
-        window.PDFJS.disableWorker = disableWorker || false;
     };
 
     /**
@@ -44,7 +43,7 @@ var PDFSlidesViewer = (function(){
     PDFSlidesViewer.prototype.loadDocument = function(url) {
         var self = this;
         var pdf_url = url || this.pdf_url;
-        return window.PDFJS.getDocument(pdf_url).then(function (file_content) {
+        return window.pdfjsLib.getDocument(pdf_url).then(function (file_content) {
             self.pdf = file_content;
             self.pdf_page_total = file_content.numPages;
             return file_content;
