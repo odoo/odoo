@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, _
+from odoo import fields, models, _
 from odoo.tools import html2plaintext
 
 
 class MailChannel(models.Model):
     _inherit = 'mail.channel'
+
+    is_lead = fields.Boolean(default=False)
 
     def _define_command_lead(self):
         return {'help': _('Create a new lead (/lead lead title)')}

@@ -28,6 +28,7 @@ Help your customers with this chat, and analyse their feedback.
         "views/mail_channel_views.xml",
         "views/im_livechat_channel_views.xml",
         "views/im_livechat_channel_templates.xml",
+        "views/res_config_settings_views.xml",
         "views/res_users_views.xml",
         "report/im_livechat_report_channel_views.xml",
         "report/im_livechat_report_operator_views.xml"

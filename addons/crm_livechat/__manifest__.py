@@ -12,6 +12,9 @@
         'crm',
         'im_livechat'
     ],
+    'data': [
+        'views/templates.xml',
+        'data/mail_data.xml'
+    ],
     'description': 'Create new lead with using /lead command in the channel',
-    'auto_install': True
 }
