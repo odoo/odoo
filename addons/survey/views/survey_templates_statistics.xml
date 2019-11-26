@@ -3,6 +3,7 @@
 <data>
     <template id="survey_page_statistics" name="Survey: result statistics page">
         <t t-call="survey.layout">
+            <t t-set="page_record_limit" t-value="2"/><!-- Change This record_limit to change number of record  per page-->
             <div class="oe_structure" id="oe_structure_survey_result_1"/>
             <div class="container o_survey_result">
                 <t t-call="survey.survey_button_form_view" />
@@ -116,29 +117,27 @@
             </thead>
             <tbody>
                 <t t-set="text_result" t-value="prepare_result"/>
-                <tr t-foreach="text_result" t-as="user_input">
-                    <td><a t-att-href="'/survey/print/%s?answer_token=%s' % (user_input.survey_id.access_token, user_input.user_input_id.access_token)"><t t-esc="user_input_index + 1"></t></a></td>
-                    <t t-if="question.question_type == 'free_text'">
+                <t t-foreach="text_result" t-as="input_line">
+                    <tr t-att-class="'d-none' if input_line_index >= page_record_limit else ''">
                         <td>
-                            <a t-att-href="'/survey/print/%s?answer_token=%s' % (user_input.survey_id.access_token, user_input.user_input_id.access_token)" t-field="user_input.value_free_text"></a><br/>
+                            <a t-att-href="input_line.user_input_id.get_print_url()"><t t-esc="input_line_index + 1"></t></a>
                         </td>
-                    </t>
-                    <t t-if="question.question_type == 'textbox'">
                         <td>
-                            <a t-att-href="'/survey/print/%s?answer_token=%s' % (user_input.survey_id.access_token, user_input.user_input_id.access_token)" t-field="user_input.value_text"></a><br/>
+                            <t t-if="question.question_type == 'free_text'">
+                                <a t-att-href="input_line.user_input_id.get_print_url()" t-field="input_line.value_free_text"></a><br/>
+                            </t>
+                            <t t-if="question.question_type == 'textbox'">
+                                <a t-att-href="input_line.user_input_id.get_print_url()" t-field="input_line.value_text"></a><br/>
+                            </t>
+                            <t t-if="question.question_type == 'date'">
+                                <a t-att-href="input_line.user_input_id.get_print_url()" t-field="input_line.value_date"></a><br/>
+                            </t>
+                            <t t-if="question.question_type == 'datetime'">
+                                <a t-att-href="input_line.user_input_id.get_print_url()" t-field="input_line.value_datetime"></a><br/>
+                            </t>
                         </td>
-                    </t>
-                    <t t-if="question.question_type == 'date'">
-                        <td>
-                            <a t-att-href="'/survey/print/%s?answer_token=%s' % (user_input.survey_id.access_token, user_input.user_input_id.access_token)" t-field="user_input.value_date"></a><br/>
-                        </td>
-                    </t>
-                    <t t-if="question.question_type == 'datetime'">
-                        <td>
-                            <a t-att-href="'/survey/print/%s?answer_token=%s' % (user_input.survey_id.access_token, user_input.user_input_id.access_token)" t-field="user_input.value_datetime"></a><br/>
-                        </td>
-                    </t>
-                </tr>
+                    </tr>
+                </t>
             </tbody>
         </table>
         <t t-call="survey.question_pagination"/>
@@ -338,7 +337,11 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="d-none" t-foreach="number_result['input_lines']" t-as="user_input">
+                        <tr t-foreach="number_result['input_lines'][:page_record_limit]" t-as="user_input">
+                            <td><a t-att-href="'/survey/print/%s?answer_token=%s' % (user_input.survey_id.access_token, user_input.user_input_id.access_token)"><t t-esc="user_input_index + 1"></t></a></td>
+                            <td><span t-field="user_input.value_number"></span><br/></td>
+                        </tr>
+                        <tr class="d-none" t-foreach="number_result['input_lines'][page_record_limit:]" t-as="user_input">
                             <td><a t-att-href="'/survey/print/%s?answer_token=%s' % (user_input.survey_id.access_token, user_input.user_input_id.access_token)"><t t-esc="user_input_index + 1"></t></a></td>
                             <td><span t-field="user_input.value_number"></span><br/></td>
                         </tr>
@@ -350,10 +353,11 @@
     </template>
 
     <template id="question_pagination" name="Survey: statistics pages pagination">
-        <t t-set="record_limit" t-value="10"/><!-- Change This record_limit to change number of record  per page-->
-        <ul t-att-id="'pagination_%d' % question.id" class="pagination" t-att-data-question_id="question.id" t-att-data-record_limit="record_limit">
-            <t t-if="len(text_result) > record_limit">
-                <li t-foreach="page_range(len(text_result), record_limit)" t-as="num" class="page-item">
+        <ul t-att-id="'pagination_%d' % question.id" class="pagination" t-att-data-question_id="question.id" t-att-data-record_limit="page_record_limit">
+            <t t-if="len(text_result) > page_record_limit">
+                <t t-set="total" t-value="math.ceil(len(text_result) / page_record_limit) + 1"/>
+                <li t-foreach="range(1, total)" t-as="num"
+                    t-att-class="'page-item o_survey_js_results_pagination %s' % ('active' if num == 1 else '')">
                     <a href="#" class="page-link" t-esc="num"></a>
                 </li>
             </t>

@@ -7,7 +7,6 @@ import werkzeug
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from math import ceil
 
 from odoo import fields, http, _
 from odoo.addons.base.models.ir_ui_view import keep_query
@@ -522,7 +521,6 @@ class Survey(http.Controller):
                     ]
                 }
 
-            page_range: pager helper function
             current_filters: a list of ids
             filter_display_data: [{'labels': ['a', 'b'], question_text} ...  ]
             filter_finish: boolean => only finished surveys or not
@@ -533,18 +531,30 @@ class Survey(http.Controller):
         answers = survey.user_input_ids.filtered(lambda answer: answer.state != 'new' and not answer.test_entry)
         filter_finish = post.get('finished') == 'true'
         if post or filter_finish:
-            filter_data = self._get_filter_data(post)
+            filter_data = self._parse_post_filters(post)
             current_filters = survey.filter_input_ids(filter_data, filter_finish)
             filter_display_data = survey.get_filter_display_data(filter_data)
         return request.render('survey.survey_page_statistics', {
             'survey': survey,
             'answers': answers,
             'survey_dict': self._prepare_result_dict(survey, current_filters),
-            'page_range': self.page_range,
             'current_filters': current_filters,
             'filter_display_data': filter_display_data,
             'filter_finish': filter_finish
         })
+
+    def _parse_post_filters(self, post):
+        """Returns data used for filtering the result"""
+        filters = []
+        filters_data = post.get('filters')
+        if filters_data:
+            for data in filters_data.split('|'):
+                try:
+                    row_id, answer_id = data.split(',')
+                    filters.append({'row_id': int(row_id), 'answer_id': int(answer_id)})
+                except:
+                    return filters
+        return filters
 
     def _prepare_result_dict(self, survey, current_filters=None):
         """Returns dictionary having values for rendering template"""
@@ -576,24 +586,6 @@ class Survey(http.Controller):
             'prepare_result': Survey.prepare_result(question, current_filters),
             'graph_data': self._get_graph_data(question, current_filters),
         }
-
-    def _get_filter_data(self, post):
-        """Returns data used for filtering the result"""
-        filters = []
-        filters_data = post.get('filters')
-        if filters_data:
-            for data in filters_data.split('|'):
-                try:
-                    row_id, answer_id = data.split(',')
-                    filters.append({'row_id': int(row_id), 'answer_id': int(answer_id)})
-                except:
-                    return filters
-        return filters
-
-    def page_range(self, total_record, limit):
-        '''Returns number of pages required for pagination'''
-        total = ceil(total_record / float(limit))
-        return range(1, int(total + 1))
 
     def _get_graph_data(self, question, current_filters=None):
         '''Returns formatted data required by graph library on basis of filter'''
