@@ -342,6 +342,7 @@ class SurveyUserInputLine(models.Model):
     value_text_box = fields.Text('Free Text answer')
     suggested_answer_id = fields.Many2one('survey.question.answer', string="Suggested answer")
     matrix_row_id = fields.Many2one('survey.question.answer', string="Row answer")
+    # scoring
     answer_score = fields.Float('Score')
     answer_is_correct = fields.Boolean('Correct', compute='_compute_answer_is_correct')
 
