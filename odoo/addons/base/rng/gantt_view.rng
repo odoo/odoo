@@ -25,6 +25,16 @@
             <rng:optional><rng:attribute name="consolidation"/></rng:optional>
             <rng:optional><rng:attribute name="consolidation_max"/></rng:optional>
             <rng:optional><rng:attribute name="consolidation_exclude"/></rng:optional>
+            <rng:optional>
+                <rng:attribute name="scale_zoom">
+                    <rng:choice>
+                        <rng:value>year</rng:value>
+                        <rng:value>month</rng:value>
+                        <rng:value>week</rng:value>
+                        <rng:value>day</rng:value>
+                    </rng:choice>
+                </rng:attribute>
+            </rng:optional>
             <rng:optional><rng:attribute name="duration_unit"/></rng:optional>
             <rng:optional><rng:attribute name="drag_resize"/></rng:optional>
             <rng:optional><rng:attribute name="relative_field"/></rng:optional>
