@@ -8,6 +8,7 @@ import fnmatch
 import inspect
 import json
 import logging
+import math
 import re
 import time
 import uuid
@@ -1601,6 +1602,9 @@ actual arch.
             viewid=self.id,
             to_text=pycompat.to_text,
             image_data_uri=image_data_uri,
+            # specific 'math' functions to ease rounding in templates and lessen controller marshmalling
+            floor=math.floor,
+            ceil=math.ceil,
         )
         return qcontext
 
