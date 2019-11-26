@@ -8,6 +8,7 @@ import fnmatch
 import inspect
 import json
 import logging
+import math
 import re
 import time
 import uuid
@@ -1597,6 +1598,7 @@ actual arch.
             time=time,
             datetime=datetime,
             relativedelta=relativedelta,
+            math=math,
             xmlid=self.key,
             viewid=self.id,
             to_text=pycompat.to_text,
