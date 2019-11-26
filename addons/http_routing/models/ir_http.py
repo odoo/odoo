@@ -246,7 +246,7 @@ class IrHttp(models.AbstractModel):
         """ Return a domain to list the domain adding web-translations and
             dynamic resources that may be used frontend views
         """
-        return []
+        return [('name', '=', 'web')]
 
     bots = "bot|crawl|slurp|spider|curl|wget|facebookexternalhit".split("|")
 
