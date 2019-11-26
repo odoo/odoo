@@ -99,7 +99,7 @@
                         <filter string="Stage" name="stage" context="{'group_by': 'stage_id'}"/>
                         <filter string="Date" name="date" context="{'group_by': 'date'}"/>
                         <filter string="Event" name="event" context="{'group_by': 'event_id'}"/>
-                        <filter string="Room" name="location" context="{'group_by': 'location_id'}"/>
+                        <filter string="Location" name="location" context="{'group_by': 'location_id'}"/>
                     </group>
                 </search>
             </field>
@@ -118,8 +118,9 @@
                             <field name="website_url" invisible="1"/>
                             <field name="is_published" widget="website_redirect_button"/>
                         </div>
-                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
-                        <field name="kanban_state" widget="state_selection"/>
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <field name="kanban_state" widget="state_selection" class="ml-3"/>
+                        <field name="image" widget="image" class="oe_avatar"/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1>
@@ -201,7 +202,7 @@
                 <p class="o_view_nocontent_smiling_face">
                   Add a new track
                 </p><p>
-                  Tracks define the schedule of your event. These can be a talk, a round table, a meeting, etc.
+                  Tracks define the schedule of your event.<br/>These can be a talk, a round table, a meeting, etc.
                 </p>
             </field>
         </record>
@@ -215,14 +216,14 @@
               <p class="o_view_nocontent_smiling_face">
                 Add a new track
               </p><p>
-                Tracks define the schedule of your event. These can be a talk, a round table, a meeting, etc.
+                Tracks define the schedule of your event.<br/>These can be a talk, a round table, a meeting, etc.
               </p>
             </field>
         </record>
 
         <menuitem
             id="menu_event_track"
-            name="Event Tracks"
+            name="Tracks"
             action="action_event_track"
             parent="event.event_main_menu"
             groups="base.group_no_one"/>
@@ -232,7 +233,7 @@
             <field name="name">Event Locations</field>
             <field name="model">event.track.location</field>
             <field name="arch" type="xml">
-                <form string="Event Location">
+                <form string="Event Locations">
                     <sheet>
                         <group>
                             <field name="name"/>
