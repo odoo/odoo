@@ -3,7 +3,7 @@
 
 from odoo import api, models
 
-from odoo.addons.calendar.models.calendar import get_real_ids
+from odoo.addons.calendar.models.calendar_event import get_real_ids
 
 
 class MailInvite(models.TransientModel):
