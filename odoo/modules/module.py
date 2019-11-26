@@ -245,8 +245,8 @@ def get_resource_from_path(path):
         # force trailing separator
         adpath = os.path.join(adpath, "")
         if os.path.commonprefix([adpath, path]) == adpath:
-            resource = path.replace(adpath, "", 1)
-            break
+            if not resource or len(path.replace(adpath, "", 1)) < len(resource):
+                resource = path.replace(adpath, "", 1)
 
     if resource:
         relative = resource.split(os.path.sep)
