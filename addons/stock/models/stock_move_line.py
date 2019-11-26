@@ -203,6 +203,7 @@ class StockMoveLine(models.Model):
                     ml.move_id.picking_id and \
                     ml.move_id.picking_id.immediate_transfer and \
                     ml.move_id.state != 'done' and \
+                    not ml.move_id.origin_returned_move_id and \
                     'qty_done' in vals:
                 ml.move_id.product_uom_qty = ml.move_id.quantity_done
             if ml.state == 'done':
@@ -353,7 +354,7 @@ class StockMoveLine(models.Model):
         # done stock move should have its `quantity_done` equals to its `product_uom_qty`, and
         # this is what move's `action_done` will do. So, we replicate the behavior here.
         if updates or 'qty_done' in vals:
-            moves = self.filtered(lambda ml: ml.move_id.state == 'done' or ml.move_id.picking_id and ml.move_id.picking_id.immediate_transfer).mapped('move_id')
+            moves = self.filtered(lambda ml: ml.move_id.state == 'done' or ml.move_id.picking_id and ml.move_id.picking_id.immediate_transfer and not ml.move_id.origin_returned_move_id).mapped('move_id')
             for move in moves:
                 move.product_uom_qty = move.quantity_done
         next_moves._do_unreserve()

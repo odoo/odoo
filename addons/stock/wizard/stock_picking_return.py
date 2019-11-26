@@ -130,7 +130,7 @@ class ReturnPicking(models.TransientModel):
     def _prepare_move_default_values(self, return_line, new_picking):
         vals = {
             'product_id': return_line.product_id.id,
-            'product_uom_qty': return_line.quantity,
+            'product_uom_qty': 0,
             'product_uom': return_line.product_id.uom_id.id,
             'picking_id': new_picking.id,
             'state': 'draft',
@@ -141,6 +141,16 @@ class ReturnPicking(models.TransientModel):
             'warehouse_id': self.picking_id.picking_type_id.warehouse_id.id,
             'origin_returned_move_id': return_line.move_id.id,
             'procure_method': 'make_to_stock',
+            'move_line_ids': [(0, 0, {
+                'picking_id': new_picking.id,
+                'product_id': return_line.product_id.id,
+                'product_uom_id': return_line.uom_id.id,
+                'location_id': return_line.move_id.location_dest_id.id,
+                'location_dest_id': self.location_id.id or return_line.move_id.location_id.id,
+                'lot_id': return_line.lot_id.id,
+                'package_id': return_line.package_id.id,
+                'qty_done': return_line.quantity,
+            })],
         }
         return vals
 
@@ -157,7 +167,9 @@ class ReturnPicking(models.TransientModel):
             'state': 'draft',
             'origin': _("Return of %s") % self.picking_id.name,
             'location_id': self.picking_id.location_dest_id.id,
-            'location_dest_id': self.location_id.id})
+            'location_dest_id': self.location_id.id,
+            'immediate_transfer': True,
+        })
         new_picking.message_post_with_view('mail.message_origin_link',
             values={'self': new_picking, 'origin': self.picking_id},
             subtype_id=self.env.ref('mail.mt_note').id)
