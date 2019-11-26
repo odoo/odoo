@@ -39,11 +39,14 @@ class SurveyUserInput(models.Model):
     invite_token = fields.Char('Invite token', readonly=True, copy=False)  # no unique constraint, as it identifies a pool of attempts
     partner_id = fields.Many2one('res.partner', string='Partner', readonly=True)
     email = fields.Char('Email', readonly=True)
+    survey_user_nickname = fields.Char('Nickname')
     # questions / answers
     user_input_line_ids = fields.One2many('survey.user_input.line', 'user_input_id', string='Answers', copy=True)
     predefined_question_ids = fields.Many2many('survey.question', string='Predefined Questions', readonly=True)
     scoring_percentage = fields.Float("Score (%)", compute="_compute_scoring_percentage", store=True, compute_sudo=True)  # stored for perf reasons
     scoring_success = fields.Boolean('Quizz Passed', compute='_compute_scoring_success', store=True, compute_sudo=True)  # stored for perf reasons
+    # live session
+    user_input_session_id = fields.Many2one('survey.user_input_session', string="User Input Session")
 
     _sql_constraints = [
         ('unique_token', 'UNIQUE (access_token)', 'An access token must be unique!'),
@@ -72,8 +75,13 @@ class SurveyUserInput(models.Model):
     def _compute_is_time_limit_reached(self):
         """ Checks that the user_input is not exceeding the survey's time limit. """
         for user_input in self:
-            user_input.is_time_limit_reached = user_input.survey_id.is_time_limited and fields.Datetime.now() \
-                > user_input.start_datetime + relativedelta(minutes=user_input.survey_id.time_limit)
+            survey_session = user_input.user_input_session_id
+            if survey_session:
+                user_input.is_time_limit_reached = survey_session.is_questions_time_limited and fields.Datetime.now() \
+                    > user_input.user_input_session_id.current_question_start_time + relativedelta(seconds=survey_session.questions_time_limit)
+            else:
+                user_input.is_time_limit_reached = user_input.survey_id.is_time_limited and fields.Datetime.now() \
+                    > user_input.start_datetime + relativedelta(minutes=user_input.survey_id.time_limit)
 
     @api.depends('state', 'test_entry', 'survey_id.is_attempts_limited', 'partner_id', 'email', 'invite_token')
     def _compute_attempts_number(self):
@@ -201,6 +209,9 @@ class SurveyUserInput(models.Model):
             self._save_line_simple_answer(question, old_answers, answer)
             if question.save_as_email and answer:
                 self.write({'email': answer})
+            if question.save_as_nickname and answer:
+                self.write({'survey_user_nickname': answer})
+
         elif question.question_type in ['simple_choice', 'multiple_choice']:
             self._save_line_choice(question, old_answers, answer, comment)
         elif question.question_type == 'matrix':
@@ -261,11 +272,43 @@ class SurveyUserInput(models.Model):
 
         if answer_type == 'suggestion':
             vals['suggested_answer_id'] = answer
+            answer_score = self._get_speed_rating_score(answer)
+            if answer_score:
+                vals.update({'answer_score': answer_score})
         elif answer_type == 'numerical_box':
             vals['value_numerical_box'] = float(answer)
         else:
             vals['value_%s' % answer_type] = answer
         return vals
+
+    def _get_speed_rating_score(self, answer_id):
+        """ If score depends on the speed of the answer, we need to compute it.
+        If the user answers in less than 2 seconds, he gets 100% of the points.
+        If he answers after that, he gets minimum 50% of the points.
+        The 50 other % are ponderated between the time limit and the time it took him to answer. """
+
+        answer = self.env['survey.question.answer'].search([('id', '=', int(answer_id))], limit=1)
+        answer_score = False
+        if self.user_input_session_id and self.user_input_session_id.speed_rating:
+            if answer.answer_score and answer.answer_score > 0:
+                max_score_delay = 2
+                time_limit = self.user_input_session_id.questions_time_limit
+                now = fields.Datetime.now()
+                seconds_to_answer = (now - self.user_input_session_id.current_question_start_time).total_seconds()
+                question_remaining_time = time_limit - seconds_to_answer
+                if seconds_to_answer < max_score_delay:  # if answered within the max_score_delay
+                    answer_score = answer.answer_score
+                elif question_remaining_time < 0:  # if no time left
+                    answer_score = answer.answer_score / 2
+                else:
+                    time_limit -= max_score_delay  # we remove the max_score_delay to have all possible values
+                    question_remaining_time -= max_score_delay
+                    score_proportion = (time_limit - seconds_to_answer) / time_limit
+                    answer_score = (answer.answer_score / 2) * (1 + score_proportion)
+            elif answer.answer_score:  # we don't want to reduce a negative scoring
+                answer_score = answer.answer_score
+
+        return answer_score
 
     def _get_line_comment_values(self, question, comment):
         return {
@@ -377,7 +420,7 @@ class SurveyUserInputLine(models.Model):
     def create(self, vals_list):
         for vals in vals_list:
             suggested_answer_id = vals.get('suggested_answer_id')
-            if suggested_answer_id:
+            if suggested_answer_id and not vals.get('answer_score'):
                 vals.update({'answer_score': self.env['survey.question.answer'].browse(int(suggested_answer_id)).answer_score})
         return super(SurveyUserInputLine, self).create(vals_list)
 

@@ -38,8 +38,12 @@
                 </span>
             </div>
         </div>
+        <div t-if="session and session.competitive_mode" class="o_survey_session_ranking mb-5 mt-1">
+            <h2 class="mt16 text-uppercase text-muted">Ranking</h2>
+            <t t-call="survey.user_input_session_ranking" />
+        </div>
         <div t-if="survey.scoring_type in ['scoring_with_answers', 'scoring_without_answers']">
-            <h1 class="mt16">Results Overview</h1>
+            <h2 class="mt16 text-uppercase text-muted">Results Overview</h2>
             <div>Success rate: <mark class="font-weight-bold"><t t-esc="survey_data['global_success_rate']"></t>%</mark></div>
             <div class="survey_graph" data-graph-type="pie" t-att-data-graph-data="survey_data['global_success_graph']">
                 <!-- canvas element for drawing pie chart -->
@@ -56,56 +60,62 @@
                 <hr class="mt-2 pb-1 mb-1"/>
             </t>
             <div t-else="" class="ml-4 mt-4">
-                <t t-set="question_scoring" t-value="survey.scoring_type in ['scoring_with_answers', 'scoring_without_answers'] and question.question_type in ['simple_choice', 'multiple_choice']"/>
-                <t t-set="comment_lines" t-value="question_data['comment_line_ids']"/>
-                <t t-set="graph_data" t-value="question_data['graph_data']"/>
-                <t t-set="table_data" t-value="question_data['table_data']"/>
-
-                <div class="d-flex align-items-start mb-2">
-                    <div class="mr-auto">
-                        <h5 t-field="question.title" class="mb-1"/>
-                        <div t-if="question_scoring">
-                            <t t-if="len(question_data['right_answers']) >= 1">
-                                <span t-if="len(question_data['right_answers']) == 1">Right answer: </span>
-                                <span t-if="len(question_data['right_answers']) > 1">Right answers: </span>
-                                <strong>
-                                    <t t-foreach="question_data['right_answers']" t-as="answer">
-                                        <span t-if="answer_index != 0">, </span><span t-esc="answer.value"/>
-                                    </t>
-                                </strong>
-                            </t>
-                        </div>
-                        <div class="ml-3 text-muted" t-field="question.description"/>
-                    </div>
-                    <!-- Question info -->
-                    <span class="badge badge-info" t-field='question.question_type'/>
-                    <t t-if="question.question_type == 'matrix'">
-                        <span class="badge badge-info ml-2" t-field='question.matrix_subtype'/>
-                    </t>
-                    <!-- Scoring info -->
-                    <t t-if="question_scoring">
-                        <span class="badge badge-success ml-3"><span t-esc="len(question_data['right_inputs'])"></span> Correct</span>
-                        <span class="badge badge-warning ml-1" t-if="question.question_type == 'multiple_choice'">
-                            <span t-esc="len(question_data['partial_inputs'])"></span> Partial
-                        </span>
-                    </t>
-                    <!-- Inputs info -->
-                    <span class="badge badge-info ml-3"><span t-esc="len(question_data['answer_input_done_ids'])"></span> Answered</span>
-                    <span class="badge badge-info ml-1"><span t-esc="len(question_data['answer_input_skipped_ids'])"></span> Skipped</span>
-                </div>
-                <t t-if="question.question_type in ['text_box', 'char_box', 'date', 'datetime']">
-                    <t t-call="survey.question_result_text"/>
-                </t>
-                <t t-elif="question.question_type in ['numerical_box']">
-                    <t t-call="survey.question_result_number"></t>
-                </t>
-                <t t-elif="question.question_type in ['simple_choice', 'multiple_choice']">
-                    <t t-call="survey.question_result_choice"></t>
-                </t>
-                <t t-elif="question.question_type in ['matrix']">
-                    <t t-call="survey.question_result_matrix"></t>
-                </t>
+                <t t-call="survey.survey_page_statistics_question" />
             </div>
+        </div>
+    </template>
+
+    <template id="survey_page_statistics_question" name="Question: result statistics">
+        <t t-set="question_scoring" t-value="survey.scoring_type in ['scoring_with_answers', 'scoring_without_answers'] and question.question_type in ['simple_choice', 'multiple_choice']"/>
+        <t t-set="comment_lines" t-value="question_data['comment_line_ids']"/>
+        <t t-set="graph_data" t-value="question_data['graph_data']"/>
+        <t t-set="table_data" t-value="question_data['table_data']"/>
+
+        <div>
+        <div class="d-flex align-items-start mb-2">
+            <div class="mr-auto">
+                <h5 t-field="question.title" class="mb-1"/>
+                <div t-if="question_scoring">
+                    <t t-if="len(question_data['right_answers']) >= 1">
+                        <span t-if="len(question_data['right_answers']) == 1">Right answer: </span>
+                        <span t-if="len(question_data['right_answers']) > 1">Right answers: </span>
+                        <strong>
+                            <t t-foreach="question_data['right_answers']" t-as="answer">
+                                <span t-if="answer_index != 0">, </span><span t-esc="answer.value"/>
+                            </t>
+                        </strong>
+                    </t>
+                </div>
+                <div class="ml-3 text-muted" t-field="question.description"/>
+            </div>
+            <!-- Question info -->
+            <span class="badge badge-info" t-field='question.question_type'/>
+            <t t-if="question.question_type == 'matrix'">
+                <span class="badge badge-info ml-2" t-field='question.matrix_subtype'/>
+            </t>
+            <!-- Scoring info -->
+            <t t-if="question_scoring">
+                <span class="badge badge-success ml-3"><span t-esc="len(question_data['right_inputs'])"></span> Correct</span>
+                <span class="badge badge-warning ml-1" t-if="question.question_type == 'multiple_choice'">
+                    <span t-esc="len(question_data['partial_inputs'])"></span> Partial
+                </span>
+            </t>
+            <!-- Inputs info -->
+            <span class="badge badge-info ml-3"><span t-esc="len(question_data['answer_input_done_ids'])"></span> Answered</span>
+            <span class="badge badge-info ml-1"><span t-esc="len(question_data['answer_input_skipped_ids'])"></span> Skipped</span>
+        </div>
+        <t t-if="question.question_type in ['text_box', 'char_box', 'date', 'datetime']">
+            <t t-call="survey.question_result_text"/>
+        </t>
+        <t t-elif="question.question_type in ['numerical_box']">
+            <t t-call="survey.question_result_number"></t>
+        </t>
+        <t t-elif="question.question_type in ['simple_choice', 'multiple_choice']">
+            <t t-call="survey.question_result_choice"></t>
+        </t>
+        <t t-elif="question.question_type in ['matrix']">
+            <t t-call="survey.question_result_matrix"></t>
+        </t>
         </div>
     </template>
 

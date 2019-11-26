@@ -7,6 +7,7 @@ import uuid
 import werkzeug
 
 from odoo import api, exceptions, fields, models, _
+from odoo.exceptions import UserError
 from odoo.osv import expression
 
 
@@ -100,6 +101,11 @@ class Survey(models.Model):
     certification_give_badge = fields.Boolean('Give Badge')
     certification_badge_id = fields.Many2one('gamification.badge', 'Certification Badge')
     certification_badge_id_dummy = fields.Many2one(related='certification_badge_id', string='Certification Badge ')
+    # live sessions
+    user_input_session_ids = fields.One2many('survey.user_input_session', 'survey_id', string="User Input Sessions")
+    user_input_session_count = fields.Integer('# Sessions', compute='_compute_user_input_session_count')
+    user_input_current_session = fields.Many2one('survey.user_input_session', compute='_compute_user_input_current_session',
+        string="Current User Input Session")
 
     _sql_constraints = [
         ('access_token_unique', 'unique(access_token)', 'Access token should be unique'),
@@ -151,6 +157,28 @@ class Survey(models.Model):
         for survey in self:
             survey.page_ids = survey.question_and_page_ids.filtered(lambda question: question.is_page)
             survey.question_ids = survey.question_and_page_ids - survey.page_ids
+
+    @api.depends('user_input_session_ids')
+    def _compute_user_input_session_count(self):
+        statistics = self.env['survey.user_input_session'].read_group(
+            [('survey_id', 'in', self.ids)],
+            ['survey_id'],
+            ['survey_id']
+        )
+        statistics_by_survey = {
+            statistics_item['survey_id'][0]: statistics_item['survey_id_count']
+            for statistics_item in statistics
+        }
+        for survey in self:
+            survey.user_input_session_count = statistics_by_survey.get(survey.id, 0)
+
+    @api.depends('user_input_session_ids.state')
+    def _compute_user_input_current_session(self):
+        for survey in self:
+            survey.user_input_current_session = self.env['survey.user_input_session'].search([
+                ('survey_id', '=', survey.id),
+                ('state', 'in', ['draft', 'ready', 'in_progress'])
+            ], limit=1)
 
     @api.onchange('scoring_success_min')
     def _onchange_scoring_success_min(self):
@@ -239,11 +267,14 @@ class Survey(models.Model):
             if user and not user._is_public():
                 answer_vals['partner_id'] = user.partner_id.id
                 answer_vals['email'] = user.email
+                answer_vals['survey_user_nickname'] = user.name
             elif partner:
                 answer_vals['partner_id'] = partner.id
                 answer_vals['email'] = partner.email
+                answer_vals['survey_user_nickname'] = partner.name
             else:
                 answer_vals['email'] = email
+                answer_vals['survey_user_nickname'] = email
 
             if invite_token:
                 answer_vals['invite_token'] = invite_token
@@ -253,13 +284,19 @@ class Survey(models.Model):
                 # created every time the user lands on '/start'
                 answer_vals['invite_token'] = self.env['survey.user_input']._generate_invite_token()
 
+            if survey.user_input_current_session and survey.user_input_current_session.state in ['ready', 'in_progress']:
+                answer_vals['user_input_session_id'] = survey.user_input_current_session.id
+
             answer_vals.update(additional_vals)
             user_inputs += user_inputs.create(answer_vals)
 
-        for question in self.mapped('question_ids').filtered(lambda q: q.question_type == 'char_box' and q.save_as_email):
+        for question in self.mapped('question_ids').filtered(
+                lambda q: q.question_type == 'char_box' and (q.save_as_email or q.save_as_nickname)):
             for user_input in user_inputs:
-                if user_input.email:
+                if question.save_as_email and user_input.email:
                     user_input.save_lines(question, user_input.email)
+                if question.save_as_nickname and user_input.survey_user_nickname:
+                    user_input.save_lines(question, user_input.survey_user_nickname)
 
         return user_inputs
 
@@ -360,6 +397,10 @@ class Survey(models.Model):
 
     @api.model
     def _previous_page_or_question_id(self, user_input, page_or_question_id):
+        if user_input.user_input_session_id:
+            # can't go back in session mode
+            return None
+
         survey = user_input.survey_id
         pages_or_questions = survey._get_pages_or_questions(user_input)
 
@@ -386,6 +427,10 @@ class Survey(models.Model):
                 to True if she knows that the page to display is the first one!
                 (doing this will probably cause a giant worm to eat her house)
         """
+
+        if user_input.user_input_session_id:
+            return (user_input.user_input_session_id.current_question_id, False)
+
         survey = user_input.survey_id
 
         pages_or_questions = survey._get_pages_or_questions(user_input)
@@ -408,6 +453,9 @@ class Survey(models.Model):
     def _get_survey_questions(self, answer=None, page_id=None, question_id=None):
         questions, page_or_question_id = None, None
 
+        if answer and answer.user_input_session_id and answer.user_input_session_id.state == 'in_progress':
+            current_session_question = answer.user_input_session_id.current_question_id
+            return (current_session_question, current_session_question.id)
         if self.questions_layout == 'page_per_section':
             if not page_id:
                 raise ValueError("Page id is needed for question layout 'page_per_section'")
@@ -547,17 +595,38 @@ class Survey(models.Model):
             'url': '/survey/%s/get_certification_preview' % (self.id)
         }
 
+    def action_user_input_session(self):
+        action_rec = self.env.ref('survey.action_survey_user_input_session')
+        action = action_rec.read()[0]
+        ctx = dict(self.env.context)
+        ctx.update({'search_default_survey_ids': self.ids})
+        action['context'] = ctx
+        return action
+
+    def action_start_input_session(self):
+        if self.user_input_current_session:
+            raise UserError(_('You already have an existing session, close it first before opening a new one.'))
+
+        action_rec = self.env.ref('survey.action_survey_user_input_session')
+        action = action_rec.read()[0]
+        action['context'] = {'default_survey_id': self.id}
+        action['views'] = [(False, 'form')]
+        return action
+
+    def action_end_input_session(self):
+        self.user_input_current_session.write({'state': 'closed'})
+
     def get_start_url(self):
-        return 'survey/start/%s' % self.access_token
+        return '/survey/start/%s' % self.access_token
 
     def get_print_url(self):
-        return 'survey/print/%s' % self.access_token
+        return '/survey/print/%s' % self.access_token
 
     # ------------------------------------------------------------
     # GRAPH / RESULTS
     # ------------------------------------------------------------
 
-    def _prepare_statistics(self, user_input_lines=None):
+    def _prepare_statistics(self, user_input_lines=None, survey_session=None):
         if user_input_lines:
             user_input_domain = [
                 ('survey_id', 'in', self.ids),
@@ -569,6 +638,10 @@ class Survey(models.Model):
                 ('state', '=', 'done'),
                 ('test_entry', '=', False)
             ]
+
+            if survey_session:
+                user_input_domain = expression.AND([user_input_domain, [('id', 'in', survey_session.answer_ids)]])
+
         count_data = self.env['survey.user_input'].sudo().read_group(user_input_domain, ['scoring_success', 'id:count_distinct'], ['scoring_success'])
 
         scoring_success_count = 0

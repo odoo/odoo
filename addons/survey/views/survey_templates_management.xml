@@ -143,7 +143,7 @@
 
     <template id="survey_button_retake" name="Survey: retake button">
         <div>
-            <t t-if="not answer.scoring_success">
+            <t t-if="not answer.scoring_success and not answer.user_input_session_id">
                 <t t-if="survey.is_attempts_limited">
                     <t t-set="attempts_left" t-value="survey._get_number_of_attempts_lefts(answer.partner_id, answer.email, answer.invite_token)" />
                     <t t-if="attempts_left > 0">

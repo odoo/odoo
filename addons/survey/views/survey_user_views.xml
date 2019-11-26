@@ -217,6 +217,64 @@
         </field>
     </record>
 
+    <!-- USER INPUT SESSIONS -->
+
+    <record model="ir.actions.act_window" id="action_survey_user_input_session">
+        <field name="name">Session</field>
+        <field name="res_model">survey.user_input_session</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_empty_folder">
+            There are no sessions to view yet
+          </p>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="survey_user_input_session_view_form">
+        <field name="name">survey_user_input_session_view_form</field>
+        <field name="model">survey.user_input_session</field>
+        <field name="arch" type="xml">
+            <form string="User Input Session" create="0">
+                <field name="state" invisible="1" />
+                <header>
+                    <button name="action_open_session_manager" string="Open Session Manager" type="object" class="oe_highlight"
+                        attrs="{'invisible': [('state', '=', 'closed')]}" />
+                    <button name="action_end_session" string="End Live Session" type="object"
+                        attrs="{'invisible': ['|', ('id', '=', False), ('state', '=', 'closed')]}" />
+                    <button name="action_result_session" string="See results" type="object" class="oe_highlight"
+                      attrs="{'invisible': [('state', '!=', 'closed')]}"/>
+                </header>
+                <sheet>
+                    <h1><field name="survey_id" options="{'no_open': True}" nolabel="1" /></h1>
+                    <group string="Session Settings">
+                        <field name="competitive_mode" />
+                        <label for="is_questions_time_limited" string="Time Limit"/>
+                        <div>
+                            <field name="is_questions_time_limited" nolabel="1"/>
+                            <field name="questions_time_limit" attrs="{'invisible': [('is_questions_time_limited', '=', False)]}" nolabel="1" class="oe_inline" /> <span attrs="{'invisible': [('is_questions_time_limited', '=', False)]}"> seconds per question</span>
+                        </div>
+                        <field name="speed_rating" attrs="{'invisible': [('is_questions_time_limited', '=', False)]}" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="survey_user_input_session_view_tree">
+        <field name="name">survey_user_input_session_view_tree</field>
+        <field name="model">survey.user_input_session</field>
+        <field name="arch" type="xml">
+            <tree string="User Input Sessions" create="0">
+                <field name="survey_id" />
+                <field name="create_date" />
+                <field name="state" />
+                <field name="answer_ids_count" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- MENUs -->
+
     <menuitem name="Participations"
         id="menu_survey_type_form1"
         action="action_survey_user_input"
