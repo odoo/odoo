@@ -25,7 +25,7 @@ class TrackLocation(models.Model):
     _name = "event.track.location"
     _description = 'Event Track Location'
 
-    name = fields.Char('Location', required=True)
+    name = fields.Char('Room', required=True)
 
 
 class TrackStage(models.Model):
@@ -92,7 +92,7 @@ class Track(models.Model):
         ('0', 'Low'), ('1', 'Medium'),
         ('2', 'High'), ('3', 'Highest')],
         'Priority', required=True, default='1')
-    image = fields.Image("Image", related='partner_id.image_128', store=True, readonly=False)
+    image = fields.Image("Image")
 
     @api.depends('name')
     def _compute_website_url(self):
@@ -107,7 +107,6 @@ class Track(models.Model):
             self.partner_name = self.partner_id.name
             self.partner_email = self.partner_id.email
             self.partner_phone = self.partner_id.phone
-            self.partner_biography = self.partner_id.website_description
 
     @api.depends('date', 'duration')
     def _compute_end_date(self):
