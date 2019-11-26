@@ -1063,6 +1063,31 @@ QUnit.module('Views', {
         pivot.destroy();
     });
 
+    QUnit.test('download a file with single measure, measure row displayed in table', async function (assert) {
+        assert.expect(1);
+
+        const pivot = await createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                '<field name="date" interval="month" type="col"/>' +
+                '<field name="foo" type="measure"/>' +
+                '</pivot>',
+            session: {
+                get_file: function (args) {
+                    const data = JSON.parse(args.data.data);
+                    assert.strictEqual(data.measure_headers.length, 4,
+                        "should have measure_headers in data");
+                    args.complete();
+                },
+            },
+        });
+
+        await testUtils.dom.click(pivot.$buttons.find('.o_pivot_download'));
+        pivot.destroy();
+    });
+
     QUnit.test('download button is disabled when there is no data', async function (assert) {
         assert.expect(1);
 

@@ -411,9 +411,7 @@ var PivotModel = AbstractModel.extend({
             originRow = headers[headers.length - 1].map(processHeader);
         } else {
             colGroupHeaderRows = headers.slice(0, headers.length - 1);
-            if (measureCount > 1) {
-                measureRow = headers[headers.length - 1].map(processHeader);
-            }
+            measureRow = headers[headers.length - 1].map(processHeader);
         }
 
         // remove the empty headers on left side
