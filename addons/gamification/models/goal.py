@@ -12,6 +12,7 @@ from odoo.tools.safe_eval import safe_eval
 _logger = logging.getLogger(__name__)
 
 
+DOMAIN_TEMPLATE = "[('store', '=', True), '|', ('model_id', '=', model_id), ('model_id', 'in', model_inherited_ids)%s]"
 class GoalDefinition(models.Model):
     """Goal definition
 
@@ -39,8 +40,15 @@ class GoalDefinition(models.Model):
         ('boolean', "Exclusive (done or not-done)"),
     ], default='progress', string="Displayed as", required=True)
     model_id = fields.Many2one('ir.model', string='Model', help='The model object for the field to evaluate')
-    field_id = fields.Many2one('ir.model.fields', string='Field to Sum', help='The field containing the value to evaluate')
-    field_date_id = fields.Many2one('ir.model.fields', string='Date Field', help='The date to use for the time period evaluated')
+    model_inherited_ids = fields.Many2many('ir.model', related='model_id.inherited_model_ids')
+    field_id = fields.Many2one(
+        'ir.model.fields', string='Field to Sum', help='The field containing the value to evaluate',
+        domain=DOMAIN_TEMPLATE % ''
+    )
+    field_date_id = fields.Many2one(
+        'ir.model.fields', string='Date Field', help='The date to use for the time period evaluated',
+        domain=DOMAIN_TEMPLATE % ", ('ttype', 'in', ('date', 'datetime'))"
+    )
     domain = fields.Char(
         "Filter Domain", required=True, default="[]",
         help="Domain for filtering records. General rule, not user depending,"
@@ -124,19 +132,6 @@ class GoalDefinition(models.Model):
         if vals.get('field_id') or vals.get('model_id') or vals.get('batch_mode'):
             self._check_model_validity()
         return res
-
-    @api.onchange('model_id')
-    def _change_model_id(self):
-        """Force domain for the `field_id` and `field_date_id` fields"""
-        if not self.model_id:
-            return {'domain': {'field_id': expression.FALSE_DOMAIN, 'field_date_id': expression.FALSE_DOMAIN}}
-        model_fields_domain = [
-            ('store', '=', True),
-            '|', ('model_id', '=', self.model_id.id),
-                 ('model_id', 'in', self.model_id.inherited_model_ids.ids)]
-        model_date_fields_domain = expression.AND([[('ttype', 'in', ('date', 'datetime'))], model_fields_domain])
-        return {'domain': {'field_id': model_fields_domain, 'field_date_id': model_date_fields_domain}}
-
 
 class Goal(models.Model):
     """Goal instance for a user
