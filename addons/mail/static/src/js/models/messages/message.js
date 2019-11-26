@@ -53,6 +53,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
         this._documentID = data.res_id;
         this._emailFrom = data.email_from;
         this._info = data.info;
+        this._isNote = data.is_note;
         this._moduleIcon = data.module_icon;
         this._needactionPartnerIDs = data.needaction_partner_ids || [];
         this._starredPartnerIDs = data.starred_partner_ids || [];
