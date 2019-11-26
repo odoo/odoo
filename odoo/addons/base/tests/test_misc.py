@@ -270,3 +270,35 @@ class TestFormatLangDate(TransactionCase):
         # Check given `lang_code` overwites context lang
         self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, time_part, time_format='short', lang_code='zh_CN'), '\u4e0b\u53484:30')
         self.assertEqual(misc.format_time(lang.with_context(lang='zh_CN').env, time_part, time_format='medium', lang_code='fr_FR'), '16:30:22')
+
+
+class TestGroupCalls(BaseCase):
+    def test_callbacks(self):
+        log = []
+
+        def foo():
+            log.append("foo")
+
+        def bar(items):
+            log.extend(items)
+            callbacks.add(baz)
+
+        def baz():
+            log.append("baz")
+
+        callbacks = misc.GroupCalls()
+        callbacks.add(foo)
+        callbacks.add(bar, list)[0].append(1)
+        callbacks.add(bar, list)[0].append(2)
+        self.assertEqual(log, [])
+
+        callbacks()
+        self.assertEqual(log, ["foo", 1, 2, "baz"])
+
+        callbacks()
+        self.assertEqual(log, ["foo", 1, 2, "baz"])
+
+        callbacks.add(bar, list)[0].append(3)
+        callbacks.clear()
+        callbacks()
+        self.assertEqual(log, ["foo", 1, 2, "baz"])
