@@ -459,7 +459,7 @@ var SlideUploadDialog = Dialog.extend({
         if (file.type === 'application/pdf') {
             var ArrayReader = new FileReader();
             this.set('can_submit_form', false);
-            // file read as ArrayBuffer for PDFJS get_Document API
+            // file read as ArrayBuffer for pdfjsLib get_Document API
             ArrayReader.readAsArrayBuffer(file);
             ArrayReader.onload = function (evt) {
                 var buffer = evt.target.result;
@@ -469,15 +469,15 @@ var SlideUploadDialog = Dialog.extend({
                     self.set('can_submit_form', true);
                 };
                 /**
-                 * The following line fixes PDFJS 'Util' global variable.
+                 * The following line fixes pdfjsLib 'Util' global variable.
                  * This is (most likely) related to #32181 which lazy loads most assets.
                  *
-                 * That caused an issue where the global 'Util' variable from PDFJS can be
+                 * That caused an issue where the global 'Util' variable from pdfjsLib can be
                  * (depending of which libraries load first) overridden by the global 'Util'
                  * variable of bootstrap.
-                 * (See 'lib/bootstrap/js/util.js' and 'lib/pdfjs/src/shared/util.js')
+                 * (See 'lib/bootstrap/js/util.js' and 'web/static/lib/pdfjs/build/pdfjs.js')
                  *
-                 * This commit ensures that the global 'Util' variable is set to the one of PDFJS
+                 * This commit ensures that the global 'Util' variable is set to the one of pdfjsLib
                  * right before it's used.
                  *
                  * Eventually, we should update or get rid of one of the two libraries since they're
@@ -485,9 +485,9 @@ var SlideUploadDialog = Dialog.extend({
                  * In the mean time, this small fix allows not refactoring all of this and can not
                  * cause much harm.
                  */
-                Util = PDFJS.Util;
-                PDFJS.getDocument(new Uint8Array(buffer), null, passwordNeeded).then(function getPdf(pdf) {
-                    self._formSetFieldValue('duration', (pdf.pdfInfo.numPages || 0) * 5);
+                Util = window.pdfjsLib.Util;
+                window.pdfjsLib.getDocument(new Uint8Array(buffer), null, passwordNeeded).then(function getPdf(pdf) {
+                    self._formSetFieldValue('duration', (pdf._pdfInfo.numPages || 0) * 5);
                     pdf.getPage(1).then(function getFirstPage(page) {
                         var scale = 1;
                         var viewport = page.getViewport(scale);
