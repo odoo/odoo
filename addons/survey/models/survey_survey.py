@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
 import random
 import uuid
 import werkzeug
-
-from collections import Counter, OrderedDict
-from itertools import product
 
 from odoo import api, exceptions, fields, models, _
 from odoo.osv import expression
@@ -554,129 +552,43 @@ class Survey(models.Model):
     # GRAPH / RESULTS
     # ------------------------------------------------------------
 
-    def filter_input_ids(self, filters, finished=False):
-        """If user applies any filters, then this function returns list of
-           filtered user_input_id and label's strings for display data in web.
-           :param filters: list of dictionary (having: row_id, ansewr_id)
-           :param finished: True for completely filled survey,Falser otherwise.
-           :returns list of filtered user_input_ids.
-        """
-        self.ensure_one()
-        if filters:
-            domain_filter, choice = [], []
-            for current_filter in filters:
-                row_id, answer_id = current_filter['row_id'], current_filter['answer_id']
-                if row_id == 0:
-                    choice.append(answer_id)
-                else:
-                    domain_filter.extend(['|', ('matrix_row_id.id', '=', row_id), ('suggested_answer_id.id', '=', answer_id)])
-            if choice:
-                domain_filter.insert(0, ('suggested_answer_id.id', 'in', choice))
-            else:
-                domain_filter = domain_filter[1:]
-            input_lines = self.env['survey.user_input.line'].search(domain_filter)
-            filtered_input_ids = [input_line.user_input_id.id for input_line in input_lines]
+    def _prepare_statistics(self, user_input_lines=None):
+        if user_input_lines:
+            user_input_domain = [
+                ('survey_id', 'in', self.ids),
+                ('id', 'in', user_input_lines.mapped('user_input_id').ids)
+            ]
         else:
-            filtered_input_ids = []
-        if finished:
-            UserInput = self.env['survey.user_input']
-            if not filtered_input_ids:
-                user_inputs = UserInput.search([('survey_id', '=', self.id)])
+            user_input_domain = [
+                ('survey_id', 'in', self.ids),
+                ('state', '=', 'done'),
+                ('test_entry', '=', False)
+            ]
+        count_data = self.env['survey.user_input'].sudo().read_group(user_input_domain, ['scoring_success', 'id:count_distinct'], ['scoring_success'])
+
+        scoring_success_count = 0
+        scoring_failed_count = 0
+        for count_data_item in count_data:
+            if count_data_item['scoring_success']:
+                scoring_success_count += count_data_item['scoring_success_count']
             else:
-                user_inputs = UserInput.browse(filtered_input_ids)
-            return user_inputs.filtered(lambda input_item: input_item.state == 'done').ids
-        return filtered_input_ids
+                scoring_failed_count += count_data_item['scoring_success_count']
 
-    @api.model
-    def get_filter_display_data(self, filters):
-        """Returns data to display current filters
-            :param filters: list of dictionary (having: row_id, answer_id)
-            :returns list of dict having data to display filters.
-        """
-        filter_display_data = []
-        if filters:
-            Label = self.env['survey.question.answer']
-            for current_filter in filters:
-                row_id, answer_id = current_filter['row_id'], current_filter['answer_id']
-                label = Label.browse(answer_id)
-                question = label.question_id
-                if row_id == 0:
-                    labels = label
-                else:
-                    labels = Label.browse([row_id, answer_id])
-                filter_display_data.append({'question_text': question.title,
-                                            'labels': labels.mapped('value')})
-        return filter_display_data
+        success_graph = json.dumps([{
+            'text': _('Passed'),
+            'count': scoring_success_count,
+            'color': '#2E7D32'
+        }, {
+            'text': _('Missed'),
+            'count': scoring_failed_count,
+            'color': '#C62828'
+        }])
 
-    @api.model
-    def prepare_result(self, question, current_filters=None):
-        """ Compute statistical data for questions by counting number of vote per choice on basis of filter """
-        current_filters = current_filters if current_filters else []
-        result_summary = {}
-        input_lines = question.user_input_line_ids.filtered(lambda line: not line.user_input_id.test_entry)
-
-        # Calculate and return statistics for choice
-        if question.question_type in ['simple_choice', 'multiple_choice']:
-            comments = []
-            answers = OrderedDict((label.id, {'text': label.value, 'count': 0, 'answer_id': label.id, 'answer_score': label.answer_score}) for label in question.suggested_answer_ids)
-            for input_line in input_lines:
-                if input_line.answer_type == 'suggestion' and answers.get(input_line.suggested_answer_id.id) and (not(current_filters) or input_line.user_input_id.id in current_filters):
-                    answers[input_line.suggested_answer_id.id]['count'] += 1
-                if input_line.answer_type == 'char_box' and (not(current_filters) or input_line.user_input_id.id in current_filters):
-                    comments.append(input_line)
-            result_summary = {'answers': list(answers.values()), 'comments': comments}
-
-        # Calculate and return statistics for matrix
-        if question.question_type == 'matrix':
-            rows = OrderedDict()
-            answers = OrderedDict()
-            res = dict()
-            comments = []
-            [rows.update({label.id: label.value}) for label in question.matrix_row_ids]
-            [answers.update({label.id: label.value}) for label in question.suggested_answer_ids]
-            for cell in product(rows, answers):
-                res[cell] = 0
-            for input_line in input_lines:
-                if input_line.answer_type == 'suggestion' and (not(current_filters) or input_line.user_input_id.id in current_filters) and input_line.matrix_row_id:
-                    res[(input_line.matrix_row_id.id, input_line.suggested_answer_id.id)] += 1
-                if input_line.answer_type == 'char_box' and (not(current_filters) or input_line.user_input_id.id in current_filters):
-                    comments.append(input_line)
-            result_summary = {'answers': answers, 'rows': rows, 'result': res, 'comments': comments}
-
-        # Calculate and return statistics for text_box, char_box, date
-        if question.question_type in ['text_box', 'char_box', 'date', 'datetime']:
-            result_summary = []
-            for input_line in input_lines:
-                if not(current_filters) or input_line.user_input_id.id in current_filters:
-                    result_summary.append(input_line)
-
-        # Calculate and return statistics for numerical_box
-        if question.question_type == 'numerical_box':
-            result_summary = {'input_lines': []}
-            all_inputs = []
-            for input_line in input_lines:
-                if not(current_filters) or input_line.user_input_id.id in current_filters:
-                    all_inputs.append(input_line.value_numerical_box)
-                    result_summary['input_lines'].append(input_line)
-            if all_inputs:
-                result_summary.update({'average': round(sum(all_inputs) / len(all_inputs), 2),
-                                       'max': round(max(all_inputs), 2),
-                                       'min': round(min(all_inputs), 2),
-                                       'sum': sum(all_inputs),
-                                       'most_common': Counter(all_inputs).most_common(5)})
-        return result_summary
-
-    @api.model
-    def get_input_summary(self, question, current_filters=None):
-        """ Returns overall summary of question e.g. answered, skipped, total_inputs on basis of filter """
-        current_filters = current_filters if current_filters else []
-        result = {}
-        search_line_ids = current_filters if current_filters else question.user_input_line_ids.ids
-
-        result['answered'] = len([line for line in question.user_input_line_ids if line.user_input_id.state != 'new' and not line.user_input_id.test_entry and not line.skipped])
-        result['skipped'] = len([line for line in question.user_input_line_ids if line.user_input_id.state != 'new' and not line.user_input_id.test_entry and line.skipped])
-
-        return result
+        total = scoring_success_count + scoring_failed_count
+        return {
+            'global_success_rate': round((scoring_success_count / total) * 100, 1) if total > 0 else 0,
+            'global_success_graph': success_graph
+        }
 
     # ------------------------------------------------------------
     # GAMIFICATION / BADGES
