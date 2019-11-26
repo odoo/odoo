@@ -16,6 +16,7 @@ class ReturnPickingLine(models.TransientModel):
     uom_id = fields.Many2one('uom.uom', string='Unit of Measure', related='move_id.product_uom', readonly=False)
     wizard_id = fields.Many2one('stock.return.picking', string="Wizard")
     move_id = fields.Many2one('stock.move', "Move")
+    lot_id = fields.Many2one('stock.production.lot', 'Lot/Serial Number')
 
 
 class ReturnPicking(models.TransientModel):
@@ -42,6 +43,12 @@ class ReturnPicking(models.TransientModel):
     location_id = fields.Many2one(
         'stock.location', 'Return Location',
         domain="['|', ('id', '=', original_location_id), '|', '&', ('return_location', '=', True), ('company_id', '=', False), '&', ('return_location', '=', True), ('company_id', '=', company_id)]")
+    display_lot_id = fields.Boolean(compute='_compute_display_lot_id')
+
+    @api.depends('product_return_moves')
+    def _compute_display_lot_id(self):
+        for return_pick in self:
+            return_pick.display_lot_id = any(line.lot_id for line in return_pick.product_return_moves)
 
     @api.onchange('picking_id')
     def _onchange_picking_id(self):
@@ -56,7 +63,7 @@ class ReturnPicking(models.TransientModel):
                 continue
             if move.move_dest_ids:
                 move_dest_exists = True
-            product_return_moves.append((0, 0, self._prepare_stock_return_picking_line_vals_from_move(move)))
+            product_return_moves += self._prepare_stock_return_picking_line_vals_from_move(move)
         if self.picking_id and not product_return_moves:
             raise UserError(_("No products to return (only lines in Done state and not fully returned yet can be returned)."))
         if self.picking_id:
@@ -71,18 +78,35 @@ class ReturnPicking(models.TransientModel):
 
     @api.model
     def _prepare_stock_return_picking_line_vals_from_move(self, stock_move):
+        # If move tracked by serial, iterates on move lines to get values for
+        # each line (a return line for each move lines).
+        if stock_move.has_tracking == 'serial':
+            move_lines = stock_move.move_line_ids.filtered(lambda l: l.qty_done > 0)
+            vals = []
+            for line in move_lines:
+                line_vals = {
+                    'product_id': line.product_id.id,
+                    'quantity': line.qty_done,
+                    'move_id': stock_move.id,
+                    'uom_id': line.product_id.uom_id.id,
+                    'lot_id': line.lot_id.id,
+                }
+                vals.append((0, 0, line_vals))
+            return vals
+        # Otherwise, return values for the move only (a return line for a move).
         quantity = stock_move.product_qty - sum(
             stock_move.move_dest_ids
             .filtered(lambda m: m.state in ['partially_available', 'assigned', 'done'])
             .mapped('move_line_ids.product_qty')
         )
         quantity = float_round(quantity, precision_rounding=stock_move.product_uom.rounding)
-        return {
+        vals = {
             'product_id': stock_move.product_id.id,
             'quantity': quantity,
             'move_id': stock_move.id,
             'uom_id': stock_move.product_id.uom_id.id,
         }
+        return [(0, 0, vals)]
 
     def _prepare_move_default_values(self, return_line, new_picking):
         vals = {

@@ -10,6 +10,7 @@
         <field name="arch" type="xml">
             <form>
                 <field name="move_dest_exists" invisible="1"/>
+                <field name="display_lot_id" invisible="1"/>
                 <field name="picking_id" invisible="1" force_save="1"/>
                 <group attrs="{'invisible': [('move_dest_exists', '=', False)]}">
                     <div class="oe_grey">
@@ -20,6 +21,8 @@
                     <field name="product_return_moves" nolabel="1">
                         <tree editable="top" create="0">
                             <field name="product_id"  options="{'no_create': True, 'no_open': True}" force_save="1"/>
+                            <field name="lot_id" readonly="1"
+                                attrs="{'column_invisible': [('parent.display_lot_id', '=', False)]}"/>
                             <field name="quantity"/>
                             <field name="uom_id" readonly="1" groups="uom.group_uom"/>
                             <field name="move_id" invisible="1"/>
