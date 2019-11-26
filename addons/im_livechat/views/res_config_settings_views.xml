@@ -9,8 +9,7 @@
                 <div class="app_settings_block" data-string="Livechat" string="Livechat" data-key="im_livechat" groups="im_livechat.im_livechat_group_user">
                     <h2>Livechat</h2>
                     <div class="row mt16 o_settings_container">
-                        <div class="col-12 col-lg-6 o_setting_box"
-                            title="Lead Generation">
+                        <div class="col-12 col-lg-6 o_setting_box" title="Lead Generation">
                             <div class="o_setting_left_pane">
                                 <field name="module_crm_livechat"/>
                             </div>
@@ -35,10 +34,5 @@
         <field name="context">{'module': 'im_livechat'}</field>
     </record>
 
-    <menuitem id="livechat_config_settings_menu"
-            name="Settings"
-            parent="livechat_config"
-            action="livechat_config_settings_action"
-            groups="base.group_system"
-            sequence="10"/>
+    <menuitem id="livechat_config_settings_menu" name="Settings" parent="livechat_config" action="livechat_config_settings_action" groups="base.group_system" sequence="10"/>
 </odoo>

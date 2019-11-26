@@ -90,14 +90,13 @@ LiveChat.LivechatButton.include({
      * @private
      */
     _onPostMessageChatWindow: function (ev) {
-        ev.stopPropagation();
+        this._super.apply(this, arguments);
         if (this.lead_id) {
             this._rpc({
                 route: '/lead/update_description',
                 params: {lead_id: this.lead_id, content: ev.data.messageData.content, channel_uuid: this._livechat._uuid},
             });
         }
-        return this._super.apply(this, arguments);
     },
 
 });
