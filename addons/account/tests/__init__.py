@@ -5,6 +5,7 @@ from . import test_account_move_out_refund
 from . import test_account_move_in_invoice
 from . import test_account_move_in_refund
 from . import test_account_move_entry
+from . import test_account_payment
 from . import test_account_move_partner_count
 from . import test_account_move_rounding
 from . import test_account_invoice_report
