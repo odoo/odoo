@@ -5,7 +5,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools.float_utils import float_round
+from odoo.tools.float_utils import float_round, float_is_zero
 
 
 class ReturnPickingLine(models.TransientModel):
@@ -116,6 +116,8 @@ class ReturnPicking(models.TransientModel):
         qty_to_return = self._get_returnable_quantity(stock_move)
         vals = []
         for (lot, package), quantity in qty_to_return.items():
+            if float_is_zero(quantity, precision_rounding=stock_move.product_id.uom_id.rounding):
+                continue
             line_vals = {
                 'product_id': stock_move.product_id.id,
                 'quantity': quantity,
