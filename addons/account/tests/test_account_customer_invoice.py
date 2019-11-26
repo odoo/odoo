@@ -106,6 +106,11 @@ class TestAccountCustomerInvoice(AccountTestUsers):
         # I clicked on Add Credit Note button.
         self.account_invoice_refund_0.invoice_refund()
 
+        self.account_invoice_customer0.move_id.line_ids.remove_move_reconcile()
+
+        # Check the invoice has been unreconciled.
+        self.assertEquals(self.account_invoice_customer0.residual, 10050.0)
+
     def test_customer_invoice_tax(self):
 
         self.env.user.company_id.tax_calculation_rounding_method = 'round_globally'
