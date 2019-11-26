@@ -249,6 +249,12 @@ class EventRegistration(models.Model):
         else:
             return _('on ') + format_datetime(self.env, self.event_begin_date, tz=self.event_id.date_tz, dt_format='medium')
 
-    def summary(self):
+    def _get_registration_summary(self):
         self.ensure_one()
-        return {'information': []}
+        return {
+            'id': self.id,
+            'partner_id': self.partner_id.id,
+            'ticket_name': self.event_ticket_id.name or _('None'),
+            'name': self.name,
+            'event_name': self.event_id.name,
+        }

@@ -170,12 +170,13 @@ class EventEvent(models.Model):
     date_end = fields.Datetime(string='End Date', required=True, tracking=True)
     date_begin_located = fields.Char(string='Start Date Located', compute='_compute_date_begin_tz')
     date_end_located = fields.Char(string='End Date Located', compute='_compute_date_end_tz')
+    is_ongoing = fields.Boolean('Is Ongoing', compute='_compute_is_ongoing', search='_search_is_ongoing')
     is_one_day = fields.Boolean(compute='_compute_field_is_one_day')
     start_sale_date = fields.Date('Start sale date', compute='_compute_start_sale_date')
     # Location and communication
     is_online = fields.Boolean('Online Event')
     address_id = fields.Many2one(
-        'res.partner', string='Location', tracking=True,
+        'res.partner', string='Venue', tracking=True,
         default=lambda self: self.env.company.partner_id,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     country_id = fields.Many2one('res.country', 'Country',  related='address_id.country_id', store=True, readonly=False)
@@ -250,6 +251,25 @@ class EventEvent(models.Model):
                     self.env, event.date_end, tz=event.date_tz, dt_format='medium')
             else:
                 event.date_end_located = False
+
+    @api.depends('date_begin', 'date_end')
+    def _compute_is_ongoing(self):
+        now = fields.Datetime.now()
+        for event in self:
+            event.is_ongoing = event.date_begin <= now < event.date_end
+
+    def _search_is_ongoing(self, operator, value):
+        if operator not in ['=', '!=']:
+            raise ValueError(_('This operator is not supported'))
+        if not isinstance(value, bool):
+            raise ValueError(_('Value should be True or False (not %s)'), value)
+        now = fields.Datetime.now()
+        if (operator == '=' and value) or (operator == '!=' and not value):
+            domain = [('date_begin', '<=', now), ('date_end', '>', now)]
+        else:
+            domain = ['|', ('date_begin', '>', now), ('date_end', '<=', now)]
+        event_ids = self.env['event.event']._search(domain)
+        return [('id', 'in', event_ids)]
 
     @api.depends('date_begin', 'date_end', 'date_tz')
     def _compute_field_is_one_day(self):
