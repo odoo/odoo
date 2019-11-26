@@ -113,7 +113,11 @@ class Digest(models.Model):
 
                     try:
                         compute_value = digest[field_name + '_value']
+                        # Context start and end date is different each time so invalidate to recompute.
+                        digest.invalidate_cache([field_name + '_value'])
                         previous_value = previous_digest[field_name + '_value']
+                        # Context start and end date is different each time so invalidate to recompute.
+                        previous_digest.invalidate_cache([field_name + '_value'])
                     except AccessError:  # no access rights -> just skip that digest details from that user's digest email
                         continue
                     margin = self._get_margin_value(compute_value, previous_value)
