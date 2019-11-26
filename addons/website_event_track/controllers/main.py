@@ -6,11 +6,12 @@ import babel.dates
 import collections
 import datetime
 import pytz
+import base64
 from werkzeug.exceptions import NotFound
 
 from odoo import fields, http
 from odoo.http import request
-from odoo.tools import html_escape as escape, html2plaintext
+from odoo.tools import plaintext2html, html2plaintext
 
 
 class WebsiteEventTrackController(http.Controller):
@@ -93,6 +94,7 @@ class WebsiteEventTrackController(http.Controller):
 
         return request.render("website_event_track.agenda", {
             'event': event,
+            'main_object': event,
             'days': days,
             'tracks_by_days': tracks_by_days,
             'tag': tag
@@ -129,7 +131,7 @@ class WebsiteEventTrackController(http.Controller):
         if not event.can_access_from_current_website():
             raise NotFound()
 
-        return request.render("website_event_track.event_track_proposal", {'event': event})
+        return request.render("website_event_track.event_track_proposal", {'event': event, 'main_object': event})
 
     @http.route(['''/event/<model("event.event"):event>/track_proposal/post'''], type='http', auth="public", methods=['POST'], website=True)
     def event_track_proposal_post(self, event, **post):
@@ -146,11 +148,12 @@ class WebsiteEventTrackController(http.Controller):
             'partner_name': post['partner_name'],
             'partner_email': post['email_from'],
             'partner_phone': post['phone'],
-            'partner_biography': escape(post['biography']),
+            'partner_biography': plaintext2html(post['biography']),
             'event_id': event.id,
             'tag_ids': [(6, 0, tags)],
             'user_id': False,
-            'description': escape(post['description'])
+            'description': plaintext2html(post['description']),
+            'image': base64.b64encode(post['image'].read()) if post.get('image') else False
         })
         if request.env.user != request.website.user_id:
             track.sudo().message_subscribe(partner_ids=request.env.user.partner_id.ids)
