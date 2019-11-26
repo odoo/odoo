@@ -9,7 +9,8 @@ class AccountMoveReversal(models.TransientModel):
     _inherit = "account.move.reversal"
 
     l10n_latam_use_documents = fields.Boolean(readonly=True)
-    l10n_latam_document_type_id = fields.Many2one('l10n_latam.document.type', 'Document Type', ondelete='cascade')
+    l10n_latam_document_type_id = fields.Many2one('l10n_latam.document.type', 'Document Type', ondelete='cascade', domain="[('id', 'in', l10n_latam_available_document_type_ids)]")
+    l10n_latam_available_document_type_ids = fields.Many2many('l10n_latam.document.type', store=False)
     l10n_latam_sequence_id = fields.Many2one('ir.sequence', compute='_compute_l10n_latam_sequence')
     l10n_latam_document_number = fields.Char(string='Document Number')
 
@@ -47,8 +48,7 @@ class AccountMoveReversal(models.TransientModel):
                 'company_id': self.move_ids.company_id.id,
             })
             self.l10n_latam_document_type_id = refund.l10n_latam_document_type_id
-            return {'domain': {
-                'l10n_latam_document_type_id': [('id', 'in', refund.l10n_latam_available_document_type_ids.ids)]}}
+            self.l10n_latam_available_document_type_ids = refund.l10n_latam_available_document_type_ids
 
     def reverse_moves(self):
         return super(AccountMoveReversal, self.with_context(
