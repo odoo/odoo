@@ -83,7 +83,12 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
             if (self.$popup.length) {
                 self.$popup.modal('hide');
             }
-            self.displayNotification(_t("Success"), result.toast_content, 'success', true);
+            self.displayNotification({
+                type: 'success',
+                title: _t("Success"),
+                message: result.toast_content,
+                sticky: true,
+            });
         });
     },
 });
