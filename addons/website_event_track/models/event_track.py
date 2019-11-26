@@ -25,7 +25,7 @@ class TrackLocation(models.Model):
     _name = "event.track.location"
     _description = 'Event Track Location'
 
-    name = fields.Char('Room', required=True)
+    name = fields.Char('Location', required=True)
 
 
 class TrackStage(models.Model):
@@ -85,7 +85,7 @@ class Track(models.Model):
     date = fields.Datetime('Track Date')
     date_end = fields.Datetime('Track End Date', compute='_compute_end_date', store=True)
     duration = fields.Float('Duration', default=1.5, help="Track duration in hours.")
-    location_id = fields.Many2one('event.track.location', 'Room')
+    location_id = fields.Many2one('event.track.location', 'Location')
     event_id = fields.Many2one('event.event', 'Event', required=True)
     color = fields.Integer('Color', related="stage_id.color")
     priority = fields.Selection([

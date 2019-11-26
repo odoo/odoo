@@ -176,7 +176,7 @@ class EventEvent(models.Model):
     auto_confirm = fields.Boolean(string='Autoconfirm Registrations')
     is_online = fields.Boolean('Online Event')
     address_id = fields.Many2one(
-        'res.partner', string='Location',
+        'res.partner', string='Venue',
         default=lambda self: self.env.company.partner_id,
         readonly=False,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
