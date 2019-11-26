@@ -215,12 +215,12 @@ DEFAULT_LOG_CONFIGURATION = [
     ':INFO',
 ]
 PSEUDOCONFIG_MAPPER = {
-    'debug_rpc_answer': ['odoo:DEBUG', 'odoo.sql_db:INFO', 'odoo.http.rpc:DEBUG'],
-    'debug_rpc': ['odoo:DEBUG', 'odoo.sql_db:INFO', 'odoo.http.rpc.request:DEBUG'],
-    'debug': ['odoo:DEBUG', 'odoo.sql_db:INFO'],
+    'debug_rpc_answer': [':DEBUG', 'odoo.sql_db:INFO', 'odoo.http.rpc:DEBUG'],
+    'debug_rpc': [':DEBUG', 'odoo.sql_db:INFO', 'odoo.http.rpc.request:DEBUG'],
+    'debug': [':DEBUG', 'odoo.sql_db:INFO'],
     'debug_sql': ['odoo.sql_db:DEBUG'],
     'info': [],
-    'warn': ['odoo:WARNING', 'werkzeug:WARNING'],
-    'error': ['odoo:ERROR', 'werkzeug:ERROR'],
-    'critical': ['odoo:CRITICAL', 'werkzeug:CRITICAL'],
+    'warn': [':WARNING'],
+    'error': [':ERROR'],
+    'critical': [':CRITICAL'],
 }
