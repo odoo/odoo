@@ -185,6 +185,14 @@ class Survey(http.Controller):
             'deadline': answer.deadline,
         }
 
+    def _prepare_survey_finished_values(self, survey, answer, token=False):
+        values = {'survey': survey, 'answer': answer}
+        if token:
+            values['token'] = token
+        if survey.scoring_type != 'no_scoring' and survey.certification:
+            values['graph_data'] = json.dumps(answer._prepare_statistics()[0])
+        return values
+
     # ------------------------------------------------------------
     # TAKING SURVEY ROUTES
     # ------------------------------------------------------------
@@ -348,6 +356,51 @@ class Survey(http.Controller):
 
         return '/survey/fill/%s/%s' % (survey_sudo.access_token, answer_token)
 
+    def _extract_comment_from_answers(self, question, answers):
+        """ Answers is a custom structure depending of the question type
+        that can contain question answers but also comments that need to be
+        extracted before validating and saving answers.
+        If multiple answers, they are listed in an array, except for matrix
+        where answers are structured differently. See input and output for
+        more info on data structures.
+        :param question: survey.question
+        :param answers:
+          * question_type: free_text, text_box, numerical_box, date, datetime
+            answers is a string containing the value
+          * question_type: simple_choice with no comment
+            answers is a string containing the value ('question_id_1')
+          * question_type: simple_choice with comment
+            ['question_id_1', {'comment': str}]
+          * question_type: multiple choice
+            ['question_id_1', 'question_id_2'] + [{'comment': str}] if holds a comment
+          * question_type: matrix
+            {'matrix_row_id_1': ['question_id_1', 'question_id_2'],
+             'matrix_row_id_2': ['question_id_1', 'question_id_2']
+            } + {'comment': str} if holds a comment
+        :return: tuple(
+          same structure without comment,
+          extracted comment for given question
+        ) """
+        comment = None
+        answers_no_comment = []
+        if answers:
+            if question.question_type == 'matrix':
+                if 'comment' in answers:
+                    comment = answers['comment'].strip()
+                    answers.pop('comment')
+                answers_no_comment = answers
+            else:
+                if not isinstance(answers, list):
+                    answers = [answers]
+                for answer in answers:
+                    if 'comment' in answer:
+                        comment = answer['comment'].strip()
+                    else:
+                        answers_no_comment.append(answer)
+                if len(answers_no_comment) == 1:
+                    answers_no_comment = answers_no_comment[0]
+        return answers_no_comment, comment
+
     # ------------------------------------------------------------
     # COMPLETED SURVEY ROUTES
     # ------------------------------------------------------------
@@ -374,65 +427,6 @@ class Survey(http.Controller):
             'format_datetime': lambda dt: format_datetime(request.env, dt, dt_format=False),
             'format_date': lambda date: format_date(request.env, date)
         })
-
-    @http.route('/survey/results/<model("survey.survey"):survey>', type='http', auth='user', website=True)
-    def survey_report(self, survey, answer_token=None, **post):
-        '''Display survey Results & Statistics for given survey.'''
-        current_filters = []
-        filter_display_data = []
-
-        answers = survey.user_input_ids.filtered(lambda answer: answer.state != 'new' and not answer.test_entry)
-        filter_finish = post.get('finished') == 'true'
-        if post or filter_finish:
-            filter_data = self._get_filter_data(post)
-            current_filters = survey.filter_input_ids(filter_data, filter_finish)
-            filter_display_data = survey.get_filter_display_data(filter_data)
-        return request.render('survey.survey_page_statistics',
-                                      {'survey': survey,
-                                       'answers': answers,
-                                       'survey_dict': self._prepare_result_dict(survey, current_filters),
-                                       'page_range': self.page_range,
-                                       'current_filters': current_filters,
-                                       'filter_display_data': filter_display_data,
-                                       'filter_finish': filter_finish
-                                       })
-        # Quick retroengineering of what is injected into the template for now:
-        # (TODO: flatten and simplify this)
-        #
-        #     survey: a browse record of the survey
-        #     survey_dict: very messy dict containing all the info to display answers
-        #         {'page_ids': [
-        #
-        #             ...
-        #
-        #                 {'page': browse record of the page,
-        #                  'question_ids': [
-        #
-        #                     ...
-        #
-        #                     {'graph_data': data to be displayed on the graph
-        #                      'input_summary': number of answered, skipped...
-        #                      'prepare_result': {
-        #                                         answers displayed in the tables
-        #                                         }
-        #                      'question': browse record of the question_ids
-        #                     }
-        #
-        #                     ...
-        #
-        #                     ]
-        #                 }
-        #
-        #             ...
-        #
-        #             ]
-        #         }
-        #
-        #     page_range: pager helper function
-        #     current_filters: a list of ids
-        #     filter_display_data: [{'labels': ['a', 'b'], question_text} ...  ]
-        #     filter_finish: boolean => only finished surveys or not
-        #
 
     @http.route(['/survey/<model("survey.survey"):survey>/get_certification_preview'], type="http", auth="user", methods=['GET'], website=True)
     def survey_get_certification_preview(self, survey, **kwargs):
@@ -466,6 +460,85 @@ class Survey(http.Controller):
             raise UserError(_("The user has not succeeded the certification"))
 
         return self._generate_report(succeeded_attempt, download=True)
+
+    def _generate_report(self, user_input, download=True):
+        report = request.env.ref('survey.certification_report').sudo().render_qweb_pdf([user_input.id], data={'report_type': 'pdf'})[0]
+
+        report_content_disposition = content_disposition('Certification.pdf')
+        if not download:
+            content_split = report_content_disposition.split(';')
+            content_split[0] = 'inline'
+            report_content_disposition = ';'.join(content_split)
+
+        return request.make_response(report, headers=[
+            ('Content-Type', 'application/pdf'),
+            ('Content-Length', len(report)),
+            ('Content-Disposition', report_content_disposition),
+        ])
+
+    # ------------------------------------------------------------
+    # REPORTING SURVEY ROUTES
+    # ------------------------------------------------------------
+
+    @http.route('/survey/results/<model("survey.survey"):survey>', type='http', auth='user', website=True)
+    def survey_report(self, survey, answer_token=None, **post):
+        """ Display survey Results & Statistics for given survey.
+
+        Quick retroengineering of what is injected into the template for now:
+        (TODO: flatten and simplify this)
+
+            survey: a browse record of the survey
+            survey_dict: very messy dict containing all the info to display answers
+                {'page_ids': [
+
+                    ...
+
+                        {'page': browse record of the page,
+                         'question_ids': [
+
+                            ...
+
+                            {'graph_data': data to be displayed on the graph
+                             'input_summary': number of answered, skipped...
+                             'prepare_result': {
+                                                answers displayed in the tables
+                                                }
+                             'question': browse record of the question_ids
+                            }
+
+                            ...
+
+                            ]
+                        }
+
+                    ...
+
+                    ]
+                }
+
+            page_range: pager helper function
+            current_filters: a list of ids
+            filter_display_data: [{'labels': ['a', 'b'], question_text} ...  ]
+            filter_finish: boolean => only finished surveys or not
+        """
+        current_filters = []
+        filter_display_data = []
+
+        answers = survey.user_input_ids.filtered(lambda answer: answer.state != 'new' and not answer.test_entry)
+        filter_finish = post.get('finished') == 'true'
+        if post or filter_finish:
+            filter_data = self._get_filter_data(post)
+            current_filters = survey.filter_input_ids(filter_data, filter_finish)
+            filter_display_data = survey.get_filter_display_data(filter_data)
+        return request.render('survey.survey_page_statistics', {
+            'survey': survey,
+            'answers': answers,
+            'survey_dict': self._prepare_result_dict(survey, current_filters),
+            'page_range': self.page_range,
+            'current_filters': current_filters,
+            'filter_display_data': filter_display_data,
+            'filter_finish': filter_finish
+        })
 
     def _prepare_result_dict(self, survey, current_filters=None):
         """Returns dictionary having values for rendering template"""
@@ -569,65 +642,3 @@ class Survey(http.Controller):
             'success_rate': round((scoring_success_count / total_scoring_success) * 100, 1) if total_scoring_success > 0 else 0,
             'graph_data': graph_data
         }
-
-    def _prepare_survey_finished_values(self, survey, answer, token=False):
-        values = {'survey': survey, 'answer': answer}
-        if token:
-            values['token'] = token
-        if survey.scoring_type != 'no_scoring' and survey.certification:
-            values['graph_data'] = json.dumps(answer._prepare_statistics()[0])
-        return values
-
-    def _extract_comment_from_answers(self, question, answers):
-        """
-        As answer is a custom structure depending of the question type
-        that can contain question answers but also comment that need to be extracted
-        before validating and saving answers.
-        If multiple answers, they are listed in an array, except for matrix where answers are structured differently.
-        See input and output for more info on data structures.
-        :param question: survey.question
-        :param answers: {str} answer (for simple questions)
-                    or {list} [answer_1,...,answer_n] (for questions with multiple answers)
-                    or {list} [answer_1, {'comment': comment}] (for questions with simple answers and with comment)
-                    or {list} [answer_1,...,answer_n, {'comment': comment}] (for questions with multiple answers with comment)
-                    or {list} [{sub_question_1: [answer_1,...,answer_n]}, {sub_question_2: [...]}] (for matrix without comment)
-                    or {list} [{sub_question_1: [answer_1,...,answer_n]}, {sub_question_2: [...]}, {'comment': comment}] (for matrix with comment)
-        :return: answers_no_comment : {str} answer for simple choice (or text and number) question types
-                                  or {list} [answer_1,...,answer_n] for multiple choices question types except matrix
-                                  or {list} [{sub_question_1: [answer_1,...,answer_n]}, {sub_question_2: [...]}] for matrix
-                 comment : {str} extracted comment for the given question
-        """
-        comment = None
-        answers_no_comment = []
-        if answers:
-            if question.question_type == 'matrix':
-                if 'comment' in answers:
-                    comment = answers['comment'].strip()
-                    answers.pop('comment')
-                answers_no_comment = answers
-            else:
-                if not isinstance(answers, list):
-                    answers = [answers]
-                for answer in answers:
-                    if 'comment' in answer:
-                        comment = answer['comment'].strip()
-                    else:
-                        answers_no_comment.append(answer)
-                if len(answers_no_comment) == 1:
-                    answers_no_comment = answers_no_comment[0]
-        return answers_no_comment, comment
-
-    def _generate_report(self, user_input, download=True):
-        report = request.env.ref('survey.certification_report').sudo().render_qweb_pdf([user_input.id], data={'report_type': 'pdf'})[0]
-
-        report_content_disposition = content_disposition('Certification.pdf')
-        if not download:
-            content_split = report_content_disposition.split(';')
-            content_split[0] = 'inline'
-            report_content_disposition = ';'.join(content_split)
-
-        return request.make_response(report, headers=[
-            ('Content-Type', 'application/pdf'),
-            ('Content-Length', len(report)),
-            ('Content-Disposition', report_content_disposition),
-        ])
