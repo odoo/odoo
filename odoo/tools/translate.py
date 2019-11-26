@@ -903,11 +903,22 @@ class TranslationModuleReader:
         """ Export ir.translation values for all retrieved records """
 
         IrTranslation = self.env['ir.translation']
-        for module, source, name, res_id, ttype, comments in self._to_translate:
-            trans = IrTranslation._get_source(name, ttype, self._lang, source) if self._lang else ""
+        for module, source, name, res_id, ttype, comments, record_id in self._to_translate:
+            trans = (
+                IrTranslation._get_source(name if type != "code" else None, ttype, self._lang, source, res_id=record_id)
+                if self._lang
+                else ""
+            )
             yield (module, ttype, name, res_id, source, encode(trans) or '', comments)
 
-    def _push_translation(self, module, ttype, name, res_id, source, comments=None):
+    def _push_translation(self, module, ttype, name, res_id, source, comments=None, record_id=None):
+        """ Insert a translation that will be used in the file generation
+        In po file will create an entry
+        #: <ttype>:<name>:<res_id>
+        #, <comment>
+        msgid "<source>"
+        record_id is the database id of the record being translated
+        """
         # empty and one-letter terms are ignored, they probably are not meant to be
         # translated, and would be very hard to translate anyway.
         sanitized_term = (source or '').strip()
@@ -915,8 +926,7 @@ class TranslationModuleReader:
         sanitized_term = re.sub(r'\W+', '', sanitized_term)
         if not sanitized_term or len(sanitized_term) <= 1:
             return
-
-        self._to_translate.append((module, source, name, res_id, ttype, tuple(comments or ())))
+        self._to_translate.append((module, source, name, res_id, ttype, tuple(comments or ()), record_id))
 
     def _get_translatable_records(self, records):
         """ Filter the records that are translatable
@@ -1004,7 +1014,7 @@ class TranslationModuleReader:
                             continue
                         for term in set(field.get_trans_terms(value)):
                             trans_type = 'model_terms' if callable(field.translate) else 'model'
-                            self._push_translation(module, trans_type, name, xml_name, term)
+                            self._push_translation(module, trans_type, name, xml_name, term, record_id=record.id)
 
     def _get_module_from_path(self, path):
         for (mp, rec) in self._path_list:
