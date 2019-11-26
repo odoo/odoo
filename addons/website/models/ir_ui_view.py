@@ -34,7 +34,8 @@ class View(models.Model):
             view.first_page_id = self.env['website.page'].search([('view_id', '=', view.id)], limit=1)
 
     def name_get(self):
-        if not self._context.get('display_website') and not self.env.user.has_group('website.group_multi_website'):
+        if (not self._context.get('display_website') and not self.env.user.has_group('website.group_multi_website')) or \
+                not self._context.get('display_website'):
             return super(View, self).name_get()
 
         res = []
