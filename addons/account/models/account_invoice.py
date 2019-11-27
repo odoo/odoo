@@ -674,7 +674,14 @@ class AccountInvoice(models.Model):
     def _get_partner_bank_id(self, company_id):
         company = self.env['res.company'].browse(company_id)
         if company.partner_id:
-            return self.env['res.partner.bank'].search([('partner_id', '=', company.partner_id.id)], limit=1)
+            bank = self.env['res.partner.bank'].search([
+                ('partner_id', '=', company.partner_id.id), ('company_id', '=', company.id)
+            ], limit=1)
+            if not bank:
+                bank = self.env['res.partner.bank'].search([
+                    ('partner_id', '=', company.partner_id.id), ('company_id', '=', False)
+                ], limit=1)
+            return bank
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
