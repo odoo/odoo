@@ -394,17 +394,18 @@ class Registry(Mapping):
         # this lazy_property is automatically reset by lazy_property.reset_all()
         return LRU(8192)
 
-    def _clear_cache(self):
+    def _clear_cache(self, signal=True):
         """ Clear the cache and mark it as invalidated. """
         self.cache.clear()
-        self.cache_invalidated = True
+        if signal:
+            self.cache_invalidated = True
 
-    def clear_caches(self):
+    def clear_caches(self, signal=True):
         """ Clear the caches associated to methods decorated with
         ``tools.ormcache`` or ``tools.ormcache_multi`` for all the models.
         """
         for model in self.models.values():
-            model.clear_caches()
+            model.clear_caches(signal)
 
     def is_an_ordinary_table(self, model):
         """ Return whether the given model has an ordinary table. """
@@ -469,8 +470,7 @@ class Registry(Mapping):
             # Check if the model caches must be invalidated.
             elif self.cache_sequence != c:
                 _logger.info("Invalidating all model caches after database signaling.")
-                self.clear_caches()
-                self.cache_invalidated = False
+                self.clear_caches(invalidate=False)
             self.registry_sequence = r
             self.cache_sequence = c
 

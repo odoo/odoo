@@ -1763,13 +1763,13 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         return defaults
 
     @classmethod
-    def clear_caches(cls):
+    def clear_caches(cls, signal=True):
         """ Clear the caches
 
         This clears the caches associated to methods decorated with
         ``tools.ormcache`` or ``tools.ormcache_multi``.
         """
-        cls.pool._clear_cache()
+        cls.pool._clear_cache(signal)
 
     @api.model
     def _read_group_expand_full(self, groups, domain, order):
