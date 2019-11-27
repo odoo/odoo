@@ -1060,6 +1060,11 @@ class Cache(object):
                         # because the other environment (eg. sudo()) is well expected to have access.
                         dst_field_cache[record_id] = value
 
+        for field in src._protected:
+            ids = dst._protected[field]
+            dst._protected[field] = ids.union(src._protected[field])
+
+
     def invalidate(self, spec=None):
         """ Invalidate the cache, partially or totally depending on ``spec``. """
         if spec is None:
