@@ -14,13 +14,6 @@
                 </xpath>
                 <xpath expr="//button[@name='run']" position="replace">
                 </xpath>
-                <xpath expr="//field[@name='model_id']" position='attributes'>
-                    <attribute name="options">{'no_create': True}</attribute>
-                </xpath>
-                <xpath expr="//field[@name='crud_model_id']" position='attributes'>
-                    <attribute name="string">Target Model</attribute>
-                    <attribute name="options">{'no_create': True}</attribute>
-                </xpath>
                 <xpath expr="//field[@name='partner_ids']" position='attributes'>
                     <attribute name="options">{'no_create': True}</attribute>
                 </xpath>
@@ -29,18 +22,6 @@
                 </xpath>
                 <xpath expr="//field[@name='template_id']" position='attributes'>
                     <attribute name="context">{'default_model_id': model_id}</attribute>
-                </xpath>
-                <xpath expr="//field[@name='col1']" position='attributes'>
-                    <attribute name="options">{'no_create':True'}</attribute>
-                </xpath>
-                <xpath expr="//field[@name='resource_ref']" position='attributes'>
-                    <attribute name="options">{'hide_model': True, 'no_create' : True}</attribute>
-                </xpath>
-                <xpath expr="//field[@name='value']" position='attributes'>
-                    <attribute name="attrs">{'readonly': ['|', ('evaluation_type', '=', 'reference'), ('col1', '=', False)]}</attribute>
-                </xpath>
-                <xpath expr="//field[@name='link_field_id']" position='attributes'>
-                    <attribute name="string">Link Field</attribute>
                 </xpath>
                 <xpath expr="//page[@name='security']" position='attributes'>
                     <attribute name='invisible'>1</attribute>
