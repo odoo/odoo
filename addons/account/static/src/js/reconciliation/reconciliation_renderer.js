@@ -315,6 +315,12 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             };
             self.fields.partner_id.insertAfter(self.$('.accounting_view caption .o_buttons'));
         });
+        var def3 = session.user_has_group('analytic.group_analytic_tags').then(function(has_group) {
+                self.group_tags = has_group;
+            });
+        var def4 = session.user_has_group('analytic.group_analytic_accounting').then(function(has_group) {
+                self.group_acc = has_group;
+            });
         $('<span class="line_info_button fa fa-info-circle"/>')
             .appendTo(this.$('thead .cell_info_popover'))
             .attr("data-content", qweb.render('reconciliation.line.statement_line.details', {'state': this._initialState}));
@@ -331,7 +337,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             'toggle': 'popover'
         });
         var def2 = this._super.apply(this, arguments);
-        return Promise.all([def1, def2]);
+        return $.when(def1, def2, def3, def4);
     },
 
     //--------------------------------------------------------------------------
