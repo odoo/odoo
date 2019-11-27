@@ -131,8 +131,8 @@ class TestSurveyInternals(common.TestSurveyCommon):
             answer = self._add_answer(self.survey, False, email='public@example.com')
             self._add_answer_line(
                 question, answer, random.choice(question.suggested_answer_ids.ids),
-                answer_type='suggestion', answer_fname='value_suggested')
-        lines = [line.value_suggested.id for line in question.user_input_line_ids]
+                answer_type='suggestion', answer_fname='suggested_answer_id')
+        lines = [line.suggested_answer_id.id for line in question.user_input_line_ids]
         answers = [{'text': label.value, 'count': lines.count(label.id), 'answer_id': label.id, 'answer_score': label.answer_score} for label in question.suggested_answer_ids]
         prp_result = self.env['survey.survey'].prepare_result(question)['answers']
         self.assertItemsEqual(prp_result, answers)
@@ -148,9 +148,9 @@ class TestSurveyInternals(common.TestSurveyCommon):
             answer = self._add_answer(self.survey, False, email='public@example.com')
             self._add_answer_line(
                 question, answer, random.choice(question.suggested_answer_ids.ids),
-                answer_type='suggestion', answer_fname='value_suggested', value_suggested_row=random.choice(question.matrix_row_ids.ids)
+                answer_type='suggestion', answer_fname='suggested_answer_id', matrix_row_id=random.choice(question.matrix_row_ids.ids)
             )
-        lines = [(line.value_suggested_row.id, line.value_suggested.id) for line in question.user_input_line_ids]
+        lines = [(line.matrix_row_id.id, line.suggested_answer_id.id) for line in question.user_input_line_ids]
         res = {}
         for i in product(question.matrix_row_ids.ids, question.suggested_answer_ids.ids):
             res[i] = lines.count((i))
