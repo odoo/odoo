@@ -26,9 +26,9 @@ class TestSurveyCommon(common.SavepointCase):
             'textbox': ('text', 'value_text'),
             'numerical_box': ('number', 'value_number'),
             'date': ('date', 'value_date'),
-            'simple_choice': ('suggestion', 'value_suggested'),  # TDE: still unclear
-            'multiple_choice': ('suggestion', 'value_suggested'),  # TDE: still unclear
-            'matrix': ('suggestion', ('value_suggested', 'value_suggested_row')),  # TDE: still unclear
+            'simple_choice': ('suggestion', 'suggested_answer_id'),  # TDE: still unclear
+            'multiple_choice': ('suggestion', 'suggested_answer_id'),  # TDE: still unclear
+            'matrix': ('suggestion', ('suggested_answer_id', 'matrix_row_id')),  # TDE: still unclear
         }
 
         """ Create test data: a survey with some pre-defined questions and various test users for ACL """
