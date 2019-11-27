@@ -435,6 +435,8 @@ logic. They are used as elements or sets of elements in form views.
   ``attrs``
     standard dynamic attributes based on record values
 
+  .. note:: Note that ``notebook`` should not be placed within ``group``
+
 ``group``
   used to define column layouts in forms. By default, groups define 2 columns
   and most direct children of groups take a single column. ``field`` direct
