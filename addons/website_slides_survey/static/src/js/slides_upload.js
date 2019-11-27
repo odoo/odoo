@@ -3,12 +3,34 @@ odoo.define('website_slides_survey.upload_modal', function (require) {
 
 var core = require('web.core');
 var _t = core._t;
+var sessionStorage = window.sessionStorage;
 var SlidesUpload = require('website_slides.upload_modal');
 
 /**
  * Management of the new 'certification' slide_type
  */
 SlidesUpload.SlideUploadDialog.include({
+    events: _.extend({}, SlidesUpload.SlideUploadDialog.prototype.events || {}, {
+        'change input#certification_id': '_onChangeCertification'
+    }),
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+   /**
+    * Will automatically set the title of the slide to the title of the chosen certification
+    */
+    _onChangeCertification: function (ev) {
+        if (ev.added && ev.added.text) {
+            this.$("input#name").val(ev.added.text);
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
     /**
      * Overridden to add the "certification" slide type
      *
@@ -56,7 +78,7 @@ SlidesUpload.SlideUploadDialog.include({
         var result = this._super.apply(this, arguments);
 
         var $certificationInput = this.$('#certification_id');
-        if ($certificationInput.length !== 0){
+        if ($certificationInput.length !== 0) {
             var $select2Container = $certificationInput
                 .closest('.form-group')
                 .find('.select2-container');
@@ -76,15 +98,38 @@ SlidesUpload.SlideUploadDialog.include({
      * @override
      * @private
      */
-    _getSelect2DropdownValues: function (){
+    _getSelect2DropdownValues: function () {
         var result = this._super.apply(this, arguments);
 
         var certificateValue = this.$('#certification_id').select2('data');
+        var survey = {};
         if (certificateValue) {
-            result['survey_id'] =  certificateValue.id;
+            if (certificateValue.create) {
+                survey.id = false;
+                survey.title = certificateValue.text;
+            } else {
+                survey.id = certificateValue.id;
+            }
         }
+        result['survey'] = survey;
         return result;
-    }
+    },
+
+    /**
+     * Overridde to handle certification created on-the-fly: toaster will hold
+     * survey edit url, need to put it in session to use it in CertificationUploadToast
+     *
+     * @override
+     * @private
+     */
+    _onFormSubmitDone: function (data) {
+        if (!data.error && data.redirect_to_certification) {
+            sessionStorage.setItem("survey_certification_url", data.redirect_url);
+            window.location.reload();
+        } else {
+            this._super.apply(this, arguments);
+        }
+    },
 });
 
 SlidesUpload.websiteSlidesUpload.include({
