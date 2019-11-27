@@ -53,6 +53,7 @@ return AbstractModel.extend({
      * @param {string[]} params.groupBys a list of valid field names
      * @param {string[]} params.groupedBy a list of valid field names
      * @param {boolean} params.stacked
+     * @param {boolean} params.accumulated
      * @param {string[]} params.timeRange
      * @param {string} params.comparisonField
      * @param {string} params.comparisonTimeRangeDescription
@@ -81,6 +82,7 @@ return AbstractModel.extend({
             mode: params.context.graph_mode || params.mode,
             origins: [],
             stacked: params.stacked,
+            accumulated: params.accumulated,
             timeRange: params.timeRange,
             timeRangeDescription: params.timeRangeDescription,
         };
@@ -141,6 +143,10 @@ return AbstractModel.extend({
         }
         if ('stacked' in params) {
             this.chart.stacked = params.stacked;
+            return Promise.resolve();
+        }
+        if ('accumulated' in params) {
+            this.chart.accumulated = params.accumulated;
             return Promise.resolve();
         }
         return this._loadGraph(this._getDomains());

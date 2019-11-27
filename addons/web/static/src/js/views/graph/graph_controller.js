@@ -145,6 +145,15 @@ var GraphController = AbstractController.extend(GroupByMenuMixin,{
     /**
      * @private
      *
+     * @param {boolean} accumulated
+     */
+    _toggleAccumulationMode: function (accumulated) {
+        this.update({accumulated: accumulated});
+        this._updateButtons();
+    },
+    /**
+     * @private
+     *
      * @param {boolean} stacked
      */
     _toggleStackMode: function (stacked) {
@@ -178,6 +187,11 @@ var GraphController = AbstractController.extend(GroupByMenuMixin,{
             .data('stacked', state.stacked)
             .toggleClass('active', state.stacked)
             .toggleClass('o_hidden', state.mode !== 'bar');
+        this.$buttons
+            .find('.o_graph_button[data-mode="accumulation"]')
+            .data('accumulated', state.accumulated)
+            .toggleClass('active', state.accumulated)
+            .toggleClass('o_hidden', state.mode !== 'line');
         _.each(this.$measureList.find('.dropdown-item'), function (item) {
             var $item = $(item);
             $item.toggleClass('selected', $item.data('field') === state.measure);
@@ -202,6 +216,8 @@ var GraphController = AbstractController.extend(GroupByMenuMixin,{
                 this._setMode($target.data('mode'));
             } else if ($target.data('mode') === 'stack') {
                 this._toggleStackMode(!$target.data('stacked'));
+            } else if ($target.data('mode') === 'accumulation') {
+                this._toggleAccumulationMode(!$target.data('accumulated'));
             }
         } else if ($target.parents('.o_graph_measures_list').length) {
             ev.preventDefault();

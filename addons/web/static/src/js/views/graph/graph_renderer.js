@@ -831,6 +831,15 @@ return AbstractRenderer.extend({
             }
             dataset.pointBackgroundColor = dataset.borderColor;
             dataset.pointBorderColor = 'rgba(0,0,0,0.2)';
+
+            if (self.state.accumulated) {
+                var accumulator = 0;
+                dataset.data = dataset.data.map(function (value) {
+                    var result = value + accumulator;
+                    accumulator += value;
+                    return result;
+                });
+            }
         });
         if (data.datasets.length === 1) {
             const dataset = data.datasets[0];
