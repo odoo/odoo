@@ -1470,3 +1470,18 @@ class DotDict(dict):
     def __getattr__(self, attrib):
         val = self.get(attrib)
         return DotDict(val) if type(val) is dict else val
+
+
+def get_field_value_string(model, field, value, env):
+    """
+    Convert the raw value of a field to a printable value
+
+    e.g.:
+        "crm.lead", "tag_ids", 1
+        tag(id=1) -> 'Information'
+    """
+    if field in model._fields and hasattr(model._fields[field], '_description_selection'):
+        return dict(model._fields[field]._description_selection(env))[value]
+    elif field in model._fields and hasattr(model._fields[field], 'comodel_name'):
+        return model.env[model._fields[field].comodel_name].browse(value).name
+    return value
