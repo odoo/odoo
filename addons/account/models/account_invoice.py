@@ -1363,8 +1363,9 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def invoice_validate(self):
-        for invoice in self.filtered(lambda invoice: invoice.partner_id not in invoice.message_partner_ids):
-            invoice.message_subscribe([invoice.partner_id.id])
+        for invoice in self:
+            if invoice.partner_id not in invoice.message_partner_ids:
+                invoice.message_subscribe([invoice.partner_id.id])
 
             # Auto-compute reference, if not already existing and if configured on company
             if not invoice.reference and invoice.type == 'out_invoice':
