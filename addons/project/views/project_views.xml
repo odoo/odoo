@@ -57,9 +57,9 @@
             <field name="name">Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_mode">kanban,tree,form,calendar,pivot,graph,activity</field>
+            <field name="domain">[('project_id', '=', active_id)]</field>
             <field name="context">{
                 'pivot_row_groupby': ['user_id'],
-                'search_default_project_id': [active_id],
                 'default_project_id': active_id,
             }</field>
             <field name="search_view_id" ref="view_task_search_form"/>
@@ -293,7 +293,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//group" position="after">
                     <footer>
-                        <button string="Create" name="open_tasks" type="object" class="btn-primary o_open_tasks"/>
+                        <button string="Create" name="action_view_tasks" type="object" class="btn-primary o_open_tasks"/>
                         <button string="Discard" class="btn-secondary" special="cancel"/>
                     </footer>
                 </xpath>
@@ -375,7 +375,7 @@
                                 </div>
 
                                 <div class="o_project_kanban_boxes">
-                                    <a class="o_project_kanban_box" name="%(act_project_project_2_project_task_all)d" type="action">
+                                    <a class="o_project_kanban_box" name="action_view_tasks" type="object">
                                         <div>
                                             <span class="o_value"><t t-esc="record.task_count.value"/></span>
                                             <span class="o_label"><t t-esc="record.label_tasks.value"/></span>
