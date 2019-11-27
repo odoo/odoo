@@ -116,7 +116,7 @@ class TestCourseCertificationFailureFlow(TestSurveyCommon):
                     'question_id': question.id,
                     'answer_type': 'suggestion',
                     'answer_score': 1 if good_answers else 0,
-                    'value_suggested': question.suggested_answer_ids[1 if good_answers else 0].id
+                    'suggested_answer_id': question.suggested_answer_ids[1 if good_answers else 0].id
                 }) for question in questions
             ]
         })

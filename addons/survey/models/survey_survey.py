@@ -571,9 +571,9 @@ class Survey(models.Model):
                 if row_id == 0:
                     choice.append(answer_id)
                 else:
-                    domain_filter.extend(['|', ('value_suggested_row.id', '=', row_id), ('value_suggested.id', '=', answer_id)])
+                    domain_filter.extend(['|', ('matrix_row_id.id', '=', row_id), ('suggested_answer_id.id', '=', answer_id)])
             if choice:
-                domain_filter.insert(0, ('value_suggested.id', 'in', choice))
+                domain_filter.insert(0, ('suggested_answer_id.id', 'in', choice))
             else:
                 domain_filter = domain_filter[1:]
             input_lines = self.env['survey.user_input.line'].search(domain_filter)
@@ -622,8 +622,8 @@ class Survey(models.Model):
             comments = []
             answers = OrderedDict((label.id, {'text': label.value, 'count': 0, 'answer_id': label.id, 'answer_score': label.answer_score}) for label in question.suggested_answer_ids)
             for input_line in input_lines:
-                if input_line.answer_type == 'suggestion' and answers.get(input_line.value_suggested.id) and (not(current_filters) or input_line.user_input_id.id in current_filters):
-                    answers[input_line.value_suggested.id]['count'] += 1
+                if input_line.answer_type == 'suggestion' and answers.get(input_line.suggested_answer_id.id) and (not(current_filters) or input_line.user_input_id.id in current_filters):
+                    answers[input_line.suggested_answer_id.id]['count'] += 1
                 if input_line.answer_type == 'text' and (not(current_filters) or input_line.user_input_id.id in current_filters):
                     comments.append(input_line)
             result_summary = {'answers': list(answers.values()), 'comments': comments}
@@ -639,8 +639,8 @@ class Survey(models.Model):
             for cell in product(rows, answers):
                 res[cell] = 0
             for input_line in input_lines:
-                if input_line.answer_type == 'suggestion' and (not(current_filters) or input_line.user_input_id.id in current_filters) and input_line.value_suggested_row:
-                    res[(input_line.value_suggested_row.id, input_line.value_suggested.id)] += 1
+                if input_line.answer_type == 'suggestion' and (not(current_filters) or input_line.user_input_id.id in current_filters) and input_line.matrix_row_id:
+                    res[(input_line.matrix_row_id.id, input_line.suggested_answer_id.id)] += 1
                 if input_line.answer_type == 'text' and (not(current_filters) or input_line.user_input_id.id in current_filters):
                     comments.append(input_line)
             result_summary = {'answers': answers, 'rows': rows, 'result': res, 'comments': comments}
@@ -699,7 +699,7 @@ class Survey(models.Model):
             question_answer_correct = question.suggested_answer_ids.filtered(lambda answer: answer.is_correct)
             for user_answer in user_answers:
                 user_answer_lines_question = user_answer.user_input_line_ids.filtered(lambda line: line.question_id == question)
-                user_answer_correct = user_answer_lines_question.filtered(lambda line: line.answer_is_correct and not line.skipped).mapped('value_suggested')
+                user_answer_correct = user_answer_lines_question.filtered(lambda line: line.answer_is_correct and not line.skipped).mapped('suggested_answer_id')
                 user_answer_incorrect = user_answer_lines_question.filtered(lambda line: not line.answer_is_correct and not line.skipped)
 
                 if user_answer_correct == question_answer_correct:

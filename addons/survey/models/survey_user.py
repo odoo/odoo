@@ -196,16 +196,16 @@ class SurveyUserInputLine(models.Model):
     value_date = fields.Date('Date answer')
     value_datetime = fields.Datetime('Datetime answer')
     value_free_text = fields.Text('Free Text answer')
-    value_suggested = fields.Many2one('survey.question.answer', string="Suggested answer")
-    value_suggested_row = fields.Many2one('survey.question.answer', string="Row answer")
+    suggested_answer_id = fields.Many2one('survey.question.answer', string="Suggested answer")
+    matrix_row_id = fields.Many2one('survey.question.answer', string="Row answer")
     answer_score = fields.Float('Score')
     answer_is_correct = fields.Boolean('Correct', compute='_compute_answer_is_correct')
 
-    @api.depends('value_suggested', 'question_id')
+    @api.depends('suggested_answer_id', 'question_id')
     def _compute_answer_is_correct(self):
         for answer in self:
-            if answer.value_suggested and answer.question_id.question_type in ['simple_choice', 'multiple_choice']:
-                answer.answer_is_correct = answer.value_suggested.is_correct
+            if answer.suggested_answer_id and answer.question_id.question_type in ['simple_choice', 'multiple_choice']:
+                answer.answer_is_correct = answer.suggested_answer_id.is_correct
             else:
                 answer.answer_is_correct = False
 
@@ -223,7 +223,7 @@ class SurveyUserInputLine(models.Model):
                 'number': (bool(uil.value_number) or uil.value_number == 0),
                 'date': bool(uil.value_date),
                 'free_text': bool(uil.value_free_text),
-                'suggestion': bool(uil.value_suggested)
+                'suggestion': bool(uil.suggested_answer_id)
             }
             if not fields_type.get(uil.answer_type, True):
                 raise ValidationError(_('The answer must be in the right type'))
@@ -231,22 +231,22 @@ class SurveyUserInputLine(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            value_suggested = vals.get('value_suggested')
-            if value_suggested:
-                vals.update({'answer_score': self.env['survey.question.answer'].browse(int(value_suggested)).answer_score})
+            suggested_answer_id = vals.get('suggested_answer_id')
+            if suggested_answer_id:
+                vals.update({'answer_score': self.env['survey.question.answer'].browse(int(suggested_answer_id)).answer_score})
         return super(SurveyUserInputLine, self).create(vals_list)
 
     def write(self, vals):
-        value_suggested = vals.get('value_suggested')
-        if value_suggested:
-            vals.update({'answer_score': self.env['survey.question.answer'].browse(int(value_suggested)).answer_score})
+        suggested_answer_id = vals.get('suggested_answer_id')
+        if suggested_answer_id:
+            vals.update({'answer_score': self.env['survey.question.answer'].browse(int(suggested_answer_id)).answer_score})
         return super(SurveyUserInputLine, self).write(vals)
 
     def _get_save_line_values(self, answer, answer_type):
         if not answer or (isinstance(answer, str) and not answer.strip()):
             return {'answer_type': None, 'skipped': True}
         if answer_type == 'suggestion':
-            return {'answer_type': answer_type, 'value_suggested': answer}
+            return {'answer_type': answer_type, 'suggested_answer_id': answer}
         value = float(answer) if answer_type == 'number' else answer
         return {'answer_type': answer_type, 'value_' + answer_type: value}
 
@@ -310,7 +310,7 @@ class SurveyUserInputLine(models.Model):
                 vals_list.append(vals.copy())
 
         if comment:
-            vals.update({'answer_type': 'text', 'value_text': comment, 'skipped': False, 'value_suggested': False})
+            vals.update({'answer_type': 'text', 'value_text': comment, 'skipped': False, 'suggested_answer_id': False})
             vals_list.append(vals.copy())
 
         old_answers.sudo().unlink()
@@ -324,11 +324,11 @@ class SurveyUserInputLine(models.Model):
 
         for row_key, row_answer in answers.items():
             for answer in row_answer:
-                vals.update({'answer_type': 'suggestion', 'value_suggested': answer, 'value_suggested_row': row_key})
+                vals.update({'answer_type': 'suggestion', 'suggested_answer_id': answer, 'matrix_row_id': row_key})
                 vals_list.append(vals.copy())
 
         if comment:
-            vals.update({'answer_type': 'text', 'value_text': comment, 'skipped': False, 'value_suggested': False})
+            vals.update({'answer_type': 'text', 'value_text': comment, 'skipped': False, 'suggested_answer_id': False})
             vals_list.append(vals.copy())
 
         old_answers.sudo().unlink()
