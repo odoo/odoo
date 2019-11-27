@@ -1478,8 +1478,9 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def invoice_validate(self):
-        for invoice in self.filtered(lambda invoice: invoice.partner_id not in invoice.message_partner_ids):
-            invoice.message_subscribe([invoice.partner_id.id])
+        for invoice in self:
+            if invoice.partner_id not in invoice.message_partner_ids:
+                invoice.message_subscribe([invoice.partner_id.id])
 
         for invoice in self:
             vals = {'state': 'open'}
