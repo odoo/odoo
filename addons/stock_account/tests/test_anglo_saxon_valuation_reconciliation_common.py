@@ -47,7 +47,9 @@ class ValuationReconciliationTestCommon(StockAccountTestCommon):
 
     def _change_pickings_date(self, pickings, date):
         pickings.mapped('move_lines').write({'date': date})
+        pickings.mapped('move_lines.account_move_ids').write({'name': '/', 'state': 'draft'})
         pickings.mapped('move_lines.account_move_ids').write({'date': date})
+        pickings.move_lines.account_move_ids.post()
 
     def _create_product_category(self):
         return self.env['product.category'].create({

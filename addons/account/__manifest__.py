@@ -27,6 +27,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'wizard/account_accrual_accounting_view.xml',
         'wizard/account_unreconcile_view.xml',
         'wizard/account_move_reversal_view.xml',
+        'wizard/account_resequence_views.xml',
         'views/account_move_views.xml',
         'wizard/setup_wizards_view.xml',
         'wizard/pos_box.xml',
@@ -70,6 +71,7 @@ You could use this simplified accounting in case you work with an (external) acc
     ],
     'qweb': [
         "static/src/xml/account_payment.xml",
+        'static/src/xml/account_resequence.xml',
         "static/src/xml/account_report_backend.xml",
         "static/src/xml/bills_tree_upload_views.xml",
         'static/src/xml/account_journal_activity.xml',

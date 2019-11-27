@@ -99,7 +99,7 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
 
         self.assertEqual(len(self.sale_order.invoice_ids), 2, 'Invoice should be created for the SO')
 
-        invoice = self.sale_order.invoice_ids.sorted()[0]
+        invoice = self.sale_order.invoice_ids.sorted()[-1]
         self.assertEqual(len(invoice.invoice_line_ids), len(self.sale_order.order_line), 'All lines should be invoiced')
         self.assertEqual(invoice.amount_total, self.sale_order.amount_total - downpayment_line.price_unit, 'Downpayment should be applied')
 

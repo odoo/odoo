@@ -15,15 +15,6 @@
                     </tree>
                 </field>
             </xpath>
-            <label for="sequence_number_next" position="attributes">
-                <attribute name="attrs">{'invisible': [('l10n_latam_use_documents', '=', True), ('l10n_latam_country_code', '=', 'AR')]}</attribute>
-            </label>
-            <field name="refund_sequence" position="attributes">
-                <attribute name="attrs">{'invisible': [('l10n_latam_use_documents', '=', True), ('l10n_latam_country_code', '=', 'AR')]}</attribute>
-            </field>
-            <xpath expr="//field[@name='sequence_number_next']/.." position="attributes">
-                <attribute name="attrs">{'invisible': [('l10n_latam_use_documents', '=', True), ('l10n_latam_country_code', '=', 'AR')]}</attribute>
-            </xpath>
             <field name="l10n_latam_use_documents" position="after">
                 <field name="company_partner" invisible="1"/>
                 <field name="l10n_ar_afip_pos_system" attrs="{'invisible':['|', '|', ('l10n_latam_country_code', '!=', 'AR'), ('l10n_latam_use_documents', '=', False), ('type', '!=', 'sale')], 'required':[('l10n_latam_country_code', '=', 'AR'), ('l10n_latam_use_documents', '=', True), ('type', '=', 'sale')]}"/>
