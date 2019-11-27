@@ -31,9 +31,21 @@ def calc_check_digits(number):
 
 class AccountMove(models.Model):
     _name = "account.move"
-    _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin']
+    _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin', 'sequence.mixin']
     _description = "Journal Entries"
     _order = 'date desc, name desc, id desc'
+
+    @property
+    def _sequence_monthly_regex(self):
+        return self.journal_id.sequence_override_regex or super()._sequence_monthly_regex
+
+    @property
+    def _sequence_yearly_regex(self):
+        return self.journal_id.sequence_override_regex or super()._sequence_yearly_regex
+
+    @property
+    def _sequence_fixed_regex(self):
+        return self.journal_id.sequence_override_regex or super()._sequence_fixed_regex
 
     @api.model
     def _get_default_journal(self):
@@ -90,7 +102,9 @@ class AccountMove(models.Model):
         return self.env.company.incoterm_id
 
     # ==== Business fields ====
-    name = fields.Char(string='Number', required=True, readonly=True, copy=False, default='/')
+    name = fields.Char(string='Number', copy=False, compute='_compute_name', readonly=False, store=True, index=True, tracking=True)
+    highest_name = fields.Char(compute='_compute_highest_name')
+    show_name_warning = fields.Boolean(store=False)
     date = fields.Date(string='Date', required=True, index=True, readonly=True,
         states={'draft': [('readonly', False)]},
         default=fields.Date.context_today)
@@ -102,6 +116,7 @@ class AccountMove(models.Model):
             ('cancel', 'Cancelled'),
         ], string='Status', required=True, readonly=True, copy=False, tracking=True,
         default='draft')
+    posted_before = fields.Boolean(help="Technical field for knowing if the move has been posted before", copy=False)
     type = fields.Selection(selection=[
             ('entry', 'Journal Entry'),
             ('out_invoice', 'Customer Invoice'),
@@ -242,13 +257,6 @@ class AccountMove(models.Model):
     invoice_cash_rounding_id = fields.Many2one('account.cash.rounding', string='Cash Rounding Method',
         readonly=True, states={'draft': [('readonly', False)]},
         help='Defines the smallest coinage of the currency that can be used to pay by cash.')
-
-    # ==== Fields to set the sequence, on the first invoice of the journal ====
-    invoice_sequence_number_next = fields.Char(string='Next Number',
-        compute='_compute_invoice_sequence_number_next',
-        inverse='_inverse_invoice_sequence_number_next')
-    invoice_sequence_number_next_prefix = fields.Char(string='Next Number Prefix',
-        compute="_compute_invoice_sequence_number_next")
 
     # ==== Display purpose fields ====
     invoice_filter_type_domain = fields.Char(compute='_compute_invoice_filter_type_domain',
@@ -909,6 +917,79 @@ class AccountMove(models.Model):
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
 
+    @api.depends('journal_id', 'date', 'state', 'highest_name')
+    def _compute_name(self):
+        for record in self.sorted(lambda m: (m.date, m.ref or '', m.id)):
+            if not record.name or record.name == '/':
+                if record.state == 'draft' and not record.posted_before and not record.highest_name:
+                    # First name of the period for the journal, no name yet
+                    record._set_next_sequence()
+                elif record.state == 'posted':
+                    # No name yet but has been posted
+                    record._set_next_sequence()
+            if record.name and record.state == 'draft' and not record.posted_before and record.highest_name:
+                # Not the first name of the period for the journal, but had a name set
+                record.name = '/'
+            record.name = record.name or '/'
+
+    @api.depends('journal_id', 'date', 'state')
+    def _compute_highest_name(self):
+        for record in self:
+            record.highest_name = record._get_last_sequence()
+
+    @api.onchange('name', 'highest_name')
+    def _onchange_name_warning(self):
+        if self.name and self.name != '/' and self.name <= (self.highest_name or ''):
+            self.show_name_warning = True
+        else:
+            self.show_name_warning = False
+
+    def _get_last_sequence_domain(self, relaxed=False):
+        self.ensure_one()
+        if not self.date or not self.journal_id:
+            return "WHERE FALSE", {}
+        where_string = "WHERE journal_id = %(journal_id)s AND name != '/'"
+        param = {'journal_id': self.journal_id.id}
+
+        if not relaxed:
+            reference_move = self.search([('journal_id', '=', self.journal_id.id), ('date', '<=', self.date), ('id', '!=', self.id or self._origin.id)], order='date desc', limit=1) or self.search([('journal_id', '=', self.journal_id.id), ('id', '!=', self.id or self._origin.id)], order='date asc', limit=1)
+            sequence_number_reset = self._deduce_sequence_number_reset(reference_move.name)
+            if sequence_number_reset == 'year':
+                where_string += " AND date_trunc('year', date) = date_trunc('year', %(date)s) "
+                param['date'] = self.date
+            elif sequence_number_reset == 'month':
+                where_string += " AND date_trunc('month', date) = date_trunc('month', %(date)s) "
+                param['date'] = self.date
+
+        if self.journal_id.refund_sequence:
+            if self.type in ('out_refund', 'in_refund'):
+                where_string += " AND type IN ('out_refund', 'in_refund') "
+            else:
+                where_string += " AND type NOT IN ('out_refund', 'in_refund') "
+
+        return where_string, param
+
+    def _get_starting_sequence(self):
+        self.ensure_one()
+        # Try to find a pattern already used by relaxing a domain. If we are here, the domain non relaxed should return nothing.
+        last_sequence = self._get_last_sequence(relaxed=True)
+        if last_sequence:
+            reference_move = self.search([('journal_id', '=', self.journal_id.id), ('date', '<=', self.date), ('id', '!=', self.id or self._origin.id)], order='date asc', limit=1) or self.search([('journal_id', '=', self.journal_id.id), ('id', '!=', self.id or self._origin.id)], order='date desc', limit=1)
+            sequence_number_reset = self._deduce_sequence_number_reset(reference_move.name)
+            if sequence_number_reset == 'year':
+                sequence = re.match(self._sequence_yearly_regex, last_sequence)
+                if sequence:
+                    return '%s%04d%s%s%s' % (sequence.group('prefix1'), self.date.year, sequence.group('prefix2'), "0" * len(sequence.group('seq')), sequence.group('suffix'))
+            elif sequence_number_reset == 'month':
+                sequence = re.match(self._sequence_monthly_regex, last_sequence)
+                if sequence:
+                    return '%s%04d%s%02d%s%s%s' % (sequence.group('prefix1'), self.date.year, sequence.group('prefix2'), self.date.month, sequence.group('prefix3'), "0" * len(sequence.group('seq')), sequence.group('suffix'))
+
+        starting_sequence = "%s/%04d/%02d/0000" % (self.journal_id.code, self.date.year, self.date.month)
+        if self.journal_id.refund_sequence and self.type in ('out_refund', 'in_refund'):
+            starting_sequence = "R" + starting_sequence
+        return starting_sequence
+
     @api.depends('type')
     def _compute_type_name(self):
         type_name_mapping = {k: v for k, v in
@@ -1128,69 +1209,6 @@ class AccountMove(models.Model):
                     vendor_display_name = _('#Created by: %s') % (move.sudo().create_uid.name or self.env.user.name)
             move.invoice_partner_display_name = vendor_display_name
 
-    @api.depends('state', 'journal_id', 'date', 'invoice_date')
-    def _compute_invoice_sequence_number_next(self):
-        """ computes the prefix of the number that will be assigned to the first invoice/bill/refund of a journal, in order to
-        let the user manually change it.
-        """
-        # Check user group.
-        system_user = self.env.is_system()
-        if not system_user:
-            self.invoice_sequence_number_next_prefix = False
-            self.invoice_sequence_number_next = False
-            return
-
-        # Check moves being candidates to set a custom number next.
-        moves = self.filtered(lambda move: move.is_invoice() and move.name == '/')
-        if not moves:
-            self.invoice_sequence_number_next_prefix = False
-            self.invoice_sequence_number_next = False
-            return
-
-        treated = self.browse()
-        for key, group in groupby(moves, key=lambda move: (move.journal_id, move._get_sequence())):
-            journal, sequence = key
-            domain = [('journal_id', '=', journal.id), ('state', '=', 'posted')]
-            if self.ids:
-                domain.append(('id', 'not in', self.ids))
-            if journal.type == 'sale':
-                domain.append(('type', 'in', ('out_invoice', 'out_refund')))
-            elif journal.type == 'purchase':
-                domain.append(('type', 'in', ('in_invoice', 'in_refund')))
-            else:
-                continue
-            if self.search_count(domain):
-                continue
-
-            for move in group:
-                sequence_date = move.date or move.invoice_date
-                prefix, dummy = sequence._get_prefix_suffix(date=sequence_date, date_range=sequence_date)
-                number_next = sequence._get_current_sequence(sequence_date=sequence_date).number_next_actual
-                move.invoice_sequence_number_next_prefix = prefix
-                move.invoice_sequence_number_next = '%%0%sd' % sequence.padding % number_next
-                treated |= move
-        remaining = (self - treated)
-        remaining.invoice_sequence_number_next_prefix = False
-        remaining.invoice_sequence_number_next = False
-
-    def _inverse_invoice_sequence_number_next(self):
-        ''' Set the number_next on the sequence related to the invoice/bill/refund'''
-        # Check user group.
-        if not self.env.is_admin():
-            return
-
-        # Set the next number in the sequence.
-        for move in self:
-            if not move.invoice_sequence_number_next:
-                continue
-            sequence = move._get_sequence()
-            nxt = re.sub("[^0-9]", '', move.invoice_sequence_number_next)
-            result = re.match("(0*)([0-9]+)", nxt)
-            if result and sequence:
-                sequence_date = move.date or move.invoice_date
-                date_sequence = sequence._get_current_sequence(sequence_date=sequence_date)
-                date_sequence.number_next_actual = int(result.group(2))
-
     def _compute_payments_widget_to_reconcile_info(self):
         for move in self:
             move.invoice_outstanding_credits_debits_widget = json.dumps(False)
@@ -1367,7 +1385,7 @@ class AccountMove(models.Model):
 
         # /!\ Computed stored fields are not yet inside the database.
         self._cr.execute('''
-            SELECT move2.id
+            SELECT move2.id, move2.name
             FROM account_move move
             INNER JOIN account_move move2 ON
                 move2.name = move.name
@@ -1376,9 +1394,10 @@ class AccountMove(models.Model):
                 AND move2.id != move.id
             WHERE move.id IN %s AND move2.state = 'posted'
         ''', [tuple(moves.ids)])
-        res = self._cr.fetchone()
+        res = self._cr.fetchall()
         if res:
-            raise ValidationError(_('Posted journal entry must have an unique sequence number per company.'))
+            raise ValidationError(_('Posted journal entry must have an unique sequence number per company.\n'
+                                    'Problematic numbers: %s\n') % ', '.join(r[1] for r in res))
 
     @api.constrains('ref', 'type', 'partner_id', 'journal_id', 'invoice_date')
     def _check_duplicate_supplier_reference(self):
@@ -1587,7 +1606,7 @@ class AccountMove(models.Model):
                 raise UserError(_("You cannot edit the following fields due to restrict mode being activated on the journal: %s.") % ', '.join(INTEGRITY_HASH_MOVE_FIELDS))
             if (move.restrict_mode_hash_table and move.inalterable_hash and 'inalterable_hash' in vals) or (move.secure_sequence_number and 'secure_sequence_number' in vals):
                 raise UserError(_('You cannot overwrite the values ensuring the inalterability of the accounting.'))
-            if (move.name != '/' and 'journal_id' in vals and move.journal_id.id != vals['journal_id']):
+            if (move.posted_before and 'journal_id' in vals and move.journal_id.id != vals['journal_id']):
                 raise UserError(_('You cannot edit the journal of an account move if it has been posted once.'))
 
             # You can't change the date of a move being inside a locked period.
@@ -1599,6 +1618,11 @@ class AccountMove(models.Model):
             if 'state' in vals and move.state == 'posted' and vals['state'] != 'posted':
                 move._check_fiscalyear_lock_date()
                 move.line_ids._check_tax_lock_date()
+
+            if move.journal_id.sequence_override_regex and vals.get('name') and vals['name'] != '/' and not re.match(move.journal_id.sequence_override_regex, vals['name']):
+                if not self.env.user.has_group('account.group_account_manager'):
+                    raise UserError(_('The Journal Entry sequence is not conform to the current format. Only the Advisor can change it.'))
+                move.journal_id.sequence_override_regex = False
 
         if self._move_autocomplete_invoice_lines_write(vals):
             res = True
@@ -1612,8 +1636,8 @@ class AccountMove(models.Model):
             self._check_fiscalyear_lock_date()
             self.mapped('line_ids')._check_tax_lock_date()
 
-        if ('state' in vals and vals.get('state') == 'posted') and self.restrict_mode_hash_table:
-            for move in self.filtered(lambda m: not(m.secure_sequence_number or m.inalterable_hash)):
+        if ('state' in vals and vals.get('state') == 'posted'):
+            for move in self.filtered(lambda m: m.restrict_mode_hash_table and not(m.secure_sequence_number or m.inalterable_hash)):
                 new_number = move.journal_id.secure_sequence_id.next_by_id()
                 vals_hashing = {'secure_sequence_number': new_number,
                                 'inalterable_hash': move._get_new_hash(new_number)}
@@ -1627,7 +1651,7 @@ class AccountMove(models.Model):
 
     def unlink(self):
         for move in self:
-            if move.name != '/' and not self._context.get('force_delete'):
+            if move.posted_before and not self._context.get('force_delete'):
                 raise UserError(_("You cannot delete an entry which has been posted once."))
             move.line_ids.unlink()
         return super(AccountMove, self).unlink()
@@ -1781,19 +1805,6 @@ class AccountMove(models.Model):
                 return ref_function()
             else:
                 raise UserError(_('The combination of reference model and reference type on the journal is not implemented'))
-
-    def _get_sequence(self):
-        ''' Return the sequence to be used during the post of the current move.
-        :return: An ir.sequence record or False.
-        '''
-        self.ensure_one()
-
-        journal = self.journal_id
-        if self.type in ('entry', 'out_invoice', 'in_invoice', 'out_receipt', 'in_receipt') or not journal.refund_sequence:
-            return journal.sequence_id
-        if not journal.refund_sequence_id:
-            return
-        return journal.refund_sequence_id
 
     def _get_move_display_name(self, show_ref=False):
         ''' Helper to get the display name of an invoice depending of its type.
@@ -2082,7 +2093,7 @@ class AccountMove(models.Model):
                 raise UserError(_('You need to add a line before posting.'))
             if move.auto_post and move.date > fields.Date.today():
                 date_msg = move.date.strftime(get_lang(self.env).date_format)
-                raise UserError(_("This move is configured to be auto-posted on %s" % date_msg))
+                raise UserError(_("This move is configured to be auto-posted on %s") % date_msg)
 
             if not move.partner_id:
                 if move.is_sale_document():
@@ -2110,24 +2121,13 @@ class AccountMove(models.Model):
 
         # Create the analytic lines in batch is faster as it leads to less cache invalidation.
         self.mapped('line_ids').create_analytic_lines()
+        self.state = 'posted'
+        self.posted_before = True
         for move in self:
             if move.auto_post and move.date > fields.Date.today():
                 raise UserError(_("This move is configured to be auto-posted on {}".format(move.date.strftime(get_lang(self.env).date_format))))
 
             move.message_subscribe([p.id for p in [move.partner_id] if p not in move.sudo().message_partner_ids])
-
-            to_write = {'state': 'posted'}
-
-            if move.name == '/':
-                # Get the journal's sequence.
-                sequence = move._get_sequence()
-                if not sequence:
-                    raise UserError(_('Please define a sequence on your journal.'))
-
-                # Consume a new number.
-                to_write['name'] = sequence.next_by_id(sequence_date=move.date)
-
-            move.write(to_write)
 
             # Compute 'ref' for 'out_invoice'.
             if move._auto_compute_invoice_reference():
@@ -2147,7 +2147,8 @@ class AccountMove(models.Model):
                 move.company_id.account_bank_reconciliation_start = move.date
 
         for move in self:
-            if not move.partner_id: continue
+            if not move.partner_id:
+                continue
             if move.type.startswith('out_'):
                 move.partner_id._increase_rank('customer_rank')
             elif move.type.startswith('in_'):
@@ -3321,13 +3322,13 @@ class AccountMoveLine(models.Model):
         if account_to_write and account_to_write.deprecated:
             raise UserError(_('You cannot use a deprecated account.'))
 
-        # when making a reconciliation on an existing liquidity journal item, mark the payment as reconciled
         for line in self:
             if line.parent_state == 'posted':
                 if line.move_id.restrict_mode_hash_table and set(vals).intersection(INTEGRITY_HASH_LINE_FIELDS):
                     raise UserError(_("You cannot edit the following fields due to restrict mode being activated on the journal: %s.") % ', '.join(INTEGRITY_HASH_LINE_FIELDS))
                 if any(key in vals for key in ('tax_ids', 'tax_line_ids')):
                     raise UserError(_('You cannot modify the taxes related to a posted journal item, you should reset the journal entry to draft to do so.'))
+            # When making a reconciliation on an existing liquidity journal item, mark the payment as reconciled
             if 'statement_line_id' in vals and line.payment_id:
                 # In case of an internal transfer, there are 2 liquidity move lines to match with a bank statement
                 if all(line.statement_id for line in line.payment_id.move_line_ids.filtered(
@@ -3370,7 +3371,7 @@ class AccountMoveLine(models.Model):
 
         # Get initial values for each line
         move_initial_values = {}
-        for line in self.filtered(lambda l: l.move_id.name != '/'): # Only lines with posted once move.
+        for line in self.filtered(lambda l: l.move_id.posted_before): # Only lines with posted once move.
             for field in tracking_fields:
                 # Group initial values by move_id
                 if line.move_id.id not in move_initial_values:
@@ -4398,6 +4399,7 @@ class AccountPartialReconcile(models.Model):
                 # recorded before the period lock date as the tax statement for this period is
                 # probably already sent to the estate.
                 newly_created_move.write({'date': move_date})
+                newly_created_move.recompute(['name'])
             # post move
             newly_created_move.post()
 

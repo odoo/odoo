@@ -561,6 +561,8 @@
 
                         <!-- Invisible fields -->
                         <field name="id" invisible="1"/>
+                        <field name="show_name_warning" invisible="1"/>
+                        <field name="posted_before" invisible="1"/>
                         <field name="type" invisible="1"/>
                         <field name="payment_state" invisible="1" force_save="1"/>
                         <field name="invoice_filter_type_domain" invisible="1"/>
@@ -570,37 +572,23 @@
 
                         <field name="invoice_has_outstanding" invisible="1"/>
                         <field name="invoice_sent" invisible="1"/>
-                        <field name="invoice_sequence_number_next_prefix" invisible="1"/>
-                        <field name="invoice_sequence_number_next" invisible="1"/>
                         <field name="invoice_has_matching_suspense_amount" invisible="1"/>
                         <field name="has_reconciled_entries" invisible="1"/>
                         <field name="restrict_mode_hash_table" invisible="1"/>
 
-                        <div>
+                        <div class="oe_title">
                             <!-- Invoice draft header -->
-                            <span class="o_form_label"><field name="type" attrs="{'invisible': ['|', ('type', '=', 'entry'), ('state', '=', 'draft')]}" readonly="1" nolabel="1"/></span>
+                            <span class="o_form_label"><field name="type" attrs="{'invisible': [('type', '=', 'entry')]}" readonly="1" nolabel="1"/></span>
                             <h1>
-                                <span attrs="{'invisible': ['|', '|', ('type', '!=', 'out_invoice'), ('state', '!=', 'draft'), ('name', '!=', '/')]}">Draft Invoice</span>
-                                <span attrs="{'invisible': ['|', '|', ('type', '!=', 'out_refund'), ('state', '!=', 'draft'), ('name', '!=', '/')]}">Draft Credit Note</span>
-                                <span attrs="{'invisible': ['|', '|', ('type', '!=', 'in_invoice'), ('state', '!=', 'draft'), ('name', '!=', '/')]}">Draft Bill</span>
-                                <span attrs="{'invisible': ['|', '|', ('type', '!=', 'in_refund'), ('state', '!=', 'draft'), ('name', '!=', '/')]}">Draft Refund</span>
-                                <span attrs="{'invisible': ['|', '|', ('type', '!=', 'out_receipt'), ('state', '!=', 'draft'), ('name', '!=', '/')]}">Draft Sales Receipt</span>
-                                <span attrs="{'invisible': ['|', '|', ('type', '!=', 'in_receipt'), ('state', '!=', 'draft'), ('name', '!=', '/')]}">Draft Purchase Receipt</span>
+                                <span attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('name', '!=', '/')]}">Draft</span>
                             </h1>
-
-                            <!-- Select next number header (only invoices) -->
-                            <span class="o_form_label" attrs="{'invisible': [('invoice_sequence_number_next_prefix', '=', False)]}">First Number:</span>
 
                             <!-- Number -->
-                            <h1 class="mt0">
-                                <field name="name" readonly="True" attrs="{'invisible':[('name', '=', '/')]}"/>
+                            <span class="text-warning" attrs="{'invisible': [('show_name_warning', '=', False)]}">The current highest number is <field name="highest_name"/>. You might want to put a higher number here.</span>
+                            <h1 class="mt0" attrs="{'invisible':[('name', '=', '/'), ('posted_before', '=', False)]}">
+                                <field name="name" attrs="{'readonly': [('state', '!=', 'draft')]}" placeholder="JRNL/2016/00001"/>
                             </h1>
 
-                            <!-- Select next number header (only invoices) -->
-                            <div  attrs="{'invisible': [('invoice_sequence_number_next_prefix', '=', False)]}">
-                                <field name="invoice_sequence_number_next_prefix" class="oe_inline"/>
-                                <field name="invoice_sequence_number_next" class="oe_inline"/>
-                            </div>
                         </div>
                         <group>
                             <group id="header_left_group">
@@ -657,7 +645,7 @@
                                        groups="account.group_account_readonly"
                                        options="{'no_create': True}"
                                        domain="[('type', '=?', invoice_filter_type_domain)]"
-                                       attrs="{'readonly': [('name', '!=', '/')]}"/>
+                                       attrs="{'readonly': [('posted_before', '=', True)]}"/>
 
                                 <field name="company_id" groups="base.group_multi_company"/>
 

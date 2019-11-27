@@ -1501,33 +1501,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount_total': 260.01,
         })
 
-    def test_out_invoice_onchange_sequence_number_1(self):
-        self.assertRecordValues(self.invoice, [{
-            'invoice_sequence_number_next': '0001',
-            'invoice_sequence_number_next_prefix': 'INV/2019/',
-        }])
-
-        move_form = Form(self.invoice)
-        move_form.invoice_sequence_number_next = '0042'
-        move_form.save()
-
-        self.assertRecordValues(self.invoice, [{
-            'invoice_sequence_number_next': '0042',
-            'invoice_sequence_number_next_prefix': 'INV/2019/',
-        }])
-
-        self.invoice.post()
-
-        self.assertRecordValues(self.invoice, [{'name': 'INV/2019/0042'}])
-
-        values = {
-            'invoice_date': self.invoice.invoice_date,
-        }
-        invoice_copy = self.invoice.copy(default=values)
-        invoice_copy.post()
-
-        self.assertRecordValues(invoice_copy, [{'name': 'INV/2019/0043'}])
-
     def test_out_invoice_create_refund(self):
         self.invoice.post()
 
@@ -1571,7 +1544,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         ], {
             **self.move_vals,
             'invoice_payment_term_id': None,
-            'name': '/',
+            'name': 'RINV/2019/02/0001',
             'date': move_reversal.date,
             'state': 'draft',
             'ref': 'Reversal of: %s, %s' % (self.invoice.name, move_reversal.reason),
@@ -2335,7 +2308,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             {
                 **self.term_line_vals_1,
                 'currency_id': self.currency_data['currency'].id,
-                'name': 'INV/2017/0001',
+                'name': 'INV/2017/01/0001',
                 'amount_currency': 1410.0,
                 'debit': 705.0,
                 'credit': 0.0,
@@ -2345,7 +2318,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             **self.move_vals,
             'currency_id': self.currency_data['currency'].id,
             'date': fields.Date.from_string('2017-01-01'),
-            'invoice_payment_ref': 'INV/2017/0001',
+            'invoice_payment_ref': 'INV/2017/01/0001',
         })
 
         accrual_lines = move.invoice_line_ids.mapped('matched_debit_ids.debit_move_id.move_id.line_ids').sorted('date')

@@ -6,7 +6,7 @@
                 ('type', '=', 'bank'),
                 ('company_id', '=', obj().env.company.id)]"/>
             <field name="date" eval="time.strftime('%Y')+'-01-01'"/>
-            <field name="name" eval="'BNK/%s/0001' % time.strftime('%Y')"/>
+            <field name="name" eval="'BNK/%s/00001' % time.strftime('%Y')"/>
             <field name="balance_end_real">8998.2</field>
             <field name="balance_start">5103.0</field>
         </record>
@@ -15,7 +15,7 @@
             <field name="ref"></field>
             <field name="statement_id" ref="l10n_generic_coa.demo_bank_statement_1"/>
             <field name="sequence">1</field>
-            <field name="name" eval="'INV/%s/0002 and INV/%s/0003' % (time.strftime('%Y'), time.strftime('%Y'))"/>
+            <field name="name" eval="'INV/%s/00002 and INV/%s/00003' % (time.strftime('%Y'), time.strftime('%Y'))"/>
             <field name="journal_id" model="account.journal" search="[
                 ('type', '=', 'bank'),
                 ('company_id', '=', obj().env.company.id)]"/>
@@ -53,7 +53,7 @@
             <field name="ref"></field>
             <field name="statement_id" ref="l10n_generic_coa.demo_bank_statement_1"/>
             <field name="sequence">4</field>
-            <field name="name" eval="'First 2000 $ of invoice %s/0001' % time.strftime('%Y')"/>
+            <field name="name" eval="'First 2000 $ of invoice %s/00001' % time.strftime('%Y')"/>
             <field name="journal_id" model="account.journal" search="[
                 ('type', '=', 'bank'),
                 ('company_id', '=', obj().env.company.id)]"/>
@@ -82,7 +82,7 @@
             <field name="ref"></field>
             <field name="statement_id" ref="l10n_generic_coa.demo_bank_statement_1"/>
             <field name="sequence">1</field>
-            <field name="name" eval="'INV/'+time.strftime('%Y')+'/0002'"/>
+            <field name="name" eval="'INV/'+time.strftime('%Y')+'/00002'"/>
             <field name="journal_id" model="account.journal" search="[
                 ('type', '=', 'bank'),
                 ('company_id', '=', obj().env.company.id)]"/>

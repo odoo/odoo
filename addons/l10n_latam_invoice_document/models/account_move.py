@@ -3,6 +3,7 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 from functools import partial
+import re
 from odoo.tools.misc import formatLang
 
 
@@ -16,48 +17,27 @@ class AccountMove(models.Model):
     l10n_latam_document_type_id = fields.Many2one(
         'l10n_latam.document.type', string='Document Type', copy=False, readonly=False, auto_join=True, index=True,
         states={'posted': [('readonly', True)]}, compute='_compute_l10n_latam_document_type', store=True)
-    l10n_latam_sequence_id = fields.Many2one('ir.sequence', compute='_compute_l10n_latam_sequence')
-    l10n_latam_document_number = fields.Char(
-        compute='_compute_l10n_latam_document_number', inverse='_inverse_l10n_latam_document_number',
-        string='Document Number', readonly=True, states={'draft': [('readonly', False)]})
     l10n_latam_use_documents = fields.Boolean(related='journal_id.l10n_latam_use_documents')
     l10n_latam_country_code = fields.Char(
         related='company_id.country_id.code', help='Technical field used to hide/show fields regarding the localization')
 
-    def _get_sequence_prefix(self):
-        """ If we use documents we update sequences only from journal """
-        return super(AccountMove, self.filtered(lambda x: not x.l10n_latam_use_documents))._get_sequence_prefix()
+    @api.model
+    def _deduce_sequence_number_reset(self, name):
+        if self.l10n_latam_use_documents:
+            return 'never'
+        return super(AccountMove, self)._deduce_sequence_number_reset(name)
 
-    @api.depends('name')
-    def _compute_l10n_latam_document_number(self):
-        recs_with_name = self.filtered(lambda x: x.name != '/')
-        for rec in recs_with_name:
-            name = rec.name
-            doc_code_prefix = rec.l10n_latam_document_type_id.doc_code_prefix
-            if doc_code_prefix and name:
-                name = name.split(" ", 1)[-1]
-            rec.l10n_latam_document_number = name
-        remaining = self - recs_with_name
-        remaining.l10n_latam_document_number = False
+    def _get_last_sequence_domain(self, relaxed=False):
+        where_string, param = super(AccountMove, self)._get_last_sequence_domain(relaxed)
+        if self.l10n_latam_use_documents:
+            where_string += " AND l10n_latam_document_type_id = %(l10n_latam_document_type_id)s "
+            param['l10n_latam_document_type_id'] = self.l10n_latam_document_type_id.id or 0
+        return where_string, param
 
-    @api.onchange('l10n_latam_document_type_id', 'l10n_latam_document_number')
-    def _inverse_l10n_latam_document_number(self):
-        for rec in self.filtered('l10n_latam_document_type_id'):
-            if not rec.l10n_latam_document_number:
-                rec.name = '/'
-            else:
-                l10n_latam_document_number = rec.l10n_latam_document_type_id._format_document_number(rec.l10n_latam_document_number)
-                if rec.l10n_latam_document_number != l10n_latam_document_number:
-                    rec.l10n_latam_document_number = l10n_latam_document_number
-                rec.name = "%s %s" % (rec.l10n_latam_document_type_id.doc_code_prefix, l10n_latam_document_number)
-
-    @api.depends('l10n_latam_document_type_id', 'journal_id')
-    def _compute_l10n_latam_sequence(self):
-        recs_with_journal_id = self.filtered('journal_id')
-        for rec in recs_with_journal_id:
-            rec.l10n_latam_sequence_id = rec._get_document_type_sequence()
-        remaining = self - recs_with_journal_id
-        remaining.l10n_latam_sequence_id = False
+    def _get_starting_sequence(self):
+        if self.l10n_latam_use_documents:
+            return "%s 0001-00000000" % (self.l10n_latam_document_type_id.doc_code_prefix)
+        return super(AccountMove, self)._get_starting_sequence()
 
     def _compute_l10n_latam_amount_and_taxes(self):
         recs_invoice = self.filtered(lambda x: x.is_invoice())
@@ -82,20 +62,10 @@ class AccountMove(models.Model):
         remaining.l10n_latam_amount_untaxed = False
         remaining.l10n_latam_tax_ids = [(5, 0)]
 
-    def _compute_invoice_sequence_number_next(self):
-        """ If journal use documents disable the next number header"""
-        with_latam_document_number = self.filtered('l10n_latam_use_documents')
-        with_latam_document_number.invoice_sequence_number_next_prefix = False
-        with_latam_document_number.invoice_sequence_number_next = False
-        return super(AccountMove, self - with_latam_document_number)._compute_invoice_sequence_number_next()
-
     def post(self):
         for rec in self.filtered(lambda x: x.l10n_latam_use_documents and (not x.name or x.name == '/')):
-            if not rec.l10n_latam_sequence_id:
-                raise UserError(_('No sequence or document number linked to invoice id %s') % rec.id)
             if rec.type in ('in_receipt', 'out_receipt'):
                 raise UserError(_('We do not accept the usage of document types on receipts yet. '))
-            rec.l10n_latam_document_number = rec.l10n_latam_sequence_id.next_by_id()
         return super().post()
 
     @api.constrains('name', 'journal_id', 'state')
@@ -122,10 +92,10 @@ class AccountMove(models.Model):
             raise ValidationError(_(
                 'The journal require a document type but not document type has been selected on invoices %s.' % (
                     without_doc_type.ids)))
-        without_number = validated_invoices.filtered(
-            lambda x: not x.l10n_latam_document_number and not x.l10n_latam_sequence_id)
+        valid = re.compile(r'[A-Z\-]+\s*\d{1,5}\-\d{1,8}')
+        without_number = validated_invoices.filtered(lambda x: not valid.match(x.name))
         if without_number:
-            raise ValidationError(_('Please set the document number on the following invoices %s.' % (
+            raise ValidationError(_('The document number on the following invoices is not correct %s.' % (
                 without_number.ids)))
 
     @api.constrains('type', 'l10n_latam_document_type_id')
@@ -193,24 +163,20 @@ class AccountMove(models.Model):
             ) for group, amounts in res]
         super(AccountMove, self - move_with_doc_type)._compute_invoice_taxes_by_group()
 
-    def _get_document_type_sequence(self):
-        """ Method to be inherited by different localizations. """
-        self.ensure_one()
-        return self.env['ir.sequence']
-
     @api.constrains('name', 'partner_id', 'company_id')
     def _check_unique_vendor_number(self):
         """ The constraint _check_unique_sequence_number is valid for customer bills but not valid for us on vendor
         bills because the uniqueness must be per partner and also because we want to validate on entry creation and
         not on entry validation """
-        for rec in self.filtered(lambda x: x.is_purchase_document() and x.l10n_latam_use_documents and x.l10n_latam_document_number):
+        for rec in self.filtered(lambda x: x.is_purchase_document() and x.l10n_latam_use_documents):
             domain = [
                 ('type', '=', rec.type),
-                # by validating name we validate l10n_latam_document_number and l10n_latam_document_type_id
+                # by validating name we validate l10n_latam_document_type_id
                 ('name', '=', rec.name),
                 ('company_id', '=', rec.company_id.id),
                 ('id', '!=', rec.id),
-                ('commercial_partner_id', '=', rec.commercial_partner_id.id)
+                ('commercial_partner_id', '=', rec.commercial_partner_id.id),
+                ('posted_before', '=', True),
             ]
             if rec.search(domain):
                 raise ValidationError(_('Vendor bill number must be unique per vendor and company.'))

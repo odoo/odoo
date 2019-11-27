@@ -921,7 +921,7 @@ class AccountJournal(models.Model):
         return self.__get_bank_statements_available_sources()
 
     name = fields.Char(string='Journal Name', required=True)
-    code = fields.Char(string='Short Code', size=5, required=True, help="The journal entries of this journal will be named using this prefix.")
+    code = fields.Char(string='Short Code', size=5, required=True, help="Shorter name used for display. The journal entries of this journal will also be named using this prefix by default.")
     active = fields.Boolean(default=True, help="Set active to false to hide the Journal without removing it.")
     type = fields.Selection([
             ('sale', 'Sales'),
@@ -944,19 +944,7 @@ class AccountJournal(models.Model):
         domain="[('deprecated', '=', False), ('company_id', '=', company_id)]", help="It acts as a default account for debit amount", ondelete='restrict')
     restrict_mode_hash_table = fields.Boolean(string="Lock Posted Entries with Hash",
         help="If ticked, the accounting entry or invoice receives a hash as soon as it is posted and cannot be modified anymore.")
-    sequence_id = fields.Many2one('ir.sequence', string='Entry Sequence',
-        help="This field contains the information related to the numbering of the journal entries of this journal.", required=True, copy=False)
-    refund_sequence_id = fields.Many2one('ir.sequence', string='Credit Note Entry Sequence',
-        help="This field contains the information related to the numbering of the credit note entries of this journal.", copy=False)
     sequence = fields.Integer(help='Used to order Journals in the dashboard view', default=10)
-    sequence_number_next = fields.Integer(string='Next Number',
-        help='The next sequence number will be used for the next invoice.',
-        compute='_compute_seq_number_next',
-        inverse='_inverse_seq_number_next')
-    refund_sequence_number_next = fields.Integer(string='Credit Notes Next Number',
-        help='The next sequence number will be used for the next credit note.',
-        compute='_compute_refund_seq_number_next',
-        inverse='_inverse_refund_seq_number_next')
 
     invoice_reference_type = fields.Selection(string='Communication Type', required=True, selection=[('none', 'Free'), ('partner', 'Based on Customer'), ('invoice', 'Based on Invoice')], default='invoice', help='You can set here the default communication that will appear on customer invoices, once validated, to help the customer to refer to that particular invoice when making the payment.')
     invoice_reference_model = fields.Selection(string='Communication Standard', required=True, selection=[('odoo', 'Odoo'),('euro', 'European')], default='odoo', help="You can choose different models for each type of reference. The default one is the Odoo reference.")
@@ -967,6 +955,11 @@ class AccountJournal(models.Model):
         help="Company related to this journal")
 
     refund_sequence = fields.Boolean(string='Dedicated Credit Note Sequence', help="Check this box if you don't want to share the same sequence for invoices and credit notes made from this journal", default=False)
+    sequence_override_regex = fields.Text(help="Technical field used to enforce complex sequence composition that the system would normally misunderstand.\n"\
+                                          "This is a regex that can include all the following capture groups: prefix1, year, prefix2, month, prefix3, seq, suffix.\n"\
+                                          "The prefix* groups are the separators between the year, month and the actual increasing sequence number (seq).\n"\
+                                          
+                                          "e.g: ^(?P<prefix1>.*?)(?P<year>\d{4})(?P<prefix2>\D*?)(?P<month>\d{2})(?P<prefix3>\D+?)(?P<seq>\d+)(?P<suffix>\D*?)$")
 
     inbound_payment_method_ids = fields.Many2many('account.payment.method', 'account_journal_inbound_payment_method_rel', 'journal_id', 'inbound_payment_method',
         domain=[('payment_type', '=', 'inbound')], string='For Incoming Payments', default=lambda self: self._default_inbound_payment_methods(),
@@ -1008,50 +1001,6 @@ class AccountJournal(models.Model):
         alias_domain = self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")
         for record in self:
             record.alias_domain = alias_domain
-
-    # do not depend on 'sequence_id.date_range_ids', because
-    # sequence_id._get_current_sequence() may invalidate it!
-    @api.depends('sequence_id.use_date_range', 'sequence_id.number_next_actual')
-    def _compute_seq_number_next(self):
-        '''Compute 'sequence_number_next' according to the current sequence in use,
-        an ir.sequence or an ir.sequence.date_range.
-        '''
-        for journal in self:
-            if journal.sequence_id:
-                sequence = journal.sequence_id._get_current_sequence()
-                journal.sequence_number_next = sequence.number_next_actual
-            else:
-                journal.sequence_number_next = 1
-
-    def _inverse_seq_number_next(self):
-        '''Inverse 'sequence_number_next' to edit the current sequence next number.
-        '''
-        for journal in self:
-            if journal.sequence_id and journal.sequence_number_next:
-                sequence = journal.sequence_id._get_current_sequence()
-                sequence.sudo().number_next = journal.sequence_number_next
-
-    # do not depend on 'refund_sequence_id.date_range_ids', because
-    # refund_sequence_id._get_current_sequence() may invalidate it!
-    @api.depends('refund_sequence_id.use_date_range', 'refund_sequence_id.number_next_actual')
-    def _compute_refund_seq_number_next(self):
-        '''Compute 'sequence_number_next' according to the current sequence in use,
-        an ir.sequence or an ir.sequence.date_range.
-        '''
-        for journal in self:
-            if journal.refund_sequence_id and journal.refund_sequence:
-                sequence = journal.refund_sequence_id._get_current_sequence()
-                journal.refund_sequence_number_next = sequence.number_next_actual
-            else:
-                journal.refund_sequence_number_next = 1
-
-    def _inverse_refund_seq_number_next(self):
-        '''Inverse 'refund_sequence_number_next' to edit the current sequence next number.
-        '''
-        for journal in self:
-            if journal.refund_sequence_id and journal.refund_sequence and journal.refund_sequence_number_next:
-                sequence = journal.refund_sequence_id._get_current_sequence()
-                sequence.sudo().number_next = journal.refund_sequence_number_next
 
     @api.constrains('type_control_ids')
     def _constrains_type_control_ids(self):
@@ -1195,14 +1144,6 @@ class AccountJournal(models.Model):
                         'company_id': company.id,
                         'partner_id': company.partner_id.id,
                     })
-            if ('code' in vals and journal.code != vals['code']):
-                if self.env['account.move'].search([('journal_id', 'in', self.ids)], limit=1):
-                    raise UserError(_('This journal already contains items, therefore you cannot modify its short name.'))
-                new_prefix = self._get_sequence_prefix(vals['code'], refund=False)
-                journal.sequence_id.write({'prefix': new_prefix})
-                if journal.refund_sequence_id:
-                    new_prefix = self._get_sequence_prefix(vals['code'], refund=True)
-                    journal.refund_sequence_id.write({'prefix': new_prefix})
             if 'currency_id' in vals:
                 if not 'default_debit_account_id' in vals and journal.default_debit_account_id:
                     journal.default_debit_account_id.currency_id = vals['currency_id']
@@ -1230,16 +1171,6 @@ class AccountJournal(models.Model):
         if 'bank_acc_number' in vals:
             for journal in self.filtered(lambda r: r.type == 'bank' and not r.bank_account_id):
                 journal.set_bank_account(vals.get('bank_acc_number'), vals.get('bank_id'))
-        # create the relevant refund sequence
-        if vals.get('refund_sequence'):
-            for journal in self.filtered(lambda j: j.type in ('sale', 'purchase') and not j.refund_sequence_id):
-                journal_vals = {
-                    'name': journal.name,
-                    'company_id': journal.company_id.id,
-                    'code': journal.code,
-                    'refund_sequence_number_next': vals.get('refund_sequence_number_next', journal.refund_sequence_number_next),
-                }
-                journal.refund_sequence_id = self.sudo()._create_sequence(journal_vals, refund=True).id
         # Changing the 'post_at' option will post the draft payment moves and change the related invoices' state.
         if 'post_at' in vals and vals['post_at'] != 'bank_rec':
             draft_moves = self.env['account.move'].search([('journal_id', 'in', self.ids), ('state', '=', 'draft')])
@@ -1251,33 +1182,6 @@ class AccountJournal(models.Model):
                 record._create_secure_sequence(['secure_sequence_id'])
 
         return result
-
-    @api.model
-    def _get_sequence_prefix(self, code, refund=False):
-        prefix = code.upper()
-        if refund:
-            prefix = 'R' + prefix
-        return prefix + '/%(range_year)s/'
-
-    @api.model
-    def _create_sequence(self, vals, refund=False):
-        """ Create new no_gap entry sequence for every new Journal"""
-        prefix = self._get_sequence_prefix(vals['code'], refund)
-        seq_name = refund and vals['code'] + _(': Refund') or vals['code']
-        seq = {
-            'name': _('%s Sequence') % seq_name,
-            'implementation': 'no_gap',
-            'prefix': prefix,
-            'padding': 4,
-            'number_increment': 1,
-            'use_date_range': True,
-        }
-        if 'company_id' in vals:
-            seq['company_id'] = vals['company_id']
-        seq = self.env['ir.sequence'].create(seq)
-        seq_date_range = seq._get_current_sequence()
-        seq_date_range.number_next = refund and vals.get('refund_sequence_number_next', 1) or vals.get('sequence_number_next', 1)
-        return seq
 
     @api.model
     def _prepare_liquidity_account(self, name, company, currency_id, type):
@@ -1353,11 +1257,6 @@ class AccountJournal(models.Model):
         if 'refund_sequence' not in vals:
             vals['refund_sequence'] = vals['type'] in ('sale', 'purchase')
 
-        # We just need to create the relevant sequences according to the chosen options
-        if not vals.get('sequence_id'):
-            vals.update({'sequence_id': self.sudo()._create_sequence(vals).id})
-        if vals.get('type') in ('sale', 'purchase') and vals.get('refund_sequence') and not vals.get('refund_sequence_id'):
-            vals.update({'refund_sequence_id': self.sudo()._create_sequence(vals, refund=True).id})
         journal = super(AccountJournal, self.with_context(mail_create_nolog=True)).create(vals)
         if 'alias_name' in vals:
             journal._update_mail_alias(vals)
@@ -1622,9 +1521,9 @@ class AccountTax(models.Model):
             JOIN account_tax tax ON tax.id = line.tax_line_id
             WHERE line.tax_line_id IN %s
             AND line.company_id != tax.company_id
-            
+
             UNION ALL
-            
+
             SELECT line.id
             FROM account_move_line_account_tax_rel tax_rel
             JOIN account_tax tax ON tax.id = tax_rel.account_tax_id

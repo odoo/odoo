@@ -10,6 +10,7 @@ from odoo.exceptions import UserError, ValidationError
 import time
 import math
 import base64
+import re
 
 
 class AccountCashboxLine(models.Model):
@@ -220,7 +221,7 @@ class AccountBankStatement(models.Model):
     _name = "account.bank.statement"
     _description = "Bank Statement"
     _order = "date desc, name desc, id desc"
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'sequence.mixin']
 
     name = fields.Char(string='Reference', states={'open': [('readonly', False)]}, copy=False, readonly=True)
     reference = fields.Char(string='External Reference', states={'open': [('readonly', False)]}, copy=False, readonly=True, help="Used to hold the reference of the external mean that created this statement (name of imported file, reference of online synchronization...)")
@@ -410,17 +411,43 @@ class AccountBankStatement(models.Model):
         """ Changes statement state to Running."""
         for statement in self:
             if not statement.name:
-                context = {'ir_sequence_date': statement.date}
-                if statement.journal_id.sequence_id:
-                    st_number = statement.journal_id.sequence_id.with_context(**context).next_by_id()
-                else:
-                    SequenceObj = self.env['ir.sequence']
-                    st_number = SequenceObj.with_context(**context).next_by_code('account.bank.statement')
-                statement.name = st_number
+                statement._set_next_sequence()
             statement.state = 'open'
 
     def button_reopen(self):
         self.state = 'open'
+
+    def _get_last_sequence_domain(self, relaxed=False):
+        self.ensure_one()
+        where_string = "WHERE journal_id = %(journal_id)s AND name != '/'"
+        param = {'journal_id': self.journal_id.id}
+
+        sequence_number_reset = self._deduce_sequence_number_reset(self.search([('date', '<', self.date)], order='date desc', limit=1).name)
+        if not relaxed:
+            if sequence_number_reset == 'year':
+                where_string += " AND date_trunc('year', date) = date_trunc('year', %(date)s) "
+                param['date'] = self.date
+            elif sequence_number_reset == 'month':
+                where_string += " AND date_trunc('month', date) = date_trunc('month', %(date)s) "
+                param['date'] = self.date
+        return where_string, param
+
+    def _get_starting_sequence(self):
+        self.ensure_one()
+        last_sequence = self._get_last_sequence(relaxed=True)
+        if last_sequence:
+            sequence_number_reset = self._deduce_sequence_number_reset(self.search([('date', '<', self.date)], order='date desc', limit=1).name)
+            if sequence_number_reset == 'year':
+                sequence = re.match(self._sequence_yearly_regex, last_sequence)
+                if sequence:
+                    return '%s%04d%s%s%s' % (sequence.group('prefix1'), self.date.year, sequence.group('prefix2'), "0" * len(sequence.group('seq')), sequence.group('suffix'))
+            elif sequence_number_reset == 'month':
+                sequence = re.match(self._sequence_monthly_regex, last_sequence)
+                if sequence:
+                    return '%s%04d%s%02d%s%s%s' % (sequence.group('prefix1'), self.date.year, sequence.group('prefix2'), self.date.month, sequence.group('prefix3'), "0" * len(sequence.group('seq')), sequence.group('suffix'))
+
+        # There was no pattern found, propose one
+        return "%s/%04d/%02d/0000" % (self.journal_id.code, self.date.year, self.date.month)
 
 
 class AccountBankStatementLine(models.Model):

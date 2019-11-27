@@ -22,7 +22,7 @@ class TestReconciliationMatchingRules(AccountTestCommon):
         cls.invoice_line_1 = cls._create_invoice_line(100, cls.partner_1, 'out_invoice')
         cls.invoice_line_2 = cls._create_invoice_line(200, cls.partner_1, 'out_invoice')
         cls.invoice_line_3 = cls._create_invoice_line(300, cls.partner_1, 'in_refund')
-        cls.invoice_line_3.move_id.name = "RBILL/2018/0013" # Without demo data, avoid to match with the first invoice
+        cls.invoice_line_3.move_id.name = "RBILL/2019/09/0013" # Without demo data, avoid to match with the first invoice
         cls.invoice_line_4 = cls._create_invoice_line(1000, cls.partner_2, 'in_invoice')
 
         current_assets_account = cls.env['account.account'].search([
@@ -65,7 +65,7 @@ class TestReconciliationMatchingRules(AccountTestCommon):
         })
         cls.bank_line_1 = cls.env['account.bank.statement.line'].create({
             'statement_id': cls.bank_st.id,
-            'name': 'invoice %s-%s' % (invoice_number.split('/')[1], invoice_number.split('/')[2]),
+            'name': 'invoice %s-%s-%s' % (invoice_number.split('/')[1], invoice_number.split('/')[2], invoice_number.split('/')[3]),
             'partner_id': cls.partner_1.id,
             'amount': '100',
             'sequence': 1,
@@ -99,8 +99,7 @@ class TestReconciliationMatchingRules(AccountTestCommon):
     @classmethod
     def _create_invoice_line(cls, amount, partner, type):
         ''' Create an invoice on the fly.'''
-        invoice_form = Form(cls.env['account.move'].with_context(default_type=type))
-        invoice_form.invoice_date = fields.Date.from_string('2019-09-01')
+        invoice_form = Form(cls.env['account.move'].with_context(default_type=type, default_invoice_date='2019-09-01', default_date='2019-09-01'))
         invoice_form.partner_id = partner
         with invoice_form.invoice_line_ids.new() as invoice_line_form:
             invoice_line_form.name = 'xxxx'

@@ -1092,33 +1092,6 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount_total': 208.01,
         })
 
-    def test_in_invoice_line_onchange_sequence_number_1(self):
-        self.assertRecordValues(self.invoice, [{
-            'invoice_sequence_number_next': '0001',
-            'invoice_sequence_number_next_prefix': 'BILL/2019/',
-        }])
-
-        move_form = Form(self.invoice)
-        move_form.invoice_sequence_number_next = '0042'
-        move_form.save()
-
-        self.assertRecordValues(self.invoice, [{
-            'invoice_sequence_number_next': '0042',
-            'invoice_sequence_number_next_prefix': 'BILL/2019/',
-        }])
-
-        self.invoice.post()
-
-        self.assertRecordValues(self.invoice, [{'name': 'BILL/2019/0042'}])
-
-        values = {
-            'invoice_date': self.invoice.invoice_date,
-        }
-        invoice_copy = self.invoice.copy(default=values)
-        invoice_copy.post()
-
-        self.assertRecordValues(invoice_copy, [{'name': 'BILL/2019/0043'}])
-
     def test_in_invoice_onchange_past_invoice_1(self):
         copy_invoice = self.invoice.copy()
 
