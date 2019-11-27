@@ -253,7 +253,7 @@ class SaleOrder(models.Model):
                     'date': order.date_order,
                     'pricelist': order.pricelist_id.id,
                 })
-                product_with_context = self.env['product.product'].with_context(product_context)
+                product_with_context = self.env['product.product'].with_context(product_context).with_company(order.company_id.id)
                 product = product_with_context.browse(product_id)
                 values['price_unit'] = self.env['account.tax']._fix_tax_included_price_company(
                     order_line._get_display_price(product),
