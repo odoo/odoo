@@ -838,14 +838,17 @@ class StockMove(models.Model):
                 in_mls |= ml
             elif ml.location_id != self.location_dest_id and ml.location_dest_id == self.location_dest_id:
                 # returned to my siblings
+                out_mls |= ml
+            elif ml.location_id == self.location_dest_id and ml.location_dest_id == self.location_id:
+                # returned to me
                 in_mls |= ml
 
         for out_ml in out_mls:
             qty = out_ml.product_uom_id._compute_quantity(out_ml.qty_done, out_ml.product_id.uom_id)
-            qty_per_lot_and_package[(out_ml.lot_id, out_ml.package_id)] -= qty
+            qty_per_lot_and_package[(out_ml.lot_id, out_ml.package_id)] += qty
         for in_ml in in_mls:
             qty = in_ml.product_uom_id._compute_quantity(in_ml.qty_done, in_ml.product_id.uom_id)
-            qty_per_lot_and_package[(in_ml.lot_id, in_ml.package_id)] += qty
+            qty_per_lot_and_package[(in_ml.lot_id, in_ml.package_id)] -= qty
         return qty_per_lot_and_package
 
     @api.onchange('product_id', 'product_qty')
