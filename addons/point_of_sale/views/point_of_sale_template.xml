@@ -15,4 +15,17 @@
             <script type="text/javascript" src="/point_of_sale/static/tests/tours/point_of_sale.js"></script>
         </xpath>
     </template>
+
+    <template id="exception_stock_moves_confirmation" name="Message: stock pickings not confirmed">
+        <div>
+            <p>Some operations could not be confirmed due to exceptions:</p>
+            <div class="mt16">
+                <ul t-foreach="stock_pickings" t-as="stock_picking">
+                    <li>
+                        <a href="#" data-oe-model="stock.picking" t-att-data-oe-id="stock_picking['id']"><t t-esc="stock_picking['name']"/></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </template>
 </odoo>

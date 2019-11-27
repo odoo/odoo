@@ -298,6 +298,7 @@ class PosSession(models.Model):
         self._check_if_no_draft_orders()
         if self.update_stock_at_closing:
             self._create_picking_at_end_of_session()
+        self.generate_activity_for_pending_pickings()
         self._create_account_move()
         if self.move_id.line_ids:
             self.move_id.post()
@@ -911,6 +912,15 @@ class PosSession(models.Model):
                 ) % ', '.join(draft_orders.mapped('name'))
             )
         return True
+
+    def generate_activity_for_pending_pickings(self):
+        stock_pickings = self.env['stock.picking'].search([('pos_session_id', '=', self.id), ('state', '=', 'draft')])
+        if stock_pickings:
+            self.activity_schedule_with_view('mail.mail_activity_data_warning',
+                views_or_xmlid='point_of_sale.exception_stock_moves_confirmation',
+                render_context={'stock_pickings': stock_pickings},
+                user_id=self.user_id.id)
+
 
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'
