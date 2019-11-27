@@ -1,14 +1,14 @@
-odoo.define('sale_product_matrix.section_and_note_widget_tests', function (require) {
+odoo.define('purchase_product_matrix.section_and_note_widget_tests', function (require) {
 "use strict";
 
 var FormView = require('web.FormView');
 var testUtils = require('web.test_utils');
 var createView = testUtils.createView;
 
-QUnit.module('section_and_note: sale_product_matrix', {
+QUnit.module('section_and_note: purchase_product_matrix', {
     beforeEach: function () {
         this.data = {
-            sale_order: {
+            purchase_order: {
                 fields: {
                     order_line_ids: {
                         string: "Lines",
@@ -52,7 +52,7 @@ QUnit.module('section_and_note: sale_product_matrix', {
     QUnit.test('can configure a product with the matrix', async function (assert) {
         assert.expect(4);
 
-        this.data.sale_order.onchanges = {
+        this.data.purchase_order.onchanges = {
             order_line_ids: obj => {
                 obj.grid = this.grid;
             },
@@ -60,13 +60,13 @@ QUnit.module('section_and_note: sale_product_matrix', {
         };
         var form = await createView({
             View: FormView,
-            model: 'sale_order',
+            model: 'purchase_order',
             data: this.data,
             arch: `<form>
                     <field name="grid" invisible="1"/>
                     <field name="order_line_ids" widget="section_and_note_one2many">
                         <tree editable="bottom">
-                            <field name="product_template_id" widget="product_configurator"/>
+                            <field name="product_template_id" widget="matrix_configurator"/>
                         </tree>
                     </field>
                 </form>`,

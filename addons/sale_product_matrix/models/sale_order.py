@@ -55,7 +55,7 @@ class SaleOrder(models.Model):
 
                 # create or find product variant from combination
                 product = product_template._create_product_variant(combination)
-                order_lines = self.order_line.filtered(lambda line: line.product_id == product and line.product_no_variant_attribute_value_ids == no_variant_attribute_values)
+                order_lines = self.order_line.filtered(lambda line: (line._origin or line).product_id == product and (line._origin or line).product_no_variant_attribute_value_ids == no_variant_attribute_values)
 
                 # if product variant already exist in order lines
                 old_qty = sum(order_lines.mapped('product_uom_qty'))
@@ -83,7 +83,7 @@ class SaleOrder(models.Model):
                         Therefore, it only raises an Error for now.
                         """
                         if len(order_lines) > 1:
-                            raise ValidationError(_("You cannot change the quantity of a product present in multiple purchase lines."))
+                            raise ValidationError(_("You cannot change the quantity of a product present in multiple sale lines."))
                         else:
                             order_lines[0].product_uom_qty = qty
                             # If we want to support multiple lines edition:

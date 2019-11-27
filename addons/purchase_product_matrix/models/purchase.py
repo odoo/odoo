@@ -47,7 +47,7 @@ class PurchaseOrder(models.Model):
                 product = product_template._create_product_variant(combination)
                 # TODO replace the check on product_id by a first check on the ptavs and pnavs?
                 # and only create/require variant after no line has been found ???
-                order_lines = self.order_line.filtered(lambda line: line.product_id == product and line.product_no_variant_attribute_value_ids == no_variant_attribute_values)
+                order_lines = self.order_line.filtered(lambda line: (line._origin or line).product_id == product and (line._origin or line).product_no_variant_attribute_value_ids == no_variant_attribute_values)
 
                 # if product variant already exist in order lines
                 old_qty = sum(order_lines.mapped('product_qty'))
