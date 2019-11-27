@@ -5,29 +5,17 @@
     <record id="demo_sup_refund_invoice_3" model="account.move.reversal">
         <field name="reason">Mercadería defectuosa</field>
         <field name="refund_method">refund</field>
-        <field name="l10n_latam_document_number">0001-01234567</field>
-        <field name="l10n_latam_use_documents" eval="True"/>
         <field name="move_ids" eval="[(4, ref('demo_sup_invoice_3'), 0)]"/>
     </record>
-
-    <function model="account.move.reversal" name="_onchange_move_id" eval="[ref('demo_sup_refund_invoice_3')]"/>
-
-    <function model="account.move.reversal" name="_onchange_l10n_latam_document_number"  eval="[ref('demo_sup_refund_invoice_3')]"/>
 
     <function model="account.move.reversal" name="reverse_moves" eval="[ref('demo_sup_refund_invoice_3')]"/>
 
     <!-- Create draft refund for invoice 4 -->
     <record id="demo_sup_refund_invoice_4" model="account.move.reversal">
         <field name="reason">Venta cancelada</field>
-        <field name="l10n_latam_document_number">0001-01234566</field>
-        <field name="l10n_latam_use_documents" eval="True"/>
         <field name="refund_method">cancel</field>
         <field name="move_ids" eval="[(4, ref('demo_sup_invoice_4'), 0)]"/>
     </record>
-
-    <function model="account.move.reversal" name="_onchange_move_id" eval="[ref('demo_sup_refund_invoice_4')]"/>
-
-    <function model="account.move.reversal" name="_onchange_l10n_latam_document_number"  eval="[ref('demo_sup_refund_invoice_4')]"/>
 
     <function model="account.move.reversal" name="reverse_moves" eval="[ref('demo_sup_refund_invoice_4')]"/>
 

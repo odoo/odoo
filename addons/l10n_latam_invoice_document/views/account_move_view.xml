@@ -38,15 +38,12 @@
                 <field name="l10n_latam_available_document_type_ids" invisible="1"/>
                 <field name="l10n_latam_use_documents" invisible="1"/>
                 <field name="l10n_latam_country_code" invisible="1"/>
-                <field name="l10n_latam_sequence_id" invisible="1"/>
             </form>
 
             <field name="journal_id" position="after">
                 <field name="l10n_latam_document_type_id"
                     attrs="{'invisible': [('l10n_latam_use_documents', '=', False)], 'required': [('l10n_latam_use_documents', '=', True)], 'readonly': [('state', '!=', 'draft')]}"
                     domain="[('id', 'in', l10n_latam_available_document_type_ids)]" options="{'no_open': True, 'no_create': True}"/>
-                <field name="l10n_latam_document_number"
-                    attrs="{'invisible': ['|', ('l10n_latam_sequence_id', '!=', False), ('l10n_latam_use_documents', '=', False)], 'required': [('l10n_latam_sequence_id', '=', False), ('l10n_latam_use_documents', '=', True)], 'readonly': [('state', '!=', 'draft')]}"/>
             </field>
 
             <field name="journal_id" position="attributes">
