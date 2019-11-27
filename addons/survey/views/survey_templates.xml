@@ -74,7 +74,7 @@
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
             <input type="hidden" name="token" t-att-value="answer.access_token" />
             <div class="o_survey_error alert alert-danger d-none" role="alert">
-                <p>Their was an error during the validation of the survey.</p>
+                <p>There was an error during the validation of the survey.</p>
             </div>
             <t t-if="survey.questions_layout == 'one_page'">
                 <t t-foreach='survey.question_and_page_ids' t-as='question'>

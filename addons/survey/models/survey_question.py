@@ -151,8 +151,9 @@ class SurveyQuestion(models.Model):
                         next_page_index = page._index()
                         break
 
-                question.question_ids = question.survey_id.question_ids.filtered(lambda q:
-                    q._index() > question._index() and (not next_page_index or q._index() < next_page_index))
+                question.question_ids = question.survey_id.question_ids.filtered(
+                    lambda q: q._index() > question._index() and (not next_page_index or q._index() < next_page_index)
+                )
             else:
                 question.question_ids = self.env['survey.question']
 
@@ -164,11 +165,9 @@ class SurveyQuestion(models.Model):
                 question.page_id = None
             else:
                 question.page_id = next(
-                    (iter(question
-                        .survey_id
-                        .question_and_page_ids
-                        .filtered(lambda q: q.is_page and q.sequence < question.sequence)
-                        .sorted(reverse=True))),
+                    (iter(question.survey_id.question_and_page_ids.filtered(
+                        lambda q: q.is_page and q.sequence < question.sequence
+                    ).sorted(reverse=True))),
                     None
                 )
 
