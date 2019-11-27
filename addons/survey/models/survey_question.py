@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
+import itertools
+
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
 
@@ -277,6 +280,134 @@ class SurveyQuestion(models.Model):
         self.ensure_one()
 
         return self.suggested_answer_ids.filtered(lambda label: label.is_correct)
+
+    # ------------------------------------------------------------
+    # STATISTICS / REPORTING
+    # ------------------------------------------------------------
+
+    def _prepare_statistics(self, user_input_lines):
+        """ Compute statistical data for questions by counting number of vote per choice on basis of filter """
+        all_questions_data = []
+        for question in self:
+            question_data = {'question': question, 'is_page': question.is_page}
+
+            if question.is_page:
+                all_questions_data.append(question_data)
+                continue
+
+            # fetch answer lines, separate comments from real answers
+            all_line_ids = user_input_lines.filtered(lambda line: line.question_id == question)
+            if question.question_type in ['simple_choice', 'multiple_choice']:
+                answer_line_ids = all_line_ids.filtered(lambda line: line.answer_type != 'text')
+            elif question.question_type == 'matrix':
+                answer_line_ids = all_line_ids.filtered(lambda line: line.answer_type != 'text')
+            else:
+                answer_line_ids = all_line_ids
+            comment_line_ids = all_line_ids - answer_line_ids
+            question_data.update(
+                all_line_ids=all_line_ids,
+                answer_line_ids=answer_line_ids,
+                answer_line_done_ids=answer_line_ids.filtered(lambda line: not line.skipped),
+                answer_line_skipped_ids=answer_line_ids.filtered(lambda line: line.skipped),
+                comment_line_ids=comment_line_ids)
+
+            # prepare table and graph data
+            question_data['graph_data'] = json.dumps(question._get_stats_graph_data(answer_line_ids))
+            question_data['table_data'] = question._get_stats_table_data(answer_line_ids)
+
+            all_questions_data.append(question_data)
+        return all_questions_data
+
+    def _get_stats_graph_data(self, user_input_lines):
+        if self.question_type in ['simple_choice']:
+            return self._get_stats_graph_data_pie(user_input_lines)
+        elif self.question_type in ['multiple_choice']:
+            return self._get_stats_graph_data_bar(user_input_lines)
+        return ''
+
+    def _get_stats_graph_data_pie(self, user_input_lines):
+        """ retro compat: [{"text": "Once a day", "count": 0, "answer_id": 1, "answer_score": 0.0}, ...] """
+        suggested_answers = self.mapped('suggested_answer_ids')
+
+        count_data = dict.fromkeys(suggested_answers, 0)
+        for line in user_input_lines:
+            if line.suggested_answer_id:
+                count_data[line.suggested_answer_id] += 1
+
+        return [{
+            'text': sug_answer.value,
+            'count': count_data[sug_answer]
+            }
+            for sug_answer in suggested_answers
+        ]
+
+    def _get_stats_graph_data_bar(self, user_input_lines):
+        """ retro compat: [{"key": "which blah", "values": [{"text": "High quality", "count": 1, "answer_id": 5, "answer_score": 0.0}, ... }] """
+        suggested_answers = self.mapped('suggested_answer_ids')
+
+        count_data = dict.fromkeys(suggested_answers, 0)
+        for line in user_input_lines:
+            if line.suggested_answer_id:
+                count_data[line.suggested_answer_id] += 1
+
+        return [{
+            'key': self.title,
+            'values': [{
+                'text': sug_answer.value,
+                'count': count_data[sug_answer]
+                }
+                for sug_answer in suggested_answers
+            ]
+        }]
+
+    def _get_stats_table_data(self, user_input_lines):
+        if self.question_type in ['simple_choice', 'multiple_choice']:
+            return self._get_stats_table_data_choice(user_input_lines)
+        elif self.question_type in ['matrix']:
+            return self._get_stats_table_data_matrix(user_input_lines)
+        elif self.question_type in ['free_text', 'textbox', 'date', 'datetime', 'numerical_box']:
+            return self._get_stats_table_data_linear(user_input_lines)
+        else:
+            raise ValueError(_('Unexpected %s question' % self.question_type))
+
+    def _get_stats_table_data_choice(self, user_input_lines):
+        """ Table data for simple choice and multiple choice """
+        suggested_answers = self.mapped('suggested_answer_ids')
+
+        count_data = dict.fromkeys(suggested_answers, 0)
+        for line in user_input_lines:
+            if line.suggested_answer_id:
+                count_data[line.suggested_answer_id] += 1
+
+        return [{
+            'suggested_answer': sug_answer,
+            'count': count_data[sug_answer]
+            }
+            for sug_answer in suggested_answers
+        ]
+
+    def _get_stats_table_data_matrix(self, user_input_lines):
+        """ Table data for matrix """
+        suggested_answers = self.mapped('suggested_answer_ids')
+        matrix_rows = self.mapped('matrix_row_ids')
+
+        count_data = dict.fromkeys(itertools.product(matrix_rows, suggested_answers), 0)
+        for line in user_input_lines:
+            if line.matrix_row_id and line.suggested_answer_id:
+                count_data[(line.matrix_row_id, line.suggested_answer_id)] += 1
+
+        return [{
+            'row': row,
+            'suggested_answer': sug_answer,
+            'count': count_data[(row, sug_answer)]
+            }
+            for row in matrix_rows
+            for sug_answer in suggested_answers
+        ]
+
+    def _get_stats_table_data_linear(self, user_input_lines):
+        """ Table data for free_text, text_box, date, datetime, numerical_box """
+        return [line for line in user_input_lines]
 
 
 class SurveyQuestionAnswer(models.Model):
