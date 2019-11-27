@@ -88,14 +88,14 @@ var StatementAction = AbstractAction.extend({
         var self = this;
         var def = this.model.load(this.params.context).then(this._super.bind(this));
         return def.then(function () {
-                var title = self.model.bank_statement_id  && self.model.bank_statement_id.display_name;
+                var title = (self.model.bank_statement_id  && self.model.bank_statement_id.display_name) || self.title;
                 self._setTitle(title);
                 self.renderer = new self.config.ActionRenderer(self, self.model, {
                     'bank_statement_id': self.model.bank_statement_id,
                     'valuenow': self.model.valuenow,
                     'valuemax': self.model.valuemax,
                     'defaultDisplayQty': self.model.defaultDisplayQty,
-                    'title': title,
+                    'title': (self.model.statement && self.model.statement.statement_name) || title,
                 });
             });
     },
