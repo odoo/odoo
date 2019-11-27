@@ -576,7 +576,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
                     groups.write({'implied_ids': [(4, implied_group.id)]})
                 else:
                     groups.write({'implied_ids': [(3, implied_group.id)]})
-                    implied_group.write({'users': [(3, user.id) for user in groups.users]})
+                    implied_group.sudo().write({'users': [(5,)]})
 
         # config fields: store ir.config_parameters
         IrConfigParameter = self.env['ir.config_parameter'].sudo()
