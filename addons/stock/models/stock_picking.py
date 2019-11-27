@@ -1164,7 +1164,10 @@ class Picking(models.Model):
         self.ensure_one()
         if self.state not in ('done', 'cancel'):
             picking_move_lines = self.move_line_ids
-            if not self.picking_type_id.show_reserved:
+            if (
+                not self.picking_type_id.show_reserved
+                and not self.env.context.get('barcode_view')
+            ):
                 picking_move_lines = self.move_line_nosuggest_ids
 
             move_line_ids = picking_move_lines.filtered(lambda ml:
