@@ -6,6 +6,7 @@ var Dialog = require('web.Dialog');
 var publicWidget = require('web.public.widget');
 var utils = require('web.utils');
 
+var sessionStorage = window.sessionStorage;
 var QWeb = core.qweb;
 var _t = core._t;
 
@@ -14,8 +15,8 @@ var SlideUploadDialog = Dialog.extend({
     events: _.extend({}, Dialog.prototype.events, {
         'click .o_wslides_js_upload_install_button': '_onClickInstallModule',
         'click .o_wslides_select_type': '_onClickSlideTypeIcon',
-        'change input#upload': '_onChangeSlideUpload',
-        'change input#url': '_onChangeSlideUrl',
+        'change .o_wslides_js_slide_upload_input': '_onChangeSlideUpload',
+        'change .o_wslides_js_slide_url': '_onChangeSlideUrl',
     }),
 
     /**
@@ -32,14 +33,12 @@ var SlideUploadDialog = Dialog.extend({
         });
         this._super(parent, options);
         this._setup();
-
         this.channelID = parseInt(options.channelId, 10);
         this.defaultCategoryID = parseInt(options.categoryId,10);
         this.canUpload = options.canUpload === 'True';
         this.canPublish = options.canPublish === 'True';
         this.modulesToInstall = options.modulesToInstall ? JSON.parse(options.modulesToInstall.replace(/'/g, '"')) : null;
         this.modulesToInstallStatus = null;
-
         this.set('state', '_select');
         this.on('change:state', this, this._onChangeType);
         this.set('can_submit_form', false);
@@ -137,7 +136,6 @@ var SlideUploadDialog = Dialog.extend({
             'duration': this._formGetFieldValue('duration'),
             'is_published': forcePublished,
         }, this._getSelect2DropdownValues()); // add tags and category
-
         // default slide_type (for webpage for instance)
         if (_.contains(this.slide_type_data), this.get('state')) {
             values['slide_type'] = this.get('state');
@@ -178,7 +176,6 @@ var SlideUploadDialog = Dialog.extend({
         control.replaceWith(control = control.clone(true));
         this.file.name = false;
     },
-
     _getModalButtons: function () {
         var btnList = [];
         var state = this.get('state');
@@ -207,7 +204,7 @@ var SlideUploadDialog = Dialog.extend({
      *
      * @private
      */
-    _getSelect2DropdownValues: function (){
+    _getSelect2DropdownValues: function () {
         var result = {};
         var self = this;
         // tags
@@ -223,16 +220,16 @@ var SlideUploadDialog = Dialog.extend({
             result['tag_ids'] = tagValues;
         }
         // category
-        if (!self.defaultCategoryID){
+        if (!self.defaultCategoryID) {
             var categoryValue = this.$('#category_id').select2('data');
             if (categoryValue && categoryValue.create) {
                 result['category_id'] = [0, {'name': categoryValue.text}];
             } else if (categoryValue) {
-                result['category_id'] =  [categoryValue.id];
+                result['category_id'] = [categoryValue.id];
                 this.categoryID = categoryValue.id;
             }
         } else {
-            result['category_id'] =  [self.defaultCategoryID];
+            result['category_id'] = [self.defaultCategoryID];
             this.categoryID = self.defaultCategoryID;
         }
         return result;
@@ -291,23 +288,30 @@ var SlideUploadDialog = Dialog.extend({
                 }
             },
             fill_data: function (query, data) {
-                var that = this,
+                var self = this,
                     tags = {results: []};
+
+                var $select2Container = $(query.element)
+                    .closest('.form-group')
+                    .find('.select2-container');
+                $select2Container.removeClass('is-invalid');
+                $select2Container.addClass('is-valid');
                 _.each(data, function (obj) {
-                    if (that.matcher(query.term, obj[nameKey])) {
+                    if (self.matcher(query.term, obj[nameKey])) {
                         tags.results.push({id: obj.id, text: obj[nameKey]});
                     }
                 });
+                
                 query.callback(tags);
             },
             query: function (query) {
-                var that = this;
+                var self = this;
                 // fetch data only once and store it
                 if (!this.selection_data) {
                     this.fetch_rpc_fnc().then(function (data) {
-                        that.can_create = data.can_create;
-                        that.fill_data(query, data.read_results);
-                        that.selection_data = data.read_results;
+                        self.can_create = data.can_create;
+                        self.fill_data(query, data.read_results);
+                        self.selection_data = data.read_results;
                     });
                 } else {
                     this.fill_data(query, this.selection_data);
@@ -423,7 +427,7 @@ var SlideUploadDialog = Dialog.extend({
 
         var $input = $(ev.currentTarget);
         var preventOnchange = $input.data('preventOnchange');
-
+        var $preview = self.$('#slide-image');
         var file = ev.target.files[0];
         if (!file) {
             this.$('#slide-image').attr('src', '/website_slides/static/src/img/document.png');
@@ -449,7 +453,7 @@ var SlideUploadDialog = Dialog.extend({
 
         utils.getDataURLFromFile(file).then(function (buffer) {
             if (isImage) {
-                self.$('#slide-image').attr('src', buffer);
+                $preview.attr('src', buffer);
             }
             buffer = buffer.split(',')[1];
             self.file.data = buffer;
@@ -501,7 +505,7 @@ var SlideUploadDialog = Dialog.extend({
                             viewport: viewport
                         }).then(function () {
                             var imageData = self.$('#data_canvas')[0].toDataURL();
-                            self.$('#slide-image').attr('src', imageData);
+                            $preview.attr('src', imageData);
                             if (loaded) {
                                 self.set('can_submit_form', true);
                             }
@@ -512,11 +516,10 @@ var SlideUploadDialog = Dialog.extend({
                 });
             };
         }
-
         if (!preventOnchange) {
             var input = file.name;
             var inputVal = input.substr(0, input.lastIndexOf('.')) || input;
-            this._formSetFieldValue('name', inputVal);
+            this._formSetFieldValue ('name', inputVal);
         }
     },
     _onChangeSlideUrl: function (ev) {
@@ -584,7 +587,7 @@ var SlideUploadDialog = Dialog.extend({
         });
     },
 
-    _onClickGoBack: function () {
+    _onClickGoBack: function (ev) {
         this.set('state', '_select');
         this.isValidUrl = true;
         if (this.modulesToInstallStatus && !this.modulesToInstallStatus.installing) {
@@ -606,7 +609,10 @@ var SlideUploadDialog = Dialog.extend({
                     self.set('state', oldType);
                     self._alertDisplay(data.error);
                 } else {
-                    window.location = data.url;
+                    if (data.toast) {
+                        sessionStorage.setItem("certification_toast", data.url);
+                    }
+                    window.location.reload();
                 }
             });
         }
@@ -615,7 +621,6 @@ var SlideUploadDialog = Dialog.extend({
         var $elem = this.$(ev.currentTarget);
         var slideType = $elem.data('slideType');
         this.set('state', slideType);
-
         this._bindSelect2Dropdown();  // rebind select2 at each modal body rendering
     },
 });

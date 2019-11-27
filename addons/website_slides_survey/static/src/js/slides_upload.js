@@ -3,12 +3,19 @@ odoo.define('website_slides_survey.upload_modal', function (require) {
 
 var core = require('web.core');
 var _t = core._t;
-var SlidesUpload = require('website_slides.upload_modal');
 
+var SlidesUpload = require('website_slides.upload_modal');
 /**
  * Management of the new 'certification' slide_type
  */
 SlidesUpload.SlideUploadDialog.include({
+    events: _.extend({}, SlidesUpload.SlideUploadDialog.prototype.events || {}, {
+        'change .o_wslides_js_slide_certification_id': '_populateWithCertificationName'
+    }),
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
     /**
      * Overridden to add the "certification" slide type
      *
@@ -31,12 +38,11 @@ SlidesUpload.SlideUploadDialog.include({
      */
     _bindSelect2Dropdown: function () {
         this._super.apply(this, arguments);
-
         var self = this;
         this.$('#certification_id').select2(this._select2Wrapper(_t('Certification'), false,
             function () {
                 return self._rpc({
-                    route: '/slides_survey/certification/search_read',
+                    route: '/slides_survey/certification/fetch_certification_info',
                     params: {
                         fields: ['title'],
                     }
@@ -56,7 +62,7 @@ SlidesUpload.SlideUploadDialog.include({
         var result = this._super.apply(this, arguments);
 
         var $certificationInput = this.$('#certification_id');
-        if ($certificationInput.length !== 0){
+        if ($certificationInput.length !== 0) {
             var $select2Container = $certificationInput
                 .closest('.form-group')
                 .find('.select2-container');
@@ -67,7 +73,6 @@ SlidesUpload.SlideUploadDialog.include({
                 $select2Container.addClass('is-valid');
             }
         }
-
         return result;
     },
     /**
@@ -76,17 +81,29 @@ SlidesUpload.SlideUploadDialog.include({
      * @override
      * @private
      */
-    _getSelect2DropdownValues: function (){
+    _getSelect2DropdownValues: function () {
         var result = this._super.apply(this, arguments);
 
         var certificateValue = this.$('#certification_id').select2('data');
-        if (certificateValue) {
-            result['survey_id'] =  certificateValue.id;
+        var survey = {};
+        if (certificateValue && certificateValue.create) {
+            survey.id = false;
+            survey.title = certificateValue.text;
+        } else if (certificateValue) {
+            survey.id = certificateValue.id;
         }
+        result['survey'] = survey;
         return result;
-    }
+    },
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+    _populateWithCertificationName: function (ev) {
+        if (ev.added) {
+            this.$("#name").val(ev.added.text);
+        }
+    },
 });
-
 SlidesUpload.websiteSlidesUpload.include({
     xmlDependencies: (SlidesUpload.websiteSlidesUpload.prototype.xmlDependencies || []).concat(
         ["/website_slides_survey/static/src/xml/website_slide_upload.xml"]

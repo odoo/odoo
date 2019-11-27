@@ -6,6 +6,33 @@ $o_wss_color_2 : #485761;
 .o_wss_certification_icon {
     @include size(1.4em, auto);
 }
+.img-hover{
+    .o_wss_icon_controls {
+        @include o-position-absolute(0, 0);
+        width: 100%;
+        color: white;
+        left: 15px;
+        width: calc(100% - 30px);
+        background-color: $o-enterprise-primary-color;
+        opacity: 0;
+        transition: opacity ease 400ms;
+
+        > button.fa {
+            border: none;
+            background-color: transparent;
+        }
+        > .fa {
+            margin-top: 5px;
+            margin-bottom: 5px;
+            margin-right: 5px;
+            cursor: pointer;
+        }
+    }
+    
+    &:hover .o_wss_icon_controls {
+        opacity: 0.8;
+    }
+}
 
 // Course page
 // **************************************************

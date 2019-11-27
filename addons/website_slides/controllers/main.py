@@ -877,7 +877,7 @@ class WebsiteSlides(WebsiteProfile):
     @http.route(['/slides/prepare_preview'], type='json', auth='user', methods=['POST'], website=True)
     def prepare_preview(self, **data):
         Slide = request.env['slide.slide']
-        document_type, document_id = Slide._find_document_data_from_url(data['url'])
+        unused, document_id = Slide._find_document_data_from_url(data['url'])
         preview = {}
         if not document_id:
             preview['error'] = _('Please enter valid youtube or google doc url')
@@ -901,6 +901,27 @@ class WebsiteSlides(WebsiteProfile):
                 return {'error': _('File is too big. File size cannot exceed 25MB')}
 
         values = dict((fname, post[fname]) for fname in self._get_valid_slide_post_values() if post.get(fname))
+        if post.get('survey'):
+            try:
+                if not post['survey']['id']:  # create new survey
+                    values['survey_id'] = request.env['survey.survey'].create({
+                        'title': post['survey']['title'],
+                        'questions_layout': 'page_per_question',
+                        'is_attempts_limited': True,
+                        'attempts_limit': 1,
+                        'is_time_limited': False,
+                        'scoring_type': 'scoring_without_answers',
+                        'certificate': True,
+                        'passing_score': 70.0,
+                        'certification_mail_template_id': request.env.ref('survey.mail_template_certification').id,
+                    }).id
+                else:
+                    values['survey_id'] = post['survey']['id']
+                    survey = request.env['survey.survey'].browse(int(values['survey_id']))
+
+            except (UserError, AccessError) as e:
+                _logger.error(e)
+                return {'error': e.name}
 
         # handle exception during creation of slide and sent error notification to the client
         # otherwise client slide create dialog box continue processing even server fail to create a slide
@@ -947,14 +968,19 @@ class WebsiteSlides(WebsiteProfile):
 
         # ensure correct ordering by re sequencing slides in front-end (backend should be ok thanks to list view)
         channel._resequence_slides(slide)
-
         redirect_url = "/slides/slide/%s" % (slide.id)
         if channel.channel_type == "training" and not slide.slide_type == "webpage":
             redirect_url = "/slides/%s" % (slug(channel))
         if slide.slide_type == 'webpage':
             redirect_url += "?enable_editor=1"
+        elif slide.slide_type == "certification":
+            if request.env['survey.survey'].check_access_rights('write', raise_exception=False):
+                action_id = request.env.ref('survey.action_survey_form').id
+                redirect_url = '/web#id=%s&action=%s&model=survey.survey&view_type=form' % (values['survey_id'], action_id)
         return {
+            'slide_type': slide.slide_type,
             'url': redirect_url,
+            'toast': slide.slide_type == "certification",
             'channel_type': channel.channel_type,
             'slide_id': slide.id,
             'category_id': slide.category_id
@@ -962,8 +988,9 @@ class WebsiteSlides(WebsiteProfile):
 
     def _get_valid_slide_post_values(self):
         return ['name', 'url', 'tag_ids', 'slide_type', 'channel_id', 'is_preview',
-                'mime_type', 'datas', 'description', 'image_1920', 'is_published']
-
+                'mime_type', 'datas', 'description', 'image_1920', 'is_published',
+                'survey_id']
+    
     @http.route(['/slides/tag/search_read'], type='json', auth='user', methods=['POST'], website=True)
     def slide_tag_search_read(self, fields, domain):
         can_create = request.env['slide.tag'].check_access_rights('create', raise_exception=False)

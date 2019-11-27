@@ -73,7 +73,7 @@
         <div class="form-group">
             <label for="duration" class="col-form-label">Duration</label>
             <div class="input-group">
-                <input type="number" id="duration" name="duration" placeholder="Estimated slide completion time" class="form-control"/>
+                <input type="number" id="duration" min="0" name="duration" placeholder="Estimated slide completion time" class="form-control"/>
                     <div class="input-group-prepend">
                     <span class="input-group-text">Minutes</span>
                 </div>
@@ -91,7 +91,7 @@
                     <div id="o_wslides_js_slide_upload_left_column" class="col">
                         <div class="form-group">
                             <label for="upload" class="col-form-label">Choose a PDF or an Image</label>
-                            <input id="upload" name="file" class="form-control" accept="image/*,application/pdf" type="file" required="required"/>
+                            <input class="form-control o_wslides_js_slide_upload_input" name="file" accept="image/*,application/pdf" type="file" required="required"/>
                         </div>
                         <canvas id="data_canvas" class="d-none"></canvas>
                         <t t-call="website.slide.upload.modal.common"/>
@@ -115,7 +115,7 @@
                     <div id="o_wslides_js_slide_upload_left_column" class="col">
                         <div class="form-group">
                             <label for="upload" class="col-form-label">Choose a Cover Image</label>
-                            <input id="upload" name="file" class="form-control" accept="image/*" type="file" required="required"/>
+                            <input class="form-control o_wslides_js_slide_upload_input" name="file" accept="image/*" type="file" required="required"/>
                         </div>
                         <canvas id="data_canvas" class="d-none"></canvas>
                         <t t-call="website.slide.upload.modal.common"/>
@@ -139,7 +139,7 @@
                     <div id="o_wslides_js_slide_upload_left_column" class="col">
                         <div class="form-group">
                             <label for="url" class="col-form-label">Youtube Link</label>
-                            <input id="url" name="url" class="form-control" placeholder="Youtube Video URL" required="required"/>
+                            <input name="url" class="form-control o_wslides_js_slide_url" placeholder="Youtube Video URL" required="required"/>
                         </div>
                         <canvas id="data_canvas" class="d-none"></canvas>
                         <t t-call="website.slide.upload.modal.common"/>
@@ -192,7 +192,7 @@
                                             <h5 class="list-group-item-heading">
                                                 <label for="upload" class="col-form-label">Image File</label>
                                             </h5>
-                                            <input id="upload" name="file" class="form-control" accept="image/*,application/pdf" type="file"/>
+                                            <input class="form-control o_wslides_js_slide_upload_input" name="file" accept="image/*,application/pdf" type="file"/>
                                         </li>
                                     </ul>
                                 </div>
