@@ -165,6 +165,21 @@ class Field(MetaField('DummyField', (object,), {})):
     :param bool store: whether the field is stored in database
         (default:``True``, ``False`` for computed fields)
 
+    :param str group_operator: aggregate function used by :meth:`~odoo.models.Model.read_group`
+        when grouping on this field.
+
+        Supported aggregate functions are:
+
+            * ``array_agg`` : values, including nulls, concatenated into an array
+            * ``count`` : number of rows
+            * ``count_distinct`` : number of distinct rows
+            * ``bool_and`` : true if all values are true, otherwise false
+            * ``bool_or`` : true if at least one value is true, otherwise false
+            * ``max`` : maximum value of all values
+            * ``min`` : minimum value of all values
+            * ``avg`` : the average (arithmetic mean) of all values
+            * ``sum`` : sum of all values
+
     .. rubric:: Computed Fields
 
     :param str compute: name of a method that computes the field
