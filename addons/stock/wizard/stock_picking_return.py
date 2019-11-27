@@ -85,7 +85,7 @@ class ReturnPicking(models.TransientModel):
         qty_to_return = stock_move._get_returnable_quantities() 
         vals = []
         for (lot, package), quantity in qty_to_return.items():
-            if float_is_zero(quantity, precision_rounding=stock_move.product_id.uom_id.rounding):
+            if float_is_zero(max(quantity, 0), precision_rounding=stock_move.product_id.uom_id.rounding):
                 continue
             line_vals = {
                 'product_id': stock_move.product_id.id,
