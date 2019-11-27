@@ -43,9 +43,6 @@
                         </div>
                     </button>
                 </div>
-                <xpath expr="//page[@name='purchase']" position="attributes">
-                    <attribute name="invisible">0</attribute>
-                </xpath>
                 <group name="purchase" position="before">
                     <field name="seller_ids" context="{'default_product_tmpl_id':context.get('product_tmpl_id',active_id), 'product_template_invisible_variant': True, 'tree_view_ref':'purchase.product_supplierinfo_tree_view2'}" nolabel="1" attrs="{'invisible': [('product_variant_count','&gt;',1)]}"/>
                     <field name="variant_seller_ids" context="{'default_product_tmpl_id': context.get('product_tmpl_id', active_id), 'tree_view_ref':'purchase.product_supplierinfo_tree_view2'}" nolabel="1" attrs="{'invisible': [('product_variant_count','&lt;=',1)]}"/>
@@ -88,13 +85,13 @@
             <field name="arch" type="xml">
                 <field name="property_account_expense_id" position="attributes">
                     <attribute name="domain">[('deprecated','=',False)]</attribute>
-                    <attribute name="attrs">{'readonly': [('purchase_ok', '=', 0)]}</attribute>
-                </field>
-                <field name='supplier_taxes_id' position="replace" >
-                     <field name="supplier_taxes_id" colspan="2" widget="many2many_tags" attrs="{'readonly':[('purchase_ok','=',0)]}" context="{'default_type_tax_use':'purchase'}"/>
+                    <!-- VFE FIXME is it on purpose that we make a less restrictive domain?
+                      domain="[('internal_type','=','other'),('deprecated','=',False)]"
+                      in account view.
+                    -->
                 </field>
                 <field name="property_account_expense_id" position="after">
-                    <field name="property_account_creditor_price_difference" domain="[('deprecated','=',False)]" attrs="{'readonly':[('purchase_ok', '=', 0)]}" groups="account.group_account_user"/>
+                    <field name="property_account_creditor_price_difference" domain="[('deprecated','=',False)]" groups="account.group_account_user"/>
                 </field>
             </field>
         </record>
