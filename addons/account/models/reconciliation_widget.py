@@ -596,7 +596,16 @@ class AccountReconciliation(models.AbstractModel):
             ])
         # filter on account.move.line having the same company as the statement line
         domain = expression.AND([domain, [('company_id', '=', st_line.company_id.id)]])
-        domain = expression.AND([domain, [('move_id.state', 'not in', ['draft', 'cancel'])]])
+
+        # take only moves in valid state. Draft is accepted only when "Post At" is set
+        # to "Bank Reconciliation" in the associated journal
+        domain_post_at = [
+            '|', '&',
+            ('move_id.state', '=', 'draft'),
+            ('journal_id.post_at', '=', 'bank_rec'),
+            ('move_id.state', 'not in', ['draft', 'cancel']),
+        ]
+        domain = expression.AND([domain, domain_post_at])
 
         if st_line.company_id.account_bank_reconciliation_start:
             domain = expression.AND([domain, [('date', '>=', st_line.company_id.account_bank_reconciliation_start)]])

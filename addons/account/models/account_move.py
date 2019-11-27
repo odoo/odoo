@@ -1335,7 +1335,7 @@ class AccountMove(models.Model):
         if res:
             raise ValidationError(_('Posted journal entry must have an unique sequence number per company.'))
 
-    @api.constrains('ref')
+    @api.constrains('ref', 'type', 'partner_id', 'journal_id', 'invoice_date')
     def _check_duplicate_supplier_reference(self):
         moves = self.filtered(lambda move: move.is_purchase_document() and move.ref)
         if not moves:
@@ -2983,7 +2983,7 @@ class AccountMoveLine(models.Model):
             # A constraint on account.tax.repartition.line ensures both those fields are mutually exclusive
             record.tax_line_id = rep_line.invoice_tax_id or rep_line.refund_tax_id
 
-    @api.depends('tag_ids', 'debit', 'credit', 'journal_id')
+    @api.depends('tag_ids', 'debit', 'credit')
     def _compute_tax_audit(self):
         separator = '        '
 
