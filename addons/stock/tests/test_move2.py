@@ -65,8 +65,8 @@ class TestPickShip(TestStockCommon):
         })
 
         picking_pack = self.env['stock.picking'].create({
-            'location_id': self.stock_location,
-            'location_dest_id': self.pack_location,
+            'location_id': self.pack_location,
+            'location_dest_id': self.output_location,
             'picking_type_id': self.picking_type_out,
         })
 
@@ -457,21 +457,17 @@ class TestPickShip(TestStockCommon):
         customer_quantity = self.env['stock.quant']._get_available_quantity(self.productA, customer_location, lot_id=lot)
         self.assertEqual(customer_quantity, 10, 'It should be one product in customer')
 
-        """ First we create the return picking for pick pinking.
-        Since we do not have created the return between customer and
-        output. This return should not be available and should only have
-        picking pick as origin move.
-        """
+        # We first try to create the return for the pick, we can't do it since the quantity is
+        # not returnable.
         stock_return_picking_form = Form(self.env['stock.return.picking']
             .with_context(active_ids=picking_pick.ids, active_id=picking_pick.ids[0],
             active_model='stock.picking'))
         stock_return_picking = stock_return_picking_form.save()
         stock_return_picking.product_return_moves.quantity = 10.0
-        stock_return_picking_action = stock_return_picking.create_returns()
-        return_pick_picking = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+        with self.assertRaises(UserError):
+            stock_return_picking_action = stock_return_picking.create_returns()
 
-        self.assertEqual(return_pick_picking.state, 'waiting')
-
+        # Return the ship.
         stock_return_picking_form = Form(self.env['stock.return.picking']
             .with_context(active_ids=picking_ship.ids, active_id=picking_ship.ids[0],
             active_model='stock.picking'))
@@ -481,31 +477,25 @@ class TestPickShip(TestStockCommon):
         return_ship_picking = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
 
         self.assertEqual(return_ship_picking.state, 'assigned', 'Return ship picking should automatically be assigned')
-        """ We created the return for ship picking. The origin/destination
-        link between return moves should have been created during return creation.
-        """
-        self.assertTrue(return_ship_picking.move_lines in return_pick_picking.move_lines.mapped('move_orig_ids'),
-                        'The pick return picking\'s moves should have the ship return picking\'s moves as origin')
-
-        self.assertTrue(return_pick_picking.move_lines in return_ship_picking.move_lines.mapped('move_dest_ids'),
-                        'The ship return picking\'s moves should have the pick return picking\'s moves as destination')
-
         return_ship_picking.move_lines[0].move_line_ids[0].write({
             'qty_done': 10.0,
             'lot_id': lot.id,
         })
         return_ship_picking._action_done()
         self.assertEqual(return_ship_picking.state, 'done')
-        #self.assertEqual(return_pick_picking.state, 'assigned')
 
         customer_quantity = self.env['stock.quant']._get_available_quantity(self.productA, customer_location, lot_id=lot)
         self.assertEqual(customer_quantity, 0, 'It should be one product in customer')
 
         pack_quantity = self.env['stock.quant']._get_available_quantity(self.productA, pack_location, lot_id=lot)
-        self.assertEqual(pack_quantity, 0, 'It should be one product in pack location but is reserved')
 
-        # Should use previous move lot.
-        return_pick_picking.move_lines[0].move_line_ids[0].qty_done = 10.0
+        # Now that the ship is completely returned, we can create the return for the ship.
+        stock_return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=picking_pick.ids, active_id=picking_pick.ids[0],
+            active_model='stock.picking'))
+        stock_return_picking = stock_return_picking_form.save()
+        stock_return_picking_action = stock_return_picking.create_returns()
+        return_pick_picking = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
         return_pick_picking._action_done()
         self.assertEqual(return_pick_picking.state, 'done')
 
@@ -539,43 +529,40 @@ class TestPickShip(TestStockCommon):
         picking_ship.move_lines[0].move_line_ids[0].qty_done = 1.0
         picking_ship._action_done()
 
-        # The quant is in customer
+        self.assertEqual(lot.quant_ids.filtered(lambda q: q.quantity > 0).location_id.id, self.customer_location)
 
+        # Return lot to output.
         stock_return_picking_form = Form(self.env['stock.return.picking']
             .with_context(active_ids=picking_ship.ids, active_id=picking_ship.ids[0],
             active_model='stock.picking'))
         stock_return_picking = stock_return_picking_form.save()
-        #stock_return_picking.product_return_moves.quantity = 1.0
         stock_return_picking_action = stock_return_picking.create_returns()
         return_ship_picking = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
-
-        #return_ship_picking.move_lines[0].move_line_ids[0].write({
-        #    'qty_done': 1.0,
-        #    'lot_id': lot.id,
-        #})
         return_ship_picking._action_done()
 
+        self.assertEqual(lot.quant_ids.filtered(lambda q: q.quantity > 0).location_id.id, self.output_location)
+
+        # Return lot to pack.
         stock_return_picking_form = Form(self.env['stock.return.picking']
-            .with_context(active_ids=picking_pack.ids, active_id=picking_pack.ids[0], debug=True,
+            .with_context(active_ids=picking_pack.ids, active_id=picking_pack.ids[0],
             active_model='stock.picking'))
         stock_return_picking = stock_return_picking_form.save()
-        #stock_return_picking.product_return_moves.quantity = 1.0
         stock_return_picking_action = stock_return_picking.create_returns()
         return_pack_picking = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
-
-        #return_pack_picking.move_lines[0].move_line_ids[0].qty_done = 1.0
         return_pack_picking._action_done()
 
+        self.assertEqual(lot.quant_ids.filtered(lambda q: q.quantity > 0).location_id.id, self.pack_location)
+
+        # Return lot to stock.
         stock_return_picking_form = Form(self.env['stock.return.picking']
             .with_context(active_ids=picking_pick.ids, active_id=picking_pick.ids[0],
             active_model='stock.picking'))
         stock_return_picking = stock_return_picking_form.save()
-        #stock_return_picking.product_return_moves.quantity = 1.0
         stock_return_picking_action = stock_return_picking.create_returns()
         return_pick_picking = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
-
-        #return_pick_picking.move_lines[0].move_line_ids[0].qty_done = 1.0
         return_pick_picking._action_done()
+
+        self.assertEqual(lot.quant_ids.filtered(lambda q: q.quantity > 0).location_id.id, self.stock_location)
 
         # Now that everything is returned we will check if the return moves are correctly linked between them.
         # +--------------------------------------------------------------------------------------------------------+
