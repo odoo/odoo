@@ -239,7 +239,11 @@ var LivechatButton = Widget.extend({
         }
         def.then(function (livechatData) {
             if (!livechatData || !livechatData.operator_pid) {
-                alert(_t("None of our collaborators seem to be available, please try again later."));
+                self.displayNotification({
+                    title: _t("Collaborators offline"),
+                    message: _t("None of our collaborators seem to be available, please try again later."),
+                    sticky: true
+                });
             } else {
                 self._livechat = new WebsiteLivechat({
                     parent: self,
@@ -328,7 +332,15 @@ var LivechatButton = Widget.extend({
         var self = this;
         return session
             .rpc('/mail/chat_post', {uuid: this._livechat.getUUID(), message_content: message.content})
-            .then(function () {
+            .then(function (messageId) {
+                if (!messageId) {
+                    self.displayNotification({
+                        title: _t("Session Expired"),
+                        message: _t("You took to long to send a message. Please refresh the page and try again."),
+                        sticky: true
+                    });
+                    self._closeChat();
+                }
                 self._chatWindow.scrollToBottom();
             });
     },
