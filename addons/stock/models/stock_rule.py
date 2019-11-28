@@ -9,11 +9,22 @@ from psycopg2 import OperationalError
 from odoo import api, fields, models, registry, SUPERUSER_ID, _
 from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, float_compare, float_round
-
 from odoo.exceptions import UserError
 
 import logging
 _logger = logging.getLogger(__name__)
+
+
+class ProcurementException(Exception):
+    """An exception raised by ProcurementGroup `run` containing all the faulty
+    procurements.
+    """
+    def __init__(self, procurement_exceptions):
+        """:param procurement_exceptions: a list of tuples containing the faulty
+        procurement and their error messages
+        :type procurement_exceptions: list
+        """
+        self.procurement_exceptions = procurement_exceptions
 
 
 class StockRule(models.Model):
@@ -210,7 +221,7 @@ class StockRule(models.Model):
         for procurement, rule in procurements:
             if not rule.location_src_id:
                 msg = _('No source location defined on stock rule: %s!') % (rule.name, )
-                raise UserError(msg)
+                raise ProcurementException([(procurement, msg)])
 
             if rule.procure_method == 'mts_else_mto':
                 mtso_products_by_locations[rule.location_src_id].append(procurement.product_id.id)
@@ -352,40 +363,49 @@ class ProcurementGroup(models.Model):
         required=True)
 
     @api.model
-    def run(self, procurements):
+    def run(self, procurements, raise_user_error=True):
         """ Method used in a procurement case. The purpose is to supply the
         product passed as argument in the location also given as an argument.
         In order to be able to find a suitable location that provide the product
         it will search among stock.rule.
         """
+
+        def raise_exception(procurement_errors):
+            if raise_user_error:
+                dummy, errors = zip(*procurement_errors)
+                raise UserError('\n'.join(errors))
+            else:
+                raise ProcurementException(procurement_errors)
+
         actions_to_run = defaultdict(list)
-        errors = []
+        procurement_errors = []
         for procurement in procurements:
             procurement.values.setdefault('company_id', self.env.company)
             procurement.values.setdefault('priority', '1')
             procurement.values.setdefault('date_planned', fields.Datetime.now())
             rule = self._get_rule(procurement.product_id, procurement.location_id, procurement.values)
             if not rule:
-                errors.append(_('No rule has been found to replenish "%s" in "%s".\nVerify the routes configuration on the product.') %
-                    (procurement.product_id.display_name, procurement.location_id.display_name))
+                error = _('No rule has been found to replenish "%s" in "%s".\nVerify the routes configuration on the product.') %\
+                    (procurement.product_id.display_name, procurement.location_id.display_name)
+                procurement_errors.append((procurement, error))
             else:
                 action = 'pull' if rule.action == 'pull_push' else rule.action
                 actions_to_run[action].append((procurement, rule))
 
-        if errors:
-            raise UserError('\n'.join(errors))
+        if procurement_errors:
+            raise_exception(procurement_errors)
 
         for action, procurements in actions_to_run.items():
             if hasattr(self.env['stock.rule'], '_run_%s' % action):
                 try:
                     getattr(self.env['stock.rule'], '_run_%s' % action)(procurements)
-                except UserError as e:
-                    errors.append(e.name)
+                except ProcurementException as e:
+                    procurement_errors += e.procurement_exceptions
             else:
                 _logger.error("The method _run_%s doesn't exist on the procurement rules" % action)
 
-        if errors:
-            raise UserError('\n'.join(errors))
+        if procurement_errors:
+            raise_exception(procurement_errors)
         return True
 
     @api.model
@@ -579,10 +599,10 @@ class ProcurementGroup(models.Model):
                                     try:
                                         with self._cr.savepoint():
                                             #TODO: make it batch
-                                            self.env['procurement.group'].run([self.env['procurement.group'].Procurement(
+                                            self.env['procurement.group'].with_context(from_orderpoint=True).run([self.env['procurement.group'].Procurement(
                                                 orderpoint.product_id, qty_rounded, orderpoint.product_uom,
                                                 orderpoint.location_id, orderpoint.name, orderpoint.name,
-                                                orderpoint.company_id, values)])
+                                                orderpoint.company_id, values)], raise_user_error=False)
                                     except UserError as error:
                                         self.env['stock.rule']._log_next_activity(orderpoint.product_id, error.name)
                                     self._procurement_from_orderpoint_post_process([orderpoint.id])

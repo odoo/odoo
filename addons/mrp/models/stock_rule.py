@@ -5,8 +5,8 @@ from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
 from odoo.osv import expression
+from odoo.addons.stock.models.stock_rule import ProcurementException
 
 
 class StockRule(models.Model):
@@ -41,7 +41,7 @@ class StockRule(models.Model):
             bom = self._get_matching_bom(procurement.product_id, procurement.company_id, procurement.values)
             if not bom:
                 msg = _('There is no Bill of Material of type manufacture or kit found for the product %s. Please define a Bill of Material for this product.') % (procurement.product_id.display_name,)
-                raise UserError(msg)
+                raise ProcurementException([(procurement, msg)])
 
             productions_values_by_company[procurement.company_id.id].append(rule._prepare_mo_vals(*procurement, bom))
 
@@ -115,7 +115,7 @@ class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'
 
     @api.model
-    def run(self, procurements):
+    def run(self, procurements, raise_user_error=True):
         """ If 'run' is called on a kit, this override is made in order to call
         the original 'run' method with the values of the components of that kit.
         """
@@ -138,7 +138,7 @@ class ProcurementGroup(models.Model):
                         procurement.origin, procurement.company_id, values))
             else:
                 procurements_without_kit.append(procurement)
-        return super(ProcurementGroup, self).run(procurements_without_kit)
+        return super(ProcurementGroup, self).run(procurements_without_kit, raise_user_error=raise_user_error)
 
     def _get_moves_to_assign_domain(self):
         domain = super(ProcurementGroup, self)._get_moves_to_assign_domain()
