@@ -1772,7 +1772,7 @@ As soon as a valid `MapBox`_ token is provided in the general settings the view 
 Structural components
 ---------------------
 
-The view's root element is ``<map>`` multiple attributes are allowed
+The view's root element is ``<map>``; it has few allowed attributes. The main ones are
 
 ``res_partner``
     Contains the res.partner many2one. If not provided the view will resort to create an empty  map.
@@ -1780,23 +1780,29 @@ The view's root element is ``<map>`` multiple attributes are allowed
     If a field is provided the view will override the model's default order. The field must be apart of the model on which the view is applied not from res.partner
 ``routing``
     if ``true`` the routes between the records will be shown. The view still needs a valid MapBox token and at least two located records. (i.e the records has a res.partner many2one and the partner has a address or valid coordinates)
+``panel_title``
+    if set, the value will be used as a title for the right-hand panel of the view; if not set, the display name of the underlying model will be used
 
-The only element allowed within the ``<map>`` element is the ``<marker-popup>``. This element is able to contain multiple ``<field>`` elements. Each of these elements will be interpreted as a line in the marker's popup. The field's attributes are the following:
+The map view displays a popup when a marker is clicked; by default, this marker contains the name and address of the target partner. These fields can be controlled using attributes on the map view:
+``hide_name``
+    if ``true``, the name field will *not be included* in the popup
+``hide_address``
+    if ``true``, the address field will *not be included* in the popup
+
+This popup can be extended by adding ``<field>`` elements inside the map view. Each of these fields will be interpreted as a line in the marker's popup. The field's attributes are the following:
 
 ``name``
     The field to display.
 ``string``
-    This string will be displayed before the field's content. It Can be used as a description.
+    This string label. Note that this attribute is *mandatory*, unlike in most other views.
 
 No attribute or element is mandatory but as stated above if no res.partner many2one is provided the view won't be able to locate records.
 
 For example here is a map:
     .. code-block:: xml
 
-        <map res_partner="partner_id" default_order="date_begin" routing="true">
-            <marker-popup>
-                <field name="name" string="Task: "/>
-            </marker-popup>
+        <map res_partner="partner_id" default_order="date_begin" routing="true" hide_address="true">
+            <field name="name" string="Task: "/>
         </map>
 
 .. _reference/views/qweb:
