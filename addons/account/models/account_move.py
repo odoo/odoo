@@ -1022,7 +1022,9 @@ class AccountMove(models.Model):
             is_paid = currency and currency.is_zero(move.amount_residual) or not move.amount_residual
 
             # Compute 'invoice_payment_state'.
-            if move.state == 'posted' and is_paid:
+            if move.type == 'entry':
+                move.invoice_payment_state = False
+            elif move.state == 'posted' and is_paid:
                 if move.id in in_payment_set:
                     move.invoice_payment_state = 'in_payment'
                 else:
