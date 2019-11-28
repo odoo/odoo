@@ -236,6 +236,6 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         po_line = self.env['purchase.order.line'].search([
             ('product_id', '=', product_1.id),
         ])
-        self.assertEqual(len(po_line), 2, 'the purchase order lines are not merged')
+        self.assertEqual(len(po_line), 2, 'the purchase order lines are merged')
         self.assertEqual(po_line[0].product_qty, 10, 'the purchase order line has a wrong quantity')
         self.assertEqual(po_line[1].product_qty, 5, 'the purchase order line has a wrong quantity')
