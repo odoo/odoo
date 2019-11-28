@@ -350,6 +350,9 @@ class Lang(models.Model):
 
         mods._update_translations(filter_lang=self.mapped('code'), overwrite=overwrite)
 
+    def action_download_translation_files(self):
+        self._download_translation_files()
+
     @api.model
     def install_lang(self):
         """
