@@ -30,7 +30,7 @@ class ResPartnerBank(models.Model):
         elif acc_number and re.match('\d{3,4}-\d{4}', acc_number):
             return 'bankgiro'
         else:
-            super(ResPartnerBank, bank).retrieve_acc_type(acc_number)
+            super(ResPartnerBank, self).retrieve_acc_type(acc_number)
 
     @api.constrains('acc_number')
     def acc_number_constrains(self):
