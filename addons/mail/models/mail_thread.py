@@ -2071,6 +2071,15 @@ class MailThread(models.AbstractModel):
         # canned_response_ids are added by js to be used by other computations (odoobot)
         # we need to pop it from values since it is not stored on mail.message
         canned_response_ids = values.pop('canned_response_ids', False)
+        
+        if(model == 'helpdesk.ticket'):
+            if(self.partner_id.id == author_id):
+                values['subtype_id'] = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment')
+            if(author_id == 2):
+                values['subtype_id'] = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note')
+                if(len(self.message_ids) == 1):
+                    values['subtype_id'] = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment')
+
         new_message = MailMessage.create(values)
         values['canned_response_ids'] = canned_response_ids
         self._message_post_after_hook(new_message, values, model_description=model_description, mail_auto_delete=mail_auto_delete)
