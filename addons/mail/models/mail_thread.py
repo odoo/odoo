@@ -997,11 +997,9 @@ class MailThread(models.AbstractModel):
         Alias, dest_aliases = self.env['mail.alias'], self.env['mail.alias']
         catchall_alias = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.alias")
         bounce_alias = self.env['ir.config_parameter'].sudo().get_param("mail.bounce.alias")
-        alias_domain = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.domain")
         fallback_model = model
 
         # get email.message.Message variables for future processing
-        local_hostname = socket.gethostname()
         message_id = message.get('Message-Id')
 
         # compute references to find if message is a reply to an existing thread
@@ -1017,7 +1015,6 @@ class MailThread(models.AbstractModel):
         email_to_localparts = [
             e.split('@', 1)[0].lower()
             for e in (tools.email_split(email_to) or [''])
-            if not alias_domain or e.endswith('@%s' % alias_domain)
         ]
 
         # Delivered-To is a safe bet in most modern MTAs, but we have to fallback on To + Cc values
@@ -1031,7 +1028,6 @@ class MailThread(models.AbstractModel):
         rcpt_tos_localparts = [
             e.split('@')[0].lower()
             for e in tools.email_split(rcpt_tos)
-            if not alias_domain or e.endswith('@%s' % alias_domain)
         ]
 
         # 0. Verify whether this is a bounced email and use it to collect bounce data and update notifications for customers
