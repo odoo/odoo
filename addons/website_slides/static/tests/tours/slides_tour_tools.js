@@ -32,6 +32,9 @@ var addVideoToSection = function (sectionName, saveAsDraft) {
 	content: 'eLearning: click on video',
 	trigger: 'a[data-slide-type=video]',
 }, {
+    content: 'Who needs titles ?',
+    trigger: 'input[name=name]',
+}, {
 	content: 'eLearning: fill video link',
 	trigger: 'input[name=url]',
 	run: 'text https://www.youtube.com/watch?v=NvS351QKFV4&list=PLtVFNIekBzqIfO4u4n78i43etfw2n1St8&index=2&t=0s',
