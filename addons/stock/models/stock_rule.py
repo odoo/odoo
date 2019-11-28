@@ -294,6 +294,7 @@ class StockRule(models.Model):
             'description_picking': product_id._get_description(self.picking_type_id),
             'priority': values.get('priority', "1"),
             'delay_alert': self.delay_alert,
+            'orderpoint_id': values.get('orderpoint_id') and values['orderpoint_id'].id,
         }
         for field in self._get_custom_move_fields():
             if field in values:
