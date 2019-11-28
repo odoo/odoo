@@ -310,10 +310,10 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             };
             self.fields.partner_id.appendTo(self.$('.accounting_view caption'));
         });
-        session.user_has_group('analytic.group_analytic_tags').then(function(has_group) {
+        var def3 = session.user_has_group('analytic.group_analytic_tags').then(function(has_group) {
                 self.group_tags = has_group;
             });
-        session.user_has_group('analytic.group_analytic_accounting').then(function(has_group) {
+        var def4 = session.user_has_group('analytic.group_analytic_accounting').then(function(has_group) {
                 self.group_acc = has_group;
             });
         $('<span class="line_info_button fa fa-info-circle"/>')
@@ -329,7 +329,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             'toggle': 'popover'
         });
         var def2 = this._super.apply(this, arguments);
-        return $.when(def1, def2);
+        return $.when(def1, def2, def3, def4);
     },
 
     //--------------------------------------------------------------------------
