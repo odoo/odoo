@@ -29,10 +29,12 @@ class WebsiteVisitor(models.Model):
 
     @api.depends('mail_channel_ids')
     def _compute_session_count(self):
-        sessions = self.env['mail.channel'].read_group([('livechat_visitor_id', 'in', self.ids)], ['livechat_visitor_id'], ['livechat_visitor_id'])
-        sessions_count = {session['livechat_visitor_id'][0]: session['livechat_visitor_id_count'] for session in sessions}
+        sessions = self.env['mail.channel'].search([('livechat_visitor_id', 'in', self.ids)])
+        session_count = dict.fromkeys(self.ids, 0)
+        for session in sessions.filtered(lambda c: c.channel_message_ids):
+            session_count[session.livechat_visitor_id.id] += 1
         for visitor in self:
-            visitor.session_count = sessions_count.get(visitor.id, 0)
+            visitor.session_count = session_count.get(visitor.id, 0)
 
     def action_send_chat_request(self):
         """ Send a chat request to website_visitor(s).

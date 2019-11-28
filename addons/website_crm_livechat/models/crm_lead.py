@@ -17,5 +17,5 @@ class Lead(models.Model):
     def action_redirect_to_livechat_sessions(self):
         visitors = self.visitor_ids
         action = self.env.ref('website_livechat.website_visitor_livechat_session_action').read()[0]
-        action['domain'] = [('livechat_visitor_id', 'in', visitors.ids)]
+        action['domain'] = [('livechat_visitor_id', 'in', visitors.ids), ('channel_message_ids', '!=', False)]
         return action
