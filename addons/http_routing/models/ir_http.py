@@ -329,7 +329,7 @@ class IrHttp(models.AbstractModel):
         """ Return a domain to list the domain adding web-translations and
             dynamic resources that may be used frontend views
         """
-        return []
+        return [('name', '=', 'web')]
 
     bots = "bot|crawl|slurp|spider|curl|wget|facebookexternalhit".split("|")
 
@@ -397,8 +397,9 @@ class IrHttp(models.AbstractModel):
                 lang = Lang._lang_get(nearest_lang)
             else:
                 nearest_ctx_lg = not is_a_bot and cls.get_nearest_lang(request.env.context['lang'])
-                preferred_lang = Lang._lang_get(cook_lang or nearest_ctx_lg) or cls._get_default_lang()
-                lang = preferred_lang
+                nearest_ctx_lg = nearest_ctx_lg in lang_codes and nearest_ctx_lg
+                preferred_lang = Lang._lang_get(cook_lang or nearest_ctx_lg)
+                lang = preferred_lang or cls._get_default_lang()
 
             request.lang = lang
             context['lang'] = lang.code

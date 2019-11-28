@@ -253,6 +253,7 @@ class SaleOrder(models.Model):
                     'quantity': quantity,
                     'date': order.date_order,
                     'pricelist': order.pricelist_id.id,
+                    'force_company': order.company_id.id,
                 })
                 product_with_context = self.env['product.product'].with_context(product_context)
                 product = product_with_context.browse(product_id)

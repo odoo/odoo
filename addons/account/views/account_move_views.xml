@@ -722,6 +722,7 @@
                                         <field name="account_internal_type" invisible="1"/>
                                     </tree>
                                     <kanban class="o_kanban_mobile">
+                                        <!-- Displayed fields -->
                                         <field name="name"/>
                                         <field name="product_id"/>
                                         <field name="price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
@@ -774,6 +775,28 @@
                                                 </div>
                                             </t>
                                         </templates>
+
+                                        <!-- Others fields -->
+                                        <field name="partner_id" invisible="1"/>
+                                        <field name="amount_currency" invisible="1"/>
+                                        <field name="currency_id" invisible="1"/>
+                                        <field name="debit" invisible="1"/>
+                                        <field name="credit" invisible="1"/>
+                                        <field name="date" invisible="1"/>
+                                        <field name="date_maturity" invisible="1"/>
+
+                                        <field name="tax_line_id" invisible="1"/>
+                                        <field name="tax_repartition_line_id" invisible="1"/>
+                                        <field name="tag_ids" invisible="1"/>
+                                        <field name="tax_base_amount" invisible="1"/>
+                                        <field name="tax_exigible" invisible="1"/>
+                                        <field name="company_id" invisible="1"/>
+                                        <field name="company_currency_id" invisible="1"/>
+                                        <field name="recompute_tax_line" invisible="1" force_save="1"/>
+                                        <field name="display_type" force_save="1" invisible="1"/>
+                                        <field name="is_rounding_line" invisible="1"/>
+                                        <field name="exclude_from_invoice_tab" invisible="1"/>
+                                        <field name="account_internal_type" invisible="1"/>
                                     </kanban>
                                     <form>
                                         <sheet>
