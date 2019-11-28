@@ -40,6 +40,7 @@ class StockRule(models.Model):
     @api.model
     def _run_buy(self, procurements):
         procurements_by_po_domain = defaultdict(list)
+        errors = []
         for procurement, rule in procurements:
 
             # Get the schedule date in order to find a valid seller
@@ -53,7 +54,7 @@ class StockRule(models.Model):
 
             if not supplier:
                 msg = _('There is no matching vendor price to generate the purchase order for product %s (no vendor defined, minimum quantity not reached, dates not valid, ...). Go on the product form and complete the list of vendors.') % (procurement.product_id.display_name)
-                raise ProcurementException([(procurement, msg)])
+                errors.append((procurement, msg))
 
             partner = supplier.name
             # we put `supplier_info` in values for extensibility purposes
@@ -65,6 +66,9 @@ class StockRule(models.Model):
 
             domain = rule._make_po_get_domain(procurement.company_id, procurement.values, partner)
             procurements_by_po_domain[domain].append((procurement, rule))
+
+        if errors:
+            raise ProcurementException(errors)
 
         for domain, procurements_rules in procurements_by_po_domain.items():
             # Get the procurements for the current domain.

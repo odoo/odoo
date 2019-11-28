@@ -117,6 +117,12 @@ class StockWarehouseOrderpoint(models.Model):
                     raise UserError(_("Changing the company of this record is forbidden at this point, you should rather archive it and create a new one."))
         return super().write(vals)
 
+    def _get_product_context(self):
+        """Used to call `virtual_available` when running an orderpoint."""
+        self.ensure_one()
+        return {
+            'location': self.location_id.id,
+        }
 
     def _prepare_procurement_values(self, product_qty, date=False, group=False):
         """ Prepare specific key for moves or other components that will be created from a stock rule
@@ -130,3 +136,6 @@ class StockWarehouseOrderpoint(models.Model):
             'orderpoint_id': self,
             'group_id': group or self.group_id,
         }
+
+    def _post_process_scheduler(self):
+        return True
