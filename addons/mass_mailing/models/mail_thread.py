@@ -21,7 +21,14 @@ class MailThread(models.AbstractModel):
         """ Override to udpate mass mailing statistics based on bounce emails """
         bounce_alias = self.env['ir.config_parameter'].sudo().get_param("mail.bounce.alias")
         email_to = decode_message_header(message, 'To')
+<<<<<<< HEAD
         email_to_localpart = (tools.email_split(email_to) or [''])[0].split('@', 1)[0].lower()
+=======
+        email_to_localparts = [
+            e.split('@', 1)[0].lower()
+            for e in (tools.email_split(email_to) or [''])
+        ]
+>>>>>>> b905babe3f2... temp
 
         if bounce_alias and bounce_alias in email_to_localpart:
             bounce_re = re.compile("%s\+(\d+)-?([\w.]+)?-?(\d+)?" % re.escape(bounce_alias), re.UNICODE)
