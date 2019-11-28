@@ -126,11 +126,20 @@ class StockRule(models.Model):
 
     @api.model
     def _get_procurements_to_merge_groupby(self, procurement):
-        return procurement.product_id, procurement.product_uom, procurement.values['propagate_date'], procurement.values['propagate_date_minimum_delta'], procurement.values['propagate_cancel']
+        # Do not group procument from different orderpoint. 1. _quantity_in_progress
+        # directly depends from the orderpoint_id on the line. 2. The stock move
+        # generated from the order line has the orderpoint's location as
+        # destination location. In case of move_dest_ids those two points are not
+        # necessary anymore since those values are taken from destination moves.
+        return procurement.product_id, procurement.product_uom, procurement.values['propagate_date'],\
+            procurement.values['propagate_date_minimum_delta'], procurement.values['propagate_cancel'],\
+            (procurement.values.get('orderpoint_id') and not procurement.values.get('move_dest_ids')) and procurement.values['orderpoint_id']
 
     @api.model
     def _get_procurements_to_merge_sorted(self, procurement):
-        return procurement.product_id.id, procurement.product_uom.id, procurement.values['propagate_date'], procurement.values['propagate_date_minimum_delta'], procurement.values['propagate_cancel']
+        return procurement.product_id.id, procurement.product_uom.id, procurement.values['propagate_date'],\
+            procurement.values['propagate_date_minimum_delta'], procurement.values['propagate_cancel'],\
+            (procurement.values.get('orderpoint_id') and not procurement.values.get('move_dest_ids')) and procurement.values['orderpoint_id']
 
     @api.model
     def _get_procurements_to_merge(self, procurements):
