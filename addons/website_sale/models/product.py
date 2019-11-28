@@ -138,7 +138,7 @@ class ProductPublicCategory(models.Model):
     _order = "sequence, name"
 
     name = fields.Char(required=True, translate=True)
-    parent_id = fields.Many2one('product.public.category', string='Parent Category', index=True)
+    parent_id = fields.Many2one('product.public.category', string='Parent Category', index=True, ondelete="cascade")
     parent_path = fields.Char(index=True)
     child_id = fields.One2many('product.public.category', 'parent_id', string='Children Categories')
     parents_and_self = fields.Many2many('product.public.category', compute='_compute_parents_and_self')
