@@ -6,7 +6,6 @@ from dateutil import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.osv import expression
 
 
@@ -63,12 +62,6 @@ class StockWarehouseOrderpoint(models.Model):
     company_id = fields.Many2one(
         'res.company', 'Company', required=True, index=True,
         default=lambda self: self.env.company)
-    lead_days = fields.Integer(
-        'Lead Time', default=1,
-        help="Number of days after the orderpoint is triggered to receive the products or to order to the vendor")
-    lead_type = fields.Selection(
-        [('net', 'Days to get the products'), ('supplier', 'Days to purchase')], 'Lead Type',
-        required=True, default='supplier')
     allowed_location_ids = fields.One2many(comodel_name='stock.location', compute='_compute_allowed_location_ids')
 
     _sql_constraints = [
@@ -124,24 +117,15 @@ class StockWarehouseOrderpoint(models.Model):
                     raise UserError(_("Changing the company of this record is forbidden at this point, you should rather archive it and create a new one."))
         return super().write(vals)
 
-    def _get_date_planned(self, product_qty, start_date):
-        days = self.lead_days or 0.0
-        if self.lead_type == 'supplier':
-            # These days will be substracted when creating the PO
-            days += self.product_id._select_seller(
-                quantity=product_qty,
-                date=fields.Date.context_today(self,start_date),
-                uom_id=self.product_uom).delay or 0.0
-        date_planned = start_date + relativedelta.relativedelta(days=days)
-        return date_planned.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
     def _prepare_procurement_values(self, product_qty, date=False, group=False):
         """ Prepare specific key for moves or other components that will be created from a stock rule
         comming from an orderpoint. This method could be override in order to add other custom key that could
         be used in move/po creation.
         """
+        date_planned = date or fields.Date.today()
         return {
-            'date_planned': date or self._get_date_planned(product_qty, datetime.today()),
+            'date_planned': date_planned,
             'warehouse_id': self.warehouse_id,
             'orderpoint_id': self,
             'group_id': group or self.group_id,
