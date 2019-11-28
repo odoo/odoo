@@ -225,7 +225,7 @@ class Survey(models.Model):
         self.check_access_rights('read')
         self.check_access_rule('read')
 
-        answers = self.env['survey.user_input']
+        user_inputs = self.env['survey.user_input']
         for survey in self:
             if partner and not user and partner.user_ids:
                 user = partner.user_ids[0]
@@ -254,9 +254,14 @@ class Survey(models.Model):
                 answer_vals['invite_token'] = self.env['survey.user_input']._generate_invite_token()
 
             answer_vals.update(additional_vals)
-            answers += answers.create(answer_vals)
+            user_inputs += user_inputs.create(answer_vals)
 
-        return answers
+        for question in self.mapped('question_ids').filtered(lambda q: q.question_type == 'char_box' and q.save_as_email):
+            for user_input in user_inputs:
+                if user_input.email:
+                    user_input.save_lines(question, user_input.email)
+
+        return user_inputs
 
     def _check_answer_creation(self, user, partner, email, test_entry=False, check_attempts=True, invite_token=False):
         """ Ensure conditions to create new tokens are met. """

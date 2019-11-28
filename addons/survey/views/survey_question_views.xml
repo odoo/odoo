@@ -97,7 +97,9 @@
                     <notebook attrs="{'invisible': [('is_page', '=', True)]}">
                         <page string="Answers">
                             <field name="validation_email" attrs="{'invisible': [('question_type', '!=', 'char_box')]}"/>
-                            <label for="validation_email" attrs="{'invisible': [('question_type', '!=', 'char_box')]}"/>
+                            <label for="validation_email" attrs="{'invisible': [('question_type', '!=', 'char_box')]}"/><br/>
+                            <field name="save_as_email" attrs="{'invisible': ['|', ('question_type', '!=', 'char_box'), ('validation_email', '=', False)]}"/>
+                            <label for="save_as_email" attrs="{'invisible': ['|', ('question_type', '!=', 'char_box'), ('validation_email', '=', False)]}"/>
                             <field name="page_id" invisible="1" required="0"/>
                             <field name="survey_id" invisible="1" readonly="1"/>
                             <field name="scoring_type" invisible="1"/>
