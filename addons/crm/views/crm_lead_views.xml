@@ -426,7 +426,7 @@
         <record id="crm_case_form_view_oppor" model="ir.ui.view">
             <field name="name">crm.lead.form.opportunity</field>
             <field name="model">crm.lead</field>
-            <field name="priority">20</field>
+            <field name="priority">15</field>
             <field name="arch" type="xml">
                 <form string="Opportunities" class="o_opportunity_form">
                     <header>
@@ -800,6 +800,7 @@ for rec in records:
                           (0, 0, {'view_mode': 'tree', 'view_id': ref('crm_case_tree_view_leads')}),
                           (0, 0, {'view_mode': 'kanban', 'view_id': ref('view_crm_lead_kanban')})]"/>
             <field name="search_view_id" ref="crm.view_crm_case_leads_filter"/>
+            <field name="view_id" ref="crm.crm_case_form_view_leads"/>
             <field name="context">{
                     'default_type':'lead',
                     'search_default_type': 'lead',
