@@ -14,7 +14,20 @@ class HrEmployee(models.Model):
     attendance_state = fields.Selection(string="Attendance Status", compute='_compute_attendance_state', selection=[('checked_out', "Checked out"), ('checked_in', "Checked in")])
     hours_last_month = fields.Float(compute='_compute_hours_last_month')
 
+<<<<<<< HEAD
     def _compute_hours_last_month(self):
+=======
+    _sql_constraints = [('barcode_uniq', 'unique (barcode)', "The Badge ID must be unique, this one is already assigned to another employee.")]
+
+    @api.multi
+    def _compute_manual_attendance(self):
+        for employee in self:
+            employee.manual_attendance = employee.user_id.has_group('hr_attendance.group_hr_attendance') if employee.user_id else False
+
+    @api.multi
+    def _inverse_manual_attendance(self):
+        manual_attendance_group = self.env.ref('hr_attendance.group_hr_attendance').sudo()
+>>>>>>> 05631f558ce... temp
         for employee in self:
             now = datetime.now()
             start = now + relativedelta(months=-1, day=1)
