@@ -4,6 +4,7 @@
 
     <record id="fiscal_position_template_1" model="account.fiscal.position.template">
         <field name="name">Regim National</field>
+        <field name="country_id" ref="base.ro"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
     </record>
 
@@ -14,16 +15,19 @@
 
     <record id="fiscal_position_template_8" model="account.fiscal.position.template">
         <field name="name">Regim TVA la Incasare</field>
+        <field name="vat_required" eval="True"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
     </record>
 
     <record id="fiscal_position_template_3" model="account.fiscal.position.template">
         <field name="name">Regim Intra-Comunitar Bunuri</field>
+        <field name="country_group_id" ref="base.europe"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
     </record>
 
     <record id="fiscal_position_template_4" model="account.fiscal.position.template">
         <field name="name">Regim Intra-Comunitar Servicii</field>
+        <field name="country_group_id" ref="base.europe"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
     </record>
 
@@ -41,6 +45,7 @@
 
     <record id="fiscal_position_template_6" model="account.fiscal.position.template">
         <field name="name">Regim Intra-Comunitar Neimpozabile</field>
+        <field name="country_group_id" ref="base.europe"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
     </record>
 
