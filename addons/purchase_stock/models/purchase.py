@@ -408,6 +408,17 @@ class PurchaseOrderLine(models.Model):
             res.append(template)
         return res
 
+    @api.model
+    def _prepare_purchase_order_line_from_procurement(self, product_id, product_qty, product_uom, company_id, values, po):
+        supplier = values.get('supplier')
+        res = self._prepare_purchase_order_line(product_id, product_qty, product_uom, company_id, supplier, po)
+        res['move_dest_ids'] = [(4, x.id) for x in values.get('move_dest_ids', [])]
+        res['orderpoint_id'] = values.get('orderpoint_id', False) and values.get('orderpoint_id').id
+        res['propagate_cancel'] = values.get('propagate_cancel')
+        res['propagate_date'] = values.get('propagate_date')
+        res['propagate_date_minimum_delta'] = values.get('propagate_date_minimum_delta')
+        return res
+
     def _create_stock_moves(self, picking):
         values = []
         for line in self.filtered(lambda l: not l.display_type):
