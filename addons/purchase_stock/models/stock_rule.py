@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from itertools import groupby
 
@@ -289,6 +290,12 @@ class StockRule(models.Model):
             ('picking_type_id', '=', self.picking_type_id.id),
             ('company_id', '=', company_id.id),
         )
+        if values.get('orderpoint_id'):
+            procurement_date = fields.Date.to_date(values['date_planned']) - relativedelta(days=int(values['supplier'].delay) + company_id.po_lead)
+            domain += (
+                ('date_order', '<=', datetime.combine(procurement_date, datetime.max.time())),
+                ('date_order', '>=', datetime.combine(procurement_date, datetime.min.time()))
+            )
         if group:
             domain += (('group_id', '=', group.id),)
         return domain
