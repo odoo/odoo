@@ -189,6 +189,7 @@ class PosOrder(models.Model):
             'price_unit': order_line.price_unit,
             'name': order_line.product_id.display_name,
             'tax_ids': [(6, 0, order_line.tax_ids.ids)],
+            'product_uom_id': order_line.product_uom_id.id,
         }
 
     def _get_pos_anglo_saxon_price_unit(self, product, partner_id, quantity):
