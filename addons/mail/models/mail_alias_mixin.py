@@ -16,6 +16,7 @@ class AliasMixin(models.AbstractModel):
     _name = 'mail.alias.mixin'
     _inherits = {'mail.alias': 'alias_id'}
     _description = 'Email Aliases Mixin'
+    ALIAS_WRITEABLE_FIELDS = ['alias_name', 'alias_contact', 'alias_defaults']
 
     alias_id = fields.Many2one('mail.alias', string='Alias', ondelete="restrict", required=True)
 
@@ -23,27 +24,53 @@ class AliasMixin(models.AbstractModel):
     # CRUD
     # --------------------------------------------------
 
-    @api.model
-    def create(self, vals):
-        """ Create a record with ``vals``, and create a corresponding alias. """
-        new_alias = not 'alias_id' in vals
-        if new_alias:
-            alias_vals, record_vals = self._alias_filter_fields(vals)
-            alias_vals.update(self._alias_get_creation_values())
-            alias = self.env['mail.alias'].create(alias_vals)
-            record_vals['alias_id'] = alias.id
+    @api.model_create_multi
+    def create(self, vals_list):
+        """ Create a record with each ``vals`` or ``vals_list`` and create a corresponding alias. """
+        valid_vals_list = []
+        for vals in vals_list:
+            new_alias = not vals.get('alias_id')
+            if new_alias:
+                alias_vals, record_vals = self._alias_filter_fields(vals)
+                alias_vals.update(self._alias_get_creation_values())
+                alias = self.env['mail.alias'].sudo().create(alias_vals)
+                record_vals['alias_id'] = alias.id
+                valid_vals_list.append(record_vals)
+            else:
+                valid_vals_list.append(vals)
 
-        record = super(AliasMixin, self).create(record_vals)
-        alias.sudo().write(record._alias_get_creation_values())
+        records = super(AliasMixin, self).create(valid_vals_list)
 
-        return record
+        for record in records:
+            record.alias_id.sudo().write(record._alias_get_creation_values())
+
+        return records
+
+    def write(self, vals):
+        """ Split writable fields of mail.alias and other fields alias fields will
+        write with sudo and the other normally """
+        alias_vals, record_vals = self._alias_filter_fields(vals, filters=self.ALIAS_WRITEABLE_FIELDS)
+        if record_vals:
+            super(AliasMixin, self).write(record_vals)
+        if alias_vals and (record_vals or self.check_access_rights('write', raise_exception=False)):
+            self.mapped('alias_id').sudo().write(alias_vals)
+
+        return True
 
     def unlink(self):
         """ Delete the given records, and cascade-delete their corresponding alias. """
         aliases = self.mapped('alias_id')
         res = super(AliasMixin, self).unlink()
-        aliases.unlink()
+        aliases.sudo().unlink()
         return res
+
+    @api.returns(None, lambda value: value[0])
+    def copy_data(self, default=None):
+        data = super(AliasMixin, self).copy_data(default)[0]
+        for fields_not_writable in set(self.env['mail.alias']._fields.keys()) - set(self.ALIAS_WRITEABLE_FIELDS):
+            if fields_not_writable in data:
+                del data[fields_not_writable]
+        return [data]
 
     def _init_column(self, name):
         """ Create aliases for existing rows. """
