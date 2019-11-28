@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 from itertools import groupby
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.addons.stock.models.stock_rule import ProcurementException
 
 
 class StockRule(models.Model):
@@ -53,7 +53,7 @@ class StockRule(models.Model):
 
             if not supplier:
                 msg = _('There is no matching vendor price to generate the purchase order for product %s (no vendor defined, minimum quantity not reached, dates not valid, ...). Go on the product form and complete the list of vendors.') % (procurement.product_id.display_name)
-                raise UserError(msg)
+                raise ProcurementException([(procurement, msg)])
 
             partner = supplier.name
             # we put `supplier_info` in values for extensibility purposes
