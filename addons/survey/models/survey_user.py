@@ -7,7 +7,7 @@ import uuid
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -38,7 +38,7 @@ class SurveyUserInput(models.Model):
     access_token = fields.Char('Identification token', default=lambda self: str(uuid.uuid4()), readonly=True, required=True, copy=False)
     invite_token = fields.Char('Invite token', readonly=True, copy=False)  # no unique constraint, as it identifies a pool of attempts
     partner_id = fields.Many2one('res.partner', string='Partner', readonly=True)
-    email = fields.Char('E-mail', readonly=True)
+    email = fields.Char('Email', readonly=True)
     # questions / answers
     user_input_line_ids = fields.One2many('survey.user_input.line', 'user_input_id', string='Answers', copy=True)
     predefined_question_ids = fields.Many2many('survey.question', string='Predefined Questions', readonly=True)
@@ -199,6 +199,8 @@ class SurveyUserInput(models.Model):
 
         if question.question_type in ['char_box', 'text_box', 'numerical_box', 'date', 'datetime']:
             self._save_line_simple_answer(question, old_answers, answer)
+            if question.save_as_email and answer:
+                self.write({'email': answer})
         elif question.question_type in ['simple_choice', 'multiple_choice']:
             self._save_line_choice(question, old_answers, answer, comment)
         elif question.question_type == 'matrix':
