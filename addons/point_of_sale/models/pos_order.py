@@ -128,6 +128,7 @@ class PosOrder(models.Model):
 
         self._process_payment_lines(order, pos_order, pos_session, draft)
 
+<<<<<<< HEAD
         if not draft:
             try:
                 pos_order.action_pos_order_paid()
@@ -136,6 +137,28 @@ class PosOrder(models.Model):
                 raise
             except Exception as e:
                 _logger.error('Could not fully process the POS Order: %s', tools.ustr(e))
+=======
+    def _prepare_invoice(self):
+        """
+        Prepare the dict of values to create the new invoice for a pos order.
+        """
+        invoice_type = 'out_invoice' if self.amount_total >= 0 else 'out_refund'
+        return {
+            'name': self.name,
+            'origin': self.name,
+            'account_id': self.partner_id.property_account_receivable_id.id,
+            'journal_id': self.session_id.config_id.invoice_journal_id.id,
+            'company_id': self.company_id.id,
+            'type': invoice_type,
+            'reference': self.name,
+            'partner_id': self.partner_id.id,
+            'comment': self.note or '',
+            # considering partner's sale pricelist's currency
+            'currency_id': self.pricelist_id.currency_id.id,
+            'user_id': self.user_id.id,
+            'fiscal_position_id': self.fiscal_position_id.id,
+        }
+>>>>>>> 88909abf639... temp
 
         if pos_order.to_invoice and pos_order.state == 'paid':
             pos_order.action_pos_order_invoice()
