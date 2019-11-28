@@ -17,7 +17,9 @@ class Project(models.Model):
             ('partner_id', '=?', partner_id),
         ]"""
     )
-    allow_timesheet_timer = fields.Boolean('Timesheet Timer', default=False, help="Use a timer to record timesheets on tasks")
+    allow_timesheet_timer = fields.Boolean(
+        'Timesheet Timer', compute='_compute_allow_timesheet_timer', readonly=False, store=True,
+        default=True, help="Use a timer to record timesheets on tasks")
 
     _sql_constraints = [
         ('timer_only_when_timesheet', "CHECK((allow_timesheets = 'f' AND allow_timesheet_timer = 'f') OR (allow_timesheets = 't'))", 'The timesheet timer can only be activated on project allowing timesheets.'),
@@ -34,10 +36,10 @@ class Project(models.Model):
             if project.allow_timesheets and not project.analytic_account_id:
                 raise ValidationError(_('To allow timesheet, your project %s should have an analytic account set.' % (project.name,)))
 
-    @api.onchange('allow_timesheets')
-    def _onchange_allow_timesheets(self):
-        if not self.allow_timesheets:
-            self.allow_timesheet_timer = False
+    @api.depends('allow_timesheets')
+    def _compute_allow_timesheet_timer(self):
+        for project in self:
+            project.allow_timesheet_timer = project.allow_timesheets
 
     @api.model
     def name_create(self, name):

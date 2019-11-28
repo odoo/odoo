@@ -243,10 +243,10 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
                 self.assertEqual(task.company_id, self.company_b, "The company of the task should be the one from its project.")
 
                 with Form(self.task_1) as task_form:
-                    task_form.project_id = self.env['project.project']  # False is not accepted by the form
+                    task_form.project_id = self.project_company_a
                 task = task_form.save()
 
-                self.assertEqual(task.company_id, self.company_b, "Making a task orphan does not change its company.")
+                self.assertEqual(task.company_id, self.company_a, "Moving a task should change its company.")
 
     def test_create_subtask(self):
         with self.sudo('employee-a'):
@@ -272,7 +272,7 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
 
     def test_cross_subtask_project(self):
         # set up default subtask project
-        self.project_company_a.write({'subtask_project_id': self.project_company_b.id})
+        self.project_company_a.write({'allow_subtasks': True, 'subtask_project_id': self.project_company_b.id})
 
         with self.sudo('employee-a'):
             with self.allow_companies([self.company_a.id, self.company_b.id]):
