@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import Form, TransactionCase
 from odoo.tools import mute_logger
 
 
@@ -166,6 +166,46 @@ class TestProcRule(TransactionCase):
         self.assertAlmostEqual(move_orig.date_expected, move_orig_initial_date, delta=timedelta(seconds=10), msg='schedule date should not be impacted by action_done')
         self.assertAlmostEqual(move_orig.date, datetime.now(), delta=timedelta(seconds=10), msg='date should be now')
         self.assertAlmostEqual(move_dest.date_expected, move_dest_initial_date + timedelta(days=6), delta=timedelta(seconds=10), msg='date should be propagated')
+
+    def test_reordering_rule_1(self):
+        warehouse = self.env['stock.warehouse'].search([], limit=1)
+        orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
+        orderpoint_form.product_id = self.product
+        orderpoint_form.location_id = warehouse.lot_stock_id
+        orderpoint_form.product_min_qty = 0.0
+        orderpoint_form.product_max_qty = 5.0
+        orderpoint_form.save()
+
+        self.env['stock.rule'].create({
+            'name': 'Rule Supplier',
+            'route_id': warehouse.reception_route_id.id,
+            'location_id': warehouse.lot_stock_id.id,
+            'location_src_id': self.env.ref('stock.stock_location_suppliers').id,
+            'action': 'pull',
+            'delay': 9.0,
+            'procure_method': 'make_to_stock',
+            'picking_type_id': warehouse.in_type_id.id,
+        })
+
+        delivery_move = self.env['stock.move'].create({
+            'name': 'Delivery',
+            'date_expected': datetime.today() + timedelta(days=5),
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 12.0,
+            'location_id': warehouse.lot_stock_id.id,
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+        })
+        delivery_move._action_confirm()
+        self.env['procurement.group'].run_scheduler()
+
+        receipt_move = self.env['stock.move'].search([
+            ('product_id', '=', self.product.id),
+            ('location_id', '=', self.env.ref('stock.stock_location_suppliers').id)
+        ])
+        self.assertTrue(receipt_move)
+        self.assertEqual(receipt_move.date_expected.date(), date.today())
+        self.assertEqual(receipt_move.product_uom_qty, 17.0)
 
 
 class TestProcRuleLoad(TransactionCase):

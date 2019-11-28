@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <div t-name="stock.leadDaysPopOver">
+        <p>
+            If the forecasted stock on the <t t-esc="lead_days_date"/> is below the minimum quantity, replenishment will be triggered.
+        </p>
+        <table t-if="lead_days_description" class="table table-borderless">
+            <tbody>
+                <tr>
+                    <td>
+                        Today
+                    </td>
+                    <td>
+                        <t t-esc="today"/>
+                    </td>
+                </tr>
+                <t t-raw="lead_days_description"/>
+                <tr class="table-info">
+                    <td>
+                        Forecasted Date
+                    </td>
+                    <td>
+                        = <t t-esc="lead_days_date"/>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</templates>

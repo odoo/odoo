@@ -9,7 +9,7 @@ from psycopg2 import OperationalError
 
 from odoo import api, fields, models, registry, SUPERUSER_ID, _
 from odoo.osv import expression
-from odoo.tools import float_compare, float_round, frozendict
+from odoo.tools import float_compare, float_round, frozendict, html_escape
 from odoo.exceptions import UserError
 
 import logging
@@ -322,6 +322,19 @@ class StockRule(models.Model):
                 note=note,
                 user_id=product_id.responsible_id.id or SUPERUSER_ID,
             )
+
+    def _get_lead_days(self, product):
+        """Returns the cumulative delay and its description encountered by a
+        procurement going through the rules in `self`.
+
+        :param product: the product of the procurement
+        :type product: :class:`~odoo.addons.product.models.product.ProductProduct`
+        :return: the cumulative delay and cumulative delay's description
+        :rtype: tuple
+        """
+        delay = sum(self.filtered(lambda r: r.action in ['pull', 'pull_push']).mapped('delay'))
+        delay_description = ''.join(['<tr><td>%s %s</td><td>+ %d %s</td></tr>' % (_('Delay on'), html_escape(rule.name), rule.delay, _('day(s)')) for rule in self if rule.action in ['pull', 'pull_push'] and rule.delay])
+        return delay, delay_description
 
 
 class ProcurementGroup(models.Model):
