@@ -444,6 +444,7 @@ class TestMailgateway(TestMailCommon):
         """Incoming bounce is properly processed."""
         self.env['ir.config_parameter'].set_param('mail.bounce.alias', 'oops')
         self.env['ir.config_parameter'].set_param('mail.catchall.domain', 'example.com')
+        self.env['ir.config_parameter'].set_param('mail.catchall.domain.strict', True)
 
         # Test: No group created, incoming bounce is counted
         self.assertEqual(self.test_record.message_bounce, 0, 'The bounced thread should have no bounced messages by default')
@@ -466,6 +467,7 @@ class TestMailgateway(TestMailCommon):
         """Incoming bounce-like mails are not confused when in alien domains."""
         self.env['ir.config_parameter'].set_param('mail.bounce.alias', 'oops')
         self.env['ir.config_parameter'].set_param('mail.catchall.domain', 'example.com')
+        self.env['ir.config_parameter'].set_param('mail.catchall.domain.strict', True)
         # A partner with an address that seems like our bounce address
         alien_bounce_partner = self.env["res.partner"].create({
             "name": "Alien bounce address",
