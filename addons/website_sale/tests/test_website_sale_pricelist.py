@@ -383,6 +383,7 @@ class TestWebsitePriceListHttp(HttpCaseWithUserPortal):
             reading that `property_product_pricelist`.
         '''
         test_company = self.env['res.company'].create({'name': 'Test Company'})
+        test_company.flush()
         self.env['product.pricelist'].create({
             'name': 'Backend Pricelist For "Test Company"',
             'website_id': False,

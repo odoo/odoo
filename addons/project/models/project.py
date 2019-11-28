@@ -155,6 +155,11 @@ class Project(models.Model):
     def _get_default_favorite_user_ids(self):
         return [(6, 0, [self.env.uid])]
 
+    def _get_default_rating_status(self):
+        if self.user_has_groups('project.group_project_rating'):
+            return 'stage'
+        return 'no'
+
     name = fields.Char("Name", index=True, required=True, tracking=True)
     active = fields.Boolean(default=True,
         help="If the active field is set to False, it will allow you to hide the project without removing it.")
@@ -212,13 +217,18 @@ class Project(models.Model):
     date = fields.Date(string='Expiration Date', index=True, tracking=True)
     subtask_project_id = fields.Many2one('project.project', string='Sub-task Project', ondelete="restrict",
         help="Project in which sub-tasks of the current project will be created. It can be the current project itself.")
+    allow_subtasks = fields.Boolean('Sub-tasks', compute='_compute_allow_subtasks')
 
     # rating fields
     rating_request_deadline = fields.Datetime(compute='_compute_rating_request_deadline', store=True)
-    rating_status = fields.Selection([('stage', 'Rating when changing stage'), ('periodic', 'Periodical Rating'), ('no','No rating')], 'Customer Ratings', help="How to get customer feedback?\n"
-                    "- Rating when changing stage: an email will be sent when a task is pulled in another stage.\n"
-                    "- Periodical Rating: email will be sent periodically.\n\n"
-                    "Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks.", default="no", required=True)
+    rating_status = fields.Selection([
+        ('stage', 'Rating when changing stage'),
+        ('periodic', 'Periodical Rating'),
+        ('no', 'No rating')], string='Customer Ratings', default=_get_default_rating_status, required=True,
+        help="How to get customer feedback?\n"
+                 "- Rating when changing stage: an email will be sent when a task is pulled in another stage.\n"
+                 "- Periodical Rating: email will be sent periodically.\n\n"
+                 "Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks.")
     rating_status_period = fields.Selection([
         ('daily', 'Daily'), ('weekly', 'Weekly'), ('bimonthly', 'Twice a Month'),
         ('monthly', 'Once a Month'), ('quarterly', 'Quarterly'), ('yearly', 'Yearly')
@@ -229,6 +239,11 @@ class Project(models.Model):
     _sql_constraints = [
         ('project_date_greater', 'check(date >= date_start)', 'Error! project start-date must be lower than project end-date.')
     ]
+
+    def _compute_allow_subtasks(self):
+        subtask_enabled = self.user_has_groups('project.group_subtask_project')
+        for project in self:
+            project.allow_subtasks = subtask_enabled
 
     @api.depends('allowed_internal_user_ids', 'allowed_portal_user_ids')
     def _compute_allowed_users(self):
@@ -540,6 +555,7 @@ class Task(models.Model):
     parent_id = fields.Many2one('project.task', string='Parent Task', index=True)
     child_ids = fields.One2many('project.task', 'parent_id', string="Sub-tasks", context={'active_test': False})
     subtask_project_id = fields.Many2one('project.project', related="project_id.subtask_project_id", string='Sub-task Project', readonly=True)
+    allow_subtasks = fields.Boolean('project.project', related="project_id.allow_subtasks", readonly=True)
     subtask_count = fields.Integer("Sub-task count", compute='_compute_subtask_count')
     email_from = fields.Char(string='Email', help="These people will receive email.", index=True,
         compute='_compute_email_from', store="True", readonly=False)

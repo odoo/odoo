@@ -79,6 +79,14 @@
             <field name="res_model">project.task</field>
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
             <field name="search_view_id" ref="project.view_task_search_form"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Click <i>Create</i> to start a new task.
+                </p><p>
+                    To get things done, use activities and status on tasks.<br/>
+                    Chat in real time or by email to collaborate efficiently.
+                </p>
+            </field>
         </record>
 
         <!-- Project -->
@@ -136,7 +144,6 @@
                                     <field name="allowed_internal_user_ids" widget="many2many_tags" attrs="{'invisible': [('privacy_visibility', '!=', 'followers')]}"/>
                                     <field name="allowed_portal_user_ids" widget="many2many_tags" attrs="{'invisible': [('privacy_visibility', '!=', 'portal')]}"/>
 
-                                    <field name="subtask_project_id" groups="project.group_subtask_project"/>
                                     <field name="company_id" groups="base.group_multi_company"/>
                                 </group>
                                 <group name="extra_settings">
@@ -162,6 +169,21 @@
                                                 <label for="portal_show_rating"/>
                                                 <field name="portal_show_rating"/>
                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 o_setting_box"  id="subtask_settings" groups="project.group_subtask_project">
+                                    <div class="o_setting_left_pane">
+                                        <field name="allow_subtasks" />
+                                    </div>
+                                    <div class="o_setting_right_pane">
+                                        <label for="allow_subtasks" />
+                                        <div class="text-muted">
+                                            Split your tasks to organize your work into sub-milestones
+                                        </div>
+                                        <div class="mt8" attrs="{'invisible': [('allow_subtasks', '=', False)]}">
+                                            <label for="subtask_project_id" />
+                                            <field name="subtask_project_id" />
                                         </div>
                                     </div>
                                 </div>
@@ -448,6 +470,7 @@
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Task" class="o_form_project_tasks">
+                    <field name="allow_subtasks" invisible="1" />
                     <header>
                         <button name="action_assign_to_me" string="Assign to Me" type="object" class="oe_highlight"
                             attrs="{'invisible' : [('user_id', '!=', False)]}"/>
@@ -456,7 +479,7 @@
                     <sheet string="Task">
                     <div class="oe_button_box" name="button_box">
                         <button name="action_subtask" type="object" class="oe_stat_button" icon="fa-tasks"
-                            attrs="{'invisible' : [('id', '=', False)]}" context="{'default_user_id': user_id, 'default_parent_id': id, 'default_project_id': subtask_project_id}" groups="project.group_subtask_project">
+                            attrs="{'invisible' : ['|', ('allow_subtasks', '=', False), ('id', '=', False)]}" context="{'default_user_id': user_id, 'default_parent_id': id, 'default_project_id': subtask_project_id}">
                             <field string="Sub-tasks" name="subtask_count" widget="statinfo"/>
                         </button>
                         <button name="%(rating_rating_action_task)d" type="action" attrs="{'invisible': [('rating_count', '=', 0)]}" class="oe_stat_button" icon="fa-smile-o" groups="project.group_project_rating">
@@ -482,14 +505,14 @@
                             <field name="legend_done" invisible="1"/>
                         </group>
                         <group>
-                            <field name="project_id" domain="[('active', '=', True), ('company_id', '=', company_id)]"/>
+                            <field name="project_id" required="1" domain="[('active', '=', True), ('company_id', '=', company_id)]"/>
                             <field name="user_id"
                                 class="o_task_user_field"
                                 options='{"no_open": True}'/>
                             <field
                                 name="parent_id"
                                 domain="[('parent_id', '=', False)]"
-                                groups="project.group_subtask_project"
+                                attrs="{'invisible' : [('allow_subtasks', '=', False)]}"
                             />
                         </group>
                         <!-- YTI FIXME: Clean these fake groups -->
@@ -561,7 +584,7 @@
                     <group>
                         <field name="name" string = "Task Title"/>
                         <field name="user_id" options="{'no_open': True,'no_create': True}"/>
-                        <field name="project_id" invisible="context.get('all_task', 1)"/>
+                        <field name="project_id" required="1" invisible="context.get('all_task', 1)"/>
                         <field name="company_id" invisible="1"/>
                         <field name="parent_id" invisible="1"/>
                     </group>
@@ -602,7 +625,7 @@
                                 <div class="o_kanban_record_top">
                                     <div class="o_kanban_record_headings">
                                         <strong class="o_kanban_record_title"><field name="name"/></strong>
-                                        <span  invisible="context.get('default_project_id', False) or context.get('fsm_mode', False)"><br/><field name="project_id"/></span>
+                                        <span  invisible="context.get('default_project_id', False) or context.get('fsm_mode', False)"><br/><field name="project_id" required="1"/></span>
                                         <br />
                                         <t t-if="record.partner_id.value">
                                             <span t-if="!record.partner_is_company.raw_value">

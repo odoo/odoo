@@ -170,6 +170,7 @@ class TestTimesheet(TestCommonTimesheet):
         non_tracked_project = self.env['project.project'].create({
             'name': 'Project without timesheet',
             'allow_timesheets': False,
+            'allow_timesheet_timer': False,
             'partner_id': self.partner.id,
         })
         self.assertFalse(non_tracked_project.analytic_account_id, "A non time-tracked project shouldn't generate an analytic account")

@@ -36,6 +36,7 @@ class Company(models.Model):
 
     def _create_leave_project_task(self):
         for company in self:
+            company = company.with_company(company)
             if not company.leave_timesheet_project_id:
                 project = self.env['project.project'].sudo().create({
                     'name': _('Internal Project'),
