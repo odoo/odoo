@@ -922,7 +922,7 @@ class Module(models.Model):
             filter_lang = [code for code, _ in self.env['res.lang'].get_installed()]
 
         update_mods = self.filtered(lambda r: r.state in ('installed', 'to install', 'to upgrade'))
-        irt_cursor = self.env['ir.translation']._get_import_cursor(overwrite)
+        irt_cursor = self.env['ir.translation']._get_import_cursor()
         # loading module translations one by one to avoid conflicts during
         # external id resolution
         for mod in update_mods:
@@ -932,12 +932,10 @@ class Module(models.Model):
                 base_lang_code = iso_code.split('_')[0] if '_' in iso_code else False
                 # Step 1: for sub-languages, load base language first (e.g. es_CL.po is loaded over es.po)
                 if base_lang_code:
-                    irt_cursor._overwrite = overwrite
-                    irt_cursor.transfer(lang, [mod.name], src_lang=base_lang_code)
+                    irt_cursor.transfer(lang, [mod.name], src_lang=base_lang_code, overwrite=overwrite)
 
                 # Step 2: then load the main translation file, possibly overriding the terms coming from the base language
-                irt_cursor._overwrite = True
-                irt_cursor.transfer(lang, [mod.name], src_lang=iso_code)
+                irt_cursor.transfer(lang, [mod.name], src_lang=iso_code, overwrite=True)
 
     def _check(self):
         for module in self:

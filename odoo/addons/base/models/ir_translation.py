@@ -29,15 +29,9 @@ class IrTranslationImport(object):
     """
     _table = 'ir_translation_reference'
 
-    def __init__(self, cr, overwrite=False):
-        """ Store some values, and also create a temporary SQL table to accept
-        the data.
-
-        :param model: the model to insert the data into (as a recordset)
-        """
+    def __init__(self, cr):
         self._cr = cr
         self._model_table = "ir_translation"
-        self._overwrite = overwrite
         self._debug = False
         self._rows = []
 
@@ -69,8 +63,8 @@ class IrTranslationImport(object):
         self._rows.clear()
         return True
 
-    def transfer(self, lang, modules, src_lang=False):
-        """ Transfer translatiosn from ir_translation_reference to ir_translation
+    def transfer(self, lang, modules, src_lang=False, overwrite=False):
+        """ Transfer translations from ir_translation_reference to ir_translation
 
         Resolve external ids
         :param lang: target language that will be used in ir.translation, must be an
@@ -78,6 +72,8 @@ class IrTranslationImport(object):
         :param src_lang: iso code of source language that will be used to fetch
                          ir_translation_reference entries (e.g. fr)
         :param modules: list of modules to use to retrieve ir_translation_reference
+        :param overwrite: if an ir.translation already exists for a term, replace it with
+                      the one in ir_translation_reference
         """
         if not modules:
             raise UserError(_("Missing module list for transfer of translations."))
@@ -135,7 +131,7 @@ class IrTranslationImport(object):
 
         count = 0
         # Step 2: insert new or upsert non-noupdate translations
-        if self._overwrite:
+        if overwrite:
             cr.execute(""" INSERT INTO ir_translation(name, lang, res_id, src, type, value, module, state, comments)
                            SELECT name, %s, res_id, src, type, value, module, 'translated', comments
                            FROM ir_translation_reference
@@ -181,7 +177,7 @@ class IrTranslationImport(object):
                        AND (%%s OR noupdate)
                        ON CONFLICT DO NOTHING;
                    """ % (self._model_table, self._table),
-                          (lang, modules, src_lang, not self._overwrite))
+                          (lang, modules, src_lang, not overwrite))
         count += cr.rowcount
 
         if self._debug:
@@ -846,9 +842,9 @@ class IrTranslation(models.Model):
 
         return action
 
-    def _get_import_cursor(self, overwrite):
+    def _get_import_cursor(self):
         """ Return a cursor-like object for fast inserting translations """
-        return IrTranslationImport(self._cr, overwrite)
+        return IrTranslationImport(self._cr)
 
     @api.model
     def get_technical_translations(self, model_name):

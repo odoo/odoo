@@ -134,9 +134,8 @@ class TestTermCount(common.TransactionCase):
                 bufferobj.name = 'test_translation_import/i18n/fr.po'
                 cursor = odoo.tools.trans_load_data(self.cr, bufferobj, 'po', 'fr_FR',
                     verbose=False,
-                    create_empty_translation=create_empty_translation,
-                    overwrite=True)
-                cursor.transfer('fr_FR', ['test_translation_import'])
+                    create_empty_translation=create_empty_translation)
+                cursor.transfer('fr_FR', ['test_translation_import'], overwrite=True)
 
         # Check that the not translated key is not created
         update_translations()

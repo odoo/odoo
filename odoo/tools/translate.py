@@ -1133,9 +1133,8 @@ def trans_load(cr, filename, lang, module_name, verbose=True, create_empty_trans
             cursor = trans_load_data(cr, fileobj, fileformat, iso_code,
                 verbose=verbose,
                 module_name=module_name,
-                create_empty_translation=create_empty_translation,
-                overwrite=overwrite)
-            cursor.transfer(lang, [module_name], src_lang=iso_code)
+                create_empty_translation=create_empty_translation)
+            cursor.transfer(lang, [module_name], src_lang=iso_code, overwrite=overwrite)
     except IOError:
         if verbose:
             _logger.error("couldn't read translation file %s", filename)
@@ -1143,7 +1142,7 @@ def trans_load(cr, filename, lang, module_name, verbose=True, create_empty_trans
 
 
 def trans_load_data(cr, fileobj, fileformat, lang,
-        verbose=True, module_name=None, create_empty_translation=False, overwrite=False):
+        verbose=True, module_name=None, create_empty_translation=False):
     """Populates the ir_translation_reference table.
 
     :param fileobj: buffer open to a translation file
@@ -1154,8 +1153,6 @@ def trans_load_data(cr, fileobj, fileformat, lang,
     :param module_name: name of the module to use for created translations  # TODO move to TranslationFileReader?
     :param create_empty_translation: create an ir.translation record, even if no value
                                      is provided in the translation entry
-    :param overwrite: if an ir.translation already exists for a term, replace it with
-                      the one in `fileobj`
     """
     if verbose:
         _logger.info('loading translation file for language %s', lang)
@@ -1182,7 +1179,7 @@ def trans_load_data(cr, fileobj, fileformat, lang,
 
         # read the rest of the file with a cursor-like object for fast inserting translations"
         Translation = env['ir.translation']
-        irt_cursor = Translation._get_import_cursor(overwrite)
+        irt_cursor = Translation._get_import_cursor()
 
         def process_row(row):
             """Process a single PO (or POT) entry."""
