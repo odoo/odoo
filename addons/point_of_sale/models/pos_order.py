@@ -374,7 +374,7 @@ class PosOrder(models.Model):
                 # considering partner's sale pricelist's currency
                 'currency_id': order.pricelist_id.currency_id.id,
                 'invoice_user_id': order.user_id.id,
-                'invoice_date': fields.Date.today(),
+                'invoice_date': order.date_order.date(),
                 'fiscal_position_id': order.fiscal_position_id.id,
                 'invoice_line_ids': [(0, None, order._prepare_invoice_line(line)) for line in order.lines],
             }
