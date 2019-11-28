@@ -544,7 +544,7 @@ class Task(models.Model):
 
     @api.depends('date_deadline')
     def _compute_date_deadline_formatted(self):
-        date_format = self.env['res.lang']._lang_get(self.env.user.lang).date_format
+        date_format = self.env['res.lang']._lang_get(self.env.user.lang).date_format or '%Y-%m-%d'
         for task in self:
             task.date_deadline_formatted = task.date_deadline.strftime(date_format) if task.date_deadline else None
 
