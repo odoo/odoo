@@ -556,7 +556,7 @@ specific overrides to work correctly. These overrides will specify the values
 of the created alias, like the kind of record it must create and possibly
 some default values these records may have depending on the parent object:
 
-.. method:: get_alias_model_name(vals)
+.. method:: _get_alias_model_name(vals)
 
     Return the model name for the alias. Incoming emails that are not
     replies to existing records will cause the creation of a new record
@@ -568,7 +568,7 @@ some default values these records may have depending on the parent object:
     :return: model name
     :rtype: str
 
-.. method:: get_alias_values()
+.. method:: _get_alias_values()
 
     Return values to create an alias, or to write on the alias after its
     creation. While not completely mandatory, it is usually required to make
@@ -579,7 +579,7 @@ some default values these records may have depending on the parent object:
     :return: dictionnary of values that will be written to the new alias
     :rtype: dict
 
-The ``get_alias_values()`` override is particularly interesting as it allows you
+The ``_get_alias_values()`` override is particularly interesting as it allows you
 to modify the behaviour of your aliases easily. Among the fields that can be set
 on the alias, the following are of particular interest:
 
@@ -632,13 +632,13 @@ you to make your alias easily configurable from the record's form view.
             alias_id = fields.Many2one('mail.alias', string='Alias', ondelete="restrict",
                                        required=True)
 
-            def get_alias_model_name(self, vals):
+            def _get_alias_model_name(self, vals):
             """ Specify the model that will get created when the alias receives a message """
                 return 'business.expense'
 
-            def get_alias_values(self):
+            def _get_alias_values(self):
             """ Specify some default values that will be set in the alias at its creation """
-                values = super(BusinessTrip, self).get_alias_values()
+                values = super(BusinessTrip, self)._get_alias_values()
                 # alias_defaults holds a dictionnary that will be written
                 # to all records created by this alias
                 #

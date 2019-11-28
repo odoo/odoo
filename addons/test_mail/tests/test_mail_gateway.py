@@ -89,11 +89,22 @@ class TestMailAlias(TestMailCommon):
         self.assertEqual(record.alias_id.alias_contact, 'followers')
 
         record.write({
-            'alias_force_thread_id': False,
+            'alias_name': 'better.alias.test',
             'alias_defaults': "{'default_name': 'defaults'}"
         })
-        self.assertFalse(record.alias_id.alias_force_thread_id)
+        self.assertEqual(record.alias_id.alias_name, 'better.alias.test')
         self.assertEqual(record.alias_id.alias_defaults, "{'default_name': 'defaults'}")
+
+        with self.assertRaises(exceptions.AccessError):
+            record.write({
+                'alias_force_thread_id': 0,
+            })
+
+        with self.assertRaises(exceptions.AccessError):
+            record.write({
+                'alias_model_id': self.env['ir.model']._get('mail.test.gateway').id,
+            })
+
 
     def test_alias_setup(self):
         alias = self.env['mail.alias'].create({
