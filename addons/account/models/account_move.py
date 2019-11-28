@@ -1015,7 +1015,7 @@ class AccountMove(models.Model):
             move.amount_residual = -sign * (total_residual_currency if len(currencies) == 1 else total_residual)
             move.amount_untaxed_signed = -total_untaxed
             move.amount_tax_signed = -total_tax
-            move.amount_total_signed = -total
+            move.amount_total_signed = abs(total) if move.type == 'entry' else -total
             move.amount_residual_signed = total_residual
 
             currency = len(currencies) == 1 and currencies.pop() or move.company_id.currency_id
