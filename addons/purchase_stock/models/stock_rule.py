@@ -144,7 +144,9 @@ class StockRule(models.Model):
             delay_description += '<tr><td>%s</td><td>+ %d %s</td></tr>' % (_('Vendor Lead Time'), supplier_delay, _('day(s)'))
         security_delay = buy_rule.picking_type_id.company_id.po_lead
         delay_description += '<tr><td>%s</td><td>+ %d %s</td></tr>' % (_('Purchase Security Lead Time'), security_delay, _('day(s)'))
-        return delay + supplier_delay + security_delay, delay_description
+        days_to_purchase = buy_rule.company_id.days_to_purchase
+        delay_description += '<tr><td>%s</td><td>+ %d %s</td></tr>' % (_('Days to Purchase'), days_to_purchase, _('day(s)'))
+        return delay + supplier_delay + security_delay + days_to_purchase, delay_description
 
     @api.model
     def _get_procurements_to_merge_groupby(self, procurement):
