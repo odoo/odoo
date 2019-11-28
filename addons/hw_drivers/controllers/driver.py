@@ -10,6 +10,7 @@ from re import sub, finditer
 import urllib3
 import os
 import socket
+import sys
 from importlib import util
 import v4l2
 from fcntl import ioctl
@@ -96,6 +97,27 @@ class StatusController(http.Controller):
         if os.path.isfile(image):
             with open(image, 'rb') as f:
                 return f.read()
+
+#----------------------------------------------------------
+# Log Exceptions
+#----------------------------------------------------------
+
+class ExceptionLogger:
+    """
+    Redirect Exceptions to the logger to keep track of them in the log file.
+    """
+
+    def __init__(self):
+        self.logger = logging.getLogger()
+
+    def write(self, message):
+        if message != '\n':
+            self.logger.err(message)
+
+    def flush(self):
+        pass
+
+sys.stderr = ExceptionLogger()
 
 #----------------------------------------------------------
 # Drivers
