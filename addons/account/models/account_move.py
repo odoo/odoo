@@ -266,10 +266,11 @@ class AccountMove(models.Model):
                         'total_void': 0.0,
                         'total_excluded': 0.0,
                         'total_included': 0.0,
-                        'taxes': deepcopy(taxes_vals_line[0]['taxes']),
+                        'taxes': deepcopy(taxes_vals_line[0]['taxes']) if taxes_vals_line else [],
                     }
-                    taxes_vals['taxes'][0]['base'] = 0.0
-                    taxes_vals['taxes'][0]['amount'] = 0.0
+                    if taxes_vals_line:
+                        taxes_vals['taxes'][0]['base'] = 0.0
+                        taxes_vals['taxes'][0]['amount'] = 0.0
                     for val in taxes_vals_line:
                         taxes_vals['total_void'] += val['total_void']
                         taxes_vals['total_excluded'] += val['total_excluded']
