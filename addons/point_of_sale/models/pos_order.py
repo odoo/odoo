@@ -181,6 +181,7 @@ class PosOrder(models.Model):
             # considering partner's sale pricelist's currency
             'currency_id': self.pricelist_id.currency_id.id,
             'user_id': self.user_id.id,
+            'fiscal_position_id': self.fiscal_position_id.id,
         }
 
     @api.model
