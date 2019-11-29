@@ -145,8 +145,8 @@ var db = {
                         'account_id': rep_ln.account_id,
                         'price_include': tax.price_include,
                         'tax_repartition_line_id': rep_ln.id,
-                        'tag_ids': [[6, null, rep_ln.tag_ids]],
-                        'tax_ids': [[6, null, [tax.id]]],
+                        'tag_ids': rep_ln.tag_ids,
+                        'tax_ids': [tax.id],
                     })
                 }
             }
