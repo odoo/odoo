@@ -82,7 +82,7 @@
                             <div class="col">
                                 <t t-if="survey.scoring_type != 'no_scoring'">
                                     <div>You scored <t t-esc="answer.scoring_percentage" />%</div>
-                                    <t t-if="answer.quizz_passed">
+                                    <t t-if="answer.scoring_success">
                                         <div>Congratulations, you have passed the test!</div>
 
                                         <div t-if="survey.certification" class="mt16 mb16">
@@ -103,7 +103,7 @@
                                     If you wish, you can <a t-att-href="'/survey/print/%s?answer_token=%s&amp;review=True' % (survey.access_token, answer.token)">review your answers</a>
                                 </div>
                             </div>
-                            <div class="col-6 text-center" t-if="survey.certification_give_badge and answer.quizz_passed">
+                            <div class="col-6 text-center" t-if="survey.certification_give_badge and answer.scoring_success">
                                 <img t-att-src="'/web/image/gamification.badge/%s/image_128' % survey.certification_badge_id.id"/>
                                 <div>You received the badge <span class="font-weight-bold" t-esc="survey.certification_badge_id.name"/>!</div>
                             </div>
@@ -138,7 +138,7 @@
 
     <template id="survey_button_retake" name="Survey: retake button">
         <div>
-            <t t-if="not answer.quizz_passed">
+            <t t-if="not answer.scoring_success">
                 <t t-if="survey.is_attempts_limited">
                     <t t-set="attempts_left" t-value="survey._get_number_of_attempts_lefts(answer.partner_id, answer.email, answer.invite_token)" />
                     <t t-if="attempts_left > 0">

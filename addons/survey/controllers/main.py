@@ -459,7 +459,7 @@ class Survey(http.Controller):
         succeeded_attempt = request.env['survey.user_input'].sudo().search([
             ('partner_id', '=', request.env.user.partner_id.id),
             ('survey_id', '=', survey_id),
-            ('quizz_passed', '=', True)
+            ('scoring_success', '=', True)
         ], limit=1)
 
         if not succeeded_attempt:
@@ -542,31 +542,31 @@ class Survey(http.Controller):
 
         count_data = request.env['survey.user_input'].read_group(
             [('survey_id', '=', survey.id), ('state', '=', 'done'), ('test_entry', '=', False)],
-            ['quizz_passed', 'id:count_distinct'],
-            ['quizz_passed']
+            ['scoring_success', 'id:count_distinct'],
+            ['scoring_success']
         )
 
-        quizz_passed_count = 0
-        quizz_failed_count = 0
+        scoring_success_count = 0
+        scoring_failed_count = 0
         for count_data_item in count_data:
-            if count_data_item['quizz_passed']:
-                quizz_passed_count = count_data_item['quizz_passed_count']
+            if count_data_item['scoring_success']:
+                scoring_success_count = count_data_item['scoring_success_count']
             else:
-                quizz_failed_count = count_data_item['quizz_passed_count']
+                scoring_failed_count = count_data_item['scoring_success_count']
 
         graph_data = [{
             'text': _('Passed'),
-            'count': quizz_passed_count,
+            'count': scoring_success_count,
             'color': '#2E7D32'
         }, {
             'text': _('Missed'),
-            'count': quizz_failed_count,
+            'count': scoring_failed_count,
             'color': '#C62828'
         }]
 
-        total_quizz_passed = quizz_passed_count + quizz_failed_count
+        total_scoring_success = scoring_success_count + scoring_failed_count
         return {
-            'success_rate': round((quizz_passed_count / total_quizz_passed) * 100, 1) if total_quizz_passed > 0 else 0,
+            'success_rate': round((scoring_success_count / total_scoring_success) * 100, 1) if total_scoring_success > 0 else 0,
             'graph_data': graph_data
         }
 

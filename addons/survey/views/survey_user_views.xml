@@ -14,7 +14,7 @@
                 <filter string="Partially Completed" name="partially_completed" domain="[('state', '=', 'skip')]"/>
                 <filter string="New" name="new" domain="[('state', '=', 'new')]"/>
                 <separator/>
-                <filter string="Quizz passed" name="quizz_passed" domain="[('quizz_passed','=', True)]"/>
+                <filter string="Quizz passed" name="scoring_success" domain="[('scoring_success','=', True)]"/>
                 <separator/>
                 <filter string="Test Entries" name="test" domain="[('test_entry','=', True)]"/>
                 <filter string="Except Test Entries" name="not_test" domain="[('test_entry','=', False)]" invisible="1"/>
@@ -60,7 +60,7 @@
                             <field name="test_entry" groups="base.group_no_one"/>
                             <field name="scoring_type" invisible="1"/>
                             <field name="scoring_percentage" attrs="{'invisible': [('scoring_type', '=', 'no_scoring')]}"/>
-                            <field name="quizz_passed" attrs="{'invisible': [('scoring_type', '=', 'no_scoring')]}"/>
+                            <field name="scoring_success" attrs="{'invisible': [('scoring_type', '=', 'no_scoring')]}"/>
                         </group>
                     </group>
                     <field name="user_input_line_ids" mode="tree" attrs="{'readonly': False}">
@@ -93,7 +93,7 @@
                 <field name="attempt_number" />
                 <field name="state"/>
                 <field name="test_entry" invisible="True"/>
-                <field name="quizz_passed"/>
+                <field name="scoring_success"/>
                 <field name="scoring_percentage"/>
             </tree>
         </field>
