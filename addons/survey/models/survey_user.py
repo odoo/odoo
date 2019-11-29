@@ -63,10 +63,10 @@ class SurveyUserInput(models.Model):
                 score = (sum(user_input.user_input_line_ids.mapped('answer_score')) / total_possible_score) * 100
                 user_input.quizz_score = round(score, 2) if score > 0 else 0
 
-    @api.depends('quizz_score', 'survey_id.passing_score')
+    @api.depends('quizz_score', 'survey_id.scoring_success_min')
     def _compute_quizz_passed(self):
         for user_input in self:
-            user_input.quizz_passed = user_input.quizz_score >= user_input.survey_id.passing_score
+            user_input.quizz_passed = user_input.quizz_score >= user_input.survey_id.scoring_success_min
 
     @api.depends('start_datetime', 'survey_id.is_time_limited', 'survey_id.time_limit')
     def _compute_is_time_limit_reached(self):
