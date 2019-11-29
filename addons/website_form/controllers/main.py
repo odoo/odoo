@@ -223,7 +223,6 @@ class WebsiteForm(http.Controller):
                     'body': nl2br(custom_content),
                     'model': model_name,
                     'message_type': 'comment',
-                    'no_auto_thread': False,
                     'res_id': record.id,
                 }
                 mail_id = request.env['mail.message'].with_user(SUPERUSER_ID).create(values)
@@ -258,7 +257,6 @@ class WebsiteForm(http.Controller):
                     'body': _('<p>Attached files : </p>'),
                     'model': model_name,
                     'message_type': 'comment',
-                    'no_auto_thread': False,
                     'res_id': id_record,
                     'attachment_ids': [(6, 0, orphan_attachment_ids)],
                     'subtype_id': request.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment'),
