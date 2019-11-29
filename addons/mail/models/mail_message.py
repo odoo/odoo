@@ -4,7 +4,6 @@
 import logging
 import re
 
-from email.utils import formataddr
 from openerp.http import request
 
 from odoo import _, api, fields, models, modules, SUPERUSER_ID, tools
@@ -28,7 +27,7 @@ class Message(models.Model):
     @api.model
     def _get_default_from(self):
         if self.env.user.email:
-            return formataddr((self.env.user.name, self.env.user.email))
+            return tools.formataddr((self.env.user.name, self.env.user.email))
         raise UserError(_("Unable to send email, please configure the sender's email address."))
 
     @api.model

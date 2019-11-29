@@ -7,7 +7,7 @@ from email.header import Header
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from email.utils import COMMASPACE, formataddr, formatdate, getaddresses, make_msgid
+from email.utils import COMMASPACE, formatdate, getaddresses, make_msgid
 import logging
 import re
 import smtplib
@@ -17,7 +17,7 @@ import html2text
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import except_orm, UserError
-from odoo.tools import ustr, pycompat
+from odoo.tools import ustr, pycompat, formataddr
 
 _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('odoo.tests')
@@ -108,22 +108,8 @@ def encode_rfc2822_address_header(header_text):
     """
     def encode_addr(addr):
         name, email = addr
-        # If s is a <text string>, then charset is a hint specifying the
-        # character set of the characters in the string. The Unicode string
-        # will be encoded using the following charsets in order: us-ascii,
-        # the charset hint, utf-8. The first character set to not provoke a
-        # UnicodeError is used.
-        # -> always pass a text string to Header
-
-        # also Header.__str__ in Python 3 "Returns an approximation of the
-        # Header as a string, using an unlimited line length.", the old one
-        # was "A synonym for Header.encode()." so call encode() directly?
-        name = Header(pycompat.to_text(name)).encode()
-        # if the from does not follow the (name <addr>),* convention, we might
-        # try to encode meaningless strings as address, as getaddresses is naive
-        # note it would also fail on real addresses with non-ascii characters
         try:
-            return formataddr((name, email))
+            return formataddr((name, email), 'ascii')
         except UnicodeEncodeError:
             _logger.warning(_('Failed to encode the address %s\n'
                               'from mail header:\n%s') % (addr, header_text))
