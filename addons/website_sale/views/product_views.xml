@@ -78,9 +78,9 @@
             <xpath expr="//group[@name='description']" position="attributes">
                 <attribute name="invisible">0</attribute>
             </xpath>
-            <div name="button_box" position="inside">
+            <button id="variants" position="before">
                 <field name="is_published" widget="website_redirect_button" attrs="{'invisible': [('sale_ok','=',False)]}"/>
-            </div>
+            </button>
             <page name="shop" position="attributes">
                 <attribute name="invisible">0</attribute>
             </page>
