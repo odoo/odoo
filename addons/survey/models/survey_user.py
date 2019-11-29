@@ -32,25 +32,25 @@ class SurveyUserInput(models.Model):
     # attempts management
     is_attempts_limited = fields.Boolean("Limited number of attempts", related='survey_id.is_attempts_limited')
     attempts_limit = fields.Integer("Number of attempts", related='survey_id.attempts_limit')
-    attempt_number = fields.Integer("Attempt n°", compute='_compute_attempt_number')
+    attempts_number = fields.Integer("Attempt n°", compute='_compute_attempts_number')
     is_time_limit_reached = fields.Boolean("Is time limit reached?", compute='_compute_is_time_limit_reached')
     # identification / access
-    token = fields.Char('Identification token', default=lambda self: str(uuid.uuid4()), readonly=True, required=True, copy=False)
+    access_token = fields.Char('Identification token', default=lambda self: str(uuid.uuid4()), readonly=True, required=True, copy=False)
     invite_token = fields.Char('Invite token', readonly=True, copy=False)  # no unique constraint, as it identifies a pool of attempts
     partner_id = fields.Many2one('res.partner', string='Partner', readonly=True)
     email = fields.Char('E-mail', readonly=True)
     # questions / answers
     user_input_line_ids = fields.One2many('survey.user_input.line', 'user_input_id', string='Answers', copy=True)
     question_ids = fields.Many2many('survey.question', string='Predefined Questions', readonly=True)
-    quizz_score = fields.Float("Score (%)", compute="_compute_quizz_score", store=True, compute_sudo=True)  # stored for perf reasons
-    quizz_passed = fields.Boolean('Quizz Passed', compute='_compute_quizz_passed', store=True, compute_sudo=True)  # stored for perf reasons
+    scoring_percentage = fields.Float("Score (%)", compute="_compute_scoring_percentage", store=True, compute_sudo=True)  # stored for perf reasons
+    scoring_success = fields.Boolean('Quizz Passed', compute='_compute_scoring_success', store=True, compute_sudo=True)  # stored for perf reasons
 
     _sql_constraints = [
-        ('unique_token', 'UNIQUE (token)', 'A token must be unique!'),
+        ('unique_token', 'UNIQUE (access_token)', 'An access token must be unique!'),
     ]
 
     @api.depends('user_input_line_ids.answer_score', 'user_input_line_ids.question_id')
-    def _compute_quizz_score(self):
+    def _compute_scoring_percentage(self):
         for user_input in self:
             total_possible_score = sum([
                 answer_score if answer_score > 0 else 0
@@ -58,15 +58,15 @@ class SurveyUserInput(models.Model):
             ])
 
             if total_possible_score == 0:
-                user_input.quizz_score = 0
+                user_input.scoring_percentage = 0
             else:
                 score = (sum(user_input.user_input_line_ids.mapped('answer_score')) / total_possible_score) * 100
-                user_input.quizz_score = round(score, 2) if score > 0 else 0
+                user_input.scoring_percentage = round(score, 2) if score > 0 else 0
 
-    @api.depends('quizz_score', 'survey_id.scoring_success_min')
-    def _compute_quizz_passed(self):
+    @api.depends('scoring_percentage', 'survey_id.scoring_success_min')
+    def _compute_scoring_success(self):
         for user_input in self:
-            user_input.quizz_passed = user_input.quizz_score >= user_input.survey_id.scoring_success_min
+            user_input.scoring_success = user_input.scoring_percentage >= user_input.survey_id.scoring_success_min
 
     @api.depends('start_datetime', 'survey_id.is_time_limited', 'survey_id.time_limit')
     def _compute_is_time_limit_reached(self):
@@ -76,16 +76,16 @@ class SurveyUserInput(models.Model):
                 > user_input.start_datetime + relativedelta(minutes=user_input.survey_id.time_limit)
 
     @api.depends('state', 'test_entry', 'survey_id.is_attempts_limited', 'partner_id', 'email', 'invite_token')
-    def _compute_attempt_number(self):
+    def _compute_attempts_number(self):
         attempts_to_compute = self.filtered(
             lambda user_input: user_input.state == 'done' and not user_input.test_entry and user_input.survey_id.is_attempts_limited
         )
 
         for user_input in (self - attempts_to_compute):
-            user_input.attempt_number = 1
+            user_input.attempts_number = 1
 
         if attempts_to_compute:
-            self.env.cr.execute("""SELECT user_input.id, (COUNT(previous_user_input.id) + 1) AS attempt_number
+            self.env.cr.execute("""SELECT user_input.id, (COUNT(previous_user_input.id) + 1) AS attempts_number
                 FROM survey_user_input user_input
                 LEFT OUTER JOIN survey_user_input previous_user_input
                 ON user_input.survey_id = previous_user_input.survey_id
@@ -101,13 +101,13 @@ class SurveyUserInput(models.Model):
             attempts_count_results = self.env.cr.dictfetchall()
 
             for user_input in attempts_to_compute:
-                attempt_number = 1
+                attempts_number = 1
                 for attempts_count_result in attempts_count_results:
                     if attempts_count_result['id'] == user_input.id:
-                        attempt_number = attempts_count_result['attempt_number']
+                        attempts_number = attempts_count_result['attempts_number']
                         break
 
-                user_input.attempt_number = attempt_number
+                user_input.attempts_number = attempts_number
 
     def action_resend(self):
         partners = self.env['res.partner']
@@ -131,7 +131,7 @@ class SurveyUserInput(models.Model):
             'type': 'ir.actions.act_url',
             'name': "View Answers",
             'target': 'self',
-            'url': '/survey/print/%s?answer_token=%s' % (self.survey_id.access_token, self.token)
+            'url': '/survey/print/%s?answer_token=%s' % (self.survey_id.access_token, self.access_token)
         }
 
     @api.model
@@ -150,7 +150,7 @@ class SurveyUserInput(models.Model):
         Challenge = self.env['gamification.challenge'].sudo()
         badge_ids = []
         for user_input in self:
-            if user_input.survey_id.certification and user_input.quizz_passed:
+            if user_input.survey_id.certification and user_input.scoring_success:
                 if user_input.survey_id.certification_mail_template_id and not user_input.test_entry:
                     user_input.survey_id.certification_mail_template_id.send_mail(user_input.id, notif_layout="mail.mail_notification_light")
                 if user_input.survey_id.certification_give_badge:
@@ -163,7 +163,7 @@ class SurveyUserInput(models.Model):
 
     def get_start_url(self):
         self.ensure_one()
-        return '%s?answer_token=%s' % (self.survey_id.get_start_url(), self.token)
+        return '%s?answer_token=%s' % (self.survey_id.get_start_url(), self.access_token)
 
     def get_print_url(self):
         self.ensure_one()
