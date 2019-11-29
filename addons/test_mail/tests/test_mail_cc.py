@@ -37,7 +37,7 @@ class TestMailResend(common.BaseFunctionalTest, common.MockEmails):
                                 to='cc_record@example.com',
                                 cc='cc2 <cc2@example.com>, cc3@example.com')
         cc = email_split_and_format(record.email_cc)
-        self.assertEqual(sorted(cc), ['cc1 <cc1@example.com>', 'cc2@example.com', 'cc3@example.com'], 'new cc should have been added on record (unique)')
+        self.assertEqual(set(cc), {'"cc1" <cc1@example.com>', 'cc2@example.com', 'cc3@example.com'}, 'new cc should have been added on record (unique)')
 
     @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_message_cc_update_no_old(self):
@@ -53,14 +53,14 @@ class TestMailResend(common.BaseFunctionalTest, common.MockEmails):
                                 to='cc_record@example.com',
                                 cc='cc2 <cc2@example.com>, cc3@example.com')
         cc = email_split_and_format(record.email_cc)
-        self.assertEqual(sorted(cc), ['cc2 <cc2@example.com>', 'cc3@example.com'], 'new cc should have been added on record (unique)')
+        self.assertEqual(set(cc), {'"cc2" <cc2@example.com>', 'cc3@example.com'}, 'new cc should have been added on record (unique)')
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mail_cc_recipient_suggestion(self):
         record = self.env['mail.test.cc'].create({'email_cc': 'cc1@example.com, cc2@example.com, cc3 <cc3@example.com>'})
         suggestions = record.message_get_suggested_recipients()[record.id]
-        self.assertEqual(sorted(suggestions), [
+        self.assertEqual(set(suggestions), {
             (False, 'cc1@example.com', 'CC Email'),
             (False, 'cc2@example.com', 'CC Email'),
-            (False, 'cc3 <cc3@example.com>', 'CC Email')
-        ], 'cc should be in suggestions')
+            (False, '"cc3" <cc3@example.com>', 'CC Email')
+        }, 'cc should be in suggestions')
