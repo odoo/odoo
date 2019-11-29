@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="0">
+
+    <record model="survey.survey" id="survey_demo_quiz">
+        <field name="title">Quiz about our Company</field>
+        <field name="access_token">b137640d-9876-1234-abcd-344ca256531e</field>
+        <field name="state">open</field>
+        <field name="access_mode">public</field>
+        <field name="users_can_go_back" eval="False"/>
+        <field name="scoring_type">scoring_with_answers</field>
+        <field name="passing_score">55</field>
+        <field name="questions_layout">page_per_section</field>
+        <field name="description" type="html">
+<p>This small quiz will test your knowledge about our Company. Be prepared !</p></field>
+    </record>
+
+    <!-- Page 1: general information -->
+    <record model="survey.question" id="survey_demo_quiz_p1">
+        <field name="title">General Information</field>
+        <field name="survey_id" ref="survey_demo_quiz"/>
+        <field name="sequence">1</field>
+        <field name="question_type" eval="False"/>
+        <field name="is_page" eval="True"/>
+        <field name="description" type="html">
+<p>Some general information about you. It will be used for statistics used internally.</p></field>
+    </record>
+    <record model="survey.question" id="survey_demo_quiz_p1_q1">
+        <field name="survey_id" ref="survey_demo_quiz"/>
+        <field name="sequence">2</field>
+        <field name="title">Where are you from ?</field>
+        <field name="question_type">textbox</field>
+        <field name="constr_mandatory" eval="True"/>
+    </record>
+    <record model="survey.question" id="survey_demo_quiz_p1_q2">
+        <field name="survey_id" ref="survey_demo_quiz"/>
+        <field name="sequence">3</field>
+        <field name="title">How old are you ?</field>
+        <field name="question_type">numerical_box</field>
+        <field name="constr_mandatory" eval="True"/>
+    </record>
+
+    <!-- Page 2: quiz about products -->
+    <record model="survey.question" id="survey_demo_quiz_p2">
+        <field name="title">Another page</field>
+        <field name="survey_id" ref="survey_demo_quiz"/>
+        <field name="sequence">10</field>
+        <field name="question_type" eval="False"/>
+        <field name="is_page" eval="True"/>
+        <field name="description" type="html">
+<p>Blah bleh blih bloh bluh</p></field>
+    </record>
+    <record model="survey.question" id="survey_demo_quiz_p2_q1">
+        <field name="survey_id" ref="survey_demo_quiz"/>
+        <field name="sequence">11</field>
+        <field name="title">How frequently do you buy products online ?</field>
+        <field name="question_type">simple_choice</field>
+        <field name="display_mode">dropdown</field>
+        <field name="comments_allowed" eval="True"/>
+        <field name="comment_count_as_answer" eval="True"/>
+        <field name="constr_mandatory" eval="True"/>
+    </record>
+        <record model="survey.question.answer" id="survey_demo_quiz_p2_q1_sug1">
+            <field name="question_id" ref="survey_demo_quiz_p2_q1"/>
+            <field name="sequence">1</field>
+            <field name="value">Once a day</field>
+        </record>
+        <record model="survey.question.answer" id="survey_demo_quiz_p2_q1_sug2">
+            <field name="question_id" ref="survey_demo_quiz_p2_q1"/>
+            <field name="sequence">2</field>
+            <field name="value">Once a week</field>
+        </record>
+        <record model="survey.question.answer" id="survey_demo_quiz_p2_q1_sug3">
+            <field name="question_id" ref="survey_demo_quiz_p2_q1"/>
+            <field name="sequence">3</field>
+            <field name="value">Once a month</field>
+        </record>
+    <record model="survey.question" id="survey_demo_quiz_p2_q2">
+        <field name="survey_id" ref="survey_demo_quiz"/>
+        <field name="sequence">12</field>
+        <field name="title">Which of the following words would you use to describe our products ?</field>
+        <field name="question_type">multiple_choice</field>
+        <field name="constr_mandatory" eval="True"/>
+        <field name="comments_allowed" eval="True"/>
+        <field name="comment_count_as_answer" eval="False"/>
+    </record>
+    <record model="survey.question.answer" id="survey_demo_quiz_p2_q2_sug1">
+        <field name="question_id" ref="survey_demo_quiz_p2_q2"/>
+        <field name="sequence">1</field>
+        <field name="value">High quality</field>
+    </record>
+    <record model="survey.question.answer" id="survey_demo_quiz_p2_q2_sug2">
+        <field name="question_id" ref="survey_demo_quiz_p2_q2"/>
+        <field name="sequence">2</field>
+        <field name="value">Useful</field>
+    </record>
+    <record model="survey.question.answer" id="survey_demo_quiz_p2_q2_sug3">
+        <field name="question_id" ref="survey_demo_quiz_p2_q2"/>
+        <field name="sequence">3</field>
+        <field name="value">Unique</field>
+    </record>
+    <record model="survey.question.answer" id="survey_demo_quiz_p2_q2_sug4">
+        <field name="question_id" ref="survey_demo_quiz_p2_q2"/>
+        <field name="sequence">4</field>
+        <field name="value">Good value for money</field>
+    </record>
+</data></odoo>
