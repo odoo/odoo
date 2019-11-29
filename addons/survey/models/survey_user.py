@@ -42,7 +42,7 @@ class SurveyUserInput(models.Model):
     # questions / answers
     user_input_line_ids = fields.One2many('survey.user_input.line', 'user_input_id', string='Answers', copy=True)
     question_ids = fields.Many2many('survey.question', string='Predefined Questions', readonly=True)
-    quizz_score = fields.Float("Score (%)", compute="_compute_quizz_score", store=True, compute_sudo=True)  # stored for perf reasons
+    scoring_percentage = fields.Float("Score (%)", compute="_compute_scoring_percentage", store=True, compute_sudo=True)  # stored for perf reasons
     quizz_passed = fields.Boolean('Quizz Passed', compute='_compute_quizz_passed', store=True, compute_sudo=True)  # stored for perf reasons
 
     _sql_constraints = [
@@ -50,7 +50,7 @@ class SurveyUserInput(models.Model):
     ]
 
     @api.depends('user_input_line_ids.answer_score', 'user_input_line_ids.question_id')
-    def _compute_quizz_score(self):
+    def _compute_scoring_percentage(self):
         for user_input in self:
             total_possible_score = sum([
                 answer_score if answer_score > 0 else 0
@@ -58,15 +58,15 @@ class SurveyUserInput(models.Model):
             ])
 
             if total_possible_score == 0:
-                user_input.quizz_score = 0
+                user_input.scoring_percentage = 0
             else:
                 score = (sum(user_input.user_input_line_ids.mapped('answer_score')) / total_possible_score) * 100
-                user_input.quizz_score = round(score, 2) if score > 0 else 0
+                user_input.scoring_percentage = round(score, 2) if score > 0 else 0
 
-    @api.depends('quizz_score', 'survey_id.scoring_success_min')
+    @api.depends('scoring_percentage', 'survey_id.scoring_success_min')
     def _compute_quizz_passed(self):
         for user_input in self:
-            user_input.quizz_passed = user_input.quizz_score >= user_input.survey_id.scoring_success_min
+            user_input.quizz_passed = user_input.scoring_percentage >= user_input.survey_id.scoring_success_min
 
     @api.depends('start_datetime', 'survey_id.is_time_limited', 'survey_id.time_limit')
     def _compute_is_time_limit_reached(self):
