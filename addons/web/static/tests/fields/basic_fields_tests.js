@@ -3325,6 +3325,35 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('daterangepicker should disappear on scrolling outside of it', async function (assert) {
+        assert.expect(2);
+
+        this.data.partner.fields.datetime_end = {string: 'Datetime End', type: 'datetime'};
+        this.data.partner.records[0].datetime_end = '2017-03-13 00:00:00';
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <field name="datetime" widget="daterange" options="{'related_end_date': 'datetime_end'}"/>
+                    <field name="datetime_end" widget="daterange" options="{'related_start_date': 'datetime'}"/>
+                </form>`,
+            res_id: 1,
+        });
+
+        await testUtils.form.clickEdit(form);
+        await testUtils.dom.click(form.$('.o_field_date_range:first'));
+
+        assert.isVisible($('.daterangepicker:first'), "date range picker should be opened");
+
+        form.el.dispatchEvent(new Event('scroll'));
+        assert.isNotVisible($('.daterangepicker:first'), "date range picker should be closed");
+
+        form.destroy();
+    });
+
     QUnit.module('FieldDate');
 
     QUnit.test('date field: toggle datepicker [REQUIRE FOCUS]', async function (assert) {
