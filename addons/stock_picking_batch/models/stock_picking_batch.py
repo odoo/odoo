@@ -75,18 +75,3 @@ class StockPickingBatch(models.Model):
             return self.env.ref('stock_picking_batch.mt_batch_state')
         return super(StockPickingBatch, self)._track_subtype(init_values)
 
-
-class StockPicking(models.Model):
-    _inherit = "stock.picking"
-
-    batch_id = fields.Many2one(
-        'stock.picking.batch', string='Batch Transfer',
-        check_company=True,
-        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
-        help='Batch associated to this transfer', copy=False)
-
-    def _should_show_transfers(self):
-        if len(self.batch_id) == 1 and self == self.batch_id.picking_ids:
-            return False
-        return super()._should_show_transfers()
-
