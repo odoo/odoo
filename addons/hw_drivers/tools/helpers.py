@@ -74,7 +74,7 @@ def get_token():
     return read_file_first_line('token')
 
 def get_version():
-    return '19.10'
+    return '19.12'
 
 def get_wifi_essid():
     wifi_options = []
