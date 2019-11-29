@@ -9,7 +9,6 @@ import smtplib
 import threading
 
 from collections import defaultdict
-from email.utils import formataddr
 
 from odoo import _, api, fields, models
 from odoo import tools
@@ -186,7 +185,7 @@ class MailMail(models.Model):
           - else fallback on mail.email_to splitting """
         self.ensure_one()
         if partner:
-            email_to = [formataddr((partner.name or 'False', partner.email or 'False'))]
+            email_to = [tools.formataddr((partner.name or 'False', partner.email or 'False'))]
         else:
             email_to = tools.email_split_and_format(self.email_to)
         return email_to

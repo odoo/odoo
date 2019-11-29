@@ -26,8 +26,8 @@ class TestMailMessage(TestMail):
 
         msg = self.env['mail.message'].sudo(self.user_employee).create({})
         self.assertIn('-private', msg.message_id.split('@')[0], 'mail_message: message_id for a void message should be a "private" one')
-        self.assertEqual(msg.reply_to, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
-        self.assertEqual(msg.email_from, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
+        self.assertEqual(msg.reply_to, '"%s" <%s>' % (self.user_employee.name, self.user_employee.email))
+        self.assertEqual(msg.email_from, '"%s" <%s>' % (self.user_employee.name, self.user_employee.email))
 
     def test_mail_message_values_alias(self):
         alias_domain = 'example.com'
@@ -36,8 +36,8 @@ class TestMailMessage(TestMail):
 
         msg = self.env['mail.message'].sudo(self.user_employee).create({})
         self.assertIn('-private', msg.message_id.split('@')[0], 'mail_message: message_id for a void message should be a "private" one')
-        self.assertEqual(msg.reply_to, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
-        self.assertEqual(msg.email_from, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
+        self.assertEqual(msg.reply_to, '"%s" <%s>' % (self.user_employee.name, self.user_employee.email))
+        self.assertEqual(msg.email_from, '"%s" <%s>' % (self.user_employee.name, self.user_employee.email))
 
     def test_mail_message_values_alias_catchall(self):
         alias_domain = 'example.com'
@@ -47,8 +47,8 @@ class TestMailMessage(TestMail):
 
         msg = self.env['mail.message'].sudo(self.user_employee).create({})
         self.assertIn('-private', msg.message_id.split('@')[0], 'mail_message: message_id for a void message should be a "private" one')
-        self.assertEqual(msg.reply_to, '%s <%s@%s>' % (self.env.user.company_id.name, alias_catchall, alias_domain))
-        self.assertEqual(msg.email_from, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
+        self.assertEqual(msg.reply_to, '"%s" <%s@%s>' % (self.env.user.company_id.name, alias_catchall, alias_domain))
+        self.assertEqual(msg.email_from, '"%s" <%s>' % (self.user_employee.name, self.user_employee.email))
 
     def test_mail_message_values_document_no_alias(self):
         self.env['ir.config_parameter'].search([('key', '=', 'mail.catchall.domain')]).unlink()
@@ -58,8 +58,8 @@ class TestMailMessage(TestMail):
             'res_id': self.test_pigs.id
         })
         self.assertIn('-openerp-%d-mail.test' % self.test_pigs.id, msg.message_id.split('@')[0], 'mail_message: message_id for a void message should be a "private" one')
-        self.assertEqual(msg.reply_to, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
-        self.assertEqual(msg.email_from, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
+        self.assertEqual(msg.reply_to, '"%s" <%s>' % (self.user_employee.name, self.user_employee.email))
+        self.assertEqual(msg.email_from, '"%s" <%s>' % (self.user_employee.name, self.user_employee.email))
 
     def test_mail_message_values_document_alias(self):
         alias_domain = 'example.com'
@@ -71,8 +71,8 @@ class TestMailMessage(TestMail):
             'res_id': self.test_pigs.id
         })
         self.assertIn('-openerp-%d-mail.test' % self.test_pigs.id, msg.message_id.split('@')[0], 'mail_message: message_id for a void message should be a "private" one')
-        self.assertEqual(msg.reply_to, '%s %s <%s@%s>' % (self.env.user.company_id.name, self.test_pigs.name, self.test_pigs.alias_name, alias_domain))
-        self.assertEqual(msg.email_from, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
+        self.assertEqual(msg.reply_to, '"%s %s" <%s@%s>' % (self.env.user.company_id.name, self.test_pigs.name, self.test_pigs.alias_name, alias_domain))
+        self.assertEqual(msg.email_from, '"%s" <%s>' % (self.user_employee.name, self.user_employee.email))
 
     def test_mail_message_values_document_alias_catchall(self):
         alias_domain = 'example.com'
@@ -85,8 +85,8 @@ class TestMailMessage(TestMail):
             'res_id': self.test_pigs.id
         })
         self.assertIn('-openerp-%d-mail.test' % self.test_pigs.id, msg.message_id.split('@')[0], 'mail_message: message_id for a void message should be a "private" one')
-        self.assertEqual(msg.reply_to, '%s %s <%s@%s>' % (self.env.user.company_id.name, self.test_pigs.name, self.test_pigs.alias_name, alias_domain))
-        self.assertEqual(msg.email_from, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
+        self.assertEqual(msg.reply_to, '"%s %s" <%s@%s>' % (self.env.user.company_id.name, self.test_pigs.name, self.test_pigs.alias_name, alias_domain))
+        self.assertEqual(msg.email_from, '"%s" <%s>' % (self.user_employee.name, self.user_employee.email))
 
     def test_mail_message_values_no_auto_thread(self):
         msg = self.env['mail.message'].sudo(self.user_employee).create({
