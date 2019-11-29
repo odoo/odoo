@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import collections
 import json
 import itertools
 
@@ -314,6 +315,7 @@ class SurveyQuestion(models.Model):
             # prepare table and graph data
             question_data['graph_data'] = json.dumps(question._get_stats_graph_data(answer_line_ids))
             question_data['table_data'] = question._get_stats_table_data(answer_line_ids)
+            question_data['summary_data'] = question._get_stats_summary_data(answer_line_ids)
 
             all_questions_data.append(question_data)
         return all_questions_data
@@ -365,10 +367,7 @@ class SurveyQuestion(models.Model):
             return self._get_stats_table_data_choice(user_input_lines)
         elif self.question_type in ['matrix']:
             return self._get_stats_table_data_matrix(user_input_lines)
-        elif self.question_type in ['free_text', 'textbox', 'date', 'datetime', 'numerical_box']:
-            return self._get_stats_table_data_linear(user_input_lines)
-        else:
-            raise ValueError(_('Unexpected %s question' % self.question_type))
+        return [line for line in user_input_lines]
 
     def _get_stats_table_data_choice(self, user_input_lines):
         """ Table data for simple choice and multiple choice """
@@ -405,9 +404,21 @@ class SurveyQuestion(models.Model):
             for sug_answer in suggested_answers
         ]
 
-    def _get_stats_table_data_linear(self, user_input_lines):
-        """ Table data for free_text, text_box, date, datetime, numerical_box """
-        return [line for line in user_input_lines]
+    def _get_stats_summary_data(self, user_input_lines):
+        if self.question_type in ['numerical_box']:
+            return self._get_stats_summary_data_numerical(user_input_lines)
+        return ''
+
+    def _get_stats_summary_data_numerical(self, user_input_lines):
+        all_values = user_input_lines.filtered(lambda line: not line.skipped).mapped('value_number')
+        lines_sum = sum(all_values)
+        return {
+            'max': max(all_values, default=0),
+            'min': min(all_values, default=0),
+            'sum': lines_sum,
+            'average': lines_sum / len(all_values) or 1,
+            'most_common': collections.Counter(all_values).most_common(5),
+        }
 
 
 class SurveyQuestionAnswer(models.Model):

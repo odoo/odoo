@@ -39,21 +39,22 @@
 
     <template id="question_result_number_new" name="Question: number result (numerical_box)">
         <t t-set="table_data" t-value="question_data['table_data']"/>
-<!--         <span class="float-right mt8">
-            <span class="badge badge-secondary only_left_radius">Sum </span> <span class="badge badge-info only_right_radius" t-esc="number_result['sum']"></span>
-            <span class="badge badge-secondary only_left_radius">Maximum </span> <span class="badge badge-success only_right_radius" t-esc="number_result['max']"></span>
-            <span class="badge badge-secondary only_left_radius">Minimum </span> <span class="badge badge-danger only_right_radius" t-esc="number_result['min']"></span>
-            <span class="badge badge-secondary only_left_radius">Average </span> <span class="badge badge-warning only_right_radius" t-esc="number_result['average']"></span>
+        <t t-set="summary_data" t-value="question_data['summary_data']"/>
+        <span class="float-right mt8">
+            <span class="badge badge-secondary only_left_radius">Sum </span> <span class="badge badge-info only_right_radius" t-esc="summary_data['sum']"></span>
+            <span class="badge badge-secondary only_left_radius">Maximum </span> <span class="badge badge-success only_right_radius" t-esc="summary_data['max']"></span>
+            <span class="badge badge-secondary only_left_radius">Minimum </span> <span class="badge badge-danger only_right_radius" t-esc="summary_data['min']"></span>
+            <span class="badge badge-secondary only_left_radius">Average </span> <span class="badge badge-warning only_right_radius" t-esc="summary_data['average']"></span>
         </span>
- -->
+
         <ul class="nav nav-tabs d-print-none" role="tablist">
-            <!-- <li class="nav-item">
+            <li class="nav-item">
                 <a t-att-href="'#survey_stats_question_%d' % question.id"
                     t-att-aria-controls="'survey_stats_question_%d' % question.id"
                     class="nav-link active" data-toggle="tab" role="tab">
-                    <i class="fa fa-list-ol"></i> Most Common <span t-esc="len(number_result['most_common'])"></span>
+                    <i class="fa fa-list-ol"></i> Most Common
                 </a>
-            </li> -->
+            </li>
             <li class="nav-item">
                 <a t-att-href="'#survey_data_question_%d' % question.id"
                     t-att-aria-controls="'survey_data_question_%d' % question.id"
@@ -65,22 +66,18 @@
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane active with-3d-shadow with-transitions" t-att-id="'survey_stats_question_%d' % question.id">
                 <table class="table table-hover table-sm">
-                     <thead>
-                         <tr>
-                             <th>User Responses</th>
-                             <th>Occurence</th>
-                         </tr>
-                     </thead>
-                     <tbody>
-<!--                          <tr t-foreach="number_result['most_common']" t-as="row">
-                             <td>
-                                 <span t-esc="row[0]"></span>
-                             </td>
-                             <td>
-                                 <span t-esc="row[1]"></span>
-                             </td>
-                         </tr> -->
-                     </tbody>
+                    <thead>
+                        <tr>
+                            <th>User Responses</th>
+                            <th>Occurence</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="summary_data['most_common']" t-as="common_value">
+                            <td><span t-esc="common_value[0]"></span></td>
+                            <td><span t-esc="common_value[1]"></span></td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
             <div role="tabpanel" class="tab-pane" t-att-id="'survey_data_question_%d' % question.id">
@@ -172,6 +169,62 @@
                 <t t-call="survey.question_result_comments" />
             </t>
         </div> -->
+    </template>
+
+
+    <template id="question_result_matrix_new" name="Question: matrix result (matrix)">
+        <t t-set="matrix_result" t-value="prepare_result"/>
+        <!-- Tabs -->
+        <ul class="nav nav-tabs d-print-none" role="tablist">
+            <li class="nav-item">
+                <a t-att-href="'#graph_question_%d' % question.id" t-att-aria-controls="'graph_question_%d' % question.id" class="nav-link active" data-toggle="tab" role="tab">
+                    <i class="fa fa-bar-chart"></i>
+                    Graph
+                </a>
+            </li>
+            <li class="nav-item">
+                <a t-att-href="'#data_question_%d' % question.id" t-att-aria-controls="'data_question_%d' % question.id" class="nav-link" data-toggle="tab" role="tab">
+                    <i class="fa fa-list-alt"></i>
+                    Data
+                </a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active with-3d-shadow with-transitions survey_graph" t-att-id="'graph_question_%d' % question.id" t-att-data-question_id= "question.id" data-graph-type= "multi_bar" t-att-data-graph-data="graph_data">
+                <!-- canvas element for drawing Multibar chart -->
+                <canvas/>
+            </div>
+            <div role="tabpanel" class="tab-pane" t-att-id="'data_question_%d' % question.id">
+                <table class="table table-hover table-sm text-right">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th class="text-right" t-foreach="matrix_result['answers']" t-as="answer_id">
+                                <span t-esc="matrix_result['answers'][answer_id]"></span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="matrix_result['rows']" t-as="row_id">
+                            <td>
+                                <span t-esc="matrix_result['rows'][row_id]"></span>
+                            </td>
+                            <td class="survey_answer" t-foreach="matrix_result['answers']" t-as="answer_id">
+                                <span t-esc="round(matrix_result['result'][(row_id,answer_id)]*100.0/(input_summary['answered'] or 1),2)"></span> %
+                                <span class="badge badge-primary" t-esc="matrix_result['result'][(row_id,answer_id)]"></span><i class="fa fa-filter text-primary survey_filter" t-att-data-question_id="question.id" t-att-data-row_id="row_id" t-att-data-answer_id="answer_id" role="img" aria-label="Survey filter" title="Survey filter"></i>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- handle comments to matrix -->
+            <div>
+                <t t-set="comments" t-value="matrix_result['comments']" />
+                <t t-if="comments">
+                    <t t-call="survey.question_result_comments" />
+                </t>
+            </div>
+        </div>
     </template>
 
     <template id="survey_page_statistics" name="Survey: result statistics page">

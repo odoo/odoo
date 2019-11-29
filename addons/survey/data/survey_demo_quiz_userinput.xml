@@ -47,6 +47,42 @@
     	<field name="question_id" ref="survey_demo_quiz_p1_q2"/>
     	<field name="value_number">42</field>
     </record>
+    <record id="survey_demo_quiz_answer_1_p2_q1_l1" model="survey.user_input.line">
+        <field name="user_input_id" ref="survey_demo_quiz_answer_1"/>
+        <field name="question_id" ref="survey_demo_quiz_p2_q1"/>
+        <field name="value_date" eval="DateTime.today()"/>
+    </record>
+    <record id="survey_demo_quiz_answer_1_p2_q2_l1" model="survey.user_input.line">
+        <field name="user_input_id" ref="survey_demo_quiz_answer_1"/>
+        <field name="question_id" ref="survey_demo_quiz_p2_q2"/>
+        <field name="value_datetime" eval="DateTime.now().replace(hour=2, minute=0)"/>
+    </record>
+    <record id="survey_demo_quiz_answer_1_p2_q3_l1" model="survey.user_input.line">
+        <field name="user_input_id" ref="survey_demo_quiz_answer_1"/>
+        <field name="question_id" ref="survey_demo_quiz_p2_q3"/>
+        <field name="value_free_text">Youpie</field>
+    </record>
+    <record id="survey_demo_quiz_answer_1_p3_q1_l1" model="survey.user_input.line">
+        <field name="user_input_id" ref="survey_demo_quiz_answer_1"/>
+        <field name="question_id" ref="survey_demo_quiz_p3_q1"/>
+        <field name="suggested_answer_id" ref="survey_demo_quiz_p3_q1_sug1"/>
+    </record>
+    <record id="survey_demo_quiz_answer_1_p3_q2_l1" model="survey.user_input.line">
+        <field name="user_input_id" ref="survey_demo_quiz_answer_1"/>
+        <field name="question_id" ref="survey_demo_quiz_p3_q2"/>
+        <field name="suggested_answer_id" ref="survey_demo_quiz_p3_q2_sug1"/>
+    </record>
+    <record id="survey_demo_quiz_answer_1_p3_q2_l2" model="survey.user_input.line">
+        <field name="user_input_id" ref="survey_demo_quiz_answer_1"/>
+        <field name="question_id" ref="survey_demo_quiz_p3_q2"/>
+        <field name="suggested_answer_id" ref="survey_demo_quiz_p3_q2_sug2"/>
+    </record>
+<!--     <record id="survey_demo_quiz_answer_1_p3_q3_l1" model="survey.user_input.line">
+        <field name="user_input_id" ref="survey_demo_quiz_answer_1"/>
+        <field name="question_id" ref="survey_demo_quiz_p3_q1"/>
+        <field name="suggested_answer_id" ref="survey_demo_quiz_p3_q3_sug1"/>
+        <field name="matrix_row_id" ref="survey_demo_quiz_p3_q3_sug3"/>
+    </record> -->
 
 	<record id="survey_demo_quiz_answer_2_p1_q1_l1" model="survey.user_input.line">
     	<field name="user_input_id" ref="survey_demo_quiz_answer_2"/>
