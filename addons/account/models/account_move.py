@@ -1586,10 +1586,6 @@ class AccountMove(models.Model):
         if 'line_ids' in vals and self._context.get('check_move_validity', True):
             self._check_balanced()
 
-        # Check the lock date.
-        # /!\ The tax lock date is managed in the lines level, don't check it there.
-        self._check_fiscalyear_lock_date()
-
         # Trigger 'action_invoice_paid' when the invoice becomes paid after a write.
         not_paid_invoices.filtered(lambda move: move.invoice_payment_state in ('paid', 'in_payment')).action_invoice_paid()
 
