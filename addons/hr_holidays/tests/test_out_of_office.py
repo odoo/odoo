@@ -52,35 +52,7 @@ class TestOutOfOffice(TestHrHolidaysCommon):
             'name': 'test'
         })
         infos = channel.with_user(self.user_employee).channel_info()
-        self.assertEqual(infos[0]['direct_partner'][0]['out_of_office_date_end'], leave_date_end.date())
-
-    def test_consolidated_leave_date_to(self):
-        # leave from Thursday to Friday
-        leave_date_end = datetime.today() - relativedelta(days=datetime.today().weekday() - 4)
-        leave = self.env['hr.leave'].create({
-            'name': 'Holiday 1',
-            'employee_id': self.employee_hruser.id,
-            'holiday_status_id': self.leave_type.id,
-            'date_from': (leave_date_end - relativedelta(days=1)),
-            'date_to': leave_date_end,
-            'number_of_days': 2,
-        })
-        leave.action_approve()
-        self.assertEqual(self.employee_hruser.leave_consolidated_date_to, leave_date_end.date(), "consolidated leave date should be end date of leave1")
-
-        # consecutive leave after weekend, start from Monday to Tuesday
-        leave2_date_end = leave_date_end + relativedelta(days=4)
-        leave2 = self.env['hr.leave'].create({
-            'name': 'Holiday 2',
-            'employee_id': self.employee_hruser.id,
-            'holiday_status_id': self.leave_type.id,
-            'date_from': (leave2_date_end - relativedelta(days=1)),
-            'date_to': leave2_date_end,
-            'number_of_days': 2,
-        })
-        leave2.action_approve()
-        self.assertEqual(self.employee_hruser.leave_consolidated_date_to, leave2_date_end.date(), "consolidated leave date should be end date of leave2")
-
+        self.assertEqual(infos[0]['direct_partner'][0]['out_of_office_date_end'], leave_date_end)
 
 @tagged('out_of_office')
 class TestOutOfOfficePerformance(TestHrHolidaysCommon, TransactionCaseWithUserDemo):
