@@ -1294,7 +1294,7 @@ registry.background = SnippetOption.extend({
         editBgEl.dataset.chooseImage = 'true';
         editBgEl.dataset.noPreview = 'true';
         const iconEl = document.createElement('i');
-        iconEl.classList.add('fa', 'fa-fw', 'fa-pencil-square-o');
+        iconEl.classList.add('fa', 'fa-fw', 'fa-edit');
         this.editBgTextEl = document.createElement('span');
         editBgEl.appendChild(this.editBgTextEl);
         editBgEl.appendChild(iconEl);
