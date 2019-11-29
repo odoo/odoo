@@ -123,6 +123,7 @@ class ImLivechatChannel(models.Model):
                 channel_partner_to_add.append((4, visitor_user.partner_id.id))
         return {
             'channel_partner_ids': channel_partner_to_add,
+            'livechat_active': True,
             'livechat_operator_id': operator_partner_id,
             'livechat_channel_id': self.id,
             'anonymous_name': False if user_id else anonymous_name,
