@@ -12,9 +12,12 @@ __base="$(basename ${__file} .sh)"
 export DEBIAN_FRONTEND=noninteractive
 echo "nameserver 8.8.8.8" >> /etc/resolv.conf
 
+# set locale to en_US
+echo "set locale to en_US"
 echo "export LANGUAGE=en_US.UTF-8" >> ~/.bashrc
 echo "export LANG=en_US.UTF-8" >> ~/.bashrc
 echo "export LC_ALL=en_US.UTF-8" >> ~/.bashrc
+locale-gen
 source ~/.bashrc
 
 apt-get update && apt-get -y upgrade
