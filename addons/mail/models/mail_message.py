@@ -6,13 +6,12 @@ import re
 
 from binascii import Error as binascii_error
 from operator import itemgetter
-from email.utils import formataddr
 from openerp.http import request
 
 from odoo import _, api, fields, models, modules, SUPERUSER_ID, tools
 from odoo.exceptions import UserError, AccessError
 from odoo.osv import expression
-from odoo.tools import groupby
+from odoo.tools import groupby, formataddr
 
 _logger = logging.getLogger(__name__)
 _image_dataurl = re.compile(r'(data:image/[a-z]+?);base64,([a-z0-9+/\n]{3,}=*)\n*([\'"])(?: data-filename="([^"]*)")?', re.I)

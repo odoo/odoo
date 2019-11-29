@@ -3,14 +3,12 @@
 
 import socket
 
-from email.utils import formataddr
-
 from odoo.addons.test_mail.data.test_mail_data import \
     MAIL_TEMPLATE, MAIL_TEMPLATE_PLAINTEXT, MAIL_MULTIPART_MIXED, MAIL_MULTIPART_MIXED_TWO, \
     MAIL_MULTIPART_IMAGE, MAIL_SINGLE_BINARY, MAIL_EML_ATTACHMENT, MAIL_XHTML
 from odoo.addons.test_mail.tests.common import BaseFunctionalTest, MockEmails
 from odoo.addons.test_mail.tests.common import mail_new_test_user
-from odoo.tools import mute_logger
+from odoo.tools import mute_logger, formataddr
 
 
 class TestEmailParsing(BaseFunctionalTest, MockEmails):
@@ -202,7 +200,7 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
         # Test bounce email
         self.assertEqual(self._mails[0].get('subject'), 'Re: Should Bounce')
         self.assertEqual(self._mails[0].get('email_to')[0], 'whatever-2a840@postmaster.twitter.com')
-        self.assertEqual(self._mails[0].get('email_from'), formataddr(('MAILER-DAEMON', 'bounce.test@test.com')))
+        self.assertEqual(self._mails[0].get('email_from'), 'MAILER-DAEMON <bounce.test@test.com>')
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_message_process_alias_followers_bounce(self):
@@ -385,7 +383,7 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
         # Test bounce email
         self.assertEqual(self._mails[0].get('subject'), 'Re: Should Bounce')
         self.assertEqual(self._mails[0].get('email_to')[0], 'whatever-2a840@postmaster.twitter.com')
-        self.assertEqual(self._mails[0].get('email_from'), formataddr(('MAILER-DAEMON', '%s@%s' % (self.bounce_alias, self.catchall_domain))))
+        self.assertEqual(self._mails[0].get('email_from'), '%s <%s@%s>' % ('MAILER-DAEMON', self.bounce_alias, self.catchall_domain))
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_process_write_to_catchall_and_alias(self):
