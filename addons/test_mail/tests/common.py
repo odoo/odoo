@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from contextlib import contextmanager
-from email.utils import formataddr
 
 from odoo import api
 from odoo.tests import common
+from odoo.tools import formataddr
 
 
 class BaseFunctionalTest(common.SavepointCase):

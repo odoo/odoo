@@ -37,8 +37,8 @@ class TestMessageValues(common.BaseFunctionalTest, common.MockEmails):
 
         msg = self.Message.create({})
         self.assertIn('-private', msg.message_id.split('@')[0], 'mail_message: message_id for a void message should be a "private" one')
-        self.assertEqual(msg.reply_to, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
-        self.assertEqual(msg.email_from, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
+        self.assertEqual(msg.reply_to, '"%s" <%s>' % (self.user_employee.name, self.user_employee.email))
+        self.assertEqual(msg.email_from, '"%s" <%s>' % (self.user_employee.name, self.user_employee.email))
 
     @mute_logger('odoo.models.unlink')
     def test_mail_message_values_alias(self):
@@ -48,8 +48,8 @@ class TestMessageValues(common.BaseFunctionalTest, common.MockEmails):
 
         msg = self.Message.create({})
         self.assertIn('-private', msg.message_id.split('@')[0], 'mail_message: message_id for a void message should be a "private" one')
-        self.assertEqual(msg.reply_to, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
-        self.assertEqual(msg.email_from, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
+        self.assertEqual(msg.reply_to, '"%s" <%s>' % (self.user_employee.name, self.user_employee.email))
+        self.assertEqual(msg.email_from, '"%s" <%s>' % (self.user_employee.name, self.user_employee.email))
 
     def test_mail_message_values_alias_catchall(self):
         alias_domain = 'example.com'
@@ -59,8 +59,8 @@ class TestMessageValues(common.BaseFunctionalTest, common.MockEmails):
 
         msg = self.Message.create({})
         self.assertIn('-private', msg.message_id.split('@')[0], 'mail_message: message_id for a void message should be a "private" one')
-        self.assertEqual(msg.reply_to, '%s <%s@%s>' % (self.env.user.company_id.name, alias_catchall, alias_domain))
-        self.assertEqual(msg.email_from, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
+        self.assertEqual(msg.reply_to, '"%s" <%s@%s>' % (self.env.user.company_id.name, alias_catchall, alias_domain))
+        self.assertEqual(msg.email_from, '"%s" <%s>' % (self.user_employee.name, self.user_employee.email))
 
     def test_mail_message_values_document_no_alias(self):
         self.env['ir.config_parameter'].search([('key', '=', 'mail.catchall.domain')]).unlink()
@@ -70,8 +70,8 @@ class TestMessageValues(common.BaseFunctionalTest, common.MockEmails):
             'res_id': self.alias_record.id
         })
         self.assertIn('-openerp-%d-mail.test' % self.alias_record.id, msg.message_id.split('@')[0])
-        self.assertEqual(msg.reply_to, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
-        self.assertEqual(msg.email_from, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
+        self.assertEqual(msg.reply_to, '"%s" <%s>' % (self.user_employee.name, self.user_employee.email))
+        self.assertEqual(msg.email_from, '"%s" <%s>' % (self.user_employee.name, self.user_employee.email))
 
     @mute_logger('odoo.models.unlink')
     def test_mail_message_values_document_alias(self):
@@ -84,8 +84,8 @@ class TestMessageValues(common.BaseFunctionalTest, common.MockEmails):
             'res_id': self.alias_record.id
         })
         self.assertIn('-openerp-%d-mail.test' % self.alias_record.id, msg.message_id.split('@')[0])
-        self.assertEqual(msg.reply_to, '%s %s <%s@%s>' % (self.env.user.company_id.name, self.alias_record.name, self.alias_record.alias_name, alias_domain))
-        self.assertEqual(msg.email_from, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
+        self.assertEqual(msg.reply_to, '"%s %s" <%s@%s>' % (self.env.user.company_id.name, self.alias_record.name, self.alias_record.alias_name, alias_domain))
+        self.assertEqual(msg.email_from, '"%s" <%s>' % (self.user_employee.name, self.user_employee.email))
 
     def test_mail_message_values_document_alias_catchall(self):
         alias_domain = 'example.com'
@@ -98,8 +98,8 @@ class TestMessageValues(common.BaseFunctionalTest, common.MockEmails):
             'res_id': self.alias_record.id
         })
         self.assertIn('-openerp-%d-mail.test' % self.alias_record.id, msg.message_id.split('@')[0])
-        self.assertEqual(msg.reply_to, '%s %s <%s@%s>' % (self.env.user.company_id.name, self.alias_record.name, self.alias_record.alias_name, alias_domain))
-        self.assertEqual(msg.email_from, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
+        self.assertEqual(msg.reply_to, '"%s %s" <%s@%s>' % (self.env.user.company_id.name, self.alias_record.name, self.alias_record.alias_name, alias_domain))
+        self.assertEqual(msg.email_from, '"%s" <%s>' % (self.user_employee.name, self.user_employee.email))
 
     def test_mail_message_values_no_auto_thread(self):
         msg = self.Message.create({

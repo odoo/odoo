@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from email.utils import formataddr
-
+from odoo.tools import formataddr
 from odoo.addons.test_mail.tests import common
 
 

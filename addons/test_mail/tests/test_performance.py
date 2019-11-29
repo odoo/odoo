@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from email.utils import formataddr
-
 from odoo.tests.common import TransactionCase, users, warmup
-from odoo.tools import mute_logger
+from odoo.tools import mute_logger, formataddr
 
 
 class TestMailPerformance(TransactionCase):
