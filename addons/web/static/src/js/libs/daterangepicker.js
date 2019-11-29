@@ -11,4 +11,14 @@ daterangepicker.prototype.clickDate = function (ev) {
     }
 };
 
+/**
+ * Override to open up or down based on top/bottom space in window.
+ */
+const moveFunction = daterangepicker.prototype.move;
+daterangepicker.prototype.move = function () {
+    const offset = this.element.offset();
+    this.drops = this.container.height() < offset.top ? 'up' : 'down';
+    moveFunction.apply(this, arguments);
+};
+
 });
