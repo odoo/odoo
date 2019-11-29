@@ -400,6 +400,25 @@ var ListController = BasicController.extend({
             return result;
         }, []);
         return new Promise((resolve, reject) => {
+            const saveRecords = () => {
+                this.model.saveRecords(this.handle, recordId, validRecordIds, fieldName)
+                    .then(async () => {
+                        this._updateButtons('readonly');
+                        const state = this.model.get(this.handle);
+                        // We need to check the current multi-editable state here
+                        // in case the selection is changed. If there are changes
+                        // and the list was multi-editable, we do not want to select
+                        // the next row.
+                        this.selectedRecords = [];
+                        await this.renderer.updateState(state, {
+                            keepWidths: true,
+                            selectedRecords: [],
+                        });
+                        this.renderer.focusCell(recordId, node);
+                        resolve(!Object.keys(changes).length);
+                    })
+                    .guardedCatch(discardAndReject);
+            };
             const discardAndReject = () => {
                 this.model.discardChanges(recordId);
                 this._confirmSave(recordId).then(() => {
@@ -408,18 +427,12 @@ var ListController = BasicController.extend({
                 });
             };
             if (validRecordIds.length > 0) {
+                if (recordIds.length === 1) {
+                    // Save without prompt
+                    return saveRecords();
+                }
                 const dialogOptions = {
-                    confirm_callback: () => {
-                        this.model.saveRecords(this.handle, recordId, validRecordIds, fieldName)
-                            .then(async () => {
-                                this._updateButtons('readonly');
-                                const state = this.model.get(this.handle);
-                                await this.renderer.updateState(state, { keepWidths: true });
-                                await this.renderer.focusCell(recordId, node);
-                                resolve(Object.keys(changes));
-                            })
-                            .guardedCatch(discardAndReject);
-                    },
+                    confirm_callback: saveRecords,
                     cancel_callback: discardAndReject,
                 };
                 const record = this.model.get(recordId);

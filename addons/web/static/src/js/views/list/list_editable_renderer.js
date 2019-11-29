@@ -507,12 +507,12 @@ ListRenderer.include({
                 onSuccess: resolve,
                 onFailure: reject,
             });
-        }).then(changedFields => {
+        }).then(selectNextRow => {
             this._enableRecordSelectors();
             // If any field has changed and if the list is in multiple edition,
             // we send a truthy boolean to _selectRow to tell it not to select
             // the following record.
-            return changedFields && changedFields.length && this.isInMultipleRecordEdition(recordID);
+            return selectNextRow;
         }).guardedCatch(() => {
             toggleWidgets(false);
         });
@@ -1300,8 +1300,8 @@ ListRenderer.include({
         var recordId = this._getRecordID(rowIndex);
         // To select a row, the currently selected one must be unselected first
         var self = this;
-        return this.unselectRow().then(noSelectNext => {
-            if (noSelectNext) {
+        return this.unselectRow().then((selectNextRow = true) => {
+            if (!selectNextRow) {
                 return Promise.resolve();
             }
             if (!recordId) {

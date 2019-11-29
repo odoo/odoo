@@ -5495,7 +5495,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('editable list view: multi edition', async function (assert) {
-        assert.expect(24);
+        assert.expect(26);
 
         var list = await createView({
             View: ListView,
@@ -5549,6 +5549,8 @@ QUnit.module('Views', {
         await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(0)'));
         assert.containsOnce(document.body, '.modal', "modal appears when switching cells");
         await testUtils.dom.click($('.modal .btn:contains(Cancel)'));
+        assert.containsN(list, '.o_list_record_selector input:checked', 2,
+            "Selection should remain unchanged");
         assert.strictEqual(list.$('.o_data_row:eq(0) .o_data_cell').text(), 'yop10',
             "changes have been discarded and row is back to readonly");
         assert.strictEqual(document.activeElement, list.$('.o_data_row:eq(0) .o_data_cell:eq(1)')[0],
@@ -5559,6 +5561,7 @@ QUnit.module('Views', {
         assert.ok($('.modal').text().includes('those 2 records'), "the number of records should be correctly displayed");
         await testUtils.dom.click($('.modal .btn-primary'));
         assert.containsNone(list, '.o_data_cell input.o_field_widget', "no field should be editable anymore");
+        assert.containsNone(list, '.o_list_record_selector input:checked', "no record should be selected anymore");
         assert.verifySteps(['write', 'read']);
         assert.strictEqual(list.$('.o_data_row:eq(0) .o_data_cell').text(), "yop666",
             "the first row should be updated");
@@ -5626,18 +5629,16 @@ QUnit.module('Views', {
         await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_list_record_selector input'));
         await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(0)'));
         await testUtils.fields.editInput(list.$('.o_field_widget[name=foo]'), 'hi');
-        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(1)'));
 
-        assert.containsOnce(document.body, '.modal'); // save dialog
-        await testUtils.dom.click($('.modal .btn-primary'));
-
+        assert.containsNone(document.body, '.modal');
         assert.strictEqual(list.$('.o_data_row:eq(0) .o_data_cell').text(), "hi2");
         assert.strictEqual(list.$('.o_data_row:eq(1) .o_data_cell').text(), "blip9");
 
         assert.verifySteps(['write', 'read']);
 
         // select the second record (the first one is still selected)
-        assert.ok(list.$('.o_data_row:eq(0) .o_list_record_selector input').is(':checked'));
+        assert.containsNone(list, '.o_list_record_selector input:checked');
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_list_record_selector input'));
         await testUtils.dom.click(list.$('.o_data_row:eq(1) .o_list_record_selector input'));
 
         // edit foo, first row
@@ -6063,7 +6064,7 @@ QUnit.module('Views', {
         list.destroy();
     });
 
-    QUnit.test('editable readonly list view: single edition behaves like a multi-edition', async function (assert) {
+    QUnit.test('editable readonly list view: single edition does not behave like a multi-edition', async function (assert) {
         assert.expect(3);
 
         const list = await createView({
@@ -6083,17 +6084,14 @@ QUnit.module('Views', {
         await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(0)'));
         await testUtils.fields.editInput(list.$('.o_field_widget[name=foo]'), "");
 
-        assert.containsOnce($('body'),'.modal', "should have a modal");
+        assert.containsOnce($('body'),'.modal', "should have a modal (invalid fields)");
         await testUtils.dom.click($('.modal button.btn'));
 
         // edit a field
         await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(0)'));
         await testUtils.fields.editInput(list.$('.o_field_widget[name=foo]'), "bar");
 
-        assert.containsOnce($('body'),'.modal', "should have a modal");
-        await testUtils.dom.click($('.modal button.btn.btn-primary'));
-
-
+        assert.containsNone($('body'),'.modal', "should not have a modal");
         assert.strictEqual(list.$('.o_data_row:eq(0) .o_data_cell').text(), "bar",
             "the first row should be updated");
 
