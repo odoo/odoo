@@ -21,7 +21,7 @@
                             <div class="p-2 w-100">
                                 <h5 class="mt-0 mb-1" t-esc="certificate.survey_id.title"/>
                                 <div t-if="user.id == uid">
-                                    <small class="font-weight-bold">Score : <span t-esc="certificate.quizz_score"/> %</small>
+                                    <small class="font-weight-bold">Score : <span t-esc="certificate.scoring_percentage"/> %</small>
                                     <div class="float-right">
                                         <a role="button" class="float-right" t-att-href="'/survey/%s/get_certification' % certificate.survey_id.id">
                                             <i class="fa fa-download" aria-label="Download certification" title="Download Certification"/>

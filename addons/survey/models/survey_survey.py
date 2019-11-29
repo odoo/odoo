@@ -122,7 +122,7 @@ class Survey(models.Model):
         for survey in self:
             survey.users_can_signup = signup_allowed
 
-    @api.depends('user_input_ids.state', 'user_input_ids.test_entry', 'user_input_ids.quizz_score', 'user_input_ids.quizz_passed')
+    @api.depends('user_input_ids.state', 'user_input_ids.test_entry', 'user_input_ids.scoring_percentage', 'user_input_ids.scoring_success')
     def _compute_survey_statistic(self):
         default_vals = {
             'answer_count': 0, 'answer_done_count': 0, 'success_count': 0,
@@ -132,13 +132,13 @@ class Survey(models.Model):
         UserInput = self.env['survey.user_input']
         base_domain = ['&', ('survey_id', 'in', self.ids), ('test_entry', '!=', True)]
 
-        read_group_res = UserInput.read_group(base_domain, ['survey_id', 'state'], ['survey_id', 'state', 'quizz_score', 'quizz_passed'], lazy=False)
+        read_group_res = UserInput.read_group(base_domain, ['survey_id', 'state'], ['survey_id', 'state', 'scoring_percentage', 'scoring_success'], lazy=False)
         for item in read_group_res:
             stat[item['survey_id'][0]]['answer_count'] += item['__count']
-            stat[item['survey_id'][0]]['answer_score_avg_total'] += item['quizz_score']
+            stat[item['survey_id'][0]]['answer_score_avg_total'] += item['scoring_percentage']
             if item['state'] == 'done':
                 stat[item['survey_id'][0]]['answer_done_count'] += item['__count']
-            if item['quizz_passed']:
+            if item['scoring_success']:
                 stat[item['survey_id'][0]]['success_count'] += item['__count']
 
         for survey_id, values in stat.items():
@@ -470,7 +470,7 @@ class Survey(models.Model):
     def action_start_survey(self, answer=None):
         """ Open the website page with the survey form """
         self.ensure_one()
-        url = '%s?%s' % (self.get_start_url(), werkzeug.urls.url_encode({'answer_token': answer.token or None}))
+        url = '%s?%s' % (self.get_start_url(), werkzeug.urls.url_encode({'answer_token': answer.access_token or None}))
         return {
             'type': 'ir.actions.act_url',
             'name': "Start Survey",
@@ -481,7 +481,7 @@ class Survey(models.Model):
     def action_print_survey(self, answer=None):
         """ Open the website page with the survey printable view """
         self.ensure_one()
-        url = '%s?%s' % (self.get_print_url(), werkzeug.urls.url_encode({'answer_token': answer.token or None}))
+        url = '%s?%s' % (self.get_print_url(), werkzeug.urls.url_encode({'answer_token': answer.access_token or None}))
         return {
             'type': 'ir.actions.act_url',
             'name': "Print Survey",
@@ -524,7 +524,7 @@ class Survey(models.Model):
         action = action_rec.read()[0]
         ctx = dict(self.env.context)
         ctx.update({'search_default_survey_id': self.ids[0],
-                    'search_default_quizz_passed': 1,
+                    'search_default_scoring_success': 1,
                     'search_default_not_test': 1})
         action['context'] = ctx
         return action
@@ -724,7 +724,7 @@ class Survey(models.Model):
         goal = self.env['gamification.goal.definition'].create({
             'name': self.title,
             'description': "%s certification passed" % self.title,
-            'domain': "['&', ('survey_id', '=', %s), ('quizz_passed', '=', True)]" % self.id,
+            'domain': "['&', ('survey_id', '=', %s), ('scoring_success', '=', True)]" % self.id,
             'computation_mode': 'count',
             'display_mode': 'boolean',
             'model_id': self.env.ref('survey.model_survey_user_input').id,

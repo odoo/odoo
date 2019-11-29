@@ -108,7 +108,7 @@ class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
         user_inputs = self.env['survey.user_input'].search([('survey_id', '=', certification.id)])
         self.assertEqual(len(user_inputs), 1)
         self.assertEqual(user_inputs.partner_id, self.user_emp.partner_id)
-        answer_token = user_inputs.token
+        answer_token = user_inputs.access_token
 
         # Employee begins survey with first page
         response = self._access_page(certification, answer_token)
@@ -126,8 +126,8 @@ class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
 
         user_inputs.invalidate_cache()
         # Check that certification is successfully passed
-        self.assertEqual(user_inputs.quizz_score, 87.5)
-        self.assertTrue(user_inputs.quizz_passed)
+        self.assertEqual(user_inputs.scoring_percentage, 87.5)
+        self.assertTrue(user_inputs.scoring_success)
 
         # Check answer correction is taken into account
         self.assertNotIn("I think they're great!", user_inputs.mapped('user_input_line_ids.value_free_text'))

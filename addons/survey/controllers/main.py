@@ -34,7 +34,7 @@ class Survey(http.Controller):
         else:
             answer_sudo = request.env['survey.user_input'].sudo().search([
                 ('survey_id', '=', survey_sudo.id),
-                ('token', '=', answer_token)
+                ('access_token', '=', answer_token)
             ], limit=1)
         return survey_sudo, answer_sudo
 
@@ -127,20 +127,20 @@ class Survey(http.Controller):
             return request.render("survey.survey_void_content", {'survey': survey_sudo, 'answer': answer_sudo})
         elif error_key == 'survey_closed' and access_data['can_answer']:
             return request.render("survey.survey_closed_expired", {'survey': survey_sudo})
-        elif error_key == 'survey_auth' and answer_sudo.token:
+        elif error_key == 'survey_auth' and answer_sudo.access_token:
             if answer_sudo.partner_id and (answer_sudo.partner_id.user_ids or survey_sudo.users_can_signup):
                 if answer_sudo.partner_id.user_ids:
                     answer_sudo.partner_id.signup_cancel()
                 else:
                     answer_sudo.partner_id.signup_prepare(expiration=fields.Datetime.now() + relativedelta(days=1))
-                redirect_url = answer_sudo.partner_id._get_signup_url_for_action(url='/survey/start/%s?answer_token=%s' % (survey_sudo.access_token, answer_sudo.token))[answer_sudo.partner_id.id]
+                redirect_url = answer_sudo.partner_id._get_signup_url_for_action(url='/survey/start/%s?answer_token=%s' % (survey_sudo.access_token, answer_sudo.access_token))[answer_sudo.partner_id.id]
             else:
-                redirect_url = '/web/login?redirect=%s' % ('/survey/start/%s?answer_token=%s' % (survey_sudo.access_token, answer_sudo.token))
+                redirect_url = '/web/login?redirect=%s' % ('/survey/start/%s?answer_token=%s' % (survey_sudo.access_token, answer_sudo.access_token))
             return request.render("survey.survey_auth_required", {'survey': survey_sudo, 'redirect_url': redirect_url})
-        elif error_key == 'answer_deadline' and answer_sudo.token:
+        elif error_key == 'answer_deadline' and answer_sudo.access_token:
             return request.render("survey.survey_closed_expired", {'survey': survey_sudo})
-        elif error_key == 'answer_done' and answer_sudo.token:
-            return request.render("survey.survey_closed_finished", self._prepare_survey_finished_values(survey_sudo, answer_sudo, token=answer_sudo.token))
+        elif error_key == 'answer_done' and answer_sudo.access_token:
+            return request.render("survey.survey_closed_finished", self._prepare_survey_finished_values(survey_sudo, answer_sudo, token=answer_sudo.access_token))
 
         return werkzeug.utils.redirect("/")
 
@@ -153,7 +153,7 @@ class Survey(http.Controller):
             answer_sudo = survey_sudo._create_answer(user=request.env.user, test_entry=True)
         except:
             return werkzeug.utils.redirect('/')
-        return request.redirect('/survey/start/%s?%s' % (survey_sudo.access_token, keep_query('*', answer_token=answer_sudo.token)))
+        return request.redirect('/survey/start/%s?%s' % (survey_sudo.access_token, keep_query('*', answer_token=answer_sudo.access_token)))
 
     @http.route('/survey/retry/<string:survey_token>/<string:answer_token>', type='http', auth='public', website=True)
     def survey_retry(self, survey_token, answer_token, **post):
@@ -178,7 +178,7 @@ class Survey(http.Controller):
             )
         except:
             return werkzeug.utils.redirect("/")
-        return request.redirect('/survey/start/%s?%s' % (survey_sudo.access_token, keep_query('*', answer_token=retry_answer_sudo.token)))
+        return request.redirect('/survey/start/%s?%s' % (survey_sudo.access_token, keep_query('*', answer_token=retry_answer_sudo.access_token)))
 
     def _prepare_retry_additional_values(self, answer):
         return {
@@ -220,7 +220,7 @@ class Survey(http.Controller):
             data = {'survey': survey_sudo, 'answer': answer_sudo, 'page': 0}
             return request.render('survey.survey_page_start', data)
         else:
-            return request.redirect('/survey/fill/%s/%s' % (survey_sudo.access_token, answer_sudo.token))
+            return request.redirect('/survey/fill/%s/%s' % (survey_sudo.access_token, answer_sudo.access_token))
 
     @http.route('/survey/fill/<string:survey_token>/<string:answer_token>', type='http', auth='public', website=True)
     def survey_display_page(self, survey_token, answer_token, **post):
@@ -459,7 +459,7 @@ class Survey(http.Controller):
         succeeded_attempt = request.env['survey.user_input'].sudo().search([
             ('partner_id', '=', request.env.user.partner_id.id),
             ('survey_id', '=', survey_id),
-            ('quizz_passed', '=', True)
+            ('scoring_success', '=', True)
         ], limit=1)
 
         if not succeeded_attempt:
@@ -542,31 +542,31 @@ class Survey(http.Controller):
 
         count_data = request.env['survey.user_input'].read_group(
             [('survey_id', '=', survey.id), ('state', '=', 'done'), ('test_entry', '=', False)],
-            ['quizz_passed', 'id:count_distinct'],
-            ['quizz_passed']
+            ['scoring_success', 'id:count_distinct'],
+            ['scoring_success']
         )
 
-        quizz_passed_count = 0
-        quizz_failed_count = 0
+        scoring_success_count = 0
+        scoring_failed_count = 0
         for count_data_item in count_data:
-            if count_data_item['quizz_passed']:
-                quizz_passed_count = count_data_item['quizz_passed_count']
+            if count_data_item['scoring_success']:
+                scoring_success_count = count_data_item['scoring_success_count']
             else:
-                quizz_failed_count = count_data_item['quizz_passed_count']
+                scoring_failed_count = count_data_item['scoring_success_count']
 
         graph_data = [{
             'text': _('Passed'),
-            'count': quizz_passed_count,
+            'count': scoring_success_count,
             'color': '#2E7D32'
         }, {
             'text': _('Missed'),
-            'count': quizz_failed_count,
+            'count': scoring_failed_count,
             'color': '#C62828'
         }]
 
-        total_quizz_passed = quizz_passed_count + quizz_failed_count
+        total_scoring_success = scoring_success_count + scoring_failed_count
         return {
-            'success_rate': round((quizz_passed_count / total_quizz_passed) * 100, 1) if total_quizz_passed > 0 else 0,
+            'success_rate': round((scoring_success_count / total_scoring_success) * 100, 1) if total_scoring_success > 0 else 0,
             'graph_data': graph_data
         }
 

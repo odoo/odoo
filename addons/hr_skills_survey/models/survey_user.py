@@ -16,7 +16,7 @@ class SurveyUserInput(models.Model):
 
         super(SurveyUserInput, self)._mark_done()
 
-        certification_user_inputs = self.filtered(lambda user_input: user_input.survey_id.certification and user_input.quizz_passed)
+        certification_user_inputs = self.filtered(lambda user_input: user_input.survey_id.certification and user_input.scoring_success)
         partner_has_completed = {user_input.partner_id.id: user_input.survey_id for user_input in certification_user_inputs}
         employees = self.env['hr.employee'].sudo().search([('user_id.partner_id', 'in', certification_user_inputs.mapped('partner_id').ids)])
         for employee in employees:
