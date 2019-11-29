@@ -75,7 +75,7 @@ class Survey(models.Model):
         ('scoring_with_answers', 'Scoring with answers at the end'),
         ('scoring_without_answers', 'Scoring without answers at the end')],
         string="Scoring", required=True, default='no_scoring')
-    passing_score = fields.Float('Passing score (%)', required=True, default=80.0)
+    scoring_success_min = fields.Float('Success %', default=80.0)
     # attendees context: attempts and time limitation
     is_attempts_limited = fields.Boolean('Limited number of attempts', help="Check this option if you want to limit the number of attempts per user")
     attempts_limit = fields.Integer('Number of attempts', default=1)
@@ -155,10 +155,10 @@ class Survey(models.Model):
             survey.page_ids = survey.question_and_page_ids.filtered(lambda question: question.is_page)
             survey.question_ids = survey.question_and_page_ids - survey.page_ids
 
-    @api.onchange('passing_score')
-    def _onchange_passing_score(self):
-        if self.passing_score < 0 or self.passing_score > 100:
-            self.passing_score = 80.0
+    @api.onchange('scoring_success_min')
+    def _onchange_scoring_success_min(self):
+        if self.scoring_success_min < 0 or self.scoring_success_min > 100:
+            self.scoring_success_min = 80.0
 
     @api.onchange('scoring_type')
     def _onchange_scoring_type(self):

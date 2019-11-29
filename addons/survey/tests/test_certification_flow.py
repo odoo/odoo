@@ -39,7 +39,7 @@ class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
                 'questions_layout': 'page_per_question',
                 'users_can_go_back': True,
                 'scoring_type': 'scoring_with_answers',
-                'passing_score': 85.0,
+                'scoring_success_min': 85.0,
                 'certification': True,
                 'certification_mail_template_id': self.env.ref('survey.mail_template_certification').id,
                 'is_time_limited': True,
