@@ -21,11 +21,9 @@ import functools
 from psycopg2 import OperationalError
 from types import CodeType
 import logging
-import sys
 import werkzeug
 
 from .misc import ustr
-from . import pycompat
 
 import odoo
 
@@ -40,77 +38,74 @@ _ALLOWED_MODULES = ['_strptime', 'math', 'time']
 
 _UNSAFE_ATTRIBUTES = ['f_builtins', 'f_globals', 'f_locals', 'gi_frame',
                       'co_code', 'func_globals']
-_POSSIBLE_OPCODES_P3 = [
-    # opcodes for `with` statement cleanup process
-    'WITH_CLEANUP_START', 'WITH_CLEANUP_FINISH',
-    # f-strings
-    'FORMAT_VALUE', 'BUILD_STRING',
-    # extended iterable unpacking: LHS has * e.g. `a, *b, c = thing()`
-    'UNPACK_EX',
-    # collection literals with unpacking e.g. [*a, *b]
-    'BUILD_LIST_UNPACK', 'BUILD_TUPLE_UNPACK', 'BUILD_SET_UNPACK', 'BUILD_MAP_UNPACK',
-    # packs args/kwargs for calls with multiple unpacks e.g. foo(*a, *b, *c)
-    'BUILD_TUPLE_UNPACK_WITH_CALL', 'BUILD_MAP_UNPACK_WITH_CALL',
-    # ???
-    'GET_YIELD_FROM_ITER',
-    # matrix operator
-    'BINARY_MATRIX_MULTIPLY', 'INPLACE_MATRIX_MULTIPLY',
-]
 
+def to_opcodes(opnames, _opmap=opmap):
+    for x in opnames:
+        if x in _opmap:
+            yield _opmap[x]
+# opcodes which absolutely positively must not be usable in safe_eval,
+# explicitly subtracted from all sets of valid opcodes just in case
+_BLACKLIST = set(to_opcodes([
+    # can't provide access to accessing arbitrary modules
+    'IMPORT_STAR', 'IMPORT_NAME', 'IMPORT_FROM',
+    # could allow replacing or updating core attributes on models & al, setitem
+    # can be used to set field values
+    'STORE_ATTR', 'DELETE_ATTR',
+    # no reason to allow this
+    'STORE_GLOBAL', 'DELETE_GLOBAL',
+]))
 # opcodes necessary to build literal values
-_CONST_OPCODES = set(opmap[x] for x in [
+_CONST_OPCODES = set(to_opcodes([
     # stack manipulations
-    'POP_TOP', 'ROT_TWO', 'ROT_THREE', 'ROT_FOUR', 'DUP_TOP', 'DUP_TOPX',
-    'DUP_TOP_TWO',  # replaces DUP_TOPX in P3
+    'POP_TOP', 'ROT_TWO', 'ROT_THREE', 'ROT_FOUR', 'DUP_TOP', 'DUP_TOP_TWO',
     'LOAD_CONST',
     'RETURN_VALUE', # return the result of the literal/expr evaluation
     # literal collections
     'BUILD_LIST', 'BUILD_MAP', 'BUILD_TUPLE', 'BUILD_SET',
     # 3.6: literal map with constant keys https://bugs.python.org/issue27140
     'BUILD_CONST_KEY_MAP',
-    # until Python 3.5, literal maps are compiled to creating an empty map
-    # (pre-sized) then filling it key by key
-    'STORE_MAP',
-] if x in opmap)
+])) - _BLACKLIST
 
+# operations which are both binary and inplace, same order as in doc'
+_operations = [
+    'POWER', 'MULTIPLY', # 'MATRIX_MULTIPLY', # matrix operator (3.5+)
+    'FLOOR_DIVIDE', 'TRUE_DIVIDE', 'MODULO', 'ADD',
+    'SUBTRACT', 'LSHIFT', 'RSHIFT', 'AND', 'XOR', 'OR',
+]
 # operations on literal values
-_EXPR_OPCODES = _CONST_OPCODES.union(set(opmap[x] for x in [
-    'UNARY_POSITIVE', 'UNARY_NEGATIVE', 'UNARY_NOT',
-    'UNARY_INVERT', 'BINARY_POWER', 'BINARY_MULTIPLY',
-    'BINARY_DIVIDE', 'BINARY_FLOOR_DIVIDE', 'BINARY_TRUE_DIVIDE',
-    'BINARY_MODULO', 'BINARY_ADD', 'BINARY_SUBTRACT', 'BINARY_SUBSCR',
-    'BINARY_LSHIFT', 'BINARY_RSHIFT', 'BINARY_AND', 'BINARY_XOR',
-    'BINARY_OR', 'INPLACE_ADD', 'INPLACE_SUBTRACT', 'INPLACE_MULTIPLY',
-    'INPLACE_DIVIDE', 'INPLACE_REMAINDER', 'INPLACE_POWER',
-    'INPLACE_LEFTSHIFT', 'INPLACE_RIGHTSHIFT', 'INPLACE_AND',
-    'INPLACE_XOR','INPLACE_OR', 'STORE_SUBSCR',
-    # slice operations (Python 3 only has BUILD_SLICE)
-    'SLICE+0', 'SLICE+1', 'SLICE+2', 'SLICE+3', 'BUILD_SLICE',
+_EXPR_OPCODES = _CONST_OPCODES.union(to_opcodes([
+    'UNARY_POSITIVE', 'UNARY_NEGATIVE', 'UNARY_NOT', 'UNARY_INVERT',
+    *('BINARY_' + op for op in _operations), 'BINARY_SUBSCR',
+    *('INPLACE_' + op for op in _operations),
+    'BUILD_SLICE',
     # comprehensions
     'LIST_APPEND', 'MAP_ADD', 'SET_ADD',
     'COMPARE_OP',
-] if x in opmap))
+])) - _BLACKLIST
 
-_SAFE_OPCODES = _EXPR_OPCODES.union(set(opmap[x] for x in [
-    'POP_BLOCK', 'POP_EXCEPT', # Seems to be a special-case of POP_BLOCK for P3
-    'SETUP_LOOP', 'BREAK_LOOP', 'CONTINUE_LOOP',
-    'MAKE_FUNCTION', 'CALL_FUNCTION',
+_SAFE_OPCODES = _EXPR_OPCODES.union(to_opcodes([
+    'POP_BLOCK', 'POP_EXCEPT',
+
+    # note: removed in 3.8
+    'SETUP_LOOP', 'SETUP_EXCEPT', 'BREAK_LOOP', 'CONTINUE_LOOP',
+
     'EXTENDED_ARG',  # P3.6 for long jump offsets.
-    # P3: https://bugs.python.org/issue27213
-    'CALL_FUNCTION_EX',
-    # Already in P2 but apparently the first one is used more aggressively in P3
-    'CALL_FUNCTION_KW', 'CALL_FUNCTION_VAR', 'CALL_FUNCTION_VAR_KW',
+    'MAKE_FUNCTION', 'CALL_FUNCTION', 'CALL_FUNCTION_KW', 'CALL_FUNCTION_EX',
     # Added in P3.7 https://bugs.python.org/issue26110
     'CALL_METHOD', 'LOAD_METHOD',
+
     'GET_ITER', 'FOR_ITER', 'YIELD_VALUE',
-    'JUMP_FORWARD', 'JUMP_IF_TRUE', 'JUMP_IF_FALSE', 'JUMP_ABSOLUTE',
-    # New in Python 2.7 - http://bugs.python.org/issue4715 :
-    'JUMP_IF_FALSE_OR_POP', 'JUMP_IF_TRUE_OR_POP', 'POP_JUMP_IF_FALSE',
-    'POP_JUMP_IF_TRUE', 'SETUP_EXCEPT', 'SETUP_FINALLY', 'END_FINALLY',
+    'JUMP_FORWARD', 'JUMP_ABSOLUTE',
+    'JUMP_IF_FALSE_OR_POP', 'JUMP_IF_TRUE_OR_POP', 'POP_JUMP_IF_FALSE', 'POP_JUMP_IF_TRUE',
+    'SETUP_FINALLY', 'END_FINALLY',
+    # Added in 3.8 https://bugs.python.org/issue17611
+    'BEGIN_FINALLY', 'CALL_FINALLY', 'POP_FINALLY',
+
     'RAISE_VARARGS', 'LOAD_NAME', 'STORE_NAME', 'DELETE_NAME', 'LOAD_ATTR',
     'LOAD_FAST', 'STORE_FAST', 'DELETE_FAST', 'UNPACK_SEQUENCE',
-    'LOAD_GLOBAL', # Only allows access to restricted globals
-] if x in opmap))
+    'STORE_SUBSCR',
+    'LOAD_GLOBAL',
+])) - _BLACKLIST
 
 _logger = logging.getLogger(__name__)
 
