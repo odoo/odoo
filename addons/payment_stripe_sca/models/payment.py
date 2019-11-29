@@ -4,6 +4,7 @@ import logging
 import requests
 import pprint
 from werkzeug import urls
+from requests.exceptions import HTTPError
 
 from odoo import api, models, fields, _
 from odoo.exceptions import ValidationError
@@ -54,9 +55,11 @@ class PaymentAcquirerStripeSCA(models.Model):
         resp = requests.request(method, url, data=data, headers=headers)
         try:
             resp.raise_for_status()
-        except:
+        except HTTPError:
             _logger.error(resp.text)
-            raise
+            stripe_error = resp.json().get('error', {}).get('message', '')
+            error_msg = " " + (_("Stripe gave us the following info about the problem: '%s'") % stripe_error)
+            raise ValidationError(error_msg)
         return resp.json()
 
     def _create_stripe_session(self, kwargs):
