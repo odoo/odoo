@@ -123,7 +123,7 @@ class WebsiteForm(http.Controller):
             # If the value of the field if a file
             if hasattr(field_value, 'filename'):
                 # Undo file upload field name indexing
-                field_name = field_name.rsplit('[', 1)[0]
+                field_name = field_name.split('[', 1)[0]
 
                 # If it's an actual binary field, convert the input file
                 # If it's not, we'll use attachments instead
