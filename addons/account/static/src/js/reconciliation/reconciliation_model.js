@@ -957,9 +957,9 @@ var StatementModel = BasicModel.extend({
                         _.each(result.taxes, function(tax){
                             var tax_prop = self._formatQuickCreate(line, {
                                 'link': prop.id,
-                                'tax_ids': tax.tax_ids[0][2],
+                                'tax_ids': tax.tax_ids,
                                 'tax_repartition_line_id': tax.tax_repartition_line_id,
-                                'tag_ids': tax.tag_ids[0][2],
+                                'tag_ids': tax.tag_ids,
                                 'amount': tax.amount,
                                 'label': prop.label ? prop.label + " " + tax.name : tax.name,
                                 'date': prop.date,
