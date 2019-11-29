@@ -9,8 +9,6 @@ import pytz
 import threading
 import re
 
-from email.utils import formataddr
-
 import requests
 from lxml import etree
 from werkzeug import urls
@@ -405,10 +403,14 @@ class Partner(models.Model):
     @api.depends('name', 'email')
     def _compute_email_formatted(self):
         for partner in self:
+<<<<<<< HEAD
             if partner.email:
                 partner.email_formatted = formataddr((partner.name or u"False", partner.email or u"False"))
             else:
                 partner.email_formatted = ''
+=======
+            partner.email_formatted = tools.formataddr((partner.name or u"False", partner.email or u"False"))
+>>>>>>> fcf2fc2b80d... temp
 
     @api.depends('is_company')
     def _compute_company_type(self):

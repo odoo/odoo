@@ -4,9 +4,12 @@
 import logging
 import re
 
+<<<<<<< HEAD
 from binascii import Error as binascii_error
 from operator import itemgetter
 from email.utils import formataddr
+=======
+>>>>>>> fcf2fc2b80d... temp
 from openerp.http import request
 
 from odoo import _, api, fields, models, modules, SUPERUSER_ID, tools
@@ -31,7 +34,7 @@ class Message(models.Model):
     @api.model
     def _get_default_from(self):
         if self.env.user.email:
-            return formataddr((self.env.user.name, self.env.user.email))
+            return tools.formataddr((self.env.user.name, self.env.user.email))
         raise UserError(_("Unable to post message, please configure the sender's email address."))
 
     @api.model

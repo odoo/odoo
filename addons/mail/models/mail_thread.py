@@ -20,13 +20,12 @@ except ImportError:
 
 from collections import namedtuple
 from email.message import Message
-from email.utils import formataddr
 from lxml import etree
 from werkzeug import url_encode
 from werkzeug import urls
 
 from odoo import _, api, exceptions, fields, models, tools
-from odoo.tools import pycompat, ustr
+from odoo.tools import pycompat, ustr, formataddr
 from odoo.tools.misc import clean_context
 from odoo.tools.safe_eval import safe_eval
 

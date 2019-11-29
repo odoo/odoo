@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+<<<<<<< HEAD
 
 import base64
 import logging
+=======
+import base64
+>>>>>>> fcf2fc2b80d... temp
 import re
 
 from email.utils import formataddr
@@ -11,7 +15,11 @@ from uuid import uuid4
 from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
+<<<<<<< HEAD
 from odoo.tools import ormcache, pycompat
+=======
+from odoo.tools import ormcache, formataddr
+>>>>>>> fcf2fc2b80d... temp
 from odoo.tools.safe_eval import safe_eval
 
 MODERATION_FIELDS = ['moderation', 'moderator_ids', 'moderation_ids', 'moderation_notify', 'moderation_notify_msg', 'moderation_guidelines', 'moderation_guidelines_msg']

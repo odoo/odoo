@@ -3,6 +3,7 @@
 import json
 
 from contextlib import contextmanager
+<<<<<<< HEAD
 from email.utils import formataddr
 from functools import partial
 
@@ -11,6 +12,12 @@ from odoo.addons.bus.models.bus import json_dump
 from odoo.tests import common, tagged, new_test_user
 
 mail_new_test_user = partial(new_test_user, context={'mail_create_nolog': True, 'mail_create_nosubscribe': True, 'mail_notrack': True, 'no_reset_password': True})
+=======
+
+from odoo import api
+from odoo.tests import common
+from odoo.tools import formataddr
+>>>>>>> fcf2fc2b80d... temp
 
 
 class BaseFunctionalTest(common.SavepointCase):
