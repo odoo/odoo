@@ -43,7 +43,7 @@ class SurveyUserInput(models.Model):
     user_input_line_ids = fields.One2many('survey.user_input.line', 'user_input_id', string='Answers', copy=True)
     question_ids = fields.Many2many('survey.question', string='Predefined Questions', readonly=True)
     scoring_percentage = fields.Float("Score (%)", compute="_compute_scoring_percentage", store=True, compute_sudo=True)  # stored for perf reasons
-    quizz_passed = fields.Boolean('Quizz Passed', compute='_compute_quizz_passed', store=True, compute_sudo=True)  # stored for perf reasons
+    scoring_success = fields.Boolean('Quizz Passed', compute='_compute_scoring_success', store=True, compute_sudo=True)  # stored for perf reasons
 
     _sql_constraints = [
         ('unique_token', 'UNIQUE (token)', 'A token must be unique!'),
@@ -64,9 +64,9 @@ class SurveyUserInput(models.Model):
                 user_input.scoring_percentage = round(score, 2) if score > 0 else 0
 
     @api.depends('scoring_percentage', 'survey_id.scoring_success_min')
-    def _compute_quizz_passed(self):
+    def _compute_scoring_success(self):
         for user_input in self:
-            user_input.quizz_passed = user_input.scoring_percentage >= user_input.survey_id.scoring_success_min
+            user_input.scoring_success = user_input.scoring_percentage >= user_input.survey_id.scoring_success_min
 
     @api.depends('start_datetime', 'survey_id.is_time_limited', 'survey_id.time_limit')
     def _compute_is_time_limit_reached(self):
@@ -150,7 +150,7 @@ class SurveyUserInput(models.Model):
         Challenge = self.env['gamification.challenge'].sudo()
         badge_ids = []
         for user_input in self:
-            if user_input.survey_id.certification and user_input.quizz_passed:
+            if user_input.survey_id.certification and user_input.scoring_success:
                 if user_input.survey_id.certification_mail_template_id and not user_input.test_entry:
                     user_input.survey_id.certification_mail_template_id.send_mail(user_input.id, notif_layout="mail.mail_notification_light")
                 if user_input.survey_id.certification_give_badge:

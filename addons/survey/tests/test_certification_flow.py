@@ -127,7 +127,7 @@ class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
         user_inputs.invalidate_cache()
         # Check that certification is successfully passed
         self.assertEqual(user_inputs.scoring_percentage, 87.5)
-        self.assertTrue(user_inputs.quizz_passed)
+        self.assertTrue(user_inputs.scoring_success)
 
         # Check answer correction is taken into account
         self.assertNotIn("I think they're great!", user_inputs.mapped('user_input_line_ids.value_free_text'))
