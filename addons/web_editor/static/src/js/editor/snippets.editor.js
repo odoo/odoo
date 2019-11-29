@@ -262,6 +262,34 @@ var SnippetEditor = Widget.extend({
             return false;
         }
     },
+    /**
+     * Clones the current snippet.
+     *
+     * @private
+     * @param {boolean} recordUndo
+     */
+    clone: function (recordUndo) {
+        this.trigger_up('snippet_will_be_cloned', {$target: this.$target});
+
+        var $clone = this.$target.clone(false);
+
+        if (recordUndo) {
+            this.trigger_up('request_history_undo_record', {$target: this.$target});
+        }
+
+        this.$target.after($clone);
+        this.trigger_up('call_for_each_child_snippet', {
+            $snippet: $clone,
+            callback: function (editor, $snippet) {
+                for (var i in editor.styles) {
+                    editor.styles[i].onClone({
+                        isCurrent: ($snippet.is($clone)),
+                    });
+                }
+            },
+        });
+        this.trigger_up('snippet_cloned', {$target: $clone, $origin: this.$target});
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -360,25 +388,7 @@ var SnippetEditor = Widget.extend({
      */
     _onCloneClick: function (ev) {
         ev.preventDefault();
-
-        this.trigger_up('snippet_will_be_cloned', {$target: this.$target});
-
-        var $clone = this.$target.clone(false);
-
-        this.trigger_up('request_history_undo_record', {$target: this.$target});
-
-        this.$target.after($clone);
-        this.trigger_up('call_for_each_child_snippet', {
-            $snippet: $clone,
-            callback: function (editor, $snippet) {
-                for (var i in editor.styles) {
-                    editor.styles[i].onClone({
-                        isCurrent: ($snippet.is($clone)),
-                    });
-                }
-            },
-        });
-        this.trigger_up('snippet_cloned', {$target: $clone, $origin: this.$target});
+        this.clone(true);
     },
     /**
      * Called when the overlay dimensions/positions should be recomputed.
@@ -566,6 +576,7 @@ var SnippetsMenu = Widget.extend({
     custom_events: {
         activate_insertion_zones: '_onActivateInsertionZones',
         call_for_each_child_snippet: '_onCallForEachChildSnippet',
+        clone_snippet: '_onCloneSnippet',
         deactivate_snippet: '_onDeactivateSnippet',
         drag_and_drop_stop: '_onDragAndDropStop',
         go_to_parent: '_onGoToParent',
@@ -1430,6 +1441,19 @@ var SnippetsMenu = Widget.extend({
      */
     _onCleanForSaveDemand: function (ev) {
         this.cleanForSave();
+    },
+    /**
+     * Called when a child editor asks to clone a snippet, allows to correctly
+     * call the _onClone methods if the element's editor has one.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onCloneSnippet: function (ev) {
+        ev.stopPropagation();
+        this._createSnippetEditor(ev.data.$snippet).then(function (editor) {
+            editor.clone();
+        });
     },
     /**
      * Called when a child editor asks to deactivate the current snippet
