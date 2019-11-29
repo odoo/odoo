@@ -122,7 +122,7 @@ class Survey(models.Model):
         for survey in self:
             survey.users_can_signup = signup_allowed
 
-    @api.depends('user_input_ids.state', 'user_input_ids.test_entry', 'user_input_ids.quizz_score', 'user_input_ids.quizz_passed')
+    @api.depends('user_input_ids.state', 'user_input_ids.test_entry', 'user_input_ids.scoring_percentage', 'user_input_ids.quizz_passed')
     def _compute_survey_statistic(self):
         default_vals = {
             'answer_count': 0, 'answer_done_count': 0, 'success_count': 0,
@@ -132,10 +132,10 @@ class Survey(models.Model):
         UserInput = self.env['survey.user_input']
         base_domain = ['&', ('survey_id', 'in', self.ids), ('test_entry', '!=', True)]
 
-        read_group_res = UserInput.read_group(base_domain, ['survey_id', 'state'], ['survey_id', 'state', 'quizz_score', 'quizz_passed'], lazy=False)
+        read_group_res = UserInput.read_group(base_domain, ['survey_id', 'state'], ['survey_id', 'state', 'scoring_percentage', 'quizz_passed'], lazy=False)
         for item in read_group_res:
             stat[item['survey_id'][0]]['answer_count'] += item['__count']
-            stat[item['survey_id'][0]]['answer_score_avg_total'] += item['quizz_score']
+            stat[item['survey_id'][0]]['answer_score_avg_total'] += item['scoring_percentage']
             if item['state'] == 'done':
                 stat[item['survey_id'][0]]['answer_done_count'] += item['__count']
             if item['quizz_passed']:

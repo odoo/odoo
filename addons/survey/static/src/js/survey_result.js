@@ -255,7 +255,7 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
     },
 
     _getDoughnutChartConfig: function () {
-        var quizz_score = this.$el.data("quizz_score") || 0.0;
+        var scoring_percentage = this.$el.data("scoring_percentage") || 0.0;
         var counts = this.graphData.map(function (point) {
             return point.count;
         });
@@ -277,7 +277,7 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
             options: {
                 title: {
                     display: true,
-                    text: _.str.sprintf(_t("Overall Performance %.2f%s"), parseFloat(quizz_score), '%'),
+                    text: _.str.sprintf(_t("Overall Performance %.2f%s"), parseFloat(scoring_percentage), '%'),
                 },
             }
         };
