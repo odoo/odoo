@@ -315,7 +315,7 @@ class MailComposer(models.TransientModel):
                 'author_id': self.author_id.id,
                 'email_from': self.email_from,
                 'record_name': self.record_name,
-                'no_auto_thread': self.reply_to_force_new,
+                'reply_to_force_new': self.reply_to_force_new,
                 'mail_server_id': self.mail_server_id.id,
                 'mail_activity_type_id': self.mail_activity_type_id.id,
             }

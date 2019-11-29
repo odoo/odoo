@@ -156,9 +156,9 @@ class Message(models.Model):
         help='Tracked values are stored in a separate model. This field allow to reconstruct '
              'the tracking and to generate statistics on the model.')
     # mail gateway
-    no_auto_thread = fields.Boolean(
+    reply_to_force_new = fields.Boolean(
         'No threading for answers',
-        help='Answers do not go in the original document discussion thread. This has an impact on the generated message-id.')
+        help='If true, answers do not go in the original document discussion thread. Instead, it will check for the reply_to in tracking message-id and redirected accordingly. This has an impact on the generated message-id.')
     message_id = fields.Char('Message-Id', help='Message unique identifier', index=True, readonly=1, copy=False)
     reply_to = fields.Char('Reply-To', help='Reply email address. Setting the reply_to bypasses the automatic thread creation.')
     mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing mail server')
@@ -1207,7 +1207,7 @@ class Message(models.Model):
 
     @api.model
     def _get_message_id(self, values):
-        if values.get('no_auto_thread', False) is True:
+        if values.get('reply_to_force_new', False) is True:
             message_id = tools.generate_tracking_message_id('reply_to')
         elif self.is_thread_message(values):
             message_id = tools.generate_tracking_message_id('%(res_id)s-%(model)s' % values)
