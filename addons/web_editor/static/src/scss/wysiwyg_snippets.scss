@@ -189,7 +189,7 @@ body.editor_enable.editor_has_snippets {
             white-space: nowrap;
             text-align: left;
 
-            &.fa {
+            &.fa, &.fas, &.fab, &.far {
                 display: inline-block;
                 margin: 0 0 0 0.3em;
                 padding: 0;
@@ -311,7 +311,7 @@ body.editor_enable.editor_has_snippets {
                             margin-left: 0.5em;
                         }
                     }
-                    > .fa {
+                    > .fa, > .fas, > .fab, > .far {
                         flex: 0 0 auto;
                     }
                 }
@@ -413,7 +413,7 @@ body.editor_enable.editor_has_snippets {
                 display: flex;
                 align-items: center;
 
-                > .fa {
+                > .fa, > .fas, > .fab, > .far {
                     margin-left: auto;
                 }
             }
@@ -517,6 +517,7 @@ body.editor_enable.editor_has_snippets {
                     justify-content: center;
                     align-items: center;
                     font-family: 'Font Awesome 5 Free' !important;
+                    font-weight: 900;
                     color: $o-we-color-success;
                 }
 
@@ -681,6 +682,7 @@ body.editor_enable.editor_has_snippets {
                     line-height: $o-we-handles-btn-size - 2;
                     font-size: 14px;
                     font-family: 'Font Awesome 5 Free';
+                    font-weight: 900;
                     background-color: darken($o-we-handles-accent-color, 20%);
                     color: white;
                 }
@@ -779,6 +781,7 @@ body.editor_enable.editor_has_snippets {
                     content: '\f141';
                     display: block;
                     font-family: 'Font Awesome 5 Free';
+                    font-weight: 900;
                     font-size: 0.8em;
                     line-height: 0.35em;
                 }
