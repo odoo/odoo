@@ -1696,7 +1696,7 @@ class Meeting(models.Model):
                             r[f] = []
                         else:
                             r[f] = False
-                    if f == 'name':
+                    if f in ['name', 'display_name']:
                         r[f] = _('Busy')
 
         for r in result:
