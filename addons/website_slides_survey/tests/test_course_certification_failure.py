@@ -68,7 +68,7 @@ class TestCourseCertificationFailureFlow(TestSurveyCommon):
         # Step 4: fill in the created user_input with wrong answers
         self.fill_in_answer(slide_partner.user_input_ids[0], certification.question_ids)
 
-        self.assertFalse(slide_partner.survey_quizz_passed, 'Quizz should not be marked as passed with wrong answers')
+        self.assertFalse(slide_partner.survey_scoring_success, 'Quizz should not be marked as passed with wrong answers')
         # forces recompute of partner_ids as we delete directly in relation
         self.channel.invalidate_cache()
         self.assertIn(self.user_public.partner_id, self.channel.partner_ids, 'Public user should still be a member of the course because he still has attempts left')
@@ -100,7 +100,7 @@ class TestCourseCertificationFailureFlow(TestSurveyCommon):
 
         # Step 8: fill in the created user_input with correct answers this time
         self.fill_in_answer(new_slide_partner.user_input_ids.filtered(lambda user_input: user_input.state != 'done')[0], certification.question_ids, good_answers=True)
-        self.assertTrue(new_slide_partner.survey_quizz_passed, 'Quizz should be marked as passed with correct answers')
+        self.assertTrue(new_slide_partner.survey_scoring_success, 'Quizz should be marked as passed with correct answers')
         # forces recompute of partner_ids as we delete directly in relation
         self.channel.invalidate_cache()
         self.assertIn(self.user_public.partner_id, self.channel.partner_ids, 'Public user should still be a member of the course')
