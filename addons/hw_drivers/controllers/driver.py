@@ -21,7 +21,8 @@ from pathlib import Path
 import socket
 import ctypes
 
-from odoo import http, _
+from odoo import http, tools, _
+from odoo.http import send_file
 from odoo.modules.module import get_resource_path
 from odoo.addons.hw_drivers.tools import helpers
 
@@ -97,6 +98,16 @@ class StatusController(http.Controller):
         if os.path.isfile(image):
             with open(image, 'rb') as f:
                 return f.read()
+
+    @http.route('/hw_drivers/download_logs', type='http', auth='none', cors='*', csrf=False, save_session=False)
+    def download_logs(self):
+        """
+        Downloads the log file
+        """
+        if tools.config['logfile']:
+            res = send_file(tools.config['logfile'], mimetype="text/plain", as_attachment=True)
+            res.headers['Cache-Control'] = 'no-cache'
+            return res
 
 #----------------------------------------------------------
 # Log Exceptions
