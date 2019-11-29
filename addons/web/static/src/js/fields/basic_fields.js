@@ -582,6 +582,10 @@ var LinkButton = AbstractField.extend({
 
 var FieldDateRange = InputField.extend({
     className: 'o_field_date_range',
+    events: Object.assign({}, InputField.prototype.events, {
+        'show.daterangepicker': '_onDateRangePickerShow',
+        'hide.daterangepicker': '_onDateRangePickerHide',
+    }),
     tagName: 'span',
     jsLibs: [
         '/web/static/lib/daterangepicker/daterangepicker.js',
@@ -619,6 +623,9 @@ var FieldDateRange = InputField.extend({
     destroy: function () {
         if (this.$pickerContainer) {
             this.$pickerContainer.remove();
+        }
+        if (this._onScroll) {
+            window.removeEventListener('scroll', this._onScroll, true);
         }
         this._super.apply(this, arguments);
     },
@@ -692,6 +699,34 @@ var FieldDateRange = InputField.extend({
                 self.$el.data('daterangepicker').hide();
             }
         });
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Unbind the scroll event handler when the daterangepicker is closed.
+     *
+     * @private
+     */
+    _onDateRangePickerHide() {
+        if (this._onScroll) {
+            window.removeEventListener('scroll', this._onScroll, true);
+        }
+    },
+    /**
+     * Bind the scroll event handle when the daterangepicker is open.
+     *
+     * @private
+     */
+    _onDateRangePickerShow() {
+        this._onScroll = ev => {
+            if (ev.target !== this.$el.data('daterangepicker').element.get(0)) {
+                this.$el.data('daterangepicker').hide();
+            }
+        };
+        window.addEventListener('scroll', this._onScroll, true);
     },
 });
 
