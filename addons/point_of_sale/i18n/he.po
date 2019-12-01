@@ -464,6 +464,7 @@ msgid ""
 "An error occurred when loading product prices. Make sure all pricelists are "
 "available in the POS."
 msgstr ""
+"אירעה שגיאה בעת טעינת מחירי המוצר. ודא שכל המחירונים זמינים בנקודת המכירה."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_name
@@ -502,7 +503,7 @@ msgstr "מאפיינים"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session_rescue
 msgid "Auto-generated session for orphan orders, ignored in constraints"
-msgstr ""
+msgstr "סשן שנוצר אוטומטית להזמנות יתומות, מתעלם מאילוצים"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_print_auto
@@ -1061,7 +1062,7 @@ msgstr "הצגת לקוחות"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_customer_facing_display
 msgid "Customer Facing Display"
-msgstr ""
+msgstr "תצוגה מול לקוח"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:559
@@ -1073,7 +1074,7 @@ msgstr "חשבונית לקוח"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_customer_facing_display_html
 msgid "Customer facing display content"
-msgstr ""
+msgstr "תוכן תצוגה מול לקוח"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_dashboard
@@ -1503,7 +1504,7 @@ msgstr "תחתית"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_big_scrollbars
 msgid "For imprecise industrial touchscreens."
-msgstr ""
+msgstr "למסכי מגע תעשייתיים לא מדויקים."
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.fruits_vegetables
@@ -1731,7 +1732,7 @@ msgstr "קטגוריה ראשונית"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_module_pos_mercury
 msgid "Integrated Card Payments"
-msgstr ""
+msgstr "תשלומי כרטיס משולבים"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1844,12 +1845,12 @@ msgstr "תאריך שינוי אחרון"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_last_session_closing_cash
 msgid "Last Session Closing Cash"
-msgstr ""
+msgstr "מזומן סגירה בסשן האחרון"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_last_session_closing_date
 msgid "Last Session Closing Date"
-msgstr ""
+msgstr "תאריך סגירה סשן אחרון"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_write_uid
@@ -1958,7 +1959,7 @@ msgstr "תכנית נאמנות"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Loyalty program to use for this point of sale."
-msgstr ""
+msgstr "תוכנית נאמנות שתשמש לנקודת מכירה זו."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_payment
@@ -1982,6 +1983,9 @@ msgid ""
 "be valid, this pricelist must be listed here as an available pricelist. "
 "Otherwise the default pricelist will apply."
 msgstr ""
+"הפוך מספר מחירונים זמינים לנקודת המכירה. תוכל גם להחיל מחירונים על לקוחות "
+"ספציפיים מטופס איש הקשר שלהם (בכרטיסיית מכירות). כדי להיות תקף, מחירון זה "
+"חייב להיות רשום כאן כמחירון זמין, אחרת מחירון ברירת המחדל יחול."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
@@ -2186,6 +2190,8 @@ msgid ""
 "Only users with Manager access rights for PoS app can modify the product "
 "prices on orders."
 msgstr ""
+"רק משתמשים עם הרשאות גישה של מנהל עבור אפליקציית קמעונאות יכולים לשנות את "
+"מחירי המוצר בהזמנות."
 
 #. module: point_of_sale
 #. openerp-web
@@ -2319,7 +2325,7 @@ msgstr "ממשק הזמנה"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_sequence_line_id
 msgid "Order Line IDs Sequence"
-msgstr ""
+msgstr "רצף מזהי שורות הזמנה"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_lines
@@ -2604,7 +2610,7 @@ msgstr "אנה הגדר חשבון הכנסות עבור מוצר זה: \"%s\" (
 #: code:addons/point_of_sale/static/src/js/screens.js:2083
 #, python-format
 msgid "Please print the invoice from the backend"
-msgstr ""
+msgstr "אנא הדפס את החשבונית מהקצה האחורי"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:653
@@ -2759,7 +2765,7 @@ msgstr "שם המשתמש בתהליך המכירה בקופה"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_is_posbox
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "PosBox"
-msgstr ""
+msgstr "PosBox"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2891,7 +2897,7 @@ msgstr "שגיאת הדפסה: "
 #: code:addons/point_of_sale/static/src/js/screens.js:1569
 #, python-format
 msgid "Printing is not supported on some android browsers"
-msgstr ""
+msgstr "הדפסה אינה נתמכת בכמה דפדפני אנדרואיד"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2902,6 +2908,8 @@ msgid ""
 "printing protocol is available. It is possible to print your tickets by "
 "making use of an IoT Box."
 msgstr ""
+"הדפסה אינה נתמכת בכמה דפדפני אנדרואיד מכיוון שאין פרוטוקול הדפסת ברירת מחדל "
+"זמין. אפשר להדפיס את הכרטיסים על ידי שימוש בקופסת IoT."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_product
@@ -3037,7 +3045,7 @@ msgstr "מזהה קבלה"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_rescue
 msgid "Recovery Session"
-msgstr ""
+msgstr "סשן הבראה"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.poivron_rouges
@@ -3083,12 +3091,12 @@ msgstr "אחראי"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_restrict_price_control
 msgid "Restrict Price Modifications to Managers"
-msgstr ""
+msgstr "הגבל שינויים במחירים למנהלים"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Restrict price modification to managers"
-msgstr ""
+msgstr "הגבל שינויים במחירים למנהלים"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -3345,12 +3353,12 @@ msgstr "קבע משקל"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Set barcodes to scan products, customer cards, etc."
-msgstr ""
+msgstr "הגדר ברקודים לסריקת מוצרים, כרטיסי לקוחות וכו '."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Set shop-specific prices, seasonal discounts, etc."
-msgstr ""
+msgstr "קבע מחירים ספציפיים לחנות, הנחות עונתיות וכו '."
 
 #. module: point_of_sale
 #. openerp-web
@@ -3367,7 +3375,7 @@ msgstr "הגדרות"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_customer_facing_display
 msgid "Show checkout to customers with a remotely-connected screen."
-msgstr ""
+msgstr "הצג קופה ללקוחות עם מסך המחובר מרחוק."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_group_pricelist_item
@@ -3460,7 +3468,7 @@ msgstr "מיקום מחסן"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Stock location used for the inventory"
-msgstr ""
+msgstr "מיקום המלאי המשמש למלאי"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3687,6 +3695,8 @@ msgid ""
 "The invoice journal must be in the same currency as the Sales Journal or the"
 " company currency if that is not set."
 msgstr ""
+"יומן החשבוניות חייב להיות באותו מטבע כמו יומן המכירות או מטבע החברה אם זה לא"
+" מוגדר."
 
 #. module: point_of_sale
 #: sql_constraint:pos.session:0
@@ -3741,6 +3751,8 @@ msgid ""
 "The point of sale will display this product category by default. If no "
 "category is specified, all available products will be shown."
 msgstr ""
+"נקודת המכירה תציג קטגוריית מוצרים זו כברירת מחדל. אם לא מוגדרת קטגוריה "
+"כלשהי, כל המוצרים הזמינים יוצגו."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_pricelist_id
@@ -3748,6 +3760,7 @@ msgid ""
 "The pricelist used if no customer is selected or if the customer has no Sale"
 " Pricelist configured."
 msgstr ""
+"המחירון יהיה בשימוש אם לא נבחר לקוח או אם ללקוח לא מוגדר מחירון מכירה."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_display_categ_images
