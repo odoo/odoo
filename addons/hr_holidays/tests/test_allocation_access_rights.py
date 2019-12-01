@@ -58,7 +58,7 @@ class TestAccessRightsSimpleUser(TestAllocationRights):
             allocation.action_approve()
 
     def test_simple_user_request_fixed_allocation(self):
-        """ A simple user cannot request an allocation if fixed by HR """
+        """ A simple user cannot request an allocation if set by HR """
         self.lt_validation_hr.allocation_type = 'fixed'
         values = {
             'employee_id': self.employee_emp.id,
@@ -162,7 +162,7 @@ class TestAccessRightsHolidayUser(TestAllocationRights):
         self.assertEqual(allocation.state, 'validate', "It should have been validated")
 
     def test_holiday_user_request_fixed_allocation(self):
-        """ A holiday user can request and approve an allocation if fixed by HR """
+        """ A holiday user can request and approve an allocation if set by HR """
         self.lt_validation_hr.allocation_type = 'fixed'
         values = {
             'employee_id': self.employee_emp.id,
