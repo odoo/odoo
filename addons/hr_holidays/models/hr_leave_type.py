@@ -84,11 +84,11 @@ class HolidaysType(models.Model):
     allocation_type = fields.Selection([
         ('no', 'No Limit'),
         ('fixed_allocation', 'Allow Employees Requests'),
-        ('fixed', 'Fixed by Time Off Officer')],
+        ('fixed', 'Set by Time Off Officer')],
         default='no', string='Mode',
         help='\tNo Limit: no allocation by default, users can freely request time off; '
              '\tAllow Employees Requests: allocated by HR and users can request time off and allocations; '
-             '\tFixed by Time Off Officer: allocated by HR and cannot be bypassed; users can request time off;')
+             '\tSet by Time Off Officer: allocated by HR and cannot be bypassed; users can request time off;')
     validity_start = fields.Date("From",
                                  help='Adding validity to types of time off so that it cannot be selected outside this time period')
     validity_stop = fields.Date("To")
