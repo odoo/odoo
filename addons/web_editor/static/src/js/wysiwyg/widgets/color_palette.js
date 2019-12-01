@@ -2,7 +2,7 @@ odoo.define('web_editor.ColorPalette', function (require) {
 'use strict';
 
 const core = require('web.core');
-const ColorPickerDialog = require('web.ColorpickerDialog');
+const ColorpickerDialog = require('web.ColorpickerDialog');
 const Dialog = require('web.Dialog');
 const Widget = require('web.Widget');
 const summernoteCustomColors = require('web_editor.rte.summernote_custom_colors');
@@ -27,8 +27,6 @@ const ColorPaletteWidget = Widget.extend({
      *
      * @param {Object} [options]
      * @param {string} [options.selectedColor] The class or css attribute color selected by default.
-     * @param {string[]} [options.targetClasses]
-     * @param {string} [options.colorPrefix='bg-'] Used for the class based colors (theme).
      * @param {boolean} [options.resetButton=true] Whether to display or not the reset button.
      * @param {string[]} [options.excluded=[]] Sections not to display.
      * @param {string[]} [options.excludeSectionOf] Extra section to exclude: the one containing the named color.
@@ -36,16 +34,19 @@ const ColorPaletteWidget = Widget.extend({
      */
     init: function (parent, options) {
         this._super.apply(this, arguments);
-        this.summernoteCustomColorsArray = [].concat(...summernoteCustomColors).map((color) => this._convertHexToCssRgba(color));
+        this.summernoteCustomColorsArray = [].concat(...summernoteCustomColors);
         this.options = _.extend({
             selectedColor: false,
-            targetClasses: [],
-            colorPrefix: 'bg-',
             resetButton: true,
             excluded: [],
             excludeSectionOf: null,
             $editable: $(),
         }, options || {});
+
+        const selectedColor = this.options.selectedColor;
+        if (selectedColor) {
+            this.options.selectedColor = ColorpickerDialog.normalizeCSSColor(selectedColor);
+        }
 
         this.trigger_up('request_editable', {callback: val => this.options.$editable = val});
     },
@@ -107,7 +108,7 @@ const ColorPaletteWidget = Widget.extend({
         }
 
         // Render custom colors
-        this._buildCustomColor();
+        this._buildCustomColors();
 
         // TODO refactor in master
         // The primary and secondary are hardcoded here (but marked as hidden)
@@ -119,31 +120,26 @@ const ColorPaletteWidget = Widget.extend({
         this.$el.append($('<button/>', {'class': 'd-none', 'data-color': 'secondary'}));
 
         // Compute class colors
-        this.classes = [];
+        this.colorNames = [];
+        const style = window.getComputedStyle(document.documentElement);
         this.el.querySelectorAll('button[data-color]').forEach(elem => {
-            const color = elem.dataset.color;
+            const colorName = elem.dataset.color;
+            const color = ColorpickerDialog.normalizeCSSColor(style.getPropertyValue('--' + colorName).trim());
             const $color = $(elem);
-            $color.addClass('bg-' + color);
-            const className = this.options.colorPrefix + color;
-            if (this.options.targetClasses.includes(className)) {
+            $color.addClass('bg-' + colorName);
+            if (this.options.selectedColor && (this.options.selectedColor === colorName || this.options.selectedColor === color)) {
                 $color.addClass('selected');
             }
-            this.classes.push(className);
+            this.colorNames.push(colorName);
         });
 
         return res;
     },
     /**
-     * Return a list of the color classes used in the color palette
+     * Return a list of the color names used in the color palette
      */
-    getClasses: function () {
-        return this.classes;
-    },
-    /**
-     * Reloads the color palette to get other custom colors on the page
-     */
-    reloadColorPalette: function () {
-        this._buildCustomColor();
+    getColorNames: function () {
+        return this.colorNames;
     },
 
     //--------------------------------------------------------------------------
@@ -153,41 +149,47 @@ const ColorPaletteWidget = Widget.extend({
     /**
      * @private
      */
-    _buildCustomColor: function () {
-        const existingColors = new Set(this.summernoteCustomColorsArray.concat(Array.from(this.el.querySelectorAll('.o_custom_color')).map(el => el.style.backgroundColor)));
-        if (!this.options.excluded.includes('custom')) {
-            Array.from(this.options.$editable.find('[style*="color"]')).forEach(el => {
-                for (const colorProp of ['color', 'backgroundColor']) {
-                    const color = el.style[colorProp];
-                    if (color && !existingColors.has(color)) {
-                        this._addCustomColorButton(color);
-                        existingColors.add(color);
-                    }
-                }
-            });
+    _buildCustomColors: function () {
+        if (this.options.excluded.includes('custom')) {
+            return;
         }
+        const existingColors = new Set(this.summernoteCustomColorsArray.concat(
+            [...this.el.querySelectorAll('.o_custom_color')].map(el => {
+                return ColorpickerDialog.normalizeCSSColor(el.style.backgroundColor);
+            })
+        ));
+        _.each(this.options.$editable.find('[style*="color"]'), el => {
+            for (const colorProp of ['color', 'backgroundColor']) {
+                const color = ColorpickerDialog.normalizeCSSColor(el.style[colorProp]);
+                if (color && !existingColors.has(color)) {
+                    this._addCustomColorButton(color);
+                    existingColors.add(color);
+                }
+            }
+        });
     },
     /**
      * Add a custom button in the coresponding section.
      *
      * @private
-     * @param {string} color Css rgb(a) string
-     * @param {Array<string>} classes Classes added to the button
+     * @param {string} color
+     * @param {string[]} classes - classes added to the button
+     * @returns {jQuery}
      */
     _addCustomColorButton: function (color, classes = []) {
         classes.push('o_custom_color');
-        this._createColorButton(color, classes).appendTo(this.$('.o_colorpicker_section[data-name="theme"]'));
+        const $themeSection = this.$('.o_colorpicker_section[data-name="theme"]');
+        return this._createColorButton(color, classes).appendTo($themeSection);
     },
     /**
      * Return a color button.
      *
-     * @param {string} color Css rgb(a) string
-     * @param {Array<string>} classes Classes added to the button
+     * @param {string} color
+     * @param {string[]} classes - classes added to the button
+     * @returns {jQuery}
      */
     _createColorButton: function (color, classes) {
-        const cssColor = this._convertHexToCssRgba(color);
-        const selectedColor = this.options.selectedColor && this._convertHexToCssRgba(this.options.selectedColor);
-        if (selectedColor === cssColor) {
+        if (this.options.selectedColor === color) { // both colors are already normalized
             classes.push('selected');
         }
         return $('<button/>', {
@@ -196,33 +198,19 @@ const ColorPaletteWidget = Widget.extend({
         });
     },
     /**
-     * Return the hexadecimal css color as an rgb(a) css color: rgb((r, g, b) | rgba(r, g, b, a)
+     * Gets normalized information about a color button.
      *
      * @private
-     * @param {string} hex Css hex string (#FFFFFF(FF))
+     * @param {HTMLElement} buttonEl
+     * @returns {Object}
      */
-    _convertHexToCssRgba: function (hex) {
-        if (!/^#([0-9A-F]{6}|[0-9A-F]{8})$/i.test(hex)) {
-            return hex;
-        }
-
-        const red = parseInt(hex.substr(1, 2), 16);
-        const blue = parseInt(hex.substr(3, 2), 16);
-        const green = parseInt(hex.substr(5, 2), 16);
-        if (hex.length === 9) {
-            return _.str.sprintf('rgba(%s, %s, %s, %s)',
-                red,
-                blue,
-                green,
-                parseInt(hex.substr(7, 2), 16)
-            );
-        } else {
-            return _.str.sprintf('rgb(%s, %s, %s)',
-                red,
-                blue,
-                green
-            );
-        }
+    _getButtonInfo: function (buttonEl) {
+        const bgColor = buttonEl.style.backgroundColor;
+        const color = bgColor ? ColorpickerDialog.normalizeCSSColor(bgColor) : buttonEl.dataset.color;
+        return {
+            color: color,
+            target: buttonEl,
+        };
     },
 
     //--------------------------------------------------------------------------
@@ -236,14 +224,10 @@ const ColorPaletteWidget = Widget.extend({
      * @param {Event} ev
      */
     _onColorButtonClick: function (ev) {
-        const target = ev.currentTarget;
+        const buttonEl = ev.currentTarget;
         this.$('button.selected').removeClass('selected');
-        $(target).addClass('selected');
-        this.trigger_up('color_picked', {
-            cssColor: target.style.backgroundColor || this.options.colorPrefix + target.dataset.color,
-            isClass: !!target.dataset.color,
-            target: ev.target,
-        });
+        $(buttonEl).addClass('selected');
+        this.trigger_up('color_picked', this._getButtonInfo(buttonEl));
     },
     /**
      * Called when a color button is entered.
@@ -253,12 +237,7 @@ const ColorPaletteWidget = Widget.extend({
      */
     _onColorButtonEnter: function (ev) {
         ev.stopPropagation();
-        const target = ev.currentTarget;
-        this.trigger_up('color_hover', {
-            cssColor: target.style.backgroundColor || this.options.colorPrefix + target.dataset.color,
-            isClass: !!target.dataset.color,
-            target: ev.target,
-        });
+        this.trigger_up('color_hover', this._getButtonInfo(ev.currentTarget));
     },
     /**
      * Called when a color button is left.
@@ -268,19 +247,16 @@ const ColorPaletteWidget = Widget.extend({
      */
     _onColorButtonLeave: function (ev) {
         ev.stopPropagation();
-        let params = {
-            cssColor: '',
-            isClass: false,
-            target: ev.target,
-        };
         const selected = this.el.querySelector('button.selected');
+        let params = null;
         if (selected) {
+            params = this._getButtonInfo(selected);
+        } else {
             params = {
-                cssColor: selected.style.backgroundColor || this.options.colorPrefix + selected.dataset.color,
-                isClass: !!selected.dataset.color,
-                target: ev.target,
+                color: '',
             };
         }
+        params.target = ev.target;
         this.trigger_up('color_leave', params);
     },
     /**
@@ -302,17 +278,16 @@ const ColorPaletteWidget = Widget.extend({
      * @param {Event} ev
      */
     _onCustomColorButtonClick: async function (ev) {
-        const originalEvent = ev;
-        const $selected = this.$('button.selected');
-        const colorpicker = new ColorPickerDialog(this, {
+        const target = ev.target;
+        const $selected = this.$('button.selected').removeClass('selected');
+        const colorpicker = new ColorpickerDialog(this, {
             defaultColor: this.options.defaultColor || $selected.css('background-color'),
         });
         colorpicker.on('colorpicker:saved', this, ev => {
-            $selected.removeClass('selected');
             this._addCustomColorButton(ev.data.cssColor, ['selected']);
-            this.trigger_up('custom_color_picked', {
-                cssColor: ev.data.cssColor,
-                target: originalEvent.target,
+            this.trigger_up('color_picked', {
+                color: ev.data.cssColor,
+                target: target,
             });
         });
         colorpicker.open();
