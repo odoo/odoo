@@ -432,6 +432,8 @@ msgid ""
 "<span class=\"o_form_label\">Rounding Method</span>\n"
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"o_form_label\">반올림 방법</span>\n"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_line_form
@@ -456,6 +458,8 @@ msgid ""
 "<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
 "                                    <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
 msgstr ""
+"<span groups=\"account.group_show_line_subtotals_tax_excluded\">수량</span>\n"
+"                                    <span groups=\"account.group_show_line_subtotals_tax_included\">총 금액</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -3444,7 +3448,7 @@ msgstr "작성자"
 #: code:addons/account/models/account_invoice.py:419
 #, python-format
 msgid "Created by: %s"
-msgstr ""
+msgstr "작성자 : %s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__create_date
@@ -4971,34 +4975,34 @@ msgstr "하프-업"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_accounting_entries
 msgid "Has Accounting Entries"
-msgstr "계좌 항목이 있음"
+msgstr "계좌 항목 여부"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__has_invoices
 msgid "Has Invoices"
-msgstr "청구서가 있음"
+msgstr "송장 여부"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__has_outstanding
 msgid "Has Outstanding"
-msgstr "미불금이 있음"
+msgstr "미처리 여부"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__has_unreconciled_entries
 #: model:ir.model.fields,field_description:account.field_res_users__has_unreconciled_entries
 msgid "Has Unreconciled Entries"
-msgstr "비조정 항목이 있음"
+msgstr "비조정 항목 여부"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__qr_code_valid
 msgid "Has all required arguments"
-msgstr "필요한 모든 인수가 있음"
+msgstr "필요한 모든 인수가 있는지 여부"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__has_error
 #: model:ir.model.fields,help:account.field_account_invoice_send__has_error
 msgid "Has error"
-msgstr "오류가 있음"
+msgstr "오류 여부"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment__hide_payment_method
@@ -5439,7 +5443,7 @@ msgstr "인코텀은 구매자와 판매자 간에 거래 비용과 책임을 �
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_line_id
 msgid "Indicates that this journal item is a tax line"
-msgstr ""
+msgstr "이 분개 항목이 세금 내역임을 나타냅니다."
 
 #. module: account
 #. openerp-web
@@ -7381,7 +7385,7 @@ msgstr "자산보유자 지불"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_line_id
 msgid "Originator tax"
-msgstr "자산보유자 세금"
+msgstr "원산지 세금"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_other_income
@@ -9682,12 +9686,12 @@ msgstr "적용할 세금"
 #. module: account
 #: selection:res.config.settings,show_line_subtotals_tax_selection:0
 msgid "Tax-Excluded"
-msgstr "반출-세금"
+msgstr "세금-제외"
 
 #. module: account
 #: selection:res.config.settings,show_line_subtotals_tax_selection:0
 msgid "Tax-Included"
-msgstr "반입-세금"
+msgstr "세금-포함"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -9722,7 +9726,7 @@ msgstr "세금 일치 작업"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_ids
 msgid "Taxes that apply on the base amount"
-msgstr ""
+msgstr "기본 금액에 적용되는 세금"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_search
@@ -12044,7 +12048,7 @@ msgstr "자동으로 조정되었습니다."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__invoice_without_email
 msgid "invoice(s) that will not be sent"
-msgstr ""
+msgstr "발송되지 않을 송장"
 
 #. module: account
 #. openerp-web

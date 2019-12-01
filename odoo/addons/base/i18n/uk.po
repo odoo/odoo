@@ -11,8 +11,8 @@
 # ТАрас <tratatuta@i.ua>, 2018
 # Sergey Doroshenko <sdoroshenko@artwebny.com>, 2018
 # Oleksandr Paziuk <o.paziuk@mobilunity.com>, 2018
-# Bohdan Lisnenko, 2018
 # Martin Trigaux, 2019
+# Bohdan Lisnenko, 2019
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
 # 
 msgid ""
@@ -6309,6 +6309,16 @@ msgstr ""
 "\n"
 "Встановіть загальний план рахунків.\n"
 "    "
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_id
+msgid ""
+"\n"
+"This is the latest Indonesian Odoo localisation necessary to run Odoo accounting for SMEs with:\n"
+"=================================================================================================\n"
+"    - generic Indonesian chart of accounts\n"
+"    - tax structure"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uk
@@ -13453,7 +13463,7 @@ msgstr "Не показувати маркер шрифту"
 #: selection:ir.actions.todo,state:0
 #: selection:res.company,base_onboarding_company_state:0
 msgid "Done"
-msgstr "Готово"
+msgstr "Виконано"
 
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_doctor
@@ -16960,6 +16970,11 @@ msgid "Indonesia"
 msgstr "Індонезія"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_id
+msgid "Indonesian - Accounting"
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.res_partner_industry_action
 #: model:ir.model,name:base.model_res_partner_industry
 #: model:ir.model.fields,field_description:base.field_res_partner__industry_id
@@ -19118,7 +19133,7 @@ msgstr "Категорія модулів"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
 msgid "Module Info"
-msgstr "Інформація про модуль"
+msgstr "Про модуль"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__shortdesc
@@ -25264,6 +25279,11 @@ msgid "Sticky memos, Collaborative"
 msgstr "Закладки, спільна робота"
 
 #. module: base
+#: model:ir.module.category,name:base.module_category_stock
+msgid "Stock"
+msgstr "Склад"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_barcode_mobile
 msgid "Stock Barcode in Mobile"
 msgstr "Штрих-код складу в мобільній версії"
@@ -28240,7 +28260,13 @@ msgid "Unknown"
 msgstr "Невідомо"
 
 #. module: base
-#: code:addons/models.py:1058
+#: code:addons/models.py:873
+#, python-format
+msgid "Unknown database error: '%s'"
+msgstr ""
+
+#. module: base
+#: code:addons/models.py:1067
 #, python-format
 msgid "Unknown database identifier '%s'"
 msgstr "Невідомий ідентифікатор бази даних '%s'"
@@ -29898,9 +29924,19 @@ msgid "test-inherits"
 msgstr "test-inherits"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_test_inherits_depends
+msgid "test-inherits-depends"
+msgstr "test-inherits-depends"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_test_limits
 msgid "test-limits"
 msgstr "test-limits"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_test_lint
+msgid "test-lint"
+msgstr "test-lint"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_translation_import

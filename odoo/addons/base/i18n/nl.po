@@ -10,10 +10,10 @@
 # Cas Vissers <c.vissers@brahoo.nl>, 2018
 # Eric Geens <ericgeens@yahoo.com>, 2018
 # Cas Vissers <casvissers@brahoo.nl>, 2019
-# Martin Trigaux, 2019
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # Thomas Pot <thomas@open2bizz.nl>, 2019
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2019
+# Martin Trigaux, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # 
 msgid ""
@@ -6167,6 +6167,16 @@ msgstr ""
 "\n"
 "Installeert een algemene grootboekrekening.\n"
 "    "
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_id
+msgid ""
+"\n"
+"This is the latest Indonesian Odoo localisation necessary to run Odoo accounting for SMEs with:\n"
+"=================================================================================================\n"
+"    - generic Indonesian chart of accounts\n"
+"    - tax structure"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uk
@@ -16583,6 +16593,11 @@ msgid "Indonesia"
 msgstr "Indonesië"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_id
+msgid "Indonesian - Accounting"
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.res_partner_industry_action
 #: model:ir.model,name:base.model_res_partner_industry
 #: model:ir.model.fields,field_description:base.field_res_partner__industry_id
@@ -24890,6 +24905,11 @@ msgid "Sticky memos, Collaborative"
 msgstr "Post-it's, samenwerking"
 
 #. module: base
+#: model:ir.module.category,name:base.module_category_stock
+msgid "Stock"
+msgstr "Voorraad"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_barcode_mobile
 msgid "Stock Barcode in Mobile"
 msgstr "Voorraadbarcode mobiel"
@@ -27868,7 +27888,13 @@ msgid "Unknown"
 msgstr "Onbekend"
 
 #. module: base
-#: code:addons/models.py:1058
+#: code:addons/models.py:873
+#, python-format
+msgid "Unknown database error: '%s'"
+msgstr ""
+
+#. module: base
+#: code:addons/models.py:1067
 #, python-format
 msgid "Unknown database identifier '%s'"
 msgstr "Onbekende database identifier '%s'"
@@ -29534,9 +29560,19 @@ msgid "test-inherits"
 msgstr "test-inherits"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_test_inherits_depends
+msgid "test-inherits-depends"
+msgstr "test-inherits-depends"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_test_limits
 msgid "test-limits"
 msgstr "test-limiten"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_test_lint
+msgid "test-lint"
+msgstr "test-lint"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_translation_import

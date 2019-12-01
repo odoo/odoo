@@ -173,7 +173,7 @@ msgstr "<br>נוצר צורך ב  <b>%s</b> וכלל יופעל כדי למלא 
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_view_kanban
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_inventory_kanban
 msgid "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_view_kanban
@@ -181,6 +181,8 @@ msgid ""
 "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Expected date\" "
 "title=\"Expected date\"/>"
 msgstr ""
+"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Expected date\" "
+"title=\"Expected date\"/>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -202,6 +204,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-caret-right\" role=\"img\" aria-label=\"Unfold\" "
 "title=\"Unfold\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-caret-right\" role=\"img\" aria-label=\"Unfold\" "
+"title=\"Unfold\"/>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
@@ -241,7 +245,7 @@ msgstr "<span class=\"o_stat_text\">במלאי</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "<span class=\"o_stat_text\">Operations</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">פעולות</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_mrp_line
@@ -250,6 +254,9 @@ msgid ""
 "Report\" aria-label=\"Traceability Report\"><i class=\"fa fa-fw fa-level-up "
 "fa-rotate-270\"/></span>"
 msgstr ""
+"<span role=\"img\" class=\"o_stock_reports_stream\" title=\"Traceability "
+"Report\" aria-label=\"Traceability Report\"><i class=\"fa fa-fw fa-level-up "
+"fa-rotate-270\"/></span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -1099,7 +1106,7 @@ msgstr "מתכלה"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__consume_line_ids
 msgid "Consume Line"
-msgstr ""
+msgstr "שורת צריכה"
 
 #. module: stock
 #: model:ir.model,name:stock.model_res_partner
@@ -2959,7 +2966,7 @@ msgstr "תצוגת רשימת קווים"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "List view of operations"
-msgstr ""
+msgstr "תצוגת רשימה של פעולות"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
@@ -3054,7 +3061,7 @@ msgstr "סידורי/אצווה"
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_body_print
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_inventory
 msgid "Lot/Serial #"
-msgstr ""
+msgstr "מספר אצווה / סידורי"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
@@ -3602,7 +3609,7 @@ msgstr ""
 #: code:addons/stock/models/stock_inventory.py:121
 #, python-format
 msgid "One Lot/Serial Number"
-msgstr ""
+msgstr "אצווה אחת/ מספר סידורי"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:119
@@ -3819,7 +3826,7 @@ msgstr "בעלים של המיקום אם לא פנימי"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__owner_id
 msgid "Owner of the quants"
-msgstr ""
+msgstr "בעלים של המנות"
 
 #. module: stock
 #: code:addons/stock/models/product.py:340
@@ -4311,7 +4318,7 @@ msgstr "תבנית למוצר"
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_tmpl_id
 #: model:ir.model.fields,field_description:stock.field_stock_rules_report__product_tmpl_id
 msgid "Product Tmpl"
-msgstr ""
+msgstr "תבנית מוצר"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__type
@@ -5214,7 +5221,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Set expiration dates on lots &amp; serial numbers"
-msgstr ""
+msgstr "קבע תאריכי תפוגה באצוות ובמספרים סידוריים"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -5302,13 +5309,13 @@ msgstr "הצג פעולות מפורטות"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__show_lots_m2o
 msgid "Show Lots M2O"
-msgstr ""
+msgstr "הצג אצוות רבים ליחיד"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__show_lots_text
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_lots_text
 msgid "Show Lots Text"
-msgstr ""
+msgstr "הצג טקסט אצוות"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_mark_as_todo
@@ -5489,14 +5496,14 @@ msgstr ""
 #: model:ir.actions.act_window,name:stock.action_stock_level_forecast_report_product
 #: model:ir.actions.act_window,name:stock.action_stock_level_forecast_report_template
 msgid "Stock Level Forecast"
-msgstr ""
+msgstr "תחזית רמת מלאי"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_level_forecast_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_level_forecast_graph
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_level_forecast_pivot
 msgid "Stock Level forecast"
-msgstr ""
+msgstr "תחזית רמת מלאי"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
@@ -5728,12 +5735,12 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__produce_line_ids
 msgid "Technical link to see which line was produced with this. "
-msgstr ""
+msgstr "קישור טכני כדי לראות איזו שורה הופקה עם זה."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__consume_line_ids
 msgid "Technical link to see who consumed what. "
-msgstr ""
+msgstr "קישור טכני כדי לראות מי צרך ומה צרך."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__product_tmpl_id
@@ -5818,7 +5825,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__package_id
 msgid "The package containing this quant"
-msgstr ""
+msgstr "החבילה מכילה כמות זו"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__location_id

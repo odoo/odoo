@@ -13,8 +13,8 @@
 # Boris Kodelja <boris@hbs.si>, 2019
 # Grega Vavtar <grega@hbs.si>, 2019
 # Matjaz Mozetic <m.mozetic@matmoz.si>, 2019
-# Jasmina Macur <jasmina@hbs.si>, 2019
 # Tadej Lupšina <tadej@hbs.si>, 2019
+# Jasmina Macur <jasmina@hbs.si>, 2019
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Tadej Lupšina <tadej@hbs.si>, 2019\n"
+"Last-Translator: Jasmina Macur <jasmina@hbs.si>, 2019\n"
 "Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -914,12 +914,12 @@ msgstr "Kontne skupine"
 #: model:ir.model.fields,field_description:account.field_account_journal__company_partner_id
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__partner_id
 msgid "Account Holder"
-msgstr ""
+msgstr "Imetnik računa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__acc_holder_name
 msgid "Account Holder Name"
-msgstr ""
+msgstr "Ime imetnika računa"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_send
@@ -1100,7 +1100,7 @@ msgstr "Kontne skupine"
 msgid ""
 "Account holder name, in case it is different than the name of the Account "
 "Holder"
-msgstr ""
+msgstr "Ime imetnika računa, če je drugačen od imena imetnika računa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__account_src_id
@@ -1414,7 +1414,7 @@ msgstr "Napredne nastavitve"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__include_base_amount
 msgid "Affect Base of Subsequent Taxes"
-msgstr ""
+msgstr "Vplivajo na osnovo kasnejših davkov"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_template__include_base_amount
@@ -1546,6 +1546,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Allows to tag analytic entries and to manage analytic distributions"
 msgstr ""
+"Omogoči označevanje analitičnih vnosov in upravljanje analitičnih "
+"distribucij"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -2113,7 +2115,7 @@ msgstr "Bančni račun"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_bank_journal_form
 msgid "Bank Account Name"
-msgstr ""
+msgstr "Naziv bančnega računa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__account_number
@@ -4518,7 +4520,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:333
 #, python-format
 msgid "External link"
-msgstr ""
+msgstr "Zunanja povezava"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_FAS
@@ -5364,7 +5366,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_tax__price_include
 #: model:ir.model.fields,field_description:account.field_account_tax_template__price_include
 msgid "Included in Price"
-msgstr ""
+msgstr "Vključeno v ceno"
 
 #. module: account
 #: selection:account.account.type,internal_group:0
@@ -5800,12 +5802,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__is_second_tax_price_included
 msgid "Is Second Tax Included in Price"
-msgstr ""
+msgstr "Ali je v ceno vključen drugi davek"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__is_tax_price_included
 msgid "Is Tax Included in Price"
-msgstr ""
+msgstr "Ali je davek vključen v ceno"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line__is_rounding_line
@@ -6145,7 +6147,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__description
 msgid "Label on Invoices"
-msgstr ""
+msgstr "Oznaka na računih"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment____last_update
@@ -6889,7 +6891,7 @@ msgstr "Novo"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__new_journal_name
 msgid "New Journal Name"
-msgstr ""
+msgstr "Novo ime dnevnika"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -7560,7 +7562,7 @@ msgstr "Plačajte račune z enim klikom s storitvijo Euro SEPA Servis"
 #: selection:account.account.type,type:0
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Payable"
-msgstr "Payable"
+msgstr "Obveznosti"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_account_payable_id
@@ -7811,13 +7813,13 @@ msgstr ""
 #: selection:account.tax,amount_type:0
 #: selection:account.tax.template,amount_type:0
 msgid "Percentage of Price"
-msgstr ""
+msgstr "Odstotek davka na ceno"
 
 #. module: account
 #: selection:account.tax,amount_type:0
 #: selection:account.tax.template,amount_type:0
 msgid "Percentage of Price Tax Included"
-msgstr ""
+msgstr "Odstotek davka na ceno, davek vključen"
 
 #. module: account
 #: selection:account.reconcile.model,second_amount_type:0
@@ -8186,7 +8188,7 @@ msgstr ""
 #: selection:account.account.type,type:0
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Receivable"
-msgstr "Receivable"
+msgstr "Terjatve"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_account_receivable_id
@@ -8848,7 +8850,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__force_second_tax_included
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__force_second_tax_included
 msgid "Second Tax Included in Price"
-msgstr ""
+msgstr "Drugi davek, vključen v ceno"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__second_amount
@@ -9533,7 +9535,7 @@ msgstr "Davčna skupina"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__force_tax_included
 #, python-format
 msgid "Tax Included in Price"
-msgstr ""
+msgstr "Davek vključen v ceno"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__tax_line_ids
@@ -10122,7 +10124,7 @@ msgstr ""
 msgid ""
 "The field Vendor is required, please complete it to validate the Vendor "
 "Bill."
-msgstr ""
+msgstr "Polje Dobavitelj je obvezno, izpolnite ga in potrdite prejeti račun."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_account_position_id
