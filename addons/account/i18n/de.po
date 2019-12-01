@@ -41,6 +41,8 @@
 # Oliver Roch <oliver.roch@d9t.de>, 2019
 # Andreas Brückl <andreas.brueckl@datenpol.at>, 2019
 # Jürgen Bereuter <jub@matchcut.at>, 2019
+# Markus Mair <mm@aster.bz>, 2019
+# Patrick Heuel <patrick.heuel@odoo-bs.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -48,7 +50,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-07 07:11+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Jürgen Bereuter <jub@matchcut.at>, 2019\n"
+"Last-Translator: Patrick Heuel <patrick.heuel@odoo-bs.com>, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -418,6 +420,9 @@ msgid ""
 "[('invoice_sequence_number_next_prefix', '=', False)]}\">First "
 "Number:</span>"
 msgstr ""
+"<span class=\"o_form_label\" attrs=\"{'invisible': "
+"[('invoice_sequence_number_next_prefix', '=', False)]}\">Erste "
+"Nummer:</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -463,7 +468,7 @@ msgid ""
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
 "<span class=\"o_form_label\">Steuerliche Lokalisierung</span>\n"
-"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Hier gesetzte Parameter sind Mandantenbezogen.\" aria-label=\"Hier gesetzte Parameter sind Mandantenbezogen.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5137,12 +5142,12 @@ msgstr "Vollständig ausgleichen"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_reversal__refund_method__cancel
 msgid "Full Refund"
-msgstr ""
+msgstr "Komplette Rückerstattung"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_reversal__refund_method__modify
 msgid "Full refund and new draft invoice"
-msgstr ""
+msgstr "Komplette Rückerstattung und neuer Rechnungsentwurf"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -7946,7 +7951,7 @@ msgstr "Teilausgleich Offene Posten"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_reversal__refund_method__refund
 msgid "Partial Refund"
-msgstr ""
+msgstr "Teilweise Rückerstattung"
 
 #. module: account
 #. openerp-web
@@ -10061,7 +10066,7 @@ msgstr "Lieferanten"
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note
 msgid "Switch into refund/credit note"
-msgstr ""
+msgstr "In Erstattung/Gutschrift umwandeln"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__name
@@ -10880,6 +10885,8 @@ msgstr ""
 msgid ""
 "The credit note is created in draft and can be edited before being issued."
 msgstr ""
+"Die Gutschrift wird als Entwurf erzeugt und kann vor der Verrechnung "
+"editiert werden."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0

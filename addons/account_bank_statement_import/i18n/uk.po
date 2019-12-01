@@ -348,6 +348,16 @@ msgid "If checked, some messages have a delivery error."
 msgstr "Якщо позначено, деякі повідомлення мають помилку доставки."
 
 #. module: account_bank_statement_import
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
+#, python-format
+msgid ""
+"If it contains transactions for more than one account, it must be imported "
+"on each of them."
+msgstr ""
+"Якщо містить транзакції для більше, ніж одного рахунка, це потрібно "
+"імпортувати на кожен з них."
+
+#. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__restrict_mode_hash_table
 msgid ""
 "If ticked, the accounting entry or invoice receives a hash as soon as it is "
@@ -724,14 +734,14 @@ msgstr "Це поле містить інформацію про нумерац�
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
-msgid "This file doesn't contain any statement."
-msgstr "Файл не містить виписки."
+msgid "This file doesn't contain any statement for account %s."
+msgstr "Цей файл не містить жодної виписки для цього рахунка %s."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
-msgid "This file doesn't contain any transaction."
-msgstr "Файл не містить транзакцій."
+msgid "This file doesn't contain any transaction for account %s."
+msgstr "Цей файл не містить жодної транзакції для цього рахунка %s."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__type

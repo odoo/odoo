@@ -13,13 +13,14 @@
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2019
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2019
 # Tim Siu Lai <tl@roomsfor.hk>, 2019
+# NANIWA Masahiro <naniwa.masahiro@gmail.com>, 2019
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-07 07:13+0000\n"
+"POT-Creation-Date: 2019-11-25 15:03+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>, 2019\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
@@ -440,7 +441,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong class=\"d-block mb-1\">Invoices</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mb-1\">請求書</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -725,6 +726,12 @@ msgstr "金額"
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_undiscounted
 msgid "Amount Before Discount"
 msgstr "割引前の金額"
+
+#. module: sale
+#: code:addons/sale/models/payment.py:0
+#, python-format
+msgid "Amount Mismatch (%s)"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__quotations_amount
@@ -2235,7 +2242,7 @@ msgstr "注文確認と顧客への製品の出荷までの日数"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "エラー数"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_needaction_counter
@@ -3603,7 +3610,7 @@ msgid "The order is not in a state requiring customer signature."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/models/payment.py:97
+#: code:addons/sale/models/payment.py:0
 #, python-format
 msgid ""
 "The order was not confirmed despite response from the acquirer (%s): order "
@@ -3675,7 +3682,7 @@ msgstr ""
 msgid ""
 "There is no invoiceable line. If a product has a Delivered quantities "
 "invoicing policy, please make sure that a quantity has been delivered."
-msgstr ""
+msgstr "請求可能な明細がありません。プロダクトの請求方針が配送済数量である場合は、配送が済んでいることをご確認ください。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3765,7 +3772,7 @@ msgstr "請求可能数量"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
 msgid "To Upsell"
-msgstr ""
+msgstr "アップセル対象"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form

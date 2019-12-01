@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-07 07:13+0000\n"
+"POT-Creation-Date: 2019-11-25 15:03+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
 "Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2019\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
@@ -43,7 +43,7 @@ msgstr "מספר הזמנות לקוח"
 #: model:mail.template,report_name:sale.email_template_edi_sale
 #: model:mail.template,report_name:sale.mail_template_sale_confirmation
 msgid "${(object.name or '').replace('/','_')}"
-msgstr ""
+msgstr "${(object.name or '').replace('/','_')}"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_confirmation
@@ -319,6 +319,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-usd\" role=\"img\" aria-label=\"Sale orders\" "
 "title=\"Sales orders\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-usd\" role=\"img\" aria-label=\"Sale orders\" "
+"title=\"Sales orders\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -366,6 +368,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -645,7 +649,7 @@ msgstr "מספר חשבון"
 #. module: sale
 #: model:ir.model,name:sale.model_account_reconciliation_widget
 msgid "Account Reconciliation widget"
-msgstr ""
+msgstr "ווידג'ט התאמת חשבון"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__deposit_account_id
@@ -733,6 +737,12 @@ msgstr "סכום"
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_undiscounted
 msgid "Amount Before Discount"
 msgstr "סכום לפני הנחה"
+
+#. module: sale
+#: code:addons/sale/models/payment.py:0
+#, python-format
+msgid "Amount Mismatch (%s)"
+msgstr "סכום לא תואם (%s)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__quotations_amount
@@ -3639,7 +3649,7 @@ msgid "The order is not in a state requiring customer signature."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/models/payment.py:97
+#: code:addons/sale/models/payment.py:0
 #, python-format
 msgid ""
 "The order was not confirmed despite response from the acquirer (%s): order "
@@ -3806,6 +3816,8 @@ msgid ""
 "list view and click on 'Portal Access Management' option in the dropdown "
 "menu *Action*."
 msgstr ""
+"לשליחת הזמנות במצב B2B, פתח איש קשר או בחר מספר כאלה בתצוגת רשימה ולחץ על "
+"האפשרות 'ניהול גישה לפורטל' בתפריט הנפתח * פעולה *."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -4096,6 +4108,8 @@ msgid ""
 "You can not remove an order line once the sales order is confirmed.\n"
 "You should rather set the quantity to 0."
 msgstr ""
+"אינך יכול להסיר שורת הזמנה לאחר אישור הזמנת הלקוח.\n"
+"עליך להגדיר את הכמות ל- 0."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice

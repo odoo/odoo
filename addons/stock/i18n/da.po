@@ -14,8 +14,8 @@
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2019
 # Sanne Kristensen <sanne@vkdata.dk>, 2019
 # Ejner Sønniksen <ejner@vkdata.dk>, 2019
-# lhmflexerp <lhm@flexerp.dk>, 2019
 # Simon Andersen <simon@vkdata.dk>, 2019
+# lhmflexerp <lhm@flexerp.dk>, 2019
 # 
 msgid ""
 msgstr ""
@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-07 07:11+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Simon Andersen <simon@vkdata.dk>, 2019\n"
+"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2019\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -255,7 +255,7 @@ msgstr "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Date\" title=\"Date
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -277,6 +277,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -608,7 +610,7 @@ msgstr ""
 #. module: stock
 #: model:res.groups,name:stock.group_stock_manager
 msgid "Administrator"
-msgstr ""
+msgstr "Administrator"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -3640,7 +3642,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__message_has_error_counter
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Antal fejl"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__message_needaction_counter
@@ -4115,6 +4117,12 @@ msgstr "Udførte plukninger"
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "Planned Transfer"
 msgstr "Planlagt overførsel"
+
+#. module: stock
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid "Please add 'Done' qantitites to the picking to create a new pack."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -5094,7 +5102,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__message_has_sms_error
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "SMS leveringsfejl"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__date_planned
@@ -6442,7 +6450,7 @@ msgstr "Enhed"
 #: model:product.product,uom_name:stock.product_cable_management_box
 #: model:product.template,uom_name:stock.product_cable_management_box_product_template
 msgid "Units"
-msgstr ""
+msgstr "Enheder"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form

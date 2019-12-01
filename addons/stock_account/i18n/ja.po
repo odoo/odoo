@@ -4,20 +4,20 @@
 # 
 # Translators:
 # Martin Trigaux, 2019
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2019
 # Manami Hashi <manami@roomsfor.hk>, 2019
 # NOKA Shigekazu <shigekazu.noka@gmail.com>, 2019
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2019
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2019
 # Tim Siu Lai <tl@roomsfor.hk>, 2019
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-07 07:12+0000\n"
+"POT-Creation-Date: 2019-11-25 15:01+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Tim Siu Lai <tl@roomsfor.hk>, 2019\n"
+"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>, 2019\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -435,6 +435,11 @@ msgid "Remaining Qty"
 msgstr "残数量"
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__remaining_value
+msgid "Remaining Value"
+msgstr "残額"
+
+#. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking
 msgid "Return Picking"
 msgstr "ピッキングの戻し"
@@ -604,7 +609,7 @@ msgstr "原価更新"
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__to_refund
 #: model:ir.model.fields,field_description:stock_account.field_stock_return_picking_line__to_refund
 msgid "Update quantities on SO/PO"
-msgstr ""
+msgstr "SO/POの数量更新"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_in_account_id
@@ -731,8 +736,3 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock_account.view_change_standard_price
 msgid "_Apply"
 msgstr "適用"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__remaining_value
-msgid "remaining_value Value"
-msgstr ""
