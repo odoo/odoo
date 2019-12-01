@@ -329,10 +329,24 @@ const UserValueWidget = Widget.extend({
                 break;
             }
             case true: {
+                // TODO improve this. The preview state has to be updated only
+                // when the actual option _select is gonna be called... but this
+                // is delayed by a mutex. So, during test tours, we would notify
+                // both 'preview' and 'reset' before the 'preview' handling is
+                // done: and so the widget would be considered not in preview
+                // during that preview action handling.
+                data.prepare = () => this.el.classList.add('o_we_preview');
                 this.trigger_up('user_value_preview', data);
                 break;
             }
             default: {
+                // TODO improve this. The preview state has to be updated only
+                // when the actual option _select is gonna be called... but this
+                // is delayed by a mutex. So, during test tours, we would notify
+                // both 'preview' and 'reset' before the 'preview' handling is
+                // done: and so the widget would be considered not in preview
+                // during that preview action handling.
+                data.prepare = () => this.el.classList.remove('o_we_preview');
                 this.trigger_up('user_value_reset', data);
             }
         }
@@ -395,7 +409,6 @@ const UserValueWidget = Widget.extend({
         }
         ev.preventDefault();
 
-        this.el.classList.add('o_we_preview');
         this._notifyValueChange(true);
     },
     /**
@@ -414,7 +427,6 @@ const UserValueWidget = Widget.extend({
         }
         ev.preventDefault();
 
-        this.el.classList.remove('o_we_preview');
         this._notifyValueChange('reset');
     },
 });
@@ -1584,6 +1596,9 @@ const SnippetOptionWidget = Widget.extend({
     _onOptionPreview: function (ev) {
         ev.stopPropagation();
         this._selectEventMutex.exec(() => {
+            if (ev.data.prepare) {
+                ev.data.prepare();
+            }
             return this._select(true, ev.data.widget).then(() => {
                 this.$target.trigger('snippet-option-preview', [this]);
             });
@@ -1599,6 +1614,9 @@ const SnippetOptionWidget = Widget.extend({
     _onOptionSelection: function (ev) {
         ev.stopPropagation();
         this._selectEventMutex.exec(() => {
+            if (ev.data.prepare) {
+                ev.data.prepare();
+            }
             return this._select(false, ev.data.widget).then(() => {
                 this.$target.trigger('snippet-option-change', [this]);
             });
@@ -1614,6 +1632,9 @@ const SnippetOptionWidget = Widget.extend({
     _onOptionCancel: function (ev) {
         ev.stopPropagation();
         this._selectEventMutex.exec(() => {
+            if (ev.data.prepare) {
+                ev.data.prepare();
+            }
             return this._select('reset', ev.data.widget);
         });
     },
