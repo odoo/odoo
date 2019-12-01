@@ -9,7 +9,7 @@
 # Diego Bittencourt <diegomb86@gmail.com>, 2018
 # guisantos23 <guisantos23@yahoo.com.br>, 2018
 # Pablo Valentini <pablondrina@gmail.com>, 2018
-# Thiago MACÊDO <thiago95macedo@gmail.com>, 2018
+# Thiago Macêdo <thiago95macedo@gmail.com>, 2018
 # Caio Leonardo Mendes de Sousa <caleozao@gmail.com>, 2018
 # André Augusto Firmino Cordeiro <a.cordeito@gmail.com>, 2018
 # Clemilton Clementino <clemylton@hotmail.com>, 2018
@@ -28,10 +28,10 @@
 # Luiz Carareto Alonso <Luiz.cararetoalonso@gmail.com>, 2019
 # Marcel Savegnago <marcel.savegnago@gmail.com>, 2019
 # Cécile Collart <cco@odoo.com>, 2019
-# Martin Trigaux, 2019
 # Mateus Lopes <mateus1@gmail.com>, 2019
 # grazziano <gra.negocia@gmail.com>, 2019
 # Silmar <pinheirosilmar@gmail.com>, 2019
+# Martin Trigaux, 2019
 # 
 msgid ""
 msgstr ""
@@ -39,7 +39,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 08:02+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Silmar <pinheirosilmar@gmail.com>, 2019\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5030,6 +5030,16 @@ msgstr ""
 "\n"
 "Instalar algum gráfico genérico de contas.\n"
 "    "
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_id
+msgid ""
+"\n"
+"This is the latest Indonesian Odoo localisation necessary to run Odoo accounting for SMEs with:\n"
+"=================================================================================================\n"
+"    - generic Indonesian chart of accounts\n"
+"    - tax structure"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uk
@@ -14350,6 +14360,11 @@ msgid "Indonesia"
 msgstr "Indonésia"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_id
+msgid "Indonesian - Accounting"
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.res_partner_industry_action
 #: model:ir.model,name:base.model_res_partner_industry
 #: model:ir.model.fields,field_description:base.field_res_partner__industry_id
@@ -21345,6 +21360,11 @@ msgid "Sticky memos, Collaborative"
 msgstr "Notas Colaborativas (post it)"
 
 #. module: base
+#: model:ir.module.category,name:base.module_category_stock
+msgid "Stock"
+msgstr "Estoque"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_barcode_mobile
 msgid "Stock Barcode in Mobile"
 msgstr ""
@@ -23684,7 +23704,13 @@ msgid "Unknown"
 msgstr "Desconhecido(a)"
 
 #. module: base
-#: code:addons/models.py:1058
+#: code:addons/models.py:873
+#, python-format
+msgid "Unknown database error: '%s'"
+msgstr ""
+
+#. module: base
+#: code:addons/models.py:1067
 #, python-format
 msgid "Unknown database identifier '%s'"
 msgstr "Identificador de base de dados desconhecido '%s'"
@@ -25318,9 +25344,19 @@ msgid "test-inherits"
 msgstr "test-inherit"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_test_inherits_depends
+msgid "test-inherits-depends"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_test_limits
 msgid "test-limits"
 msgstr "test-limits"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_test_lint
+msgid "test-lint"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_translation_import
