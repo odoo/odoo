@@ -807,8 +807,12 @@
         data-selector=".note-editable > div:not(.o_layout), .note-editable .oe_structure > div, td, th"
         data-exclude=".o_mail_no_resize, .o_mail_no_options"/>
 
-    <div data-js="colorpicker" string="Background Color"
-        data-selector=".note-editable > div:not(.o_layout), .note-editable .oe_structure > div, td, th"
-        data-exclude=".o_mail_no_colorpicker, .o_mail_no_options"/>
+    <div data-selector=".note-editable > div:not(.o_layout), .note-editable .oe_structure > div, td, th"
+         data-exclude=".o_mail_no_colorpicker, .o_mail_no_options">
+        <we-colorpicker string="Background Color"
+            data-select-style="true"
+            data-css-property="background-color"
+            data-color-prefix="bg-"/>
+    </div>
 </template>
 </odoo>

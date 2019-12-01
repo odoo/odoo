@@ -4,6 +4,7 @@ odoo.define('web_editor.rte.summernote', function (require) {
 var Class = require('web.Class');
 const concurrency = require('web.concurrency');
 var core = require('web.core');
+const ColorpickerDialog = require('web.ColorpickerDialog');
 var ColorPaletteWidget = require('web_editor.ColorPalette').ColorPaletteWidget;
 var mixins = require('web.mixins');
 var fonts = require('wysiwyg.fonts');
@@ -50,13 +51,17 @@ renderer.createPalette = function ($container, options) {
                 const targetNode = r.sc;
                 const targetElement = targetNode.nodeType === Node.ELEMENT_NODE ? targetNode : targetNode.parentNode;
                 colorpicker = new ColorPaletteWidget(parent, {
-                    colorPrefix: eventName === "foreColor" ? 'text-' : 'bg-',
                     excluded: ['transparent_grayscale'],
                     $editable: rte.Class.prototype.editable(), // Our parent is the root widget, we can't retrieve the editable section from it...
                     selectedColor: $(targetElement).css(eventName === "foreColor" ? 'color' : 'backgroundColor'),
-                    targetClasses: [...targetElement.classList],
                 });
-                colorpicker.on('color_picked custom_color_picked', null, ev => applyColor(ev.data.target, eventName, ev.data.cssColor));
+                colorpicker.on('color_picked', null, ev => {
+                    let color = ev.data.color;
+                    if (!ColorpickerDialog.isCSSColor(color)) {
+                        color = (eventName === "foreColor" ? 'text-' : 'bg-') + color;
+                    }
+                    applyColor(ev.data.target, eventName, color);
+                });
                 colorpicker.on('color_reset', null, ev => applyColor(ev.data.target, eventName, 'inherit'));
                 return colorpicker.replace(hookEl).then(() => {
                     if (oldColorpicker) {

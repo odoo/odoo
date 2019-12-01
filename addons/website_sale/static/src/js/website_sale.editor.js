@@ -113,8 +113,8 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
     /**
      * @see this.selectClass for params
      */
-    setPpg: function (previewMode, value, $opt) {
-        const ppg = parseInt($opt.find('input').val());
+    setPpg: function (previewMode, widgetValue, params) {
+        const ppg = parseInt(widgetValue);
         if (!ppg || ppg < 1) {
             return false;
         }
@@ -129,12 +129,12 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
     /**
      * @see this.selectClass for params
      */
-    setPpr: function (previewMode, value, $opt) {
-        this.ppr = parseInt(value);
+    setPpr: function (previewMode, widgetValue, params) {
+        this.ppr = parseInt(widgetValue);
         this._rpc({
             route: '/shop/change_ppr',
             params: {
-                'ppr': value,
+                'ppr': this.ppr,
             },
         }).then(reload);
     },
@@ -146,18 +146,16 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
     /**
      * @override
      */
-    _setActive: function () {
-        this._super(...arguments);
-
-        this.$el.find('[data-set-ppr]')
-            .removeClass('active')
-            .filter((i, el) => {
-                var nbColumns = parseInt($(el).data('setPpr'));
-                return nbColumns === this.ppr;
-            })
-            .addClass('active');
-
-        this.$el.find('[data-set-ppg] > input').val(this.ppg);
+    _computeWidgetState: function (methodName, params) {
+        switch (methodName) {
+            case 'setPpg': {
+                return this.ppg;
+            }
+            case 'setPpr': {
+                return this.ppr;
+            }
+        }
+        return this._super(...arguments);
     },
 });
 
@@ -172,29 +170,11 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
     /**
      * @override
      */
-    start: function () {
+    willStart: function () {
         this.ppr = this.$target.closest('[data-ppr]').data('ppr');
         this.productTemplateID = parseInt(this.$target.find('[data-oe-model="product.template"]').data('oe-id'));
 
-        var defs = [this._super.apply(this, arguments)];
-
-        defs.push(this._rpc({
-            model: 'product.style',
-            method: 'search_read',
-        }).then(data => {
-            var $menu = this.$el.find('[name="style"]');
-            for (var k in data) {
-                $menu.append(this.buildCheckboxElement(data[k]['name'], {
-                    dataAttributes: {
-                        'style': data[k]['id'],
-                        'toggleClass': data[k]['html_class'],
-                    },
-                }));
-            }
-            this._updateUI();
-        }));
-
-        return $.when.apply($, defs);
+        return this._super(...arguments);
     },
     /**
      * @override
@@ -212,37 +192,37 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
     /**
      * @see this.selectClass for params
      */
-    style: function (previewMode, value, $opt) {
+    style: function (previewMode, widgetValue, params) {
         this._rpc({
             route: '/shop/change_styles',
             params: {
                 'id': this.productTemplateID,
-                'style_id': value,
+                'style_id': params.possibleValues[params.possibleValues.length - 1],
             },
         });
     },
     /**
      * @see this.selectClass for params
      */
-    changeSequence: function (previewMode, value, $opt) {
+    changeSequence: function (previewMode, widgetValue, params) {
         this._rpc({
             route: '/shop/change_sequence',
             params: {
                 id: this.productTemplateID,
-                sequence: value,
+                sequence: widgetValue,
             },
         }).then(reload);
     },
 
     //--------------------------------------------------------------------------
-    // Private
+    // Public
     //--------------------------------------------------------------------------
 
     /**
      * @override
      */
-    _updateUI: function () {
-        this._super.apply(this, arguments);
+    updateUI: async function () {
+        await this._super.apply(this, arguments);
 
         var sizeX = parseInt(this.$target.attr('colspan') || 1);
         var sizeY = parseInt(this.$target.attr('rowspan') || 1);
@@ -253,6 +233,37 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
 
         // Adapt size array preview to fit ppr
         $size.find('tr td:nth-child(n + ' + parseInt(this.ppr + 1) + ')').hide();
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _renderCustomWidgets: async function (uiFragment) {
+        const checkboxes = [];
+        return this._rpc({
+            model: 'product.style',
+            method: 'search_read',
+        }).then(async data => {
+            for (var k in data) {
+                const checkboxWidget = this._registerUserValueWidget('we-checkbox', this, data[k]['name'], {
+                    dataAttributes: {
+                        'style': data[k]['id'],
+                        'selectClass': data[k]['html_class'],
+                    },
+                });
+                checkboxes.push(checkboxWidget);
+                await checkboxWidget.appendTo(document.createDocumentFragment());
+            }
+        }).then(() => {
+            const menuEl = uiFragment.querySelector('[name="style"]');
+            for (const checkbox of checkboxes) {
+                menuEl.appendChild(checkbox.el);
+            }
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -277,8 +288,8 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
     _onTableItemMouseEnter: function (ev) {
         var $td = $(ev.currentTarget);
         var $table = $td.closest("table");
-        var x = $td.index()+1;
-        var y = $td.parent().index()+1;
+        var x = $td.index() + 1;
+        var y = $td.parent().index() + 1;
 
         var tr = [];
         for (var yi = 0; yi < y; yi++) {
@@ -334,7 +345,7 @@ options.registry.ProductsSearchBar = options.Class.extend({
     /**
      * @see this.selectClass for parameters
      */
-    openSearchbarSettings: function (previewMode, value, $opt) {
+    openSearchbarSettings: function (previewMode, widgetValue, params) {
         var self = this;
         new Dialog(this, {
             title: _t("Products Search Bar"),

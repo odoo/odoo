@@ -982,25 +982,39 @@
     <t t-call="web_editor.snippet_options"/>
 
     <!-- COLOR | .s_three_columns | .s_comparisons -->
-    <div data-js="colorpicker" string="Color"
-        data-selector=".s_three_columns .row > div, .s_comparisons .row > div, .s_tabs .row > div"
-        data-target=".card"/>
+    <div data-selector=".s_three_columns .row > div, .s_comparisons .row > div, .s_tabs .row > div"
+         data-target=".card">
+        <we-colorpicker string="Color"
+            data-select-style="true"
+            data-css-property="background-color"
+            data-color-prefix="bg-"/>
+    </div>
 
     <!-- COLOR | .s_hr -->
-    <div data-js="colorpicker" string="Color"
-        data-selector=".s_hr"
-        data-target="hr"
-        data-color-prefix="border-"
-        data-palette-exclude="transparent_grayscale, common, custom"/>
+    <div data-selector=".s_hr"
+         data-target="hr">
+        <we-colorpicker string="Color"
+            data-select-style="true"
+            data-css-property="border-color"
+            data-color-prefix="border-"
+            data-excluded="transparent_grayscale"/>
+    </div>
 
     <!-- COLOR | .s_cards -->
-    <div data-js="colorpicker" string="Color"
-        data-selector=".s_card, .accordion .card"/>
+    <div data-selector=".s_card, .accordion .card">
+        <we-colorpicker string="Color"
+            data-select-style="true"
+            data-css-property="background-color"
+            data-color-prefix="bg-"/>
+    </div>
 
     <!-- COLOR | .s_alert -->
-    <div data-js="colorpicker" string="Color"
-        data-selector=".s_alert"
-        data-color-prefix="alert-"/>
+    <div data-selector=".s_alert">
+        <we-colorpicker string="Color"
+            data-select-style="true"
+            data-css-property="background-color"
+            data-color-prefix="alert-"/>
+    </div>
 
     <!-- STYLES | .s_title -->
     <div data-selector=".s_title" data-target="[class*='s_title_']">
@@ -1108,7 +1122,7 @@
             <we-divider/>
             <we-button data-select-class="s_carousel_default">Default</we-button>
         </we-select>
-        <we-input string="Speed" data-set-data-attribute="interval" data-unit="s" data-save-unit="ms" data-step="0.1"/>
+        <we-input string="Speed" data-select-data-attribute="0s" data-attribute-name="interval" data-unit="s" data-save-unit="ms" data-step="0.1"/>
     </div>
 
     <div data-js="CarouselItem"
@@ -1238,46 +1252,62 @@
             <we-button class="fas fa-fw fa-expand-arrows-alt" title="Background Position"
                        data-background-position-overlay="true" data-no-preview="true"/>
         </we-row>
-        <we-input string="Background width" data-set-style="background-size" data-default-value="auto"/>
-        <we-input string="Background height" data-set-style="background-size" data-default-value="auto"/>
+        <we-multi data-css-property="background-size">
+            <we-input string="Width" data-select-style="auto" data-unit="px"/>
+            <we-input string="Height" data-select-style="auto" data-unit="px"/>
+        </we-multi>
     </div>
 
     <!-- Parallax -->
     <div data-js="parallax" data-selector=".parallax">
-        <we-select string="Scroll Speed">
-            <we-button data-scroll="0">No-scroll</we-button>
+        <we-select string="Scroll Speed" data-attribute-name="scrollBackgroundRatio" data-attribute-default-value="0">
+            <we-button data-select-data-attribute="0">No-scroll</we-button>
             <we-divider/>
-            <we-button data-scroll="1">Fixed</we-button>
+            <we-button data-select-data-attribute="1">Fixed</we-button>
             <we-divider/>
-            <we-button data-scroll="0.6">Very Slow</we-button>
-            <we-button data-scroll="1.2">Slow</we-button>
-            <we-button data-scroll="1.6">Fast</we-button>
-            <we-button data-scroll="2">Very Fast</we-button>
+            <we-button data-select-data-attribute="0.6">Very Slow</we-button>
+            <we-button data-select-data-attribute="1.2">Slow</we-button>
+            <we-button data-select-data-attribute="1.6">Fast</we-button>
+            <we-button data-select-data-attribute="2">Very Fast</we-button>
         </we-select>
     </div>
 
     <!-- Color | Section -->
-    <div id="so_main_colorpicker" string="Background Color"
-        data-js="colorpicker"
-        data-selector="section, .carousel-item"
-        data-exclude=".parallax, .o_gallery .carousel-item"/>
+    <div id="so_main_colorpicker"
+         data-selector="section, .carousel-item"
+         data-exclude=".parallax, .o_gallery .carousel-item">
+        <we-colorpicker string="Background Color"
+            data-select-style="true"
+            data-css-property="background-color"
+            data-color-prefix="bg-"/>
+    </div>
 
     <!-- FILTER | .s_parallax -->
-    <div data-js="colorpicker" string="Filter"
-        data-selector=".parallax"
-        data-palette-exclude="common, theme, custom"
-        data-palette-default="transparent_grayscale"/>
+    <div data-selector=".parallax">
+        <we-colorpicker string="Filter"
+            data-select-style="true"
+            data-css-property="background-color"
+            data-color-prefix="bg-"
+            data-excluded="common, theme, custom"/>
+    </div>
 
     <!-- Color | Columns -->
-    <div data-js="colorpicker" string="Background Color"
-        data-selector="section .row > div"
-        data-exclude=".s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .o_gallery .row > div"/>
+    <div data-selector="section .row > div"
+         data-exclude=".s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .o_gallery .row > div">
+        <we-colorpicker string="Background Color"
+            data-select-style="true"
+            data-css-property="background-color"
+            data-color-prefix="bg-"/>
+    </div>
 
     <div data-selector="section .row > div"
         data-exclude=".s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .o_gallery .row > div">
-        <we-input string="Border" data-set-style="border-width" data-extra-class="border"/>
-        <we-input string="Rounded" data-set-style="border-radius" data-extra-class="rounded"/>
-        <we-checkbox string="Shadow" data-toggle-class="shadow"/>
+        <we-row string="Border" class="o_we_inline">
+            <we-colorpicker data-select-style="true" data-css-property="border-color" data-color-prefix="border-"/>
+            <we-input data-select-style="0" data-css-property="border-width" data-unit="px" data-extra-class="border"/>
+        </we-row>
+        <we-input string="Rounded" data-select-style="0" data-css-property="border-radius" data-unit="px" data-extra-class="rounded"/>
+        <we-checkbox string="Shadow" data-select-class="shadow"/>
     </div>
 
     <div data-js="sizing_y"
@@ -1301,7 +1331,7 @@
 
     <div data-js="ul"
          data-selector=":not(li) > ul:has(ul,ol), :not(li) > ol:has(ul,ol)">
-        <we-checkbox string="Folded list" data-toggle-class="o_ul_folded"/>
+        <we-checkbox string="Folded list" data-select-class="o_ul_folded"/>
     </div>
 
     <div data-js="menu_data"
@@ -1319,11 +1349,14 @@
         <we-checkbox string="Transparent" data-transparent="true" data-no-preview="true"/>
     </div>
 
-    <div data-js="topMenuColor" string="Background Color"
-        data-selector="[data-main-object^='website.page('] #wrapwrap > header"
-        data-palette-exclude="theme,common, custom"
-        data-palette-default="transparent_grayscale"
-        data-no-check="true">
+    <div data-js="topMenuColor"
+         data-selector="[data-main-object^='website.page('] #wrapwrap > header"
+         data-no-check="true">
+        <we-colorpicker string="Background Color"
+            data-select-style="true"
+            data-css-property="background-color"
+            data-color-prefix="bg-"
+            data-excluded="theme, common, custom"/>
     </div>
 
     <!-- Anchor Name -->
@@ -1391,7 +1424,7 @@
     <div data-js="SectionStretch"
         data-selector="section"
         data-target="> .container, > .container-fluid">
-        <we-checkbox string="Stretch" data-toggle-container-fluid=""/>
+        <we-checkbox string="Stretch" data-select-class="container|container-fluid" data-no-preview="true"/>
     </div>
 </template>
 </odoo>

@@ -297,26 +297,6 @@ body.editor_enable.editor_has_snippets {
                 @include we-icon-button('\f107');
             }
 
-            we-row {
-                display: block;
-
-                > div {
-                    display: flex;
-                    align-items: center;
-
-                    > * {
-                        flex: 1 1 auto;
-
-                        + * {
-                            margin-left: 0.5em;
-                        }
-                    }
-                    > .fa, > .fas, > .fab, > .far {
-                        flex: 0 0 auto;
-                    }
-                }
-            }
-
             we-select {
                 position: relative;
                 display: flex;
@@ -374,13 +354,8 @@ body.editor_enable.editor_has_snippets {
             }
 
             we-input {
-                display: flex;
-                align-items: center;
+                @extend we-row.o_we_inline;
 
-                > we-title {
-                    min-width: 60%;
-                    margin-right: 5%;
-                }
                 > input {
                     flex: 1 1 auto;
                     width: 0;
@@ -395,6 +370,50 @@ body.editor_enable.editor_has_snippets {
                 }
                 > span {
                     flex: 0 0 auto;
+                }
+            }
+
+            we-row {
+                position: relative;
+                display: block;
+
+                > div {
+                    flex: 1 1 auto;
+                    display: flex;
+                    align-items: center;
+
+                    > * {
+                        flex: 1 1 auto;
+
+                        + * {
+                            margin-left: 0.5em;
+                        }
+                    }
+                    > .fa, > .fas, > .fab, > .far {
+                        flex: 0 0 auto;
+                    }
+                }
+
+                &.o_we_inline {
+                    display: flex;
+                    align-items: center;
+
+                    > we-title {
+                        min-width: 60%;
+                        margin-right: 5%;
+                    }
+                }
+
+                we-select {
+                    position: static;
+                }
+
+                we-input {
+                    flex-wrap: wrap;
+
+                    > we-title {
+                        min-width: 95%;
+                    }
                 }
             }
 

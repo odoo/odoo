@@ -111,8 +111,8 @@ options.registry.CoverProperties.include({
     /**
      * @override
      */
-    _updateUI: function () {
-        this._super(...arguments);
+    updateUI: async function () {
+        await this._super(...arguments);
         var isRegularCover = this.$target.is('.o_wblog_post_page_cover_regular');
         var $coverFull = this.$el.find('[data-select-class*="cover_full"]');
         var $coverMid = this.$el.find('[data-select-class*="cover_mid"]');

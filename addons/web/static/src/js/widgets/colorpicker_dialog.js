@@ -15,7 +15,7 @@ var ColorpickerDialog = Dialog.extend({
         'mousedown .o_color_pick_area': '_onMouseDownPicker',
         'mousedown .o_color_slider': '_onMouseDownSlider',
         'mousedown .o_opacity_slider': '_onMouseDownOpacitySlider',
-        'change .o_color_picker_inputs' : '_onChangeInputs',
+        'change .o_color_picker_inputs': '_onChangeInputs',
     }),
 
     /**
@@ -76,7 +76,7 @@ var ColorpickerDialog = Dialog.extend({
         this.$opacitySliderPointer = this.$('.o_opacity_pointer');
 
         var defaultColor = this.options.defaultColor || '#FF0000';
-        var rgba = ColorpickerDialog.convertColorToRgba(defaultColor);
+        var rgba = ColorpickerDialog.convertCSSColorToRgba(defaultColor);
         if (rgba) {
             this._updateRgba(rgba.red, rgba.green, rgba.blue, rgba.opacity);
         }
@@ -143,7 +143,7 @@ var ColorpickerDialog = Dialog.extend({
      * @param {string} hex - hexadecimal code
      */
     _updateHex: function (hex) {
-        var rgb = ColorpickerDialog.convertHexToRgba(hex);
+        var rgb = ColorpickerDialog.convertCSSColorToRgba(hex);
         if (!rgb) {
             return;
         }
@@ -164,14 +164,17 @@ var ColorpickerDialog = Dialog.extend({
      * @param {integer} [a]
      */
     _updateRgba: function (r, g, b, a) {
-        var hex = ColorpickerDialog.convertRgbToHex(r, g, b);
+        // We update the hexadecimal code by transforming into a css color and
+        // ignoring the opacity (we don't display opacity component in hexa as
+        // not supported on all browsers)
+        var hex = ColorpickerDialog.convertRgbaToCSSColor(r, g, b);
         if (!hex) {
             return;
         }
         _.extend(this.colorComponents,
             {red: r, green: g, blue: b},
             a === undefined ? {} : {opacity: a},
-            hex,
+            {hex: hex},
             ColorpickerDialog.convertRgbToHsl(r, g, b)
         );
         this._updateCssColor();
@@ -189,10 +192,12 @@ var ColorpickerDialog = Dialog.extend({
         if (!rgb) {
             return;
         }
+        // We receive an hexa as we ignore the opacity
+        const hex = ColorpickerDialog.convertRgbaToCSSColor(rgb.red, rgb.green, rgb.blue);
         _.extend(this.colorComponents,
             {hue: h, saturation: s, lightness: l},
             rgb,
-            ColorpickerDialog.convertRgbToHex(rgb.red, rgb.green, rgb.blue)
+            {hex: hex}
         );
         this._updateCssColor();
     },
@@ -217,8 +222,12 @@ var ColorpickerDialog = Dialog.extend({
      * @private
      */
     _updateCssColor: function () {
+        const r = this.colorComponents.red;
+        const g = this.colorComponents.green;
+        const b = this.colorComponents.blue;
+        const a = this.colorComponents.opacity;
         _.extend(this.colorComponents,
-            {cssColor: ColorpickerDialog.formatColor(this.colorComponents)}
+            {cssColor: ColorpickerDialog.convertRgbaToCSSColor(r, g, b, a)}
         );
     },
 
@@ -359,84 +368,21 @@ var ColorpickerDialog = Dialog.extend({
 //--------------------------------------------------------------------------
 
 /**
- * Converts any color to string RGBA.
+ * Converts RGB color components to HSL components.
  *
  * @static
- * @param {Object|string} color
- * @returns {string} rgba (red, green, blue, opacity)
- */
-ColorpickerDialog.formatColor = function (color) {
-    if (typeof color === 'string') {
-        color = ColorpickerDialog.convertColorToRgba(color);
-    }
-    if (!color) {
-        return '';
-    }
-    if (color.opacity === 100) {
-        return ColorpickerDialog.convertRgbToHex(color.red, color.green, color.blue).hex;
-    }
-    return _.str.sprintf('rgba(%s, %s, %s, %s)',
-        color.red,
-        color.green,
-        color.blue,
-        color.opacity / 100
-    );
-};
-/**
- * Converts any color to  code to RGBA.
- *
- * @static
- * @param {string} color
- * @returns {Object|false} contains red, green, blue, opacity
- */
-ColorpickerDialog.convertColorToRgba = function (color) {
-    var rgba = color.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/);
-    if (rgba) {
-        if (rgba[4] === undefined) {
-            rgba[4] = 1;
-        }
-        return {
-            red: parseInt(rgba[1]),
-            green: parseInt(rgba[2]),
-            blue: parseInt(rgba[3]),
-            opacity: Math.round(parseFloat(rgba[4]) * 100),
-        };
-    } else {
-        return ColorpickerDialog.convertHexToRgba(color);
-    }
-};
-/**
- * Converts Hexadecimal code to RGB.
- *
- * @static
- * @param {string} hex - hexadecimal code
- * @returns {Object|false} contains red, green and blue
- */
-ColorpickerDialog.convertHexToRgba = function (hex) {
-    if (!/^#([0-9A-F]{6}|[0-9A-F]{8})$/i.test(hex)) {
-        return false;
-    }
-
-    return {
-        red: parseInt(hex.substr(1, 2), 16),
-        green: parseInt(hex.substr(3, 2), 16),
-        blue: parseInt(hex.substr(5, 2), 16),
-        opacity: (hex.length === 9 ? (parseInt(hex.substr(7, 2), 16) / 255) : 1) * 100,
-    };
-};
-/**
- * Converts RGB color to HSL.
- *
- * @static
- * @param {integer} r
- * @param {integer} g
- * @param {integer} b
- * @returns {Object|false} contains hue, saturation and lightness
+ * @param {integer} r - [0, 255]
+ * @param {integer} g - [0, 255]
+ * @param {integer} b - [0, 255]
+ * @returns {Object|false}
+ *          - hue [0, 360[
+ *          - saturation [0, 100]
+ *          - lightness [0, 100]
  */
 ColorpickerDialog.convertRgbToHsl = function (r, g, b) {
-    if (typeof (r) !== 'number' || isNaN(r) || r < 0 || r > 255 ||
-        typeof (g) !== 'number' || isNaN(g) || g < 0 || g > 255 ||
-        typeof (b) !== 'number' || isNaN(b) || b < 0 || b > 255) {
+    if (typeof (r) !== 'number' || isNaN(r) || r < 0 || r > 255
+            || typeof (g) !== 'number' || isNaN(g) || g < 0 || g > 255
+            || typeof (b) !== 'number' || isNaN(b) || b < 0 || b > 255) {
         return false;
     }
 
@@ -471,20 +417,24 @@ ColorpickerDialog.convertRgbToHsl = function (r, g, b) {
     };
 };
 /**
- * Converts HSL color to RGB.
+ * Converts HSL color components to RGB components.
  *
  * @static
- * @param {integer} h
- * @param {integer} s
- * @param {integer} l
- * @returns {Object|false} contains red, green and blue
+ * @param {integer} h - [0, 360[
+ * @param {integer} s - [0, 100]
+ * @param {integer} l - [0, 100]
+ * @returns {Object|false}
+ *          - red [0, 255]
+ *          - green [0, 255]
+ *          - blue [0, 255]
  */
 ColorpickerDialog.convertHslToRgb = function (h, s, l) {
-    if (typeof (h) !== 'number' || isNaN(h) || h < 0 || h > 360 ||
-        typeof (s) !== 'number' || isNaN(s) || s < 0 || s > 100 ||
-        typeof (l) !== 'number' || isNaN(l) || l < 0 || l > 100) {
+    if (typeof (h) !== 'number' || isNaN(h) || h < 0 || h > 360
+            || typeof (s) !== 'number' || isNaN(s) || s < 0 || s > 100
+            || typeof (l) !== 'number' || isNaN(l) || l < 0 || l > 100) {
         return false;
     }
+
     var huePrime = h / 60;
     var saturation = s / 100;
     var lightness = l / 100;
@@ -537,28 +487,111 @@ ColorpickerDialog.convertHslToRgb = function (h, s, l) {
             blue: secondComponent,
         };
     }
+    return false;
 };
 /**
- * Converts RGB color to Hexadecimal code.
+ * Converts RGBA color components to a normalized CSS color: if the opacity
+ * is invalid or equal to 100, a hex is returned; otherwise a rgba() css color
+ * is returned.
+ *
+ * Those choice have multiple reason:
+ * - A hex color is more common to c/c from other utilities on the web and is
+ *   also shorter than rgb() css colors
+ * - Opacity in hexadecimal notations is not supported on all browsers and is
+ *   also less common to use.
  *
  * @static
- * @param {integer} r
- * @param {integer} g
- * @param {integer} b
- * @returns {Object|false} contains hexadecimal code
+ * @param {integer} r - [0, 255]
+ * @param {integer} g - [0, 255]
+ * @param {integer} b - [0, 255]
+ * @param {float} a - [0, 100]
+ * @returns {string}
  */
-ColorpickerDialog.convertRgbToHex = function (r, g, b) {
-    if (typeof (r) !== 'number' || isNaN(r) || r < 0 || r > 255 ||
-        typeof (g) !== 'number' || isNaN(g) || g < 0 || g > 255 ||
-        typeof (b) !== 'number' || isNaN(b) || b < 0 || b > 255) {
+ColorpickerDialog.convertRgbaToCSSColor = function (r, g, b, a) {
+    if (typeof (r) !== 'number' || isNaN(r) || r < 0 || r > 255
+            || typeof (g) !== 'number' || isNaN(g) || g < 0 || g > 255
+            || typeof (b) !== 'number' || isNaN(b) || b < 0 || b > 255) {
         return false;
     }
-    var red = r < 16 ? '0' + r.toString(16) : r.toString(16);
-    var green = g < 16 ? '0' + g.toString(16) : g.toString(16);
-    var blue = b < 16 ? '0' + b.toString(16) : b.toString(16);
-    return {
-        hex: _.str.sprintf('#%s%s%s', red, green, blue)
-    };
+    if (typeof (a) !== 'number' || isNaN(a) || a < 0 || Math.abs(a - 100) < Number.EPSILON) {
+        const rr = r < 16 ? '0' + r.toString(16) : r.toString(16);
+        const gg = g < 16 ? '0' + g.toString(16) : g.toString(16);
+        const bb = b < 16 ? '0' + b.toString(16) : b.toString(16);
+        return (`#${rr}${gg}${bb}`).toUpperCase();
+    }
+    return `rgba(${r}, ${g}, ${b}, ${parseFloat((a / 100.0).toFixed(3))})`;
+};
+/**
+ * Converts a CSS color (rgb(), rgba(), hexadecimal) to RGBA color components.
+ *
+ * Note: we don't support using and displaying hexadecimal color with opacity
+ * but this method allows to receive one and returns the correct opacity value.
+ *
+ * @static
+ * @param {string} cssColor - hexadecimal code or rgb() or rgba()
+ * @returns {Object|false}
+ *          - red [0, 255]
+ *          - green [0, 255]
+ *          - blue [0, 255]
+ *          - opacity [0, 100.0]
+ */
+ColorpickerDialog.convertCSSColorToRgba = function (cssColor) {
+    // Check if cssColor is a rgba() or rgb() color
+    const rgba = cssColor.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/);
+    if (rgba) {
+        if (rgba[4] === undefined) {
+            rgba[4] = 1;
+        }
+        return {
+            red: parseInt(rgba[1]),
+            green: parseInt(rgba[2]),
+            blue: parseInt(rgba[3]),
+            opacity: Math.round(parseFloat(rgba[4]) * 100),
+        };
+    }
+
+    // Otherwise, check if cssColor is an hexadecimal code color
+    if (/^#([0-9A-F]{6}|[0-9A-F]{8})$/i.test(cssColor)) {
+        return {
+            red: parseInt(cssColor.substr(1, 2), 16),
+            green: parseInt(cssColor.substr(3, 2), 16),
+            blue: parseInt(cssColor.substr(5, 2), 16),
+            opacity: (cssColor.length === 9 ? (parseInt(cssColor.substr(7, 2), 16) / 255) : 1) * 100,
+        };
+    }
+
+    // TODO maybe implement a support for receiving css color like 'red' or
+    // 'transparent' (which are now considered non-css color by isCSSColor...)
+
+    return false;
+};
+/**
+ * Converts a CSS color (rgb(), rgba(), hexadecimal) to a normalized version
+ * of the same color (@see convertRgbaToCSSColor).
+ *
+ * Normalized color can be safely compared using string comparison.
+ *
+ * @static
+ * @param {string} cssColor - hexadecimal code or rgb() or rgba()
+ * @returns {string} - the normalized css color or the given css color if it
+ *                     failed to be normalized
+ */
+ColorpickerDialog.normalizeCSSColor = function (cssColor) {
+    const rgba = ColorpickerDialog.convertCSSColorToRgba(cssColor);
+    if (!rgba) {
+        return cssColor;
+    }
+    return ColorpickerDialog.convertRgbaToCSSColor(rgba.red, rgba.green, rgba.blue, rgba.opacity);
+};
+/**
+ * Checks if a given string is a css color.
+ *
+ * @static
+ * @param {string} cssColor
+ * @returns {boolean}
+ */
+ColorpickerDialog.isCSSColor = function (cssColor) {
+    return ColorpickerDialog.convertCSSColorToRgba(cssColor) !== false;
 };
 
 return ColorpickerDialog;

@@ -145,6 +145,15 @@ var SnippetEditor = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Checks whether the snippet options are shown or not.
+     *
+     * @returns {boolean}
+     */
+    areOptionsShown: function () {
+        const lastIndex = this._customize$Elements.length - 1;
+        return !!this._customize$Elements[lastIndex].parent().length;
+    },
+    /**
      * Notifies all the associated snippet options that the snippet has just
      * been dropped in the page.
      */
@@ -163,6 +172,17 @@ var SnippetEditor = Widget.extend({
         }
         _.each(this.styles, function (option) {
             option.cleanForSave();
+        });
+    },
+    /**
+     * Closes all widgets of all options.
+     */
+    closeWidgets: function () {
+        if (!this.areOptionsShown()) {
+            return;
+        }
+        Object.keys(this.styles).forEach(key => {
+            this.styles[key].closeWidgets();
         });
     },
     /**
@@ -288,9 +308,7 @@ var SnippetEditor = Widget.extend({
             return;
         }
 
-        var lastIndex = this._customize$Elements.length - 1;
-        var optionsAlreadyShown = !!this._customize$Elements[lastIndex].parent().length;
-        if (optionsAlreadyShown === show) {
+        if (this.areOptionsShown() === show) {
             return;
         }
         this.trigger_up('update_customize_elements', {
@@ -301,6 +319,7 @@ var SnippetEditor = Widget.extend({
             var styles = _.values(editor.styles);
             _.sortBy(styles, '__order').forEach(style => {
                 if (show) {
+                    style.updateUI();
                     style.onFocus();
                 } else {
                     style.onBlur();
@@ -321,62 +340,6 @@ var SnippetEditor = Widget.extend({
     // Private
     //--------------------------------------------------------------------------
 
-    /**
-     * Transforms option UI description into actual DOM.
-     *
-     * @private
-     * @param {jQuery} $el
-     */
-    _createOptionUI: function ($el) {
-        const $optionSection = $(core.qweb.render('web_editor.customize_block_option'));
-        $optionSection.append($el);
-        const uiEl = $optionSection[0];
-
-        // Build group first as their internal components will be built after
-        uiEl.querySelectorAll('we-row').forEach(el => {
-            const infos = this._extraInfoFromDescriptionElement(el);
-            const groupEl = options.Class.prototype.buildRowElement(infos.title, infos.options);
-            el.parentNode.insertBefore(groupEl, el);
-            el.parentNode.removeChild(el);
-        });
-
-        // Build standard components
-        uiEl.querySelectorAll('we-select').forEach(el => {
-            const infos = this._extraInfoFromDescriptionElement(el);
-            const selectEl = options.Class.prototype.buildSelectElement(infos.title, infos.options);
-            el.parentNode.insertBefore(selectEl, el);
-            el.parentNode.removeChild(el);
-        });
-        uiEl.querySelectorAll('we-checkbox').forEach(el => {
-            const infos = this._extraInfoFromDescriptionElement(el);
-            const checkboxEl = options.Class.prototype.buildCheckboxElement(infos.title, infos.options);
-            el.parentNode.insertBefore(checkboxEl, el);
-            el.parentNode.removeChild(el);
-        });
-        uiEl.querySelectorAll('we-input').forEach(el => {
-            const infos = this._extraInfoFromDescriptionElement(el);
-            const inputEl = options.Class.prototype.buildInputElement(infos.title, infos.options);
-            el.parentNode.insertBefore(inputEl, el);
-            el.parentNode.removeChild(el);
-        });
-
-        return $optionSection;
-    },
-    /**
-     * @private
-     * @param {HTMLElement} el
-     * @returns {Object}
-     */
-    _extraInfoFromDescriptionElement: function (el) {
-        return {
-            title: el.getAttribute('string'),
-            options: {
-                classes: el.classList,
-                dataAttributes: el.dataset,
-                childNodes: [...el.childNodes],
-            },
-        };
-    },
     /**
      * DOMElements have a default name which appears in the overlay when they
      * are being edited. This method retrieves this name; it can be defined
@@ -418,7 +381,8 @@ var SnippetEditor = Widget.extend({
         var $optionsSection = $(core.qweb.render('web_editor.customize_block_options_section', {
             name: this._getName(),
         })).data('editor', this);
-        $optionsSection.find('we-button-group').contents().each((i, node) => {
+        const $optionsSectionBtnGroup = $optionsSection.find('we-button-group');
+        $optionsSectionBtnGroup.contents().each((i, node) => {
             if (node.nodeType === Node.TEXT_NODE) {
                 node.parentNode.removeChild(node);
             }
@@ -447,13 +411,15 @@ var SnippetEditor = Widget.extend({
             }
 
             var optionName = val.option;
-
-            var $ui = val.$el.children().clone(true);
             var option = new (options.registry[optionName] || options.Class)(
                 this,
+                val.$el.children(),
                 val.base_target ? this.$target.find(val.base_target).eq(0) : this.$target,
                 this.$el,
-                _.extend({snippetName: this._getName()}, val.data),
+                _.extend({
+                    optionName: optionName,
+                    snippetName: this._getName(),
+                }, val.data),
                 this.options
             );
             var key = optionName || _.uniqueId('option');
@@ -465,8 +431,7 @@ var SnippetEditor = Widget.extend({
             }
             this.styles[key] = option;
             option.__order = i++;
-            const $option = this._createOptionUI($ui).addClass('snippet-option-' + optionName);
-            return option.attachTo($option);
+            return option.appendTo(document.createDocumentFragment());
         });
 
         this.isTargetMovable = (this.selectorSiblings.length > 0 || this.selectorChildren.length > 0);
@@ -476,8 +441,8 @@ var SnippetEditor = Widget.extend({
         return Promise.all(defs).then(() => {
             const options = _.sortBy(this.styles, '__order');
             options.forEach(option => {
-                if (option.isTopOption()) {
-                    $optionsSection.find('we-button-group').first().prepend(option.$el);
+                if (option.isTopOption) {
+                    $optionsSectionBtnGroup.prepend(option.$el);
                 } else {
                     $optionsSection.append(option.$el);
                 }
@@ -720,7 +685,6 @@ var SnippetsMenu = Widget.extend({
     id: 'oe_snippets',
     cacheSnippetTemplate: {},
     events: {
-        'click we-select': '_onOptionTogglerClick',
         'click .o_install_btn': '_onInstallBtnClick',
     },
     custom_events: {
@@ -738,6 +702,7 @@ var SnippetsMenu = Widget.extend({
         'hide_overlay': '_onHideOverlay',
         'block_preview_overlays': '_onBlockPreviewOverlays',
         'unblock_preview_overlays': '_onUnblockPreviewOverlays',
+        'user_value_widget_opening': '_onUserValueWidgetOpening',
     },
 
     /**
@@ -1723,21 +1688,6 @@ var SnippetsMenu = Widget.extend({
         this.cleanForSave();
     },
     /**
-     * @private
-     * @param {*} ev
-     */
-    _onOptionTogglerClick: function (ev) {
-        var togglerEl = ev.currentTarget;
-        if (togglerEl.tagName !== 'WE-TOGGLER') {
-            togglerEl = togglerEl.querySelector('we-toggler');
-        }
-
-        var $hierarchyTogglers = $(togglerEl).parents('we-select').children('we-toggler');
-        this.$('we-select').children('we-toggler').not($hierarchyTogglers).removeClass('active');
-        $hierarchyTogglers.not(togglerEl).addClass('active');
-        togglerEl.classList.toggle('active');
-    },
-    /**
      * Called when the overlay dimensions/positions should be recomputed.
      *
      * @private
@@ -1889,6 +1839,13 @@ var SnippetsMenu = Widget.extend({
         this.$('.o_we_add_snippet_btn').toggleClass('active', !customize);
         this.customizePanel.classList.toggle('d-none', !customize);
         this.$('.o_we_customize_snippet_btn').toggleClass('active', customize);
+    },
+    /**
+     * Called when an user value widget is being opened -> close all the other
+     * user value widgets of all editors.
+     */
+    _onUserValueWidgetOpening: function () {
+        this.snippetEditors.forEach(editor => editor.closeWidgets());
     },
 });
 
