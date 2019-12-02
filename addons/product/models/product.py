@@ -568,7 +568,7 @@ class ProductProduct(models.Model):
                 'res_id': self.product_tmpl_id.id,
                 'target': 'new'}
 
-    def _prepare_sellers(self, params):
+    def _prepare_sellers(self, params=False):
         return self.seller_ids.filtered(lambda s: s.name.active).sorted(lambda s: (s.sequence, -s.min_qty, s.price))
 
     def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False, params=False):
