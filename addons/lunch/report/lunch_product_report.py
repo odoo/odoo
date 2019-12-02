@@ -13,9 +13,9 @@ class LunchProductReport(models.Model):
 
     id = fields.Integer('ID')
     product_id = fields.Many2one('lunch.product', 'Product')
-    name = fields.Char('Product Name')
+    name = fields.Char('Product Name', related='product_id.name')
     category_id = fields.Many2one('lunch.product.category', 'Product Category')
-    description = fields.Text('Description')
+    description = fields.Text('Description', related='product_id.description')
     price = fields.Float('Price')
     supplier_id = fields.Many2one('lunch.supplier', 'Vendor')
     company_id = fields.Many2one('res.company')
@@ -81,9 +81,7 @@ class LunchProductReport(models.Model):
                 SELECT
                     row_number() over (ORDER BY users.id,product.id) AS id,
                     product.id AS product_id,
-                    product.name,
                     product.category_id,
-                    product.description,
                     product.price,
                     product.supplier_id,
                     product.company_id,
