@@ -108,7 +108,7 @@ class TestStockValuation(SavepointCase):
         price change updates the stock value based on current stock level.
         """
         # Enter 10 products while price is 5.0
-        self.product1._change_standard_price(5.0, self.expense_account.id)
+        self.product1.standard_price = 5.0
         move1 = self.env['stock.move'].create({
             'name': 'IN 10 units @ 10.00 per unit',
             'location_id': self.supplier_location.id,
@@ -123,7 +123,7 @@ class TestStockValuation(SavepointCase):
         move1._action_done()
 
         # Set price to 6.0
-        self.product1._change_standard_price(6.0, self.expense_account.id)
+        self.product1.standard_price = 6.0
         stock_aml, price_change_aml = self._get_stock_valuation_move_lines()
         self.assertEqual(stock_aml.debit, 50)
         self.assertEqual(price_change_aml.debit, 10)
@@ -2737,7 +2737,7 @@ class TestStockValuation(SavepointCase):
         self.product1.categ_id.property_cost_method = 'standard'
         self.product1.categ_id.property_valuation = 'manual_periodic'
 
-        self.product1.with_user(self.inventory_user)._change_standard_price(10)
+        self.product1.standard_price = 10.0
 
         move1 = self.env['stock.move'].with_user(self.inventory_user).create({
             'name': 'IN 10 units',
@@ -2752,12 +2752,12 @@ class TestStockValuation(SavepointCase):
         move1.move_line_ids.qty_done = 10.0
         move1._action_done()
 
-    def test_standard_perpetual_1(self):
+    def test_standard_perpetual_2(self):
         """Validate a receipt as a regular stock user."""
         self.product1.categ_id.property_cost_method = 'standard'
         self.product1.categ_id.property_valuation = 'real_time'
 
-        self.product1.with_user(self.inventory_user)._change_standard_price(10)
+        self.product1.standard_price = 10.0
 
         move1 = self.env['stock.move'].with_user(self.inventory_user).create({
             'name': 'IN 10 units',
@@ -3100,7 +3100,7 @@ class TestStockValuation(SavepointCase):
         date8 = now - timedelta(days=1)
 
         # set the standard price to 10
-        self.product1._change_standard_price(10, self.expense_account.id)
+        self.product1.standard_price = 10.0
 
         # receive 10
         move1 = self.env['stock.move'].create({
@@ -3160,7 +3160,7 @@ class TestStockValuation(SavepointCase):
         self.assertEqual(self.product1.value_svl, 150)
 
         # set the standard price to 5
-        self.product1._change_standard_price(5, self.expense_account.id)
+        self.product1.standard_price = 5
         self.product1.stock_valuation_layer_ids.sorted()[-1]._write({'create_date': date5})
 
         self.assertEqual(self.product1.quantity_svl, 15)
@@ -3186,7 +3186,7 @@ class TestStockValuation(SavepointCase):
         self.assertEqual(self.product1.value_svl, -25)
 
         # set the standard price to 7.5
-        self.product1._change_standard_price(7.5, self.expense_account.id)
+        self.product1.standard_price = 7.5
         self.product1.stock_valuation_layer_ids.sorted()[-1]._write({'create_date': date7})
 
         # receive 100

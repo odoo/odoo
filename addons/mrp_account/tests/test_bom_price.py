@@ -182,9 +182,3 @@ class TestBom(common.TransactionCase):
         self.Product.browse([self.dining_table.id, self.table_head.id]).action_bom_cost()
         # Total cost of Dining Table = (718.75) + Total cost of all operations (125 + 10.42) = 854.17
         self.assertEqual(float_compare(self.dining_table.standard_price, 854.17, precision_digits=2), 0, "After computing price from BoM price should be 786.46")
-
-    def test_01_compute_price_inventory_valuation(self):
-        """Test update cost from bom in list view when inventory valuation is real time."""
-        self.glass.categ_id.property_valuation = 'real_time'
-        with self.assertRaises(UserError):
-            self.dining_table.with_context(button=False).action_bom_cost()

@@ -211,7 +211,7 @@ class TestStockValuationStandard(TestStockValuationCommon):
         move3 = self._make_out_move(self.product1, 15)
 
         # change cost from 10 to 15
-        self.product1._change_standard_price(15.0)
+        self.product1.standard_price = 15.0
 
         self.assertEqual(self.product1.value_svl, 75)
         self.assertEqual(self.product1.quantity_svl, 5)
