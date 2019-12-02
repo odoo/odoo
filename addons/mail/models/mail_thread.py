@@ -1437,18 +1437,15 @@ class MailThread(models.AbstractModel):
                 stored_date = datetime.datetime.now()
             msg_dict['date'] = stored_date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
 
+        parent_ids = False
         if msg_dict['in_reply_to']:
             parent_ids = self.env['mail.message'].search([('message_id', '=', msg_dict['in_reply_to'])], limit=1)
-            if parent_ids:
-                msg_dict['parent_id'] = parent_ids.id
-                msg_dict['is_internal'] = parent_ids.subtype_id and parent_ids.subtype_id.internal or False
-
-        if msg_dict['references'] and 'parent_id' not in msg_dict:
+        if msg_dict['references'] and not parent_ids:
             references_msg_id_list = tools.mail_header_msgid_re.findall(msg_dict['references'])
             parent_ids = self.env['mail.message'].search([('message_id', 'in', [x.strip() for x in references_msg_id_list])], limit=1)
-            if parent_ids:
-                msg_dict['parent_id'] = parent_ids.id
-                msg_dict['is_internal'] = parent_ids.subtype_id and parent_ids.subtype_id.internal or False
+        if parent_ids:
+            msg_dict['parent_id'] = parent_ids.id
+            msg_dict['is_internal'] = parent_ids.subtype_id and parent_ids.subtype_id.internal or False
 
         msg_dict.update(self._message_parse_extract_payload(message, save_original=save_original))
         msg_dict.update(self._message_parse_extract_bounce(message, msg_dict))
