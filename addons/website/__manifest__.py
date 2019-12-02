@@ -15,6 +15,7 @@
         'web_editor',
         'http_routing',
         'portal',
+        'utm',
         'social_media',
         'auth_signup',
     ],

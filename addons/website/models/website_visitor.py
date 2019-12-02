@@ -27,6 +27,7 @@ class WebsiteTrack(models.Model):
 
 class WebsiteVisitor(models.Model):
     _name = 'website.visitor'
+    _inherit = ['utm.mixin']
     _description = 'Website Visitor'
     _order = 'last_connection_datetime DESC'
 
@@ -34,7 +35,7 @@ class WebsiteVisitor(models.Model):
     access_token = fields.Char(required=True, default=lambda x: uuid.uuid4().hex, index=False, copy=False, groups='base.group_website_publisher')
     active = fields.Boolean('Active', default=True)
     website_id = fields.Many2one('website', "Website", readonly=True)
-    partner_id = fields.Many2one('res.partner', string="Linked Partner", help="Partner of the last logged in user.")
+    partner_id = fields.Many2one('res.partner', string="Contact", help="Partner of the last logged in user.")
     partner_image = fields.Binary(related='partner_id.image_1920')
 
     # localisation and info
@@ -43,21 +44,22 @@ class WebsiteVisitor(models.Model):
     lang_id = fields.Many2one('res.lang', string='Language', help="Language from the website when visitor has been created")
     timezone = fields.Selection(_tz_get, string='Timezone')
     email = fields.Char(string='Email', compute='_compute_email_phone')
-    mobile = fields.Char(string='Mobile Phone', compute='_compute_email_phone')
+    mobile = fields.Char(string='Phone', compute='_compute_email_phone')
 
     # Visit fields
-    visit_count = fields.Integer('Number of visits', default=1, readonly=True, help="A new visit is considered if last connection was more than 8 hours ago.")
+    visit_count = fields.Integer('Visits', default=1, readonly=True, help="A new visit is considered if last connection was more than 8 hours ago.")
     website_track_ids = fields.One2many('website.track', 'visitor_id', string='Visited Pages History', readonly=True)
     visitor_page_count = fields.Integer('Page Views', compute="_compute_page_statistics", help="Total number of visits on tracked pages")
-    page_ids = fields.Many2many('website.page', string="Visited Pages", compute="_compute_page_statistics")
+    page_ids = fields.Many2many('website.page', string="Pages", compute="_compute_page_statistics")
     page_count = fields.Integer('# Visited Pages', compute="_compute_page_statistics", help="Total number of tracked page visited")
     last_visited_page_id = fields.Many2one('website.page', string="Last Visited Page", compute="_compute_last_visited_page_id")
 
     # Time fields
-    create_date = fields.Datetime('First connection date', readonly=True)
+    create_date = fields.Datetime('First Connection', readonly=True)
     last_connection_datetime = fields.Datetime('Last Connection', default=fields.Datetime.now, help="Last page view date", readonly=True)
     time_since_last_action = fields.Char('Last action', compute="_compute_time_statistics", help='Time since last page view. E.g.: 2 minutes ago')
     is_connected = fields.Boolean('Is connected ?', compute='_compute_time_statistics', help='A visitor is considered as connected if his last page view was within the last 5 minutes.')
+    is_internal_user = fields.Boolean('Is Internal User', compute='_compute_is_internal_user', store="True")
 
     _sql_constraints = [
         ('access_token_unique', 'unique(access_token)', 'Access token should be unique.'),
@@ -70,6 +72,11 @@ class WebsiteVisitor(models.Model):
             record.id,
             (record.name or _('Website Visitor #%s', record.id))
         ) for record in self]
+
+    @api.depends('partner_id', 'partner_id.user_ids')
+    def _compute_is_internal_user(self):
+        for visitor in self:
+            visitor.is_internal_user = bool(visitor.partner_id.user_ids.filtered(lambda user: user.share == False))
 
     @api.depends('partner_id.email_normalized', 'partner_id.mobile', 'partner_id.phone')
     def _compute_email_phone(self):

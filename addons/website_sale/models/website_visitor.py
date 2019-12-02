@@ -15,7 +15,7 @@ class WebsiteVisitor(models.Model):
     _inherit = 'website.visitor'
 
     visitor_product_count = fields.Integer('Product Views', compute="_compute_product_statistics", help="Total number of views on products")
-    product_ids = fields.Many2many('product.product', string="Visited Products", compute="_compute_product_statistics")
+    product_ids = fields.Many2many('product.product', string="Products", compute="_compute_product_statistics")
     product_count = fields.Integer('Products Views', compute="_compute_product_statistics", help="Total number of product viewed")
 
     @api.depends('website_track_ids')

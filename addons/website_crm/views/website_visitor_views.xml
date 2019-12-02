@@ -44,8 +44,7 @@
         <field name="model">website.visitor</field>
         <field name="inherit_id" ref="website.website_visitor_view_search"/>
         <field name="arch" type="xml">
-            <xpath expr="//filter[@name='type_visitor']" position="replace">
-                <filter string="Visitors" name="type_visitor" domain="[('partner_id', '=', False), ('lead_ids', '=', False)]"/>
+            <xpath expr="//filter[@name='is_connected']" position="after">
                 <filter string="Leads" name="type_lead" domain="[('partner_id', '=', False), ('lead_ids', '!=', False)]"/>
             </xpath>
         </field>

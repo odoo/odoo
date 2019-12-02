@@ -44,12 +44,20 @@
                 </t>
             </xpath>
             <xpath expr="//div[hasclass('w_visitor_kanban_actions_ungrouped')]" position="before">
-                <div class="col" >
-                    <b>
-                        <field name="livechat_operator_name" t-if="record.livechat_operator_id.raw_value"/>
-                        <span t-else="">-</span>
-                    </b>
-                    <div>Speaking With</div>
+                <div class="col">
+                    <t t-if="record.session_count.raw_value">
+                       <b>
+                           <field name="session_count"/>
+                       </b><div>Chats</div>
+                    </t>
+                </div>
+                <div class="col">
+                    <t t-if="record.livechat_operator_id.raw_value">
+                        <b>
+                            <field name="livechat_operator_name"/>
+                        </b>
+                        <div>Speaking With</div>
+                    </t>
                 </div>
             </xpath>
             <xpath expr="//div[hasclass('w_visitor_kanban_actions')]" position="inside">
@@ -79,14 +87,12 @@
                 attrs="{'invisible': ['|', ('livechat_operator_id', '!=', False), ('is_connected', '=', False)]}"/>
             </xpath>
             <xpath expr="//group[@id='general_info']" position="before">
-                <group id="livechat_info">
-                    <field name="livechat_operator_id"/>
-                </group>
+                <field name="livechat_operator_id" invisible="1"/>
             </xpath>
             <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
                 <button name="%(website_visitor_livechat_session_action)d" type="action" class="oe_stat_button" icon="fa-comment"
                         attrs="{'invisible': [('session_count', '=', 0)]}">
-                    <field name="session_count" widget="statinfo" string="Sessions"/>
+                    <field name="session_count" widget="statinfo" string="Chat Sessions"/>
                 </button>
             </xpath>
         </field>
@@ -98,7 +104,7 @@
         <field name="inherit_id" ref="website.website_visitor_view_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='is_connected']" position="after">
-                <field name="livechat_operator_id"/>
+                <field name="livechat_operator_id" optional="hide"/>
                 <button name="action_send_chat_request" string="Send chat request" type="object" icon="fa-comments"
                         attrs="{'invisible': ['|', ('livechat_operator_id', '!=', False), ('is_connected', '=', False)]}"/>
             </xpath>
@@ -111,8 +117,7 @@
         <field name="inherit_id" ref="website.website_visitor_view_search"/>
         <field name="arch" type="xml">
             <xpath expr="//search" position="inside">
-                <filter string="Busy" name="in_conversation" domain="[('livechat_operator_id', '!=', False)]"/>
-                <filter string="Available" name="not_in_conversation" domain="[('livechat_operator_id', '=', False)]"/>
+                <filter string="Connected" name="in_conversation" domain="[('livechat_operator_id', '!=', False)]"/>
             </xpath>
         </field>
     </record>
