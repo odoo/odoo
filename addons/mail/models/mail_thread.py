@@ -2402,7 +2402,7 @@ class MailThread(models.AbstractModel):
             if pid:
                 if active is False:
                     continue
-                pdata = {'id': pid, 'active': active, 'share': pshare, 'groups': groups}
+                pdata = {'id': pid, 'active': active, 'share': pshare, 'groups': groups or []}
                 if notif == 'inbox':
                     recipient_data['partners'].append(dict(pdata, notif=notif, type='user'))
                 elif not pshare and notif:  # has an user and is not shared, is therefore user
