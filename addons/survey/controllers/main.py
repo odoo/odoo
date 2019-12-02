@@ -315,28 +315,32 @@ class Survey(http.Controller):
             # prevent cheating with users creating multiple 'user_input' before their last attempt
             return {}
 
-        if not answer_sudo.is_time_limit_reached:
-            # Prepare answers and comment by question
-            prepared_questions = {}
-            for question in questions:
-                answer_full = post.get(str(question.id))
-                answer_without_comment, comment = self._extract_comment_from_answers(question, answer_full)
-                prepared_questions[question.id] = {'answer': answer_without_comment, 'comment': comment}
+        # Prepare answers and comment by question
+        prepared_questions = {}
+        for question in questions:
+            answer_full = post.get(str(question.id))
+            answer_without_comment, comment = self._extract_comment_from_answers(question, answer_full)
+            prepared_questions[question.id] = {'answer': answer_without_comment, 'comment': comment}
 
-            # Questions Validation
-            errors = {}
-            for question in questions:
-                answer = prepared_questions[question.id]['answer']
-                comment = prepared_questions[question.id]['comment']
-                errors.update(question.validate_question(answer, comment))
-            if errors:
+        # Questions Validation
+        errors = {}
+        for question in questions:
+            answer = prepared_questions[question.id]['answer']
+            comment = prepared_questions[question.id]['comment']
+            errors.update(question.validate_question(answer, comment))
+        if errors:
+            if answer_sudo.is_time_limit_reached:
+                # If time limit reached, remove the invalid answers to the questions to submit,
+                # to be able to compute score on not finished survey
+                questions = questions.filtered(lambda q: q.id not in errors.keys())
+            else:
                 return {'error': 'validation', 'fields': errors}
 
-            # Submitting questions
-            for question in questions:
-                answer = prepared_questions[question.id]['answer']
-                comment = prepared_questions[question.id]['comment']
-                answer_sudo.save_lines(question, answer, comment)
+        # Submitting questions
+        for question in questions:
+            answer = prepared_questions[question.id]['answer']
+            comment = prepared_questions[question.id]['comment']
+            answer_sudo.save_lines(question, answer, comment)
 
         if answer_sudo.is_time_limit_reached or survey_sudo.questions_layout == 'one_page':
             answer_sudo._mark_done()
