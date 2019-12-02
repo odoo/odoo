@@ -3,6 +3,7 @@
 
 from . import account_bank_statement
 from . import account_journal
+from . import account_invoice
 from . import barcode_rule
 from . import pos_category
 from . import pos_config
