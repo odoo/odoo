@@ -7,7 +7,9 @@
             <field name="inherit_id" ref="product.product_template_only_form_view" />
             <field name="groups_id" eval="[(4, ref('mrp.group_mrp_user'))]"/>
             <field name="arch" type="xml">
-                <xpath expr="//span[@name='update_cost_price']" position="inside">
+                <xpath expr="//div[@name='standard_price_uom']" position="inside">
+                    <field name="cost_method" invisible="1"/>
+                    <field name="valuation" invisible="1"/>
                     <button name="button_bom_cost"
                         string="Compute Price from BoM" type="object"
                         attrs="{'invisible': ['|', ('bom_count', '=', 0), '&amp;', ('valuation', '=', 'real_time'), ('cost_method', '=', 'fifo')]}"
@@ -24,7 +26,9 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="groups_id" eval="[(4, ref('mrp.group_mrp_user'))]"/>
             <field name="arch" type="xml">
-                <xpath expr="//span[@name='update_cost_price']" position="inside">
+                <xpath expr="//div[@name='standard_price_uom']" position="inside">
+                    <field name="cost_method" invisible="1"/>
+                    <field name="valuation" invisible="1"/>
                     <button name="button_bom_cost"
                         string="Compute Price from BoM" type="object"
                         attrs="{'invisible': ['|', ('bom_count', '=', 0), '&amp;', ('valuation', '=', 'real_time'), ('cost_method', '=', 'fifo')]}"
@@ -41,14 +45,20 @@
             <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
             <field name="arch" type="xml">
                 <data>
-                <xpath expr="//div[@name='update_cost_price']" position="inside">
+                <xpath expr="//field[@name='standard_price']" position="replace">
                     <field name="bom_count" invisible="1"/>
-                    <button name="button_bom_cost"
-                        string="Compute Price from BoM"
-                        type="object"
-                        attrs="{'invisible': ['|', ('bom_count', '=', 0), '&amp;', ('valuation', '=', 'real_time'), ('cost_method', '=', 'fifo')]}"
-                        help="Compute the price of the product using products and operations of related bill of materials, for manufactured products only."
-                        class="oe_link oe_read_only pt-0"/>
+                    <field name="cost_method" invisible="1"/>
+                    <field name="valuation" invisible="1"/>
+                    <label for="standard_price"/>
+                    <div>
+                        <field name="standard_price" widget='monetary' options="{'currency_field': 'cost_currency_id'}"/>
+                        <button name="button_bom_cost"
+                            string="Compute Price from BoM"
+                            type="object"
+                            attrs="{'invisible': ['|', ('bom_count', '=', 0), '&amp;', ('valuation', '=', 'real_time'), ('cost_method', '=', 'fifo')]}"
+                            help="Compute the price of the product using products and operations of related bill of materials, for manufactured products only."
+                            class="oe_link oe_read_only pt-0"/>
+                    </div>
                 </xpath>
                 </data>
             </field>

@@ -38,9 +38,7 @@ class TestLifoPrice(StockAccountTestCommon):
         product_form.categ_id.property_stock_account_output_categ_id = self.o_income
         product_lifo_icecream = product_form.save()
 
-        std_price_wiz = Form(self.env['stock.change.standard.price'].with_context(active_id=product_lifo_icecream.id, active_model='product.product'))
-        std_price_wiz.new_price = 70.0
-        std_price_wiz.save()
+        product_lifo_icecream.standard_price = 70.0
 
         # I create a draft Purchase Order for first in move for 10 pieces at 60 euro
         order_form = Form(self.env['purchase.order'])

@@ -325,7 +325,7 @@ class StockMove(models.Model):
 
             tmpl_dict[move.product_id.id] += qty_done
             # Write the standard price, as SUPERUSER_ID because a warehouse manager may not have the right to write on products
-            move.product_id.with_company(move.company_id.id).sudo().write({'standard_price': new_std_price})
+            move.product_id.with_company(move.company_id.id).with_context(disable_auto_svl=True).sudo().write({'standard_price': new_std_price})
             std_price_update[move.company_id.id, move.product_id.id] = new_std_price
 
     def _get_accounting_data_for_valuation(self):

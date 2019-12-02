@@ -144,7 +144,7 @@ class LandedCost(models.Model):
                 # Update the AVCO
                 product = line.move_id.product_id
                 if product.cost_method == 'average' and not float_is_zero(product.quantity_svl, precision_rounding=product.uom_id.rounding):
-                    product.with_company(self.company_id).sudo().standard_price += cost_to_add / product.quantity_svl
+                    product.with_company(self.company_id).sudo().with_context(disable_auto_svl=True).standard_price += cost_to_add / product.quantity_svl
                 # `remaining_qty` is negative if the move is out and delivered proudcts that were not
                 # in stock.
                 qty_out = 0

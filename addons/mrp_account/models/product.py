@@ -27,28 +27,18 @@ class ProductProduct(models.Model):
 
     def button_bom_cost(self):
         self.ensure_one()
-        price = self._get_price_from_bom()
-        if self.valuation == 'real_time':
-            action_rec = self.env.ref('stock_account.action_view_change_standard_price')
-            action = action_rec.read([])[0]
-            action['context'] = {'default_new_price': price}
-            return action
-        else:
-            self.standard_price = price
+        self._set_price_from_bom()
 
     def action_bom_cost(self):
-        real_time_products = self.filtered(lambda p: p.valuation == 'real_time')
-        if real_time_products:
-            raise UserError(_('The inventory valuation of some products %s is automated. You can only update their cost from the product form.') % (real_time_products.mapped('display_name')))
-
         boms_to_recompute = self.env['mrp.bom'].search(['|', ('product_id', 'in', self.ids), '&', ('product_id', '=', False), ('product_tmpl_id', 'in', self.mapped('product_tmpl_id').ids)])
         for product in self:
-            product.standard_price = product._get_price_from_bom(boms_to_recompute)
+            product._set_price_from_bom(boms_to_recompute)
 
-    def _get_price_from_bom(self, boms_to_recompute=False):
+    def _set_price_from_bom(self, boms_to_recompute=False):
         self.ensure_one()
         bom = self.env['mrp.bom']._bom_find(product=self)
-        return self._compute_bom_price(bom, boms_to_recompute=boms_to_recompute)
+        if bom:
+            self.standard_price = self._compute_bom_price(bom, boms_to_recompute=boms_to_recompute)
 
     def _compute_bom_price(self, bom, boms_to_recompute=False):
         self.ensure_one()

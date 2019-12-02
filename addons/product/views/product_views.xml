@@ -305,7 +305,7 @@
                     <field name="product_template_attribute_value_ids" widget="many2many_tags" groups="product.group_product_variant" readonly="1"/>
                     <field name="company_id" groups="base.group_multi_company" optional="hide" readonly="1"/>
                     <field name="lst_price" optional="show" string="Sales Price"/>
-                    <field name="standard_price" optional="show" readonly="1"/>
+                    <field name="standard_price" optional="show"/>
                     <field name="categ_id" optional="hide"/>
                     <field name="type" optional="hide" readonly="1"/>
                     <field name="price" invisible="not context.get('pricelist',False)"/>
