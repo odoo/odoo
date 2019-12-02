@@ -53,7 +53,15 @@ class Crawler(HttpCaseWithUserDemo):
             seen.add(url_slug)
 
         _logger.info("%s %s", msg, url)
-        r = self.url_open(url)
+        r = self.url_open(url, allow_redirects=False)
+        if r.status_code in (301, 302):
+            # check local redirect to avoid fetch externals pages
+            new_url = r.headers.get('Location')
+            current_url = r.url
+            if urls.url_parse(new_url).netloc != urls.url_parse(current_url).netloc:
+                return seen
+            r = self.url_open(new_url)
+
         code = r.status_code
         self.assertIn(code, range(200, 300), "%s Fetching %s returned error response (%d)" % (msg, url, code))
 

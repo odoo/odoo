@@ -1220,13 +1220,13 @@ class HttpCase(TransactionCase):
         self.opener = requests.Session()
         self.opener.cookies['session_id'] = self.session_id
 
-    def url_open(self, url, data=None, files=None, timeout=10, headers=None):
+    def url_open(self, url, data=None, files=None, timeout=10, headers=None, allow_redirects=True):
         self.env['base'].flush()
         if url.startswith('/'):
             url = "http://%s:%s%s" % (HOST, odoo.tools.config['http_port'], url)
         if data or files:
-            return self.opener.post(url, data=data, files=files, timeout=timeout, headers=headers)
-        return self.opener.get(url, timeout=timeout, headers=headers)
+            return self.opener.post(url, data=data, files=files, timeout=timeout, headers=headers, allow_redirects=allow_redirects)
+        return self.opener.get(url, timeout=timeout, headers=headers, allow_redirects=allow_redirects)
 
     def _wait_remaining_requests(self, timeout=10):
 
