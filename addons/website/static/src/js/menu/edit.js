@@ -33,6 +33,14 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      */
     init: function () {
         this._super.apply(this, arguments);
+
+        // Mark the #wrap as editable only if it has content to prevent users
+        // from typing directly inside of an empty page.
+        const wrap = document.getElementById('wrap');
+        new MutationObserver(mutations => {
+            wrap.setAttribute('contenteditable', !!wrap.childElementCount);
+        }).observe(wrap, {childList: true});
+
         var context;
         this.trigger_up('context_get', {
             extra: true,

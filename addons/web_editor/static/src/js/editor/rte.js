@@ -724,6 +724,15 @@ var RTEWidget = Widget.extend({
 
             this._enableEditableArea($editable);
         }
+        // Deactivate editor toolbars if the $editable is the main page and it is empty
+        // This prevents the user from inserting images or other content outside of snippets
+        if ($editable.is('#wrap')) {
+            if (!$editable.children().length) {
+                $('#web_editor-toolbars').children().hide();
+            } else {
+                $('#web_editor-toolbars').children().show();
+            }
+        }
     },
     /**
      * Called when the mouse is unpressed on the document.
