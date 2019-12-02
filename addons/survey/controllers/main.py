@@ -5,7 +5,7 @@ import json
 import logging
 import werkzeug
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
 from odoo import fields, http, _
@@ -302,10 +302,11 @@ class Survey(http.Controller):
         # Survey Validation
         access_data = self._get_access_data(survey_token, answer_token, ensure_token=True)
         if access_data['validity_code'] is not True:
-            return {
-                'error': access_data['validity_code'],
-            }
+            return {'error': access_data['validity_code']}
         survey_sudo, answer_sudo = access_data['survey_sudo'], access_data['answer_sudo']
+
+        if answer_sudo.state == 'done':
+            return {'error': 'unauthorized'}
 
         questions, page_or_question_id = survey_sudo._get_survey_questions(answer=answer_sudo,
                                                                            page_id=post.get('page_id'),
@@ -313,30 +314,24 @@ class Survey(http.Controller):
 
         if not answer_sudo.test_entry and not survey_sudo._has_attempts_left(answer_sudo.partner_id, answer_sudo.email, answer_sudo.invite_token):
             # prevent cheating with users creating multiple 'user_input' before their last attempt
-            return {}
+            return {'error': 'unauthorized'}
 
-        if not answer_sudo.is_time_limit_reached:
-            # Prepare answers and comment by question
-            prepared_questions = {}
-            for question in questions:
-                answer_full = post.get(str(question.id))
-                answer_without_comment, comment = self._extract_comment_from_answers(question, answer_full)
-                prepared_questions[question.id] = {'answer': answer_without_comment, 'comment': comment}
+        if answer_sudo.is_time_limit_reached:
+            time_limit = answer_sudo.start_datetime + timedelta(minutes=survey_sudo.time_limit)
+            if fields.Datetime.now() > (time_limit + timedelta(seconds=10)):
+                # prevent cheating with users blocking the JS timer and taking all their time to answer
+                return {'error': 'unauthorized'}
 
-            # Questions Validation
-            errors = {}
-            for question in questions:
-                answer = prepared_questions[question.id]['answer']
-                comment = prepared_questions[question.id]['comment']
-                errors.update(question.validate_question(answer, comment))
-            if errors:
-                return {'error': 'validation', 'fields': errors}
-
-            # Submitting questions
-            for question in questions:
-                answer = prepared_questions[question.id]['answer']
-                comment = prepared_questions[question.id]['comment']
+        errors = {}
+        # Prepare answers / comment by question, validate and save answers
+        for question in questions:
+            answer, comment = self._extract_comment_from_answers(question, post.get(str(question.id)))
+            errors.update(question.validate_question(answer, comment))
+            if not errors.get(question.id):
                 answer_sudo.save_lines(question, answer, comment)
+
+        if errors and not answer_sudo.is_time_limit_reached:
+            return {'error': 'validation', 'fields': errors}
 
         if answer_sudo.is_time_limit_reached or survey_sudo.questions_layout == 'one_page':
             answer_sudo._mark_done()
