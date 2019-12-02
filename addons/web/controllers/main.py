@@ -517,8 +517,9 @@ class HomeStaticTemplateHelpers(object):
                 inherited_template = apply_inheritance_specs(parent_tree, xpaths)
 
                 if inherit_mode == self.PRIMARY_MODE:  # New template_tree: A' = B(A)
-                    inherited_template.set(self.NAME_TEMPLATE_DIRECTIVE, template_name)
-                    inherited_template.set(self.STATIC_INHERIT_DIRECTIVE, template_tree.attrib[self.STATIC_INHERIT_DIRECTIVE])
+                    for attr_name, attr_val in template_tree.attrib.items():
+                        if attr_name not in ('t-inherit', 't-inherit-mode'):
+                            inherited_template.set(attr_name, attr_val)
                     if self.debug:
                         self._remove_inheritance_comments(inherited_template)
                     self.template_dict[addon][template_name] = inherited_template

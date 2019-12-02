@@ -144,7 +144,7 @@ class TestStaticInheritance(BaseCase):
                     <!-- Modified by anonymous_template_2 from module_2 -->
                     <div>And I learned how to get along</div>
                 </t>
-                <form t-name="template_2_1" random-attr="gloria" t-inherit="module_1.template_1_1">
+                <form t-name="template_2_1" random-attr="gloria">
                     <div>At first I was afraid</div>
                     <div>I was petrified</div>
                     <div>But then I spent so many nights thinking how you did me wrong</div>
@@ -153,6 +153,86 @@ class TestStaticInheritance(BaseCase):
                 <div t-name="template_2_2">
                     <div>And I learned how to get along</div>
                 </div>
+            </templates>
+        """
+
+        self.assertXMLEqual(contents, expected)
+
+    def test_static_inheritance_02(self):
+        self.template_files = {
+            'module_1_file_1': b'''
+                <templates id="template" xml:space="preserve">
+                    <form t-name="template_1_1" random-attr="gloria">
+                        <div>At first I was afraid</div>
+                        <div>Kept thinking I could never live without you by my side</div>
+                    </form>
+                    <form t-name="template_1_2" t-inherit="template_1_1" added="true">
+                        <xpath expr="//div[1]" position="after">
+                            <div>I was petrified</div>
+                        </xpath>
+                    </form>
+                </templates>
+            '''
+        }
+        self.modules = [
+            ('module_1_file_1', None, 'module_1'),
+        ]
+        contents = HomeStaticTemplateHelpers.get_qweb_templates(addons=self._get_module_names(), debug=True)
+        expected = b"""
+            <templates>
+                <form t-name="template_1_1" random-attr="gloria">
+                    <div>At first I was afraid</div>
+                    <div>Kept thinking I could never live without you by my side</div>
+                </form>
+                <form t-name="template_1_2" random-attr="gloria" added="true">
+                    <div>At first I was afraid</div>
+                    <div>I was petrified</div>
+                    <div>Kept thinking I could never live without you by my side</div>
+                </form>
+            </templates>
+        """
+
+        self.assertXMLEqual(contents, expected)
+
+    def test_static_inheritance_03(self):
+        self.maxDiff = None
+        self.template_files = {
+            'module_1_file_1': b'''
+                <templates id="template" xml:space="preserve">
+                    <form t-name="template_1_1">
+                        <div>At first I was afraid</div>
+                        <div>Kept thinking I could never live without you by my side</div>
+                    </form>
+                    <form t-name="template_1_2" t-inherit="template_1_1" added="true">
+                        <xpath expr="//div[1]" position="after">
+                            <div>I was petrified</div>
+                        </xpath>
+                    </form>
+                    <form t-name="template_1_3" t-inherit="template_1_2" added="false" other="here">
+                        <xpath expr="//div[2]" position="replace"/>
+                    </form>
+                </templates>
+            '''
+        }
+        self.modules = [
+            ('module_1_file_1', None, 'module_1'),
+        ]
+        contents = HomeStaticTemplateHelpers.get_qweb_templates(addons=self._get_module_names(), debug=True)
+        expected = b"""
+            <templates>
+                <form t-name="template_1_1">
+                    <div>At first I was afraid</div>
+                    <div>Kept thinking I could never live without you by my side</div>
+                </form>
+                <form t-name="template_1_2" added="true">
+                    <div>At first I was afraid</div>
+                    <div>I was petrified</div>
+                    <div>Kept thinking I could never live without you by my side</div>
+                </form>
+                <form t-name="template_1_3" added="false" other="here">
+                    <div>At first I was afraid</div>
+                    <div>Kept thinking I could never live without you by my side</div>
+                </form>
             </templates>
         """
 
@@ -191,7 +271,7 @@ class TestStaticInheritance(BaseCase):
                     <div>At first I was afraid</div>
                     <div>Kept thinking I could never live without you by my side</div>
                 </form>
-                <form t-name="template_1_2" t-inherit="template_1_1">
+                <form t-name="template_1_2">
                     <div>At first I was afraid</div>
                     <div>I was petrified</div>
                     <div>Kept thinking I could never live without you by my side</div>
@@ -228,7 +308,7 @@ class TestStaticInheritance(BaseCase):
                     <div>At first I was afraid</div>
                     <div>Kept thinking I could never live without you by my side</div>
                 </form>
-                <form t-name="template_1_2" t-inherit="template_1_1">
+                <form t-name="template_1_2">
                     <div>At first I was afraid</div>
                     <div>I was petrified</div>
                     <div>Kept thinking I could never live without you by my side</div>
@@ -271,7 +351,7 @@ class TestStaticInheritance(BaseCase):
                     <div>I was petrified</div>
                     <div>Kept thinking I could never live without you by my side</div>
                 </form>
-                <form t-name="template_1_3" t-inherit="template_1_1">
+                <form t-name="template_1_3">
                     <div>At first I was afraid</div>
                     <div>I was petrified</div>
                     <div>Kept thinking I could never live without you by my side</div>
@@ -630,7 +710,7 @@ class TestStaticInheritance(BaseCase):
                     <div>At first I was afraid</div>
                     <form>Inner Form</form>
                 </form>
-                <div t-name="template_1_2" t-inherit="template_1_1">
+                <div t-name="template_1_2">
                     Form replacer
                 </div>
             </templates>
@@ -670,7 +750,7 @@ class TestStaticInheritance(BaseCase):
                 <form t-name="template_1_1" random-attr="gloria">
                     <div>At first I was afraid</div>
                  </form>
-                 <div overriden-attr="overriden" t-name="template_1_2" t-inherit="template_1_1">
+                 <div overriden-attr="overriden" t-name="template_1_2">
                     And I grew strong
                     <p>And I learned how to get along</p>
                  </div>
