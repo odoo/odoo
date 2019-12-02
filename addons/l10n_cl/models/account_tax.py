@@ -7,7 +7,7 @@ class AccountTax(models.Model):
     _name = 'account.tax'
     _inherit = 'account.tax'
 
-    l10n_cl_sii_code = fields.Integer('SII Code')
+    l10n_cl_sii_code = fields.Integer('SII Code', group_operator=False)
 
 
 class AccountTaxTemplate(models.Model):
