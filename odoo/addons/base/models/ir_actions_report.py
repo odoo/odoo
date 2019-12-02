@@ -559,8 +559,10 @@ class IrActionsReport(models.Model):
                     pass
 
         # Check special case having only one record with existing attachment.
+        # In that case, return directly the attachment content.
+        # In that way, we also ensure the embedded files are well preserved.
         if len(save_in_attachment) == 1 and not pdf_content:
-            return self._merge_pdfs(list(save_in_attachment.values()))
+            return list(save_in_attachment.values())[0].getvalue()
 
         # Create a list of streams representing all sub-reports part of the final result
         # in order to append the existing attachments and the potentially modified sub-reports
