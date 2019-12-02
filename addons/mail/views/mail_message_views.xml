@@ -18,8 +18,8 @@
         </record>
 
         <!-- mail.message form: short view !-->
-        <record model="ir.ui.view" id="view_message_form">
-            <field name="name">mail.message.form</field>
+        <record id="mail_message_view_form" model="ir.ui.view">
+            <field name="name">mail.message.view.form</field>
             <field name="model">mail.message</field>
             <field name="priority">20</field>
             <field name="arch" type="xml">
@@ -31,16 +31,17 @@
                                 <field name="date"/>
                                 <field name="email_from"/>
                                 <field name="author_id"/>
-                                <field name="record_name"/>
-                                <field name="moderator_id"/>
-                            </group>
-                            <group>
-                                <field name="parent_id"/>
-                                <field name="model"/>
-                                <field name="res_id" widget="integer"/>
                                 <field name="message_type"/>
                                 <field name="subtype_id"/>
+                                <field name="is_internal"/>
+                            </group>
+                            <group>
+                                <field name="model"/>
+                                <field name="res_id" widget="integer"/>
+                                <field name="record_name"/>
+                                <field name="parent_id"/>
                                 <field name="moderation_status"/>
+                                <field name="moderator_id"/>
                             </group>
                         </group>
                         <notebook>
@@ -81,7 +82,7 @@
                                     </field>
                                 </group>
                             </page>
-                            <page string="Tracking">
+                            <page string="Tracking" name="page_tracking">
                                 <field name="tracking_value_ids"/>
                             </page>
                         </notebook>
