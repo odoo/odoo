@@ -701,3 +701,104 @@ class TestInventory(SavepointCase):
         inventory_2.action_validate()
         # Expect line of inventory 1 is still up to date
         self.assertEqual(inventory_1.line_ids.outdated, False)
+
+    def test_inventory_include_exhausted_product(self):
+        """ Checks that exhausted product (quant not set or == 0) is added
+        to inventory line
+        (only for location_ids selected or, if not set, for each main location
+        (linked directly to the warehouse) of the current company)
+        when the option is active """
+
+        # location_ids SET + product_ids SET
+        inventory = self.env['stock.inventory'].create({
+            'name': 'loc SET - pro SET',
+            'exhausted': True,
+            'location_ids': [(4, self.stock_location.id)],
+            'product_ids': [(4, self.product1.id)],
+        })
+        inventory.action_start()
+
+        self.assertEqual(len(inventory.line_ids), 1)
+        self.assertEqual(inventory.line_ids.product_id.id, self.product1.id)
+        self.assertEqual(inventory.line_ids.theoretical_qty, 0)
+        self.assertEqual(inventory.line_ids.location_id.id, self.stock_location.id)
+
+        # location_ids SET + product_ids UNSET
+        inventory = self.env['stock.inventory'].create({
+            'name': 'loc SET - pro UNSET',
+            'exhausted': True,
+            'location_ids': [(4, self.stock_location.id)]
+        })
+        inventory.action_start()
+        line_ids_p1 = [l for l in inventory.line_ids if l['product_id']['id'] == self.product1.id]
+        line_ids_p2 = [l for l in inventory.line_ids if l['product_id']['id'] == self.product2.id]
+        self.assertEqual(len(line_ids_p1), 1)
+        self.assertEqual(len(line_ids_p2), 1)
+        self.assertEqual(line_ids_p1[0].location_id.id, self.stock_location.id)
+        self.assertEqual(line_ids_p2[0].location_id.id, self.stock_location.id)
+
+        # location_ids UNSET + product_ids SET
+        warehouse = self.env['stock.warehouse'].create({
+            'name': 'Warhouse',
+            'code': 'WAR'
+        })
+        child_loc = self.env['stock.location'].create({
+            'name': "ChildLOC",
+            'usage': 'internal',
+            'location_id': warehouse.lot_stock_id.id
+        })
+
+        inventory = self.env['stock.inventory'].create({
+            'name': 'loc UNSET - pro SET',
+            'exhausted': True,
+            'product_ids': [(4, self.product1.id)],
+        })
+        inventory.action_start()
+
+        line_ids = [l for l in inventory.line_ids if l['location_id']['id'] == warehouse.lot_stock_id.id]
+        self.assertEqual(len(line_ids), 1)
+        self.assertEqual(line_ids[0].theoretical_qty, 0)
+        self.assertEqual(line_ids[0].product_id.id, self.product1.id)
+
+        # Only the main location have a exhausted line
+        line_ids = [l for l in inventory.line_ids if l['location_id']['id'] == child_loc.id]
+        self.assertEqual(len(line_ids), 0)
+
+        # location_ids UNSET + product_ids UNSET
+        inventory = self.env['stock.inventory'].create({
+            'name': 'loc UNSET - pro UNSET',
+            'exhausted': True
+        })
+        inventory.action_start()
+
+        # Product1 & Product2 line with warehouse location
+        line_ids_p1 = [l for l in inventory.line_ids if l['product_id']['id'] == self.product1.id and l['location_id']['id'] == warehouse.lot_stock_id.id]
+        line_ids_p2 = [l for l in inventory.line_ids if l['product_id']['id'] == self.product2.id and l['location_id']['id'] == warehouse.lot_stock_id.id]
+        self.assertEqual(len(line_ids_p1), 1)
+        self.assertEqual(len(line_ids_p2), 1)
+        self.assertEqual(line_ids_p1[0].theoretical_qty, 0)
+        self.assertEqual(line_ids_p2[0].theoretical_qty, 0)
+
+        # location_ids SET + product_ids SET but when product in one locations but no the other
+        self.env['stock.quant'].create({
+            'product_id': self.product1.id,
+            'product_uom_id': self.uom_unit.id,
+            'location_id': self.stock_location.id,
+            'quantity': 10,
+            'reserved_quantity': 0,
+        })
+        inventory = self.env['stock.inventory'].create({
+            'name': 'loc SET - pro SET',
+            'exhausted': True,
+            'location_ids': [(4, self.stock_location.id), (4, warehouse.lot_stock_id.id)],
+            'product_ids': [(4, self.product1.id)],
+        })
+        inventory.action_start()
+
+        # need to have line for product1 for both location, one with quant the other not
+        line_ids_loc1 = [l for l in inventory.line_ids if l['location_id']['id'] == self.stock_location.id]
+        line_ids_loc2 = [l for l in inventory.line_ids if l['location_id']['id'] == warehouse.lot_stock_id.id]
+        self.assertEqual(len(line_ids_loc1), 1)
+        self.assertEqual(len(line_ids_loc2), 1)
+        self.assertEqual(line_ids_loc1[0].theoretical_qty, 10)
+        self.assertEqual(line_ids_loc2[0].theoretical_qty, 0)
