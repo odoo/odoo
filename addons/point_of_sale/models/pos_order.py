@@ -740,7 +740,9 @@ class PosOrder(models.Model):
 
             if to_invoice:
                 pos_order.action_pos_order_invoice()
-                pos_order.invoice_id.sudo().with_context(force_company=self.env.user.company_id.id).action_invoice_open()
+                pos_order.invoice_id.sudo().with_context(
+                    force_company=self.env.user.company_id.id, pos_picking_id=pos_order.picking_id
+                ).action_invoice_open()
                 pos_order.account_move = pos_order.invoice_id.move_id
         return order_ids
 
