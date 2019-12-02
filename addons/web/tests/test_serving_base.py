@@ -694,11 +694,11 @@ class TestStaticInheritance(BaseCase):
                         <div>At first I was afraid</div>
                         <form>Inner Form</form>
                     </form>
-                    <t t-name="template_1_2" t-inherit="template_1_1" t-inherit-mode="primary">
+                    <form t-name="template_1_2" t-inherit="template_1_1" t-inherit-mode="primary">
                         <xpath expr="//form" position="replace">
                             <div>Form replacer</div>
                         </xpath>
-                    </t>
+                    </form>
                 </templates>
                 """,
         }
