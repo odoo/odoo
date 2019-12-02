@@ -32,22 +32,21 @@
                         </div>
                         <group>
                             <group>
-                                <field name="res_name"/>
-                                <field name="parent_res_name"/>
+                                <field name="res_name" string="Document"/>
+                                <field name="parent_res_name" string="Parent Holder"/>
                                 <field name="rated_partner_id"/>
-                                <field name="partner_id"/>
                                 <field name="rating" invisible="1"/>
-                                <field name="create_date" string="Submitted on"/>
+                                <field name="is_internal"/>
                             </group>
                             <group>
-                                <div colspan="2" class="text-center">
+                                <field name="partner_id"/>
+                                <div colspan="2" class="text-center" name="rating_image_container">
                                     <field name="rating_image" widget='image'/>
                                     <div class="mt4">
                                         <strong><field name="rating_text"/></strong>
                                     </div>
                                 </div>
-                            </group>
-                            <group>
+                                <field name="create_date" string="Submitted on"/>
                                 <field name="feedback" attrs="{'invisible': [('feedback','=',False)]}"/>
                             </group>
                         </group>
@@ -168,5 +167,18 @@
                 </p>
             </field>
         </record>
+
+        <record id="rating_rating_view" model="ir.actions.act_window">
+            <field name="name">Ratings</field>
+            <field name="res_model">rating.rating</field>
+            <field name="view_mode">kanban,tree,graph,pivot,form</field>
+        </record>
+
+        <!-- Add menu entry in Technical/Discuss -->
+        <menuitem name="Ratings"
+            id="rating_rating_menu_technical"
+            parent="mail.mail_menu_technical"
+            action="rating_rating_view"
+            sequence="30"/>
 
 </odoo>
