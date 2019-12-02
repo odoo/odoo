@@ -883,7 +883,7 @@ class WebsiteSlides(WebsiteProfile):
             return preview
         values = Slide._parse_document_url(data['url'], only_preview_fields=True)
         if values.get('error'):
-            preview['error'] = _('Could not fetch data from url. Document or access right not available.\nHere is the received response: %s') % values['error']
+            preview['error'] = values['error']
             return preview
         return values
 
