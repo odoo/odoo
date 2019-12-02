@@ -9,6 +9,8 @@ const {
     start: utilsStart,
 } = require('mail.owl.testUtils');
 
+const { makeTestPromise } = require('web.test_utils');
+
 QUnit.module('mail.owl', {}, function () {
 QUnit.module('component', {}, function () {
 QUnit.module('MessagingMenu', {
@@ -28,6 +30,64 @@ QUnit.module('MessagingMenu', {
             this.widget.destroy();
         }
     }
+});
+
+QUnit.test('messaging not ready', async function (assert) {
+    assert.expect(2);
+
+    await this.start({
+        async mockRPC(route) {
+            if (route === '/mail/init_messaging') {
+                // simulate messaging never ready
+                return new Promise(resolve => {});
+            }
+            return this._super(...arguments);
+        }
+    });
+    assert.strictEqual(
+        document.querySelectorAll('.o_MessagingMenu_loading').length,
+        1,
+        "should display loading icon on messaging menu when messaging not yet ready"
+    );
+
+    document.querySelector(`.o_MessagingMenu_toggler`).click();
+    await nextRender();
+    assert.strictEqual(
+        document.querySelector('.o_MessagingMenu_dropdownMenu').textContent,
+        "Please wait...",
+        "should prompt loading when opening messaging menu"
+    );
+});
+
+QUnit.test('messaging becomes ready', async function (assert) {
+    assert.expect(2);
+
+    const messagingReadyProm = makeTestPromise();
+
+    await this.start({
+        async mockRPC(route) {
+            const _super = this._super.bind(this, ...arguments); // limitation of class.js
+            if (route === '/mail/init_messaging') {
+                await messagingReadyProm;
+            }
+            return _super();
+        }
+    });
+    document.querySelector(`.o_MessagingMenu_toggler`).click();
+    await nextRender();
+
+    // simulate messaging becomes ready
+    messagingReadyProm.resolve();
+    await nextRender();
+    assert.strictEqual(
+        document.querySelectorAll('.o_MessagingMenu_loading').length,
+        0,
+        "should no longer display loading icon on messaging menu when messaging becomes ready"
+    );
+    assert.notOk(
+        document.querySelector('.o_MessagingMenu_dropdownMenu').textContent.includes("Please wait..."),
+        "should no longer prompt loading when opening messaging menu when messaging becomes ready"
+    );
 });
 
 QUnit.test('basic rendering', async function (assert) {

@@ -29,6 +29,7 @@ class MessagingMenu extends Component {
             return Object.assign({}, state.messagingMenu, {
                 counter: this.storeGetters.globalThreadUnreadCounter(),
                 isDiscussOpen: state.discuss.isOpen,
+                isMessagingReady: state.isMessagingReady,
                 isMobile: state.isMobile,
             });
         });

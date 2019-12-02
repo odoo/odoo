@@ -6,7 +6,10 @@
             <t t-if="!storeProps.isMobile or !props.activeMobileThread">
                 <a class="o_MessagingMenu_toggler o-no-caret" t-att-class="{ show: storeProps.isOpen }" href="#" t-on-click.stop.prevent="_onClickToggler" data-toggle="dropdown" data-display="static" title="Conversations" role="button" aria-expanded="false">
                     <i class="o_MessagingMenu_icon fa fa-comments-o" role="img" aria-label="Messages"/>
-                    <t t-if="storeProps.counter > 0">
+                    <t t-if="!storeProps.isMessagingReady">
+                        <i class="o_MessagingMenu_loading fa fa-spinner fa-spin"/>
+                    </t>
+                    <t t-elif="storeProps.counter > 0">
                         <span class="o_MessagingMenu_counter badge badge-pill">
                             <t t-esc="storeProps.counter"/>
                         </span>
@@ -14,51 +17,56 @@
                 </a>
             </t>
             <t t-if="storeProps.isOpen and (!storeProps.isMobile or !props.activeMobileThread)">
-                <div class="o_MessagingMenu_dropdownMenu dropdown-menu dropdown-menu-right" t-att-class="{ 'o-mobile': storeProps.isMobile }" role="menu">
-                    <div class="o_MessagingMenu_dropdownMenuHeader" t-att-class="{ 'o-mobile': storeProps.isMobile }">
-                        <t t-if="!storeProps.isMobile">
-                            <t t-foreach="['all', 'chat', 'channel']" t-as="tabId" t-key="tabId">
-                                <button class="o_MessagingMenu_tabButton o-desktop btn btn-link" t-att-class="{ 'o-active': storeProps.activeTabId === tabId, }" t-on-click.stop="_onClickDesktopTabButton" type="button" role="tab" t-att-data-tab-id="tabId">
-                                    <t t-if="tabId === 'all'">All</t>
-                                    <t t-elif="tabId === 'chat'">Chat</t>
-                                    <t t-elif="tabId === 'channel'">Channels</t>
-                                </button>
+                <div class="o_MessagingMenu_dropdownMenu dropdown-menu dropdown-menu-right" t-att-class="{ 'o-mobile': storeProps.isMobile, 'o-messaging-not-ready': !storeProps.isMessagingReady }" role="menu">
+                    <t t-if="!storeProps.isMessagingReady">
+                        <span><i class="o_MessagingMenu_dropdownLoadingIcon fa fa-spinner fa-spin"/>Please wait...</span>
+                    </t>
+                    <t t-else="">
+                        <div class="o_MessagingMenu_dropdownMenuHeader" t-att-class="{ 'o-mobile': storeProps.isMobile }">
+                            <t t-if="!storeProps.isMobile">
+                                <t t-foreach="['all', 'chat', 'channel']" t-as="tabId" t-key="tabId">
+                                    <button class="o_MessagingMenu_tabButton o-desktop btn btn-link" t-att-class="{ 'o-active': storeProps.activeTabId === tabId, }" t-on-click.stop="_onClickDesktopTabButton" type="button" role="tab" t-att-data-tab-id="tabId">
+                                        <t t-if="tabId === 'all'">All</t>
+                                        <t t-elif="tabId === 'chat'">Chat</t>
+                                        <t t-elif="tabId === 'channel'">Channels</t>
+                                    </button>
+                                </t>
                             </t>
-                        </t>
+                            <t t-if="storeProps.isMobile">
+                                <t t-call="mail.component.MessagingMenu.NewMessageButton"/>
+                            </t>
+                            <div class="o-autogrow"/>
+                            <t t-if="!storeProps.isMobile and !storeProps.isDiscussOpen">
+                                <t t-call="mail.component.MessagingMenu.NewMessageButton"/>
+                            </t>
+                            <t t-if="storeProps.isMobile and storeProps.isMobileNewMessageToggled">
+                                <AutocompleteInput
+                                    class="o_MessagingMenu_mobileNewMessageInput"
+                                    customClass="id + '_mobileNewMessageInputAutocomplete'"
+                                    isFocusOnMount="true"
+                                    placeholder="mobileNewMessageInputPlaceholder"
+                                    select="_onMobileNewMessageInputSelect"
+                                    source="_onMobileNewMessageInputSource"
+                                    t-on-o-hide.stop="_onHideMobileNewMessage"
+                                    t-ref="mobileNewMessageInput"
+                                />
+                            </t>
+                        </div>
+                        <ThreadPreviewList
+                            class="o_MessagingMenu_threadPreviewList"
+                            t-att-class="{ 'o_MessagingMenu_threadPreviewList-mobile': storeProps.isMobile }"
+                            filter="storeProps.activeTabId"
+                            t-on-o-select-thread.stop="_onSelectThread"
+                            t-ref="threadPreviewList"
+                        />
                         <t t-if="storeProps.isMobile">
-                            <t t-call="mail.component.MessagingMenu.NewMessageButton"/>
-                        </t>
-                        <div class="o-autogrow"/>
-                        <t t-if="!storeProps.isMobile and !storeProps.isDiscussOpen">
-                            <t t-call="mail.component.MessagingMenu.NewMessageButton"/>
-                        </t>
-                        <t t-if="storeProps.isMobile and storeProps.isMobileNewMessageToggled">
-                            <AutocompleteInput
-                                class="o_MessagingMenu_mobileNewMessageInput"
-                                customClass="id + '_mobileNewMessageInputAutocomplete'"
-                                isFocusOnMount="true"
-                                placeholder="mobileNewMessageInputPlaceholder"
-                                select="_onMobileNewMessageInputSelect"
-                                source="_onMobileNewMessageInputSource"
-                                t-on-o-hide.stop="_onHideMobileNewMessage"
-                                t-ref="mobileNewMessageInput"
+                            <MobileNavbar
+                                class="o_MessagingMenu_mobileNavbar"
+                                activeTabId="storeProps.activeTabId"
+                                tabs="tabs"
+                                t-on-o-select-mobile-messaging-navbar-tab.stop="_onSelectMobileNavbarTab"
                             />
                         </t>
-                    </div>
-                    <ThreadPreviewList
-                        class="o_MessagingMenu_threadPreviewList"
-                        t-att-class="{ 'o_MessagingMenu_threadPreviewList-mobile': storeProps.isMobile }"
-                        filter="storeProps.activeTabId"
-                        t-on-o-select-thread.stop="_onSelectThread"
-                        t-ref="threadPreviewList"
-                    />
-                    <t t-if="storeProps.isMobile">
-                        <MobileNavbar
-                            class="o_MessagingMenu_mobileNavbar"
-                            activeTabId="storeProps.activeTabId"
-                            tabs="tabs"
-                            t-on-o-select-mobile-messaging-navbar-tab.stop="_onSelectMobileNavbarTab"
-                        />
                     </t>
                 </div>
             </t>
