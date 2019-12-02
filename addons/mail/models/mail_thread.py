@@ -685,6 +685,7 @@ class MailThread(models.AbstractModel):
     def _routing_create_bounce_email(self, email_from, body_html, message, **mail_values):
         bounce_to = tools.decode_message_header(message, 'Return-Path') or email_from
         bounce_mail_values = {
+            'author_id': False,
             'body_html': body_html,
             'subject': 'Re: %s' % message.get('subject'),
             'email_to': bounce_to,
@@ -693,8 +694,10 @@ class MailThread(models.AbstractModel):
         bounce_from = self.env['ir.mail_server']._get_default_bounce_address()
         if bounce_from:
             bounce_mail_values['email_from'] = tools.formataddr(('MAILER-DAEMON', bounce_from))
+        else:
+            bounce_mail_values['email_from'] = tools.decode_message_header(message, 'To')
         bounce_mail_values.update(mail_values)
-        self.env['mail.mail'].create(bounce_mail_values).send()
+        self.env['mail.mail'].sudo().create(bounce_mail_values).send()
 
     @api.model
     def _routing_handle_bounce(self, email_message, message_dict):
@@ -1827,8 +1830,7 @@ class MailThread(models.AbstractModel):
             raise ValueError('message_post partner_ids and channel_ids must be integer list, not commands')
 
         # Find the message's author
-        author_info = self._message_compute_author(author_id, email_from, raise_exception=True)
-        author_id, email_from = author_info['author_id'], author_info['email_from']
+        author_id, email_from = self._message_compute_author(author_id, email_from, raise_exception=True)
 
         if not subtype_id:
             subtype = subtype or 'mt_note'
@@ -1973,8 +1975,7 @@ class MailThread(models.AbstractModel):
         msg_kwargs = dict((key, val) for key, val in kwargs.items() if key in self.env['mail.message']._fields)
         notif_kwargs = dict((key, val) for key, val in kwargs.items() if key not in msg_kwargs)
 
-        author_info = self._message_compute_author(author_id, email_from, raise_exception=True)
-        author_id, email_from = author_info['author_id'], author_info['email_from']
+        author_id, email_from = self._message_compute_author(author_id, email_from, raise_exception=True)
 
         if not partner_ids:
             _logger.warning('Message notify called without recipient_ids, skipping')
@@ -2013,8 +2014,7 @@ class MailThread(models.AbstractModel):
         the log process. This method should be called within methods where
         access rights are already granted to avoid privilege escalation. """
         self.ensure_one()
-        author_info = self._message_compute_author(author_id, email_from, raise_exception=False)
-        author_id, email_from = author_info['author_id'], author_info['email_from']
+        author_id, email_from = self._message_compute_author(author_id, email_from, raise_exception=False)
 
         message_values = {
             'subject': subject,
@@ -2038,8 +2038,7 @@ class MailThread(models.AbstractModel):
 
           :param bodies: dict {record_id: body}
         """
-        author_info = self._message_compute_author(author_id, email_from, raise_exception=False)
-        author_id, email_from = author_info['author_id'], author_info['email_from']
+        author_id, email_from = self._message_compute_author(author_id, email_from, raise_exception=False)
 
         base_message_values = {
             'subject': subject,
@@ -2079,10 +2078,7 @@ class MailThread(models.AbstractModel):
         if not email_from and not self.env.su and raise_exception:
             raise exceptions.UserError(_("Unable to log message, please configure the sender's email address."))
 
-        return {
-            'author_id': author_id,
-            'email_from': email_from,
-        }
+        return author_id, email_from
 
     def _message_create(self, values_list):
         if not isinstance(values_list, (list)):

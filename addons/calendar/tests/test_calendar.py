@@ -398,7 +398,7 @@ class TestCalendar(SavepointCaseWithUserDemo):
         def _test_one_mail_per_attendee(self, m, partners):
             # check that every attendee receive a (single) mail for the event
             for partner in partners:
-                mail = self.env['mail.mail'].search([
+                mail = self.env['mail.mail'].sudo().search([
                     ('recipient_ids', 'in', partner.id),
                     ('subject', 'like', m.name),
                     ])

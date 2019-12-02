@@ -607,6 +607,7 @@ class HrExpense(models.Model):
         expense_template = self.env.ref(mail_template_id)
         rendered_body = expense_template.render({'expense': expense}, engine='ir.qweb')
         body = self.env['mail.thread']._replace_local_links(rendered_body)
+        # TDE TODO: seems louche, check to use notify
         if expense.employee_id.user_id.partner_id:
             expense.message_post(
                 partner_ids=expense.employee_id.user_id.partner_id.ids,
@@ -616,7 +617,9 @@ class HrExpense(models.Model):
                 email_layout_xmlid='mail.mail_notification_light',
             )
         else:
-            self.env['mail.mail'].create({
+            self.env['mail.mail'].sudo().create({
+                'email_from': self.env.user.email_formatted,
+                'author_id': self.env.user.partner_id.id,
                 'body_html': body,
                 'subject': 'Re: %s' % msg_dict.get('subject', ''),
                 'email_to': msg_dict.get('email_from', False),

@@ -54,14 +54,14 @@ class MailComposer(models.TransientModel):
         result = super(MailComposer, self).default_get(fields)
 
         # author
-        if 'author_id' not in result:
-            result['author_id'] = self.env.user.partner_id.id
-            if 'email_from' not in result and self.env.user.email:
-                result['email_from'] = self.env.user.email_formatted
-        elif 'email_from' not in result:
-            author = self.env['res.partner'].browse(result['author_id'])
-            if author.email:
-                result['email_from'] = tools.formataddr((author.name, author.email))
+        missing_author = 'author_id' in fields and 'author_id' not in result
+        missing_email_from = 'email_from' in fields and 'email_from' not in result
+        if missing_author or missing_email_from:
+            author_id, email_from = self.env['mail.thread']._message_compute_author(result.get('author_id'), result.get('email_from'), raise_exception=False)
+            if missing_email_from:
+                result['email_from'] = email_from
+            if missing_author:
+                result['author_id'] = author_id
 
         result['composition_mode'] = result.get('composition_mode', 'comment')
         result['model'] = result.get('model', self._context.get('active_model'))
@@ -208,7 +208,6 @@ class MailComposer(models.TransientModel):
             # Mass Mailing
             mass_mode = wizard.composition_mode in ('mass_mail', 'mass_post')
 
-            Mail = self.env['mail.mail']
             ActiveModel = self.env[wizard.model] if wizard.model and hasattr(self.env[wizard.model], 'message_post') else self.env['mail.thread']
             if wizard.composition_mode == 'mass_post':
                 # do not send emails directly but use the queue instead
@@ -233,11 +232,15 @@ class MailComposer(models.TransientModel):
                 subtype_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment')
 
             for res_ids in sliced_res_ids:
-                batch_mails = Mail
+                # mass mail mode: mail are sudo-ed, as when going through get_mail_values
+                # standard access rights on related records will be checked when browsing them
+                # to compute mail values. If people have access to the records they have rights
+                # to create lots of emails in sudo as it is consdiered as a technical model.
+                batch_mails_sudo = self.env['mail.mail'].sudo()
                 all_mail_values = wizard.get_mail_values(res_ids)
                 for res_id, mail_values in all_mail_values.items():
                     if wizard.composition_mode == 'mass_mail':
-                        batch_mails |= Mail.create(mail_values)
+                        batch_mails_sudo |= self.env['mail.mail'].sudo().create(mail_values)
                     else:
                         post_params = dict(
                             message_type=wizard.message_type,
@@ -258,7 +261,7 @@ class MailComposer(models.TransientModel):
                             ActiveModel.browse(res_id).message_post(**post_params)
 
                 if wizard.composition_mode == 'mass_mail':
-                    batch_mails.send(auto_commit=auto_commit)
+                    batch_mails_sudo.send(auto_commit=auto_commit)
 
     def get_mail_values(self, res_ids):
         """Generate the values that will be used by send_mail to create mail_messages

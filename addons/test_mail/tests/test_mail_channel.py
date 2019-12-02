@@ -263,7 +263,7 @@ class TestChannelModeration(TestMailCommon):
             self.assertEqual(mail.author_id, self.partner_employee)
             self.assertEqual(mail.subject, 'Guidelines of channel %s' % self.channel_1.name)
             self.assertEqual(mail.state, 'outgoing')
-            self.assertEqual(mail.email_from, self.user_employee.company_id.catchall)
+            self.assertEqual(mail.email_from, self.user_employee.company_id.catchall_formatted)
         self.assertEqual(self._new_mails.mapped('recipient_ids'), self.partner_employee | self.partner_portal)
 
     def test_send_guidelines_crash(self):

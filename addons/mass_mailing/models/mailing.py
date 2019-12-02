@@ -69,7 +69,7 @@ class MassMailing(models.Model):
     active = fields.Boolean(default=True, tracking=True)
     subject = fields.Char('Subject', help='Subject of emails to send', required=True, translate=True)
     email_from = fields.Char(string='Send From', required=True,
-        default=lambda self: self.env['mail.message']._get_default_from())
+        default=lambda self: self.env.user.email_formatted)
     sent_date = fields.Datetime(string='Sent Date', copy=False)
     schedule_date = fields.Datetime(string='Scheduled for', tracking=True)
     # don't translate 'body_arch', the translations are only on 'body_html'
@@ -92,7 +92,7 @@ class MassMailing(models.Model):
     reply_to_mode = fields.Selection(
         [('thread', 'Recipient Followers'), ('email', 'Specified Email Address')], string='Reply-To Mode', required=True)
     reply_to = fields.Char(string='Reply To', help='Preferred Reply-To Address',
-        default=lambda self: self.env['mail.message']._get_default_from())
+        default=lambda self: self.env.user.email_formatted)
     # recipients
     mailing_model_real = fields.Char(compute='_compute_model', string='Recipients Real Model', default='mailing.contact', required=True)
     mailing_model_id = fields.Many2one('ir.model', string='Recipients Model', domain=[('model', 'in', MASS_MAILING_BUSINESS_MODELS)],

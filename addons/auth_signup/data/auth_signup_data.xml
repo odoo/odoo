@@ -289,7 +289,7 @@
                         Your login is <strong>${object.email}</strong><br/>
                         To gain access to your account, you can use the following link:
                         <div style="margin: 16px 0px 16px 0px;">
-                            <a href="/web/login?${ctx['auth_login']}"
+                            <a href="/web/login?auth_login=${object.email}"
                                 style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
                                 Go to My Account
                             </a>

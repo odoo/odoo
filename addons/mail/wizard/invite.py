@@ -5,6 +5,7 @@ from lxml import etree
 from lxml.html import builder as html
 
 from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 
 
 class Invite(models.TransientModel):
@@ -47,7 +48,9 @@ class Invite(models.TransientModel):
     send_mail = fields.Boolean('Send Email', default=True, help="If checked, the partners will receive an email warning they have been added in the document's followers.")
 
     def add_followers(self):
-        email_from = self.env['mail.message']._get_default_from()
+        if not self.env.user.email:
+            raise UserError(_("Unable to post message, please configure the sender's email address."))
+        email_from = self.env.user.email_formatted
         for wizard in self:
             Model = self.env[wizard.res_model]
             document = Model.browse(wizard.res_id)
