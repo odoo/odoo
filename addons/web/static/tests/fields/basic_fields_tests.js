@@ -1943,7 +1943,7 @@ QUnit.module('basic_fields', {
     });
 
     QUnit.test('text field translatable', async function (assert) {
-        assert.expect(3);
+        assert.expect(7);
 
         this.data.partner.fields.txt.translate = true;
 
@@ -1977,9 +1977,22 @@ QUnit.module('basic_fields', {
             },
         });
         await testUtils.form.clickEdit(form);
-        var $button = form.$('textarea + .o_field_translate');
-        assert.strictEqual($button.length, 1, "should have a translate button");
-        await testUtils.dom.click($button);
+
+        const translateButton = form.el.querySelector('textarea[name="txt"] + .o_field_translate');
+        const hiddenTextarea = form.el.querySelector('textarea[name="txt"] + .o_field_translate + textarea');
+
+        // Hidden text area should be the preceding element
+        assert.strictEqual(hiddenTextarea.tagName, 'TEXTAREA');
+        assert.strictEqual(hiddenTextarea.className, '');
+
+        // Translate button should be the following element
+        assert.strictEqual(translateButton.tagName, 'SPAN');
+        assert.strictEqual(translateButton.className, 'o_field_translate btn btn-link o_field_widget o_input');
+
+        assert.containsOnce(form, translateButton, "should have a translate button");
+
+        await testUtils.dom.click(translateButton);
+
         assert.containsOnce($(document), '.modal', 'there should be a translation modal');
         form.destroy();
         _t.database.multi_lang = multiLang;

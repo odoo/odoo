@@ -75,7 +75,14 @@ var dom = {
         var minHeight;
 
         function resize() {
-            $fixedTextarea.insertAfter($textarea);
+            if ($textarea[0].parentNode && $textarea[0].name) {
+                // Insert the text area after all the siblings sharing the same name
+                const siblings = $textarea[0].parentNode.querySelectorAll(`:scope > [name="${$textarea[0].name}"]`);
+                $textarea[0].parentNode.insertBefore($fixedTextarea[0], siblings[siblings.length - 1].nextSibling);
+            } else {
+                // No parent: insert directly after the textarea
+                $fixedTextarea.insertAfter($textarea);
+            }
             var heightOffset = 0;
             var style = window.getComputedStyle($textarea[0], null);
             if (style.boxSizing === 'border-box') {
