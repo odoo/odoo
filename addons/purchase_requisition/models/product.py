@@ -14,8 +14,8 @@ class SupplierInfo(models.Model):
 class ProductProduct(models.Model):
     _inherit = 'product.product'
 
-    def _prepare_sellers(self, params):
-        sellers = super(ProductProduct, self)._prepare_sellers(params)
+    def _prepare_sellers(self, params=False):
+        sellers = super(ProductProduct, self)._prepare_sellers(params=params)
         if params and params.get('order_id'):
             return sellers.filtered(lambda s: not s.purchase_requisition_id or s.purchase_requisition_id == params['order_id'].requisition_id)
         else:
