@@ -18,8 +18,11 @@ var QuestionFormWidget = publicWidget.Widget.extend({
     events: {
         'click .o_wslides_js_quiz_validate_question': '_validateQuestion',
         'click .o_wslides_js_quiz_cancel_question': '_cancelValidation',
+        'click .o_wslides_js_quiz_comment_answer': '_toggleAnswerLineComment',
         'click .o_wslides_js_quiz_add_answer': '_addAnswerLine',
         'click .o_wslides_js_quiz_remove_answer': '_removeAnswerLine',
+        'click .o_wslides_js_quiz_remove_answer_comment': '_removeAnswerLineComment',
+        'change .o_wslides_js_quiz_answer_comment > input[type=text]': '_onCommentChanged'
     },
 
     /**
@@ -52,6 +55,34 @@ var QuestionFormWidget = publicWidget.Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
+     *
+     * @param commentInput
+     * @private
+     */
+    _onCommentChanged: function (event) {
+        var input = event.currentTarget;
+        var commentIcon = $(input).closest('.o_wslides_js_quiz_answer').find('.o_wslides_js_quiz_comment_answer');
+        if (input.value.trim() !== '') {
+            commentIcon.addClass('text-primary');
+            commentIcon.removeClass('text-muted');
+        } else {
+            commentIcon.addClass('text-muted');
+            commentIcon.removeClass('text-primary');
+        }
+    },
+
+    /**
+     * Toggle the input for commenting the answer line which will be
+     * seen by the frontend user when submitting the quiz.
+     * @param ev
+     * @private
+     */
+    _toggleAnswerLineComment: function (ev) {
+        var commentLine = $(ev.currentTarget).closest('.o_wslides_js_quiz_answer').find('.o_wslides_js_quiz_answer_comment').toggleClass('d-none');
+        commentLine.find('input[type=text]').focus();
+    },
+
+    /**
      * Adds a new answer line after the element the user clicked on
      * e.g. If there is 3 answer lines and the user click on the add
      *      answer button on the second line, the new answer line will
@@ -72,6 +103,16 @@ var QuestionFormWidget = publicWidget.Widget.extend({
         if (this.$('.o_wslides_js_quiz_answer').length > 1) {
             $(ev.currentTarget).closest('.o_wslides_js_quiz_answer').remove();
         }
+    },
+
+    /**
+     *
+     * @param ev
+     * @private
+     */
+    _removeAnswerLineComment: function (ev) {
+        var commentLine = $(ev.currentTarget).closest('.o_wslides_js_quiz_answer_comment').addClass('d-none');
+        commentLine.find('input[type=text]').val('').change();
     },
 
     /**
@@ -165,12 +206,13 @@ var QuestionFormWidget = publicWidget.Widget.extend({
         var answers = [];
         var sequence = 1;
         $form.find('.o_wslides_js_quiz_answer').each(function () {
-            var value = $(this).find('input[type=text]').val();
+            var value = $(this).find('.o_wslides_js_quiz_answer_value').val();
             if (value.trim() !== "") {
                 var answer = {
                     'sequence': sequence++,
                     'text_value': value,
-                    'is_correct': $(this).find('input[type=radio]').prop('checked') === true
+                    'is_correct': $(this).find('input[type=radio]').prop('checked') === true,
+                    'comment': $(this).find('.o_wslides_js_quiz_answer_comment > input[type=text]').val().trim()
                 };
                 answers.push(answer);
             }
