@@ -7,7 +7,7 @@ var field_registry = require('web.field_registry');
 var field_utils = require('web.field_utils');
 
 var QWeb = core.qweb;
-
+var _t = core._t;
 
 var ShowPaymentLineWidget = AbstractField.extend({
     events: _.extend({
@@ -55,6 +55,7 @@ var ShowPaymentLineWidget = AbstractField.extend({
             title: info.title
         }));
         _.each(this.$('.js_payment_info'), function (k, v){
+            var isRTL = _t.database.parameters.direction === "rtl";
             var content = info.content[v];
             var options = {
                 content: function () {
@@ -76,7 +77,7 @@ var ShowPaymentLineWidget = AbstractField.extend({
                     return $content;
                 },
                 html: true,
-                placement: 'left',
+                placement: isRTL ? 'bottom' : 'left',
                 title: 'Payment Information',
                 trigger: 'focus',
                 delay: { "show": 0, "hide": 100 },
