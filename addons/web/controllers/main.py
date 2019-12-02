@@ -514,6 +514,8 @@ class HomeStaticTemplateHelpers(object):
                 if self.debug and inherit_mode == self.EXTENSION_MODE:
                     for xpath in xpaths:
                         xpath.insert(0, etree.Comment(" Modified by %s from %s " % (template_name, addon)))
+                elif inherit_mode == self.PRIMARY_MODE:
+                    parent_tree.tag = template_tree.tag
                 inherited_template = apply_inheritance_specs(parent_tree, xpaths)
 
                 if inherit_mode == self.PRIMARY_MODE:  # New template_tree: A' = B(A)
