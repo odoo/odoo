@@ -205,14 +205,14 @@ var ChatterComposer = BasicComposer.extend({
         return new Promise(function (resolve, reject) {
             self._super().then(function (message) {
                 message = _.extend(message, {
-                    subtype: 'mail.mt_comment',
+                    subtype_xmlid: 'mail.mt_comment',
                     message_type: 'comment',
                     context: _.defaults({}, self.context, session.user_context),
                 });
 
                 // Subtype
                 if (self.options.isLog) {
-                    message.subtype = 'mail.mt_note';
+                    message.subtype_xmlid = 'mail.mt_note';
                 }
 
                 // Partner_ids

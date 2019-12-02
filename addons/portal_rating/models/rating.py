@@ -6,8 +6,6 @@ from odoo import fields, models, exceptions, _
 class Rating(models.Model):
     _inherit = 'rating.rating'
 
-    # Add this related field to mail.message for performance reason
-    website_published = fields.Boolean(related='message_id.website_published', store=True, readonly=False)
     # Adding information for comment a rating message
     publisher_comment = fields.Text("Publisher Comment")
     publisher_id = fields.Many2one('res.partner', 'Commented by',

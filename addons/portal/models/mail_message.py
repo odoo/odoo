@@ -10,7 +10,7 @@ class MailMessage(models.Model):
     def portal_message_format(self):
         return self._portal_message_format([
             'id', 'body', 'date', 'author_id', 'email_from',  # base message fields
-            'message_type', 'subtype_id', 'subject',  # message specific
+            'message_type', 'subtype_id', 'is_internal', 'subject',  # message specific
             'model', 'res_id', 'record_name',  # document related
         ])
 
@@ -24,7 +24,3 @@ class MailMessage(models.Model):
                 if not attachment.get('access_token'):
                     attachment['access_token'] = IrAttachmentSudo.browse(attachment['id']).generate_access_token()[0]
         return message_values
-
-    @api.model
-    def _non_employee_message_domain(self):
-        return ['&', ('subtype_id', '!=', False), ('subtype_id.internal', '=', False)]

@@ -112,6 +112,7 @@ class LivechatController(http.Controller):
                 'rating': rate,
                 'consumed': True,
                 'feedback': reason,
+                'is_internal': False,
             }
             if not channel.rating_ids:
                 res_model_id = request.env['ir.model'].sudo().search([('model', '=', channel._name)], limit=1).id
