@@ -86,7 +86,7 @@ def _message_post_helper(res_model, res_id, message, token='', _hash=False, pid=
     message_post_args = dict(
         body=message,
         message_type=kw.pop('message_type', "comment"),
-        subtype=kw.pop('subtype', "mt_comment"),
+        subtype_xmlid=kw.pop('subtype_xmlid', "mail.mt_comment"),
         author_id=author_id,
         **kw
     )
@@ -158,6 +158,7 @@ class PortalChatter(http.Controller):
             'options': {
                 'message_count': message_data['message_count'],
                 'is_user_public': is_user_public,
+                'is_user_employee': request.env.user.has_group('base.group_user'),
                 'is_user_publisher': request.env.user.has_group('website.group_website_publisher'),
                 'display_composer': display_composer,
                 'partner_id': request.env.user.partner_id.id
@@ -183,12 +184,18 @@ class PortalChatter(http.Controller):
                 raise Forbidden()
             # Non-employee see only messages with not internal subtype (aka, no internal logs)
             if not request.env['res.users'].has_group('base.group_user'):
-                domain = expression.AND([Message._non_employee_message_domain(), domain])
+                domain = expression.AND([Message._get_search_domain_share(), domain])
             Message = request.env['mail.message'].sudo()
         return {
             'messages': Message.search(domain, limit=limit, offset=offset).portal_message_format(),
             'message_count': Message.search_count(domain)
         }
+
+    @http.route(['/mail/update_is_internal'], type='json', auth="user", website=True)
+    def portal_message_update_is_internal(self, message_id, is_internal):
+        message = request.env['mail.message'].browse(int(message_id))
+        message.write({'is_internal': is_internal})
+        return message.is_internal
 
 
 class MailController(MailController):

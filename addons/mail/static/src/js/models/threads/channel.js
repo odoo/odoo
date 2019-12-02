@@ -443,7 +443,7 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
         return this._super.apply(this, arguments).then(function (messageData) {
             _.extend(messageData, {
                 message_type: 'comment',
-                subtype: 'mail.mt_comment',
+                subtype_xmlid: 'mail.mt_comment',
                 command: data.command,
             });
             return self._rpc({

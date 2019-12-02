@@ -36,7 +36,7 @@ class TestMailResend(TestMailCommon):
                 [{'partner': partner, 'type': 'email', 'status': 'exception'} for partner in self.partners],
                 message_info={'message_type': 'notification'},
                 sim_error='connect_failure'):
-            message = self.test_record.with_user(self.user_admin).message_post(partner_ids=self.partners.ids, subtype='mail.mt_comment', message_type='notification')
+            message = self.test_record.with_user(self.user_admin).message_post(partner_ids=self.partners.ids, subtype_xmlid='mail.mt_comment', message_type='notification')
 
         wizard = self.env['mail.resend.message'].with_context({'mail_message_to_resend': message.id}).create({})
         self.assertEqual(wizard.notification_ids.mapped('res_partner_id'), self.partners, "wizard should manage notifications for each failed partner")
@@ -80,7 +80,7 @@ class TestMailResend(TestMailCommon):
     def test_remove_mail_become_canceled(self):
         # two failure sent on bus, one for each mail
         with self.mock_mail_gateway(), self.assertBus([(self.cr.dbname, 'res.partner', self.partner_admin.id)] * 2):
-            message = self.test_record.with_user(self.user_admin).message_post(partner_ids=self.partners.ids, subtype='mail.mt_comment', message_type='notification')
+            message = self.test_record.with_user(self.user_admin).message_post(partner_ids=self.partners.ids, subtype_xmlid='mail.mt_comment', message_type='notification')
 
         self.assertMailNotifications(message, [
             {'content': '', 'message_type': 'notification',
@@ -102,7 +102,7 @@ class TestMailResend(TestMailCommon):
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_cancel_all(self):
         with self.mock_mail_gateway(), self.assertBus([(self.cr.dbname, 'res.partner', self.partner_admin.id)] * 2):
-            message = self.test_record.with_user(self.user_admin).message_post(partner_ids=self.partners.ids, subtype='mail.mt_comment', message_type='notification')
+            message = self.test_record.with_user(self.user_admin).message_post(partner_ids=self.partners.ids, subtype_xmlid='mail.mt_comment', message_type='notification')
 
         wizard = self.env['mail.resend.message'].with_context({'mail_message_to_resend': message.id}).create({})
         # one update for cancell

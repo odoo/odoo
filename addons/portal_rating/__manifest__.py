@@ -2,13 +2,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Website Rating',
+    'name': 'Portal Rating',
     'category': 'Hidden',
     'version': '1.0',
     'description': """
-Bridge module for rating on website stuff.
+Bridge module adding rating capabilities on portal. It includes notably
+inclusion of rating directly within the customer portal discuss widget.
         """,
-    'depends': ['rating', 'website_mail'],
+    'depends': [
+        'portal',
+        'rating',
+    ],
     'data': [
         'views/assets.xml',
         'views/rating_views.xml',

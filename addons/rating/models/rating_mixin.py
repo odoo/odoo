@@ -134,7 +134,8 @@ class RatingMixin(models.AbstractModel):
                 'partner_id': partner.id,
                 'rated_partner_id': rated_partner.id,
                 'res_model_id': record_model_id,
-                'res_id': self.id
+                'res_id': self.id,
+                'is_internal': False,
             })
         else:
             rating = ratings[0]
@@ -168,7 +169,7 @@ class RatingMixin(models.AbstractModel):
                 subtype_id=subtype_id
             )
 
-    def rating_apply(self, rate, token=None, feedback=None, subtype=None):
+    def rating_apply(self, rate, token=None, feedback=None, subtype_xmlid=None):
         """ Apply a rating given a token. If the current model inherits from
         mail.thread mixin, a message is posted on its chatter. User going through
         this method should have at least employee rights because of rating
@@ -178,7 +179,7 @@ class RatingMixin(models.AbstractModel):
         :param float rate : the rating value to apply
         :param string token : access token
         :param string feedback : additional feedback
-        :param string subtype : xml id of a valid mail.message.subtype
+        :param string subtype_xmlid : xml id of a valid mail.message.subtype
 
         :returns rating.rating record
         """
@@ -194,7 +195,7 @@ class RatingMixin(models.AbstractModel):
                 self.message_post(
                     body="<img src='/rating/static/src/img/rating_%s.png' alt=':%s/10' style='width:18px;height:18px;float:left;margin-right: 5px;'/>%s"
                     % (rate, rate, feedback),
-                    subtype=subtype or "mail.mt_comment",
+                    subtype_xmlid=subtype_xmlid or "mail.mt_comment",
                     author_id=rating.partner_id and rating.partner_id.id or None  # None will set the default author in mail_thread.py
                 )
             if hasattr(self, 'stage_id') and self.stage_id and hasattr(self.stage_id, 'auto_validation_kanban_state') and self.stage_id.auto_validation_kanban_state:

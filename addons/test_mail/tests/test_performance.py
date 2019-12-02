@@ -331,7 +331,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         with self.assertQueryCount(__system__=5, emp=6):
             record.message_post(
                 body='<p>Test message_post as log</p>',
-                subtype='mail.mt_note',
+                subtype_xmlid='mail.mt_note',
                 message_type='comment')
 
     @users('__system__', 'emp')
@@ -344,7 +344,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
                 body='<p>Test Post Performances basic</p>',
                 partner_ids=[],
                 message_type='comment',
-                subtype='mail.mt_comment')
+                subtype_xmlid='mail.mt_comment')
 
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('__system__', 'emp')
@@ -357,7 +357,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
                 body='<p>Test Post Performances with an email ping</p>',
                 partner_ids=self.customer.ids,
                 message_type='comment',
-                subtype='mail.mt_comment')
+                subtype_xmlid='mail.mt_comment')
 
     @users('__system__', 'emp')
     @warmup
@@ -369,7 +369,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
                 body='<p>Test Post Performances with an inbox ping</p>',
                 partner_ids=self.user_test.partner_id.ids,
                 message_type='comment',
-                subtype='mail.mt_comment')
+                subtype_xmlid='mail.mt_comment')
 
     @mute_logger('odoo.models.unlink')
     @users('__system__', 'emp')
@@ -476,7 +476,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
             record.message_post(
                 body='<p>Test Post Performances</p>',
                 message_type='comment',
-                subtype='mail.mt_comment')
+                subtype_xmlid='mail.mt_comment')
 
         self.assertEqual(record.message_ids[0].body, '<p>Test Post Performances</p>')
         self.assertEqual(record.message_ids[0].notified_partner_ids, self.partners | self.user_portal.partner_id)
@@ -823,7 +823,7 @@ class TestMailHeavyPerformancePost(BaseMailPerformance):
                 body='<p>Test body <img src="cid:cid1"> <img src="cid:cid2"></p>',
                 subject='Test Subject',
                 message_type='notification',
-                subtype=None,
+                subtype_xmlid=None,
                 partner_ids=partner_ids,
                 channel_ids=channel_ids,
                 parent_id=False,

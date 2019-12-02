@@ -16,11 +16,11 @@ var STAR_RATING_RATIO = 2;  // conversion factor from the star (1-5) to the db r
  * a popup with the portal composer when clicking on it.
  **/
 var RatingPopupComposer = publicWidget.Widget.extend({
-    template: 'website_rating.PopupComposer',
+    template: 'portal_rating.PopupComposer',
     xmlDependencies: [
         '/portal/static/src/xml/portal_chatter.xml',
-        '/website_rating/static/src/xml/portal_tools.xml',
-        '/website_rating/static/src/xml/portal_rating_composer.xml',
+        '/portal_rating/static/src/xml/portal_tools.xml',
+        '/portal_rating/static/src/xml/portal_rating_composer.xml',
     ],
 
     init: function (parent, options) {

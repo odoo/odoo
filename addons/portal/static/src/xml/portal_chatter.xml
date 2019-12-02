@@ -92,6 +92,7 @@
                 <div class="media o_portal_chatter_message" t-att-id="'message-' + message.id">
                     <img class="o_portal_chatter_avatar" t-att-src="message.author_avatar_url" alt="avatar"/>
                     <div class="media-body">
+                        <t t-call="portal.chatter_internal_toggle" t-if="widget.options['is_user_employee']"/>
 
                         <div class="o_portal_chatter_message_title">
                             <h5><t t-esc="message.author_id[1]"/></h5>
@@ -107,6 +108,18 @@
                     </div>
                 </div>
             </t>
+        </div>
+    </t>
+
+    <!-- Chatter: internal toggle widget -->
+    <t t-name="portal.chatter_internal_toggle">
+        <div t-attf-class="float-right o_portal_chatter_js_is_internal #{message.is_internal and 'o_portal_message_internal_on' or 'o_portal_message_internal_off'}"
+                t-att-data-message-id="message.id"
+                t-att-data-is-internal="message.is_internal">
+            <button class="btn btn-danger"
+                title="Currently restricted to internal employees, click to make it available to everyone viewing this document.">Employees Only</button>
+            <button class="btn btn-success"
+                title="Currently available to everyone viewing this document, click to restrict to internal employees.">Visible</button>
         </div>
     </t>
 

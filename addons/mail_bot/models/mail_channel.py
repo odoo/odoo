@@ -24,6 +24,6 @@ class Channel(models.Model):
                 'name': 'OdooBot'
             })
             message = _("Hello,<br/>Odoo's chat helps employees collaborate efficiently. I'm here to help you discover its features.<br/><b>Try to send me an emoji :)</b>")
-            channel.sudo().message_post(body=message, author_id=odoobot_id, message_type="comment", subtype="mail.mt_comment")
+            channel.sudo().message_post(body=message, author_id=odoobot_id, message_type="comment", subtype_xmlid="mail.mt_comment")
             self.env.user.odoobot_state = 'onboarding_emoji'
             return channel

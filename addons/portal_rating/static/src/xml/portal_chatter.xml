@@ -9,7 +9,7 @@
             <attribute name="t-attf-action">#{widget.options['force_submit_url'] ? widget.options['force_submit_url'] : '/mail/chatter_post'}</attribute>
         </t>
         <t t-jquery=".o_portal_chatter_composer_form input[name='csrf_token']" t-operation="after">
-            <t t-call="website_rating.rating_star_input">
+            <t t-call="portal_rating.rating_star_input">
                 <t t-set="default_rating" t-value="widget.options['default_rating_value']"/>
             </t>
             <input type="hidden" name="message_id" t-att-value="widget.options['default_message_id']" t-if="widget.options['default_message_id']"/>
@@ -19,7 +19,7 @@
     <t t-extend="portal.chatter_messages">
         <t t-jquery="t[t-raw='message.body']" t-operation="before">
             <t t-if="message['rating_value']">
-                <t t-call="website_rating.rating_stars_static">
+                <t t-call="portal_rating.rating_stars_static">
                     <t t-set="val" t-value="message.rating_value"/>
                 </t>
             </t>
@@ -28,7 +28,7 @@
             <!--Only possible if a rating is link to the message, for now we can't comment if no rating
                 is link to the message (because publisher comment data
                 is on the rating.rating model - one comment max) -->
-            <t t-if="message.rating and message.rating.id" t-call="website_rating.chatter_rating_publisher">
+            <t t-if="message.rating and message.rating.id" t-call="portal_rating.chatter_rating_publisher">
                 <t t-set="is_publisher" t-value="widget.options['is_user_publisher']"/>
                 <t t-set="rating" t-value="message.rating"/>
             </t>
@@ -38,7 +38,7 @@
     <t t-extend="portal.Chatter">
         <t t-jquery="t[t-call='portal.chatter_message_count']" t-operation="replace">
             <t t-if="widget.options['display_rating']">
-                <t t-call="website_rating.rating_card"/>
+                <t t-call="portal_rating.rating_card"/>
             </t>
             <t t-if="!widget.options['display_rating']">
                 <t t-call="portal.chatter_message_count"/>
@@ -49,7 +49,7 @@
     <!--
         New templates specific of rating in Chatter
     -->
-    <t t-name="website_rating.chatter_rating_publisher">
+    <t t-name="portal_rating.chatter_rating_publisher">
         <div class="o_wrating_publisher_container">
             <button t-if="is_publisher"
                 t-attf-class="btn px-2 btn-sm border o_wrating_js_publisher_comment_btn {{ rating.publisher_comment !== '' ? 'd-none' : '' }}"
@@ -57,12 +57,12 @@
                 <i class="fa fa-comment text-muted mr-1"/>Comment
             </button>
             <div class="o_wrating_publisher_comment mt-2 mb-2">
-                <t t-if="rating.publisher_comment" t-call="website_rating.chatter_rating_publisher_comment"/>
+                <t t-if="rating.publisher_comment" t-call="portal_rating.chatter_rating_publisher_comment"/>
             </div>
         </div>
     </t>
 
-    <t t-name="website_rating.chatter_rating_publisher_comment">
+    <t t-name="portal_rating.chatter_rating_publisher_comment">
         <div class="media o_portal_chatter_message">
             <img class="o_portal_chatter_avatar" t-att-src="rating.publisher_avatar" alt="avatar"/>
             <div class="media-body">
@@ -89,7 +89,7 @@
             </div>
         </div>
     </t>
-    <t t-name="website_rating.chatter_rating_publisher_form">
+    <t t-name="portal_rating.chatter_rating_publisher_form">
         <div t-if="is_publisher" class="media o_portal_chatter_message shadow bg-white rounded px-3 py-3 my-1">
             <img class="o_portal_chatter_avatar" t-att-src="rating.publisher_avatar" alt="avatar"/>
             <div class="media-body">

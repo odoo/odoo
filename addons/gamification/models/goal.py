@@ -219,7 +219,7 @@ class Goal(models.Model):
         self.message_notify(
             body=body_html,
             partner_ids=[self.user_id.partner_id.id],
-            subtype='mail.mt_comment',
+            subtype_xmlid='mail.mt_comment',
             email_layout_xmlid='mail.mail_notification_light',
         )
 

@@ -27,7 +27,7 @@ def _admin_password_warn(uid):
         .message_post(
             body=_("Your password is the default (admin)! If this system is exposed to untrusted users it is important to change it immediately for security reasons. I will keep nagging you about it!"),
             message_type='comment',
-            subtype='mail.mt_comment'
+            subtype_xmlid='mail.mt_comment'
         )
 
 class Home(web.Home):

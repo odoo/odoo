@@ -930,8 +930,8 @@ class Task(models.Model):
             return self.project_id.partner_id
         return res
 
-    def rating_apply(self, rate, token=None, feedback=None, subtype=None):
-        return super(Task, self).rating_apply(rate, token=token, feedback=feedback, subtype="project.mt_task_rating")
+    def rating_apply(self, rate, token=None, feedback=None, subtype_xmlid=None):
+        return super(Task, self).rating_apply(rate, token=token, feedback=feedback, subtype_xmlid="project.mt_task_rating")
 
     def _rating_get_parent_field_name(self):
         return 'project_id'
