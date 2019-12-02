@@ -12,7 +12,7 @@ class TestServerActionsEmail(TestMailCommon, TestServerActionsBase):
         self.action.write({'state': 'email', 'template_id': email_template.id})
         self.action.with_context(self.context).run()
         # check an email is waiting for sending
-        mail = self.env['mail.mail'].search([('subject', '=', 'About TestingPartner')])
+        mail = self.env['mail.mail'].sudo().search([('subject', '=', 'About TestingPartner')])
         self.assertEqual(len(mail), 1)
         # check email content
         self.assertEqual(mail.body, '<p>Hello TestingPartner</p>')

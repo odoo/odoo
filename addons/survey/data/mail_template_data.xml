@@ -42,7 +42,7 @@
             <field name="name">Survey: Send certification by email</field>
             <field name="model_id" ref="survey.model_survey_user_input"/>
             <field name="subject">Certification: ${object.survey_id.display_name}</field>
-            <field name="email_from">${(object.survey_id.create_uid.email_formatted or user.email_formatted or user.company_id.catchall) |safe}</field>
+            <field name="email_from">${(object.survey_id.create_uid.email_formatted or user.email_formatted or user.company_id.catchall_formatted) |safe}</field>
             <field name="email_to">${(object.partner_id.email_formatted or object.email) |safe}</field>
             <field name="body_html" type="xml">
                 <div style="background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;">

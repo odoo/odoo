@@ -199,7 +199,8 @@ class TxPaypal(models.Model):
                     'body_html': mail_body,
                     'subject': _('Add your Paypal account to Odoo'),
                     'email_to': self.acquirer_id.paypal_email_account,
-                    'email_from': self.acquirer_id.create_uid.email
+                    'email_from': self.acquirer_id.create_uid.email_formatted,
+                    'author_id': self.acquirer_id.create_uid.partner_id.id,
                 }
                 self.env['mail.mail'].sudo().create(mail_values).send()
 

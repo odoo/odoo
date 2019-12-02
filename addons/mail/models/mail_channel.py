@@ -367,7 +367,9 @@ class Channel(models.Model):
         # Notifies the message author when his message is pending moderation if required on channel.
         # The fields "email_from" and "reply_to" are filled in automatically by method create in model mail.message.
         if self.moderation_notify and self.moderation_notify_msg and message_type == 'email' and moderation_status == 'pending_moderation':
-            self.env['mail.mail'].create({
+            self.env['mail.mail'].sudo().create({
+                'author_id': self.env.user.partner_id.id,
+                'email_from': self.env.user.company_id.catchall_formatted or self.env.user.company_id.email_formatted,
                 'body_html': self.moderation_notify_msg,
                 'subject': 'Re: %s' % (kwargs.get('subject', '')),
                 'email_to': email,
@@ -418,12 +420,13 @@ class Channel(models.Model):
         ]).mapped('email')
         for partner in partners.filtered(lambda p: p.email and not (p.email in banned_emails)):
             create_values = {
+                'email_from': partner.company_id.catchall_formatted or partner.company_id.email_formatted,
+                'author_id': self.env.user.partner_id.id,
                 'body_html': view.render({'channel': self, 'partner': partner}, engine='ir.qweb', minimal_qcontext=True),
                 'subject': _("Guidelines of channel %s") % self.name,
-                'email_from': partner.company_id.catchall or partner.company_id.email,
                 'recipient_ids': [(4, partner.id)]
             }
-            mail = self.env['mail.mail'].create(create_values)
+            mail = self.env['mail.mail'].sudo().create(create_values)
         return True
 
     def _update_moderation_email(self, emails, status):

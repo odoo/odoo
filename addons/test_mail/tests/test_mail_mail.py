@@ -15,8 +15,7 @@ class TestMailMail(TestMailCommon):
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mail_message_notify_from_mail_mail(self):
         # Due ot post-commit hooks, store send emails in every step
-        # self.email_to_list = []
-        mail = self.env['mail.mail'].create({
+        mail = self.env['mail.mail'].sudo().create({
             'body_html': '<p>Test</p>',
             'email_to': 'test@example.com',
             'partner_ids': [(4, self.user_employee.partner_id.id)]
@@ -28,7 +27,7 @@ class TestMailMail(TestMailCommon):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mail_message_values_unicode(self):
-        mail = self.env['mail.mail'].create({
+        mail = self.env['mail.mail'].sudo().create({
             'body_html': '<p>Test</p>',
             'email_to': 'test.😊@example.com',
             'partner_ids': [(4, self.user_employee.partner_id.id)]
@@ -45,7 +44,7 @@ class TestMailMailRace(common.TransactionCase):
             'name': 'Ernest Partner',
         })
         # we need to simulate a mail sent by the cron task, first create mail, message and notification by hand
-        mail = self.env['mail.mail'].create({
+        mail = self.env['mail.mail'].sudo().create({
             'body_html': '<p>Test</p>',
             'notification': True,
             'state': 'outgoing',
