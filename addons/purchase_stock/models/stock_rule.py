@@ -137,7 +137,7 @@ class StockRule(models.Model):
         """
         delay, delay_description = super()._get_lead_days(product)
         buy_rule = self.filtered(lambda r: r.action == 'buy')
-        if not buy_rule or not product._prepare_sellers(False):
+        if not buy_rule or not product._prepare_sellers():
             return delay, delay_description
         buy_rule.ensure_one()
         supplier_delay = product._prepare_sellers()[0].delay
