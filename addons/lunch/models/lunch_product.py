@@ -12,7 +12,7 @@ class LunchProductCategory(models.Model):
     _inherit = 'image.mixin'
     _description = 'Lunch Product Category'
 
-    name = fields.Char('Product Category', required=True)
+    name = fields.Char('Product Category', required=True, translate=True)
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
     topping_label_1 = fields.Char('Extra 1 Label', required=True, default='Extras')
@@ -89,9 +89,9 @@ class LunchProduct(models.Model):
     _inherit = 'image.mixin'
     _order = 'name'
 
-    name = fields.Char('Product Name', required=True)
+    name = fields.Char('Product Name', required=True, translate=True)
     category_id = fields.Many2one('lunch.product.category', 'Product Category', required=True)
-    description = fields.Text('Description')
+    description = fields.Text('Description', translate=True)
     price = fields.Float('Price', digits='Account', required=True)
     supplier_id = fields.Many2one('lunch.supplier', 'Vendor', required=True)
     active = fields.Boolean(default=True)
