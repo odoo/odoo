@@ -234,6 +234,7 @@ class Partner(models.Model):
         for partner in self:
             partner.display_name = names.get(partner.id)
 
+    @api.depends('lang')
     def _compute_active_lang_count(self):
         lang_count = len(self.env['res.lang'].get_installed())
         for partner in self:
