@@ -163,7 +163,7 @@ class Inventory(models.Model):
         self.ensure_one()
         action = {
             'type': 'ir.actions.act_window',
-            'views': [(self.env.ref('stock.stock_inventory_line_tree2').id, 'tree')],
+            'views': [(self.env.ref('stock.stock_inventory_line_tree').id, 'tree')],
             'view_mode': 'tree',
             'name': _('Inventory Lines'),
             'res_model': 'stock.inventory.line',
@@ -357,7 +357,6 @@ class InventoryLine(models.Model):
 
     @api.onchange('product_id', 'location_id', 'product_uom_id', 'prod_lot_id', 'partner_id', 'package_id')
     def _onchange_quantity_context(self):
-        product_qty = False
         if self.product_id:
             self.product_uom_id = self.product_id.uom_id
         if self.product_id and self.location_id and self.product_id.uom_id.category_id == self.product_uom_id.category_id:  # TDE FIXME: last part added because crash
