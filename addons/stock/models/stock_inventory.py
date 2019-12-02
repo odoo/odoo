@@ -58,6 +58,10 @@ class Inventory(models.Model):
         help="Allows to start with prefill counted quantity for each lines or "
         "with all counted quantity set to zero.", default='counted',
         selection=[('counted', 'Default to stock on hand'), ('zero', 'Default to zero')])
+    exhausted = fields.Boolean(
+        'Include Exhausted Products', readonly=True,
+        states={'draft': [('readonly', False)]},
+        help="Include also products with quantity of 0")
 
     @api.onchange('company_id')
     def _onchange_company_id(self):
@@ -206,8 +210,7 @@ class Inventory(models.Model):
         return action
 
     def _get_quantities(self):
-        """
-        Return quantities group by product_id, location_id, lot_id, package_id and owner_id
+        """Return quantities group by product_id, location_id, lot_id, package_id and owner_id
 
         :return: a dict with keys as tuple of group by and quantity as value
         :rtype: dict
@@ -240,9 +243,44 @@ class Inventory(models.Model):
             quant['quantity'] for quant in quants
         }
 
-    def _get_inventory_lines_values(self):
+    def _get_exhausted_inventory_lines_vals(self, non_exhausted_set):
+        """Return the values of the inventory lines to create if the user
+        wants to include exhausted products. Exhausted products are products
+        without quantities or quantity equal to 0.
+
+        :param non_exhausted_set: set of tuple (product_id, location_id) of non exhausted product-location
+        :return: a list containing the `stock.inventory.line` values to create
+        :rtype: list
         """
-        Return the values of the inventory lines to create for this inventory.
+        self.ensure_one()
+        if self.product_ids:
+            product_ids = self.product_ids.ids
+        else:
+            product_ids = self.env['product.product'].search_read([
+                '|', ('company_id', '=', self.company_id.id), ('company_id', '=', False),
+                ('type', '=', 'product'),
+                ('active', '=', True)], ['id'])
+            product_ids = [p['id'] for p in product_ids]
+
+        if self.location_ids:
+            location_ids = self.location_ids.ids
+        else:
+            location_ids = self.env['stock.warehouse'].search([('company_id', '=', self.company_id.id)]).lot_stock_id.ids
+
+        vals = []
+        for product_id in product_ids:
+            for location_id in location_ids:
+                if ((product_id, location_id) not in non_exhausted_set):
+                    vals.append({
+                        'inventory_id': self.id,
+                        'product_id': product_id,
+                        'location_id': location_id,
+                        'theoretical_qty': 0
+                    })
+        return vals
+
+    def _get_inventory_lines_values(self):
+        """Return the values of the inventory lines to create for this inventory.
 
         :return: a list containing the `stock.inventory.line` values to create
         :rtype: list
@@ -263,6 +301,8 @@ class Inventory(models.Model):
             }
             line_values['product_uom_id'] = self.env['product.product'].browse(product_id).uom_id.id
             vals.append(line_values)
+        if self.exhausted:
+            vals += self._get_exhausted_inventory_lines_vals({(l['product_id'], l['location_id']) for l in vals})
         return vals
 
 
