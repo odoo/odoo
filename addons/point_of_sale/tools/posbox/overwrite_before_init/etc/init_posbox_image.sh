@@ -55,6 +55,7 @@ PKGS_TO_INSTALL="
     x11-utils \
     xserver-xorg-video-dummy \
     openbox \
+    fbi \
     rpi-update \
     adduser \
     libpq-dev \
@@ -155,6 +156,7 @@ systemctl enable autologin@.service
 systemctl disable systemd-timesyncd.service
 systemctl unmask hostapd.service
 systemctl disable hostapd.service
+systemctl enable splashscreen.service
 
 # disable overscan in /boot/config.txt, we can't use
 # overwrite_after_init because it's on a different device
@@ -163,8 +165,17 @@ systemctl disable hostapd.service
 # cf: https://www.raspberrypi.org/documentation/configuration/raspi-config.md
 echo "disable_overscan=1" >> /boot/config.txt
 
+# Disable the Raspberry Pi ‘color test’
+echo "disable_splash=1" >> /boot/config.txt
+
 # Separate framebuffers for both screens on RPI4
 sed -i '/dtoverlay/d' /boot/config.txt
+
+# Send the various bits of output from the kernel and friends to console tty2
+sed -ie "s/console=tty1/console=tty2/g" /boot/cmdline.txt
+
+# Add Odoo splash screen / remove raspberries logo
+sed -i "$ s/$/ splash logo.nologo/" /boot/cmdline.txt
 
 # exclude /drivers folder from git info to be able to load specific drivers
 echo "addons/hw_drivers/drivers/" > /home/pi/odoo/.git/info/exclude
