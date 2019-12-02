@@ -11,19 +11,34 @@
                             <button class="oe_stat_button" name="account.action_move_line_select"
                                 string="Journal Items" type="action" icon="fa-bars"/>
                         </div>
-                       <group>
-                           <group>
+                       <div class="oe_title">
+                           <h1 class= "oe_read_only">
+                             <field name="code" placeholder="code"/> - <field name="name" placeholder="name"/>
+                           </h1>
+                           <div class="oe_inline oe_edit_only">
+                             <label for="code"/>
                              <field name="code" placeholder="code"/>
-                             <field name="name"/>
-                             <field name="user_type_id" widget="account_hierarchy_selection"/>
-                             <field name="tax_ids" widget="many2many_tags" domain="[('company_id','=',company_id)]" attrs="{'invisible': [('internal_group', '=', 'off_balance')]}"/>
-                             <field name="tag_ids" widget="many2many_tags" domain="[('applicability', '!=', 'taxes')]" context="{'default_applicability': 'accounts'}" options="{'no_create_edit': True}"/>
-                             <field name="allowed_journal_ids" widget="many2many_tags" domain="[('company_id','=',company_id)]" options="{'no_create_edit': True}"/>
+                             <label for="name"/>
+                             <field name="name" placeholder="name"/>
+                           </div>
+                       </div>
+                       <group>
+                           <group name="left_main_group">
                              <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
-                             <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
+                             <field name="user_type_id" widget="account_hierarchy_selection"/>
                              <field name="internal_type" invisible="1" readonly="1"/>
                              <field name="internal_group" invisible="1" readonly="1"/>
+                           </group>
+                           <group name="right_main_group">
+                             <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                              <field name="deprecated"/>
+                           </group>
+                           <group string="Account Options" name="options_group">
+                             <field name="tax_ids" widget="many2many_tags" domain="[('company_id','=',company_id)]" attrs="{'invisible': [('internal_group', '=', 'off_balance')]}"/>
+                             <field name="tag_ids" widget="many2many_tags" domain="[('applicability', '!=', 'taxes')]" context="{'default_applicability': 'accounts'}" options="{'no_create_edit': True}"/>
+                           </group>
+                           <group string="Security" name="secutiry_group">
+                             <field name="allowed_journal_ids" widget="many2many_tags" domain="[('company_id','=',company_id)]" options="{'no_create_edit': True}"/>
                            </group>
                        </group>
                     </sheet>
