@@ -88,8 +88,6 @@ odoo.define('website_slides.quiz', function (require) {
         start: function() {
             var self = this;
             return this._super.apply(this, arguments).then(function ()  {
-                self._renderAnswers();
-                self._renderAnswersHighlighting();
                 self._renderValidationInfo();
                 self._bindSortable();
                 self._checkLocationHref();
@@ -207,8 +205,9 @@ odoo.define('website_slides.quiz', function (require) {
          * @private
          * Decorate the answers according to state
          */
-        _renderAnswers: function () {
+        _disableAnswers: function () {
             var self = this;
+            this.$('.o_wslides_js_lesson_quiz_question').addClass('completed-disabled');
             this.$('input[type=radio]').each(function () {
                 $(this).prop('disabled', self.slide.readonly || self.slide.completed);
             });
@@ -217,29 +216,37 @@ odoo.define('website_slides.quiz', function (require) {
         /**
          * @private
          * Decorate the answer inputs according to the correction
+         * and adds the answer comment if any
          */
-        _renderAnswersHighlighting: function () {
+        _renderAnswersHighlightingAndComments: function () {
             var self = this;
-            this.$('a.o_wslides_quiz_answer').each(function () {
-                var $answer = $(this);
-                var answerId = $answer.data('answerId');
-                if (_.contains(self.quiz.goodAnswers, answerId)) {
-                    $answer.removeClass('list-group-item-danger').addClass('list-group-item-success');
-                    $answer.find('i.fa').addClass('d-none');
-                    $answer.find('i.fa-check-circle').removeClass('d-none');
-                }
-                else if (_.contains(self.quiz.badAnswers, answerId)) {
-                    $answer.removeClass('list-group-item-success').addClass('list-group-item-danger');
-                    $answer.find('i.fa').addClass('d-none');
-                    $answer.find('i.fa-times-circle').removeClass('d-none');
-                    $answer.find('label input').prop('checked', false);
-                }
-                else {
-                    if (!self.slide.completed) {
+            this.$('.o_wslides_js_lesson_quiz_question').each(function () {
+                var $question = $(this);
+                var questionId = $question.data('questionId');
+                var isCorrect = self.quiz.answers[questionId].is_correct;
+                $question.find('a.o_wslides_quiz_answer ').each(function () {
+                    var $answer = $(this);
+                    if ($answer.find('input[type=radio]')[0].checked) {
+                        if (isCorrect) {
+                            $answer.removeClass('list-group-item-danger').addClass('list-group-item-success');
+                            $answer.find('i.fa').addClass('d-none');
+                            $answer.find('i.fa-check-circle').removeClass('d-none');
+                        } else {
+                            $answer.removeClass('list-group-item-success').addClass('list-group-item-danger');
+                            $answer.find('i.fa').addClass('d-none');
+                            $answer.find('i.fa-times-circle').removeClass('d-none');
+                            $answer.find('label input').prop('checked', false);
+                        }
+                    } else {
                         $answer.removeClass('list-group-item-danger list-group-item-success');
                         $answer.find('i.fa').addClass('d-none');
                         $answer.find('i.fa-circle').removeClass('d-none');
                     }
+                });
+                var comment = self.quiz.answers[questionId].comment;
+                if (comment) {
+                    $question.find('.o_wslides_quiz_answer_info').removeClass('d-none');
+                    $question.find('.o_wslides_quiz_answer_comment').text(comment);
                 }
             });
         },
@@ -273,6 +280,7 @@ odoo.define('website_slides.quiz', function (require) {
                 } else {
                     self.quiz = _.extend(self.quiz, data);
                     if (data.completed) {
+                        self._disableAnswers();
                         new SlideQuizFinishModal(self, {
                             quiz: self.quiz,
                             hasNext: self.slide.hasNext,
@@ -282,7 +290,7 @@ odoo.define('website_slides.quiz', function (require) {
                         self.trigger_up('slide_completed', {slide: self.slide, completion: data.channel_completion});
                     }
                     self._hideEditOptions();
-                    self._renderAnswersHighlighting();
+                    self._renderAnswersHighlightingAndComments();
                     self._renderValidationInfo();
                 }
             });
@@ -301,7 +309,8 @@ odoo.define('website_slides.quiz', function (require) {
                 answers.push({
                     'id': $(this).data('answerId'),
                     'text_value': $(this).data('text'),
-                    'is_correct': $(this).data('isCorrect')
+                    'is_correct': $(this).data('isCorrect'),
+                    'comment': $(this).data('comment')
                 });
             });
             return {
