@@ -186,7 +186,7 @@ class SurveyUserInput(models.Model):
     # CREATE / UPDATE LINES FROM SURVEY FRONTEND INPUT
     # ------------------------------------------------------------
 
-    def save_lines(self, question, answer, comment=None):
+    def save_lines(self, question, answer, comment=None, skip=False):
         """ Save answers to questions, depending on question type
 
             If an answer already exists for question and user_input_id, it will be
