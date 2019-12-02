@@ -5,19 +5,6 @@
         <field name="name">stock.inventory.line.tree</field>
         <field name="model">stock.inventory.line</field>
         <field name="arch" type="xml">
-            <tree string="Stock Inventory Lines">
-                <field name="product_id"/>
-                <field name="product_qty"/>
-                <field name="product_uom_id" groups="uom.group_uom"/>
-                <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
-            </tree>
-        </field>
-    </record>
-
-    <record id="stock_inventory_line_tree2" model="ir.ui.view">
-        <field name="name">stock.inventory.line.tree2</field>
-        <field name="model">stock.inventory.line</field>
-        <field name="arch" type="xml">
             <tree default_order="location_id,product_id" editable="top" string="Inventory Details" js_class="inventory_validate_button"
                   decoration-danger="product_qty != theoretical_qty"
                   decoration-muted="product_qty == theoretical_qty"
