@@ -83,11 +83,13 @@ $o-wslides-fs-side-width: 300px;
         }
     }
 
-    .o_wsildes_quiz_question_input {
-        .o_wslides_js_quiz_is_correct > label,
-        .o_wslides_js_quiz_add_answer,
-        .o_wslides_js_quiz_remove_answer {
+    .o_wslides_js_lesson_quiz {
+        i.o_wslides_js_quiz_icon {
             cursor: pointer;
+        }
+
+        i.o_wslides_js_quiz_icon:hover {
+            color: black !important;
         }
     }
 
@@ -105,20 +107,6 @@ $o-wslides-fs-side-width: 300px;
             pointer-events: none;
         }
 
-        .o_wslides_js_quiz_edit_question,
-        .o_wslides_js_quiz_delete_question {
-            cursor: pointer;
-        }
-
-        .o_wslides_js_quiz_sequence_handler {
-            cursor: pointer;
-            opacity: 0.4;
-        }
-
-        .o_wslides_js_quiz_sequence_handler:hover {
-            opacity: 1;
-        }
-
         &.completed-disabled{
             pointer-events: none;
         }
@@ -127,7 +115,7 @@ $o-wslides-fs-side-width: 300px;
     a.o_wslides_js_quiz_is_correct {
         color: black;
         input:checked + i.fa-check-circle-o {
-            color: $primary;
+            color: $primary !important;
         }
     }
 

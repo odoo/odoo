@@ -133,7 +133,8 @@ class WebsiteSlides(WebsiteProfile):
                 'answer_ids': [{
                     'id': answer.id,
                     'text_value': answer.text_value,
-                    'is_correct': answer.is_correct if slide_completed or request.website.is_publisher() else None
+                    'is_correct': answer.is_correct if slide_completed or request.website.is_publisher() else None,
+                    'comment': answer.comment if request.website.is_publisher else None
                 } for answer in question.sudo().answer_ids],
             } for question in slide.question_ids]
         }
@@ -753,7 +754,8 @@ class WebsiteSlides(WebsiteProfile):
             'answer_ids': [(0, 0, {
                 'sequence': answer['sequence'],
                 'text_value': answer['text_value'],
-                'is_correct': answer['is_correct']
+                'is_correct': answer['is_correct'],
+                'comment': answer['comment']
             }) for answer in answer_ids]
         })
         return request.env.ref('website_slides.lesson_content_quiz_question').render({
@@ -798,7 +800,6 @@ class WebsiteSlides(WebsiteProfile):
             return {'error': 'slide_quiz_incomplete'}
 
         user_bad_answers = user_answers.filtered(lambda answer: not answer.is_correct)
-        user_good_answers = user_answers - user_bad_answers
 
         self._set_viewed_slide(slide, quiz_attempts_inc=True)
         quiz_info = self._get_slide_quiz_partner_info(slide, quiz_done=True)
@@ -815,8 +816,12 @@ class WebsiteSlides(WebsiteProfile):
                 'level_up': rank_progress['previous_rank']['lower_bound'] != rank_progress['new_rank']['lower_bound']
             })
         return {
-            'goodAnswers': user_good_answers.ids,
-            'badAnswers': user_bad_answers.ids,
+            'answers': {
+                answer.question_id.id: {
+                    'is_correct': answer.is_correct,
+                    'comment': answer.comment
+                } for answer in user_answers
+            },
             'completed': slide.user_membership_id.sudo().completed,
             'channel_completion': slide.channel_id.completion,
             'quizKarmaWon': quiz_info['quiz_karma_won'],
