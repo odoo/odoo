@@ -4,8 +4,8 @@
 {
     'name': 'Denmark - Accounting',
     'version': '1.0',
-    'author': 'Odoo House ApS',
-    'website': 'https://odoohouse.dk',
+    'author': 'Odoo Denmark',
+    'website': 'https://odoodanmark.dk',
     'category': 'Localization',
     'description': """
 
