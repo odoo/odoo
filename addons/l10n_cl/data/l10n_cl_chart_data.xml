@@ -348,7 +348,7 @@
         <field name="code">110640</field>
         <field name="name">Existencias en Tránsito</field>
         <field ref="account.data_account_type_current_assets" name="user_type_id"/>
-        <field name="reconcile" eval="False"/>
+        <field name="reconcile" eval="True"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
     </record>
 
@@ -786,7 +786,7 @@
         <field name="code">210230</field>
         <field name="name">Facturas por Recibir</field>
         <field ref="account.data_account_type_current_liabilities" name="user_type_id"/>
-        <field name="reconcile" eval="False"/>
+        <field name="reconcile" eval="True"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
     </record>
 
@@ -1667,12 +1667,14 @@
     <record id="cl_chart_template" model="account.chart.template">
         <field name="property_account_receivable_id" ref="account_110310"/>
         <field name="property_account_payable_id" ref="account_210210"/>
-        <field name="property_account_expense_categ_id" ref="account_410230"/>
+        <field name="property_account_expense_categ_id" ref="account_410235"/>
         <field name="property_account_income_categ_id" ref="account_310115"/>
         <field name="income_currency_exchange_account_id" ref="account_410195"/>
         <field name="expense_currency_exchange_account_id" ref="account_410195"/>
         <field name="default_pos_receivable_account_id" ref="account_110421"/>
-        <!--<field name="transfer_account_id" ref="transfer_account_id"/>-->
+        <field name="property_stock_account_input_categ_id" ref="account_210230"/>
+        <field name="property_stock_account_output_categ_id" ref="account_110640"/>
+        <field name="property_stock_valuation_account_id" ref="account_110610"/>
     </record>
 
 </odoo>
