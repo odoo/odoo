@@ -95,6 +95,16 @@ class ProductProduct(models.Model):
     value_svl = fields.Float(compute='_compute_value_svl')
     quantity_svl = fields.Float(compute='_compute_value_svl')
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'product_id')
+    valuation = fields.Selection(related="categ_id.property_valuation", readonly=True)
+
+    def write(self, vals):
+        if 'standard_price' in vals and not self.env.context.get('disable_auto_svl'):
+            for product_product in self:
+                if product_product.cost_method != 'fifo':
+                    counterpart_account_id = product_product.property_account_expense_id.id or product_product.categ_id.property_account_expense_categ_id.id
+                    product_product._change_standard_price(vals['standard_price'], counterpart_account_id)
+
+        return super(ProductProduct, self).write(vals)
 
     @api.depends('stock_valuation_layer_ids')
     @api.depends_context('to_date', 'company')
@@ -172,6 +182,10 @@ class ProductProduct(models.Model):
         :param new_price: new standard price
         """
         # Handle stock valuation layers.
+
+        if self.valuation == 'real_time' and not self.env['account.move'].check_access_rights('create', raise_exception=False):
+            raise UserError(_("You cannot update the cost of a product in automated valuation as it leads to the creation of a journal entry, for which you don't have the access rights."))
+
         svl_vals_list = []
         company_id = self.env.company
         for product in self:
@@ -223,6 +237,7 @@ class ProductProduct(models.Model):
                 'company_id': company_id.id,
                 'ref': product.default_code,
                 'stock_valuation_layer_ids': [(6, None, [stock_valuation_layer.id])],
+                'type': 'entry',
                 'line_ids': [(0, 0, {
                     'name': _('%s changed cost from %s to %s - %s') % (self.env.user.name, product.standard_price, new_price, product.display_name),
                     'account_id': debit_account_id,
@@ -238,11 +253,9 @@ class ProductProduct(models.Model):
                 })],
             }
             am_vals_list.append(move_vals)
-        account_moves = self.env['account.move'].create(am_vals_list)
-        account_moves.post()
 
-        # Actually update the standard price.
-        self.with_company(company_id).sudo().write({'standard_price': new_price})
+        account_moves = self.env['account.move'].sudo().create(am_vals_list)
+        account_moves.post()
 
     def _run_fifo(self, quantity, company):
         self.ensure_one()
@@ -279,7 +292,7 @@ class ProductProduct(models.Model):
 
         # Update the standard price with the price of the last used candidate, if any.
         if new_standard_price and self.cost_method == 'fifo':
-            self.sudo().with_company(company.id).standard_price = new_standard_price
+            self.sudo().with_company(company.id).with_context(disable_auto_svl=True).standard_price = new_standard_price
 
         # If there's still quantity to value but we're out of candidates, we fall in the
         # negative stock use case. We chose to value the out move at the price of the

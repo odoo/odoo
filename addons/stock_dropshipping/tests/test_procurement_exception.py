@@ -21,9 +21,8 @@ class TestProcurementException(common.TransactionCase):
         product_form.categ_id = self.env.ref('product.product_category_1')
         product_with_no_seller = product_form.save()
 
-        std_price_wiz = Form(self.env['stock.change.standard.price'].with_context(active_id=product_with_no_seller.id, active_model='product.product'))
-        std_price_wiz.new_price = 70.0
-        std_price_wiz.save()
+        product_with_no_seller.standard_price = 70.0
+
         # I create a sales order with this product with route dropship.
         so_form = Form(self.env['sale.order'])
         so_form.partner_id = res_partner_2
