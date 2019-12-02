@@ -11,8 +11,30 @@
         <field name="type_tax_use">sale</field>
         <field name="price_include">False</field>
         <field name="tax_group_id" ref="tax_group_iva_22"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'account_id': ref('2601'), 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'account_id': ref('2601'), 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
     <record id="22a" model="account.tax.template">
@@ -25,8 +47,30 @@
         <field name="type_tax_use">purchase</field>
         <field name="price_include">False</field>
         <field name="tax_group_id" ref="tax_group_iva_22"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'account_id': ref('1601'), 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'account_id': ref('1601'), 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
     <record id="21v" model="account.tax.template">
@@ -39,8 +83,30 @@
         <field name="type_tax_use">sale</field>
         <field name="price_include">False</field>
         <field name="tax_group_id" ref="tax_group_iva_21"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'account_id': ref('2601'), 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'account_id': ref('2601'), 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
     <record id="21a" model="account.tax.template">
@@ -53,8 +119,30 @@
         <field name="type_tax_use">purchase</field>
         <field name="price_include">False</field>
         <field name="tax_group_id" ref="tax_group_iva_21"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'account_id': ref('1601'), 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'account_id': ref('1601'), 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
     <record id="20v" model="account.tax.template">
@@ -67,8 +155,30 @@
         <field name="type_tax_use">sale</field>
         <field name="price_include">False</field>
         <field name="tax_group_id" ref="tax_group_iva_20"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'account_id': ref('2601'), 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'account_id': ref('2601'), 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
     <record id="20a" model="account.tax.template">
@@ -81,8 +191,30 @@
         <field name="type_tax_use">purchase</field>
         <field name="price_include">False</field>
         <field name="tax_group_id" ref="tax_group_iva_20"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'account_id': ref('1601'), 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'account_id': ref('1601'), 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
     <record id="5v" model="account.tax.template">
@@ -95,8 +227,30 @@
         <field name="type_tax_use">sale</field>
         <field name="price_include">False</field>
         <field name="tax_group_id" ref="tax_group_iva_5"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'account_id': ref('2601'), 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'account_id': ref('2601'), 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
     <record id="5a" model="account.tax.template">
@@ -109,8 +263,30 @@
         <field name="type_tax_use">purchase</field>
         <field name="price_include">False</field>
         <field name="tax_group_id" ref="tax_group_iva_5"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'account_id': ref('1601'), 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'account_id': ref('1601'), 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
     <record id="10v" model="account.tax.template">
@@ -123,8 +299,30 @@
         <field name="type_tax_use">sale</field>
         <field name="price_include">False</field>
         <field name="tax_group_id" ref="tax_group_iva_10"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'account_id': ref('2601'), 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'account_id': ref('2601'), 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
     <record id="10a" model="account.tax.template">
@@ -137,8 +335,30 @@
         <field name="type_tax_use">purchase</field>
         <field name="price_include">False</field>
         <field name="tax_group_id" ref="tax_group_iva_10"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'account_id': ref('1601'), 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'account_id': ref('1601'), 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
     <record id="10AO" model="account.tax.template">
@@ -151,8 +371,28 @@
         <field name="type_tax_use">purchase</field>
         <field name="price_include">False</field>
         <field name="tax_group_id" ref="tax_group_iva_10"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
     <record id="12v" model="account.tax.template">
@@ -165,8 +405,30 @@
         <field name="type_tax_use">sale</field>
         <field name="price_include">False</field>
         <field name="tax_group_id" ref="tax_group_iva_12"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'account_id': ref('2601'), 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'account_id': ref('2601'), 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
     <record id="12a" model="account.tax.template">
@@ -179,8 +441,30 @@
         <field name="type_tax_use">purchase</field>
         <field name="price_include">False</field>
         <field name="tax_group_id" ref="tax_group_iva_12"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'account_id': ref('1601'), 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'account_id': ref('1601'), 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
     <record id="2010" model="account.tax.template">
@@ -193,8 +477,40 @@
         <field name="type_tax_use">purchase</field>
         <field name="price_include">False</field>
         <field name="tax_group_id" ref="tax_group_iva_20_de_10"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 10, 'repartition_type': 'tax', 'account_id': ref('1601'), 'tag_ids': [ref('VP4')]}), (0, 0, {'factor_percent': 90, 'repartition_type': 'tax', 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 10, 'repartition_type': 'tax', 'account_id': ref('1601'), 'tag_ids': [ref('VP5')]}), (0, 0, {'factor_percent': 90, 'repartition_type': 'tax', 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 10,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'tag_ids': [ref('VP4')]
+            }),
+            (0, 0, {
+                'factor_percent': 90,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 10,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'tag_ids': [ref('VP5')]
+            }),
+            (0, 0, {
+                'factor_percent': 90,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
     <record id="2015" model="account.tax.template">
@@ -207,8 +523,40 @@
         <field name="type_tax_use">purchase</field>
         <field name="price_include">False</field>
         <field name="tax_group_id" ref="tax_group_iva_20_de_15"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 15, 'repartition_type': 'tax', 'account_id': ref('1601'), 'tag_ids': [ref('VP4')]}), (0, 0, {'factor_percent': 85, 'repartition_type': 'tax', 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 15, 'repartition_type': 'tax', 'account_id': ref('1601'), 'tag_ids': [ref('VP5')]}), (0, 0, {'factor_percent': 85, 'repartition_type': 'tax', 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 15,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'tag_ids': [ref('VP4')]
+            }),
+            (0, 0, {
+                'factor_percent': 85,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 15,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'tag_ids': [ref('VP5')]
+            }),
+            (0, 0, {
+                'factor_percent': 85,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
     <record id="2040" model="account.tax.template">
@@ -221,8 +569,40 @@
         <field name="type_tax_use">purchase</field>
         <field name="price_include">False</field>
         <field name="tax_group_id" ref="tax_group_iva_20_de_40"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 40, 'repartition_type': 'tax', 'account_id': ref('1601'), 'tag_ids': [ref('VP4')]}), (0, 0, {'factor_percent': 60, 'repartition_type': 'tax', 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 40, 'repartition_type': 'tax', 'account_id': ref('1601'), 'tag_ids': [ref('VP5')]}), (0, 0, {'factor_percent': 60, 'repartition_type': 'tax', 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 40,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'tag_ids': [ref('VP4')]
+            }),
+            (0, 0, {
+                'factor_percent': 60,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 40,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'tag_ids': [ref('VP5')]
+            }),
+            (0, 0, {
+                'factor_percent': 60,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
     <record id="20AO" model="account.tax.template">
@@ -235,8 +615,28 @@
         <field name="type_tax_use">purchase</field>
         <field name="price_include">False</field>
         <field name="tax_group_id" ref="tax_group_iva_20"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
     <record id="20I5" model="account.tax.template">
@@ -249,8 +649,40 @@
         <field name="type_tax_use">purchase</field>
         <field name="price_include">False</field>
         <field name="tax_group_id" ref="tax_group_iva_20_de_50"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 50, 'repartition_type': 'tax', 'account_id': ref('1601'), 'tag_ids': [ref('VP4')]}), (0, 0, {'factor_percent': 50, 'repartition_type': 'tax', 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 50, 'repartition_type': 'tax', 'account_id': ref('1601'), 'tag_ids': [ref('VP5')]}), (0, 0, {'factor_percent': 50, 'repartition_type': 'tax', 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'tag_ids': [ref('VP4')]
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'tag_ids': [ref('VP5')]
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
     <record id="2v" model="account.tax.template">
@@ -263,8 +695,30 @@
         <field name="type_tax_use">sale</field>
         <field name="price_include">False</field>
         <field name="tax_group_id" ref="tax_group_iva_2"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'account_id': ref('2601'), 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'account_id': ref('2601'), 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
     <record id="2a" model="account.tax.template">
@@ -277,8 +731,30 @@
         <field name="type_tax_use">purchase</field>
         <field name="price_include">False</field>
         <field name="tax_group_id" ref="tax_group_iva_2"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'account_id': ref('1601'), 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'account_id': ref('1601'), 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
     <record id="4v" model="account.tax.template">
@@ -291,8 +767,30 @@
         <field name="type_tax_use">sale</field>
         <field name="price_include">False</field>
         <field name="tax_group_id" ref="tax_group_iva_4"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'account_id': ref('2601'), 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'account_id': ref('2601'), 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
     <record id="4a" model="account.tax.template">
@@ -305,8 +803,30 @@
         <field name="type_tax_use">purchase</field>
         <field name="price_include">False</field>
         <field name="tax_group_id" ref="tax_group_iva_4"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'account_id': ref('1601'), 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'account_id': ref('1601'), 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
     <record id="4AO" model="account.tax.template">
@@ -319,8 +839,28 @@
         <field name="type_tax_use">purchase</field>
         <field name="price_include">False</field>
         <field name="tax_group_id" ref="tax_group_iva_4"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
     <record id="10I5" model="account.tax.template">
@@ -333,8 +873,40 @@
         <field name="type_tax_use">purchase</field>
         <field name="price_include">False</field>
         <field name="tax_group_id" ref="tax_group_iva_10_de_50"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 50, 'repartition_type': 'tax', 'account_id': ref('1601'), 'tag_ids': [ref('VP4')]}), (0, 0, {'factor_percent': 50, 'repartition_type': 'tax', 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 50, 'repartition_type': 'tax', 'account_id': ref('1601'), 'tag_ids': [ref('VP5')]}), (0, 0, {'factor_percent': 50, 'repartition_type': 'tax', 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'tag_ids': [ref('VP4')]
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'tag_ids': [ref('VP5')]
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
     <record id="4I5" model="account.tax.template">
@@ -347,8 +919,40 @@
         <field name="type_tax_use">purchase</field>
         <field name="price_include">False</field>
         <field name="tax_group_id" ref="tax_group_iva_4_de_50"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 50, 'repartition_type': 'tax', 'account_id': ref('1601'), 'tag_ids': [ref('VP4')]}), (0, 0, {'factor_percent': 50, 'repartition_type': 'tax', 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 50, 'repartition_type': 'tax', 'account_id': ref('1601'), 'tag_ids': [ref('VP5')]}), (0, 0, {'factor_percent': 50, 'repartition_type': 'tax', 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'tag_ids': [ref('VP4')]
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'tag_ids': [ref('VP5')]
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
     <record id="00v" model="account.tax.template">
@@ -361,8 +965,28 @@
         <field name="type_tax_use">sale</field>
         <field name="price_include">False</field>
         <field name="tax_group_id" ref="tax_group_fuori"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
     <record id="00a" model="account.tax.template">
@@ -375,8 +999,28 @@
         <field name="type_tax_use">purchase</field>
         <field name="price_include">False</field>
         <field name="tax_group_id" ref="tax_group_fuori"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
     <record id="00art15v" model="account.tax.template">
@@ -389,8 +1033,28 @@
         <field name="type_tax_use">sale</field>
         <field name="price_include">False</field>
         <field name="tax_group_id" ref="tax_group_imp_esc_art_15"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
     <record id="00art15a" model="account.tax.template">
@@ -403,8 +1067,28 @@
         <field name="type_tax_use">purchase</field>
         <field name="price_include">False</field>
         <field name="tax_group_id" ref="tax_group_imp_esc_art_15"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
     <record id="22v_INC" model="account.tax.template">
@@ -417,8 +1101,30 @@
         <field name="type_tax_use">sale</field>
         <field name="price_include">True</field>
         <field name="tax_group_id" ref="tax_group_iva_22"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'account_id': ref('2601'), 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'account_id': ref('2601'), 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
     <record id="21v_INC" model="account.tax.template">
@@ -431,8 +1137,30 @@
         <field name="type_tax_use">sale</field>
         <field name="price_include">True</field>
         <field name="tax_group_id" ref="tax_group_iva_21"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'account_id': ref('2601'), 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'account_id': ref('2601'), 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
     <record id="20v_INC" model="account.tax.template">
@@ -445,8 +1173,30 @@
         <field name="type_tax_use">sale</field>
         <field name="price_include">True</field>
         <field name="tax_group_id" ref="tax_group_iva_20"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'account_id': ref('2601'), 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'account_id': ref('2601'), 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
     <record id="10v_INC" model="account.tax.template">
@@ -459,8 +1209,30 @@
         <field name="type_tax_use">sale</field>
         <field name="price_include">True</field>
         <field name="tax_group_id" ref="tax_group_iva_10"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'account_id': ref('2601'), 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'account_id': ref('2601'), 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
     <record id="12v_INC" model="account.tax.template">
@@ -473,8 +1245,30 @@
         <field name="type_tax_use">sale</field>
         <field name="price_include">True</field>
         <field name="tax_group_id" ref="tax_group_iva_12"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'account_id': ref('2601'), 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'account_id': ref('2601'), 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
     <record id="2v_INC" model="account.tax.template">
@@ -487,8 +1281,30 @@
         <field name="type_tax_use">sale</field>
         <field name="price_include">True</field>
         <field name="tax_group_id" ref="tax_group_iva_2"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'account_id': ref('2601'), 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'account_id': ref('2601'), 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
     <record id="4v_INC" model="account.tax.template">
@@ -501,8 +1317,30 @@
         <field name="type_tax_use">sale</field>
         <field name="price_include">True</field>
         <field name="tax_group_id" ref="tax_group_iva_4"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'account_id': ref('2601'), 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'account_id': ref('2601'), 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
     <record id="00v_INC" model="account.tax.template">
@@ -515,8 +1353,28 @@
         <field name="type_tax_use">sale</field>
         <field name="price_include">True</field>
         <field name="tax_group_id" ref="tax_group_fuori"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
     <record id="2110" model="account.tax.template">
@@ -529,8 +1387,40 @@
         <field name="type_tax_use">purchase</field>
         <field name="price_include">False</field>
         <field name="tax_group_id" ref="tax_group_iva_21_de_10"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 10, 'repartition_type': 'tax', 'account_id': ref('1601'), 'tag_ids': [ref('VP4')]}), (0, 0, {'factor_percent': 90, 'repartition_type': 'tax', 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 10, 'repartition_type': 'tax', 'account_id': ref('1601'), 'tag_ids': [ref('VP5')]}), (0, 0, {'factor_percent': 90, 'repartition_type': 'tax', 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 10,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'tag_ids': [ref('VP4')]
+            }),
+            (0, 0, {
+                'factor_percent': 90,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 10,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'tag_ids': [ref('VP5')]
+            }),
+            (0, 0, {
+                'factor_percent': 90,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
     <record id="2115" model="account.tax.template">
@@ -543,8 +1433,40 @@
         <field name="type_tax_use">purchase</field>
         <field name="price_include">False</field>
         <field name="tax_group_id" ref="tax_group_iva_21_de_15"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 15, 'repartition_type': 'tax', 'account_id': ref('1601'), 'tag_ids': [ref('VP4')]}), (0, 0, {'factor_percent': 85, 'repartition_type': 'tax', 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 15, 'repartition_type': 'tax', 'account_id': ref('1601'), 'tag_ids': [ref('VP5')]}), (0, 0, {'factor_percent': 85, 'repartition_type': 'tax', 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 15,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'tag_ids': [ref('VP4')]
+            }),
+            (0, 0, {
+                'factor_percent': 85,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 15,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'tag_ids': [ref('VP5')]
+            }),
+            (0, 0, {
+                'factor_percent': 85,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
     <record id="2140" model="account.tax.template">
@@ -557,8 +1479,40 @@
         <field name="type_tax_use">purchase</field>
         <field name="price_include">False</field>
         <field name="tax_group_id" ref="tax_group_iva_21_de_40"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 40, 'repartition_type': 'tax', 'account_id': ref('1601'), 'tag_ids': [ref('VP4')]}), (0, 0, {'factor_percent': 60, 'repartition_type': 'tax', 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 40, 'repartition_type': 'tax', 'account_id': ref('1601'), 'tag_ids': [ref('VP5')]}), (0, 0, {'factor_percent': 60, 'repartition_type': 'tax', 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 40,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'tag_ids': [ref('VP4')]
+            }),
+            (0, 0, {
+                'factor_percent': 60,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 40,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'tag_ids': [ref('VP5')]
+            }),
+            (0, 0, {
+                'factor_percent': 60,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
     <record id="21AO" model="account.tax.template">
@@ -571,8 +1525,28 @@
         <field name="type_tax_use">purchase</field>
         <field name="price_include">False</field>
         <field name="tax_group_id" ref="tax_group_iva_21_inde"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
     <record id="21I5" model="account.tax.template">
@@ -585,8 +1559,40 @@
         <field name="type_tax_use">purchase</field>
         <field name="price_include">False</field>
         <field name="tax_group_id" ref="tax_group_iva_21_de_50"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 50, 'repartition_type': 'tax', 'account_id': ref('1601'), 'tag_ids': [ref('VP4')]}), (0, 0, {'factor_percent': 50, 'repartition_type': 'tax', 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 50, 'repartition_type': 'tax', 'account_id': ref('1601'), 'tag_ids': [ref('VP5')]}), (0, 0, {'factor_percent': 50, 'repartition_type': 'tax', 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'tag_ids': [ref('VP4')]
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'tag_ids': [ref('VP5')]
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
     <record id="2210" model="account.tax.template">
@@ -599,8 +1605,40 @@
         <field name="type_tax_use">purchase</field>
         <field name="price_include">False</field>
         <field name="tax_group_id" ref="tax_group_iva_22_de_10"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 10, 'repartition_type': 'tax', 'account_id': ref('1601'), 'tag_ids': [ref('VP4')]}), (0, 0, {'factor_percent': 90, 'repartition_type': 'tax', 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 10, 'repartition_type': 'tax', 'account_id': ref('1601'), 'tag_ids': [ref('VP5')]}), (0, 0, {'factor_percent': 90, 'repartition_type': 'tax', 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 10,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'tag_ids': [ref('VP4')]
+            }),
+            (0, 0, {
+                'factor_percent': 90,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 10,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'tag_ids': [ref('VP5')]
+            }),
+            (0, 0, {
+                'factor_percent': 90,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
     <record id="2215" model="account.tax.template">
@@ -613,8 +1651,40 @@
         <field name="type_tax_use">purchase</field>
         <field name="price_include">False</field>
         <field name="tax_group_id" ref="tax_group_iva_22_de_15"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 15, 'repartition_type': 'tax', 'account_id': ref('1601'), 'tag_ids': [ref('VP4')]}), (0, 0, {'factor_percent': 85, 'repartition_type': 'tax', 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 15, 'repartition_type': 'tax', 'account_id': ref('1601'), 'tag_ids': [ref('VP5')]}), (0, 0, {'factor_percent': 85, 'repartition_type': 'tax', 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 15,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'tag_ids': [ref('VP4')]
+            }),
+            (0, 0, {
+                'factor_percent': 85,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 15,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'tag_ids': [ref('VP5')]
+            }),
+            (0, 0, {
+                'factor_percent': 85,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
     <record id="2240" model="account.tax.template">
@@ -627,8 +1697,40 @@
         <field name="type_tax_use">purchase</field>
         <field name="price_include">False</field>
         <field name="tax_group_id" ref="tax_group_iva_22_de_40"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 40, 'repartition_type': 'tax', 'account_id': ref('1601'), 'tag_ids': [ref('VP4')]}), (0, 0, {'factor_percent': 60, 'repartition_type': 'tax', 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 40, 'repartition_type': 'tax', 'account_id': ref('1601'), 'tag_ids': [ref('VP5')]}), (0, 0, {'factor_percent': 60, 'repartition_type': 'tax', 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 40,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'tag_ids': [ref('VP4')]
+            }),
+            (0, 0, {
+                'factor_percent': 60,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 40,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'tag_ids': [ref('VP5')]
+            }),
+            (0, 0, {
+                'factor_percent': 60,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
     <record id="22AO" model="account.tax.template">
@@ -641,8 +1743,28 @@
         <field name="type_tax_use">purchase</field>
         <field name="price_include">False</field>
         <field name="tax_group_id" ref="tax_group_iva_22_inde"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 100, 'repartition_type': 'tax', 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
     <record id="22I5" model="account.tax.template">
@@ -655,8 +1777,40 @@
         <field name="type_tax_use">purchase</field>
         <field name="price_include">False</field>
         <field name="tax_group_id" ref="tax_group_iva_22_de_50"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP2')]}), (0, 0, {'factor_percent': 50, 'repartition_type': 'tax', 'account_id': ref('1601'), 'tag_ids': [ref('VP4')]}), (0, 0, {'factor_percent': 50, 'repartition_type': 'tax', 'tag_ids': [ref('VP4')]})]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0), (0, 0, {'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': [ref('VP3')]}), (0, 0, {'factor_percent': 50, 'repartition_type': 'tax', 'account_id': ref('1601'), 'tag_ids': [ref('VP5')]}), (0, 0, {'factor_percent': 50, 'repartition_type': 'tax', 'tag_ids': [ref('VP5')]})]"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP2')]
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'tag_ids': [ref('VP4')]
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP4')]
+            })]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('VP3')]
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'tag_ids': [ref('VP5')]
+            }),
+            (0, 0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'tag_ids': [ref('VP5')]
+            })]"/>
     </record>
 
 </odoo>
