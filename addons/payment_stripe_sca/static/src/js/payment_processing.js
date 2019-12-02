@@ -21,12 +21,9 @@ odoo.define('payment_stripe_sca.processing', function (require) {
                 stripe.handleCardPayment(tx.stripe_payment_intent_secret)
                     .then(function(result) {defer.resolve(result)})
             }).then(function(result) {
-                if (result.error) {
-                    return $.Deferred().reject({"message": {"data": { "message": result.error.message}}});
-                }
                 return rpc.query({
                     route: '/payment/stripe/s2s/process_payment_intent',
-                    params: _.extend({}, result.paymentIntent, {reference: tx.reference}),
+                    params: _.extend({}, result.paymentIntent, {reference: tx.reference, error: result.error}),
                 });
             }).then(function(result) {
                 window.location = '/payment/process';
