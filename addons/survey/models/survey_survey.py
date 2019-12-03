@@ -350,7 +350,7 @@ class Survey(models.Model):
             return None
         elif self.questions_layout == 'page_per_question' and self.questions_selection == 'random':
             return list(enumerate(
-                user_input.question_ids
+                user_input.predefined_question_ids
             ))
         else:
             return list(enumerate(
@@ -425,7 +425,7 @@ class Survey(models.Model):
         # we need the intersection of the questions of this page AND the questions prepared for that user_input
         # (because randomized surveys do not use all the questions of every page)
         if answer:
-            questions = questions & answer.question_ids
+            questions = questions & answer.predefined_question_ids
         return questions, page_or_question_id
 
     # ------------------------------------------------------------
