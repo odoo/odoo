@@ -7,9 +7,23 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='vat']" position="before">
-                  <field name="l10n_il_income_tax_id_number"/>
-                  <field name="l10n_il_registry_number"/>
+                    <field name="l10n_il_income_tax_id_number"/>
+                    <field name="l10n_il_registry_number"/>
                 </xpath>
+                <page name="accounting" position="after">
+                    <page string="Withholding Tax" name="withholding_tax" groups="account.group_account_user">
+                        <group name="withholding_tax_data">
+                            <group>
+                                <field name="l10n_il_tax_rate"/>
+                                <field name="l10n_il_valid_until_date" string="Valid until"/>
+                            </group>
+                            <group>
+                                <field name="l10n_il_withh_tax_reason" string="Reason"/>
+                                <field name="l10n_il_ita_branch"/>
+                            </group>
+                        </group>
+                    </page>
+                </page>
             </field>
         </record>
     </data>
