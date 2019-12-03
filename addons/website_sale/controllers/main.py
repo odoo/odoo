@@ -970,7 +970,7 @@ class WebsiteSale(http.Controller):
         """ Method that should be called by the server when receiving an update
         for a transaction. State at this point :
 
-         - UDPATE ME
+         - UPDATE ME
         """
         if sale_order_id is None:
             order = request.website.sale_get_order()

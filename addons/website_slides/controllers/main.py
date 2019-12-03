@@ -715,7 +715,7 @@ class WebsiteSlides(WebsiteProfile):
         """ Add a new question to an existing slide. Completed field of slide.partner
         link is set to False to make sure that the creator can take the quiz again.
 
-        An optional question_id to udpate can be given. In this case question is
+        An optional question_id to update can be given. In this case question is
         deleted first before creating a new one to simplify management.
 
         :param integer slide_id: Slide ID

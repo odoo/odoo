@@ -760,7 +760,7 @@ class MailThread(models.AbstractModel):
                 fallback on a message_new by resetting thread_id
             2 - check that message_update exists if thread_id is set; or at least
                 that message_new exist
-            [ - find author_id if udpate_author is set]
+            [ - find author_id if update_author is set]
             3 - if there is an alias, check alias_contact:
                 'followers' and thread_id:
                     check on target document that the author is in the followers
@@ -2855,9 +2855,9 @@ class MailThread(models.AbstractModel):
         for res_model, fnames in relation.items():
             for field in (fname for fname in fnames if updated_values.get(fname)):
                 updated_relation.setdefault(res_model, set()).add(field)
-        udpated_fields = [fname for fnames in updated_relation.values() for fname in fnames if updated_values.get(fname)]
+        updated_fields = [fname for fnames in updated_relation.values() for fname in fnames if updated_values.get(fname)]
 
-        if udpated_fields:
+        if updated_fields:
             doc_data = [(model, [updated_values[fname] for fname in fnames]) for model, fnames in updated_relation.items()]
             res = self.env['mail.followers']._get_subscription_data(doc_data, None, None, include_pshare=True)
             for fid, rid, pid, cid, subtype_ids, pshare in res:
