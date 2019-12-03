@@ -105,18 +105,17 @@ class ProductProduct(models.Model):
             #Cost price is calculated afterwards as it is a property
             self.env['account.move.line'].flush(['price_unit', 'quantity', 'balance', 'product_id', 'display_type'])
             self.env['account.move'].flush(['state', 'payment_state', 'move_type', 'invoice_date', 'company_id'])
-            self.env['product.template'].flush(['list_price'])
+            self.env['product.product'].flush(['list_price'])
             sqlstr = """
                 WITH currency_rate AS ({})
                 SELECT
                     SUM(l.price_unit / (CASE COALESCE(cr.rate, 0) WHEN 0 THEN 1.0 ELSE cr.rate END) * l.quantity) / NULLIF(SUM(l.quantity),0) AS avg_unit_price,
                     SUM(l.quantity) AS num_qty,
                     SUM(l.balance) AS total,
-                    SUM(l.quantity * pt.list_price) AS sale_expected
+                    SUM(l.quantity * product.list_price) AS sale_expected
                 FROM account_move_line l
                 LEFT JOIN account_move i ON (l.move_id = i.id)
                 LEFT JOIN product_product product ON (product.id=l.product_id)
-                LEFT JOIN product_template pt ON (pt.id = product.product_tmpl_id)
                 left join currency_rate cr on
                 (cr.currency_id = i.currency_id and
                  cr.company_id = i.company_id and

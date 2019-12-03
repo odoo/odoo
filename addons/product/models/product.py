@@ -76,12 +76,13 @@ class ProductProduct(models.Model):
     # price_extra: catalog extra value only, sum of variant extra attributes
     price_extra = fields.Float(
         'Variant Price Extra', compute='_compute_product_price_extra',
-        digits='Product Price',
+        digits='Product Price', store=True,
         help="This is the sum of the extra price of all attributes")
-    # lst_price: catalog value + extra, context dependent (uom)
+    list_price = fields.Float(
+        'Base Price', digits='Product Price')
     lst_price = fields.Float(
-        'Public Price', compute='_compute_product_lst_price',
-        digits='Product Price', inverse='_set_product_lst_price',
+        'Sales Price', compute='_compute_product_lst_price',
+        digits='Product Price', inverse='_set_product_lst_price', store=True,
         help="The sale price is managed from the product template. Click on the 'Configure Variants' button to set the extra attribute prices.")
     price = fields.Float(
         'Price', compute='_compute_price',
@@ -224,15 +225,9 @@ class ProductProduct(models.Model):
 
     def _set_product_lst_price(self):
         for product in self:
-            if product.product_variant_count > 1:
-                # The field is readonly when product_variant_count > 1 in the view.
-                # It shouldn't be modified if the template has multiple variants
-                # because changing the price on the variant changes the template price.
-                raise ValidationError(_("You cannot modify the price of a variant if its template has multiple variants."))
-            value = product.lst_price
-            value -= product.price_extra
-            product.write({'list_price': value})
+            product.list_price = product.lst_price - product.price_extra
 
+    @api.depends('product_template_attribute_value_ids.price_extra')
     def _compute_product_price_extra(self):
         for product in self:
             product.price_extra = sum(product.product_template_attribute_value_ids.mapped('price_extra'))
@@ -243,6 +238,7 @@ class ProductProduct(models.Model):
             product.lst_price = product.list_price + product.price_extra
 
     @api.depends_context('pricelist_id', 'quantity', 'uom_id', 'date', 'ptav_ids', 'currency_id')
+    @api.depends('lst_price', 'standard_price')
     def _compute_price(self):
         # Code copy/pasted from Product Template
         # s.t. self is a product.product for the variant price computation.

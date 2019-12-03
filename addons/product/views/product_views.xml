@@ -45,10 +45,12 @@
                                     <field name="categ_id" string="Product Category"/>
                                 </group>
                                 <group name="group_standard_price">
-                                    <label for="list_price"/>
+                                    <label for="lst_price"/>
                                     <div name="pricing">
-                                      <field name="list_price" class="oe_inline" widget='monetary'
-                                        options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                                      <field name="product_variant_ids" invisible="1"/>
+                                      <field name="list_price" invisible="1"/>
+                                      <field name="lst_price" class="oe_inline" widget='monetary'
+                                        options="{'field_digits': True}"/>
                                       <button name="open_pricelist_rules" icon="fa-arrow-right" type="object"
                                         groups="product.group_product_pricelist" class="oe_inline">
                                         <field name="pricelist_item_count" attrs="{'invisible': [('pricelist_item_count', '=', 0)]}"/>
@@ -238,7 +240,7 @@
                                 <field name="product_variant_count" invisible="1"/>
                                 <label for="lst_price"/>
                                 <div class="o_row col-5 pl-0">
-                                    <field name="lst_price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'readonly': [('product_variant_count', '&gt;', 1)]}"/>
+                                    <field name="lst_price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"/>
                                 </div>
                                 <field name="standard_price" widget='monetary' options="{'currency_field': 'cost_currency_id'}"/>
                                 <field name="currency_id" invisible='1'/>
@@ -329,13 +331,6 @@
                     <field name="default_code"/>
                     <field name="barcode"/>
                 </field>
-                <field name="list_price" position="attributes">
-                   <attribute name="name">lst_price</attribute>
-                   <attribute name="attrs">{'readonly': [('product_variant_count', '&gt;', 1)]}</attribute>
-                </field>
-                <xpath expr="//label[@for='list_price']" position="replace">
-                    <label for="lst_price"/>
-                </xpath>
                 <group name="packaging" position="attributes">
                     <attribute name="attrs">{'invisible': 0}</attribute>
                 </group>

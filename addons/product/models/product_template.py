@@ -167,13 +167,13 @@ class ProductTemplate(models.Model):
 
     # list_price: catalog price, user defined
     list_price = fields.Float(
-        'Sales Price', default=1.0,
+        'Base Price', default=1.0,
         digits='Product Price',
-        help="Price at which the product is sold to customers.")
+        help="Price at which the product is sold to customers. "
+        "Some extra prices can be applied on top of this price.")
     # lst_price: catalog price for template, but including extra for variants
     lst_price = fields.Float(
-        'Public Price', related='list_price', readonly=False,
-        digits='Product Price')
+        'Sales Price', related='list_price', readonly=False)
     standard_price = fields.Float(
         'Cost', compute='_compute_standard_price',
         inverse='_set_standard_price', search='_search_standard_price',
@@ -476,6 +476,16 @@ class ProductTemplate(models.Model):
             if len(p.product_variant_ids) == 1:
                 p.product_variant_ids.packaging_ids = p.packaging_ids
 
+    @api.onchange('lst_price')
+    def _onchange_list_price(self):
+        if self.product_variant_count > 1:
+            previous_price = (self._origin or self).list_price
+            if any(p.list_price != previous_price for p in self.product_variant_ids):
+                return dict(warning=dict(
+                    title=_("Warning for %s") % self.name,
+                    message=_("Modifying the price of the template will change the prices of all variants !"),
+                ))
+
     @api.constrains('uom_id', 'uom_po_id')
     def _check_uom(self):
         if any(template.uom_id and template.uom_po_id and template.uom_id.category_id != template.uom_po_id.category_id for template in self):
@@ -501,7 +511,7 @@ class ProductTemplate(models.Model):
 
         # This is needed to set given values to first variant after creation
         for template, vals in zip(templates, vals_list):
-            related_vals = {}
+            related_vals = {'list_price': template.list_price}
             if vals.get('barcode'):
                 related_vals['barcode'] = vals['barcode']
             if vals.get('default_code'):
@@ -525,7 +535,9 @@ class ProductTemplate(models.Model):
         if 'attribute_line_ids' in vals or vals.get('active'):
             self._create_variant_ids()
         if 'active' in vals and not vals.get('active'):
-            self.with_context(active_test=False).mapped('product_variant_ids').write({'active': vals.get('active')})
+            self.with_context(active_test=False).product_variant_ids.write({'active': vals.get('active')})
+        if 'list_price' in vals:
+            self.with_context(active_test=False).product_variant_ids.write({'list_price': vals.get('list_price')})
         if 'image_1920' in vals:
             self.env['product.product'].invalidate_cache(fnames=[
                 'image_1920',
@@ -680,6 +692,7 @@ class ProductTemplate(models.Model):
                             'product_tmpl_id': tmpl_id.id,
                             'product_template_attribute_value_ids': [(6, 0, combination.ids)],
                             'active': tmpl_id.active,
+                            'list_price': tmpl_id.list_price,
                         })
                         if len(current_variants_to_create) > 1000:
                             raise UserError(_(
@@ -990,6 +1003,7 @@ class ProductTemplate(models.Model):
 
         return Product.sudo().create({
             'product_tmpl_id': self.id,
+            'list_price': self.list_price,
             'product_template_attribute_value_ids': [(6, 0, combination._without_no_variant_attributes().ids)]
         })
 
