@@ -339,8 +339,8 @@
                                                         <field t-if="record.state_id.raw_value" name="state_id"/>
                                                         <field name="country_id"/>
                                                     </div>
-                                                    <div t-if="record.phone.raw_value">Phone: <field name="phone" widget="phone"/></div>
-                                                    <div t-if="record.mobile.raw_value">Mobile: <field name="mobile" widget="phone"/></div>
+                                                    <div t-if="record.phone.raw_value">Phone: <t t-esc="record.phone.value"/></div>
+                                                    <div t-if="record.mobile.raw_value">Mobile: <t t-esc="record.mobile.value"/></div>
                                                 </div>
                                             </div>
                                         </t>
