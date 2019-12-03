@@ -238,7 +238,6 @@ class Survey(models.Model):
             answer_vals = {
                 'survey_id': survey.id,
                 'test_entry': test_entry,
-                'question_ids': [(6, 0, survey._prepare_answer_questions().ids)]
             }
             if user and not user._is_public():
                 answer_vals['partner_id'] = user.partner_id.id
@@ -286,7 +285,7 @@ class Survey(models.Model):
             if check_attempts and not self._has_attempts_left(partner or (user and user.partner_id), email, invite_token):
                 raise UserError(_('No attempts left.'))
 
-    def _prepare_answer_questions(self):
+    def _prepare_user_input_predefined_questions(self):
         """ Will generate the questions for a randomized survey.
         It uses the random_questions_count of every sections of the survey to
         pick a random number of questions and returns the merged recordset """
@@ -350,7 +349,7 @@ class Survey(models.Model):
             return None
         elif self.questions_layout == 'page_per_question' and self.questions_selection == 'random':
             return list(enumerate(
-                user_input.question_ids
+                user_input.predefined_question_ids
             ))
         else:
             return list(enumerate(
@@ -425,7 +424,7 @@ class Survey(models.Model):
         # we need the intersection of the questions of this page AND the questions prepared for that user_input
         # (because randomized surveys do not use all the questions of every page)
         if answer:
-            questions = questions & answer.question_ids
+            questions = questions & answer.predefined_question_ids
         return questions, page_or_question_id
 
     # ------------------------------------------------------------
