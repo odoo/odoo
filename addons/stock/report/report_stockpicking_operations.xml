@@ -85,13 +85,8 @@
                                 </thead>
                                 <tbody>
                                     <t t-foreach="o.move_ids_without_package.sorted(key=lambda m: m.product_id.id)" t-as="move">
-                                        <t t-if="o.picking_type_id.show_reserved == False">
-                                            <t t-set="move_line_ids" t-value="move.move_line_nosuggest_ids"/>
-                                        </t>
-                                        <t t-else="1">
-                                            <t t-set="move_line_ids" t-value="move.move_line_ids"/>
-                                        </t>
-                                        <t t-foreach="move_line_ids.sorted(key=lambda ml: ml.location_id.id)" t-as="ml">
+                                        <!-- In case you come accross duplicated lines, ask NIM or LAP -->
+                                        <t t-foreach="move.move_line_ids.sorted(key=lambda ml: ml.location_id.id)" t-as="ml">
                                             <tr>
                                                 <td>
                                                     <span t-field="ml.product_id.display_name"/><br/>
