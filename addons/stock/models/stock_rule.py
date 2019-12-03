@@ -313,16 +313,6 @@ class StockRule(models.Model):
                 move_values[field] = values.get(field)
         return move_values
 
-    def _log_next_activity(self, product_id, note):
-        existing_activity = self.env['mail.activity'].search([('res_id', '=',  product_id.product_tmpl_id.id), ('res_model_id', '=', self.env.ref('product.model_product_template').id),
-                                                              ('note', '=', note)])
-        if not existing_activity:
-            product_id.product_tmpl_id.activity_schedule(
-                'mail.mail_activity_data_warning',
-                note=note,
-                user_id=product_id.responsible_id.id or SUPERUSER_ID,
-            )
-
     def _get_lead_days(self, product):
         """Returns the cumulative delay and its description encountered by a
         procurement going through the rules in `self`.
@@ -616,8 +606,18 @@ class ProcurementGroup(models.Model):
                     orderpoints_batch._post_process_scheduler()
                     break
 
+            # Log an activity on product template for failed orderpoints.
             for orderpoint, error_msg in orderpoints_exceptions:
-                self.env['stock.rule']._log_next_activity(orderpoint.product_id, error_msg)
+                existing_activity = self.env['mail.activity'].search([
+                    ('res_id', '=', orderpoint.product_id.product_tmpl_id.id),
+                    ('res_model_id', '=', self.env.ref('product.model_product_template').id),
+                    ('note', '=', error_msg)])
+                if not existing_activity:
+                    orderpoint.product_id.product_tmpl_id.activity_schedule(
+                        'mail.mail_activity_data_warning',
+                        note=error_msg,
+                        user_id=orderpoint.product_id.responsible_id.id or SUPERUSER_ID,
+                    )
 
             if use_new_cursor:
                 cr.commit()
