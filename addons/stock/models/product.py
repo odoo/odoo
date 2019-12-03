@@ -484,8 +484,7 @@ class Product(models.Model):
 
     # Be aware that the exact same function exists in product.template
     def action_open_quants(self):
-        location_domain = self._get_domain_locations()[0]
-        domain = expression.AND([[('product_id', 'in', self.ids)], location_domain])
+        domain = [('product_id', 'in', self.ids)]
         hide_location = not self.user_has_groups('stock.group_stock_multi_locations')
         hide_lot = all([product.tracking == 'none' for product in self])
         self = self.with_context(hide_location=hide_location, hide_lot=hide_lot)
@@ -510,7 +509,7 @@ class Product(models.Model):
         else:
             self = self.with_context(product_tmpl_id=self.product_tmpl_id.id)
         ctx = dict(self.env.context)
-        ctx.update({'no_at_date': True})
+        ctx.update({'no_at_date': True, 'search_default_on_hand': True})
         return self.env['stock.quant'].with_context(ctx)._get_quants_action(domain)
 
     def action_update_quantity_on_hand(self):
