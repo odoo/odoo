@@ -192,8 +192,8 @@
     -->
     <t t-name="mail.UserStatus">
         <span t-att-class="partnerID ? 'o_updatable_im_status' : ''" t-att-data-partner-id="partnerID">
-            <i t-if="status == 'online'" class="o_mail_user_status o_user_online far fa-circle" title="Online" role="img" aria-label="User is online"/>
-            <i t-if="status == 'away'" class="o_mail_user_status o_user_idle far fa-circle" title="Idle" role="img" aria-label="User is idle"/>
+            <i t-if="status == 'online'" class="o_mail_user_status o_user_online fa fa-circle" title="Online" role="img" aria-label="User is online"/>
+            <i t-if="status == 'away'" class="o_mail_user_status o_user_idle fa fa-circle" title="Idle" role="img" aria-label="User is idle"/>
             <i t-if="status == 'offline'" class="o_mail_user_status far fa-circle" title="Offline" role="img" aria-label="User is offline"/>
         </span>
     </t>
