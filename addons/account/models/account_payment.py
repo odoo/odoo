@@ -504,7 +504,11 @@ class account_payment(models.Model):
             # Manage custom currency on journal for liquidity line.
             if payment.journal_id.currency_id and payment.currency_id != payment.journal_id.currency_id:
                 # Custom currency on journal.
-                liquidity_line_currency_id = payment.journal_id.currency_id.id
+                if payment.journal_id.currency_id == company_currency:
+                    # Single-currency
+                    liquidity_line_currency_id = False
+                else:
+                    liquidity_line_currency_id = payment.journal_id.currency_id.id
                 liquidity_amount = company_currency._convert(
                     balance, payment.journal_id.currency_id, payment.company_id, payment.payment_date)
             else:
