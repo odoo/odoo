@@ -41,131 +41,6 @@ class TestCalendar(SavepointCaseWithUserDemo):
             "Sanity check"
         )
 
-    def test_calender_event(self):
-        # Now I will set recurrence for this event to occur monday and friday of week
-        data = {
-            'fr': 1,
-            'mo': 1,
-            'interval': 1,
-            'rrule_type': 'weekly',
-            'end_type': 'end_date',
-            'final_date': '2011-05-31 00:00:00',
-            'recurrency': True
-        }
-
-        self.event_tech_presentation.write(data)
-
-        # In order to check that recurrent events are views successfully in calendar view, I will open calendar view of events|
-        self.CalendarEvent.fields_view_get(False, 'calendar')
-
-        # In order to check that recurrent events are views successfully in calendar view, I will search for one of the recurrent event and count the number of events
-        rec_events = self.CalendarEvent.with_context({'virtual_id': True}).search([
-            ('start', '>=', '2011-04-30 16:00:00'), ('start', '<=', '2011-05-31 00:00:00')
-        ])
-        self.assertEqual(len(rec_events), 9, 'Wrong number of events found')
-
-        # Now I move a virtual event, to see that a real event is well created and depending from the native recurrence
-        before = self.CalendarEvent.with_context({'virtual_id': False}).search([
-            ('start', '>=', '2011-04-30 16:00:00'), ('start', '<=', '2011-05-31 00:00:00')
-        ])
-
-        # We start by detach the event
-        newevent = rec_events[1].detach_recurring_event()
-        newevent.with_context({'virtual_id': True}).write({'name': 'New Name', 'recurrency': True})
-        after = self.CalendarEvent.with_context({'virtual_id': False}).search([
-            ('start', '>=', '2011-04-30 16:00:00'), ('start', '<=', '2011-05-31 00:00:00')
-        ])
-        self.assertEqual(len(after), len(before) + 1, 'Wrong number of events found, after to have moved a virtual event')
-        new_event = after - before
-        self.assertEqual(new_event[0].recurrent_id, before.id, 'Recurrent_id not correctly passed to the new event')
-
-        # Now I will test All day event
-        allday_event = self.CalendarEvent.create({
-            'allday': 1,
-            'privacy': 'confidential',
-            'start': '2011-04-30 00:00:00',
-            'stop': '2011-04-30 00:00:00',
-            'description': 'All day technical test',
-            'location': 'School',
-            'name': 'All day test event'
-        })
-
-        # In order to check reminder I will first create reminder
-        res_alarm_day_before_event_starts = self.env['calendar.alarm'].create({
-            'name': '1 Day before event starts',
-            'duration': 1,
-            'interval': 'days',
-            'alarm_type': 'notification'
-        })
-
-        # Now I will assign this reminder to all day event|
-        allday_event.write({'alarm_ids': [(6, 0, [res_alarm_day_before_event_starts.id])]})
-
-        # I create a recuring rule for my event
-        calendar_event_sprint_review = self.CalendarEvent.create({
-            'name': 'Begin of month meeting',
-            'start': datetime.combine(fields.Date.today(), time(12, 0)),
-            'stop': datetime.combine(fields.Date.today(), time(18, 0)),
-            'recurrency': True,
-            'rrule': 'FREQ=MONTHLY;INTERVAL=1;COUNT=12;BYDAY=1MO'
-        })
-
-        # I check that the attributes are set correctly
-        self.assertEqual(calendar_event_sprint_review.rrule_type, 'monthly', 'rrule_type should be mothly')
-        self.assertEqual(calendar_event_sprint_review.count, 12, 'rrule_type should be mothly')
-        self.assertEqual(calendar_event_sprint_review.month_by, 'day', 'rrule_type should be mothly')
-        self.assertEqual(calendar_event_sprint_review.byday, '1', 'rrule_type should be mothly')
-        self.assertEqual(calendar_event_sprint_review.week_list, 'MO', 'rrule_type should be mothly')
-
-    def test_validation_error(self):
-        """
-        Ideally this should build the base event in such a way that calling
-        write() triggers detach_recurring_event, but I've no idea how that
-        actually works so just calling it directly for now
-        """
-        m = self.CalendarEvent.create({
-            'name': "wheee",
-            'start': '2017-07-12 14:30:00',
-            'allday': False,
-            'rrule': u'FREQ=WEEKLY;BYDAY=WE;INTERVAL=1;COUNT=100',
-            'duration': 0.5,
-            'stop': '2017-07-12 15:00:00',
-        })
-        self.assertEqual(
-            (str(m.start_datetime), str(m.stop_datetime)),
-            (u'2017-07-12 14:30:00', u'2017-07-12 15:00:00'),
-            "Sanity check"
-        )
-        partner_1 = self.env['res.partner'].create({'name': 'A First Partner'})
-        partner_2 = self.env['res.partner'].create({'name': 'A Second Partner'})
-        values = {
-            'allday': False,
-            'name': u'wheee',
-            'attendee_ids': [
-                (0, 0, {'state': u'needsAction', 'partner_id': partner_1.id, 'email': u'bob@example.com'}),
-                (0, 0, {'state': u'needsAction', 'partner_id': partner_2.id, 'email': u'ed@example.com'}),
-            ],
-            'recurrency': True,
-            'privacy': u'public',
-            'stop': '2017-07-10 16:00:00',
-            'alarm_ids': [(6, 0, [])],
-            'start': '2017-07-10 15:30:00',
-            'location': u"XXX",
-            'duration': 0.5,
-            'partner_ids': [(4, partner_1.id), (4, partner_2.id)],
-            'description': u"A thing"
-        }
-
-        records = m.detach_recurring_event(values)
-        self.assertEqual(
-            (str(m.start_datetime), str(m.stop_datetime)),
-            ('2017-07-12 14:30:00', u'2017-07-12 15:00:00'),
-        )
-        self.assertEqual(
-            (str(records.start_datetime), str(records.stop_datetime)),
-            (u'2017-07-10 15:30:00', u'2017-07-10 16:00:00'),
-        )
-
     def test_event_order(self):
         """ check the ordering of events when searching """
         def create_event(name, date):
@@ -303,15 +178,15 @@ class TestCalendar(SavepointCaseWithUserDemo):
             'start': '2018-10-27 14:30:00',
             'allday': False,
             'rrule': u'FREQ=DAILY;INTERVAL=1;COUNT=4',
-            'duration': 2,
+            'recurrency': True,
             'stop': '2018-10-27 16:30:00',
+            'event_tz': 'Europe/Brussels',
         })
 
-        start_recurring_dates = m.with_context({'tz': 'Europe/Brussels'})._get_recurrent_date_by_event()
+        start_recurring_dates = m.recurrence_id.calendar_event_ids.sorted('start').mapped('start')
         self.assertEqual(len(start_recurring_dates), 4)
 
         for d in start_recurring_dates:
-            self.assertEqual(d.tzinfo, pytz.UTC)
             if d.day < 28:  # DST switch happens between 2018-10-27 and 2018-10-28
                 self.assertEqual(d.hour, 14)
             else:
@@ -402,6 +277,7 @@ class TestCalendar(SavepointCaseWithUserDemo):
                     ('recipient_ids', 'in', partner.id),
                     ('subject', 'like', m.name),
                     ])
+                print(mail.mapped('subject'))
                 self.assertEqual(len(mail), 1)
 
         partners = [
@@ -414,7 +290,7 @@ class TestCalendar(SavepointCaseWithUserDemo):
             'name': "mailTest1",
             'allday': False,
             'rrule': u'FREQ=DAILY;INTERVAL=1;COUNT=5',
-            'duration': 0.5,
+            'recurrency': True,
             'partner_ids': partner_ids,
             'start': fields.Datetime.to_string(now + timedelta(days=10)),
             'stop': fields.Datetime.to_string(now + timedelta(days=15)),
@@ -430,17 +306,10 @@ class TestCalendar(SavepointCaseWithUserDemo):
             self.env['res.partner'].create({'name':'testuser4','email': u'alain@example.com'}),
             ])
         partner_ids = [(6, False, [p.id for p in partners]),]
-        m.write({'partner_ids': partner_ids})
+        m.write({
+            'partner_ids': partner_ids,
+            'recurrence_update': 'all_events',
+        })
 
         # more email should be sent
-        _test_one_mail_per_attendee(self, m, partners)
-
-        # calculate virtualid to detach one event
-        virtid = str(m.id) + '-' + ''.join(re.split('[\D]', fields.Datetime.to_string(now + timedelta(days=12))))
-
-        # detaching a virtual event in the chain
-        self.env['calendar.event'].browse(virtid).detach_recurring_event(values={'active':False})
-
-        # since the detach actually create an event in the backend
-        # we check that no mail notifications are sent to the attendees
         _test_one_mail_per_attendee(self, m, partners)

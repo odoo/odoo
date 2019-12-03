@@ -31,20 +31,21 @@ class AlarmManager(models.AbstractModel):
                         cal.id,
                         cal.start - interval '1' minute  * calcul_delta.max_delta AS first_alarm,
                         CASE
-                            WHEN cal.recurrency THEN cal.final_date - interval '1' minute  * calcul_delta.min_delta
+                            WHEN cal.recurrency THEN rrule.until - interval '1' minute  * calcul_delta.min_delta
                             ELSE cal.stop - interval '1' minute  * calcul_delta.min_delta
                         END as last_alarm,
                         cal.start as first_event_date,
                         CASE
-                            WHEN cal.recurrency THEN cal.final_date
+                            WHEN cal.recurrency THEN rrule.until
                             ELSE cal.stop
                         END as last_event_date,
                         calcul_delta.min_delta,
                         calcul_delta.max_delta,
-                        cal.rrule AS rule
+                        rrule.rrule AS rule
                     FROM
                         calendar_event AS cal
                     RIGHT JOIN calcul_delta ON calcul_delta.calendar_event_id = cal.id
+                    LEFT JOIN calendar_recurrence as rrule ON rrule.id = cal.recurrence_id
              """
 
         filter_user = """
@@ -157,10 +158,10 @@ class AlarmManager(models.AbstractModel):
         for meeting in self.env['calendar.event'].browse(all_meetings):
             max_delta = all_meetings[meeting.id]['max_duration']
 
-            if meeting.recurrency:
+            if meeting.recurrency and meeting.recurrence_id:
                 at_least_one = False
                 last_found = False
-                for one_date in meeting._get_recurrent_date_by_event():
+                for one_date in meeting.recurrence_id._get_occurrences(meeting.start):
                     in_date_format = one_date.replace(tzinfo=None)
                     last_found = self.do_check_alarm_for_one_date(in_date_format, meeting, max_delta, 0, 'email', after=last_notif_mail, missing=True)
                     for alert in last_found:
@@ -187,10 +188,10 @@ class AlarmManager(models.AbstractModel):
         for event_id in all_meetings:
             max_delta = all_meetings[event_id]['max_duration']
             meeting = self.env['calendar.event'].browse(event_id)
-            if meeting.recurrency:
+            if meeting.recurrency and meeting.recurrence_id:
                 b_found = False
                 last_found = False
-                for one_date in meeting._get_recurrent_date_by_event():
+                for one_date in meeting.recurrence_id._get_occurrences(meeting.start):
                     in_date_format = one_date.replace(tzinfo=None)
                     last_found = self.do_check_alarm_for_one_date(in_date_format, meeting, max_delta, time_limit, 'notification', after=partner.calendar_last_notif_ack)
                     if last_found:

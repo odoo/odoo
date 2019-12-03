@@ -5,8 +5,6 @@ from datetime import datetime
 
 from odoo import api, fields, models
 
-from odoo.addons.calendar.models.calendar_event import get_real_ids
-
 
 class Partner(models.Model):
     _inherit = 'res.partner'
@@ -20,7 +18,7 @@ class Partner(models.Model):
         datas = []
         meeting = None
         if meeting_id:
-            meeting = self.env['calendar.event'].browse(get_real_ids(meeting_id))
+            meeting = self.env['calendar.event'].browse(meeting_id)
 
         for partner in self:
             data = partner.name_get()[0]
