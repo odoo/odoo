@@ -143,8 +143,10 @@ class WebsiteVisitor(models.Model):
         compose_form = self.env.ref('mail.email_compose_message_wizard_form', False)
 
         compose_ctx = dict(
-            default_use_template=False,
+            default_use_template=True,
             default_composition_mode='comment',
+            default_reply_to=self.env.user.partner_id.email,
+            default_template_id=self.env.ref('website_mail.mail_template_website_visitor').id,
         )
         compose_ctx.update(**visitor_composer_ctx)
         return {

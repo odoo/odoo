@@ -11,6 +11,7 @@ Module holding mail improvements for website. It holds the follow widget.
 """,
     'depends': ['website', 'mail'],
     'data': [
+        'data/mail_template_data.xml',
         'views/assets.xml',
         'views/website_mail_templates.xml',
     ],

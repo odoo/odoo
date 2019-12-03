@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <record id="mail_template_website_visitor" model="mail.template">
+        <field name="name">Website visitor</field>
+        <field name="email_to">${object.email}</field>
+        <field name="subject">Thank you for paying us a visit !</field>
+        <field name="model_id" ref="website.model_website_visitor"/>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                <p>Dear Customer,</p>
+                <br/>
+                <p>Thank you for paying us a visit ! We hope you have been able to find what you were looking for.</p>
+                <p>
+                    Would you need anything, feel free to reach us through our Contact page
+                    % if object.env.company.email:
+                        or via email at ${object.env.company.email}
+                    % endif
+                </p>
+                <br/>
+                <p>Have a nice day ! </p>
+                <br/>
+                <p>${object.env.company.name or ''}</p>
+                <p>${object.env.company.phone + '|' if object.env.company.phone else ''} ${(object.env.company.email + '|') if object.env.company.email else ''} ${object.env.company.website or ''}</p>
+            </div>
+        </field>
+    </record>
+</data>
+</odoo>
