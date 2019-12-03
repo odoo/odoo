@@ -176,8 +176,8 @@
                 <span t-if="question.constr_mandatory" class="text-danger">*</span>
             </h4>
             <div t-field='question.description' class="text-muted oe_no_empty"/>
-            <t t-if="question.question_type == 'free_text'"><t t-call="survey.question_free_text"/></t>
-            <t t-if="question.question_type == 'textbox'"><t t-call="survey.question_textbox"/></t>
+            <t t-if="question.question_type == 'text_box'"><t t-call="survey.question_text_box"/></t>
+            <t t-if="question.question_type == 'char_box'"><t t-call="survey.question_char_box"/></t>
             <t t-if="question.question_type == 'numerical_box'"><t t-call="survey.question_numerical_box"/></t>
             <t t-if="question.question_type == 'date'"><t t-call="survey.question_date"/></t>
             <t t-if="question.question_type == 'datetime'"><t t-call="survey.question_datetime"/></t>
@@ -188,18 +188,18 @@
         </div>
     </template>
 
-    <template id="question_free_text" name="Question: free text box">
-        <textarea class="form-control o_survey_question_free_text" rows="3" t-att-name="question.id"
-                  t-att-data-question-type="question.question_type"><t t-if="answer_lines" t-esc="answer_lines[0].value_free_text or None"/></textarea>
+    <template id="question_text_box" name="Question: free text box">
+        <textarea class="form-control o_survey_question_text_box" rows="3" t-att-name="question.id"
+                  t-att-data-question-type="question.question_type"><t t-if="answer_lines" t-esc="answer_lines[0].value_text_box or None"/></textarea>
     </template>
 
-    <template id="question_textbox" name="Question: text box">
-        <input type="text" class="form-control o_survey_question_text_box" t-att-name="question.id" t-att-value="answer_lines[0].value_text if answer_lines else None"
+    <template id="question_char_box" name="Question: text box">
+        <input type="text" class="form-control o_survey_question_text_box" t-att-name="question.id" t-att-value="answer_lines[0].value_char_box if answer_lines else None"
                t-att-data-question-type="question.question_type"/>
     </template>
 
     <template id="question_numerical_box" name="Question: numerical box">
-        <input type="number" step="any" class="form-control o_survey_question_numerical_box" t-att-name="question.id" t-att-value="answer_lines[0].value_number if answer_lines else None"
+        <input type="number" step="any" class="form-control o_survey_question_numerical_box" t-att-name="question.id" t-att-value="answer_lines[0].value_numerical_box if answer_lines else None"
                t-att-data-question-type="question.question_type"/>
     </template>
 
@@ -233,7 +233,7 @@
 
     <template id="question_simple_choice" name="Question: simple choice">
         <t t-set="answer_line" t-value="answer_lines.filtered(lambda line: line.suggested_answer_id)"/>
-        <t t-set="comment_line" t-value="answer_lines.filtered(lambda line: line.value_text)"/>
+        <t t-set="comment_line" t-value="answer_lines.filtered(lambda line: line.value_char_box)"/>
         <div t-if="question.display_mode == 'dropdown'" class="o_survey_form_choice o_survey_question_simple_choice_dropdown row"
              t-att-data-name="question.id"
              data-question-type="simple_choice_dropdown">
@@ -255,11 +255,11 @@
             </div>
             <div t-if='question.comments_allowed and question.comment_count_as_answer' class="col-lg-6">
                 <textarea type="text" class="form-control"
-                          t-attf-class="form-control #{'' if comment_line else 'd-none'}"><t t-esc="comment_line.value_text if comment_line else ''"/></textarea>
+                          t-attf-class="form-control #{'' if comment_line else 'd-none'}"><t t-esc="comment_line.value_char_box if comment_line else ''"/></textarea>
             </div>
             <div t-if='question.comments_allowed and not question.comment_count_as_answer' class="col-lg-12 mt16">
                 <span t-field="question.comments_message"/>
-                <textarea type="text" class="form-control o_survey_comment"><t t-esc="comment_line.value_text if comment_line else ''"/></textarea>
+                <textarea type="text" class="form-control o_survey_comment"><t t-esc="comment_line.value_char_box if comment_line else ''"/></textarea>
             </div>
         </div>
         <div t-if="question.display_mode == 'columns'" class="row o_survey_form_choice o_survey_question_simple_choice_radio"
@@ -279,17 +279,17 @@
                     <span t-field="question.comments_message" />
                 </label>
                 <textarea type="text" class="form-control"
-                          t-attf-disabled="#{'' if comment_line else 'disabled'}"><t t-esc="comment_line.value_text if comment_line else ''"/></textarea>
+                          t-attf-disabled="#{'' if comment_line else 'disabled'}"><t t-esc="comment_line.value_char_box if comment_line else ''"/></textarea>
             </div>
             <div t-if='question.comments_allowed and not question.comment_count_as_answer' class="col-lg-12">
                 <span t-field="question.comments_message"/>
-                <textarea type="text" class="form-control o_survey_comment"><t t-esc="comment_line.value_text if comment_line else ''"/></textarea>
+                <textarea type="text" class="form-control o_survey_comment"><t t-esc="comment_line.value_char_box if comment_line else ''"/></textarea>
             </div>
         </div>
     </template>
 
     <template id="question_multiple_choice" name="Question: multiple choice">
-        <t t-set="comment_line" t-value="answer_lines.filtered(lambda line: line.value_text)"/>
+        <t t-set="comment_line" t-value="answer_lines.filtered(lambda line: line.value_char_box)"/>
         <div class="row o_survey_form_choice o_survey_question_multiple_choice"
              t-att-data-name="question.id"
              t-att-data-question-type="question.question_type">
@@ -309,17 +309,17 @@
                     <span t-field="question.comments_message" />
                 </label>
                 <textarea type="text" class="form-control"
-                          t-attf-disabled="#{'' if comment_line else 'disabled'}"><t t-esc="comment_line.value_text if comment_line else ''"/></textarea>
+                          t-attf-disabled="#{'' if comment_line else 'disabled'}"><t t-esc="comment_line.value_char_box if comment_line else ''"/></textarea>
             </div>
             <div t-if='question.comments_allowed and not question.comment_count_as_answer' class="col-lg-12">
                 <span t-field="question.comments_message"/>
-                <textarea type="text" class="form-control o_survey_comment"><t t-esc="comment_line.value_text if comment_line else ''"/></textarea>
+                <textarea type="text" class="form-control o_survey_comment"><t t-esc="comment_line.value_char_box if comment_line else ''"/></textarea>
             </div>
         </div>
     </template>
 
     <template id="question_matrix" name="Question: matrix">
-        <t t-set="comment_line" t-value="answer_lines.filtered(lambda line: line.value_text)"/>
+        <t t-set="comment_line" t-value="answer_lines.filtered(lambda line: line.value_char_box)"/>
         <table class="table table-hover o_survey_question_matrix"
                t-att-data-name="question.id"
                t-att-data-question-type="question.question_type">
@@ -344,7 +344,7 @@
         </table>
         <div t-if='question.comments_allowed'>
             <span t-field="question.comments_message"/>
-            <textarea type="text" class="form-control" t-att-name="'%s_%s' % (question.id, 'comment')"><t t-esc="comment_line.value_text if comment_line else ''"/></textarea>
+            <textarea type="text" class="form-control" t-att-name="'%s_%s' % (question.id, 'comment')"><t t-esc="comment_line.value_char_box if comment_line else ''"/></textarea>
         </div>
     </template>
 
@@ -377,8 +377,8 @@
                                             <span t-if="quizz_correction" class="badge badge-pill" t-att-data-score-question="question.id"></span>
                                         </h2>
                                         <t t-if="question.description"><div class="text-muted oe_no_empty" t-field='question.description'/></t>
-                                        <t t-if="question.question_type == 'free_text'"><t t-call="survey.question_free_text"/></t>
-                                        <t t-if="question.question_type == 'textbox'"><t t-call="survey.question_textbox"/></t>
+                                        <t t-if="question.question_type == 'text_box'"><t t-call="survey.question_text_box"/></t>
+                                        <t t-if="question.question_type == 'char_box'"><t t-call="survey.question_char_box"/></t>
                                         <t t-if="question.question_type == 'numerical_box'"><t t-call="survey.question_numerical_box"/></t>
                                         <t t-if="question.question_type == 'date'"><t t-call="survey.question_date"/></t>
                                         <t t-if="question.question_type == 'datetime'"><t t-call="survey.question_datetime"/></t>

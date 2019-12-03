@@ -29,7 +29,7 @@ class TestUiFeedback(HttpCaseWithUserDemo):
                 }), (0, 0, {
                     'title': 'Where do you live ?',
                     'sequence': 2,
-                    'question_type': 'textbox',
+                    'question_type': 'char_box',
                     'constr_mandatory': False,
                 }), (0, 0, {
                     'title': 'When is your date of birth ?',
@@ -146,7 +146,7 @@ class TestUiFeedback(HttpCaseWithUserDemo):
                 }), (0, 0, {
                     'title': 'Do you have any other comments, questions, or concerns ?',
                     'sequence': 9,
-                    'question_type': 'free_text',
+                    'question_type': 'text_box',
                     'constr_mandatory': False,
                 })
             ],
