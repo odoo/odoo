@@ -76,6 +76,31 @@ function _buildRowElement(title, options) {
 
     return groupEl;
 }
+/**
+ * Creates a proxy for an object where one property is replaced by a different
+ * value. This value is captured in the closure and can be read and written to.
+ *
+ * @param {Object} [obj] - the object for which to create a proxy
+ * @param {String} [propertyName] - the name/key of the property to replace
+ * @param {Any} [value] - the initial value to give to the property's copy
+ * @returns {Object} a proxy of the object with the property replaced
+ */
+function createPropertyProxy(obj, propertyName, value) {
+    return new Proxy(obj, {
+        get: function (obj, prop) {
+            if (prop === propertyName) {
+                return value;
+            }
+            return obj[prop];
+        },
+        set: function (obj, prop, val) {
+            if (prop === propertyName) {
+                return value = val;
+            }
+            return Reflect.set(...arguments);
+        }
+    });
+}
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -1330,7 +1355,9 @@ const SnippetOptionWidget = Widget.extend({
 
             const methodsNames = widget.getMethodsNames();
             const proms = methodsNames.map(async methodName => {
-                const value = await this._computeWidgetState(methodName, widget.getMethodsParams(methodName));
+                const params = widget.getMethodsParams(methodName);
+                const proxy = createPropertyProxy(this, '$target', this.$target.find(params.applyTo).eq(0));
+                const value = await this._computeWidgetState.call(params.applyTo ? proxy : this, methodName, params);
                 const normalizedValue = this._normalizeWidgetValue(value);
                 widget.setValue(normalizedValue, methodName);
             });
@@ -1570,7 +1597,16 @@ const SnippetOptionWidget = Widget.extend({
         }
 
         widget.getMethodsNames().forEach(methodName => {
-            this[methodName](previewMode, widget.getValue(methodName), widget.getMethodsParams(methodName));
+            const params = widget.getMethodsParams(methodName);
+            if (params.applyTo) {
+                const $subTargets = this.$target.find(params.applyTo);
+                $subTargets.each((index, subTarget) => {
+                    const proxy = createPropertyProxy(this, '$target', $(subTarget));
+                    this[methodName].call(proxy, previewMode, widget.getValue(methodName), params);
+                });
+            } else {
+                this[methodName](previewMode, widget.getValue(methodName), params);
+            }
         });
 
         if (!previewMode) {

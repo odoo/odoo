@@ -1310,6 +1310,15 @@
         <we-checkbox string="Shadow" data-select-class="shadow"/>
     </div>
 
+    <div data-selector=".s_three_columns">
+        <we-row string="Border" class="o_we_inline">
+            <we-colorpicker data-select-style="true" data-css-property="border-color" data-color-prefix="border-" data-apply-to=".card"/>
+            <we-input data-select-style="0" data-css-property="border-width" data-unit="px" data-extra-class="border" data-apply-to=".card"/>
+        </we-row>
+        <we-input string="Rounded" data-select-style="0" data-css-property="border-radius" data-unit="px" data-extra-class="rounded" data-apply-to=".card"/>
+        <we-checkbox string="Shadow" data-select-class="shadow" data-apply-to=".card"/>
+    </div>
+
     <div data-js="sizing_y"
         data-selector="section, .row > div, .parallax, .s_hr, .s_btn, .carousel-item"
         data-exclude="section:has(> .carousel), .o_gallery .carousel-item"/>
