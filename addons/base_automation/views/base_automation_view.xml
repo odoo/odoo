@@ -13,7 +13,7 @@
                 <xpath expr="//button[@name='unlink_action']" position="replace">
                 </xpath>
                 <xpath expr="//group[@name='action_content']" position="inside">
-                    <field name="active" invisible="1"/>
+                    <field name="active"/>
                     <field name="trigger"/>
                     <field name="trigger_field_ids" domain="[('model_id', '=', model_id)]"
                                     attrs="{'invisible': [('trigger', 'not in', ['on_write', 'on_create_or_write'])]}"/>
