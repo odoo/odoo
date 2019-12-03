@@ -400,6 +400,10 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
                         msg = "Query count less than expected for user %s: %d < %d in %s at %s:%s"
                         logger.info(msg, login, count, expected, funcname, filename, linenum)
         else:
+            # flush before and after during warmup, in order to reproduce the
+            # same operations, otherwise the caches might not be ready!
+            if flush:
+                self.env.user.flush()
             yield
             if flush:
                 self.env.user.flush()
