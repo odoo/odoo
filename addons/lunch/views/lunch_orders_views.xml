@@ -41,7 +41,7 @@
                 <field name='price' sum="Total" string="Price" widget="monetary"/>
                 <field name='state'/>
                 <field name="company_id" groups="base.group_multi_company"/>
-                <button name="action_confirm" string="Confirm" type="object" icon="fa-phone text-success" attrs="{'invisible': [('state', '!=', 'ordered')]}" groups="lunch.group_lunch_manager"/>
+                <button name="action_confirm" string="Confirm" type="object" icon="fa-phone-alt text-success" attrs="{'invisible': [('state', '!=', 'ordered')]}" groups="lunch.group_lunch_manager"/>
                 <button name="action_cancel" string="Cancel" type="object" icon="fa-times-circle text-danger" attrs="{'invisible': [('state', 'in', ['cancelled', 'confirmed'])]}" groups="lunch.group_lunch_manager"/>
             </tree>
         </field>
@@ -81,7 +81,7 @@
                             <div class="row mt4">
                                 <div class="col-6">
                                     <a class="btn btn-sm btn-success" role="button" name="action_order" string="Order" type="object" attrs="{'invisible': ['|',('state','=','confirmed'),('state','=','ordered')]}" groups="lunch.group_lunch_manager">
-                                        <i class="fa fa-phone" role="img" aria-label="Order button" title="Order button"/>
+                                        <i class="fa fa-phone-alt" role="img" aria-label="Order button" title="Order button"/>
                                     </a>
                                     <a class="btn btn-sm btn-info" role="button" name="action_confirm" string="Receive" type="object" attrs="{'invisible': [('state','!=','ordered')]}" groups="lunch.group_lunch_manager">
                                         <i class="fa fa-check" role="img" aria-label="Receive button" title="Receive button"/>
@@ -149,7 +149,7 @@
           </p><p>
             Here you can see today's orders grouped by vendors.
           </p><p>
-            Click on the <span class="fa fa-phone text-success" role="img" aria-label="Order button" title="Order button"/> to announce that the order is ordered.<br/>
+            Click on the <span class="fa fa-phone-alt text-success" role="img" aria-label="Order button" title="Order button"/> to announce that the order is ordered.<br/>
             Click on the <span class="fa fa-check text-success" role="img" aria-label="Receive button" title="Receive button"/> to announce that the order is received.<br/>
             Click on the <span class="fa fa-times-circle text-danger" role="img" aria-label="Cancel button" title="Cancel button"/> to announce that the order isn't available.
           </p>
@@ -168,7 +168,7 @@
           </p><p>
             Summary of all lunch orders, grouped by vendor and by date.
           </p><p>
-            Click on the <span class="fa fa-phone text-success" role="img" aria-label="Order button" title="Order button"/> to announce that the order is ordered.<br/>
+            Click on the <span class="fa fa-phone-alt text-success" role="img" aria-label="Order button" title="Order button"/> to announce that the order is ordered.<br/>
             Click on the <span class="fa fa-check text-success" role="img" aria-label="Receive button" title="Receive button"/> to announce that the order is received.<br/>
             Click on the <span class="fa fa-times-circle text-danger" role="img" aria-label="Cancel button" title="Cancel button"/> red X to announce that the order isn't available.
           </p>

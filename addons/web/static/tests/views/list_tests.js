@@ -3293,13 +3293,13 @@ QUnit.module('Views', {
             data: this.data,
             arch: '<tree string="Phonecalls" editable="top">' +
                     '<field name="foo"/>' +
-                    '<button string="abc" icon="fa-phone" type="object" name="schedule_another_phonecall"/>' +
+                    '<button string="abc" icon="fa-phone-alt" type="object" name="schedule_another_phonecall"/>' +
                 '</tree>',
         });
 
         await testUtils.dom.click(list.$buttons.find('.o_list_button_add'));
 
-        assert.containsOnce(list, 'table button.o_icon_button i.fa-phone',
+        assert.containsOnce(list, 'table button.o_icon_button i.fa-phone-alt',
             "should have rendered a button");
         list.destroy();
     });

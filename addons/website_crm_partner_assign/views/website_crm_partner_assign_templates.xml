@@ -357,7 +357,7 @@
                                         <span t-if="not lead.partner_name" itemprop="name" t-field="lead.contact_name"/>
                                     </div>
                                     <div t-if="lead.phone">
-                                        <span class="fa fa-phone" role="img" aria-label="Phone" title="Phone"/> <span itemprop="telephone" t-field="lead.phone" />
+                                        <span class="fa fa-phone-alt" role="img" aria-label="Phone" title="Phone"/> <span itemprop="telephone" t-field="lead.phone" />
                                     </div>
                                     <div t-if="lead.mobile">
                                         <span class="fas fa-mobile-alt" role="img" aria-label="Mobile" title="Mobile"/> <span itemprop="telephone" t-field="lead.mobile" />
@@ -577,7 +577,7 @@
                                         <strong class="font-italic" t-else="" itemprop="name" t-field="opportunity.contact_name" />
                                     </div>
                                     <div>
-                                        <span class="fa fa-phone fa-fw" role="img" aria-label="Phone" title="Phone"/>
+                                        <span class="fa fa-phone-alt fa-fw" role="img" aria-label="Phone" title="Phone"/>
                                         <span t-if="opportunity.phone" itemprop="telephone" t-field="opportunity.phone"/>
                                         <span t-else="" class="text-muted"> - </span>
                                     </div>

@@ -70,7 +70,7 @@
                 <a target="_blank" t-att-href="timezone_url">(Time Now)</a>
             </p>
             <p t-if="phones">
-                <i class="fa fa-fw mr-2 fa-phone text-primary"/>
+                <i class="fa fa-fw mr-2 fa-phone-alt text-primary"/>
                 <b>Phone :</b>
                 <t t-foreach="phones" t-as="phone_number">
                     <a class="mr-3" t-attf-href="tel:{{phone_number}}" t-esc="phone_number"/>
