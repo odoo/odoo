@@ -79,7 +79,7 @@
             <t t-if="survey.questions_layout == 'one_page'">
                 <t t-foreach='survey.question_and_page_ids' t-as='question'>
                     <h2 t-if="question.is_page" t-field='question.title' class="o_survey_title" />
-                    <t t-if="not question.is_page and question in answer.question_ids" t-call="survey.question_container"/>
+                    <t t-if="not question.is_page and question in answer.predefined_question_ids" t-call="survey.question_container"/>
                 </t>
 
                 <div class="text-center mt16 mb256">
@@ -93,7 +93,7 @@
 
                 <input type="hidden" name="page_id" t-att-value="page.id" />
                 <t t-foreach='page.question_ids' t-as='question'>
-                    <t t-if="question in answer.question_ids" t-call="survey.question_container"/>
+                    <t t-if="question in answer.predefined_question_ids" t-call="survey.question_container"/>
                 </t>
 
                 <div class="text-center mt16 mb256">
@@ -110,7 +110,7 @@
                 <t t-call="survey.question_container"/>
 
                 <div class="text-center mt16 mb256">
-                    <button t-if="survey.users_can_go_back and question != answer.question_ids[0]" type="submit" class="btn btn-secondary"
+                    <button t-if="survey.users_can_go_back and question != answer.predefined_question_ids[0]" type="submit" class="btn btn-secondary"
                             name="button_submit" value="previous" t-att-data-previous-page-id="previous_page_id">Previous page</button>
                     <button type="submit" t-att-value="'next' if not last else 'finish'" class="btn btn-primary">
                         <t t-esc="'Next Page' if not last else 'Submit Survey'"/>
@@ -368,7 +368,7 @@
                                     <h1 t-field='question.title' />
                                     <div t-if="question.description" t-field='question.description' class="oe_no_empty"/>
                                 </div>
-                                <t t-if="not question.is_page and not answer or (question in answer.question_ids)" >
+                                <t t-if="not question.is_page and not answer or (question in answer.predefined_question_ids)" >
                                     <t t-set="answer_lines" t-value="answer.user_input_line_ids.filtered(lambda line: line.question_id == question)"/>
                                     <div class="js_question-wrapper" t-att-id="question.id">
                                         <h2>

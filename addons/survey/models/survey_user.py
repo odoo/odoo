@@ -41,7 +41,7 @@ class SurveyUserInput(models.Model):
     email = fields.Char('E-mail', readonly=True)
     # questions / answers
     user_input_line_ids = fields.One2many('survey.user_input.line', 'user_input_id', string='Answers', copy=True)
-    question_ids = fields.Many2many('survey.question', string='Predefined Questions', readonly=True)
+    predefined_question_ids = fields.Many2many('survey.question', string='Predefined Questions', readonly=True)
     scoring_percentage = fields.Float("Score (%)", compute="_compute_scoring_percentage", store=True, compute_sudo=True)  # stored for perf reasons
     scoring_success = fields.Boolean('Quizz Passed', compute='_compute_scoring_success', store=True, compute_sudo=True)  # stored for perf reasons
 
@@ -54,7 +54,7 @@ class SurveyUserInput(models.Model):
         for user_input in self:
             total_possible_score = sum([
                 answer_score if answer_score > 0 else 0
-                for answer_score in user_input.question_ids.mapped('suggested_answer_ids.answer_score')
+                for answer_score in user_input.predefined_question_ids.mapped('suggested_answer_ids.answer_score')
             ])
 
             if total_possible_score == 0:
@@ -108,6 +108,15 @@ class SurveyUserInput(models.Model):
                         break
 
                 user_input.attempts_number = attempts_number
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if 'predefined_question_ids' not in vals:
+                suvey_id = vals.get('survey_id', self.env.context.get('default_survey_id'))
+                survey = self.env['survey.survey'].browse(suvey_id)
+                vals['predefined_question_ids'] = [(6, 0, survey._prepare_user_input_predefined_questions().ids)]
+        return super(SurveyUserInput, self).create(vals_list)
 
     def action_resend(self):
         partners = self.env['res.partner']

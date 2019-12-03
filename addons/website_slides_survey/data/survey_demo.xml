@@ -109,11 +109,6 @@
             <field name="partner_id" ref="base.res_partner_address_3"/>
             <field name="email">douglas.fletcher51@example.com</field>
             <field name="state">done</field>
-            <field name="question_ids" eval="[
-                    ref('furniture_certification_page_1_question_1'),
-                    ref('furniture_certification_page_1_question_2'),
-                    ref('furniture_certification_page_1_question_3'),
-                ]"/>
         </record>
         <record model="survey.user_input" id="furniture_certification_answer_2">
             <field name="survey_id" ref="website_slides_survey.furniture_certification" />
