@@ -15,6 +15,7 @@
                 <group expand='0' string='Filters'>
                     <filter name='internal_loc' string="Internal Locations" domain="[('location_id.usage','=', 'internal')]"/>
                     <filter name='transit_loc' string="Transit Locations" domain="[('location_id.usage' ,'=', 'transit')]"/>
+                    <filter name="on_hand" string="On Hand" domain="[('on_hand', '=', True)]"/>
                     <separator/>
                     <filter name="negative" string="Negative Stock" domain="[('quantity', '&lt;', 0.0)]"/>
                     <filter name="positive" string="Positive Stock" domain="[('quantity', '&gt;', 0.0)]"/>
