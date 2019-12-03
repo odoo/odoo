@@ -124,6 +124,7 @@ class AccountMove(models.Model):
             bank supporting the ISR (including the zeros).
         """
         for record in self:
+            record.l10n_ch_isr_optical_line = ''
             if record.l10n_ch_isr_number and record.l10n_ch_isr_subscription and record.currency_id.name:
                 #Left part
                 currency_code = None
