@@ -3,3 +3,4 @@
 
 from . import test_calendar
 from . import test_calendar_recurrent_event_case2
+from . import test_event_recurrence

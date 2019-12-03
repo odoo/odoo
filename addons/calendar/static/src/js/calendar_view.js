@@ -3,6 +3,8 @@ odoo.define('calendar.CalendarView', function (require) {
 
 var CalendarPopover = require('web.CalendarPopover');
 var CalendarRenderer = require('web.CalendarRenderer');
+var CalendarController = require('calendar.CalendarController');
+var CalendarModel = require('calendar.CalendarModel');
 var CalendarView = require('web.CalendarView');
 const session = require('web.session');
 var viewRegistry = require('web.view_registry');
@@ -107,6 +109,8 @@ var AttendeeCalendarRenderer = CalendarRenderer.extend({
 var AttendeeCalendarView = CalendarView.extend({
     config: _.extend({}, CalendarView.prototype.config, {
         Renderer: AttendeeCalendarRenderer,
+        Controller: CalendarController,
+        Model: CalendarModel,
     }),
 });
 
