@@ -61,7 +61,7 @@ class IrQWeb(models.AbstractModel, QWeb):
         if b'data-pagebreak=' not in result:
             return result
 
-        fragments = html.fragments_fromstring(result)
+        fragments = html.fragments_fromstring(result.decode('utf-8'))
 
         for fragment in fragments:
             for row in fragment.iterfind('.//tr[@data-pagebreak]'):
