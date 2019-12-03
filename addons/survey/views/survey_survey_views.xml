@@ -54,7 +54,7 @@
                     </group>
                     <notebook>
                         <page string="Questions">
-                            <field name="question_and_page_ids" nolabel="1" widget="question_page_one2many" context="{'default_survey_id': active_id, 'default_questions_selection': questions_selection}">
+                            <field name="question_and_page_ids" nolabel="1" widget="question_page_one2many" mode="tree,kanban" context="{'default_survey_id': active_id, 'default_questions_selection': questions_selection}">
                                 <tree decoration-bf="is_page" editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="title"/>

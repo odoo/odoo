@@ -36,7 +36,7 @@ if ! file_exists *raspbian*.img ; then
     unzip raspbian.img.zip
 fi
 
-cp -a *raspbian*.img posbox.img
+cp -a *raspbian*.img iotbox.img
 
 CLONE_DIR="${OVERWRITE_FILES_BEFORE_INIT_DIR}/home/pi/odoo"
 
@@ -68,11 +68,11 @@ mv /tmp/ngrok "${USR_BIN}"
 
 # zero pad the image to be around 3.5 GiB, by default the image is only ~1.3 GiB
 echo "Enlarging the image..."
-dd if=/dev/zero bs=1M count=2048 >> posbox.img
+dd if=/dev/zero bs=1M count=2048 >> iotbox.img
 
 # resize partition table
 echo "Fdisking"
-START_OF_ROOT_PARTITION=$(fdisk -l posbox.img | tail -n 1 | awk '{print $2}')
+START_OF_ROOT_PARTITION=$(fdisk -l iotbox.img | tail -n 1 | awk '{print $2}')
 (echo 'p';                          # print
  echo 'd';                          # delete
  echo '2';                          #   second partition
@@ -82,10 +82,11 @@ START_OF_ROOT_PARTITION=$(fdisk -l posbox.img | tail -n 1 | awk '{print $2}')
  echo "${START_OF_ROOT_PARTITION}"; #   starting at previous offset
  echo '';                           #   ending at default (fdisk should propose max)
  echo 'p';                          # print
- echo 'w') | fdisk posbox.img       # write and quit
+ echo 'w') | fdisk iotbox.img       # write and quit
 
-LOOP=$(kpartx -avs posbox.img)
+LOOP=$(kpartx -avs iotbox.img)
 LOOP_MAPPER_PATH=$(echo "${LOOP}" | tail -n 1 | awk '{print $3}')
+LOOP_PATH="/dev/${LOOP_MAPPER_PATH::-2}"
 LOOP_MAPPER_PATH="/dev/mapper/${LOOP_MAPPER_PATH}"
 LOOP_MAPPER_BOOT=$(echo "${LOOP}" | tail -n 2 | awk 'NR==1 {print $3}')
 LOOP_MAPPER_BOOT="/dev/mapper/${LOOP_MAPPER_BOOT}"
@@ -122,11 +123,11 @@ find "${MOUNT_POINT}"/ -type f -name "*.iotpatch"|while read iotpatch; do
 done
 
 # cleanup
-umount -f "${MOUNT_POINT}"/boot
+umount -f "${MOUNT_POINT}"/boot/
 umount -f "${MOUNT_POINT}"
 
 echo "Running zerofree..."
 zerofree -v "${LOOP_MAPPER_PATH}" || true
 
-kpartx -d posbox.img
+kpartx -d "${LOOP_PATH}"
 rm -rf "${MOUNT_POINT}"

@@ -2288,9 +2288,9 @@ class Many2one(_Relational):
     :param bool delegate: set it to ``True`` to make fields of the target model
         accessible from the current model (corresponds to ``_inherits``)
 
-    :param check_company: add default domain ``['|', ('company_id', '=', False),
-        ('company_id', '=', company_id)]``. Mark the field to be verified in
-        ``_check_company``.
+    :param bool check_company: Mark the field to be verified in
+        :meth:`~odoo.models.Model._check_company`. Add a default company
+        domain depending on the field attributes.
     """
     type = 'many2one'
     column_type = ('int4', 'int4')
@@ -3052,9 +3052,9 @@ class Many2many(_RelationalMulti):
     :param dict context: an optional context to use on the client side when
         handling that field
 
-    :param check_company: add default domain ``['|', ('company_id', '=', False),
-        ('company_id', '=', company_id)]``. Mark the field to be verified in
-        ``_check_company``.
+    :param bool check_company: Mark the field to be verified in
+        :meth:`~odoo.models.Model._check_company`. Add a default company
+        domain depending on the field attributes.
 
     :param int limit: optional limit to use upon read
     """

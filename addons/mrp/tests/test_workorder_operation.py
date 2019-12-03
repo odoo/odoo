@@ -1454,3 +1454,33 @@ class TestRoutingAndKits(SavepointCase):
         self.assertEqual(len(mo.workorder_ids), 2)
         self.assertEqual(set(mo.workorder_ids[0].raw_workorder_line_ids.product_id.ids), set([self.compfinished1.id, self.compkit1.id]))
         self.assertFalse(mo.workorder_ids[1].raw_workorder_line_ids.product_id.id)
+
+    def test_merge_lot(self):
+        """ Produce 10 units of product tracked by lot on two workorder. On the
+        first one, produce 4 onto lot1 then 6 onto lot1 as well. The second
+        workorder should be prefilled with 10 units and lot1"""
+        self.finished1.tracking = 'lot'
+        lot1 = self.env['stock.production.lot'].create({
+            'product_id': self.finished1.id,
+            'company_id': self.env.company.id,
+        })
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.finished1
+        mo_form.bom_id = self.bom_finished1
+        mo_form.product_qty = 10.0
+        mo = mo_form.save()
+
+        mo.action_confirm()
+        mo.button_plan()
+        wo1 = mo.workorder_ids.filtered(lambda wo: wo.state == 'ready')[0]
+        wo1.button_start()
+        wo1.qty_producing = 4
+        wo1.finished_lot_id = lot1
+        wo1.record_production()
+        wo1.qty_producing = 6
+        wo1.finished_lot_id = lot1
+        wo1.record_production()
+        wo2 = mo.workorder_ids.filtered(lambda wo: wo.state == 'ready')[0]
+        wo2.button_start()
+        self.assertEqual(wo2.qty_producing, 10)
+        self.assertEqual(wo2.finished_lot_id, lot1)

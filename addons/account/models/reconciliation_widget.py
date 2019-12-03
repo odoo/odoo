@@ -553,17 +553,20 @@ class AccountReconciliation(models.AbstractModel):
         excluded_ids.extend(to_check_excluded)
 
         domain_reconciliation = [
-            '&', '&',
+            '&', '&', '&',
             ('statement_line_id', '=', False),
             ('account_id', 'in', aml_accounts),
-            ('payment_id', '<>', False)
+            ('payment_id', '<>', False),
+            ('balance', '!=', 0.0),
         ]
 
         # default domain matching
-        domain_matching = expression.AND([
-            [('reconciled', '=', False)],
-            [('account_id.reconcile', '=', True)]
-        ])
+        domain_matching = [
+            '&', '&',
+            ('reconciled', '=', False),
+            ('account_id.reconcile', '=', True),
+            ('balance', '!=', 0.0),
+        ]
 
         domain = expression.OR([domain_reconciliation, domain_matching])
         if partner_id:

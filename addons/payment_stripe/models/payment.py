@@ -69,6 +69,9 @@ class PaymentAcquirerStripe(models.Model):
                           "Request data:\n%s\n"
                           "Response body:\n%s",
                           url, pprint.pformat(data), resp.text)
+            stripe_error = resp.json().get('error', {}).get('message', '')
+            error_msg = " " + (_("Stripe gave us the following info about the problem: '%s'") % stripe_error)
+            raise ValidationError(error_msg)
         return resp.json()
 
     def _create_stripe_session(self, kwargs):

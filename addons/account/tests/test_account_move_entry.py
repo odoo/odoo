@@ -75,7 +75,10 @@ class TestAccountMove(InvoiceTestCommon):
         # lines[3] = 'revenue line 2'
         lines = self.test_move.line_ids.sorted('debit')
 
-        # Try to edit a line not affecting the taxes.
+        # Editing the reference should be allowed.
+        self.test_move.ref = 'whatever'
+
+        # Try to edit a line into a locked fiscal year.
         with self.assertRaises(UserError), self.cr.savepoint():
             self.test_move.write({
                 'line_ids': [

@@ -17,13 +17,11 @@
 # Melanie Bernard <mbe@odoo.com>, 2019
 # Marie Willemyns <mwi@odoo.com>, 2019
 # Nicolas Bayet <nicolas.bayet@gmail.com>, 2019
-# Olivier ANDRE <frsw194@gmail.com>, 2019
 # Mohamed BENKIRANE <benkirane.med.ali@gmail.com>, 2019
 # fr trans <e2ffr05@hotmail.com>, 2019
 # Richard Mathot <rim@odoo.com>, 2019
 # Florian Hatat, 2019
 # Fabri Yohann <psn@fabri.pw>, 2019
-# Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2019
 # f5f0a0dac17dde787a1d812a6989680e, 2019
 # Laura Piraux <lap@odoo.com>, 2019
 # Nathan Noël <nathan070@me.com>, 2019
@@ -43,14 +41,16 @@
 # Eloïse Stilmant <est@odoo.com>, 2019
 # Martin Trigaux, 2019
 # Oriane Malburny <oma@odoo.com>, 2019
+# Olivier ANDRE <frsw194@gmail.com>, 2019
+# Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-07 07:13+0000\n"
+"POT-Creation-Date: 2019-11-25 15:03+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Oriane Malburny <oma@odoo.com>, 2019\n"
+"Last-Translator: Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -947,6 +947,12 @@ msgstr "Montant"
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_undiscounted
 msgid "Amount Before Discount"
 msgstr "Montant avant remise"
+
+#. module: sale
+#: code:addons/sale/models/payment.py:0
+#, python-format
+msgid "Amount Mismatch (%s)"
+msgstr "Anomalie de montant (%s)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__quotations_amount
@@ -3067,7 +3073,7 @@ msgstr "Date du devis"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
 msgid "Quotation Layout"
-msgstr "Layout des devis"
+msgstr "Mise en page des devis"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_quotation_tree
@@ -3929,7 +3935,7 @@ msgstr ""
 "L'état de la commande ne requiert pas de signature de la part du client."
 
 #. module: sale
-#: code:addons/sale/models/payment.py:97
+#: code:addons/sale/models/payment.py:0
 #, python-format
 msgid ""
 "The order was not confirmed despite response from the acquirer (%s): order "

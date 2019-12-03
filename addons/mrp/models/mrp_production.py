@@ -621,7 +621,7 @@ class MrpProduction(models.Model):
                 move[0].with_context(do_not_unreserve=True).write({'product_uom_qty': quantity})
                 move[0]._recompute_state()
                 move[0]._action_assign()
-                move[0].unit_factor = remaining_qty and quantity / remaining_qty or 1.0
+                move[0].unit_factor = remaining_qty and (quantity - move[0].quantity_done) / remaining_qty or 1.0
                 return move[0], old_qty, quantity
             else:
                 if move[0].quantity_done > 0:

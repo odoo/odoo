@@ -1,16 +1,17 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_bank_statement_import
-#
+# 
 # Translators:
 # Martin Trigaux, 2019
 # fanha99 <fanha99@hotmail.com>, 2019
 # son dang <son.dang@doda100.com>, 2019
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
+# thanhnguyen.icsc <thanhnguyen.icsc@gmail.com>, 2019
 # Duy BQ <duybq86@gmail.com>, 2019
 # Chinh Chinh <trinhttp@trobz.com>, 2019
 # Dung Nguyen Thi <dungnt@trobz.com>, 2019
 # Dao Nguyen <trucdao.uel@gmail.com>, 2019
+# Phuc Tran Thanh <phuctran.odoo@gmail.com>, 2019
 #
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-09-27 09:10+0000\n"
 "PO-Revision-Date: 2019-08-26 09:08+0000\n"
-"Last-Translator: Dao Nguyen <trucdao.uel@gmail.com>, 2019\n"
+"Last-Translator: Phuc Tran Thanh <phuctran.odoo@gmail.com>, 2019\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -354,6 +355,16 @@ msgid "If checked, some messages have a delivery error."
 msgstr "Nếu đánh dấu thì một số thông điệp có lỗi."
 
 #. module: account_bank_statement_import
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
+#, python-format
+msgid ""
+"If it contains transactions for more than one account, it must be imported "
+"on each of them."
+msgstr ""
+"Nếu nó chưa các giao dịch cho nhiều hơn một tài khoản, nó phải được import "
+"riêng cho từng tài khoản."
+
+#. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__restrict_mode_hash_table
 msgid ""
 "If ticked, the accounting entry or invoice receives a hash as soon as it is "
@@ -556,7 +567,7 @@ msgstr "Số lượng hành động"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Số lượng lỗi"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_needaction_counter
@@ -596,7 +607,7 @@ msgstr "Người phụ trách"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "Có lỗi gửi SMS"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__secure_sequence_id
@@ -611,10 +622,10 @@ msgid ""
 "Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
-"Chọn 'Bán hàng' đối với sổ nhật ký ghi nhận hạch toán hoá đơn khách hàng.\n"
+"Chọn 'Bán hàng' đối với sổ nhật ký ghi nhận hạch toán Hoá đơn khách hàng.\n"
 "Chọn 'Mua hàng' đối với sổ nhật ký ghi nhận hạch toán hoá đơn từ nhà cung cấp.\n"
 "Chọn 'Ngân hàng' hoặc 'Tiền mặt' đối với các số nhật ký ghi nhận hạch toán các khoản thanh toán.\n"
-"Chọn 'Khác' đối với các sổ nhật ký dành cho các hoạt động khác.\"\n"
+"Chọn 'Khác' đối với các sổ nhật ký dành cho các hoạt động khác."
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
@@ -726,14 +737,14 @@ msgstr ""
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
-msgid "This file doesn't contain any statement."
-msgstr "Tập tin này không chứa bất kỳ sao kê nào."
+msgid "This file doesn't contain any statement for account %s."
+msgstr "Tập tin này không chứa bất kỳ sao kê nào cho tài khoản %s."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
-msgid "This file doesn't contain any transaction."
-msgstr "Tập tin này không chứa bất kỳ giao dịch nào."
+msgid "This file doesn't contain any transaction for account %s."
+msgstr "Tập tin này không chứa bất kỳ giao dịch nào cho tài khoản %s."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__type

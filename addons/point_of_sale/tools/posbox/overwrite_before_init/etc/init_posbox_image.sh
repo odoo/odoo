@@ -12,9 +12,12 @@ __base="$(basename ${__file} .sh)"
 export DEBIAN_FRONTEND=noninteractive
 echo "nameserver 8.8.8.8" >> /etc/resolv.conf
 
+# set locale to en_US
+echo "set locale to en_US"
 echo "export LANGUAGE=en_US.UTF-8" >> ~/.bashrc
 echo "export LANG=en_US.UTF-8" >> ~/.bashrc
 echo "export LC_ALL=en_US.UTF-8" >> ~/.bashrc
+locale-gen
 source ~/.bashrc
 
 apt-get update && apt-get -y upgrade
@@ -50,6 +53,7 @@ PKGS_TO_INSTALL="
     xdotool \
     unclutter \
     x11-utils \
+    xserver-xorg-video-dummy \
     openbox \
     rpi-update \
     adduser \
@@ -158,6 +162,9 @@ systemctl disable hostapd.service
 # This option disables any black strips around the screen
 # cf: https://www.raspberrypi.org/documentation/configuration/raspi-config.md
 echo "disable_overscan=1" >> /boot/config.txt
+
+# Separate framebuffers for both screens on RPI4
+sed -i '/dtoverlay/d' /boot/config.txt
 
 # exclude /drivers folder from git info to be able to load specific drivers
 echo "addons/hw_drivers/drivers/" > /home/pi/odoo/.git/info/exclude

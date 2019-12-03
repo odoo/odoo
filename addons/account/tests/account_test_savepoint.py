@@ -25,7 +25,7 @@ class AccountingSavepointCase(SavepointCase):
         user = cls.env['res.users'].create({
             'name': 'Because I am accountman!',
             'login': 'accountman',
-            'groups_id': [(6, 0, cls.env.user.groups_id.ids)],
+            'groups_id': [(6, 0, cls.env.user.groups_id.ids), (4, cls.env.ref('account.group_account_user').id)],
         })
         user.partner_id.email = 'accountman@test.com'
 
@@ -93,6 +93,14 @@ class AccountingSavepointCase(SavepointCase):
             'default_journal_purchase': cls.env['account.journal'].search([
                     ('company_id', '=', company.id),
                     ('type', '=', 'purchase')
+                ], limit=1),
+            'default_journal_bank': cls.env['account.journal'].search([
+                    ('company_id', '=', company.id),
+                    ('type', '=', 'bank')
+                ], limit=1),
+            'default_journal_cash': cls.env['account.journal'].search([
+                    ('company_id', '=', company.id),
+                    ('type', '=', 'cash')
                 ], limit=1),
             'default_tax_sale': company.account_sale_tax_id,
             'default_tax_purchase': company.account_purchase_tax_id,

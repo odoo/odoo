@@ -6,6 +6,7 @@ from datetime import timedelta
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, AccessError, ValidationError
 from odoo.tools.safe_eval import safe_eval
+from odoo.tools.misc import format_date
 
 
 class ProjectTaskType(models.Model):
@@ -544,9 +545,8 @@ class Task(models.Model):
 
     @api.depends('date_deadline')
     def _compute_date_deadline_formatted(self):
-        date_format = self.env['res.lang']._lang_get(self.env.user.lang).date_format
         for task in self:
-            task.date_deadline_formatted = task.date_deadline.strftime(date_format) if task.date_deadline else None
+            task.date_deadline_formatted = format_date(self.env, task.date_deadline) if task.date_deadline else None
 
     def _compute_attachment_ids(self):
         for task in self:

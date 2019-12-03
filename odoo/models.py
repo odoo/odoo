@@ -942,6 +942,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             batch.clear()
             batch_xml_ids.clear()
 
+            unknown_msg = _(u"Unknown database error: '%s'")
             try:
                 cr.execute('SAVEPOINT model_load_save')
             except psycopg2.InternalError as e:
@@ -949,7 +950,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 # already logged
                 if not any(message['type'] == 'error' for message in messages):
                     info = data_list[0]['info']
-                    messages.append(dict(info, type='error', message=u"Unknown database error: '%s'" % e))
+                    messages.append(dict(info, type='error', message=unknown_msg % e))
                 return
 
             # try to create in batch
@@ -3108,7 +3109,19 @@ Fields:
                 raise ValidationError(_('A document was modified since you last viewed it (%s:%d)') % (self._description, res[0]))
 
     def _check_company(self, fnames=None):
-        """ Check the companies of the values of the given field names. """
+        """ Check the companies of the values of the given field names.
+
+        :param list fnames: names of relational fields to check
+        :raises UserError: if the `company_id` of the value of any field is not
+            in `[False, self.company_id]` (or `self` if
+            :class:`~odoo.addons.base.models.res_company`).
+
+        For :class:`~odoo.addons.base.models.res_users` relational fields,
+        verifies record company is in `company_ids` fields.
+
+        User with main company A, having access to company A and B, could be
+        assigned or linked to records in company B.
+        """
         if fnames is None:
             fnames = self._fields
 
@@ -6158,8 +6171,8 @@ def convert_pgerror_not_null(model, fields, info, e):
 def convert_pgerror_unique(model, fields, info, e):
     # new cursor since we're probably in an error handler in a blown
     # transaction which may not have been rollbacked/cleaned yet
-    with closing(model.env.registry.cursor()) as cr:
-        cr.execute("""
+    with closing(model.env.registry.cursor()) as cr_tmp:
+        cr_tmp.execute("""
             SELECT
                 conname AS "constraint name",
                 t.relname AS "table name",
@@ -6172,7 +6185,7 @@ def convert_pgerror_unique(model, fields, info, e):
             JOIN pg_class t ON t.oid = conrelid
             WHERE conname = %s
         """, [e.diag.constraint_name])
-        constraint, table, ufields = cr.fetchone() or (None, None, None)
+        constraint, table, ufields = cr_tmp.fetchone() or (None, None, None)
     # if the unique constraint is on an expression or on an other table
     if not ufields or model._table != table:
         return {'message': tools.ustr(e)}

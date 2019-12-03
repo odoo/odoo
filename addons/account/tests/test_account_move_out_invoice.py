@@ -1814,3 +1814,46 @@ class TestAccountMoveOutInvoiceOnchanges(InvoiceTestCommon):
             {'amount_currency': -120.0, 'debit': 0.0,   'credit': 60.0,     'account_id': self.product_line_vals_2['account_id'],   'reconciled': False},
             {'amount_currency': 120.0,  'debit': 60.0,  'credit': 0.0,      'account_id': wizard.revenue_accrual_account.id,        'reconciled': True},
         ])
+
+    def test_out_invoice_filter_zero_balance_lines(self):
+        zero_balance_payment_term = self.env['account.payment.term'].create({
+            'name': 'zero_balance_payment_term',
+            'line_ids': [
+                (0, 0, {
+                    'value': 'percent',
+                    'value_amount': 100.0,
+                    'sequence': 10,
+                    'days': 0,
+                    'option': 'day_after_invoice_date',
+                }),
+                (0, 0, {
+                    'value': 'balance',
+                    'value_amount': 0.0,
+                    'sequence': 20,
+                    'days': 0,
+                    'option': 'day_after_invoice_date',
+                }),
+            ],
+        })
+
+        zero_balance_tax = self.env['account.tax'].create({
+            'name': 'zero_balance_tax',
+            'amount_type': 'percent',
+            'amount': 0.0,
+        })
+
+        invoice = self.env['account.move'].create({
+            'type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': fields.Date.from_string('2019-01-01'),
+            'invoice_payment_term_id': zero_balance_payment_term.id,
+            'invoice_line_ids': [(0, None, {
+                'name': 'whatever',
+                'quantity': 1.0,
+                'price_unit': 1000.0,
+                'tax_ids': [(6, 0, zero_balance_tax.ids)],
+            })]
+        })
+
+        self.assertEqual(len(invoice.invoice_line_ids), 1)
+        self.assertEqual(len(invoice.line_ids), 2)

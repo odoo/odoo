@@ -163,6 +163,10 @@ class ProductPublicCategory(models.Model):
             res.append((category.id, " / ".join(category.parents_and_self.mapped('name'))))
         return res
 
+    def unlink(self):
+        self.child_id.parent_id = None
+        return super(ProductPublicCategory, self).unlink()
+
     def _compute_parents_and_self(self):
         for category in self:
             if category.parent_path:

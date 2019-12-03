@@ -796,6 +796,9 @@ class AccountMove(models.Model):
             # Recompute amls: update existing line or create new one for each payment term.
             new_terms_lines = self.env['account.move.line']
             for date_maturity, balance, amount_currency in to_compute:
+                if self.journal_id.company_id.currency_id.is_zero(balance) and len(to_compute) > 1:
+                    continue
+
                 if existing_terms_lines_index < len(existing_terms_lines):
                     # Update existing line.
                     candidate = existing_terms_lines[existing_terms_lines_index]
@@ -1008,14 +1011,16 @@ class AccountMove(models.Model):
             move.amount_residual = -sign * (total_residual_currency if len(currencies) == 1 else total_residual)
             move.amount_untaxed_signed = -total_untaxed
             move.amount_tax_signed = -total_tax
-            move.amount_total_signed = -total
+            move.amount_total_signed = abs(total) if move.type == 'entry' else -total
             move.amount_residual_signed = total_residual
 
             currency = len(currencies) == 1 and currencies.pop() or move.company_id.currency_id
             is_paid = currency and currency.is_zero(move.amount_residual) or not move.amount_residual
 
             # Compute 'invoice_payment_state'.
-            if move.state == 'posted' and is_paid:
+            if move.type == 'entry':
+                move.invoice_payment_state = False
+            elif move.state == 'posted' and is_paid:
                 if move.id in in_payment_set:
                     move.invoice_payment_state = 'in_payment'
                 else:
@@ -1580,10 +1585,6 @@ class AccountMove(models.Model):
         # Ensure the move is still well balanced.
         if 'line_ids' in vals and self._context.get('check_move_validity', True):
             self._check_balanced()
-
-        # Check the lock date.
-        # /!\ The tax lock date is managed in the lines level, don't check it there.
-        self._check_fiscalyear_lock_date()
 
         # Trigger 'action_invoice_paid' when the invoice becomes paid after a write.
         not_paid_invoices.filtered(lambda move: move.invoice_payment_state in ('paid', 'in_payment')).action_invoice_paid()

@@ -14,7 +14,7 @@ publicWidget.registry.ProjectRatingImage = publicWidget.Widget.extend({
         this.$el.popover({
             placement: 'bottom',
             trigger: 'hover',
-            html: 'true',
+            html: true,
             content: function () {
                 var $elem = $(this);
                 var id = $elem.data('id');
