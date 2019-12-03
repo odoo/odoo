@@ -159,8 +159,8 @@ class PortalWizardUser(models.TransientModel):
             'email': extract_email(self.email),
             'login': extract_email(self.email),
             'partner_id': self.partner_id.id,
-            'company_id': self.env.company_id.id,
-            'company_ids': [(6, 0, self.env.company_id.ids)],
+            'company_id': self.env.company.id,
+            'company_ids': [(6, 0, self.env.company.ids)],
         })
 
     def _send_email(self):
