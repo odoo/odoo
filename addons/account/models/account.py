@@ -276,6 +276,10 @@ class AccountTaxReportLine(models.Model):
                     orm_cmd_code = other_lines_same_tag and 3 or 2
                     records.write({'tag_name': None, 'tag_ids': [(orm_cmd_code, tag.id) for tag in line_tags]})
 
+        if 'country_id' in vals and self.tag_ids:
+            # Writing the country of a tax report line should overwrite the country of its tags
+            self.tag_ids.write({'country_id': vals['country_id']})
+
         return rslt
 
     def unlink(self):
@@ -314,9 +318,36 @@ class AccountTaxReportLine(models.Model):
 
     @api.constrains('tag_name', 'tag_ids')
     def _validate_tags(self):
+<<<<<<< HEAD
         for record in self.filtered(lambda x: x.tag_ids):
             neg_tags = record.tag_ids.filtered(lambda x: x.tax_negate)
             pos_tags = record.tag_ids.filtered(lambda x: not x.tax_negate)
+=======
+        for record in self:
+            neg_tags = record.tag_ids.filtered(lambda x: x.tax_negate)
+            pos_tags = record.tag_ids.filtered(lambda x: not x.tax_negate)
+            if record.tag_ids and (len(neg_tags) !=1 or len(pos_tags) != 1):
+                raise ValidationError(_("If tags are defined for a tax report line, only two are allowed on it: a positive and a negative one."))
+
+    @api.constrains('tag_name', 'country_id')
+    def _validate_tag_name_unicity(self):
+        for record in self:
+            if record.tag_name:
+                other_lines_with_same_tag = self.env['account.tax.report.line'].search_count([('tag_name', '=', record.tag_name), ('id', '!=', record.id), ('country_id', '=', record.country_id.id)])
+                if other_lines_with_same_tag:
+                    raise ValidationError(_("Tag name %(tag)s is used by more than one tax report line in %(country)s. Each tag name should only be used once per country.") % {'tag': record.tag_name, 'country': record.country_id.name})
+
+    @api.onchange('parent_id')
+    def _onchange_parent_id(self):
+        """ If the parent of a report line is changed, the sequence of this line
+        must be updated, in order for it to match  the sequence numbering of its
+        parent. By default, we add it as the last line of this section.
+        """
+        if self.country_id:
+            lines_domain = [('country_id', '=', self.country_id.id)]
+            if self.parent_id:
+                lines_domain.append(('parent_id', '=', self.parent_id.id))
+>>>>>>> 31108dda148... temp
 
             if (len(neg_tags) != 1 or len(pos_tags) != 1):
                 raise ValidationError(_("If tags are defined for a tax report line, only two are allowed on it: a positive and a negative one."))
