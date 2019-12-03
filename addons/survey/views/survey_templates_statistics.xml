@@ -82,7 +82,7 @@
                             <t t-if="question.description">
                                 <div class="text-muted oe_no_empty" t-field="question.description" />
                             </t>
-                            <t t-if="question.question_type in ['textbox', 'free_text', 'date', 'datetime']">
+                            <t t-if="question.question_type in ['char_box', 'text_box', 'date', 'datetime']">
                                 <t t-call="survey.question_result_text"></t>
                             </t>
                             <t t-if="question.question_type in ['simple_choice', 'multiple_choice']">
@@ -105,7 +105,7 @@
         </t>
     </template>
 
-    <!-- Result for free_text,textbox and date -->
+    <!-- Result for text_box,char_box and date -->
     <template id="question_result_text" name="Question: text result">
         <table class="table table-hover table-sm" t-att-id="'table_question_%d' % question.id">
             <thead>
@@ -118,14 +118,14 @@
                 <t t-set="text_result" t-value="prepare_result"/>
                 <tr t-foreach="text_result" t-as="user_input">
                     <td><a t-att-href="'/survey/print/%s?answer_token=%s' % (user_input.survey_id.access_token, user_input.user_input_id.access_token)"><t t-esc="user_input_index + 1"></t></a></td>
-                    <t t-if="question.question_type == 'free_text'">
+                    <t t-if="question.question_type == 'text_box'">
                         <td>
-                            <a t-att-href="'/survey/print/%s?answer_token=%s' % (user_input.survey_id.access_token, user_input.user_input_id.access_token)" t-field="user_input.value_free_text"></a><br/>
+                            <a t-att-href="'/survey/print/%s?answer_token=%s' % (user_input.survey_id.access_token, user_input.user_input_id.access_token)" t-field="user_input.value_text_box"></a><br/>
                         </td>
                     </t>
-                    <t t-if="question.question_type == 'textbox'">
+                    <t t-if="question.question_type == 'char_box'">
                         <td>
-                            <a t-att-href="'/survey/print/%s?answer_token=%s' % (user_input.survey_id.access_token, user_input.user_input_id.access_token)" t-field="user_input.value_text"></a><br/>
+                            <a t-att-href="'/survey/print/%s?answer_token=%s' % (user_input.survey_id.access_token, user_input.user_input_id.access_token)" t-field="user_input.value_char_box"></a><br/>
                         </td>
                     </t>
                     <t t-if="question.question_type == 'date'">
@@ -157,7 +157,7 @@
                 <tr t-foreach="comments" t-as="user_input">
                     <td><a t-att-href="'/survey/print/%s?answer_token=%s' % (user_input.survey_id.access_token, user_input.user_input_id.access_token)"><t t-esc="user_input_index + 1"></t></a></td>
                     <td>
-                        <span t-field="user_input.value_text"></span><br/>
+                        <span t-field="user_input.value_char_box"></span><br/>
                     </td>
                 </tr>
             </tbody>
@@ -340,7 +340,7 @@
                     <tbody>
                         <tr class="d-none" t-foreach="number_result['input_lines']" t-as="user_input">
                             <td><a t-att-href="'/survey/print/%s?answer_token=%s' % (user_input.survey_id.access_token, user_input.user_input_id.access_token)"><t t-esc="user_input_index + 1"></t></a></td>
-                            <td><span t-field="user_input.value_number"></span><br/></td>
+                            <td><span t-field="user_input.value_numerical_box"></span><br/></td>
                         </tr>
                     </tbody>
                 </table>
