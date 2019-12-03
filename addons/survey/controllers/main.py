@@ -328,7 +328,7 @@ class Survey(http.Controller):
             for question in questions:
                 answer = prepared_questions[question.id]['answer']
                 comment = prepared_questions[question.id]['comment']
-                request.env['survey.user_input.line'].sudo().save_lines(answer_sudo.id, question, answer, comment)
+                answer_sudo.save_lines(question, answer, comment)
 
         if answer_sudo.is_time_limit_reached or survey_sudo.questions_layout == 'one_page':
             answer_sudo._mark_done()
@@ -575,13 +575,7 @@ class Survey(http.Controller):
         if token:
             values['token'] = token
         if survey.scoring_type != 'no_scoring' and survey.certification:
-            answer_perf = survey._get_answers_correctness(answer)[answer]
-            values['graph_data'] = json.dumps([
-                {"text": "Correct", "count": answer_perf['correct']},
-                {"text": "Partially", "count": answer_perf['partial']},
-                {"text": "Incorrect", "count": answer_perf['incorrect']},
-                {"text": "Unanswered", "count": answer_perf['skipped']}
-            ])
+            values['graph_data'] = json.dumps(answer._prepare_statistics()[0])
         return values
 
     def _extract_comment_from_answers(self, question, answers):
