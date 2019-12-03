@@ -1220,7 +1220,9 @@ QUnit.module('core', function () {
         assert.checkAST("not a in b", "not prefix with expression");
     });
 
-    QUnit("conditional expression", function (assert) {
+    QUnit.test("conditional expression", function (assert) {
+        assert.expect(2);
+
         assert.checkAST("1 if a else 2");
         assert.checkAST("[] if a else 2");
     });
