@@ -219,58 +219,89 @@ class TestEvalXML(common.TransactionCase):
 @common.tagged('csv_comments')
 class TestCSVProcessing(common.TransactionCase):
 
-    def setUp(self):
-        super().setUp()
-        self.csv = b"""field1,field2,field3\n"""
+    def process(self, *lines):
+        content = b"\n".join(line.encode() for line in lines)
+        return _process_raw_csv(content, "test_file.csv")
 
     def test_invalid_00(self):
-        self.csv += b""""#this",should,be,invalid"""
-        with self.assertRaises(ValueError):
-            _process_raw_csv(self.csv, 'test_invalid_00.csv')
+        with self.assertRaisesRegex(ValueError, "Invalid cell"):
+            self.process(
+                'field1,field2,field3',
+                '"#this",should be,invalid',
+            )
 
     def test_valid_00(self):
-        self.csv += b"""" # this is valid though",no,problem"""
-        _, datas = _process_raw_csv(self.csv, 'test_valid_00.csv')
-        self.assertEqual(len(datas), 1)
-        self.assertEqual(len(datas[0]), 3)
-        self.assertEqual(datas[0][0], " # this is valid though")
+        _, datas = self.process(
+            'field1,field2,field3',
+            '" # this is valid though",no,problem',
+        )
+        self.assertEqual(datas, [[' # this is valid though', 'no', 'problem']])
 
     def test_valid_10(self):
-        self.csv += b"""# this is a very valid comment"""
-        _, datas = _process_raw_csv(self.csv, 'test_valid_10.csv')
-        self.assertFalse(any(datas))
+        _, datas = self.process(
+            'field1,field2,field3',
+            '# this is a very valid comment',
+        )
+        self.assertEqual(datas, [])
 
     def test_valid_20(self):
-        self.csv += b"""what,about,"this"\n# this should still be a valid comment"""
-        _, datas = _process_raw_csv(self.csv, 'test_valid_20.csv')
-        self.assertEqual(len(datas), 1)
-        self.assertEqual(datas[0], ["what", "about", "this"])
+        _, datas = self.process(
+            'field1,field2,field3',
+            'what,about,"this"',
+            '# this should still be a valid comment',
+        )
+        self.assertEqual(datas, [['what', 'about', 'this']])
 
     def test_valid_30(self):
-        self.csv += b"""# this comment has lots of , and, also, ","," and #,#,#"""
-        _, datas = _process_raw_csv(self.csv, 'test_valid_30.csv')
-        self.assertFalse(any(datas))
+        _, datas = self.process(
+            'field1,field2,field3',
+            '# this comment has lots of , and, also, ","," and #,#,#',
+        )
+        self.assertEqual(datas, [])
 
     def test_valid_40(self):
-        self.csv += b"""#this\n#is\n#a\n#valid\n#multi-line\n#comment"""
-        _, datas = _process_raw_csv(self.csv, 'test_valid_40.csv')
-        self.assertFalse(any(datas))
+        _, datas = self.process(
+            'field1,field2,field3',
+            '#this',
+            '#is',
+            '#a',
+            '#valid',
+            '#multi-line',
+            '#comment',
+        )
+        self.assertEqual(datas, [])
 
     def test_valid_50(self):
-        self.csv += b"""these,are,multiple\n#comments\nscattered,accross,"multiple"\n#different\nlines,ok,boomer"""
-        _, datas = _process_raw_csv(self.csv, 'test_valid_50.csv')
-        self.assertEqual(len(datas), 3)
-        self.assertEqual(datas[0], ['these', 'are', 'multiple'])
-        self.assertEqual(' '.join(datas[-1][1:]), "ok boomer")
+        _, datas = self.process(
+            'field1,field2,field3',
+            'these,are,multiple',
+            '#comments',
+            'scattered,accross,"multiple"',
+            '',
+            '#different',
+            'lines,ok,boomer',
+        )
+        self.assertEqual(datas, [
+            ['these', 'are', 'multiple'],
+            ['scattered', 'accross', 'multiple'],
+            ['lines', 'ok', 'boomer'],
+        ])
 
     def test_valid_60(self):
-        self.csv += b""""\n#this should",be,valid"""
-        _, datas = _process_raw_csv(self.csv, 'test_valid_60')
-        self.assertEqual(len(datas), 1)
-        self.assertEqual(datas[0][0], "\n#this should")
+        _, datas = self.process(
+            'field1,field2,field3',
+            '"',
+            '#this should",be,valid',
+        )
+        self.assertEqual(datas, [['\n#this should', 'be', 'valid']])
 
     def test_valid_70(self):
-        self.csv += b""""\n\n\n\n#this should also",be,valid"""
-        _, datas = _process_raw_csv(self.csv, 'test_valid_70.csv')
-        self.assertEqual(len(datas), 1)
-        self.assertEqual(datas[0][0], "\n\n\n\n#this should also")
+        _, datas = self.process(
+            'field1,field2,field3',
+            '"',
+            '',
+            '',
+            '',
+            '#this should also",be,valid',
+        )
+        self.assertEqual(datas, [['\n\n\n\n#this should also', 'be', 'valid']])
