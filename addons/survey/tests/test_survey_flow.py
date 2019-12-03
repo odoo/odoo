@@ -37,7 +37,7 @@ class TestSurveyFlow(common.TestSurveyCommon, HttpCase):
                 'survey_id': survey.id,
             })
             page0_q0 = self._add_question(
-                page_0, 'What is your name', 'free_text',
+                page_0, 'What is your name', 'text_box',
                 comments_allowed=False,
                 constr_mandatory=True, constr_error_msg='Please enter your name', survey_id=survey.id)
             page0_q1 = self._add_question(
