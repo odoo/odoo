@@ -126,6 +126,19 @@ class ProjectTask(models.Model):
     is_project_map_empty = fields.Boolean("Is Project map empty", compute='_compute_is_project_map_empty')
     allow_billable = fields.Boolean(related="project_id.allow_billable")
 
+    @api.onchange('sale_line_id')
+    def _onchange_sale_line_id(self):
+        if self.timesheet_ids:
+            if self.sale_line_id:
+                message = _("All timesheet hours that are not yet invoiced will be assigned to the selected Sales Order Item on save. Discard to avoid the change.")
+            else:
+                message = _("All timesheet hours that are not yet invoiced will be removed from the selected Sales Order Item on save. Discard to avoid the change.")
+
+            return {'warning': {
+                'title': _("Warning"),
+                'message': message
+            }}
+
     @api.depends('sale_line_id', 'project_id', 'billable_type')
     def _compute_sale_order_id(self):
         for task in self:
@@ -166,11 +179,19 @@ class ProjectTask(models.Model):
         # set domain on SO: on non billable project, all SOL of customer, otherwise the one from the SO
 
     def write(self, values):
+        old_sale_line_id = dict([(t.id, t.sale_line_id.id) for t in self])
         if values.get('project_id'):
             project_dest = self.env['project.project'].browse(values['project_id'])
             if project_dest.billable_type == 'employee_rate':
                 values['sale_line_id'] = False
-        return super(ProjectTask, self).write(values)
+        res = super(ProjectTask, self).write(values)
+        if 'sale_line_id' in values and self.sudo().timesheet_ids:
+            self.timesheet_ids.filtered(
+                lambda t: (not t.timesheet_invoice_id or t.timesheet_invoice_id.state == 'cancel') and t.so_line.id == old_sale_line_id[t.task_id.id]
+            ).write({
+                'so_line': values['sale_line_id']
+            })
+        return res
 
     def action_make_billable(self):
         return {
@@ -185,3 +206,6 @@ class ProjectTask(models.Model):
                 'form_view_initial_mode': 'edit',
             },
         }
+
+    def _get_action_view_so_ids(self):
+        return list(set((self.sale_order_id + self.timesheet_ids.so_line.order_id).ids))
