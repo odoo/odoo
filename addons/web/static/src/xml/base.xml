@@ -469,9 +469,6 @@
     </table>
 </div>
 
-<div t-name="PivotView" t-attf-class="o_pivot #{widget.enableLinking ? 'o_enable_linking' : ''}">
-    <div class="o_field_selection"/>
-</div>
 <t t-name="PivotView.buttons">
     <div class="btn-group" role="toolbar" aria-label="Main actions">
         <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
@@ -489,29 +486,6 @@
         <button class="btn btn-secondary fa fa-exchange o_pivot_flip_button" title="Flip axis" aria-label="Flip axis"/>
         <button class="btn btn-secondary fa fa-arrows o_pivot_expand_button" title="Expand all" aria-label="Expand all"/>
         <button class="btn btn-secondary fa fa-download o_pivot_download" title="Download xls" aria-label="Download xls"/>
-    </div>
-</t>
-<t t-name="PivotView.GroupBySelection">
-    <div class="dropdown-menu o_pivot_field_menu" role="menu">
-        <t t-foreach="fields" t-as="field">
-            <t t-if="(field[1].type === 'date') || (field[1].type === 'datetime')">
-                <div role="menuitem" aria-haspopup="true" class="o_inline_dropdown">
-                    <a href="#" t-att-data-field="field[0]" t-attf-class="dropdown-item o_pivot_field_selection#{field[2] ? ' disabled' : ''}">
-                        <t t-esc="field[1].string"/>
-                    </a>
-                    <div class="dropdown-menu" role="menu">
-                        <a role="menuitem" href="#" class="dropdown-item" t-att-data-interval="'day'" t-att-data-field="field[0]">Day</a>
-                        <a role="menuitem" href="#" class="dropdown-item" t-att-data-interval="'week'" t-att-data-field="field[0]">Week</a>
-                        <a role="menuitem" href="#" class="dropdown-item" t-att-data-interval="'month'" t-att-data-field="field[0]">Month</a>
-                        <a role="menuitem" href="#" class="dropdown-item" t-att-data-interval="'quarter'" t-att-data-field="field[0]">Quarter</a>
-                        <a role="menuitem" href="#" class="dropdown-item" t-att-data-interval="'year'" t-att-data-field="field[0]">Year</a>
-                    </div>
-                </div>
-            </t>
-            <t t-else="">
-                <a href="#" role="menuitem" t-att-data-field="field[0]" t-attf-class="dropdown-item#{field[2] ? ' disabled' : ''}"><t t-esc="field[1].string"/></a>
-            </t>
-        </t>
     </div>
 </t>
 

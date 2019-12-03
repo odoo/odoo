@@ -361,7 +361,7 @@ var PivotModel = AbstractModel.extend({
      * @param {string} groupBy
      * @returns {Promise}
      */
-    expandGroup: function (group, groupBy) {
+    expandGroup: async function (group, groupBy) {
         var leftDivisors;
         var rightDivisors;
 
@@ -475,6 +475,7 @@ var PivotModel = AbstractModel.extend({
         function twistKey(key) {
             return JSON.stringify(JSON.parse(key).reverse());
         }
+
         function twist(object) {
             var newObject = {};
             Object.keys(object).forEach(function (key) {
@@ -483,6 +484,7 @@ var PivotModel = AbstractModel.extend({
             });
             return newObject;
         }
+
         this.measurements = twist(this.measurements);
         this.counts = twist(this.counts);
         this.groupDomains = twist(this.groupDomains);
@@ -507,6 +509,7 @@ var PivotModel = AbstractModel.extend({
             measures: this.data.measures,
             origins: this.data.origins,
             rowGroupBys: groupBys.rowGroupBys,
+            selectionGroupBys: this._getSelectionGroupBy(groupBys),
         };
         if (!raw && state.hasData) {
             state.table = this._getTable();
@@ -540,6 +543,7 @@ var PivotModel = AbstractModel.extend({
      * @param {string} [params.default_order]
      * @param {string} [params.timeRangeDescription=""]
      * @param {string} params.modelName
+     * @param {Object[]} params.groupableFields
      * @returns {Promise}
      */
     load: function (params) {
@@ -549,6 +553,7 @@ var PivotModel = AbstractModel.extend({
 
         this.fields = params.fields;
         this.modelName = params.modelName;
+        this.groupableFields = params.groupableFields;
         this.data = {
             expandedRowGroupBys: [],
             expandedColGroupBys: [],
@@ -661,6 +666,7 @@ var PivotModel = AbstractModel.extend({
      * in-memory sort.
      *
      * @param {Object} sortedColumn
+     * @param {number[]} sortedColumn.groupId
      */
     sortRows: function (sortedColumn) {
         var self = this;
@@ -1041,7 +1047,7 @@ var PivotModel = AbstractModel.extend({
             var groupId = column.groupId;
             var measure = column.measure;
             var isSorted = sortedColumn.measure === measure &&
-                           _.isEqual(sortedColumn.groupId, groupId);
+                _.isEqual(sortedColumn.groupId, groupId);
             var isSortedByOrigin = isSorted && !sortedColumn.originIndexes[1];
             var isSortedByVariation = isSorted && sortedColumn.originIndexes[1];
 
@@ -1092,6 +1098,31 @@ var PivotModel = AbstractModel.extend({
         }
         return origins;
     },
+
+    /**
+     * Get the selection needed to display the group by dropdown
+     * @returns {Object[]}
+     * @private
+     */
+    _getSelectionGroupBy: function (groupBys) {
+        let groupedFieldNames = groupBys.rowGroupBys
+            .concat(groupBys.colGroupBys)
+            .map(function (g) {
+                return g.split(':')[0];
+            });
+
+        var fields = Object.keys(this.groupableFields)
+            .map((fieldName, index) => {
+                return {
+                    name: fieldName,
+                    field: this.groupableFields[fieldName],
+                    active: groupedFieldNames.includes(fieldName)
+                }
+            })
+            .sort((left, right) => left.field.string < right.field.string ? -1 : 1);
+        return fields;
+    },
+
     /**
      * Returns a description of the pivot table.
      *
@@ -1132,6 +1163,7 @@ var PivotModel = AbstractModel.extend({
             title: "",
             width: 1,
         });
+
         // col groupby cells with group values
         /**
          * Recursive function that generates the header cells corresponding to
@@ -1139,7 +1171,7 @@ var PivotModel = AbstractModel.extend({
          *
          * @param {Object} tree
          */
-        function generateTreeHeaders(tree) {
+        function generateTreeHeaders(tree, fields) {
             var group = tree.root;
             var rowIndex = group.values.length;
             var row = colGroupRows[rowIndex];
@@ -1150,6 +1182,7 @@ var PivotModel = AbstractModel.extend({
                 groupId: groupId,
                 height: isLeaf ? (colGroupBys.length + 1 - rowIndex) : 1,
                 isLeaf: isLeaf,
+                label: rowIndex === 0 ? undefined : fields[colGroupBys[rowIndex - 1].split(':')[0]].string,
                 title: group.labels[group.labels.length - 1] || _t('Total'),
                 width: leafCount * measureCount * (2 * originCount - 1),
             };
@@ -1159,10 +1192,11 @@ var PivotModel = AbstractModel.extend({
             }
 
             _.values(tree.directSubTrees).forEach(function (subTree) {
-                generateTreeHeaders(subTree);
+                generateTreeHeaders(subTree, fields);
             });
         }
-        generateTreeHeaders(this.colGroupTree);
+
+        generateTreeHeaders(this.colGroupTree, this.fields);
         // blank top right cell for 'Total' group (if there is more that one leaf)
         if (leafCounts[JSON.stringify(this.colGroupTree.root.values)] > 1) {
             var groupId = [[], []];
@@ -1205,6 +1239,7 @@ var PivotModel = AbstractModel.extend({
         var title = group.labels[group.labels.length - 1] || _t('Total');
         var indent = group.labels.length;
         var isLeaf = _.isEmpty(tree.directSubTrees);
+        var rowGroupBys = this._getGroupBys().rowGroupBys;
 
         var subGroupMeasurements = columns.map(function (column) {
             var colGroupId = column.groupId;
@@ -1226,6 +1261,7 @@ var PivotModel = AbstractModel.extend({
 
         rows.push({
             title: title,
+            label: indent === 0 ? undefined : this.fields[rowGroupBys[indent - 1].split(':')[0]].string,
             groupId: rowGroupId,
             indent: indent,
             isLeaf: isLeaf,
@@ -1276,17 +1312,17 @@ var PivotModel = AbstractModel.extend({
     _loadData: function () {
         var self = this;
 
-        this.rowGroupTree = {root: {labels: [], values: []}, directSubTrees: {}};
-        this.colGroupTree = {root: {labels: [], values: []}, directSubTrees: {}};
+        this.rowGroupTree = { root: { labels: [], values: [] }, directSubTrees: {} };
+        this.colGroupTree = { root: { labels: [], values: [] }, directSubTrees: {} };
         this.measurements = {};
         this.counts = {};
 
-        var key = JSON.stringify([[],[]]);
+        var key = JSON.stringify([[], []]);
         this.groupDomains = {};
         this.groupDomains[key] = this.data.domains.slice(0);
 
 
-        var group = {rowValues: [], colValues: []};
+        var group = { rowValues: [], colValues: [] };
         var groupBys = this._getGroupBys();
         var leftDivisors = sections(groupBys.rowGroupBys);
         var rightDivisors = sections(groupBys.colGroupBys);
@@ -1305,7 +1341,6 @@ var PivotModel = AbstractModel.extend({
      *
      * @private
      * @param  {Object} group
-        TO DO
      * @param  {Object[]} groupSubdivisions
      */
     _prepareData: function (group, groupSubdivisions) {
@@ -1447,7 +1482,7 @@ var PivotModel = AbstractModel.extend({
             return this._getNumberedLabel(value, fieldName);
         }
         if (fieldName && this.fields[fieldName] && (this.fields[fieldName].type === 'selection')) {
-            var selected = _.where(this.fields[fieldName].selection, {0: value})[0];
+            var selected = _.where(this.fields[fieldName].selection, { 0: value })[0];
             return selected ? selected[1] : value;
         }
         return value;
@@ -1487,7 +1522,11 @@ var PivotModel = AbstractModel.extend({
                 // if group is known to be empty for the given origin,
                 // we don't need to fetch data fot that origin.
                 if (!self.counts[key] || self.counts[key][originIndex] > 0) {
-                    var subGroup = {rowValues: group.rowValues, colValues: group.colValues, originIndex: originIndex};
+                    var subGroup = {
+                        rowValues: group.rowValues,
+                        colValues: group.colValues,
+                        originIndex: originIndex
+                    };
                     divisors.forEach(function (divisor) {
                         acc.push(self._getGroupSubdivision(subGroup, divisor[0], divisor[1]));
                     });

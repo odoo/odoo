@@ -6,7 +6,7 @@ odoo.define('web.config', function () {
  * This is often necessary to allow the rest of the web client to properly
  * render itself.
  *
- * Note that many informations currently stored in session should be moved to
+ * Note that many information currently stored in session should be moved to
  * this file someday.
  */
 
