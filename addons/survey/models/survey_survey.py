@@ -8,8 +8,7 @@ import werkzeug
 from collections import Counter, OrderedDict
 from itertools import product
 
-from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo import api, exceptions, fields, models, _
 from odoo.osv import expression
 
 
@@ -267,23 +266,23 @@ class Survey(models.Model):
         if test_entry:
             # the current user must have the access rights to survey
             if not user.has_group('survey.group_survey_user'):
-                raise UserError(_('Creating test token is not allowed for you.'))
+                raise exceptions.UserError(_('Creating test token is not allowed for you.'))
         else:
             if not self.active:
-                raise UserError(_('Creating token for archived surveys is not allowed.'))
+                raise exceptions.UserError(_('Creating token for archived surveys is not allowed.'))
             elif self.state == 'closed':
-                raise UserError(_('Creating token for closed surveys is not allowed.'))
+                raise exceptions.UserError(_('Creating token for closed surveys is not allowed.'))
             if self.access_mode == 'authentication':
                 # signup possible -> should have at least a partner to create an account
                 if self.users_can_signup and not user and not partner:
-                    raise UserError(_('Creating token for external people is not allowed for surveys requesting authentication.'))
+                    raise exceptions.UserError(_('Creating token for external people is not allowed for surveys requesting authentication.'))
                 # no signup possible -> should be a not public user (employee or portal users)
                 if not self.users_can_signup and (not user or user._is_public()):
-                    raise UserError(_('Creating token for external people is not allowed for surveys requesting authentication.'))
+                    raise exceptions.UserError(_('Creating token for external people is not allowed for surveys requesting authentication.'))
             if self.access_mode == 'internal' and (not user or not user.has_group('base.group_user')):
-                raise UserError(_('Creating token for anybody else than employees is not allowed for internal surveys.'))
+                raise exceptions.UserError(_('Creating token for anybody else than employees is not allowed for internal surveys.'))
             if check_attempts and not self._has_attempts_left(partner or (user and user.partner_id), email, invite_token):
-                raise UserError(_('No attempts left.'))
+                raise exceptions.UserError(_('No attempts left.'))
 
     def _prepare_user_input_predefined_questions(self):
         """ Will generate the questions for a randomized survey.
@@ -444,10 +443,10 @@ class Survey(models.Model):
         """ Open a window to compose an email, pre-filled with the survey message """
         # Ensure that this survey has at least one page with at least one question.
         if (not self.page_ids and self.questions_layout == 'page_per_section') or not self.question_ids:
-            raise UserError(_('You cannot send an invitation for a survey that has no questions.'))
+            raise exceptions.UserError(_('You cannot send an invitation for a survey that has no questions.'))
 
         if self.state == 'closed':
-            raise UserError(_("You cannot send invitations for closed surveys."))
+            raise exceptions.UserError(_("You cannot send invitations for closed surveys."))
 
         template = self.env.ref('survey.mail_template_user_input_invite', raise_if_not_found=False)
 
@@ -678,39 +677,6 @@ class Survey(models.Model):
         result['skipped'] = len([line for line in question.user_input_line_ids if line.user_input_id.state != 'new' and not line.user_input_id.test_entry and line.skipped])
 
         return result
-
-    def _get_answers_correctness(self, user_answers):
-        if not user_answers.mapped('survey_id') == self:
-            raise UserError(_('Invalid performance computation'))
-
-        res = dict((user_answer, {
-            'correct': 0,
-            'incorrect': 0,
-            'partial': 0,
-            'skipped': 0,
-        }) for user_answer in user_answers)
-
-        scored_questions = self.question_ids.filtered(
-            lambda question: question.question_type in ['simple_choice', 'multiple_choice']
-        )
-
-        for question in scored_questions:
-            question_answer_correct = question.suggested_answer_ids.filtered(lambda answer: answer.is_correct)
-            for user_answer in user_answers:
-                user_answer_lines_question = user_answer.user_input_line_ids.filtered(lambda line: line.question_id == question)
-                user_answer_correct = user_answer_lines_question.filtered(lambda line: line.answer_is_correct and not line.skipped).mapped('suggested_answer_id')
-                user_answer_incorrect = user_answer_lines_question.filtered(lambda line: not line.answer_is_correct and not line.skipped)
-
-                if user_answer_correct == question_answer_correct:
-                    res[user_answer]['correct'] += 1
-                elif user_answer_correct and user_answer_correct < question_answer_correct:
-                    res[user_answer]['partial'] += 1
-                if not user_answer_correct and user_answer_incorrect:
-                    res[user_answer]['incorrect'] += 1
-                if not user_answer_correct and not user_answer_incorrect:
-                    res[user_answer]['skipped'] += 1
-
-        return res
 
     # ------------------------------------------------------------
     # GAMIFICATION / BADGES
