@@ -29,11 +29,11 @@
                         <group>
                             <div class="col-lg-6 offset-lg-3 o_preview_questions">
                                 <!-- Multiple Lines Text Zone -->
-                                <div attrs="{'invisible': [('question_type', '!=', 'free_text')]}">
+                                <div attrs="{'invisible': [('question_type', '!=', 'text_box')]}">
                                         <i class="fa fa-align-justify fa-4x" role="img" aria-label="Multiple lines" title="Multiple Lines"/>
                                 </div>
                                 <!-- Single Line Text Zone -->
-                                <div attrs="{'invisible': [('question_type', '!=', 'textbox')]}">
+                                <div attrs="{'invisible': [('question_type', '!=', 'char_box')]}">
                                     <i class="fa fa-minus fa-4x" role="img" aria-label="Single Line" title="Single Line"/>
                                 </div>
                                 <!-- Numerical Value -->
@@ -96,8 +96,8 @@
                     </group>
                     <notebook attrs="{'invisible': [('is_page', '=', True)]}">
                         <page string="Answers">
-                            <field name="validation_email" attrs="{'invisible': [('question_type', '!=', 'textbox')]}"/>
-                            <label for="validation_email" attrs="{'invisible': [('question_type', '!=', 'textbox')]}"/>
+                            <field name="validation_email" attrs="{'invisible': [('question_type', '!=', 'char_box')]}"/>
+                            <label for="validation_email" attrs="{'invisible': [('question_type', '!=', 'char_box')]}"/>
                             <field name="page_id" invisible="1" required="0"/>
                             <field name="survey_id" invisible="1" readonly="1"/>
                             <field name="scoring_type" invisible="1"/>
@@ -126,13 +126,13 @@
                                     <field name="constr_mandatory" string="Mandatory Answer"/>
                                     <field name="constr_error_msg" attrs="{'invisible': [('constr_mandatory', '=', False)]}"/>
                                 </group>
-                                <div colspan="2" attrs="{'invisible': [('question_type', 'not in', ['textbox', 'numerical_box', 'date', 'datetime'])]}">
+                                <div colspan="2" attrs="{'invisible': [('question_type', 'not in', ['char_box', 'numerical_box', 'date', 'datetime'])]}">
                                     <group>
-                                        <field name="validation_required" attrs="{'invisible': [('validation_email', '=', True), ('question_type', '=', 'textbox')]}"/>
+                                        <field name="validation_required" attrs="{'invisible': [('validation_email', '=', True), ('question_type', '=', 'char_box')]}"/>
                                     </group>
                                     <group col="4" attrs="{'invisible': [('validation_required', '=', False)]}">
-                                        <field name="validation_length_min" attrs="{'invisible': [('question_type', '!=', 'textbox')]}"/>
-                                        <field name="validation_length_max" attrs="{'invisible': [('question_type', '!=', 'textbox')]}"/>
+                                        <field name="validation_length_min" attrs="{'invisible': [('question_type', '!=', 'char_box')]}"/>
+                                        <field name="validation_length_max" attrs="{'invisible': [('question_type', '!=', 'char_box')]}"/>
                                         <field name="validation_min_float_value" attrs="{'invisible': [('question_type', '!=', 'numerical_box')]}"/>
                                         <field name="validation_max_float_value" attrs="{'invisible': [('question_type', '!=', 'numerical_box')]}"/>
                                         <field name="validation_min_date" attrs="{'invisible': [('question_type', '!=', 'date')]}"/>

@@ -623,7 +623,7 @@ class Survey(models.Model):
             for input_line in input_lines:
                 if input_line.answer_type == 'suggestion' and answers.get(input_line.suggested_answer_id.id) and (not(current_filters) or input_line.user_input_id.id in current_filters):
                     answers[input_line.suggested_answer_id.id]['count'] += 1
-                if input_line.answer_type == 'text' and (not(current_filters) or input_line.user_input_id.id in current_filters):
+                if input_line.answer_type == 'char_box' and (not(current_filters) or input_line.user_input_id.id in current_filters):
                     comments.append(input_line)
             result_summary = {'answers': list(answers.values()), 'comments': comments}
 
@@ -640,12 +640,12 @@ class Survey(models.Model):
             for input_line in input_lines:
                 if input_line.answer_type == 'suggestion' and (not(current_filters) or input_line.user_input_id.id in current_filters) and input_line.matrix_row_id:
                     res[(input_line.matrix_row_id.id, input_line.suggested_answer_id.id)] += 1
-                if input_line.answer_type == 'text' and (not(current_filters) or input_line.user_input_id.id in current_filters):
+                if input_line.answer_type == 'char_box' and (not(current_filters) or input_line.user_input_id.id in current_filters):
                     comments.append(input_line)
             result_summary = {'answers': answers, 'rows': rows, 'result': res, 'comments': comments}
 
-        # Calculate and return statistics for free_text, textbox, date
-        if question.question_type in ['free_text', 'textbox', 'date', 'datetime']:
+        # Calculate and return statistics for text_box, char_box, date
+        if question.question_type in ['text_box', 'char_box', 'date', 'datetime']:
             result_summary = []
             for input_line in input_lines:
                 if not(current_filters) or input_line.user_input_id.id in current_filters:
@@ -657,7 +657,7 @@ class Survey(models.Model):
             all_inputs = []
             for input_line in input_lines:
                 if not(current_filters) or input_line.user_input_id.id in current_filters:
-                    all_inputs.append(input_line.value_number)
+                    all_inputs.append(input_line.value_numerical_box)
                     result_summary['input_lines'].append(input_line)
             if all_inputs:
                 result_summary.update({'average': round(sum(all_inputs) / len(all_inputs), 2),

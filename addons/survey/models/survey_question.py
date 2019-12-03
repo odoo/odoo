@@ -44,7 +44,7 @@ class SurveyQuestion(models.Model):
     def default_get(self, fields):
         defaults = super(SurveyQuestion, self).default_get(fields)
         if (not fields or 'question_type' in fields):
-            defaults['question_type'] = False if defaults.get('is_page') == True else 'free_text'
+            defaults['question_type'] = False if defaults.get('is_page') == True else 'text_box'
         return defaults
 
     # question generic data
@@ -65,8 +65,8 @@ class SurveyQuestion(models.Model):
     # question specific
     page_id = fields.Many2one('survey.question', string='Page', compute="_compute_page_id", store=True)
     question_type = fields.Selection([
-        ('free_text', 'Multiple Lines Text Box'),
-        ('textbox', 'Single Line Text Box'),
+        ('text_box', 'Multiple Lines Text Box'),
+        ('char_box', 'Single Line Text Box'),
         ('numerical_box', 'Numerical Value'),
         ('date', 'Date'),
         ('datetime', 'Datetime'),
@@ -188,8 +188,8 @@ class SurveyQuestion(models.Model):
 
         # because in choices question types, comment can count as answer
         if answer or self.question_type in ['simple_choice', 'multiple_choice']:
-            if self.question_type == 'textbox':
-                return self._validate_textbox(answer)
+            if self.question_type == 'char_box':
+                return self._validate_char_box(answer)
             elif self.question_type == 'numerical_box':
                 return self._validate_numerical_box(answer)
             elif self.question_type in ['date', 'datetime']:
@@ -200,7 +200,7 @@ class SurveyQuestion(models.Model):
                 return self._validate_matrix(answer)
         return {}
 
-    def _validate_textbox(self, answer):
+    def _validate_char_box(self, answer):
         # Email format validation
         # all the strings of the form "<something>@<anything>.<extension>" will be accepted
         if self.validation_email:

@@ -87,8 +87,8 @@ class TestSurveyInternals(common.TestSurveyCommon):
         )
 
     @users('survey_manager')
-    def test_answer_validation_textbox_email(self):
-        question = self._add_question(self.page_0, 'Q0', 'textbox', validation_email=True)
+    def test_answer_validation_char_box_email(self):
+        question = self._add_question(self.page_0, 'Q0', 'char_box', validation_email=True)
 
         self.assertEqual(
             question.validate_question('not an email'),
@@ -101,9 +101,9 @@ class TestSurveyInternals(common.TestSurveyCommon):
         )
 
     @users('survey_manager')
-    def test_answer_validation_textbox_length(self):
+    def test_answer_validation_char_box_length(self):
         question = self._add_question(
-            self.page_0, 'Q0', 'textbox', validation_required=True,
+            self.page_0, 'Q0', 'char_box', validation_required=True,
             validation_length_min=2, validation_length_max=8, validation_error_msg='ValidationError')
 
         self.assertEqual(

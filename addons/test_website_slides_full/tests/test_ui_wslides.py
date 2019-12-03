@@ -127,7 +127,7 @@ class TestUi(TestUICommon):
                 }), (0, 0, {
                     'title': 'What do you think about the content of the course? (not rated)',
                     'sequence': 4,
-                    'question_type': 'free_text',
+                    'question_type': 'text_box',
                 })
             ]
         })

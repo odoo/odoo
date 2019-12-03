@@ -22,9 +22,9 @@ class TestSurveyCommon(common.SavepointCase):
             value: (answer type, answer field_name)
         """
         self._type_match = {
-            'free_text': ('free_text', 'value_free_text'),
-            'textbox': ('text', 'value_text'),
-            'numerical_box': ('number', 'value_number'),
+            'text_box': ('text_box', 'value_text_box'),
+            'char_box': ('char_box', 'value_char_box'),
+            'numerical_box': ('numerical_box', 'value_numerical_box'),
             'date': ('date', 'value_date'),
             'simple_choice': ('suggestion', 'suggested_answer_id'),  # TDE: still unclear
             'multiple_choice': ('suggestion', 'suggested_answer_id'),  # TDE: still unclear
@@ -79,7 +79,7 @@ class TestSurveyCommon(common.SavepointCase):
             'title': 'Test Free Text',
             'survey_id': self.survey.id,
             'sequence': 2,
-            'question_type': 'free_text',
+            'question_type': 'text_box',
         })
         self.question_num = self.env['survey.question'].with_user(self.survey_manager).create({
             'title': 'Test NUmerical Box',

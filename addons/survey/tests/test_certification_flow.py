@@ -70,7 +70,7 @@ class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
                 ])
 
             q03 = self._add_question(
-                None, 'What do you think about SO line widgets (not rated)?', 'free_text',
+                None, 'What do you think about SO line widgets (not rated)?', 'text_box',
                 sequence=3,
                 constr_mandatory=True, constr_error_msg='Please tell us what you think', survey_id=certification.id)
 
@@ -130,8 +130,8 @@ class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
         self.assertTrue(user_inputs.scoring_success)
 
         # Check answer correction is taken into account
-        self.assertNotIn("I think they're great!", user_inputs.mapped('user_input_line_ids.value_free_text'))
-        self.assertIn("Just kidding, I don't like it...", user_inputs.mapped('user_input_line_ids.value_free_text'))
+        self.assertNotIn("I think they're great!", user_inputs.mapped('user_input_line_ids.value_text_box'))
+        self.assertIn("Just kidding, I don't like it...", user_inputs.mapped('user_input_line_ids.value_text_box'))
 
         certification_email = self.env['mail.mail'].sudo().search([], limit=1, order="create_date desc")
         # Check certification email correctly sent and contains document

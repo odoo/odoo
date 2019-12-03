@@ -178,8 +178,8 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         // Get all question answers by question type
         this.$('[data-question-type]').each(function () {
             switch ($(this).data('questionType')) {
-                case 'free_text':
-                case 'textbox':
+                case 'text_box':
+                case 'char_box':
                 case 'numerical_box':
                     params[this.name] = this.value;
                     break;

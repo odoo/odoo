@@ -138,7 +138,7 @@ class TestUiCertification(HttpCaseWithUserDemo):
                 }), (0, 0, {
                     'title': 'Do you think we have missing products in our catalog? (not rated)',
                     'sequence': 6,
-                    'question_type': 'free_text',
+                    'question_type': 'text_box',
                 }), (0, 0, {
                     'title': 'Prices',
                     'sequence': 7,

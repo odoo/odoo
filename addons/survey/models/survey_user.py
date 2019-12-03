@@ -194,17 +194,17 @@ class SurveyUserInputLine(models.Model):
     # answer
     skipped = fields.Boolean('Skipped')
     answer_type = fields.Selection([
-        ('text', 'Text'),
-        ('number', 'Number'),
+        ('text_box', 'Free Text'),
+        ('char_box', 'Text'),
+        ('numerical_box', 'Number'),
         ('date', 'Date'),
         ('datetime', 'Datetime'),
-        ('free_text', 'Free Text'),
         ('suggestion', 'Suggestion')], string='Answer Type')
-    value_text = fields.Char('Text answer')
-    value_number = fields.Float('Numerical answer')
+    value_char_box = fields.Char('Text answer')
+    value_numerical_box = fields.Float('Numerical answer')
     value_date = fields.Date('Date answer')
     value_datetime = fields.Datetime('Datetime answer')
-    value_free_text = fields.Text('Free Text answer')
+    value_text_box = fields.Text('Free Text answer')
     suggested_answer_id = fields.Many2one('survey.question.answer', string="Suggested answer")
     matrix_row_id = fields.Many2one('survey.question.answer', string="Row answer")
     answer_score = fields.Float('Score')
@@ -228,10 +228,10 @@ class SurveyUserInputLine(models.Model):
     def _check_answer_type(self):
         for uil in self:
             fields_type = {
-                'text': bool(uil.value_text),
-                'number': (bool(uil.value_number) or uil.value_number == 0),
+                'char_box': bool(uil.value_char_box),
+                'numerical_box': (bool(uil.value_numerical_box) or uil.value_numerical_box == 0),
                 'date': bool(uil.value_date),
-                'free_text': bool(uil.value_free_text),
+                'text_box': bool(uil.value_text_box),
                 'suggestion': bool(uil.suggested_answer_id)
             }
             if not fields_type.get(uil.answer_type, True):
@@ -256,7 +256,7 @@ class SurveyUserInputLine(models.Model):
             return {'answer_type': None, 'skipped': True}
         if answer_type == 'suggestion':
             return {'answer_type': answer_type, 'suggested_answer_id': answer}
-        value = float(answer) if answer_type == 'number' else answer
+        value = float(answer) if answer_type == 'numerical_box' else answer
         return {'answer_type': answer_type, 'value_' + answer_type: value}
 
     @api.model
@@ -278,7 +278,7 @@ class SurveyUserInputLine(models.Model):
             ('question_id', '=', question.id)
         ])
 
-        if question.question_type in ['textbox', 'free_text', 'numerical_box', 'date', 'datetime']:
+        if question.question_type in ['char_box', 'text_box', 'numerical_box', 'date', 'datetime']:
             self._save_line_simple_answer(vals, old_answers, question, answer)
         elif question.question_type in ['simple_choice', 'multiple_choice']:
             self._save_line_choice(vals, old_answers, question, answer, comment)
@@ -290,10 +290,6 @@ class SurveyUserInputLine(models.Model):
     @api.model
     def _save_line_simple_answer(self, vals, old_answers, question, answer):
         answer_type = question.question_type
-        if question.question_type == 'textbox':
-            answer_type = 'text'
-        elif question.question_type == 'numerical_box':
-            answer_type = 'number'
 
         vals.update(self._get_save_line_values(answer, answer_type))
         if old_answers:
@@ -319,7 +315,7 @@ class SurveyUserInputLine(models.Model):
                 vals_list.append(vals.copy())
 
         if comment:
-            vals.update({'answer_type': 'text', 'value_text': comment, 'skipped': False, 'suggested_answer_id': False})
+            vals.update({'answer_type': 'char_box', 'value_char_box': comment, 'skipped': False, 'suggested_answer_id': False})
             vals_list.append(vals.copy())
 
         old_answers.sudo().unlink()
@@ -337,7 +333,7 @@ class SurveyUserInputLine(models.Model):
                 vals_list.append(vals.copy())
 
         if comment:
-            vals.update({'answer_type': 'text', 'value_text': comment, 'skipped': False, 'suggested_answer_id': False})
+            vals.update({'answer_type': 'char_box', 'value_char_box': comment, 'skipped': False, 'suggested_answer_id': False})
             vals_list.append(vals.copy())
 
         old_answers.sudo().unlink()
