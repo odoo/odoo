@@ -1331,6 +1331,9 @@ const SnippetOptionWidget = Widget.extend({
             const methodsNames = widget.getMethodsNames();
             const proms = methodsNames.map(async methodName => {
                 const value = await this._computeWidgetState(methodName, widget.getMethodsParams(methodName));
+                if (value === undefined) {
+                    return;
+                }
                 const normalizedValue = this._normalizeWidgetValue(value);
                 widget.setValue(normalizedValue, methodName);
             });
@@ -1351,10 +1354,12 @@ const SnippetOptionWidget = Widget.extend({
      * Returns the string value that should be hold by the widget which is
      * related to the given method name.
      *
+     * If the value is irrelevant for a method, it must return undefined.
+     *
      * @private
      * @param {string} methodName
      * @param {Object} params
-     * @returns {Promise<string>|string}
+     * @returns {Promise<string|undefined>|string|undefined}
      */
     _computeWidgetState: async function (methodName, params) {
         switch (methodName) {
