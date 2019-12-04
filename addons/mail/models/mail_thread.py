@@ -295,11 +295,10 @@ class MailThread(models.AbstractModel):
 
         # post track template if a tracked field changed
         if not self._context.get('mail_notrack'):
-            track_threads = threads.with_lang()
-            tracked_fields = self._get_tracked_fields()
-            for thread in track_threads:
+            fnames = self._get_tracked_fields()
+            for thread in threads:
                 create_values = create_values_list[thread.id]
-                changes = [field for field in tracked_fields if create_values.get(field)]
+                changes = [fname for fname in fnames if create_values.get(fname)]
                 # based on tracked field to stay consistent with write
                 # we don't consider that a falsy field is a change, to stay consistent with previous implementation,
                 # but we may want to change that behaviour later.
@@ -311,15 +310,14 @@ class MailThread(models.AbstractModel):
         if self._context.get('tracking_disable'):
             return super(MailThread, self).write(values)
 
-        # Track initial values of tracked fields
-        track_self = self.with_lang()
-
         tracked_fields = None
         if not self._context.get('mail_notrack'):
-            tracked_fields = track_self._get_tracked_fields()
+            tracked_fields = self._get_tracked_fields()
         if tracked_fields:
-            initial_values = dict((record.id, dict((key, getattr(record, key)) for key in tracked_fields))
-                                  for record in track_self)
+            initial_values = {
+                record.id: {name: record[name] for name in tracked_fields}
+                for record in self
+            }
 
         # Perform write
         result = super(MailThread, self).write(values)
@@ -329,10 +327,11 @@ class MailThread(models.AbstractModel):
 
         # Perform the tracking
         if tracked_fields:
-            tracking = track_self.with_context(clean_context(self._context)).message_track(tracked_fields, initial_values)
+            context = clean_context(self._context)
+            tracking = self.with_context(context).message_track(tracked_fields, initial_values)
             if any(change for rec_id, (change, tracking_value_ids) in tracking.items()):
-                (changes, tracking_value_ids) = tracking[track_self[0].id]
-                track_self._message_track_post_template(changes)
+                (changes, tracking_value_ids) = tracking[self[0].id]
+                self._message_track_post_template(changes)
         return result
 
     def unlink(self):
@@ -541,20 +540,14 @@ class MailThread(models.AbstractModel):
     # Automatic log / Tracking
     # ------------------------------------------------------
 
-    @api.model
+    @tools.ormcache()
     def _get_tracked_fields(self):
-        """ Return a structure of tracked fields for the current model.
-            :return dict: a dict mapping field name to description, containing on_change fields
-        """
-        tracked_fields = []
-        for name, field in self._fields.items():
-            tracking = getattr(field, 'tracking', None) or getattr(field, 'track_visibility', None)
-            if tracking:
-                tracked_fields.append(name)
-
-        if tracked_fields:
-            return self.fields_get(tracked_fields)
-        return {}
+        """ Return the name of the tracked fields for the current model. """
+        return [
+            name
+            for name, field in self._fields.items()
+            if getattr(field, 'tracking', None) or getattr(field, 'track_visibility', None)
+        ]
 
     def _creation_subtype(self):
         """ Give the subtypes triggered by the creation of a record
@@ -601,9 +594,9 @@ class MailThread(models.AbstractModel):
             if not template:
                 continue
             if isinstance(template, str):
-                self.message_post_with_view(template, **post_kwargs)
+                self.with_lang().message_post_with_view(template, **post_kwargs)
             else:
-                self.message_post_with_template(template.id, **post_kwargs)
+                self.with_lang().message_post_with_template(template.id, **post_kwargs)
         return True
 
     @api.model
@@ -650,10 +643,16 @@ class MailThread(models.AbstractModel):
         """ Track updated values. Comparing the initial and current values of
         the fields given in tracked_fields, it generates a message containing
         the updated values. This message can be linked to a mail.message.subtype
-        given by the ``_track_subtype`` method. """
+        given by the ``_track_subtype`` method.
+
+        :param tracked_fields: iterable of field names to track
+        :param initial_values: mapping {record_id: {field_name: value}}
+        :return: mapping {record_id: (changed_field_names, tracking_value_ids)}
+        """
         if not tracked_fields:
             return True
 
+        tracked_fields = self.fields_get(tracked_fields)
         tracking = dict()
         for record in self:
             tracking[record.id] = record._message_track(tracked_fields, initial_values[record.id])
