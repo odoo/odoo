@@ -105,7 +105,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     _onSubmit: function (event) {
         event.preventDefault();
         if ($(event.currentTarget).val() === 'previous') {
-            this._submitForm({'previous_id': $(event.currentTarget).data('previousId')});
+            this._submitForm({'previous_page_id': $(event.currentTarget).data('previousPageId')});
         } else {
             this._submitForm({});
         }
@@ -120,18 +120,29 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
 
         this._resetErrors();
 
-        return self._rpc({
+        var resolveFadeOut;
+        var fadeOutPromise = new Promise(function (resolve, reject) {resolveFadeOut = resolve;});
+        self.$('.o_survey_form_content').fadeOut(400, function() {
+            resolveFadeOut();
+        });
+        var submitPromise = self._rpc({
             route: '/survey/submit/' + self.options.surveyToken + '/' + self.options.answerToken ,
             params: params,
-        }).then(function (result) {
-            return self._onSubmitDone(result, params);
+        });
+        Promise.all([fadeOutPromise, submitPromise]).then(function (results) {
+           return self._onSubmitDone(results[1], params);
         });
     },
 
     _onSubmitDone: function (result, params) {
         var self = this;
         if (result && !result.error) {
-            window.location = result;
+            self.$(".o_survey_form_content").empty();
+            self.$(".o_survey_form_content").html(result);
+            self.$('div.o_survey_form_date').each(function () {
+                self._initDateTimePicker($(this));
+            });
+            self.$('.o_survey_form_content').fadeIn(400);
         }
         else if (result && result.fields && result.error === 'validation') {
             var fieldKeys = _.keys(result.fields);

@@ -60,11 +60,55 @@
         </t>
     </template>
 
+    <template id="survey_frontend_form" name="Survey: form">
+        <t t-if="survey.questions_layout == 'one_page'">
+            <t t-foreach='survey.question_and_page_ids' t-as='question'>
+                <h2 t-if="question.is_page" t-field='question.title' class="o_survey_title" />
+                <t t-if="not question.is_page and question in answer.predefined_question_ids" t-call="survey.question_container"/>
+            </t>
+
+            <div class="text-center mt16 mb256">
+                <button type="submit" class="btn btn-primary">Submit Survey</button>
+            </div>
+        </t>
+
+        <t t-if="survey.questions_layout == 'page_per_section'">
+            <h2 t-field='page.title' class="o_survey_title" />
+            <div t-field='page.description' class="oe_no_empty"/>
+
+            <input type="hidden" name="page_id" t-att-value="page.id" />
+            <t t-foreach='page.question_ids' t-as='question'>
+                <t t-if="question in answer.predefined_question_ids" t-call="survey.question_container"/>
+            </t>
+
+            <div class="text-center mt16 mb256">
+                <button t-if="survey.users_can_go_back and page != survey.page_ids[0]" type="submit" class="btn btn-secondary"
+                        name="button_submit" value="previous" t-att-data-previous-page-id="previous_page_id">Previous page</button>
+                <button type="submit" t-att-value="'next' if not last else 'finish'" class="btn btn-primary">
+                    <t t-esc="'Next Page' if not last else 'Submit Survey'"/>
+                </button>
+            </div>
+        </t>
+
+        <t t-if="survey.questions_layout == 'page_per_question'">
+            <input type="hidden" name="question_id" t-att-value="question.id" />
+            <t t-call="survey.question_container"/>
+
+            <div class="text-center mt16 mb256">
+                <button t-if="survey.users_can_go_back and question != answer.predefined_question_ids[0]" type="submit" class="btn btn-secondary"
+                        name="button_submit" value="previous" t-att-data-previous-page-id="previous_page_id">Previous page</button>
+                <button type="submit" t-att-value="'next' if not last else 'finish'" class="btn btn-primary">
+                    <t t-esc="'Next Page' if not last else 'Submit Survey'"/>
+                </button>
+            </div>
+        </t>
+    </template>
+
     <template id="survey_page_content" name="Survey: main page content">
         <t t-set="survey_form_readonly" t-value="false"/>
-        <t t-if="survey.questions_layout == 'one_page'" t-set="page_or_question_id" t-value="None" />
-        <t t-if="survey.questions_layout == 'page_per_section'" t-set="page_or_question_id" t-value="page.id" />
-        <t t-if="survey.questions_layout == 'page_per_question'" t-set="page_or_question_id" t-value="question.id" />
+        <!--<t t-if="survey.questions_layout == 'one_page'" t-set="page_or_question_id" t-value="None" />-->
+        <!--<t t-if="survey.questions_layout == 'page_per_section'" t-set="page_or_question_id" t-value="page.id" />-->
+        <!--<t t-if="survey.questions_layout == 'page_per_question'" t-set="page_or_question_id" t-value="question.id" />-->
 
         <form role="form" method="post" t-att-name="survey.id"
                 t-att-data-answer-token="answer.access_token"
@@ -76,47 +120,10 @@
             <div class="o_survey_error alert alert-danger d-none" role="alert">
                 <p>Their was an error during the validation of the survey.</p>
             </div>
-            <t t-if="survey.questions_layout == 'one_page'">
-                <t t-foreach='survey.question_and_page_ids' t-as='question'>
-                    <h2 t-if="question.is_page" t-field='question.title' class="o_survey_title" />
-                    <t t-if="not question.is_page and question in answer.predefined_question_ids" t-call="survey.question_container"/>
-                </t>
 
-                <div class="text-center mt16 mb256">
-                    <button type="submit" class="btn btn-primary">Submit Survey</button>
-                </div>
-            </t>
-
-            <t t-if="survey.questions_layout == 'page_per_section'">
-                <h2 t-field='page.title' class="o_survey_title" />
-                <div t-field='page.description' class="oe_no_empty"/>
-
-                <input type="hidden" name="page_id" t-att-value="page.id" />
-                <t t-foreach='page.question_ids' t-as='question'>
-                    <t t-if="question in answer.predefined_question_ids" t-call="survey.question_container"/>
-                </t>
-
-                <div class="text-center mt16 mb256">
-                    <button t-if="survey.users_can_go_back and page != survey.page_ids[0]" type="submit" class="btn btn-secondary"
-                            name="button_submit" value="previous" t-att-data-previous-page-id="previous_page_id">Previous page</button>
-                    <button type="submit" t-att-value="'next' if not last else 'finish'" class="btn btn-primary">
-                        <t t-esc="'Next Page' if not last else 'Submit Survey'"/>
-                    </button>
-                </div>
-            </t>
-
-            <t t-if="survey.questions_layout == 'page_per_question'">
-                <input type="hidden" name="question_id" t-att-value="question.id" />
-                <t t-call="survey.question_container"/>
-
-                <div class="text-center mt16 mb256">
-                    <button t-if="survey.users_can_go_back and question != answer.predefined_question_ids[0]" type="submit" class="btn btn-secondary"
-                            name="button_submit" value="previous" t-att-data-previous-page-id="previous_page_id">Previous page</button>
-                    <button type="submit" t-att-value="'next' if not last else 'finish'" class="btn btn-primary">
-                        <t t-esc="'Next Page' if not last else 'Submit Survey'"/>
-                    </button>
-                </div>
-            </t>
+            <div class="o_survey_form_content">
+                <t t-call="survey.survey_frontend_form"/>
+            </div>
         </form>
 
         <!-- Modal used to display error message, i.c.o. ajax error -->
