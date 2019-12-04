@@ -81,16 +81,16 @@ SELECT
     'forecast' as state,
     GENERATE_SERIES(
     CASE
-        WHEN state = 'done' THEN (now() at time zone 'utc')::date - interval '3month'
+        WHEN m.state = 'done' THEN (now() at time zone 'utc')::date - interval '3month'
         ELSE date_expected::date
     END,
     CASE
-        WHEN state != 'done' THEN (now() at time zone 'utc')::date + interval '3 month'
+        WHEN m.state != 'done' THEN (now() at time zone 'utc')::date + interval '3 month'
         ELSE date::date - interval '1 day'
     END, '1 day'::interval)::date date,
     CASE
-        WHEN (ls.usage = 'internal' OR ls.usage = 'transit' AND ls.company_id IS NOT NULL) AND ld.usage != 'internal' AND state = 'done' THEN product_qty
-        WHEN ls.usage != 'internal' AND (ld.usage = 'internal' OR ld.usage = 'transit' AND ld.company_id IS NOT NULL) AND state = 'done' THEN -product_qty
+        WHEN (ls.usage = 'internal' OR ls.usage = 'transit' AND ls.company_id IS NOT NULL) AND ld.usage != 'internal' AND m.state = 'done' THEN product_qty
+        WHEN ls.usage != 'internal' AND (ld.usage = 'internal' OR ld.usage = 'transit' AND ld.company_id IS NOT NULL) AND m.state = 'done' THEN -product_qty
         WHEN (ls.usage = 'internal' OR ls.usage = 'transit' AND ls.company_id IS NOT NULL) AND ld.usage != 'internal' THEN -product_qty
         WHEN ls.usage != 'internal' AND (ld.usage = 'internal' OR ld.usage = 'transit' AND ld.company_id IS NOT NULL) THEN product_qty
     END AS product_qty,
