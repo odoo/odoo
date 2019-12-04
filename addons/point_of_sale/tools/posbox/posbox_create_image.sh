@@ -125,9 +125,9 @@ done
 # cleanup
 umount -f "${MOUNT_POINT}"/boot/
 umount -f "${MOUNT_POINT}"
+rm -rf "${MOUNT_POINT}"
 
 echo "Running zerofree..."
 zerofree -v "${LOOP_MAPPER_PATH}" || true
 
 kpartx -d "${LOOP_PATH}"
-rm -rf "${MOUNT_POINT}"
