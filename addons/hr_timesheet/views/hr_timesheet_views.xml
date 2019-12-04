@@ -57,6 +57,7 @@
                     <field name="employee_id" type="row"/>
                     <field name="date" interval="month" type="col"/>
                     <field name="unit_amount" type="measure" widget="timesheet_uom"/>
+                    <field name="amount" string="Timesheet Costs"/>
                 </pivot>
             </field>
         </record>
@@ -69,6 +70,7 @@
                     <field name="task_id" type="row"/>
                     <field name="project_id" type="row"/>
                     <field name="unit_amount" type="measure" widget="timesheet_uom"/>
+                    <field name="amount" string="Timesheet Costs"/>
                 </graph>
             </field>
         </record>
@@ -122,6 +124,7 @@
                 <search string="Timesheet">
                     <field name="date"/>
                     <field name="employee_id"/>
+                    <field name="department_id"/>
                     <field name="project_id"/>
                     <field name="task_id"/>
                     <field name="name"/>
@@ -129,10 +132,11 @@
                     <separator/>
                     <filter name="month" string="Date" date="date"/>
                     <group expand="0" string="Group By">
-                        <filter string="Employee" name="groupby_employee" domain="[]" context="{'group_by': 'employee_id'}"/>
                         <filter string="Project" name="groupby_project" domain="[]" context="{'group_by': 'project_id'}"/>
                         <filter string="Task" name="groupby_task" domain="[]" context="{'group_by': 'task_id'}"/>
                         <filter string="Date" name="groupby_date" domain="[]" context="{'group_by': 'date'}" help="Timesheet by Date"/>
+                        <filter string="Department" name="groupby_department" domain="[]" context="{'group_by': 'department_id'}"/>
+                        <filter string="Employee" name="groupby_employee" domain="[]" context="{'group_by': 'employee_id'}"/>
                     </group>
                 </search>
             </field>
