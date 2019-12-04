@@ -29,7 +29,7 @@
         <field name="arch" type="xml">
             <form string="Point of Sale Configuration">
                 <sheet>
-                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <field name="active" invisible="1"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="selectable_categ_ids" invisible="1"/>
