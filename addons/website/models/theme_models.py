@@ -152,11 +152,7 @@ class Theme(models.AbstractModel):
     _description = 'Theme Utils'
     _auto = False
 
-    def _post_copy(self, mod, website=False):
-        # deprecated: to remove in master
-        if not website:  # remove optional website in master
-            website = self.env['website'].get_current_website()
-
+    def _post_copy(self, mod):
         # Reinitialize font customizations
         self.env['web_editor.assets'].make_scss_customization(
             '/website/static/src/scss/options/user_values.scss',
@@ -172,7 +168,7 @@ class Theme(models.AbstractModel):
         theme_post_copy = '_%s_post_copy' % mod.name
         if hasattr(self, theme_post_copy):
             _logger.info('Executing method %s' % theme_post_copy)
-            method = getattr(self.with_context(website_id=website.id), theme_post_copy)
+            method = getattr(self, theme_post_copy)
             return method(mod)
         return False
 
