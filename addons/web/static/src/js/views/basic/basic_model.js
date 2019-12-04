@@ -3980,7 +3980,8 @@ var BasicModel = AbstractModel.extend({
 
         // Fields that are present in the originating view, that need to be initialized
         // Hence preventing their value to crash when getting back to the originating view
-        var parentRecord = self.localData[params.parentID];
+        var parentRecord = params.parentID && this.localData[params.parentID].type === 'list' ? this.localData[params.parentID] : null;
+
         if (parentRecord) {
             var originView = parentRecord.viewType;
             fieldNames = _.union(fieldNames, Object.keys(parentRecord.fieldsInfo[originView]));
