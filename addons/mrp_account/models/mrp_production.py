@@ -17,6 +17,11 @@ class MrpProduction(models.Model):
     _inherit = 'mrp.production'
 
     extra_cost = fields.Float(copy=False, help='Extra cost per produced unit')
+    show_valuation = fields.Boolean(compute='_compute_show_valuation')
+
+    def _compute_show_valuation(self):
+        for order in self:
+            order.show_valuation = any(m.state == 'done' for m in order.move_finished_ids)
 
     def _cal_price(self, consumed_moves):
         """Set a price unit on the finished move according to `consumed_moves`.
@@ -79,4 +84,3 @@ class MrpProduction(models.Model):
         context.update(self.env.context)
         context['no_at_date'] = True
         return dict(action, domain=domain, context=context)
-
