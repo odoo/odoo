@@ -9,7 +9,7 @@ tour.register('test_certification_success', {
 },
 [{ // Page-1
         content: "Clicking on Start Certification",
-        trigger: 'a.btn.btn-primary.btn-lg:contains("Start Certification")',
+        trigger: 'button.btn.btn-primary.btn-lg:contains("Start Certification")',
     }, { // Question: Do we sell Acoustic Bloc Screens?
         content: "Selecting answer 'Yes'",
         trigger: 'div.js_question-wrapper:contains("Do we sell Acoustic Bloc Screens") label:contains("Yes") input',

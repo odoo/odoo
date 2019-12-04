@@ -1,4 +1,4 @@
-odoo.define('survey.form', function(require) {
+odoo.define('survey.form', function (require) {
 'use strict';
 
 var field_utils = require('web.field_utils');
@@ -10,7 +10,9 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     events: {
         'change .o_survey_form_choice_item': '_onChangeChoiceItem',
         'click button[type="submit"]': '_onSubmit',
-        'click .o_survey_header .breadcrumb-item a': '_onBreadcrumbClick',
+    },
+    custom_events: {
+        'breadcrumb_click': '_onBreadcrumbClick',
     },
 
     //--------------------------------------------------------------------------
@@ -22,7 +24,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     */
     start: function () {
         var self = this;
-        return this._super.apply(this, arguments).then(function() {
+        return this._super.apply(this, arguments).then(function () {
             self.options = self.$target.find('form').data();
             var $timer = $('.o_survey_timer');
             if ($timer.length) {
@@ -37,6 +39,10 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
                     self.$el.find('button[type="submit"]').click();
                 });
             }
+            if (!self.options.isStartScreen) {
+                self._initTimer();
+                self._initBreadcrumb();
+            }
             self.$('div.o_survey_form_date').each(function () {
                 self._initDateTimePicker($(this));
             });
@@ -50,7 +56,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     // Handlers
     // -------------------------------------------------------------------------
 
-    /*
+    /**
     * Checks, if the 'other' choice is checked. Applies only if the comment count as answer.
     *   If not checked : Clear the comment textarea and disable it
     *   If checked : enable the comment textarea and focus on it
@@ -72,70 +78,110 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         }
     },
 
-    /*
-    * When clicking on a breadcrumb enabled item, redirect to the target page.
-    * Uses the submit flow to validate and save the answer before going to the specified page.
-    *
-    * @private
-    * @param {Event} event
-    */
-    _onBreadcrumbClick: function (event) {
-        event.preventDefault();
-        this._submitForm({'previous_page_id': $(event.currentTarget).data('previousPageId')});
-    },
-
     _onSubmit: function (event) {
         event.preventDefault();
-        if ($(event.currentTarget).val() === 'previous') {
-            this._submitForm({'previous_id': $(event.currentTarget).data('previousId')});
-        } else {
-            this._submitForm({});
-        }
+        this._submitForm($(event.currentTarget));
     },
 
-    _submitForm: function (params) {
+    // Custom Events
+    // -------------------------------------------------------------------------
+
+    _onBreadcrumbClick: function (event) {
+        this._submitForm(event.data);
+    },
+
+    /**
+    * This function will send a json rpc call to the server to
+    * - start the survey (if we are on start screen)
+    * - submit the answers of the current page
+    * Before submitting the answers, they are first validated to avoid latency from the server
+    * and allow a fade out/fade in transition of the next question.
+    * Depending of the target, the next page will be
+    * - For 'Continue' button: the next page
+    * - For 'Back' button or Breadcrumb items: the page with the given 'previous_page_id'.
+    */
+    _submitForm: function ($target) {
         var self = this;
-        var $form = this.$('form');
-        var formData = new FormData($form[0]);
+        var params = {};
+        var route = "/survey/submit";
 
-        this._prepareSubmitValues(formData, params);
+        if (self.options.isStartScreen) {
+            route = "/survey/begin";
+        } else {
+            if ($target.hasClass('breadcrumb-item')) {
+                params = {'previous_page_id': $target.data('pageId')};
+            } else {
+                params = $target.val() === 'previous' ? {'previous_page_id': $target.data('previousPageId')} : {};
+            }
+            var $form = this.$('form');
+            var formData = new FormData($form[0]);
 
-        this._resetErrors();
+            this._prepareSubmitValues(formData, params);
 
-        return self._rpc({
-            route: '/survey/submit/' + self.options.surveyToken + '/' + self.options.answerToken ,
+            this._resetErrors();
+        }
+
+        var resolveFadeOut;
+        var fadeOutPromise = new Promise(function (resolve, reject) {resolveFadeOut = resolve;});
+
+        var selectorsToFadeout = ['.o_survey_form_content'];
+        if ($target.val() === 'finish') {
+            selectorsToFadeout.push('.breadcrumb', '.o_survey_timer');
+        }
+        self.$(selectorsToFadeout.join(',')).fadeOut(400, function () {
+            resolveFadeOut();
+        });
+        var submitPromise = self._rpc({
+            route: _.str.sprintf('%s/%s/%s', route, self.options.surveyToken, self.options.answerToken),
             params: params,
-        }).then(function (result) {
-            return self._onSubmitDone(result, params);
+        });
+        Promise.all([fadeOutPromise, submitPromise]).then(function (results) {
+            // When transitioning from start screen to survey, we need to show the survey breadcrumb
+            if (self.options.isStartScreen) {
+                self.options.isStartScreen = false;
+            }
+            return self._onSubmitDone(results[1], $target);
         });
     },
 
-    _onSubmitDone: function (result, params) {
+    /**
+    * Follow the submit and handle the transition from one screen to another
+    * Also handle server side validation and displays eventual error messages.
+    */
+    _onSubmitDone: function (result, $target) {
         var self = this;
         if (result && !result.error) {
-            window.location = result;
+            self.$(".o_survey_form_content").empty();
+            self.$(".o_survey_form_content").html(result);
+            self.$('div.o_survey_form_date').each(function () {
+                self._initDateTimePicker($(this));
+            });
+            self._initTimer();
+            self._updateBreadcrumb();
+            if ($target.val() === 'finish') {
+                self._initResultWidget();
+            }
+            self.$('.o_survey_form_content').fadeIn(400);
+            $("html, body").animate({ scrollTop: 0 }, 400);
         }
         else if (result && result.fields && result.error === 'validation') {
             var fieldKeys = _.keys(result.fields);
             _.each(fieldKeys, function (key) {
-                self.$("#" + key + '>.o_survey_question_error').append($('<p>', {text: result.fields[key]})).toggleClass('d-none', false);
+                self.$("#" + key + '>.o_survey_question_error').append($('<p>', {text: result.fields[key]})).removeClass('d-none');
                 if (fieldKeys[fieldKeys.length - 1] === key) {
                     self._scrollToError(self.$('.o_survey_question_error:visible:first').closest('.js_question-wrapper'));
                 }
             });
-            return false;
-        }
-        else {
-            var $target = self.$('.o_survey_error');
-            $target.toggleClass('d-none', false);
-            self._scrollToError($target);
-            return false;
+        } else {
+            var $errorTarget = self.$('.o_survey_error');
+            $errorTarget.removeClass('d-none');
+            self._scrollToError($errorTarget);
         }
     },
 
     // PREPARE SUBMIT TOOLS
     // -------------------------------------------------------------------------
-    /*
+    /**
     * For each type of question, extract the answer from inputs or textarea (comment or answer)
     *
     *
@@ -145,7 +191,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     _prepareSubmitValues: function (formData, params) {
         var self = this;
         // Get all context params -- TODO : Use formData instead (test if input with no name are in formData)
-        formData.forEach(function(value, key){
+        formData.forEach(function (value, key){
             switch (key) {
                 case 'csrf_token':
                 case 'token':
@@ -186,7 +232,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     *   Convert date value from client current timezone to UTC Date to correspond to the server format.
     *   return params = { 'dateQuestionId' : '2019-05-23', 'datetimeQuestionId' : '2019-05-23 14:05:12' }
     */
-    _prepareSubmitDates: function(params, questionId, value, isDateTime) {
+    _prepareSubmitDates: function (params, questionId, value, isDateTime) {
         var momentDate = isDateTime ? field_utils.parse.datetime(value, null, {timezone: true}) : field_utils.parse.date(value);
         var formattedDate = momentDate ? momentDate.toJSON() : '';
         params[questionId] = formattedDate;
@@ -250,7 +296,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     *   Lonely answer are directly assigned to questionId. Multiple answers are regrouped in an array:
     *   params = { 'questionId1' : lonelyAnswer, 'questionId2' : [multipleAnswer1, multipleAnswer2, ...] }
     */
-    _prepareSubmitAnswer: function(params, questionId, value) {
+    _prepareSubmitAnswer: function (params, questionId, value) {
         if (questionId in params) {
             if (params[questionId].constructor === Array) {
                 params[questionId].push(value);
@@ -269,7 +315,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     *   with the new value. At the end, the result looks like :
     *   params = { 'questionId1' : {'comment': commentValue}, 'questionId2' : [multipleAnswer1, {'comment': commentValue}, ...] }
     */
-    _prepareSubmitComment: function(params, $parent, questionId, isMatrix) {
+    _prepareSubmitComment: function (params, $parent, questionId, isMatrix) {
         var self = this;
         $parent.find('textarea').each(function () {
             if (this.value) {
@@ -287,6 +333,53 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     // INIT FIELDS TOOLS
     // -------------------------------------------------------------------------
 
+    _initBreadcrumb: function () {
+        var self = this;
+        var $breadcrumb = this.$('.o_survey_breadcrumb_container');
+        var pageId = this.$('input[name=page_id]').val();
+        if ($breadcrumb.length) {
+            this.surveyBreadcrumbWidget = new publicWidget.registry.SurveyBreadcrumbWidget(this, {
+                'canGoBack': $breadcrumb.data('canGoBack'),
+                'currentPageId': pageId ? parseInt(pageId) : 0,
+                'pageIds': $breadcrumb.data('pageIds'),
+                'pageTitles': $breadcrumb.data('pageTitles'),
+            });
+            this.surveyBreadcrumbWidget.appendTo($breadcrumb);
+            $breadcrumb.removeClass('d-none');  // hidden by default to avoid having ghost div in start screen
+        }
+    },
+
+    _updateBreadcrumb: function () {
+        if (this.surveyBreadcrumbWidget) {
+            var pageId = this.$('input[name=page_id]').val();
+            if (!pageId) {  // If current page is end screen.
+                this.$('.o_survey_breadcrumb_container').addClass('d-none');
+            } else {
+                this.surveyBreadcrumbWidget.updateBreadcrumb(parseInt(pageId));
+            }
+        } else {
+            this._initBreadcrumb();
+        }
+    },
+    
+    _initTimer: function () {
+        var self = this;
+        var $timer = this.$('.o_survey_timer');
+        if ($timer.length) {
+            var timeLimitMinutes = this.options.timeLimitMinutes;
+            var timer = this.options.timer;
+            this.surveyTimerWidget = new publicWidget.registry.SurveyTimerWidget(this, {
+                'timer': timer,
+                'timeLimitMinutes': timeLimitMinutes
+            });
+            this.surveyTimerWidget.attachTo($timer);
+            this.surveyTimerWidget.on('time_up', this, function (ev) {
+                self.$el.find('button[type="submit"]').click();
+            });
+            $timer.removeClass('d-none');
+        }
+    },
+
     /**
     * Initialize datetimepicker in correct format and with constraints
     */
@@ -298,7 +391,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         var maxDateData = $dateGroup.data('maxdate');
         var maxDate = maxDateData ? this._formatDateTime(maxDateData) : moment().add(200, "y");
 
-        var datetimepickerFormat = time.getLangDateFormat()
+        var datetimepickerFormat = time.getLangDateFormat();
         if ($dateGroup.find('input').data('questionType') === 'datetime') {
             datetimepickerFormat = time.getLangDatetimeFormat();
         } else {
@@ -332,8 +425,17 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         });
     },
 
-    _formatDateTime: function (datetimeValue){
+    _formatDateTime: function (datetimeValue) {
         return field_utils.format.datetime(moment(datetimeValue), null, {timezone: true});
+    },
+
+    _initResultWidget: function () {
+        var $result = this.$('.o_survey_result');
+        if ($result.length) {
+            this.surveyResultWidget = new publicWidget.registry.SurveyResultWidget(this);
+            this.surveyResultWidget.attachTo($result);
+            $result.fadeIn(400);
+        }
     },
 
     // ERRORS TOOLS
@@ -354,8 +456,8 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     * Clean all form errors in order to clean DOM before a new validation
     */
     _resetErrors: function () {
-        this.$('.o_survey_question_error').empty().toggleClass("d-none", true);
-        this.$('.o_survey_error').toggleClass("d-none", true);
+        this.$('.o_survey_question_error').empty().addClass("d-none");
+        this.$('.o_survey_error').addClass("d-none");
     },
 
 });

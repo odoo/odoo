@@ -72,8 +72,11 @@ class SurveyUserInput(models.Model):
     def _compute_is_time_limit_reached(self):
         """ Checks that the user_input is not exceeding the survey's time limit. """
         for user_input in self:
-            user_input.is_time_limit_reached = user_input.survey_id.is_time_limited and fields.Datetime.now() \
-                > user_input.start_datetime + relativedelta(minutes=user_input.survey_id.time_limit)
+            if user_input.start_datetime and user_input.survey_id.is_time_limited:
+                datetime_limit = user_input.start_datetime + relativedelta(minutes=user_input.survey_id.time_limit)
+                user_input.is_time_limit_reached = fields.Datetime.now() > datetime_limit
+            else:
+                user_input.is_time_limit_reached = False
 
     @api.depends('state', 'test_entry', 'survey_id.is_attempts_limited', 'partner_id', 'email', 'invite_token')
     def _compute_attempts_number(self):
@@ -260,7 +263,7 @@ class SurveyUserInput(models.Model):
             return vals
 
         if answer_type == 'suggestion':
-            vals['suggested_answer_id'] = answer
+            vals['suggested_answer_id'] = int(answer)
         elif answer_type == 'numerical_box':
             vals['value_numerical_box'] = float(answer)
         else:

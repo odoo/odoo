@@ -71,61 +71,56 @@
 
     <!-- Finished (taken and finished) survey page -->
     <template id="survey_closed_finished" name="Survey: finished">
-        <t t-call="survey.layout">
-            <div class="wrap">
-                <div class="container">
-                    <t t-if="answer.test_entry" t-call="survey.survey_button_form_view" />
-                    <div class="jumbotron mt32">
-                        <h1>Thank you!</h1>
-                        <div t-field="survey.description_done" class="oe_no_empty" />
-                        <div class="row">
-                            <div class="col">
-                                <t t-if="survey.scoring_type != 'no_scoring'">
-                                    <div>You scored <t t-esc="answer.scoring_percentage" />%</div>
-                                    <t t-if="answer.scoring_success">
-                                        <div>Congratulations, you have passed the test!</div>
+        <div class="wrap">
+            <div class="o_survey_finished mt32 mb32">
+                <h1>Thank you!</h1>
+                <div t-field="survey.description_done" class="oe_no_empty" />
+                <div class="row">
+                    <div class="col">
+                        <t t-if="survey.scoring_type != 'no_scoring'">
+                            <div>You scored <t t-esc="answer.scoring_percentage" />%</div>
+                            <t t-if="answer.scoring_success">
+                                <div>Congratulations, you have passed the test!</div>
 
-                                        <div t-if="survey.certification" class="mt16 mb16">
-                                            <a role="button"
-                                                class="btn btn-primary btn-lg"
-                                                t-att-href="'/survey/%s/get_certification' % survey.id">
-                                                <i class="fa fa-fw fa-trophy" role="img" aria-label="Download certification" title="Download certification"/>
-                                                Download certification
-                                            </a>
-                                        </div>
-                                    </t>
-                                    <t t-else="">
-                                        <div>Unfortunately, you have failed the test.</div>
-                                    </t>
-                                </t>
-                                <t t-call="survey.survey_button_retake"/>
-                                <div t-if="survey.scoring_type != 'scoring_without_answers'">
-                                    If you wish, you can <a t-att-href="'/survey/print/%s?answer_token=%s&amp;review=True' % (survey.access_token, answer.access_token)">review your answers</a>
+                                <div t-if="survey.certification" class="mt16 mb16">
+                                    <a role="button"
+                                        class="btn btn-primary btn-lg"
+                                        t-att-href="'/survey/%s/get_certification' % survey.id">
+                                        <i class="fa fa-fw fa-trophy" role="img" aria-label="Download certification" title="Download certification"/>
+                                        Download certification
+                                    </a>
                                 </div>
-                            </div>
-                            <div class="col-6 text-center" t-if="survey.certification_give_badge and answer.scoring_success">
-                                <img t-att-src="'/web/image/gamification.badge/%s/image_128' % survey.certification_badge_id.id"/>
-                                <div>You received the badge <span class="font-weight-bold" t-esc="survey.certification_badge_id.name"/>!</div>
-                            </div>
+                            </t>
+                            <t t-else="">
+                                <div>Unfortunately, you have failed the test.</div>
+                            </t>
+                        </t>
+                        <t t-call="survey.survey_button_retake"/>
+                        <div t-if="survey.scoring_type != 'scoring_without_answers'">
+                            If you wish, you can <a t-att-href="'/survey/print/%s?answer_token=%s&amp;review=True' % (survey.access_token, answer.access_token)">review your answers</a>
                         </div>
                     </div>
-                </div>
-                <div class="container o_survey_result p-4" t-if="graph_data">
-                    <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane active survey_graph"
-                            t-att-data-scoring_percentage="answer.scoring_percentage"
-                            t-att-id="'survey_graph_question_%d' % answer.id"
-                            t-att-data-question_id="answer.id"
-                            data-graph-type="doughnut"
-                            t-att-data-graph-data="graph_data">
-                            <canvas id="doughnut_chart"></canvas>
-                            <span class="o_overall_performance"></span>
-                        </div>
+                    <div class="col-6 text-center" t-if="survey.certification_give_badge and answer.scoring_success">
+                        <img t-att-src="'/web/image/gamification.badge/%s/image_128' % survey.certification_badge_id.id"/>
+                        <div>You received the badge <span class="font-weight-bold" t-esc="survey.certification_badge_id.name"/>!</div>
                     </div>
                 </div>
-                <div class="oe_structure"/>
             </div>
-        </t>
+            <div class="container o_survey_result p-4" t-if="graph_data">
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active survey_graph"
+                         t-att-data-scoring_percentage="answer.scoring_percentage"
+                         t-att-id="'survey_graph_question_%d' % answer.id"
+                         t-att-data-question_id="answer.id"
+                         data-graph-type="doughnut"
+                         t-att-data-graph-data="graph_data">
+                        <canvas id="doughnut_chart"></canvas>
+                        <span class="o_overall_performance"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="oe_structure"/>
+        </div>
     </template>
 
     <!-- ============================================================ -->
