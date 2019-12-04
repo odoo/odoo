@@ -332,7 +332,7 @@ class ProductProduct(models.Model):
         :param Model account_analytic: a account.account.analytic record from the line of the product being sold
         """
 
-        if product.type == 'product' and product.valuation == 'real_time':
+        if (product.valuation == 'real_time' and (product.type == 'product' or (product.type == 'consu' and product._is_phantom_bom()))) :
             accounts = product.product_tmpl_id.get_product_accounts(fiscal_pos=fiscal_position)
             # debit account dacc will be the output account
             dacc = accounts['stock_output'].id
