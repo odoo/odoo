@@ -51,7 +51,10 @@
                                 <div class="col-12 col-lg-6 o_setting_box" id="companies_setting">
                                     <div class="o_setting_right_pane">
                                         <field name='company_count' class="w-auto pl-1 font-weight-bold"/>
-                                        <span class="o_form_label">
+                                        <span class='o_form_label' attrs="{'invisible':[('company_count', '&gt;', '1')]}">
+                                            Company
+                                        </span>
+                                        <span class='o_form_label' attrs="{'invisible':[('company_count', '&lt;=', '1')]}">
                                             Companies
                                         </span>
                                         <br/>
@@ -71,7 +74,10 @@
                                         <!-- TODO This is not an ideal solution but it looks ok on the interface -->
                                         <div class="w-50">
                                             <field name="language_count" class="w-auto pl-1 font-weight-bold"/>
-                                            <span class="o_form_label">
+                                            <span class='o_form_label' attrs="{'invisible':[('language_count', '&gt;', '1')]}">
+                                                Language
+                                            </span>
+                                            <span class='o_form_label' attrs="{'invisible':[('language_count', '&lt;=', '1')]}">
                                                 Languages
                                             </span>
                                         </div>
