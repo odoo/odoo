@@ -23,25 +23,25 @@ var Widget = require('web.Widget');
  * - has (or has not) a css class
  *
  * @private
- * @param {Widget|jQuery|HTMLElement} w
+ * @param {Widget|jQuery|HTMLElement|owl.Component} w
  * @param {string} className
  * @param {boolean} shouldHaveClass
  * @param {string} [msg]
  */
 function _checkClass(w, className, shouldHaveClass, msg) {
-    var $el = w instanceof Widget ? w.$el :
-              w instanceof HTMLElement ? $(w) :
-              w;  // jquery element
-
-    if ($el.length !== 1) {
-        var descr = `${shouldHaveClass ? 'hasClass' : 'doesNotHaveClass'} ${className}`;
-        QUnit.assert.ok(false, `Assertion '${descr}' targets ${$el.length} elements instead of 1`);
-    } else {
-        msg = msg || `target should ${shouldHaveClass ? '' : 'not'} have class ${className}`;
-        var hasClass = $el.hasClass(className);
-        var condition = shouldHaveClass ? hasClass : !hasClass;
-        QUnit.assert.ok(condition, msg);
+    if (w instanceof jQuery && w.length !== 1) {
+        const assertion = shouldHaveClass ? 'hasClass' : 'doesNotHaveClass';
+        QUnit.assert.ok(false, `Assertion '${assertion} ${className}' targets ${w.length} elements instead of 1`);
     }
+
+    const el = w instanceof Widget || w instanceof owl.Component ? w.el :
+              w instanceof jQuery ? w[0] : w;
+
+    msg = msg || `target should ${shouldHaveClass ? 'have' : 'not have'} class ${className}`;
+    const hasClass = className.split(" ").reduce((acc, cls) =>
+        acc && el.classList.contains(cls), true);
+    const condition = shouldHaveClass ? hasClass : !hasClass;
+    QUnit.assert.ok(condition, msg);
 }
 
 /**
@@ -50,31 +50,31 @@ function _checkClass(w, className, shouldHaveClass, msg) {
  * - is (or not) visible
  *
  * @private
- * @param {Widget|jQuery|HTMLElement} w
+ * @param {Widget|jQuery|HTMLElement|owl.Component} w
  * @param {boolean} shouldBeVisible
  * @param {string} [msg]
  */
 function _checkVisible(w, shouldBeVisible, msg) {
-    var $el = w instanceof Widget ? w.$el :
-              w instanceof HTMLElement ? $(w) :
-              w;  // jquery element
-
-    if ($el.length !== 1) {
-        var descr = `${shouldBeVisible ? 'isVisible' : 'isNotVisible'}`;
-        QUnit.assert.ok(false, `Assertion '${descr}' targets ${$el.length} elements instead of 1`);
-    } else {
-        msg = msg || `target should ${shouldBeVisible ? '' : 'not'} be visible`;
-        var isVisible = $el.is(':visible');
-        if (isVisible) {
-            // Additional test to see if $el is really visible, since jQuery
-            // considers an element visible if it has a DOWRect, even if its
-            // width and height are equal to zero.
-            var boundingClientRect = $el[0].getBoundingClientRect();
-            isVisible = boundingClientRect.width + boundingClientRect.height;
-        }
-        var condition = shouldBeVisible ? isVisible : !isVisible;
-        QUnit.assert.ok(condition, msg);
+    if (w instanceof jQuery && w.length !== 1) {
+        const assertion = shouldHaveClass ? 'hasClass' : 'doesNotHaveClass';
+        QUnit.assert.ok(false, `Assertion '${assertion} ${className}' targets ${w.length} elements instead of 1`);
     }
+
+    const el = w instanceof Widget || w instanceof owl.Component ? w.el :
+            w instanceof jQuery ? w[0] : w;
+
+    msg = msg || `target should ${shouldBeVisible ? '' : 'not'} be visible`;
+    let isVisible = el &&
+        el.offsetWidth &&
+        el.offsetHeight;
+    if (isVisible) {
+        // This computation is a little more heavy and we only want to perform it
+        // if the above assertion has failed.
+        const rect = el.getBoundingClientRect();
+        isVisible = rect.width + rect.height;
+    }
+    const condition = shouldBeVisible ? isVisible : !isVisible;
+    QUnit.assert.ok(condition, msg);
 }
 
 //------------------------------------------------------------------------------
@@ -87,32 +87,38 @@ function _checkVisible(w, shouldBeVisible, msg) {
  *
  * Example: assert.containsN(document.body, '.modal', 0)
  *
- * @param {Widget|jQuery|HTMLElement} w
+ * @param {Widget|jQuery|HTMLElement|owl.Component} w
  * @param {string} selector
  * @param {number} n
  * @param {string} [msg]
  */
 function containsN(w, selector, n, msg) {
     if (typeof n !== 'number') {
-        throw Error("containsN assert should be called with a number as third argument");
+        throw new Error("containsN assert should be called with a number as third argument");
     }
-    var $el = w instanceof Widget ? w.$el :
-              w instanceof HTMLElement ? $(w) :
-              w;  // jquery element
-
-    var $matches = $el.find(selector);
+    let matches = [];
+    if (w instanceof owl.Component) {
+        if (!w.el) {
+            throw new Error(`containsN assert with selector '${selector}' called on an unmounted component`);
+        }
+        matches = w.el.querySelectorAll(selector);
+    } else {
+        const $el = w instanceof Widget ? w.$el :
+            w instanceof HTMLElement ? $(w) :
+                w;  // jquery element
+        matches = $el.find(selector);
+    }
     if (!msg) {
-        msg = `Selector '${selector}' should have exactly ${n} matches`;
-        msg += ` (inside the target)`;
+        msg = `Selector '${selector}' should have exactly ${n} matches (inside the target)`;
     }
-    QUnit.assert.strictEqual($matches.length, n, msg);
+    QUnit.assert.strictEqual(matches.length, n, msg);
 }
 
 /**
  * Checks that the target element (described by widget/jquery or html element)
  * contains exactly 1 match for the selector.
  *
- * @param {Widget|jQuery|HTMLElement} w
+ * @param {Widget|jQuery|HTMLElement|owl.Component} w
  * @param {string} selector
  * @param {string} [msg]
  */
@@ -124,7 +130,7 @@ function containsOnce(w, selector, msg) {
  * Checks that the target element (described by widget/jquery or html element)
  * contains exactly 0 match for the selector.
  *
- * @param {Widget|jQuery|HTMLElement} w
+ * @param {Widget|jQuery|HTMLElement|owl.Component} w
  * @param {string} selector
  * @param {string} [msg]
  */
@@ -144,7 +150,7 @@ function containsNone(w, selector, msg) {
  *
  *  div.a.b.c: has class 'a b c', but does not have class 'a c b'
  *
- * @param {Widget|jQuery|HTMLElement} w
+ * @param {Widget|jQuery|HTMLElement|owl.Component} w
  * @param {string} className
  * @param {string} [msg]
  */
@@ -158,7 +164,7 @@ function hasClass(w, className, msg) {
  * - is unique
  * - does not have the given class (specified by className)
  *
- * @param {Widget|jQuery|HTMLElement} w
+ * @param {Widget|jQuery|HTMLElement|owl.Component} w
  * @param {string} className
  * @param {string} [msg]
  */
@@ -172,7 +178,7 @@ function doesNotHaveClass(w, className, msg) {
  * - is unique
  * - has the given attribute with the proper value
  *
- * @param {Widget|jQuery|HTMLElement} w
+ * @param {Widget|jQuery|HTMLElement|owl.Component} w
  * @param {string} attr
  * @param {string} value
  * @param {string} [msg]
@@ -196,7 +202,7 @@ function hasAttrValue(w, attr, value, msg) {
  * - exists
  * - is visible (as far as jQuery can tell: not in display none, ...)
  *
- * @param {Widget|jQuery|HTMLElement} w
+ * @param {Widget|jQuery|HTMLElement|owl.Component} w
  * @param {string} [msg]
  */
 function isVisible(w, msg) {
@@ -208,7 +214,7 @@ function isVisible(w, msg) {
  * - exists
  * - is not visible (as far as jQuery can tell: display none, ...)
  *
- * @param {Widget|jQuery|HTMLElement} w
+ * @param {Widget|jQuery|HTMLElement|owl.Component} w
  * @param {string} [msg]
  */
 function isNotVisible(w, msg) {

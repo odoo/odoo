@@ -1824,7 +1824,7 @@ QUnit.module('fields', {}, function () {
         });
 
         QUnit.test('list in form: call button in sub view', async function (assert) {
-            assert.expect(6);
+            assert.expect(11);
 
             this.data.partner.records[0].p = [2];
             var form = await createView({
@@ -1855,6 +1855,7 @@ QUnit.module('fields', {}, function () {
                             'should call with correct currentID in env');
                         assert.deepEqual(event.data.env.resIDs, [37],
                             'should call with correct resIDs in env');
+                        assert.step(event.data.action_data.name);
                     },
                 },
                 archs: {
@@ -1872,8 +1873,14 @@ QUnit.module('fields', {}, function () {
             await testUtils.dom.click(form.$('td.o_data_cell:first'));
             await testUtils.dom.click(form.$('.o_external_button'));
             await testUtils.dom.click($('button:contains("Just do it !")'));
+            assert.verifySteps(['action']);
             await testUtils.dom.click($('button:contains("Just don\'t do it !")'));
+            assert.verifySteps([]); // the second button is disabled, it can't be clicked
 
+            await testUtils.dom.click($('.modal .btn-secondary:contains(Discard)'));
+            await testUtils.dom.click(form.$('.o_external_button'));
+            await testUtils.dom.click($('button:contains("Just don\'t do it !")'));
+            assert.verifySteps(['object']);
             form.destroy();
         });
 
@@ -2149,9 +2156,9 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            form.$('.o_field_many2one input').focus();
+            await testUtils.dom.triggerEvent(form.$('.o_field_many2one input'),'focus');
             await testUtils.fields.editAndTrigger(form.$('.o_field_many2one input'),
-            'new partner', ['keyup', 'focusout']);
+            'new partner', ['keyup', 'blur']);
             await testUtils.dom.click($('.modal .modal-footer .btn-primary').first());
 
             form.destroy();

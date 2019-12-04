@@ -4853,11 +4853,9 @@ QUnit.module('Views', {
 
         await list.update({groupBy: []});
 
-        await testUtils.dom.click(list.$('.o_data_cell:eq(0)'));
+        await testUtils.dom.clickFirst(list.$('.o_data_cell'));
 
-        await testUtils.dom.click(list.$('.o_selected_row .o_data_cell .o_field_many2one input'));
-        await testUtils.dom.triggerEvents($('.ui-autocomplete a:contains(Search More)'),
-            ['mouseenter', 'click']);
+        await testUtils.fields.many2one.searchAndClickItem('m2o', { item: 'Search More' });
 
         assert.containsOnce($('body'), '.modal-content');
 

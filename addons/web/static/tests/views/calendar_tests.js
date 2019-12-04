@@ -2538,7 +2538,7 @@ QUnit.module('Views', {
         );
         await testUtils.nextTick();
 
-        assert.strictEqual(calendar.$('.fc-event:eq(0)').text().trim(), "event 6");
+        assert.strictEqual(calendar.$('.fc-event:first').text().trim(), "event 6");
         await testUtils.dom.click(calendar.$('.fc-event:eq(0)'));
         assert.strictEqual(calendar.$('.o_field_widget[name="start"]').text(), "11/27/2016 16:00:00");
 
@@ -2583,8 +2583,8 @@ QUnit.module('Views', {
 
         // Create event (on 20 december)
         var $cell = calendar.$('.fc-day-grid .fc-row:eq(3) .fc-day:eq(2)');
-        testUtils.triggerMouseEvent($cell, "mousedown");
-        testUtils.triggerMouseEvent($cell, "mouseup");
+        await testUtils.triggerMouseEvent($cell, "mousedown");
+        await testUtils.triggerMouseEvent($cell, "mouseup");
         await testUtils.nextTick();
         var $input = $('.modal-body input:first');
         await testUtils.fields.editInput($input, "An event");
@@ -2689,8 +2689,8 @@ QUnit.module('Views', {
 
         // Create event (on 20 december)
         var $cell = calendar.$('.fc-day-grid .fc-row:eq(3) .fc-day:eq(2)');
-        testUtils.triggerMouseEvent($cell, "mousedown");
-        testUtils.triggerMouseEvent($cell, "mouseup");
+        await testUtils.triggerMouseEvent($cell, "mousedown");
+        await testUtils.triggerMouseEvent($cell, "mouseup");
         await testUtils.nextTick();
         var $input = $('.modal-body input:first');
         await testUtils.fields.editInput($input, "An event");
@@ -2702,6 +2702,7 @@ QUnit.module('Views', {
             calendar.$('.fc-event').first(),
             calendar.$('.fc-day-top').first()
         );
+        await testUtils.nextTick();
 
         calendar.destroy();
     });
@@ -2742,8 +2743,8 @@ QUnit.module('Views', {
         });
 
         var $cell = calendar.$('.fc-day-grid .fc-row:eq(2) .fc-day:eq(2)');
-        testUtils.dom.triggerMouseEvent($cell, "mousedown");
-        testUtils.dom.triggerMouseEvent($cell, "mouseup");
+        await testUtils.dom.triggerMouseEvent($cell, "mousedown");
+        await testUtils.dom.triggerMouseEvent($cell, "mouseup");
         await testUtils.nextTick();
 
         var $input = $('.modal-body input:first');
@@ -2783,8 +2784,8 @@ QUnit.module('Views', {
         });
 
         var $cell = calendar.$('.fc-day-grid .fc-row:eq(2) .fc-day:eq(2)');
-        testUtils.dom.triggerMouseEvent($cell, "mousedown");
-        testUtils.dom.triggerMouseEvent($cell, "mouseup");
+        await testUtils.dom.triggerMouseEvent($cell, "mousedown");
+        await testUtils.dom.triggerMouseEvent($cell, "mouseup");
         await testUtils.nextTick();
         calendar.destroy();
     });

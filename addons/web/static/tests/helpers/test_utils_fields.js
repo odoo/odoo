@@ -24,17 +24,21 @@ var domUtils = require('web.test_utils_dom');
  * Example:
  *     testUtils.fields.editAndTrigger($('selector'), 'test', ['input', 'change']);
  *
- * @param {jQuery} $el should target an input, textarea or select
+ * @param {jQuery|EventTarget} el should target an input, textarea or select
  * @param {string|number} value
  * @param {string[]} events
  * @returns {Promise}
  */
-function editAndTrigger($el, value, events) {
-    if ($el.length !== 1) {
-        throw new Error(`target ${$el.selector} has length ${$el.length} instead of 1`);
+function editAndTrigger(el, value, events) {
+    if (el instanceof jQuery) {
+        if (el.length !== 1) {
+            throw new Error(`target ${el.selector} has length ${el.length} instead of 1`);
+        }
+        el.val(value);
+    } else {
+        el.value = value;
     }
-    $el.val(value);
-    return domUtils.triggerEvents($el, events);
+    return domUtils.triggerEvents(el, events);
 }
 
 /**
@@ -45,12 +49,12 @@ function editAndTrigger($el, value, events) {
  * Example:
  *     testUtils.fields.editInput($('selector'), 'somevalue');
  *
- * @param {jQuery} $el
+ * @param {jQuery|EventTarget} el should target an input, textarea or select
  * @param {string|number} value
  * @returns {Promise}
  */
-function editInput($el, value) {
-    return editAndTrigger($el, value, ['input']);
+function editInput(el, value) {
+    return editAndTrigger(el, value, ['input']);
 }
 
 /**
@@ -61,12 +65,12 @@ function editInput($el, value) {
  * Example:
  *     testUtils.fields.editSelect($('selector'), 'somevalue');
  *
- * @param {jQuery} $el
+ * @param {jQuery|EventTarget} el should target an input, textarea or select
  * @param {string|number} value
  * @returns {Promise}
  */
-function editSelect($el, value) {
-    return editAndTrigger($el, value, ['change']);
+function editSelect(el, value) {
+    return editAndTrigger(el, value, ['change']);
 }
 
 /**
@@ -83,10 +87,9 @@ async function clickOpenM2ODropdown(fieldName, selector) {
     if (matches.length !== 1) {
         throw new Error(`cannot open m2o: selector ${selector} has been found ${matches.length} instead of 1`);
     }
-    matches[0].click();
-    return await concurrency.delay(0).then(function () {
-        return matches[0];
-    });
+
+    await domUtils.click(matches[0]);
+    return matches[0];
 }
 
 /**
