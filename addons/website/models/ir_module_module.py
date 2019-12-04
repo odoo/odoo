@@ -202,7 +202,7 @@ class IrModuleModule(models.Model):
             for model_name in self._theme_model_names:
                 module._update_records(model_name, website)
 
-            self.env['theme.utils']._post_copy(module, website)
+            self.env['theme.utils'].with_context(website_id=website.id)._post_copy(module)
 
     def _theme_unload(self, website):
         """
