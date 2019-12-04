@@ -81,9 +81,6 @@
         <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="arch" type="xml">
             <!-- add state field in header -->
-            <xpath expr="//group[@name='email_template_and_project']" position="attributes">
-                <attribute name="invisible">0</attribute>
-            </xpath>
             <xpath expr="//group[@name='description']" position="attributes">
                 <attribute name="invisible">0</attribute>
             </xpath>
