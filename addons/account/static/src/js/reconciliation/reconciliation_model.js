@@ -690,9 +690,14 @@ var StatementModel = BasicModel.extend({
             if (fieldName === 'analytic_tag_ids') {
                 switch (value.operation) {
                     case "ADD_M2M":
-                        if (!_.findWhere(prop.analytic_tag_ids, {id: value.ids.id})) {
-                            prop.analytic_tag_ids.push(value.ids);
-                        }
+                        // handle analytic_tag selection via drop down (single dict) and
+                        // full widget (array of dict)
+                        var vids = _.isArray(value.ids) ? value.ids : [value.ids];
+                        _.each(vids, function (val) {
+                            if (!_.findWhere(prop.analytic_tag_ids, {id: val.id})) {
+                                prop.analytic_tag_ids.push(val);
+                            }
+                        });
                         break;
                     case "FORGET":
                         var id = self.localData[value.ids[0]].ref;

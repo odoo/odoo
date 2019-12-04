@@ -618,6 +618,7 @@ class HolidaysRequest(models.Model):
         return holiday
 
     def _read(self, fields):
+        fields = set(fields)
         if 'name' in fields and 'employee_id' not in fields:
             fields.add('employee_id')
         super(HolidaysRequest, self)._read(fields)
