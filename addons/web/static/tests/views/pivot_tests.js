@@ -336,21 +336,21 @@ QUnit.module('Views', {
 
         // check column highlighting
         // hover third measure
-        await testUtils.dom.triggerEvents(pivot.$('th.o_pivot_measure_row:nth(2)'), 'mouseenter');
+        await testUtils.dom.triggerEvents(pivot.$('th.o_pivot_measure_row:nth(2)'), 'mouseover');
         assert.containsN(pivot, '.o_cell_hover', 3);
         for (var i = 0; i < 3; i++) {
             assert.hasClass(pivot.$('tbody tr:nth(' + i + ') td:nth(2)'), 'o_cell_hover');
         }
-        await testUtils.dom.triggerEvents(pivot.$('th.o_pivot_measure_row:nth(2)'), 'mouseleave');
+        await testUtils.dom.triggerEvents(pivot.$('th.o_pivot_measure_row:nth(2)'), 'mouseout');
         assert.containsNone(pivot, '.o_cell_hover');
 
         // hover second cell, second row
-        await testUtils.dom.triggerEvents(pivot.$('tbody tr:nth(1) td:nth(1)'), 'mouseenter');
+        await testUtils.dom.triggerEvents(pivot.$('tbody tr:nth(1) td:nth(1)'), 'mouseover');
         assert.containsN(pivot, '.o_cell_hover', 3);
         for (i = 0; i < 3; i++) {
             assert.hasClass(pivot.$('tbody tr:nth(' + i + ') td:nth(1)'), 'o_cell_hover');
         }
-        await testUtils.dom.triggerEvents(pivot.$('tbody tr:nth(1) td:nth(1)'), 'mouseleave');
+        await testUtils.dom.triggerEvents(pivot.$('tbody tr:nth(1) td:nth(1)'), 'mouseout');
         assert.containsNone(pivot, '.o_cell_hover');
 
         pivot.destroy();

@@ -329,7 +329,7 @@ var FormRenderer = BasicRenderer.extend({
     _addOnClickAction: function ($el, node) {
         if (node.attrs.special || node.attrs.confirm || node.attrs.type || $el.hasClass('oe_stat_button')) {
             var self = this;
-            $el.click(function () {
+            $el.on("click", function () {
                 self.trigger_up('button_clicked', {
                     attrs: node.attrs,
                     record: self.state,
