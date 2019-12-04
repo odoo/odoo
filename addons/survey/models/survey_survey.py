@@ -238,7 +238,7 @@ class Survey(models.Model):
             answer_vals = {
                 'survey_id': survey.id,
                 'test_entry': test_entry,
-                'question_ids': [(6, 0, survey._prepare_answer_questions().ids)]
+                'predefined_question_ids': [(6, 0, survey._prepare_answer_questions().ids)]
             }
             if user and not user._is_public():
                 answer_vals['partner_id'] = user.partner_id.id
