@@ -33,7 +33,7 @@
                 <form string="Forum">
                     <sheet>
                         <field name="active" invisible="1"/>
-                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="image_1920" widget="image" options="{'preview_image': 'image_128'}" class="oe_avatar"/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
@@ -154,7 +154,7 @@
             <field name="arch" type="xml">
                 <form string="Forum Post">
                     <sheet>
-                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <label for="name" class="oe_edit_only"/>
                         <h1>
                             <field name="name" placeholder="Name"/>
