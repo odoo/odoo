@@ -139,8 +139,6 @@ class Survey(http.Controller):
             return request.render("survey.survey_auth_required", {'survey': survey_sudo, 'redirect_url': redirect_url})
         elif error_key == 'answer_deadline' and answer_sudo.access_token:
             return request.render("survey.survey_closed_expired", {'survey': survey_sudo})
-        elif error_key == 'answer_done' and answer_sudo.access_token:
-            return request.render("survey.survey_closed_finished", self._prepare_survey_finished_values(survey_sudo, answer_sudo, token=answer_sudo.access_token))
 
         return werkzeug.utils.redirect("/")
 
@@ -223,21 +221,9 @@ class Survey(http.Controller):
             else:
                 return request.render("survey.survey_403_page", {'survey': survey_sudo})
 
-        # Select the right page
-        if answer_sudo.state == 'new':  # Intro page
-            data = {'survey': survey_sudo, 'answer': answer_sudo, 'page': 0}
-            return request.render('survey.survey_page_start', data)
-        else:
-            return request.redirect('/survey/fill/%s/%s' % (survey_sudo.access_token, answer_sudo.access_token))
+        return request.redirect('/survey/%s/%s' % (survey_sudo.access_token, answer_sudo.access_token))
 
-    @http.route('/survey/fill/<string:survey_token>/<string:answer_token>', type='http', auth='public', website=True)
-    def survey_display_page(self, survey_token, answer_token, **post):
-        access_data = self._get_access_data(survey_token, answer_token, ensure_token=True)
-        if access_data['validity_code'] is not True:
-            return self._redirect_with_error(access_data, access_data['validity_code'])
-
-        survey_sudo, answer_sudo = access_data['survey_sudo'], access_data['answer_sudo']
-
+    def _survey_display_data(self, survey_sudo, answer_sudo, **post):
         data = {
             'format_datetime': lambda dt: format_datetime(request.env, dt, dt_format=False),
             'format_date': lambda date: format_date(request.env, date)
@@ -255,16 +241,18 @@ class Survey(http.Controller):
                 'answer': answer_sudo,
                 'previous_page_id': new_previous_id
             })
-            return request.render('survey.survey_page_main', data)
-
-        if survey_sudo.is_time_limited and not answer_sudo.start_datetime:
-            # init start date when user starts filling in the survey
-            answer_sudo.write({
-                'start_datetime': fields.Datetime.now()
-            })
+            return data
 
         # Select the right page
         if answer_sudo.state == 'new':  # First page
+            if 'start' not in post:  # Init page
+                return {'survey': survey_sudo, 'answer': answer_sudo, 'start': True, 'page': 0}
+
+            if survey_sudo.is_time_limited and not answer_sudo.start_datetime:
+                # init start date when user starts filling in the survey
+                answer_sudo.write({
+                    'start_datetime': fields.Datetime.now()
+                })
             page_or_question_id, is_last = survey_sudo.next_page_or_question(answer_sudo, 0)
             data.update({
                 'survey': survey_sudo,
@@ -273,9 +261,12 @@ class Survey(http.Controller):
             })
             if is_last:
                 data.update({'last': True})
-            return request.render('survey.survey_page_main', data)
-        elif answer_sudo.state == 'done':  # Display success message
-            return request.render('survey.survey_closed_finished', self._prepare_survey_finished_values(survey_sudo, answer_sudo))
+            answer_sudo.state = 'skip'
+            return data
+        elif answer_sudo.state == 'done' or (survey_sudo.is_time_limited and answer_sudo.is_time_limit_reached):  # Display success message
+            data = self._prepare_survey_finished_values(survey_sudo, answer_sudo)
+            data['finished'] = True
+            return data
         elif answer_sudo.state == 'skip':
             page_or_question_id, is_last = survey_sudo.next_page_or_question(answer_sudo, answer_sudo.last_displayed_page_id.id)
 
@@ -291,9 +282,30 @@ class Survey(http.Controller):
             if is_last:
                 data.update({'last': True})
 
-            return request.render('survey.survey_page_main', data)
+            return data
         else:
-            return request.render("survey.survey_403_page", {'survey': survey_sudo})
+            return {'not_found': True}
+
+    def _prepare_question_html(self, survey_sudo, answer_sudo, **post):
+        data = self._survey_display_data(survey_sudo, answer_sudo, **post)
+        if data.get('finished'):
+            return request.env.ref('survey.survey_closed_finished').render(data).decode('UTF-8')
+        return request.env.ref('survey.survey_frontend_form').render(data).decode('UTF-8')
+
+    @http.route('/survey/<string:survey_token>/<string:answer_token>', type='http', auth='public', website=True)
+    def survey_display_page(self, survey_token, answer_token, **post):
+        access_data = self._get_access_data(survey_token, answer_token, ensure_token=True)
+        if access_data['validity_code'] is not True and access_data['validity_code'] != 'answer_done':
+            return self._redirect_with_error(access_data, access_data['validity_code'])
+
+        survey_sudo, answer_sudo = access_data['survey_sudo'], access_data['answer_sudo']
+
+        data = self._survey_display_data(survey_sudo, answer_sudo, **post)
+
+        if data.get('not_found'):
+            return request.render('survey.survey_403_page', {'survey': survey_sudo})
+        else:
+            return request.render('survey.survey_page_main', data)
 
     @http.route('/survey/submit/<string:survey_token>/<string:answer_token>', type='json', auth='public', website=True)
     def survey_submit(self, survey_token, answer_token, **post):
@@ -313,6 +325,10 @@ class Survey(http.Controller):
             return {
                 'error': "survey_done",
             }
+
+        # If start survey, render first page/question and skip submit and validation
+        if 'start' in post:
+            return self._prepare_question_html(survey_sudo, answer_sudo, **post)
 
         questions, page_or_question_id = survey_sudo._get_survey_questions(answer=answer_sudo,
                                                                            page_id=post.get('page_id'),
@@ -353,7 +369,7 @@ class Survey(http.Controller):
             answer_sudo._mark_done()
         elif 'previous_page_id' in post:
             # Go back to specific page using the breadcrumb. Lines are saved and survey continues
-            return '/survey/fill/%s/%s?previous_page_id=%s' % (survey_sudo.access_token, answer_token, post['previous_page_id'])
+            return self._prepare_question_html(survey_sudo, answer_sudo, **post)
         else:
             next_page, unused = request.env['survey.survey'].next_page_or_question(answer_sudo, page_or_question_id)
             vals = {'last_displayed_page_id': page_or_question_id}
@@ -365,7 +381,7 @@ class Survey(http.Controller):
 
             answer_sudo.write(vals)
 
-        return '/survey/fill/%s/%s' % (survey_sudo.access_token, answer_token)
+        return self._prepare_question_html(survey_sudo, answer_sudo)
 
     def _extract_comment_from_answers(self, question, answers):
         """ Answers is a custom structure depending of the question type
