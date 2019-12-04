@@ -8,6 +8,7 @@ odoo.define('website_slides.quiz', function (require) {
 
     var CourseJoinWidget = require('website_slides.course.join.widget').courseJoinWidget;
     var QuestionFormWidget = require('website_slides.quiz.question.form');
+    var SlideQuizFinishModal = require('website_slides.quiz.finish');
 
     var QWeb = core.qweb;
     var _t = core._t;
@@ -243,118 +244,6 @@ odoo.define('website_slides.quiz', function (require) {
             });
         },
 
-        /**
-         * @private
-         * When the quiz is done and succeed, a congratulation modal appears.
-         */
-        _renderSuccessModal: function () {
-            var $modal = this.$('#slides_quiz_modal');
-            if (!$modal.length) {
-                this.$el.append(QWeb.render('slide.slide.quiz.finish', {'widget': this}));
-                $modal = this.$('#slides_quiz_modal');
-            }
-            var self = this;
-            $modal.on('shown.bs.modal', function () {
-                var rankProgress = self.quiz.rankProgress;
-                self._animateText($modal, rankProgress);
-                self._animateProgressBar($modal, rankProgress);
-            });
-            $modal.modal({
-                'show': true,
-            });
-            $modal.on('hidden.bs.modal', function () {
-                $modal.remove();
-            });
-        },
-
-        /**
-         * Handles the animation of the karma gain in the following steps:
-         * 1. Initiate the tooltip which will display the actual Karma
-         *    over the progress bar.
-         * 2. Animate the tooltip text to increment smoothly from the old
-         *    karma value to the new karma value and updates it to make it
-         *    move as the progress bar moves.
-         * 3a. The user doesn't level up
-         *    I.   When the user doesn't level up the progress bar simply goes
-         *         from the old karma value to the new karma value.
-         * 3b. The user levels up
-         *    I.   The first step makes the progress bar go from the old karma
-         *         value to 100%.
-         *    II.  The second step makes the progress bar go from 100% to 0%.
-         *    III. The third and final step makes the progress bar go from 0%
-         *         to the new karma value. It also changes the lower and upper
-         *         bound to match the new rank.
-         * @param $modal
-         * @param rankProgress
-         * @private
-         */
-        _animateProgressBar: function ($modal, rankProgress) {
-            var self = this;
-
-            this.$('[data-toggle="tooltip"]').tooltip({
-                trigger: 'manual',
-                container: '.progress-bar-tooltip',
-            }).tooltip('show');
-
-            $modal.find('.tooltip-inner')
-                .prop('karma', rankProgress.previous_rank.karma)
-                .animate({
-                    karma: rankProgress.new_rank.karma
-                }, {
-                    duration: rankProgress.level_up ? 1700 : 800,
-                    step: function (newKarma) {
-                        $modal.find('.tooltip-inner').text(Math.ceil(newKarma));
-                        self.$('[data-toggle="tooltip"]').tooltip('update');
-                    }
-                }
-            );
-
-            var $progressBar = $modal.find('.progress-bar');
-            if (rankProgress.level_up) {
-                $modal.find('.o_wslides_quiz_modal_title').text(_('Level up!'));
-                $progressBar.css('width', '100%');
-                _.delay(function () {
-                    $modal.find('.o_wslides_quiz_modal_rank_lower_bound')
-                        .text(rankProgress.new_rank.lower_bound);
-                    $modal.find('.o_wslides_quiz_modal_rank_upper_bound')
-                        .text(rankProgress.new_rank.upper_bound || "");
-
-                    // we need to use _.delay to force DOM re-rendering between 0 and new percentage
-                    _.delay(function () {
-                        $progressBar.addClass('no-transition').width('0%');
-                    }, 1);
-                    _.delay(function () {
-                        $progressBar
-                            .removeClass('no-transition')
-                            .width(rankProgress.new_rank.progress + '%');
-                    }, 100);
-                }, 800);
-            } else {
-                $progressBar.css('width', rankProgress.new_rank.progress + '%');
-            }
-        },
-
-        _animateText: function ($modal, rankProgress) {
-           _.delay(function () {
-                $modal.find('h4.o_wslides_quiz_modal_xp_gained').addClass('show in');
-                $modal.find('.o_wslides_quiz_modal_dismiss').removeClass('d-none');
-            }, 800);
-
-            if (rankProgress.level_up) {
-                _.delay(function () {
-                    $modal.find('.o_wslides_quiz_modal_rank_motivational').addClass('fade');
-                    _.delay(function () {
-                        $modal.find('.o_wslides_quiz_modal_rank_motivational').html(
-                            rankProgress.last_rank ?
-                                rankProgress.description :
-                                rankProgress.new_rank.motivational
-                        );
-                        $modal.find('.o_wslides_quiz_modal_rank_motivational').addClass('show in');
-                    }, 800);
-                }, 800);
-            }
-        },
-
         /*
          * @private
          * Update validation box (karma, buttons) according to widget state
@@ -384,7 +273,11 @@ odoo.define('website_slides.quiz', function (require) {
                 } else {
                     self.quiz = _.extend(self.quiz, data);
                     if (data.completed) {
-                        self._renderSuccessModal(data);
+                        new SlideQuizFinishModal(self, {
+                            quiz: self.quiz,
+                            hasNext: self.slide.hasNext,
+                            userId: self.userId
+                        }).open();
                         self.slide.completed = true;
                         self.trigger_up('slide_completed', {slide: self.slide, completion: data.channel_completion});
                     }
@@ -454,9 +347,6 @@ odoo.define('website_slides.quiz', function (require) {
          */
         _onClickNext: function (ev) {
             if (this.slide.hasNext) {
-                if (this.$('#slides_quiz_modal').length !== 0) {
-                    this.$('#slides_quiz_modal').modal('hide');
-                }
                 this.trigger_up('slide_go_next');
             }
         },
