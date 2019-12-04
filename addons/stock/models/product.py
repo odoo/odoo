@@ -453,6 +453,10 @@ class Product(models.Model):
                 raise UserError(msg)
         return res
 
+    def _is_phantom_bom(self):
+        self.ensure_one()
+        return False
+
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
