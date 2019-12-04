@@ -47,7 +47,7 @@ except ImportError:
 
 import odoo
 from odoo import fields
-from .service.server import memory_info
+from .service.server import memory_info, setproctitle
 from .service import security, model as service_model
 from .tools.func import lazy_property
 from .tools import ustr, consteq, frozendict, pycompat, unique, date_utils
@@ -348,6 +348,11 @@ class WebRequest(object):
                 # Early rendering of lazy responses to benefit from @service_model.check protection
                 result.flatten()
             return result
+
+        # json case already handled in JsonRequest:dispatch()
+        if self.endpoint.routing['type'] == 'http':
+            setproctitle('odoo: WorkerHTTP %s %s' % (self.db and self.db or '(nodb)',
+                                                     self.httprequest.path))
 
         if self.db:
             return checked_call(self.db, *args, **kwargs)
@@ -658,14 +663,14 @@ class JsonRequest(WebRequest):
 
     def dispatch(self):
         try:
+            endpoint = self.endpoint.method.__name__
+            model = self.params.get('model')
+            method = self.params.get('method')
+            args = self.params.get('args', [])
+
             rpc_request_flag = rpc_request.isEnabledFor(logging.DEBUG)
             rpc_response_flag = rpc_response.isEnabledFor(logging.DEBUG)
             if rpc_request_flag or rpc_response_flag:
-                endpoint = self.endpoint.method.__name__
-                model = self.params.get('model')
-                method = self.params.get('method')
-                args = self.params.get('args', [])
-
                 start_time = time.time()
                 start_memory = 0
                 if psutil:
@@ -673,6 +678,16 @@ class JsonRequest(WebRequest):
                 if rpc_request and rpc_response_flag:
                     rpc_request.debug('%s: %s %s, %s',
                         endpoint, model, method, pprint.pformat(args))
+
+            # change process name with relevant information
+            # except for the longpolling process
+            if not odoo.evented:
+                if method:
+                    title = '%s:%s' % (model, method)
+                else:
+                    title = self.httprequest.path
+                setproctitle('odoo: WorkerHTTP %s %s' % (self.db and self.db or '(nodb)',
+                                                         title))
 
             result = self._call_function(**self.params)
 

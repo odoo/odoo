@@ -1,16 +1,18 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
-import threading
-import time
+import os
 import psycopg2
 import pytz
+import threading
+import time
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
 import odoo
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.service.server import setproctitle
 
 _logger = logging.getLogger(__name__)
 
@@ -224,6 +226,7 @@ class ir_cron(models.Model):
                         continue
                     # Got the lock on the job row, run its code
                     _logger.info('Starting job `%s`.', job['cron_name'])
+                    setproctitle('odoo: WorkerCron %s `%s`' % (db_name, job['cron_name']))
                     job_cr = db.cursor()
                     try:
                         registry = odoo.registry(db_name)
