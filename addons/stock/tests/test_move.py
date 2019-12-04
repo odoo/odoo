@@ -4046,42 +4046,6 @@ class StockMove(SavepointCase):
             elif quant.lot_id == lot2:
                 self.assertAlmostEqual(quant.in_date, initial_in_date_lot2, delta=timedelta(seconds=1))
 
-    def test_transit_1(self):
-        """ Receive some products, send some to transit, check the product's `available_qty`
-        computed field with or without the "company_owned" key in the context.
-        """
-        move1 = self.env['stock.move'].create({
-            'name': 'test_transit_1',
-            'location_id': self.supplier_location.id,
-            'location_dest_id': self.stock_location.id,
-            'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
-            'product_uom_qty': 10.0,
-            'picking_type_id': self.env.ref('stock.picking_type_in').id,
-        })
-        move1._action_confirm()
-        move1._action_assign()
-        move1.move_line_ids.qty_done = 10
-        move1._action_done()
-
-        self.assertEqual(self.product.qty_available, 10.0)
-
-        move2 = self.env['stock.move'].create({
-            'name': 'test_transit_1',
-            'location_id': self.stock_location.id,
-            'location_dest_id': self.transit_location.id,
-            'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
-            'product_uom_qty': 5.0,
-        })
-        move2._action_confirm()
-        move2._action_assign()
-        move2.move_line_ids.qty_done = 5
-        move2._action_done()
-
-        self.assertEqual(self.product.qty_available, 5.0)
-        self.assertEqual(self.product.with_context(company_owned=True).qty_available, 10.0)
-
     def test_edit_initial_demand_1(self):
         """ Increase initial demand once everything is reserved and check if
         the existing move_line is updated.
