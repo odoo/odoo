@@ -2435,7 +2435,7 @@ QUnit.module('basic_fields', {
         function waitForChangeTriggered() {
             return def.then(function () {
                 def = testUtils.makeTestPromise();
-                return concurrency.delay(0);
+                return testUtils.nextTick();
             });
         }
     });
@@ -5988,7 +5988,7 @@ QUnit.module('basic_fields', {
 
         // Focusing the field selector input should open the field selector
         // popover
-        await testUtils.dom.triggerEvents($fieldSelector, ['focusin']);
+        await testUtils.dom.triggerEvents($fieldSelector, 'focus');
         var $fieldSelectorPopover = $fieldSelector.find(".o_field_selector_popover");
         assert.ok($fieldSelectorPopover.is(":visible"),
             "field selector popover should be visible");
@@ -6057,7 +6057,7 @@ QUnit.module('basic_fields', {
             "there should be a field selector");
 
         // Focusing its input should open the field selector popover
-        await testUtils.dom.triggerEvents($fieldSelector, ['focusin']);
+        await testUtils.dom.triggerEvents($fieldSelector, 'focus');
         var $fieldSelectorPopover = $fieldSelector.find(".o_field_selector_popover");
         assert.ok($fieldSelectorPopover.is(":visible"),
             "field selector popover should be visible");
