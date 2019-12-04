@@ -139,8 +139,6 @@ class Survey(http.Controller):
             return request.render("survey.survey_auth_required", {'survey': survey_sudo, 'redirect_url': redirect_url})
         elif error_key == 'answer_deadline' and answer_sudo.access_token:
             return request.render("survey.survey_closed_expired", {'survey': survey_sudo})
-        elif error_key == 'answer_done' and answer_sudo.access_token:
-            return request.render("survey.survey_closed_finished", self._prepare_survey_finished_values(survey_sudo, answer_sudo, token=answer_sudo.access_token))
 
         return werkzeug.utils.redirect("/")
 
@@ -296,21 +294,21 @@ class Survey(http.Controller):
 
     def _prepare_question_html(self, survey_sudo, answer_sudo, **post):
         data = self._survey_display_data(survey_sudo, answer_sudo, **post)
+        if data.get('finished'):
+            return request.env.ref('survey.survey_closed_finished').render(data).decode('UTF-8')
         return request.env.ref('survey.survey_frontend_form').render(data).decode('UTF-8')
 
     @http.route('/survey/fill/<string:survey_token>/<string:answer_token>', type='http', auth='public', website=True)
     def survey_display_page(self, survey_token, answer_token, **post):
         access_data = self._get_access_data(survey_token, answer_token, ensure_token=True)
-        if access_data['validity_code'] is not True:
+        if access_data['validity_code'] is not True and access_data['validity_code'] != 'answer_done':
             return self._redirect_with_error(access_data, access_data['validity_code'])
 
         survey_sudo, answer_sudo = access_data['survey_sudo'], access_data['answer_sudo']
 
         data = self._survey_display_data(survey_sudo, answer_sudo, **post)
 
-        if data.get('finished'):
-            return request.render('survey.survey_closed_finished', data)
-        elif data.get('not_found'):
+        if data.get('not_found'):
             return request.render('survey.survey_403_page', {'survey': survey_sudo})
         else:
             return request.render('survey.survey_page_main', data)

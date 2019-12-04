@@ -53,7 +53,9 @@
                 <div class="container o_survey_form">
                     <t t-if="answer.test_entry" t-call="survey.survey_button_form_view" />
                     <t t-call="survey.survey_page_main_header" />
-                    <t t-call="survey.survey_page_content" />
+
+                    <t t-if="finished" t-call="survey.survey_closed_finished" />
+                    <t t-else="" t-call="survey.survey_page_content" />
                 </div>
                 <div class="oe_structure" id="oe_structure_survey_survey_2"/>
             </div>
