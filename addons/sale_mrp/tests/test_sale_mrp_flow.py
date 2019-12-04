@@ -554,42 +554,12 @@ class TestSaleMrpFlow(common.SavepointCase):
         self.assertEqual(del_qty, 5.0, 'Sale MRP: delivered quantity should be 5.0 after complete delivery of a kit')
         self.assertEqual(so.invoice_status, 'to invoice', 'Sale MRP: so invoice_status should be "to invoice" after complete delivery of a kit')
 
-    def test_02_sale_mrp_anglo_saxon(self):
-        """Test the price unit of a kit"""
-        # This test will check that the correct journal entries are created when a stockable product in real time valuation
-        # and in fifo cost method is sold in a company using anglo-saxon.
-        # For this test, let's consider a product category called Test category in real-time valuation and real price costing method
-        # Let's  also consider a finished product with a bom with two components: component1(cost = 20) and component2(cost = 10)
-        # These products are in the Test category
-        # The bom consists of 2 component1 and 1 component2
-        # The invoice policy of the finished product is based on delivered quantities
-        self.uom_unit = self.UoM.create({
-            'name': 'Test-Unit',
-            'category_id': self.categ_unit.id,
-            'factor': 1,
-            'uom_type': 'bigger',
-            'rounding': 1.0})
-        self.company = self.env.ref('base.main_company')
-        self.company.anglo_saxon_accounting = True
-        self.partner = self.env.ref('base.res_partner_1')
-        self.category = self.env.ref('product.product_category_1').copy({'name': 'Test category','property_valuation': 'real_time', 'property_cost_method': 'fifo'})
-        account_type = self.env['account.account.type'].create({'name': 'RCV type', 'type': 'receivable'})
-        self.account_receiv = self.env['account.account'].create({'name': 'Receivable', 'code': 'RCV00' , 'user_type_id': account_type.id, 'reconcile': True})
-        account_expense = self.env['account.account'].create({'name': 'Expense', 'code': 'EXP00' , 'user_type_id': account_type.id, 'reconcile': True})
-        account_output = self.env['account.account'].create({'name': 'Output', 'code': 'OUT00' , 'user_type_id': account_type.id, 'reconcile': True})
-        account_valuation = self.env['account.account'].create({'name': 'Valuation', 'code': 'STV00' , 'user_type_id': account_type.id, 'reconcile': True})
-        self.partner.property_account_receivable_id = self.account_receiv
-        self.category.property_account_income_categ_id = self.account_receiv
-        self.category.property_account_expense_categ_id = account_expense
-        self.category.property_stock_account_input_categ_id = self.account_receiv
-        self.category.property_stock_account_output_categ_id = account_output
-        self.category.property_stock_valuation_account_id = account_valuation
-        self.category.property_stock_journal = self.env['account.journal'].create({'name': 'Stock journal', 'type': 'sale', 'code': 'STK00'})
+    def _sale_mrp_anglo_saxon(self, product_type):
 
         Product = self.env['product.product']
         self.finished_product = Product.create({
                 'name': 'Finished product',
-                'type': 'product',
+                'type': product_type,
                 'uom_id': self.uom_unit.id,
                 'invoice_policy': 'delivery',
                 'categ_id': self.category.id})
@@ -629,13 +599,15 @@ class TestSaleMrpFlow(common.SavepointCase):
                 'product_qty': 1.0,
                 'bom_id': self.bom.id})
 
+        price_list_EUR = self.env.ref('product.list0').copy({'currency_id': self.env.ref('base.EUR').id})
+
         # Create a SO for a specific partner for three units of the finished product
         so_vals = {
             'partner_id': self.partner.id,
             'partner_invoice_id': self.partner.id,
             'partner_shipping_id': self.partner.id,
             'order_line': [(0, 0, {'name': self.finished_product.name, 'product_id': self.finished_product.id, 'product_uom_qty': 3, 'product_uom': self.finished_product.uom_id.id, 'price_unit': self.finished_product.list_price})],
-            'pricelist_id': self.env.ref('product.list0').id,
+            'pricelist_id': price_list_EUR.id,
             'company_id': self.company.id,
         }
         self.so = self.env['sale.order'].create(so_vals)
@@ -655,11 +627,50 @@ class TestSaleMrpFlow(common.SavepointCase):
         self.invoice.invoice_line_ids.write({'quantity': 2.0})
         self.invoice.action_invoice_open()
         aml = self.invoice.move_id.line_ids
-        aml_expense = aml.filtered(lambda l: l.account_id.id == account_expense.id)
-        aml_output = aml.filtered(lambda l: l.account_id.id == account_output.id)
+        aml_expense = aml.filtered(lambda l: l.account_id.id == self.account_expense.id)
+        aml_output = aml.filtered(lambda l: l.account_id.id == self.account_output.id)
         # Check that the cost of Good Sold entries are equal to 2* (2 * 20 + 1 * 10) = 100
         self.assertEqual(aml_expense.debit, 100, "Cost of Good Sold entry missing or mismatching")
         self.assertEqual(aml_output.credit, 100, "Cost of Good Sold entry missing or mismatching")
+
+    def test_02_sale_mrp_anglo_saxon(self):
+        """Test the price unit of a kit"""
+        # This test will check that the correct journal entries are created when a stockable product in real time valuation
+        # and in fifo cost method is sold in a company using anglo-saxon.
+        # For this test, let's consider a product category called Test category in real-time valuation and real price costing method
+        # Let's  also consider a finished product with a bom with two components: component1(cost = 20) and component2(cost = 10)
+        # These products are in the Test category
+        # The bom consists of 2 component1 and 1 component2
+        # The invoice policy of the finished product is based on delivered quantities
+
+        self.uom_unit = self.UoM.create({
+            'name': 'Test-Unit',
+            'category_id': self.categ_unit.id,
+            'factor': 1,
+            'uom_type': 'bigger',
+            'rounding': 1.0})
+        self.company = self.env.ref('base.main_company')
+        self.company.anglo_saxon_accounting = True
+        self.partner = self.env.ref('base.res_partner_1')
+        self.category = self.env.ref('product.product_category_1').copy({'name': 'Test category','property_valuation': 'real_time', 'property_cost_method': 'fifo'})
+        account_type = self.env['account.account.type'].create({'name': 'RCV type', 'type': 'receivable'})
+        self.account_receiv = self.env['account.account'].create({'name': 'Receivable', 'code': 'RCV00' , 'user_type_id': account_type.id, 'reconcile': True})
+        self.account_expense = self.env['account.account'].create({'name': 'Expense', 'code': 'EXP00' , 'user_type_id': account_type.id, 'reconcile': True})
+        self.account_output = self.env['account.account'].create({'name': 'Output', 'code': 'OUT00' , 'user_type_id': account_type.id, 'reconcile': True})
+        self.account_valuation = self.env['account.account'].create({'name': 'Valuation', 'code': 'STV00' , 'user_type_id': account_type.id, 'reconcile': True})
+        self.partner.property_account_receivable_id = self.account_receiv
+        self.category.property_account_income_categ_id = self.account_receiv
+        self.category.property_account_expense_categ_id = self.account_expense
+        self.category.property_stock_account_input_categ_id = self.account_receiv
+        self.category.property_stock_account_output_categ_id = self.account_output
+        self.category.property_stock_valuation_account_id = self.account_valuation
+        self.category.property_stock_journal = self.env['account.journal'].create({'name': 'Stock journal', 'type': 'sale', 'code': 'STK00'})
+
+        #In this case the finished product is a storable product
+        self._sale_mrp_anglo_saxon('product')
+        #In this case the finished product is a consumable product
+        self._sale_mrp_anglo_saxon('consu')
+
 
     def test_03_sale_mrp_simple_kit_qty_delivered(self):
         """ Test that the quantities delivered are correct when

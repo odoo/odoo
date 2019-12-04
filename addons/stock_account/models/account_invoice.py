@@ -110,7 +110,7 @@ class AccountInvoiceLine(models.Model):
         return self.invoice_id.currency_id.round(price)
 
     def get_invoice_line_account(self, type, product, fpos, company):
-        if company.anglo_saxon_accounting and type in ('in_invoice', 'in_refund') and product and product.type == 'product':
+        if company.anglo_saxon_accounting and type in ('in_invoice', 'in_refund') and product and (product.type == 'product' or product.type == 'consu' and product._is_phantom_bom()):
             accounts = product.product_tmpl_id.get_product_accounts(fiscal_pos=fpos)
             if accounts['stock_input']:
                 return accounts['stock_input']
