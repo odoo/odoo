@@ -413,7 +413,7 @@ class StockMove(models.Model):
                 tracking.append((picking, initial_values))
         res = super(StockMove, self).create(vals_list)
         for picking, initial_values in tracking:
-            picking.message_track(picking.fields_get(['state']), initial_values)
+            picking.message_track(['state'], initial_values)
         return res
 
     def write(self, vals):
@@ -473,7 +473,7 @@ class StockMove(models.Model):
                     move.date = move.date_expected
 
         if track_pickings:
-            pickings.message_track(pickings.fields_get(['state']), initial_values)
+            pickings.message_track(['state'], initial_values)
 
         if receipt_moves_to_reassign:
             receipt_moves_to_reassign._action_assign()
