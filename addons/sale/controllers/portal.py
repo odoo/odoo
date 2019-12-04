@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import date
 from odoo import fields, http, _
 from odoo.exceptions import AccessError, MissingError
 from odoo.http import request
@@ -151,13 +152,16 @@ class CustomerPortal(CustomerPortal):
 
         # use sudo to allow accessing/viewing orders for public user
         # only if he knows the private token
-        now = fields.Date.today()
-
         # Log only once a day
-        if order_sudo and request.session.get('view_quote_%s' % order_sudo.id) != now and request.env.user.share and access_token:
-            request.session['view_quote_%s' % order_sudo.id] = now
-            body = _('Quotation viewed by customer')
-            _message_post_helper(res_model='sale.order', res_id=order_sudo.id, message=body, token=order_sudo.access_token, message_type='notification', subtype="mail.mt_note", partner_ids=order_sudo.user_id.sudo().partner_id.ids)
+        if order_sudo:
+            now = fields.Date.today().isoformat()
+            session_obj_date = request.session.get('view_quote_%s' % order_sudo.id)
+            if isinstance(session_obj_date, date):
+                session_obj_date = session_obj_date.isoformat()
+            if session_obj_date != now and request.env.user.share and access_token:
+                request.session['view_quote_%s' % order_sudo.id] = now
+                body = _('Quotation viewed by customer')
+                _message_post_helper(res_model='sale.order', res_id=order_sudo.id, message=body, token=order_sudo.access_token, message_type='notification', subtype="mail.mt_note", partner_ids=order_sudo.user_id.sudo().partner_id.ids)
 
         values = {
             'sale_order': order_sudo,
