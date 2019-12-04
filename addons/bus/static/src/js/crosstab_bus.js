@@ -348,7 +348,7 @@ var CrossTabBus = Longpolling.extend({
      */
     _onUnload: function () {
         // unload peer
-        var peers = this._callLocalStorage('getItem', 'peers', {});
+        var peers = this._callLocalStorage('getItem', 'peers') || {};
         delete peers[this._id];
         this._callLocalStorage('setItem', 'peers', peers);
 
