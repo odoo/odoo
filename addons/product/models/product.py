@@ -159,7 +159,8 @@ class ProductProduct(models.Model):
     ]
 
     def _get_invoice_policy(self):
-        return False
+        # Consider we are in "delivery" mode for proper valuation
+        return "delivery"
 
     def _compute_is_product_variant(self):
         for product in self:
