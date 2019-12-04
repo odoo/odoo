@@ -177,6 +177,7 @@ body.editor_enable.editor_has_snippets {
     > .o_we_customize_panel {
 
         we-button, we-toggler {
+            flex: 1 1 auto;
             cursor: pointer;
             @include o-text-overflow(block);
             padding: 0.1em 0.4em;
@@ -190,6 +191,7 @@ body.editor_enable.editor_has_snippets {
             text-align: left;
 
             &.fa, &.fas, &.fab, &.far {
+                flex: 0 0 auto;
                 display: inline-block;
                 margin: 0 0 0 0.3em;
                 padding: 0;
@@ -298,6 +300,7 @@ body.editor_enable.editor_has_snippets {
             }
 
             we-select {
+                flex: 1 1 auto;
                 position: relative;
                 display: flex;
                 flex-flow: row wrap;
@@ -354,12 +357,13 @@ body.editor_enable.editor_has_snippets {
             }
 
             we-input {
+                flex: 1 1 auto;
                 @extend we-row.o_we_inline;
 
                 > input {
                     flex: 1 1 auto;
                     width: 0;
-                    min-width: 3em;
+                    min-width: 1.5em;
                     margin: 0 2px 0 0;
                     padding: 0 2px;
                     border: none;
@@ -382,15 +386,8 @@ body.editor_enable.editor_has_snippets {
                     display: flex;
                     align-items: center;
 
-                    > * {
-                        flex: 1 1 auto;
-
-                        + * {
-                            margin-left: 0.5em;
-                        }
-                    }
-                    > .fa, > .fas, > .fab, > .far {
-                        flex: 0 0 auto;
+                    > * + * {
+                        margin-left: 0.5em;
                     }
                 }
 
@@ -432,6 +429,9 @@ body.editor_enable.editor_has_snippets {
                 display: flex;
                 align-items: center;
 
+                > span {
+                    @include o-text-overflow();
+                }
                 > .fa, > .fas, > .fab, > .far {
                     margin-left: auto;
                 }
@@ -439,6 +439,8 @@ body.editor_enable.editor_has_snippets {
         }
 
         .o_we_so_color_palette {
+            flex: 0 0 auto;
+
             we-title + span {
                 @include o-alpha-button-preview;
                 display: block;
