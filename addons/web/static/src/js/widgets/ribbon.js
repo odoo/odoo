@@ -4,7 +4,7 @@ odoo.define('web.ribbon', function (require) {
     /**
      * This widget adds a ribbon on the top right side of the form
      *
-     *      - You can specify the text with the text attribute.
+     *      - You can specify the text with the title attribute.
      *      - You can specify a background color for the ribbon with the bg_color attribute
      *        using bootstrap classes :
      *        (bg-primary, bg-secondary, bg-success, bg-danger, bg-warning, bg-info,
@@ -23,7 +23,7 @@ odoo.define('web.ribbon', function (require) {
 
         init: function (parent, data, options) {
             this._super.apply(this, arguments);
-            this.text = options.attrs.text;
+            this.text = options.attrs.title || options.attrs.text;
             this.bgColor = options.attrs.bg_color;
         }
 
