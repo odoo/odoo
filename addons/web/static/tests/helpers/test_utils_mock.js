@@ -19,6 +19,7 @@ var session = require('web.session');
 
 var DebouncedField = basic_fields.DebouncedField;
 
+
 //------------------------------------------------------------------------------
 // Private functions
 //------------------------------------------------------------------------------
@@ -45,7 +46,7 @@ function _observe(widget) {
  * and optionally triggers an rpc with the src url as route on a widget.
  * This method is critical and must be fastest (=> no jQuery, no underscore)
  *
- * @param {DOM Node} el
+ * @param {HTMLElement} el
  * @param {[Widget]} widget the widget on which the rpc should be performed
  */
 function removeSrcAttribute(el, widget) {
@@ -568,7 +569,6 @@ function patchSetTimeout() {
         window.setTimeout = original;
     };
 }
-
 
 return {
     addMockEnvironment: addMockEnvironment,

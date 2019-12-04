@@ -531,13 +531,12 @@ QUnit.module('Views', {
             },
         });
 
-        await testUtils.dom.click(form.$('.o_field_widget[name="instrument"] .o_input'));
+        await testUtils.fields.many2one.clickOpenDropdown('instrument');
 
         assert.notOk($('.ui-autocomplete a:contains(Create and Edit)').length,
             'Create and edit not present in dropdown');
 
-        await testUtils.dom.triggerEvents($('.ui-autocomplete a:contains(Search More)'),
-            ['mouseenter', 'click']);
+        await testUtils.fields.many2one.clickItem('instrument', 'Search More...');
 
         var $modal = $('.modal-dialog.modal-lg');
 
