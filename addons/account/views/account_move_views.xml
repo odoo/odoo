@@ -538,9 +538,9 @@
                         </div>
 
                         <!-- Payment status for invoices / receipts -->
-                        <widget name="web_ribbon" text="Paid"
+                        <widget name="web_ribbon" title="Paid"
                                 attrs="{'invisible': ['|', ('invoice_payment_state', '!=', 'paid'), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
-                        <widget name="web_ribbon" text="In Payment"
+                        <widget name="web_ribbon" title="In Payment"
                                 attrs="{'invisible': ['|', ('invoice_payment_state', '!=', 'in_payment'), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
 
                         <!-- Invisible fields -->
