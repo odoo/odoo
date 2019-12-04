@@ -50,7 +50,10 @@
             <field name="name">Timesheets By Project</field>
             <field name="res_model">account.analytic.line</field>
             <field name="domain">[('project_id', '!=', False)]</field>
-            <field name="context">{'search_default_groupby_project':1,}</field>
+            <field name="context">{
+                'search_default_groupby_project': 1,
+                'search_default_groupby_employee': 1,
+            }</field>
             <field name="search_view_id" ref="hr_timesheet_line_search"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
