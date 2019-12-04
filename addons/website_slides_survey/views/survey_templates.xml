@@ -2,7 +2,7 @@
 <odoo>
     <data>
         <template id="survey_closed_finished_inherit_website_slides" inherit_id="survey.survey_closed_finished">
-            <xpath expr="//div[hasclass('jumbotron')]/div[last()]" position="after">
+            <xpath expr="//div[hasclass('o_survey_finished')]/div[last()]" position="after">
                 <div t-if="channel_url" class="mt16">
                     <a role="button"
                         class="btn btn-primary btn-lg"

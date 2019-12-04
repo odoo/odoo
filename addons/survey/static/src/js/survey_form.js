@@ -1,4 +1,4 @@
-odoo.define('survey.form', function(require) {
+odoo.define('survey.form', function (require) {
 'use strict';
 
 var field_utils = require('web.field_utils');
@@ -22,7 +22,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     */
     start: function () {
         var self = this;
-        return this._super.apply(this, arguments).then(function() {
+        return this._super.apply(this, arguments).then(function () {
             self.options = self.$target.find('form').data();
             var $timer = $('.o_survey_timer');
             if ($timer.length) {
@@ -37,6 +37,9 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
                     self.$el.find('button[type="submit"]').click();
                 });
             }
+            if (!self.options.isStartScreen) {
+                self.$('.breadcrumb').removeClass('d-none');
+            }
             self.$('div.o_survey_form_date').each(function () {
                 self._initDateTimePicker($(this));
             });
@@ -50,7 +53,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     // Handlers
     // -------------------------------------------------------------------------
 
-    /*
+    /**
     * Checks, if the 'other' choice is checked. Applies only if the comment count as answer.
     *   If not checked : Clear the comment textarea and disable it
     *   If checked : enable the comment textarea and focus on it
@@ -72,7 +75,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         }
     },
 
-    /*
+    /**
     * When clicking on a breadcrumb enabled item, redirect to the target page.
     * Uses the submit flow to validate and save the answer before going to the specified page.
     *
@@ -81,53 +84,85 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     */
     _onBreadcrumbClick: function (event) {
         event.preventDefault();
-        this._submitForm({'previous_page_id': $(event.currentTarget).data('previousPageId')});
+        this._submitForm($(event.currentTarget));
     },
 
     _onSubmit: function (event) {
         event.preventDefault();
-        if ($(event.currentTarget).val() === 'previous') {
-            this._submitForm({'previous_id': $(event.currentTarget).data('previousId')});
-        } else {
-            this._submitForm({});
-        }
+        this._submitForm($(event.currentTarget));
     },
 
-    _submitForm: function (params) {
+    /**
+    * This function will sent a json rpc call to the server to
+    * - start the survey (if we are on start screen)
+    * - submit the answers of the current page
+    * Before submitting the answers, they are first validated to avoid latency from the server.
+    * Depending of the target, the next page will be
+    * - For 'Continue' button: the next page
+    * - For 'Back' button or Breadcrumb items: the page with the given 'previous_page_id'.
+    */
+    _submitForm: function ($target) {
         var self = this;
-        var $form = this.$('form');
-        var formData = new FormData($form[0]);
+        var params = {};
+        var route = "/survey/submit/";
 
-        this._prepareSubmitValues(formData, params);
+        if (self.options.isStartScreen) {
+            route = "/survey/begin/";
+        } else {
+            params = $target.data('previousPageId') ? {'previous_page_id': $target.data('previousPageId')} : {}
+            var $form = this.$('form');
+            var formData = new FormData($form[0]);
 
-        this._resetErrors();
+            this._prepareSubmitValues(formData, params);
 
-        return self._rpc({
-            route: '/survey/submit/' + self.options.surveyToken + '/' + self.options.answerToken ,
+            this._resetErrors();
+        }
+
+        var resolveFadeOut;
+        var fadeOutPromise = new Promise(function (resolve, reject) {resolveFadeOut = resolve;});
+
+        var selectorsToFadeout = ['.o_survey_form_content'];
+        if ($target.val() === 'finish') {
+            selectorsToFadeout.push('.breadcrumb', '.o_survey_timer');
+        }
+        self.$(selectorsToFadeout.join(',')).fadeOut(400, function () {
+            resolveFadeOut();
+        });
+        var submitPromise = self._rpc({
+            route: route + self.options.surveyToken + '/' + self.options.answerToken ,
             params: params,
-        }).then(function (result) {
-            return self._onSubmitDone(result, params);
+        });
+        Promise.all([fadeOutPromise, submitPromise]).then(function (results) {
+            if (self.options.isStartScreen) {
+                self.options.isStartScreen = false;
+                self.$('.breadcrumb').removeClass('d-none');
+            }
+            return self._onSubmitDone(results[1]);
         });
     },
 
-    _onSubmitDone: function (result, params) {
+    _onSubmitDone: function (result) {
         var self = this;
         if (result && !result.error) {
-            window.location = result;
+            self.$(".o_survey_form_content").empty();
+            self.$(".o_survey_form_content").html(result);
+            self.$('div.o_survey_form_date').each(function () {
+                self._initDateTimePicker($(this));
+            });
+            self.$('.o_survey_form_content').fadeIn(400);
         }
         else if (result && result.fields && result.error === 'validation') {
             var fieldKeys = _.keys(result.fields);
             _.each(fieldKeys, function (key) {
-                self.$("#" + key + '>.o_survey_question_error').append($('<p>', {text: result.fields[key]})).toggleClass('d-none', false);
+                self.$("#" + key + '>.o_survey_question_error').append($('<p>', {text: result.fields[key]})).removeClass('d-none');
                 if (fieldKeys[fieldKeys.length - 1] === key) {
                     self._scrollToError(self.$('.o_survey_question_error:visible:first').closest('.js_question-wrapper'));
                 }
             });
             return false;
-        }
-        else {
+        } else {
             var $target = self.$('.o_survey_error');
-            $target.toggleClass('d-none', false);
+            $target.removeClass('d-none');
             self._scrollToError($target);
             return false;
         }
@@ -135,7 +170,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
 
     // PREPARE SUBMIT TOOLS
     // -------------------------------------------------------------------------
-    /*
+    /**
     * For each type of question, extract the answer from inputs or textarea (comment or answer)
     *
     *
@@ -145,7 +180,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     _prepareSubmitValues: function (formData, params) {
         var self = this;
         // Get all context params -- TODO : Use formData instead (test if input with no name are in formData)
-        formData.forEach(function(value, key){
+        formData.forEach(function (value, key){
             switch (key) {
                 case 'csrf_token':
                 case 'token':
@@ -186,7 +221,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     *   Convert date value from client current timezone to UTC Date to correspond to the server format.
     *   return params = { 'dateQuestionId' : '2019-05-23', 'datetimeQuestionId' : '2019-05-23 14:05:12' }
     */
-    _prepareSubmitDates: function(params, questionId, value, isDateTime) {
+    _prepareSubmitDates: function (params, questionId, value, isDateTime) {
         var momentDate = isDateTime ? field_utils.parse.datetime(value, null, {timezone: true}) : field_utils.parse.date(value);
         var formattedDate = momentDate ? momentDate.toJSON() : '';
         params[questionId] = formattedDate;
@@ -215,7 +250,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     *   This method adds matrix answers one by one and add comment if any to a params key,value like :
     *   params = { 'matrixQuestionId' : {'rowId1': [colId1, colId2,...], 'rowId2': [colId1, colId3, ...], 'comment': comment }}
     */
-    _prepareSubmitAnswersMatrix: function(params, $matrixDiv) {
+    _prepareSubmitAnswersMatrix: function (params, $matrixDiv) {
         var self = this;
         $matrixDiv.find('input:checked').each(function () {
             params = self._prepareSubmitAnswerMatrix(params, $matrixDiv.data('name'), $(this).data('rowId'), this.value);
@@ -229,7 +264,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     *   This method regroups answers by question and by row to make an object like :
     *   params = { 'matrixQuestionId' : { 'rowId1' : [colId1, colId2,...], 'rowId2' : [colId1, colId3, ...] } }
     */
-    _prepareSubmitAnswerMatrix: function(params, questionId, rowId, colId) {
+    _prepareSubmitAnswerMatrix: function (params, questionId, rowId, colId) {
         var value = questionId in params ? params[questionId] : {};
         if (rowId in value) {
             value[rowId].push(colId);
@@ -246,7 +281,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     *   Lonely answer are directly assigned to questionId. Multiple answers are regrouped in an array:
     *   params = { 'questionId1' : lonelyAnswer, 'questionId2' : [multipleAnswer1, multipleAnswer2, ...] }
     */
-    _prepareSubmitAnswer: function(params, questionId, value) {
+    _prepareSubmitAnswer: function (params, questionId, value) {
         if (questionId in params) {
             if (params[questionId].constructor === Array) {
                 params[questionId].push(value);
@@ -265,7 +300,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     *   with the new value. At the end, the result looks like :
     *   params = { 'questionId1' : {'comment': commentValue}, 'questionId2' : [multipleAnswer1, {'comment': commentValue}, ...] }
     */
-    _prepareSubmitComment: function(params, $parent, questionId, isMatrix) {
+    _prepareSubmitComment: function (params, $parent, questionId, isMatrix) {
         var self = this;
         $parent.find('textarea').each(function () {
             if (this.value) {
@@ -294,7 +329,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         var maxDateData = $dateGroup.data('maxdate');
         var maxDate = maxDateData ? this._formatDateTime(maxDateData) : moment().add(200, "y");
 
-        var datetimepickerFormat = time.getLangDateFormat()
+        var datetimepickerFormat = time.getLangDateFormat();
         if ($dateGroup.find('input').data('questionType') === 'datetime') {
             datetimepickerFormat = time.getLangDatetimeFormat();
         } else {
@@ -328,7 +363,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         });
     },
 
-    _formatDateTime: function (datetimeValue){
+    _formatDateTime: function (datetimeValue) {
         return field_utils.format.datetime(moment(datetimeValue), null, {timezone: true});
     },
 
@@ -350,8 +385,8 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     * Clean all form errors in order to clean DOM before a new validation
     */
     _resetErrors: function () {
-        this.$('.o_survey_question_error').empty().toggleClass("d-none", true);
-        this.$('.o_survey_error').toggleClass("d-none", true);
+        this.$('.o_survey_question_error').empty().addClass("d-none");
+        this.$('.o_survey_error').addClass("d-none");
     },
 
 });

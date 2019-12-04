@@ -17,33 +17,27 @@
 
     <!-- First page of a survey -->
     <template id="survey_page_start" name="Survey: start page">
-        <t t-call="survey.layout">
-            <div class="wrap">
-                <div class="oe_structure" id="oe_structure_survey_init_1"/>
-                <div class="container">
-                    <t t-if="answer.test_entry" t-call="survey.survey_button_form_view" />
-                    <div class='jumbotron mt32'>
-                        <h1 t-field='survey.title' />
-                        <div t-field='survey.description' class="oe_no_empty"/>
-                        <div t-if="survey.is_time_limited">
-                            <p>
-                                <span>Time limit for this survey: </span>
-                                <span class="font-weight-bold text-danger" t-field="survey.time_limit" t-options="{'widget': 'duration', 'unit': 'minute'}"></span>
-                            </p>
-                        </div>
-                        <a role="button" class="btn btn-primary btn-lg" t-att-href="'/survey/fill/%s/%s' % (survey.access_token, answer.access_token)">
-                            <t t-if="survey.certification">
-                                Start Certification
-                            </t>
-                            <t t-else="">
-                                Start Survey
-                            </t>
-                        </a>
-                    </div>
+        <div class="wrap o_survey_start">
+            <div class="oe_structure" id="oe_structure_survey_init_1"/>
+            <div class='mt32 mb32'>
+                <div t-field='survey.description' class="oe_no_empty"/>
+                <div t-if="survey.is_time_limited">
+                    <p>
+                        <span>Time limit for this survey: </span>
+                        <span class="font-weight-bold text-danger" t-field="survey.time_limit" t-options="{'widget': 'duration', 'unit': 'minute'}"></span>
+                    </p>
                 </div>
-                <div class="oe_structure" id="oe_structure_survey_init_2"/>
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <t t-if="survey.certification">
+                        Start Certification
+                    </t>
+                    <t t-else="">
+                        Start Survey
+                    </t>
+                </button>
             </div>
-        </t>
+            <div class="oe_structure" id="oe_structure_survey_init_2"/>
+        </div>
     </template>
 
     <template id="survey_page_main" name="Survey: main page (take survey)">
@@ -52,6 +46,7 @@
                 <div class="oe_structure" id="oe_structure_survey_survey_1"/>
                 <div class="container o_survey_form">
                     <t t-if="answer.test_entry" t-call="survey.survey_button_form_view" />
+
                     <t t-call="survey.survey_page_main_header" />
                     <t t-call="survey.survey_page_content" />
                 </div>
@@ -60,63 +55,69 @@
         </t>
     </template>
 
+    <template id="survey_form_content" name="Survey: form">
+        <t t-if="survey.questions_layout == 'one_page'">
+            <t t-foreach='survey.question_and_page_ids' t-as='question'>
+                <h2 t-if="question.is_page" t-field='question.title' class="o_survey_title" />
+                <t t-if="not question.is_page and question in answer.predefined_question_ids" t-call="survey.question_container"/>
+            </t>
+
+            <div class="text-center mt16 mb256">
+                <button type="submit" value="finish" class="btn btn-primary">Submit Survey</button>
+            </div>
+        </t>
+
+        <t t-if="survey.questions_layout == 'page_per_section'">
+            <h2 t-field='page.title' class="o_survey_title" />
+            <div t-field='page.description' class="oe_no_empty"/>
+
+            <input type="hidden" name="page_id" t-att-value="page.id" />
+            <t t-foreach='page.question_ids' t-as='question'>
+                <t t-if="question in answer.predefined_question_ids" t-call="survey.question_container"/>
+            </t>
+
+            <div class="text-center mt16 mb256">
+                <button t-if="survey.users_can_go_back and page != survey.page_ids[0]" type="submit" class="btn btn-secondary"
+                        name="button_submit" value="previous" t-att-data-previous-page-id="previous_page_id">Previous page</button>
+                <button type="submit" t-att-value="'next' if not last else 'finish'" class="btn btn-primary">
+                    <t t-esc="'Next Page' if not last else 'Submit Survey'"/>
+                </button>
+            </div>
+        </t>
+
+        <t t-if="survey.questions_layout == 'page_per_question'">
+            <input type="hidden" name="question_id" t-att-value="question.id" />
+            <t t-call="survey.question_container"/>
+
+            <div class="text-center mt16 mb256">
+                <button t-if="survey.users_can_go_back and question != answer.predefined_question_ids[0]" type="submit" class="btn btn-secondary"
+                        name="button_submit" value="previous" t-att-data-previous-page-id="previous_page_id">Previous page</button>
+                <button type="submit" t-att-value="'next' if not last else 'finish'" class="btn btn-primary">
+                    <t t-esc="'Next Page' if not last else 'Submit Survey'"/>
+                </button>
+            </div>
+        </t>
+    </template>
+
     <template id="survey_page_content" name="Survey: main page content">
         <t t-set="survey_form_readonly" t-value="false"/>
-        <t t-if="survey.questions_layout == 'one_page'" t-set="page_or_question_id" t-value="None" />
-        <t t-if="survey.questions_layout == 'page_per_section'" t-set="page_or_question_id" t-value="page.id" />
-        <t t-if="survey.questions_layout == 'page_per_question'" t-set="page_or_question_id" t-value="question.id" />
-
         <form role="form" method="post" t-att-name="survey.id"
                 t-att-data-answer-token="answer.access_token"
                 t-att-data-survey-token="survey.access_token"
-                t-att-data-timer="answer.start_datetime.isoformat() if survey.is_time_limited else False"
-                t-att-data-time-limit-minutes="survey.time_limit">
+                t-att-data-timer="answer.start_datetime.isoformat() if survey.is_time_limited and answer.start_datetime else False"
+                t-att-data-time-limit-minutes="survey.time_limit"
+                t-att-data-is-start-screen="page == 0">
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
             <input type="hidden" name="token" t-att-value="answer.access_token" />
             <div class="o_survey_error alert alert-danger d-none" role="alert">
                 <p>There was an error during the validation of the survey.</p>
             </div>
-            <t t-if="survey.questions_layout == 'one_page'">
-                <t t-foreach='survey.question_and_page_ids' t-as='question'>
-                    <h2 t-if="question.is_page" t-field='question.title' class="o_survey_title" />
-                    <t t-if="not question.is_page and question in answer.predefined_question_ids" t-call="survey.question_container"/>
-                </t>
 
-                <div class="text-center mt16 mb256">
-                    <button type="submit" class="btn btn-primary">Submit Survey</button>
-                </div>
-            </t>
-
-            <t t-if="survey.questions_layout == 'page_per_section'">
-                <h2 t-field='page.title' class="o_survey_title" />
-                <div t-field='page.description' class="oe_no_empty"/>
-
-                <input type="hidden" name="page_id" t-att-value="page.id" />
-                <t t-foreach='page.question_ids' t-as='question'>
-                    <t t-if="question in answer.predefined_question_ids" t-call="survey.question_container"/>
-                </t>
-
-                <div class="text-center mt16 mb256">
-                    <button t-if="survey.users_can_go_back and page != survey.page_ids[0]" type="submit" class="btn btn-secondary"
-                            name="button_submit" value="previous" t-att-data-previous-page-id="previous_page_id">Previous page</button>
-                    <button type="submit" t-att-value="'next' if not last else 'finish'" class="btn btn-primary">
-                        <t t-esc="'Next Page' if not last else 'Submit Survey'"/>
-                    </button>
-                </div>
-            </t>
-
-            <t t-if="survey.questions_layout == 'page_per_question'">
-                <input type="hidden" name="question_id" t-att-value="question.id" />
-                <t t-call="survey.question_container"/>
-
-                <div class="text-center mt16 mb256">
-                    <button t-if="survey.users_can_go_back and question != answer.predefined_question_ids[0]" type="submit" class="btn btn-secondary"
-                            name="button_submit" value="previous" t-att-data-previous-page-id="previous_page_id">Previous page</button>
-                    <button type="submit" t-att-value="'next' if not last else 'finish'" class="btn btn-primary">
-                        <t t-esc="'Next Page' if not last else 'Submit Survey'"/>
-                    </button>
-                </div>
-            </t>
+            <div class="o_survey_form_content">
+                <t t-if="page == 0" t-call="survey.survey_page_start"/>
+                <t t-elif="finished" t-call="survey.survey_closed_finished" />
+                <t t-else="" t-call="survey.survey_form_content"/>
+            </div>
         </form>
 
         <!-- Modal used to display error message, i.c.o. ajax error -->
