@@ -94,7 +94,7 @@ class Product(models.Model):
     @api.depends('stock_move_ids.product_qty', 'stock_move_ids.state')
     @api.depends_context(
         'lot_id', 'owner_id', 'package_id', 'from_date', 'to_date',
-        'company_owned', 'location', 'warehouse',
+        'location', 'warehouse',
     )
     def _compute_quantities(self):
         products = self.filtered(lambda p: p.type != 'service')
@@ -230,27 +230,6 @@ class Product(models.Model):
         '''
         Warehouse = self.env['stock.warehouse']
 
-        if self.env.context.get('company_owned', False):
-            company_id = self.env.company.id
-            return (
-                [('location_id.company_id', '=', company_id), ('location_id.usage', 'in', ['internal', 'transit'])],
-                ['&',
-                     ('location_dest_id.company_id', '=', company_id),
-                     '|',
-                         ('location_id.company_id', '=', False),
-                         '&',
-                             ('location_id.usage', 'in', ['inventory', 'production']),
-                             ('location_id.company_id', '=', company_id),
-                 ],
-                ['&',
-                     ('location_id.company_id', '=', company_id),
-                     '|',
-                         ('location_dest_id.company_id', '=', False),
-                         '&',
-                             ('location_dest_id.usage', 'in', ['inventory', 'production']),
-                             ('location_dest_id.company_id', '=', company_id),
-                 ]
-            )
         def _search_ids(model, values):
             ids = set()
             domain = []
@@ -613,7 +592,7 @@ class ProductTemplate(models.Model):
         'product_variant_ids.stock_move_ids.product_qty',
         'product_variant_ids.stock_move_ids.state',
     )
-    @api.depends_context('company_owned', 'company')
+    @api.depends_context('company')
     def _compute_quantities(self):
         res = self._compute_quantities_dict()
         for template in self:
