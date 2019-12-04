@@ -46,6 +46,8 @@ var GraphView = AbstractView.extend({
         var groupableFields = {};
         this.fields.__count__ = {string: _t("Count"), type: "integer"};
 
+        var measureString = {};
+
         this.arch.children.forEach(function (field) {
             var fieldName = field.attrs.name;
             if (fieldName === "id") {
@@ -61,6 +63,9 @@ var GraphView = AbstractView.extend({
             } else {
                 groupBys.push(fieldName);
             }
+            if (field.attrs.string) {
+                measureString[fieldName] = field.attrs.string;
+            }
         });
 
         _.each(this.fields, function (field, name) {
@@ -72,6 +77,12 @@ var GraphView = AbstractView.extend({
                 if (_.contains(GROUPABLE_TYPES, field.type)) {
                     groupableFields[name] = field;
                 }
+            }
+        });
+
+        _.each(measureString, function (string, name) {
+            if (measures[name]) {
+                measures[name].string = string;
             }
         });
 
