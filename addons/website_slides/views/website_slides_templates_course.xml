@@ -296,8 +296,7 @@
                 </a>
                 <div t-if="not channel.is_member and channel.enroll == 'invite'" class="text-center">
                     <div class="alert my-0 bg-100 p-2">Private Course</div>
-                    <div t-if="channel.enroll_msg" t-field="channel.enroll_msg"/>
-                    <small t-if="not channel.enroll_msg">Contact website administrator.</small>
+                    <div class="o_wslides_enroll_msg mt-2" t-field="channel.enroll_msg"/>
                 </div>
                 <t t-if="channel.is_member">
                     <button class="d-flex align-items-center alert my-0 px-2 px-xl-3 bg-100 w-100 o_wslides_js_channel_unsubscribe"
