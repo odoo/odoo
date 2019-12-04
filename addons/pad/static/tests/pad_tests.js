@@ -13,6 +13,7 @@ QUnit.module('pad widget', {
             task: {
                 fields: {
                     description: {string: "Description", type: "char"},
+                    use_pad: {string: "Use pad", type: "boolean"},
                 },
                 records: [
                     {id: 1, description: false},
@@ -268,6 +269,40 @@ QUnit.module('pad widget', {
         await testUtils.form.clickDiscard(form);
         assert.strictEqual(form.$('.oe_pad_readonly').text(), this.data.task.pad_get_content(),
             "pad content should not have changed");
+        form.destroy();
+        delete FieldPad.prototype.isPadConfigured;
+    });
+
+    QUnit.test('no pad deadlock on form change modifying pad readonly modifier', async function (assert) {
+        assert.expect(1);
+
+        var form = await createView({
+            View: FormView,
+            model: 'task',
+            data: this.data,
+            arch:'<form>' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="use_pad" widget="toggle_button"/>' +
+                            '<field name="description" widget="pad" attrs="{\'readonly\': [(\'use_pad\', \'=\', False)]}"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 2,
+            mockRPC: function (route, args) {
+                if (!args.method) {
+                    return Promise.resolve(true);
+                }
+                if (args.method === "write") {
+                    assert.strictEqual(args.args[1].description,
+                        "https://pad.odoo.pad/p/test-03AK6RCJT");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        await testUtils.form.clickEdit(form);
+        await testUtils.dom.click(form.$('.o_field_widget[name="use_pad"]'));
+        await testUtils.form.clickSave(form);
         form.destroy();
         delete FieldPad.prototype.isPadConfigured;
     });
