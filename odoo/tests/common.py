@@ -813,6 +813,81 @@ class ChromeBrowser():
         self.request_id += 1
         return sent_id
 
+    def _get_message(self, raise_log_error=True):
+        """
+        :param bool raise_log_error:
+
+            by default, error logging messages reported by the browser are
+            converted to exception in order to fail the current test.
+
+            This is undersirable for *some* message loops, mostly when waiting
+            for a response to a command we've sent (wait_id): we do want to
+            properly handle exceptions and to forward the browser logs in order
+            to avoid losing information, but e.g. if the client generates two
+            console.error() we don't want the first call to take_screenshot to
+            trip up on the second console.error message and throw a second
+            exception. At the same time we don't want to *lose* the second
+            console.error as it might provide useful information.
+        """
+        try:
+            res = json.loads(self.ws.recv())
+        except websocket.WebSocketTimeoutException:
+            res = {}
+
+        if res.get('method') == 'Runtime.consoleAPICalled':
+            params = res['params']
+
+            # console formatting differs somewhat from Python's, if args[0] has
+            # format modifiers that many of args[1:] get formatted in, missing
+            # args are replaced by empty strings and extra args are concatenated
+            # (space-separated)
+            #
+            # current version modifies the args in place which could and should
+            # probably be improved
+            arg0, args = '', []
+            if params.get('args'):
+                arg0 = str(self._from_remoteobject(params['args'][0]))
+                args = params['args'][1:]
+            formatted = [re.sub(r'%[%sdfoOc]', self.console_formatter(args), arg0)]
+            # formatter consumes args it uses, leaves unformatted args untouched
+            formatted.extend(str(self._from_remoteobject(arg)) for arg in args)
+            message = ' '.join(formatted)
+            stack = ''.join(self._format_stack(params))
+            if stack:
+                message += '\n' + stack
+
+            log_type = params['type']
+            if raise_log_error and log_type == 'error':
+                self.take_screenshot()
+                self._save_screencast()
+                raise ChromeBrowserException(message)
+
+            self._logger.getChild('browser').log(
+                self._TO_LEVEL.get(log_type, logging.INFO),
+                "%s", message # might still have %<x> characters
+            )
+            res['success'] = 'test successful' in message
+
+        if res.get('method') == 'Runtime.exceptionThrown':
+            exception_details = res['params']['exceptionDetails']
+            descr = exception_details.get('exception', {}).get('description')
+            self.take_screenshot()
+            self._save_screencast()
+            raise ChromeBrowserException(descr or pprint.pformat(exception_details))
+
+        return res
+
+    _TO_LEVEL = {
+        'debug': logging.DEBUG,
+        'log': logging.INFO,
+        'info': logging.INFO,
+        'warning': logging.INFO, # logging.WARNING,
+        'error': logging.ERROR,
+        # TODO: what do with
+        # dir, dirxml, table, trace, clear, startGroup, startGroupCollapsed,
+        # endGroup, assert, profile, profileEnd, count, timeEnd
+    }
+
     def _websocket_wait_id(self, awaited_id, timeout=10):
         """
         blocking wait for a certain id in a response
@@ -820,11 +895,8 @@ class ChromeBrowser():
         """
         start_time = time.time()
         while time.time() - start_time < timeout:
-            try:
-                res = json.loads(self.ws.recv())
-            except websocket.WebSocketTimeoutException:
-                res = None
-            if res and res.get('id') == awaited_id:
+            res = self._get_message(raise_log_error=False)
+            if res.get('id') == awaited_id:
                 return res
         self._logger.info('timeout exceeded while waiting for id : %d', awaited_id)
         return {}
@@ -835,11 +907,8 @@ class ChromeBrowser():
         """
         start_time = time.time()
         while time.time() - start_time < timeout:
-            try:
-                res = json.loads(self.ws.recv())
-            except websocket.WebSocketTimeoutException:
-                res = None
-            if res and res.get('method', '') == method:
+            res = self._get_message()
+            if res.get('method', '') == method:
                 if params:
                     if set(params).issubset(set(res.get('params', {}))):
                         return res
@@ -856,9 +925,12 @@ class ChromeBrowser():
         self._logger.info('Asked for screenshot (id: %s)', ss_id)
         res = self._websocket_wait_id(ss_id)
         base_png = res.get('result', {}).get('data')
-        decoded = base64.decodebytes(bytes(base_png.encode('utf-8')))
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S_%f')
-        fname = '%s%s%s.png' % (prefix, timestamp,suffix)
+        if not base_png:
+            self._logger.warning("Couldn't capture screenshot: expected image data, got %s", res)
+            return
+
+        decoded = base64.b64decode(base_png, validate=True)
+        fname = '{}{:%Y%m%d_%H%M%S_%f}{}.png'.format(prefix, datetime.now(), suffix)
         full_path = os.path.join(self.screenshots_dir, fname)
         with open(full_path, 'wb') as f:
             f.write(decoded)
@@ -882,7 +954,7 @@ class ChromeBrowser():
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S_%f')
         fname = '%s_screencast_%s.mp4' % (prefix, timestamp)
         outfile = os.path.join(self.screencasts_dir, fname)
-        
+
         try:
             ffmpeg_path = find_in_path('ffmpeg')
         except IOError:
@@ -924,11 +996,9 @@ class ChromeBrowser():
         tdiff = time.time() - start_time
         has_exceeded = False
         while tdiff < timeout:
-            try:
-                res = json.loads(self.ws.recv())
-            except websocket.WebSocketTimeoutException:
-                res = None
-            if res and res.get('id') == ready_id:
+            res = self._get_message()
+
+            if res.get('id') == ready_id:
                 if res.get('result') == awaited_result:
                     if has_exceeded:
                         self._logger.info('The ready code tooks too much time : %s', tdiff)
@@ -951,48 +1021,15 @@ class ChromeBrowser():
         logged_error = False
         nb_frame = 0
         while time.time() - start_time < timeout:
-            try:
-                res = json.loads(self.ws.recv())
-            except websocket.WebSocketTimeoutException:
-                res = None
-            if res and res.get('id', -1) == code_id:
+            res = self._get_message()
+
+            if res.get('id', -1) == code_id:
                 self._logger.info('Code start result: %s', res)
                 if res.get('result', {}).get('result').get('subtype', '') == 'error':
                     raise ChromeBrowserException("Running code returned an error: %s" % res)
-            elif res and res.get('method') == 'Runtime.exceptionThrown':
-                exception_details = res.get('params', {}).get('exceptionDetails', {})
-                self.take_screenshot()
-                self._save_screencast()
-                raise ChromeBrowserException(exception_details)
-            elif res and res.get('method') == 'Runtime.consoleAPICalled' and res.get('params', {}).get('type') in ('log', 'error', 'trace'):
-                logs = res.get('params', {}).get('args')
-                log_type = res.get('params', {}).get('type')
-                content = []
-                for log in logs:
-                    text = ''
-                    if log.get('type') == 'string':
-                        text = str(log.get('value', '`Empty string`'))
-                    elif log.get('type') == 'object' and 'Error' in log.get('className', '') and log.get('description'):
-                        text = str(log.get('description'))
-                    else:
-                        type_ = log.get('className') or log.get('type')
-                        properties = log.get('preview', {}).get('properties')
-                        if log.get('type') == 'object' and properties and all(p.get('name') is not None and p.get('value') is not None for p in properties):
-                            elems = ['%s:%s' % (p.get('name'), "'%s'" % p.get('value') if p.get('type') == 'string' else p.get('value')) for p in properties]
-                            text = "%s\n{%s}" % (type_, ", ".join(elems))
-                        else:
-                            text = str(log)
-                    content.append(text)
-                content = " ".join(content)
-                if log_type == 'error':
-                    self.take_screenshot()
-                    self._save_screencast()
-                    raise ChromeBrowserException(content)
-                else:
-                    self._logger.info('console log: %s', content)
-                    if 'test successful' in content:
-                        return True
-            elif res and res.get('method') == 'Page.screencastFrame':
+            elif res.get('success'):
+                return True
+            elif res.get('method') == 'Page.screencastFrame':
                 session_id = res.get('params').get('sessionId')
                 self._websocket_send('Page.screencastFrameAck', params={'sessionId': int(session_id)})
                 outfile = os.path.join(self.screencasts_frames_dir, 'frame_%05d.b64' % nb_frame)
@@ -1036,6 +1073,71 @@ class ChromeBrowser():
         self._websocket_wait_id(cl_id)
         self.navigate_to('about:blank', wait_stop=True)
 
+    def _from_remoteobject(self, arg):
+        """ attempts to make a CDT RemoteObject comprehensible
+        """
+        objtype = arg['type']
+        klass = arg.get('className', '')
+        subtype = arg.get('subtype')
+        if objtype == 'undefined':
+            # the undefined remoteobject is literally just {type: undefined}...
+            return 'undefined'
+        elif objtype != 'object' or subtype:
+            # value is the json representation for json object
+            # otherwise fallback on the description which is "a string
+            # representation of the object" e.g. the traceback for errors, the
+            # source for functions, ... finally fallback on the entire arg mess
+            return arg.get('value', arg.get('description', arg))
+
+        # all that's left is type=object, subtype=None aka custom or
+        # non-standard objects, print as TypeName(param=val, ...), sadly because
+        # of the way Odoo widgets are created they all appear as Class(...)
+        return '%s(%s)' % (
+            klass or objtype,
+            ', '.join(
+                '%s=%s' % (p['name'], repr(p['value']) if p['type'] == 'string' else p['value'])
+                for p in arg.get('preview', {}).get('properties', [])
+                if p.get('value') is not None
+            )
+        )
+
+    LINE_PATTERN = '\tat %(functionName)s (%(url)s:%(lineNumber)d:%(columnNumber)d)\n'
+    def _format_stack(self, logrecord):
+        if logrecord['type'] not in ('error', 'trace', 'warning'):
+            return
+
+        trace = logrecord.get('stackTrace')
+        while trace:
+            for f in trace['callFrames']:
+                yield self.LINE_PATTERN % f
+            trace = trace.get('parent')
+
+    def console_formatter(self, args):
+        """ Formats similarly to the console API:
+
+        * if there are no args, don't format (return string as-is)
+        * %% -> %
+        * %c -> replace by styling directives (ignore for us)
+        * other known formatters -> replace by corresponding argument
+        * leftover known formatters (args exhausted) -> replace by empty string
+        * unknown formatters -> return as-is
+        """
+        if not args:
+            return lambda m: m[0]
+
+        def replacer(m):
+            fmt = m[0][1]
+            if fmt == '%':
+                return '%'
+            if fmt in 'sdfoOc':
+                if not args:
+                    return ''
+                repl = args.pop(0)
+                if fmt == 'c':
+                    return ''
+                return str(self._from_remoteobject(repl))
+            return m[0]
+        return replacer
 
 class HttpCase(TransactionCase):
     """ Transactional HTTP TestCase with url_open and Chrome headless helpers.
@@ -2264,7 +2366,7 @@ class TagsSelector(object):
 
         test_module = getattr(test, 'test_module', None)
         test_class = getattr(test, 'test_class', None)
-        test_tags = test.test_tags | {test_module}  # module as test_tags deprecated, keep for retrocompatibility, 
+        test_tags = test.test_tags | {test_module}  # module as test_tags deprecated, keep for retrocompatibility,
         test_method = getattr(test, '_testMethodName', None)
 
         def _is_matching(test_filter):
