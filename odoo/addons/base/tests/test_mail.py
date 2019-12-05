@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import email
 
 from unittest.mock import patch
 
 from odoo.tests.common import BaseCase
 from odoo.tests.common import SavepointCase
-from odoo.tools import html_sanitize, append_content_to_html, plaintext2html, email_split, misc
+import odoo.addons.base.models.ir_mail_server as ir_mail_server
+from odoo.tools import html_sanitize, append_content_to_html, plaintext2html, email_split, misc, decode_smtp_header
 
 from . import test_mail_examples
 
@@ -337,6 +339,32 @@ class TestEmailTools(BaseCase):
         ]
         for text, expected in cases:
             self.assertEqual(email_split(text), expected, 'email_split is broken')
+
+    def test_decode_recode_username(self):
+        """If the name of a contact contains a comma,
+        it might cause trouble since it's used as email separator.
+        We check that in both cases, decoding is idempotent,
+        and we get back get the right name/address couples
+        """
+        froms = [
+            "From: pen pen <pen@odoodoo.com>",
+            "From: pen, pen <pen@odoodoo.com>",
+            "From: =?UTF-8?B?8J+QpyBwZW4gcGVuIPCfkKc=?= <pen@odoodoo.com>",  # basic unicode
+            "From: =?UTF-8?B?8J+QpywgcGVuIHBlbg==?= <pen@odoodoo.com>",  # with comma
+            "From: =?UTF-8?B?8J+QpyIsIGxlbg==?= <pen@odoodoo.com >",  # with double quote
+            "From: =?UTF-8?B?8J+QpycsIGxlbg==?= <pen@odoodoo.com >",  # with single quote
+            "From: =?UTF-8?B?8J+Qp1wnLCBsZVxu?= <pen@odoodoo.com >",  # with backslash
+        ]
+        for header_from in froms:
+            decoded_from = decode_smtp_header(header_from, escape_names=True)
+            addresses_from = email.utils.getaddresses([decoded_from])
+            re_encoded = ir_mail_server.encode_rfc2822_address_header(decoded_from)
+            redecoded_from = decode_smtp_header(re_encoded, escape_names=True)
+            addresses_from_redecoded = email.utils.getaddresses([redecoded_from])
+
+            self.assertEqual(len(addresses_from), len(addresses_from_redecoded))
+            self.assertEqual(addresses_from[0][1], addresses_from_redecoded[0][1])
+            self.assertEqual(addresses_from[0][0], addresses_from_redecoded[0][0])
 
 
 class EmailConfigCase(SavepointCase):
