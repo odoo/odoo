@@ -283,6 +283,7 @@ class SurveyUserInputLine(models.Model):
     def _save_line_choice(self, user_input, question, old_answers, answers, comment):
         if not (isinstance(answers, list)):
             answers = [answers]
+        vals_list = []
 
         if question.question_type == 'simple_choice':
             if not (question.comment_count_as_answer and question.comments_allowed and comment):
