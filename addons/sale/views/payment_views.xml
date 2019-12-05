@@ -19,7 +19,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
                     <button name="action_view_sales_orders" type="object"
-                            class="oe_stat_button" icon="fa-money-bill-alt"
+                            class="oe_stat_button" icon="fa-money"
                             attrs="{'invisible': [('sale_order_ids_nbr', '=', 0)]}">
                         <field name="sale_order_ids_nbr" widget="statinfo" string="Sales Order(s)"/>
                     </button>

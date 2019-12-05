@@ -13,7 +13,7 @@ var _lt = core._lt;
 var ActivityView = BasicView.extend({
     accesskey: "a",
     display_name: _lt('Activity'),
-    icon: 'far fa-clock',
+    icon: 'fa-clock-o',
     config: _.extend({}, BasicView.prototype.config, {
         Controller: ActivityController,
         Model: ActivityModel,

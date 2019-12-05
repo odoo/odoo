@@ -73,11 +73,11 @@
                     </li>
                     <!-- Mobile preview -->
                     <li class="o_mobile_preview" id="mobile-menu">
-                        <a data-action="show-mobile-preview" href="#"><span title="Mobile preview" role="img" aria-label="Mobile preview" class="fas fa-mobile-alt"/></a>
+                        <a data-action="show-mobile-preview" href="#"><span title="Mobile preview" role="img" aria-label="Mobile preview" class="fa fa-mobile"/></a>
                     </li>
                     <li groups="website.group_multi_website" t-if="multi_website_websites">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            <i class="fa fa-globe-americas d-lg-none"/>
+                            <i class="fa fa-globe d-lg-none"/>
                             <span class="d-none d-lg-inline-block">
                                 <t t-esc="multi_website_websites_current['name']"/>
                             </span>
@@ -106,7 +106,7 @@
                                 <div class="row">
                                     <div groups="website.group_website_designer" class="col-md-4 mb8 o_new_content_element">
                                         <a href="#" data-action="new_page" aria-label="New page" title="New page">
-                                            <i class="far fa-file"/>
+                                            <i class="fa fa-file-o"/>
                                             <p>New Page</p>
                                         </a>
                                     </div>
@@ -118,13 +118,13 @@
                                     </div>
                                     <div groups="base.group_system" name="module_website_event" t-att-data-module-id="env.ref('base.module_website_event').id" t-att-data-module-shortdesc="env.ref('base.module_website_event').shortdesc" class="col-md-4 mb8 o_new_content_element">
                                         <a href="#" data-action="new_event">
-                                            <i class="fas fa-glass-martini"/>
+                                            <i class="fa fa-glass"/>
                                             <p>New Event</p>
                                         </a>
                                     </div>
                                     <div groups="base.group_system" name="module_website_forum" t-att-data-module-id="env.ref('base.module_website_forum').id" t-att-data-module-shortdesc="env.ref('base.module_website_forum').shortdesc" class="col-md-4 mb8 o_new_content_element">
                                         <a href="#" data-action="new_forum">
-                                            <i class="fas fa-comment"/>
+                                            <i class="fa fa-comment"/>
                                             <p>New Forum</p>
                                         </a>
                                     </div>
@@ -157,7 +157,7 @@
                         </div>
                     </li>
                     <li t-if="not translatable" id="edit-page-menu">
-                        <a data-action="edit" href="#"><span class="fas fa-pencil-alt mr-2"/>Edit</a>
+                        <a data-action="edit" href="#"><span class="fa fa-pencil mr-2"/>Edit</a>
                     </li>
                     <li t-if="edit_in_backend or ('website_published' in main_object.fields_get() and main_object._name != 'website.page')">
                         <a role="button" class="btn btn-primary btn-sm dropdown-toggle css_edit_dynamic" data-toggle="dropdown">
