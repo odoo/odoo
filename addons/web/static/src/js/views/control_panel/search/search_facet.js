@@ -105,7 +105,7 @@ var SearchFacet = Widget.extend({
         } else if (this.facet.type === 'favorite') {
             icon = 'fa-star';
         } else if (this.facet.type === 'timeRange') {
-            icon = 'fa-calendar-alt';
+            icon = 'fa-calendar';
         }
         return icon;
     },

@@ -230,7 +230,7 @@
                     </t>
                     <a t-attf-class="dropdown-item #{item.classname}" role="menuitem" t-att-title="item.title or None" t-att-data-section="section.name" t-att-data-index="item_index" t-att-href="item.url or '#'">
                         <t t-raw="item.label"/>
-                        <span t-if="section.name == 'files' and widget.options.editable and !item.callback" class="far fa-trash-alt o_sidebar_delete_attachment" t-att-data-id="item.id" title="Delete this attachment" role="img" aria-label="Delete this attachment"/>
+                        <span t-if="section.name == 'files' and widget.options.editable and !item.callback" class="fa fa-trash-o o_sidebar_delete_attachment" t-att-data-id="item.id" title="Delete this attachment" role="img" aria-label="Delete this attachment"/>
                     </a>
                 </t>
                 <div role="menuitem" t-if="section.name == 'files' and widget.options.editable" class="dropdown-item o_sidebar_add_attachment">
@@ -425,9 +425,9 @@
         </div>
     </div>
     <div class="btn-group" role="toolbar" aria-label="Change graph">
-        <button class="btn btn-secondary far fa-chart-bar o_graph_button" title="Bar Chart" aria-label="Bar Chart" data-mode="bar"/>
-        <button class="btn btn-secondary fas fa-chart-area o_graph_button" title="Line Chart" aria-label="Line Chart" data-mode="line"/>
-        <button class="btn btn-secondary fas fa-chart-pie o_graph_button" title="Pie Chart" aria-label="Pie Chart" data-mode="pie"/>
+        <button class="btn btn-secondary fa fa-bar-chart-o o_graph_button" title="Bar Chart" aria-label="Bar Chart" data-mode="bar"/>
+        <button class="btn btn-secondary fa fa-area-chart o_graph_button" title="Line Chart" aria-label="Line Chart" data-mode="line"/>
+        <button class="btn btn-secondary fa fa-pie-chart o_graph_button" title="Pie Chart" aria-label="Pie Chart" data-mode="pie"/>
     </div>
     <div class="btn-group" role="toolbar" aria-label="Change graph">
         <button class="btn btn-secondary fa fa-database o_graph_button" title="Stacked" aria-label="Stacked" data-mode="stack"/>
@@ -472,8 +472,8 @@
         </div>
     </div>
     <div class="btn-group" role="toolbar" aria-label="Pivot settings">
-        <button class="btn btn-secondary fas fa-exchange-alt o_pivot_flip_button" title="Flip axis" aria-label="Flip axis"/>
-        <button class="btn btn-secondary fas fa-arrows-alt o_pivot_expand_button" title="Expand all" aria-label="Expand all"/>
+        <button class="btn btn-secondary fa fa-exchange o_pivot_flip_button" title="Flip axis" aria-label="Flip axis"/>
+        <button class="btn btn-secondary fa fa-arrows o_pivot_expand_button" title="Expand all" aria-label="Expand all"/>
         <button class="btn btn-secondary fa fa-download o_pivot_download" title="Download xls" aria-label="Download xls"/>
     </div>
 </t>
@@ -753,7 +753,7 @@
                 t-att-id="widget.idForLabel"/>
             <a role="button" class="o_dropdown_button" draggable="false"/>
         </div>
-        <button type="button" t-if="!widget.noOpen" class="fas fa-external-link-alt btn btn-secondary o_external_button" tabindex="-1" draggable="false" aria-label="External link" title="External link"/>
+        <button type="button" t-if="!widget.noOpen" class="fa fa-external-link btn btn-secondary o_external_button" tabindex="-1" draggable="false" aria-label="External link" title="External link"/>
     </div>
 </t>
 <t t-name="FieldReference" t-extend="FieldMany2One">
@@ -867,8 +867,8 @@
     <div class="o_field_image" aria-atomic="true">
         <t t-if="widget.mode !== 'readonly'">
             <div class="o_form_image_controls">
-                <button class="fas fa-pencil-alt fa-lg float-left o_select_file_button" title="Edit" aria-label="Edit"/>
-                <button class="far fa-trash-alt fa-lg float-right o_clear_file_button" title="Clear" aria-label="Clear"/>
+                <button class="fa fa-pencil fa-lg float-left o_select_file_button" title="Edit" aria-label="Edit"/>
+                <button class="fa fa-trash-o fa-lg float-right o_clear_file_button" title="Clear" aria-label="Clear"/>
 
                 <span class="o_form_binary_progress">Uploading...</span>
                 <t t-call="HiddenInputFile">
@@ -887,12 +887,12 @@
 </t>
 <t t-name="CopyClipboardText">
     <button class="btn btn-sm btn-primary o_clipboard_button o_btn_text_copy">
-        <span class="far fa-clipboard"></span><span> Copy Text</span>
+        <span class="fa fa-clipboard"></span><span> Copy Text</span>
     </button>
 </t>
 <t t-name="CopyClipboardChar">
     <button class="btn btn-sm btn-primary o_clipboard_button o_btn_char_copy">
-        <span class="far fa-clipboard"></span><span> Copy Text</span>
+        <span class="fa fa-clipboard"></span><span> Copy Text</span>
     </button>
 </t>
 <t t-name="FieldBinaryFile">
@@ -906,8 +906,8 @@
             t-att-autofocus="widget.attrs.autofocus"/>
 
         <button type="button" class="btn btn-primary o_select_file_button" title="Select">Upload your file</button>
-        <button type="button" class="btn btn-secondary fas fa-pencil-alt o_select_file_button" title="Select" aria-label="Select"/>
-        <button type="button" class="btn btn-secondary far fa-trash-alt o_clear_file_button" title="Clear" aria-label="Clear"/>
+        <button type="button" class="btn btn-secondary fa fa-pencil o_select_file_button" title="Select" aria-label="Select"/>
+        <button type="button" class="btn btn-secondary fa fa-trash-o o_clear_file_button" title="Clear" aria-label="Clear"/>
 
         <span class="o_form_binary_progress">Uploading...</span>
         <t t-call="HiddenInputFile">
@@ -980,8 +980,8 @@
         <div t-if="widget.mode !== 'readonly'" class="o_form_pdf_controls mt8" role="toolbar" aria-label="PDF controls">
             <span class="o_form_binary_progress">Uploading...</span>
             <button type="button" class="btn btn-primary o_select_file_button" title="Select">Upload your file</button>
-            <button class="btn btn-secondary fas fa-pencil-alt o_select_file_button" title="Select" aria-label="Select" type="button"></button>
-            <button class="btn btn-secondary far fa-trash-alt o_clear_file_button" title="Clear" aria-label="Clear" type="button"></button>
+            <button class="btn btn-secondary fa fa-pencil o_select_file_button" title="Select" aria-label="Select" type="button"></button>
+            <button class="btn btn-secondary fa fa-trash-o o_clear_file_button" title="Clear" aria-label="Clear" type="button"></button>
         </div>
         <iframe class="o_pdfview_iframe o_field_pdfviewer"/>
         <t t-call="HiddenInputFile">
@@ -1056,7 +1056,7 @@
                 t-att-data-id="item.id">
                 <a role="menuitem" href="#" t-attf-class="dropdown-item#{item.isActive ? ' selected ' : ''}">
                     <t t-esc="item.description"/>
-                    <span t-if="item.isRemovable" t-att-data-id="item.id" class="o_trash_button" > <span class="far fa-trash-alt"></span> </span>
+                    <span t-if="item.isRemovable" t-att-data-id="item.id" class="o_trash_button" > <span class="fa fa-trash-o"></span> </span>
                     <span t-if="item.hasOptions" t-att-data-id="item.id" class="o_submenu_switcher">
                         <span t-att-class="widget.openItems[item.id] ? 'fa fa-caret-down' : 'fa fa-caret-right'"></span>
                     </span>
@@ -1117,7 +1117,7 @@
 <div t-name="web.TimeRangeMenu" class="btn-group o_dropdown">
     <button t-att-class="'o_dropdown_toggler_btn btn btn-secondary dropdown-toggle o_time_range_menu_button' + (widget.isMobile ? ' o-no-caret' : '')" data-toggle="dropdown"
         aria-expanded="false" tabindex="-1">
-        <span class="far fa-calendar-alt"/> Time Ranges <span t-att-class="widget.symbol"/>
+        <span class="fa fa-calendar"/> Time Ranges <span t-att-class="widget.symbol"/>
     </button>
     <div class="dropdown-menu o_dropdown_menu o_time_range_menu" role="menu">
         <div class="dropdown-item-text">
@@ -1211,7 +1211,7 @@
             <span t-if="facetValue_index > 0" class="o_facet_values_sep" t-esc="widget.separator"/> <span t-esc="facetValue"/>
         </t>
     </div>
-    <div class="fas fa-sm fa-times o_facet_remove" role="img" aria-label="Remove" title="Remove"/>
+    <div class="fa fa-sm fa-remove o_facet_remove" role="img" aria-label="Remove" title="Remove"/>
 </div>
 
 <t t-name="SearchView.autocomplete">
@@ -1242,7 +1242,7 @@
                     </option>
                 </t>
             </select>
-            <span class="o_searchview_extended_delete_prop far fa-trash-alt" role="img" aria-label="Delete" title="Delete"/>
+            <span class="o_searchview_extended_delete_prop fa fa-trash-o" role="img" aria-label="Delete" title="Delete"/>
         </span>
         <select class="o_input o_searchview_extended_prop_op"/>
         <span class="o_searchview_extended_prop_value"/>
@@ -1347,7 +1347,7 @@
         <label class="pt-2 font-weight-bold">Save as : </label>
         <input class="form-control ml-4 o_save_list_name"
                placeholder="New template"/>
-        <button type="button" class="btn btn-secondary ml-1 o_save_list_btn"><i class="far fa-save"/></button>
+        <button type="button" class="btn btn-secondary ml-1 o_save_list_btn"><i class="fa fa-floppy-o"/></button>
         <button type="button" class="btn btn-secondary ml-1 o_cancel_list_btn"><i class="fa fa-times"/></button>
     </div>
 </t>
@@ -1364,7 +1364,7 @@
             </t>
         </select>
         <button type="button" class="btn btn-secondary d-none ml-1 o_delete_exported_list">
-            <i class="far fa-trash-alt"/>
+            <i class="fa fa-trash"/>
         </button>
     </div>
 </t>
@@ -1404,7 +1404,7 @@
 </t>
 <t t-name="toggle_button">
     <button type="button" class="o_icon_button" t-att-title="widget.string" t-att-aria-label="widget.string" aria-pressed="false">
-        <i class="far fa-circle" t-att-title="widget.string"/>
+        <i class="fa fa-circle" t-att-title="widget.string"/>
     </button>
 </t>
 
@@ -1470,7 +1470,7 @@
 <t t-name="SwitchCompanyMenu">
     <li class="o_switch_company_menu">
         <a role="button" class="dropdown-toggle" data-toggle="dropdown" data-display="static" aria-expanded="false" href="#" aria-label="Dropdown menu" title="Dropdown menu">
-            <span t-attf-class="#{widget.isMobile ? 'far fa-building' : 'oe_topbar_name'}">
+            <span t-attf-class="#{widget.isMobile ? 'fa fa-building-o' : 'oe_topbar_name'}">
                 <t t-if="!widget.isMobile"><t t-raw="widget.current_company_name"/></t>
             </span>
         </a>
@@ -1483,10 +1483,10 @@
                     <div class="ml-auto pl-3 pr-3 border border-top-0 border-left-0 border-bottom-0 toggle_company o_py">
                         <span style="height: 2rem;">
                             <t t-if="widget.allowed_company_ids.includes(company[0])">
-                                <i class="fas fa-fw fa-check-square pt-2"></i>
+                                <i class="fa fa-fw fa-check-square pt-2"></i>
                             </t>
                             <t t-if="!widget.allowed_company_ids.includes(company[0])">
-                                <i class="far fa-fw fa-square pt-2"></i>
+                                <i class="fa fa-fw fa-square-o pt-2"></i>
                             </t>
                         </span>
                     </div>

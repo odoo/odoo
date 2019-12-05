@@ -2237,7 +2237,7 @@ QUnit.module('fields', {}, function () {
             assert.containsN(form, 'td.o_list_record_remove button', 3,
                 "should have 3 remove buttons");
 
-            assert.hasClass(form.$('td.o_list_record_remove button').first(),'far fa-trash-alt',
+            assert.hasClass(form.$('td.o_list_record_remove button').first(),'fa fa-trash-o',
                 "should have trash bin icons to remove (delete) records");
 
             await testUtils.dom.click(form.$('td.o_list_record_remove button').first());

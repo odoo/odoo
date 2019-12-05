@@ -65,9 +65,8 @@
             user-select: none;  // Prevent unwanted selection while sorting
 
             &::after {
-                font-family: 'Font Awesome 5 Free';
+                font-family: FontAwesome;
                 content: "\f0d7";
-                font-weight: 900;
                 opacity: 0;
             }
             &:not(:empty)::after {
@@ -77,14 +76,12 @@
                 cursor: n-resize;
                 &::after {
                     content: "\f0d7";
-                    font-weight: 900;
                 }
             }
             &.o-sort-down {
                 cursor: s-resize;
                 &::after {
                     content: "\f0d8";
-                    font-weight: 900;
                 }
             }
             &:hover::after {
