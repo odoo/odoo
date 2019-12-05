@@ -127,7 +127,14 @@ class OgoneController(http.Controller):
             return 'ko'
         return 'ok'
 
-    @http.route(['/payment/ogone/feedback', ], type='http', auth='public', website=True)
+    @http.route(['/payment/ogone/prepare_token', ], type='json', auth='public')
+    def prepare_token(self, **kwargs):
+        payment_token = request.env['payment.token'].with_user(SUPERUSER_ID)
+        data = payment_token.ogone_prepare_token(kwargs)
+        return data
+
+
+    @http.route(['/payment/ogone/feedback', ], type='http', auth='public', website=True, sitemap=False)
     def ogone_alias_gateway_feedback(self, **post):
         post = {key.upper(): value for key, value in post.items()}
         acquirer = request.env['payment.acquirer'].with_user(SUPERUSER_ID).search([('provider', '=', 'ogone')])
