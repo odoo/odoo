@@ -1,4 +1,9 @@
-body.l10n_ch_isr {
+@font-face {
+    font-family: ocrb;
+    src: url('../font/ocrb.ttf') format('truetype');
+}
+
+.l10n_ch_isr {
     /*
         all elements are positionned for A4 format (210 x 297mm) but the viewport
         is bigger than this, hence we zoom the whole page to be bigger than the viewport
@@ -11,11 +16,11 @@ body.l10n_ch_isr {
 
         /* display dummy check bacground in html rendering to help see the end result */
         #isr {
-            background: url(/l10n_ch/static/src/img/background_virgin_isr.png) bottom no-repeat;
+            background: url(../img/background_virgin_isr.png) bottom no-repeat;
             background-size: 100%;
 
             &.isr-print-bank {
-                background-image: url(/l10n_ch/static/src/img/background_virgin_isr_bank.png);
+                background-image: url(../img/background_virgin_isr_bank.png);
             }
         }
     }
@@ -31,9 +36,8 @@ body.l10n_ch_isr {
         background: none;
         min-height: 0;
     }
-}
 
-body.l10n_ch_isr #isr {
+#isr {
     height: 106mm;
     width: 210mm;
 
@@ -43,7 +47,7 @@ body.l10n_ch_isr #isr {
     left: 0;
 
     overflow: hidden;
-    font-family: OCRB, Courier, monospace;
+    font-family: ocrb;
     line-height: 0.16in;
     font-size: 10pt;
 
@@ -186,7 +190,7 @@ body.l10n_ch_isr #isr {
             bottom: 0.667in;
 
             /* Positioning is set for OCRB of Tsukurimashou Font Family */
-            font-family: OCRB, Courier, monospace;
+            font-family: ocrb;
             font-size: 10pt;
             line-height: 0.1in;
 
@@ -200,4 +204,5 @@ body.l10n_ch_isr #isr {
             }
         }
     }
+}
 }
