@@ -119,7 +119,7 @@ tour.register('course_member', {
 }, {
     trigger: 'button[data-target="#ratingpopupcomposer"]'
 }, {
-    trigger: 'form.o_portal_chatter_composer_form i.fa-star:eq(4)',
+    trigger: 'form.o_portal_chatter_composer_form i.fa:eq(4)',
     extra_trigger: 'div.modal_shown',
     run: 'click',
     in_modal: false,

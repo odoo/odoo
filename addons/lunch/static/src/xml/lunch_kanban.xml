@@ -39,7 +39,7 @@
                         <div class="card-body">
                             <h4 class="card-title">
                                 Your order
-                                <button t-if="widget.raw_state != 'confirmed'" class="btn btn-sm btn-icon btn-link far fa-trash-alt o_lunch_widget_unlink"/>
+                                <button t-if="widget.raw_state != 'confirmed'" class="btn btn-sm btn-icon btn-link fa fa-trash o_lunch_widget_unlink"/>
                                 <span t-if="widget.raw_state != 'new'" t-esc="widget.state" t-attf-class="badge badge-pill {{ state_class }}"/>
                             </h4>
                             <ul class="list-unstyled o_lunch_widget_lines">

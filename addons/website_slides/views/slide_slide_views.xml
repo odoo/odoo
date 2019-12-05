@@ -179,28 +179,28 @@
                                     </div>
                                     <div class="o_kanban_record_bottom mt-auto d-flex justify-content-between align-items-end">
                                         <span>
-                                            <i class="far fa-clock mr-2" aria-label="Duration" role="img" title="Duration"/><field name="completion_time" widget="float_time"/>
+                                            <i class="fa fa-clock-o mr-2" aria-label="Duration" role="img" title="Duration"/><field name="completion_time" widget="float_time"/>
                                         </span>
                                         <span>
                                             <i class="fa fa-question mr-2" aria-label="Number of Questions" role="img" title="Number of Questions"/><field name="questions_count"/>
                                         </span>
                                         <span>
-                                            <i class="far fa-eye mr-2" aria-label="Views" role="img" title="Views"/><field name="total_views"/>
+                                            <i class="fa fa-eye mr-2" aria-label="Views" role="img" title="Views"/><field name="total_views"/>
                                         </span>
                                         <span>
                                             <t t-if="record.slide_type.raw_value == 'infographic'">
-                                                <i class="far fa-file-image mr-2" aria-label="Infographic" role="img" title="Infographic"/>
+                                                <i class="fa fa-file-image-o mr-2" aria-label="Infographic" role="img" title="Infographic"/>
                                             </t>
                                             <t t-elif="record.slide_type.raw_value == 'webpage'">
-                                                <i class="far fa-file-code mr-2" aria-label="Webpage" role="img" title="Webpage"/>
+                                                <i class="fa fa-file-code-o mr-2" aria-label="Webpage" role="img" title="Webpage"/>
                                             </t>
                                             <t t-elif="record.slide_type.raw_value == 'video'">
-                                                <i class="far fa-file-video mr-2" aria-label="Video" role="img" title="Video"/>
+                                                <i class="fa fa-file-video-o mr-2" aria-label="Video" role="img" title="Video"/>
                                             </t>
                                             <t t-elif="record.slide_type.raw_value == 'quiz'">
-                                                <i class="far fa-flag mr-2" aria-label="Quiz" role="img" title="Quiz"/>
+                                                <i class="fa fa-flag mr-2" aria-label="Quiz" role="img" title="Quiz"/>
                                             </t>
-                                            <t t-else=""><i class="far fa-file-pdf mr-2" aria-label="Document" role="img" title="Document"/></t>
+                                            <t t-else=""><i class="fa fa-file-pdf-o mr-2" aria-label="Document" role="img" title="Document"/></t>
                                             <field name="slide_type"/>
                                         </span>
                                         <img t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" class="oe_kanban_avatar o_image_24_cover"/>

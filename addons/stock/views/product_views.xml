@@ -10,7 +10,7 @@
                 <div name="button_box" position="inside">
                     <button string="Putaway Rules"
                         class="oe_stat_button"
-                        icon="fas fa-random" name="%(category_open_putaway)d" type="action"
+                        icon="fa-random" name="%(category_open_putaway)d" type="action"
                         groups="stock.group_stock_multi_locations"/>
                 </div>
                 <group name="first" position="after">
@@ -242,11 +242,11 @@
                             type="object"
                             name= "action_view_stock_move_lines"
                             attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
-                            class="oe_stat_button" icon="fa-exchange-alt"
+                            class="oe_stat_button" icon="fa-exchange"
                             groups="stock.group_stock_user"/>
                         <button name="%(product_open_orderpoint)d" type="action"
                             attrs="{'invisible':['|',('type', 'not in', ['product', 'consu']),('nbr_reordering_rules', '!=', 1)]}"
-                            class="oe_stat_button" icon="fa-sync">
+                            class="oe_stat_button" icon="fa-refresh">
                             <div class="o_field_widget o_stat_info mr4">
                                 <span class="o_stat_text">Min :</span>
                                 <span class="o_stat_text">Max:</span>
@@ -259,7 +259,7 @@
                         <button type="action"
                             name="%(product_open_orderpoint)d"
                             attrs="{'invisible':['|',('type', '!=', 'product'),('nbr_reordering_rules', '==', 1)]}"
-                            class="oe_stat_button" icon="fa-sync">
+                            class="oe_stat_button" icon="fa-refresh">
                             <field name="nbr_reordering_rules" widget="statinfo"/>
                         </button>
                         <button string="Lot/Serial Numbers" type="object"
@@ -330,12 +330,12 @@
                         <button string="Traceability" type="object"
                             name= "action_view_stock_move_lines"
                             attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
-                            class="oe_stat_button" icon="fa-exchange-alt"
+                            class="oe_stat_button" icon="fa-exchange"
                             groups="stock.group_stock_user"/>
                         <button type="object"
                             name="action_view_orderpoints"
                             attrs="{'invisible':['|',('type', '!=', 'product'),('nbr_reordering_rules', '!=', 1)]}"
-                            class="oe_stat_button" icon="fa-sync">
+                            class="oe_stat_button" icon="fa-refresh">
                             <div class="o_field_widget o_stat_info mr4">
                                 <span class="o_stat_text">Min:</span>
                                 <span class="o_stat_text">Max:</span>
@@ -349,7 +349,7 @@
                             name="action_view_orderpoints"
                             attrs="{'invisible':['|',('type', '!=', 'product'),('nbr_reordering_rules', '==', 1)]}"
                             class="oe_stat_button"
-                            icon="fa-sync">
+                            icon="fa-refresh">
                             <field name="nbr_reordering_rules" widget="statinfo"/>
                          </button>
                         <button string="Lot/Serial Numbers" type="object"

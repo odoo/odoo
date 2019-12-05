@@ -49,7 +49,7 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
         if (options.fromPageManagement) {
             buttons.push({
                 text: _t("Go To Page"),
-                icon: 'fa-globe-americas',
+                icon: 'fa-globe',
                 classes: 'btn-link float-right',
                 click: function (e) {
                     window.location.href = '/' + self.page.url;
@@ -58,7 +58,7 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
         }
         buttons.push({
             text: _t("Delete Page"),
-            icon: 'far fa-trash-alt',
+            icon: 'fa-trash',
             classes: 'btn-link float-right',
             click: function (e) {
                 _deletePage.call(this, self.page_id, options.fromPageManagement);
@@ -156,8 +156,8 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
             maxDate: moment().add(200, 'y'),
             calendarWeeks: true,
             icons : {
-                time: 'far fa-clock',
-                date: 'far fa-calendar-alt',
+                time: 'fa fa-clock-o',
+                date: 'fa fa-calendar',
                 next: 'fa fa-chevron-right',
                 previous: 'fa fa-chevron-left',
                 up: 'fa fa-chevron-up',

@@ -186,7 +186,7 @@ QUnit.module('Views', {
                     <search>
                         <searchpanel>
                             <field name="company_id" icon="fa-car" color="blue"/>
-                            <field select="multi" name="state" icon="far fa-star" color="#000"/>
+                            <field select="multi" name="state" icon="fa-star" color="#000"/>
                         </searchpanel>
                     </search>`,
             },

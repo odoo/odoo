@@ -378,12 +378,9 @@ var dom = {
         var $button = $('<button/>', jQueryParams);
 
         if (options.icon) {
-            var isFontAwesome = options.icon.match(/(fa[brs]* )*(fa-(.+))/); 
-            if (isFontAwesome) {
-                var faClass = (isFontAwesome[1] !== undefined ? isFontAwesome[1] : 'fas');
-                var faIcon = isFontAwesome[2];
+            if (options.icon.substr(0, 3) === 'fa-') {
                 $button.append($('<i/>', {
-                    class: faClass + ' fa-fw o_button_icon ' + faIcon
+                    class: 'fa fa-fw o_button_icon ' + options.icon,
                 }));
             } else {
                 $button.append($('<img/>', {

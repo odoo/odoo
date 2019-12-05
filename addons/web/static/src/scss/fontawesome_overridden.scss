@@ -1,15 +1,15 @@
 // This is rtl language specific fix
 // It will override the font awesome symbols and flip them 180 degree
 .o_rtl {
-    .fa, .far, .fas, .fab {
+    .fa {
         &.fa-align-right,
         &.fa-align-left,
         &.fa-chevron-right,
         &.fa-chevron-left,
         &.fa-arrow-right,
         &.fa-arrow-left,
-        &.fa-hand-point-right,
-        &.fa-hand-point-left,
+        &.fa-hand-o-right,
+        &.fa-hand-o-left,
         &.fa-arrow-circle-right,
         &.fa-arrow-circle-left,
         &.fa-caret-right,
@@ -24,32 +24,15 @@
         &.fa-quote-left,
         &.fa-chevron-circle-right,
         &.fa-chevron-circle-left,
-        &.fa-long-arrow-alt-right,
-        &.fa-long-arrow-alt-left,
-        &.fa-caret-square-right,
-        &.fa-caret-square-left,
-        &.fa-arrow-alt-circle-left,
-        &.fa-arrow-alt-circle-right {
+        &.fa-long-arrow-right,
+        &.fa-long-arrow-left,
+        &.fa-toggle-right,
+        &.fa-toggle-left,
+        &.fa-caret-square-o-right,
+        &.fa-arrow-circle-o-left,
+        &.fa-arrow-circle-o-right,
+        &.fa-caret-square-o-left {
             transform: rotate(180deg);
         }
-    }
-}
-
-.fa, .fas {
-    font-weight: 900 !important;
-}
-
-.far {
-    font-weight: 400 !important;
-}
-
-.fa-phone {
-    transform: rotate(90deg);
-}
-
-.fa-clock {
-    transform: rotateY(180deg);
-    + * {
-        transform: rotate(0deg);
     }
 }

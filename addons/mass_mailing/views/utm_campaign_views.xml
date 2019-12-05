@@ -10,7 +10,7 @@
             </xpath>
             <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
                 <button name="%(action_view_mass_mailings_from_campaign)d"
-                    type="action" class="oe_stat_button order-9" icon="far fa-envelope"
+                    type="action" class="oe_stat_button order-9" icon="fa-envelope-o"
                     attrs="{'invisible': [('mailing_mail_count', '=', 0)]}" groups="mass_mailing.group_mass_mailing_campaign">
                     <field name="mailing_mail_count" widget="statinfo" string="Mailings"/>
                 </button>

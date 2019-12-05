@@ -147,7 +147,7 @@
                         t-att-class="'o_wslides_lesson_aside_list_link d-flex align-items-top px-2 pt-1 text-decoration-none %s%s' % (('bg-100 py-1 active' if aside_slide == slide else ''), 'text-muted' if not can_access else '')">
                         <div t-if="is_member" >
                             <i t-att-id="'o_wslides_lesson_aside_slide_check_%s' % (aside_slide.id)"
-                                t-att-class="'mr-1 fas fa-fw %s' % ('text-success fa-check-circle' if channel_progress[aside_slide.id].get('completed') else 'text-600 fa-circle')">
+                                t-att-class="'mr-1 fa fa-fw %s' % ('text-success fa-check-circle' if channel_progress[aside_slide.id].get('completed') else 'text-600 fa-circle')">
                             </i>
                         </div>
                         <div class="o_wslides_lesson_link_name">
@@ -175,7 +175,7 @@
                         </t>
                         <li class="pl-4">
                             <a t-if="can_access and aside_slide.question_ids and aside_slide.slide_type != 'quiz'" t-att-href="'/slides/slide/%s#lessonQuiz' % (slug(aside_slide))" class="o_wslides_lesson_aside_list_link text-decoration-none small text-600">
-                                <i class="far fa-flag text-warning"/> Quiz
+                                <i class="fa fa-flag text-warning"/> Quiz
                             </a>
                             <span t-elif="not can_access and aside_slide.question_ids and aside_slide.slide_type != 'quiz'"
                                 class="o_wslides_lesson_aside_list_link text-decoration-none small text-600 text-muted">
@@ -204,7 +204,7 @@
                 <span t-if="slide.question_ids"
                     t-att-class="'ml-2 badge %s' % ('badge-success' if channel_progress[slide.id].get('completed') else 'badge-info')">
                     <span t-if="channel_progress[slide.id].get('completed')">
-                        <i class="fas fa-check-circle"/>
+                        <i class="fa fa-check-circle"/>
                         <t t-esc="channel_progress[slide.id].get('quiz_karma_won', 0)"/>
                     </span>
                     <span t-else="" t-esc="channel_progress[slide.id].get('quiz_karma_gain', 0)"/>
@@ -265,12 +265,12 @@
             </li>
             <li t-if="slide.channel_id.allow_comment" class="nav-item">
                 <a href="#discuss" aria-controls="discuss" class="nav-link" role="tab" data-toggle="tab">
-                    <i class="fas fa-comments"></i> Comments (<span t-esc="slide.comments_count"/>)
+                    <i class="fa fa-comments"></i> Comments (<span t-esc="slide.comments_count"/>)
                 </a>
             </li>
             <li class="nav-item">
                 <a href="#statistic" aria-controls="statistic" class="nav-link" role="tab" data-toggle="tab">
-                    <i class="far fa-chart-bar"></i> Statistics
+                    <i class="fa fa-bar-chart"></i> Statistics
                 </a>
             </li>
             <li class="nav-item">
@@ -500,7 +500,7 @@
                         data-loading-text="Sending..."
                         t-attf-data-slide-id="#{slide.id}"
                         style="border-top-right-radius: 4px;border-bottom-right-radius: 4px;">
-                        <i class="far fa-envelope"/> Send Email
+                        <i class="fa fa-envelope"/> Send Email
                     </button>
                 </span>
             </div>

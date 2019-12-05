@@ -3441,7 +3441,7 @@ QUnit.module('Views', {
 
         assert.containsN(list, '.o_list_button', 4,
             "there should be one button per row");
-        assert.containsOnce(list, '.o_list_button:first .o_icon_button .fas.fa-car',
+        assert.containsOnce(list, '.o_list_button:first .o_icon_button .fa.fa-car',
             'buttons should have correct icon');
 
         await testUtils.dom.click(list.$('.o_list_button:first > button'));

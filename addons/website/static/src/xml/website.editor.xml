@@ -15,7 +15,7 @@
         <div id="web_editor-top-edit">
             <form class="navbar-form text-muted">
                 <button type="button" class="btn btn-secondary" data-action="cancel"><i class="fa fa-times"/> Discard</button>
-                <button type="button" class="btn btn-primary" data-action="save"><i class="far fa-save"/> Save</button>
+                <button type="button" class="btn btn-primary" data-action="save"><i class="fa fa-floppy-o"/> Save</button>
             </form>
         </div>
     </t>
@@ -51,7 +51,7 @@
     <t t-name="website.theme_customize_delete_font">
         <t t-set="delete_font_title">Delete this font</t>
         <button type="button"
-            class="btn btn-link d-flex align-items-center text-danger far fa-trash-alt o_theme_customize_delete_google_font"
+            class="btn btn-link d-flex align-items-center text-danger fa fa-trash-o o_theme_customize_delete_google_font"
             t-att-aria-label="delete_font_title"
             t-att-title="delete_font_title"
             t-att-data-font-index="index"/>
@@ -75,7 +75,7 @@
         <div class="o_theme_customize_input"
             t-att-data-variable="variable"
             t-att-data-unit="unit">
-            <i class="fas fa-edit"/>
+            <i class="fa fa-edit"/>
             <span/>
         </div>
     </t>

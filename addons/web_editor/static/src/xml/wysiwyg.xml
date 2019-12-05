@@ -151,7 +151,7 @@
                     </button>
                     <div class="ml-2">
                         <span class="o_we_url_success text-success d-none fa fa-lg fa-check" title="The URL seems valid."/>
-                        <span class="o_we_url_warning text-warning d-none fas fa-lg fa-exclamation-triangle" t-att-title="urlWarningTitle"/>
+                        <span class="o_we_url_warning text-warning d-none fa fa-lg fa-warning" t-att-title="urlWarningTitle"/>
                         <span class="o_we_url_error text-danger d-none fa fa-lg fa-times" title="The URL does not seem to work."/>
                     </div>
                 </div>
@@ -170,7 +170,7 @@
             <t t-set="urlWarningTitle">The URL does not contain any image. The file will be added in the document section.</t>
             <t t-if="widget.options.showQuickUpload" t-set="alternateUpload">
                 <button class="btn btn-primary o_we_quick_upload" type="button" title="Quick Upload">
-                    <i class="fas fa-fast-forward"/>
+                    <i class="fa fa-fast-forward"/>
                     <span class="sr-only">Quick Upload</span>
                 </button>
             </t>
@@ -194,7 +194,7 @@
                     <div class="form-group">
                         <label class="o_we_title_label" for="o_we_name_input">
                             Name
-                            <i class="far fa-question-circle" title="Give a relevant name to your file to optimize search engine results."/>
+                            <i class="fa fa-question-circle-o" title="Give a relevant name to your file to optimize search engine results."/>
                         </label>
                         <input type="text" class="form-control" id="o_we_name_input" name="filename" aria-describedby="nameHelp" t-att-value="widget.attachment.name" required="required"/>
                     </div>
@@ -205,7 +205,7 @@
                     <div t-else="1" class="form-group">
                         <label class="o_we_title_label" for="o_we_name_input">
                             Size
-                            <i class="far fa-question-circle" title="Reduce the size as much as possible to increase performance."/>
+                            <i class="fa fa-question-circle-o" title="Reduce the size as much as possible to increase performance."/>
                         </label>
                         <div class="form-row align-items-center">
                             <div class="col">
@@ -253,14 +253,14 @@
                                 <input type="checkbox" class="custom-control-input" id="o_we_optimize_quality" t-att-checked="widget.isExisting ? undefined : 'checked'" aria-describedby="toggleQualityHelp"/>
                                 <label class="custom-control-label" for="o_we_optimize_quality">
                                     Optimize
-                                    <i class="far fa-question-circle" title="This reduces the quality to increase performance."/>
+                                    <i class="fa fa-question-circle-o" title="This reduces the quality to increase performance."/>
                                 </label>
                             </div>
                         </t>
                         <t t-else="1">
                             <label class="o_we_title_label" for="o_we_quality_input">
                                 Quality
-                                <i class="far fa-question-circle" title="Reduce the quality as much as possible to increase performance."/>
+                                <i class="fa fa-question-circle-o" title="Reduce the quality as much as possible to increase performance."/>
                             </label>
                             <div class="form-row align-items-center">
                                 <div class="col-sm-10">
@@ -329,7 +329,7 @@
     <t t-name="wysiwyg.widgets.file.existing.remove">
         <t t-set="removeTitle" t-if="attachment.res_model === 'ir.ui.view'">This file is a public view attachment.</t>
         <t t-set="removeTitle" t-else="">This file is attached to the current record.</t>
-        <i class="far fa-trash-alt o_existing_attachment_remove p-2" t-att-title="removeTitle" role="img" t-att-aria-label="removeTitle"/>
+        <i class="fa fa-trash o_existing_attachment_remove p-2" t-att-title="removeTitle" role="img" t-att-aria-label="removeTitle"/>
     </t>
 
     <t t-name="wysiwyg.widgets.image.existing.error">
@@ -537,15 +537,15 @@
                    <button type="button" class="btn btn-secondary" title="Zoom Out" data-event="zoom" data-value="-0.1"><i class="fa fa-search-minus"/></button>
                </div>
                <div class="btn-group" role="group">
-                   <button type="button" class="btn btn-secondary" title="Rotate Left" data-event="rotate" data-value="-45"><i class="fas fa-undo"/></button>
-                   <button type="button" class="btn btn-secondary" title="Rotate Right" data-event="rotate" data-value="45"><i class="fas fa-redo"/></button>
+                   <button type="button" class="btn btn-secondary" title="Rotate Left" data-event="rotate" data-value="-45"><i class="fa fa-rotate-left"/></button>
+                   <button type="button" class="btn btn-secondary" title="Rotate Right" data-event="rotate" data-value="45"><i class="fa fa-rotate-right"/></button>
                </div>
                <div class="btn-group" role="group">
-                   <button type="button" class="btn btn-secondary" title="Flip Horizontal" data-event="flip" data-value="horizontal" data-x="1"><i class="fas fa-arrows-alt-h"/></button>
-                   <button type="button" class="btn btn-secondary" title="Flip Vertical" data-event="flip" data-value="vertical" data-y="1"><i class="fas fa-arrows-alt-v"/></button>
+                   <button type="button" class="btn btn-secondary" title="Flip Horizontal" data-event="flip" data-value="horizontal" data-x="1"><i class="fa fa-arrows-h"/></button>
+                   <button type="button" class="btn btn-secondary" title="Flip Vertical" data-event="flip" data-value="vertical" data-y="1"><i class="fa fa-arrows-v"/></button>
                </div>
                <div class="btn-group" role="group">
-                   <button type="button" class="btn btn-secondary" title="Reset Image" data-event="reset"><i class="fas fa-sync"/> Reset Image</button>
+                   <button type="button" class="btn btn-secondary" title="Reset Image" data-event="reset"><i class="fa fa-refresh"/> Reset Image</button>
                </div>
            </div>
        </t>

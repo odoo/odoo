@@ -22,11 +22,11 @@
         </t>
         <div itemprop="address" itemscope="itemscope" itemtype="http://schema.org/PostalAddress">
             <div t-if="address and 'address' in fields" class="d-flex align-items-baseline">
-                <i t-if="not options.get('no_marker')" class="fas fa-map-marker-alt fa-fw" role="img" aria-label="Address" title="Address"/>
+                <i t-if="not options.get('no_marker')" class="fa fa-map-marker fa-fw" role="img" aria-label="Address" title="Address"/>
                 <span class="w-100 o_force_ltr" itemprop="streetAddress" t-raw="address.replace('\n', options.get('no_tag_br') and ', ' or ('&lt;br/&gt;%s' % ('' if options.get('no_marker') else '')))"/>
             </div>
             <div t-if="city and 'city' in fields" class="d-flex align-items-baseline">
-                <i t-if="not options.get('no_marker')" class="fas fa-map-marker-alt fa-fw" role="img" aria-label="Address" title="Address"/>
+                <i t-if="not options.get('no_marker')" class="fa fa-map-marker fa-fw" role="img" aria-label="Address" title="Address"/>
                 <span class="o_force_ltr">
                     <div>
                         <span itemprop="addressLocality" t-esc="city"/>,
@@ -35,13 +35,13 @@
                 </span>
             </div>
             <div t-if="phone and 'phone' in fields"><i t-if="not options.get('no_marker') or options.get('phone_icons')" class='fa fa-phone fa-fw' role="img" aria-label="Phone" title="Phone"/> <span class="o_force_ltr" itemprop="telephone" t-esc="phone"/></div>
-            <div t-if="mobile and 'mobile' in fields"><i t-if="not options.get('no_marker') or options.get('phone_icons')" class='fas fa-mobile-alt fa-fw' role="img" aria-label="Mobile" title="Mobile"/> <span class="o_force_ltr" itemprop="telephone" t-esc="mobile"/></div>
-            <div t-if="fax and 'fax' in fields"><i t-if="not options.get('no_marker') or options.get('phone_icons')" class='fab fa-fax fa-fw' role="img" aria-label="Fax" title="Fax"/> <span class="o_force_ltr" itemprop="faxNumber" t-esc="fax"/></div>
+            <div t-if="mobile and 'mobile' in fields"><i t-if="not options.get('no_marker') or options.get('phone_icons')" class='fa fa-mobile fa-fw' role="img" aria-label="Mobile" title="Mobile"/> <span class="o_force_ltr" itemprop="telephone" t-esc="mobile"/></div>
+            <div t-if="fax and 'fax' in fields"><i t-if="not options.get('no_marker') or options.get('phone_icons')" class='fa fa-fax fa-fw' role="img" aria-label="Fax" title="Fax"/> <span class="o_force_ltr" itemprop="faxNumber" t-esc="fax"/></div>
             <div t-if="website and 'website' in fields">
-                <i t-if="not options.get('no_marker')" class='fa fa-globe-americas' role="img" aria-label="Website" title="Website"/>
+                <i t-if="not options.get('no_marker')" class='fa fa-globe' role="img" aria-label="Website" title="Website"/>
                 <a t-att-href="website and '%s%s' % ('http://' if '://' not in website else '',website)"><span itemprop="website" t-esc="website"/></a>
             </div>
-            <div t-if="email and 'email' in fields"><i t-if="not options.get('no_marker')" class='far fa-envelope fa-fw' role="img" aria-label="Email" title="Email"/> <span itemprop="email" t-esc="email"/></div>
+            <div t-if="email and 'email' in fields"><i t-if="not options.get('no_marker')" class='fa fa-envelope fa-fw' role="img" aria-label="Email" title="Email"/> <span itemprop="email" t-esc="email"/></div>
         </div>
         <div t-if="vat and 'vat' in fields"><span t-esc="vat_label"/>: <span itemprop="vatID" t-esc="vat"/></div>
         <t t-if="object.country_id and object.country_id.name_position == 'after'">

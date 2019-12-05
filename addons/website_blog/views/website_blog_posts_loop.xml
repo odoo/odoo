@@ -25,12 +25,12 @@ according to the enabled options.
                 <div class="btn-group btn-group-sm">
                     <a t-attf-class="btn #{state == 'published' and 'btn-success' or 'btn-default bg-white border'}"
                        t-attf-href="#{state == 'published' and blog_url(state='') or blog_url(state='published')}">
-                        <i t-attf-class="fa mr-1 #{state == 'published' and 'fa-check-square' or 'fa-square'}"/>
+                        <i t-attf-class="fa mr-1 #{state == 'published' and 'fa-check-square-o' or 'fa-square-o'}"/>
                         Published (<t t-esc="state_info['published']" />)
                     </a>
                     <a t-attf-class="btn #{state == 'unpublished' and 'btn-success' or 'btn-default bg-white border'}"
                        t-attf-href="#{state == 'unpublished' and blog_url(state='') or blog_url(state='unpublished')}">
-                        <i t-attf-class="fa mr-1 #{state == 'unpublished' and 'fa-check-square' or 'fa-square'}"/>
+                        <i t-attf-class="fa mr-1 #{state == 'unpublished' and 'fa-check-square-o' or 'fa-square-o'}"/>
                         Unpublished (<t t-esc="state_info['unpublished']" />)
                     </a>
                 </div>
@@ -70,7 +70,7 @@ according to the enabled options.
                     </t>
                 </t>
                 <span t-if="date_begin" class="align-items-baseline border d-inline-flex pl-2 rounded mb-2">
-                    <i class="far fa-calendar-alt mr-2 text-muted"/>
+                    <i class="fa fa-calendar-o mr-2 text-muted"/>
                     <t t-esc="date_begin" t-options="{'widget': 'date', 'format': 'MMM yyyy'}"></t>
                     <a t-attf-href="#{blog_url(date_begin=False, date_end=False)}" class="btn border-0 py-1">&#215;</a>
                 </span>

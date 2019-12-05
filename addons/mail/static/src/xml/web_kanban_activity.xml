@@ -56,17 +56,17 @@
     <li t-attf-class="list-group-item o_log_activity d-flex #{log_last ? 'border-bottom' : ''}" role="menuitem">
         <div t-attf-class="o_activity_title o_log_activity #{edit_class}" t-att-data-activity-id="log.id">
             <div t-attf-class="o_activity_title_entry {{! log.force_next ? 'align-items-center' : 'mb-1'}}">
-                <span t-attf-class="#{log.icon ? log.icon : 'far fa-bell' } fa-fw mr-2 text-center text-muted" role="img" aria-label="Log" title="Log"/>
+                <span t-attf-class="fa #{log.icon ? log.icon : 'fa-bell' } fa-fw mr-2 text-center text-muted" role="img" aria-label="Log" title="Log"/>
                 <strong class="text-dark"><t t-esc="log.title_action or log.activity_type_id[1]"/></strong>
-                <button t-if="! log.force_next and log.can_write" class="btn btn-sm btn-link py-0 o_edit_button"><i class="fas fa-pencil-alt"/></button>
+                <button t-if="! log.force_next and log.can_write" class="btn btn-sm btn-link py-0 o_edit_button"><i class="fa fa-pencil"/></button>
             </div>
             <div class="o_activity_title_entry mt-1" t-if="log.state != 'today'">
-                <span class="far fa-clock fa-fw mr-2 text-center text-muted" role="img" aria-label="Deadline" title="Deadline"/>
+                <span class="fa fa-clock-o fa-fw mr-2 text-center text-muted" role="img" aria-label="Deadline" title="Deadline"/>
                 <small t-att-title="log.date_deadline"><t t-esc="log.label_delay" /></small>
             </div>
             <t t-if="log.mail_template_ids">
                 <div t-foreach="log.mail_template_ids" t-as="mail_template" class="o_activity_title_entry mt-2" t-att-data-activity-id="log.id" t-att-data-force-next-activity="log.force_next" t-att-data-previous-activity-type-id="log.activity_type_id[0]">
-                    <i class="far fa-envelope fa-fw mr-2 text-center text-muted" aria-label="Mail" title="Mail" role="img"></i>
+                    <i class="fa fa-envelope-o fa-fw mr-2 text-center text-muted" aria-label="Mail" title="Mail" role="img"></i>
                     <small>
                         <div class="mb-1" t-esc="mail_template.name + ':'"/>
                         <a class="o_activity_template_preview" t-att-data-template-id="mail_template.id" href="#"><b>Preview</b></a>
@@ -76,7 +76,7 @@
                 </div>
             </t>
             <div t-if="log.user_id[0] != session.uid and log.mail_template_ids" class="o_activity_title_entry">
-                <span class="fas fa-user fa-fw mr-2 text-center text-muted" role="img" aria-label="User" title="User"/>
+                <span class="fa fa-user fa-fw mr-2 text-center text-muted" role="img" aria-label="User" title="User"/>
                 <span><t t-esc="log.user_id[1]" /></span>
             </div>
         </div>
@@ -101,7 +101,7 @@
                     t-att-data-previous-activity-type-id="log.activity_type_id[0]"
                     t-att-data-activity-id="log.id"
                     t-attf-href="#o_mark_done_form{{log.id}}"
-                    class="o_mark_as_done o_activity_link o_activity_link_kanban fas fa-check-circle"
+                    class="o_mark_as_done o_activity_link o_activity_link_kanban fa fa-check-circle"
                     data-toggle="collapse" title="Mark as done" role="img" aria-label="Mark as done"/>
             </t>
         </div>

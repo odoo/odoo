@@ -57,7 +57,7 @@
                                         }'/>
                                     <span t-if="not job.website_published" class="badge badge-danger">unpublished</span>
                                     <div class="text-muted">
-                                        <i class="far fa-clock" title="Publication date" role="img" aria-label="Publication date"/> <span t-field="job.write_date"/>
+                                        <i class="fa fa-clock-o" title="Publication date" role="img" aria-label="Publication date"/> <span t-field="job.write_date"/>
                                     </div>
                                 </div>
                             </li>
@@ -323,12 +323,12 @@
         <div class="container">
             <div class="row">
                 <div class="text-center col-lg-3 mt16 mb16">
-                    <h4 class="mb0 mt8"><span class="fas fa-2x fa-heart"/>
+                    <h4 class="mb0 mt8"><span class="fa fa-2x fa-heart"/>
                     Benefits</h4>
                     <p>Healthcare, dental, vision, life insurance, Flexible Spending Account (FSA), Health Savings Account (HSA)</p>
                 </div>
                 <div class="text-center col-lg-3 mt16 mb16">
-                    <h4 class="mt8 mb0"><span class="far fa-2x fa-sun"/>
+                    <h4 class="mt8 mb0"><span class="fa fa-2x fa-sun-o"/>
                     PTOs</h4>
                     <p>Vacation, Sick, and paid leaves</p>
                 </div>
@@ -338,23 +338,23 @@
                     <p>Pre-tax commuter benefitsbr <br/>(parking and transit) </p>
                     </div>
                 <div class="text-center col-lg-3 mt16 mb16">
-                    <h4 class="mb0 mt8"><span class="far fa-2x fa-check-circle"/>
+                    <h4 class="mb0 mt8"><span class="fa fa-2x fa-check-circle"/>
                     Discount Programs</h4>
                     <p>Brand-name product and services in categories like travel, electronics, health, fitness, cellular, and more</p>
                 </div>
             </div><div class="row">
                 <div class="text-center col-lg-3 mt16 mb16">
-                    <h4 class="mb0 mt8"><span class="fas fa-2x fa-map-marker-alt"/>
+                    <h4 class="mb0 mt8"><span class="fa fa-2x fa-map-marker"/>
                     Prime location</h4>
                     <p>Only a couple blocs from BART, Caltrain, Highway 101, carpool pickup, and Bay Bridge.</p>
                 </div>
                 <div class="text-center col-lg-3 mt16 mb16">
-                    <h4 class="mt8 mb0"><span class="far fa-2x fa-calendar-alt"/>
+                    <h4 class="mt8 mb0"><span class="fa fa-2x fa-calendar"/>
                     Sponsored Events</h4>
                     <p>Tuesday Dinners, Monthly Lunch Mixers, Monthly Happy Hour, Annual day event</p>
                 </div>
                 <div class="text-center col-lg-3 mt16 mb16">
-                    <h4 class="mt8 mb0"><span class="far fa-2x fa-futbol"/>
+                    <h4 class="mt8 mb0"><span class="fa fa-2x fa-futbol-o"/>
                     Sport Activity</h4>
                     <p>Play any sport with colleagues and the bill is covered</p>
                     </div>
@@ -431,7 +431,7 @@
                                         <h4 class="mt0" t-field="responsible.name"/>
                                         <p t-field="responsible.function"/>
                                         <t t-if='responsible.email'>
-                                            <i class="far fa-envelope" role="img" aria-label="Email" title="Email"></i> <a t-attf-href="mailto:#{responsible.email}" t-esc="responsible.email"/>
+                                            <i class="fa fa-envelope" role="img" aria-label="Email" title="Email"></i> <a t-attf-href="mailto:#{responsible.email}" t-esc="responsible.email"/>
                                         </t>
                                         <t t-if='responsible.phone'>
                                             <br/><i class="fa fa-phone" role="img" aria-label="Phone" title="Phone"></i> <span t-field="responsible.phone"/>

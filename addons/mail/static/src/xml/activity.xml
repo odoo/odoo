@@ -65,7 +65,7 @@
                             <div class="mt16" t-att-data-activity-id="activity.id" t-att-data-previous-activity-type-id="activity.activity_type_id[0]">
                                 <t t-foreach="activity.mail_template_ids" t-as="mail_template">
                                     <div>
-                                        <i class="far fa-envelope" aria-label="Mail" title="Mail" role="img"></i>
+                                        <i class="fa fa-envelope-o" aria-label="Mail" title="Mail" role="img"></i>
                                         <span t-esc="mail_template.name"/>:
                                         <span class="o_activity_template_preview" t-att-data-template-id="mail_template.id">Preview</span>
                                         <span class="text-muted">or</span>
@@ -101,7 +101,7 @@
                 </t>
             </span>
             <a role="button" href="#" class="btn btn-link btn-secondary text-muted o_edit_activity o_activity_link" t-att-data-activity-id="activity.id">
-                <i class="fas fa-pencil-alt"/> Edit
+                <i class="fa fa-pencil"/> Edit
             </a>
             <a role="button" href="#" class="btn btn-link btn-danger text-muted o_unlink_activity o_activity_link" t-att-data-activity-id="activity.id">
                 <i class="fa fa-times"/> Cancel

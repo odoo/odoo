@@ -16,7 +16,7 @@
                     <filter name="group_by_category" string="Category" context="{'group_by': 'category_id'}"/>
                 </group>
                 <searchpanel>
-                    <field name="category_id" select="multi" string="Categories" icon="fa-utensils" color="#875A7B"/>
+                    <field name="category_id" select="multi" string="Categories" icon="fa-cutlery" color="#875A7B"/>
                     <field name="supplier_id" select="multi" string="Vendors" icon="fa-truck"/>
                 </searchpanel>
             </search>
@@ -221,7 +221,7 @@
                         <button class="oe_stat_button" type="action" name="%(lunch.lunch_product_action_statbutton)d"
                             context="{'search_default_category_id': active_id,'default_category_id': active_id}"
                             attrs="{'invisible': [('product_count', '=', 0)]}"
-                            icon="fa-utensils">
+                            icon="fa-cutlery">
                             <field string="Products" name="product_count" widget="statinfo"/>
                         </button>
                     </div>

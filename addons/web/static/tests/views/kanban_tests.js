@@ -2335,7 +2335,7 @@ QUnit.module('Views', {
             'there should be only one tag in second record');
 
         // Write on the record using the priority widget to trigger a re-render in readonly
-        await testUtils.dom.click(kanban.$('.o_field_widget.o_priority a.o_priority_star.fa-star').first());
+        await testUtils.dom.click(kanban.$('.o_field_widget.o_priority a.o_priority_star.fa-star-o').first());
         assert.verifySteps([
             '/web/dataset/call_kw/partner/write',
             '/web/dataset/call_kw/partner/read',

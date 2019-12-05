@@ -380,13 +380,13 @@ img.o_we_custom_image {
                 margin-bottom: 0.3em;
             }
 
-            .fa, .far, .fas {
+            .fa {
                 @include o-position-absolute(0, $left: 0);
                 line-height: $line-height-base;
 
                 + span, + div {
                     display: block;
-                    // 'Font Awesome 5 Free' '.fa-fw' fixed-with + margin
+                    // FontAwesome '.fa-fw' fixed-with + margin
                     padding-left: 1.28571429em + 0.5em;
                 }
             }

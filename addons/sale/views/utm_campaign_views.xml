@@ -29,11 +29,11 @@
     <field name="arch" type="xml">
         <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
             <button name="action_redirect_to_invoiced"
-                type="object" class="oe_stat_button order-1" icon="fa-dollar-sign">
+                type="object" class="oe_stat_button order-1" icon="fa-usd">
                 <field name="invoiced_amount" widget="statinfo" string="Revenues"/>
             </button>
             <button name="action_redirect_to_quotations"
-                type="object" class="oe_stat_button order-2" icon="fa-money-bill">
+                type="object" class="oe_stat_button order-2" icon="fa-money">
                 <field name="quotation_count" widget="statinfo" string="Quotations"/>
             </button>
         </xpath>

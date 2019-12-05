@@ -67,7 +67,7 @@
                 <i class='fa fa-fw fa-wifi' role="img" aria-label="Synchronisation Disconnected" title="Synchronisation Disconnected"></i>
             </div>
             <div class="js_error oe_icon oe_red oe_hidden">
-                <i class='fas fa-fw fa-exclamation-triangle' role="img" aria-label="Synchronisation Error" title="Synchronisation Error"></i>
+                <i class='fa fa-fw fa-warning' role="img" aria-label="Synchronisation Error" title="Synchronisation Error"></i>
             </div>
         </div>
     </t>
@@ -152,7 +152,7 @@
     <t t-name="ActionpadWidget">
         <div class="actionpad">
             <button t-attf-class='button set-customer #{ ( widget.pos.get_client() and widget.pos.get_client().name.length > 10) ? "decentered" : "" }' >
-                <i class='fas fa-user' role="img" aria-label="Customer" title="Customer"/>
+                <i class='fa fa-user' role="img" aria-label="Customer" title="Customer"/>
                 <t t-if="widget.pos.get_client()">
                     <t t-esc="widget.pos.get_client().name" />
                 </t>
@@ -370,7 +370,7 @@
             <input class='detail client-name' name='name' t-att-value='partner.name' placeholder='Name'></input>
             <div class='edit-buttons'>
                 <div class='button undo'><i class='fa fa-undo' role="img" aria-label="Undo" title="Undo"/></div>
-                <div class='button save'><i class='far fa-save' role="img" aria-label="Save" title="Save"/></div>
+                <div class='button save'><i class='fa fa-floppy-o' role="img" aria-label="Save" title="Save"/></div>
             </div>
             <div class='client-details-box clearfix'>
                 <div class='client-details-left'>
@@ -459,7 +459,7 @@
             </div>
             <div class='client-name'><t t-esc='partner.name' /></div>
             <div class='edit-buttons'>
-                <div class='button edit'><i class='fas fa-pen-square' role="img" aria-label="Edit" title="Edit"/></div>
+                <div class='button edit'><i class='fa fa-pencil-square' role="img" aria-label="Edit" title="Edit"/></div>
             </div>
             <div class='client-details-box clearfix'>
                 <div class='client-details-left'>
@@ -538,7 +538,7 @@
                     </span>
                     <span class='searchbox'></span>
                     <span class='button new-customer' role="img" aria-label="Add a customer" title="Add a customer">
-                        <i class='fas fa-user'></i>
+                        <i class='fa fa-user'></i>
                         <i class='fa fa-plus'></i>
                     </span>
                     <span class='button next oe_hidden highlight'>
@@ -813,7 +813,7 @@
 
                     <div class='payment-buttons'>
                         <div class='button js_set_customer'>
-                            <i class='fas fa-user' role="img" aria-label="Customer" title="Customer"/>
+                            <i class='fa fa-user' role="img" aria-label="Customer" title="Customer"/>
                             <span class='js_customer_name'>
                                 <t t-if="widget.pos.get_client()">
                                     <t t-esc="widget.pos.get_client().name" />
@@ -826,7 +826,7 @@
                         <t t-if='widget.pos.config.module_account'>
                             <t t-if='widget.pos.get_order()'>
                                 <div t-attf-class='button js_invoice #{ widget.pos.get_order().is_to_invoice() ? "highlight" : ""} '>
-                                    <i class='far fa-file-alt' /> Invoice
+                                    <i class='fa fa-file-text-o' /> Invoice
                                 </div>
                             </t>
                         </t>
@@ -835,7 +835,7 @@
                         </div>
                         <t t-if='widget.pos.config.tip_product_id'>
                             <div class='button js_tip'>
-                                <i class='fas fa-heart' /> Tip
+                                <i class='fa fa-heart' /> Tip
                             </div>
                         </t>
                         <t t-if='widget.pos.config.iface_cashdrawer'>
@@ -1283,7 +1283,7 @@
                                 t-att-autofocus="lot_line === focus_lot_line ? 'autofocus': undefined"
                                 class="popup-input packlot-line-input"
                                 placeholder="Serial/Lot Number"/>
-                            <i class="oe_link_icon remove-lot far fa-trash-alt" role="img" aria-label="Remove" title="Remove"></i>
+                            <i class="oe_link_icon remove-lot fa fa-trash-o" role="img" aria-label="Remove" title="Remove"></i>
                         </t>
                     </t>
                 </main>
