@@ -848,7 +848,8 @@ models.PosModel = models.PosModel.extend({
         options = options || {};
         var self = this;
         var timeout = typeof options.timeout === 'number' ? options.timeout : 7500;
-        return rpc.query({
+        return new Promise( function(resolve, reject) {
+            rpc.query({
                 model: 'pos.order',
                 method: 'get_table_draft_orders',
                 args: [table_id],
@@ -856,7 +857,15 @@ models.PosModel = models.PosModel.extend({
             }, {
                 timeout: timeout,
                 shadow: false,
-            })
+            }).then(function(orders){
+                orders.forEach(function(order) {
+                    order.multiprint_resume = JSON.parse(order.multiprint_resume? order.multiprint_resume: false);
+                });
+                resolve(orders);
+            }).catch(function(err) {
+                reject(err);
+            });
+        });
     },
 
     /**
