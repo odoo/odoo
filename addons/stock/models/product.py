@@ -743,14 +743,7 @@ class ProductTemplate(models.Model):
         return self._get_action_view_related_putaway_rules(domain)
 
     def action_view_orderpoints(self):
-        products = self.mapped('product_variant_ids')
-        action = self.env.ref('stock.product_open_orderpoint').read()[0]
-        if products and len(products) == 1:
-            action['context'] = {'default_product_id': products.ids[0], 'search_default_product_id': products.ids[0]}
-        else:
-            action['domain'] = [('product_id', 'in', products.ids)]
-            action['context'] = {}
-        return action
+        self.product_variant_ids.action_view_orderpoints
 
     def action_view_stock_move_lines(self):
         self.ensure_one()
