@@ -199,9 +199,17 @@ models.Order = models.Order.extend({
 
         for ( line_hash in current_res) {
             var curr = current_res[line_hash];
-            var old  = old_res[line_hash];
+            var old  = {};
+            var found = false;
+            for(var id in old_res) {
+                if(old_res[id].product_id === curr.product_id){
+                    found = true;
+                    old = old_res[id];
+                    break;
+                }
+            }
 
-            if (typeof old === 'undefined') {
+            if (!found) {
                 add.push({
                     'id':       curr.product_id,
                     'name':     this.pos.db.get_product_by_id(curr.product_id).display_name,
@@ -229,7 +237,12 @@ models.Order = models.Order.extend({
         }
 
         for (line_hash in old_res) {
-            if (typeof current_res[line_hash] === 'undefined') {
+            var found = false;
+            for(var id in current_res) {
+                if(current_res[id].product_id === old_res[line_hash].product_id)
+                    found = true;
+            }
+            if (!found) {
                 var old = old_res[line_hash];
                 rem.push({
                     'id':       old.product_id,
@@ -315,12 +328,12 @@ models.Order = models.Order.extend({
     },
     export_as_JSON: function(){
         var json = _super_order.export_as_JSON.apply(this,arguments);
-        json.multiprint_resume = this.saved_resume;
+        json.multiprint_resume = JSON.stringify(this.saved_resume);
         return json;
     },
     init_from_JSON: function(json){
         _super_order.init_from_JSON.apply(this,arguments);
-        this.saved_resume = json.multiprint_resume;
+        this.saved_resume = JSON.parse(json.multiprint_resume);
     },
 });
 
