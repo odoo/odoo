@@ -109,6 +109,7 @@ function createPropertyProxy(obj, propertyName, value) {
  * user values.
  */
 const UserValueWidget = Widget.extend({
+    className: 'o_we_user_value_widget',
     custom_events: {
         'user_value_change': '_onUserValueNotification',
         'user_value_preview': '_onUserValueNotification',
@@ -132,6 +133,8 @@ const UserValueWidget = Widget.extend({
     _makeDescriptive: function () {
         const $el = this._super(...arguments);
         _addTitleAndAllowedAttributes($el[0], this.title, this.options);
+        this.containerEl = document.createElement('div');
+        $el.append(this.containerEl);
         return $el;
     },
 
@@ -471,7 +474,7 @@ const ButtonUserValueWidget = UserValueWidget.extend({
      */
     start: function (parent, title, options) {
         if (this.options && this.options.childNodes) {
-            this.options.childNodes.forEach(node => this.el.appendChild(node));
+            this.options.childNodes.forEach(node => this.containerEl.appendChild(node));
         }
 
         return this._super(...arguments);
@@ -529,7 +532,7 @@ const CheckboxUserValueWidget = ButtonUserValueWidget.extend({
      */
     start: function () {
         const checkboxEl = document.createElement('we-checkbox');
-        this.el.appendChild(checkboxEl);
+        this.containerEl.appendChild(checkboxEl);
 
         return this._super(...arguments);
     },
@@ -546,17 +549,17 @@ const SelectUserValueWidget = UserValueWidget.extend({
      */
     start: function () {
         if (this.options && this.options.valueEl) {
-            this.el.appendChild(this.options.valueEl);
+            this.containerEl.appendChild(this.options.valueEl);
         }
 
         this.menuTogglerEl = document.createElement('we-toggler');
-        this.el.appendChild(this.menuTogglerEl);
+        this.containerEl.appendChild(this.menuTogglerEl);
 
         this.menuEl = document.createElement('we-select-menu');
         if (this.options && this.options.childNodes) {
             this.options.childNodes.forEach(node => this.menuEl.appendChild(node));
         }
-        this.el.appendChild(this.menuEl);
+        this.containerEl.appendChild(this.menuEl);
 
         return this._super(...arguments);
     },
@@ -661,11 +664,11 @@ const InputUserValueWidget = UserValueWidget.extend({
 
         this.inputEl = document.createElement('input');
         this.inputEl.setAttribute('type', 'text');
-        this.el.appendChild(this.inputEl);
+        this.containerEl.appendChild(this.inputEl);
 
         var unitEl = document.createElement('span');
         unitEl.textContent = unit;
-        this.el.appendChild(unitEl);
+        this.containerEl.appendChild(unitEl);
 
         return this._super(...arguments);
     },
@@ -825,7 +828,7 @@ const MultiUserValueWidget = UserValueWidget.extend({
      * @override
      */
     start: function () {
-        this.el.appendChild(_buildRowElement('', this.options));
+        this.containerEl.appendChild(_buildRowElement('', this.options));
         return this._super(...arguments);
     },
 
@@ -865,6 +868,7 @@ const MultiUserValueWidget = UserValueWidget.extend({
 });
 
 const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
+    className: (ButtonUserValueWidget.prototype.className || '') + ' o_we_so_color_palette',
     custom_events: {
         'color_picked': '_onColorPicked',
         'color_hover': '_onColorHovered',
@@ -875,26 +879,16 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
     /**
      * @override
      */
-    init: function () {
-        this._super(...arguments);
-        if (!this.title) {
-            this.title = ' ';
-        }
-    },
-    /**
-     * @override
-     */
     start: async function () {
         const _super = this._super.bind(this);
         const args = arguments;
-
-        this.el.classList.add('o_we_so_color_palette');
 
         // Pre-instanciate the color palette widget
         await this._renderColorPalette();
 
         // Build the select element with a custom span to hold the color preview
         this.colorPreviewEl = document.createElement('span');
+        this.colorPreviewEl.classList.add('o_we_color_preview');
         this.options.childNodes = [this.colorPalette.el];
         this.options.valueEl = this.colorPreviewEl;
 
