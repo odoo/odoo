@@ -14,9 +14,9 @@ class TestCourseCertificationFailureFlow(TestSurveyCommon):
                 'access_mode': 'public',
                 'users_login_required': True,
                 'scoring_type': 'scoring_with_answers',
-                'certificate': True,
+                'certification': True,
                 'is_attempts_limited': True,
-                'passing_score': 100.0,
+                'scoring_success_min': 100.0,
                 'attempts_limit': 2,
                 'state': 'open',
             })
@@ -68,7 +68,7 @@ class TestCourseCertificationFailureFlow(TestSurveyCommon):
         # Step 4: fill in the created user_input with wrong answers
         self.fill_in_answer(slide_partner.user_input_ids[0], certification.question_ids)
 
-        self.assertFalse(slide_partner.survey_quizz_passed, 'Quizz should not be marked as passed with wrong answers')
+        self.assertFalse(slide_partner.survey_scoring_success, 'Quizz should not be marked as passed with wrong answers')
         # forces recompute of partner_ids as we delete directly in relation
         self.channel.invalidate_cache()
         self.assertIn(self.user_public.partner_id, self.channel.partner_ids, 'Public user should still be a member of the course because he still has attempts left')
@@ -100,7 +100,7 @@ class TestCourseCertificationFailureFlow(TestSurveyCommon):
 
         # Step 8: fill in the created user_input with correct answers this time
         self.fill_in_answer(new_slide_partner.user_input_ids.filtered(lambda user_input: user_input.state != 'done')[0], certification.question_ids, good_answers=True)
-        self.assertTrue(new_slide_partner.survey_quizz_passed, 'Quizz should be marked as passed with correct answers')
+        self.assertTrue(new_slide_partner.survey_scoring_success, 'Quizz should be marked as passed with correct answers')
         # forces recompute of partner_ids as we delete directly in relation
         self.channel.invalidate_cache()
         self.assertIn(self.user_public.partner_id, self.channel.partner_ids, 'Public user should still be a member of the course')
@@ -108,7 +108,7 @@ class TestCourseCertificationFailureFlow(TestSurveyCommon):
     def fill_in_answer(self, answer, questions, good_answers=False):
         """ Fills in the user_input with answers for all given questions.
         You can control whether the answer will be correct or not with the 'good_answers' param.
-        (It's assumed that wrong answers are at index 0 of question.labels_ids and good answers at index 1) """
+        (It's assumed that wrong answers are at index 0 of question.suggested_answer_ids and good answers at index 1) """
         answer.write({
             'state': 'done',
             'user_input_line_ids': [
@@ -116,7 +116,7 @@ class TestCourseCertificationFailureFlow(TestSurveyCommon):
                     'question_id': question.id,
                     'answer_type': 'suggestion',
                     'answer_score': 1 if good_answers else 0,
-                    'value_suggested': question.labels_ids[1 if good_answers else 0].id
+                    'suggested_answer_id': question.suggested_answer_ids[1 if good_answers else 0].id
                 }) for question in questions
             ]
         })

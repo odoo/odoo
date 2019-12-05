@@ -8,29 +8,29 @@ class SlidePartnerRelation(models.Model):
     _inherit = 'slide.slide.partner'
 
     user_input_ids = fields.One2many('survey.user_input', 'slide_partner_id', 'Certification attempts')
-    survey_quizz_passed = fields.Boolean('Certification Quizz Passed', compute='_compute_survey_quizz_passed', store=True)
+    survey_scoring_success = fields.Boolean('Certification Succeeded', compute='_compute_survey_scoring_success', store=True)
 
-    @api.depends('partner_id', 'user_input_ids.quizz_passed')
-    def _compute_survey_quizz_passed(self):
-        passed_user_inputs = self.env['survey.user_input'].sudo().search([
+    @api.depends('partner_id', 'user_input_ids.scoring_success')
+    def _compute_survey_scoring_success(self):
+        succeeded_user_inputs = self.env['survey.user_input'].sudo().search([
             ('slide_partner_id', 'in', self.ids),
-            ('quizz_passed', '=', True)
+            ('scoring_success', '=', True)
         ])
-        passed_slide_partners = passed_user_inputs.mapped('slide_partner_id')
+        succeeded_slide_partners = succeeded_user_inputs.mapped('slide_partner_id')
         for record in self:
-            record.survey_quizz_passed = record in passed_slide_partners
+            record.survey_scoring_success = record in succeeded_slide_partners
 
     @api.model_create_multi
     def create(self, vals_list):
         res = super(SlidePartnerRelation, self).create(vals_list)
-        completed = res.filtered('survey_quizz_passed')
+        completed = res.filtered('survey_scoring_success')
         if completed:
             completed.write({'completed': True})
         return res
 
     def _write(self, vals):
         res = super(SlidePartnerRelation, self)._write(vals)
-        if vals.get('survey_quizz_passed'):
+        if vals.get('survey_scoring_success'):
             self.sudo().write({'completed': True})
         return res
 
@@ -103,7 +103,7 @@ class Slide(models.Model):
                     last_user_input = next(user_input for user_input in user_membership_id_sudo.user_input_ids.sorted(
                         lambda user_input: user_input.create_date, reverse=True
                     ))
-                    certification_urls[slide.id] = last_user_input._get_survey_url()
+                    certification_urls[slide.id] = last_user_input.get_start_url()
                 else:
                     user_input = slide.survey_id.sudo()._create_answer(
                         partner=self.env.user.partner_id,
@@ -114,7 +114,7 @@ class Slide(models.Model):
                         },
                         invite_token=self.env['survey.user_input']._generate_invite_token()
                     )
-                    certification_urls[slide.id] = user_input._get_survey_url()
+                    certification_urls[slide.id] = user_input.get_start_url()
             else:
                 user_input = slide.survey_id.sudo()._create_answer(
                     partner=self.env.user.partner_id,
@@ -123,5 +123,5 @@ class Slide(models.Model):
                         'slide_id': slide.id
                     }
                 )
-                certification_urls[slide.id] = user_input._get_survey_url()
+                certification_urls[slide.id] = user_input.get_start_url()
         return certification_urls

@@ -37,7 +37,7 @@ class TestSurveyInvite(common.TestSurveyCommon):
                 'state': 'closed',
                 'question_and_page_ids': [
                     (0, 0, {'is_page': True, 'title': 'P0', 'sequence': 1}),
-                    (0, 0, {'title': 'Q0', 'sequence': 2, 'question_type': 'free_text'})
+                    (0, 0, {'title': 'Q0', 'sequence': 2, 'question_type': 'text_box'})
                 ]
             })
         ]

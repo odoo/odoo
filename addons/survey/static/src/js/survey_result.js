@@ -14,7 +14,7 @@ var D3_COLORS = ["#1f77b4","#ff7f0e","#aec7e8","#ffbb78","#2ca02c","#98df8a","#d
 // -> this is ugly / not efficient, needs to be refactored
 publicWidget.registry.SurveyResultPagination = publicWidget.Widget.extend({
     events: {
-        'click li a': '_onPageClick',
+        'click li.o_survey_js_results_pagination a': '_onPageClick',
     },
 
     //--------------------------------------------------------------------------
@@ -38,7 +38,6 @@ publicWidget.registry.SurveyResultPagination = publicWidget.Widget.extend({
         var self = this;
         return this._super.apply(this, arguments).then(function () {
             self.limit = self.$el.data("record_limit");
-            self._changePage(1);
         });
     },
 
@@ -52,24 +51,9 @@ publicWidget.registry.SurveyResultPagination = publicWidget.Widget.extend({
      */
     _onPageClick: function (ev) {
         ev.preventDefault();
+        this.$('li.o_survey_js_results_pagination').removeClass('active');
 
-        var pageNumber = $(ev.currentTarget).text();
-        this._changePage(pageNumber);
-    },
-
-    // -------------------------------------------------------------------------
-    // Private
-    // -------------------------------------------------------------------------
-
-    /**
-     * Shows / hides the records based on the selected page.
-     *
-     * @private
-     * @param {string} pageNumber
-     */
-    _changePage: function (pageNumber) {
-        this.$('li').removeClass('active');
-        var $target = this.$(_.str.sprintf('li:contains("%s")', pageNumber));
+        var $target = $(ev.currentTarget);
         $target.closest('li').addClass('active');
         this.$questionsEl.find('tbody tr').addClass('d-none');
 
@@ -82,6 +66,7 @@ publicWidget.registry.SurveyResultPagination = publicWidget.Widget.extend({
             this.$questionsEl.find('tbody tr:lt('+ this.limit * num +'):gt(' + min + ')')
                 .removeClass('d-none');
         }
+
     },
 });
 
@@ -255,7 +240,7 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
     },
 
     _getDoughnutChartConfig: function () {
-        var quizz_score = this.$el.data("quizz_score") || 0.0;
+        var scoring_percentage = this.$el.data("scoring_percentage") || 0.0;
         var counts = this.graphData.map(function (point) {
             return point.count;
         });
@@ -277,7 +262,7 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
             options: {
                 title: {
                     display: true,
-                    text: _.str.sprintf(_t("Overall Performance %.2f%s"), parseFloat(quizz_score), '%'),
+                    text: _.str.sprintf(_t("Overall Performance %.2f%s"), parseFloat(scoring_percentage), '%'),
                 },
             }
         };
@@ -343,7 +328,7 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
             self.$('.pagination').each(function (){
                 var questionId = $(this).data("question_id");
                 new publicWidget.registry.SurveyResultPagination(self, {
-                    'questionsEl': self.$('#table_question_'+ questionId)
+                    'questionsEl': self.$('#survey_table_question_'+ questionId)
                 }).attachTo($(this));
             });
 
@@ -367,8 +352,8 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
         var row_id = cell.data('row_id') | 0;
         var answer_id = cell.data('answer_id');
 
-        var params = new URLSearchParams(window.location.search)
-        var filters = params.get('filters') ? params.get('filters') + "|" + row_id + ',' + answer_id : row_id + ',' + answer_id
+        var params = new URLSearchParams(window.location.search);
+        var filters = params.get('filters') ? params.get('filters') + "|" + row_id + ',' + answer_id : row_id + ',' + answer_id;
         params.set('filters', filters);
 
         window.location.href = window.location.pathname + '?' + params.toString();
@@ -379,7 +364,7 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onClearFilterClick: function (ev) {
-        var params = new URLSearchParams(window.location.search)
+        var params = new URLSearchParams(window.location.search);
         params.delete('filters');
         params.delete('finished');
         window.location.href = window.location.pathname + '?' + params.toString();
@@ -390,7 +375,7 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onFilterAllClick: function (ev) {
-        var params = new URLSearchParams(window.location.search)
+        var params = new URLSearchParams(window.location.search);
         params.delete('finished');
         window.location.href = window.location.pathname + '?' + params.toString();
     },
@@ -400,7 +385,7 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onFilterFinishedClick: function (ev) {
-        var params = new URLSearchParams(window.location.search)
+        var params = new URLSearchParams(window.location.search);
         params.set('finished', true);
         window.location.href = window.location.pathname + '?' + params.toString();
     },

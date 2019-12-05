@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import collections
+import json
+import itertools
+import operator
+
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
 
@@ -37,19 +42,18 @@ class SurveyQuestion(models.Model):
     """
     _name = 'survey.question'
     _description = 'Survey Question'
-    _rec_name = 'question'
+    _rec_name = 'title'
     _order = 'sequence,id'
 
     @api.model
     def default_get(self, fields):
         defaults = super(SurveyQuestion, self).default_get(fields)
         if (not fields or 'question_type' in fields):
-            defaults['question_type'] = False if defaults.get('is_page') == True else 'free_text'
+            defaults['question_type'] = False if defaults.get('is_page') == True else 'text_box'
         return defaults
 
     # question generic data
     title = fields.Char('Title', required=True, translate=True)
-    question = fields.Char('Question', related="title")
     description = fields.Html('Description', help="Use this field to add additional explanations about your question", translate=True)
     survey_id = fields.Many2one('survey.survey', string='Survey', ondelete='cascade')
     scoring_type = fields.Selection(related='survey_id.scoring_type', string='Scoring Type', readonly=True)
@@ -66,8 +70,8 @@ class SurveyQuestion(models.Model):
     # question specific
     page_id = fields.Many2one('survey.question', string='Page', compute="_compute_page_id", store=True)
     question_type = fields.Selection([
-        ('free_text', 'Multiple Lines Text Box'),
-        ('textbox', 'Single Line Text Box'),
+        ('text_box', 'Multiple Lines Text Box'),
+        ('char_box', 'Single Line Text Box'),
         ('numerical_box', 'Numerical Value'),
         ('date', 'Date'),
         ('datetime', 'Datetime'),
@@ -75,15 +79,15 @@ class SurveyQuestion(models.Model):
         ('multiple_choice', 'Multiple choice: multiple answers allowed'),
         ('matrix', 'Matrix')], string='Question Type')
     # -- simple choice / multiple choice / matrix
-    labels_ids = fields.One2many(
-        'survey.label', 'question_id', string='Types of answers', copy=True,
+    suggested_answer_ids = fields.One2many(
+        'survey.question.answer', 'question_id', string='Types of answers', copy=True,
         help='Labels used for proposed choices: simple choice, multiple choice and columns of matrix')
     # -- matrix
     matrix_subtype = fields.Selection([
         ('simple', 'One choice per row'),
         ('multiple', 'Multiple choices per row')], string='Matrix Type', default='simple')
-    labels_ids_2 = fields.One2many(
-        'survey.label', 'question_id_2', string='Rows of the Matrix', copy=True,
+    matrix_row_ids = fields.One2many(
+        'survey.question.answer', 'matrix_question_id', string='Matrix Rows', copy=True,
         help='Labels used for proposed choices: rows of matrix')
     # -- display options
     column_nb = fields.Selection([
@@ -93,7 +97,7 @@ class SurveyQuestion(models.Model):
     display_mode = fields.Selection(
         [('columns', 'Radio Buttons'), ('dropdown', 'Selection Box')],
         string='Display Mode', default='columns', help='Display mode of simple choice questions.')
-    # -- comments
+    # -- comments (simple choice, multiple choice, matrix (without count as an answer))
     comments_allowed = fields.Boolean('Show Comments Field')
     comments_message = fields.Char('Comment Message', translate=True, default=lambda self: _("If other, please specify:"))
     comment_count_as_answer = fields.Boolean('Comment Field is an Answer Choice')
@@ -113,7 +117,7 @@ class SurveyQuestion(models.Model):
     constr_error_msg = fields.Char('Error message', translate=True, default=lambda self: _("This question requires an answer."))
     # answers
     user_input_line_ids = fields.One2many(
-        'survey.user_input_line', 'question_id', string='Answers',
+        'survey.user_input.line', 'question_id', string='Answers',
         domain=[('skipped', '=', False)], groups='survey.group_survey_user')
 
     _sql_constraints = [
@@ -189,8 +193,8 @@ class SurveyQuestion(models.Model):
 
         # because in choices question types, comment can count as answer
         if answer or self.question_type in ['simple_choice', 'multiple_choice']:
-            if self.question_type == 'textbox':
-                return self._validate_textbox(answer)
+            if self.question_type == 'char_box':
+                return self._validate_char_box(answer)
             elif self.question_type == 'numerical_box':
                 return self._validate_numerical_box(answer)
             elif self.question_type in ['date', 'datetime']:
@@ -201,7 +205,7 @@ class SurveyQuestion(models.Model):
                 return self._validate_matrix(answer)
         return {}
 
-    def _validate_textbox(self, answer):
+    def _validate_char_box(self, answer):
         # Email format validation
         # all the strings of the form "<something>@<anything>.<extension>" will be accepted
         if self.validation_email:
@@ -262,7 +266,7 @@ class SurveyQuestion(models.Model):
 
     def _validate_matrix(self, answers):
         # Validate that each line has been answered
-        if self.constr_mandatory and len(self.labels_ids_2) != len(answers):
+        if self.constr_mandatory and len(self.matrix_row_ids) != len(answers):
             return {self.id: self.constr_error_msg}
         return {}
 
@@ -274,29 +278,175 @@ class SurveyQuestion(models.Model):
         self.ensure_one()
         return list(self.survey_id.question_and_page_ids).index(self)
 
-    def get_correct_answer_ids(self):
-        self.ensure_one()
+    # ------------------------------------------------------------
+    # STATISTICS / REPORTING
+    # ------------------------------------------------------------
 
-        return self.labels_ids.filtered(lambda label: label.is_correct)
+    def _prepare_statistics(self, user_input_lines):
+        """ Compute statistical data for questions by counting number of vote per choice on basis of filter """
+        all_questions_data = []
+        for question in self:
+            question_data = {'question': question, 'is_page': question.is_page}
+
+            if question.is_page:
+                all_questions_data.append(question_data)
+                continue
+
+            # fetch answer lines, separate comments from real answers
+            all_lines = user_input_lines.filtered(lambda line: line.question_id == question)
+            if question.question_type in ['simple_choice', 'multiple_choice', 'matrix']:
+                answer_lines = all_lines.filtered(
+                    lambda line: line.answer_type == 'suggestion' or (
+                        line.answer_type == 'char_box' and question.comment_count_as_answer)
+                    )
+                comment_line_ids = all_lines.filtered(lambda line: line.answer_type == 'char_box')
+            else:
+                answer_lines = all_lines
+                comment_line_ids = self.env['survey.user_input.line']
+            skipped_lines = answer_lines.filtered(lambda line: line.skipped)
+            done_lines = answer_lines - skipped_lines
+            question_data.update(
+                answer_line_ids=answer_lines,
+                answer_line_done_ids=done_lines,
+                answer_input_done_ids=done_lines.mapped('user_input_id'),
+                answer_input_skipped_ids=skipped_lines.mapped('user_input_id'),
+                comment_line_ids=comment_line_ids)
+            question_data.update(question._get_stats_summary_data(answer_lines))
+
+            # prepare table and graph data
+            table_data, graph_data = question._get_stats_data(answer_lines)
+            question_data['table_data'] = table_data
+            question_data['graph_data'] = json.dumps(graph_data)
+
+            all_questions_data.append(question_data)
+        return all_questions_data
+
+    def _get_stats_data(self, user_input_lines):
+        if self.question_type in ['simple_choice']:
+            return self._get_stats_data_answers(user_input_lines)
+        elif self.question_type in ['multiple_choice']:
+            table_data, graph_data = self._get_stats_data_answers(user_input_lines)
+            return table_data, [{'key': self.title, 'values': graph_data}]
+        elif self.question_type in ['matrix']:
+            return self._get_stats_graph_data_matrix(user_input_lines)
+        return [line for line in user_input_lines], []
+
+    def _get_stats_data_answers(self, user_input_lines):
+        """ Statistics for question.answer based questions (simple choice, multiple
+        choice.). A corner case with a void record survey.question.answer is added
+        to count comments that should be considered as valid answers. This small hack
+        allow to have everything available in the same standard structure. """
+        suggested_answers = [answer for answer in self.mapped('suggested_answer_ids')]
+        if self.comment_count_as_answer:
+            suggested_answers += [self.env['survey.question.answer']]
+
+        count_data = dict.fromkeys(suggested_answers, 0)
+        for line in user_input_lines:
+            if line.suggested_answer_id or (line.value_char_box and self.comment_count_as_answer):
+                count_data[line.suggested_answer_id] += 1
+
+        table_data = [{
+            'value': _('Other (see comments)') if not sug_answer else sug_answer.value,
+            'suggested_answer': sug_answer,
+            'count': count_data[sug_answer]
+            }
+            for sug_answer in suggested_answers]
+        graph_data = [{
+            'text': _('Other (see comments)') if not sug_answer else sug_answer.value,
+            'count': count_data[sug_answer]
+            }
+            for sug_answer in suggested_answers]
+
+        return table_data, graph_data
+
+    def _get_stats_graph_data_matrix(self, user_input_lines):
+        suggested_answers = self.mapped('suggested_answer_ids')
+        matrix_rows = self.mapped('matrix_row_ids')
+
+        count_data = dict.fromkeys(itertools.product(matrix_rows, suggested_answers), 0)
+        for line in user_input_lines:
+            if line.matrix_row_id and line.suggested_answer_id:
+                count_data[(line.matrix_row_id, line.suggested_answer_id)] += 1
+
+        table_data = [{
+            'row': row,
+            'columns': [{
+                'suggested_answer': sug_answer,
+                'count': count_data[(row, sug_answer)]
+            } for sug_answer in suggested_answers],
+        } for row in matrix_rows]
+        graph_data = [{
+            'key': sug_answer.value,
+            'values': [{
+                'text': row.value,
+                'count': count_data[(row, sug_answer)]
+                }
+                for row in matrix_rows
+            ]
+        } for sug_answer in suggested_answers]
+
+        return table_data, graph_data
+
+    def _get_stats_summary_data(self, user_input_lines):
+        if self.question_type in ['simple_choice', 'multiple_choice']:
+            return self._get_stats_summary_data_choice(user_input_lines)
+        if self.question_type in ['numerical_box']:
+            return self._get_stats_summary_data_numerical(user_input_lines)
+        return {}
+
+    def _get_stats_summary_data_choice(self, user_input_lines):
+        right_inputs, partial_inputs = self.env['survey.user_input'], self.env['survey.user_input']
+        right_answers = self.suggested_answer_ids.filtered(lambda label: label.is_correct)
+        if self.question_type == 'multiple_choice':
+            for user_input, lines in tools.groupby(user_input_lines, operator.itemgetter('user_input_id')):
+                user_input_answers = self.env['survey.user_input.line'].concat(*lines).filtered(lambda l: l.answer_is_correct).mapped('suggested_answer_id')
+                if user_input_answers and user_input_answers < right_answers:
+                    partial_inputs += user_input
+                elif user_input_answers:
+                    right_inputs += user_input
+        else:
+            right_inputs = user_input_lines.filtered(lambda line: line.answer_is_correct).mapped('user_input_id')
+        return {
+            'right_answers': right_answers,
+            'right_inputs': right_inputs,
+            'partial_inputs': partial_inputs,
+        }
+
+    def _get_stats_summary_data_numerical(self, user_input_lines):
+        all_values = user_input_lines.filtered(lambda line: not line.skipped).mapped('value_numerical_box')
+        lines_sum = sum(all_values)
+        return {
+            'numerical_max': max(all_values, default=0),
+            'numerical_min': min(all_values, default=0),
+            'numerical_average': round(lines_sum / len(all_values) or 1, 2),
+            'numerical_common_lines': collections.Counter(all_values).most_common(5),
+        }
 
 
-class SurveyLabel(models.Model):
-    """ A suggested answer for a question """
-    _name = 'survey.label'
+class SurveyQuestionAnswer(models.Model):
+    """ A preconfigured answer for a question. This model stores values used
+    for
+
+      * simple choice, multiple choice: proposed values for the selection /
+        radio;
+      * matrix: row and column values;
+
+    """
+    _name = 'survey.question.answer'
     _rec_name = 'value'
-    _order = 'sequence,id'
+    _order = 'sequence, id'
     _description = 'Survey Label'
 
     question_id = fields.Many2one('survey.question', string='Question', ondelete='cascade')
-    question_id_2 = fields.Many2one('survey.question', string='Question 2', ondelete='cascade')
+    matrix_question_id = fields.Many2one('survey.question', string='Question (as matrix row)', ondelete='cascade')
     sequence = fields.Integer('Label Sequence order', default=10)
     value = fields.Char('Suggested value', translate=True, required=True)
     is_correct = fields.Boolean('Is a correct answer')
     answer_score = fields.Float('Score for this choice', help="A positive score indicates a correct choice; a negative or null score indicates a wrong answer")
 
-    @api.constrains('question_id', 'question_id_2')
+    @api.constrains('question_id', 'matrix_question_id')
     def _check_question_not_empty(self):
-        """Ensure that field question_id XOR field question_id_2 is not null"""
+        """Ensure that field question_id XOR field matrix_question_id is not null"""
         for label in self:
-            if not bool(label.question_id) != bool(label.question_id_2):
+            if not bool(label.question_id) != bool(label.matrix_question_id):
                 raise ValidationError(_("A label must be attached to only one question."))

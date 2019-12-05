@@ -7,13 +7,13 @@ import werkzeug
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from math import ceil
 
 from odoo import fields, http, _
 from odoo.addons.base.models.ir_ui_view import keep_query
 from odoo.exceptions import UserError
 from odoo.http import request, content_disposition
-from odoo.tools import ustr, format_datetime, format_date
+from odoo.osv import expression
+from odoo.tools import format_datetime, format_date
 
 _logger = logging.getLogger(__name__)
 
@@ -34,7 +34,7 @@ class Survey(http.Controller):
         else:
             answer_sudo = request.env['survey.user_input'].sudo().search([
                 ('survey_id', '=', survey_sudo.id),
-                ('token', '=', answer_token)
+                ('access_token', '=', answer_token)
             ], limit=1)
         return survey_sudo, answer_sudo
 
@@ -127,20 +127,20 @@ class Survey(http.Controller):
             return request.render("survey.survey_void_content", {'survey': survey_sudo, 'answer': answer_sudo})
         elif error_key == 'survey_closed' and access_data['can_answer']:
             return request.render("survey.survey_closed_expired", {'survey': survey_sudo})
-        elif error_key == 'survey_auth' and answer_sudo.token:
+        elif error_key == 'survey_auth' and answer_sudo.access_token:
             if answer_sudo.partner_id and (answer_sudo.partner_id.user_ids or survey_sudo.users_can_signup):
                 if answer_sudo.partner_id.user_ids:
                     answer_sudo.partner_id.signup_cancel()
                 else:
                     answer_sudo.partner_id.signup_prepare(expiration=fields.Datetime.now() + relativedelta(days=1))
-                redirect_url = answer_sudo.partner_id._get_signup_url_for_action(url='/survey/start/%s?answer_token=%s' % (survey_sudo.access_token, answer_sudo.token))[answer_sudo.partner_id.id]
+                redirect_url = answer_sudo.partner_id._get_signup_url_for_action(url='/survey/start/%s?answer_token=%s' % (survey_sudo.access_token, answer_sudo.access_token))[answer_sudo.partner_id.id]
             else:
-                redirect_url = '/web/login?redirect=%s' % ('/survey/start/%s?answer_token=%s' % (survey_sudo.access_token, answer_sudo.token))
+                redirect_url = '/web/login?redirect=%s' % ('/survey/start/%s?answer_token=%s' % (survey_sudo.access_token, answer_sudo.access_token))
             return request.render("survey.survey_auth_required", {'survey': survey_sudo, 'redirect_url': redirect_url})
-        elif error_key == 'answer_deadline' and answer_sudo.token:
+        elif error_key == 'answer_deadline' and answer_sudo.access_token:
             return request.render("survey.survey_closed_expired", {'survey': survey_sudo})
-        elif error_key == 'answer_done' and answer_sudo.token:
-            return request.render("survey.survey_closed_finished", self._prepare_survey_finished_values(survey_sudo, answer_sudo, token=answer_sudo.token))
+        elif error_key == 'answer_done' and answer_sudo.access_token:
+            return request.render("survey.survey_closed_finished", self._prepare_survey_finished_values(survey_sudo, answer_sudo, token=answer_sudo.access_token))
 
         return werkzeug.utils.redirect("/")
 
@@ -153,7 +153,7 @@ class Survey(http.Controller):
             answer_sudo = survey_sudo._create_answer(user=request.env.user, test_entry=True)
         except:
             return werkzeug.utils.redirect('/')
-        return request.redirect('/survey/start/%s?%s' % (survey_sudo.access_token, keep_query('*', answer_token=answer_sudo.token)))
+        return request.redirect('/survey/start/%s?%s' % (survey_sudo.access_token, keep_query('*', answer_token=answer_sudo.access_token)))
 
     @http.route('/survey/retry/<string:survey_token>/<string:answer_token>', type='http', auth='public', website=True)
     def survey_retry(self, survey_token, answer_token, **post):
@@ -178,13 +178,20 @@ class Survey(http.Controller):
             )
         except:
             return werkzeug.utils.redirect("/")
-        return request.redirect('/survey/start/%s?%s' % (survey_sudo.access_token, keep_query('*', answer_token=retry_answer_sudo.token)))
+        return request.redirect('/survey/start/%s?%s' % (survey_sudo.access_token, keep_query('*', answer_token=retry_answer_sudo.access_token)))
 
     def _prepare_retry_additional_values(self, answer):
         return {
-            'input_type': answer.input_type,
             'deadline': answer.deadline,
         }
+
+    def _prepare_survey_finished_values(self, survey, answer, token=False):
+        values = {'survey': survey, 'answer': answer}
+        if token:
+            values['token'] = token
+        if survey.scoring_type != 'no_scoring' and survey.certification:
+            values['graph_data'] = json.dumps(answer._prepare_statistics()[0])
+        return values
 
     # ------------------------------------------------------------
     # TAKING SURVEY ROUTES
@@ -221,7 +228,7 @@ class Survey(http.Controller):
             data = {'survey': survey_sudo, 'answer': answer_sudo, 'page': 0}
             return request.render('survey.survey_page_start', data)
         else:
-            return request.redirect('/survey/fill/%s/%s' % (survey_sudo.access_token, answer_sudo.token))
+            return request.redirect('/survey/fill/%s/%s' % (survey_sudo.access_token, answer_sudo.access_token))
 
     @http.route('/survey/fill/<string:survey_token>/<string:answer_token>', type='http', auth='public', website=True)
     def survey_display_page(self, survey_token, answer_token, **post):
@@ -329,7 +336,7 @@ class Survey(http.Controller):
             for question in questions:
                 answer = prepared_questions[question.id]['answer']
                 comment = prepared_questions[question.id]['comment']
-                request.env['survey.user_input_line'].sudo().save_lines(answer_sudo.id, question, answer, comment)
+                answer_sudo.save_lines(question, answer, comment)
 
         if answer_sudo.is_time_limit_reached or survey_sudo.questions_layout == 'one_page':
             answer_sudo._mark_done()
@@ -348,6 +355,51 @@ class Survey(http.Controller):
             answer_sudo.write(vals)
 
         return '/survey/fill/%s/%s' % (survey_sudo.access_token, answer_token)
+
+    def _extract_comment_from_answers(self, question, answers):
+        """ Answers is a custom structure depending of the question type
+        that can contain question answers but also comments that need to be
+        extracted before validating and saving answers.
+        If multiple answers, they are listed in an array, except for matrix
+        where answers are structured differently. See input and output for
+        more info on data structures.
+        :param question: survey.question
+        :param answers:
+          * question_type: free_text, text_box, numerical_box, date, datetime
+            answers is a string containing the value
+          * question_type: simple_choice with no comment
+            answers is a string containing the value ('question_id_1')
+          * question_type: simple_choice with comment
+            ['question_id_1', {'comment': str}]
+          * question_type: multiple choice
+            ['question_id_1', 'question_id_2'] + [{'comment': str}] if holds a comment
+          * question_type: matrix
+            {'matrix_row_id_1': ['question_id_1', 'question_id_2'],
+             'matrix_row_id_2': ['question_id_1', 'question_id_2']
+            } + {'comment': str} if holds a comment
+        :return: tuple(
+          same structure without comment,
+          extracted comment for given question
+        ) """
+        comment = None
+        answers_no_comment = []
+        if answers:
+            if question.question_type == 'matrix':
+                if 'comment' in answers:
+                    comment = answers['comment'].strip()
+                    answers.pop('comment')
+                answers_no_comment = answers
+            else:
+                if not isinstance(answers, list):
+                    answers = [answers]
+                for answer in answers:
+                    if 'comment' in answer:
+                        comment = answer['comment'].strip()
+                    else:
+                        answers_no_comment.append(answer)
+                if len(answers_no_comment) == 1:
+                    answers_no_comment = answers_no_comment[0]
+        return answers_no_comment, comment
 
     # ------------------------------------------------------------
     # COMPLETED SURVEY ROUTES
@@ -376,65 +428,6 @@ class Survey(http.Controller):
             'format_date': lambda date: format_date(request.env, date)
         })
 
-    @http.route('/survey/results/<model("survey.survey"):survey>', type='http', auth='user', website=True)
-    def survey_report(self, survey, answer_token=None, **post):
-        '''Display survey Results & Statistics for given survey.'''
-        current_filters = []
-        filter_display_data = []
-
-        answers = survey.user_input_ids.filtered(lambda answer: answer.state != 'new' and not answer.test_entry)
-        filter_finish = post.get('finished') == 'true'
-        if post or filter_finish:
-            filter_data = self._get_filter_data(post)
-            current_filters = survey.filter_input_ids(filter_data, filter_finish)
-            filter_display_data = survey.get_filter_display_data(filter_data)
-        return request.render('survey.survey_page_statistics',
-                                      {'survey': survey,
-                                       'answers': answers,
-                                       'survey_dict': self._prepare_result_dict(survey, current_filters),
-                                       'page_range': self.page_range,
-                                       'current_filters': current_filters,
-                                       'filter_display_data': filter_display_data,
-                                       'filter_finish': filter_finish
-                                       })
-        # Quick retroengineering of what is injected into the template for now:
-        # (TODO: flatten and simplify this)
-        #
-        #     survey: a browse record of the survey
-        #     survey_dict: very messy dict containing all the info to display answers
-        #         {'page_ids': [
-        #
-        #             ...
-        #
-        #                 {'page': browse record of the page,
-        #                  'question_ids': [
-        #
-        #                     ...
-        #
-        #                     {'graph_data': data to be displayed on the graph
-        #                      'input_summary': number of answered, skipped...
-        #                      'prepare_result': {
-        #                                         answers displayed in the tables
-        #                                         }
-        #                      'question': browse record of the question_ids
-        #                     }
-        #
-        #                     ...
-        #
-        #                     ]
-        #                 }
-        #
-        #             ...
-        #
-        #             ]
-        #         }
-        #
-        #     page_range: pager helper function
-        #     current_filters: a list of ids
-        #     filter_display_data: [{'labels': ['a', 'b'], question_text} ...  ]
-        #     filter_finish: boolean => only finished surveys or not
-        #
-
     @http.route(['/survey/<model("survey.survey"):survey>/get_certification_preview'], type="http", auth="user", methods=['GET'], website=True)
     def survey_get_certification_preview(self, survey, **kwargs):
         if not request.env.user.has_group('survey.group_survey_user'):
@@ -450,7 +443,7 @@ class Survey(http.Controller):
         """ The certification document can be downloaded as long as the user has succeeded the certification """
         survey = request.env['survey.survey'].sudo().search([
             ('id', '=', survey_id),
-            ('certificate', '=', True)
+            ('certification', '=', True)
         ])
 
         if not survey:
@@ -460,169 +453,13 @@ class Survey(http.Controller):
         succeeded_attempt = request.env['survey.user_input'].sudo().search([
             ('partner_id', '=', request.env.user.partner_id.id),
             ('survey_id', '=', survey_id),
-            ('quizz_passed', '=', True)
+            ('scoring_success', '=', True)
         ], limit=1)
 
         if not succeeded_attempt:
             raise UserError(_("The user has not succeeded the certification"))
 
         return self._generate_report(succeeded_attempt, download=True)
-
-    def _prepare_result_dict(self, survey, current_filters=None):
-        """Returns dictionary having values for rendering template"""
-        current_filters = current_filters if current_filters else []
-        result = {'page_ids': []}
-
-        # First append questions without page
-        questions_without_page = [self._prepare_question_values(question,current_filters) for question in survey.question_ids if not question.page_id]
-        if questions_without_page:
-            result['page_ids'].append({'page': request.env['survey.question'], 'question_ids': questions_without_page})
-
-        # Then, questions in sections
-        for page in survey.page_ids:
-            page_dict = {'page': page, 'question_ids': [self._prepare_question_values(question,current_filters) for question in page.question_ids]}
-            result['page_ids'].append(page_dict)
-
-        if survey.scoring_type in ['scoring_with_answers', 'scoring_without_answers']:
-            scoring_data = self._get_scoring_data(survey)
-            result['success_rate'] = scoring_data['success_rate']
-            result['scoring_graph_data'] = json.dumps(scoring_data['graph_data'])
-
-        return result
-
-    def _prepare_question_values(self, question, current_filters):
-        Survey = request.env['survey.survey']
-        return {
-            'question': question,
-            'input_summary': Survey.get_input_summary(question, current_filters),
-            'prepare_result': Survey.prepare_result(question, current_filters),
-            'graph_data': self._get_graph_data(question, current_filters),
-        }
-
-    def _get_filter_data(self, post):
-        """Returns data used for filtering the result"""
-        filters = []
-        filters_data = post.get('filters')
-        if filters_data:
-            for data in filters_data.split('|'):
-                try:
-                    row_id, answer_id = data.split(',')
-                    filters.append({'row_id': int(row_id), 'answer_id': int(answer_id)})
-                except:
-                    return filters
-        return filters
-
-    def page_range(self, total_record, limit):
-        '''Returns number of pages required for pagination'''
-        total = ceil(total_record / float(limit))
-        return range(1, int(total + 1))
-
-    def _get_graph_data(self, question, current_filters=None):
-        '''Returns formatted data required by graph library on basis of filter'''
-        # TODO refactor this terrible method and merge it with _prepare_result_dict
-        current_filters = current_filters if current_filters else []
-        Survey = request.env['survey.survey']
-        result = []
-        if question.question_type == 'multiple_choice':
-            result.append({'key': ustr(question.question),
-                           'values': Survey.prepare_result(question, current_filters)['answers']
-                           })
-        if question.question_type == 'simple_choice':
-            result = Survey.prepare_result(question, current_filters)['answers']
-        if question.question_type == 'matrix':
-            data = Survey.prepare_result(question, current_filters)
-            for answer in data['answers']:
-                values = []
-                for row in data['rows']:
-                    values.append({'text': data['rows'].get(row), 'count': data['result'].get((row, answer))})
-                result.append({'key': data['answers'].get(answer), 'values': values})
-        return json.dumps(result)
-
-    def _get_scoring_data(self, survey):
-        """Performs a read_group to fetch the count of failed/passed tests in a single query."""
-
-        count_data = request.env['survey.user_input'].read_group(
-            [('survey_id', '=', survey.id), ('state', '=', 'done'), ('test_entry', '=', False)],
-            ['quizz_passed', 'id:count_distinct'],
-            ['quizz_passed']
-        )
-
-        quizz_passed_count = 0
-        quizz_failed_count = 0
-        for count_data_item in count_data:
-            if count_data_item['quizz_passed']:
-                quizz_passed_count = count_data_item['quizz_passed_count']
-            else:
-                quizz_failed_count = count_data_item['quizz_passed_count']
-
-        graph_data = [{
-            'text': _('Passed'),
-            'count': quizz_passed_count,
-            'color': '#2E7D32'
-        }, {
-            'text': _('Missed'),
-            'count': quizz_failed_count,
-            'color': '#C62828'
-        }]
-
-        total_quizz_passed = quizz_passed_count + quizz_failed_count
-        return {
-            'success_rate': round((quizz_passed_count / total_quizz_passed) * 100, 1) if total_quizz_passed > 0 else 0,
-            'graph_data': graph_data
-        }
-
-    def _prepare_survey_finished_values(self, survey, answer, token=False):
-        values = {'survey': survey, 'answer': answer}
-        if token:
-            values['token'] = token
-        if survey.scoring_type != 'no_scoring' and survey.certificate:
-            answer_perf = survey._get_answers_correctness(answer)[answer]
-            values['graph_data'] = json.dumps([
-                {"text": "Correct", "count": answer_perf['correct']},
-                {"text": "Partially", "count": answer_perf['partial']},
-                {"text": "Incorrect", "count": answer_perf['incorrect']},
-                {"text": "Unanswered", "count": answer_perf['skipped']}
-            ])
-        return values
-
-    def _extract_comment_from_answers(self, question, answers):
-        """
-        As answer is a custom structure depending of the question type
-        that can contain question answers but also comment that need to be extracted
-        before validating and saving answers.
-        If multiple answers, they are listed in an array, except for matrix where answers are structured differently.
-        See input and output for more info on data structures.
-        :param question: survey.question
-        :param answers: {str} answer (for simple questions)
-                    or {list} [answer_1,...,answer_n] (for questions with multiple answers)
-                    or {list} [answer_1, {'comment': comment}] (for questions with simple answers and with comment)
-                    or {list} [answer_1,...,answer_n, {'comment': comment}] (for questions with multiple answers with comment)
-                    or {list} [{sub_question_1: [answer_1,...,answer_n]}, {sub_question_2: [...]}] (for matrix without comment)
-                    or {list} [{sub_question_1: [answer_1,...,answer_n]}, {sub_question_2: [...]}, {'comment': comment}] (for matrix with comment)
-        :return: answers_no_comment : {str} answer for simple choice (or text and number) question types
-                                  or {list} [answer_1,...,answer_n] for multiple choices question types except matrix
-                                  or {list} [{sub_question_1: [answer_1,...,answer_n]}, {sub_question_2: [...]}] for matrix
-                 comment : {str} extracted comment for the given question
-        """
-        comment = None
-        answers_no_comment = []
-        if answers:
-            if question.question_type == 'matrix':
-                if 'comment' in answers:
-                    comment = answers['comment'].strip()
-                    answers.pop('comment')
-                answers_no_comment = answers
-            else:
-                if not isinstance(answers, list):
-                    answers = [answers]
-                for answer in answers:
-                    if 'comment' in answer:
-                        comment = answer['comment'].strip()
-                    else:
-                        answers_no_comment.append(answer)
-                if len(answers_no_comment) == 1:
-                    answers_no_comment = answers_no_comment[0]
-        return answers_no_comment, comment
 
     def _generate_report(self, user_input, download=True):
         report = request.env.ref('survey.certification_report').sudo().render_qweb_pdf([user_input.id], data={'report_type': 'pdf'})[0]
@@ -638,3 +475,74 @@ class Survey(http.Controller):
             ('Content-Length', len(report)),
             ('Content-Disposition', report_content_disposition),
         ])
+
+    # ------------------------------------------------------------
+    # REPORTING SURVEY ROUTES
+    # ------------------------------------------------------------
+
+    @http.route('/survey/results/<model("survey.survey"):survey>', type='http', auth='user', website=True)
+    def survey_report(self, survey, answer_token=None, **post):
+        """ Display survey Results & Statistics for given survey.
+
+        New structure: {
+            'survey': current survey browse record,
+            'question_and_page_data': see ``SurveyQuestion._prepare_statistics()``,
+            'survey_data'= see ``SurveySurvey._prepare_statistics()``
+            'search_filters': [],
+            'search_finished': either filter on finished inputs only or not,
+        }
+        """
+        user_input_lines, search_filters = self._extract_filters_data(survey, post)
+        survey_data = survey._prepare_statistics(user_input_lines)
+        question_and_page_data = survey.question_and_page_ids._prepare_statistics(user_input_lines)
+
+        return request.render('survey.survey_page_statistics', {
+            # survey and its statistics
+            'survey': survey,
+            'question_and_page_data': question_and_page_data,
+            'survey_data': survey_data,
+            # search
+            'search_filters': search_filters,
+            'search_finished': post.get('finished') == 'true',
+        })
+
+    def _extract_filters_data(self, survey, post):
+        search_filters = []
+        line_filter_domain, line_choices = [], []
+        for data in post.get('filters', '').split('|'):
+            try:
+                row_id, answer_id = (int(item) for item in data.split(','))
+            except:
+                pass
+            else:
+                if row_id and answer_id:
+                    line_filter_domain = expression.AND([
+                        ['&', ('matrix_row_id', '=', row_id), ('suggested_answer_id', '=', answer_id)],
+                        line_filter_domain
+                    ])
+                    answers = request.env['survey.question.answer'].browse([row_id, answer_id])
+                elif answer_id:
+                    line_choices.append(answer_id)
+                    answers = request.env['survey.question.answer'].browse([answer_id])
+                if answer_id:
+                    search_filters.append({
+                        'question': answers[0].question_id.title,
+                        'answers': '%s%s' % (answers[0].value, ': %s' % answers[1].value if len(answers) > 1 else '')
+                    })
+        if line_choices:
+            line_filter_domain = expression.AND([[('suggested_answer_id', 'in', line_choices)], line_filter_domain])
+
+        user_input_domain = ['&', ('test_entry', '=', False), ('survey_id', '=', survey.id)]
+        if line_filter_domain:
+            matching_line_ids = request.env['survey.user_input.line'].sudo().search(line_filter_domain).ids
+            user_input_domain = expression.AND([
+                [('user_input_line_ids', 'in', matching_line_ids)],
+                user_input_domain
+            ])
+            if post.get('finished'):
+                user_input_domain = expression.AND([[('state', '=', 'done')], user_input_domain])
+            else:
+                user_input_domain = expression.AND([[('state', '!=', 'new')], user_input_domain])
+        user_input_lines = request.env['survey.user_input'].sudo().search(user_input_domain).mapped('user_input_line_ids')
+
+        return user_input_lines, search_filters

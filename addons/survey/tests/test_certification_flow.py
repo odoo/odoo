@@ -28,7 +28,7 @@ class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
         post_data.update(**additional_post_data)
         return post_data
 
-    def test_flow_certificate(self):
+    def test_flow_certification(self):
         # Step: survey user creates the certification
         # --------------------------------------------------
         with self.with_user(self.survey_user):
@@ -39,8 +39,8 @@ class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
                 'questions_layout': 'page_per_question',
                 'users_can_go_back': True,
                 'scoring_type': 'scoring_with_answers',
-                'passing_score': 85.0,
-                'certificate': True,
+                'scoring_success_min': 85.0,
+                'certification': True,
                 'certification_mail_template_id': self.env.ref('survey.mail_template_certification').id,
                 'is_time_limited': True,
                 'time_limit': 10,
@@ -70,7 +70,7 @@ class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
                 ])
 
             q03 = self._add_question(
-                None, 'What do you think about SO line widgets (not rated)?', 'free_text',
+                None, 'What do you think about SO line widgets (not rated)?', 'text_box',
                 sequence=3,
                 constr_mandatory=True, constr_error_msg='Please tell us what you think', survey_id=certification.id)
 
@@ -108,7 +108,7 @@ class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
         user_inputs = self.env['survey.user_input'].search([('survey_id', '=', certification.id)])
         self.assertEqual(len(user_inputs), 1)
         self.assertEqual(user_inputs.partner_id, self.user_emp.partner_id)
-        answer_token = user_inputs.token
+        answer_token = user_inputs.access_token
 
         # Employee begins survey with first page
         response = self._access_page(certification, answer_token)
@@ -116,22 +116,22 @@ class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
         csrf_token = self._find_csrf_token(response.text)
 
         with patch.object(IrMailServer, 'connect'):
-            self._answer_question(q01, q01.labels_ids.ids[3], answer_token, csrf_token)
-            self._answer_question(q02, q02.labels_ids.ids[1], answer_token, csrf_token)
+            self._answer_question(q01, q01.suggested_answer_ids.ids[3], answer_token, csrf_token)
+            self._answer_question(q02, q02.suggested_answer_ids.ids[1], answer_token, csrf_token)
             self._answer_question(q03, "I think they're great!", answer_token, csrf_token)
-            self._answer_question(q04, q04.labels_ids.ids[0], answer_token, csrf_token, button_submit='previous')
+            self._answer_question(q04, q04.suggested_answer_ids.ids[0], answer_token, csrf_token, button_submit='previous')
             self._answer_question(q03, "Just kidding, I don't like it...", answer_token, csrf_token)
-            self._answer_question(q04, q04.labels_ids.ids[0], answer_token, csrf_token)
-            self._answer_question(q05, [q05.labels_ids.ids[0], q05.labels_ids.ids[1], q05.labels_ids.ids[3]], answer_token, csrf_token)
+            self._answer_question(q04, q04.suggested_answer_ids.ids[0], answer_token, csrf_token)
+            self._answer_question(q05, [q05.suggested_answer_ids.ids[0], q05.suggested_answer_ids.ids[1], q05.suggested_answer_ids.ids[3]], answer_token, csrf_token)
 
         user_inputs.invalidate_cache()
         # Check that certification is successfully passed
-        self.assertEqual(user_inputs.quizz_score, 87.5)
-        self.assertTrue(user_inputs.quizz_passed)
+        self.assertEqual(user_inputs.scoring_percentage, 87.5)
+        self.assertTrue(user_inputs.scoring_success)
 
         # Check answer correction is taken into account
-        self.assertNotIn("I think they're great!", user_inputs.mapped('user_input_line_ids.value_free_text'))
-        self.assertIn("Just kidding, I don't like it...", user_inputs.mapped('user_input_line_ids.value_free_text'))
+        self.assertNotIn("I think they're great!", user_inputs.mapped('user_input_line_ids.value_text_box'))
+        self.assertIn("Just kidding, I don't like it...", user_inputs.mapped('user_input_line_ids.value_text_box'))
 
         certification_email = self.env['mail.mail'].sudo().search([], limit=1, order="create_date desc")
         # Check certification email correctly sent and contains document
