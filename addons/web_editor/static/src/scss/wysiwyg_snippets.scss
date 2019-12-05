@@ -92,21 +92,20 @@ body.editor_enable.editor_has_snippets {
         overflow: auto;
     }
 
-    > #o_scroll {
+    .o_panel_header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 3%;
+        color: inherit;
+        margin-bottom: 3%;
 
-        .o_panel_header {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 3%;
-            color: inherit;
-            margin-bottom: 3%;
-
-            i {
-                margin-right: 5px;
-            }
+        i {
+            margin-right: 5px;
         }
+    }
 
+    > #o_scroll {
         .o_panel_body {
             &:after {
                 content: " ";
@@ -503,6 +502,23 @@ body.editor_enable.editor_has_snippets {
                 .fa, .fas, .fab, .far {
                     margin-left: auto;
                 }
+            }
+        }
+    }
+
+    > .o_we_invisible_el_panel {
+        flex: 0 0 auto;
+        max-height: 220px;
+        overflow-y: auto;
+        background-color: var(--o-we-bg-color);
+        border-top: 2px solid;
+
+        .o_we_invisible_entry {
+            padding: 0.5rem;
+            cursor: pointer;
+
+            &:hover {
+                background-color: var(--o-we-snippets-bg-color);
             }
         }
     }
