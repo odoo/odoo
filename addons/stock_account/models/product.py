@@ -287,7 +287,11 @@ class ProductProduct(models.Model):
 
             qty_to_take_on_candidates -= qty_taken_on_candidate
             tmp_value += value_taken_on_candidate
+
             if float_is_zero(qty_to_take_on_candidates, precision_rounding=self.uom_id.rounding):
+                if float_is_zero(candidate.remaining_qty, precision_rounding=self.uom_id.rounding):
+                    next_candidates = candidates.filtered(lambda svl: svl.remaining_qty > 0)
+                    new_standard_price = next_candidates and next_candidates[0].unit_cost or new_standard_price
                 break
 
         # Update the standard price with the price of the last used candidate, if any.

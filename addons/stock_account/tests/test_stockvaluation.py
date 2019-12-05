@@ -103,6 +103,47 @@ class TestStockValuation(SavepointCase):
             ('account_id', '=', self.stock_valuation_account.id),
         ], order='date, id')
 
+
+    def _make_in_move(self, product, quantity, unit_cost=None):
+        """ Helper to create and validate a receipt move.
+        """
+        unit_cost = unit_cost or product.standard_price
+        in_move = self.env['stock.move'].create({
+            'name': 'in %s units @ %s per unit' % (str(quantity), str(unit_cost)),
+            'product_id': product.id,
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': self.env.ref('stock.stock_location_stock').id,
+            'product_uom': self.env.ref('uom.product_uom_unit').id,
+            'product_uom_qty': quantity,
+            'price_unit': unit_cost,
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+        })
+
+        in_move._action_confirm()
+        in_move._action_assign()
+        in_move.move_line_ids.qty_done = quantity
+        in_move._action_done()
+
+        return in_move.with_context(svl=True)
+
+    def _make_out_move(self, product, quantity):
+        """ Helper to create and validate a delivery move.
+        """
+        out_move = self.env['stock.move'].create({
+            'name': 'out %s units' % str(quantity),
+            'product_id': product.id,
+            'location_id': self.env.ref('stock.stock_location_stock').id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            'product_uom': self.env.ref('uom.product_uom_unit').id,
+            'product_uom_qty': quantity,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+        })
+        out_move._action_confirm()
+        out_move._action_assign()
+        out_move.move_line_ids.qty_done = quantity
+        out_move._action_done()
+        return out_move.with_context(svl=True)
+
     def test_realtime(self):
         """ Stock moves update stock value with product x cost price,
         price change updates the stock value based on current stock level.
@@ -1916,6 +1957,50 @@ class TestStockValuation(SavepointCase):
 
         self.assertEqual(self.product1.quantity_svl, 0)
         self.assertEqual(self.product1.value_svl, 0)
+
+    def test_fifo_standard_price_upate_1(self):
+        product = self.env['product.product'].create({
+            'name': 'product1',
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+        product.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+        self._make_in_move(product, 3, unit_cost=17)
+        self._make_in_move(product, 1, unit_cost=23)
+        self._make_out_move(product, 3)
+        self.assertEqual(product.standard_price, 23)
+
+    def test_fifo_standard_price_upate_2(self):
+        product = self.env['product.product'].create({
+            'name': 'product1',
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+        product.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+        self._make_in_move(product, 5, unit_cost=17)
+        self._make_in_move(product, 1, unit_cost=23)
+        self._make_out_move(product, 4)
+        self.assertEqual(product.standard_price, 17)
+
+    def test_fifo_standard_price_upate_3(self):
+        """Standard price must be set on move in if no product and if first move."""
+        product = self.env['product.product'].create({
+            'name': 'product1',
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+        product.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+        self._make_in_move(product, 5, unit_cost=17)
+        self._make_in_move(product, 1, unit_cost=23)
+        self.assertEqual(product.standard_price, 17)
+        self._make_out_move(product, 4)
+        self.assertEqual(product.standard_price, 17)
+        self._make_out_move(product, 1)
+        self.assertEqual(product.standard_price, 23)
+        self._make_out_move(product, 1)
+        self.assertEqual(product.standard_price, 23)
+        self._make_in_move(product, 1, unit_cost=77)
+        self.assertEqual(product.standard_price, 77)
 
     def test_average_perpetual_1(self):
         # http://accountingexplained.com/financial/inventories/avco-method
