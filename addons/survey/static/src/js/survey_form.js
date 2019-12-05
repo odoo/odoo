@@ -9,7 +9,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     selector: '.o_survey_form',
     events: {
         'change .o_survey_form_choice_item': '_onChangeChoiceItem',
-        'click button[type="submit"]': '_onSubmit',
+        'click button[type="submit"], .o_survey_start button': '_onSubmit',
         'click .o_survey_header .breadcrumb-item a': '_onBreadcrumbClick',
     },
 
@@ -104,7 +104,10 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
 
     _onSubmit: function (event) {
         event.preventDefault();
-        if ($(event.currentTarget).val() === 'previous') {
+        if ($(event.currentTarget).val() === 'start') {
+            this._submitForm({'start': true});
+        }
+        else if ($(event.currentTarget).val() === 'previous') {
             this._submitForm({'previous_page_id': $(event.currentTarget).data('previousPageId')});
         } else {
             this._submitForm({});
@@ -113,12 +116,15 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
 
     _submitForm: function (params) {
         var self = this;
-        var $form = this.$('form');
-        var formData = new FormData($form[0]);
 
-        this._prepareSubmitValues(formData, params);
+        if (!('start' in params)) {
+            var $form = this.$('form');
+            var formData = new FormData($form[0]);
 
-        this._resetErrors();
+            this._prepareSubmitValues(formData, params);
+
+            this._resetErrors();
+        }
 
         var resolveFadeOut;
         var fadeOutPromise = new Promise(function (resolve, reject) {resolveFadeOut = resolve;});
@@ -130,11 +136,11 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
             params: params,
         });
         Promise.all([fadeOutPromise, submitPromise]).then(function (results) {
-           return self._onSubmitDone(results[1], params);
+           return self._onSubmitDone(results[1]);
         });
     },
 
-    _onSubmitDone: function (result, params) {
+    _onSubmitDone: function (result) {
         var self = this;
         if (result && !result.error) {
             self.$(".o_survey_form_content").empty();

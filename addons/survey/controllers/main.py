@@ -229,10 +229,9 @@ class Survey(http.Controller):
 
         # Select the right page
         if answer_sudo.state == 'new':  # Intro page
-            data = {'survey': survey_sudo, 'answer': answer_sudo, 'page': 0}
-            return request.render('survey.survey_page_start', data)
+            return request.redirect('/survey/%s/%s?start' % (survey_sudo.access_token, answer_sudo.access_token))
         else:
-            return request.redirect('/survey/fill/%s/%s' % (survey_sudo.access_token, answer_sudo.access_token))
+            return request.redirect('/survey/%s/%s' % (survey_sudo.access_token, answer_sudo.access_token))
 
     def _survey_display_data(self, survey_sudo, answer_sudo, **post):
         data = {
@@ -262,6 +261,9 @@ class Survey(http.Controller):
 
         # Select the right page
         if answer_sudo.state == 'new':  # First page
+            if 'start' in post:  # Intro page
+                return {'survey': survey_sudo, 'answer': answer_sudo, 'start': True, 'page': 0}
+
             page_or_question_id, is_last = survey_sudo.next_page_or_question(answer_sudo, 0)
             data.update({
                 'survey': survey_sudo,
@@ -298,7 +300,7 @@ class Survey(http.Controller):
             return request.env.ref('survey.survey_closed_finished').render(data).decode('UTF-8')
         return request.env.ref('survey.survey_frontend_form').render(data).decode('UTF-8')
 
-    @http.route('/survey/fill/<string:survey_token>/<string:answer_token>', type='http', auth='public', website=True)
+    @http.route('/survey/<string:survey_token>/<string:answer_token>', type='http', auth='public', website=True)
     def survey_display_page(self, survey_token, answer_token, **post):
         access_data = self._get_access_data(survey_token, answer_token, ensure_token=True)
         if access_data['validity_code'] is not True and access_data['validity_code'] != 'answer_done':
@@ -326,6 +328,10 @@ class Survey(http.Controller):
                 'error': access_data['validity_code'],
             }
         survey_sudo, answer_sudo = access_data['survey_sudo'], access_data['answer_sudo']
+
+        # If start survey, render first page/question and skip submit and validation
+        if 'start' in post:
+            return self._prepare_question_html(survey_sudo, answer_sudo)
 
         questions, page_or_question_id = survey_sudo._get_survey_questions(answer=answer_sudo,
                                                                            page_id=post.get('page_id'),
