@@ -784,16 +784,6 @@ const InputUserValueWidget = UserValueWidget.extend({
      * @private
      * @param {Event} ev
      */
-    _onInputClick: function (ev) {
-        const inputEl = ev.currentTarget.querySelector('input');
-        if (inputEl) {
-            inputEl.select();
-        }
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
     _onInputKeydown: function (ev) {
         switch (ev.which) {
             case $.ui.keyCode.ENTER: {
