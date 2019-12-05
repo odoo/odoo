@@ -11,6 +11,7 @@ class PosOrderLine(models.Model):
 
     note = fields.Char('Note added by the waiter.')
     mp_skip = fields.Boolean('Skip line when sending ticket to kitchen printers.')
+    mp_dirty = fields.Boolean()
 
 
 class PosOrder(models.Model):
@@ -18,6 +19,7 @@ class PosOrder(models.Model):
 
     table_id = fields.Many2one('restaurant.table', string='Table', help='The table where this order was served')
     customer_count = fields.Integer(string='Guests', help='The amount of customers that have been served by this order.')
+    multiprint_resume = fields.Char()
 
     def _get_pack_lot_lines(self, order_lines):
         """Add pack_lot_lines to the order_lines.
@@ -44,6 +46,19 @@ class PosOrder(models.Model):
         for order_line_id, pack_lot_ids in groupby(pack_lots, key=lambda x:x['order_line']):
             next(order_line for order_line in order_lines if order_line['id'] == order_line_id)['pack_lot_ids'] = list(pack_lots)
 
+    def _get_fields_for_order_line(self):
+        return [
+            'id',
+            'discount',
+            'product_id',
+            'price_unit',
+            'order_id',
+            'qty',
+            'note',
+            'mp_skip',
+            'mp_dirty',
+        ]
+
     def _get_order_lines(self, orders):
         """Add pos_order_lines to the orders.
 
@@ -54,16 +69,7 @@ class PosOrder(models.Model):
         """
         order_lines = self.env['pos.order.line'].search_read(
                 domain = [('order_id', 'in', [to['id'] for to in orders])],
-                fields = [
-                    'id',
-                    'discount',
-                    'product_id',
-                    'price_unit',
-                    'order_id',
-                    'qty',
-                    'note',
-                    'mp_skip',
-                    ])
+                fields = self._get_fields_for_order_line())
 
         if order_lines != []:
             self._get_pack_lot_lines(order_lines)
@@ -108,20 +114,8 @@ class PosOrder(models.Model):
         for order_id, payment_lines in groupby(extended_payment_lines, key=lambda x:x[2]['pos_order_id']):
             next(order for order in orders if order['id'] == order_id[0])['statement_ids'] = list(payment_lines)
 
-    @api.model
-    def get_table_draft_orders(self, table_id):
-        """Generate an object of all draft orders for the given table.
-
-        Generate and return an JSON object with all draft orders for the given table, to send to the 
-        front end application.
-
-        :param table_id: Id of the selected table.
-        :type table_id: int.
-        :returns: list -- list of dict representing the table orders
-        """
-        table_orders = self.search_read(
-                domain = [('state', '=', 'draft'), ('table_id', '=', table_id)],
-                fields = [
+    def _get_fields_for_draft_order(self):
+        return [
                     'id',
                     'pricelist_id',
                     'partner_id',
@@ -134,7 +128,23 @@ class PosOrder(models.Model):
                     'fiscal_position_id',
                     'table_id',
                     'to_invoice',
-                    ])
+                    'multiprint_resume',
+                    ]
+
+    @api.model
+    def get_table_draft_orders(self, table_id):
+        """Generate an object of all draft orders for the given table.
+
+        Generate and return an JSON object with all draft orders for the given table, to send to the
+        front end application.
+
+        :param table_id: Id of the selected table.
+        :type table_id: int.
+        :returns: list -- list of dict representing the table orders
+        """
+        table_orders = self.search_read(
+                domain = [('state', '=', 'draft'), ('table_id', '=', table_id)],
+                fields = self._get_fields_for_draft_order())
 
         self._get_order_lines(table_orders)
         self._get_payment_lines(table_orders)
@@ -171,4 +181,5 @@ class PosOrder(models.Model):
         order_fields = super(PosOrder, self)._order_fields(ui_order)
         order_fields['table_id'] = ui_order.get('table_id', False)
         order_fields['customer_count'] = ui_order.get('customer_count', 0)
+        order_fields['multiprint_resume'] = ui_order.get('multiprint_resume', False)
         return order_fields
