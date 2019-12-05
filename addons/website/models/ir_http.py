@@ -281,12 +281,15 @@ class Http(models.AbstractModel):
     def _get_exception_code_values(cls, exception):
         code, values = super(Http, cls)._get_exception_code_values(exception)
         if request.website.is_publisher() and isinstance(exception, werkzeug.exceptions.NotFound):
-            code = 'page_404'
             values['path'] = request.httprequest.path[1:]
+<<<<<<< HEAD
         if isinstance(exception, werkzeug.exceptions.Forbidden) and \
            exception.description == "website_visibility_password_required":
             code = 'protected_403'
             values['path'] = request.httprequest.path
+=======
+            values['force_template'] = 'website.page_404'
+>>>>>>> ef17ebdbab6... temp
         return (code, values)
 
     @classmethod
@@ -320,8 +323,13 @@ class Http(models.AbstractModel):
 
     @classmethod
     def _get_error_html(cls, env, code, values):
+<<<<<<< HEAD
         if code in ('page_404', 'protected_403'):
             return code.split('_')[1], env['ir.ui.view'].render_template('website.%s' % code, values)
+=======
+        if values.get('force_template'):
+            return env['ir.ui.view'].render_template(values['force_template'], values)
+>>>>>>> ef17ebdbab6... temp
         return super(Http, cls)._get_error_html(env, code, values)
 
     def binary_content(self, xmlid=None, model='ir.attachment', id=None, field='datas',
