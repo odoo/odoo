@@ -165,7 +165,7 @@ QUnit.test('Canceled', async function (assert) {
     testUtils.dom.triggerMouseEvent(form.$('.o_thread_message_snailmail_canceled'), 'mouseenter');
     assert.ok($('.o_thread_tooltip_snailmail:visible').length,
         "Tooltip should appear when hovering the Snailmail Icon");
-    assert.ok($('.o_thread_tooltip_snailmail_icon.fa-trash-alt').length,
+    assert.ok($('.o_thread_tooltip_snailmail_icon.fa-trash-o').length,
         "Tooltip should show correct icon");
     assert.ok($('.o_thread_tooltip_snailmail:contains("Canceled")').length,
         "Tooltip should show correct text");
@@ -201,7 +201,7 @@ QUnit.test('Pending', async function (assert) {
     testUtils.dom.triggerMouseEvent(form.$('.o_thread_message_snailmail_pending'), 'mouseenter');
     assert.ok($('.o_thread_tooltip_snailmail:visible').length,
         "Tooltip should appear when hovering the Snailmail Icon");
-    assert.ok($('.o_thread_tooltip_snailmail_icon.fa-clock').length,
+    assert.ok($('.o_thread_tooltip_snailmail_icon.fa-clock-o').length,
         "Tooltip should show correct icon");
     assert.ok($('.o_thread_tooltip_snailmail:contains("Awaiting Dispatch")').length,
         "Tooltip should show correct text");

@@ -329,17 +329,17 @@ var SlideUploadDialog = Dialog.extend({
     _setup: function () {
         this.slide_type_data = {
             presentation: {
-                icon: 'fa-file-pdf',
+                icon: 'fa-file-pdf-o',
                 label: _t('Presentation'),
                 template: 'website.slide.upload.modal.presentation',
             },
             webpage: {
-                icon: 'fa-file-alt',
+                icon: 'fa-file-text',
                 label: _t('Web Page'),
                 template: 'website.slide.upload.modal.webpage',
             },
             video: {
-                icon: 'fa-video',
+                icon: 'fa-video-camera',
                 label: _t('Video'),
                 template: 'website.slide.upload.modal.video',
             },

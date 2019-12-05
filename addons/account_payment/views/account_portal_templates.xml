@@ -17,7 +17,7 @@
             <t t-set="last_tx" t-value="invoice.get_portal_last_transaction()"/>
             <td class="tx_status text-center">
                 <t t-if="invoice.state == 'posted' and invoice.invoice_payment_state == 'not_paid' and (last_tx.state not in ['pending', 'authorized', 'done', 'cancel'] or (last_tx.state == 'pending' and last_tx.acquirer_id.provider in ('transfer', 'manual')))">
-                    <span class="badge badge-pill badge-info"><i class="far fa-fw fa-clock"></i><span class="d-none d-md-inline"> Waiting for Payment</span></span>
+                    <span class="badge badge-pill badge-info"><i class="fa fa-fw fa-clock-o"></i><span class="d-none d-md-inline"> Waiting for Payment</span></span>
                 </t>
                 <t t-if="invoice.state == 'posted' and last_tx.state == 'authorized'">
                     <span class="badge badge-pill badge-primary"><i class="fa fa-fw fa-check"/><span class="d-none d-md-inline"> Authorized</span></span>
@@ -29,7 +29,7 @@
                     <span class="badge badge-pill badge-success"><i class="fa fa-fw fa-check"></i><span class="d-none d-md-inline"> Paid</span></span>
                 </t>
                 <t t-if="invoice.state == 'cancel'">
-                    <span class="badge badge-pill badge-danger"><i class="fas fa-fw fa-times"></i><span class="d-none d-md-inline"> Cancelled</span></span>
+                    <span class="badge badge-pill badge-danger"><i class="fa fa-fw fa-remove"></i><span class="d-none d-md-inline"> Cancelled</span></span>
                 </t>
             </td>
         </xpath>
@@ -76,10 +76,10 @@
                     <i class="fa fa-fw fa-arrow-circle-right"/> Pay Now
                 </a>
                 <div t-if="tx_ids and not pending_manual_txs and invoice.invoice_payment_state != 'paid'" class="alert alert-info py-1 mb-2" >
-                    <i class="far fa-fw fa-check-circle"/> Pending
+                    <i class="fa fa-fw fa-check-circle"/> Pending
                 </div>
                 <div t-if="invoice.invoice_payment_state == 'paid'" class="alert alert-success py-1 mb-2" >
-                    <i class="far fa-fw fa-check-circle"/> Paid
+                    <i class="fa fa-fw fa-check-circle"/> Paid
                 </div>
             </div>
         </xpath>

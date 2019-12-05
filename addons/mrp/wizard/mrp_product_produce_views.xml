@@ -22,7 +22,7 @@
                             <label for="finished_lot_id" attrs="{'invisible': [('product_tracking', '=', 'none')]}"/>
                             <div class="o_row">
                                 <field name="finished_lot_id" attrs="{'invisible': [('product_tracking', '=', 'none')], 'required': [('product_tracking', '!=', 'none'), ('finished_lot_id', '!=', False)]}" context="{'default_product_id': product_id, 'default_company_id': company_id}"/>
-                                <button name="action_generate_serial" type="object" class="btn btn-primary far fa-plus-square" aria-label="Creates a new serial/lot number" title="Creates a new serial/lot number" role="img" attrs="{'invisible': ['|', ('product_tracking', '=', 'none'), ('finished_lot_id', '!=', False)]}"/>
+                                <button name="action_generate_serial" type="object" class="btn btn-primary fa fa-plus-square-o" aria-label="Creates a new serial/lot number" title="Creates a new serial/lot number" role="img" attrs="{'invisible': ['|', ('product_tracking', '=', 'none'), ('finished_lot_id', '!=', False)]}"/>
                             </div>
                         </group>
                     </group>

@@ -21,7 +21,7 @@ var GROUPABLE_TYPES = controlPanelViewParameters.GROUPABLE_TYPES;
 
 var GraphView = AbstractView.extend({
     display_name: _lt('Graph'),
-    icon: 'fa-chart-bar',
+    icon: 'fa-bar-chart',
     jsLibs: [
         '/web/static/lib/Chart/Chart.js',
     ],

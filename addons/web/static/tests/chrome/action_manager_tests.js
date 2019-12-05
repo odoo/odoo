@@ -3022,23 +3022,23 @@ QUnit.module('ActionManager', {
         });
         await actionManager.doAction(3);
 
-        assert.hasClass($('.o_control_panel .fa.fa-chart-bar'),'active',
+        assert.hasClass($('.o_control_panel  .fa-bar-chart-o'),'active',
             "bar chart button is active");
-        assert.doesNotHaveClass($('.o_control_panel .fa-chart-area'), 'active',
+        assert.doesNotHaveClass($('.o_control_panel  .fa-area-chart'), 'active',
             "line chart button is not active");
 
         // display line chart
-        await testUtils.dom.click($('.o_control_panel .fa-chart-area'));
-        assert.hasClass($('.o_control_panel .fa-chart-area'),'active',
+        await testUtils.dom.click($('.o_control_panel  .fa-area-chart'));
+        assert.hasClass($('.o_control_panel  .fa-area-chart'),'active',
             "line chart button is now active");
 
         // switch to kanban and back to graph view
         await testUtils.dom.click($('.o_control_panel .o_cp_switch_kanban'));
-        assert.strictEqual($('.o_control_panel .fa-chart-area').length, 0,
+        assert.strictEqual($('.o_control_panel  .fa-area-chart').length, 0,
             "graph buttons are no longer in control panel");
 
         await testUtils.dom.click($('.o_control_panel .o_cp_switch_graph'));
-        assert.hasClass($('.o_control_panel .fa-chart-area'),'active',
+        assert.hasClass($('.o_control_panel  .fa-area-chart'),'active',
             "line chart button is still active");
         actionManager.destroy();
     });

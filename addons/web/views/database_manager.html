@@ -87,7 +87,7 @@
             <div class="col-md-8 input-group">
                 <input id="password" type="password" name="password" class="form-control" required="required" autocomplete="off"/>
                 <div class="input-group-append">
-                    <span class="far fa-eye o_little_eye input-group-text" aria-hidden="true" style="cursor: pointer;"></span>
+                    <span class="fa fa-eye o_little_eye input-group-text" aria-hidden="true" style="cursor: pointer;"></span>
                 </div>
             </div>
         </div>
@@ -149,20 +149,20 @@
                                 <div class="list-group-item d-flex align-items-center">
                                     <a href="/web?db={{ db }}" class="d-block flex-grow-1">
                                         {% if db in incompatible_databases %}
-                                            <i class="icon fas fa-exclamation-triangle float-right text-warning" title="This database may not be compatible"></i>
+                                            <i class="icon fa fa-warning float-right text-warning" title="This database may not be compatible"></i>
                                         {% endif %}
                                         {{ db }}
                                     </a>
                                     {% if manage %}
                                         <div class="btn-group btn-group-sm float-right">
                                             <button type="button" data-db="{{ db }}" data-target=".o_database_backup" class="o_database_action btn btn-primary">
-                                                <i class="far fa-save fa-fw"></i> Backup
+                                                <i class="fa fa-floppy-o fa-fw"></i> Backup
                                             </button>
                                             <button type="button" data-db="{{ db }}" data-target=".o_database_duplicate" class="o_database_action btn btn-secondary">
-                                                <i class="far fa-copy fa-fw"></i> Duplicate
+                                                <i class="fa fa-files-o fa-fw"></i> Duplicate
                                             </button>
                                             <button type="button" data-db="{{ db }}" data-target=".o_database_delete" class="o_database_action btn btn-danger">
-                                                <i class="far fa-trash-alt fa-fw"></i> Delete
+                                                <i class="fa fa-trash-o fa-fw"></i> Delete
                                             </button>
                                         </div>
                                     {% endif %}
@@ -274,7 +274,7 @@
                                 <div class="input-group">
                                     <input id="master_pwd_new" type="password" name="master_pwd_new" class="form-control" required="required" autocomplete="off"/>
                                     <div class="input-group-append">
-                                        <span class="far fa-eye o_little_eye input-group-text" aria-hidden="true" style="cursor: pointer;"></span>
+                                        <span class="fa fa-eye o_little_eye input-group-text" aria-hidden="true" style="cursor: pointer;"></span>
                                     </div>
                                 </div>
                             </div>
