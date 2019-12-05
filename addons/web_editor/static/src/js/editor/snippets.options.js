@@ -318,6 +318,7 @@ const UserValueWidget = Widget.extend({
         if (this._canUpdateUI()) {
             await this._updateUI();
         }
+        this._validating = false;
     },
 
     //--------------------------------------------------------------------------
@@ -334,7 +335,8 @@ const UserValueWidget = Widget.extend({
     _canUpdateUI: function () {
         const focusEl = document.activeElement;
         if (focusEl && focusEl.tagName === 'INPUT'
-                && (this.el === focusEl || this.el.contains(focusEl))) {
+                && (this.el === focusEl || this.el.contains(focusEl))
+                && !this._validating) {
             return false;
         }
         return true;
@@ -790,32 +792,29 @@ const InputUserValueWidget = UserValueWidget.extend({
      * @param {Event} ev
      */
     _onInputKeydown: function (ev) {
-        const input = ev.currentTarget;
-        let value = parseFloat(input.value || input.placeholder);
-        if (isNaN(value)) {
-            return;
-        }
-
-        let step = parseFloat(input.parentNode.dataset.step);
-        if (isNaN(step)) {
-            step = 1.0;
-        }
         switch (ev.which) {
-            case $.ui.keyCode.UP: {
-                value += step;
+            case $.ui.keyCode.ENTER: {
+                this._validating = true;
+                this._onUserValueChange(ev);
                 break;
             }
+            case $.ui.keyCode.UP:
             case $.ui.keyCode.DOWN: {
-                value -= step;
+                const input = ev.currentTarget;
+                let value = parseFloat(input.value || input.placeholder);
+                if (isNaN(value)) {
+                    return;
+                }
+                let step = parseFloat(input.parentNode.dataset.step);
+                if (isNaN(step)) {
+                    step = 1.0;
+                }
+                value += (ev.which === $.ui.keyCode.UP ? step : -step);
+                input.value = `${parseFloat(value.toFixed(3))}`;
+                $(input).trigger('input');
                 break;
-            }
-            default: {
-                return;
             }
         }
-
-        input.value = `${parseFloat(value.toFixed(3))}`;
-        $(input).trigger('input');
     },
 });
 
