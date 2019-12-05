@@ -31,7 +31,7 @@ class TestRecruitmentSurvey(common.SingleTransactionCase):
         action_start = self.job_sysadmin.action_start_survey()
         self.assertEqual(action_start['type'], 'ir.actions.act_url')
         self.assertNotEqual(self.job_sysadmin.response_id.id, False)
-        self.assertIn(self.job_sysadmin.response_id.token, action_start['url'])
+        self.assertIn(self.job_sysadmin.response_id.access_token, action_start['url'])
         action_start_with_response = self.job_sysadmin.action_start_survey()
         self.assertEqual(action_start_with_response, action_start)
 
@@ -42,4 +42,4 @@ class TestRecruitmentSurvey(common.SingleTransactionCase):
         self.assertEqual(action_print['type'], 'ir.actions.act_url')
         self.job_sysadmin.response_id = self.env['survey.user_input'].create({'survey_id': self.survey_sysadmin.id})
         action_print_with_response = self.job_sysadmin.action_print_survey()
-        self.assertIn(self.job_sysadmin.response_id.token, action_print_with_response['url'])
+        self.assertIn(self.job_sysadmin.response_id.access_token, action_print_with_response['url'])

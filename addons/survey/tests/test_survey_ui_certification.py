@@ -1,7 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo.tests
+
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+
 
 @odoo.tests.common.tagged('post_install', '-at_install')
 class TestUiCertification(HttpCaseWithUserDemo):
@@ -17,14 +19,13 @@ class TestUiCertification(HttpCaseWithUserDemo):
             'users_can_go_back': True,
             'users_login_required': True,
             'scoring_type': 'scoring_with_answers',
-            'certificate': True,
+            'certification': True,
             'certification_mail_template_id': self.env.ref('survey.mail_template_certification').id,
             'is_time_limited': 'limited',
             'time_limit': 10.0,
             'is_attempts_limited': True,
             'attempts_limit': 2,
             'description': """&lt;p&gt;Test your vendor skills!.&lt;/p&gt;""",
-            'thank_you_message': """&lt;p&gt;&lt;/p&gt;""",
             'question_and_page_ids': [
                 (0, 0, {
                     'title': 'Products',
@@ -38,7 +39,7 @@ class TestUiCertification(HttpCaseWithUserDemo):
                     'question_type': 'simple_choice',
                     'display_mode': 'dropdown',
                     'constr_mandatory': True,
-                    'labels_ids': [
+                    'suggested_answer_ids': [
                         (0, 0, {
                             'value': 'No',
                             'sequence': 1,
@@ -54,7 +55,7 @@ class TestUiCertification(HttpCaseWithUserDemo):
                     'sequence': 3,
                     'question_type': 'multiple_choice',
                     'column_nb': '4',
-                    'labels_ids': [
+                    'suggested_answer_ids': [
                         (0, 0, {
                             'value': 'Chair floor protection',
                             'sequence': 1,
@@ -85,7 +86,7 @@ class TestUiCertification(HttpCaseWithUserDemo):
                     'sequence': 4,
                     'question_type': 'multiple_choice',
                     'column_nb': '4',
-                    'labels_ids': [
+                    'suggested_answer_ids': [
                         (0, 0, {
                             'value': 'Color',
                             'sequence': 1,
@@ -117,7 +118,7 @@ class TestUiCertification(HttpCaseWithUserDemo):
                     'question_type': 'simple_choice',
                     'display_mode': 'dropdown',
                     'constr_mandatory': True,
-                    'labels_ids': [
+                    'suggested_answer_ids': [
                         (0, 0, {
                             'value': 1,
                             'sequence': 1,
@@ -137,7 +138,7 @@ class TestUiCertification(HttpCaseWithUserDemo):
                 }), (0, 0, {
                     'title': 'Do you think we have missing products in our catalog? (not rated)',
                     'sequence': 6,
-                    'question_type': 'free_text',
+                    'question_type': 'text_box',
                 }), (0, 0, {
                     'title': 'Prices',
                     'sequence': 7,
@@ -150,7 +151,7 @@ class TestUiCertification(HttpCaseWithUserDemo):
                     'question_type': 'simple_choice',
                     'display_mode': 'dropdown',
                     'constr_mandatory': True,
-                    'labels_ids': [
+                    'suggested_answer_ids': [
                         (0, 0, {
                             'value': '20$',
                             'sequence': 1,
@@ -178,7 +179,7 @@ class TestUiCertification(HttpCaseWithUserDemo):
                     'sequence': 9,
                     'question_type': 'multiple_choice',
                     'column_nb': '2',
-                    'labels_ids': [
+                    'suggested_answer_ids': [
                         (0, 0, {
                             'value': 'Corner Desk Right Sit',
                             'sequence': 1,
@@ -214,7 +215,7 @@ class TestUiCertification(HttpCaseWithUserDemo):
                     'question_type': 'simple_choice',
                     'display_mode': 'dropdown',
                     'constr_mandatory': True,
-                    'labels_ids': [
+                    'suggested_answer_ids': [
                         (0, 0, {
                             'value': 'Very underpriced',
                             'sequence': 1,

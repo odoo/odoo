@@ -59,12 +59,11 @@ class TestUi(TestUICommon):
             'users_can_go_back': True,
             'users_login_required': True,
             'scoring_type': 'scoring_with_answers',
-            'certificate': True,
+            'certification': True,
             'certification_mail_template_id': self.env.ref('survey.mail_template_certification').id,
             'is_attempts_limited': True,
             'attempts_limit': 3,
             'description': "<p>Test your furniture knowledge!</p>",
-            'thank_you_message': "<p></p>",
             'question_and_page_ids': [
                 (0, 0, {
                     'title': 'Furniture',
@@ -77,7 +76,7 @@ class TestUi(TestUICommon):
                     'question_type': 'simple_choice',
                     'display_mode': 'dropdown',
                     'constr_mandatory': True,
-                    'labels_ids': [
+                    'suggested_answer_ids': [
                         (0, 0, {
                             'value': 'Fir',
                             'sequence': 1,
@@ -99,7 +98,7 @@ class TestUi(TestUICommon):
                     'sequence': 3,
                     'question_type': 'multiple_choice',
                     'column_nb': '4',
-                    'labels_ids': [
+                    'suggested_answer_ids': [
                         (0, 0, {
                             'value': 'Chair',
                             'sequence': 1,
@@ -128,7 +127,7 @@ class TestUi(TestUICommon):
                 }), (0, 0, {
                     'title': 'What do you think about the content of the course? (not rated)',
                     'sequence': 4,
-                    'question_type': 'free_text',
+                    'question_type': 'text_box',
                 })
             ]
         })

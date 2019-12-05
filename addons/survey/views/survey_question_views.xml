@@ -29,11 +29,11 @@
                         <group>
                             <div class="col-lg-6 offset-lg-3 o_preview_questions">
                                 <!-- Multiple Lines Text Zone -->
-                                <div attrs="{'invisible': [('question_type', '!=', 'free_text')]}">
+                                <div attrs="{'invisible': [('question_type', '!=', 'text_box')]}">
                                         <i class="fa fa-align-justify fa-4x" role="img" aria-label="Multiple lines" title="Multiple Lines"/>
                                 </div>
                                 <!-- Single Line Text Zone -->
-                                <div attrs="{'invisible': [('question_type', '!=', 'textbox')]}">
+                                <div attrs="{'invisible': [('question_type', '!=', 'char_box')]}">
                                     <i class="fa fa-minus fa-4x" role="img" aria-label="Single Line" title="Single Line"/>
                                 </div>
                                 <!-- Numerical Value -->
@@ -96,14 +96,14 @@
                     </group>
                     <notebook attrs="{'invisible': [('is_page', '=', True)]}">
                         <page string="Answers">
-                            <field name="validation_email" attrs="{'invisible': [('question_type', '!=', 'textbox')]}"/>
-                            <label for="validation_email" attrs="{'invisible': [('question_type', '!=', 'textbox')]}"/>
+                            <field name="validation_email" attrs="{'invisible': [('question_type', '!=', 'char_box')]}"/>
+                            <label for="validation_email" attrs="{'invisible': [('question_type', '!=', 'char_box')]}"/>
                             <field name="page_id" invisible="1" required="0"/>
                             <field name="survey_id" invisible="1" readonly="1"/>
                             <field name="scoring_type" invisible="1"/>
                             <separator />
-                            <label for="labels_ids" string="Columns of the Matrix" attrs="{'invisible': [('question_type', '!=', 'matrix')]}" />
-                            <field name="labels_ids" string="Type of answers" context="{'default_question_id': active_id}" attrs="{'invisible': [('question_type', 'not in', ['simple_choice', 'multiple_choice', 'matrix'])]}">
+                            <label for="suggested_answer_ids" string="Columns of the Matrix" attrs="{'invisible': [('question_type', '!=', 'matrix')]}" />
+                            <field name="suggested_answer_ids" string="Type of answers" context="{'default_question_id': active_id}" attrs="{'invisible': [('question_type', 'not in', ['simple_choice', 'multiple_choice', 'matrix'])]}">
                                 <tree editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="value" string="Choices"/>
@@ -112,8 +112,8 @@
                                 </tree>
                             </field>
                             <separator />
-                            <label for="labels_ids_2" attrs="{'invisible': [('question_type', '!=', 'matrix')]}" />
-                            <field name="labels_ids_2" context="{'default_question_id_2': active_id}" attrs="{'invisible': [('question_type', '!=', 'matrix')]}">
+                            <label for="matrix_row_ids" attrs="{'invisible': [('question_type', '!=', 'matrix')]}" />
+                            <field name="matrix_row_ids" context="{'default_matrix_question_id': active_id}" attrs="{'invisible': [('question_type', '!=', 'matrix')]}">
                                 <tree editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="value" string="Rows"/>
@@ -126,13 +126,13 @@
                                     <field name="constr_mandatory" string="Mandatory Answer"/>
                                     <field name="constr_error_msg" attrs="{'invisible': [('constr_mandatory', '=', False)]}"/>
                                 </group>
-                                <div colspan="2" attrs="{'invisible': [('question_type', 'not in', ['textbox', 'numerical_box', 'date', 'datetime'])]}">
+                                <div colspan="2" attrs="{'invisible': [('question_type', 'not in', ['char_box', 'numerical_box', 'date', 'datetime'])]}">
                                     <group>
-                                        <field name="validation_required" attrs="{'invisible': [('validation_email', '=', True), ('question_type', '=', 'textbox')]}"/>
+                                        <field name="validation_required" attrs="{'invisible': [('validation_email', '=', True), ('question_type', '=', 'char_box')]}"/>
                                     </group>
                                     <group col="4" attrs="{'invisible': [('validation_required', '=', False)]}">
-                                        <field name="validation_length_min" attrs="{'invisible': [('question_type', '!=', 'textbox')]}"/>
-                                        <field name="validation_length_max" attrs="{'invisible': [('question_type', '!=', 'textbox')]}"/>
+                                        <field name="validation_length_min" attrs="{'invisible': [('question_type', '!=', 'char_box')]}"/>
+                                        <field name="validation_length_max" attrs="{'invisible': [('question_type', '!=', 'char_box')]}"/>
                                         <field name="validation_min_float_value" attrs="{'invisible': [('question_type', '!=', 'numerical_box')]}"/>
                                         <field name="validation_max_float_value" attrs="{'invisible': [('question_type', '!=', 'numerical_box')]}"/>
                                         <field name="validation_min_date" attrs="{'invisible': [('question_type', '!=', 'date')]}"/>
@@ -167,7 +167,7 @@
         <field name="arch" type="xml">
             <tree string="Survey Question" create="false">
                 <field name="sequence" widget="handle"/>
-                <field name="question"/>
+                <field name="title"/>
                 <field name="survey_id"/>
                 <field name="question_type"/>
             </tree>
@@ -178,11 +178,11 @@
         <field name="model">survey.question</field>
         <field name="arch" type="xml">
             <search string="Search Question">
-                <field name="question" string="Question"/>
+                <field name="title"/>
                 <field name="survey_id" string="Survey"/>
                 <field name="question_type" string="Type"/>
                 <group expand="1" string="Group By">
-                    <filter name="group_by_type" string="Type" domain="[]"  context="{'group_by':'question_type'}"/>
+                    <filter name="group_by_type" string="Type" domain="[]" context="{'group_by':'question_type'}"/>
                 </group>
             </search>
         </field>
@@ -203,35 +203,37 @@
     </record>
 
     <!-- LABELS -->
-    <record model="ir.ui.view" id="survey_label_tree">
-        <field name="name">survey_label_tree</field>
-        <field name="model">survey.label</field>
+    <record id="survey_question_answer_view_tree" model="ir.ui.view">
+        <field name="name">survey.question.answer.view.tree</field>
+        <field name="model">survey.question.answer</field>
         <field name="arch" type="xml">
             <tree string="Survey Label" create="false">
                 <field name="sequence" widget="handle"/>
                 <field name="question_id"/>
-                <field name="question_id_2"/>
+                <field name="matrix_question_id"/>
                 <field name="value"/>
                 <field name="answer_score" groups="base.group_no_one"/>
             </tree>
         </field>
     </record>
-    <record id="survey_label_search" model="ir.ui.view">
-        <field name="name">survey_label_search</field>
-        <field name="model">survey.label</field>
+    <record id="survey_question_answer_view_search" model="ir.ui.view">
+        <field name="name">survey.question.answer.view.search</field>
+        <field name="model">survey.question.answer</field>
         <field name="arch" type="xml">
             <search string="Search Label">
-                <field name="question_id" string="Question"/>
-                <filter name="group_by_question" string="Question" domain="[]" context="{'group_by':'question_id'}"/>
+                <field name="question_id"/>
+                <group expand="1" string="Group By">
+                    <filter name="group_by_question" string="Question" domain="[]" context="{'group_by':'question_id'}"/>
+                </group>
             </search>
         </field>
     </record>
 
-    <record model="ir.actions.act_window" id="action_survey_label_form">
+    <record id="survey_question_answer_action" model="ir.actions.act_window">
         <field name="name">Suggested Values</field>
-        <field name="res_model">survey.label</field>
+        <field name="res_model">survey.question.answer</field>
         <field name="view_mode">tree,form</field>
-        <field name="search_view_id" ref="survey_label_search"/>
+        <field name="search_view_id" ref="survey_question_answer_view_search"/>
         <field name="context">{'search_default_group_by_question': True}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_empty_folder">
@@ -247,7 +249,7 @@
         sequence="2"/>
     <menuitem name="Suggested Values"
         id="menu_survey_label_form1"
-        action="action_survey_label_form"
+        action="survey_question_answer_action"
         parent="survey_menu_questions"
         sequence="3"/>
 </data>

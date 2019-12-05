@@ -18,13 +18,9 @@ class Applicant(models.Model):
         else:
             response = self.response_id
         # grab the token of the response and start surveying
-        return self.survey_id.with_context(survey_token=response.token).action_start_survey()
+        return self.survey_id.action_start_survey(answer=response)
 
     def action_print_survey(self):
         """ If response is available then print this response otherwise print survey form (print template of the survey) """
         self.ensure_one()
-        if not self.response_id:
-            return self.survey_id.action_print_survey()
-        else:
-            response = self.response_id
-            return self.survey_id.with_context(survey_token=response.token).action_print_survey()
+        return self.survey_id.action_print_survey(answer=self.response_id)

@@ -1,7 +1,6 @@
 odoo.define('survey.form', function(require) {
 'use strict';
 
-var ajax = require('web.ajax');
 var field_utils = require('web.field_utils');
 var publicWidget = require('web.public.widget');
 var time = require('web.time');
@@ -24,7 +23,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     start: function () {
         var self = this;
         return this._super.apply(this, arguments).then(function() {
-            self.options = self.$target.find('form').data()
+            self.options = self.$target.find('form').data();
             var $timer = $('.o_survey_timer');
             if ($timer.length) {
                 var timeLimitMinutes = self.options.timeLimitMinutes;
@@ -70,9 +69,9 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
 
         // Handle dropdownlist
         var $dropdownlist = $choiceItemGroup.find('select');
-        var isDropdown = $dropdownlist.length > 0
+        var isDropdown = $dropdownlist.length > 0;
 
-        var isOtherSelected = (isDropdown && $dropdownlist.val() === $otherItem.val()) || $otherItem.prop('checked')
+        var isOtherSelected = (isDropdown && $dropdownlist.val() === $otherItem.val()) || $otherItem.prop('checked');
 
         if (isOtherSelected || $commentInput.hasClass('o_survey_comment')) {
             if (isDropdown) {
@@ -100,7 +99,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     */
     _onBreadcrumbClick: function (event) {
         event.preventDefault();
-        this._submitForm({'previous_page_id': $(event.currentTarget).data('previousPageId')})
+        this._submitForm({'previous_page_id': $(event.currentTarget).data('previousPageId')});
     },
 
     _onSubmit: function (event) {
@@ -178,8 +177,8 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         // Get all question answers by question type
         this.$('[data-question-type]').each(function () {
             switch ($(this).data('questionType')) {
-                case 'free_text':
-                case 'textbox':
+                case 'text_box':
+                case 'char_box':
                 case 'numerical_box':
                     params[this.name] = this.value;
                     break;
@@ -223,7 +222,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     _prepareSubmitChoices: function(params, $parent, questionId, selector) {
         var self = this;
         $parent.find(selector).each(function () {
-            if (this.value != '-1') {
+            if (this.value !== '-1') {
                 params = self._prepareSubmitAnswer(params, questionId, this.value);
             }
         });
@@ -299,7 +298,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
                 }
             }
         });
-        return params
+        return params;
     },
 
     // INIT FIELDS TOOLS
@@ -309,21 +308,21 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     * Initialize datetimepicker in correct format and with constraints
     */
     _initDateTimePicker: function ($dateGroup) {
-        var disabledDates = []
+        var disabledDates = [];
 
-        var minDateData = $dateGroup.data('mindate')
+        var minDateData = $dateGroup.data('mindate');
         var minDate = minDateData ? this._formatDateTime(minDateData) : moment({ y: 1900 });
-        var maxDateData = $dateGroup.data('maxdate')
+        var maxDateData = $dateGroup.data('maxdate');
         var maxDate = maxDateData ? this._formatDateTime(maxDateData) : moment().add(200, "y");
 
         var datetimepickerFormat = time.getLangDateFormat()
         if ($dateGroup.find('input').data('questionType') === 'datetime') {
-            datetimepickerFormat = time.getLangDatetimeFormat()
+            datetimepickerFormat = time.getLangDatetimeFormat();
         } else {
             // Include min and max date in selectable values
             maxDate = moment(maxDate).add(1, "d");
             minDate = moment(minDate).subtract(1, "d");
-            disabledDates = [minDate, maxDate]
+            disabledDates = [minDate, maxDate];
         }
 
         $dateGroup.datetimepicker({
@@ -360,8 +359,8 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     _scrollToError: function ($target) {
         var scrollLocation = $target.offset().top;
         var navbarHeight = $('.o_main_navbar').height();
-        if (navbarHeight != undefined) {
-            scrollLocation -= navbarHeight
+        if (navbarHeight) {
+            scrollLocation -= navbarHeight;
         }
         $('html, body').animate({
             scrollTop: scrollLocation

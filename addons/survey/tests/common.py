@@ -22,13 +22,13 @@ class TestSurveyCommon(common.SavepointCase):
             value: (answer type, answer field_name)
         """
         self._type_match = {
-            'free_text': ('free_text', 'value_free_text'),
-            'textbox': ('text', 'value_text'),
-            'numerical_box': ('number', 'value_number'),
+            'text_box': ('text_box', 'value_text_box'),
+            'char_box': ('char_box', 'value_char_box'),
+            'numerical_box': ('numerical_box', 'value_numerical_box'),
             'date': ('date', 'value_date'),
-            'simple_choice': ('suggestion', 'value_suggested'),  # TDE: still unclear
-            'multiple_choice': ('suggestion', 'value_suggested'),  # TDE: still unclear
-            'matrix': ('suggestion', ('value_suggested', 'value_suggested_row')),  # TDE: still unclear
+            'simple_choice': ('suggestion', 'suggested_answer_id'),  # TDE: still unclear
+            'multiple_choice': ('suggestion', 'suggested_answer_id'),  # TDE: still unclear
+            'matrix': ('suggestion', ('suggested_answer_id', 'matrix_row_id')),  # TDE: still unclear
         }
 
         """ Create test data: a survey with some pre-defined questions and various test users for ACL """
@@ -79,7 +79,7 @@ class TestSurveyCommon(common.SavepointCase):
             'title': 'Test Free Text',
             'survey_id': self.survey.id,
             'sequence': 2,
-            'question_type': 'free_text',
+            'question_type': 'text_box',
         })
         self.question_num = self.env['survey.question'].with_user(self.survey_manager).create({
             'title': 'Test NUmerical Box',
@@ -163,7 +163,7 @@ class TestSurveyCommon(common.SavepointCase):
             'constr_error_msg': constr_error_msg,
         }
         if qtype in ('simple_choice', 'multiple_choice'):
-            base_qvalues['labels_ids'] = [
+            base_qvalues['suggested_answer_ids'] = [
                 (0, 0, {
                     'value': label['value'],
                     'answer_score': label.get('answer_score', 0),
@@ -172,11 +172,11 @@ class TestSurveyCommon(common.SavepointCase):
             ]
         elif qtype == 'matrix':
             base_qvalues['matrix_subtype'] = kwargs.pop('matrix_subtype', 'simple')
-            base_qvalues['labels_ids'] = [
+            base_qvalues['suggested_answer_ids'] = [
                 (0, 0, {'value': label['value'], 'answer_score': label.get('answer_score', 0)})
                 for label in kwargs.pop('labels')
             ]
-            base_qvalues['labels_ids_2'] = [
+            base_qvalues['matrix_row_ids'] = [
                 (0, 0, {'value': label['value'], 'answer_score': label.get('answer_score', 0)})
                 for label in kwargs.pop('labels_2')
             ]
@@ -191,7 +191,6 @@ class TestSurveyCommon(common.SavepointCase):
             'survey_id': survey.id,
             'partner_id': partner.id if partner else False,
             'email': kwargs.pop('email', False),
-            'input_type': 'manually',
         }
         base_avals.update(kwargs)
         return self.env['survey.user_input'].create(base_avals)
@@ -209,7 +208,7 @@ class TestSurveyCommon(common.SavepointCase):
         }
         base_alvals[answer_fname] = answer_value
         base_alvals.update(kwargs)
-        return self.env['survey.user_input_line'].create(base_alvals)
+        return self.env['survey.user_input.line'].create(base_alvals)
 
     def _access_start(self, survey):
         return self.url_open('/survey/start/%s' % survey.access_token)

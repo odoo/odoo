@@ -1,7 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo.tests
+
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+
 
 @odoo.tests.common.tagged('post_install', '-at_install')
 class TestUiFeedback(HttpCaseWithUserDemo):
@@ -17,7 +19,6 @@ class TestUiFeedback(HttpCaseWithUserDemo):
             'questions_layout': 'page_per_section',
             'description': """<p>This survey allows you to give a feedback about your experience with our eCommerce solution.
     Filling it helps us improving your experience.</p></field>""",
-            'thank_you_message': """&lt;p&gt;&lt;/p&gt;""",
             'question_and_page_ids': [
                 (0, 0, {
                     'title': 'General information',
@@ -28,7 +29,7 @@ class TestUiFeedback(HttpCaseWithUserDemo):
                 }), (0, 0, {
                     'title': 'Where do you live ?',
                     'sequence': 2,
-                    'question_type': 'textbox',
+                    'question_type': 'char_box',
                     'constr_mandatory': False,
                 }), (0, 0, {
                     'title': 'When is your date of birth ?',
@@ -43,7 +44,7 @@ class TestUiFeedback(HttpCaseWithUserDemo):
                     'comments_allowed': True,
                     'comment_count_as_answer': True,
                     'constr_mandatory': True,
-                    'labels_ids': [
+                    'suggested_answer_ids': [
                         (0, 0, {
                             'value': 'Once a day',
                             'sequence': 1,
@@ -78,7 +79,7 @@ class TestUiFeedback(HttpCaseWithUserDemo):
                     'constr_mandatory': True,
                     'comments_allowed': True,
                     'comment_count_as_answer': False,
-                    'labels_ids': [
+                    'suggested_answer_ids': [
                         (0, 0, {
                             'value': 'High quality',
                             'sequence': 1,
@@ -113,7 +114,7 @@ class TestUiFeedback(HttpCaseWithUserDemo):
                     'question_type': 'matrix',
                     'matrix_subtype': 'multiple',
                     'constr_mandatory': True,
-                    'labels_ids': [(0, 0, {
+                    'suggested_answer_ids': [(0, 0, {
                         'value': 'Totally disagree',
                         'sequence': 1
                     }), (0, 0, {
@@ -126,7 +127,7 @@ class TestUiFeedback(HttpCaseWithUserDemo):
                         'value': 'Totally agree',
                         'sequence': 4,
                     })],
-                    'labels_ids_2': [(0, 0, {
+                    'matrix_row_ids': [(0, 0, {
                         'value': 'The new layout and design is fresh and up-to-date',
                         'sequence': 1,
                     }), (0, 0, {
@@ -145,7 +146,7 @@ class TestUiFeedback(HttpCaseWithUserDemo):
                 }), (0, 0, {
                     'title': 'Do you have any other comments, questions, or concerns ?',
                     'sequence': 9,
-                    'question_type': 'free_text',
+                    'question_type': 'text_box',
                     'constr_mandatory': False,
                 })
             ],

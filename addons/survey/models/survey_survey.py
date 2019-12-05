@@ -1,15 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
 import random
 import uuid
+import werkzeug
 
-from collections import Counter, OrderedDict
-from itertools import product
-from werkzeug import urls
-
-from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo import api, exceptions, fields, models, _
 from odoo.osv import expression
 
 
@@ -26,20 +23,18 @@ class Survey(models.Model):
 
     # description
     title = fields.Char('Survey Title', required=True, translate=True)
+    color = fields.Integer('Color Index', default=0)
     description = fields.Html(
         "Description", translate=True,
         help="The description will be displayed on the home page of the survey. You can use this to give the purpose and guidelines to your candidates before they start it.")
-    color = fields.Integer('Color Index', default=0)
-    thank_you_message = fields.Html("Thanks Message", translate=True, help="This message will be displayed when survey is completed")
+    description_done = fields.Html(
+        "End Message", translate=True,
+        help="This message will be displayed when survey is completed")
     active = fields.Boolean("Active", default=True)
     state = fields.Selection(selection=[
         ('draft', 'Draft'), ('open', 'In Progress'), ('closed', 'Closed')
     ], string="Survey Stage", default='draft', required=True,
         group_expand='_read_group_states')
-    category = fields.Selection([
-        ('default', 'Generic Survey')], string='Category',
-        default='default', required=True,
-        help='Category is used to know in which context the survey is used. Various apps may define their own categories when they use survey like jobs recruitment or employee appraisal surveys.')
     # questions
     question_and_page_ids = fields.One2many('survey.question', 'survey_id', string='Sections and Questions', copy=True)
     page_ids = fields.One2many('survey.question', string='Pages', compute="_compute_page_and_question_ids")
@@ -65,25 +60,26 @@ class Survey(models.Model):
     users_login_required = fields.Boolean('Login Required', help="If checked, users have to login before answering even with a valid token.")
     users_can_go_back = fields.Boolean('Users can go back', help="If checked, users can go back to previous pages.")
     users_can_signup = fields.Boolean('Users can signup', compute='_compute_users_can_signup')
-    public_url = fields.Char("Public link", compute="_compute_survey_url")
     # statistics
     answer_count = fields.Integer("Registered", compute="_compute_survey_statistic")
     answer_done_count = fields.Integer("Attempts", compute="_compute_survey_statistic")
     answer_score_avg = fields.Float("Avg Score %", compute="_compute_survey_statistic")
     success_count = fields.Integer("Success", compute="_compute_survey_statistic")
     success_ratio = fields.Integer("Success Ratio", compute="_compute_survey_statistic")
-    # scoring / certification
+    # scoring
     scoring_type = fields.Selection([
         ('no_scoring', 'No scoring'),
         ('scoring_with_answers', 'Scoring with answers at the end'),
         ('scoring_without_answers', 'Scoring without answers at the end')],
         string="Scoring", required=True, default='no_scoring')
-    passing_score = fields.Float('Passing score (%)', required=True, default=80.0)
+    scoring_success_min = fields.Float('Success %', default=80.0)
+    # attendees context: attempts and time limitation
     is_attempts_limited = fields.Boolean('Limited number of attempts', help="Check this option if you want to limit the number of attempts per user")
     attempts_limit = fields.Integer('Number of attempts', default=1)
     is_time_limited = fields.Boolean('The survey is limited in time')
     time_limit = fields.Float("Time limit (minutes)")
-    certificate = fields.Boolean('Certificate')
+    # certification
+    certification = fields.Boolean('Is a Certification')
     certification_mail_template_id = fields.Many2one(
         'mail.template', 'Email Template',
         domain="[('model', '=', 'survey.user_input')]",
@@ -107,7 +103,7 @@ class Survey(models.Model):
 
     _sql_constraints = [
         ('access_token_unique', 'unique(access_token)', 'Access token should be unique'),
-        ('certificate_check', "CHECK( scoring_type!='no_scoring' OR certificate=False )",
+        ('certification_check', "CHECK( scoring_type!='no_scoring' OR certification=False )",
             'You can only create certifications for surveys that have a scoring mechanism.'),
         ('time_limit_check', "CHECK( (is_time_limited=False) OR (time_limit is not null AND time_limit > 0) )",
             'The time limit needs to be a positive number if the survey is time limited.'),
@@ -123,7 +119,7 @@ class Survey(models.Model):
         for survey in self:
             survey.users_can_signup = signup_allowed
 
-    @api.depends('user_input_ids.state', 'user_input_ids.test_entry', 'user_input_ids.quizz_score', 'user_input_ids.quizz_passed')
+    @api.depends('user_input_ids.state', 'user_input_ids.test_entry', 'user_input_ids.scoring_percentage', 'user_input_ids.scoring_success')
     def _compute_survey_statistic(self):
         default_vals = {
             'answer_count': 0, 'answer_done_count': 0, 'success_count': 0,
@@ -133,13 +129,13 @@ class Survey(models.Model):
         UserInput = self.env['survey.user_input']
         base_domain = ['&', ('survey_id', 'in', self.ids), ('test_entry', '!=', True)]
 
-        read_group_res = UserInput.read_group(base_domain, ['survey_id', 'state'], ['survey_id', 'state', 'quizz_score', 'quizz_passed'], lazy=False)
+        read_group_res = UserInput.read_group(base_domain, ['survey_id', 'state'], ['survey_id', 'state', 'scoring_percentage', 'scoring_success'], lazy=False)
         for item in read_group_res:
             stat[item['survey_id'][0]]['answer_count'] += item['__count']
-            stat[item['survey_id'][0]]['answer_score_avg_total'] += item['quizz_score']
+            stat[item['survey_id'][0]]['answer_score_avg_total'] += item['scoring_percentage']
             if item['state'] == 'done':
                 stat[item['survey_id'][0]]['answer_done_count'] += item['__count']
-            if item['quizz_passed']:
+            if item['scoring_success']:
                 stat[item['survey_id'][0]]['success_count'] += item['__count']
 
         for survey_id, values in stat.items():
@@ -150,27 +146,21 @@ class Survey(models.Model):
         for survey in self:
             survey.update(stat.get(survey._origin.id, default_vals))
 
-    def _compute_survey_url(self):
-        """ Computes a public URL for the survey """
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        for survey in self:
-            survey.public_url = urls.url_join(base_url, "survey/start/%s" % (survey.access_token))
-
     @api.depends('question_and_page_ids')
     def _compute_page_and_question_ids(self):
         for survey in self:
             survey.page_ids = survey.question_and_page_ids.filtered(lambda question: question.is_page)
             survey.question_ids = survey.question_and_page_ids - survey.page_ids
 
-    @api.onchange('passing_score')
-    def _onchange_passing_score(self):
-        if self.passing_score < 0 or self.passing_score > 100:
-            self.passing_score = 80.0
+    @api.onchange('scoring_success_min')
+    def _onchange_scoring_success_min(self):
+        if self.scoring_success_min < 0 or self.scoring_success_min > 100:
+            self.scoring_success_min = 80.0
 
     @api.onchange('scoring_type')
     def _onchange_scoring_type(self):
         if self.scoring_type == 'no_scoring':
-            self.certificate = False
+            self.certification = False
             self.is_time_limited = False
 
     @api.onchange('users_login_required', 'access_mode')
@@ -192,9 +182,9 @@ class Survey(models.Model):
         selection = self.env['survey.survey'].fields_get(allfields=['state'])['state']['selection']
         return [s[0] for s in selection]
 
-    @api.onchange('users_login_required', 'certificate')
+    @api.onchange('users_login_required', 'certification')
     def _onchange_set_certification_give_badge(self):
-        if not self.users_login_required or not self.certificate:
+        if not self.users_login_required or not self.certification:
             self.certification_give_badge = False
 
     # ------------------------------------------------------------
@@ -245,7 +235,6 @@ class Survey(models.Model):
             answer_vals = {
                 'survey_id': survey.id,
                 'test_entry': test_entry,
-                'question_ids': [(6, 0, survey._prepare_answer_questions().ids)]
             }
             if user and not user._is_public():
                 answer_vals['partner_id'] = user.partner_id.id
@@ -275,25 +264,25 @@ class Survey(models.Model):
         if test_entry:
             # the current user must have the access rights to survey
             if not user.has_group('survey.group_survey_user'):
-                raise UserError(_('Creating test token is not allowed for you.'))
+                raise exceptions.UserError(_('Creating test token is not allowed for you.'))
         else:
             if not self.active:
-                raise UserError(_('Creating token for archived surveys is not allowed.'))
+                raise exceptions.UserError(_('Creating token for archived surveys is not allowed.'))
             elif self.state == 'closed':
-                raise UserError(_('Creating token for closed surveys is not allowed.'))
+                raise exceptions.UserError(_('Creating token for closed surveys is not allowed.'))
             if self.access_mode == 'authentication':
                 # signup possible -> should have at least a partner to create an account
                 if self.users_can_signup and not user and not partner:
-                    raise UserError(_('Creating token for external people is not allowed for surveys requesting authentication.'))
+                    raise exceptions.UserError(_('Creating token for external people is not allowed for surveys requesting authentication.'))
                 # no signup possible -> should be a not public user (employee or portal users)
                 if not self.users_can_signup and (not user or user._is_public()):
-                    raise UserError(_('Creating token for external people is not allowed for surveys requesting authentication.'))
+                    raise exceptions.UserError(_('Creating token for external people is not allowed for surveys requesting authentication.'))
             if self.access_mode == 'internal' and (not user or not user.has_group('base.group_user')):
-                raise UserError(_('Creating token for anybody else than employees is not allowed for internal surveys.'))
+                raise exceptions.UserError(_('Creating token for anybody else than employees is not allowed for internal surveys.'))
             if check_attempts and not self._has_attempts_left(partner or (user and user.partner_id), email, invite_token):
-                raise UserError(_('No attempts left.'))
+                raise exceptions.UserError(_('No attempts left.'))
 
-    def _prepare_answer_questions(self):
+    def _prepare_user_input_predefined_questions(self):
         """ Will generate the questions for a randomized survey.
         It uses the random_questions_count of every sections of the survey to
         pick a random number of questions and returns the merged recordset """
@@ -357,7 +346,7 @@ class Survey(models.Model):
             return None
         elif self.questions_layout == 'page_per_question' and self.questions_selection == 'random':
             return list(enumerate(
-                user_input.question_ids
+                user_input.predefined_question_ids
             ))
         else:
             return list(enumerate(
@@ -432,7 +421,7 @@ class Survey(models.Model):
         # we need the intersection of the questions of this page AND the questions prepared for that user_input
         # (because randomized surveys do not use all the questions of every page)
         if answer:
-            questions = questions & answer.question_ids
+            questions = questions & answer.predefined_question_ids
         return questions, page_or_question_id
 
     # ------------------------------------------------------------
@@ -448,26 +437,14 @@ class Survey(models.Model):
     def action_close(self):
         self.write({'state': 'closed'})
 
-    def action_start_survey(self):
-        """ Open the website page with the survey form """
-        self.ensure_one()
-        token = self.env.context.get('survey_token')
-        trail = "?answer_token=%s" % token if token else ""
-        return {
-            'type': 'ir.actions.act_url',
-            'name': "Start Survey",
-            'target': 'self',
-            'url': self.public_url + trail
-        }
-
     def action_send_survey(self):
         """ Open a window to compose an email, pre-filled with the survey message """
         # Ensure that this survey has at least one page with at least one question.
         if (not self.page_ids and self.questions_layout == 'page_per_section') or not self.question_ids:
-            raise UserError(_('You cannot send an invitation for a survey that has no questions.'))
+            raise exceptions.UserError(_('You cannot send an invitation for a survey that has no questions.'))
 
         if self.state == 'closed':
-            raise UserError(_("You cannot send invitations for closed surveys."))
+            raise exceptions.UserError(_("You cannot send invitations for closed surveys."))
 
         template = self.env.ref('survey.mail_template_user_input_invite', raise_if_not_found=False)
 
@@ -486,16 +463,26 @@ class Survey(models.Model):
             'context': local_context,
         }
 
-    def action_print_survey(self):
+    def action_start_survey(self, answer=None):
+        """ Open the website page with the survey form """
+        self.ensure_one()
+        url = '%s?%s' % (self.get_start_url(), werkzeug.urls.url_encode({'answer_token': answer.access_token or None}))
+        return {
+            'type': 'ir.actions.act_url',
+            'name': "Start Survey",
+            'target': 'self',
+            'url': url,
+        }
+
+    def action_print_survey(self, answer=None):
         """ Open the website page with the survey printable view """
         self.ensure_one()
-        token = self.env.context.get('survey_token')
-        trail = "?answer_token=%s" % token if token else ""
+        url = '%s?%s' % (self.get_print_url(), werkzeug.urls.url_encode({'answer_token': answer.access_token or None}))
         return {
             'type': 'ir.actions.act_url',
             'name': "Print Survey",
             'target': 'self',
-            'url': '/survey/print/%s%s' % (self.access_token, trail)
+            'url': url
         }
 
     def action_result_survey(self):
@@ -533,7 +520,7 @@ class Survey(models.Model):
         action = action_rec.read()[0]
         ctx = dict(self.env.context)
         ctx.update({'search_default_survey_id': self.ids[0],
-                    'search_default_quizz_passed': 1,
+                    'search_default_scoring_success': 1,
                     'search_default_not_test': 1})
         action['context'] = ctx
         return action
@@ -555,166 +542,53 @@ class Survey(models.Model):
             'url': '/survey/%s/get_certification_preview' % (self.id)
         }
 
+    def get_start_url(self):
+        return 'survey/start/%s' % self.access_token
+
+    def get_print_url(self):
+        return 'survey/print/%s' % self.access_token
+
     # ------------------------------------------------------------
     # GRAPH / RESULTS
     # ------------------------------------------------------------
 
-    def filter_input_ids(self, filters, finished=False):
-        """If user applies any filters, then this function returns list of
-           filtered user_input_id and label's strings for display data in web.
-           :param filters: list of dictionary (having: row_id, ansewr_id)
-           :param finished: True for completely filled survey,Falser otherwise.
-           :returns list of filtered user_input_ids.
-        """
-        self.ensure_one()
-        if filters:
-            domain_filter, choice = [], []
-            for current_filter in filters:
-                row_id, answer_id = current_filter['row_id'], current_filter['answer_id']
-                if row_id == 0:
-                    choice.append(answer_id)
-                else:
-                    domain_filter.extend(['|', ('value_suggested_row.id', '=', row_id), ('value_suggested.id', '=', answer_id)])
-            if choice:
-                domain_filter.insert(0, ('value_suggested.id', 'in', choice))
-            else:
-                domain_filter = domain_filter[1:]
-            input_lines = self.env['survey.user_input_line'].search(domain_filter)
-            filtered_input_ids = [input_line.user_input_id.id for input_line in input_lines]
+    def _prepare_statistics(self, user_input_lines=None):
+        if user_input_lines:
+            user_input_domain = [
+                ('survey_id', 'in', self.ids),
+                ('id', 'in', user_input_lines.mapped('user_input_id').ids)
+            ]
         else:
-            filtered_input_ids = []
-        if finished:
-            UserInput = self.env['survey.user_input']
-            if not filtered_input_ids:
-                user_inputs = UserInput.search([('survey_id', '=', self.id)])
+            user_input_domain = [
+                ('survey_id', 'in', self.ids),
+                ('state', '=', 'done'),
+                ('test_entry', '=', False)
+            ]
+        count_data = self.env['survey.user_input'].sudo().read_group(user_input_domain, ['scoring_success', 'id:count_distinct'], ['scoring_success'])
+
+        scoring_success_count = 0
+        scoring_failed_count = 0
+        for count_data_item in count_data:
+            if count_data_item['scoring_success']:
+                scoring_success_count += count_data_item['scoring_success_count']
             else:
-                user_inputs = UserInput.browse(filtered_input_ids)
-            return user_inputs.filtered(lambda input_item: input_item.state == 'done').ids
-        return filtered_input_ids
+                scoring_failed_count += count_data_item['scoring_success_count']
 
-    @api.model
-    def get_filter_display_data(self, filters):
-        """Returns data to display current filters
-            :param filters: list of dictionary (having: row_id, answer_id)
-            :returns list of dict having data to display filters.
-        """
-        filter_display_data = []
-        if filters:
-            Label = self.env['survey.label']
-            for current_filter in filters:
-                row_id, answer_id = current_filter['row_id'], current_filter['answer_id']
-                label = Label.browse(answer_id)
-                question = label.question_id
-                if row_id == 0:
-                    labels = label
-                else:
-                    labels = Label.browse([row_id, answer_id])
-                filter_display_data.append({'question_text': question.question,
-                                            'labels': labels.mapped('value')})
-        return filter_display_data
+        success_graph = json.dumps([{
+            'text': _('Passed'),
+            'count': scoring_success_count,
+            'color': '#2E7D32'
+        }, {
+            'text': _('Missed'),
+            'count': scoring_failed_count,
+            'color': '#C62828'
+        }])
 
-    @api.model
-    def prepare_result(self, question, current_filters=None):
-        """ Compute statistical data for questions by counting number of vote per choice on basis of filter """
-        current_filters = current_filters if current_filters else []
-        result_summary = {}
-        input_lines = question.user_input_line_ids.filtered(lambda line: not line.user_input_id.test_entry)
-
-        # Calculate and return statistics for choice
-        if question.question_type in ['simple_choice', 'multiple_choice']:
-            comments = []
-            answers = OrderedDict((label.id, {'text': label.value, 'count': 0, 'answer_id': label.id, 'answer_score': label.answer_score}) for label in question.labels_ids)
-            for input_line in input_lines:
-                if input_line.answer_type == 'suggestion' and answers.get(input_line.value_suggested.id) and (not(current_filters) or input_line.user_input_id.id in current_filters):
-                    answers[input_line.value_suggested.id]['count'] += 1
-                if input_line.answer_type == 'text' and (not(current_filters) or input_line.user_input_id.id in current_filters):
-                    comments.append(input_line)
-            result_summary = {'answers': list(answers.values()), 'comments': comments}
-
-        # Calculate and return statistics for matrix
-        if question.question_type == 'matrix':
-            rows = OrderedDict()
-            answers = OrderedDict()
-            res = dict()
-            comments = []
-            [rows.update({label.id: label.value}) for label in question.labels_ids_2]
-            [answers.update({label.id: label.value}) for label in question.labels_ids]
-            for cell in product(rows, answers):
-                res[cell] = 0
-            for input_line in input_lines:
-                if input_line.answer_type == 'suggestion' and (not(current_filters) or input_line.user_input_id.id in current_filters) and input_line.value_suggested_row:
-                    res[(input_line.value_suggested_row.id, input_line.value_suggested.id)] += 1
-                if input_line.answer_type == 'text' and (not(current_filters) or input_line.user_input_id.id in current_filters):
-                    comments.append(input_line)
-            result_summary = {'answers': answers, 'rows': rows, 'result': res, 'comments': comments}
-
-        # Calculate and return statistics for free_text, textbox, date
-        if question.question_type in ['free_text', 'textbox', 'date', 'datetime']:
-            result_summary = []
-            for input_line in input_lines:
-                if not(current_filters) or input_line.user_input_id.id in current_filters:
-                    result_summary.append(input_line)
-
-        # Calculate and return statistics for numerical_box
-        if question.question_type == 'numerical_box':
-            result_summary = {'input_lines': []}
-            all_inputs = []
-            for input_line in input_lines:
-                if not(current_filters) or input_line.user_input_id.id in current_filters:
-                    all_inputs.append(input_line.value_number)
-                    result_summary['input_lines'].append(input_line)
-            if all_inputs:
-                result_summary.update({'average': round(sum(all_inputs) / len(all_inputs), 2),
-                                       'max': round(max(all_inputs), 2),
-                                       'min': round(min(all_inputs), 2),
-                                       'sum': sum(all_inputs),
-                                       'most_common': Counter(all_inputs).most_common(5)})
-        return result_summary
-
-    @api.model
-    def get_input_summary(self, question, current_filters=None):
-        """ Returns overall summary of question e.g. answered, skipped, total_inputs on basis of filter """
-        current_filters = current_filters if current_filters else []
-        result = {}
-        search_line_ids = current_filters if current_filters else question.user_input_line_ids.ids
-
-        result['answered'] = len([line for line in question.user_input_line_ids if line.user_input_id.state != 'new' and not line.user_input_id.test_entry and not line.skipped])
-        result['skipped'] = len([line for line in question.user_input_line_ids if line.user_input_id.state != 'new' and not line.user_input_id.test_entry and line.skipped])
-
-        return result
-
-    def _get_answers_correctness(self, user_answers):
-        if not user_answers.mapped('survey_id') == self:
-            raise UserError(_('Invalid performance computation'))
-
-        res = dict((user_answer, {
-            'correct': 0,
-            'incorrect': 0,
-            'partial': 0,
-            'skipped': 0,
-        }) for user_answer in user_answers)
-
-        scored_questions = self.question_ids.filtered(
-            lambda question: question.question_type in ['simple_choice', 'multiple_choice']
-        )
-
-        for question in scored_questions:
-            question_answer_correct = question.labels_ids.filtered(lambda answer: answer.is_correct)
-            for user_answer in user_answers:
-                user_answer_lines_question = user_answer.user_input_line_ids.filtered(lambda line: line.question_id == question)
-                user_answer_correct = user_answer_lines_question.filtered(lambda line: line.answer_is_correct and not line.skipped).mapped('value_suggested')
-                user_answer_incorrect = user_answer_lines_question.filtered(lambda line: not line.answer_is_correct and not line.skipped)
-
-                if user_answer_correct == question_answer_correct:
-                    res[user_answer]['correct'] += 1
-                elif user_answer_correct and user_answer_correct < question_answer_correct:
-                    res[user_answer]['partial'] += 1
-                if not user_answer_correct and user_answer_incorrect:
-                    res[user_answer]['incorrect'] += 1
-                if not user_answer_correct and not user_answer_incorrect:
-                    res[user_answer]['skipped'] += 1
-
-        return res
+        total = scoring_success_count + scoring_failed_count
+        return {
+            'global_success_rate': round((scoring_success_count / total) * 100, 1) if total > 0 else 0,
+            'global_success_graph': success_graph
+        }
 
     # ------------------------------------------------------------
     # GAMIFICATION / BADGES
@@ -727,7 +601,7 @@ class Survey(models.Model):
         goal = self.env['gamification.goal.definition'].create({
             'name': self.title,
             'description': "%s certification passed" % self.title,
-            'domain': "['&', ('survey_id', '=', %s), ('quizz_passed', '=', True)]" % self.id,
+            'domain': "['&', ('survey_id', '=', %s), ('scoring_success', '=', True)]" % self.id,
             'computation_mode': 'count',
             'display_mode': 'boolean',
             'model_id': self.env.ref('survey.model_survey_user_input').id,
@@ -737,7 +611,7 @@ class Survey(models.Model):
             'batch_user_expression': 'user.partner_id.id'
         })
         challenge = self.env['gamification.challenge'].create({
-            'name': _('%s challenge certificate' % self.title),
+            'name': _('%s challenge certification' % self.title),
             'reward_id': self.certification_badge_id.id,
             'state': 'inprogress',
             'period': 'once',

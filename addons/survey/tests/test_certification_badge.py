@@ -15,7 +15,7 @@ class TestCertificationBadge(common.TestSurveyCommon):
             'access_mode': 'public',
             'users_login_required': True,
             'scoring_type': 'scoring_with_answers',
-            'certificate': True,
+            'certification': True,
             'state': 'open',
         })
 
@@ -24,7 +24,7 @@ class TestCertificationBadge(common.TestSurveyCommon):
             'access_mode': 'public',
             'users_login_required': True,
             'scoring_type': 'scoring_with_answers',
-            'certificate': True,
+            'certification': True,
             'state': 'open',
         })
 
@@ -167,7 +167,7 @@ class TestCertificationBadge(common.TestSurveyCommon):
             'access_mode': 'public',
             'users_login_required': True,
             'scoring_type': 'scoring_with_answers',
-            'certificate': True,
+            'certification': True,
             'certification_give_badge': True,
             'certification_badge_id': self.certification_badge.id,
             'state': 'open'
