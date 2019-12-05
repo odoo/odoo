@@ -521,6 +521,7 @@ registry.parallax = Animation.extend({
     destroy: function () {
         this._super.apply(this, arguments);
         $(window).off('.animation_parallax');
+        this.$target.css('overflow', '');
     },
 
     //--------------------------------------------------------------------------
@@ -548,6 +549,7 @@ registry.parallax = Animation.extend({
             this.$bg.css('background-image', urlTarget);
         }
         this.$target.css('background-image', 'none');
+        this.$target.css('overflow', '');
 
         // Get parallax speed
         this.speed = parseFloat(this.$target.attr('data-scroll-background-ratio') || 0);
@@ -574,6 +576,9 @@ registry.parallax = Animation.extend({
             top: -this.ratio,
             bottom: -this.ratio,
         });
+        // TODO this introduces a limitation: no dropdown will be able to
+        // overflow. Maybe there is a better way to find.
+        this.$target.css('overflow', 'hidden');
     },
 
     //--------------------------------------------------------------------------
