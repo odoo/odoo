@@ -70,7 +70,7 @@
                         <tbody class="invoice_tbody">
                             <t t-set="current_subtotal" t-value="0"/>
 
-                            <t t-foreach="o.invoice_line_ids" t-as="line">
+                            <t t-foreach="o.invoice_line_ids.sorted(key=lambda l: (-l.sequence, l.date, l.move_name, -l.id), reverse=True)" t-as="line">
 
                                 <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
                                 <t t-set="current_subtotal" t-value="current_subtotal + line.price_total" groups="account.group_show_line_subtotals_tax_included"/>
