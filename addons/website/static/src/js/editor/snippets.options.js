@@ -35,12 +35,13 @@ options.Class.include({
      *
      * @private
      * @param {jQuery} [$el=this.$target]
+     * @param {Object} [options]
      */
-    _refreshPublicWidgets: function ($el) {
-        this.trigger_up('widgets_start_request', {
+    _refreshPublicWidgets: function ($el, options) {
+        this.trigger_up('widgets_start_request', _.extend({
             editableMode: true,
             $target: $el || this.$target,
-        });
+        }, options || {}));
     },
 });
 
