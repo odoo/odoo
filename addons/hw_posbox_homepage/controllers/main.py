@@ -93,14 +93,7 @@ class IoTboxHomepage(web.Home):
         wifi = Path.home() / 'wifi_network.txt'
         remote_server = Path.home() / 'odoo-remote-server.conf'
         if (wifi.exists() == False or remote_server.exists() == False) and helpers.access_point():
-            return configure_wizard_template.render({
-                'title': 'Configure IoT Box',
-                'breadcrumb': 'Configure IoT Box',
-                'loading_message': 'Configuring your IoT Box',
-                'ssid': helpers.get_wifi_essid(),
-                'server': helpers.get_odoo_server_url(),
-                'hostname': subprocess.check_output('hostname').decode('utf-8'),
-                })
+            return "<meta http-equiv='refresh' content='0; url=http://" + helpers.get_ip() + ":8069/steps'>"
         else:
             return homepage_template.render(self.get_homepage_data())
 
