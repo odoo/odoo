@@ -158,7 +158,7 @@
     <!-- Question widgets -->
     <template id="question_container" name="Survey: question container">
         <t t-set="answer_lines" t-value="answer.user_input_line_ids.filtered(lambda line: line.question_id == question)"/>
-        <div class="js_question-wrapper" t-att-id="question.id">
+        <div class="js_question-wrapper" t-att-id="question.id" t-att-data-required="question.constr_mandatory">
             <h4>
                 <span t-field='question.title' />
                 <span t-if="question.constr_mandatory" class="text-danger">*</span>
@@ -172,7 +172,7 @@
             <t t-if="question.question_type == 'simple_choice'"><t t-call="survey.question_simple_choice"/></t>
             <t t-if="question.question_type == 'multiple_choice'"><t t-call="survey.question_multiple_choice"/></t>
             <t t-if="question.question_type == 'matrix'"><t t-call="survey.question_matrix"/></t>
-            <div class="o_survey_question_error alert alert-danger d-none" role="alert"></div>
+            <div class="o_survey_question_error alert alert-danger" role="alert"></div>
         </div>
     </template>
 
@@ -182,13 +182,19 @@
     </template>
 
     <template id="question_char_box" name="Question: text box">
-        <input type="text" class="form-control o_survey_question_text_box" t-att-name="question.id" t-att-value="answer_lines[0].value_char_box if answer_lines else None"
-               t-att-data-question-type="question.question_type"/>
+        <input t-att-type="'email' if question.validation_email else 'text'"
+               class="form-control o_survey_question_text_box" t-att-name="question.id"
+               t-att-value="answer_lines[0].value_char_box if answer_lines else None"
+               t-att-data-question-type="question.question_type"
+               t-att-data-validation-length-min="question.validation_length_min if question.validation_required else False"
+               t-att-data-validation-length-max="question.validation_length_max if question.validation_required else False"/>
     </template>
 
     <template id="question_numerical_box" name="Question: numerical box">
         <input type="number" step="any" class="form-control o_survey_question_numerical_box" t-att-name="question.id" t-att-value="answer_lines[0].value_numerical_box if answer_lines else None"
-               t-att-data-question-type="question.question_type"/>
+               t-att-data-question-type="question.question_type"
+               t-att-data-validation-float-min="question.validation_min_float_value if question.validation_required else False"
+               t-att-data-validation-float-max="question.validation_max_float_value if question.validation_required else False"/>
     </template>
 
     <template id="question_date" name="Question: date box">
@@ -228,6 +234,7 @@
             <div t-foreach='question.suggested_answer_ids' t-as='label' t-attf-class="col-lg-#{question.column_nb}">
                 <label t-att-class="' bg-success ' if quizz_correction and label.answer_score > 0.0 else None">
                     <input type="radio" t-att-value='label.id' class="o_survey_form_choice_item"
+                           t-att-name='question.id'
                            t-att-checked="answer_line and answer_line.suggested_answer_id.id == label.id and 'checked' or None"/>
                     <span t-field='label.value'/>
                 </label>
@@ -235,6 +242,7 @@
             <div t-if='question.comments_allowed and question.comment_count_as_answer' class="js_comments col-lg-12" >
                 <label>
                     <input type="radio" class="o_survey_form_choice_item o_survey_js_form_other_comment" value="-1"
+                           t-att-name='question.id'
                            t-att-checked="comment_line and 'checked' or None"/>
                     <span t-field="question.comments_message" />
                 </label>
@@ -257,6 +265,7 @@
                 <t t-set="answer_line" t-value="answer_lines.filtered(lambda line: line.suggested_answer_id == label)"/>
                 <label t-att-class="' bg-success ' if quizz_correction and label.answer_score > 0.0 else None">
                     <input type="checkbox" t-att-value='label.id' class="o_survey_form_choice_item"
+                           t-att-name="question.id"
                            t-att-checked="'checked' if answer_line else None"/>
                     <span t-field='label.value'/>
                 </label>
@@ -265,6 +274,7 @@
             <div t-if='question.comments_allowed and question.comment_count_as_answer' class="js_ck_comments col-lg-12" >
                 <label>
                     <input type="checkbox" class="o_survey_form_choice_item o_survey_js_form_other_comment" value="-1"
+                           t-att-name="question.id"
                            t-att-checked="comment_line and 'checked' or None"/>
                     <span t-field="question.comments_message" />
                 </label>
@@ -282,7 +292,8 @@
         <t t-set="comment_line" t-value="answer_lines.filtered(lambda line: line.value_char_box)"/>
         <table class="table table-hover o_survey_question_matrix"
                t-att-data-name="question.id"
-               t-att-data-question-type="question.question_type">
+               t-att-data-question-type="question.question_type"
+               t-att-data-sub-questions="question.matrix_row_ids.ids">
             <thead>
                 <tr>
                     <th> </th>
@@ -295,7 +306,7 @@
                     <td t-foreach="question.suggested_answer_ids" t-as="col_label">
                         <t t-set="answer" t-value="answer_lines.filtered(lambda line: line.suggested_answer_id == col_label and line.matrix_row_id == row_label)"/>
                         <input t-att-type="'checkbox' if question.matrix_subtype == 'multiple' else 'radio'"
-                               t-att-name="'%s_%s' % (question_id, row_label.id)" t-att-value='col_label.id'
+                               t-att-name="'%s_%s' % (question.id, row_label.id)" t-att-value='col_label.id'
                                t-att-checked="'checked' if answer else None"
                                t-att-data-row-id="row_label.id"/>
                     </td>
@@ -345,7 +356,7 @@
                                         <t t-if="question.question_type == 'simple_choice'"><t t-call="survey.question_simple_choice"/></t>
                                         <t t-if="question.question_type == 'multiple_choice'"><t t-call="survey.question_multiple_choice"/></t>
                                         <t t-if="question.question_type == 'matrix'"><t t-call="survey.question_matrix"/></t>
-                                        <div class="o_survey_question_error alert alert-danger d-none" role="alert"></div>
+                                        <div class="o_survey_question_error alert alert-danger" role="alert"></div>
                                     </div>
                                 </t>
                             </t>

@@ -4,6 +4,8 @@ odoo.define('survey.form', function (require) {
 var field_utils = require('web.field_utils');
 var publicWidget = require('web.public.widget');
 var time = require('web.time');
+var core = require('web.core');
+var _t = core._t;
 
 publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     selector: '.o_survey_form',
@@ -67,6 +69,9 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         this._submitForm($(event.currentTarget));
     },
 
+    // SUBMIT
+    // -------------------------------------------------------------------------
+
     /**
     * This function will sent a json rpc call to the server to
     * - start the survey (if we are on start screen)
@@ -92,9 +97,16 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
             var $form = this.$('form');
             var formData = new FormData($form[0]);
 
-            this._prepareSubmitValues(formData, params);
+            if ($target.hasClass('o_survey_timer')) {
+                $target.val('finish');
+            } else {
+                // Validation pre submit
+                if (!this._validateForm($form, formData)) {
+                    return;
+                }
+            }
 
-            this._resetErrors();
+            this._prepareSubmitValues(formData, params);
         }
 
         var resolveFadeOut;
@@ -133,20 +145,132 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
             $("html, body").animate({ scrollTop: 0 }, "fast");
         }
         else if (result && result.fields && result.error === 'validation') {
-            var fieldKeys = _.keys(result.fields);
-            _.each(fieldKeys, function (key) {
-                self.$("#" + key + '>.o_survey_question_error').append($('<p>', {text: result.fields[key]})).removeClass('d-none');
-                if (fieldKeys[fieldKeys.length - 1] === key) {
-                    self._scrollToError(self.$('.o_survey_question_error:visible:first').closest('.js_question-wrapper'));
-                }
-            });
+            self.$('.o_survey_form_content').fadeIn(400);
+            self._showErrors(result.fields);
             return false;
         } else {
             var $target = self.$('.o_survey_error');
-            $target.removeClass('d-none');
+            $target.addClass("slide_in");
             self._scrollToError($target);
             return false;
         }
+    },
+
+    // VALIDATION TOOLS
+    // -------------------------------------------------------------------------
+    /**
+    * Validation is done in frontend before submit to avoid latency from the server.
+    * If the validation is incorrect, the errors are displayed before submitting and
+    * fade in / out is avoided.
+    * @private
+    */
+    _validateForm: function ($form, formData) {
+        var self = this;
+        var errors = {};
+        var validationErrorMsg = _t("The answer you entered is not valid.");
+        var validationEmailMsg = _t("This answer must be an email address.");
+        var validationDateMsg = _t("This is not a date");
+        var constrErrorMsg = _t("This question requires an answer.");
+
+        this._resetErrors();
+
+        var data = {};
+        formData.forEach(function (value, key) {
+            data[key] = value;
+        });
+
+        $form.find('[data-question-type]').each(function () {
+            var $input = $(this);
+            var $questionWrapper = $input.closest(".js_question-wrapper");
+            var questionId = $questionWrapper[0].id;
+            var questionRequired = $questionWrapper.data('required');
+            switch ($input.data('question-type')) {
+                case 'char_box':
+                    if (questionRequired && !data[questionId]) {
+                        errors[questionId] = constrErrorMsg;
+                    } else if ($input.attr('type') === 'email' && !self._validateEmail($input.val())) {
+                        errors[questionId] = validationEmailMsg;
+                    } else {
+                        var lengthMin = $input.data('validation-length-min');
+                        var lengthMax = $input.data('validation-length-max');
+                        var length = $input.val().length;
+                        if (lengthMin && (lengthMin > length || length > lengthMax)) {
+                            errors[questionId] = validationErrorMsg;
+                        }
+                    }
+                    break;
+                case 'numerical_box':
+                    if (questionRequired && !data[questionId]) {
+                        errors[questionId] = constrErrorMsg;
+                    } else {
+                        var floatMin = $input.data('validation-float-min');
+                        var floatMax = $input.data('validation-float-max');
+                        var value = parseFloat($input.val());
+                        if (floatMin && (floatMin > value || value > floatMax)) {
+                            errors[questionId] = validationErrorMsg;
+                        }
+                    }
+                    break;
+                case 'date':
+                case 'datetime':
+                    if (questionRequired && !data[questionId]) {
+                        errors[questionId] = constrErrorMsg;
+                    } else {
+                        var momentDate = moment($input.val());
+                        if (!momentDate.isValid()) {
+                            errors[questionId] = validationDateMsg;
+                        } else {
+                            var $dateDiv = $questionWrapper.find('.o_survey_form_date');
+                            var maxDate = $dateDiv.data('maxdate');
+                            var minDate = $dateDiv.data('mindate');
+                            if ((maxDate && momentDate.isAfter(moment(maxDate)))
+                                    || (minDate && momentDate.isBefore(moment(minDate)))) {
+                                errors[questionId] = validationErrorMsg;
+                            }
+                        }
+                    }
+                    break;
+                case 'simple_choice_radio':
+                case 'multiple_choice':
+                    if (questionRequired && !data[questionId]) {
+                        errors[questionId] = constrErrorMsg;
+                    } else {
+                        var $textarea = $questionWrapper.find('textarea');
+                        if (questionRequired && (questionId in data)
+                                && data[questionId] === '-1' && !$textarea.hasClass('o_survey_comment') && !$textarea.val()) {
+                            errors[questionId] = constrErrorMsg;
+                        }
+                    }
+                    break;
+                case 'matrix':
+                    if (questionRequired) {
+                        var subQuestionsIds = $questionWrapper.find('table').data('subQuestions');
+                        subQuestionsIds.forEach(function (id) {
+                            if (!((questionId + '_' + id) in data)) {
+                                errors[questionId] = constrErrorMsg;
+                            }
+                        });
+                    }
+                    break;
+            }
+        });
+        if (Object.keys(errors).length > 0) {
+            this._showErrors(errors);
+            return false;
+        }
+        return true;
+    },
+
+    /**
+    * Check if the email has an '@', a left part and a right part
+    * @private
+    */
+    _validateEmail: function (email) {
+        var emailParts = email.split('@');
+        if (emailParts.length === 2 && emailParts[0] && emailParts[1]){
+            return true;
+        }
+        return false;
     },
 
     // PREPARE SUBMIT TOOLS
@@ -342,7 +466,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
             });
             this.surveyTimerWidget.attachTo($timer);
             this.surveyTimerWidget.on('time_up', this, function (ev) {
-                self.$el.find('button[type="submit"]').click();
+                self._submitForm($timer);
             });
             $timer.toggleClass('d-none', false);
         }
@@ -400,6 +524,16 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     // ERRORS TOOLS
     // -------------------------------------------------------------------------
 
+    _showErrors: function (errors) {
+        var self = this;
+        _.each(_.keys(errors), function (key) {
+            self.$("#" + key + '>.o_survey_question_error').append($('<p>', {text: errors[key]})).addClass("slide_in");
+            if (errors[errors.length - 1] === key) {
+                self._scrollToError(self.$('.o_survey_question_error:visible:first').closest('.js_question-wrapper'));
+            }
+        });
+    },
+
     _scrollToError: function ($target) {
         var scrollLocation = $target.offset().top;
         var navbarHeight = $('.o_main_navbar').height();
@@ -415,8 +549,8 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     * Clean all form errors in order to clean DOM before a new validation
     */
     _resetErrors: function () {
-        this.$('.o_survey_question_error').empty().addClass("d-none");
-        this.$('.o_survey_error').addClass("d-none");
+        this.$('.o_survey_question_error').empty().removeClass('slide_in');
+        this.$('.o_survey_error').removeClass('slide_in');
     },
 
 });
