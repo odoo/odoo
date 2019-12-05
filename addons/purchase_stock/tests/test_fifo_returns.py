@@ -66,7 +66,7 @@ class TestFifoReturns(PurchaseTestCommon, StockAccountTestCommon):
         Form(self.env[res['res_model']].with_context(res['context'])).save().process()
 
         # Check the standard price of the product (fifo icecream)
-        self.assertEqual(product_fiforet_icecream.standard_price, 0.0, 'Standard price should not have changed!')
+        self.assertAlmostEqual(product_fiforet_icecream.standard_price, 50)
 
         # Confirm the second purchase order
         purchase_order_2.button_confirm()

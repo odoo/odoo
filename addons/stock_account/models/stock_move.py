@@ -328,6 +328,12 @@ class StockMove(models.Model):
             move.product_id.with_company(move.company_id.id).with_context(disable_auto_svl=True).sudo().write({'standard_price': new_std_price})
             std_price_update[move.company_id.id, move.product_id.id] = new_std_price
 
+        # adapt standard price on incomming moves if the product cost_method is 'fifo'
+        for move in self.filtered(lambda move:
+                                  move.with_company(move.company_id).product_id.cost_method == 'fifo'
+                                  and float_is_zero(move.product_id.quantity_svl, precision_rounding=move.product_id.uom_id.rounding)):
+            move.product_id.with_company(move.company_id.id).sudo().write({'standard_price': move._get_price_unit()})
+
     def _get_accounting_data_for_valuation(self):
         """ Return the accounts and journal to use to post Journal Entries for
         the real-time valuation of the quant. """
