@@ -101,6 +101,7 @@ class WebsiteForm(http.Controller):
         'integer': integer,
         'float': floating,
         'binary': binary,
+        'monetary': floating,
     }
 
 
