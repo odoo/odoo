@@ -53,7 +53,7 @@ QUnit.module('ActivityMenu', {
                         overdue_count: 1,
                         total_count: 3,
                         actions : [{
-                            icon: "fa-clock-o",
+                            icon: "fa-clock",
                             name: "summary",
                         }],
                     },
@@ -66,7 +66,7 @@ QUnit.module('ActivityMenu', {
                         overdue_count: 1,
                         total_count: 3,
                         actions: [{
-                            icon: "fa-clock-o",
+                            icon: "fa-clock",
                             name: "summary",
                             action_xmlid: "mail.mail_activity_type_view_tree",
                         }],
@@ -178,11 +178,11 @@ QUnit.test('activity menu widget: activity view icon', async function (assert) {
     var $second = activityMenu.$('.o_mail_activity_action').eq(1);
     assert.strictEqual($first.data('model_name'), "Issue",
                        "first activity action should link to 'Issue'");
-    assert.hasClass($first,'fa-clock-o', "should display the activity action icon");
+    assert.hasClass($first,'fa-clock', "should display the activity action icon");
 
     assert.strictEqual($second.data('model_name'), "Note",
                        "Second activity action should link to 'Note'");
-    assert.hasClass($second,'fa-clock-o', "should display the activity action icon");
+    assert.hasClass($second,'fa-clock', "should display the activity action icon");
 
     testUtils.mock.intercept(activityMenu, 'do_action', function (ev) {
         if (ev.data.action.name) {

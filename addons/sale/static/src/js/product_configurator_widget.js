@@ -43,7 +43,7 @@ var ProductConfiguratorWidget = relationalFields.FieldMany2One.extend({
         if (this.$('.o_external_button').length === 0) {
             var $productLinkButton = $('<button>', {
                 type: 'button',
-                class: 'fa fa-external-link btn btn-secondary o_external_button',
+                class: 'fas fa-external-link-alt btn btn-secondary o_external_button',
                 tabindex: '-1',
                 draggable: false,
                 'aria-label': _t('External Link'),
@@ -66,7 +66,7 @@ var ProductConfiguratorWidget = relationalFields.FieldMany2One.extend({
             this.$('.o_edit_product_configuration').length === 0) {
             var $editConfigurationButton = $('<button>', {
                 type: 'button',
-                class: 'fa fa-pencil btn btn-secondary o_edit_product_configuration',
+                class: 'fas fa-pencil-alt btn btn-secondary o_edit_product_configuration',
                 tabindex: '-1',
                 draggable: false,
                 'aria-label': _t('Edit Configuration'),

@@ -123,7 +123,7 @@ class Challenge(models.Model):
     last_report_date = fields.Date("Last Report Date", default=fields.Date.today)
     next_report_date = fields.Date("Next Report Date", compute='_get_next_report_date', store=True)
 
-    category = fields.Selection([
+    challenge_category = fields.Selection([
         ('hr', 'Human Resources / Engagement'),
         ('other', 'Settings / Gamification Tools'),
     ], string="Appears in", required=True, default='hr',
@@ -377,11 +377,11 @@ class Challenge(models.Model):
                 if end_date:
                     values['end_date'] = end_date
 
-                    # the goal is initialised over the limit to make sure we will compute it at least once
-                    if line.condition == 'higher':
-                        values['current'] = min(line.target_goal - 1, 0)
-                    else:
-                        values['current'] = max(line.target_goal + 1, 0)
+                # the goal is initialised over the limit to make sure we will compute it at least once
+                if line.condition == 'higher':
+                    values['current'] = min(line.target_goal - 1, 0)
+                else:
+                    values['current'] = max(line.target_goal + 1, 0)
 
                 if challenge.remind_update_delay:
                     values['remind_update_delay'] = challenge.remind_update_delay
@@ -562,13 +562,13 @@ class Challenge(models.Model):
             challenge.message_post(
                 body=body_html,
                 partner_ids=challenge.mapped('user_ids.partner_id.id'),
-                subtype='mail.mt_comment',
+                subtype_xmlid='mail.mt_comment',
                 email_layout_xmlid='mail.mail_notification_light',
                 )
             if challenge.report_message_group_id:
                 challenge.report_message_group_id.message_post(
                     body=body_html,
-                    subtype='mail.mt_comment')
+                    subtype_xmlid='mail.mt_comment')
 
         else:
             # generate individual reports
@@ -586,13 +586,13 @@ class Challenge(models.Model):
                 challenge.message_notify(
                     body=body_html,
                     partner_ids=[user.partner_id.id],
-                    subtype='mail.mt_comment',
+                    subtype_xmlid='mail.mt_comment',
                     email_layout_xmlid='mail.mail_notification_light',
                 )
                 if challenge.report_message_group_id:
                     challenge.report_message_group_id.message_post(
                         body=body_html,
-                        subtype='mail.mt_comment',
+                        subtype_xmlid='mail.mt_comment',
                         email_layout_xmlid='mail.mail_notification_light',
                     )
         return challenge.write({'last_report_date': fields.Date.today()})

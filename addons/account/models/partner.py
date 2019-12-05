@@ -44,28 +44,21 @@ class AccountFiscalPosition(models.Model):
             if self.zip_from and self.zip_to and position.zip_from > position.zip_to:
                 raise ValidationError(_('Invalid "Zip Range", please configure it properly.'))
 
-    @api.model     # noqa
     def map_tax(self, taxes, product=None, partner=None):
-        result = self.env['account.tax'].browse()
+        if not self:
+            return taxes
+        result = self.env['account.tax']
         for tax in taxes:
-            tax_count = 0
-            for t in self.tax_ids:
-                if t.tax_src_id == tax:
-                    tax_count += 1
-                    if t.tax_dest_id:
-                        result |= t.tax_dest_id
-            if not tax_count:
-                result |= tax
+            taxes_correspondance = self.tax_ids.filtered(lambda t: t.tax_src_id == tax)
+            result |= taxes_correspondance.tax_dest_id if taxes_correspondance else tax
         return result
 
-    @api.model
     def map_account(self, account):
         for pos in self.account_ids:
             if pos.account_src_id == account:
                 return pos.account_dest_id
         return account
 
-    @api.model
     def map_accounts(self, accounts):
         """ Receive a dictionary having accounts in values and try to replace those accounts accordingly to the fiscal position.
         """
@@ -154,12 +147,17 @@ class AccountFiscalPosition(models.Model):
         if not fpos:
             # Fallback on catchall (no country, no group)
             fpos = self.search(base_domain + null_country_dom, limit=1)
-        return fpos or False
+        return fpos
 
     @api.model
     def get_fiscal_position(self, partner_id, delivery_id=None):
+        """
+        :return: fiscal position found (recordset)
+        :rtype: :class:`account.fiscal.position`
+        """
         if not partner_id:
-            return False
+            return self.env['account.fiscal.position']
+
         # This can be easily overridden to apply more complex fiscal rules
         PartnerObj = self.env['res.partner']
         partner = PartnerObj.browse(partner_id)
@@ -172,7 +170,7 @@ class AccountFiscalPosition(models.Model):
 
         # partner manually set fiscal position always win
         if delivery.property_account_position_id or partner.property_account_position_id:
-            return delivery.property_account_position_id.id or partner.property_account_position_id.id
+            return delivery.property_account_position_id or partner.property_account_position_id
 
         # First search only matching VAT positions
         vat_required = bool(partner.vat)
@@ -182,7 +180,7 @@ class AccountFiscalPosition(models.Model):
         if not fp and vat_required:
             fp = self._get_fpos_by_region(delivery.country_id.id, delivery.state_id.id, delivery.zip, False)
 
-        return fp.id if fp else False
+        return fp or self.env['account.fiscal.position']
 
 
 class AccountFiscalPositionTax(models.Model):

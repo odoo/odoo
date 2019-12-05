@@ -11,14 +11,15 @@ class StockAccountTestCommon(AccountTestCommon):
         super(StockAccountTestCommon, cls).setUpClass()
 
         # Properties: Stock valuation account and journal
-        cls.env['ir.property'].create([{
-            'name': 'property_stock_valuation_account_id',
-            'fields_id': cls.env['ir.model.fields'].search([('model', '=', 'product.category'), ('name', '=', 'property_stock_valuation_account_id')], limit=1).id,
-            'value': 'account.account,%s' % (cls.stk.id),
-            'company_id': cls.env.company.id,
-        }, {
-            'name': 'property_stock_valuation_journal',
-            'fields_id': cls.env['ir.model.fields'].search([('model', '=', 'product.category'), ('name', '=', 'property_stock_journal')], limit=1).id,
-            'value': 'account.journal,%s' % (cls.miscellaneous_journal.id),
-            'company_id': cls.env.company.id,
-        }])
+        cls.env['ir.property'].set_default(
+            'property_stock_valuation_account_id',
+            'product.category',
+            cls.stk,
+            cls.env.company,
+        )
+        cls.env['ir.property'].set_default(
+            'property_stock_journal',
+            'product.category',
+            cls.miscellaneous_journal,
+            cls.env.company,
+        )

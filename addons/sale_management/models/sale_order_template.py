@@ -146,8 +146,6 @@ class SaleOrderTemplateOption(models.Model):
             name += '\n' + self.product_id.description_sale
         self.name = name
         self.uom_id = product.uom_id
-        domain = {'uom_id': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
-        return {'domain': domain}
 
     @api.onchange('uom_id')
     def _onchange_product_uom(self):

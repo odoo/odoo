@@ -7,6 +7,9 @@ import logging
 import werkzeug
 import math
 
+from ast import literal_eval
+from collections import defaultdict
+
 from odoo import http, tools, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.website_profile.controllers.main import WebsiteProfile
@@ -127,10 +130,10 @@ class WebsiteSlides(WebsiteProfile):
             'slide_questions': [{
                 'id': question.id,
                 'question': question.question,
-                'answers': [{
+                'answer_ids': [{
                     'id': answer.id,
                     'text_value': answer.text_value,
-                    'is_correct': answer.is_correct if slide_completed else None
+                    'is_correct': answer.is_correct if slide_completed or request.website.is_publisher() else None
                 } for answer in question.sudo().answer_ids],
             } for question in slide.question_ids]
         }
@@ -195,22 +198,18 @@ class WebsiteSlides(WebsiteProfile):
 
     def _extract_channel_tag_search(self, **post):
         tags = request.env['slide.channel.tag']
-        for key in (_key for _key in post if _key.startswith('channel_tag_group_id_')):
-            group_id, tag_id = False, False
+        if post.get('tags'):
             try:
-                group_id = int(key.lstrip('channel_tag_group_id_'))
-                tag_id = int(post[key])
+                tag_ids = literal_eval(post['tags'])
             except:
                 pass
             else:
-                search_tag = request.env['slide.channel.tag'].search([('id', '=', tag_id), ('group_id', '=', group_id)]).exists()
-                if search_tag:
-                    tags |= search_tag
+                # perform a search to filter on existing / valid tags implicitely
+                tags = request.env['slide.channel.tag'].search([('id', 'in', tag_ids)])
         return tags
 
     def _build_channel_domain(self, base_domain, slide_type=None, my=False, **post):
         search_term = post.get('search')
-        channel_tag_id = post.get('channel_tag_id')
         tags = self._extract_channel_tag_search(**post)
 
         domain = base_domain
@@ -218,10 +217,19 @@ class WebsiteSlides(WebsiteProfile):
             domain = expression.AND([
                 domain,
                 ['|', ('name', 'ilike', search_term), ('description', 'ilike', search_term)]])
-        if channel_tag_id:
-            domain = expression.AND([domain, [('tag_ids', 'in', [channel_tag_id])]])
-        elif tags:
-            domain = expression.AND([domain, [('tag_ids', 'in', tags.ids)]])
+
+        if tags:
+            # Group by group_id
+            grouped_tags = defaultdict(list)
+            for tag in tags:
+                grouped_tags[tag.group_id].append(tag)
+
+            # OR inside a group, AND between groups.
+            group_domain_list = []
+            for group in grouped_tags:
+                group_domain_list.append([('tag_ids', 'in', [tag.id for tag in grouped_tags[group]])])
+
+            domain = expression.AND([domain, *group_domain_list])
 
         if slide_type and 'nbr_%s' % slide_type in request.env['slide.channel']:
             domain = expression.AND([domain, [('nbr_%s' % slide_type, '>', 0)]])
@@ -240,7 +248,8 @@ class WebsiteSlides(WebsiteProfile):
         domain = request.website.website_domain()
         channels_all = request.env['slide.channel'].search(domain)
         if not request.env.user._is_public():
-            channels_my = channels_all.filtered(lambda channel: channel.is_member).sorted('completion', reverse=True)[:3]
+            #If a course is completed, we don't want to see it in first position but in last
+            channels_my = channels_all.filtered(lambda channel: channel.is_member).sorted(lambda channel: 0 if channel.completed else channel.completion, reverse=True)[:3]
         else:
             channels_my = request.env['slide.channel']
         channels_popular = channels_all.sorted('total_votes', reverse=True)[:3]
@@ -252,7 +261,7 @@ class WebsiteSlides(WebsiteProfile):
             challenges_done = None
         else:
             challenges = request.env['gamification.challenge'].sudo().search([
-                ('category', '=', 'slides'),
+                ('challenge_category', '=', 'slides'),
                 ('reward_id.is_published', '=', True)
             ], order='id asc', limit=5)
             challenges_done = request.env['gamification.badge.user'].sudo().search([
@@ -275,6 +284,7 @@ class WebsiteSlides(WebsiteProfile):
             'top3_users': self._get_top3_users(),
             'challenges': challenges,
             'challenges_done': challenges_done,
+            'search_tags': request.env['slide.channel.tag']
         })
 
         return request.render('website_slides.courses_home', values)
@@ -304,7 +314,8 @@ class WebsiteSlides(WebsiteProfile):
         channels = request.env['slide.channel'].search(domain, order=order)
         # channels_layouted = list(itertools.zip_longest(*[iter(channels)] * 4, fillvalue=None))
 
-        tag_groups = request.env['slide.channel.tag.group'].search(['&', ('tag_ids', '!=', False), ('website_published', '=', True)])
+        tag_groups = request.env['slide.channel.tag.group'].search(
+            ['&', ('tag_ids', '!=', False), ('website_published', '=', True)])
         search_tags = self._extract_channel_tag_search(**post)
 
         values = self._prepare_user_values(**post)
@@ -350,7 +361,7 @@ class WebsiteSlides(WebsiteProfile):
 
         if search:
             domain += [
-                '|', '|', '|',
+                '|', '|',
                 ('name', 'ilike', search),
                 ('description', 'ilike', search),
                 ('html_content', 'ilike', search)]
@@ -422,7 +433,7 @@ class WebsiteSlides(WebsiteProfile):
                 ('res_id', '=', channel.id),
                 ('author_id', '=', request.env.user.partner_id.id),
                 ('message_type', '=', 'comment'),
-                ('website_published', '=', True)
+                ('is_internal', '=', False)
             ], order='write_date DESC', limit=1)
             if last_message:
                 last_message_values = last_message.read(['body', 'rating_value', 'attachment_ids'])[0]
@@ -699,6 +710,57 @@ class WebsiteSlides(WebsiteProfile):
     # QUIZZ SECTION
     # --------------------------------------------------
 
+    @http.route('/slides/slide/quiz/question_add_or_update', type='json', methods=['POST'], auth='user', website=True)
+    def slide_quiz_question_add_or_update(self, slide_id, question, sequence, answer_ids, existing_question_id=None):
+        """ Add a new question to an existing slide. Completed field of slide.partner
+        link is set to False to make sure that the creator can take the quiz again.
+
+        An optional question_id to udpate can be given. In this case question is
+        deleted first before creating a new one to simplify management.
+
+        :param integer slide_id: Slide ID
+        :param string question: Question Title
+        :param integer sequence: Question Sequence
+        :param array answer_ids: Array containing all the answers :
+                [
+                    'sequence': Answer Sequence (Integer),
+                    'text_value': Answer Title (String),
+                    'is_correct': Answer Is Correct (Boolean)
+                ]
+        :param integer existing_question_id: question ID if this is an update
+
+        :return: rendered question template
+        """
+        fetch_res = self._fetch_slide(slide_id)
+        if fetch_res.get('error'):
+            return fetch_res
+        slide = fetch_res['slide']
+        if existing_question_id:
+            request.env['slide.question'].search([
+                ('slide_id', '=', slide.id),
+                ('id', '=', int(existing_question_id))
+            ]).unlink()
+
+        request.env['slide.slide.partner'].search([
+            ('slide_id', '=', slide_id),
+            ('partner_id', '=', request.env.user.partner_id.id)
+        ]).write({'completed': False})
+
+        slide_question = request.env['slide.question'].create({
+            'sequence': sequence,
+            'question': question,
+            'slide_id': slide_id,
+            'answer_ids': [(0, 0, {
+                'sequence': answer['sequence'],
+                'text_value': answer['text_value'],
+                'is_correct': answer['is_correct']
+            }) for answer in answer_ids]
+        })
+        return request.env.ref('website_slides.lesson_content_quiz_question').render({
+            'slide': slide,
+            'question': slide_question,
+        })
+
     @http.route('/slides/slide/quiz/get', type="json", auth="public", website=True)
     def slide_quiz_get(self, slide_id):
         fetch_res = self._fetch_slide(slide_id)
@@ -706,6 +768,16 @@ class WebsiteSlides(WebsiteProfile):
             return fetch_res
         slide = fetch_res['slide']
         return self._get_slide_quiz_data(slide)
+
+    @http.route('/slides/slide/quiz/reset', type="json", auth="user", website=True)
+    def slide_quiz_reset(self, slide_id):
+        fetch_res = self._fetch_slide(slide_id)
+        if fetch_res.get('error'):
+            return fetch_res
+        request.env['slide.slide.partner'].search([
+            ('slide_id', '=', fetch_res['slide'].id),
+            ('partner_id', '=', request.env.user.partner_id.id)
+        ]).write({'completed': False, 'quiz_attempts_count': 0})
 
     @http.route('/slides/slide/quiz/submit', type="json", auth="public", website=True)
     def slide_quiz_submit(self, slide_id, answer_ids):
@@ -767,7 +839,6 @@ class WebsiteSlides(WebsiteProfile):
             'motivational': next_rank.description_motivational,
             'progress': progress
         }
-
     # --------------------------------------------------
     # CATEGORY MANAGEMENT
     # --------------------------------------------------
@@ -877,9 +948,6 @@ class WebsiteSlides(WebsiteProfile):
             redirect_url = "/slides/%s" % (slug(channel))
         if slide.slide_type == 'webpage':
             redirect_url += "?enable_editor=1"
-        if slide.slide_type == "quiz":
-            action_id = request.env.ref('website_slides.slide_slide_action').id
-            redirect_url = '/web#id=%s&action=%s&model=slide.slide&view_type=form' %( slide.id, action_id)
         return {
             'url': redirect_url,
             'channel_type': channel.channel_type,

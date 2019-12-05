@@ -270,7 +270,11 @@ var CalendarController = AbstractController.extend({
         var data = this.model.calendarEventToRecord(event.data);
 
         var context = _.extend({}, this.context, event.options && event.options.context);
-        context.default_name = data.name || null;
+        // context default has more priority in default_get so if data.name is false then it may
+        // lead to error/warning while saving record in form view as name field can be required
+        if (data.name) {
+            context.default_name = data.name;
+        }
         context['default_' + this.mapping.date_start] = data[this.mapping.date_start] || null;
         if (this.mapping.date_stop) {
             context['default_' + this.mapping.date_stop] = data[this.mapping.date_stop] || null;

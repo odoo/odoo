@@ -51,7 +51,7 @@ class LeaveReport(models.Model):
                 leaves.date_to as date_to, leaves.payslip_status as payslip_status
                 from (select
                     allocation.employee_id as employee_id,
-                    allocation.name as name,
+                    allocation.private_name as name,
                     allocation.number_of_days as number_of_days,
                     allocation.category_id as category_id,
                     allocation.department_id as department_id,

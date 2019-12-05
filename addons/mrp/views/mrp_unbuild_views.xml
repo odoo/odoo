@@ -80,7 +80,7 @@
                                     </div>
                                     <div class="col-4">
                                         <span class="float-right text-right">
-                                            <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'done': 'success'}}"/>
+                                            <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'done': 'success'}}" readonly="1"/>
                                         </span>
                                     </div>
                                 </div>
@@ -103,7 +103,7 @@
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button class="oe_stat_button" name="%(action_mrp_unbuild_moves)d"
-                                    string="Product Moves" type="action" icon="fa-exchange" states="done"/>
+                                    string="Product Moves" type="action" icon="fa-exchange-alt" states="done"/>
                         </div>
                         <div class="oe_title">
                             <h1><field name="name" placeholder="Unbuild Order" nolabel="1"/></h1>

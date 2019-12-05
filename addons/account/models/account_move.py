@@ -97,7 +97,7 @@ class AccountMove(models.Model):
     date = fields.Date(string='Date', required=True, index=True, readonly=True,
         states={'draft': [('readonly', False)]},
         default=fields.Date.context_today)
-    ref = fields.Char(string='Reference', copy=False)
+    ref = fields.Char(string='Reference', copy=False, tracking=True)
     narration = fields.Text(string='Internal Note')
     state = fields.Selection(selection=[
             ('draft', 'Draft'),
@@ -122,7 +122,6 @@ class AccountMove(models.Model):
         states={'draft': [('readonly', False)]},
         domain="[('company_id', '=', company_id)]",
         default=_get_default_journal)
-    user_id = fields.Many2one(related='invoice_user_id', string='User')
     company_id = fields.Many2one(string='Company', store=True, readonly=True,
         related='journal_id.company_id', change_default=True)
     company_currency_id = fields.Many2one(string='Company Currency', readonly=True,
@@ -325,9 +324,8 @@ class AccountMove(models.Model):
 
         # Find the new fiscal position.
         delivery_partner_id = self._get_invoice_delivery_partner_id()
-        new_fiscal_position_id = self.env['account.fiscal.position'].with_company(self.company_id).get_fiscal_position(
+        self.fiscal_position_id = self.env['account.fiscal.position'].with_company(self.company_id).get_fiscal_position(
             self.partner_id.id, delivery_id=delivery_partner_id)
-        self.fiscal_position_id = self.env['account.fiscal.position'].browse(new_fiscal_position_id)
         self._recompute_dynamic_lines()
         if warning:
             return {'warning': warning}
@@ -501,16 +499,23 @@ class AccountMove(models.Model):
         taxes_map = {}
 
         # ==== Add tax lines ====
+        to_remove = self.env['account.move.line']
         for line in self.line_ids.filtered('tax_repartition_line_id'):
             grouping_dict = self._get_tax_grouping_key_from_tax_line(line)
             grouping_key = _serialize_tax_grouping_key(grouping_dict)
-            taxes_map[grouping_key] = {
-                'tax_line': line,
-                'balance': 0.0,
-                'amount_currency': 0.0,
-                'tax_base_amount': 0.0,
-                'grouping_dict': False,
-            }
+            if grouping_key in taxes_map:
+                # A line with the same key does already exist, we only need one
+                # to modify it; we have to drop this one.
+                to_remove += line
+            else:
+                taxes_map[grouping_key] = {
+                    'tax_line': line,
+                    'balance': 0.0,
+                    'amount_currency': 0.0,
+                    'tax_base_amount': 0.0,
+                    'grouping_dict': False,
+                }
+        self.line_ids -= to_remove
 
         # ==== Mount base lines ====
         for line in self.line_ids.filtered(lambda line: not line.exclude_from_invoice_tab):
@@ -794,6 +799,9 @@ class AccountMove(models.Model):
             # Recompute amls: update existing line or create new one for each payment term.
             new_terms_lines = self.env['account.move.line']
             for date_maturity, balance, amount_currency in to_compute:
+                if self.journal_id.company_id.currency_id.is_zero(balance) and len(to_compute) > 1:
+                    continue
+
                 if existing_terms_lines_index < len(existing_terms_lines):
                     # Update existing line.
                     candidate = existing_terms_lines[existing_terms_lines_index]
@@ -1006,14 +1014,16 @@ class AccountMove(models.Model):
             move.amount_residual = -sign * (total_residual_currency if len(currencies) == 1 else total_residual)
             move.amount_untaxed_signed = -total_untaxed
             move.amount_tax_signed = -total_tax
-            move.amount_total_signed = -total
+            move.amount_total_signed = abs(total) if move.type == 'entry' else -total
             move.amount_residual_signed = total_residual
 
             currency = len(currencies) == 1 and currencies.pop() or move.company_id.currency_id
             is_paid = currency and currency.is_zero(move.amount_residual) or not move.amount_residual
 
             # Compute 'invoice_payment_state'.
-            if move.state == 'posted' and is_paid:
+            if move.type == 'entry':
+                move.invoice_payment_state = False
+            elif move.state == 'posted' and is_paid:
                 if move.id in in_payment_set:
                     move.invoice_payment_state = 'in_payment'
                 else:
@@ -1333,7 +1343,7 @@ class AccountMove(models.Model):
         if res:
             raise ValidationError(_('Posted journal entry must have an unique sequence number per company.'))
 
-    @api.constrains('ref')
+    @api.constrains('ref', 'type', 'partner_id', 'journal_id', 'invoice_date')
     def _check_duplicate_supplier_reference(self):
         moves = self.filtered(lambda move: move.is_purchase_document() and move.ref)
         if not moves:
@@ -1583,10 +1593,6 @@ class AccountMove(models.Model):
         # Ensure the move is still well balanced.
         if 'line_ids' in vals and self._context.get('check_move_validity', True):
             self._check_balanced()
-
-        # Check the lock date.
-        # /!\ The tax lock date is managed in the lines level, don't check it there.
-        self._check_fiscalyear_lock_date()
 
         # Trigger 'action_invoice_paid' when the invoice becomes paid after a write.
         not_paid_invoices.filtered(lambda move: move.invoice_payment_state in ('paid', 'in_payment')).action_invoice_paid()
@@ -2072,7 +2078,7 @@ class AccountMove(models.Model):
             # When the accounting date is prior to the tax lock date, move it automatically to the next available date.
             # /!\ 'check_move_validity' must be there since the dynamic lines will be recomputed outside the 'onchange'
             # environment.
-            if move.company_id.tax_lock_date and move.date <= move.company_id.tax_lock_date:
+            if (move.company_id.tax_lock_date and move.date <= move.company_id.tax_lock_date) and (move.line_ids.tax_ids or move.line_ids.tag_ids):
                 move.date = move.company_id.tax_lock_date + timedelta(days=1)
                 move.with_context(check_move_validity=False)._onchange_currency()
 
@@ -2390,11 +2396,12 @@ class AccountMoveLine(models.Model):
     country_id = fields.Many2one(comodel_name='res.country', related='move_id.company_id.country_id')
     account_id = fields.Many2one('account.account', string='Account',
         index=True, ondelete="cascade",
-        domain=[('deprecated', '=', False)])
+        domain=[('deprecated', '=', False)],
+        tracking=True)
     account_internal_type = fields.Selection(related='account_id.user_type_id.type', string="Internal Type", store=True, readonly=True)
     account_root_id = fields.Many2one(related='account_id.root_id', string="Account Root", store=True, readonly=True)
     sequence = fields.Integer(default=10)
-    name = fields.Char(string='Label')
+    name = fields.Char(string='Label', tracking=True)
     quantity = fields.Float(string='Quantity',
         default=1.0, digits='Product Unit of Measure',
         help="The optional quantity expressed by this line, eg: number of product sold. "
@@ -2416,7 +2423,7 @@ class AccountMoveLine(models.Model):
     reconciled = fields.Boolean(compute='_amount_residual', store=True)
     blocked = fields.Boolean(string='No Follow-up', default=False,
         help="You can check this box to mark this journal item as a litigation with the associated partner")
-    date_maturity = fields.Date(string='Due Date', index=True,
+    date_maturity = fields.Date(string='Due Date', index=True, tracking=True,
         help="This field is used for payable and receivable journal entries. You can put the limit date for the payment of this line.")
     currency_id = fields.Many2one('res.currency', string='Currency')
     partner_id = fields.Many2one('res.partner', string='Partner', ondelete='restrict')
@@ -2450,7 +2457,7 @@ class AccountMoveLine(models.Model):
         string="Originator Tax Repartition Line", ondelete='restrict', readonly=True,
         help="Tax repartition line that caused the creation of this move line, if any")
     tag_ids = fields.Many2many(string="Tags", comodel_name='account.account.tag', ondelete='restrict',
-        help="Tags assigned to this line by the tax creating it, if any. It determines its impact on financial reports.")
+        help="Tags assigned to this line by the tax creating it, if any. It determines its impact on financial reports.", tracking=True)
     tax_audit = fields.Char(string="Tax Audit String", compute="_compute_tax_audit", store=True,
         help="Computed field, listing the tax grids impacted by this line, and the amount it applies to each of them.")
 
@@ -2626,11 +2633,7 @@ class AccountMoveLine(models.Model):
         if self.company_id and tax_ids:
             tax_ids = tax_ids.filtered(lambda tax: tax.company_id == self.company_id)
 
-        fiscal_position = self.move_id.fiscal_position_id
-        if tax_ids and fiscal_position:
-            return fiscal_position.map_tax(tax_ids, partner=self.partner_id)
-        else:
-            return tax_ids
+        return self.move_id.fiscal_position_id.map_tax(tax_ids, partner=self.partner_id)
 
     def _get_computed_uom(self):
         self.ensure_one()
@@ -2971,7 +2974,7 @@ class AccountMoveLine(models.Model):
             # A constraint on account.tax.repartition.line ensures both those fields are mutually exclusive
             record.tax_line_id = rep_line.invoice_tax_id or rep_line.refund_tax_id
 
-    @api.depends('tag_ids', 'debit', 'credit', 'journal_id')
+    @api.depends('tag_ids', 'debit', 'credit')
     def _compute_tax_audit(self):
         separator = '        '
 
@@ -3212,7 +3215,58 @@ class AccountMoveLine(models.Model):
                             or (account_type != 'payable' and account_to_write.user_type_id.type == 'payable'):
                         raise UserError(_("You can only set an account having the payable type on payment terms lines for vendor bill."))
 
+        # Get all tracked fields (without related fields because these fields must be manage on their own model)
+        tracking_fields = []
+        for value in vals:
+            field = self._fields[value]
+            if hasattr(field, 'related') and field.related:
+                continue # We don't want to track related field.
+            if hasattr(field, 'tracking') and field.tracking:
+                tracking_fields.append(value)
+        ref_fields = self.env['account.move.line'].fields_get(tracking_fields)
+
+        # Get initial values for each line
+        move_initial_values = {}
+        for line in self.filtered(lambda l: l.move_id.name != '/'): # Only lines with posted once move.
+            for field in tracking_fields:
+                # Group initial values by move_id
+                if line.move_id.id not in move_initial_values:
+                    move_initial_values[line.move_id.id] = {}
+                move_initial_values[line.move_id.id].update({field: line[field]})
+
         result = super(AccountMoveLine, self).write(vals)
+
+        # Create the dict for the message post
+        tracking_values = {} # Tracking values to write in the message post
+        for move_id, modified_lines in move_initial_values.items():
+            tmp_move = {move_id: []}
+            for line in self.filtered(lambda l: l.move_id.id == move_id):
+                tracked_field = self.env['mail.thread'].static_message_track(line, ref_fields, modified_lines) # Return a tuple like (changed field, ORM command)
+                tmp = {'line_id': line.id}
+                if len(tracked_field[1]) > 0:
+                    selected_field = tracked_field[1][0][2] # Get the last element of the tuple in the list of ORM command. (changed, [(0, 0, THIS)])
+                    tmp.update({
+                        **{'field_name': selected_field.get('field_desc')},
+                        **self._get_formated_values(selected_field)
+                    })
+                elif len(tracked_field[0]):
+                    field_name = line._fields[tracked_field[0].pop()].string # Get the field name
+                    tmp.update({
+                        'error': True,
+                        'field_error': field_name
+                    })
+                else:
+                    continue
+                tmp_move[move_id].append(tmp)
+            if len(tmp_move[move_id]) > 0:
+                tracking_values.update(tmp_move)
+
+        # Write in the chatter.
+        for move in self.mapped('move_id'):
+            fields = tracking_values.get(move.id, [])
+            if len(fields) > 0:
+                msg = self._get_tracking_field_string(tracking_values.get(move.id))
+                move.message_post(body=msg) # Write for each concerned move the message in the chatter
 
         for line in self:
             if not line.move_id.is_invoice(include_receipts=True):
@@ -3320,6 +3374,39 @@ class AccountMoveLine(models.Model):
             name += (line.name or line.product_id.display_name) and (' ' + (line.name or line.product_id.display_name)) or ''
             result.append((line.id, name))
         return result
+
+    # -------------------------------------------------------------------------
+    # TRACKING METHODS
+    # -------------------------------------------------------------------------
+
+    def _get_formated_values(self, tracked_field):
+        if tracked_field.get('field_type') in ('date', 'datetime'):
+            return {
+                'old_value': format_date(self.env, fields.Datetime.from_string(tracked_field.get('old_value_datetime'))),
+                'new_value': format_date(self.env, fields.Datetime.from_string(tracked_field.get('new_value_datetime'))),
+            }
+        elif tracked_field.get('field_type') in ('one2many', 'many2many', 'many2one'):
+            return {
+                'old_value': tracked_field.get('old_value_char', ''),
+                'new_value': tracked_field.get('new_value_char', '')
+            }
+        else:
+            return {
+                'old_value': [val for key, val in tracked_field.items() if 'old_value' in key][0], # Get the first element because we create a list like ['Elem']
+                'new_value': [val for key, val in tracked_field.items() if 'new_value' in key][0], # Get the first element because we create a list like ['Elem']
+            }
+
+    def _get_tracking_field_string(self, fields):
+        ARROW_RIGHT = '<span aria-label="Changed" class="fas fa-long-arrow-alt-right" role="img" title="Changed"></span>'
+        msg = '<ul>'
+        for field in fields:
+            redirect_link = '<a href=# data-oe-model=account.move.line data-oe-id=%d>#%d</a>' % (field['line_id'], field['line_id']) # Account move line link
+            if field.get('error', False):
+                msg += '<li>%s: A modication has been operated on the line %s.</li>' % (field['field_error'], redirect_link)
+            else:
+                msg += '<li>%s: %s %s %s (%s)</li>' % (field['field_name'], field['old_value'], ARROW_RIGHT, field['new_value'], redirect_link)
+        msg += '</ul>'
+        return _(msg)
 
     # -------------------------------------------------------------------------
     # RECONCILIATION

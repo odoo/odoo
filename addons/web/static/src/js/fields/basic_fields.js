@@ -539,7 +539,7 @@ var LinkButton = AbstractField.extend({
      */
     _render: function () {
         if (this.value) {
-            var className = this.attrs.icon || 'fa-globe';
+            var className = this.attrs.icon || 'fa-globe-americas';
 
             this.$el.html("<span role='img'/>");
             this.$el.addClass("fa "+ className);
@@ -1393,7 +1393,7 @@ var ListFieldText = FieldText.extend({
 var HandleWidget = AbstractField.extend({
     description: _lt("Handle"),
     noLabel: true,
-    className: 'o_row_handle fa fa-arrows ui-sortable-handle',
+    className: 'o_row_handle fas fa-expand-arrows-alt ui-sortable-handle',
     widthInList: '33px',
     tagName: 'span',
     supportedFieldTypes: ['integer'],
@@ -2147,9 +2147,10 @@ var PriorityWidget = AbstractField.extend({
             .attr('title', tip)
             .attr('aria-label', tip)
             .attr('data-index', index)
-            .addClass('o_priority_star fa')
-            .toggleClass('fa-star', isFull)
-            .toggleClass('fa-star-o', !isFull);
+            .addClass('o_priority_star')
+            .toggleClass('fas', isFull)
+            .toggleClass('far', !isFull)
+            .addClass('fa-star');
     },
 
     //--------------------------------------------------------------------------
@@ -2194,8 +2195,8 @@ var PriorityWidget = AbstractField.extend({
      */
     _onMouseOver: function (event) {
         clearTimeout(this.hoverTimer);
-        this.$('.o_priority_star').removeClass('fa-star-o').addClass('fa-star');
-        $(event.currentTarget).nextAll().removeClass('fa-star').addClass('fa-star-o');
+        this.$('.o_priority_star').removeClass('far').addClass('fas');
+        $(event.currentTarget).nextAll().removeClass('fas').addClass('far');
     },
 });
 
@@ -2351,8 +2352,8 @@ var FavoriteWidget = AbstractField.extend({
      */
     _render: function () {
         var tip = this.value ? _t('Remove from Favorites') : _t('Add to Favorites');
-        var template = this.attrs.nolabel ? '<a href="#"><i class="fa %s" title="%s" aria-label="%s" role="img"></i></a>' : '<a href="#"><i class="fa %s" role="img" aria-label="%s"></i> %s</a>';
-        this.$el.empty().append(_.str.sprintf(template, this.value ? 'fa-star' : 'fa-star-o', tip, tip));
+        var template = this.attrs.nolabel ? '<a href="#"><i class="%s" title="%s" aria-label="%s" role="img"></i></a>' : '<a href="#"><i class="%s" role="img" aria-label="%s"></i> %s</a>';
+        this.$el.empty().append(_.str.sprintf(template, this.value ? 'fas fa-star' : 'far fa-star', tip, tip));
     },
 
     //--------------------------------------------------------------------------

@@ -65,11 +65,10 @@ return AbstractModel.extend({
         }
 
         var isDateEvent = this.fields[this.mapping.date_start].type === 'date';
-        var keepRecordTime = !this.mapping.all_day || (this.data.scale === 'month' && event.record && !event.record[this.mapping.all_day]);
         // An "allDay" event without the "all_day" option is not considered
         // as a 24h day. It's just a part of the day (by default: 7h-19h).
         if (event.allDay) {
-            if (keepRecordTime && !isDateEvent) {
+            if (!this.mapping.all_day && !isDateEvent) {
                 if (event.r_start) {
                     start.hours(event.r_start.hours())
                          .minutes(event.r_start.minutes())
@@ -95,7 +94,7 @@ return AbstractModel.extend({
         if (this.mapping.all_day) {
             if (event.record) {
                 data[this.mapping.all_day] =
-                    (this.data.scale !== 'month' && event.allDay) ||
+                    (this.scale !== 'month' && event.allDay) ||
                     event.record[this.mapping.all_day] &&
                     end.diff(start) < 10 ||
                     false;
@@ -708,8 +707,8 @@ return AbstractModel.extend({
             'record': evt,
             'start': date_start,
             'end': date_stop,
-            'r_start': date_start,
-            'r_end': date_stop,
+            'r_start': date_start.clone(),
+            'r_end': date_stop.clone(),
             'title': the_title,
             'allDay': all_day,
             'id': evt.id,
@@ -722,12 +721,13 @@ return AbstractModel.extend({
         } else if (this.data.scale === 'month' && this.fields[this.mapping.date_start].type !== 'date') {
             // In month, FullCalendar gives the end day as the
             // next day at midnight (instead of 23h59).
-            r.end = date_stop.clone().add(1, 'days').startOf('day').format('YYYY-MM-DD');
-            r.start = date_start.clone().format('YYYY-MM-DD');
+            date_stop.add(1, 'days');
 
             // allow to resize in month mode
             r.reset_allday = r.allDay;
             r.allDay = true;
+            r.start = date_start.format('YYYY-MM-DD');
+            r.end = date_stop.startOf('day').format('YYYY-MM-DD');
         }
 
         return r;

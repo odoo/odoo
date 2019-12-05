@@ -1,20 +1,11 @@
 # -*- coding: utf-8 -*-
+
 from odoo import http
 from odoo.http import request
 from odoo.addons.web.controllers.main import _serialize_exception
 from odoo.tools import html_escape
 
 import json
-
-
-class BarcodeController(http.Controller):
-
-    @http.route(['/stock/barcode/'], type='http', auth='user')
-    def a(self, **k):
-        if not request.session.uid:
-            return http.local_redirect('/web/login?redirect=/stock/barcode/')
-
-        return request.render('stock.barcode_index')
 
 
 class StockReportController(http.Controller):

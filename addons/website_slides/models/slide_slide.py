@@ -8,6 +8,7 @@ import re
 import requests
 import PyPDF2
 
+from dateutil.relativedelta import relativedelta
 from PIL import Image
 from werkzeug import urls
 
@@ -123,6 +124,7 @@ class Slide(models.Model):
     channel_id = fields.Many2one('slide.channel', string="Course", required=True)
     tag_ids = fields.Many2many('slide.tag', 'rel_slide_tag', 'slide_id', 'tag_id', string='Tags')
     is_preview = fields.Boolean('Allow Preview', default=False, help="The course is accessible by anyone : the users don't need to join the channel to access the content of the course.")
+    is_new_slide = fields.Boolean('Is New Slide', compute='_compute_is_new_slide')
     completion_time = fields.Float('Duration', digits=(10, 4), help="The estimated completion time for this slide")
     # Categories
     is_category = fields.Boolean('Is a category', default=False)
@@ -188,6 +190,11 @@ class Slide(models.Model):
     _sql_constraints = [
         ('exclusion_html_content_and_url', "CHECK(html_content IS NULL OR url IS NULL)", "A slide is either filled with a document url or HTML content. Not both.")
     ]
+
+    @api.depends('date_published', 'is_published')
+    def _compute_is_new_slide(self):
+        for slide in self:
+            slide.is_new_slide = slide.date_published > fields.Datetime.now() - relativedelta(days=7) if slide.is_published else False
 
     @api.depends('channel_id.slide_ids.is_category', 'channel_id.slide_ids.sequence')
     def _compute_category_id(self):
@@ -260,7 +267,7 @@ class Slide(models.Model):
         for slide in self:
             slide.slide_views = mapped_data.get(slide.id, 0)
 
-    @api.depends('slide_ids.slide_type', 'slide_ids.is_published', 'slide_ids.is_category')
+    @api.depends('slide_ids.sequence', 'slide_ids.slide_type', 'slide_ids.is_published', 'slide_ids.is_category')
     def _compute_slides_statistics(self):
         # Do not use dict.fromkeys(self.ids, dict()) otherwise it will use the same dictionnary for all keys.
         # Therefore, when updating the dict of one key, it updates the dict of all keys.
@@ -361,9 +368,6 @@ class Slide(models.Model):
                 else:
                     url = '%s/slides/slide/%s' % (base_url, slug(slide))
                 slide.website_url = url
-
-    def get_backend_menu_id(self):
-        return self.env.ref('website_slides.website_slides_menu_root').id
 
     @api.depends('channel_id.can_publish')
     def _compute_can_publish(self):
@@ -479,7 +483,7 @@ class Slide(models.Model):
             slide.channel_id.with_context(mail_create_nosubscribe=True).message_post(
                 subject=subject,
                 body=html_body,
-                subtype='website_slides.mt_channel_slide_published',
+                subtype_xmlid='website_slides.mt_channel_slide_published',
                 email_layout_xmlid='mail.mail_notification_light',
             )
         return True
@@ -498,10 +502,18 @@ class Slide(models.Model):
         mail_ids = []
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for record in self:
+            template = self.channel_id.share_template_id.with_context(
+                user=self.env.user,
+                email=email,
+                base_url=base_url,
+                fullscreen=fullscreen
+            )
+            email_values = {'email_to': email}
             if self.env.user.has_group('base.group_portal'):
-                mail_ids.append(self.channel_id.share_template_id.with_context(user=self.env.user, email=email, base_url=base_url, fullscreen=fullscreen).sudo().send_mail(record.id, notif_layout='mail.mail_notification_light', email_values={'email_from': self.env['res.company'].catchall or self.env['res.company'].email, 'email_to': email}))
-            else:
-                mail_ids.append(self.channel_id.share_template_id.with_context(user=self.env.user, email=email, base_url=base_url, fullscreen=fullscreen).send_mail(record.id, notif_layout='mail.mail_notification_light', email_values={'email_to': email}))
+                template = template.sudo()
+                email_values['email_from'] = self.env.company.catchall_formatted or self.env.company.email_formatted
+
+            mail_ids.append(template.send_mail(record.id, notif_layout='mail.mail_notification_light', email_values=email_values))
         return mail_ids
 
     def action_like(self):
@@ -806,3 +818,10 @@ class Slide(models.Model):
         res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = self.env['website'].image_url(self, 'image_1024')
         res['default_meta_description'] = self.description
         return res
+
+    # ---------------------------------------------------------
+    # Data / Misc
+    # ---------------------------------------------------------
+
+    def get_backend_menu_id(self):
+        return self.env.ref('website_slides.website_slides_menu_root').id

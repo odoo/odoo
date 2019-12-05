@@ -509,19 +509,19 @@ class HomeStaticTemplateHelpers(object):
                 # After several performance tests, we found out that deepcopy is the most efficient
                 # solution in this case (compared with copy, xpath with '.' and stringifying).
                 parent_tree = copy.deepcopy(self.template_dict[parent_addon][parent_name])
-                parent_tag = parent_tree.tag
-                # replace temporarily the parent tag so it is never the target of the inheritance
-                parent_tree.tag = 't'
+
                 xpaths = list(template_tree)
                 if self.debug and inherit_mode == self.EXTENSION_MODE:
                     for xpath in xpaths:
                         xpath.insert(0, etree.Comment(" Modified by %s from %s " % (template_name, addon)))
+                elif inherit_mode == self.PRIMARY_MODE:
+                    parent_tree.tag = template_tree.tag
                 inherited_template = apply_inheritance_specs(parent_tree, xpaths)
-                inherited_template.tag = parent_tag
 
                 if inherit_mode == self.PRIMARY_MODE:  # New template_tree: A' = B(A)
-                    inherited_template.set(self.NAME_TEMPLATE_DIRECTIVE, template_name)
-                    inherited_template.set(self.STATIC_INHERIT_DIRECTIVE, template_tree.attrib[self.STATIC_INHERIT_DIRECTIVE])
+                    for attr_name, attr_val in template_tree.attrib.items():
+                        if attr_name not in ('t-inherit', 't-inherit-mode'):
+                            inherited_template.set(attr_name, attr_val)
                     if self.debug:
                         self._remove_inheritance_comments(inherited_template)
                     self.template_dict[addon][template_name] = inherited_template

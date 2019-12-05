@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.sms.tests import common as sms_common
 from odoo.addons.test_mail_full.tests import common as test_mail_full_common
 
 
-class TestServerAction(test_mail_full_common.BaseFunctionalTest, sms_common.MockSMS, test_mail_full_common.TestRecipients):
+class TestServerAction(test_mail_full_common.TestSMSCommon, test_mail_full_common.TestRecipients):
 
     @classmethod
     def setUpClass(cls):
@@ -34,7 +33,7 @@ class TestServerAction(test_mail_full_common.BaseFunctionalTest, sms_common.Mock
             'active_ids': (self.test_record | self.test_record_2).ids,
         }
 
-        with self.sudo('employee'), self.mockSMSGateway():
+        with self.with_user('employee'), self.mockSMSGateway():
             self.action.with_user(self.env.user).with_context(**context).run()
 
         self.assertSMSOutgoing(self.test_record.customer_id, None, 'Dear %s this is an SMS.' % self.test_record.display_name)
@@ -46,7 +45,7 @@ class TestServerAction(test_mail_full_common.BaseFunctionalTest, sms_common.Mock
             'active_id': self.test_record.id,
         }
 
-        with self.sudo('employee'), self.mockSMSGateway():
+        with self.with_user('employee'), self.mockSMSGateway():
             self.action.with_user(self.env.user).with_context(**context).run()
         self.assertSMSOutgoing(self.test_record.customer_id, None, 'Dear %s this is an SMS.' % self.test_record.display_name)
 
@@ -57,7 +56,7 @@ class TestServerAction(test_mail_full_common.BaseFunctionalTest, sms_common.Mock
             'active_ids': (self.test_record | self.test_record_2).ids,
         }
 
-        with self.sudo('employee'), self.mockSMSGateway():
+        with self.with_user('employee'), self.mockSMSGateway():
             self.action.with_user(self.env.user).with_context(**context).run()
 
         self.assertSMSOutgoing(self.test_record.customer_id, None, 'Dear %s this is an SMS.' % self.test_record.display_name)

@@ -3,40 +3,27 @@
 
 import datetime
 import logging
-import re
 import uuid
+
+from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
-from dateutil.relativedelta import relativedelta
-
-email_validator = re.compile(r"[^@]+@[^@]+\.[^@]+")
 _logger = logging.getLogger(__name__)
-
-
-def dict_keys_startswith(dictionary, string):
-    """Returns a dictionary containing the elements of <dict> whose keys start with <string>.
-        .. note::
-            This function uses dictionary comprehensions (Python >= 2.7)
-    """
-    return {k: v for k, v in dictionary.items() if k.startswith(string)}
 
 
 class SurveyUserInput(models.Model):
     """ Metadata for a set of one user's answers to a particular survey """
-
     _name = "survey.user_input"
     _rec_name = 'survey_id'
     _description = 'Survey User Input'
 
-    # description
+    # answer description
     survey_id = fields.Many2one('survey.survey', string='Survey', required=True, readonly=True, ondelete='cascade')
     scoring_type = fields.Selection(string="Scoring", related="survey_id.scoring_type")
-    is_attempts_limited = fields.Boolean("Limited number of attempts", related='survey_id.is_attempts_limited')
-    attempts_limit = fields.Integer("Number of attempts", related='survey_id.attempts_limit')
     start_datetime = fields.Datetime('Start date and time', readonly=True)
-    is_time_limit_reached = fields.Boolean("Is time limit reached?", compute='_compute_is_time_limit_reached')
+    deadline = fields.Datetime('Deadline', help="Datetime until customer can open the survey and submit answers")
     input_type = fields.Selection([
         ('manually', 'Manual'), ('link', 'Invitation')],
         string='Answer Type', default='manually', required=True, readonly=True)
@@ -45,24 +32,26 @@ class SurveyUserInput(models.Model):
         ('skip', 'Partially completed'),
         ('done', 'Completed')], string='Status', default='new', readonly=True)
     test_entry = fields.Boolean(readonly=True)
-    # identification and access
+    last_displayed_page_id = fields.Many2one('survey.question', string='Last displayed question/page')
+    # attempts management
+    is_attempts_limited = fields.Boolean("Limited number of attempts", related='survey_id.is_attempts_limited')
+    attempts_limit = fields.Integer("Number of attempts", related='survey_id.attempts_limit')
+    attempt_number = fields.Integer("Attempt n°", compute='_compute_attempt_number')
+    is_time_limit_reached = fields.Boolean("Is time limit reached?", compute='_compute_is_time_limit_reached')
+    # identification / access
     token = fields.Char('Identification token', default=lambda self: str(uuid.uuid4()), readonly=True, required=True, copy=False)
-    # no unique constraint, as it identifies a pool of attempts
-    invite_token = fields.Char('Invite token', readonly=True, copy=False)
+    invite_token = fields.Char('Invite token', readonly=True, copy=False)  # no unique constraint, as it identifies a pool of attempts
     partner_id = fields.Many2one('res.partner', string='Partner', readonly=True)
     email = fields.Char('E-mail', readonly=True)
-    attempt_number = fields.Integer("Attempt n°", compute='_compute_attempt_number')
-
-    # Displaying data
-    last_displayed_page_id = fields.Many2one('survey.question', string='Last displayed question/page')
-    # answers
+    # questions / answers
     user_input_line_ids = fields.One2many('survey.user_input_line', 'user_input_id', string='Answers', copy=True)
-    # Pre-defined questions
     question_ids = fields.Many2many('survey.question', string='Predefined Questions', readonly=True)
-    deadline = fields.Datetime('Deadline', help="Datetime until customer can open the survey and submit answers")
-    # Stored for performance reasons while displaying results page
-    quizz_score = fields.Float("Score (%)", compute="_compute_quizz_score", store=True, compute_sudo=True)
-    quizz_passed = fields.Boolean('Quizz Passed', compute='_compute_quizz_passed', store=True, compute_sudo=True)
+    quizz_score = fields.Float("Score (%)", compute="_compute_quizz_score", store=True, compute_sudo=True)  # stored for perf reasons
+    quizz_passed = fields.Boolean('Quizz Passed', compute='_compute_quizz_passed', store=True, compute_sudo=True)  # stored for perf reasons
+
+    _sql_constraints = [
+        ('unique_token', 'UNIQUE (token)', 'A token must be unique!'),
+    ]
 
     @api.depends('user_input_line_ids.answer_score', 'user_input_line_ids.question_id')
     def _compute_quizz_score(self):
@@ -82,49 +71,6 @@ class SurveyUserInput(models.Model):
     def _compute_quizz_passed(self):
         for user_input in self:
             user_input.quizz_passed = user_input.quizz_score >= user_input.survey_id.passing_score
-
-    _sql_constraints = [
-        ('unique_token', 'UNIQUE (token)', 'A token must be unique!'),
-    ]
-
-    @api.model
-    def do_clean_emptys(self):
-        """ Remove empty user inputs that have been created manually
-            (used as a cronjob declared in data/survey_cron.xml)
-        """
-        an_hour_ago = fields.Datetime.to_string(datetime.datetime.now() - datetime.timedelta(hours=1))
-        self.search([('input_type', '=', 'manually'),
-                     ('state', '=', 'new'),
-                     ('create_date', '<', an_hour_ago)]).unlink()
-
-    @api.model
-    def _generate_invite_token(self):
-        return str(uuid.uuid4())
-
-    def action_resend(self):
-        partners = self.env['res.partner']
-        emails = []
-        for user_answer in self:
-            if user_answer.partner_id:
-                partners |= user_answer.partner_id
-            elif user_answer.email:
-                emails.append(user_answer.email)
-
-        return self.survey_id.with_context(
-            default_existing_mode='resend',
-            default_partner_ids=partners.ids,
-            default_emails=','.join(emails)
-        ).action_send_survey()
-
-    def action_print_answers(self):
-        """ Open the website page with the survey form """
-        self.ensure_one()
-        return {
-            'type': 'ir.actions.act_url',
-            'name': "View Answers",
-            'target': 'self',
-            'url': '/survey/print/%s?answer_token=%s' % (self.survey_id.access_token, self.token)
-        }
 
     @api.depends('start_datetime', 'survey_id.is_time_limited', 'survey_id.time_limit')
     def _compute_is_time_limit_reached(self):
@@ -166,6 +112,45 @@ class SurveyUserInput(models.Model):
                         break
 
                 user_input.attempt_number = attempt_number
+
+    @api.model
+    def do_clean_emptys(self):
+        """ Remove empty user inputs that have been created manually
+            (used as a cronjob declared in data/survey_cron.xml)
+        """
+        an_hour_ago = fields.Datetime.to_string(datetime.datetime.now() - datetime.timedelta(hours=1))
+        self.search([('input_type', '=', 'manually'),
+                     ('state', '=', 'new'),
+                     ('create_date', '<', an_hour_ago)]).unlink()
+
+    def action_resend(self):
+        partners = self.env['res.partner']
+        emails = []
+        for user_answer in self:
+            if user_answer.partner_id:
+                partners |= user_answer.partner_id
+            elif user_answer.email:
+                emails.append(user_answer.email)
+
+        return self.survey_id.with_context(
+            default_existing_mode='resend',
+            default_partner_ids=partners.ids,
+            default_emails=','.join(emails)
+        ).action_send_survey()
+
+    def action_print_answers(self):
+        """ Open the website page with the survey form """
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_url',
+            'name': "View Answers",
+            'target': 'self',
+            'url': '/survey/print/%s?answer_token=%s' % (self.survey_id.access_token, self.token)
+        }
+
+    @api.model
+    def _generate_invite_token(self):
+        return str(uuid.uuid4())
 
     def _mark_done(self):
         """ This method will:

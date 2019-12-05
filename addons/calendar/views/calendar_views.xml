@@ -203,7 +203,7 @@
                         </page>
 
                         <page name="page_invitations" string="Invitations" groups="base.group_no_one">
-                            <button name="action_sendmail" type="object" string="Send mail" icon="fa-envelope" class="oe_link"/>
+                            <button name="action_sendmail" type="object" string="Send mail" icon="far fa-envelope" class="oe_link"/>
                             <field name="attendee_ids" widget="one2many" mode="tree,kanban">
                                 <tree string="Invitation details" editable="top" create="false" delete="false">
                                     <field name="partner_id" />
@@ -265,6 +265,7 @@
                 <field name="attendee_status"/>
                 <field name="partner_id"/>
                 <field name="partner_ids" widget="many2many_tags_avatar" write_model="calendar.contacts" write_field="partner_id" avatar_field="image_128"/>
+                <field name="is_highlighted" invisible="1"/>
                 <field name="description"/>
             </calendar>
         </field>

@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
+        <record model="gamification.badge" id="vendor_certification_badge">
+            <field name="name">MyCompany Vendor</field>
+            <field name="description">Congratulation, you are now official vendor of MyCompany</field>
+            <field name="rule_auth">nobody</field>
+            <field name="image_1920" type="base64" file="gamification/static/img/badge_good_job-image.png"/>
+        </record>
+
         <!-- Odoo Vendor Certification -->
         <record model="survey.survey" id="vendor_certification">
             <field name="title">MyCompany Vendor Certification</field>
@@ -18,6 +25,8 @@
             <field name="attempts_limit">2</field>
             <field name="description">&lt;p&gt;Test your vendor skills!&lt;/p&gt;</field>
             <field name="thank_you_message">&lt;p&gt;&lt;/p&gt;</field>
+            <field name="certification_give_badge">True</field>
+            <field name="certification_badge_id" ref="vendor_certification_badge"/>
         </record>
         <!-- Page 1 -->
         <record model="survey.question" id="vendor_certification_page_1">

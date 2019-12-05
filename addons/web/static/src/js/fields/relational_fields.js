@@ -241,7 +241,7 @@ var FieldMany2One = AbstractField.extend({
     _addAutocompleteSource: function (method, params) {
         this._autocompleteSources.push({
             method: method,
-            placeholder: (params.placeholder ? _t(params.placeholder) : _t('Loading...')) + '<i class="fa fa-spinner fa-spin pull-right"></i>' ,
+            placeholder: (params.placeholder ? _t(params.placeholder) : _t('Loading...')) + '<i class="fa fa-spinner fa-spin fa-pull-right"></i>' ,
             validation: params.validation,
             loading: false,
             order: params.order || 999
@@ -1108,7 +1108,7 @@ var FieldX2Many = AbstractField.extend({
             // 'UPDATE' commands with no data can be ignored: they occur in
             // one2manys when the record is updated from a dialog and in this
             // case, we can re-render the whole subview.
-            if (command.operation === 'UPDATE' && command.data) {
+            if (command && command.operation === 'UPDATE' && command.data) {
                 var state = record.data[this.name];
                 var fieldNames = state.getFieldNames();
                 this._reset(record, ev);
@@ -1714,7 +1714,7 @@ var FieldOne2Many = FieldX2Many.extend({
         var self = this;
         return this._super.apply(this, arguments).then(function () {
             if (ev && ev.target === self && ev.data.changes && self.view.arch.tag === 'tree') {
-                if (ev.data.changes[self.name].operation === 'CREATE') {
+                if (ev.data.changes[self.name] && ev.data.changes[self.name].operation === 'CREATE') {
                     var index = 0;
                     if (self.editable !== 'top') {
                         index = self.value.data.length - 1;
@@ -2756,6 +2756,13 @@ var FieldSelection = AbstractField.extend({
         var required = this.attrs.modifiersValue && this.attrs.modifiersValue.required;
         for (var i = 0 ; i < this.values.length ; i++) {
             var disabled = required && this.values[i][0] === false;
+            console.log(this.values);
+            console.log(i);
+            console.log(this.values[i])
+            // console.log(this.values[i][0])
+            if (this.values[i] == undefined) {
+                debugger
+            }
 
             this.$el.append($('<option/>', {
                 value: JSON.stringify(this.values[i][0]),

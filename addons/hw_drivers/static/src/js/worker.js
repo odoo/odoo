@@ -8,7 +8,7 @@
         function longpolling() {
             $.ajax({
                 type: 'POST',
-                url: window.location.origin+'/point_of_sale/get_serialized_order',
+                url: window.location.origin + '/point_of_sale/get_serialized_order/' + display_identifier,
                 dataType: 'json',
                 beforeSend: function(xhr){xhr.setRequestHeader('Content-Type', 'application/json');},
                 data: JSON.stringify({jsonrpc: '2.0'}),

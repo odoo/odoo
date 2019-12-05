@@ -314,4 +314,6 @@ class SendSMS(models.TransientModel):
             records = self.env[self.res_model].browse(self.res_id)
         else:
             records = self.env[self.res_model].browse(literal_eval(self.res_ids or '[]'))
+
+        records = records.with_context(mail_notify_author=True)
         return records

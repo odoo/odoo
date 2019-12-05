@@ -147,32 +147,10 @@ var AbstractThreadWindow = Widget.extend({
      * @returns {mail.model.Thread|undefined}
      */
     getThread: function () {
-        if (!this.hasThread) {
+        if (!this.hasThread()) {
             return undefined;
         }
         return this._thread;
-    },
-    /**
-    *Get out of office info
-    *
-    * @returns {string|undefined}
-    */
-    getOutOfOfficeInfo: function () {
-        if (!this.hasThread()) {
-            return undefined;
-        }
-        return this._thread.getOutOfOfficeInfo();
-    },
-    /**
-     * Get out of office user text
-     *
-     * @returns {string|undefined}
-     */
-    getOutOfOfficeMessage: function () {
-        if (!this.hasThread()) {
-            return undefined;
-        }
-        return this._thread.getOutOfOfficeMessage();
     },
     /**
      * Get the status of the thread, such as the im status of a DM chat

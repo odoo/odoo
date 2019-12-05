@@ -25,7 +25,7 @@
                                 <div class="btn-group btn-group-toggle row" data-toggle="buttons">
                                     <t t-foreach="rate_names" t-as="rate_name">
                                         <label t-attf-class="col-xs-12 btn o_rating_label shadow-none {{rate == rate_name and 'active' or ''}}">
-                                            <input type="radio" name="rate" t-attf-id="rate_{{rate_name}}" t-att-value="rate_name"/>
+                                            <input type="radio" name="rate" t-attf-id="rate_{{rate_name}}" t-att-value="rate_name" t-att-checked="rate == rate_name"/>
                                             <a class="o_rating" href="#">
                                                 <img t-attf-src='/rating/static/src/img/rating_#{rate_name}.png' t-att-alt="rate_name_value" t-att-title="rate_name_value"/>
                                             </a>

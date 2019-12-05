@@ -187,7 +187,7 @@ class StockMove(models.Model):
         for move in self:
             move.display_assign_serial = (
                 move.has_tracking == 'serial' and
-                move.state in ('partially_available', 'assigned') and
+                move.state in ('partially_available', 'assigned', 'confirmed') and
                 move.picking_type_id.use_create_lots and
                 not move.picking_type_id.use_existing_lots and
                 not move.picking_type_id.show_reserved
@@ -692,7 +692,7 @@ class StockMove(models.Model):
     @api.model
     def _prepare_merge_moves_distinct_fields(self):
         return [
-            'product_id', 'price_unit', 'procure_method',
+            'product_id', 'price_unit', 'procure_method', 'location_id', 'location_dest_id',
             'product_uom', 'restrict_partner_id', 'scrapped', 'origin_returned_move_id',
             'package_level_id', 'propagate_cancel', 'propagate_date', 'propagate_date_minimum_delta',
             'delay_alert',
@@ -702,7 +702,7 @@ class StockMove(models.Model):
     def _prepare_merge_move_sort_method(self, move):
         move.ensure_one()
         return [
-            move.product_id.id, move.price_unit, move.procure_method,
+            move.product_id.id, move.price_unit, move.procure_method, move.location_id, move.location_dest_id,
             move.product_uom.id, move.restrict_partner_id.id, move.scrapped, move.origin_returned_move_id.id,
             move.package_level_id.id, move.propagate_cancel, move.propagate_date, move.propagate_date_minimum_delta,
             move.delay_alert,
@@ -1035,10 +1035,6 @@ class StockMove(models.Model):
             )
         return vals
 
-    def _update_next_serial_count(self):
-        self.next_serial = None
-        self.next_serial_count = len(self.move_line_ids)
-
     def _update_reserved_quantity(self, need, available_quantity, location_id, lot_id=None, package_id=None, owner_id=None, strict=True):
         """ Create or update move lines.
         """
@@ -1223,7 +1219,7 @@ class StockMove(models.Model):
                             break
                         partially_available_moves |= move
             if move.product_id.tracking == 'serial':
-                move._update_next_serial_count()
+                move.next_serial_count = move.product_uom_qty
 
         self.env['stock.move.line'].create(move_line_vals_list)
         partially_available_moves.write({'state': 'partially_available'})
@@ -1232,7 +1228,7 @@ class StockMove(models.Model):
 
     def _action_cancel(self):
         if any(move.state == 'done' and not move.scrapped for move in self):
-            raise UserError(_('You cannot cancel a stock move that has been set to \'Done\'.'))
+            raise UserError(_('You cannot cancel a stock move that has been set to \'Done\'. Create a return in order to reverse the moves which took place.'))
         moves_to_cancel = self.filtered(lambda m: m.state != 'cancel')
         # self cannot contain moves that are either cancelled or done, therefore we can safely
         # unlink all associated move_line_ids

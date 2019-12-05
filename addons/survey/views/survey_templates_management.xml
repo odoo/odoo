@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+
+    <!-- ============================================================ -->
+    <!--                Errors / Corner case management               -->
+    <!-- ============================================================ -->
+
+    <!-- Forbidden error messages-->
+    <template id="survey_403_page" name="Survey: custom 403 page">
+        <t t-call="survey.layout">
+            <div id="wrap">
+                <div class="container">
+                    <h1 class="mt32">403: Forbidden</h1>
+                    <p>The page you were looking for could not be authorized.</p>
+                    <p>Maybe you were looking for
+                        <a t-attf-href="/web#view_type=form&amp;model=survey.survey&amp;id=#{survey.id}&amp;action=survey.action_survey_form">this page</a> ?
+                    </p>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Error: void survey -->
+    <template id="survey_void_content" name="Survey: void content">
+        <t t-call="survey.layout">
+            <div class="wrap">
+                <div class="container">
+                    <t t-if="answer.test_entry" t-call="survey.survey_button_form_view" />
+                    <div class="jumbotron mt32">
+                        <h1><span t-field="survey.title"/> survey is void</h1>
+                        <p>Please make sure you have at least one question in your survey. You also need at least one section if you chose the "Page per section" layout.<br />
+                            <a t-att-href="'/web#view_type=form&amp;model=survey.survey&amp;id=%s&amp;action=survey.action_survey_form' % survey.id"
+                                class="btn btn-secondary"
+                                groups="survey.group_survey_manager">Edit in backend</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Error: auth required  -->
+    <template id="survey_auth_required" name="Survey: login required">
+        <t t-call="survey.layout">
+            <div class="wrap">
+                <div class="container">
+                    <div class="jumbotron mt32">
+                        <h1>Login required</h1>
+                        <p>This survey is open only to registered people. Please
+                            <a t-att-href="redirect_url">log in</a>.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Expired (closed) survey page -->
+    <template id="survey_closed_expired" name="Survey: expired">
+        <t t-call="survey.layout">
+            <div class="wrap">
+                <div class="container">
+                    <div class="jumbotron mt32">
+                        <h1><span t-field="survey.title"/> survey expired</h1>
+                        <p>This survey is now closed. Thank you for your interest !</p>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Finished (taken and finished) survey page -->
+    <template id="survey_closed_finished" name="Survey: finished">
+        <t t-call="survey.layout">
+            <div class="wrap">
+                <div class="container">
+                    <t t-if="answer.test_entry" t-call="survey.survey_button_form_view" />
+                    <div class="jumbotron mt32">
+                        <h1>Thank you!</h1>
+                        <div t-field="survey.thank_you_message" class="oe_no_empty" />
+                        <div class="row">
+                            <div class="col">
+                                <t t-if="survey.scoring_type != 'no_scoring'">
+                                    <div>You scored <t t-esc="answer.quizz_score" />%</div>
+                                    <t t-if="answer.quizz_passed">
+                                        <div>Congratulations, you have passed the test!</div>
+
+                                        <div t-if="survey.certificate" class="mt16 mb16">
+                                            <a role="button"
+                                                class="btn btn-primary btn-lg"
+                                                t-att-href="'/survey/%s/get_certification' % survey.id">
+                                                <i class="fa fa-fw fa-trophy" role="img" aria-label="Download certification" title="Download certification"/>
+                                                Download certification
+                                            </a>
+                                        </div>
+                                    </t>
+                                    <t t-else="">
+                                        <div>Unfortunately, you have failed the test.</div>
+                                    </t>
+                                </t>
+                                <t t-call="survey.survey_button_retake"/>
+                                <div t-if="survey.scoring_type != 'scoring_without_answers'">
+                                    If you wish, you can <a t-att-href="'/survey/print/%s?answer_token=%s&amp;review=True' % (survey.access_token, answer.token)">review your answers</a>
+                                </div>
+                            </div>
+                            <div class="col-6 text-center" t-if="survey.certification_give_badge and answer.quizz_passed">
+                                <img t-att-src="'/web/image/gamification.badge/%s/image_128' % survey.certification_badge_id.id"/>
+                                <div>You received the badge <span class="font-weight-bold" t-esc="survey.certification_badge_id.name"/>!</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container o_survey_result p-4" t-if="graph_data">
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active survey_graph" t-att-data-quizz_score="answer.quizz_score" t-att-id="'graph_question_%d' % answer.id" t-att-data-question_id="answer.id" data-graph-type="doughnut" t-att-data-graph-data="graph_data">
+                            <canvas id="doughnut_chart"></canvas>
+                            <span class="o_overall_performance"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="oe_structure"/>
+            </div>
+        </t>
+    </template>
+
+    <!-- ============================================================ -->
+    <!--                       Tools / Utilities                      -->
+    <!-- ============================================================ -->
+
+    <template id="survey_button_form_view" name="Survey: back to form view">
+        <div groups="survey.group_survey_manager" t-ignore="true" class="alert alert-info alert-dismissible rounded-0 mt16 fade show d-print-none css_editable_mode_hidden">
+            <div t-ignore="true" class="text-center">
+                <a t-attf-href="/web#view_type=form&amp;model=survey.survey&amp;id=#{survey.id}&amp;action=survey.action_survey_form"><i class="fa fa-fw fa-arrow-right"/><span t-if="answer and answer.test_entry">This is a test survey. </span>Edit Survey.</a>
+            </div>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"> &#215; </button>
+        </div>
+    </template>
+
+    <template id="survey_button_retake" name="Survey: retake button">
+        <div>
+            <t t-if="not answer.quizz_passed">
+                <t t-if="survey.is_attempts_limited">
+                    <t t-set="attempts_left" t-value="survey._get_number_of_attempts_lefts(answer.partner_id, answer.email, answer.invite_token)" />
+                    <t t-if="attempts_left > 0">
+                        <p><span>Number of attemps left</span>: <span t-esc="attempts_left"></span></p>
+                        <p><a role="button" class="btn btn-primary btn-lg" t-att-href="'/survey/retry/%s/%s' % (survey.access_token, answer.token)">
+                        Retry</a></p>
+                    </t>
+                </t>
+                <t t-else="">
+                    <p><a role="button" class="btn btn-primary btn-lg" t-att-href="'/survey/retry/%s/%s' % (survey.access_token, answer.token)">
+                        Retry</a></p>
+                </t>
+            </t>
+        </div>
+    </template>
+
+</data>
+</odoo>

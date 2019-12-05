@@ -103,7 +103,7 @@
                                         <span t-esc="record.move_id.value"/>
                                     </strong>
                                     <strong class="col-6 text-right">
-                                        <i class="fa fa-clock-o" aria-label="Date" role="img" title="Date"/><field name="date_maturity"/>
+                                        <i class="far fa-clock" aria-label="Date" role="img" title="Date"/><field name="date_maturity"/>
                                     </strong>
                                     <div class="col-10">
                                         <span t-esc="record.name.value"/>
@@ -196,10 +196,10 @@
                            domain="[('applicability', '=', 'taxes')]"/>
                     <groupby name="move_id">
                         <field name="state" invisible="1"/>
-                        <button name="edit" type="edit" icon="fa-edit" title="Edit"/>
+                        <button name="edit" type="edit" icon="fas fa-edit" title="Edit"/>
                         <button name="action_post" states="draft" icon="fa-check" title="Post" type="object" groups="account.group_account_invoice"/>
-                        <button name="%(action_view_account_move_reversal)d" states="posted" title="Reverse" icon="fa-refresh" type="action" groups="account.group_account_invoice"/>
-                        <button name="action_duplicate" icon="fa-files-o" title="Duplicate" type="object" groups="account.group_account_invoice"/>
+                        <button name="%(action_view_account_move_reversal)d" states="posted" title="Reverse" icon="fa-sync" type="action" groups="account.group_account_invoice"/>
+                        <button name="action_duplicate" icon="fa-copy" title="Duplicate" type="object" groups="account.group_account_invoice"/>
                     </groupby>
                 </tree>
             </field>
@@ -431,7 +431,7 @@
                                         <strong><span><field name="journal_id"/></span></strong>
                                     </div>
                                     <div class="col-6 text-right">
-                                        <strong><i class="fa fa-clock-o" aria-label="Date" role="img" title="Date"/> <t t-esc="record.date.value"/></strong>
+                                        <strong><i class="far fa-clock" aria-label="Date" role="img" title="Date"/> <t t-esc="record.date.value"/></strong>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -717,6 +717,7 @@
                                         <field name="account_internal_type" invisible="1"/>
                                     </tree>
                                     <kanban class="o_kanban_mobile">
+                                        <!-- Displayed fields -->
                                         <field name="name"/>
                                         <field name="product_id"/>
                                         <field name="price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
@@ -769,6 +770,28 @@
                                                 </div>
                                             </t>
                                         </templates>
+
+                                        <!-- Others fields -->
+                                        <field name="partner_id" invisible="1"/>
+                                        <field name="amount_currency" invisible="1"/>
+                                        <field name="currency_id" invisible="1"/>
+                                        <field name="debit" invisible="1"/>
+                                        <field name="credit" invisible="1"/>
+                                        <field name="date" invisible="1"/>
+                                        <field name="date_maturity" invisible="1"/>
+
+                                        <field name="tax_line_id" invisible="1"/>
+                                        <field name="tax_repartition_line_id" invisible="1"/>
+                                        <field name="tag_ids" invisible="1"/>
+                                        <field name="tax_base_amount" invisible="1"/>
+                                        <field name="tax_exigible" invisible="1"/>
+                                        <field name="company_id" invisible="1"/>
+                                        <field name="company_currency_id" invisible="1"/>
+                                        <field name="recompute_tax_line" invisible="1" force_save="1"/>
+                                        <field name="display_type" force_save="1" invisible="1"/>
+                                        <field name="is_rounding_line" invisible="1"/>
+                                        <field name="exclude_from_invoice_tab" invisible="1"/>
+                                        <field name="account_internal_type" invisible="1"/>
                                     </kanban>
                                     <form>
                                         <sheet>
@@ -1274,7 +1297,7 @@
         </record>
 
         <record id="action_move_in_refund_type" model="ir.actions.act_window">
-            <field name="name">Refund</field>
+            <field name="name">Refunds</field>
             <field name="res_model">account.move</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="view_id" ref="view_invoice_tree"/>

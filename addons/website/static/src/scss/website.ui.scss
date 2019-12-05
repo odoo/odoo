@@ -34,7 +34,6 @@ body.o_connected_user {
     .o_menu_sections {
         .o_mobile_preview a {
             text-align: center;
-            font-size: 20px;
         }
     }
     .o_menu_systray {
@@ -52,7 +51,6 @@ body.o_connected_user {
 
         .o_mobile_preview a {
             text-align: center;
-            font-size: 20px;
         }
     }
     @include media-breakpoint-down(sm) {
@@ -135,7 +133,7 @@ body .modal {
                         font-weight: normal;
                         color: inherit;
 
-                        .fa {
+                        .fa, .far, .fas {
                             margin-left: $grid-gutter-width/2;
                         }
                     }
@@ -230,7 +228,8 @@ body .modal {
                         @include o-position-absolute(2px, 3px);
                         display: inline-block;
                         content: "\f00c";
-                        font-family: FontAwesome;
+                        font-family: 'Font Awesome 5 Free';
+                        font-weight: 900;
                         color: white;
                         font-size: 12px;
                     }
@@ -420,7 +419,7 @@ body .modal {
         padding: 0.45rem;
     }
     td {
-        > a.fa {
+        > a.fa, > a.far, > a.fas {
             margin-left: 5px;
             color: $o-brand-odoo;
         }

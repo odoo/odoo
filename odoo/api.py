@@ -148,7 +148,6 @@ def onchange(*args):
     .. code-block:: python
 
         return {
-            'domain': {'other_id': [('partner_id', '=', partner_id)]},
             'warning': {'title': "Warning", 'message': "What is this?", 'type': 'notification'},
         }
 

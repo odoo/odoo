@@ -380,13 +380,13 @@ img.o_we_custom_image {
                 margin-bottom: 0.3em;
             }
 
-            .fa {
+            .fa, .far, .fas {
                 @include o-position-absolute(0, $left: 0);
                 line-height: $line-height-base;
 
                 + span, + div {
                     display: block;
-                    // FontAwesome '.fa-fw' fixed-with + margin
+                    // 'Font Awesome 5 Free' '.fa-fw' fixed-with + margin
                     padding-left: 1.28571429em + 0.5em;
                 }
             }
@@ -522,6 +522,18 @@ form label {
 
         &:hover .o_portal_chatter_attachment_delete {
             opacity: 1;
+        }
+    }
+
+    .o_portal_message_internal_off {
+        .btn-danger {
+            display: none;
+        }
+    }
+
+    .o_portal_message_internal_on {
+        .btn-success {
+            display: none;
         }
     }
 }

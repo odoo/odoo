@@ -213,7 +213,7 @@ class Attendee(models.Model):
                 mail_ids.append(invitation_template.send_mail(attendee.id, email_values=email_values, notif_layout='mail.mail_notification_light'))
 
         if force_send and mail_ids:
-            res = self.env['mail.mail'].browse(mail_ids).send()
+            res = self.env['mail.mail'].sudo().browse(mail_ids).send()
 
         return res
 
@@ -226,7 +226,7 @@ class Attendee(models.Model):
         result = self.write({'state': 'accepted'})
         for attendee in self:
             if attendee.event_id:
-                attendee.event_id.message_post(body=_("%s has accepted invitation") % (attendee.common_name), subtype="calendar.subtype_invitation")
+                attendee.event_id.message_post(body=_("%s has accepted invitation") % (attendee.common_name), subtype_xmlid="calendar.subtype_invitation")
         return result
 
     def do_decline(self):
@@ -234,7 +234,7 @@ class Attendee(models.Model):
         res = self.write({'state': 'declined'})
         for attendee in self:
             if attendee.event_id:
-                attendee.event_id.message_post(body=_("%s has declined invitation") % (attendee.common_name), subtype="calendar.subtype_invitation")
+                attendee.event_id.message_post(body=_("%s has declined invitation") % (attendee.common_name), subtype_xmlid="calendar.subtype_invitation")
         return res
 
 
@@ -720,7 +720,7 @@ class Meeting(models.Model):
         if zallday:
             display_time = _("AllDay , %s") % (date_str)
         elif zduration < 24:
-            duration = date + timedelta(hours=zduration)
+            duration = date + timedelta(minutes=round(zduration*60))
             duration_time = to_text(duration.strftime(format_time))
             display_time = _(u"%s at (%s To %s) (%s)") % (
                 date_str,
@@ -757,6 +757,9 @@ class Meeting(models.Model):
                     event.is_highlighted = True
                 else:
                     event.is_highlighted = False
+        else:
+            for event in self:
+                event.is_highlighted = False
 
     name = fields.Char('Meeting Subject', required=True, states={'done': [('readonly', True)]})
     state = fields.Selection([('draft', 'Unconfirmed'), ('open', 'Confirmed')], string='Status', readonly=True, tracking=True, default='draft')
@@ -946,7 +949,11 @@ class Meeting(models.Model):
         if self.start_datetime:
             start = self.start_datetime
             self.start = self.start_datetime
-            self.stop = start + timedelta(hours=self.duration) - timedelta(seconds=1)
+            # Round the duration (in hours) to the minute to avoid weird situations where the event
+            # stops at 4:19:59, later displayed as 4:19.
+            self.stop = start + timedelta(minutes=round(self.duration * 60))
+            if self.allday:
+                self.stop -= timedelta(seconds=1)
 
     @api.onchange('start_date')
     def _onchange_start_date(self):

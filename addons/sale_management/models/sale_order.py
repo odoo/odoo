@@ -84,6 +84,8 @@ class SaleOrder(models.Model):
                             discount = 0
                         else:
                             price = line.price_unit
+                    elif line.price_unit:
+                        price = line.price_unit
 
                 else:
                     price = line.price_unit
@@ -96,8 +98,6 @@ class SaleOrder(models.Model):
                     'product_uom': line.product_uom_id.id,
                     'customer_lead': self._get_customer_lead(line.product_id.product_tmpl_id),
                 })
-                if self.pricelist_id:
-                    data.update(self.env['sale.order.line']._get_purchase_price(self.pricelist_id, line.product_id, line.product_uom_id, fields.Date.context_today(self)))
             order_lines.append((0, 0, data))
 
         self.order_line = order_lines
@@ -202,8 +202,6 @@ class SaleOrderOption(models.Model):
         if pricelist and product:
             partner_id = self.order_id.partner_id.id
             self.price_unit = pricelist.with_context(uom=self.uom_id.id).get_product_price(product, self.quantity, partner_id)
-        domain = {'uom_id': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
-        return {'domain': domain}
 
     def button_add_to_order(self):
         self.add_option_to_order()

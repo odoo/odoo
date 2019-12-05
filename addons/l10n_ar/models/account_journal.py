@@ -12,8 +12,11 @@ class AccountJournal(models.Model):
         selection='_get_l10n_ar_afip_pos_types_selection', string='AFIP POS System')
     l10n_ar_afip_pos_number = fields.Integer(
         'AFIP POS Number', help='This is the point of sale number assigned by AFIP in order to generate invoices')
+    company_partner = fields.Many2one('res.partner', related='company_id.partner_id')
     l10n_ar_afip_pos_partner_id = fields.Many2one(
-        'res.partner', 'AFIP POS Address', help='This is the address used for invoice reports of this POS')
+        'res.partner', 'AFIP POS Address', help='This is the address used for invoice reports of this POS',
+        domain="['|', ('id', '=', company_partner), '&', ('id', 'child_of', company_partner), ('type', '!=', 'contact')]"
+    )
     l10n_ar_sequence_ids = fields.One2many('ir.sequence', 'l10n_latam_journal_id', string="Sequences")
     l10n_ar_share_sequences = fields.Boolean(
         'Unified Book', help='Use same sequence for documents with the same letter')
@@ -174,13 +177,6 @@ class AccountJournal(models.Model):
     def _onchange_l10n_ar_afip_pos_system(self):
         """ On 'Pre-printed Invoice' the usual is to share sequences. On other types, do not share """
         self.l10n_ar_share_sequences = bool(self.l10n_ar_afip_pos_system == 'II_IM')
-
-    @api.onchange('company_id')
-    def _onchange_company_set_domain(self):
-        """ Will define the AFIP POS Address field domain taking into account the company configured in the journal """
-        company_partner = self.company_id.partner_id.id
-        return {'domain': {'l10n_ar_afip_pos_partner_id': [
-            '|', ('id', '=', company_partner), '&', ('id', 'child_of', company_partner), ('type', '!=', 'contact')]}}
 
     @api.onchange('l10n_ar_afip_pos_number', 'type')
     def _onchange_set_short_name(self):

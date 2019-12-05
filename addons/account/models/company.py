@@ -337,7 +337,7 @@ class ResCompany(models.Model):
                 opening_date = opening_date + relativedelta(years=-1)
 
             self.account_opening_move_id = self.env['account.move'].create({
-                'name': _('Opening Journal Entry'),
+                'ref': _('Opening Journal Entry'),
                 'company_id': self.id,
                 'journal_id': default_journal.id,
                 'date': opening_date,

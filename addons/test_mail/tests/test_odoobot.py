@@ -3,13 +3,13 @@
 
 from unittest.mock import patch
 
-from odoo.addons.test_mail.tests.common import BaseFunctionalTest, MockEmails, TestRecipients
-from odoo.tools import mute_logger
+from odoo.addons.test_mail.tests.common import TestMailCommon, TestRecipients
 from odoo.tests import tagged
+from odoo.tools import mute_logger
 
 
 @tagged("odoobot")
-class TestOdoobot(BaseFunctionalTest, MockEmails, TestRecipients):
+class TestOdoobot(TestMailCommon, TestRecipients):
 
     @classmethod
     def setUpClass(cls):
@@ -22,7 +22,7 @@ class TestOdoobot(BaseFunctionalTest, MockEmails, TestRecipients):
             'attachment_ids': [],
             'message_type': 'comment',
             'partner_ids': [],
-            'subtype': 'mail.mt_comment'
+            'subtype_xmlid': 'mail.mt_comment'
         }
         cls.odoobot_ping_body = '<a href="http://odoo.com/web#model=res.partner&amp;id=%s" class="o_mail_redirect" data-oe-id="%s" data-oe-model="res.partner" target="_blank">@OdooBot</a>' % (cls.odoobot.id, cls.odoobot.id)
         cls.test_record_employe = cls.test_record.with_user(cls.user_employee)

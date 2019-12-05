@@ -34,13 +34,13 @@ var DateWidget = Widget.extend({
             maxDate: moment({ y: 9999, M: 11, d: 31 }),
             useCurrent: false,
             icons: {
-                time: 'fa fa-clock-o',
-                date: 'fa fa-calendar',
+                time: 'far fa-clock',
+                date: 'far fa-calendar-alt',
                 up: 'fa fa-chevron-up',
                 down: 'fa fa-chevron-down',
                 previous: 'fa fa-chevron-left',
                 next: 'fa fa-chevron-right',
-                today: 'fa fa-calendar-check-o',
+                today: 'far fa-calendar-alt-check',
                 clear: 'fa fa-delete',
                 close: 'fa fa-check primary',
             },
@@ -207,7 +207,8 @@ var DateWidget = Widget.extend({
             this.$warning.attr('title', title);
             this.$input.after(this.$warning);
         }
-        if (currentDate && currentDate.isAfter(moment())) {
+        // Get rid of time and TZ crap for comparison
+        if (currentDate && currentDate.format('YYYY-MM-DD') > moment().format('YYYY-MM-DD')) {
             this.$warning.show();
         } else {
             this.$warning.hide();

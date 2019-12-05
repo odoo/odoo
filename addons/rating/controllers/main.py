@@ -29,7 +29,7 @@ class Rating(http.Controller):
 
     @http.route(['/rating/<string:token>/submit_feedback'], type="http", auth="public", methods=['post'], website=True)
     def submit_rating(self, token, **kwargs):
-        rate = kwargs.get('rate')
+        rate = int(kwargs.get('rate'))
         assert rate in (1, 5, 10), "Incorrect rating"
         rating = request.env['rating.rating'].sudo().search([('access_token', '=', token)])
         if not rating:

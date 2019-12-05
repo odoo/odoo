@@ -404,6 +404,7 @@ class WebsiteSale(http.Controller):
             'suggested_products': [],
         })
         if order:
+            order.order_line.filtered(lambda l: not l.product_id.active).unlink()
             _order = order
             if not request.env.context.get('pricelist'):
                 _order = order.with_context(pricelist=order.pricelist_id.id)
@@ -1242,7 +1243,7 @@ class WebsiteSale(http.Controller):
                     res_product.update(combination_info)
                     res_product['price'] = FieldMonetary.value_to_html(res_product['price'], monetary_options)
                     if rating:
-                        res_product['rating'] = request.env["ir.ui.view"].render_template('website_rating.rating_widget_stars_static', values={
+                        res_product['rating'] = request.env["ir.ui.view"].render_template('portal_rating.rating_widget_stars_static', values={
                             'rating_avg': product.rating_avg,
                             'rating_count': product.rating_count,
                         })

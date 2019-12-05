@@ -164,7 +164,7 @@
                 <button name="%(act_hr_employee_holiday_request)d"
                         type="action"
                         class="oe_stat_button"
-                        icon="fa-calendar"
+                        icon="far fa-calendar-alt"
                         attrs="{'invisible': [('show_leaves','=', False)]}"
                         context="{'search_default_employee_id': active_id}"
                         groups="base.group_user"
@@ -179,6 +179,17 @@
                     </div>
                 </button>
             </div>
+        </field>
+    </record>
+
+    <record id="view_employee_tree_inherit_leave" model="ir.ui.view">
+        <field name="name">hr.employee.tree.leave</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='work_location']" position="after">
+                <field name="leave_manager_id" optional="hide"/>
+            </xpath>
         </field>
     </record>
 
@@ -250,7 +261,7 @@
                 <button name="%(hr_leave_action_new_request)d"
                         type="action"
                         class="oe_stat_button"
-                        icon="fa-calendar"
+                        icon="far fa-calendar-alt"
                         attrs="{'invisible': [('show_leaves','=', False)]}"
                         groups="base.group_user"
                         help="Remaining leaves">

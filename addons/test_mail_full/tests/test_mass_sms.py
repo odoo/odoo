@@ -3,15 +3,12 @@
 
 
 from odoo.addons.phone_validation.tools import phone_validation
-from odoo.addons.mass_mailing_sms.tests import common as mass_mailing_sms_common
-from odoo.addons.test_mail.tests import common as test_mail_common
 from odoo.addons.test_mail_full.tests import common as test_mail_full_common
-from odoo.tools import mute_logger
 from odoo.tests import tagged
 
 
 @tagged('mass_mailing')
-class TestMassSMS(test_mail_full_common.MassSMSBaseFunctionalTest, mass_mailing_sms_common.MockSMS):
+class TestMassSMS(test_mail_full_common.TestSMSCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -61,7 +58,7 @@ class TestMassSMS(test_mail_full_common.MassSMSBaseFunctionalTest, mass_mailing_
         })
 
     def test_mass_sms_internals(self):
-        with self.sudo('marketing'):
+        with self.with_user('marketing'):
             mailing = self.env['mailing.mailing'].create({
                 'name': 'Xmas Spam',
                 'subject': 'Xmas Spam',
@@ -108,7 +105,7 @@ class TestMassSMS(test_mail_full_common.MassSMSBaseFunctionalTest, mass_mailing_
         })
         records_numbers = self.records_numbers + ['+32456999999']
 
-        with self.sudo('marketing'):
+        with self.with_user('marketing'):
             with self.mockSMSGateway():
                 self.mailing.action_send_sms()
 
@@ -122,7 +119,7 @@ class TestMassSMS(test_mail_full_common.MassSMSBaseFunctionalTest, mass_mailing_
         )
 
     def test_mass_sms_internals_done_ids(self):
-        with self.sudo('marketing'):
+        with self.with_user('marketing'):
             with self.mockSMSGateway():
                 self.mailing.action_send_sms(res_ids=self.records[:5].ids)
 
@@ -134,7 +131,7 @@ class TestMassSMS(test_mail_full_common.MassSMSBaseFunctionalTest, mass_mailing_
             self.mailing, self.records[:5], check_sms=True
         )
 
-        with self.sudo('marketing'):
+        with self.with_user('marketing'):
             with self.mockSMSGateway():
                 self.mailing.action_send_sms(res_ids=self.records.ids)
 

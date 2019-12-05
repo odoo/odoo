@@ -18,6 +18,7 @@ class FleetVehicle(models.Model):
         return state if state and state.id else False
 
     name = fields.Char(compute="_compute_vehicle_name", store=True)
+    description = fields.Text("Vehicle Description")
     active = fields.Boolean('Active', default=True, tracking=True)
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
@@ -28,16 +29,21 @@ class FleetVehicle(models.Model):
     future_driver_id = fields.Many2one('res.partner', 'Future Driver', tracking=True, help='Next Driver of the vehicle', copy=False, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     model_id = fields.Many2one('fleet.vehicle.model', 'Model',
         tracking=True, required=True, help='Model of the vehicle')
-    manager_id = fields.Many2one('res.users', related='model_id.manager_id')
+    manager_id = fields.Many2one('res.users', compute='_compute_manager_id', domain=lambda self: [('groups_id', 'in', self.env.ref('fleet.fleet_group_manager').id)], store=True, readonly=False)
+
+    @api.depends('model_id')
+    def _compute_manager_id(self):
+        if self.model_id:
+            self.manager_id = self.model_id.manager_id
+        else:
+            self.manager_id = None
+
     brand_id = fields.Many2one('fleet.vehicle.model.brand', 'Brand', related="model_id.brand_id", store=True, readonly=False)
     log_drivers = fields.One2many('fleet.vehicle.assignation.log', 'vehicle_id', string='Assignation Logs')
-    log_fuel = fields.One2many('fleet.vehicle.log.fuel', 'vehicle_id', 'Fuel Logs')
     log_services = fields.One2many('fleet.vehicle.log.services', 'vehicle_id', 'Services Logs')
     log_contracts = fields.One2many('fleet.vehicle.log.contract', 'vehicle_id', 'Contracts')
-    cost_count = fields.Integer(compute="_compute_count_all", string="Costs")
     contract_count = fields.Integer(compute="_compute_count_all", string='Contract Count')
     service_count = fields.Integer(compute="_compute_count_all", string='Services')
-    fuel_logs_count = fields.Integer(compute="_compute_count_all", string='Fuel Log Count')
     odometer_count = fields.Integer(compute="_compute_count_all", string='Odometer')
     history_count = fields.Integer(compute="_compute_count_all", string="Drivers History Count")
     next_assignation_date = fields.Date('Assignation Date', help='This is the date at which the car will be available, if not set it means available instantly')
@@ -108,16 +114,12 @@ class FleetVehicle(models.Model):
 
     def _compute_count_all(self):
         Odometer = self.env['fleet.vehicle.odometer']
-        LogFuel = self.env['fleet.vehicle.log.fuel']
         LogService = self.env['fleet.vehicle.log.services']
         LogContract = self.env['fleet.vehicle.log.contract']
-        Cost = self.env['fleet.vehicle.cost']
         for record in self:
             record.odometer_count = Odometer.search_count([('vehicle_id', '=', record.id)])
-            record.fuel_logs_count = LogFuel.search_count([('vehicle_id', '=', record.id)])
             record.service_count = LogService.search_count([('vehicle_id', '=', record.id)])
             record.contract_count = LogContract.search_count([('vehicle_id', '=', record.id), ('state', '!=', 'closed')])
-            record.cost_count = Cost.search_count([('vehicle_id', '=', record.id), ('parent_id', '=', False)])
             record.history_count = self.env['fleet.vehicle.assignation.log'].search_count([('vehicle_id', '=', record.id)])
 
     @api.depends('log_contracts')
@@ -130,7 +132,7 @@ class FleetVehicle(models.Model):
             total = 0
             name = ''
             for element in record.log_contracts:
-                if element.state in ('open', 'diesoon', 'expired') and element.expiration_date:
+                if element.state in ('open', 'expired') and element.expiration_date:
                     current_date_str = fields.Date.context_today(record)
                     due_time_str = element.expiration_date
                     current_date = fields.Date.from_string(current_date_str)
@@ -145,16 +147,20 @@ class FleetVehicle(models.Model):
                     if overdue or due_soon:
                         log_contract = self.env['fleet.vehicle.log.contract'].search([
                             ('vehicle_id', '=', record.id),
-                            ('state', 'in', ('open', 'diesoon', 'expired'))
+                            ('state', 'in', ('open', 'expired'))
                             ], limit=1, order='expiration_date asc')
                         if log_contract:
                             # we display only the name of the oldest overdue/due soon contract
-                            name = log_contract.cost_subtype_id.name
+                            name = log_contract.name
 
             record.contract_renewal_overdue = overdue
             record.contract_renewal_due_soon = due_soon
             record.contract_renewal_total = total - 1  # we remove 1 from the real total for display purposes
             record.contract_renewal_name = name
+
+    def _get_analytic_name(self):
+        # This function is used in fleet_account and is overrided in l10n_be_hr_payroll_fleet
+        return self.license_plate or _('No plate')
 
     def _search_contract_renewal_due_soon(self, operator, value):
         params = self.env['ir.config_parameter'].sudo()
@@ -168,16 +174,11 @@ class FleetVehicle(models.Model):
         today = fields.Date.context_today(self)
         datetime_today = fields.Datetime.from_string(today)
         limit_date = fields.Datetime.to_string(datetime_today + relativedelta(days=+delay_alert_contract))
-        self.env.cr.execute("""SELECT cost.vehicle_id,
-                        count(contract.id) AS contract_number
-                        FROM fleet_vehicle_cost cost
-                        LEFT JOIN fleet_vehicle_log_contract contract ON contract.cost_id = cost.id
-                        WHERE contract.expiration_date IS NOT NULL
-                          AND contract.expiration_date > %s
-                          AND contract.expiration_date < %s
-                          AND contract.state IN ('open', 'diesoon', 'expired')
-                        GROUP BY cost.vehicle_id""", (today, limit_date))
-        res_ids = [x[0] for x in self.env.cr.fetchall()]
+        res_ids = self.env['fleet.vehicle.log.contract'].search([
+            ('expiration_date', '>', today),
+            ('expiration_date', '<', limit_date),
+            ('state', 'in', ['open', 'expired'])
+        ]).mapped('id')
         res.append(('id', search_operator, res_ids))
         return res
 
@@ -189,15 +190,11 @@ class FleetVehicle(models.Model):
         else:
             search_operator = 'not in'
         today = fields.Date.context_today(self)
-        self.env.cr.execute('''SELECT cost.vehicle_id,
-                        count(contract.id) AS contract_number
-                        FROM fleet_vehicle_cost cost
-                        LEFT JOIN fleet_vehicle_log_contract contract ON contract.cost_id = cost.id
-                        WHERE contract.expiration_date IS NOT NULL
-                          AND contract.expiration_date < %s
-                          AND contract.state IN ('open', 'diesoon', 'expired')
-                        GROUP BY cost.vehicle_id ''', (today,))
-        res_ids = [x[0] for x in self.env.cr.fetchall()]
+        res_ids = self.env['fleet.vehicle.log.contract'].search([
+            ('expiration_date', '!=', False),
+            ('expiration_date', '<', today),
+            ('state', 'in', ['open', 'expired'])
+        ]).mapped('id')
         res.append(('id', search_operator, res_ids))
         return res
 
@@ -255,6 +252,12 @@ class FleetVehicle(models.Model):
     @api.model
     def _read_group_stage_ids(self, stages, domain, order):
         return self.env['fleet.vehicle.state'].search([], order=order)
+
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        if 'co2' in fields:
+            fields.remove('co2')
+        return super(FleetVehicle, self).read_group(domain, fields, groupby, offset, limit, orderby, lazy)
 
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):

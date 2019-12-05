@@ -2,17 +2,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.base.tests.test_ir_actions import TestServerActionsBase
-from odoo.addons.test_mail.tests.common import BaseFunctionalTest
+from odoo.addons.test_mail.tests.common import TestMailCommon
 
 
-class TestServerActionsEmail(BaseFunctionalTest, TestServerActionsBase):
+class TestServerActionsEmail(TestMailCommon, TestServerActionsBase):
 
     def test_action_email(self):
         email_template = self._create_template('res.partner', {'partner_to': '%s' % self.test_partner.id})
         self.action.write({'state': 'email', 'template_id': email_template.id})
         self.action.with_context(self.context).run()
         # check an email is waiting for sending
-        mail = self.env['mail.mail'].search([('subject', '=', 'About TestingPartner')])
+        mail = self.env['mail.mail'].sudo().search([('subject', '=', 'About TestingPartner')])
         self.assertEqual(len(mail), 1)
         # check email content
         self.assertEqual(mail.body, '<p>Hello TestingPartner</p>')

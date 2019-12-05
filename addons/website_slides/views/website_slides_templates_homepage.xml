@@ -149,7 +149,9 @@
                                 </div>
                                 <div class="row mx-n2 mt8">
                                     <t t-foreach="channels_my[:3]" t-as="channel">
-                                        <div class="col-md-4 col-sm-6 px-2 col-xs-12 d-flex flex-grow-1" t-call="website_slides.course_card"/>
+                                        <div class="col-md-4 col-sm-6 px-2 col-xs-12 d-flex flex-grow-1">
+                                            <t t-call="website_slides.course_card"/>
+                                        </div>
                                     </t>
                                 </div>
                             </div>
@@ -165,7 +167,9 @@
                             </div>
                             <div class="row mx-n2 mt8">
                                 <t t-foreach="channels_popular[:3]" t-as="channel">
-                                    <div class="col-md-4 col-sm-6 px-2 col-xs-12 d-flex flex-grow-1" t-call="website_slides.course_card"/>
+                                    <div class="col-md-4 col-sm-6 px-2 col-xs-12 d-flex flex-grow-1">
+                                        <t t-call="website_slides.course_card"/>
+                                    </div>
                                 </t>
                             </div>
                         </div>
@@ -180,7 +184,9 @@
                             </div>
                             <div class="row mx-n2 mt8">
                                 <t t-foreach="channels_newest[:3]" t-as="channel">
-                                    <div class="col-md-4 col-sm-6 px-2 col-xs-12 d-flex flex-grow-1" t-call="website_slides.course_card"/>
+                                    <div class="col-md-4 col-sm-6 px-2 col-xs-12 d-flex flex-grow-1">
+                                        <t t-call="website_slides.course_card"/>
+                                    </div>
                                 </t>
                             </div>
                         </div>
@@ -200,6 +206,7 @@
             <section class="s_banner bg-900" style="background-image: url(&quot;/website_slides/static/src/img/banner_default_all.svg&quot;); background-size: cover; background-position: 80% 20%">
                 <div class="container py-5">
                     <h1 t-if="search_my" class="display-3 mb-0">My Courses</h1>
+                    <h1 t-elif="search_slide_type=='certification'" class="display-3 mb-0">Certifications</h1>
                     <h1 t-else="" class="display-3 mb-0">All Courses</h1>
                 </div>
             </section>
@@ -221,6 +228,9 @@
                             <input type="search" name="search" class="form-control"
                                 placeholder="Search courses" aria-label="Search"
                                 t-att-value="search_term"/>
+                            <input t-if="search_tags" type="hidden" name="tags" t-att-value="str(search_tags.ids)"/>
+                            <input t-if="search_my" type="hidden" name="my" t-att-value="1"/>
+                            <input t-if="search_slide_type" type="hidden" name="slide_type" t-att-value="search_slide_type" />
                             <div class="input-group-append">
                                 <button class="btn border border-left-0 oe_search_button" type="submit" aria-label="Search" title="Search">
                                     <i class="fa fa-search"/>
@@ -247,7 +257,7 @@
                                     <div class="dropdown-menu" t-att-id="'navToogleTagGroup%s' % tag_group.id">
                                         <t t-foreach="tag_group.tag_ids" t-as="tag">
                                             <a rel="nofollow" t-att-class="'dropdown-item %s' % ('active' if tag in search_tags else '')"
-                                                t-att-href="'/slides/all?%s' % keep_query('*', **{'channel_tag_group_id_%s' % tag_group.id: tag.id if tag not in search_tags else False})"
+                                                t-att-href="'/slides/all?%s' % keep_query('*', tags=str((search_tags - tag).ids if tag in search_tags else (tag | search_tags).ids))"
                                                 t-esc="tag.name"/>
                                         </t>
                                     </div>
@@ -266,6 +276,9 @@
                                 <input type="search" name="search" class="form-control"
                                     placeholder="Search courses" aria-label="Search"
                                     t-att-value="search_term"/>
+                                <input t-if="search_tags" type="hidden" name="tags" t-att-value="str(search_tags.ids)"/>
+                                <input t-if="search_my" type="hidden" name="my" t-att-value="1"/>
+                                <input t-if="search_slide_type" type="hidden" name="slide_type" t-att-value="search_slide_type" />
                                 <div class="input-group-append">
                                     <button class="btn border border-left-0 oe_search_button" type="submit" aria-label="Search" title="Search">
                                         <i class="fa fa-search"/>
@@ -282,6 +295,28 @@
                         <t t-set="additional_validated_email_message" t-value="' You may now participate to our eLearning.'"/>
                     </t>
                 </div>
+                <!-- Display tags -->
+                <t t-if="search_my">
+                      <span class="align-items-baseline border d-inline-flex pl-2 rounded mb-2">
+                      <i class="fa fa-tag mr-2 text-muted"/>
+                      My Courses
+                      <a t-att-href="'/slides/all?%s' % keep_query('*', my=None)" class="btn border-0 py-1">&#215;</a>
+                    </span>
+                </t>
+                <t t-if="search_term">
+                      <span class="align-items-baseline border d-inline-flex pl-2 rounded mb-2">
+                      <i class="fa fa-tag mr-2 text-muted"/>
+                      <t t-esc="search_term"/>
+                      <a t-att-href="'/slides/all?%s' % keep_query('*', search=None)" class="btn border-0 py-1">&#215;</a>
+                    </span>
+                </t>
+                <t t-foreach="search_tags" t-as="tag">
+                    <span class="align-items-baseline border d-inline-flex pl-2 rounded mb-2">
+                        <i class="fa fa-tag mr-2 text-muted"/>
+                        <t t-esc="tag.display_name"/>
+                        <a t-att-href="'/slides/all?%s' % keep_query('*', tags=str((search_tags - tag).ids))" class="btn border-0 py-1">&#215;</a>
+                    </span>
+                </t>
             </div>
             <div class="container o_wslides_home_main pb-5">
                 <div t-if="not channels and not search_term and not search_slide_type and not search_my and not search_tags and not search_channel_tag_id">
@@ -296,7 +331,9 @@
                 </div>
                 <div t-else="" class="row mx-n2">
                     <t t-foreach="channels" t-as="channel">
-                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 px-2 d-flex flex-grow-1" t-call="website_slides.course_card"/>
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 px-2 d-flex flex-grow-1">
+                            <t t-call="website_slides.course_card"/>
+                        </div>
                     </t>
                 </div>
             </div>
@@ -310,6 +347,7 @@
     <div t-attf-class="card w-100 o_wslides_course_card mb-4 #{'o_wslides_course_unpublished' if not channel.is_published else ''}">
         <t t-set="course_image" t-value="website.image_url(channel, 'image_1024')"/>
         <a t-attf-href="/slides/#{slug(channel)}" t-title="channel.name">
+            <t t-if="channel.partner_has_new_content" t-call="website_slides.course_card_information"/> 
             <div t-if="channel.image_1024" class="card-img-top" t-attf-style="padding-top: 50%; background-image: url(#{course_image}); background-size: cover; background-position:center"/>
             <div t-else="" class="o_wslides_gradient card-img-top position-relative" style="padding-top: 50%; opacity: 0.8">
                 <i class="fa fa-graduation-cap fa-2x mr-3 mb-3 position-absolute text-white-75" style="right:0; bottom: 0"/>
@@ -319,10 +357,10 @@
             <a class="card-title h5 mb-2 o_wslides_desc_truncate_2" t-attf-href="/slides/#{slug(channel)}" t-esc="channel.name"/>
             <span t-if="not channel.is_published" class="badge badge-danger p-1">Unpublished</span>
             <div class="card-text mt-1">
-                <div class="font-weight-light o_wslides_desc_truncate_3" t-field="channel.description"/>
+                <div class="font-weight-light o_wslides_desc_truncate_3" t-field="channel.description_short"/>
                 <div t-if="channel.tag_ids" class="mt-2 pt-1 o_wslides_desc_truncate_2">
                     <t t-foreach="channel.tag_ids" t-as="tag">
-                        <a t-att-href="'/slides/all?channel_tag_id=%s' % tag.id" class="badge badge-light" t-esc="tag.name"/>
+                        <a t-att-href="'/slides/all?%s' % keep_query('*', tags=str((tag | search_tags).ids))" t-attf-class="badge #{'badge-primary' if tag in search_tags else 'badge-light'}" t-esc="tag.name"/>
                     </t>
                 </div>
             </div>
@@ -332,7 +370,7 @@
                 <small t-if="channel.total_time" class="font-weight-bold" t-esc="channel.total_time" t-options="{'widget': 'duration', 'unit': 'hour', 'round': 'minute'}"/>
                 <div class="d-flex flex-grow-1 justify-content-end">
                     <t t-if="channel.is_member and channel.completed">
-                        <span class="badge badge-pill badge-success pull-right py-1 px-2"><i class="fa fa-check"/> Completed</span>
+                        <span class="badge badge-pill badge-success pull-right py-1 px-2"><i class="fas fa-check"/> Completed</span>
                     </t>
                     <div t-elif="channel.is_member and channel.channel_type != 'documentation'" class="progress w-50" style="height: 6px">
                         <div class="progress-bar" role="progressbar" t-att-aria-valuenow="channel.completion" aria-valuemin="0" aria-valuemax="100" t-attf-style="width:#{channel.completion}%;"/>
@@ -342,6 +380,18 @@
             </div>
         </div>
     </div>
+</template>
+
+<template id="course_card_information" name='Course Information'>
+    <t id="course_card_information_content">
+    </t>
+</template>
+
+<template id="course_card_information_arrow" inherit_id="website_slides.course_card_information"
+    active="True" customize_show="True" name='New Content Ribbon'>
+    <xpath expr="//t[@id='course_card_information_content']" position="inside">
+        <span class="o_wslides_arrow">New Content</span>
+    </xpath>
 </template>
 
 <template id='slides_home_achievements_small' name="Users">
@@ -456,7 +506,7 @@
                     <b class="text_small_caps" t-esc="challenge.reward_id.name"/><br/>
                     <span class="text-muted" t-esc="challenge.reward_id.description"/>
                 </div>
-                <i t-if="challenge_done" class="fa fa-check h5 text-success" aria-label="Done" title="Done" role="img"></i>
+                <i t-if="challenge_done" class="fas fa-check h5 text-success" aria-label="Done" title="Done" role="img"></i>
             </div>
         </t>
     </div>

@@ -4,6 +4,7 @@ odoo.define('web_editor.rte.summernote', function (require) {
 var Class = require('web.Class');
 const concurrency = require('web.concurrency');
 var core = require('web.core');
+const ColorpickerDialog = require('web.ColorpickerDialog');
 var ColorPaletteWidget = require('web_editor.ColorPalette').ColorPaletteWidget;
 var mixins = require('web.mixins');
 var fonts = require('wysiwyg.fonts');
@@ -50,13 +51,17 @@ renderer.createPalette = function ($container, options) {
                 const targetNode = r.sc;
                 const targetElement = targetNode.nodeType === Node.ELEMENT_NODE ? targetNode : targetNode.parentNode;
                 colorpicker = new ColorPaletteWidget(parent, {
-                    colorPrefix: eventName === "foreColor" ? 'text-' : 'bg-',
                     excluded: ['transparent_grayscale'],
                     $editable: rte.Class.prototype.editable(), // Our parent is the root widget, we can't retrieve the editable section from it...
                     selectedColor: $(targetElement).css(eventName === "foreColor" ? 'color' : 'backgroundColor'),
-                    targetClasses: [...targetElement.classList],
                 });
-                colorpicker.on('color_picked custom_color_picked', null, ev => applyColor(ev.data.target, eventName, ev.data.cssColor));
+                colorpicker.on('color_picked', null, ev => {
+                    let color = ev.data.color;
+                    if (!ColorpickerDialog.isCSSColor(color)) {
+                        color = (eventName === "foreColor" ? 'text-' : 'bg-') + color;
+                    }
+                    applyColor(ev.data.target, eventName, color);
+                });
                 colorpicker.on('color_reset', null, ev => applyColor(ev.data.target, eventName, 'inherit'));
                 return colorpicker.replace(hookEl).then(() => {
                     if (oldColorpicker) {
@@ -83,7 +88,7 @@ renderer.tplPopovers = function (lang, options) {
     //////////////// image popover
 
     // add center button for images
-    $(tplIconButton('fa fa-align-center', {
+    $(tplIconButton('fas fa-align-center', {
         title: _t('Center'),
         event: 'floatMe',
         value: 'center'
@@ -101,14 +106,14 @@ renderer.tplPopovers = function (lang, options) {
         '<li><a class="dropdown-item" data-event="padding" href="#" data-value="large">'+_t('Large')+'</a></li>',
         '<li><a class="dropdown-item" data-event="padding" href="#" data-value="xl">'+_t('Xl')+'</a></li>',
     ];
-    $(tplIconButton('fa fa-plus-square-o', {
+    $(tplIconButton('far fa-plus-square', {
         title: _t('Padding'),
         dropdown: tplDropdown(dropdown_content)
     })).appendTo($padding);
 
     // circle, boxed... options became toggled
     $imagePopover.find('[data-event="imageShape"]:not([data-value])').remove();
-    var $button = $(tplIconButton('fa fa-sun-o', {
+    var $button = $(tplIconButton('far fa-sun', {
         title: _t('Shadow'),
         event: 'imageShape',
         value: 'shadow'
@@ -116,7 +121,7 @@ renderer.tplPopovers = function (lang, options) {
 
     // add spin for fa
     var $spin = $('<div class="btn-group d-none only_fa"/>').insertAfter($button.parent());
-    $(tplIconButton('fa fa-refresh', {
+    $(tplIconButton('fas fa-sync', {
             title: _t('Spin'),
             event: 'imageShape',
             value: 'fa-spin'
@@ -139,16 +144,16 @@ renderer.tplPopovers = function (lang, options) {
     // show dialog box and delete
     var $imageprop = $('<div class="btn-group"/>');
     $imageprop.appendTo($imagePopover.find('.popover-body'));
-    $(tplIconButton('fa fa-file-image-o', {
+    $(tplIconButton('far fa-file-image', {
             title: _t('Edit'),
             event: 'showImageDialog'
         })).appendTo($imageprop);
-    $(tplIconButton('fa fa-trash-o', {
+    $(tplIconButton('far fa-trash-alt', {
             title: _t('Remove'),
             event: 'delete'
         })).appendTo($imageprop);
 
-    $(tplIconButton('fa fa-crop', {
+    $(tplIconButton('fas fa-crop', {
         title: _t('Crop Image'),
         event: 'cropImage',
     })).insertAfter($imagePopover.find('[data-event="imageShape"][data-value="img-thumbnail"]'));
@@ -165,7 +170,7 @@ renderer.tplPopovers = function (lang, options) {
 
     $linkPopover.find('.popover-body').append($airPopover.find(".note-history").clone());
 
-    $linkPopover.find('button[data-event="showLinkDialog"] i').attr("class", "fa fa-link");
+    $linkPopover.find('button[data-event="showLinkDialog"] i').attr("class", "fas fa-link");
     $linkPopover.find('button[data-event="unlink"]').before($airPopover.find('button[data-event="showImageDialog"]').clone());
 
     //////////////// text/air popover
@@ -569,7 +574,7 @@ function prettify_html(html) {
  *   disable (false) or enable (true) the code view mode.
  */
 $.summernote.pluginEvents.codeview = function (event, editor, layoutInfo, enable) {
-    if (layoutInfo === undefined) {
+    if (!layoutInfo) {
         return;
     }
     if (layoutInfo.toolbar) {

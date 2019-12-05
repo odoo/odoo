@@ -6,10 +6,11 @@ from usb import core
 from gatt import DeviceManager as Gatt_DeviceManager
 import subprocess
 import json
-from re import sub
+from re import sub, finditer
 import urllib3
 import os
 import socket
+import sys
 from importlib import util
 import v4l2
 from fcntl import ioctl
@@ -96,6 +97,27 @@ class StatusController(http.Controller):
         if os.path.isfile(image):
             with open(image, 'rb') as f:
                 return f.read()
+
+#----------------------------------------------------------
+# Log Exceptions
+#----------------------------------------------------------
+
+class ExceptionLogger:
+    """
+    Redirect Exceptions to the logger to keep track of them in the log file.
+    """
+
+    def __init__(self):
+        self.logger = logging.getLogger()
+
+    def write(self, message):
+        if message != '\n':
+            self.logger.err(message)
+
+    def flush(self):
+        pass
+
+sys.stderr = ExceptionLogger()
 
 #----------------------------------------------------------
 # Drivers
@@ -302,14 +324,20 @@ class Manager(Thread):
 
     def get_connected_displays(self):
         display_devices = {}
-        hdmi = subprocess.check_output(['tvservice', '-n']).decode('utf-8').replace('\n', '')
-        if hdmi.find('=') != -1 and hdmi.split('=')[1] != "Unk-Composite dis":
-            hdmi_serial = sub('[^a-zA-Z0-9 ]+', '', hdmi.split('=')[1]).replace(' ', '_')
+
+        displays = subprocess.check_output(['tvservice', '-l']).decode()
+        x_screen = 0
+        for match in finditer('Display Number (\d), type HDMI (\d)', displays):
+            display_id, hdmi_id = match.groups()
+            display_name = subprocess.check_output(['tvservice', '-nv', display_id]).decode().rstrip().split('=')[1]
+            display_identifier = sub('[^a-zA-Z0-9 ]+', '', display_name).replace(' ', '_') + "_" + str(hdmi_id)
             iot_device = IoTDevice({
-                'identifier': hdmi_serial,
-                'name': hdmi.split('=')[1],
+                'identifier': display_identifier,
+                'name': display_name,
+                'x_screen': str(x_screen),
             }, 'display')
-            display_devices[hdmi_serial] = iot_device
+            display_devices[display_identifier] = iot_device
+            x_screen += 1
 
         if not len(display_devices):
             # No display connected, create "fake" device to be accessed from another computer
@@ -471,7 +499,6 @@ class MPDManager(Thread):
 
     def run(self):
         eftapi.EFT_CreateSession(ctypes.byref(self.mpd_session))
-        eftapi.EFT_PutDeviceId(self.mpd_session, terminal_id.encode())
         while True:
             if self.terminal_connected(terminal_id):
                 self.devices[terminal_id] = IoTDevice(terminal_id, 'mpd')
@@ -481,7 +508,6 @@ class MPDManager(Thread):
 
     def terminal_connected(self, terminal_id):
         eftapi.EFT_QueryStatus(self.mpd_session)
-        eftapi.EFT_Complete(self.mpd_session, 1)  # Needed to read messages from driver
         device_status = ctypes.c_long()
         eftapi.EFT_GetDeviceStatusCode(self.mpd_session, ctypes.byref(device_status))
         return device_status.value in [0, 1]
@@ -494,19 +520,12 @@ cups_lock = Lock()  # We can only make one call to Cups at a time
 
 mpdm = MPDManager()
 terminal_id = helpers.read_file_first_line('odoo-six-payment-terminal.conf')
+subprocess.call(["pkill", "-9", "eftdvs"])  # Kill any running MPD server
 if terminal_id:
-    try:
-        subprocess.check_output(["pidof", "eftdvs"])  # Check if MPD server is running
-    except subprocess.CalledProcessError:
-        subprocess.Popen(["eftdvs", "/ConfigDir", "/usr/share/eftdvs/"])  # Start MPD server
+    subprocess.Popen(["eftdvs", "/ConfigDir", "/usr/share/eftdvs/", "/TID", terminal_id])  # Start MPD server
     eftapi = ctypes.CDLL("eftapi.so")  # Library given by Six
     mpdm.daemon = True
     mpdm.start()
-else:
-    try:
-        subprocess.check_call(["pkill", "-9", "eftdvs"])  # Check if MPD server is running
-    except subprocess.CalledProcessError:
-        pass
 
 m = Manager()
 m.daemon = True

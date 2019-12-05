@@ -13,43 +13,45 @@ class TestReflection(common.TransactionCase):
         ir_models = self.env['ir.model'].search([('model', 'in', list(model_names))])
         self.assertEqual(len(ir_models), len(model_names))
         for ir_model in ir_models:
-            model = self.env[ir_model.model]
-            self.assertEqual(ir_model.name, model._description or False)
-            self.assertEqual(ir_model.state, 'manual' if model._custom else 'base')
-            self.assertEqual(ir_model.transient, bool(model._transient))
-            self.assertItemsEqual(ir_model.mapped('field_id.name'), list(model._fields))
-            for ir_field in ir_model.field_id:
-                field = model._fields[ir_field.name]
-                self.assertEqual(ir_field.model, field.model_name)
-                self.assertEqual(ir_field.field_description, field.string)
-                self.assertEqual(ir_field.help, field.help or False)
-                self.assertEqual(ir_field.ttype, field.type)
-                self.assertEqual(ir_field.state, 'manual' if field.manual else 'base')
-                self.assertEqual(ir_field.index, bool(field.index))
-                self.assertEqual(ir_field.store, bool(field.store))
-                self.assertEqual(ir_field.copied, bool(field.copy))
-                self.assertEqual(ir_field.related, bool(field.related) and ".".join(field.related))
-                self.assertEqual(ir_field.readonly, bool(field.readonly))
-                self.assertEqual(ir_field.required, bool(field.required))
-                self.assertEqual(ir_field.selectable, bool(field.search or field.store))
-                self.assertEqual(ir_field.translate, bool(field.translate))
-                if field.relational:
-                    self.assertEqual(ir_field.relation, field.comodel_name)
-                if field.type == 'one2many' and field.store:
-                    self.assertEqual(ir_field.relation_field, field.inverse_name)
-                if field.type == 'many2many' and field.store:
-                    self.assertEqual(ir_field.relation_table, field.relation)
-                    self.assertEqual(ir_field.column1, field.column1)
-                    self.assertEqual(ir_field.column2, field.column2)
-                    relation = self.env['ir.model.relation'].search([('name', '=', field.relation)])
-                    self.assertTrue(relation)
-                    self.assertIn(relation.model.model, [field.model_name, field.comodel_name])
-                if field.type == 'selection':
-                    selection = [(sel.value, sel.name) for sel in ir_field.selection_ids]
-                    if isinstance(field.selection, list):
-                        self.assertEqual(selection, field.selection)
-                    else:
-                        self.assertEqual(selection, [])
+            with self.subTest(model=ir_model.model):
+                model = self.env[ir_model.model]
+                self.assertEqual(ir_model.name, model._description or False)
+                self.assertEqual(ir_model.state, 'manual' if model._custom else 'base')
+                self.assertEqual(ir_model.transient, bool(model._transient))
+                self.assertItemsEqual(ir_model.mapped('field_id.name'), list(model._fields))
+                for ir_field in ir_model.field_id:
+                    with self.subTest(field=ir_field.name):
+                        field = model._fields[ir_field.name]
+                        self.assertEqual(ir_field.model, field.model_name)
+                        self.assertEqual(ir_field.field_description, field.string)
+                        self.assertEqual(ir_field.help, field.help or False)
+                        self.assertEqual(ir_field.ttype, field.type)
+                        self.assertEqual(ir_field.state, 'manual' if field.manual else 'base')
+                        self.assertEqual(ir_field.index, bool(field.index))
+                        self.assertEqual(ir_field.store, bool(field.store))
+                        self.assertEqual(ir_field.copied, bool(field.copy))
+                        self.assertEqual(ir_field.related, bool(field.related) and ".".join(field.related))
+                        self.assertEqual(ir_field.readonly, bool(field.readonly))
+                        self.assertEqual(ir_field.required, bool(field.required))
+                        self.assertEqual(ir_field.selectable, bool(field.search or field.store))
+                        self.assertEqual(ir_field.translate, bool(field.translate))
+                        if field.relational:
+                            self.assertEqual(ir_field.relation, field.comodel_name)
+                        if field.type == 'one2many' and field.store:
+                            self.assertEqual(ir_field.relation_field, field.inverse_name)
+                        if field.type == 'many2many' and field.store:
+                            self.assertEqual(ir_field.relation_table, field.relation)
+                            self.assertEqual(ir_field.column1, field.column1)
+                            self.assertEqual(ir_field.column2, field.column2)
+                            relation = self.env['ir.model.relation'].search([('name', '=', field.relation)])
+                            self.assertTrue(relation)
+                            self.assertIn(relation.model.model, [field.model_name, field.comodel_name])
+                        if field.type == 'selection':
+                            selection = [(sel.value, sel.name) for sel in ir_field.selection_ids]
+                            if isinstance(field.selection, list):
+                                self.assertEqual(selection, field.selection)
+                            else:
+                                self.assertEqual(selection, [])
 
 
 class TestSchema(common.TransactionCase):

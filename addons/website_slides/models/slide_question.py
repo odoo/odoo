@@ -9,8 +9,9 @@ class SlideQuestion(models.Model):
     _name = "slide.question"
     _rec_name = "question"
     _description = "Content Quiz Question"
+    _order = "sequence"
 
-    sequence = fields.Integer("Sequence", default=10)
+    sequence = fields.Integer("Sequence")
     question = fields.Char("Question Name", required=True, translate=True)
     slide_id = fields.Many2one('slide.slide', string="Content", required=True)
     answer_ids = fields.One2many('slide.answer', 'question_id', string="Answer")
@@ -20,26 +21,12 @@ class SlideQuestion(models.Model):
     done_count = fields.Integer(compute="_compute_statistics", groups='website.group_website_publisher')
 
     @api.constrains('answer_ids')
-    def _check_only_one_good_answer(self):
+    def _check_answers_integrity(self):
         for question in self:
-            good_answer_count = 0
-            for answer in question.answer_ids:
-                if answer.is_correct:
-                    good_answer_count += 1
-                    if good_answer_count > 1:
-                        raise ValidationError(_('Question "%s" can only have one good answer') % question.question)
-
-    @api.constrains('answer_ids')
-    def _check_correct_answer(self):
-        for question in self:
-            if not any([answer.is_correct for answer in question.answer_ids]):
-                raise ValidationError(_('Question "%s" must at least have one good answer') % question.question)
-
-    @api.constrains('answer_ids')
-    def _check_at_least_2_answers(self):
-        for question in self:
+            if len(question.answer_ids.filtered(lambda answer: answer.is_correct)) != 1:
+                raise ValidationError(_('Question "%s" must have 1 correct answer') % question.question)
             if len(question.answer_ids) < 2:
-                raise ValidationError(_('Question "%s" has no valid answer, please set one') % question.question)
+                raise ValidationError(_('Question "%s" must have 1 correct answer and at least 1 invalid answer') % question.question)
 
     @api.depends('slide_id')
     def _compute_statistics(self):
@@ -63,8 +50,9 @@ class SlideAnswer(models.Model):
     _name = "slide.answer"
     _rec_name = "text_value"
     _description = "Answer for a slide question"
-    _order = 'question_id, id'
+    _order = 'question_id, sequence'
 
-    question_id = fields.Many2one('slide.question', string="Question", required=True)
+    sequence = fields.Integer("Sequence")
+    question_id = fields.Many2one('slide.question', string="Question", required=True, ondelete='cascade')
     text_value = fields.Char("Answer", required=True, translate=True)
     is_correct = fields.Boolean("Is correct answer")

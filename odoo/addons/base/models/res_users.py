@@ -389,7 +389,7 @@ class Users(models.Model):
 
     @api.constrains('company_id', 'company_ids')
     def _check_company(self):
-        if any(user.company_ids and user.company_id not in user.company_ids for user in self):
+        if any(user.company_id not in user.company_ids for user in self):
             raise ValidationError(_('The chosen company is not in the allowed companies for this user'))
 
     @api.constrains('action_id')

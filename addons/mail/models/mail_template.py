@@ -236,9 +236,9 @@ class MailTemplate(models.Model):
             variables['object'] = record
             try:
                 render_result = template.render(variables)
-            except Exception:
-                _logger.info("Failed to render template %r using values %r" % (template, variables), exc_info=True)
-                raise UserError(_("Failed to render template %r using values %r")% (template, variables))
+            except Exception as e:
+                _logger.info("Failed to render template : %s" % e, exc_info=True)
+                raise UserError(_("Failed to render template : %s") % e)
             if render_result == u"False":
                 render_result = u""
             results[res_id] = render_result
@@ -405,6 +405,11 @@ class MailTemplate(models.Model):
     # EMAIL
     # ----------------------------------------
 
+    def _send_check_access(self, res_ids):
+        records = self.env[self.model].browse(res_ids)
+        records.check_access_rights('read')
+        records.check_access_rule('read')
+
     def send_mail(self, res_id, force_send=False, raise_exception=False, email_values=None, notif_layout=False):
         """ Generates a new mail.mail. Template is rendered on record given by
         res_id and model coming from template.
@@ -417,8 +422,11 @@ class MailTemplate(models.Model):
         :param str notif_layout: optional notification layout to encapsulate the
             generated email;
         :returns: id of the mail.mail that was created """
+
+        # Grant access to send_mail only if access to related document
         self.ensure_one()
-        Mail = self.env['mail.mail']
+        self._send_check_access([res_id])
+
         Attachment = self.env['ir.attachment']  # TDE FIXME: should remove default_type from context
 
         # create a mail_mail based on values, without attachments
@@ -447,7 +455,7 @@ class MailTemplate(models.Model):
                 }
                 body = template.render(template_ctx, engine='ir.qweb', minimal_qcontext=True)
                 values['body_html'] = self.env['mail.thread']._replace_local_links(body)
-        mail = Mail.create(values)
+        mail = self.env['mail.mail'].sudo().create(values)
 
         # manage attachments
         for attachment in attachments:

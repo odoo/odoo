@@ -206,32 +206,12 @@ class AccountTestCommon(SavepointCase):
         })
 
         # Properties: Product income and expense accounts, default parameters
-        cls.env['ir.property'].create([{
-            'name': 'property_account_receivable_id',
-            'fields_id': cls.env['ir.model.fields'].search([('model', '=', 'res.partner'), ('name', '=', 'property_account_receivable_id')], limit=1).id,
-            'value': 'account.account,%s' % (cls.a_recv.id),
-            'company_id': cls.company.id,
-        }, {
-            'name': 'property_account_payable_id',
-            'fields_id': cls.env['ir.model.fields'].search([('model', '=', 'res.partner'), ('name', '=', 'property_account_payable_id')], limit=1).id,
-            'value': 'account.account,%s' % (cls.a_pay.id),
-            'company_id': cls.company.id,
-        }, {
-            'name': 'property_account_position_id',
-            'fields_id': cls.env['ir.model.fields'].search([('model', '=', 'res.partner'), ('name', '=', 'property_account_position_id')], limit=1).id,
-            'value': False,
-            'company_id': cls.company.id,
-        }, {
-            'name': 'property_account_expense_categ_id',
-            'fields_id': cls.env['ir.model.fields'].search([('model', '=', 'product.category'), ('name', '=', 'property_account_expense_categ_id')], limit=1).id,
-            'value': 'account.account,%s' % (cls.a_expense.id),
-            'company_id': cls.company.id,
-        }, {
-            'name': 'property_account_income_categ_id',
-            'fields_id': cls.env['ir.model.fields'].search([('model', '=', 'product.category'), ('name', '=', 'property_account_income_categ_id')], limit=1).id,
-            'value': 'account.account,%s' % (cls.a_sale.id),
-            'company_id': cls.company.id,
-        }])
+        Property = cls.env['ir.property']
+        Property.set_default('property_account_receivable_id', 'res.partner', cls.a_recv, cls.company)
+        Property.set_default('property_account_payable_id', 'res.partner', cls.a_pay, cls.company)
+        Property.set_default('property_account_position_id', 'res.partner', False, cls.company)
+        Property.set_default('property_account_expense_categ_id', 'product.category', cls.a_expense, cls.company)
+        Property.set_default('property_account_income_categ_id', 'product.category', cls.a_sale, cls.company)
 
         # Bank Accounts
         cls.bank_account = cls.env['res.partner.bank'].create({
@@ -482,7 +462,7 @@ class AccountTestInvoicingCommon(SavepointCase):
         user = cls.env['res.users'].create({
             'name': 'Because I am accountman!',
             'login': 'accountman',
-            'groups_id': [(6, 0, cls.env.user.groups_id.ids)],
+            'groups_id': [(6, 0, cls.env.user.groups_id.ids), (4, cls.env.ref('account.group_account_user').id)],
         })
         user.partner_id.email = 'accountman@test.com'
 
@@ -606,7 +586,6 @@ class AccountTestInvoicingCommon(SavepointCase):
             'rounding_method': 'DOWN',
         })
 
-
     @classmethod
     def setup_company_data(cls, company_name, **kwargs):
         ''' Create a new company having the name passed as parameter.
@@ -663,6 +642,14 @@ class AccountTestInvoicingCommon(SavepointCase):
             'default_journal_purchase': cls.env['account.journal'].search([
                     ('company_id', '=', company.id),
                     ('type', '=', 'purchase')
+                ], limit=1),
+            'default_journal_bank': cls.env['account.journal'].search([
+                    ('company_id', '=', company.id),
+                    ('type', '=', 'bank')
+                ], limit=1),
+            'default_journal_cash': cls.env['account.journal'].search([
+                    ('company_id', '=', company.id),
+                    ('type', '=', 'cash')
                 ], limit=1),
             'default_tax_sale': company.account_sale_tax_id,
             'default_tax_purchase': company.account_purchase_tax_id,

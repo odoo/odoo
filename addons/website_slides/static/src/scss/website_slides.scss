@@ -29,6 +29,35 @@ $o-wslides-fs-side-width: 300px;
     }
 }
 
+.o_wslides_arrow {
+    position: absolute;
+    height: 24px;
+    margin-left: -5px;
+    margin-top: 10px;
+    line-height: 1.8em;
+    padding-left: 8px;
+    padding-right: 5px;  
+    background: #17A2B8;
+    color: white;
+    box-shadow: 0px 0px 3px  gray;
+    z-index: 1;
+
+    text-decoration: none;
+
+    &:after {
+        // the triangle
+        content: "";
+        position: absolute;
+        height: 0px;
+        width: 0px;
+        right: 0; 
+        margin-right: -15px;
+        border-left: 15px solid #17A2B8;
+        border-bottom: 12px solid transparent;
+        border-top: 12px solid transparent;
+    }
+}
+
 .o_wslides_body {
     background-color: $o-wslides-color-bg;
 
@@ -54,6 +83,14 @@ $o-wslides-fs-side-width: 300px;
         }
     }
 
+    .o_wsildes_quiz_question_input {
+        .o_wslides_js_quiz_is_correct > label,
+        .o_wslides_js_quiz_add_answer,
+        .o_wslides_js_quiz_remove_answer {
+            cursor: pointer;
+        }
+    }
+
     .o_wslides_js_lesson_quiz_question {
         .list-group-item  {
             font-size: 1rem;
@@ -68,8 +105,49 @@ $o-wslides-fs-side-width: 300px;
             pointer-events: none;
         }
 
+        .o_wslides_js_quiz_edit_question,
+        .o_wslides_js_quiz_delete_question {
+            cursor: pointer;
+        }
+
+        .o_wslides_js_quiz_sequence_handler {
+            cursor: pointer;
+            opacity: 0.4;
+        }
+
+        .o_wslides_js_quiz_sequence_handler:hover {
+            opacity: 1;
+        }
+
         &.completed-disabled{
             pointer-events: none;
+        }
+    }
+
+    a.o_wslides_js_quiz_is_correct {
+        color: black;
+        input:checked + i.fa-check-circle-o {
+            color: $primary;
+        }
+    }
+
+    .o_wslides_js_quiz_sequence_highlight {
+        background-color: #1252F3;
+        height: 1px;
+        z-index: 3;
+
+        &:before, &:after {
+            content: "";
+            @include size(6px);
+            display: block;
+            border-radius: 100%;
+            background-color: inherit;
+            @include o-position-absolute(-2px, -2px);
+        }
+
+        &:after {
+            right: auto;
+            left: -2px;
         }
     }
 

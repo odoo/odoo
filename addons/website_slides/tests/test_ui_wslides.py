@@ -67,10 +67,13 @@ class TestUICommon(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
                                 (0, 0, {
                                     'text_value': 'A fruit',
                                     'is_correct': True,
+                                    'sequence': 1,
                                 }), (0, 0, {
                                     'text_value': 'A vegetable',
+                                    'sequence': 2,
                                 }), (0, 0, {
                                     'text_value': 'A table',
+                                    'sequence': 3,
                                 })
                             ]
                         }), (0, 0, {
@@ -79,8 +82,10 @@ class TestUICommon(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
                                 (0, 0, {
                                     'text_value': 'A shovel',
                                     'is_correct': True,
+                                    'sequence': 1,
                                 }), (0, 0, {
                                     'text_value': 'A spoon',
+                                    'sequence': 2,
                                 })
                             ]
                         })

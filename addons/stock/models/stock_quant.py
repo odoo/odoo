@@ -51,15 +51,13 @@ class StockQuant(models.Model):
         'product.product', 'Product',
         domain=lambda self: self._domain_product_id(),
         ondelete='restrict', readonly=True, required=True, index=True, check_company=True)
-    # so user can filter on template in webclient
     product_tmpl_id = fields.Many2one(
         'product.template', string='Product Template',
         related='product_id.product_tmpl_id', readonly=False)
     product_uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure',
         readonly=True, related='product_id.uom_id')
-    company_id = fields.Many2one(related='location_id.company_id',
-        string='Company', store=True, readonly=True)
+    company_id = fields.Many2one(related='location_id.company_id', string='Company', store=True, readonly=True)
     location_id = fields.Many2one(
         'stock.location', 'Location',
         domain=lambda self: self._domain_location_id(),
@@ -87,8 +85,18 @@ class StockQuant(models.Model):
         default=0.0,
         help='Quantity of reserved products in this quant, in the default unit of measure of the product',
         readonly=True, required=True)
+    available_quantity = fields.Float(
+        'Available Quantity',
+        help="On hand quantity which hasn't been reserved on a transfer, in the default unit of measure of the product",
+        compute='_compute_available_quantity')
     in_date = fields.Datetime('Incoming Date', readonly=True)
     tracking = fields.Selection(related='product_id.tracking', readonly=True)
+    on_hand = fields.Boolean('On Hand', store=False, search='_search_on_hand')
+
+    @api.depends('quantity', 'reserved_quantity')
+    def _compute_available_quantity(self):
+        for quant in self:
+            quant.available_quantity = quant.quantity - quant.reserved_quantity
 
     @api.depends('quantity')
     def _compute_inventory_quantity(self):
@@ -118,6 +126,18 @@ class StockQuant(models.Model):
                 move_vals = quant._get_inventory_move_values(-diff, quant.location_id, quant.product_id.with_company(quant.company_id).property_stock_inventory, out=True)
             move = quant.env['stock.move'].with_context(inventory_mode=False).create(move_vals)
             move._action_done()
+
+    def _search_on_hand(self, operator, value):
+        """Handle the "on_hand" filter, indirectly calling `_get_domain_locations`."""
+        if operator not in ['=', '!='] or not isinstance(value, bool):
+            raise UserError(_('Operation not supported'))
+        domain_loc = self.env['product.product']._get_domain_locations()[0]
+        quant_ids = [l['id'] for l in self.env['stock.quant'].search_read(domain_loc, ['id'])]
+        if (operator == '!=' and value is True) or (operator == '=' and value is False):
+            domain_operator = 'not in'
+        else:
+            domain_operator = 'in'
+        return [('id', domain_operator, quant_ids)]
 
     @api.model
     def create(self, vals):
@@ -151,13 +171,20 @@ class StockQuant(models.Model):
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        """ Override to handle the "inventory mode" and set the `inventory_quantity`
-        in view list grouped.
+        """ Override to set the `inventory_quantity` field if we're in "inventory mode" as well
+        as to compute the sum of the `available_quantity` field.
         """
+        if 'available_quantity' in fields:
+            if 'quantity' not in fields:
+                fields.append('quantity')
+            if 'reserved_quantity' not in fields:
+                fields.append('reserved_quantity')
         result = super(StockQuant, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
-        if self._is_inventory_mode():
-            for record in result:
-                record['inventory_quantity'] = record.get('quantity', 0)
+        for group in result:
+            if self._is_inventory_mode():
+                group['inventory_quantity'] = group.get('quantity', 0)
+            if 'available_quantity' in fields:
+                group['available_quantity'] = group['quantity'] - group['reserved_quantity']
         return result
 
     def write(self, vals):
@@ -596,7 +623,7 @@ class StockQuant(models.Model):
             'view_mode': 'list',
             'res_model': 'stock.quant',
             'type': 'ir.actions.act_window',
-            'context': dict(self.env.context),
+            'context': self.env.context,
             'domain': domain or [],
             'help': """
                 <p class="o_view_nocontent_empty_folder">No Stock On Hand</p>

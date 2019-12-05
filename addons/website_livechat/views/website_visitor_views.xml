@@ -33,7 +33,7 @@
             </field>
             <xpath expr="//div[hasclass('w_visitor_kanban_actions')]" position="before">
                 <div t-if="record.livechat_operator_id.raw_value">
-                    <span class="fa fa-comments mr-2"/>Speaking With <span class="font-weight-bold"><field name="livechat_operator_name"/></span>
+                    <span class="fas fa-comments mr-2"/>Speaking With <span class="font-weight-bold"><field name="livechat_operator_name"/></span>
                 </div>
                 <t t-else="">
                     <br attrs="{'invisible': ['|', ('livechat_operator_id', '!=', False), ('is_connected', '=', False)]}"/>
@@ -80,7 +80,7 @@
                 </group>
             </xpath>
             <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
-                <button name="%(website_visitor_livechat_session_action)d" type="action" class="oe_stat_button" icon="fa-comment"
+                <button name="%(website_visitor_livechat_session_action)d" type="action" class="oe_stat_button" icon="fas fa-comment"
                         attrs="{'invisible': [('session_count', '=', 0)]}">
                     <field name="session_count" widget="statinfo" string="Sessions"/>
                 </button>
@@ -95,7 +95,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='is_connected']" position="after">
                 <field name="livechat_operator_id"/>
-                <button name="action_send_chat_request" string="Send chat request" type="object" icon="fa-comments"
+                <button name="action_send_chat_request" string="Send chat request" type="object" icon="fas fa-comments"
                         attrs="{'invisible': ['|', ('livechat_operator_id', '!=', False), ('is_connected', '=', False)]}"/>
             </xpath>
         </field>

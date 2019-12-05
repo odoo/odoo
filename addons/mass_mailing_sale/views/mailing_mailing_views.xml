@@ -8,7 +8,7 @@
     		<xpath expr="//button[@id='button_view_sent']" position="before">
                 <button name="action_redirect_to_quotations"
                     type="object"
-                    icon="fa-pencil"
+                    icon="fa-pencil-alt"
                     class="oe_stat_button"
                     groups="sales_team.group_sale_salesman"
                     attrs="{'invisible': [('state', '=', 'draft')]}">
@@ -16,7 +16,7 @@
                 </button>
                 <button name="action_redirect_to_invoiced"
                     type="object"
-                    icon="fa-dollar"
+                    icon="fa-dollar-sign"
                     class="oe_stat_button"
                     groups="sales_team.group_sale_salesman"
                     attrs="{'invisible': [('state', '=', 'draft')]}" >

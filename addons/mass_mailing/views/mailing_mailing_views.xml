@@ -101,9 +101,9 @@
                                 id="button_view_sent"
                                 type="object"
                                 context="{'search_default_filter_sent': True}"
-                                icon="fa-envelope-o" class="oe_stat_button"
-                                attrs="{'invisible': ['&amp;', ('sent', '=', 0), ('state', 'in', ('draft', 'test'))]}" >
-                                <field name="sent" string="Sent" widget="statinfo"/>
+                                icon="far fa-envelope" class="oe_stat_button o_mass_mailing_button"
+                                attrs="{'invisible': ['&amp;', ('sent', '=', 0), ('state', 'in', ('draft','test'))]}" >
+                                <field name="sent" string="Emails Sent" widget="statinfo"/>
                             </button>
                             <button name="action_view_delivered"
                                 type="object"
@@ -340,7 +340,7 @@
                                 </div>
                                 <div name="div_responsible_avatar">
                                     <span attrs="{'invisible': [('sent_date', '=', False)]}">
-                                        <span class="fa fa-clock-o text-muted mr-2" aria-label="Sent date"/>
+                                        <span class="fa fa-clock text-muted mr-2" aria-label="Sent date"/>
                                         <field name="sent_date" widget="date"/>
                                     </span>
                                     <span attrs="{'invisible': [('sent_date', '!=', False)]}" class="oe_clear text-muted">

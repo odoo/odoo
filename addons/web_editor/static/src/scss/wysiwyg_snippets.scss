@@ -189,7 +189,7 @@ body.editor_enable.editor_has_snippets {
             white-space: nowrap;
             text-align: left;
 
-            &.fa {
+            &.fa, &.fas, &.fab, &.far {
                 display: inline-block;
                 margin: 0 0 0 0.3em;
                 padding: 0;
@@ -227,7 +227,8 @@ body.editor_enable.editor_has_snippets {
                 width: 1em;
                 right: 0.5em;
                 text-align: center;
-                font-family: FontAwesome;
+                font-family: 'Font Awesome 5 Free';
+                font-weight: 900;
             }
         }
 
@@ -296,26 +297,6 @@ body.editor_enable.editor_has_snippets {
                 @include we-icon-button('\f107');
             }
 
-            we-row {
-                display: block;
-
-                > div {
-                    display: flex;
-                    align-items: center;
-
-                    > * {
-                        flex: 1 1 auto;
-
-                        + * {
-                            margin-left: 0.5em;
-                        }
-                    }
-                    > .fa {
-                        flex: 0 0 auto;
-                    }
-                }
-            }
-
             we-select {
                 position: relative;
                 display: flex;
@@ -373,13 +354,8 @@ body.editor_enable.editor_has_snippets {
             }
 
             we-input {
-                display: flex;
-                align-items: center;
+                @extend we-row.o_we_inline;
 
-                > we-title {
-                    min-width: 60%;
-                    margin-right: 5%;
-                }
                 > input {
                     flex: 1 1 auto;
                     width: 0;
@@ -394,6 +370,50 @@ body.editor_enable.editor_has_snippets {
                 }
                 > span {
                     flex: 0 0 auto;
+                }
+            }
+
+            we-row {
+                position: relative;
+                display: block;
+
+                > div {
+                    flex: 1 1 auto;
+                    display: flex;
+                    align-items: center;
+
+                    > * {
+                        flex: 1 1 auto;
+
+                        + * {
+                            margin-left: 0.5em;
+                        }
+                    }
+                    > .fa, > .fas, > .fab, > .far {
+                        flex: 0 0 auto;
+                    }
+                }
+
+                &.o_we_inline {
+                    display: flex;
+                    align-items: center;
+
+                    > we-title {
+                        min-width: 60%;
+                        margin-right: 5%;
+                    }
+                }
+
+                we-select {
+                    position: static;
+                }
+
+                we-input {
+                    flex-wrap: wrap;
+
+                    > we-title {
+                        min-width: 95%;
+                    }
                 }
             }
 
@@ -412,7 +432,7 @@ body.editor_enable.editor_has_snippets {
                 display: flex;
                 align-items: center;
 
-                > .fa {
+                > .fa, > .fas, > .fab, > .far {
                     margin-left: auto;
                 }
             }
@@ -515,7 +535,8 @@ body.editor_enable.editor_has_snippets {
                     display: flex;
                     justify-content: center;
                     align-items: center;
-                    font-family: FontAwesome !important;
+                    font-family: 'Font Awesome 5 Free' !important;
+                    font-weight: 900;
                     color: $o-we-color-success;
                 }
 
@@ -679,7 +700,8 @@ body.editor_enable.editor_has_snippets {
                     border: solid 1px darken($o-we-handles-accent-color, 10%);
                     line-height: $o-we-handles-btn-size - 2;
                     font-size: 14px;
-                    font-family: FontAwesome;
+                    font-family: 'Font Awesome 5 Free';
+                    font-weight: 900;
                     background-color: darken($o-we-handles-accent-color, 20%);
                     color: white;
                 }
@@ -696,12 +718,14 @@ body.editor_enable.editor_has_snippets {
 
                 &.w:after,
                 &.e:after {
-                    content: "\f07e";
+                    content: "\f337";
+                    font-weight: 900;
                 }
 
                 &.s:after,
                 &.n:after {
-                    content: "\f07d";
+                    content: "\f338";
+                    font-weight: 900;
                 }
 
                 &.o_handle_start {
@@ -709,11 +733,13 @@ body.editor_enable.editor_has_snippets {
                     &.w:after,
                     &.e:after {
                         content: '\f061';
+                        font-weight: 900;
                     }
 
                     &.n:after,
                     &.s:after {
                         content: '\f063';
+                        font-weight: 900;
                     }
                 }
 
@@ -722,11 +748,13 @@ body.editor_enable.editor_has_snippets {
                     &.w:after,
                     &.e:after {
                         content: '\f060';
+                        font-weight: 900;
                     }
 
                     &.n:after,
                     &.s:after {
                         content: '\f062';
+                        font-weight: 900;
                     }
                 }
 
@@ -771,7 +799,8 @@ body.editor_enable.editor_has_snippets {
                 &::before, &::after {
                     content: '\f141';
                     display: block;
-                    font-family: FontAwesome;
+                    font-family: 'Font Awesome 5 Free';
+                    font-weight: 900;
                     font-size: 0.8em;
                     line-height: 0.35em;
                 }

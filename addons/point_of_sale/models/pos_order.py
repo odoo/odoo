@@ -8,8 +8,8 @@ import psycopg2
 import pytz
 
 from odoo import api, fields, models, tools, _
-from odoo.tools import float_is_zero
-from odoo.exceptions import UserError
+from odoo.tools import float_is_zero, float_round
+from odoo.exceptions import ValidationError, UserError
 from odoo.http import request
 from odoo.osv.expression import AND
 import base64
@@ -25,8 +25,7 @@ class PosOrder(models.Model):
     @api.model
     def _amount_line_tax(self, line, fiscal_position_id):
         taxes = line.tax_ids.filtered(lambda t: t.company_id.id == line.order_id.company_id.id)
-        if fiscal_position_id:
-            taxes = fiscal_position_id.map_tax(taxes, line.product_id, line.order_id.partner_id)
+        taxes = fiscal_position_id.map_tax(taxes, line.product_id, line.order_id.partner_id)
         price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
         taxes = taxes.compute_all(price, line.order_id.pricelist_id.currency_id, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)['taxes']
         return sum(tax.get('amount', 0.0) for tax in taxes)
@@ -191,6 +190,7 @@ class PosOrder(models.Model):
             'price_unit': order_line.price_unit,
             'name': order_line.product_id.display_name,
             'tax_ids': [(6, 0, order_line.tax_ids.ids)],
+            'product_uom_id': order_line.product_uom_id.id,
         }
 
     def _get_pos_anglo_saxon_price_unit(self, product, partner_id, quantity):
@@ -270,7 +270,6 @@ class PosOrder(models.Model):
     def _compute_currency_rate(self):
         for order in self:
             order.currency_rate = self.env['res.currency']._get_conversion_rate(order.company_id.currency_id, order.currency_id, order.company_id, order.date_order)
-
 
     @api.onchange('payment_ids', 'lines')
     def _onchange_amount_all(self):
@@ -358,8 +357,15 @@ class PosOrder(models.Model):
 
     def action_pos_order_paid(self):
         self.ensure_one()
-        if not float_is_zero(self.amount_total - self.amount_paid, precision_rounding=self.currency_id.rounding):
+
+        if not self.config_id.cash_rounding:
+            total = self.amount_total
+        else:
+            total = float_round(self.amount_total, precision_rounding=self.config_id.rounding_method.rounding, rounding_method=self.config_id.rounding_method.rounding_method)
+
+        if not float_is_zero(total - self.amount_paid, precision_rounding=self.currency_id.rounding):
             raise UserError(_("Order %s is not fully paid.") % self.name)
+
         self.write({'state': 'paid'})
         return True
 
@@ -386,9 +392,10 @@ class PosOrder(models.Model):
                 # considering partner's sale pricelist's currency
                 'currency_id': order.pricelist_id.currency_id.id,
                 'invoice_user_id': order.user_id.id,
-                'invoice_date': fields.Date.today(),
+                'invoice_date': order.date_order.date(),
                 'fiscal_position_id': order.fiscal_position_id.id,
                 'invoice_line_ids': [(0, None, order._prepare_invoice_line(line)) for line in order.lines],
+                'invoice_cash_rounding_id': order.config_id.rounding_method.id if order.config_id.cash_rounding else False
             }
             new_move = moves.sudo()\
                             .with_company(order.company_id)\
@@ -436,8 +443,9 @@ class PosOrder(models.Model):
         for order in orders:
             existing_order = False
             if 'server_id' in order['data']:
-                existing_order = self.env['pos.order'].search([('id', '=', order['data']['server_id'])], limit=1)
-            order_ids.append(self._process_order(order, draft, existing_order))
+                existing_order = self.env['pos.order'].search(['|', ('id', '=', order['data']['server_id']), ('pos_reference', '=', order['data']['name'])], limit=1)
+            if (existing_order and existing_order.state == 'draft') or not existing_order:
+                order_ids.append(self._process_order(order, draft, existing_order))
 
         return self.env['pos.order'].search_read(domain = [('id', 'in', order_ids)], fields = ['id', 'pos_reference'])
 
@@ -652,7 +660,7 @@ class PosOrderLine(models.Model):
     def _compute_amount_line_all(self):
         self.ensure_one()
         fpos = self.order_id.fiscal_position_id
-        tax_ids_after_fiscal_position = fpos.map_tax(self.tax_ids, self.product_id, self.order_id.partner_id) if fpos else self.tax_ids
+        tax_ids_after_fiscal_position = fpos.map_tax(self.tax_ids, self.product_id, self.order_id.partner_id)
         price = self.price_unit * (1 - (self.discount or 0.0) / 100.0)
         taxes = tax_ids_after_fiscal_position.compute_all(price, self.order_id.pricelist_id.currency_id, self.qty, product=self.product_id, partner=self.order_id.partner_id)
         return {
@@ -671,8 +679,7 @@ class PosOrderLine(models.Model):
                 self.product_id, self.qty or 1.0, self.order_id.partner_id)
             self._onchange_qty()
             self.tax_ids = self.product_id.taxes_id.filtered(lambda r: not self.company_id or r.company_id == self.company_id)
-            fpos = self.order_id.fiscal_position_id
-            tax_ids_after_fiscal_position = fpos.map_tax(self.tax_ids, self.product_id, self.order_id.partner_id) if fpos else self.tax_ids
+            tax_ids_after_fiscal_position = self.order_id.fiscal_position_id.map_tax(self.tax_ids, self.product_id, self.order_id.partner_id)
             self.price_unit = self.env['account.tax']._fix_tax_included_price_company(price, self.product_id.taxes_id, tax_ids_after_fiscal_position, self.company_id)
 
     @api.onchange('qty', 'discount', 'price_unit', 'tax_ids')
@@ -824,3 +831,13 @@ class ReportSaleDetails(models.AbstractModel):
         configs = self.env['pos.config'].browse(data['config_ids'])
         data.update(self.get_sale_details(data['date_start'], data['date_stop'], configs))
         return data
+
+    class AccountCashRounding(models.Model):
+        _inherit = 'account.cash.rounding'
+
+        @api.constrains('rounding', 'rounding_method', 'strategy')
+        def _check_session_state(self):
+            open_session = self.env['pos.session'].search([('config_id.rounding_method', '=', self.id), ('state', '!=', 'closed')])
+            if open_session:
+                raise ValidationError(
+                    _("You are not allowed to change the cash rounding configuration while a pos session using it is already opened."))

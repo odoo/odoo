@@ -133,7 +133,7 @@ class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
         self.assertNotIn("I think they're great!", user_inputs.mapped('user_input_line_ids.value_free_text'))
         self.assertIn("Just kidding, I don't like it...", user_inputs.mapped('user_input_line_ids.value_free_text'))
 
-        certification_email = self.env['mail.mail'].search([], limit=1, order="create_date desc")
+        certification_email = self.env['mail.mail'].sudo().search([], limit=1, order="create_date desc")
         # Check certification email correctly sent and contains document
         self.assertIn("User Certification for SO lines", certification_email.subject)
         self.assertIn("employee@example.com", certification_email.email_to)

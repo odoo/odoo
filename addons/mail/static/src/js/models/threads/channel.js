@@ -5,6 +5,7 @@ var SearchableThread = require('mail.model.SearchableThread');
 var ThreadTypingMixin = require('mail.model.ThreadTypingMixin');
 var mailUtils = require('mail.utils');
 
+const config = require('web.config');
 var session = require('web.session');
 var time = require('web.time');
 
@@ -106,11 +107,15 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
      */
     close: function () {
         this._super.apply(this, arguments);
-        this._rpc({
-                model: 'mail.channel',
-                method: 'channel_fold',
-                kwargs: { uuid: this.getUUID(), state: 'closed' },
-            }, { shadow: true });
+        // Do not notify the server to avoid desktop chat window from closing
+        // when a chat window is closed on mobile.
+        if (!config.device.isMobile) {
+            this._rpc({
+                    model: 'mail.channel',
+                    method: 'channel_fold',
+                    kwargs: { uuid: this.getUUID(), state: 'closed' },
+                }, { shadow: true });
+        }
     },
     /**
      * Decrement the needaction counter of the channel
@@ -131,13 +136,17 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
     detach: function () {
         var self = this;
         return this._super.apply(this, arguments).then(function () {
-            self._rpc({
-                model: 'mail.channel',
-                method: 'channel_minimize',
-                args: [self.getUUID(), true],
-            }, {
-                shadow: true,
-            });
+            // Do not notify the server to avoid desktop chat window from opening
+            // when a chat window is opened on mobile.
+            if (!config.device.isMobile) {
+                self._rpc({
+                    model: 'mail.channel',
+                    method: 'channel_minimize',
+                    args: [self.getUUID(), true],
+                }, {
+                    shadow: true,
+                });
+            }
         });
     },
     /**
@@ -434,7 +443,7 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
         return this._super.apply(this, arguments).then(function (messageData) {
             _.extend(messageData, {
                 message_type: 'comment',
-                subtype: 'mail.mt_comment',
+                subtype_xmlid: 'mail.mt_comment',
                 command: data.command,
             });
             return self._rpc({

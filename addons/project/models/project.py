@@ -6,6 +6,7 @@ from datetime import timedelta
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, AccessError, ValidationError
 from odoo.tools.safe_eval import safe_eval
+from odoo.tools.misc import format_date
 
 
 class ProjectTaskType(models.Model):
@@ -482,6 +483,7 @@ class Task(models.Model):
     date_end = fields.Datetime(string='Ending Date', index=True, copy=False)
     date_assign = fields.Datetime(string='Assigning Date', index=True, copy=False, readonly=True)
     date_deadline = fields.Date(string='Deadline', index=True, copy=False, tracking=True)
+    date_deadline_formatted = fields.Char(compute='_compute_date_deadline_formatted')
     date_last_stage_update = fields.Datetime(string='Last Stage Update',
         index=True,
         copy=False,
@@ -528,6 +530,11 @@ class Task(models.Model):
     working_days_close = fields.Float(compute='_compute_elapsed', string='Working days to close', store=True, group_operator="avg")
     # customer portal: include comment and incoming emails in communication history
     website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', 'in', ['email', 'comment'])])
+
+    @api.depends('date_deadline')
+    def _compute_date_deadline_formatted(self):
+        for task in self:
+            task.date_deadline_formatted = format_date(self.env, task.date_deadline) if task.date_deadline else None
 
     def _compute_attachment_ids(self):
         for task in self:
@@ -588,15 +595,12 @@ class Task(models.Model):
     @api.depends('child_ids.planned_hours')
     def _compute_subtask_planned_hours(self):
         for task in self:
-            task.subtask_planned_hours = sum(task.child_ids.mapped('planned_hours'))
+            task.subtask_planned_hours = sum(child_task.planned_hours + child_task.subtask_planned_hours for child_task in task.child_ids)
 
     @api.depends('child_ids')
     def _compute_subtask_count(self):
-        """ Note: since we accept only one level subtask, we can use a read_group here """
-        task_data = self.env['project.task'].read_group([('parent_id', 'in', self.ids)], ['parent_id'], ['parent_id'])
-        mapping = dict((data['parent_id'][0], data['parent_id_count']) for data in task_data)
         for task in self:
-            task.subtask_count = mapping.get(task.id, 0)
+            task.subtask_count = len(self._get_all_subtasks())
 
     @api.onchange('project_id')
     def _onchange_project(self):
@@ -882,21 +886,17 @@ class Task(models.Model):
     def action_assign_to_me(self):
         self.write({'user_id': self.env.user.id})
 
-    def action_open_parent_task(self):
-        return {
-            'name': _('Parent Task'),
-            'view_mode': 'form',
-            'res_model': 'project.task',
-            'res_id': self.parent_id.id,
-            'type': 'ir.actions.act_window',
-            'context': dict(self._context, create=False)
-        }
+    def _get_all_subtasks(self):
+        children = self.mapped('child_ids')
+        if not children:
+            return self.env['project.task']
+        return children + children._get_all_subtasks()
 
     def action_subtask(self):
         action = self.env.ref('project.project_task_action_sub_task').read()[0]
 
-        # only display subtasks of current task
-        action['domain'] = [('id', 'child_of', self.id), ('id', '!=', self.id)]
+        # display all subtasks of current task
+        action['domain'] = [('id', 'in', self._get_all_subtasks().ids)]
 
         # update context, with all default values as 'quick_create' does not contains all field in its view
         if self._context.get('default_project_id'):
@@ -908,7 +908,6 @@ class Task(models.Model):
             'default_name': self.env.context.get('name', self.name) + ':',
             'default_parent_id': self.id,  # will give default subtask field in `default_get`
             'default_company_id': default_project.company_id.id if default_project else self.env.company.id,
-            'search_default_parent_id': self.id,
         })
 
         action['context'] = ctx
@@ -931,8 +930,8 @@ class Task(models.Model):
             return self.project_id.partner_id
         return res
 
-    def rating_apply(self, rate, token=None, feedback=None, subtype=None):
-        return super(Task, self).rating_apply(rate, token=token, feedback=feedback, subtype="project.mt_task_rating")
+    def rating_apply(self, rate, token=None, feedback=None, subtype_xmlid=None):
+        return super(Task, self).rating_apply(rate, token=token, feedback=feedback, subtype_xmlid="project.mt_task_rating")
 
     def _rating_get_parent_field_name(self):
         return 'project_id'

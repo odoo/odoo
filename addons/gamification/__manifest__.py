@@ -34,7 +34,8 @@ Both goals and badges are flexibles and can be adapted to a large range of modul
         'views/gamification.xml',
         'views/gamification_karma_rank_views.xml',
         'views/gamification_karma_tracking_views.xml',
-        'views/mail_templates.xml'
+        'views/mail_templates.xml',
+        'views/res_users_views.xml',
     ],
     'demo': [
         'data/gamification_karma_rank_demo.xml',

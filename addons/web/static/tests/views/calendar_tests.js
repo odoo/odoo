@@ -571,7 +571,6 @@ QUnit.module('Views', {
             mockRPC: function (route, args) {
                 if (args.method === "create") {
                     assert.deepEqual(args.kwargs.context, {
-                        "default_name": null,
                         "default_start": "2016-12-13 06:00:00",
                         "default_stop": "2016-12-13 08:00:00",
                         "default_allday": null
@@ -1001,7 +1000,6 @@ QUnit.module('Views', {
             mockRPC: function (route, args) {
                 if (args.method === "create") {
                     assert.deepEqual(args.kwargs.context, {
-                        "default_name": null,
                         "default_start": "2016-12-13 06:00:00",
                         "default_stop": "2016-12-13 08:00:00",
                         "default_allday": null
@@ -1340,6 +1338,62 @@ QUnit.module('Views', {
         calendar.destroy();
     });
 
+    QUnit.test('create event with default context (no quickCreate)', async function (assert) {
+        assert.expect(3);
+
+        this.data.event.records = [];
+
+        const calendar = await createCalendarView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            `<calendar
+                class="o_calendar_test"
+                date_start="start"
+                date_stop="stop"
+                mode="week"
+                quick_add="False"/>`,
+            archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+            session: {
+                getTZOffset() {
+                    return 120;
+                },
+            },
+            context: {
+                default_name: 'New',
+            },
+            intercepts: {
+                do_action(ev) {
+                    assert.step('do_action');
+                    assert.deepEqual(ev.data.action.context, {
+                        default_name: "New",
+                        default_start: "2016-12-14 05:00:00",
+                        default_stop: "2016-12-15 17:00:00",
+                    },
+                    "should send the correct data to create events");
+                },
+            },
+        }, { positionalClicks: true });
+
+        var pos = calendar.$('.fc-bg td:eq(4)').offset();
+        try {
+            testUtils.dom.triggerPositionalMouseEvent(pos.left + 15, pos.top + 15, "mousedown");
+        } catch (e) {
+            calendar.destroy();
+            throw new Error('The test fails to simulate a click in the screen. Your screen is probably too small or your dev tools is open.');
+        }
+        pos = calendar.$('.fc-bg td:eq(5)').offset();
+        testUtils.dom.triggerPositionalMouseEvent(pos.left + 15, pos.top + 15, "mousemove");
+        testUtils.dom.triggerPositionalMouseEvent(pos.left + 15, pos.top + 15, "mouseup");
+        assert.verifySteps(['do_action']);
+
+        calendar.destroy();
+    });
+
     QUnit.test('create all day event in week mode (no quickCreate)', async function (assert) {
         assert.expect(1);
 
@@ -1367,7 +1421,6 @@ QUnit.module('Views', {
             intercepts: {
                 do_action: function (event) {
                     assert.deepEqual(event.data.action.context, {
-                        "default_name": null,
                         "default_start": "2016-12-14 05:00:00",
                         "default_stop": "2016-12-15 17:00:00",
                     },
@@ -2563,6 +2616,48 @@ QUnit.module('Views', {
         await testUtils.dom.click(calendar.$('.fc-event:contains(An event)'));
         assert.ok(calendar.$('.o_cw_popover').length, "should open a popover clicking on event");
         assert.strictEqual(calendar.$('.o_cw_popover .o_cw_popover_fields_secondary .list-group-item:last .o_field_date').text(), '01/07/2017', "should have correct start date");
+        calendar.destroy();
+    });
+
+    QUnit.test("drag and drop on month mode", async function (assert) {
+        assert.expect(2);
+
+        const calendar = await createCalendarView({
+            arch:
+                `<calendar date_start="start" date_stop="stop" mode="month" event_open_popup="true" quick_add="False">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                </calendar>`,
+            archs: archs,
+            data: this.data,
+            model: 'event',
+            View: CalendarView,
+            viewOptions: { initialDate: initialDate },
+        });
+
+        // Create event (on 20 december)
+        var $cell = calendar.$('.fc-day-grid .fc-row:eq(3) .fc-day:eq(2)');
+        testUtils.triggerMouseEvent($cell, "mousedown");
+        testUtils.triggerMouseEvent($cell, "mouseup");
+        await testUtils.nextTick();
+        var $input = $('.modal-body input:first');
+        await testUtils.fields.editInput($input, "An event");
+        await testUtils.dom.click($('.modal button.btn-primary'));
+        await testUtils.nextTick();
+
+        // Move event to another day (on 19 december)
+        await testUtils.dragAndDrop(
+            calendar.$('.fc-event:contains("An event")'),
+            calendar.$('.fc-day-grid .fc-row:eq(3) .fc-day-top:eq(1)')
+        );
+        await testUtils.nextTick();
+        await testUtils.dom.click(calendar.$('.fc-event:contains("An event")'));
+
+        assert.containsOnce(calendar, '.popover:contains("07:00")',
+            "start hour shouldn't have been changed");
+        assert.containsOnce(calendar, '.popover:contains("19:00")',
+            "end hour shouldn't have been changed");
+
         calendar.destroy();
     });
 

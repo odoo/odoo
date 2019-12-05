@@ -18,13 +18,12 @@ class ResCompany(models.Model):
                 'name': _("Default %(currency)s pricelist") %  params,
                 'currency_id': new_company.currency_id.id,
             })
-        field = self.env['ir.model.fields']._get('res.partner', 'property_product_pricelist')
-        self.env['ir.property'].sudo().create({
-            'name': 'property_product_pricelist',
-            'value_reference': 'product.pricelist,%s' % pricelist.id,
-            'fields_id': field.id,
-            'company_id': new_company.id,
-        })
+        self.env['ir.property'].sudo().set_default(
+            'property_product_pricelist',
+            'res.partner',
+            pricelist,
+            new_company,
+        )
         return new_company
 
     def write(self, values):
@@ -38,7 +37,7 @@ class ResCompany(models.Model):
             nb_companies = self.search_count([])
             for company in self:
                 existing_pricelist = ProductPricelist.search(
-                    [('company_id', 'in', (False, company.id)), 
+                    [('company_id', 'in', (False, company.id)),
                      ('currency_id', '=', currency_id)])
                 if existing_pricelist:
                     continue
@@ -55,11 +54,10 @@ class ResCompany(models.Model):
                         'name': _("Default %(currency)s pricelist") %  params,
                         'currency_id': currency_id,
                     })
-                    field = self.env['ir.model.fields'].search([('model', '=', 'res.partner'), ('name', '=', 'property_product_pricelist')])
-                    self.env['ir.property'].sudo().create({
-                        'name': 'property_product_pricelist',
-                        'company_id': company.id,
-                        'value_reference': 'product.pricelist,%s' % pricelist.id,
-                        'fields_id': field.id
-                    })
+                    self.env['ir.property'].sudo().set_default(
+                        'property_product_pricelist',
+                        'res.partner',
+                        pricelist,
+                        company,
+                    )
         return super(ResCompany, self).write(values)

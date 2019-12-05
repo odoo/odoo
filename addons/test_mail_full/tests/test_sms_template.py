@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.sms.tests import common as sms_common
 from odoo.addons.test_mail_full.tests import common as test_mail_full_common
 
 
-class TestSmsTemplate(test_mail_full_common.BaseFunctionalTest, sms_common.MockSMS, test_mail_full_common.TestRecipients):
+class TestSmsTemplate(test_mail_full_common.TestSMSCommon, test_mail_full_common.TestRecipients):
 
     @classmethod
     def setUpClass(cls):

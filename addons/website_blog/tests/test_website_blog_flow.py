@@ -53,7 +53,7 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
             body='Armande BlogUser Commented',
             message_type='comment',
             author_id=self.user_employee.partner_id.id,
-            subtype='mt_comment',
+            subtype_xmlid='mail.mt_comment',
         )
         self.assertIn(
             self.user_employee.partner_id, test_blog_post.message_partner_ids,

@@ -264,10 +264,12 @@ class Import(models.TransientModel):
     def _read_xls(self, options):
         """ Read file content, using xlrd lib """
         book = xlrd.open_workbook(file_contents=self.file or b'')
-        return self._read_xls_book(book)
+        sheets = options['sheets'] = book.sheet_names()
+        sheet = options['sheet'] = options.get('sheet') or sheets[0]
+        return self._read_xls_book(book, sheet)
 
-    def _read_xls_book(self, book):
-        sheet = book.sheet_by_index(0)
+    def _read_xls_book(self, book, sheet_name):
+        sheet = book.sheet_by_name(sheet_name)
         # emulate Sheet.get_rows for pre-0.9.4
         for rowx, row in enumerate(map(sheet.row, range(sheet.nrows)), 1):
             values = []
@@ -309,10 +311,12 @@ class Import(models.TransientModel):
     def _read_ods(self, options):
         """ Read file content using ODSReader custom lib """
         doc = odf_ods_reader.ODSReader(file=io.BytesIO(self.file or b''))
+        sheets = options['sheets'] = list(doc.SHEETS.keys())
+        sheet = options['sheet'] = options.get('sheet') or sheets[0]
 
         return (
             row
-            for row in doc.getFirstSheet()
+            for row in doc.getSheet(sheet)
             if any(x for x in row if x.strip())
         )
 

@@ -12,23 +12,26 @@ class TestSaleMargin(common.TransactionCase):
         self.SaleOrder = self.env['sale.order']
 
         self.product_uom_id = self.ref('uom.product_uom_unit')
-        self.product_id = self.env['product.product'].create({'name': 'Individual Workplace'}).id
+        self.product = self.env['product.product'].create({'name': 'Individual Workplace'})
+        self.product_id = self.product.id
         self.partner_id = self.env['res.partner'].create({'name': 'A test partner'}).id
         self.partner_invoice_address_id = self.env['res.partner'].create({
             'name': 'A test partner address',
             'parent_id': self.partner_id,
         }).id
         self.pricelist_id = self.ref('product.list0')
+        self.pricelist = self.env.ref('product.list0')
 
     def test_sale_margin(self):
         """ Test the sale_margin module in Odoo. """
+        self.pricelist.currency_id = self.env.company.currency_id
+        self.product.standard_price = 700.0
         sale_order_so11 = self.SaleOrder.create({
             'date_order': datetime.today(),
             'name': 'Test_SO011',
             'order_line': [
                 (0, 0, {
                     'name': '[CARD] Individual Workplace',
-                    'purchase_price': 700.0,
                     'price_unit': 1000.0,
                     'product_uom': self.product_uom_id,
                     'product_uom_qty': 10.0,
@@ -37,7 +40,6 @@ class TestSaleMargin(common.TransactionCase):
                 (0, 0, {
                     'name': 'Line without product_uom',
                     'price_unit': 1000.0,
-                    'purchase_price': 700.0,
                     'product_uom_qty': 10.0,
                     'state': 'draft',
                     'product_id': self.product_id})],

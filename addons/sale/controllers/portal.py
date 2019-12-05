@@ -19,11 +19,11 @@ class CustomerPortal(CustomerPortal):
         partner = request.env.user.partner_id
 
         SaleOrder = request.env['sale.order']
-        quotation_count = SaleOrder.sudo().search_count([
+        quotation_count = SaleOrder.search_count([
             ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
             ('state', 'in', ['sent', 'cancel'])
         ])
-        order_count = SaleOrder.sudo().search_count([
+        order_count = SaleOrder.search_count([
             ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
             ('state', 'in', ['sale', 'done'])
         ])
@@ -159,7 +159,7 @@ class CustomerPortal(CustomerPortal):
         if order_sudo and request.session.get('view_quote_%s' % order_sudo.id) != now and request.env.user.share and access_token:
             request.session['view_quote_%s' % order_sudo.id] = now
             body = _('Quotation viewed by customer %s') % order_sudo.partner_id.name
-            _message_post_helper('sale.order', order_sudo.id, body, token=order_sudo.access_token, message_type='notification', subtype="mail.mt_note")
+            _message_post_helper('sale.order', order_sudo.id, body, token=order_sudo.access_token, message_type='notification', subtype_xmlid="mail.mt_note")
 
         values = {
             'sale_order': order_sudo,

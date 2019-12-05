@@ -8,6 +8,7 @@ var Widget = require('web.Widget');
 var weWidgets = require('wysiwyg.widgets');
 var websiteNavbarData = require('website.navbar');
 var ColorPaletteDialog = require('web_editor.ColorPalette').ColorPaletteDialog;
+const ColorpickerDialog = require('web.ColorpickerDialog');
 
 var _t = core._t;
 
@@ -518,13 +519,14 @@ var ThemeCustomizeDialog = Dialog.extend({
             var colorpicker = new ColorPaletteDialog(self, {
                 resetButton: false,
                 defaultColor: $color.css('background-color'),
-                excluded: ['transparent_grayscale'],
-                excludeSectionOf: colorName,
             });
             var chosenColor = undefined;
-            colorpicker.on('color_picked custom_color_picked', self, function (ev) {
+            colorpicker.on('color_picked', self, function (ev) {
                 ev.stopPropagation();
-                chosenColor = ev.data.cssColor;
+                chosenColor = ev.data.color;
+                if (!ColorpickerDialog.isCSSColor(chosenColor)) {
+                    chosenColor = ColorpickerDialog.normalizeCSSColor(self.style.getPropertyValue('--' + chosenColor).trim());
+                }
                 colorpicker.close();
             });
             colorpicker.on('closed', self, function (ev) {
@@ -709,7 +711,7 @@ var ThemeCustomizeDialog = Dialog.extend({
     _updateStyle: function (enable, disable, reload) {
         var self = this;
 
-        var $loading = $('<i/>', {class: 'fa fa-refresh fa-spin'});
+        var $loading = $('<i/>', {class: 'fas fa-sync fa-spin'});
         this.$modal.find('.modal-title').append($loading);
 
         if (reload || config.isDebug('assets')) {

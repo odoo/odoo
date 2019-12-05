@@ -2,6 +2,17 @@
 <odoo>
     <data>
 
+        <record id="account_tax_report_tree" model="ir.ui.view">
+            <field name="name">account.tax.report.tree</field>
+            <field name="model">account.tax.report</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="country_id"/>
+                </tree>
+            </field>
+        </record>
+
         <record id="account_tax_report_line_tree" model="ir.ui.view">
             <field name="name">account.tax.report.line.tree</field>
             <field name="model">account.tax.report.line</field>
@@ -9,7 +20,32 @@
                 <tree create="1" delete="1">
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
+                    <field name="tag_name"/>
+                    <field name="code"/>
+                    <field name="formula"/>
                 </tree>
+            </field>
+        </record>
+
+        <record id="account_tax_report_form" model="ir.ui.view">
+            <field name="name">account.tax.report.form</field>
+            <field name="model">account.tax.report</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                            </group>
+                            <group>
+                                <field name="country_id"/>
+                            </group>
+                        </group>
+
+                        <field name="id" invisible="1"/>
+                        <field name="root_line_ids" context="{'default_report_id': id}"/>
+                    </sheet>
+                </form>
             </field>
         </record>
 
@@ -21,13 +57,13 @@
                 <sheet>
                     <group>
                         <group>
-                            <field name="country_id" invisible="1"/>
                             <field name="sequence" invisible="1"/>
                             <field name="name"/>
                             <field name="tag_name"/>
                         </group>
                         <group>
-                            <field name="parent_id" domain="[('country_id','=',country_id)]"/>
+                            <field name="report_id" readonly="1"/>
+                            <field name="parent_id" readonly="1"/>
                             <field name="code"/>
                         </group>
                     </group>
@@ -35,11 +71,10 @@
                         <field name="formula"/>
                     </group>
                     <group string="Sublines">
-                        <field name="children_line_ids" context="{'default_country_id': country_id}">
+                        <field name="children_line_ids" context="{'default_report_id': report_id}">
                             <form>
                                 <group>
                                     <group>
-                                        <field name="country_id" invisible="1"/>
                                         <field name="sequence" invisible="1"/>
                                         <field name="name"/>
                                         <field name="tag_name"/>
@@ -52,7 +87,7 @@
                                     <field name="formula"/>
                                 </group>
                                 <group string="Sublines">
-                                    <field name="children_line_ids" context="{'form_view_ref': 'account.account_tax_report_line_form', 'default_country_id': country_id}"/>
+                                    <field name="children_line_ids" context="{'form_view_ref': 'account.account_tax_report_line_form'}"/>
                                 </group>
                             </form>
                         </field>
@@ -62,25 +97,25 @@
             </field>
         </record>
 
-        <record id="account_tax_report_line_search" model="ir.ui.view">
-            <field name="name">account.tax.report.line.search</field>
-            <field name="model">account.tax.report.line</field>
+        <record id="account_tax_report_search" model="ir.ui.view">
+            <field name="name">account.tax.report.search</field>
+            <field name="model">account.tax.report</field>
             <field name="arch" type="xml">
                 <search>
                     <group expand="0" string="Group By">
-                        <filter string="Country" name="groupby_country" context="{'group_by': 'country_id'}"/>
+                        <field name="name"/>
+                        <field name="country_id"/>
                     </group>
                 </search>
             </field>
         </record>
 
         <record id="action_configure_tax_report" model="ir.actions.act_window">
-            <field name="name">Configure Tax Report</field>
+            <field name="name">Tax Reports</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">account.tax.report.line</field>
+            <field name="res_model">account.tax.report</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="account_tax_report_line_tree"/>
-            <field name="context">{'search_default_groupby_country': True}</field>
+            <field name="view_id" ref="account_tax_report_tree"/>
         </record>
 
 

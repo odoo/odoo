@@ -402,7 +402,7 @@ class GoogleCalendar(models.AbstractModel):
         if event_new.allday:
             _originalStartTime['date'] = event_new.recurrent_id_date.strftime("%Y-%m-%d")
         else:
-            _originalStartTime['datetime'] = event_new.recurrent_id_date.strftime("%Y-%m-%dT%H:%M:%S.%fz")
+            _originalStartTime['dateTime'] = event_new.recurrent_id_date.strftime("%Y-%m-%dT%H:%M:%S.%fz")
 
         data.update(
             recurringEventId=event_ori_google_id,

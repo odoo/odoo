@@ -11,11 +11,5 @@
             <field name="parent_id" ref="website.main_menu"/>
             <field name="sequence" type="int">50</field>
         </record>
-
-        <template id="portal_404" inherit_id="portal.404_oe_structure_404_2"  name="Slides 404 Popular Page Entry">
-            <xpath expr="//li[last()]" position="before">
-                <li class="list-inline-item mb-2"><a href="/slides" class="btn btn-secondary">Courses</a></li>
-            </xpath>
-        </template>
     </data>
 </odoo>

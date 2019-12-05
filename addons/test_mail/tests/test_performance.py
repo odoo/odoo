@@ -239,7 +239,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
     def test_adv_activity_mixin(self):
         record = self.env['mail.test.activity'].create({'name': 'Test'})
 
-        with self.assertQueryCount(__system__=7, emp=7):
+        with self.assertQueryCount(__system__=8, emp=8):
             activity = record.action_start('Test Start')
             #read activity_type to normalize cache between enterprise and community
             #voip module read activity_type during create leading to one less query in enterprise on action_close
@@ -331,7 +331,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         with self.assertQueryCount(__system__=5, emp=6):
             record.message_post(
                 body='<p>Test message_post as log</p>',
-                subtype='mail.mt_note',
+                subtype_xmlid='mail.mt_note',
                 message_type='comment')
 
     @users('__system__', 'emp')
@@ -344,7 +344,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
                 body='<p>Test Post Performances basic</p>',
                 partner_ids=[],
                 message_type='comment',
-                subtype='mail.mt_comment')
+                subtype_xmlid='mail.mt_comment')
 
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('__system__', 'emp')
@@ -357,7 +357,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
                 body='<p>Test Post Performances with an email ping</p>',
                 partner_ids=self.customer.ids,
                 message_type='comment',
-                subtype='mail.mt_comment')
+                subtype_xmlid='mail.mt_comment')
 
     @users('__system__', 'emp')
     @warmup
@@ -369,7 +369,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
                 body='<p>Test Post Performances with an inbox ping</p>',
                 partner_ids=self.user_test.partner_id.ids,
                 message_type='comment',
-                subtype='mail.mt_comment')
+                subtype_xmlid='mail.mt_comment')
 
     @mute_logger('odoo.models.unlink')
     @users('__system__', 'emp')
@@ -459,8 +459,8 @@ class TestMailComplexPerformance(BaseMailPerformance):
             'recipient_ids': [(4, pid) for pid in self.partners.ids],
         })
         mail_ids = mail.ids
-        with self.assertQueryCount(__system__=8, emp=9):
-            self.env['mail.mail'].browse(mail_ids).send()
+        with self.assertQueryCount(__system__=8, emp=8):
+            self.env['mail.mail'].sudo().browse(mail_ids).send()
 
         self.assertEqual(mail.body_html, '<p>Test</p>')
         self.assertEqual(mail.reply_to, formataddr(('%s %s' % (self.env.company.name, self.umbrella.name), 'test-alias@example.com')))
@@ -476,7 +476,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
             record.message_post(
                 body='<p>Test Post Performances</p>',
                 message_type='comment',
-                subtype='mail.mt_comment')
+                subtype_xmlid='mail.mt_comment')
 
         self.assertEqual(record.message_ids[0].body, '<p>Test Post Performances</p>')
         self.assertEqual(record.message_ids[0].notified_partner_ids, self.partners | self.user_portal.partner_id)
@@ -823,7 +823,7 @@ class TestMailHeavyPerformancePost(BaseMailPerformance):
                 body='<p>Test body <img src="cid:cid1"> <img src="cid:cid2"></p>',
                 subject='Test Subject',
                 message_type='notification',
-                subtype=None,
+                subtype_xmlid=None,
                 partner_ids=partner_ids,
                 channel_ids=channel_ids,
                 parent_id=False,

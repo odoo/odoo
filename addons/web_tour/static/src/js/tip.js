@@ -178,7 +178,14 @@ var Tip = Widget.extend({
     },
     _bind_anchor_events: function () {
         this.consume_event = Tip.getConsumeEventType(this.$anchor);
-        this.$anchor.on(this.consume_event + ".anchor", (function (e) {
+        this.$consumeEventAnchor = this.$anchor;
+        // jQuery-ui draggable triggers 'drag' events on the .ui-draggable element,
+        // but the tip is attached to the .ui-draggable-handle element which may
+        // be one of its children (or the element itself)
+        if (this.consume_event === "drag") {
+            this.$consumeEventAnchor = this.$anchor.closest('.ui-draggable');
+        }
+        this.$consumeEventAnchor.on(this.consume_event + ".anchor", (function (e) {
             if (e.type !== "mousedown" || e.which === 1) { // only left click
                 this.trigger("tip_consumed");
                 this._unbind_anchor_events();
@@ -189,6 +196,7 @@ var Tip = Widget.extend({
     },
     _unbind_anchor_events: function () {
         this.$anchor.off(".anchor");
+        this.$consumeEventAnchor.off(".anchor");
     },
     _get_spaced_inverted_position: function (position) {
         if (position === "right") return "left+" + this.info.space;
@@ -305,6 +313,8 @@ Tip.getConsumeEventType = function ($element) {
         return !type || !!type.match(/^(email|number|password|search|tel|text|url)$/);
     })) {
         return "input";
+    } else if ($element.hasClass('ui-draggable-handle')) {
+        return "drag";
     }
     return "click";
 };

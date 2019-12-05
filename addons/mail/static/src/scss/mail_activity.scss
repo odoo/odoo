@@ -155,10 +155,13 @@
 .o_kanban_record, .o_view_controller{
     .o_mail_activity {
         .o_activity_btn {
-            span.fa {
+            span.fa,
+            span.far,
+            span.fas {
                 overflow: visible;
                 line-height: 1;
                 vertical-align: middle;
+                font-size: 15px;
             }
         }
 
@@ -178,6 +181,10 @@
                     .o_activity_title_entry {
                         display: flex;
                         align-items: baseline;
+
+                        .fa, .far, .fas, .fab {
+                            font-size: unset;
+                        }
                     }
 
                     .o_edit_button {

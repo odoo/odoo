@@ -20,7 +20,7 @@ class StockPickingBatch(models.Model):
         help='Person responsible for this batch transfer')
     company_id = fields.Many2one(
         'res.company', string="Company", required=True, readonly=True,
-        index=True)
+        index=True, default=lambda self: self.env.company)
     picking_ids = fields.One2many(
         'stock.picking', 'batch_id', string='Transfers',
         domain="[('company_id', '=', company_id), ('state', 'not in', ('done', 'cancel'))]",

@@ -75,12 +75,14 @@
                             <button name="button_upgrade_cancel" states="to upgrade" string="Cancel Upgrade" type="object" class="btn btn-secondary mr-1"/>
                             <button name="button_install_cancel" states="to install" string="Cancel Install" type="object" class="btn btn-secondary mr-1"/>
                         </div>
+                        <h6 class="text-muted mt-2" attrs="{'invisible': [('has_iap', '=', False)]}">Contains In-App Purchases</h6>
                     </div>
                     <div class="oe_clear"/>
                     <notebook groups="base.group_no_one">
                         <page string="Information">
                             <group>
                                 <group>
+                                    <field name="has_iap" invisible="1"/>
                                     <field name="website" widget="url" attrs="{'invisible':[('website','=',False)]}"/>
                                     <field name="category_id" widget="selection"/>
                                     <field name="summary"/>

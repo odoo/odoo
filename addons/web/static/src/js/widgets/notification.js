@@ -56,7 +56,7 @@ var Notification = Widget.extend({
             this.icon = 'fa-exclamation';
             this.className += ' bg-danger';
         } else if (this.type === 'warning') {
-            this.icon = 'fa-lightbulb-o';
+            this.icon = 'fa-lightbulb';
             this.className += ' bg-warning';
         } else if (this.type === 'success') {
             this.icon = 'fa-check';
@@ -67,7 +67,7 @@ var Notification = Widget.extend({
         }
 
         if (this.buttons && this.buttons.length) {
-            this.icon = 'fa-question-circle-o';
+            this.icon = 'fa-question-circle';
         }
     },
     /**

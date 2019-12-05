@@ -23,18 +23,12 @@ class MailMail(models.Model):
         mails = super(MailMail, self).create(values_list)
         for mail, values in zip(mails, values_list):
             if values.get('mailing_trace_ids'):
-                mail_sudo = mail.sudo()
-                mail_sudo.mailing_trace_ids.write({'message_id': mail_sudo.message_id, 'state': 'outgoing'})
+                mail.mailing_trace_ids.write({'message_id': mail.message_id, 'state': 'outgoing'})
         return mails
 
     def _get_tracking_url(self):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        track_url = werkzeug.urls.url_join(
-            base_url, 'mail/track/%(mail_id)s/blank.gif?%(params)s' % {
-                'mail_id': self.id,
-                'params': werkzeug.urls.url_encode({'db': self.env.cr.dbname})
-            }
-        )
+        track_url = werkzeug.urls.url_join(base_url, 'mail/track/%s/blank.gif' % self.id)
         return '<img src="%s" alt=""/>' % track_url
 
     def _get_unsubscribe_url(self, email_to):
@@ -43,7 +37,6 @@ class MailMail(models.Model):
             base_url, 'mail/mailing/%(mailing_id)s/unsubscribe?%(params)s' % {
                 'mailing_id': self.mailing_id.id,
                 'params': werkzeug.urls.url_encode({
-                    'db': self.env.cr.dbname,
                     'res_id': self.res_id,
                     'email': email_to,
                     'token': self.mailing_id._unsubscribe_token(

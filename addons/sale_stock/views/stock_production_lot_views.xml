@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('oe_button_box')]/button" position="before">
                 <button class="oe_stat_button" name="action_view_so"
-                        type="object" icon="fa-pencil-square-o" help="Sale Orders"
+                        type="object" icon="fas fa-edit" help="Sale Orders"
                         attrs="{'invisible': ['|', ('sale_order_count', '=', 0), ('display_complete', '=', False)]}">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value">

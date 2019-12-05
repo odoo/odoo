@@ -29,7 +29,7 @@
                         <div class="container o_kanban_card_content" t-if="!selection_mode">
                             <div class="row">
                                 <div class="col-6 o_kanban_primary_left">
-                                    <button class="btn btn-primary" name="%(mrp_production_action_picking_deshboard)d" type="action" context="{'search_default_todo': 1}">
+                                    <button class="btn btn-primary" name="%(mrp_production_action_picking_deshboard)d" type="action" context="{'search_default_todo': 1, 'default_picking_type_id': active_id}">
                                         <span t-if="record.code.raw_value =='mrp_operation'"><t t-esc="record.count_mo_todo.value"/> To Process</span>
                                     </button>
                                 </div>
@@ -46,7 +46,7 @@
                                     </div>
                                     <div t-if="record.count_mo_late.raw_value > 0" class="row">
                                         <div class="col-9">
-                                            <a class="oe_kanban_stock_picking_type_list" name="%(mrp_production_action_picking_deshboard)d" type="action" context="{'search_default_late': 1}">
+                                            <a class="oe_kanban_stock_picking_type_list" name="%(mrp_production_action_picking_deshboard)d" type="action" context="{'search_default_late': 1, 'default_picking_type_id': active_id}">
                                                 Late
                                             </a>
                                         </div>

@@ -43,7 +43,13 @@ class SurveyInvite(models.TransientModel):
         help="Author of the message.")
     # recipients
     partner_ids = fields.Many2many(
-        'res.partner', 'survey_invite_partner_ids', 'invite_id', 'partner_id', string='Recipients')
+        'res.partner', 'survey_invite_partner_ids', 'invite_id', 'partner_id', string='Recipients',
+        domain="""[
+            '|', (survey_users_can_signup, '=', 1),
+            '|', (not survey_users_login_required, '=', 1),
+                 ('user_ids', '!=', False),
+        ]"""
+    )
     existing_partner_ids = fields.Many2many(
         'res.partner', compute='_compute_existing_partner_ids', readonly=True, store=False)
     emails = fields.Text(string='Additional emails', help="This list of emails of recipients will not be converted in contacts.\
@@ -62,6 +68,7 @@ class SurveyInvite(models.TransientModel):
     survey_url = fields.Char(related="survey_id.public_url", readonly=True)
     survey_access_mode = fields.Selection(related="survey_id.access_mode", readonly=True)
     survey_users_login_required = fields.Boolean(related="survey_id.users_login_required", readonly=True)
+    survey_users_can_signup = fields.Boolean(related='survey_id.users_can_signup')
     deadline = fields.Datetime(string="Answer deadline")
 
     @api.depends('partner_ids', 'survey_id')
@@ -110,16 +117,6 @@ class SurveyInvite(models.TransientModel):
             raise UserError(_("Some emails you just entered are incorrect: %s") % (', '.join(error)))
         self.emails = '\n'.join(valid)
 
-    @api.onchange('survey_users_login_required')
-    def _onchange_survey_users_login_required(self):
-        if self.survey_users_login_required and not self.survey_id.users_can_signup:
-            return {'domain': {
-                    'partner_ids': [('user_ids', '!=', False)]
-                    }}
-        return {'domain': {
-                'partner_ids': []
-                }}
-
     @api.onchange('partner_ids')
     def _onchange_partner_ids(self):
         if self.survey_users_login_required and self.partner_ids:
@@ -150,9 +147,9 @@ class SurveyInvite(models.TransientModel):
                 values['body'] = template.body_html
         return super(SurveyInvite, self).create(values)
 
-    #------------------------------------------------------
+    # ------------------------------------------------------
     # Wizard validation and send
-    #------------------------------------------------------
+    # ------------------------------------------------------
 
     def _prepare_answers(self, partners, emails):
         answers = self.env['survey.user_input']

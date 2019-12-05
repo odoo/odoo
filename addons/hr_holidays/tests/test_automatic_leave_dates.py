@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 from datetime import date, datetime
 
-from odoo.tests.common import Form, tagged
+from odoo.tests.common import Form
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
 
-@tagged('prout')
 class TestAutomaticLeaveDates(TestHrHolidaysCommon):
     def setUp(self):
         super(TestAutomaticLeaveDates, self).setUp()

@@ -11,7 +11,7 @@ odoo.define('website_slides.fullscreen', function (require) {
 
     var session = require('web.session');
 
-    var Quiz = require('website_slides.quiz');
+    var Quiz = require('website_slides.quiz').Quiz;
 
     var Dialog = require('web.Dialog');
 
@@ -198,8 +198,8 @@ odoo.define('website_slides.fullscreen', function (require) {
          * @param {Integer} slideId
          */
         setSlideCompleted: function (slideId) {
-            var $elem = this.$('.fa-circle-thin[data-slide-id="'+slideId+'"]');
-            $elem.removeClass('fa-circle-thin').addClass('fa-check text-success o_wslides_slide_completed');
+            var $elem = this.$('.fa-circle[data-slide-id="'+slideId+'"]');
+            $elem.removeClass('far fa-circle').addClass('fas fa-check text-success o_wslides_slide_completed');
         },
         /**
          * Updates the progressbar whenever a lesson is completed

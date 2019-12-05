@@ -15,6 +15,7 @@
                 <group expand='0' string='Filters'>
                     <filter name='internal_loc' string="Internal Locations" domain="[('location_id.usage','=', 'internal')]"/>
                     <filter name='transit_loc' string="Transit Locations" domain="[('location_id.usage' ,'=', 'transit')]"/>
+                    <filter name="on_hand" string="On Hand" domain="[('on_hand', '=', True)]"/>
                     <separator/>
                     <filter name="negative" string="Negative Stock" domain="[('quantity', '&lt;', 0.0)]"/>
                     <filter name="positive" string="Positive Stock" domain="[('quantity', '&gt;', 0.0)]"/>
@@ -40,7 +41,7 @@
             <form string="Inventory Valuation" create="false" edit="false" delete="false">
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button class="oe_stat_button" icon="fa-exchange" type="object" name="action_view_stock_moves" string="Product Moves"/>
+                        <button class="oe_stat_button" icon="fa-exchange-alt" type="object" name="action_view_stock_moves" string="Product Moves"/>
                     </div>
                     <group>
                         <group>
@@ -101,7 +102,7 @@
                        invisible="1"/>
                 <field name="inventory_quantity" string="On Hand Quantity"
                        readonly="0"/>
-                <field name="reserved_quantity" optional="hide"/>
+                <field name="available_quantity" optional="show"/>
                 <field name="product_uom_id" groups="uom.group_uom"/>
                 <field name='company_id' groups="base.group_multi_company" optional="show"/>
             </tree>
@@ -121,7 +122,7 @@
                        invisible="context.get('hide_lot', False)"/>
                 <field name="package_id" groups="stock.group_tracking_lot"/>
                 <field name="owner_id" groups="stock.group_tracking_owner"/>
-                <field name="reserved_quantity" string="Reserved"/>
+                <field name="available_quantity"/>
                 <field name="quantity"/>
                 <field name="product_uom_id" groups="uom.group_uom"/>
                 <field name='company_id' groups="base.group_multi_company"/>
@@ -208,7 +209,7 @@
                     <div class="oe_button_box" name="button_box">
                         <button class="oe_stat_button" name="action_view_picking"
                         string="Package Transfers" type="object"
-                        widget="statinfo" icon="fa-arrows-v"/>
+                        widget="statinfo" icon="fa-arrows-alt-v"/>
                     </div>
                     <div class="oe_title">
                         <label for="name" string="Package Reference" class="oe_edit_only"/>

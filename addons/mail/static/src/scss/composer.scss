@@ -54,14 +54,21 @@
                 font-style: italic;
                 color: gray;
             }
-            .fa {
+            .fa,
+            .far,
+            .fas {
+                font-size: 0.8em;
                 font-size: 0.8em;
             }
         }
         textarea {
             resize: none;
         }
-        .btn.fa {
+        .btn.fa,
+        .btn.far,
+        .btn.fas {
+            @include o-hover-opacity($default-opacity: 0.8, $hover-opacity: 1);
+            @include o-hover-opacity($default-opacity: 0.8, $hover-opacity: 1);
             @include o-hover-opacity($default-opacity: 0.8, $hover-opacity: 1);
             border: none;
         }

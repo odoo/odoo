@@ -165,7 +165,7 @@ class PurchaseOrder(models.Model):
     def write(self, vals):
         res = super(PurchaseOrder, self).write(vals)
         if vals.get('date_planned'):
-            self.order_line.write({'date_planned': vals['date_planned']})
+            self.order_line.filtered(lambda line: not line.display_type).date_planned = vals['date_planned']
         return res
 
     def unlink(self):
@@ -212,13 +212,12 @@ class PurchaseOrder(models.Model):
             self.currency_id = self.partner_id.property_purchase_currency_id.id or self.env.company.currency_id.id
         return {}
 
-    @api.onchange('fiscal_position_id')
+    @api.onchange('fiscal_position_id', 'company_id')
     def _compute_tax_id(self):
         """
         Trigger the recompute of the taxes if the fiscal position is changed on the PO.
         """
-        for order in self:
-            order.order_line._compute_tax_id()
+        self.order_line._compute_tax_id()
 
     @api.onchange('partner_id')
     def onchange_partner_id_warning(self):
@@ -518,10 +517,11 @@ class PurchaseOrderLine(models.Model):
 
     def _compute_tax_id(self):
         for line in self:
-            fpos = line.order_id.fiscal_position_id or line.order_id.partner_id.with_company(line.company_id).property_account_position_id
-            # If company_id is set, always filter taxes by the company
-            taxes = line.product_id.supplier_taxes_id.filtered(lambda r: not line.company_id or r.company_id == line.company_id)
-            line.taxes_id = fpos.map_tax(taxes, line.product_id, line.order_id.partner_id) if fpos else taxes
+            line = line.with_company(line.company_id)
+            fpos = line.order_id.fiscal_position_id or line.order_id.fiscal_position_id.get_fiscal_position(line.order_id.partner_id.id)
+            # filter taxes by company
+            taxes = line.product_id.supplier_taxes_id.filtered(lambda r: r.company_id == line.env.company)
+            line.taxes_id = fpos.map_tax(taxes, line.product_id, line.order_id.partner_id)
 
     @api.depends('invoice_lines.move_id.state', 'invoice_lines.quantity')
     def _compute_qty_invoiced(self):
@@ -754,4 +754,48 @@ class PurchaseOrderLine(models.Model):
             'analytic_tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
             'tax_ids': [(6, 0, self.taxes_id.ids)],
             'display_type': self.display_type,
+        }
+
+    @api.model
+    def _prepare_purchase_order_line(self, product_id, product_qty, product_uom, company_id, supplier, po):
+        partner = supplier.name
+        uom_po_qty = product_uom._compute_quantity(product_qty, product_id.uom_po_id)
+        # _select_seller is used if the supplier have different price depending
+        # the quantities ordered.
+        seller = product_id.with_company(company_id)._select_seller(
+            partner_id=partner,
+            quantity=uom_po_qty,
+            date=po.date_order and po.date_order.date(),
+            uom_id=product_id.uom_po_id)
+
+        taxes = product_id.supplier_taxes_id
+        fpos = po.fiscal_position_id
+        taxes_id = fpos.map_tax(taxes, product_id, seller.name)
+        if taxes_id:
+            taxes_id = taxes_id.filtered(lambda x: x.company_id.id == company_id.id)
+
+        price_unit = self.env['account.tax']._fix_tax_included_price_company(seller.price, product_id.supplier_taxes_id, taxes_id, company_id) if seller else 0.0
+        if price_unit and seller and po.currency_id and seller.currency_id != po.currency_id:
+            price_unit = seller.currency_id._convert(
+                price_unit, po.currency_id, po.company_id, po.date_order or fields.Date.today())
+
+        product_lang = product_id.with_context(
+            lang=partner.lang,
+            partner_id=partner.id,
+        )
+        name = product_lang.display_name
+        if product_lang.description_purchase:
+            name += '\n' + product_lang.description_purchase
+
+        date_planned = self._get_date_planned(seller, po=po)
+
+        return {
+            'name': name,
+            'product_qty': uom_po_qty,
+            'product_id': product_id.id,
+            'product_uom': product_id.uom_po_id.id,
+            'price_unit': price_unit,
+            'date_planned': date_planned,
+            'taxes_id': [(6, 0, taxes_id.ids)],
+            'order_id': po.id,
         }

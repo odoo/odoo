@@ -1261,7 +1261,7 @@ QUnit.module('Views', {
                 return this._super.apply(this, arguments);
             },
         });
-        assert.containsOnce(form, 'button.btn i.fa.fa-check');
+        assert.containsOnce(form, 'button.btn i.fas.fa-check');
         assert.containsN(form, '.o_form_statusbar button', 3);
         assert.containsOnce(form, 'button.p[name="post"]:contains(Confirm)');
         assert.containsN(form, '.o_form_statusbar button:visible', 2);
@@ -2644,12 +2644,12 @@ QUnit.module('Views', {
             "no confirm modal should be displayed");
         assert.strictEqual(form.$('.o_pager_value').text(), '2', "pager value should be 2");
 
-        assert.containsN(form, '.o_priority .fa-star-o', 2,
+        assert.containsN(form, '.o_priority .fa-star', 2,
             'priority widget should have been rendered with correct value');
 
         // edit the value in readonly
-        await testUtils.dom.click(form.$('.o_priority .fa-star-o:first')); // click on the first star
-        assert.containsOnce(form, '.o_priority .fa-star',
+        await testUtils.dom.click(form.$('.o_priority .fa-star:first')); // click on the first star
+        assert.containsOnce(form, '.o_priority .fas.fa-star',
             'priority widget should have been updated');
 
         await testUtils.dom.click('.o_pager_next'); // click on next
@@ -2996,30 +2996,30 @@ QUnit.module('Views', {
 
         assert.containsN(form, '.o_priority .o_priority_star', 2,
             'priority widget should have been rendered');
-        assert.containsN(form, '.o_priority .fa-star-o', 2,
+        assert.containsN(form, '.o_priority .fa-star', 2,
             'priority widget should have been rendered with correct value');
 
         // edit the value in readonly
-        await testUtils.dom.click(form.$('.o_priority .fa-star-o:first'));
+        await testUtils.dom.click(form.$('.o_priority .fa-star:first'));
         assert.strictEqual(nbWrite, 1, 'should have saved directly');
-        assert.containsOnce(form, '.o_priority .fa-star',
+        assert.containsOnce(form, '.o_priority .fas.fa-star',
             'priority widget should have been updated');
 
         // switch to edit mode and edit the value again
         await testUtils.form.clickEdit(form);
         assert.containsN(form, '.o_priority .o_priority_star', 2,
             'priority widget should have been correctly rendered');
-        assert.containsOnce(form, '.o_priority .fa-star',
+        assert.containsOnce(form, '.o_priority .far.fa-star',
             'priority widget should have correct value');
-        await testUtils.dom.click(form.$('.o_priority .fa-star-o:first'));
+        await testUtils.dom.click(form.$('.o_priority .far.fa-star:first'));
         assert.strictEqual(nbWrite, 1, 'should not have saved directly');
-        assert.containsN(form, '.o_priority .fa-star', 2,
+        assert.containsN(form, '.o_priority .fas.fa-star', 2,
             'priority widget should have been updated');
 
         // save
         await testUtils.form.clickSave(form);
         assert.strictEqual(nbWrite, 2, 'should not have saved directly');
-        assert.containsN(form, '.o_priority .fa-star', 2,
+        assert.containsN(form, '.o_priority .fas.fa-star', 2,
             'priority widget should have correct value');
         form.destroy();
     });
@@ -3455,7 +3455,7 @@ QUnit.module('Views', {
         await testUtils.form.clickEdit(form);
         await testUtils.dom.click(form.$('.o_data_cell').first());
         await testUtils.fields.editInput(form.$('input[name=display_name]'), '');
-        await testUtils.dom.click(form.$('.fa-trash-o').eq(1));
+        await testUtils.dom.click(form.$('.fa-trash-alt').eq(1));
 
         assert.strictEqual($('.modal').find('.modal-title').first().text(), "Warning",
             "Clicking out of a dirty line while editing should trigger a warning modal.");
@@ -4955,7 +4955,7 @@ QUnit.module('Views', {
             arch: '<form string="Manufacturing Orders">' +
                     '<sheet>' +
                         '<div class="oe_button_box" name="button_box">' +
-                            '<button string="Inventory Moves" class="oe_stat_button" icon="fa-arrows-v"/>' +
+                            '<button string="Inventory Moves" class="oe_stat_button" icon="fa-arrows-alt-v"/>' +
                         '</div>' +
                     '</sheet>' +
                 '</form>',

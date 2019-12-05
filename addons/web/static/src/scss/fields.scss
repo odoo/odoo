@@ -228,10 +228,10 @@
                 padding-left: 5px;
             }
 
-            &.fa-star-o {
+            &.far.fa-star {
                 color: $o-main-color-muted;
             }
-            &.fa-star {
+            &.fas.fa-star {
                 color: gold;
             }
         }
@@ -239,16 +239,18 @@
 
     // Favorite
     &.o_favorite {
-        i.fa {
+        i.fa,
+        i.far,
+        i.fas {
             font-size: 16px;
         }
-        i.fa-star-o {
+        i.far.fa-star {
             color: $o-main-color-muted;
             &:hover {
                 color: gold;
             }
         }
-        i.fa-star {
+        i.fas.fa-star {
             color: gold;
         }
     }
@@ -375,22 +377,26 @@
             opacity: 0;
             transition: opacity ease 400ms;
 
-            > button.fa {
+            > button.fa,
+            > button.far,
+            > button.fas {
                 border: none;
                 background-color: transparent;
             }
 
-            > .fa {
+            > .fa,
+            > .far,
+            > .fas {
                 padding: 4px;
-                margin: 5px;
-                cursor: pointer;
             }
         }
         @include media-breakpoint-down(xs, $o-extra-grid-breakpoints) {
             .o_form_image_controls{
                 position: initial;
                 opacity: 1;
-                > .fa{
+                > .fa,
+                > .far,
+                > .fas{
                     width: 50%;
                     padding: 6px;
                     margin: 0px;

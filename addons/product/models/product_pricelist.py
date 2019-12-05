@@ -214,7 +214,7 @@ class Pricelist(models.Model):
                         continue
 
                 if rule.base == 'pricelist' and rule.base_pricelist_id:
-                    price_tmp = rule.base_pricelist_id._compute_price_rule([(product, qty, partner)])[product.id][0]  # TDE: 0 = price, 1 = rule
+                    price_tmp = rule.base_pricelist_id._compute_price_rule([(product, qty, partner)], date, uom_id)[product.id][0]  # TDE: 0 = price, 1 = rule
                     price = rule.base_pricelist_id.currency_id._convert(price_tmp, self.currency_id, self.env.company, date, round=False)
                 else:
                     # if base option is public price take sale price else cost price of product
@@ -449,7 +449,7 @@ class PricelistItem(models.Model):
         ('fixed', 'Fixed Price'),
         ('percentage', 'Percentage (discount)'),
         ('formula', 'Formula')], index=True, default='fixed', required=True)
-    fixed_price = fields.Monetary('Fixed Price')
+    fixed_price = fields.Float('Fixed Price', digits='Product Price')
     percent_price = fields.Float('Percentage Price')
     # functional fields used for usability purposes
     name = fields.Char(
@@ -495,11 +495,12 @@ class PricelistItem(models.Model):
                 item.name = _("All Products")
 
             if item.compute_price == 'fixed':
+                decimal_places = self.env['decimal.precision'].precision_get('Product Price')
                 if item.currency_id.position == 'after':
                     item.price = "%s %s" % (
                         float_repr(
                             item.fixed_price,
-                            item.currency_id.decimal_places,
+                            decimal_places,
                         ),
                         item.currency_id.symbol,
                     )
@@ -508,7 +509,7 @@ class PricelistItem(models.Model):
                         item.currency_id.symbol,
                         float_repr(
                             item.fixed_price,
-                            item.currency_id.decimal_places,
+                            decimal_places,
                         ),
                     )
             elif item.compute_price == 'percentage':

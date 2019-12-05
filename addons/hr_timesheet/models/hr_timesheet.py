@@ -20,7 +20,10 @@ class AccountAnalyticLine(models.Model):
             result['employee_id'] = self.env['hr.employee'].search([('user_id', '=', result['user_id'])], limit=1).id
         return result
 
-    task_id = fields.Many2one('project.task', 'Task', index=True, domain="[('company_id', '=', company_id)]")
+    task_id = fields.Many2one(
+        'project.task', 'Task', index=True,
+        domain="[('company_id', '=', company_id), ('project_id.allow_timesheets', '=', True), ('project_id', '=?', project_id)]"
+    )
     project_id = fields.Many2one('project.project', 'Project', domain=[('allow_timesheets', '=', True)])
 
     employee_id = fields.Many2one('hr.employee', "Employee", check_company=True)
@@ -33,18 +36,9 @@ class AccountAnalyticLine(models.Model):
 
     @api.onchange('project_id')
     def onchange_project_id(self):
-        # force domain on task when project is set
-        if self.project_id:
-            if self.project_id != self.task_id.project_id:
-                # reset task when changing project
-                self.task_id = False
-            return {'domain': {
-                'task_id': [('project_id', '=', self.project_id.id)]
-            }}
-        return {'domain': {
-            'task_id': [('project_id.allow_timesheets', '=', True)]
-        }}
-
+        if self.project_id and self.project_id != self.task_id.project_id:
+            # reset task when changing project
+            self.task_id = False
 
     @api.onchange('task_id')
     def _onchange_task_id(self):

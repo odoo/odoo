@@ -36,32 +36,13 @@ class TestUi(odoo.tests.HttpCase):
             'user_type_id': self.env.ref('account.data_account_type_liquidity').id,
         })
 
-        self.env['ir.property'].create([{
-            'name': 'property_account_receivable_id',
-            'fields_id': self.env['ir.model.fields'].search([('model', '=', 'res.partner'), ('name', '=', 'property_account_receivable_id')], limit=1).id,
-            'value': 'account.account,%s' % (a_recv.id),
-            'company_id': self.env.company.id,
-        }, {
-            'name': 'property_account_payable_id',
-            'fields_id': self.env['ir.model.fields'].search([('model', '=', 'res.partner'), ('name', '=', 'property_account_payable_id')], limit=1).id,
-            'value': 'account.account,%s' % (a_pay.id),
-            'company_id': self.env.company.id,
-        }, {
-            'name': 'property_account_position_id',
-            'fields_id': self.env['ir.model.fields'].search([('model', '=', 'res.partner'), ('name', '=', 'property_account_position_id')], limit=1).id,
-            'value': False,
-            'company_id': self.env.company.id,
-        }, {
-            'name': 'property_account_expense_categ_id',
-            'fields_id': self.env['ir.model.fields'].search([('model', '=', 'product.category'), ('name', '=', 'property_account_expense_categ_id')], limit=1).id,
-            'value': 'account.account,%s' % (a_expense.id),
-            'company_id': self.env.company.id,
-        }, {
-            'name': 'property_account_income_categ_id',
-            'fields_id': self.env['ir.model.fields'].search([('model', '=', 'product.category'), ('name', '=', 'property_account_income_categ_id')], limit=1).id,
-            'value': 'account.account,%s' % (a_sale.id),
-            'company_id': self.env.company.id,
-        }])
+        Property = self.env['ir.property']
+        Property.set_default('property_account_receivable_id', 'res.partner', a_recv, self.env.company)
+        Property.set_default('property_account_payable_id', 'res.partner', a_pay, self.env.company)
+        Property.set_default('property_account_position_id', 'res.partner', False, self.env.company)
+        Property.set_default('property_account_expense_categ_id', 'product.category', a_expense, self.env.company)
+        Property.set_default('property_account_income_categ_id', 'product.category', a_sale, self.env.company)
+
         self.expenses_journal = self.env['account.journal'].create({
             'name': 'Vendor Bills - Test',
             'code': 'TEXJ',

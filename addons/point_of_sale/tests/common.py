@@ -410,7 +410,7 @@ class TestPoSCommon(StockAccountTestCommon):
 
         def create_order_line(product, quantity):
             price_unit = self.pricelist.get_product_price(product, quantity, False)
-            tax_ids = fiscal_position.map_tax(product.taxes_id) if fiscal_position else product.taxes_id
+            tax_ids = fiscal_position.map_tax(product.taxes_id)
             tax_values = (
                 tax_ids.compute_all(price_unit, self.currency, quantity)
                 if tax_ids

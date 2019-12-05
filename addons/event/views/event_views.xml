@@ -236,7 +236,7 @@
                                 <label for="date_begin" string="Date"/>
                                 <div class="o_row">
                                     <field name="date_begin" widget="daterange" nolabel="1" class="oe_inline" options="{'related_end_date': 'date_end'}"/>
-                                    <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow"/>
+                                    <i class="fas fa-long-arrow-alt-right mx-2" aria-label="Arrow icon" title="Arrow"/>
                                     <field name="date_end" widget="daterange" nolabel="1" class="oe_inline" options="{'related_start_date': 'date_begin'}"/>
                                 </div>
                                 <field name="date_tz"/>
@@ -340,7 +340,7 @@
                                     <h4 class="o_kanban_record_title"><field name="name"/></h4>
                                     <div>
                                         <t t-if="record.country_id.raw_value"> <b class="o_kanban_record_subtitle"> <field name="country_id"/> </b> <br/> </t>
-                                        <b><i class="fa fa-clock-o"/>
+                                        <b><i class="far fa-clock"/>
                                         To</b> <t t-esc="moment(record.date_end.raw_value).format('lll')"/>
                                     </div>
                                     <h4>
@@ -467,7 +467,7 @@
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="message_needaction" invisible="1"/>
                     <button name="confirm_registration" string="Confirm Registration" states="draft" type="object" icon="fa-check text-success"/>
-                    <button name="button_reg_close" string="Attended the Event" states="open" type="object" icon="fa-level-down text-success"/>
+                    <button name="button_reg_close" string="Attended the Event" states="open" type="object" icon="fa-level-down-alt text-success"/>
                     <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="fa-times-circle text-danger"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
                 </tree>

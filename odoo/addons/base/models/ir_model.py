@@ -314,7 +314,13 @@ class IrModel(models.Model):
         cr.execute('SELECT * FROM ir_model WHERE state=%s', ['manual'])
         for model_data in cr.dictfetchall():
             model_class = self._instanciate(model_data)
-            model_class._build_model(self.pool, cr)
+            Model = model_class._build_model(self.pool, cr)
+            if tools.table_kind(cr, Model._table) not in ('r', None):
+                # not a regular table, so disable schema upgrades
+                Model._auto = False
+                cr.execute('SELECT * FROM %s LIMIT 0' % Model._table)
+                columns = {desc[0] for desc in cr.description}
+                Model._log_access = set(models.LOG_ACCESS_COLUMNS) <= columns
 
 
 # retrieve field types defined by the framework only (not extensions)
@@ -346,6 +352,7 @@ class IrModelFields(models.Model):
     selection_ids = fields.One2many("ir.model.fields.selection", "field_id",
                                     string="Selection Options", copy=True)
     copied = fields.Boolean(string='Copied',
+                            compute='_compute_copied', store=True, readonly=False,
                             help="Whether the value is copied when duplicating a record.")
     related = fields.Char(string='Related Field', help="The corresponding related field, if any. This must be a dot-separated list of field names.")
     related_field_id = fields.Many2one('ir.model.fields', compute='_compute_related_field_id',
@@ -406,6 +413,11 @@ class IrModelFields(models.Model):
         for rec in self:
             selection = literal_eval(rec.selection or "[]")
             self.env['ir.model.fields.selection']._update_selection(rec.model, rec.name, selection)
+
+    @api.depends('ttype', 'related', 'compute')
+    def _compute_copied(self):
+        for rec in self:
+            rec.copied = (rec.ttype != 'one2many') and not (rec.related or rec.compute)
 
     @api.depends()
     def _in_modules(self):
@@ -471,7 +483,6 @@ class IrModelFields(models.Model):
             self.ttype = field.type
             self.relation = field.comodel_name
             self.readonly = True
-            self.copied = False
 
     @api.constrains('depends')
     def _check_depends(self):
@@ -497,7 +508,6 @@ class IrModelFields(models.Model):
     def _onchange_compute(self):
         if self.compute:
             self.readonly = True
-            self.copied = False
 
     @api.constrains('relation_table')
     def _check_relation_table(self):
@@ -518,7 +528,6 @@ class IrModelFields(models.Model):
 
     @api.onchange('ttype', 'model_id', 'relation')
     def _onchange_ttype(self):
-        self.copied = (self.ttype != 'one2many')
         if self.ttype == 'many2many' and self.model_id and self.relation:
             if self.relation not in self.env:
                 return {
@@ -866,16 +875,17 @@ class IrModelFields(models.Model):
         fields_data = self._existing_field_data(model._name)
         to_insert = []
         to_xmlids = []
+        modified_ids = []
+        modified_fnames = []
         for name, field in model._fields.items():
             old_vals = fields_data.get(name)
             new_vals = self._reflect_field_params(field)
+            modified_fnames = new_vals.keys()
             if old_vals is None:
                 to_insert.append(new_vals)
             elif any(old_vals[key] != new_vals[key] for key in new_vals):
                 ids = query_update(cr, self._table, new_vals, ['model', 'name'])
-                record = self.browse(ids)
-                keys = [key for key in new_vals if old_vals[key] != new_vals[key]]
-                self.pool.post_init(record.modified, keys)
+                modified_ids.extend(ids)
                 old_vals.update(new_vals)
             if module and (module == model._original_module or module in field._modules):
                 # remove this and only keep the else clause if version >= saas-12.4
@@ -888,9 +898,17 @@ class IrModelFields(models.Model):
         if to_insert:
             # insert missing fields
             ids = query_insert(cr, self._table, to_insert)
-            records = self.browse(ids)
-            self.pool.post_init(records.modified, to_insert[0])
+            modified_ids.extend(ids)
             self.clear_caches()
+
+        if modified_ids:
+            def mark_modified(records, fnames):
+                # protect all modified fields, to avoid them being recomputed
+                fields = [records._fields[fname] for fname in fnames]
+                with records.env.protecting(fields, records):
+                    records.modified(fnames)
+
+            self.pool.post_init(mark_modified, self.browse(modified_ids), modified_fnames)
 
         if to_xmlids:
             # create or update their corresponding xml ids

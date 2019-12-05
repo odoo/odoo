@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.test_mail.tests import common
+from odoo.addons.test_mail.tests.common import TestMailCommon
 from odoo.tools import mute_logger
 
 
-class TestInvite(common.BaseFunctionalTest, common.MockEmails):
+class TestInvite(TestMailCommon):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_invite_email(self):
@@ -20,11 +20,14 @@ class TestInvite(common.BaseFunctionalTest, common.MockEmails):
         }).with_user(self.user_employee).create({
             'partner_ids': [(4, test_partner.id), (4, self.user_admin.partner_id.id)],
             'send_mail': True})
-        mail_invite.add_followers()
+        with self.mock_mail_gateway():
+            mail_invite.add_followers()
 
         # check added followers and that emails were sent
         self.assertEqual(test_record.message_partner_ids,
                          test_partner | self.user_admin.partner_id)
         self.assertEqual(test_record.message_follower_ids.mapped('channel_id'),
                          self.env['mail.channel'])
+        self.assertSentEmail(self.partner_employee, [test_partner])
+        self.assertSentEmail(self.partner_employee, [self.partner_admin])
         self.assertEqual(len(self._mails), 2)

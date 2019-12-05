@@ -148,15 +148,14 @@ var ThreadWindow = AbstractThreadWindow.extend({
     },
     renderOutOfOffice: function () {
         var $outOfOffice = this.$('.o_out_of_office');
-        if (!this.getOutOfOfficeInfo() && !this.getOutOfOfficeMessage()) {
+        const thread = this.getThread();
+        if (!thread.hasOutOfOffice()) {
             if ($outOfOffice.length) {
                 $outOfOffice.remove();
             }
             return;
         }
-        var $newOutOfOffice = $(QWeb.render('mail.thread_window.OutOfOffice', {
-            widget: this,
-        }));
+        const $newOutOfOffice = $(QWeb.render('mail.thread.OutOfOffice', { thread }));
         if ($outOfOffice.length) {
             $outOfOffice.replaceWith($newOutOfOffice);
         } else {

@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import random
 import uuid
 
 from collections import Counter, OrderedDict
 from itertools import product
 from werkzeug import urls
-import random
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
@@ -26,23 +26,24 @@ class Survey(models.Model):
 
     # description
     title = fields.Char('Survey Title', required=True, translate=True)
-    description = fields.Html("Description", translate=True,
+    description = fields.Html(
+        "Description", translate=True,
         help="The description will be displayed on the home page of the survey. You can use this to give the purpose and guidelines to your candidates before they start it.")
     color = fields.Integer('Color Index', default=0)
     thank_you_message = fields.Html("Thanks Message", translate=True, help="This message will be displayed when survey is completed")
     active = fields.Boolean("Active", default=True)
+    state = fields.Selection(selection=[
+        ('draft', 'Draft'), ('open', 'In Progress'), ('closed', 'Closed')
+    ], string="Survey Stage", default='draft', required=True,
+        group_expand='_read_group_states')
+    category = fields.Selection([
+        ('default', 'Generic Survey')], string='Category',
+        default='default', required=True,
+        help='Category is used to know in which context the survey is used. Various apps may define their own categories when they use survey like jobs recruitment or employee appraisal surveys.')
+    # questions
     question_and_page_ids = fields.One2many('survey.question', 'survey_id', string='Sections and Questions', copy=True)
     page_ids = fields.One2many('survey.question', string='Pages', compute="_compute_page_and_question_ids")
     question_ids = fields.One2many('survey.question', string='Questions', compute="_compute_page_and_question_ids")
-    state = fields.Selection(
-        string="Survey Stage",
-        selection=[
-                ('draft', 'Draft'),
-                ('open', 'In Progress'),
-                ('closed', 'Closed'),
-        ], default='draft', required=True,
-        group_expand='_read_group_states'
-    )
     questions_layout = fields.Selection([
         ('one_page', 'One page with all the questions'),
         ('page_per_section', 'One page per section'),
@@ -53,12 +54,7 @@ class Survey(models.Model):
         ('random', 'Randomized per section')],
         string="Selection", required=True, default='all',
         help="If randomized is selected, add the number of random questions next to the section.")
-
-    category = fields.Selection([
-        ('default', 'Generic Survey')], string='Category',
-        default='default', required=True,
-        help='Category is used to know in which context the survey is used. Various apps may define their own categories when they use survey like jobs recruitment or employee appraisal surveys.')
-    # content
+    # attendees
     user_input_ids = fields.One2many('survey.user_input', 'survey_id', string='User responses', readonly=True, groups='survey.group_survey_user')
     # security / access
     access_mode = fields.Selection([
@@ -76,15 +72,14 @@ class Survey(models.Model):
     answer_score_avg = fields.Float("Avg Score %", compute="_compute_survey_statistic")
     success_count = fields.Integer("Success", compute="_compute_survey_statistic")
     success_ratio = fields.Integer("Success Ratio", compute="_compute_survey_statistic")
-    # scoring and certification fields
+    # scoring / certification
     scoring_type = fields.Selection([
         ('no_scoring', 'No scoring'),
         ('scoring_with_answers', 'Scoring with answers at the end'),
         ('scoring_without_answers', 'Scoring without answers at the end')],
         string="Scoring", required=True, default='no_scoring')
     passing_score = fields.Float('Passing score (%)', required=True, default=80.0)
-    is_attempts_limited = fields.Boolean('Limited number of attempts',
-        help="Check this option if you want to limit the number of attempts per user")
+    is_attempts_limited = fields.Boolean('Limited number of attempts', help="Check this option if you want to limit the number of attempts per user")
     attempts_limit = fields.Integer('Number of attempts', default=1)
     is_time_limited = fields.Boolean('The survey is limited in time')
     time_limit = fields.Float("Time limit (minutes)")
@@ -93,7 +88,14 @@ class Survey(models.Model):
         'mail.template', 'Email Template',
         domain="[('model', '=', 'survey.user_input')]",
         help="Automated email sent to the user when he succeeds the certification, containing his certification document.")
-
+    certification_report_layout = fields.Selection([
+        ('modern_purple', 'Modern Purple'),
+        ('modern_blue', 'Modern Blue'),
+        ('modern_gold', 'Modern Gold'),
+        ('classic_purple', 'Classic Purple'),
+        ('classic_blue', 'Classic Blue'),
+        ('classic_gold', 'Classic Gold')],
+        string='Certification template', default='modern_purple')
     # Certification badge
     #   certification_badge_id_dummy is used to have two different behaviours in the form view :
     #   - If the certification badge is not set, show certification_badge_id and only display create option in the m2o
@@ -218,7 +220,7 @@ class Survey(models.Model):
         return super(Survey, self).copy_data(default)
 
     # ------------------------------------------------------------
-    # TECHNICAL
+    # ANSWER MANAGEMENT
     # ------------------------------------------------------------
 
     def _create_answer(self, user=False, partner=False, email=False, test_entry=False, check_attempts=True, **additional_vals):
@@ -346,8 +348,9 @@ class Survey(models.Model):
         return self.attempts_limit - self.env['survey.user_input'].search_count(domain)
 
     # ------------------------------------------------------------
-    # ACTIONS
+    # QUESTIONS MANAGEMENT
     # ------------------------------------------------------------
+
     @api.model
     def _get_pages_or_questions(self, user_input):
         if self.questions_layout == 'one_page':
@@ -374,7 +377,6 @@ class Survey(models.Model):
         previous_page_id = pages_or_questions[current_page_index - 1][1].id
 
         return previous_page_id
-
 
     @api.model
     def next_page_or_question(self, user_input, page_or_question_id):
@@ -432,6 +434,10 @@ class Survey(models.Model):
         if answer:
             questions = questions & answer.question_ids
         return questions, page_or_question_id
+
+    # ------------------------------------------------------------
+    # ACTIONS
+    # ------------------------------------------------------------
 
     def action_draft(self):
         self.write({'state': 'draft'})
@@ -540,6 +546,14 @@ class Survey(models.Model):
                     'search_default_not_test': 1})
         action['context'] = ctx
         return action
+
+    def action_survey_preview_certification_template(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_url',
+            'target': '_blank',
+            'url': '/survey/%s/get_certification_preview' % (self.id)
+        }
 
     # ------------------------------------------------------------
     # GRAPH / RESULTS
@@ -705,6 +719,8 @@ class Survey(models.Model):
     # ------------------------------------------------------------
     # GAMIFICATION / BADGES
     # ------------------------------------------------------------
+    def _prepare_challenge_category(self):
+        return 'certification'
 
     def _create_certification_badge_trigger(self):
         self.ensure_one()
@@ -725,7 +741,7 @@ class Survey(models.Model):
             'reward_id': self.certification_badge_id.id,
             'state': 'inprogress',
             'period': 'once',
-            'category': 'certification',
+            'challenge_category': self._prepare_challenge_category(),
             'reward_realtime': True,
             'report_message_frequency': 'never',
             'user_domain': [('karma', '>', 0)],

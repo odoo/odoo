@@ -115,7 +115,7 @@ odoo.define('website_form_editor.tour', function(require) {
         },
         {
             content:  "Click on Hidden",
-            trigger:  "[data-toggle-class='o_website_form_field_hidden']"
+            trigger:  "[data-select-class='o_website_form_field_hidden']"
         },
         {
             content:  "Check the resulting field",

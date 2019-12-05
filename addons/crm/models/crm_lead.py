@@ -131,7 +131,7 @@ class Lead(models.Model):
     street2 = fields.Char('Street2')
     zip = fields.Char('Zip', change_default=True)
     city = fields.Char('City')
-    state_id = fields.Many2one("res.country.state", string='State')
+    state_id = fields.Many2one("res.country.state", string='State', domain="[('country_id', '=?', country_id)]")
     country_id = fields.Many2one('res.country', string='Country')
     lang_id = fields.Many2one('res.lang', string='Language', help="Language of the lead.")
     phone = fields.Char('Phone', tracking=50)
@@ -356,10 +356,6 @@ class Lead(models.Model):
     @api.onchange('country_id')
     def _onchange_country_id(self):
         self._onchange_compute_probability(optional_field_name='country_id')
-        res = {'domain': {'state_id': []}}
-        if self.country_id:
-            res['domain']['state_id'] = [('country_id', '=', self.country_id.id)]
-        return res
 
     @api.onchange('lang_id')
     def _onchange_lang_id(self):

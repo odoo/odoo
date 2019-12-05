@@ -19,6 +19,11 @@
                     <field name="employee_cars_count" widget="statinfo" />
                 </button>
             </div>
+            <xpath expr="//group[@name='identification_group']" position="after">
+                <group string="Fleet">
+                    <field name="mobility_card"/>
+                </group>
+            </xpath>
         </field>
     </record>
 
