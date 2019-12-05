@@ -358,8 +358,13 @@ body.editor_enable.editor_has_snippets {
 
             we-input {
                 flex: 1 1 auto;
-                @extend we-row.o_we_inline;
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
 
+                > we-title {
+                    min-width: 100%;
+                }
                 > input {
                     flex: 1 1 auto;
                     width: 0;
@@ -391,26 +396,18 @@ body.editor_enable.editor_has_snippets {
                     }
                 }
 
-                &.o_we_inline {
-                    display: flex;
-                    align-items: center;
-
-                    > we-title {
-                        min-width: 60%;
-                        margin-right: 5%;
-                    }
-                }
-
                 we-select {
                     position: static;
                 }
+            }
 
-                we-input {
-                    flex-wrap: wrap;
+            .o_we_inline {
+                display: flex;
+                align-items: center;
 
-                    > we-title {
-                        min-width: 95%;
-                    }
+                > we-title {
+                    min-width: 60%;
+                    margin-right: 5%;
                 }
             }
 
