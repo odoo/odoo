@@ -57,9 +57,9 @@ class TestFifoPrice(PurchaseTestCommon, StockAccountTestCommon):
         res = picking.button_validate()
         Form(self.env[res['res_model']].with_context(res['context'])).save().process()
 
-        # Check the standard price of the product (fifo icecream), that should have not changed
-        # because the standard price is supposed to be updated only when goods are going out of the stock
-        self.assertEqual(product_cable_management_box.standard_price, 70.0, 'Standard price should not have changed')
+        # Check the standard price of the product (fifo icecream), that should have changed
+        # because the unit cost of the purchase order is 50
+        self.assertAlmostEqual(product_cable_management_box.standard_price, 50.0)
         self.assertEqual(product_cable_management_box.value_svl, 500.0, 'Wrong stock value')
 
         # I create a draft Purchase Order for second shipment for 30 kg at 80 euro
@@ -82,9 +82,9 @@ class TestFifoPrice(PurchaseTestCommon, StockAccountTestCommon):
         res = picking.button_validate()
         Form(self.env[res['res_model']].with_context(res['context'])).save().process()
 
-        # Check the standard price of the product, that should have not changed because the
-        # standard price is supposed to be updated only when goods are going out of the stock
-        self.assertEqual(product_cable_management_box.standard_price, 70.0, 'Standard price as fifo price of second reception incorrect!')
+        # Check the standard price of the product, that should have not changed because we
+        # still have icecream in stock
+        self.assertEqual(product_cable_management_box.standard_price, 50.0, 'Standard price as fifo price of second reception incorrect!')
         self.assertEqual(product_cable_management_box.value_svl, 2900.0, 'Stock valuation should be 2900')
 
         # Let us send some goods
