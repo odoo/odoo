@@ -62,6 +62,12 @@ class TestUom(TransactionCase):
                 'category_id': time_category.id
             })
 
+    def test_31_reference_uniqueness(self):
+        """ Check the uniqueness of the reference UoM in a category """
+        time_category = self.env['uom.category'].search([('measure_type', '=', 'working_time')], limit=1)
+        with self.assertRaises(ValidationError):
+            self.env['uom.uom'].search([('measure_type', '=', 'unit'), ('uom_type', '=', 'reference')]).category_id = time_category
+
     def test_40_custom_uom(self):
         """ A custom UoM is an UoM in a category without measurement type. It should behave like a normal UoM """
         category = self.env['uom.category'].create({
