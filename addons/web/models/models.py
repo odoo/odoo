@@ -148,7 +148,10 @@ class Base(models.AbstractModel):
             'quarter': 'QQQ yyyy',
             'year': 'yyyy'}
 
-        records_values = self.search_read(domain or [], [progress_bar['field'], group_by])
+        if self._fields[group_by].store and self._fields[progress_bar['field']].store:
+            records_values = self.read_group(domain or [], [progress_bar['field'], group_by], [progress_bar['field'], group_by], lazy=False)
+        else:
+            records_values = self.search_read(domain or [], [progress_bar['field'], group_by])
 
         data = {}
         field_type = self._fields[group_by].type
@@ -179,7 +182,7 @@ class Base(models.AbstractModel):
                     if group_by_value in selection_labels else False
 
             if type(group_by_value) == tuple:
-                group_by_value = group_by_value[1] # FIXME should use technical value (0)
+                group_by_value = str(group_by_value[1]) # FIXME should use technical value (0)
 
             if group_by_value not in data:
                 data[group_by_value] = {}
@@ -188,7 +191,7 @@ class Base(models.AbstractModel):
 
             field_value = record_values[progress_bar['field']]
             if field_value in data[group_by_value]:
-                data[group_by_value][field_value] += 1
+                data[group_by_value][field_value] += record_values.get("__count", 1)
 
         return data
 
