@@ -609,18 +609,23 @@ var StatementModel = BasicModel.extend({
     },
     getPartialReconcileAmount: function(handle, data) {
         var line = this.getLine(handle);
+        var formatOptions = {
+            currency_id: line.st_line.currency_id,
+            noSymbol: true,
+        };
         var prop = _.find(line.reconciliation_proposition, {'id': data.data});
         if (prop) {
             var amount = prop.partial_amount || prop.amount;
             // Check if we can get a partial amount that would directly set balance to zero
             var partial = Math.abs(line.balance.amount + amount);
             if (Math.abs(line.balance.amount) >= Math.abs(amount)) {
-                return Math.abs(amount);
+                amount = Math.abs(amount);
+            } else if (partial <= Math.abs(prop.amount) && partial >= 0) {
+                amount = partial;
+            } else {
+                amount = Math.abs(amount);
             }
-            if (partial <= Math.abs(prop.amount) && partial >= 0) {
-                return partial;
-            }
-            return Math.abs(amount);
+            return field_utils.format.monetary(amount, {}, formatOptions);
         }
     },
     /**
