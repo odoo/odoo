@@ -1675,7 +1675,7 @@ options.registry.anchor = options.Class.extend({
             buttons.push({
                 text: _t("Remove"),
                 classes: 'btn-link ml-auto',
-                icon: 'fa-trash-alt',
+                icon: 'fa-trash',
                 close: true,
                 click: function () {
                     self._setAnchorName();

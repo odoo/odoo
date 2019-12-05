@@ -126,7 +126,7 @@
               </div>
             </div>
             <!-- modal end -->
-            <h3>World Map<button class="btn btn-link" data-toggle="modal" data-target=".partner_map_modal"><span class="fas fa-external-link-alt" role="img" aria-label="External link" title="External link"/></button></h3>
+            <h3>World Map<button class="btn btn-link" data-toggle="modal" data-target=".partner_map_modal"><span class="fa fa-external-link" role="img" aria-label="External link" title="External link"/></button></h3>
             <ul class="nav">
                 <iframe t-attf-src="/google_map?width=260&amp;height=240&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/partners/"
                     style="width:260px; height:240px; border:0; padding:0; margin:0;" scrolling="no"></iframe>
@@ -337,7 +337,7 @@
                         <div class="col-lg-12">
                             <span class="float-right" title="Rating" role="img" t-attf-aria-label="Rating: #{lead.priority} on 3">
                                 <t t-foreach="range(1, 4)" t-as="i">
-                                    <span t-attf-class="fa#{'s' if i &lt;= int(lead.priority) else 'r'} fa-lg fa-star"/>
+                                    <span t-attf-class="fa fa-lg fa-star#{'' if i &lt;= int(lead.priority) else '-o'}"/>
                                 </t>
                             </span>
                             <h4>
@@ -360,10 +360,10 @@
                                         <span class="fa fa-phone" role="img" aria-label="Phone" title="Phone"/> <span itemprop="telephone" t-field="lead.phone" />
                                     </div>
                                     <div t-if="lead.mobile">
-                                        <span class="fas fa-mobile-alt" role="img" aria-label="Mobile" title="Mobile"/> <span itemprop="telephone" t-field="lead.mobile" />
+                                        <span class="fa fa-mobile" role="img" aria-label="Mobile" title="Mobile"/> <span itemprop="telephone" t-field="lead.mobile" />
                                     </div>
                                     <div t-if="lead.email_from">
-                                        <span class="far fa-envelope" role="img" aria-label="Email" title="Email"/> <span itemprop="email" t-field="lead.email_from" />
+                                        <span class="fa fa-envelope" role="img" aria-label="Email" title="Email"/> <span itemprop="email" t-field="lead.email_from" />
                                     </div>
                                 </address>
                             </div>
@@ -419,7 +419,7 @@
                 </div>
             </div>
             <div class='mt8'>
-                <a role="button" href="#" class="btn btn-primary btn" data-toggle="modal" data-target=".modal_partner_assign_interested"><i class="far fa-file-alt"/> I'm interested</a>
+                <a role="button" href="#" class="btn btn-primary btn" data-toggle="modal" data-target=".modal_partner_assign_interested"><i class="fa fa-file-text-o"/> I'm interested</a>
                 <a role="button" href="#" class="btn btn-primary btn" data-toggle="modal" data-target=".modal_partner_assign_desinterested"><i class="fa fa-fw fa-times"/> I'm not interested</a>
                 <div class="modal fade modal_partner_assign_interested" role="form">
                     <div class="modal-dialog">
@@ -530,7 +530,7 @@
                                     <span class="text-nowrap" t-esc="opportunity.planned_revenue" t-options="{'widget': 'monetary', 'display_currency': opportunity.company_currency}"/> at
                                     <span class="badge badge-info badge-pill"><span t-field="opportunity.probability"/>%</span>
                                 </h5>
-                                <button type="button" data-toggle="modal" data-target=".modal_edit_opp" class="btn btn-link btn-sm"><i class="fas fa-pencil-alt mr-1"/>Edit</button>
+                                <button type="button" data-toggle="modal" data-target=".modal_edit_opp" class="btn btn-link btn-sm"><i class="fa fa-pencil mr-1"/>Edit</button>
                             </div>
                             <div class="row mb-2">
                                 <strong class="col-12 col-sm-4">Expected Closing</strong>
@@ -566,13 +566,13 @@
                         <div class="col-lg-6 offset-lg-1 col-xl-5 offset-xl-2">
                             <div class="d-flex justify-content-between py-2 mb-3 border-bottom align-items-center">
                                 <h5 class="card-title mb-0">Contact</h5>
-                                <button type="button" data-toggle="modal" data-target=".modal_edit_contact" class="btn btn-link btn-sm"><i class="fas fa-pencil-alt mr-1"/>Edit</button>
+                                <button type="button" data-toggle="modal" data-target=".modal_edit_contact" class="btn btn-link btn-sm"><i class="fa fa-pencil mr-1"/>Edit</button>
                             </div>
                             <div class="row mb-3" t-if="opportunity.partner_name or opportunity.email_from or opportunity.contact_name">
                                 <strong class="col-12 col-sm-3">Customer</strong>
                                 <div class="col">
                                     <div>
-                                        <span class="fas fa-user fa-fw" role="img" aria-label="User" title="User"/>
+                                        <span class="fa fa-user fa-fw" role="img" aria-label="User" title="User"/>
                                         <strong class="font-italic" t-if="opportunity.partner_name" itemprop="name" t-field="opportunity.partner_name" />
                                         <strong class="font-italic" t-else="" itemprop="name" t-field="opportunity.contact_name" />
                                     </div>
@@ -582,12 +582,12 @@
                                         <span t-else="" class="text-muted"> - </span>
                                     </div>
                                     <div>
-                                        <span class="fas fa-mobile-alt fa-fw" role="img" aria-label="Mobile" title="Mobile"/>
+                                        <span class="fa fa-mobile fa-fw" role="img" aria-label="Mobile" title="Mobile"/>
                                         <span t-if="opportunity.mobile" itemprop="mobile" t-field="opportunity.mobile"/>
                                         <span t-else="" class="text-muted"> - </span>
                                     </div>
                                     <div>
-                                        <span class="far fa-envelope fa-fw" role="img" aria-label="Email" title="Email"/>
+                                        <span class="fa fa-envelope fa-fw" role="img" aria-label="Email" title="Email"/>
                                         <span t-if="opportunity.email_from" itemprop="email" t-field="opportunity.email_from"/>
                                         <span t-else="" class="text-muted"> - </span>
                                     </div>
@@ -596,7 +596,7 @@
                             <div class="row">
                                 <strong class="col-12 col-sm-3">Address</strong>
                                 <address class="col d-flex align-items-baseline mb-0">
-                                    <span class="fas fa-map-marker-alt fa-fw" role="img" aria-label="Address" title="Address"/>
+                                    <span class="fa fa-map-marker fa-fw" role="img" aria-label="Address" title="Address"/>
                                     <div>
                                         <div t-if="opportunity.street"><span t-field="opportunity.street"/></div>
                                         <span t-else="" class="text-muted"> - </span>
@@ -652,7 +652,7 @@
                                                         <div class="input-group">
                                                             <label class="radio-inline">
                                                                 <input type="radio" name="PriorityRadioOptions" value="0" t-att-checked="opportunity.priority not in ['1','2','3']" aria-label="Rating: 0 on 3" title="Rating: 0 on 3"/>
-                                                                <i class="ml-1 far fa-star"></i>
+                                                                <i class="ml-1 fa fa-star-o"></i>
                                                             </label>
                                                             <label class="radio-inline ml-2">
                                                                 <input type="radio" name="PriorityRadioOptions" value="1" t-att-checked="opportunity.priority == '1'" aria-label="Rating: 1 on 3" title="Rating: 1 on 3"/>
@@ -678,7 +678,7 @@
                                                             <input type="date" min="1900-01-01" name="date_deadline" t-att-value="date_formatted" class="datetimepicker-input form-control date_deadline" data-date-format="YYYY-MM-DD" t-att-name="prefix" placeholder="YYYY-MM-DD"/>
                                                             <div class="input-group-append" data-target="#exp_closing_div" data-toggle="datetimepicker">
                                                                 <span class="input-group-text">
-                                                                    <span class="far fa-calendar-alt" role="img" aria-label="Calendar"></span>
+                                                                    <span class="fa fa-calendar" role="img" aria-label="Calendar"></span>
                                                                 </span>
                                                             </div>
                                                         </div>
@@ -704,7 +704,7 @@
                                                     <input type="date" min="1900-01-01" name="activity_date_deadline" t-att-value="date_formatted" class="form-control activity_date_deadline datetimepicker-input" data-date-format="YYYY-MM-DD" t-att-name="prefix" placeholder="YYYY-MM-DD"/>
                                                     <div class="input-group-append" data-target="#next_activity_div" data-toggle="datetimepicker">
                                                         <span class="input-group-text">
-                                                            <span class="far fa-calendar-alt" role="img" aria-label="Calendar" title="Calendar"></span>
+                                                            <span class="fa fa-calendar" role="img" aria-label="Calendar" title="Calendar"></span>
                                                         </span>
                                                     </div>
                                                 </div>

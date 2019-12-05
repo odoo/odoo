@@ -40,7 +40,7 @@
         <field name="arch" type="xml">
             <xpath expr="//button[@name='action_send_mail']" position="after">
                 <field name="mobile" invisible="1"/>
-                <button name="action_send_sms" type="object" icon="fa-mobile-alt"
+                <button name="action_send_sms" type="object" icon="fa-mobile"
                         attrs="{'invisible': [('mobile', '=', False)]}" string="Send SMS"/>
             </xpath>
         </field>

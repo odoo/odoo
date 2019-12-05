@@ -22,7 +22,7 @@
         <xpath expr="//section[@id='details']//t[@t-if='not line.display_type']" position="inside">
             <td class="text-center" t-if="display_remove">
                 <a t-att-href="sale_order.get_portal_url(suffix='/update_line/%s' % line.id, query_string='&amp;unlink=True')" class="mb8 js_update_line_json d-print-none" t-if="sale_order.state in ('draft', 'sent') and line.sale_order_option_ids" aria-label="Remove" title="Remove">
-                    <span class="far fa-trash-alt"></span>
+                    <span class="fa fa-trash-o"></span>
                 </a>
             </td>
         </xpath>

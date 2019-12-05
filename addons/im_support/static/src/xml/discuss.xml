@@ -17,7 +17,7 @@
                 <t t-if="channel.getType() == 'support_channel'">
                     <div t-attf-class="o_mail_discuss_title_main o_mail_discuss_item #{(activeThreadID == channel.getID()) ? 'o_active': ''}"
                          t-att-data-thread-id="channel.getID()">
-                        <span class="o_thread_name"><i class="far fa-question-circle mr8"/>Odoo Support</span>
+                        <span class="o_thread_name"><i class="fa fa-question-circle mr8"/>Odoo Support</span>
                         <t t-set="counter" t-value="channel.getUnreadCounter()"/>
                         <t t-call="mail.discuss.SidebarCounter"/>
                     </div>

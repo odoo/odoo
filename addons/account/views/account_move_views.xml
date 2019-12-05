@@ -103,7 +103,7 @@
                                         <span t-esc="record.move_id.value"/>
                                     </strong>
                                     <strong class="col-6 text-right">
-                                        <i class="far fa-clock" aria-label="Date" role="img" title="Date"/><field name="date_maturity"/>
+                                        <i class="fa fa-clock-o" aria-label="Date" role="img" title="Date"/><field name="date_maturity"/>
                                     </strong>
                                     <div class="col-10">
                                         <span t-esc="record.name.value"/>
@@ -196,10 +196,10 @@
                            domain="[('applicability', '=', 'taxes')]"/>
                     <groupby name="move_id">
                         <field name="state" invisible="1"/>
-                        <button name="edit" type="edit" icon="fas fa-edit" title="Edit"/>
+                        <button name="edit" type="edit" icon="fa-edit" title="Edit"/>
                         <button name="action_post" states="draft" icon="fa-check" title="Post" type="object" groups="account.group_account_invoice"/>
-                        <button name="%(action_view_account_move_reversal)d" states="posted" title="Reverse" icon="fa-sync" type="action" groups="account.group_account_invoice"/>
-                        <button name="action_duplicate" icon="fa-copy" title="Duplicate" type="object" groups="account.group_account_invoice"/>
+                        <button name="%(action_view_account_move_reversal)d" states="posted" title="Reverse" icon="fa-refresh" type="action" groups="account.group_account_invoice"/>
+                        <button name="action_duplicate" icon="fa-files-o" title="Duplicate" type="object" groups="account.group_account_invoice"/>
                     </groupby>
                 </tree>
             </field>
@@ -431,7 +431,7 @@
                                         <strong><span><field name="journal_id"/></span></strong>
                                     </div>
                                     <div class="col-6 text-right">
-                                        <strong><i class="far fa-clock" aria-label="Date" role="img" title="Date"/> <t t-esc="record.date.value"/></strong>
+                                        <strong><i class="fa fa-clock-o" aria-label="Date" role="img" title="Date"/> <t t-esc="record.date.value"/></strong>
                                     </div>
                                 </div>
                                 <div class="row">

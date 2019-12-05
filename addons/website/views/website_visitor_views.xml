@@ -142,8 +142,8 @@
                             <!-- displayed in grouped mode -->
                             <div class="oe_kanban_details">
                                 <div class="float-right">
-                                    <span class="far fa-circle text-success" t-if="record.is_connected.raw_value" aria-label="Online" title="Online"/>
-                                    <span class="far fa-circle text-danger" t-else="" aria-label="Offline" title="Offline"/>
+                                    <span class="fa fa-circle text-success" t-if="record.is_connected.raw_value" aria-label="Online" title="Online"/>
+                                    <span class="fa fa-circle text-danger" t-else="" aria-label="Offline" title="Offline"/>
                                 </div>
                                 <strong>
                                     <img t-if="record.country_id.raw_value"
@@ -180,11 +180,11 @@
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button class="oe_stat_button o_stat_button_info" attrs="{'invisible': [('is_connected', '=', False)]}">
-                            <i class="far fa-fw o_button_icon fa-circle text-success"/>
+                            <i class="fa fa-fw o_button_icon fa-circle text-success"/>
                             <span>Connected</span>
                         </button>
                         <button class="oe_stat_button o_stat_button_info" attrs="{'invisible': [('is_connected', '=', True)]}">
-                            <i class="far fa-fw o_button_icon fa-circle text-danger"/>
+                            <i class="fa fa-fw o_button_icon fa-circle text-danger"/>
                             <span>Offline</span>
                         </button>
                         <button id="w_visitor_visit_counter" class="oe_stat_button o_stat_button_info" icon="fa-globe">
