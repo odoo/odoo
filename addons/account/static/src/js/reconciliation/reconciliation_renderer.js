@@ -464,7 +464,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
         $line.find('.edit_amount').addClass('d-none');
         $line.find('.edit_amount_input').removeClass('d-none');
         $line.find('.edit_amount_input').focus();
-        $line.find('.edit_amount_input').val(amount.toFixed(2));
+        $line.find('.edit_amount_input').val(amount);
         $line.find('.line_amount').addClass('d-none');
     },
 
