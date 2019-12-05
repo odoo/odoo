@@ -85,6 +85,8 @@ class L10nLatamDocumentType(models.Model):
                 failed = True
             elif len(number) > 8 or not number.isdigit():
                 failed = True
+            if len(pos) == 5 and pos[0] == '0':
+                pos = pos[1:]
             document_number = '{:>04s}-{:>08s}'.format(pos, number)
         if failed:
             raise UserError(msg % (document_number, self.name, _(
