@@ -183,6 +183,7 @@ class Cursor(object):
             self.__caller = False
         self._closed = False   # real initialisation value
         self.autocommit(False)
+        self.set_statement_timeout(tools.config['limit_time_real'] * 1000)
         self.__closer = False
 
         self._default_log_exceptions = True
@@ -324,6 +325,10 @@ class Cursor(object):
             templates_list = tuple(set(['template0', 'template1', 'postgres', chosen_template]))
             keep_in_pool = self.dbname not in templates_list
             self.__pool.give_back(self._cnx, keep_in_pool=keep_in_pool)
+
+    @check
+    def set_statement_timeout(self, timeout=0):
+        self._obj.execute("SET STATEMENT_TIMEOUT = %s", (timeout, ))
 
     @check
     def autocommit(self, on):
