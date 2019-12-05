@@ -14,6 +14,7 @@
         'data/ir_action.xml',
         'data/mail_data.xml',
         'views/crm_lead_views.xml',
+        'views/res_config_settings_view.xml',
     ],
     'post_init_hook': '_synchronize_cron',
 }
