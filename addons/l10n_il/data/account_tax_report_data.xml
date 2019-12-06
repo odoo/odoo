@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!-- SALES lines -->
+    <record id="account_tax_report_line_out_base" model="account.tax.report.line">
+        <field name="name">VAT SALES (BASE)</field>
+        <field name="tag_name">VAT SALES (BASE)</field>
+        <field name="code">ILTAX_OUT_BASE</field>
+        <field name="sequence">1</field>
+        <field name="country_id" ref="base.il"/>
+    </record>
+
+	<record id="account_tax_report_line_vat_sales_tax" model="account.tax.report.line">
+        <field name="name">VAT SALES (TAX)</field>
+        <field name="formula">ILTAX_OUT_BALANCE_00+ILTAX_OUT_BALANCE_PA</field>
+        <field name="code">ILTAX_OUT_BALANCE</field>
+        <field name="sequence">2</field>
+        <field name="country_id" ref="base.il"/>
+    </record>
+
+    <record id="account_tax_report_line_out_balance" model="account.tax.report.line">
+        <field name="name">VAT Sales</field>
+        <field name="tag_name">VAT Sales</field>
+        <field name="code">ILTAX_OUT_BALANCE_00</field>
+        <field name="sequence">21</field>
+        <field name="parent_id" ref="account_tax_report_line_vat_sales_tax"/>
+        <field name="country_id" ref="base.il"/>
+    </record>
+
+    <record id="account_tax_report_line_out_balance_pa" model="account.tax.report.line">
+        <field name="name">VAT PA Sales</field>
+        <field name="tag_name">VAT PA Sales</field>
+        <field name="code">ILTAX_OUT_BALANCE_PA</field>
+        <field name="sequence">22</field>
+        <field name="parent_id" ref="account_tax_report_line_vat_sales_tax"/>
+        <field name="country_id" ref="base.il"/>
+    </record>
+
+    <record id="account_tax_report_line_out_base_exempt" model="account.tax.report.line">
+        <field name="name">VAT Exempt Sales (BASE)</field>
+        <field name="tag_name">VAT Exempt Sales (BASE)</field>
+        <field name="code">ILTAX_OUT_BASE_exempt</field>
+        <field name="sequence">3</field>
+        <field name="country_id" ref="base.il"/>
+    </record>
+
+<!-- PURCHASE lines -->
+    <record id="account_tax_report_line_in_balance" model="account.tax.report.line">
+        <field name="name">VAT INPUTS (TAX)</field>
+        <field name="formula">ILTAX_IN_BALANCE_17+ILTAX_IN_BALANCE_2_3+ILTAX_IN_BALANCE_1_4</field>
+        <field name="code">ILTAX_IN_BALANCE</field>
+        <field name="sequence">4</field>
+        <field name="country_id" ref="base.il"/>
+    </record>
+
+	<record id="account_tax_report_line_in_balance_17" model="account.tax.report.line">
+        <field name="name">VAT Inputs 17%</field>
+        <field name="tag_name">VAT Inputs 17%</field>
+        <field name="code">ILTAX_IN_BALANCE_17</field>
+        <field name="sequence">41</field>
+        <field name="parent_id" ref="account_tax_report_line_in_balance"/>
+        <field name="country_id" ref="base.il"/>
+    </record>
+
+    <record id="account_tax_report_line_in_balance_2_3" model="account.tax.report.line">
+        <field name="name">VAT Inputs 2/3</field>
+        <field name="tag_name">VAT Inputs 2/3</field>
+        <field name="code">ILTAX_IN_BALANCE_2_3</field>
+        <field name="sequence">42</field>
+        <field name="parent_id" ref="account_tax_report_line_in_balance"/>
+        <field name="country_id" ref="base.il"/>
+    </record>
+
+    <record id="account_tax_report_line_in_balance_1_4" model="account.tax.report.line">
+        <field name="name">VAT Inputs 1/4</field>
+        <field name="tag_name">VAT Inputs 1/4</field>
+        <field name="code">ILTAX_IN_BALANCE_1_4</field>
+        <field name="sequence">43</field>
+        <field name="parent_id" ref="account_tax_report_line_in_balance"/>
+        <field name="country_id" ref="base.il"/>
+    </record>
+
+    <record id="account_tax_report_line_vat_in_fa" model="account.tax.report.line">
+        <field name="name">VAT INPUTS (fixed assets)</field>
+        <field name="tag_name">VAT INPUTS (fixed assets)</field>
+        <field name="code">ILTAX_VAT_IN_FA</field>
+        <field name="sequence">5</field>
+        <field name="country_id" ref="base.il"/>
+    </record>
+
+    <record id="account_tax_report_line_vat_due" model="account.tax.report.line">
+        <field name="name">VAT DUE</field>
+        <field name="formula">(ILTAX_OUT_BALANCE_00 + ILTAX_OUT_BALANCE_PA) - (ILTAX_IN_BALANCE_17 + ILTAX_IN_BALANCE_2_3 + ILTAX_IN_BALANCE_1_4) - ILTAX_VAT_IN_FA</field>
+        <field name="sequence">6</field>
+        <field name="country_id" ref="base.il"/>
+    </record>
+</odoo>

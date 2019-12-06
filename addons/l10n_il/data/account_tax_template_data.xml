@@ -15,22 +15,26 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
+                'plus_report_line_ids': [ref('account_tax_report_line_out_base')]
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('il_account_111110'),
+                'plus_report_line_ids': [ref('account_tax_report_line_out_balance')]
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
+                'minus_report_line_ids': [ref('account_tax_report_line_out_base')]
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('il_account_111110'),
+                'minus_report_line_ids': [ref('account_tax_report_line_out_balance')]
             }),
         ]"/>
     </record>
@@ -48,22 +52,26 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
+                'plus_report_line_ids': [ref('account_tax_report_line_out_base')]
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('il_account_111120'),
+                'plus_report_line_ids': [ref('account_tax_report_line_out_balance_pa')]
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
+                'minus_report_line_ids': [ref('account_tax_report_line_out_base')]
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('il_account_111120'),
+                'minus_report_line_ids': [ref('account_tax_report_line_out_balance_pa')]
             }),
         ]"/>
     </record>
@@ -83,6 +91,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
+                'plus_report_line_ids': [ref('account_tax_report_line_out_base_exempt')]
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -94,6 +103,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
+                'minus_report_line_ids': [ref('account_tax_report_line_out_base_exempt')]
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -122,6 +132,7 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('il_account_101800'),
+                'plus_report_line_ids': [ref('account_tax_report_line_in_balance_17')]
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -133,6 +144,7 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('il_account_101800'),
+                'minus_report_line_ids': [ref('account_tax_report_line_in_balance_17')]
             }),
         ]"/>
     </record>
@@ -189,6 +201,7 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('il_account_101800'),
+                'plus_report_line_ids':[ ref('account_tax_report_line_in_balance_2_3')]
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -200,6 +213,7 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('il_account_101800'),
+                'minus_report_line_ids':[ ref('account_tax_report_line_in_balance_2_3')]
             }),
         ]"/>
     </record>
@@ -223,6 +237,7 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('il_account_101800'),
+                'plus_report_line_ids':[ ref('account_tax_report_line_in_balance_1_4')]
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -234,6 +249,7 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('il_account_101800'),
+                'minus_report_line_ids':[ ref('account_tax_report_line_in_balance_1_4')]
             }),
         ]"/>
     </record>
@@ -256,6 +272,7 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('il_account_101810'),
+                'plus_report_line_ids':[ref('account_tax_report_line_vat_in_fa')]
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -267,6 +284,7 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('il_account_101810'),
+                'minus_report_line_ids':[ref('account_tax_report_line_vat_in_fa')]
             }),
         ]"/>
     </record>
@@ -301,5 +319,4 @@
             }),
         ]"/>
     </record>
-
 </odoo>
