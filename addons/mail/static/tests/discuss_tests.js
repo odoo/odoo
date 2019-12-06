@@ -1733,57 +1733,6 @@ QUnit.test('receive channel message notification then delayed needaction notific
     discuss.destroy();
 });
 
-QUnit.test('input not cleared on unresolved message_post rpc', async function (assert) {
-    assert.expect(2);
-    // Promise to simulate late server response on message post
-    var messagePostPromise = testUtils.makeTestPromise();
-
-    this.data.initMessaging = {
-        channel_slots: {
-            channel_channel: [{
-                id: 1,
-                channel_type: "channel",
-                name: "general",
-            }],
-        },
-    };
-
-    var discuss = await createDiscuss({
-        id: 1,
-        context: {},
-        params: {},
-        data: this.data,
-        services: this.services,
-        mockRPC: function (route, args) {
-            if (args.method === 'message_post') {
-                return messagePostPromise;
-            }
-            return this._super.apply(this, arguments);
-        },
-    });
-
-    // Click on channel 'general'
-    var $general = discuss.$('.o_mail_discuss_sidebar').find('.o_mail_discuss_item[data-thread-id=1]');
-    await testUtils.dom.click($general);
-
-    // Type message
-    var $input = discuss.$('textarea.o_composer_text_field').first();
-    $input.focus();
-    $input.val('test message');
-
-    // Send message
-    await testUtils.fields.triggerKeydown($input, 'enter');
-    assert.strictEqual($input.val(), 'test message', "composer should not be cleared on send without server response");
-
-    // Simulate server response
-    messagePostPromise.resolve();
-
-    await testUtils.nextTick();
-    assert.strictEqual($input.val(), '', "composer should be cleared on send after server response");
-
-    discuss.destroy();
-});
-
 QUnit.test('messages marked as read move to "History" mailbox', async function (assert) {
     assert.expect(3);
 
