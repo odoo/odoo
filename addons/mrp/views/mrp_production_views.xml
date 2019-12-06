@@ -25,6 +25,7 @@
                     <field name="state" optional="show"/>
                     <field name="company_id" readonly="1" groups="base.group_multi_company" optional="show"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
+                    <field name="reschedule_description_html" string=" " widget="html_popover" options="{'color': 'text-warning', 'title': 'Reschedule'}"/>
                 </tree>
             </field>
         </record>
@@ -112,9 +113,17 @@
                             <field name="bom_id"
                                 context="{'default_product_tmpl_id': product_tmpl_id}" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="routing_id" groups="mrp.group_mrp_routings"/>
+                            <field name="parent_mrp_production_id"/>
                         </group>
                         <group>
-                            <field name="date_deadline" attrs="{'readonly': [('state', 'in', ['done', 'cancel'])]}"/>
+                            <label for="date_deadline"/>
+                            <div class="o_row" attrs="{'readonly': [('state', 'in', ['done', 'cancel'])]}">
+                                <field name="date_deadline"/>
+                                <field name="reschedule_date_deadline" invisible="1"/>
+                                <button icon="fa-exclamation-circle" type="object" name="action_update_date_deadline"
+                                    attrs="{'invisible': [('reschedule_date_deadline', '=', False)]}"
+                                    help="This manufacturing order should be rescheduled"/>
+                            </div>
                             <field name="date_start_wo"
                                 attrs="{'invisible': [
                                 '|',
@@ -133,12 +142,9 @@
                                                 ('state', 'in', ['draft', 'confirmed'])
                                         ]}"/>
                             </div>
-                            <div class="o_row">
+                            <div class="o_row" attrs="{'invisible': [('routing_id', '!=', False), ('state', 'in', ['draft', 'confirmed'])]}">
                                 <field name="date_planned_start"
-                                       attrs="{'invisible': [
-                                            ('routing_id', '!=', False),
-                                            ('state', 'in', ['draft', 'confirmed']),
-                                        ], 'readonly': [
+                                       attrs="{'readonly': [
                                        '|',
                                         '&amp;',
                                             ('routing_id', '=', False),
@@ -146,13 +152,7 @@
                                         '&amp;',
                                             ('routing_id', '!=', False),
                                             ('state', 'not in', ['draft', 'confirmed'])]}"/>
-                                <label for="date_planned_finished" string="to" attrs="{'invisible': [
-                                    '|',
-                                        ('id', '=', False),
-                                        '&amp;',
-                                            ('routing_id', '!=', False),
-                                            ('state', 'in', ['draft', 'confirmed'])
-                                ]}"/>
+                                <label for="date_planned_finished" string="to" attrs="{'invisible': [('id', '=', False)]}"/>
                                 <field name="date_planned_finished" required="1"
                                 attrs="{'readonly': [
                                     '|',
@@ -160,10 +160,11 @@
                                             ('routing_id', '=', False),
                                             ('state', 'in', ['done', 'cancel']),
                                         ('routing_id', '!=', False)
-                                ], 'invisible': [
-                                    ('routing_id', '!=', False),
-                                    ('state', 'in', ['draft', 'confirmed'])
                                 ]}"/>
+                                <field name="reschedule_dates_planned" invisible="1"/>
+                                <button icon="fa-exclamation-circle" type="object" name="action_update_dates_planned"
+                                    attrs="{'invisible': [('reschedule_dates_planned', '=', False)]}"
+                                    help="This manufacturing order should be rescheduled"/>
                             </div>
                             <field name="user_id"/>
                             <field name="origin"/>
@@ -240,6 +241,9 @@
                                     <div class="oe_kanban_bottom_left text-muted">
                                         <span><t t-esc="record.name.value"/> <t t-esc="record.date_deadline.value and record.date_deadline.value.split(' ')[0] or False"/></span>
                                         <field name="activity_ids" widget="kanban_activity"/>
+                                        <field name="reschedule_date_deadline" invisible="1"/>
+                                        <field name="reschedule_dates_planned" invisible="1"/>
+                                        <field name="reschedule_description_html" widget="html_popover" options="{'color': 'text-warning', 'title': 'Reschedule'}"/>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
                                         <span t-attf-class="badge #{['draft', 'cancel'].indexOf(record.state.raw_value) > -1 ? 'badge-secondary' : ['none'].indexOf(record.state.raw_value) > -1 ? 'badge-danger' : ['confirmed'].indexOf(record.state.raw_value) > -1 ? 'badge-warning' : ['done'].indexOf(record.state.raw_value) > -1 ? 'badge-success' : 'badge-primary'}"><t t-esc="record.state.value"/></span>

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import datetime
 from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 
@@ -45,6 +46,7 @@ class StockRule(models.Model):
         for company_id, productions_values in productions_values_by_company.items():
             # create the MO as SUPERUSER because the current user may not have the rights to do it (mto product launched by a sale for example)
             productions = self.env['mrp.production'].sudo().with_company(company_id).create(productions_values)
+            productions.action_update_dates_based_on_parent()
             self.env['stock.move'].sudo().create(productions._get_moves_raw_values())
             productions.action_confirm()
 
@@ -74,6 +76,8 @@ class StockRule(models.Model):
 
     def _prepare_mo_vals(self, product_id, product_qty, product_uom, location_id, name, origin, company_id, values, bom):
         date_deadline = fields.Datetime.to_string(self._get_date_planned(product_id, company_id, values))
+        print('_prepare_mo_vals', values)
+
         return {
             'origin': origin,
             'product_id': product_id.id,
@@ -94,6 +98,7 @@ class StockRule(models.Model):
             'company_id': company_id.id,
             'move_dest_ids': values.get('move_dest_ids') and [(4, x.id) for x in values['move_dest_ids']] or False,
             'user_id': False,
+            'parent_mrp_production_id': self.env['mrp.production'].search([('name', '=', origin)]).id,
         }
 
     def _get_date_planned(self, product_id, company_id, values):

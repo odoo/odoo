@@ -4,6 +4,7 @@
 import datetime
 from collections import defaultdict
 from itertools import groupby
+from html import escape
 
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, UserError
@@ -220,6 +221,45 @@ class MrpProduction(models.Model):
     picking_ids = fields.Many2many('stock.picking', compute='_compute_picking_ids', string='Picking associated to this manufacturing order')
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
     confirm_cancel = fields.Boolean(compute='_compute_confirm_cancel')
+
+    parent_mrp_production_id = fields.Many2one(
+        'mrp.production', string='Parent MO', readonly=True, required=False,
+        default=False, help='MO which created automatically this MO.')
+    children_mrp_production_ids = fields.One2many(
+        'mrp.production', 'parent_mrp_production_id', string='Children MO',
+        readonly=True, help='Children of this MO.')
+
+    reschedule_date_deadline = fields.Boolean(
+        default=False, string='Reschedule deadline',
+        help='Deadline date should be rescheduled based on the parent MO.')
+    reschedule_dates_planned = fields.Boolean(
+        default=False, string='Reschedule start date',
+        help='Planned dates should be rescheduled based on the parent MO.')
+
+    reschedule_description_html = fields.Html('Rescheduling description', compute='_compute_reschedule_description_html')
+
+    @api.depends('reschedule_date_deadline', 'reschedule_dates_planned')
+    def _compute_reschedule_description_html(self):
+        for production in self:
+            html_description = "This manufacturing order should be rescheduled considering the fact that the finished products are required at this date for %s.<br/><button action='%s' type='object'>%s<button>"
+
+            if production.reschedule_date_deadline and production.reschedule_dates_planned:
+                production.reschedule_description_html = html_description % (
+                    escape(production.parent_mrp_production_id.name),
+                    'action_update_dates_based_on_parent',
+                    'Update dates')
+            elif production.reschedule_date_deadline:
+                production.reschedule_description_html = html_description % (
+                    escape(production.parent_mrp_production_id.name),
+                    'action_update_date_deadline',
+                    'Update deadline')
+            elif production.reschedule_dates_planned:
+                production.reschedule_description_html = html_description % (
+                    escape(production.parent_mrp_production_id.name),
+                    'action_update_dates_planned',
+                    'Update dates planned')
+            else:
+                production.reschedule_description_html = False
 
     @api.depends('move_raw_ids.state', 'move_finished_ids.state')
     def _compute_confirm_cancel(self):
@@ -484,6 +524,14 @@ class MrpProduction(models.Model):
             moves.write({
                 'date_expected': fields.Datetime.to_datetime(vals['date_planned_start']),
             })
+
+        if 'date_deadline' in vals or 'date_planned_start' in vals or 'date_planned_finished' in vals:
+            for production in self:
+                for child in production.children_mrp_production_ids:
+                    child.reschedule_date_deadline = child._dates_depends_on_parent()
+                    if 'date_planned_start' in vals or 'date_planned_finished' in vals:
+                        child.reschedule_dates_planned = child._dates_depends_on_parent()
+
         for production in self:
             if 'date_planned_start' in vals:
                 if production.state in ['done', 'cancel']:
@@ -869,6 +917,8 @@ class MrpProduction(models.Model):
             self.state = 'cancel'
             return True
         self._action_cancel()
+        self.children_mrp_production_ids.filtered(lambda prod: prod.state == 'draft').action_cancel()
+
         return True
 
     def _action_cancel(self):
@@ -1047,3 +1097,51 @@ class MrpProduction(models.Model):
             return self.env.ref('mrp.exception_on_mo').render(values=values)
 
         self.env['stock.picking']._log_activity(_render_note_exception_quantity_mo, documents)
+
+    def _get_planned_duration(self):
+        self.ensure_one()
+        return self.date_planned_finished - self.date_planned_start
+
+    def _dates_depends_on_parent(self):
+        """Return True if the ``mrp.production`` dates might depends on the parent."""
+        self.ensure_one()
+        return self.parent_mrp_production_id and self.state in ['draft', 'confirmed']
+
+    def action_update_dates_based_on_parent(self):
+        """Update the dates based on the date of the ``parent_mrp_production_id``."""
+        self.action_update_date_deadline()
+        self.action_update_dates_planned()
+
+    def action_update_date_deadline(self):
+        for mrp_prod in self:
+            if not mrp_prod._dates_depends_on_parent():
+                continue
+
+            if mrp_prod.parent_mrp_production_id.date_deadline:
+                mrp_prod.date_deadline = (
+                    mrp_prod.parent_mrp_production_id.date_deadline
+                    - mrp_prod.parent_mrp_production_id._get_planned_duration()
+                    - datetime.timedelta(days=mrp_prod.parent_mrp_production_id.company_id.manufacturing_lead))
+
+        self.reschedule_date_deadline = False
+
+    def action_update_dates_planned(self):
+        """Update the ``date_planned_start`` and ``date_planned_finished``.
+
+        Update only if a parent exists and if the state if draft or confirmed.
+        The time between ``date_planned_start`` and ``date_planned_finished``
+        will be preserved.
+        """
+        for mrp_prod in self:
+            if not mrp_prod._dates_depends_on_parent():
+                continue
+
+            if mrp_prod.parent_mrp_production_id.date_planned_start and mrp_prod.parent_mrp_production_id.date_planned_finished:
+                planned_duration = mrp_prod._get_planned_duration()
+                mrp_prod.date_planned_start = (
+                    mrp_prod.parent_mrp_production_id.date_planned_start
+                    - mrp_prod.parent_mrp_production_id._get_planned_duration()
+                    - datetime.timedelta(days=mrp_prod.parent_mrp_production_id.company_id.manufacturing_lead))
+                mrp_prod.date_planned_finished = mrp_prod.date_planned_start + planned_duration
+
+        self.reschedule_dates_planned = False
