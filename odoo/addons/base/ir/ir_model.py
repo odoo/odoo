@@ -932,7 +932,9 @@ class IrModelFields(models.Model):
                         [field_data["relation"]],
                     )
                     modules = [e["module"] for e in self.env.cr.dictfetchall()]
-                    modules_not_in_addons_path = list(filter(lambda module: modules not in custom_modules, modules))
+                    modules_not_in_addons_path = [
+                        module for module in modules if module in custom_modules
+                    ]
                     if len(modules_not_in_addons_path):
                         if len(modules_not_in_addons_path)==1:
                             _logger.warning("Field {} not loaded:"
