@@ -136,6 +136,7 @@ var WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
         return session.rpc('/im_livechat/notify_typing', {
             uuid: this.getUUID(),
             is_typing: params.typing,
+            im_status: this.im_status
         }, { shadow: true });
     },
     /**
