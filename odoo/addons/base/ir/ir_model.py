@@ -12,7 +12,7 @@ from odoo.modules.registry import Registry
 from odoo.osv import expression
 from odoo.tools import pycompat
 from odoo.tools.safe_eval import safe_eval
-from openerp.modules.module import get_modules
+from odoo.modules.module import get_modules
 
 _logger = logging.getLogger(__name__)
 
@@ -923,7 +923,7 @@ class IrModelFields(models.Model):
                         """
                         SELECT d.module
                         FROM ir_model m
-                        JOIN ir_model_data d ON d.res_id = m.id AND d.model = 'ir.model'
+                        LEFT JOIN ir_model_data d ON d.res_id = m.id AND d.model = 'ir.model'
                         WHERE m.model = %s
                         """,
                         [field_data["relation"]],

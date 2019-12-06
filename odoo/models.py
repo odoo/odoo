@@ -2431,11 +2431,35 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # set up fields
         bad_fields = []
+        modules_in_addon_path = odoo.modules.module.get_modules()
         for name, field in cls._fields.items():
             try:
                 field.setup_full(self)
             except Exception:
-                if not self.pool.loaded and field.base_field.manual:
+                self.env.cr.execute(
+                        """
+                        SELECT d.module
+                        FROM ir_model_fields f
+                        LEFT JOIN ir_model_data d ON d.res_id=f.id AND d.model='ir.model.fields'
+                        WHERE f.name = %s AND f.model = %s
+                        """,
+                        (name, cls.__name__,)
+                    )
+                modules = [e["module"] for e in self.env.cr.dictfetchall()]
+                modules_not_in_addons_path = [
+                        module for module in modules if module not in modules_in_addon_path
+                    ]
+                if len(modules_not_in_addons_path):
+                    if len(modules_not_in_addons_path)==1:
+                        _logger.warning("Field {} not loaded:"
+                        " module '{}' is not found in the addons-path".format(
+                            name, modules_not_in_addons_path[0]))
+                    else:
+                        _logger.warning("Field {} not loaded:"
+                        " some of the module(s) '({})' are not found in the addons-path".format(
+                            name, modules_not_in_addons_path))
+                    continue
+                elif not self.pool.loaded and field.base_field.manual:
                     # Something goes wrong when setup a manual field.
                     # This can happen with related fields using another manual many2one field
                     # that hasn't been loaded because the comodel does not exist yet.
