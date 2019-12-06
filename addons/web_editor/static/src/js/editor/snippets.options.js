@@ -648,7 +648,6 @@ const InputUserValueWidget = UserValueWidget.extend({
         'input input': '_onInputInput',
         'blur input': '_onInputBlur',
 
-        'click': '_onInputClick',
         'keydown input': '_onInputKeydown',
     },
 
