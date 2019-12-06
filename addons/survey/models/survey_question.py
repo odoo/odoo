@@ -60,7 +60,7 @@ class SurveyQuestion(models.Model):
     sequence = fields.Integer('Sequence', default=10)
     # page specific
     is_page = fields.Boolean('Is a page?')
-    question_ids = fields.One2many('survey.question', string='Questions', compute="_compute_question_ids")
+    question_ids = fields.One2many('survey.question', 'page_id', string='Questions', depends=['sequence', 'page_id'])
     questions_selection = fields.Selection(
         related='survey_id.questions_selection', readonly=True,
         help="If randomized is selected, add the number of random questions next to the section.")
@@ -142,24 +142,6 @@ class SurveyQuestion(models.Model):
     def _onchange_is_page(self):
         if self.is_page:
             self.question_type = False
-
-    @api.depends('survey_id.question_and_page_ids.is_page', 'survey_id.question_and_page_ids.sequence')
-    def _compute_question_ids(self):
-        """Will take all questions of the survey for which the index is higher than the index of this page
-        and lower than the index of the next page."""
-        for question in self:
-            if question.is_page:
-                next_page_index = False
-                for page in question.survey_id.page_ids:
-                    if page._index() > question._index():
-                        next_page_index = page._index()
-                        break
-
-                question.question_ids = question.survey_id.question_ids.filtered(
-                    lambda q: q._index() > question._index() and (not next_page_index or q._index() < next_page_index)
-                )
-            else:
-                question.question_ids = self.env['survey.question']
 
     @api.depends('survey_id.question_and_page_ids.is_page', 'survey_id.question_and_page_ids.sequence')
     def _compute_page_id(self):
