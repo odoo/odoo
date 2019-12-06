@@ -351,7 +351,7 @@ class IrTranslation(models.Model):
         existing_ids = [row[0] for row in self._cr.fetchall()]
 
         # create missing translations
-        self.create([{
+        self.sudo().create([{
                 'lang': lang,
                 'type': tt,
                 'name': name,
