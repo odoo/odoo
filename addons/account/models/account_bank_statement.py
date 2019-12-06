@@ -718,7 +718,7 @@ class AccountBankStatementLine(models.Model):
         if self.account_number and self.partner_id and not self.bank_account_id:
             # Search bank account without partner to handle the case the res.partner.bank already exists but is set
             # on a different partner.
-            bank_account = self.env['res.partner.bank'].search([('acc_number', '=', self.account_number)])
+            bank_account = self.env['res.partner.bank'].search([('company_id', '=', self.company_id.id),('acc_number', '=', self.account_number)])
             if not bank_account:
                 bank_account = self.env['res.partner.bank'].create({
                     'acc_number': self.account_number, 'partner_id': self.partner_id.id
