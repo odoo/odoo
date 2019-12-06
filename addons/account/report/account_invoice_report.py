@@ -84,7 +84,7 @@ class AccountInvoiceReport(models.Model):
                 line.analytic_account_id,
                 line.journal_id,
                 line.company_id,
-                line.currency_id,
+                COALESCE(line.currency_id, line.company_currency_id)        AS currency_id,
                 line.partner_id AS commercial_partner_id,
                 move.name,
                 move.state,
