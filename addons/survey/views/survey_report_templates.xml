@@ -14,12 +14,17 @@
                     </div>
 
                     <div class="certification-bottom">
-                        <h5 class="user-name-label">This Certificate is Presented to</h5>
-                        <div class="user-name" t-esc="user_input.partner_id.name or user_input.email"/>
+                        <div t-if="user_input.quizz_passed">
+                            <h5 class="user-name-label">This Certificate is Presented to</h5>
+                            <div class="user-name" t-esc="user_input.partner_id.name or user_input.email"/>
 
-                        <div class="certification-description">
-                            <span t-field="user_input.survey_id.create_uid.company_id.display_name"/> is proud to award this certificate to
-                            <span t-esc="user_input.partner_id.name or user_input.email"/> for gratuating from <span t-field="user_input.survey_id.display_name"/>.
+                            <div class="certification-description">
+                                <span t-field="user_input.survey_id.create_uid.company_id.display_name"/> is proud to award this certificate to
+                                <span t-esc="user_input.partner_id.name or user_input.email"/> for gratuating from <span t-field="user_input.survey_id.display_name"/>.
+                            </div>
+                        </div>
+                        <div t-else="">
+                            <h5>Certification Failed</h5>
                         </div>
 
                         <div class="certification-bottom-group">
@@ -46,13 +51,18 @@
                     <div class="certification-name" t-field="user_input.survey_id.display_name"/>
                     <hr/>
 
-                    <h5>This Certificate is Presented to</h5>
-                    <div class="user-name" t-esc="user_input.partner_id.name or user_input.email"/>
-                    <hr class="small"/>
+                    <div t-if="user_input.quizz_passed">
+                        <h5>This Certificate is Presented to</h5>
+                        <div class="user-name" t-esc="user_input.partner_id.name or user_input.email"/>
+                        <hr class="small"/>
 
-                    <div class="certification-description">
-                        <span t-field="user_input.survey_id.create_uid.company_id.display_name"/> is proud to award this certificate to
-                        <span t-esc="user_input.partner_id.name or user_input.email"/> for graduating from <span t-field="user_input.survey_id.display_name"/>.
+                        <div class="certification-description">
+                            <span t-field="user_input.survey_id.create_uid.company_id.display_name"/> is proud to award this certificate to
+                            <span t-esc="user_input.partner_id.name or user_input.email"/> for graduating from <span t-field="user_input.survey_id.display_name"/>.
+                        </div>
+                    </div>
+                    <div t-else="">
+                        <h5>Certification Failed</h5>
                     </div>
 
                     <div class="certification-date" t-field="user_input.create_date" t-options='{"widget": "date"}'/>
