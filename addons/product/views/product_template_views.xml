@@ -5,9 +5,11 @@
         <field name="model">product.template</field>
         <field name="arch" type="xml">
             <tree string="Product" multi_edit="1">
+                <field name="product_variant_count" invisible="1"/>
+
                 <field name="sequence" widget="handle" readonly="1"/>
                 <field name="default_code" optional="show"/>
-                <field name="barcode" optional="hide"/>
+                <field name="barcode" optional="hide" attrs="{'readonly': [('product_variant_count', '>', 1)]}"/>
                 <field name="name"/>
                 <field name="company_id" options="{'no_create_edit': True}"
                     groups="base.group_multi_company" optional="hide"/>
