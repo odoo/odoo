@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_fiscal_position_palestinian_authority" model="account.fiscal.position.template">
+        <field name="name">Palestinian Authority (PA)</field>
+        <field name="auto_apply" eval="True"/>
+        <field name="sequence">16</field>
+        <field name="country_id" ref="base.ps"/>
+        <field name="chart_template_id" ref="il_chart_template"/>
+    </record>
+
+    <record id="account_fiscal_position_palestinian_authority_01" model="account.fiscal.position.tax.template">
+        <field name="tax_src_id" ref="il_vat_sales_17"/>
+        <field name="tax_dest_id" ref="il_vat_pa_sales_17"/>
+        <field name="position_id" ref="account_fiscal_position_palestinian_authority"/>
+    </record>
+
+    <record id="account_fiscal_position_palestinian_authority_02" model="account.fiscal.position.tax.template">
+        <field name="tax_src_id" ref="il_vat_inputs_17"/>
+        <field name="tax_dest_id" ref="il_vat_pa_purchase_16"/>
+        <field name="position_id" ref="account_fiscal_position_palestinian_authority"/>
+    </record>
+</odoo>
