@@ -227,8 +227,8 @@ class AccountReconcileModel(models.Model):
                 'analytic_tag_ids': tax.analytic and base_line_dict['analytic_tag_ids'],
                 'tax_exigible': tax_res['tax_exigibility'],
                 'tax_repartition_line_id': tax_res['tax_repartition_line_id'],
-                'tax_ids': tax_res['tax_ids'],
-                'tag_ids': tax_res['tag_ids'],
+                'tax_ids': [(6, 0, tax_res['tax_ids'])],
+                'tag_ids': [(6, 0, tax_res['tag_ids'])],
                 'reconcile_model_id': self.id,
             })
 
@@ -240,7 +240,7 @@ class AccountReconcileModel(models.Model):
 
     def _get_write_off_move_lines_dict(self, st_line, move_lines=None, residual_balance=None):
         ''' Get move.lines dict (to be passed to the create()) corresponding to the reconciliation model's write-off lines.
-        :param st_line:     An account.bank.statement.line record.
+        :param st_line:     An account.bank.statement.line record.(possibly empty, if performing manual reconciliation)
         :param move_lines:  An account.move.line recordset.
         :return: A list of dict representing move.lines to be created corresponding to the write-off lines.
         '''
@@ -250,7 +250,8 @@ class AccountReconcileModel(models.Model):
             return []
 
         line_residual = st_line.currency_id and st_line.amount_currency or st_line.amount
-        line_currency = st_line.currency_id or st_line.journal_id.currency_id or st_line.company_id.currency_id
+        line_currency = st_line.currency_id or st_line.journal_id.currency_id or self.company_id.currency_id
+
         total_residual = move_lines and sum(aml.currency_id and aml.amount_residual_currency or aml.amount_residual for aml in move_lines) or 0.0
 
         balance = total_residual - line_residual
