@@ -2,11 +2,11 @@
 
 import odoo.tests
 
-from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.addons.survey.tests.common import TestSurveyCommonHttp
 
 
 @odoo.tests.common.tagged('post_install', '-at_install')
-class TestUiCertification(HttpCaseWithUserDemo):
+class TestUiCertification(TestSurveyCommonHttp):
 
     def setUp(self):
         super(TestUiCertification, self).setUp()
@@ -237,10 +237,10 @@ class TestUiCertification(HttpCaseWithUserDemo):
             ]
         })
 
-    def test_04_certification_success_tour(self):
+    def test_certification_success_tour(self):
         access_token = self.survey_certification.access_token
-        self.start_tour("/survey/start/%s" % access_token, 'test_certification_success', login="demo")
+        self.start_tour("/survey/start/%s" % access_token, 'test_certification_success', login="user_emp")
 
-    def test_05_certification_failure_tour(self):
+    def test_certification_failure_tour(self):
         access_token = self.survey_certification.access_token
-        self.start_tour("/survey/start/%s" % access_token, 'test_certification_failure', login="demo")
+        self.start_tour("/survey/start/%s" % access_token, 'test_certification_failure', login="user_emp")

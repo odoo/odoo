@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from odoo import fields
@@ -11,7 +10,7 @@ from odoo.tests import Form
 from odoo.tests.common import users
 
 
-class TestSurveyInvite(common.TestSurveyCommon):
+class TestSurveyInvite(common.TestSurveyWDemoSurvey):
 
     def setUp(self):
         res = super(TestSurveyInvite, self).setUp()

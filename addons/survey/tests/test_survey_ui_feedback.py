@@ -2,11 +2,11 @@
 
 import odoo.tests
 
-from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.addons.survey.tests.common import TestSurveyCommonHttp
 
 
 @odoo.tests.common.tagged('post_install', '-at_install')
-class TestUiFeedback(HttpCaseWithUserDemo):
+class TestUiFeedback(TestSurveyCommonHttp):
 
     def setUp(self):
         super(TestUiFeedback, self).setUp()
@@ -152,19 +152,18 @@ class TestUiFeedback(HttpCaseWithUserDemo):
             ],
         })
 
-
-    def test_01_admin_survey_tour(self):
+    def test_admin_survey_tour(self):
         access_token = self.survey_feedback.access_token
         self.start_tour("/survey/start/%s" % access_token, 'test_survey', login="admin")
 
-    def test_02_demo_survey_tour(self):
+    def test_emp_survey_tour(self):
         access_token = self.survey_feedback.access_token
-        self.start_tour("/survey/start/%s" % access_token, 'test_survey', login="demo")
+        self.start_tour("/survey/start/%s" % access_token, 'test_survey', login="user_emp")
 
-    def test_03_public_survey_tour(self):
+    def test_public_survey_tour(self):
         access_token = self.survey_feedback.access_token
         self.start_tour("/survey/start/%s" % access_token, 'test_survey')
 
-    def test_06_survey_prefill(self):
+    def test_survey_prefill(self):
         access_token = self.survey_feedback.access_token
         self.start_tour("/survey/start/%s" % access_token, 'test_survey_prefill')

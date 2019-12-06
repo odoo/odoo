@@ -3,25 +3,16 @@
 
 from odoo.addons.survey.tests import common
 from odoo.tests import tagged
-from odoo.tests.common import HttpCase
 
 
 @tagged('-at_install', 'post_install', 'functional')
-class TestSurveyFlow(common.TestSurveyCommon, HttpCase):
-    def _format_submission_data(self, page, answer_data, additional_post_data):
-        post_data = {}
-        post_data['page_id'] = page.id
-        for question_id, answer_vals in answer_data.items():
-            question = page.question_ids.filtered(lambda q: q.id == question_id)
-            post_data.update(self._prepare_post_data(question, answer_vals['value'], post_data))
-        post_data.update(**additional_post_data)
-        return post_data
+class TestSurveyFlow(common.TestSurveyCommonHttp):
 
-    def test_flow_public(self):
-        # Step: survey manager creates the survey
-        # --------------------------------------------------
-        with self.with_user(self.survey_manager):
-            survey = self.env['survey.survey'].create({
+    def setUp(self):
+        super(TestSurveyFlow, self).setUp()
+
+        with self.with_user('survey_manager'):
+            self.survey = self.env['survey.survey'].create({
                 'title': 'Public Survey for Tarte Al Djotte',
                 'access_mode': 'public',
                 'users_login_required': False,
@@ -30,89 +21,81 @@ class TestSurveyFlow(common.TestSurveyCommon, HttpCase):
             })
 
             # First page is about customer data
-            page_0 = self.env['survey.question'].create({
+            self.page_0 = self.env['survey.question'].create({
                 'is_page': True,
                 'sequence': 1,
                 'title': 'Page1: Your Data',
-                'survey_id': survey.id,
+                'survey_id': self.survey.id,
             })
-            page0_q0 = self._add_question(
-                page_0, 'What is your name', 'text_box',
-                comments_allowed=False,
-                constr_mandatory=True, constr_error_msg='Please enter your name', survey_id=survey.id)
-            page0_q1 = self._add_question(
-                page_0, 'What is your age', 'numerical_box',
-                comments_allowed=False,
-                constr_mandatory=True, constr_error_msg='Please enter your name', survey_id=survey.id)
+            self.page0_q0 = self._add_question(
+                'What is your name', 'text_box', page=self.page_0,
+                comments_allowed=False, constr_mandatory=True, constr_error_msg='Please enter your name')
+            self.page0_q1 = self._add_question(
+                'What is your age', 'numerical_box', page=self.page_0,
+                comments_allowed=False, constr_mandatory=True, constr_error_msg='Please enter your name')
 
             # Second page is about tarte al djotte
-            page_1 = self.env['survey.question'].create({
+            self.page_1 = self.env['survey.question'].create({
                 'is_page': True,
                 'sequence': 4,
                 'title': 'Page2: Tarte Al Djotte',
-                'survey_id': survey.id,
+                'survey_id': self.survey.id,
             })
-            page1_q0 = self._add_question(
-                page_1, 'What do you like most in our tarte al djotte', 'multiple_choice',
-                labels=[{'value': 'The gras'},
-                        {'value': 'The bette'},
-                        {'value': 'The tout'},
-                        {'value': 'The regime is fucked up'}], survey_id=survey.id)
+            self.page1_q0 = self._add_question(
+                'What do you like most in our tarte al djotte', 'multiple_choice', page=self.page_1,
+                suggested_answers=[
+                    {'value': 'The gras'}, {'value': 'The bette'},
+                    {'value': 'The tout'}, {'value': 'The regime is fucked up'}
+                ])
 
+    def test_flow_public(self):
         # fetch starting data to check only newly created data during this flow
-        answers = self.env['survey.user_input'].search([('survey_id', '=', survey.id)])
-        answer_lines = self.env['survey.user_input.line'].search([('survey_id', '=', survey.id)])
-        self.assertEqual(answers, self.env['survey.user_input'])
+        user_input = self.env['survey.user_input'].search([('survey_id', '=', self.survey.id)])
+        answer_lines = self.env['survey.user_input.line'].search([('survey_id', '=', self.survey.id)])
+        self.assertEqual(user_input, self.env['survey.user_input'])
         self.assertEqual(answer_lines, self.env['survey.user_input.line'])
 
         # Step: customer takes the survey
         # --------------------------------------------------
 
         # Customer opens start page
-        r = self._access_start(survey)
-        self.assertResponse(r, 200, [survey.title])
+        r = self._access_start(self.survey)
+        self.assertResponse(r, 200, [self.survey.title])
 
         # -> this should have generated a new answer with a token
-        answers = self.env['survey.user_input'].search([('survey_id', '=', survey.id)])
-        self.assertEqual(len(answers), 1)
-        answer_token = answers.access_token
+        user_input = self.env['survey.user_input'].search([('survey_id', '=', self.survey.id)])
+        self.assertEqual(len(user_input), 1)
+        answer_token = user_input.access_token
         self.assertTrue(answer_token)
-        self.assertAnswer(answers, 'new', self.env['survey.question'])
+        self.assertEqual(user_input.state, 'new')
+        self.assertEqual(user_input.last_displayed_page_id, self.env['survey.question'])
 
         # Customer begins survey with first page
-        r = self._access_page(survey, answer_token)
-        self.assertResponse(r, 200)
-        self.assertAnswer(answers, 'new', self.env['survey.question'])
-        csrf_token = self._find_csrf_token(r.text)
+        response, csrf_token = self._access_page(self.survey, answer_token)
+        self.assertResponse(response, 200)
+        self.assertEqual(user_input.state, 'new')
+        self.assertEqual(user_input.last_displayed_page_id, self.env['survey.question'])
 
         # Customer submit first page answers
         answer_data = {
-            page0_q0.id: {'value': ['Alfred Poilvache']},
-            page0_q1.id: {'value': ['44.0']},
+            self.page0_q0: 'Alfred Poilvache',
+            self.page0_q1: 44.0,
         }
-        post_data = self._format_submission_data(page_0, answer_data, {'csrf_token': csrf_token, 'token': answer_token, 'button_submit': 'next'})
-        r = self._access_submit(survey, answer_token, post_data)
-        self.assertResponse(r, 200)
-        answers.invalidate_cache()  # TDE note: necessary as lots of sudo in controllers messing with cache
-
+        response = self._answer_questions(self.page0_q0 | self.page0_q1, answer_data, answer_token, csrf_token)
+        user_input.invalidate_cache()
         # -> this should have generated answer lines
-        self.assertAnswer(answers, 'skip', page_0)
-        self.assertAnswerLines(page_0, answers, answer_data)
-
-        # Customer is redirected on second page and begins filling it
-        r = self._access_page(survey, answer_token)
-        self.assertResponse(r, 200)
-        csrf_token = self._find_csrf_token(r.text)
+        self.assertEqual(user_input.state, 'skip')
+        self.assertEqual(user_input.last_displayed_page_id, self.page_0)
+        self.assertPageAnswered(self.page_0, user_input, answer_data)
 
         # Customer submit second page answers
+        response, csrf_token = self._access_page(self.survey, answer_token)
         answer_data = {
-            page1_q0.id: {'value': [page1_q0.suggested_answer_ids.ids[0], page1_q0.suggested_answer_ids.ids[1]]},
+            self.page1_q0: [self.page1_q0.suggested_answer_ids.ids[0], self.page1_q0.suggested_answer_ids.ids[1]],
         }
-        post_data = self._format_submission_data(page_1, answer_data, {'csrf_token': csrf_token, 'token': answer_token, 'button_submit': 'next'})
-        r = self._access_submit(survey, answer_token, post_data)
-        self.assertResponse(r, 200)
-        answers.invalidate_cache()  # TDE note: necessary as lots of sudo in controllers messing with cache
-
+        response = self._answer_questions(self.page1_q0, answer_data, answer_token, csrf_token)
+        user_input.invalidate_cache()
         # -> this should have generated answer lines and closed the answer
-        self.assertAnswer(answers, 'done', page_1)
-        self.assertAnswerLines(page_1, answers, answer_data)
+        self.assertEqual(user_input.state, 'done')
+        self.assertEqual(user_input.last_displayed_page_id, self.page_1)
+        self.assertPageAnswered(self.page_1, user_input, answer_data)

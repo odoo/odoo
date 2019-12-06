@@ -9,14 +9,14 @@ from odoo.tools import mute_logger
 
 
 @tagged('security')
-class TestAccess(common.TestSurveyCommon):
+class TestAccess(common.TestSurveyWDemoSurvey):
 
     def setUp(self):
         super(TestAccess, self).setUp()
 
         self.answer_0 = self._add_answer(self.survey, self.customer)
-        self.answer_0_0 = self._add_answer_line(self.question_ft, self.answer_0, 'Test Answer')
-        self.answer_0_1 = self._add_answer_line(self.question_num, self.answer_0, 5)
+        self.answer_0_0 = self._add_answer_line(self.question_tb_0, self.answer_0, 'Test Answer')
+        self.answer_0_1 = self._add_answer_line(self.question_nb_0, self.answer_0, 5)
 
     @mute_logger('odoo.addons.base.models.ir_model')
     @users('user_emp')
@@ -41,7 +41,7 @@ class TestAccess(common.TestSurveyCommon):
         with self.assertRaises(AccessError):
             self.page_0.with_user(self.env.user).write({'title': 'New Title'})
         with self.assertRaises(AccessError):
-            self.question_ft.with_user(self.env.user).write({'question': 'New Title'})
+            self.question_nb_0.with_user(self.env.user).write({'question': 'New Title'})
 
         # Unlink: nope
         with self.assertRaises(AccessError):
@@ -49,7 +49,7 @@ class TestAccess(common.TestSurveyCommon):
         with self.assertRaises(AccessError):
             self.page_0.with_user(self.env.user).unlink()
         with self.assertRaises(AccessError):
-            self.question_ft.with_user(self.env.user).unlink()
+            self.question_nb_0.with_user(self.env.user).unlink()
 
     @mute_logger('odoo.addons.base.models.ir_model')
     @users('user_portal')
@@ -74,7 +74,7 @@ class TestAccess(common.TestSurveyCommon):
         with self.assertRaises(AccessError):
             self.page_0.with_user(self.env.user).write({'title': 'New Title'})
         with self.assertRaises(AccessError):
-            self.question_ft.with_user(self.env.user).write({'question': 'New Title'})
+            self.question_nb_0.with_user(self.env.user).write({'question': 'New Title'})
 
         # Unlink: nope
         with self.assertRaises(AccessError):
@@ -82,7 +82,7 @@ class TestAccess(common.TestSurveyCommon):
         with self.assertRaises(AccessError):
             self.page_0.with_user(self.env.user).unlink()
         with self.assertRaises(AccessError):
-            self.question_ft.with_user(self.env.user).unlink()
+            self.question_nb_0.with_user(self.env.user).unlink()
 
     @mute_logger('odoo.addons.base.models.ir_model')
     @users('user_public')
@@ -107,7 +107,7 @@ class TestAccess(common.TestSurveyCommon):
         with self.assertRaises(AccessError):
             self.page_0.with_user(self.env.user).write({'title': 'New Title'})
         with self.assertRaises(AccessError):
-            self.question_ft.with_user(self.env.user).write({'question': 'New Title'})
+            self.question_nb_0.with_user(self.env.user).write({'question': 'New Title'})
 
         # Unlink: nope
         with self.assertRaises(AccessError):
@@ -115,7 +115,7 @@ class TestAccess(common.TestSurveyCommon):
         with self.assertRaises(AccessError):
             self.page_0.with_user(self.env.user).unlink()
         with self.assertRaises(AccessError):
-            self.question_ft.with_user(self.env.user).unlink()
+            self.question_nb_0.with_user(self.env.user).unlink()
 
     @users('survey_manager')
     def test_access_survey_survey_manager(self):
@@ -165,7 +165,7 @@ class TestAccess(common.TestSurveyCommon):
         with self.assertRaises(AccessError):
             self.env['survey.user_input'].create({'survey_id': self.survey.id})
         with self.assertRaises(AccessError):
-            self.env['survey.user_input.line'].create({'question_id': self.question_num.id, 'answer_type': 'numerical_box', 'value_numerical_box': 3, 'user_input_id': self.answer_0.id})
+            self.env['survey.user_input.line'].create({'question_id': self.question_nb_0.id, 'answer_type': 'numerical_box', 'value_numerical_box': 3, 'user_input_id': self.answer_0.id})
 
         # Read: nope
         with self.assertRaises(AccessError):
@@ -194,7 +194,7 @@ class TestAccess(common.TestSurveyCommon):
         with self.assertRaises(AccessError):
             self.env['survey.user_input'].create({'survey_id': self.survey.id})
         with self.assertRaises(AccessError):
-            self.env['survey.user_input.line'].create({'question_id': self.question_num.id, 'answer_type': 'numerical_box', 'value_numerical_box': 3, 'user_input_id': self.answer_0.id})
+            self.env['survey.user_input.line'].create({'question_id': self.question_nb_0.id, 'answer_type': 'numerical_box', 'value_numerical_box': 3, 'user_input_id': self.answer_0.id})
 
         # Read: nope
         with self.assertRaises(AccessError):
@@ -223,7 +223,7 @@ class TestAccess(common.TestSurveyCommon):
         with self.assertRaises(AccessError):
             self.env['survey.user_input'].create({'survey_id': self.survey.id})
         with self.assertRaises(AccessError):
-            self.env['survey.user_input.line'].create({'question_id': self.question_num.id, 'answer_type': 'numerical_box', 'value_numerical_box': 3, 'user_input_id': self.answer_0.id})
+            self.env['survey.user_input.line'].create({'question_id': self.question_nb_0.id, 'answer_type': 'numerical_box', 'value_numerical_box': 3, 'user_input_id': self.answer_0.id})
 
         # Read: nope
         with self.assertRaises(AccessError):
@@ -273,7 +273,7 @@ class TestAccess(common.TestSurveyCommon):
         with self.assertRaises(AccessError):
             answer_other = self.env['survey.user_input'].create({'survey_id': self.survey.id})
         with self.assertRaises(AccessError):
-            answer_line_other = self.env['survey.user_input.line'].create({'question_id': self.question_num.id, 'answer_type': 'numerical_box', 'value_numerical_box': 3, 'user_input_id': self.answer_0.id})
+            answer_line_other = self.env['survey.user_input.line'].create({'question_id': self.question_nb_0.id, 'answer_type': 'numerical_box', 'value_numerical_box': 3, 'user_input_id': self.answer_0.id})
 
         # Write: own survey only
         answer_own.write({'state': 'done'})
@@ -290,7 +290,7 @@ class TestAccess(common.TestSurveyCommon):
     @users('survey_manager')
     def test_access_answers_survey_manager(self):
         admin = self.env.ref('base.user_admin')
-        with self.with_user(admin):
+        with self.with_user(admin.login):
             survey_other = self.env['survey.survey'].create({'title': 'Other'})
             self.env['survey.question'].create({'title': 'Other', 'sequence': 0, 'is_page': True, 'survey_id': survey_other.id})
             question_other = self.env['survey.question'].create({'title': 'Other Question', 'sequence': 1, 'survey_id': survey_other.id})
@@ -300,7 +300,7 @@ class TestAccess(common.TestSurveyCommon):
         # Create: always
         answer_own = self.env['survey.user_input'].create({'survey_id': self.survey.id})
         answer_other = self.env['survey.user_input'].create({'survey_id': survey_other.id})
-        answer_line_own = self.env['survey.user_input.line'].create({'question_id': self.question_num.id, 'answer_type': 'numerical_box', 'value_numerical_box': 3, 'user_input_id': answer_own.id})
+        answer_line_own = self.env['survey.user_input.line'].create({'question_id': self.question_nb_0.id, 'answer_type': 'numerical_box', 'value_numerical_box': 3, 'user_input_id': answer_own.id})
         answer_line_other = self.env['survey.user_input.line'].create({'question_id': question_other.id, 'answer_type': 'numerical_box', 'value_numerical_box': 3, 'user_input_id': answer_other.id})
 
         # Read: always

@@ -7,7 +7,7 @@ from odoo.exceptions import AccessError
 from odoo.tools import mute_logger
 
 
-class TestCertificationBadge(common.TestSurveyCommon):
+class TestCertificationBadge(common.TestSurveyCommonWUsers):
     def setUp(self):
         super(TestCertificationBadge, self).setUp()
         self.certification_survey = self.env['survey.survey'].with_user(self.survey_manager).create({
