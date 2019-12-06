@@ -31,7 +31,7 @@ class TestCertificationFlow(common.TestSurveyCommonHttp):
             })
 
             self.q01 = self._add_question(
-                'When do you know it\'s the right time to use the SO line model?', 'simple_choice',
+                'When do you know it\'s the right time to use the SO line model?', 'answer_selection',
                 sequence=1, constr_mandatory=True, survey_id=self.certification.id,
                 suggested_answers=[
                     {'value': 'Please stop'},
@@ -41,7 +41,7 @@ class TestCertificationFlow(common.TestSurveyCommonHttp):
                 ])
 
             self.q02 = self._add_question(
-                'On average, how many lines of code do you need when you use SO line widgets?', 'simple_choice',
+                'On average, how many lines of code do you need when you use SO line widgets?', 'answer_selection',
                 sequence=2, constr_mandatory=True, survey_id=self.certification.id,
                 suggested_answers=[
                     {'value': '1'},
@@ -55,7 +55,7 @@ class TestCertificationFlow(common.TestSurveyCommonHttp):
                 sequence=3, constr_mandatory=True, constr_error_msg='Please tell us what you think', survey_id=self.certification.id)
 
             self.q04 = self._add_question(
-                'On a scale of 1 to 10, how much do you like SO line widgets (not rated)?', 'simple_choice',
+                'On a scale of 1 to 10, how much do you like SO line widgets (not rated)?', 'answer_selection',
                 sequence=4, constr_mandatory=True, survey_id=self.certification.id,
                 suggested_answers=[
                     {'value': '-1'},
@@ -64,7 +64,7 @@ class TestCertificationFlow(common.TestSurveyCommonHttp):
                 ])
 
             self.q05 = self._add_question(
-                'Select all the correct "types" of SO lines', 'multiple_choice',
+                'Select all the correct "types" of SO lines', 'answer_selection', selection_mode='multiple',
                 sequence=5, constr_mandatory=False, survey_id=self.certification.id,
                 suggested_answers=[
                     {'value': 'sale_order', 'is_correct': True, 'answer_score': 1.0},

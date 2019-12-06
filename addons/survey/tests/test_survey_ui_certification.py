@@ -36,8 +36,8 @@ class TestUiCertification(TestSurveyCommonHttp):
                 }), (0, 0, {
                     'title': 'Do we sell Acoustic Bloc Screens?',
                     'sequence': 2,
-                    'question_type': 'simple_choice',
-                    'display_mode': 'dropdown',
+                    'question_type': 'answer_selection',
+                    'selection_mode': 'single',
                     'constr_mandatory': True,
                     'suggested_answer_ids': [
                         (0, 0, {
@@ -53,7 +53,8 @@ class TestUiCertification(TestSurveyCommonHttp):
                 }), (0, 0, {
                     'title': 'Select all the existing products',
                     'sequence': 3,
-                    'question_type': 'multiple_choice',
+                    'question_type': 'answer_selection',
+                    'selection_mode': 'multiple',
                     'column_nb': '4',
                     'suggested_answer_ids': [
                         (0, 0, {
@@ -84,7 +85,8 @@ class TestUiCertification(TestSurveyCommonHttp):
                 }), (0, 0, {
                     'title': 'Select all the available customizations for our Customizable Desk',
                     'sequence': 4,
-                    'question_type': 'multiple_choice',
+                    'question_type': 'answer_selection',
+                    'selection_mode': 'multiple',
                     'column_nb': '4',
                     'suggested_answer_ids': [
                         (0, 0, {
@@ -115,8 +117,8 @@ class TestUiCertification(TestSurveyCommonHttp):
                 }), (0, 0, {
                     'title': 'How many versions of the Corner Desk do we have?',
                     'sequence': 5,
-                    'question_type': 'simple_choice',
-                    'display_mode': 'dropdown',
+                    'question_type': 'answer_selection',
+                    'selection_mode': 'single',
                     'constr_mandatory': True,
                     'suggested_answer_ids': [
                         (0, 0, {
@@ -148,8 +150,8 @@ class TestUiCertification(TestSurveyCommonHttp):
                 }), (0, 0, {
                     'title': 'How much do we sell our Cable Management Box?',
                     'sequence': 8,
-                    'question_type': 'simple_choice',
-                    'display_mode': 'dropdown',
+                    'question_type': 'answer_selection',
+                    'selection_mode': 'single',
                     'constr_mandatory': True,
                     'suggested_answer_ids': [
                         (0, 0, {
@@ -177,7 +179,8 @@ class TestUiCertification(TestSurveyCommonHttp):
                 }), (0, 0, {
                     'title': 'Select all the the products that sell for 100$ or more',
                     'sequence': 9,
-                    'question_type': 'multiple_choice',
+                    'question_type': 'answer_selection',
+                    'selection_mode': 'multiple',
                     'column_nb': '2',
                     'suggested_answer_ids': [
                         (0, 0, {
@@ -212,8 +215,8 @@ class TestUiCertification(TestSurveyCommonHttp):
                 }), (0, 0, {
                     'title': 'What do you think about our prices (not rated)?',
                     'sequence': 10,
-                    'question_type': 'simple_choice',
-                    'display_mode': 'dropdown',
+                    'question_type': 'answer_selection',
+                    'selection_mode': 'single',
                     'constr_mandatory': True,
                     'suggested_answer_ids': [
                         (0, 0, {

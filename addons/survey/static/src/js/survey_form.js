@@ -188,14 +188,10 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
                 case 'datetime':
                     params = self._prepareSubmitDates(params, this.name, this.value, true);
                     break;
-                case 'simple_choice_dropdown':
-                    params = self._prepareSubmitChoices(params, $(this), $(this).data('name'), 'option:selected');
-                    break;
-                case 'simple_choice_radio':
-                case 'multiple_choice':
+                case 'answer_selection':
                     params = self._prepareSubmitChoices(params, $(this), $(this).data('name'), 'input:checked');
                     break;
-                case 'matrix':
+                case 'answer_matrix':
                     params = self._prepareSubmitAnswersMatrix(params, $(this));
                     break;
             }

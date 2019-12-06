@@ -73,8 +73,8 @@ class TestUi(TestUICommon):
                 }), (0, 0, {
                     'title': 'What type of wood is the best for furniture?',
                     'sequence': 2,
-                    'question_type': 'simple_choice',
-                    'display_mode': 'dropdown',
+                    'question_type': 'answer_selection',
+                    'selection_mode': 'single',
                     'constr_mandatory': True,
                     'suggested_answer_ids': [
                         (0, 0, {
@@ -96,7 +96,8 @@ class TestUi(TestUICommon):
                 }), (0, 0, {
                     'title': 'Select all the furniture shown in the video',
                     'sequence': 3,
-                    'question_type': 'multiple_choice',
+                    'question_type': 'answer_selection',
+                    'selection_mode': 'multiple',
                     'column_nb': '4',
                     'suggested_answer_ids': [
                         (0, 0, {

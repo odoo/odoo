@@ -367,13 +367,13 @@ class Survey(http.Controller):
         :param answers:
           * question_type: free_text, text_box, numerical_box, date, datetime
             answers is a string containing the value
-          * question_type: simple_choice with no comment
+          * question_type: answer_selection + selection_mode single with no comment
             answers is a string containing the value ('question_id_1')
-          * question_type: simple_choice with comment
+          * question_type: answer_selection + selection_mode single with comment
             ['question_id_1', {'comment': str}]
-          * question_type: multiple choice
+          * question_type: answer_selection + selection_mode multiple
             ['question_id_1', 'question_id_2'] + [{'comment': str}] if holds a comment
-          * question_type: matrix
+          * question_type: answer_matrix
             {'matrix_row_id_1': ['question_id_1', 'question_id_2'],
              'matrix_row_id_2': ['question_id_1', 'question_id_2']
             } + {'comment': str} if holds a comment
@@ -384,7 +384,7 @@ class Survey(http.Controller):
         comment = None
         answers_no_comment = []
         if answers:
-            if question.question_type == 'matrix':
+            if question.question_type == 'answer_matrix':
                 if 'comment' in answers:
                     comment = answers['comment'].strip()
                     answers.pop('comment')

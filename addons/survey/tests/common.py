@@ -8,7 +8,6 @@ from odoo.tests import common
 
 
 class TestSurveyCommon(common.BaseCase):
-
     """ Some custom stuff to make the matching between questions and answers
       :param dict _type_match: dict
         key: question type
@@ -19,9 +18,8 @@ class TestSurveyCommon(common.BaseCase):
         'char_box': ('char_box', 'value_char_box'),
         'numerical_box': ('numerical_box', 'value_numerical_box'),
         'date': ('date', 'value_date'),
-        'simple_choice': ('suggestion', 'suggested_answer_id'),  # TDE: still unclear
-        'multiple_choice': ('suggestion', 'suggested_answer_id'),  # TDE: still unclear
-        'matrix': ('suggestion', ('suggested_answer_id', 'matrix_row_id')),  # TDE: still unclear
+        'answer_selection': ('suggestion', 'suggested_answer_id'),  # TDE: still unclear
+        'answer_matrix': ('suggestion', ('suggested_answer_id', 'matrix_row_id')),  # TDE: still unclear
     }
 
     # ------------------------------------------------------------
@@ -39,13 +37,13 @@ class TestSurveyCommon(common.BaseCase):
         # self.assertEqual(len(lines), len(expected_values.keys()))
         for question, expected in expected_values.items():
             answer_lines = lines.filtered(lambda l: l.question_id == question)
-            if question.question_type == 'multiple_choice':
+            if question.question_type == 'answer_selection' and question.selection_mode == 'multiple':
                 self.assertEqual(set(answer_lines.mapped('suggested_answer_id').ids), set(expected))
                 self.assertTrue(all(line.answer_type == 'suggestion' for line in answer_lines))
-            elif question.question_type == 'simple_choice':
+            elif question.question_type == 'answer_selection' and question.selection_mode == 'single':
                 self.assertEqual(set(answer_lines.mapped('suggested_answer_id').ids), set([expected]))
                 self.assertTrue(all(line.answer_type == 'suggestion' for line in answer_lines))
-            elif question.question_type == 'matrix':
+            elif question.question_type == 'answer_matrix':
                 [value_col, value_row] = user_input['value']
                 answer_fname_col = self._type_match[question.question_type][1][0]
                 answer_fname_row = self._type_match[question.question_type][1][1]
@@ -85,7 +83,8 @@ class TestSurveyCommon(common.BaseCase):
             'constr_mandatory': constr_mandatory,
             'constr_error_msg': constr_error_msg,
         }
-        if qtype in ('simple_choice', 'multiple_choice', 'matrix'):
+        if qtype in ('answer_selection', 'answer_matrix'):
+            base_qvalues['selection_mode'] = kwargs.pop('selection_mode', 'single')
             base_qvalues['suggested_answer_ids'] = [
                 (0, 0, {
                     'value': answer['value'],
@@ -93,8 +92,7 @@ class TestSurveyCommon(common.BaseCase):
                     'is_correct': answer.get('is_correct', False)
                 }) for answer in kwargs.pop('suggested_answers')
             ]
-            if qtype == 'matrix':
-                base_qvalues['matrix_subtype'] = kwargs.pop('matrix_subtype', 'simple')
+            if qtype == 'answer_matrix':
                 base_qvalues['matrix_row_ids'] = [
                     (0, 0, {'value': answer['value'], 'answer_score': answer.get('answer_score', 0)})
                     for answer in kwargs.pop('matrix_rows')
@@ -155,7 +153,7 @@ class TestSurveyCommon(common.BaseCase):
 
     def _prepare_question_post_data(self, question, user_answers):
         post_data = {}
-        if question.question_type == 'multiple_choice':
+        if question.question_type== 'answer_selection' and question.selection_mode == 'multiple':
             user_answers = user_answers if isinstance(user_answers, list) else [user_answers]
             for value in user_answers:
                 values = post_data.get('%s' % question.id, [])

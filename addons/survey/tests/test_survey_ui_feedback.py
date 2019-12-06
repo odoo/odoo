@@ -39,8 +39,8 @@ class TestUiFeedback(TestSurveyCommonHttp):
                 }), (0, 0, {
                     'title': 'How frequently do you buy products online ?',
                     'sequence': 4,
-                    'question_type': 'simple_choice',
-                    'display_mode': 'dropdown',
+                    'question_type': 'answer_selection',
+                    'selection_mode': 'single',
                     'comments_allowed': True,
                     'comment_count_as_answer': True,
                     'constr_mandatory': True,
@@ -75,7 +75,8 @@ class TestUiFeedback(TestSurveyCommonHttp):
                 }), (0, 0, {
                     'title': 'Which of the following words would you use to describe our products ?',
                     'sequence': 7,
-                    'question_type': 'multiple_choice',
+                    'question_type': 'answer_selection',
+                    'selection_mode': 'multiple',
                     'constr_mandatory': True,
                     'comments_allowed': True,
                     'comment_count_as_answer': False,
@@ -111,8 +112,8 @@ class TestUiFeedback(TestSurveyCommonHttp):
                 }), (0, 0, {
                     'title': 'What do your think about our new eCommerce ?',
                     'sequence': 8,
-                    'question_type': 'matrix',
-                    'matrix_subtype': 'multiple',
+                    'question_type': 'answer_matrix',
+                    'selection_mode': 'multiple',
                     'constr_mandatory': True,
                     'suggested_answer_ids': [(0, 0, {
                         'value': 'Totally disagree',

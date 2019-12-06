@@ -29,9 +29,9 @@
             <field name="survey_id" ref="furniture_certification" />
             <field name="sequence">2</field>
             <field name="title">What type of wood is the best for furniture?</field>
-            <field name="question_type">simple_choice</field>
-            <field name="display_mode">dropdown</field>
-            <field name="constr_mandatory" eval="True" />
+            <field name="question_type">answer_selection</field>
+            <field name="selection_mode">single</field>
+            <field name="constr_mandatory" eval="True"/>
         </record>
         <record model="survey.question.answer" id="furniture_certification_page_1_question_1_choice_1">
             <field name="question_id" ref="furniture_certification_page_1_question_1"/>
@@ -60,7 +60,8 @@
             <field name="survey_id" ref="furniture_certification" />
             <field name="sequence">3</field>
             <field name="title">Select all the furniture shown in the video</field>
-            <field name="question_type">multiple_choice</field>
+            <field name="question_type">answer_selection</field>
+            <field name="selection_mode">multiple</field>
             <field name="column_nb">4</field>
         </record>
         <record model="survey.question.answer" id="furniture_certification_page_1_question_2_choice_1">

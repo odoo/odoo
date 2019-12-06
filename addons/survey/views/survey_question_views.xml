@@ -53,19 +53,19 @@
                                     </p>
                                 </div>
                                 <!-- Multiple choice: only one answer -->
-                                <div attrs="{'invisible': [('question_type', '!=', 'simple_choice')]}" role="img" aria-label="Multiple choice with one answer" title="Multiple choice with one answer">
+                                <div attrs="{'invisible': ['|', ('question_type', '!=', 'answer_selection'), ('selection_mode', '!=', 'single')]}" role="img" aria-label="Multiple choice with one answer" title="Multiple choice with one answer">
                                     <div class="row"><i class="fa fa-circle-o  fa-lg"/> answer</div>
                                     <div class="row"><i class="fa fa-dot-circle-o fa-lg"/> answer</div>
                                     <div class="row"><i class="fa fa-circle-o  fa-lg"/> answer</div>
                                 </div>
                                 <!-- Multiple choice: multiple answers allowed -->
-                                <div attrs="{'invisible': [('question_type', '!=', 'multiple_choice')]}" role="img" aria-label="Multiple choice with multiple answers" title="Multiple choice with multiple answers">
+                                <div attrs="{'invisible': ['|', ('question_type', '!=', 'answer_selection'), ('selection_mode', '!=', 'multiple')]}" role="img" aria-label="Multiple choice with multiple answers" title="Multiple choice with multiple answers">
                                     <div class="row"><i class="fa fa-square-o fa-lg"/> answer</div>
                                     <div class="row"><i class="fa fa-check-square-o fa-lg"/> answer</div>
                                     <div class="row"><i class="fa fa-square-o fa-lg"/> answer</div>
                                 </div>
                                 <!-- Matrix -->
-                                <div attrs="{'invisible': [('question_type', '!=', 'matrix')]}">
+                                <div attrs="{'invisible': [('question_type', '!=', 'answer_matrix')]}">
                                     <div class="row o_matrix_head">
                                         <div class="col-lg-3"></div>
                                         <div class="col-lg-3">ans</div>
@@ -104,18 +104,19 @@
                             <field name="survey_id" invisible="1" readonly="1"/>
                             <field name="scoring_type" invisible="1"/>
                             <separator />
-                            <label for="suggested_answer_ids" string="Columns of the Matrix" attrs="{'invisible': [('question_type', '!=', 'matrix')]}" />
-                            <field name="suggested_answer_ids" string="Type of answers" context="{'default_question_id': active_id}" attrs="{'invisible': [('question_type', 'not in', ['simple_choice', 'multiple_choice', 'matrix'])]}">
+                            <label for="suggested_answer_ids" string="Columns of the Matrix" attrs="{'invisible': [('question_type', '!=', 'answer_matrix')]}" />
+                            <field name="suggested_answer_ids" string="Type of answers" context="{'default_question_id': active_id}"
+                                attrs="{'invisible': [('question_type', 'not in', ['answer_selection', 'answer_matrix'])]}">
                                 <tree editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="value" string="Choices"/>
-                                    <field name="is_correct" attrs="{'column_invisible': ['|', ('parent.scoring_type', '=', 'no_scoring'), ('parent.question_type', '=', 'matrix')]}"/>
-                                    <field name="answer_score" attrs="{'column_invisible': ['|', ('parent.scoring_type', '=', 'no_scoring'), ('parent.question_type', '=', 'matrix')]}"/>
+                                    <field name="is_correct" attrs="{'column_invisible': ['|', ('parent.scoring_type', '=', 'no_scoring'), ('parent.question_type', '=', 'answer_matrix')]}"/>
+                                    <field name="answer_score" attrs="{'column_invisible': ['|', ('parent.scoring_type', '=', 'no_scoring'), ('parent.question_type', '=', 'answer_matrix')]}"/>
                                 </tree>
                             </field>
                             <separator />
-                            <label for="matrix_row_ids" attrs="{'invisible': [('question_type', '!=', 'matrix')]}" />
-                            <field name="matrix_row_ids" context="{'default_matrix_question_id': active_id}" attrs="{'invisible': [('question_type', '!=', 'matrix')]}">
+                            <label for="matrix_row_ids" attrs="{'invisible': [('question_type', '!=', 'answer_matrix')]}" />
+                            <field name="matrix_row_ids" context="{'default_matrix_question_id': active_id}" attrs="{'invisible': [('question_type', '!=', 'answer_matrix')]}">
                                 <tree editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="value" string="Rows"/>
@@ -145,17 +146,18 @@
                                     </group>
                                 </div>
                                 <group>
-                                    <field name="matrix_subtype" attrs="{'invisible':[('question_type','not in',['matrix'])],'required':[('question_type','=','matrix')]}"/>
+                                    <field name="selection_mode" attrs="{
+                                        'invisible': [('question_type', 'not in', ['answer_selection', 'answer_matrix'])],
+                                        'required': [('question_type', 'in', ['answer_selection', 'answer_matrix'])]}"/>
                                 </group>
                             </group>
-                            <group string="Display mode" attrs="{'invisible':[('question_type','not in',['simple_choice', 'multiple_choice'])]}">
-                                <field name="display_mode" string="Format" attrs="{'invisible':[('question_type','not in',['simple_choice'])],'required':[('question_type','=','simple_choice')]}"/>
-                                <field name="column_nb" string="Number of columns" attrs="{'invisible':[('display_mode','=','dropdown'), ('question_type','=','simple_choice')]}"/>
+                            <group string="Display mode" attrs="{'invisible': [('question_type', '!=', 'answer_selection')]}">
+                                <field name="column_nb" string="Number of columns"/>
                             </group>
-                            <group string="Allow Comments" attrs="{'invisible':[('question_type','not in',['simple_choice','multiple_choice', 'matrix'])]}">
-                                <field name='comments_allowed' />
+                            <group string="Allow Comments" attrs="{'invisible': [('question_type','not in',['answer_selection', 'answer_matrix'])]}">
+                                <field name='comments_allowed'/>
                                 <field name='comments_message' attrs="{'invisible': [('comments_allowed', '=', False)]}"/>
-                                <field name='comment_count_as_answer' attrs="{'invisible': ['|', ('comments_allowed', '=', False), ('question_type', 'in', ['matrix'])]}" />
+                                <field name='comment_count_as_answer' attrs="{'invisible': ['|', ('comments_allowed', '=', False), ('question_type', '=', 'answer_matrix')]}"/>
                             </group>
                         </page>
                     </notebook>

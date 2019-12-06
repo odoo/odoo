@@ -42,7 +42,7 @@ class TestSurveyFlow(common.TestSurveyCommonHttp):
                 'survey_id': self.survey.id,
             })
             self.page1_q0 = self._add_question(
-                'What do you like most in our tarte al djotte', 'multiple_choice', page=self.page_1,
+                'What do you like most in our tarte al djotte', 'answer_selection', selection_mode='multiple', page=self.page_1,
                 suggested_answers=[
                     {'value': 'The gras'}, {'value': 'The bette'},
                     {'value': 'The tout'}, {'value': 'The regime is fucked up'}

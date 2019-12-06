@@ -181,9 +181,9 @@
             <t t-if="question.question_type == 'numerical_box'"><t t-call="survey.question_numerical_box"/></t>
             <t t-if="question.question_type == 'date'"><t t-call="survey.question_date"/></t>
             <t t-if="question.question_type == 'datetime'"><t t-call="survey.question_datetime"/></t>
-            <t t-if="question.question_type == 'simple_choice'"><t t-call="survey.question_simple_choice"/></t>
-            <t t-if="question.question_type == 'multiple_choice'"><t t-call="survey.question_multiple_choice"/></t>
-            <t t-if="question.question_type == 'matrix'"><t t-call="survey.question_matrix"/></t>
+            <t t-if="question.question_type == 'answer_selection' and question.selection_mode == 'single'"><t t-call="survey.question_simple_choice"/></t>
+            <t t-if="question.question_type == 'answer_selection' and question.selection_mode == 'multiple'"><t t-call="survey.question_multiple_choice"/></t>
+            <t t-if="question.question_type == 'answer_matrix'"><t t-call="survey.question_matrix"/></t>
             <div class="o_survey_question_error alert alert-danger d-none" role="alert"></div>
         </div>
     </template>
@@ -234,35 +234,7 @@
     <template id="question_simple_choice" name="Question: simple choice">
         <t t-set="answer_line" t-value="answer_lines.filtered(lambda line: line.suggested_answer_id)"/>
         <t t-set="comment_line" t-value="answer_lines.filtered(lambda line: line.value_char_box)"/>
-        <div t-if="question.display_mode == 'dropdown'" class="o_survey_form_choice o_survey_question_simple_choice_dropdown row"
-             t-att-data-name="question.id"
-             data-question-type="simple_choice_dropdown">
-            <div class="col-lg-12">
-                <select class="form-control o_survey_form_choice_item">
-                    <option disabled="1" selected="1" value=""
-                            t-att-selected="not answer_line and (not comment_line or not question.comment_count_as_answer) and 'selected' or None">Choose...</option>
-                    <t t-foreach='question.suggested_answer_ids' t-as='label'>
-                        <option t-att-value='label.id'
-                                t-att-selected="answer_line and answer_line.suggested_answer_id == label and 'selected' or None"><t t-esc='label.value'/></option>
-                    </t>
-                    <t t-if='question.comments_allowed and question.comment_count_as_answer'>
-                        <option class="o_survey_js_form_other_comment" value="-1"
-                                t-att-selected="comment_line and question.comment_count_as_answer and 'selected' or None">
-                            <span t-esc="question.comments_message"/>
-                        </option>
-                    </t>
-                </select>
-            </div>
-            <div t-if='question.comments_allowed and question.comment_count_as_answer' class="col-lg-6">
-                <textarea type="text" class="form-control"
-                          t-attf-class="form-control #{'' if comment_line else 'd-none'}"><t t-esc="comment_line.value_char_box if comment_line else ''"/></textarea>
-            </div>
-            <div t-if='question.comments_allowed and not question.comment_count_as_answer' class="col-lg-12 mt16">
-                <span t-field="question.comments_message"/>
-                <textarea type="text" class="form-control o_survey_comment"><t t-esc="comment_line.value_char_box if comment_line else ''"/></textarea>
-            </div>
-        </div>
-        <div t-if="question.display_mode == 'columns'" class="row o_survey_form_choice o_survey_question_simple_choice_radio"
+        <div class="row o_survey_form_choice o_survey_question_simple_choice_radio"
              t-att-data-name="question.id"
              data-question-type="simple_choice_radio">
             <div t-foreach='question.suggested_answer_ids' t-as='label' t-attf-class="col-lg-#{question.column_nb}">
@@ -334,7 +306,7 @@
                     <th><span t-field="row_label.value" /></th>
                     <td t-foreach="question.suggested_answer_ids" t-as="col_label">
                         <t t-set="answer" t-value="answer_lines.filtered(lambda line: line.suggested_answer_id == col_label and line.matrix_row_id == row_label)"/>
-                        <input t-att-type="'checkbox' if question.matrix_subtype == 'multiple' else 'radio'"
+                        <input t-att-type="'checkbox' if question.selection_mode == 'multiple' else 'radio'"
                                t-att-name="'%s_%s' % (question_id, row_label.id)" t-att-value='col_label.id'
                                t-att-checked="'checked' if answer else None"
                                t-att-data-row-id="row_label.id"/>
@@ -382,9 +354,9 @@
                                         <t t-if="question.question_type == 'numerical_box'"><t t-call="survey.question_numerical_box"/></t>
                                         <t t-if="question.question_type == 'date'"><t t-call="survey.question_date"/></t>
                                         <t t-if="question.question_type == 'datetime'"><t t-call="survey.question_datetime"/></t>
-                                        <t t-if="question.question_type == 'simple_choice'"><t t-call="survey.question_simple_choice"/></t>
-                                        <t t-if="question.question_type == 'multiple_choice'"><t t-call="survey.question_multiple_choice"/></t>
-                                        <t t-if="question.question_type == 'matrix'"><t t-call="survey.question_matrix"/></t>
+                                        <t t-if="question.question_type == 'answer_selection' and question.selection_mode == 'single'"><t t-call="survey.question_simple_choice"/></t>
+                                        <t t-if="question.question_type == 'answer_selection' and question.selection_mode == 'multiple'"><t t-call="survey.question_multiple_choice"/></t>
+                                        <t t-if="question.question_type == 'answer_matrix'"><t t-call="survey.question_matrix"/></t>
                                         <div class="o_survey_question_error alert alert-danger d-none" role="alert"></div>
                                     </div>
                                 </t>

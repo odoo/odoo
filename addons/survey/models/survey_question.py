@@ -75,21 +75,19 @@ class SurveyQuestion(models.Model):
         ('numerical_box', 'Numerical Value'),
         ('date', 'Date'),
         ('datetime', 'Datetime'),
-        ('simple_choice', 'Multiple choice: only one answer'),
-        ('multiple_choice', 'Multiple choice: multiple answers allowed'),
-        ('matrix', 'Matrix')], string='Question Type')
+        ('answer_selection', 'Multiple choice'),
+        ('answer_matrix', 'Matrix')], string='Question Type')
     # -- char_box
     save_as_email = fields.Boolean(
         "Save as user email", compute='_compute_save_as_email', readonly=False, store=True,
         help="If checked, this option will save the user's answer as its email address.")
-    # -- simple choice / multiple choice / matrix
+    # -- multiple choice / matrix
     suggested_answer_ids = fields.One2many(
         'survey.question.answer', 'question_id', string='Types of answers', copy=True,
         help='Labels used for proposed choices: simple choice, multiple choice and columns of matrix')
-    # -- matrix
-    matrix_subtype = fields.Selection([
-        ('simple', 'One choice per row'),
-        ('multiple', 'Multiple choices per row')], string='Matrix Type', default='simple')
+    selection_mode = fields.Selection([
+        ('single', 'One choice per row'),
+        ('multiple', 'Multiple choices per row')], string='Selection Mode', default='single')
     matrix_row_ids = fields.One2many(
         'survey.question.answer', 'matrix_question_id', string='Matrix Rows', copy=True,
         help='Labels used for proposed choices: rows of matrix')
@@ -179,20 +177,20 @@ class SurveyQuestion(models.Model):
         if isinstance(answer, str):
             answer = answer.strip()
         # Empty answer to mandatory question
-        if self.constr_mandatory and not answer and self.question_type not in ['simple_choice', 'multiple_choice']:
+        if self.constr_mandatory and not answer and self.question_type != 'answer_selection':
             return {self.id: self.constr_error_msg}
 
         # because in choices question types, comment can count as answer
-        if answer or self.question_type in ['simple_choice', 'multiple_choice']:
+        if answer or self.question_type == 'answer_selection':
             if self.question_type == 'char_box':
                 return self._validate_char_box(answer)
             elif self.question_type == 'numerical_box':
                 return self._validate_numerical_box(answer)
             elif self.question_type in ['date', 'datetime']:
                 return self._validate_date(answer)
-            elif self.question_type in ['simple_choice', 'multiple_choice']:
+            elif self.question_type == 'answer_selection':
                 return self._validate_choice(answer, comment)
-            elif self.question_type == 'matrix':
+            elif self.question_type == 'answer_matrix':
                 return self._validate_matrix(answer)
         return {}
 
@@ -285,7 +283,7 @@ class SurveyQuestion(models.Model):
 
             # fetch answer lines, separate comments from real answers
             all_lines = user_input_lines.filtered(lambda line: line.question_id == question)
-            if question.question_type in ['simple_choice', 'multiple_choice', 'matrix']:
+            if question.question_type in ['answer_selection', 'answer_matrix']:
                 answer_lines = all_lines.filtered(
                     lambda line: line.answer_type == 'suggestion' or (
                         line.answer_type == 'char_box' and question.comment_count_as_answer)
@@ -313,12 +311,12 @@ class SurveyQuestion(models.Model):
         return all_questions_data
 
     def _get_stats_data(self, user_input_lines):
-        if self.question_type in ['simple_choice']:
-            return self._get_stats_data_answers(user_input_lines)
-        elif self.question_type in ['multiple_choice']:
+        if self.question_type == 'answer_selection':
             table_data, graph_data = self._get_stats_data_answers(user_input_lines)
-            return table_data, [{'key': self.title, 'values': graph_data}]
-        elif self.question_type in ['matrix']:
+            if self.selection_mode == 'multiple':
+                graph_data = [{'key': self.title, 'values': graph_data}]
+            return table_data, graph_data
+        elif self.question_type in ['answer_matrix']:
             return self._get_stats_graph_data_matrix(user_input_lines)
         return [line for line in user_input_lines], []
 
@@ -379,7 +377,7 @@ class SurveyQuestion(models.Model):
         return table_data, graph_data
 
     def _get_stats_summary_data(self, user_input_lines):
-        if self.question_type in ['simple_choice', 'multiple_choice']:
+        if self.question_type in ['answer_selection']:
             return self._get_stats_summary_data_choice(user_input_lines)
         if self.question_type in ['numerical_box']:
             return self._get_stats_summary_data_numerical(user_input_lines)
@@ -388,7 +386,7 @@ class SurveyQuestion(models.Model):
     def _get_stats_summary_data_choice(self, user_input_lines):
         right_inputs, partial_inputs = self.env['survey.user_input'], self.env['survey.user_input']
         right_answers = self.suggested_answer_ids.filtered(lambda label: label.is_correct)
-        if self.question_type == 'multiple_choice':
+        if self.selection_mode == 'multiple':
             for user_input, lines in tools.groupby(user_input_lines, operator.itemgetter('user_input_id')):
                 user_input_answers = self.env['survey.user_input.line'].concat(*lines).filtered(lambda l: l.answer_is_correct).mapped('suggested_answer_id')
                 if user_input_answers and user_input_answers < right_answers:

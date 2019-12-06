@@ -13,9 +13,9 @@ class TestValidation(common.TestSurveyWDemoSurvey):
         """ For each type of question check that mandatory questions correctly check for complete answers """
         for (question_type, text) in self.env['survey.question']._fields['question_type'].selection:
             kwargs = {'page': self.page_0}
-            if question_type in ['simple_choice', 'multiple_choice']:
+            if question_type == 'answer_selection':
                 kwargs['suggested_answers'] = [{'value': 'MChoice0'}, {'value': 'MChoice1'}]
-            elif question_type == 'matrix':
+            elif question_type == 'answer_matrix':
                 kwargs['suggested_answers'] = [{'value': 'Column0'}, {'value': 'Column1'}]
                 kwargs['matrix_rows'] = [{'value': 'Row0'}, {'value': 'Row1'}]
             question = self._add_question('Q0', question_type, **kwargs)

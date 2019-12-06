@@ -88,8 +88,8 @@
         <field name="sequence">21</field>
         <field name="title">Which category does a tomato belong to</field>
         <field name="description" type="html"><span>"Red" is not a category, I know what you are trying to do ;)</span></field>
-        <field name="question_type">simple_choice</field>
-        <field name="display_mode">dropdown</field>
+        <field name="question_type">answer_selection</field>
+        <field name="selection_mode">single</field>
         <field name="comments_allowed" eval="True"/>
         <field name="comment_count_as_answer" eval="True"/>
         <field name="constr_mandatory" eval="True"/>
@@ -117,8 +117,8 @@
         <field name="survey_id" ref="survey_demo_quiz"/>
         <field name="sequence">22</field>
         <field name="title">Which of the following would you use to pollinate</field>
-        <field name="question_type">simple_choice</field>
-        <field name="display_mode">columns</field>
+        <field name="question_type">answer_selection</field>
+        <field name="selection_mode">single</field>
         <field name="comments_allowed" eval="True"/>
         <field name="comment_count_as_answer" eval="False"/>
         <field name="constr_mandatory" eval="True"/>
@@ -145,7 +145,8 @@
         <field name="sequence">23</field>
         <field name="title">Select trees that made more than 20K sales this year</field>
         <field name="description" type="html"><span>Our sales people have an advantage, but you can do it !</span></field>
-        <field name="question_type">multiple_choice</field>
+        <field name="question_type">answer_selection</field>
+        <field name="selection_mode">multiple</field>
         <field name="constr_mandatory" eval="False"/>
         <field name="comments_allowed" eval="True"/>
         <field name="comment_count_as_answer" eval="True"/>
@@ -178,7 +179,8 @@
         <field name="survey_id" ref="survey_demo_quiz"/>
         <field name="sequence">23</field>
         <field name="title">A "Citrus" could give you ...</field>
-        <field name="question_type">multiple_choice</field>
+        <field name="question_type">answer_selection</field>
+        <field name="selection_mode">multiple</field>
         <field name="constr_mandatory" eval="True"/>
         <field name="comments_allowed" eval="True"/>
         <field name="comment_count_as_answer" eval="False"/>
@@ -211,8 +213,8 @@
         <field name="survey_id" ref="survey_demo_quiz"/>
         <field name="sequence">24</field>
         <field name="title">How often should you water those plants</field>
-        <field name="question_type">matrix</field>
-        <field name="matrix_subtype">simple</field>
+        <field name="question_type">answer_matrix</field>
+        <field name="selection_mode">single</field>
         <field name="constr_mandatory" eval="True"/>
         <field name="comments_allowed" eval="True"/>
     </record>
@@ -241,8 +243,8 @@
         <field name="sequence">25</field>
         <field name="title">When do you harvest those fruits</field>
         <field name="description" type="html"><span>Best time to do it, is the right time to do it.</span></field>
-        <field name="question_type">matrix</field>
-        <field name="matrix_subtype">multiple</field>
+        <field name="question_type">answer_matrix</field>
+        <field name="selection_mode">multiple</field>
         <field name="constr_mandatory" eval="True"/>
         <field name="comments_allowed" eval="False"/>
     </record>

@@ -46,7 +46,7 @@
                         <hr class="mt-2 pb-1 mb-1"/>
                     </t>
                     <div t-else="" class="ml-4 mt-4">
-                        <t t-set="question_scoring" t-value="survey.scoring_type in ['scoring_with_answers', 'scoring_without_answers'] and question.question_type in ['simple_choice', 'multiple_choice']"/>
+                        <t t-set="question_scoring" t-value="survey.scoring_type in ['scoring_with_answers', 'scoring_without_answers'] and question.question_type == 'answer_selection'"/>
                         <t t-set="comment_lines" t-value="question_data['comment_line_ids']"/>
                         <t t-set="graph_data" t-value="question_data['graph_data']"/>
                         <t t-set="table_data" t-value="question_data['table_data']"/>
@@ -69,13 +69,13 @@
                             </div>
                             <!-- Question info -->
                             <span class="badge badge-info" t-field='question.question_type'/>
-                            <t t-if="question.question_type == 'matrix'">
-                                <span class="badge badge-info ml-2" t-field='question.matrix_subtype'/>
+                            <t t-if="question.question_type in ['answer_selection', 'answer_matrix']">
+                                <span class="badge badge-info ml-2" t-field='question.selection_mode'/>
                             </t>
                             <!-- Scoring info -->
                             <t t-if="question_scoring">
                                 <span class="badge badge-success ml-3"><span t-esc="len(question_data['right_inputs'])"></span> Correct</span>
-                                <span class="badge badge-warning ml-1" t-if="question.question_type == 'multiple_choice'">
+                                <span class="badge badge-warning ml-1" t-if="question.selection_mode == 'multiple'">
                                     <span t-esc="len(question_data['partial_inputs'])"></span> Partial
                                 </span>
                             </t>
@@ -89,10 +89,10 @@
                         <t t-elif="question.question_type in ['numerical_box']">
                             <t t-call="survey.question_result_number"></t>
                         </t>
-                        <t t-elif="question.question_type in ['simple_choice', 'multiple_choice']">
+                        <t t-elif="question.question_type in ['answer_selection'']">
                             <t t-call="survey.question_result_choice"></t>
                         </t>
-                        <t t-elif="question.question_type in ['matrix']">
+                        <t t-elif="question.question_type in ['answer_matrix']">
                             <t t-call="survey.question_result_matrix"></t>
                         </t>
                     </div>
@@ -200,14 +200,14 @@
         </div>
     </template>
 
-    <template id="question_result_choice" name="Question: choice result (simple_choice, multiple_choice)">
+    <template id="question_result_choice" name="Question: choice result (answer_selection)">
         <ul class="nav nav-tabs d-print-none" role="tablist">
             <li class="nav-item">
                 <a t-att-href="'#survey_graph_question_%d' % question.id"
                     t-att-aria-controls="'survey_graph_question_%d' % question.id"
                     class="nav-link active" data-toggle="tab" role="tab">
                     <i class="fa fa-bar-chart-o"></i>
-                    <span t-if="question.question_type == 'simple_choice'">Pie Graph</span>
+                    <span t-if="question.selection_mode == 'single'">Pie Graph</span>
                     <span t-else="">Graph</span>
                 </a>
             </li>
@@ -223,7 +223,7 @@
             <div role="tabpanel" class="tab-pane active survey_graph"
                 t-att-id="'survey_graph_question_%d' % question.id"
                 t-att-data-question_id="question.id" 
-                t-att-data-graph-type="'pie' if question.question_type == 'simple_choice' else 'bar'"
+                t-att-data-graph-type="'pie' if question.question_type == 'single' else 'bar'"
                 t-att-data-graph-data="graph_data">
                 <!-- canvas element for drawing bar chart -->
                 <canvas/>
@@ -259,7 +259,7 @@
         <div t-if="comment_lines" t-call="survey.question_result_comments" />
     </template>
 
-    <template id="question_result_matrix" name="Question: matrix result (matrix)">
+    <template id="question_result_matrix" name="Question: matrix result (answer_matrix)">
         <t t-set="graph_data" t-value="question_data['graph_data']"/>
         <t t-set="table_data" t-value="question_data['table_data']"/>
         <ul class="nav nav-tabs d-print-none" role="tablist">

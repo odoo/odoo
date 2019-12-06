@@ -201,9 +201,9 @@ class SurveyUserInput(models.Model):
             self._save_line_simple_answer(question, old_answers, answer)
             if question.save_as_email and answer:
                 self.write({'email': answer})
-        elif question.question_type in ['simple_choice', 'multiple_choice']:
+        elif question.question_type == 'answer_selection':
             self._save_line_choice(question, old_answers, answer, comment)
-        elif question.question_type == 'matrix':
+        elif question.question_type == 'answer_matrix':
             self._save_line_matrix(question, old_answers, answer, comment)
         else:
             raise AttributeError(question.question_type + ": This type of question has no saving function")
@@ -221,10 +221,10 @@ class SurveyUserInput(models.Model):
             answers = [answers]
         vals_list = []
 
-        if question.question_type == 'simple_choice':
+        if question.selection_mode == 'single':
             if not question.comment_count_as_answer or not question.comments_allowed or not comment:
                 vals_list = [self._get_line_answer_values(question, answer, 'suggestion') for answer in answers]
-        elif question.question_type == 'multiple_choice':
+        else:
             vals_list = [self._get_line_answer_values(question, answer, 'suggestion') for answer in answers]
 
         if comment:
@@ -289,7 +289,7 @@ class SurveyUserInput(models.Model):
         }) for user_input in self)
 
         scored_questions = self.mapped('predefined_question_ids').filtered(
-            lambda question: question.question_type in ['simple_choice', 'multiple_choice']
+            lambda question: question.question_type == 'answer_selection'
         )
 
         for question in scored_questions:
@@ -351,7 +351,7 @@ class SurveyUserInputLine(models.Model):
     @api.depends('suggested_answer_id', 'question_id')
     def _compute_answer_is_correct(self):
         for answer in self:
-            if answer.suggested_answer_id and answer.question_id.question_type in ['simple_choice', 'multiple_choice']:
+            if answer.suggested_answer_id and answer.question_id.question_type == 'answer_selection':
                 answer.answer_is_correct = answer.suggested_answer_id.is_correct
             else:
                 answer.answer_is_correct = False
