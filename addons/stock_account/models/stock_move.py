@@ -456,9 +456,6 @@ class StockMove(models.Model):
     def _account_entry_move(self, qty, description, svl_id, cost):
         """ Accounting Valuation Entries """
         self.ensure_one()
-        if self.product_id.type != 'product':
-            # no stock valuation for consumable products
-            return False
         if self.restrict_partner_id:
             # if the move isn't owned by the company, we don't make any valuation
             return False

@@ -206,8 +206,7 @@ class AccountMoveLine(models.Model):
         # OVERRIDE to use the stock input account by default on vendor bills when dealing
         # with anglo-saxon accounting.
         self.ensure_one()
-        if self.product_id.type == 'product' \
-            and self.move_id.company_id.anglo_saxon_accounting \
+        if self.move_id.company_id.anglo_saxon_accounting \
             and self.move_id.is_purchase_document():
             fiscal_position = self.move_id.fiscal_position_id
             accounts = self.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=fiscal_position)
