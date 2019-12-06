@@ -18,3 +18,5 @@ class ResConfigSettings(models.TransientModel):
         related='company_id.timesheet_encode_uom_id', readonly=False,
         help="""This will set the unit of measure used to encode timesheet. This will simply provide tools
         and widgets to help the encoding. All reporting will still be expressed in hours (default value).""")
+    timesheet_min_duration = fields.Integer('Minimal duration', default=15, config_parameter='hr_timesheet.timesheet_min_duration')
+    timesheet_rounding = fields.Integer('Rounding up', default=15, config_parameter='hr_timesheet.timesheet_rounding')
