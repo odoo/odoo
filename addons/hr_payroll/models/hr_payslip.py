@@ -232,7 +232,7 @@ class HrPayslip(models.Model):
         def _sum_salary_rule_category(localdict, category, amount):
             if category.parent_id:
                 localdict = _sum_salary_rule_category(localdict, category.parent_id, amount)
-            localdict['categories'].dict[category.code] = category.code in localdict['categories'].dict and localdict['categories'].dict[category.code] + amount or amount
+            localdict['categories'].dict[category.code] = localdict['categories'].dict[category.code] + amount if category.code in localdict['categories'].dict else amount
             return localdict
 
         class BrowsableObject(object):
