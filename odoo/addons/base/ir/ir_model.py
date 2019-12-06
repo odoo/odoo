@@ -911,12 +911,9 @@ class IrModelFields(models.Model):
     def _add_manual_fields(self, model):
         """ Add extra fields on model. """
         fields_data = self._get_manual_field_data(model._name)
+        modules_in_addon_path = get_modules()
         for name, field_data in fields_data.items():
             if name not in model._fields and field_data['state'] == 'manual':
-                modules_in_addon_path = get_modules()
-                custom_modules = [r['name'] for r in self.env['ir.module.module'].search_read([
-                ('name', 'not in', modules_in_addon_path + ['studio_customization'])
-                ], ['name'])]
                 try:
                     field = self._instanciate(field_data)
                     if field:
@@ -933,7 +930,7 @@ class IrModelFields(models.Model):
                     )
                     modules = [e["module"] for e in self.env.cr.dictfetchall()]
                     modules_not_in_addons_path = [
-                        module for module in modules if module in custom_modules
+                        module for module in modules if module not in modules_in_addon_path
                     ]
                     if len(modules_not_in_addons_path):
                         if len(modules_not_in_addons_path)==1:
