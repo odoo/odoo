@@ -87,6 +87,21 @@ class SaleOrder(models.Model):
                     elif line.price_unit:
                         price = line.price_unit
 
+                        # Applying pricelist rules on the template's price
+                        for rule in self.pricelist_id.item_ids:
+                            # If the template's line match the rule
+                            product_match = (not line.product_id or line.product_id.product_tmpl_id == rule.product_tmpl_id) \
+                                             or not rule.product_tmpl_id
+                            quantity_match = (line.product_uom_qty >= rule.min_quantity or rule.min_quantity == 0)
+                            date_match = (not rule.date_start or fields.Date.to_date(self.date_order) >= rule.date_start) \
+                                          and (not rule.date_end or fields.Date.to_date(self.date_order) < rule.date_end)
+                            if product_match and quantity_match and date_match:
+                                if rule.fixed_price:
+                                    # If the rule has a fixed price, it replace the template's price
+                                    price = rule.fixed_price
+                                elif rule.percent_price:
+                                    # If the rule has a discount, applying it on the template's price
+                                    price -= (price * rule.percent_price) / 100
                 else:
                     price = line.price_unit
 
