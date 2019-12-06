@@ -49,6 +49,8 @@ class ProductTemplate(models.Model):
                 policy = 'delivered_manual' if product.service_type == 'manual' else 'delivered_timesheet'
             elif product.invoice_policy == 'order' and product.service_type == 'timesheet':
                 policy = 'ordered_timesheet'
+            elif product.invoice_policy == 'order' and product.type == 'service':
+                policy = 'ordered_timesheet'
             product.service_policy = policy
 
     def _inverse_service_policy(self):
