@@ -1247,6 +1247,22 @@ class TestRoutingAndKits(SavepointCase):
             'name': 'compfinished',
             'type': 'product',
         })
+        cls.whole_grain = cls.env['product.product'].create({
+            'name': 'Whole Grain',
+            'type': 'product',
+        })
+        cls.milk = cls.env['product.product'].create({
+            'name': 'Milk',
+            'type': 'product',
+        })
+        cls.fruit_toppings = cls.env['product.product'].create({
+            'name': 'Fruit Toppings',
+            'type': 'product',
+        })
+        cls.fruit_cake = cls.env['product.product'].create({
+            'name': 'Fruit Cake',
+            'type': 'product',
+        })
         cls.workcenter_finished1 = cls.env['mrp.workcenter'].create({
             'name': 'workcenter1',
         })
@@ -1296,6 +1312,51 @@ class TestRoutingAndKits(SavepointCase):
             'routing_id': cls.routing_kit1.id,
             'bom_line_ids': [
                 (0, 0, {'product_id': cls.compkit1.id, 'product_qty': 1}),
+            ]})
+        cls.workcenter_grinder = cls.env['mrp.workcenter'].create({
+            'name': 'Grinder',
+        })
+        cls.workcenter_mixer = cls.env['mrp.workcenter'].create({
+            'name': 'Mixer',
+        })
+        cls.workcenter_baker = cls.env['mrp.workcenter'].create({
+            'name': 'Baker',
+        })
+        cls.routing_cake_making = cls.env['mrp.routing'].create({
+            'name': 'Routing for Cake Making',
+        })
+        cls.operation_grinding = cls.env['mrp.routing.workcenter'].create({
+            'sequence': 1,
+            'name': 'Grinding',
+            'workcenter_id': cls.workcenter_grinder.id,
+            'routing_id': cls.routing_cake_making.id,
+            'batch': 'yes'
+        })
+        cls.operation_mixing = cls.env['mrp.routing.workcenter'].create({
+            'sequence': 1,
+            'name': 'Mixing',
+            'workcenter_id': cls.workcenter_mixer.id,
+            'routing_id': cls.routing_cake_making.id,
+            'batch': 'yes'
+        })
+        cls.operation_baking = cls.env['mrp.routing.workcenter'].create({
+            'sequence': 1,
+            'name': 'Backing',
+            'workcenter_id': cls.workcenter_baker.id,
+            'routing_id': cls.routing_cake_making.id,
+            'batch': 'yes'
+        })
+        cls.bom_fruit_cake = cls.env['mrp.bom'].create({
+            'product_id': cls.fruit_cake.id,
+            'product_tmpl_id': cls.fruit_cake.product_tmpl_id.id,
+            'product_uom_id': cls.uom_unit.id,
+            'product_qty': 1,
+            'type': 'normal',
+            'routing_id': cls.routing_cake_making.id,
+            'bom_line_ids': [
+                (0, 0, {'product_id': cls.whole_grain.id, 'product_qty': 1}),
+                (0, 0, {'product_id': cls.milk.id, 'product_qty': 1}),
+                (0, 0, {'product_id': cls.fruit_toppings.id, 'product_qty': 1}),
             ]})
 
     def test_1(self):
@@ -1484,3 +1545,109 @@ class TestRoutingAndKits(SavepointCase):
         wo2.button_start()
         self.assertEqual(wo2.qty_producing, 10)
         self.assertEqual(wo2.finished_lot_id, lot1)
+
+    def test_partial_production_qty_suggetion(self):
+        """ Create a BOM with products and work centers to allow partial
+            production and suggest quantity to produce in next work order if
+            some quantities are processed.
+        """
+        self.fruit_cake.tracking = 'none'
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.fruit_cake
+        mo_form.product_qty = 5
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo.button_plan()
+
+        # Process first work order
+        first_wo = mo.workorder_ids.filtered(lambda wo: wo.state == 'ready')[0]
+        first_wo.button_start()
+        self.assertEqual(first_wo.qty_producing, 5, "wrong number of qty to produce.")
+        first_wo.qty_producing = 2
+        first_wo.record_production()
+        self.assertEqual(first_wo.qty_produced, 2, "wrong number of qty is produced.")
+        self.assertEqual(first_wo.qty_producing, 3, "wrong number of qty is suggested to produce.")
+        # Check for 2nd work order
+        second_wo = mo.workorder_ids.filtered(lambda wo: wo.state == 'ready')[0]
+        second_wo.button_start()
+        self.assertEqual(second_wo.qty_producing, 2, "wrong number of qty is produced.")
+        second_wo.record_production()
+        self.assertEqual(second_wo.qty_produced, 2, "wrong number of qty is produced.")
+        self.assertEqual(second_wo.qty_producing, 0, "wrong number of qty is suggested to produce.")
+        # Check for 3rd work order
+        third_wo = mo.workorder_ids.filtered(lambda wo: wo.state == 'ready')[0]
+        third_wo.button_start()
+        self.assertEqual(third_wo.qty_producing, 2, "wrong number of qty is produced.")
+        third_wo.record_production()
+        self.assertEqual(third_wo.qty_produced, 2, "wrong number of qty is produced.")
+        self.assertEqual(second_wo.qty_producing, 0, "wrong number of qty is suggested to produce.")
+
+    def test_partial_production_qty_suggetion_with_lot(self):
+        """ Create a BOM with products and work centers to allow partial
+            production and suggest quantity to produce in next work order if
+            some quantities are processed and finihsed product is tracked by
+            LOT.
+        """
+        self.fruit_cake.tracking = 'lot'
+        lot_1 = self.env['stock.production.lot'].create({
+            'product_id': self.fruit_cake.id,
+            'company_id': self.env.company.id,
+        })
+        lot_2 = self.env['stock.production.lot'].create({
+            'product_id': self.fruit_cake.id,
+            'company_id': self.env.company.id,
+        })
+        produced_msg = "Wrong quantity produced."
+        processing_msg = "Wrong to produce quantity suggested"
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.fruit_cake
+        mo_form.product_qty = 5
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo.button_plan()
+
+        # Process first work order
+        first_wo = mo.workorder_ids.filtered(lambda wo: wo.state == 'ready')[0]
+        first_wo.button_start()
+        self.assertEqual(first_wo.qty_producing, 5, produced_msg)
+        first_wo.qty_producing = 1
+        first_wo.finished_lot_id = lot_1
+        first_wo.record_production()
+        self.assertEqual(first_wo.qty_produced, 1, produced_msg)
+        self.assertEqual(first_wo.qty_producing, 4, processing_msg)
+        first_wo.qty_producing = 2
+        first_wo.finished_lot_id = lot_2
+        first_wo.record_production()
+        self.assertEqual(first_wo.qty_produced, 3, produced_msg)
+        self.assertEqual(first_wo.qty_producing, 2, processing_msg)
+
+        # Check for 2nd work order
+        second_wo = mo.workorder_ids.filtered(lambda wo: wo.state == 'ready')[0]
+        second_wo.button_start()
+        self.assertEqual(second_wo.qty_producing, 1, produced_msg)
+        self.assertEqual(second_wo.finished_lot_id, lot_1, "wrong lot is suggested")
+        second_wo.finished_lot_id = lot_2
+        second_wo._onchange_finished_lot_id()
+        self.assertEqual(second_wo.qty_producing, 2, produced_msg)
+        second_wo.record_production()
+        self.assertEqual(second_wo.qty_produced, 2, produced_msg)
+        self.assertEqual(second_wo.qty_producing, 1, processing_msg)
+        self.assertEqual(second_wo.finished_lot_id, lot_1, "wrong number of qty is produced.")
+        second_wo._onchange_finished_lot_id()
+        second_wo.record_production()
+        self.assertEqual(second_wo.qty_produced, 3, produced_msg)
+        self.assertEqual(second_wo.qty_producing, 0, processing_msg)
+
+        # Check for 3rd work order
+        third_wo = mo.workorder_ids.filtered(lambda wo: wo.state == 'ready')[0]
+        third_wo.button_start()
+        self.assertEqual(third_wo.qty_producing, 2, produced_msg)
+        self.assertEqual(third_wo.finished_lot_id, lot_2, "wrong lot is suggested")
+        third_wo.record_production()
+        self.assertEqual(third_wo.qty_produced, 2, produced_msg)
+        self.assertEqual(third_wo.qty_producing, 1, processing_msg)
+        self.assertEqual(third_wo.finished_lot_id, lot_1, "wrong number of qty is produced.")
+        third_wo.record_production()
+        self.assertEqual(third_wo.qty_produced, 3, produced_msg)
+        self.assertEqual(third_wo.qty_producing, 0, processing_msg)
