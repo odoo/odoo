@@ -19,6 +19,10 @@ class UtmMixin(models.AbstractModel):
 
     @api.model
     def default_get(self, fields):
+        """Loop tuples in tracking_fields() to set cookies for url with UTM.
+        Search the active records to match each utm parameters. For utm
+        campaigns, we also search the deactivated ones, since it could be merged
+        with others. We set the statistics to the merged ones."""
         values = super(UtmMixin, self).default_get(fields)
 
         # We ignore UTM for salesmen, except some requests that could be done as superuser_id to bypass access rights.
@@ -35,10 +39,13 @@ class UtmMixin(models.AbstractModel):
                 # if we receive a string for a many2one, we search/create the id
                 if field.type == 'many2one' and isinstance(value, str) and value:
                     Model = self.env[field.comodel_name]
-                    records = Model.search([('name', '=', value)], limit=1)
-                    if not records:
-                        records = Model.create({'name': value, 'is_website': True})
-                    value = records.id
+                    # also search for achieved records for campaign_id
+                    record = Model.with_context(active_test=not field_name == 'campaign_id').search([('name', '=', value)], limit=1)
+                    if not record:
+                        record = Model.create({'name': value, 'is_website': True})
+                    if field_name == 'campaign_id' and not record.active and record.reference_utm_campaign_id:
+                        record = record.reference_utm_campaign_id
+                    value = record.id
                 if value:
                     values[field_name] = value
         return values

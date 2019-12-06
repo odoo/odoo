@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, api, SUPERUSER_ID
+from odoo import fields, models
 
 
 class UtmCampaign(models.Model):
@@ -19,3 +19,14 @@ class UtmCampaign(models.Model):
 
         for campaign in self:
             campaign.click_count = mapped_data.get(campaign.id, 0)
+
+    def _get_ignored_merge_models(self):
+        return super(UtmCampaign, self)._get_ignored_merge_models() + ['link.tracker']
+
+    def _merge_utm_campaigns(self, campaign_to_keep):
+        """After merge the campaigns, redirect the link.tracker that link to old
+        campaigns to the new merged campaign."""
+        super(UtmCampaign, self)._merge_utm_campaigns(campaign_to_keep)
+        link_trackers = self.env['link.tracker'].sudo().search([('campaign_id', 'in', self.ids)])
+        link_trackers._clean_duplicates()
+        self._clean_merged_campaigns_reference('link.tracker', 'campaign_id', campaign_to_keep)

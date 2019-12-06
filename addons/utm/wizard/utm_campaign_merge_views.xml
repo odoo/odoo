@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Merge UTM Campaigns  -->
+    <record id="utm_campaign_merge_view_form" model="ir.ui.view">
+        <field name="name">utm.campaign.merge.view.form</field>
+        <field name="model">utm.campaign.merge</field>
+        <field name="arch" type="xml">
+            <form string="Merge UTM Campaign">
+                <sheet>
+                    <group name="campaign_to_keep" col="1">
+                        <p class="oe_grey">
+                            Selected campaigns will be merged together.
+                            All documents and statistics linked to one of these
+                            campaigns will be redirected to the destination campaigns.
+                            You can remove campaigns from this list to avoid merging them.
+                        </p>
+                        <group col="2">
+                            <field name="campaign_id" string="Destination Campaign" domain="[('id', 'in', campaign_ids)]" context="{'show_id': 1}" options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                    <group name="merged_campaigns" string="Merged Campaigns">
+                        <field name="campaign_ids" nolabel="1">
+                            <tree>
+                                <field name="id"/>
+                                <field name="name"/>
+                                <field name="user_id"/>
+                                <field name="stage_id"/>
+                                <field name="tag_ids" widget="many2many_tags"/>
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_merge" type="object" string="Merge" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <act_window
+        id="action_merge_utm_campaign"
+        name="Merge"
+        res_model="utm.campaign.merge"
+        binding_model="utm.campaign"
+        binding_views="list"
+        view_mode="form"
+        target="new"/>
+</odoo>

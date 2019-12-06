@@ -14,6 +14,7 @@ Enable management of UTM trackers: campaign, medium, source.
         'views/assets.xml',
         'views/utm_campaign_views.xml',
         'views/utm_views.xml',
+        'wizard/utm_campaign_merge_views.xml',
         'security/ir.model.access.csv',
     ],
     'demo': [
