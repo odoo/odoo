@@ -913,9 +913,9 @@ class IrModelFields(models.Model):
         fields_data = self._get_manual_field_data(model._name)
         for name, field_data in fields_data.items():
             if name not in model._fields and field_data['state'] == 'manual':
-                addon_path_module = get_modules()
+                modules_in_addon_path = get_modules()
                 custom_modules = [r['name'] for r in self.env['ir.module.module'].search_read([
-                ('name', 'not in', addon_path_module + ['studio_customization'])
+                ('name', 'not in', modules_in_addon_path + ['studio_customization'])
                 ], ['name'])]
                 try:
                     field = self._instanciate(field_data)
@@ -932,7 +932,17 @@ class IrModelFields(models.Model):
                         [field_data["relation"]],
                     )
                     modules = [e["module"] for e in self.env.cr.dictfetchall()]
-                    if not any([m in custom_modules for m in modules]):
+                    modules_not_in_addons_path = list(filter(lambda module: modules not in custom_modules, modules))
+                    if len(modules_not_in_addons_path):
+                        if len(modules_not_in_addons_path)==1:
+                            _logger.warning("Field {} not loaded:"
+                            " module '{}' is not found in the addons-path".format(
+                                field_data['name'], modules_not_in_addons_path[0]))
+                        else:
+                            _logger.warning("Field {} not loaded:"
+                            " some of the module(s) '({})' are not found in the addons-path".format(
+                                field_data['name'], modules_not_in_addons_path))
+                    else:
                         raise
 
 class IrModelConstraint(models.Model):
