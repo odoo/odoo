@@ -539,10 +539,10 @@ class Survey(http.Controller):
                 [('user_input_line_ids', 'in', matching_line_ids)],
                 user_input_domain
             ])
-            if post.get('finished'):
-                user_input_domain = expression.AND([[('state', '=', 'done')], user_input_domain])
-            else:
-                user_input_domain = expression.AND([[('state', '!=', 'new')], user_input_domain])
+        if post.get('finished'):
+            user_input_domain = expression.AND([[('state', '=', 'done')], user_input_domain])
+        else:
+            user_input_domain = expression.AND([[('state', '!=', 'new')], user_input_domain])
         user_input_lines = request.env['survey.user_input'].sudo().search(user_input_domain).mapped('user_input_line_ids')
 
         return user_input_lines, search_filters
