@@ -346,7 +346,7 @@ class TestEmailTools(BaseCase):
         We check that in both cases, decoding is idempotent,
         and we get back get the right name/address couples
         """
-        froms = [
+        headers = [
             "From: pen pen <pen@odoodoo.com>",
             "From: pen, pen <pen@odoodoo.com>",
             "From: =?UTF-8?B?8J+QpyBwZW4gcGVuIPCfkKc=?= <pen@odoodoo.com>",  # basic unicode
@@ -354,17 +354,25 @@ class TestEmailTools(BaseCase):
             "From: =?UTF-8?B?8J+QpyIsIGxlbg==?= <pen@odoodoo.com >",  # with double quote
             "From: =?UTF-8?B?8J+QpycsIGxlbg==?= <pen@odoodoo.com >",  # with single quote
             "From: =?UTF-8?B?8J+Qp1wnLCBsZVxu?= <pen@odoodoo.com >",  # with backslash
+            # composite ones:
+            "To: min@oobo.com, max@oobo.com",
+            "To: min@oobo.com, Mitchell Admin <admin@oobo.com>",
+            "Cc: min@oobo.com, =?UTF-8?B?8J+QpyBwZW4gcGVuIPCfkKc=?= <pen@oobo.com>",
+            "Cc: <min@oobo.com>, =?UTF-8?B?8J+QpyBwZW4gcGVuIPCfkKc=?= <pen@oobo.com>",
+            "Cc: =?UTF-8?B?8J+QpyBwZW4gcGVuIPCfkKc=?= <pen@oobo.com>, <min@oobo.com>, "
+                "=?UTF-8?B?8J+Qp1wnLCBsZVxu?= <pen@odoodoo.com >",
         ]
-        for header_from in froms:
-            decoded_from = decode_smtp_header(header_from, escape_names=True)
+        for header in headers:
+            decoded_from = decode_smtp_header(header, escape_names=True)
             addresses_from = email.utils.getaddresses([decoded_from])
             re_encoded = ir_mail_server.encode_rfc2822_address_header(decoded_from)
             redecoded_from = decode_smtp_header(re_encoded, escape_names=True)
             addresses_from_redecoded = email.utils.getaddresses([redecoded_from])
 
             self.assertEqual(len(addresses_from), len(addresses_from_redecoded))
-            self.assertEqual(addresses_from[0][1], addresses_from_redecoded[0][1])
-            self.assertEqual(addresses_from[0][0], addresses_from_redecoded[0][0])
+            for i in range(len(addresses_from)):
+                self.assertEqual(addresses_from[i][1], addresses_from_redecoded[i][1])
+                self.assertEqual(addresses_from[i][0], addresses_from_redecoded[i][0])
 
 
 class EmailConfigCase(SavepointCase):
