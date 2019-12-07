@@ -551,9 +551,14 @@ def decode_smtp_header(smtp_header, escape_names=False):
         if not escape_names:
             return ''.join([ustr(x[0], x[1]) for x in text])
         else:
-            # getaddresses is "-aware, but we need quote to take care of pesky \ and "
             f = lambda s: '"' + quote(s) + '"' if any(ss in s for ss in [',', '"', '\\']) else s
-            return ''.join([ustr(f(ustr(x[0])), x[1]) for x in text])
+            g = lambda p: ''.join([ustr(*n) for n in decode_header(p)])
+            h = lambda n, a: n + ' <' + a + '>' if n else a
+            encoded_address_pairs = ", ".join(
+                h(f(g(a)), g(b))
+                for a, b in getaddresses([smtp_header])
+            )
+            return encoded_address_pairs
     return u''
 
 # was mail_thread.decode_header()
