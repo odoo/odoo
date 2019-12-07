@@ -131,6 +131,10 @@ class AccountTaxReportLine(models.Model):
                 self._delete_tags_from_taxes(self.mapped('tag_ids.id'))
                 self.write({'tag_ids': [(2, tag.id, 0) for tag in self.mapped('tag_ids')]})
 
+        if 'country_id' in vals and self.tag_ids:
+            # Writing the country of a tax report line should overwrite the country of its tags
+            self.tag_ids.write({'country_id': vals['country_id']})
+
         return rslt
 
     def unlink(self):
@@ -161,22 +165,25 @@ class AccountTaxReportLine(models.Model):
 
     @api.constrains('formula', 'tag_name')
     def _validate_formula(self):
-        if self.formula and self.tag_name:
-            raise ValidationError(_("Tag name and formula are mutually exclusive, they should not be set together on the same tax report line."))
+        for record in self:
+            if record.formula and record.tag_name:
+                raise ValidationError(_("Tag name and formula are mutually exclusive, they should not be set together on the same tax report line."))
 
     @api.constrains('tag_name', 'tag_ids')
     def _validate_tags(self):
-        neg_tags = self.tag_ids.filtered(lambda x: x.tax_negate)
-        pos_tags = self.tag_ids.filtered(lambda x: not x.tax_negate)
-        if self.tag_ids and (len(neg_tags) !=1 or len(pos_tags) != 1):
-            raise ValidationError(_("If tags are defined for a tax report line, only two are allowed on it: a positive and a negative one."))
+        for record in self:
+            neg_tags = record.tag_ids.filtered(lambda x: x.tax_negate)
+            pos_tags = record.tag_ids.filtered(lambda x: not x.tax_negate)
+            if record.tag_ids and (len(neg_tags) !=1 or len(pos_tags) != 1):
+                raise ValidationError(_("If tags are defined for a tax report line, only two are allowed on it: a positive and a negative one."))
 
     @api.constrains('tag_name', 'country_id')
     def _validate_tag_name_unicity(self):
-        if self.tag_name:
-            other_lines_with_same_tag = self.env['account.tax.report.line'].search_count([('tag_name', '=', self.tag_name), ('id', '!=', self.id), ('country_id', '=', self.country_id.id)])
-            if other_lines_with_same_tag:
-                raise ValidationError(_("Tag name %(tag)s is used by more than one tax report line in %(country)s. Each tag name should only be used once per country.") % {'tag': self.tag_name, 'country': self.country_id.name})
+        for record in self:
+            if record.tag_name:
+                other_lines_with_same_tag = self.env['account.tax.report.line'].search_count([('tag_name', '=', record.tag_name), ('id', '!=', record.id), ('country_id', '=', record.country_id.id)])
+                if other_lines_with_same_tag:
+                    raise ValidationError(_("Tag name %(tag)s is used by more than one tax report line in %(country)s. Each tag name should only be used once per country.") % {'tag': record.tag_name, 'country': record.country_id.name})
 
     @api.onchange('parent_id')
     def _onchange_parent_id(self):
