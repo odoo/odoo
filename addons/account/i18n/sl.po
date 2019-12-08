@@ -12,9 +12,9 @@
 # Martin Trigaux, 2019
 # Boris Kodelja <boris@hbs.si>, 2019
 # Grega Vavtar <grega@hbs.si>, 2019
+# Jasmina Macur <jasmina@hbs.si>, 2019
 # Matjaz Mozetic <m.mozetic@matmoz.si>, 2019
 # Tadej Lupšina <tadej@hbs.si>, 2019
-# Jasmina Macur <jasmina@hbs.si>, 2019
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Jasmina Macur <jasmina@hbs.si>, 2019\n"
+"Last-Translator: Tadej Lupšina <tadej@hbs.si>, 2019\n"
 "Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -715,7 +715,7 @@ msgstr "<strong>Skupaj</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_account_kanban
 msgid "<strong>Type: </strong>"
-msgstr ""
+msgstr "<strong>Vrsta: </strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -2161,7 +2161,7 @@ msgstr "Bančni dnevniki"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Bank Operations"
-msgstr ""
+msgstr "Bančne operacije"
 
 #. module: account
 #. openerp-web
@@ -3158,7 +3158,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:54
 #, python-format
 msgid "Congrats, you're all done!"
-msgstr ""
+msgstr "Čestitke, opravljeno je!"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_onboarding_panel
@@ -3274,7 +3274,7 @@ msgstr "Ustvari bančni račun"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_invoice_out_refund
 msgid "Create a credit note"
-msgstr ""
+msgstr "Ustvari dobropis"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_invoice_tree1
@@ -3335,7 +3335,7 @@ msgstr "Ustvari nov davek"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_invoice_in_refund
 msgid "Create a vendor credit note"
-msgstr ""
+msgstr "Ustavrite prejeti dobropis"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_adjustments_wizard
@@ -3440,7 +3440,7 @@ msgstr "Ustvaril"
 #: code:addons/account/models/account_invoice.py:419
 #, python-format
 msgid "Created by: %s"
-msgstr ""
+msgstr "Kreiral: %s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__create_date
@@ -3852,7 +3852,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move_line__debit
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "Debit"
-msgstr "Debit"
+msgstr "Debet"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__debit_cash_basis
@@ -4201,7 +4201,7 @@ msgstr "Prikaži SEPA QR kodo"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line__display_type
 msgid "Display Type"
-msgstr ""
+msgstr "Vrsta prikaza"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_template__description
@@ -4328,6 +4328,8 @@ msgid ""
 "Duplicated vendor reference detected. You probably encoded twice the same "
 "vendor bill/credit note."
 msgstr ""
+"Zaznan je duplikat sklica dobavitelja. Verjetno ste dvakrat vknjižili isti "
+"prejeti račun/dobropis."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_reports
@@ -6739,7 +6741,7 @@ msgstr "Razno"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #, python-format
 msgid "Miscellaneous Operations"
-msgstr ""
+msgstr "Razne operacije"
 
 #. module: account
 #: sql_constraint:account.invoice.line:0
@@ -7028,6 +7030,8 @@ msgid ""
 "Note that the easiest way to create a credit note is to do it directly\n"
 "                from the customer invoice."
 msgstr ""
+"Upoštevajte, da je najlažji način, da ustvarite dobropis neposredno\n"
+"                iz računa stranke."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_invoice_in_refund
@@ -7035,6 +7039,8 @@ msgid ""
 "Note that the easiest way to create a vendor credit note it to do it "
 "directly from the vendor bill."
 msgstr ""
+"Upoštevajte, da je najlažji način, da ustvarite prejeti dobropis, če to "
+"storite neposredno iz prejetega računa."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__note
@@ -7221,7 +7227,7 @@ msgstr "Otvoritvena bilanca"
 #. module: account
 #: model:ir.model,name:account.model_account_financial_year_op
 msgid "Opening Balance of Financial Year"
-msgstr ""
+msgstr "Začetno stanje finančnega leta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__opening_date
@@ -7332,6 +7338,8 @@ msgid ""
 "Or share the email %s to your vendors: bills will be created automatically "
 "upon mail reception."
 msgstr ""
+"Ali delite e-pošto %s svojim dobaviteljem: računi bodo ustvarjeni samodejno "
+"ob prejemu pošte."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:694
@@ -7340,6 +7348,8 @@ msgid ""
 "Or share the emails %s to your vendors: bills will be created automatically "
 "upon mail reception."
 msgstr ""
+"Ali delite e-pošto %s svojim dobaviteljem: računi bodo ustvarjeni samodejno "
+"ob prejemu pošte. "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__payment_id
@@ -7433,7 +7443,7 @@ msgstr "Plačano"
 #: code:addons/account/models/account_payment.py:545
 #, python-format
 msgid "Paid Invoices"
-msgstr ""
+msgstr "Plačani računi"
 
 #. module: account
 #. openerp-web
@@ -7787,6 +7797,8 @@ msgid ""
 "Payments are used to register liquidity movements. You can process those "
 "payments by your own means or by using installed facilities."
 msgstr ""
+"Plačila se uporabljajo za evidentiranje gibanja likvidnosti. Ta plačila "
+"lahko obdelujete z lastnimi sredstvi ali z uporabo nameščenih naprav."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:444
@@ -8052,7 +8064,7 @@ msgstr "Skupina izdelkov"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line__product_image
 msgid "Product Image"
-msgstr ""
+msgstr "Slika izdelka"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__product_qty
@@ -8300,7 +8312,7 @@ msgstr "Uskladitev z bančnimi izpiski"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_vendor_bill_template
 msgid "Record a new vendor bill"
-msgstr ""
+msgstr "Zapiši nov prejeti račun"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -8384,7 +8396,7 @@ msgstr "Zabeleži plačilo"
 #. module: account
 #: model:ir.model,name:account.model_account_register_payments
 msgid "Register Payments"
-msgstr ""
+msgstr "Zabeleži plačila"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -8396,7 +8408,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:account.action_account_payments_payable
 #: model_terms:ir.actions.act_window,help:account.action_account_payments_transfer
 msgid "Register a payment"
-msgstr ""
+msgstr "Zabeleži plačilo"
 
 #. module: account
 #: selection:account.account.type,type:0
@@ -9186,7 +9198,7 @@ msgstr "Izvorni dokument"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__source_email
 msgid "Source Email"
-msgstr ""
+msgstr "Vir e-pošte"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding__strategy
@@ -10833,12 +10845,12 @@ msgstr "Skupni znesek, ki vam ga dolguje ta stranka."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line__price_total
 msgid "Total amount with taxes"
-msgstr ""
+msgstr "Skupni znesek z davki"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line__price_subtotal
 msgid "Total amount without taxes"
-msgstr ""
+msgstr "Skupni znesek brez davkov"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__debit
@@ -11074,7 +11086,7 @@ msgstr "Naloži"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_import_wizard_form_view
 msgid "Upload Files"
-msgstr ""
+msgstr "Naloži datoteke"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__use_anglo_saxon
@@ -11635,6 +11647,8 @@ msgid ""
 "You cannot delete an invoice which is not draft or cancelled. You should "
 "create a credit note instead."
 msgstr ""
+"Ni možno izbrisati računa, ki ni v statusu \"Osnutek\" ali \"Preklican\". "
+"Namesto tega ustvarite dobropis."
 
 #. module: account
 #: code:addons/account/models/res_config_settings.py:146

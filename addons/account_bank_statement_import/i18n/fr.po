@@ -371,7 +371,7 @@ msgstr "Ça sert de compte par défaut pour les montants en débit"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__alias_name
 msgid "It creates draft vendor bill by sending an email."
-msgstr ""
+msgstr "Il crée un brouillon de facture fournisseur en envoyant un courriel."
 
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_journal
@@ -551,6 +551,8 @@ msgid ""
 "The currency of the bank statement (%s) is not the same as the currency of "
 "the journal (%s)."
 msgstr ""
+"La devise du relevé bancaire (%s) n’est pas la même que celle du journal "
+"(%s)."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__currency_id
@@ -638,6 +640,9 @@ msgid ""
 "draft state, so that the related journal entries are only posted when "
 "performing bank reconciliation."
 msgstr ""
+"Indiquez si les paiements effectués dans ce journal doivent être générés à "
+"l'état brouillon afin que les écritures correspondantes ne soient "
+"enregistrées que lors du rapprochement bancaire."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__show_on_dashboard
@@ -653,7 +658,7 @@ msgstr "Vous avez déjà importé ce fichier."
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "You can install more file formats by"
-msgstr ""
+msgstr "Vous pouvez installer plusieurs formats de fichiers en "
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:47
