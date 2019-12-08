@@ -895,10 +895,22 @@ class AccountMoveLine(models.Model):
             credit_move = credit_moves[0]
             company_currency = debit_move.company_id.currency_id
             # We need those temporary value otherwise the computation might be wrong below
-            temp_amount_residual = min(debit_move.amount_residual, -credit_move.amount_residual)
-            temp_amount_residual_currency = min(debit_move.amount_residual_currency, -credit_move.amount_residual_currency)
+            if field == 'amount_residual_currency':
+                # /!\ NOTE: ordering by amount_residual_currency
+                temp_amount_residual_currency, temp_amount_residual = min(
+                    (debit_move.amount_residual_currency, debit_move.amount_residual),
+                    (-credit_move.amount_residual_currency, -credit_move.amount_residual))
+                amount_reconcile = temp_amount_residual_currency
+            else:
+                # /!\ NOTE: This does not make too much sense but in order to
+                # keep the logic of the code pretty much the same @hbto is
+                # leaving it like this
+                temp_amount_residual, temp_amount_residual_currency = min(
+                    (debit_move.amount_residual, debit_move.amount_residual_currency),
+                    (-credit_move.amount_residual, -credit_move.amount_residual_currency))
+                amount_reconcile = temp_amount_residual
+
             dc_vals[(debit_move.id, credit_move.id)] = (debit_move, credit_move, temp_amount_residual_currency)
-            amount_reconcile = min(debit_move[field], -credit_move[field])
 
             #Remove from recordset the one(s) that will be totally reconciled
             # For optimization purpose, the creation of the partial_reconcile are done at the end,

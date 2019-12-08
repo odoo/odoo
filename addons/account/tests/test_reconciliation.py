@@ -2032,9 +2032,10 @@ class TestReconciliationExec(TestReconciliation):
         tax_waiting_line = invoice.move_id.line_ids.filtered(lambda l: l.account_id == self.tax_waiting_account)
         self.assertFalse(tax_waiting_line.reconciled)
 
-        move_caba0 = tax_waiting_line.matched_debit_ids.debit_move_id.move_id
+        # /!\ NOTE: There could be two account.partial.reconcile records
+        # `matched_debit_ids` one for the CABA entry and one for the FX entry.
+        move_caba0 = tax_waiting_line.mapped('matched_debit_ids.debit_move_id.move_id').filtered(lambda x: x.journal_id == self.env.user.company_id.tax_cash_basis_journal_id)
         self.assertTrue(move_caba0.exists())
-        self.assertEqual(move_caba0.journal_id, self.env.user.company_id.tax_cash_basis_journal_id)
 
         pay_receivable_line0 = payment0.move_line_ids.filtered(lambda l: l.account_id == self.account_rcv)
         self.assertTrue(pay_receivable_line0.reconciled)
