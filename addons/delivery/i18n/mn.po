@@ -8,6 +8,7 @@
 # nurbakhit nurka <nurbakhit@bumanit.mn>, 2019
 # Ubuntu Erka <erdenebold10@gmail.com>, 2019
 # Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2019
+# Batmunkh Ganbat <batmunkh.g@bumanit.mn>, 2019
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-07 07:12+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2019\n"
+"Last-Translator: Batmunkh Ganbat <batmunkh.g@bumanit.mn>, 2019\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -284,7 +285,7 @@ msgstr "Хүргэлтийн өртөг"
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__delivery_message
 #: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_message
 msgid "Delivery Message"
-msgstr ""
+msgstr "Хүргэлтийн зурвас"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__name
@@ -330,7 +331,7 @@ msgstr "Хүргэх бараа"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_rating_success
 msgid "Delivery Rating Success"
-msgstr ""
+msgstr "Хүргэлтийн үнэлгээ амжилттай"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_set
@@ -370,7 +371,7 @@ msgstr "Дэлгэрэнгүй нэр"
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.act_delivery_trackers_url
 msgid "Display tracking links"
-msgstr ""
+msgstr "Хяналтын холбоосыг харуулах"
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -392,7 +393,7 @@ msgstr "Орчин"
 #: code:addons/delivery/models/delivery_grid.py:0
 #, python-format
 msgid "Error: this delivery method is not available for this address."
-msgstr ""
+msgstr "Алдаа: Энэ хүргэх аргыг уг хаягаар ашиглах боломжгүй байна."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__invoice_policy
@@ -438,7 +439,7 @@ msgstr "Үнэгүй хүргэлтийн хураамж"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__free_over
 msgid "Free if order amount is above"
-msgstr ""
+msgstr "Хэрэв захиалгын хэмжээг дээр тодорхойлсон бол үнэгүй"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__return_label_on_delivery
@@ -611,6 +612,8 @@ msgstr "Тээвэрлэгч уялдуулалт алга"
 #, python-format
 msgid "No price rule matching this order; delivery cost cannot be computed."
 msgstr ""
+"Энэ захиалгатай тохирох үнийн дүрэм олдсонгүй. Хүргэх зардлыг тооцох "
+"боломжгүй."
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.normal_delivery_carrier
@@ -654,7 +657,7 @@ msgstr "Баглааны дэлгэрэнгүй"
 #: code:addons/delivery/wizard/choose_delivery_package.py:0
 #, python-format
 msgid "Package too heavy!"
-msgstr ""
+msgstr "Баглаа хэт хүнд байна!"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_quant_package
@@ -832,7 +835,7 @@ msgstr "Хүргэлтийн жин"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_small_delivery
 msgid "Shipping Weight:"
-msgstr ""
+msgstr "Хүргэлтийн жин"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_product_product__hs_code
@@ -889,12 +892,14 @@ msgid ""
 "The weight of your package is higher than the maximum weight authorized for "
 "this package type. Please choose another package type."
 msgstr ""
+"Таны багцын жин нь энэ баглаанд зөвшөөрөгдсөн дээд хэмжээнээс их байна. Өөр "
+"савалгааны төрлийг сонгоно уу."
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_grid.py:0
 #, python-format
 msgid "There is no matching delivery rule."
-msgstr ""
+msgstr "Тохирох хүргэлтийн дүрэм олдсонгүй."
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -938,7 +943,7 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
 msgid "Trackers URL"
-msgstr ""
+msgstr "Холбоос"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -953,7 +958,7 @@ msgstr "Хөтлөлтийн код"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_tracking_url
 msgid "Tracking URL"
-msgstr ""
+msgstr "Мөшгөлтийн холбоос"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale_delivery
@@ -973,7 +978,7 @@ msgstr "Шилжүүлгэ"
 #: model:product.template,uom_name:delivery.product_product_delivery_poste_product_template
 #: model:product.template,uom_name:delivery.product_product_delivery_product_template
 msgid "Units"
-msgstr ""
+msgstr "Нэгж"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
@@ -1035,7 +1040,7 @@ msgstr "Хүргэлтийн жин"
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__weight_uom_name
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package__weight_uom_name
 msgid "Weight unit of measure label"
-msgstr ""
+msgstr "хэмжих нэгж дэхь жингийн нэр"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging__width
@@ -1060,7 +1065,7 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
 msgid "You have multiple tracker links, they are available in the chatter."
-msgstr ""
+msgstr "Танд олон дагах холбоос байна, эдгээрийг чаат дээр ашиглах боломжтой."
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:0

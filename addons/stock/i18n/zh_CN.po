@@ -35,7 +35,7 @@
 # Martin Trigaux, 2019
 # ChinaMaker <liuct@chinamaker.net>, 2019
 # Manga Tsang <mts@odoo.com>, 2019
-# Jeffery CHEN <jeffery9@gmail.com>, 2019
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
 # snow wang <147156565@qq.com>, 2019
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2019
 # liAnGjiA <liangjia@qq.com>, 2019
@@ -45,7 +45,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-07 07:11+0000\n"
+"POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
 "Last-Translator: Jerry Pan <panjianyu@inspur.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -743,14 +743,6 @@ msgid "All returned moves"
 msgstr "全部退回移动"
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid ""
-"All the products currently reserved in the picking are already in a pack. "
-"Please add products to the picking to create a new pack."
-msgstr "当前在拣选中保留的所有产品都已打包完毕。请将产品添加到拣选中以创建新的包装。"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__allowed_location_ids
 msgid "Allowed Location"
 msgstr "允许的位置"
@@ -800,11 +792,17 @@ msgid ""
 msgstr "应用特定路线进行补货，而不是产品的默认路线。"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_view_search
 #: model_terms:ir.ui.view,arch_db:stock.stock_warehouse_view_search
+#: model_terms:ir.ui.view,arch_db:stock.view_location_form
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model_terms:ir.ui.view,arch_db:stock.view_pickingtype_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_filter
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
+#: model_terms:ir.ui.view,arch_db:stock.view_warehouse
+#: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Archived"
 msgstr "已归档"
@@ -2131,11 +2129,6 @@ msgstr ""
 "位置移至另一位置。例如，若果你从供应商那边收到产品，\n"
 "Odoo将会把产品从供应商位置调拨到仓位置置。每个报表可用在\n"
 "实体位置、业务伙伴位置或者虚拟位置进行。"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
-msgid "Exception Activities"
-msgstr "例外活动"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -6835,6 +6828,7 @@ msgstr "警告！"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Warnings"
 msgstr "警告"
 

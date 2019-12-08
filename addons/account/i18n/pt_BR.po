@@ -43,10 +43,10 @@
 # danimaribeiro <danimaribeiro@gmail.com>, 2019
 # Martin Trigaux, 2019
 # Maicon Grahl <maicongrahl@hotmail.com>, 2019
-# Luiz Carlos Zancanella Junior <junior@zancanella.com.br>, 2019
 # Silmar <pinheirosilmar@gmail.com>, 2019
 # Mateus Lopes <mateus1@gmail.com>, 2019
 # grazziano <gra.negocia@gmail.com>, 2019
+# Frederico Freire Boaventura <fboaventura@live.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -54,7 +54,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-07 07:11+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: grazziano <gra.negocia@gmail.com>, 2019\n"
+"Last-Translator: Frederico Freire Boaventura <fboaventura@live.com>, 2019\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -76,16 +76,25 @@ msgid ""
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
+"\n"
+"- Grupo de Taxas: A taxa é um conjunto de subtaxas.\n"
+"- Fixo: O valor da taxa continua o mesmo independente do preço.\n"
+"- Porcentagem do Preço: O valor da taxa é uma % do preço:\n"
+"   ex: 100 * 10% = 10 (preço não incluso)\n"
+"         110 / (1 + 10%) = 122,22 (preço incluso)\n"
+"- Porcentagem do Preço com Taxas Inclusas: O valor da taxa é uma divisão do preço:\n"
+"    ex: 180 / (1 - 10%) = 200 (not price included)\n"
+"    ex: 200 * (1 - 10%) = 180 (price included)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
 msgid "# of Digits"
-msgstr "# de Dígitos"
+msgstr "nº de Dígitos"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cashbox_line__number
 msgid "#Coins/Bills"
-msgstr ""
+msgstr "Número de Moedas/Cédulas"
 
 #. module: account
 #: model:mail.template,report_name:account.mail_template_data_payment_receipt
@@ -95,7 +104,7 @@ msgstr "${(object.name or '').replace('/','-')}"
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.name or 'n/a'})"
-msgstr ""
+msgstr "${object.company_id.name} Fatura (Ref ${object.name or 'n/a'})"
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_payment_receipt
@@ -124,7 +133,7 @@ msgstr "%s (cópia)"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "%s (rounding)"
-msgstr ""
+msgstr "%s (arredondamento)"
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -135,13 +144,13 @@ msgstr "%s Sequência"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "&amp;nbsp;<span>on</span>"
-msgstr "&amp;nbsp;<span>em</span>"
+msgstr "&amp;&nbsp;<span>em</span>"
 
 #. module: account
 #: model:ir.actions.report,print_report_name:account.account_invoices
 #: model:ir.actions.report,print_report_name:account.account_invoices_without_payment
 msgid "(object._get_report_base_filename())"
-msgstr ""
+msgstr "(object._get_report_base_filename())"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
@@ -166,17 +175,17 @@ msgstr "2 Meses"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_21days
 msgid "21 Days"
-msgstr ""
+msgstr "21 Dias"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_30days
 msgid "30 Days"
-msgstr ""
+msgstr "30 Dias"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance
 msgid "30% Advance End of Following Month"
-msgstr "Prazo de pagamento: 30% de Adiantamento no Fim do Mês Seguinte"
+msgstr "30% adiantado e restante no final do mês seguinte"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance_60days

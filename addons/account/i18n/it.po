@@ -33,6 +33,7 @@
 # Martin Trigaux, 2019
 # Léonie Bouchat <lbo@odoo.com>, 2019
 # Sergio Zanchetta <primes2h@gmail.com>, 2019
+# Luana Andronico <andronicoluana@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -40,7 +41,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-07 07:11+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
+"Last-Translator: Luana Andronico <andronicoluana@gmail.com>, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -954,6 +955,10 @@ msgid ""
 "either in 'Tax-Included' or in 'Tax-Excluded' mode\n"
 "(or switch twice the mode if you are already in the desired one)."
 msgstr ""
+"Un utente non può avere sia tasse B2B che tasse B2C. \n"
+"Vai in Impostazioni Generali e scegli visualizzare Prezzo Prodotto, \n"
+"sia nella modalità \"Tasse incluse\" che nella modalità \"Tasse Escluse\" \n"
+"(o cambia modalità due volte se ti trovi già in quella desiderata)."
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account
@@ -1298,13 +1303,13 @@ msgstr "Conto alternativo da usare"
 #: model:ir.model.fields,help:account.field_account_accrual_accounting_wizard__revenue_accrual_account
 #: model:ir.model.fields,help:account.field_res_company__revenue_accrual_account_id
 msgid "Account used to move the period of a revenue"
-msgstr ""
+msgstr "Account usato per modificare il periodo di un entrata"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_accrual_accounting_wizard__expense_accrual_account
 #: model:ir.model.fields,help:account.field_res_company__expense_accrual_account_id
 msgid "Account used to move the period of an expense"
-msgstr ""
+msgstr "Account usato per modificare il periodo di una spesa"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__cash_basis_transition_account_id
@@ -1315,6 +1320,10 @@ msgid ""
 "reconciled ; at reconciliation, this amount cancelled on this account and "
 "put on the regular tax account."
 msgstr ""
+"Account usato per il trasferimento dell'ammontare delle tasse in contanti. "
+"Conterrà l'ammontae delle tasse come da fattura originale fintanto che la "
+"fattura originale non è riconciliata; una volta riconciliata, questo importo"
+" è cancellato dall'account è posto nell'account relativo alle tasse."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
@@ -1892,13 +1901,13 @@ msgstr "Importo:"
 #: code:addons/account/models/account.py:0
 #, python-format
 msgid "An Off-Balance account can not be reconcilable"
-msgstr ""
+msgstr "Un conto fuori bilancio non può essere riconciliabile"
 
 #. module: account
 #: code:addons/account/models/account.py:0
 #, python-format
 msgid "An Off-Balance account can not have taxes"
-msgstr ""
+msgstr "Un conto fuori bilancio non può avere tasse"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_account_account_src_dest_uniq
@@ -3299,7 +3308,7 @@ msgstr "Condizioni sulla riga di estratto conto bancario"
 #. module: account
 #: model:ir.model,name:account.model_res_config_settings
 msgid "Config Settings"
-msgstr "Impostazioni configurazione"
+msgstr "Impostazioni di configurazione"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_configuration
@@ -4638,7 +4647,7 @@ msgstr "E-mail predefinita"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Email your Invoices/Bills"
-msgstr ""
+msgstr "Invia le tue Fatture / Conti via email"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox__end_bank_stmt_ids
@@ -4885,7 +4894,7 @@ msgstr "Stati federali"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "Filter on account, label, partner, amount,..."
-msgstr ""
+msgstr "Filtro per account, etichetta, partner, importo, ..."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__general_account_id
@@ -7441,7 +7450,7 @@ msgstr "Non contiene"
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "Not Due"
-msgstr ""
+msgstr "Non dovuto"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__invoice_payment_state__not_paid
@@ -7640,7 +7649,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account_type__internal_group__off_balance
 msgid "Off Balance"
-msgstr ""
+msgstr "Fuori bilancio"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_off_sheet
@@ -11755,7 +11764,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 #, python-format
 msgid "To Check"
-msgstr ""
+msgstr "Da controllare"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -12125,7 +12134,7 @@ msgstr "Usare modello"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__used
 msgid "Used"
-msgstr ""
+msgstr "Utilizzato"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_type__include_initial_balance
@@ -12542,7 +12551,7 @@ msgstr "È possibile registrare pagamenti solo per fatture aperte"
 #: code:addons/account/wizard/account_invoice_send.py:0
 #, python-format
 msgid "You can only send invoices."
-msgstr ""
+msgstr "Puoi solo inviare fatture"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12881,7 +12890,7 @@ msgstr "Selezionare prima un movimento di apertura."
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You need to add a line before posting."
-msgstr ""
+msgstr "Prima di pubblicare devi aggiungere una riga"
 
 #. module: account
 #. openerp-web
@@ -13055,14 +13064,14 @@ msgstr "pagamenti in sospeso"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__invoice_payment_state__paid
 msgid "paid"
-msgstr ""
+msgstr "Pagato"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "reconcile"
-msgstr ""
+msgstr "Riconciliare"
 
 #. module: account
 #. openerp-web
@@ -13105,12 +13114,12 @@ msgstr "azienda madre"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "to check"
-msgstr ""
+msgstr "Da controllare"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "to mark this invoice as paid."
-msgstr ""
+msgstr "Contrassegna questa fattura come pagata"
 
 #. module: account
 #. openerp-web
