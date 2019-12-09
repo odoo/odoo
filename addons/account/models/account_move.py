@@ -968,22 +968,20 @@ class AccountMoveLine(models.Model):
         In case of full reconciliation, all moves belonging to the reconciliation will belong to the same account_full_reconcile object.
         """
         # Get first all aml involved
-        part_recs = self.env['account.partial.reconcile'].search(['|', ('debit_move_id', 'in', self.ids), ('credit_move_id', 'in', self.ids)])
-        amls = self
-        todo = set(part_recs)
+        todo = self.env['account.partial.reconcile'].search_read(['|', ('debit_move_id', 'in', self.ids), ('credit_move_id', 'in', self.ids)], ['debit_move_id', 'credit_move_id'])
+        amls = set(self.ids)
         seen = set()
         while todo:
-            partial_rec = todo.pop()
-            seen.add(partial_rec)
-            for aml in [partial_rec.debit_move_id, partial_rec.credit_move_id]:
-                if aml not in amls:
-                    amls += aml
-                    for x in aml.matched_debit_ids | aml.matched_credit_ids:
-                        if x not in seen:
-                            todo.add(x)
-        partial_rec_ids = [x.id for x in seen]
+            aml_ids = [rec['debit_move_id'][0] for rec in todo if rec['debit_move_id']] + [rec['credit_move_id'][0] for rec in todo if rec['credit_move_id']]
+            amls |= set(aml_ids)
+            seen |= set([rec['id'] for rec in todo])
+            todo = self.env['account.partial.reconcile'].search_read(['&', '|', ('credit_move_id', 'in', aml_ids), ('debit_move_id', 'in', aml_ids), '!', ('id', 'in', list(seen))], ['debit_move_id', 'credit_move_id'])
+
+        partial_rec_ids = list(seen)
         if not amls:
             return
+        else:
+            amls = self.browse(list(amls))
         # If we have multiple currency, we can only base ourselve on debit-credit to see if it is fully reconciled
         currency = set([a.currency_id for a in amls if a.currency_id.id != False])
         multiple_currency = False
@@ -998,7 +996,9 @@ class AccountMoveLine(models.Model):
         total_amount_currency = 0
         maxdate = '0000-00-00'
         to_balance = {}
+        cash_basis_partial = self.env['account.partial.reconcile']
         for aml in amls:
+            cash_basis_partial |= aml.move_id.tax_cash_basis_rec_id
             total_debit += aml.debit
             total_credit += aml.credit
             maxdate = max(aml.date, maxdate)
@@ -1013,18 +1013,31 @@ class AccountMoveLine(models.Model):
                     to_balance[aml.currency_id] = [self.env['account.move.line'], 0]
                 to_balance[aml.currency_id][0] += aml
                 to_balance[aml.currency_id][1] += aml.amount_residual != 0 and aml.amount_residual or aml.amount_residual_currency
+
         # Check if reconciliation is total
         # To check if reconciliation is total we have 3 differents use case:
         # 1) There are multiple currency different than company currency, in that case we check using debit-credit
         # 2) We only have one currency which is different than company currency, in that case we check using amount_currency
         # 3) We have only one currency and some entries that don't have a secundary currency, in that case we check debit-credit
         #   or amount_currency.
+        # 4) Cash basis full reconciliation
+        #     - either none of the moves are cash basis reconciled, and we proceed
+        #     - or some moves are cash basis reconciled and we make sure they are all fully reconciled
+
         digits_rounding_precision = amls[0].company_id.currency_id.rounding
-        if (currency and float_is_zero(total_amount_currency, precision_rounding=currency.rounding)) or \
-            (multiple_currency and float_compare(total_debit, total_credit, precision_rounding=digits_rounding_precision) == 0):
+        if (
+                (
+                    not cash_basis_partial or (cash_basis_partial and all([p >= 1.0 for p in amls._get_matched_percentage().values()]))
+                ) and
+                (
+                    currency and float_is_zero(total_amount_currency, precision_rounding=currency.rounding) or
+                    multiple_currency and float_compare(total_debit, total_credit, precision_rounding=digits_rounding_precision) == 0
+                )
+        ):
+
             exchange_move_id = False
             # Eventually create a journal entry to book the difference due to foreign currency's exchange rate that fluctuates
-            if to_balance and any([residual for aml, residual in to_balance.values()]):
+            if to_balance and any([not float_is_zero(residual, precision_rounding=digits_rounding_precision) for aml, residual in to_balance.values()]):
                 exchange_move = self.env['account.move'].create(
                     self.env['account.full.reconcile']._prepare_exchange_diff_move(move_date=maxdate, company=amls[0].company_id))
                 part_reconcile = self.env['account.partial.reconcile']
