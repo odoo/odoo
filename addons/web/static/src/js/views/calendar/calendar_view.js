@@ -92,23 +92,29 @@ var CalendarView = AbstractView.extend({
 
                     modelFilters.push(fields[fieldName].relation);
                 }
+                if (child.attrs.filter) {
+                    filters[fieldName] = filters[fieldName] || {
+                        'title': fields[fieldName].string,
+                        'fieldName': fieldName,
+                        'filters': [],
+                    };
+                    if (child.attrs.color) {
+                        filters[fieldName].field_color = child.attrs.color;
+                        filters[fieldName].color_model = fields[fieldName].relation;
+                    }
+                    if (!child.attrs.avatar_field && fields[fieldName].relation) {
+                        if (fields[fieldName].relation.includes(['res.users', 'res.partner', 'hr.employee'])) {
+                            filters[fieldName].avatar_field = 'image_128';
+                        }
+                        filters[fieldName].avatar_model = fields[fieldName].relation;
+                    }
+                }
             }
         });
 
         if (attrs.color) {
             var fieldName = attrs.color;
             fieldNames.push(fieldName);
-            filters[fieldName] = {
-                'title': fields[fieldName].string,
-                'fieldName': fieldName,
-                'filters': [],
-            };
-            if (fields[fieldName].relation) {
-                if (['res.users', 'res.partner', 'hr.employee'].indexOf(fields[fieldName].relation) !== -1) {
-                    filters[fieldName].avatar_field = 'image_128';
-                }
-                filters[fieldName].avatar_model = fields[fieldName].relation;
-            }
         }
 
         //if quick_add = False, we don't allow quick_add

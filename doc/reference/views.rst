@@ -927,6 +927,9 @@ calendar view are:
     ``write_model`` and ``write_field``
         you can add a filter and save the result in the defined model, the
         filter is added in the sidebar
+    ``filter`` and ``color``
+        use "True" to add this field in filter in the sidebar. You can specify
+        a color field used to colorize the checkbox.
 
 ``templates``
   defines the :ref:`reference/qweb` template ``calendar-box``. Cards definition
