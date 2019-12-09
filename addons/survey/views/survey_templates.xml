@@ -146,26 +146,12 @@
                     </div>
                 </div>
             </div>
-            <ol t-if="survey.questions_layout == 'page_per_section'" class="breadcrumb mt8 justify-content-end">
-                <t t-set="can_go_back" t-value="survey.users_can_go_back" />
-                <t t-foreach='survey.page_ids' t-as='breadcrumb_page'>
-                    <li t-attf-class="breadcrumb-item #{'active' if breadcrumb_page == page else ''}">
-                        <t t-if="page == breadcrumb_page">
-                            <!-- Users can only go back and not forward -->
-                            <!-- As soon as we reach the current page, set "can_go_back" to False -->
-                            <t t-set="can_go_back" t-value="False" />
-                        </t>
-                        <t t-if="can_go_back">
-                            <a href="#" t-att-data-previous-page-id="breadcrumb_page.id">
-                                <span t-field='breadcrumb_page.title' />
-                            </a>
-                        </t>
-                        <t t-else="">
-                            <span t-field='breadcrumb_page.title' />
-                        </t>
-                    </li>
-                </t>
-            </ol>
+            <div t-att-class="'o_survey_breadcrumb_container mt8' + (' d-none ' if not page else '')"
+                 t-if="survey.questions_layout == 'page_per_section' and not finished"
+                t-att-data-can-go-back="survey.users_can_go_back"
+                t-att-data-page-ids="survey.page_ids.ids"
+                t-att-data-page-titles="{str(page.id): page.title for page in survey.page_ids}">
+            </div>
         </div>
     </template>
 

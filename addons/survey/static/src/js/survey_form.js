@@ -10,7 +10,6 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     events: {
         'change .o_survey_form_choice_item': '_onChangeChoiceItem',
         'click button[type="submit"]': '_onSubmit',
-        'click .o_survey_header .breadcrumb-item a': '_onBreadcrumbClick',
     },
 
     //--------------------------------------------------------------------------
@@ -25,8 +24,8 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         return this._super.apply(this, arguments).then(function () {
             self.options = self.$target.find('form').data();
             if (!self.options.isStartScreen) {
-                self.$('.breadcrumb').removeClass('d-none');
                 self._initTimer();
+                self._initBreadcrumb();
             }
             self.$('div.o_survey_form_date').each(function () {
                 self._initDateTimePicker($(this));
@@ -63,18 +62,6 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         }
     },
 
-    /**
-    * When clicking on a breadcrumb enabled item, redirect to the target page.
-    * Uses the submit flow to validate and save the answer before going to the specified page.
-    *
-    * @private
-    * @param {Event} event
-    */
-    _onBreadcrumbClick: function (event) {
-        event.preventDefault();
-        this._submitForm($(event.currentTarget));
-    },
-
     _onSubmit: function (event) {
         event.preventDefault();
         this._submitForm($(event.currentTarget));
@@ -97,7 +84,11 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         if (self.options.isStartScreen) {
             route = "/survey/begin/";
         } else {
-            params = $target.data('previousPageId') ? {'previous_page_id': $target.data('previousPageId')} : {}
+            if ($target.hasClass('breadcrumb-item')) {
+                params = {'previous_page_id': $target.data('pageId')};
+            } else {
+                params = $target.val() === 'previous' ? {'previous_page_id': $target.data('previousPageId')} : {};
+            }
             var $form = this.$('form');
             var formData = new FormData($form[0]);
 
@@ -123,7 +114,6 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         Promise.all([fadeOutPromise, submitPromise]).then(function (results) {
             if (self.options.isStartScreen) {
                 self.options.isStartScreen = false;
-                self.$('.breadcrumb').removeClass('d-none');
             }
             return self._onSubmitDone(results[1]);
         });
@@ -138,7 +128,9 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
                 self._initDateTimePicker($(this));
             });
             self._initTimer();
+            self._updateBreadcrumb();
             self.$('.o_survey_form_content').fadeIn(400);
+            $("html, body").animate({ scrollTop: 0 }, "fast");
         }
         else if (result && result.fields && result.error === 'validation') {
             var fieldKeys = _.keys(result.fields);
@@ -307,6 +299,37 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     // INIT FIELDS TOOLS
     // -------------------------------------------------------------------------
 
+    _initBreadcrumb: function () {
+        var self = this;
+        var $breadcrumb = this.$('.o_survey_breadcrumb_container');
+        var pageId = this.$('input[name=page_id]').val();
+        if ($breadcrumb.length) {
+            this.surveyBreadcrumbWidget = new publicWidget.registry.SurveyBreadcrumbWidget(this, {
+                'canGoBack': $breadcrumb.data('canGoBack'),
+                'currentPageId': pageId ? parseInt(pageId) : 0,
+                'pageIds': $breadcrumb.data('pageIds'),
+                'pageTitles': JSON.parse($breadcrumb.data('pageTitles').replace(/'/g, "\"")),
+            });
+            this.surveyBreadcrumbWidget.attachTo($breadcrumb);
+            this.surveyBreadcrumbWidget.on('breadcrumbClick', this, function (ev) {
+                self._submitForm(ev.data);
+            });
+            $breadcrumb.removeClass('d-none');  // hidden by default to avoid having ghost div in start screen
+        }
+    },
+
+    _updateBreadcrumb: function () {
+        if (this.surveyBreadcrumbWidget) {
+            var pageId = this.$('input[name=page_id]').val();
+            this.surveyBreadcrumbWidget.updateBreadcrumb(pageId ? parseInt(pageId) : 0);
+            if (!pageId) {  // If current page is end screen.
+                this.$('.o_survey_breadcrumb_container').addClass('d-none');
+            }
+        } else {
+            this._initBreadcrumb();
+        }
+    },
+    
     _initTimer: function () {
         var self = this;
         var $timer = this.$('.o_survey_timer');
