@@ -81,6 +81,31 @@ ADAMEquipmentProtocol = ScaleProtocol(
     autoResetWeight=True,  # AZExtra will not return 0 after removing products
 )
 
+# Add protocol to read value send by Fairbanks scale.
+# This driver read only value send by scale.
+# you can't send any command.
+FAIRBANKSProtocol = ScaleProtocol(
+    name='Fairbanks',
+    baudrate=9600,
+    bytesize=serial.EIGHTBITS,
+    stopbits=serial.STOPBITS_ONE,
+    parity=serial.PARITY_NONE,
+    timeout=1,
+    writeTimeout=1,
+    measureRegexp=b'\s[0-9].{4}',
+    statusRegexp=b"\x02\\s*(\\?.)\\r",
+    commandDelay=0.2,
+    measureDelay=0.5,
+    newMeasureDelay=0.2,
+    commandTerminator=b'',
+    measureCommand=None,
+    zeroCommand=None,
+    tareCommand=None,
+    clearCommand=None,
+    emptyAnswerValid=False,
+    autoResetWeight=False,
+)
+
 
 # Ensures compatibility with older versions of Odoo
 class ScaleReadOldRoute(http.Controller):
@@ -223,7 +248,6 @@ class Toledo8217Driver(ScaleDriver):
         """
 
         protocol = cls._protocol
-
         try:
             with serial_connection(device['identifier'], protocol, is_probing=True) as connection:
                 connection.write(b'Ehello' + protocol.commandTerminator)
@@ -300,12 +324,56 @@ class AdamEquipmentDriver(ScaleDriver):
         """
 
         protocol = cls._protocol
-
         try:
             with serial_connection(device['identifier'], protocol, is_probing=True) as connection:
                 connection.write(protocol.measureCommand + protocol.commandTerminator)
                 # Checking whether writing to the serial port using the Adam protocol raises a timeout exception is about the only thing we can do.
                 return True
+        except serial.serialutil.SerialTimeoutException:
+            pass
+        except Exception:
+            _logger.exception('Error while probing %s with protocol %s' % (device, protocol.name))
+        return False
+
+
+class FAIRBANKSDriver(ScaleDriver):
+    """Driver for the Fairbanks serial scale."""
+    _protocol = FAIRBANKSProtocol
+
+    def __init__(self, device):
+        super().__init__(device)
+        self._device_manufacturer = 'Fairbanks'
+
+    @staticmethod
+    def _get_raw_response(connection):
+        """Gets raw bytes containing the updated value of the device.
+
+        :param connection: a connection to the device's serial port
+        :type connection: pyserial.Serial
+        :return: the raw response to a weight request
+        :rtype: str
+        """
+
+        return connection.read(17)
+
+    @classmethod
+    def supported(cls, device):
+        """Checks whether the device, which port info is passed as argument, is supported by the driver.
+
+        :param device: path to the device
+        :type device: str
+        :return: whether the device is supported by the driver
+        :rtype: bool
+        """
+
+        protocol = cls._protocol
+        try:
+            with serial_connection(device['identifier'], protocol, is_probing=True) as connection:
+                answer = cls._get_raw_response(connection)
+                STXA = re.search(b'..(\d)*', answer)
+                GW = re.search(protocol.measureRegexp, answer)
+                if STXA and STXA.group() == b'\x021' and GW.group():
+                    return True
         except serial.serialutil.SerialTimeoutException:
             pass
         except Exception:
