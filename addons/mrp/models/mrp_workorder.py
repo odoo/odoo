@@ -8,7 +8,7 @@ import json
 
 from odoo import api, fields, models, _, SUPERUSER_ID
 from odoo.exceptions import UserError
-from odoo.tools import float_compare, float_round, format_datetime
+from odoo.tools import float_compare, float_round, format_datetime, float_is_zero
 
 
 class MrpWorkorder(models.Model):
@@ -769,6 +769,41 @@ class MrpWorkorder(models.Model):
             res[wo1].append(wo2)
         return res
 
+    def _update_quantity(self, qty_per_operation):
+        for workorder in self:
+            operation = workorder.operation_id
+            if qty_per_operation.get(operation.id):
+                cycle_number = float_round(qty_per_operation[operation.id] / operation.workcenter_id.capacity,
+                    precision_digits=0, rounding_method='UP')
+                workorder.duration_expected = (
+                    operation.workcenter_id.time_start +
+                    operation.workcenter_id.time_stop +
+                    cycle_number * operation.time_cycle * 100.0 /
+                    operation.workcenter_id.time_efficiency)
+
+            remaining_quantity = workorder.qty_production - workorder.qty_produced
+            precision = workorder.product_uom_id.rounding
+            if workorder.product_id.tracking == 'serial' and\
+                    not float_is_zero(remaining_quantity, precision_rounding=precision):
+                remaining_quantity = 1.0
+
+            if float_is_zero(remaining_quantity, precision_rounding=precision):
+                workorder.finished_lot_id = False
+                workorder._workorder_line_ids().unlink()
+
+            workorder.qty_producing = remaining_quantity
+            if workorder.qty_produced < workorder.qty_production and workorder.state == 'done':
+                workorder.state = 'progress'
+            if workorder.qty_produced == workorder.qty_production and workorder.state == 'progress':
+                workorder.state = 'done'
+
+            if workorder.state not in ('done', 'cancel'):
+                line_values = workorder._update_workorder_lines()
+                workorder._workorder_line_ids().create(line_values['to_create'])
+                if line_values['to_delete']:
+                    line_values['to_delete'].unlink()
+                for line, vals in line_values['to_update'].items():
+                    line.write(vals)
 
 class MrpWorkorderLine(models.Model):
     _name = 'mrp.workorder.line'
