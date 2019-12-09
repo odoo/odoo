@@ -21,8 +21,8 @@ options.Class.include({
     /**
      * @override
      */
-    selectDataAttribute: function (previewMode, widgetValue, params) {
-        this._super(...arguments);
+    selectDataAttribute: async function (previewMode, widgetValue, params) {
+        await this._super(...arguments);
         this._refreshPublicWidgets();
     },
 
@@ -941,8 +941,8 @@ options.registry.ul = options.Class.extend({
     /**
      * @override
      */
-    selectClass: function () {
-        this._super.apply(this, arguments);
+    selectClass: async function () {
+        await this._super.apply(this, arguments);
 
         this.trigger_up('widgets_stop_request', {
             $target: this.$target,
@@ -2175,8 +2175,8 @@ options.registry.InnerChart = options.Class.extend({
     /**
      * @override
      */
-    selectDataAttribute: function (previewMode, widgetValue, params) {
-        this._super(...arguments);
+    selectDataAttribute: async function (previewMode, widgetValue, params) {
+        await this._super(...arguments);
         // Data might change if going from or to a pieChart.
         if (params.attributeName === 'type') {
             this._setDefaultSelectedInput();
