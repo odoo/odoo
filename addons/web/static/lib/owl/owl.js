@@ -88,7 +88,6 @@
         constructor() {
             this.rev = 1;
             this.allowMutations = true;
-            this.dirty = false;
             this.weakMap = new WeakMap();
         }
         notifyCB() { }
@@ -199,7 +198,7 @@
     };
     // note that the space after typeof is relevant. It makes sure that the formatted
     // expression has a space after typeof
-    const OPERATORS = ".,===,==,+,!==,!=,!,||,&&,>=,>,<=,<,?,-,*,/,%,typeof ".split(",");
+    const OPERATORS = ".,===,==,+,!==,!=,!,||,&&,>=,>,<=,<,?,-,*,/,%,typeof ,=>".split(",");
     let tokenizeString = function (expr) {
         let s = expr[0];
         let start = s;
@@ -338,39 +337,57 @@
      * - unless the previous token is a dot (in that case, this is a property: `a.b`)
      * - or if the previous token is a left brace or a comma, and the next token is
      *   a colon (in that case, this is an object key: `{a: b}`)
+     *
+     * Some specific code is also required to support arrow functions. If we detect
+     * the arrow operator, then we add the current (or some previous tokens) token to
+     * the list of variables so it does not get replaced by a lookup in the context
      */
     function compileExpr(expr, vars) {
+        vars = Object.create(vars);
         const tokens = tokenize(expr);
-        let result = "";
         for (let i = 0; i < tokens.length; i++) {
             let token = tokens[i];
+            let prevToken = tokens[i - 1];
+            let nextToken = tokens[i + 1];
+            let isVar = token.type === "SYMBOL" && !RESERVED_WORDS.includes(token.value);
             if (token.type === "SYMBOL" && !RESERVED_WORDS.includes(token.value)) {
-                // we need to find if it is a variable
-                let isVar = true;
-                let prevToken = tokens[i - 1];
                 if (prevToken) {
                     if (prevToken.type === "OPERATOR" && prevToken.value === ".") {
                         isVar = false;
                     }
                     else if (prevToken.type === "LEFT_BRACE" || prevToken.type === "COMMA") {
-                        let nextToken = tokens[i + 1];
                         if (nextToken && nextToken.type === "COLON") {
                             isVar = false;
                         }
                     }
                 }
-                if (isVar) {
-                    if (token.value in vars && "id" in vars[token.value]) {
-                        token.value = vars[token.value].id;
-                    }
-                    else {
-                        token.value = `context['${token.value}']`;
+            }
+            if (nextToken && nextToken.type === "OPERATOR" && nextToken.value === "=>") {
+                if (token.type === "RIGHT_PAREN") {
+                    let j = i - 1;
+                    while (j > 0 && tokens[j].type !== "LEFT_PAREN") {
+                        if (tokens[j].type === "SYMBOL" && tokens[j].originalValue) {
+                            tokens[j].value = tokens[j].originalValue;
+                            vars[tokens[j].value] = { id: tokens[j].value };
+                        }
+                        j--;
                     }
                 }
+                else {
+                    vars[token.value] = { id: token.value };
+                }
             }
-            result += token.value;
+            if (isVar) {
+                if (token.value in vars && "id" in vars[token.value]) {
+                    token.value = vars[token.value].id;
+                }
+                else {
+                    token.originalValue = token.value;
+                    token.value = `context['${token.value}']`;
+                }
+            }
         }
-        return result;
+        return tokens.map(t => t.value).join("");
     }
 
     const INTERP_REGEXP = /\{\{.*?\}\}/g;
@@ -771,7 +788,7 @@
         klass = klass || {};
         elm = vnode.elm;
         for (name in oldClass) {
-            if (!klass[name]) {
+            if (name && !klass[name]) {
                 elm.classList.remove(name);
             }
         }
@@ -1318,6 +1335,7 @@
     }
 
     var _utils = /*#__PURE__*/Object.freeze({
+        __proto__: null,
         whenReady: whenReady,
         loadJS: loadJS,
         loadFile: loadFile,
@@ -1577,12 +1595,12 @@
                 for (let v in parentContext.variables) {
                     let variable = parentContext.variables[v];
                     if (variable.id) {
-                        ctx.addLine(`let ${variable.id} = extra.fiber.vars.${variable.id}`);
+                        ctx.addLine(`let ${variable.id} = extra.vars.${variable.id};`);
                     }
                 }
             }
             if (parentContext) {
-                ctx.addLine("    Object.assign(context, extra.fiber.scope);");
+                ctx.addLine("Object.assign(context, extra.fiber.scope);");
             }
             this._compileNode(elem, ctx);
             if (!parentContext) {
@@ -1826,13 +1844,14 @@
                 if (!name.startsWith("t-") && !node.getAttribute("t-attf-" + name)) {
                     const attID = ctx.generateID();
                     if (name === "class") {
-                        let classDef = value
-                            .trim()
-                            .split(/\s+/)
-                            .map(a => `'${a}':true`)
-                            .join(",");
-                        classObj = `_${ctx.generateID()}`;
-                        ctx.addLine(`let ${classObj} = {${classDef}};`);
+                        if ((value = value.trim())) {
+                            let classDef = value
+                                .split(/\s+/)
+                                .map(a => `'${a}':true`)
+                                .join(",");
+                            classObj = `_${ctx.generateID()}`;
+                            ctx.addLine(`let ${classObj} = {${classDef}};`);
+                        }
                     }
                     else {
                         ctx.addLine(`var _${attID} = '${value}';`);
@@ -2212,7 +2231,7 @@
                         .join(",");
                     varCode = `{${content}}`;
                 }
-                ctx.addLine(`this.recursiveFns['${subTemplateName}'].call(this, context, Object.assign({}, extra, {parentNode: c${ctx.parentNode}, fiber: {vars: ${varCode}, scope}}));`);
+                ctx.addLine(`this.recursiveFns['${subTemplateName}'].call(this, context, Object.assign({}, extra, {parentNode: c${ctx.parentNode}, vars: ${varCode}, fiber: {scope}}));`);
                 return true;
             }
             templateMap[subTemplate] = true;
@@ -2343,7 +2362,7 @@
                 return "";
             });
             let params = extraArgs ? `owner, ${ctx.formatExpression(extraArgs)}` : "owner";
-            let handler = `function (e) {`;
+            let handler = `function (e) {if (!context.__owl__.isMounted){return}`;
             handler += mods
                 .map(function (mod) {
                 return MODS_CODE[mod];
@@ -2494,7 +2513,10 @@
                 ctx.addLine(`let ${parentNode}= []`);
                 ctx.addLine(`result = {}`);
             }
-            ctx.addLine(`slot${slotKey}.call(this, context.__owl__.parent, Object.assign({}, extra, {parentNode: ${parentNode}, vars: extra.vars, parent: extra.parent || owner}));`);
+            // if we are in a slot of a component, we need to get the vars from the
+            // parent fiber instead.
+            const vars = ctx.allowMultipleRoots ? "extra.fiber.parent.vars" : "extra.fiber.vars";
+            ctx.addLine(`slot${slotKey}.call(this, context.__owl__.parent, Object.assign({}, extra, {parentNode: ${parentNode}, parent: extra.parent || owner, vars: ${vars}}));`);
             if (!ctx.parentNode) {
                 ctx.addLine(`utils.defineProxy(result, ${parentNode}[0]);`);
             }
@@ -2889,7 +2911,7 @@
                             params = `owner, ${ctx.formatExpression(extraArgs)}`;
                         }
                     }
-                    let handler = `function (e) {`;
+                    let handler = `function (e) {if(!owner.__owl__.isMounted){return}`;
                     handler += mods
                         .map(function (mod) {
                         return T_COMPONENT_MODS_CODE[mod];
@@ -3119,7 +3141,7 @@
      * states and in general determine the state of the rendering.
      */
     class Fiber {
-        constructor(parent, component, force, target) {
+        constructor(parent, component, force, inserter) {
             this.id = Fiber.nextId++;
             // isCompleted means that the rendering corresponding to this fiber's work is
             // done, either because the component has been mounted or patched, or because
@@ -3147,7 +3169,7 @@
             this.parent = null;
             this.component = component;
             this.force = force;
-            this.target = target;
+            this.inserter = inserter;
             const __owl__ = component.__owl__;
             this.scope = __owl__.scope;
             this.vars = __owl__.vars;
@@ -3256,7 +3278,7 @@
         complete() {
             let component = this.component;
             this.isCompleted = true;
-            if (!this.target && !component.__owl__.isMounted) {
+            if (!this.inserter && !component.__owl__.isMounted) {
                 return;
             }
             // build patchQueue
@@ -3283,29 +3305,29 @@
                 const fiber = patchQueue[i];
                 component = fiber.component;
                 component.__patch(fiber.vnode);
-                if (!fiber.shouldPatch && (!fiber.target || i !== 0)) {
+                if (!fiber.shouldPatch && (!fiber.inserter || i !== 0)) {
                     component.__owl__.pvnode.elm = component.__owl__.vnode.elm;
                 }
                 component.__owl__.currentFiber = null;
             }
             // insert into the DOM (mount case)
             let inDOM = false;
-            if (this.target) {
-                this.target.appendChild(this.component.el);
-                inDOM = document.body.contains(this.target);
+            if (this.inserter) {
+                this.inserter(this.component.el);
+                inDOM = document.body.contains(this.component.el);
                 this.component.env.qweb.trigger("dom-appended");
             }
             // call patched/mounted hook on each fiber of (reversed) patchQueue
             for (let i = patchLen - 1; i >= 0; i--) {
                 const fiber = patchQueue[i];
                 component = fiber.component;
-                if (fiber.shouldPatch && !this.target) {
+                if (fiber.shouldPatch && !this.inserter) {
                     component.patched();
                     if (component.__owl__.patchedCB) {
                         component.__owl__.patchedCB();
                     }
                 }
-                else if (this.target ? inDOM : true) {
+                else if (this.inserter ? inDOM : true) {
                     component.__callMounted();
                 }
             }
@@ -3641,7 +3663,8 @@
          *
          * Note that a component can be mounted an unmounted several times
          */
-        async mount(target) {
+        async mount(target, options = {}) {
+            const position = options.position || "last-child";
             const __owl__ = this.__owl__;
             if (__owl__.isMounted) {
                 return Promise.resolve();
@@ -3651,7 +3674,15 @@
                 message += `\nMaybe the DOM is not ready yet? (in that case, you can use owl.utils.whenReady)`;
                 throw new Error(message);
             }
-            const fiber = new Fiber(null, this, false, target);
+            let inserter = position === "last-child"
+                ? el => target.appendChild(el)
+                : position === "first-child"
+                    ? el => target.prepend(el)
+                    : el => { };
+            if (position === "self") {
+                this.__target = target;
+            }
+            const fiber = new Fiber(null, this, false, inserter);
             fiber.shouldPatch = false;
             if (!__owl__.vnode) {
                 this.__prepareAndRender(fiber, () => { });
@@ -3875,8 +3906,17 @@
          */
         __patch(vnode) {
             const __owl__ = this.__owl__;
-            const target = __owl__.vnode || document.createElement(vnode.sel);
-            __owl__.vnode = patch(target, vnode);
+            if (this.__target) {
+                if (this.__target.tagName.toLowerCase() !== vnode.sel) {
+                    throw new Error(`Cannot attach '${this.constructor.name}' to target node (not same tag name)`);
+                }
+                __owl__.vnode = patch(this.__target, vnode);
+                delete this.__target;
+            }
+            else {
+                const target = __owl__.vnode || document.createElement(vnode.sel);
+                __owl__.vnode = patch(target, vnode);
+            }
         }
         /**
          * The __prepare method is only called by the t-component directive, when a
@@ -4260,6 +4300,7 @@
     }
 
     var _hooks = /*#__PURE__*/Object.freeze({
+        __proto__: null,
         useState: useState,
         onMounted: onMounted,
         onWillUnmount: onWillUnmount,
@@ -4396,6 +4437,7 @@
     }
 
     var _tags = /*#__PURE__*/Object.freeze({
+        __proto__: null,
         xml: xml
     });
 
@@ -4459,6 +4501,16 @@
                     }
                 }
             });
+        }
+        /**
+         * Override to revert back to a classic Component's structure
+         *
+         * @override
+         */
+        __callWillUnmount() {
+            super.__callWillUnmount();
+            this.el.appendChild(this.portal.elm);
+            this.doTargetLookUp = true;
         }
         /**
          * At each DOM change, we must ensure that the portal contains exactly one
@@ -4528,7 +4580,7 @@
                 }
             }
             this.__checkVNodeStructure(vnode);
-            const shouldDeploy = !this.portal && !this.doTargetLookUp;
+            const shouldDeploy = (!this.portal || this.el.contains(this.portal.elm)) && !this.doTargetLookUp;
             if (!this.doTargetLookUp && !shouldDeploy) {
                 // Only on pure patching, provided the
                 // this.target's parent has not been unmounted
@@ -4856,8 +4908,8 @@
     exports.utils = utils;
 
     exports.__info__.version = '1.0.0-beta1';
-    exports.__info__.date = '2019-12-03T08:05:47.553Z';
-    exports.__info__.hash = '42aa9d3';
+    exports.__info__.date = '2019-12-09T09:51:53.594Z';
+    exports.__info__.hash = '124211c';
     exports.__info__.url = 'https://github.com/odoo/owl';
 
 }(this.owl = this.owl || {}));
