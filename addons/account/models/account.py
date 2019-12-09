@@ -95,7 +95,8 @@ class AccountTaxReport(models.Model):
                         new_tags = tags_cache[cache_key]
 
                         if new_tags:
-                            tags_to_unlink = line.tag_ids.filtered(lambda x: record in x.mapped('tax_report_line_ids.report_id'))
+                            tags_to_unlink = line.tag_ids.filtered(lambda x: record == x.mapped('tax_report_line_ids.report_id'))
+                            # == instead of in, as we only want tags_to_unlink to contain the tags that are not linked to any other report than the one we're considering
                             line.write({'tag_ids': [(6, 0, new_tags.ids)]})
                             self.env['account.tax.report.line']._delete_tags_from_taxes(tags_to_unlink.ids)
 
