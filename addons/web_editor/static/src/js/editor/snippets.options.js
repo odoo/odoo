@@ -1560,11 +1560,36 @@ const SnippetOptionWidget = Widget.extend({
      */
     _handleUserValueEvent: function (ev, previewMode) {
         ev.stopPropagation();
-        this.trigger_up('snippet_edition_request', {exec: () => {
+        this.trigger_up('snippet_edition_request', {exec: async () => {
             if (ev.data.prepare) {
                 ev.data.prepare();
             }
-            return this._select(previewMode, ev.data.widget);
+
+            const widget = ev.data.widget;
+            if (previewMode && (widget.$el.closest('[data-no-preview="true"]').length)) {
+                // TODO the flag should be fetched through widget params somehow
+                return;
+            }
+
+            // Call widget option methods and update $target
+            await this._select(previewMode, widget);
+
+            // Trigger the related events notifying snippet changes
+            let evName = 'snippet-option-reset';
+            if (previewMode === false) {
+                evName = 'snippet-option-change';
+            } else if (previewMode === true) {
+                evName = 'snippet-option-preview';
+            }
+            this.$target.trigger(evName, [this]);
+            this.$target.trigger('content_changed');
+
+            // Update the UI of the correct widgets
+            if (!previewMode) {
+                await this.updateUI(w => !w.isPreviewed() || w === widget);
+            } else {
+                await this.updateUI(w => w !== widget && !w.isPreviewed());
+            }
         }});
     },
     /**
@@ -1702,12 +1727,6 @@ const SnippetOptionWidget = Widget.extend({
      * @returns {Promise}
      */
     _select: async function (previewMode, widget) {
-        if (previewMode && (widget.$el.closest('[data-no-preview="true"]').length)) {
-            // TODO the no-preview flag should be retrieved through widget
-            // params somehow
-            return;
-        }
-
         // If it is not preview mode, the user selected the option for good
         // (so record the action)
         if (!previewMode) {
@@ -1729,23 +1748,6 @@ const SnippetOptionWidget = Widget.extend({
             } else {
                 await this[methodName](previewMode, widgetValue, params);
             }
-        }
-
-        // Trigger the related events notifying snippet changes
-        let evName = 'snippet-option-reset';
-        if (previewMode === false) {
-            evName = 'snippet-option-change';
-        } else if (previewMode === true) {
-            evName = 'snippet-option-preview';
-        }
-        this.$target.trigger(evName, [this]);
-        this.$target.trigger('content_changed');
-
-        // Update the UI of the correct widgets
-        if (!previewMode) {
-            await this.updateUI(w => !w.isPreviewed() || w === widget);
-        } else {
-            await this.updateUI(w => w !== widget && !w.isPreviewed());
         }
     },
 
