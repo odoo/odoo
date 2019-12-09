@@ -125,12 +125,12 @@ msgstr "2 Luni"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_21days
 msgid "21 Days"
-msgstr ""
+msgstr "21 zile"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_30days
 msgid "30 Days"
-msgstr ""
+msgstr "30 zile"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance
@@ -346,6 +346,10 @@ msgid ""
 "False), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', "
 "'in_refund', 'out_receipt', 'in_receipt'))]}\"> or </span>"
 msgstr ""
+"<span class=\"o_form_label mx-3 oe_edit_only\" attrs=\"{'invisible': [ '|', "
+"'|', '|', ('state', '!=', 'draft'), ('invoice_payment_term_id', '!=', "
+"False), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', "
+"'in_refund', 'out_receipt', 'in_receipt'))]}\"> sau </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -829,6 +833,8 @@ msgid ""
 "either in 'Tax-Included' or in 'Tax-Excluded' mode\n"
 "(or switch twice the mode if you are already in the desired one)."
 msgstr ""
+"Un utilizator nu poate avea atât Taxa B2B, cât și Taxa B2C.\n"
+"Ar trebui să accesați Setări generale și să alegeți ce să afișați la prețurile produselor fie modul „taxe incluse”, fie modul „Fără taxe” (sau să schimbați de două ori modul dacă sunteți deja în cea dorită)."
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account

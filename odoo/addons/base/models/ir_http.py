@@ -346,7 +346,8 @@ class IrHttp(models.AbstractModel):
                         filename = os.path.basename(module_resource_path)
                         mimetype = guess_mimetype(base64.b64decode(content), default=default_mimetype)
                         filehash = '"%s"' % hashlib.md5(pycompat.to_text(content).encode('utf-8')).hexdigest()
-            else:
+
+            if not content:
                 status = 301
                 content = record.url
 

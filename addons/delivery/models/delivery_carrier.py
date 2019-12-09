@@ -204,6 +204,7 @@ class DeliveryCarrier(models.Model):
         self.ensure_one()
 
         if self.debug_logging:
+            self.flush()
             db_name = self._cr.dbname
 
             # Use a new cursor to avoid rollback that could be caused by an upper method

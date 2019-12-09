@@ -76,6 +76,7 @@
                 <tree delete="0" default_order="is_done,sequence" decoration-muted="is_done" decoration-warning="quantity_done&gt;product_uom_qty" decoration-success="not is_done and quantity_done==product_uom_qty" decoration-danger="not is_done and reserved_availability &lt; product_uom_qty">
                     <field name="product_id" required="1"/>
                     <field name="company_id" invisible="1"/>
+                    <field name="product_uom_category_id" invisible="1"/>
                     <field name="name" invisible="1"/>
                     <field name="unit_factor" invisible="1"/>
                     <field name="product_uom" groups="uom.group_uom"/>

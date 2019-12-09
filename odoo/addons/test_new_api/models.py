@@ -764,3 +764,23 @@ class InverseM2oRef(models.Model):
     def _compute_model_ids_count(self):
         for rec in self:
             rec.model_ids_count = len(rec.model_ids)
+
+class ModelChildM2o(models.Model):
+    _name = 'test_new_api.model_child_m2o'
+    _description = 'dummy model with override write and ValidationError'
+
+    name = fields.Char('Name')
+    parent_id = fields.Many2one('test_new_api.model_parent_m2o')
+
+    def write(self, vals):
+        res = super(ModelChildM2o, self).write(vals)
+        if self.name == 'A':
+            raise ValidationError('the first existing child should not be changed when adding a new child to the parent')
+        return res
+
+class ModelParentM2o(models.Model):
+    _name = 'test_new_api.model_parent_m2o'
+    _description = 'dummy model with multiple childs'
+
+    name = fields.Char('Name')
+    child_ids = fields.One2many('test_new_api.model_child_m2o', 'parent_id', string="Children")

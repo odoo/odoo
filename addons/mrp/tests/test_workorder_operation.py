@@ -1099,6 +1099,26 @@ class TestWorkOrderProcess(TestMrpCommon):
         self.assertAlmostEqual(wo.date_planned_start, datetime.now(), delta=timedelta(seconds=10))
         self.assertAlmostEqual(wo.date_planned_finished, datetime.now(), delta=timedelta(seconds=10))
 
+    def test_planning_7(self):
+        """ set the workcenter capacity to 10. Produce a dozen of product tracked by
+        SN. The production should be done in two batches"""
+        self.workcenter_1.capacity = 10
+        self.workcenter_1.time_efficiency = 100
+        self.workcenter_1.time_start = 0
+        self.workcenter_1.time_stop = 0
+        self.routing_1.operation_ids.time_cycle = 60
+        self.product_4.tracking = 'serial'
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.product_4
+        mo_form.bom_id = self.planning_bom
+        mo_form.product_uom_id = self.uom_dozen
+        mo_form.product_qty = 1
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo.button_plan()
+        wo = mo.workorder_ids
+        self.assertEqual(wo.duration_expected, 120)
+
     def test_plan_unplan_date(self):
         """ Testing planning a workorder then cancel it and then plan it again.
         The planned date must be the same the first time and the second time the
@@ -1434,3 +1454,33 @@ class TestRoutingAndKits(SavepointCase):
         self.assertEqual(len(mo.workorder_ids), 2)
         self.assertEqual(set(mo.workorder_ids[0].raw_workorder_line_ids.product_id.ids), set([self.compfinished1.id, self.compkit1.id]))
         self.assertFalse(mo.workorder_ids[1].raw_workorder_line_ids.product_id.id)
+
+    def test_merge_lot(self):
+        """ Produce 10 units of product tracked by lot on two workorder. On the
+        first one, produce 4 onto lot1 then 6 onto lot1 as well. The second
+        workorder should be prefilled with 10 units and lot1"""
+        self.finished1.tracking = 'lot'
+        lot1 = self.env['stock.production.lot'].create({
+            'product_id': self.finished1.id,
+            'company_id': self.env.company.id,
+        })
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.finished1
+        mo_form.bom_id = self.bom_finished1
+        mo_form.product_qty = 10.0
+        mo = mo_form.save()
+
+        mo.action_confirm()
+        mo.button_plan()
+        wo1 = mo.workorder_ids.filtered(lambda wo: wo.state == 'ready')[0]
+        wo1.button_start()
+        wo1.qty_producing = 4
+        wo1.finished_lot_id = lot1
+        wo1.record_production()
+        wo1.qty_producing = 6
+        wo1.finished_lot_id = lot1
+        wo1.record_production()
+        wo2 = mo.workorder_ids.filtered(lambda wo: wo.state == 'ready')[0]
+        wo2.button_start()
+        self.assertEqual(wo2.qty_producing, 10)
+        self.assertEqual(wo2.finished_lot_id, lot1)

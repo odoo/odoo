@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from itertools import groupby
+from re import search
 
 from odoo import api, fields, models
 
@@ -140,7 +141,7 @@ class PosOrder(models.Model):
 
         for order in table_orders:
             order['pos_session_id'] = order['session_id'][0]
-            order['uid'] = order['pos_reference'].split(' ')[1]
+            order['uid'] = search(r"\d{5,}-\d{3,}-\d{4,}", order['pos_reference']).group(0)
             order['name'] = order['pos_reference']
             order['creation_date'] = order['create_date']
             order['server_id'] = order['id']

@@ -61,15 +61,19 @@ class PaymentAcquirerStripe(models.Model):
             'Stripe-Version': '2019-05-16', # SetupIntent need a specific version
             }
         resp = requests.request(method, url, data=data, headers=headers)
-        try:
-            resp.raise_for_status()
-        except HTTPError:
-            _logger.error("Here are some more information for the "
-                          "following HTTP error on %s:\n"
-                          "Request data:\n%s\n"
-                          "Response body:\n%s",
-                          url, pprint.pformat(data), resp.text)
-            raise
+        # Stripe can send 4XX errors for payment failure (not badly-formed requests)
+        # check if error `code` is present in 4XX response and raise only if not
+        # cfr https://stripe.com/docs/error-codes
+        # these can be made customer-facing, as they usually indicate a problem with the payment
+        # (e.g. insufficient funds, expired card, etc.)
+        if not resp.ok and not (400 <= resp.status_code < 500 and resp.json().get('error', {}).get('code')):
+            try:
+                resp.raise_for_status()
+            except HTTPError:
+                _logger.error(resp.text)
+                stripe_error = resp.json().get('error', {}).get('message', '')
+                error_msg = " " + (_("Stripe gave us the following info about the problem: '%s'") % stripe_error)
+                raise ValidationError(error_msg)
         return resp.json()
 
     def _create_stripe_session(self, kwargs):
@@ -274,11 +278,8 @@ class PaymentTransactionStripe(models.Model):
             self._set_transaction_pending()
             return True
         else:
-            error = tree.get('failure_message')
-            _logger.warn(error)
-            vals.update({'state_message': error})
-            self.write(vals)
-            self._set_transaction_cancel()
+            error = tree.get("failure_message") or tree.get('error', {}).get('message')
+            self._set_transaction_error(error)
             return False
 
     def _stripe_form_get_invalid_parameters(self, data):

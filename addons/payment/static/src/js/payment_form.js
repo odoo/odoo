@@ -246,6 +246,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                     // here we remove the 'processing' icon from the 'add a new payment' button
                     self.enableButton(button);
                 }).guardedCatch(function (error) {
+                    error.event.preventDefault();
                     // if the rpc fails, pretty obvious
                     self.enableButton(button);
 
@@ -299,6 +300,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                             );
                         }
                     }).guardedCatch(function (error) {
+                        error.event.preventDefault();
                         self.displayError(
                             _t('Server Error'),
                             _t("We are not able to redirect you to the payment form.") + " " +
@@ -426,6 +428,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                 $(button).children('.fa').addClass('fa-plus-circle');
                 $(button).find('span.o_loader').remove();
             }).guardedCatch(function (error) {
+                error.event.preventDefault();
                 // if the rpc fails, pretty obvious
                 $(button).attr('disabled', false);
                 $(button).children('.fa').addClass('fa-plus-circle');

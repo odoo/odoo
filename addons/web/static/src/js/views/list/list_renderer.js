@@ -434,17 +434,22 @@ var ListRenderer = BasicRenderer.extend({
             var $el = this._renderFieldWidget(node, record, _.pick(options, 'mode'));
             return $td.append($el);
         }
+        this._handleAttributes($td, node);
         var name = node.attrs.name;
         var field = this.state.fields[name];
         var value = record.data[name];
-        var formattedValue = field_utils.format[field.type](value, field, {
-            data: record.data,
+        var formatter = field_utils.format[field.type];
+        var formatOptions = {
             escape: true,
+            data: record.data,
             isPassword: 'password' in node.attrs,
             digits: node.attrs.digits && JSON.parse(node.attrs.digits),
-        });
-        this._handleAttributes($td, node);
-        var title = field.type !== 'boolean' ? formattedValue : '';
+        };
+        var formattedValue = formatter(value, field, formatOptions);
+        var title = '';
+        if (field.type !== 'boolean') {
+            title = formatter(value, field, _.extend(formatOptions, {escape: false}));
+        }
         return $td.html(formattedValue).attr('title', title);
     },
     /**
@@ -868,8 +873,15 @@ var ListRenderer = BasicRenderer.extend({
             'aria-expanded': false,
         });
         $a.appendTo($optionalColumnsDropdown);
+
+        // Set the expansion direction of the dropdown
+        // The button is located at the end of the list headers
+        // We want the dropdown to expand towards the list rather than away from it
+        // https://getbootstrap.com/docs/4.0/components/dropdowns/#menu-alignment
+        var direction = _t.database.parameters.direction;
+        var dropdownMenuClass = direction === 'rtl' ? 'dropdown-menu-left' : 'dropdown-menu-right';
         var $dropdown = $("<div>", {
-            class: 'dropdown-menu dropdown-menu-right o_optional_columns_dropdown',
+            class: 'dropdown-menu o_optional_columns_dropdown ' + dropdownMenuClass,
             role: 'menu',
         });
         this.optionalColumns.forEach(function (col) {

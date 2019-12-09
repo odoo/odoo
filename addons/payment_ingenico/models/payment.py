@@ -80,7 +80,7 @@ class PaymentAcquirerOgone(models.Model):
                 return True
             else:
                 # SHA-OUT keys
-                # source https://viveum.v-psp.com/Ncol/Viveum_e-Com-BAS_EN.pdf
+                # source https://payment-services.ingenico.com/int/en/ogone/support/guides/integration guides/e-commerce/transaction-feedback
                 keys = [
                     'AAVADDRESS',
                     'AAVCHECK',
@@ -97,8 +97,11 @@ class PaymentAcquirerOgone(models.Model):
                     'CARDNO',
                     'CCCTY',
                     'CN',
+                    'COLLECTOR_BIC',
+                    'COLLECTOR_IBAN',
                     'COMPLUS',
                     'CREATION_STATUS',
+                    'CREDITDEBIT',
                     'CURRENCY',
                     'CVCCHECK',
                     'DCC_COMMPERCENTAGE',
@@ -110,35 +113,38 @@ class PaymentAcquirerOgone(models.Model):
                     'DCC_INDICATOR',
                     'DCC_MARGINPERCENTAGE',
                     'DCC_VALIDHOURS',
+                    'DEVICEID',
                     'DIGESTCARDNO',
                     'ECI',
                     'ED',
+                    'EMAIL',
                     'ENCCARDNO',
                     'FXAMOUNT',
                     'FXCURRENCY',
-                    'IBAN',
                     'IP',
                     'IPCTY',
+                    'MANDATEID',
+                    'MOBILEMODE',
                     'NBREMAILUSAGE',
                     'NBRIPUSAGE',
                     'NBRIPUSAGE_ALLTX',
                     'NBRUSAGE',
                     'NCERROR',
-                    'NCERRORCARDNO',
-                    'NCERRORCN',
-                    'NCERRORCVC',
-                    'NCERRORED',
                     'ORDERID',
                     'PAYID',
                     'PAYIDSUB',
+                    'PAYMENT_REFERENCE',
                     'PM',
                     'SCO_CATEGORY',
                     'SCORING',
+                    'SEQUENCETYPE',
+                    'SIGNDATE',
                     'STATUS',
                     'SUBBRAND',
                     'SUBSCRIPTION_ID',
+                    'TICKET',
                     'TRXDATE',
-                    'VC'
+                    'VC',
                 ]
                 return key.upper() in keys
 
@@ -149,7 +155,7 @@ class PaymentAcquirerOgone(models.Model):
         return shasign
 
     def ogone_form_generate_values(self, values):
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        base_url = self.get_base_url()
         ogone_tx_values = dict(values)
         param_plus = {
             'return_url': ogone_tx_values.pop('return_url', False)

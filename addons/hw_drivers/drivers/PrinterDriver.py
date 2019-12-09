@@ -87,7 +87,7 @@ class PrinterDriver(Driver):
             'reason': None,
         }
         self.send_status()
-        if 'direct' in self._device_connection:
+        if 'direct' in self._device_connection and 'CMD:ESC/POS;' in self.dev['device-id']:
             self.print_status()
 
     @classmethod

@@ -84,6 +84,8 @@ class SaleOrder(models.Model):
                             discount = 0
                         else:
                             price = line.price_unit
+                    elif line.price_unit:
+                        price = line.price_unit
 
                 else:
                     price = line.price_unit

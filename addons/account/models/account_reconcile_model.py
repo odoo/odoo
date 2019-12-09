@@ -501,7 +501,7 @@ class AccountReconcileModel(models.Model):
                 (
                     move.invoice_payment_ref IS NOT NULL
                     AND
-                    TRIM(move.invoice_payment_ref) = TRIM(st_line.name)
+                    regexp_replace(move.invoice_payment_ref, '\s+', '', 'g') = regexp_replace(st_line.name, '\s+', '', 'g')
                 )                                   AS payment_reference_flag
             FROM account_bank_statement_line st_line
             LEFT JOIN account_journal journal       ON journal.id = st_line.journal_id
@@ -566,7 +566,7 @@ class AccountReconcileModel(models.Model):
                             (
                                 move.invoice_payment_ref IS NOT NULL
                                 AND
-                                TRIM(move.invoice_payment_ref) = TRIM(st_line.name)
+                                regexp_replace(move.invoice_payment_ref, '\s+', '', 'g') = regexp_replace(st_line.name, '\s+', '', 'g')
                             )
                         )
                     )
@@ -794,7 +794,7 @@ class AccountReconcileModel(models.Model):
                             break
 
                     # Needed to handle check on total residual amounts.
-                    if first_batch_candidates or first_batch_candidates_proposed or second_batch_candidates or second_batch_candidates_proposed or model._check_rule_propositions(line, available_candidates):
+                    if first_batch_candidates or first_batch_candidates_proposed or model._check_rule_propositions(line, available_candidates):
                         results[line.id]['model'] = model
 
                         # Add candidates to the result.

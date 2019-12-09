@@ -283,7 +283,7 @@ using the view in the kanban arch (a specific example is the helpdesk dashboard)
 Promises and asynchronous code
 ===============================
 
-For a very good and complete introduction to promises, please read this excellent article https://github.com/getify/You-Dont-Know-JS/blob/master/async%20%26%20performance/ch3.md
+For a very good and complete introduction to promises, please read this excellent article https://github.com/getify/You-Dont-Know-JS/blob/1st-ed/async%20%26%20performance/ch3.md
 
 Creating new Promises
 -----------------------
@@ -492,8 +492,6 @@ Testing asynchronous code
 - using promises in tests
         In the tests code, we support the latest version of Javascript, including primitives like `async` and `await`. This makes using and waiting for promises very easy.
         Most helper methods also return a promise (either by being marked `async` or by returning a promise directly.
-
-        .. note:: Version 12 and 13 of Odoo supports IE11, for which it is not possible to polyfill async and await. We do not consider that it is important that the tests runs on these browser though.
 
         .. code-block:: javascript
 

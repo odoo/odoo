@@ -44,7 +44,7 @@
                             <field name="is_published" widget="website_redirect_button"
                                    attrs="{'invisible': [('is_category', '=', True)]}"/>
                         </div>
-                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="image_1920" widget="image" class="oe_avatar" options='{"preview_image": "image_256"}'
                             attrs="{'readonly': [('slide_type', 'in', ('document', 'presentation', 'video'))], 'invisible': [('is_category', '=', True)]}"
                         />
@@ -170,7 +170,7 @@
                                         t-att-src="kanban_image('slide.channel', 'image_128', record.channel_id.raw_value)"/>
                                 </div>
                                 <div class="oe_kanban_details d-flex flex-column">
-                                    <strong class="o_kanban_record_title oe_partner_heading"><field name="display_name"/></strong>
+                                    <strong class="o_kanban_record_title oe_partner_heading"><field name="name"/></strong>
                                     <div class="text-mutex"><field name="channel_id"/></div>
                                     <div class="o_kanban_tags_section mb-2">
                                         <span class="oe_kanban_list_many2many">

@@ -45,6 +45,7 @@ Here is how it works:
         'views/res_bank_view.xml',
         'views/account_invoice_view.xml',
         'views/res_config_settings_views.xml',
+        'views/setup_wizard_views.xml',
     ],
 
     'demo': [

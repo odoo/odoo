@@ -26,6 +26,10 @@ Tour.register('bank_statement_reconciliation', {
             trigger: '.o_reconciliation_line:nth-child(4) .cell_label:contains("First")'
         },
         {
+            content: "select the right line to match",
+            trigger: '.o_reconciliation_line:nth-child(4) .o_notebook .cell_label:contains("2019/0001")'
+        },
+        {
             content: "click on partial reconcile",
             trigger: '.o_reconciliation_line:nth-child(4) .accounting_view .edit_amount',
         },

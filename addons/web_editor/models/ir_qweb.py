@@ -17,10 +17,10 @@ import logging
 import os
 import re
 import hashlib
+from datetime import datetime
 
 import pytz
 import requests
-from dateutil import parser
 from lxml import etree, html
 from PIL import Image as I
 from werkzeug import urls
@@ -239,7 +239,8 @@ class DateTime(models.AbstractModel):
             return False
 
         # parse from string to datetime
-        dt = parser.parse(value)
+        date_format = self.env['res.lang']._lang_get(self.env.user.lang).date_format + ' %H:%M'
+        dt = datetime.strptime(value, date_format)
 
         # convert back from user's timezone to UTC
         tz_name = self.env.context.get('tz') or self.env.user.tz
@@ -319,6 +320,8 @@ class Image(models.AbstractModel):
 
     @api.model
     def from_html(self, model, field, element):
+        if element.find('img') is None:
+            return False
         url = element.find('img').get('src')
 
         url_object = urls.url_parse(url)

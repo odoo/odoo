@@ -74,35 +74,87 @@ var db = {
             return Promise.resolve();
         },
     },
+    'account.account.tag':{
+        fields: {
+            id: {string: "ID", type: 'integer'},
+        },
+        records: [
+            {id: 1},
+            {id: 2},
+            {id: 3},
+            {id: 4},
+        ],
+    },
+    'account.tax.repartition.line': {
+        fields: {
+            id: {string: "ID", type: 'integer'},
+            repartition_type: {string:"Repartition Type", type: 'selection'},
+            account_id: {string: "Account", type: 'many2one', relation: 'account.account'},
+            factor_percent: {string: "%", type: 'integer'},
+            tag_ids: {string:"Tax Grids", type: 'many2many', relation: 'account.account.tag'}
+        },
+        records: [
+            {id: 1, factor_percent: 100, repartition_type: "base", tag_ids: [1]},
+            {id: 2, factor_percent: 100, repartition_type: "tax", tag_ids: [2]},
+            {id: 3, factor_percent: 100, repartition_type: "base", tag_ids: [3]},
+            {id: 4, factor_percent: 100, repartition_type: "tax", tag_ids: [4], account_id: 288},
+        ],
+    },
     'account.tax': {
         fields: {
             id: {string: "ID", type: 'integer'},
             display_name: {string: "Displayed name", type: 'char'},
             amount: {string: "amout", type: 'float'},
             price_include: {string: "Included in Price", type: 'boolean'},
-            account_id: {string: "partner", type: 'many2one', relation: 'account.account'},
             company_id: {string: "Company", type: 'many2one', relation: 'res.company'},
-            amount_type: {string: "type", type: 'selection'}
+            amount_type: {string: "type", type: 'selection'},
+            invoice_repartition_line_ids: {string: "Invoice Repartition", type: 'one2many', relation: 'account.tax.repartition.line'},
+            //No need for refund repartition lines in our test; they're not used by reconciliation widget anyway
         },
         records: [
-            {id: 6, display_name: "Tax 20.00%", amount: 20, amount_type: 'percent', price_include: false, company_id: 1},
-            {id: 7, display_name: "Tax 10.00% include", amount: 10, amount_type: 'percent', price_include: true, account_id: 288, company_id: 1},
+            {id: 6, display_name: "Tax 20.00%", amount: 20, amount_type: 'percent', price_include: false, company_id: 1, invoice_repartition_line_ids: [1, 2]},
+            {id: 7, display_name: "Tax 10.00% include", amount: 10, amount_type: 'percent', price_include: true, company_id: 1, invoice_repartition_line_ids: [3, 4]},
         ],
         json_friendly_compute_all: function (args) {
             var tax = _.find(db['account.tax'].records, {'id': args[0][0]});
             var amount = args[1];
-            var tax_base = tax.price_include ? amount*100/(100+tax.amount) : amount;
+
+            var tax_base = null;
+            var base_tags = null;
+            var taxes = [];
+
+            for (let i = 0 ; i < tax.invoice_repartition_line_ids.length ; i++) {
+                var rep_ln = _.find(db['account.tax.repartition.line'].records, {'id': tax.invoice_repartition_line_ids[i]});
+
+                if(rep_ln.repartition_type == 'base') {
+                    tax_base = (tax.price_include ? amount*100/(100+tax.amount) : amount) * (rep_ln.factor_percent/100);
+                    base_tags = rep_ln.tag_ids;
+                }
+                else if(rep_ln.repartition_type == 'tax') {
+                    /*
+                    IMPORTANT :
+                    For simplicity of testing, we assume there is ALWAYS a
+                    base repartition line before the tax one, so tax_base is non-null
+                    */
+                    taxes.push({
+                        'id': tax.id,
+                        'amount': tax_base*tax.amount/100,
+                        "base": tax_base,
+                        'name': tax.display_name,
+                        "analytic": false,
+                        'account_id': rep_ln.account_id,
+                        'price_include': tax.price_include,
+                        'tax_repartition_line_id': rep_ln.id,
+                        'tag_ids': rep_ln.tag_ids,
+                        'tax_ids': [tax.id],
+                    })
+                }
+            }
+
             return Promise.resolve({
                 "base": amount,
-                "taxes": [{
-                    'id': tax.id,
-                    'amount': tax_base*tax.amount/100,
-                    "base": tax_base,
-                    'name': tax.display_name,
-                    "analytic": false,
-                    "refund_account_id": false,
-                    'account_id': tax.account_id
-                }],
+                "taxes": taxes,
+                "base_tags": base_tags,
                 "total_excluded": amount/100*(100-tax.amount),
                 "total_included": amount,
             });
@@ -1896,8 +1948,8 @@ QUnit.module('account', {
                     );
                     assert.deepEqual(
                         _.pick(args.args[0][0].new_mv_line_dicts[1 - idx],
-                               'account_id', 'name', 'credit', 'debit', 'tax_line_id'),
-                        {account_id: 287, name: "Tax 20.00%", credit: 0, debit: 36, tax_line_id: 6},
+                               'account_id', 'name', 'credit', 'debit', 'tax_repartition_line_id'),
+                        {account_id: 287, name: "Tax 20.00%", credit: 0, debit: 36, tax_repartition_line_id: 2},
                         "Reconciliation rpc payload, new_mv_line_dicts.tax is correct"
                     );
                 }

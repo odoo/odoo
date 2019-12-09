@@ -504,7 +504,11 @@ class account_payment(models.Model):
             # Manage custom currency on journal for liquidity line.
             if payment.journal_id.currency_id and payment.currency_id != payment.journal_id.currency_id:
                 # Custom currency on journal.
-                liquidity_line_currency_id = payment.journal_id.currency_id.id
+                if payment.journal_id.currency_id == company_currency:
+                    # Single-currency
+                    liquidity_line_currency_id = False
+                else:
+                    liquidity_line_currency_id = payment.journal_id.currency_id.id
                 liquidity_amount = company_currency._convert(
                     balance, payment.journal_id.currency_id, payment.company_id, payment.payment_date)
             else:
@@ -548,7 +552,7 @@ class account_payment(models.Model):
                     # Receivable / Payable / Transfer line.
                     (0, 0, {
                         'name': rec_pay_line_name,
-                        'amount_currency': counterpart_amount + write_off_amount,
+                        'amount_currency': counterpart_amount + write_off_amount if currency_id else 0.0,
                         'currency_id': currency_id,
                         'debit': balance + write_off_balance > 0.0 and balance + write_off_balance or 0.0,
                         'credit': balance + write_off_balance < 0.0 and -balance - write_off_balance or 0.0,
@@ -560,7 +564,7 @@ class account_payment(models.Model):
                     # Liquidity line.
                     (0, 0, {
                         'name': liquidity_line_name,
-                        'amount_currency': -liquidity_amount,
+                        'amount_currency': -liquidity_amount if liquidity_line_currency_id else 0.0,
                         'currency_id': liquidity_line_currency_id,
                         'debit': balance < 0.0 and -balance or 0.0,
                         'credit': balance > 0.0 and balance or 0.0,
@@ -592,11 +596,17 @@ class account_payment(models.Model):
 
             # ==== 'transfer' ====
             if payment.payment_type == 'transfer':
+                journal = payment.destination_journal_id
 
-                if payment.destination_journal_id.currency_id:
-                    transfer_amount = payment.currency_id._convert(counterpart_amount, payment.destination_journal_id.currency_id, payment.company_id, payment.payment_date)
+                # Manage custom currency on journal for liquidity line.
+                if journal.currency_id and payment.currency_id != journal.currency_id:
+                    # Custom currency on journal.
+                    liquidity_line_currency_id = journal.currency_id.id
+                    transfer_amount = company_currency._convert(balance, journal.currency_id, payment.company_id, payment.payment_date)
                 else:
-                    transfer_amount = 0.0
+                    # Use the payment currency.
+                    liquidity_line_currency_id = currency_id
+                    transfer_amount = counterpart_amount
 
                 transfer_move_vals = {
                     'date': payment.payment_date,
@@ -607,7 +617,7 @@ class account_payment(models.Model):
                         # Transfer debit line.
                         (0, 0, {
                             'name': payment.name,
-                            'amount_currency': -counterpart_amount,
+                            'amount_currency': -counterpart_amount if currency_id else 0.0,
                             'currency_id': currency_id,
                             'debit': balance < 0.0 and -balance or 0.0,
                             'credit': balance > 0.0 and balance or 0.0,
@@ -619,8 +629,8 @@ class account_payment(models.Model):
                         # Liquidity credit line.
                         (0, 0, {
                             'name': _('Transfer from %s') % payment.journal_id.name,
-                            'amount_currency': transfer_amount,
-                            'currency_id': payment.destination_journal_id.currency_id.id,
+                            'amount_currency': transfer_amount if liquidity_line_currency_id else 0.0,
+                            'currency_id': liquidity_line_currency_id,
                             'debit': balance > 0.0 and balance or 0.0,
                             'credit': balance < 0.0 and -balance or 0.0,
                             'date_maturity': payment.payment_date,

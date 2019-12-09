@@ -1181,7 +1181,10 @@ class Picking(models.Model):
         self.ensure_one()
         if self.state not in ('done', 'cancel'):
             picking_move_lines = self.move_line_ids
-            if not self.picking_type_id.show_reserved:
+            if (
+                not self.picking_type_id.show_reserved
+                and not self.env.context.get('barcode_view')
+            ):
                 picking_move_lines = self.move_line_nosuggest_ids
 
             move_line_ids = picking_move_lines.filtered(lambda ml:
@@ -1198,7 +1201,7 @@ class Picking(models.Model):
                     res = self._put_in_pack(move_line_ids)
                 return res
             else:
-                raise UserError(_('All the products currently reserved in the picking are already in a pack. Please add products to the picking to create a new pack.'))
+                raise UserError(_("Please add 'Done' qantitites to the picking to create a new pack."))
 
     def button_scrap(self):
         self.ensure_one()

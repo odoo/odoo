@@ -45,7 +45,6 @@ var _t = core._t;
  *          id: number|string
  *          partial_amount: number
  *          invalid: boolean - through the invalid line (without account, label...)
- *          is_tax: boolean
  *          account_code: string
  *          date: string
  *          date_maturity: string
@@ -610,18 +609,23 @@ var StatementModel = BasicModel.extend({
     },
     getPartialReconcileAmount: function(handle, data) {
         var line = this.getLine(handle);
+        var formatOptions = {
+            currency_id: line.st_line.currency_id,
+            noSymbol: true,
+        };
         var prop = _.find(line.reconciliation_proposition, {'id': data.data});
         if (prop) {
             var amount = prop.partial_amount || prop.amount;
             // Check if we can get a partial amount that would directly set balance to zero
             var partial = Math.abs(line.balance.amount + amount);
             if (Math.abs(line.balance.amount) >= Math.abs(amount)) {
-                return Math.abs(amount);
+                amount = Math.abs(amount);
+            } else if (partial <= Math.abs(prop.amount) && partial >= 0) {
+                amount = partial;
+            } else {
+                amount = Math.abs(amount);
             }
-            if (partial <= Math.abs(prop.amount) && partial >= 0) {
-                return partial;
-            }
-            return Math.abs(amount);
+            return field_utils.format.monetary(amount, {}, formatOptions);
         }
     },
     /**
@@ -691,9 +695,14 @@ var StatementModel = BasicModel.extend({
             if (fieldName === 'analytic_tag_ids') {
                 switch (value.operation) {
                     case "ADD_M2M":
-                        if (!_.findWhere(prop.analytic_tag_ids, {id: value.ids.id})) {
-                            prop.analytic_tag_ids.push(value.ids);
-                        }
+                        // handle analytic_tag selection via drop down (single dict) and
+                        // full widget (array of dict)
+                        var vids = _.isArray(value.ids) ? value.ids : [value.ids];
+                        _.each(vids, function (val) {
+                            if (!_.findWhere(prop.analytic_tag_ids, {id: val.id})) {
+                                prop.analytic_tag_ids.push(val);
+                            }
+                        });
                         break;
                     case "FORGET":
                         var id = self.localData[value.ids[0]].ref;
@@ -929,7 +938,7 @@ var StatementModel = BasicModel.extend({
                 // If one of the proposition is to_check, set the global to_check flag to true
                 line.to_check = true;
             }
-            if (prop.is_tax) {
+            if (prop.tax_repartition_line_id) {
                 if (!_.find(line.reconciliation_proposition, {'id': prop.link}).__tax_to_recompute) {
                     reconciliation_proposition.push(prop);
                 }
@@ -942,7 +951,7 @@ var StatementModel = BasicModel.extend({
 
             if (prop.tax_ids && prop.tax_ids.length && prop.__tax_to_recompute && prop.base_amount) {
                 reconciliation_proposition = _.filter(reconciliation_proposition, function (p) {
-                    return !p.is_tax || p.link !== prop.id;
+                    return !p.tax_repartition_line_id || p.link !== prop.id;
                 });
                 var args = [prop.tax_ids.map(function(el){return el.id;}), prop.base_amount, formatOptions.currency_id];
                 var add_context = {'round': true};
@@ -958,13 +967,14 @@ var StatementModel = BasicModel.extend({
                         _.each(result.taxes, function(tax){
                             var tax_prop = self._formatQuickCreate(line, {
                                 'link': prop.id,
-                                'tax_ids': [tax.id],
+                                'tax_ids': tax.tax_ids,
+                                'tax_repartition_line_id': tax.tax_repartition_line_id,
+                                'tag_ids': tax.tag_ids,
                                 'amount': tax.amount,
                                 'label': prop.label ? prop.label + " " + tax.name : tax.name,
                                 'date': prop.date,
                                 'account_id': tax.account_id ? [tax.account_id, null] : prop.account_id,
                                 'analytic': tax.analytic,
-                                'is_tax': true,
                                 '__focus': false
                             });
 
@@ -978,6 +988,8 @@ var StatementModel = BasicModel.extend({
 
                             reconciliation_proposition.push(tax_prop);
                         });
+
+                        prop.tag_ids = result.base_tags;
                     }));
             } else {
                 prop.amount_str = field_utils.format.monetary(Math.abs(prop.amount), {}, formatOptions);
@@ -1265,6 +1277,8 @@ var StatementModel = BasicModel.extend({
             'analytic_tag_ids': this._formatMany2ManyTags(values.analytic_tag_ids || []),
             'journal_id': this._formatNameGet(values.journal_id),
             'tax_ids': this._formatMany2ManyTagsTax(values.tax_ids || []),
+            'tag_ids': values.tag_ids,
+            'tax_repartition_line_id': values.tax_repartition_line_id,
             'debit': 0,
             'credit': 0,
             'date': values.date ? values.date : field_utils.parse.date(today, {}, {isUTC: true}),
@@ -1276,7 +1290,6 @@ var StatementModel = BasicModel.extend({
             'invalid': true,
             'to_check': !!values.to_check,
             '__tax_to_recompute': true,
-            'is_tax': values.is_tax,
             '__focus': '__focus' in values ? values.__focus : true,
         };
         if (prop.base_amount) {
@@ -1397,8 +1410,10 @@ var StatementModel = BasicModel.extend({
         }
         if (!isNaN(prop.id)) result.counterpart_aml_id = prop.id;
         if (prop.analytic_account_id) result.analytic_account_id = prop.analytic_account_id.id;
-        if (prop.tax_ids && prop.tax_ids.length && !prop.is_tax) result.tax_ids = [[6, null, _.pluck(prop.tax_ids, 'id')]];
-        if (prop.tax_ids && prop.tax_ids.length && prop.is_tax) result.tax_line_id = prop.tax_ids[0].id;
+        if (prop.tax_ids && prop.tax_ids.length) result.tax_ids = [[6, null, _.pluck(prop.tax_ids, 'id')]];
+
+        if (prop.tag_ids && prop.tag_ids.length) result.tag_ids = [[6, null, prop.tag_ids]];
+        if (prop.tax_repartition_line_id) result.tax_repartition_line_id = prop.tax_repartition_line_id;
         if (prop.reconcileModelId) result.reconcile_model_id = prop.reconcileModelId
         return result;
     },

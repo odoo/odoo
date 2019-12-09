@@ -90,6 +90,7 @@ class TestStockValuationLCFIFO(TestStockValuationLC):
 
         self.assertEqual(self.product1.value_svl, 380)
         self.assertEqual(self.product1.quantity_svl, 19)
+        self.assertEqual(self.product1.standard_price, 20)
 
     def test_negative_1(self):
         self.product1.standard_price = 10

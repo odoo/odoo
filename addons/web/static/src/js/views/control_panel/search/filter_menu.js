@@ -52,10 +52,10 @@ var FilterMenu = DropdownMenu.extend({
      * @override
      */
     start: function () {
-        this.$menu = this.$('.o_dropdown_menu');
+        var superProm = this._super.apply(this, arguments);
         this.$menu.addClass('o_filters_menu');
         this._renderGeneratorMenu();
-        return this._super.apply(this, arguments);
+        return superProm;
     },
 
     //--------------------------------------------------------------------------
@@ -108,6 +108,7 @@ var FilterMenu = DropdownMenu.extend({
         if (this.generatorMenuIsOpen && !this.propositions.length) {
             this._appendProposition();
         }
+        this.$dropdownReference.dropdown('update');
     },
     /**
      * Hide and display the submenu which allows adding custom filters.

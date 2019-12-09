@@ -10,6 +10,9 @@ var favorites_submenus_registry = require('web.favorites_submenus_registry');
 var _t = core._t;
 
 var FavoriteMenu = DropdownMenu.extend({
+    custom_events: _.extend({}, DropdownMenu.prototype.custom_events, {
+        favorite_submenu_toggled: '_onSubMenuToggled',
+    }),
     /**
      * @override
      * @param {Object} action
@@ -38,7 +41,7 @@ var FavoriteMenu = DropdownMenu.extend({
             favorites: this.items,
             action: this.action,
         };
-        this.$menu = this.$('.o_dropdown_menu');
+        var superProm = this._super.apply(this, arguments);
         this.$menu.addClass('o_favorites_menu');
         this.subMenus = [];
         favorites_submenus_registry.values().forEach(function (SubMenu) {
@@ -46,6 +49,7 @@ var FavoriteMenu = DropdownMenu.extend({
             subMenu.appendTo(self.$menu);
             self.subMenus.push(subMenu);
         });
+        return superProm;
     },
 
     //--------------------------------------------------------------------------
@@ -82,6 +86,21 @@ var FavoriteMenu = DropdownMenu.extend({
     _onBootstrapClose: function () {
         this._super.apply(this, arguments);
         this._closeSubMenus();
+    },
+    /**
+     * Reacts to a submenu being toggled
+     *
+     * When a submenu is toggled, it has changed the position
+     * and size of the Favorite's dropdown. This method
+     * repositions the current dropdown
+     *
+     * @private
+     * @param {OdooEvent} ev
+     *
+     */
+    _onSubMenuToggled: function (ev) {
+        ev.stopPropagation();
+        this.$dropdownReference.dropdown('update');
     },
     /**
      * @override

@@ -5,7 +5,7 @@ import re
 
 from odoo import fields, models
 
-TEXT_URL_REGEX = r'(https?:\/\/(www\.)?[a-zA-Z0-9@:%._\+~#=/-]{1,64})'
+TEXT_URL_REGEX = r'https?://[a-zA-Z0-9@:%._+~#=/-]+'
 
 
 class SmsSms(models.Model):
@@ -25,8 +25,7 @@ class SmsSms(models.Model):
                 continue
 
             body = sms.body
-            for match in re.findall(TEXT_URL_REGEX, body):
-                url = match[0]
+            for url in re.findall(TEXT_URL_REGEX, body):
                 if url.startswith(shortened_schema):
                     body = body.replace(url, url + '/s/%s' % sms.id)
             res[sms.id] = body

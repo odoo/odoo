@@ -5,7 +5,6 @@
 # Translators:
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2019
 # Rick Hunter <rick_hunter_ec@yahoo.com>, 2019
-# Katerina Katapodi <katerinakatapodi@gmail.com>, 2019
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2019
 # Carlos Lopez <celm1990@hotmail.com>, 2019
 # Diego de cos <diegodecos@hotmail.com>, 2019
@@ -19,14 +18,15 @@
 # Alejandro Die Sanchis <marketing@domatix.com>, 2019
 # RGB Consulting <odoo@rgbconsulting.com>, 2019
 # Nicolás Broggi <rnbroggi@gmail.com>, 2019
+# oihane <oihanecruce@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-18 09:46+0000\n"
+"POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Nicolás Broggi <rnbroggi@gmail.com>, 2019\n"
+"Last-Translator: oihane <oihanecruce@gmail.com>, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -474,7 +474,9 @@ msgstr ""
 "ingresos de su proyecto."
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
+#: model_terms:ir.ui.view,arch_db:project.view_task_form2
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Archived"
 msgstr "Archivado"
@@ -922,6 +924,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__daily
 msgid "Daily"
 msgstr "Diariamente"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__date_deadline_formatted
+msgid "Date Deadline Formatted"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -1983,12 +1990,7 @@ msgstr ""
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Others"
-msgstr ""
-"Otros\n"
-"Retirar dinero\n"
-"Tomar dinero es utilizado para tomar su cash manualmente despues el fin de todas transacciones. De los windows Register Transactios, ir al menuselection. Mas-Retirar dinero\n"
-"Las transacciones seran agregado al registro del pago cash.\n"
-"Auditor "
+msgstr "Otros"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft

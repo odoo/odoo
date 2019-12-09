@@ -142,3 +142,18 @@ class TestSlideStatistics(common.SlidesCase):
         self.assertEqual(
             category.nbr_document,
             len(category.channel_id.slide_ids.filtered(lambda s: s.category_id == category and s.slide_type == 'document')))
+
+        self.assertEqual(category.total_slides, 2, 'The first category should contain 2 slides')
+        other_category = self.env['slide.slide'].with_user(self.user_publisher).create({
+            'name': 'Other Category',
+            'channel_id': self.channel.id,
+            'is_category': True,
+            'is_published': True,
+            'sequence': 5,
+        })
+        self.assertEqual(other_category.total_slides, 0, 'The other category should not contain any slide yet')
+
+        # move one of the slide to the other category
+        self.slide_3.write({'sequence': 6})
+        self.assertEqual(category.total_slides, 1, 'The first category should contain 1 slide')
+        self.assertEqual(other_category.total_slides, 1, 'The other category should contain 1 slide')

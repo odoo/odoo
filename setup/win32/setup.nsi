@@ -208,7 +208,7 @@ Section $(TITLE_OpenERP_Server) SectionOpenERP_Server
     
     # Installing winpython
     SetOutPath "$INSTDIR\python"
-    File /r /x "__pycache__" "..\..\..\WinPython\python-3.6.2\*"
+    File /r /x "__pycache__" "..\..\..\WinPython\python-${PYTHONVERSION}\*"
 
     SetOutPath "$INSTDIR\nssm"
     File /r /x "src" "..\..\..\nssm-2.24\*"
@@ -229,7 +229,6 @@ Section $(TITLE_OpenERP_Server) SectionOpenERP_Server
 
     SetOutPath "$INSTDIR\thirdparty"
     File /r "${STATIC_PATH}\wkhtmltopdf\*"
-    File /r "${STATIC_PATH}\less\*"
 
 # If there is a previous install of the OpenERP Server, keep the login/password from the config file
     WriteIniStr "$INSTDIR\server\odoo.conf" "options" "db_host" $TextPostgreSQLHostname

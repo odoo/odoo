@@ -139,7 +139,7 @@ class AccountReconciliation(models.AbstractModel):
                 COALESCE(p1.id,p2.id,p3.id)         AS partner_id
             FROM account_bank_statement_line st_line
         '''
-        query += 'LEFT JOIN res_partner_bank bank ON bank.id = st_line.bank_account_id OR bank.acc_number = st_line.account_number %s\n' % (where_bank)
+        query += "LEFT JOIN res_partner_bank bank ON bank.id = st_line.bank_account_id OR bank.sanitized_acc_number ILIKE regexp_replace(st_line.account_number, '\W+', '', 'g') %s\n" % (where_bank)
         query += 'LEFT JOIN res_partner p1 ON st_line.partner_id=p1.id \n'
         query += 'LEFT JOIN res_partner p2 ON bank.partner_id=p2.id \n'
         # By definition the commercial partner_id doesn't have a parent_id set
@@ -316,7 +316,7 @@ class AccountReconciliation(models.AbstractModel):
                 'suppliers': [],
             }
         # If we have specified partner_ids, don't return the list of reconciliation for specific accounts as it will
-        # show entries that are not reconciled with other partner. Asking for a specific partner on a specific account 
+        # show entries that are not reconciled with other partner. Asking for a specific partner on a specific account
         # is never done.
         accounts_data = []
         if not partner_ids:
@@ -358,25 +358,34 @@ class AccountReconciliation(models.AbstractModel):
             AND EXISTS (
                 SELECT NULL
                 FROM account_move_line l
+                JOIN account_move move ON l.move_id = move.id
+                JOIN account_journal journal ON l.journal_id = journal.id
                 WHERE l.account_id = a.id
                 {inner_where}
                 AND l.amount_residual != 0
+                AND (move.state = 'posted' OR (move.state = 'draft' AND journal.post_at = 'bank_rec'))
             )
         """.format(inner_where=is_partner and 'AND l.partner_id = p.id' or ' ')
         only_dual_entries_query = """
             AND EXISTS (
                 SELECT NULL
                 FROM account_move_line l
+                JOIN account_move move ON l.move_id = move.id
+                JOIN account_journal journal ON l.journal_id = journal.id
                 WHERE l.account_id = a.id
                 {inner_where}
                 AND l.amount_residual > 0
+                AND (move.state = 'posted' OR (move.state = 'draft' AND journal.post_at = 'bank_rec'))
             )
             AND EXISTS (
                 SELECT NULL
                 FROM account_move_line l
+                JOIN account_move move ON l.move_id = move.id
+                JOIN account_journal journal ON l.journal_id = journal.id
                 WHERE l.account_id = a.id
                 {inner_where}
                 AND l.amount_residual < 0
+                AND (move.state = 'posted' OR (move.state = 'draft' AND journal.post_at = 'bank_rec'))
             )
         """.format(inner_where=is_partner and 'AND l.partner_id = p.id' or ' ')
         query = ("""
@@ -544,17 +553,20 @@ class AccountReconciliation(models.AbstractModel):
         excluded_ids.extend(to_check_excluded)
 
         domain_reconciliation = [
-            '&', '&',
+            '&', '&', '&',
             ('statement_line_id', '=', False),
             ('account_id', 'in', aml_accounts),
-            ('payment_id', '<>', False)
+            ('payment_id', '<>', False),
+            ('balance', '!=', 0.0),
         ]
 
         # default domain matching
-        domain_matching = expression.AND([
-            [('reconciled', '=', False)],
-            [('account_id.reconcile', '=', True)]
-        ])
+        domain_matching = [
+            '&', '&',
+            ('reconciled', '=', False),
+            ('account_id.reconcile', '=', True),
+            ('balance', '!=', 0.0),
+        ]
 
         domain = expression.OR([domain_reconciliation, domain_matching])
         if partner_id:
@@ -587,7 +599,16 @@ class AccountReconciliation(models.AbstractModel):
             ])
         # filter on account.move.line having the same company as the statement line
         domain = expression.AND([domain, [('company_id', '=', st_line.company_id.id)]])
-        domain = expression.AND([domain, [('move_id.state', '!=', 'draft')]])
+
+        # take only moves in valid state. Draft is accepted only when "Post At" is set
+        # to "Bank Reconciliation" in the associated journal
+        domain_post_at = [
+            '|', '&',
+            ('move_id.state', '=', 'draft'),
+            ('journal_id.post_at', '=', 'bank_rec'),
+            ('move_id.state', 'not in', ['draft', 'cancel']),
+        ]
+        domain = expression.AND([domain, domain_post_at])
 
         if st_line.company_id.account_bank_reconciliation_start:
             domain = expression.AND([domain, [('date', '>=', st_line.company_id.account_bank_reconciliation_start)]])
@@ -596,7 +617,7 @@ class AccountReconciliation(models.AbstractModel):
     @api.model
     def _domain_move_lines_for_manual_reconciliation(self, account_id, partner_id=False, excluded_ids=None, search_str=False):
         """ Create domain criteria that are relevant to manual reconciliation. """
-        domain = ['&', ('reconciled', '=', False), ('account_id', '=', account_id)]
+        domain = ['&', '&', ('reconciled', '=', False), ('account_id', '=', account_id), '|', ('move_id.state', '=', 'posted'), '&', ('move_id.state', '=', 'draft'), ('move_id.journal_id.post_at', '=', 'bank_rec')]
         if partner_id:
             domain = expression.AND([domain, [('partner_id', '=', partner_id)]])
         if excluded_ids:
@@ -766,8 +787,16 @@ class AccountReconciliation(models.AbstractModel):
         # Get pairs
         query = """
             SELECT a.id, b.id
-            FROM account_move_line a, account_move_line b
+            FROM account_move_line a, account_move_line b,
+                 account_move move_a, account_move move_b,
+                 account_journal journal_a, account_journal journal_b
             WHERE a.id != b.id
+            AND move_a.id = a.move_id
+            AND (move_a.state = 'posted' OR (move_a.state = 'draft' AND journal_a.post_at = 'bank_rec'))
+            AND move_a.journal_id = journal_a.id
+            AND move_b.id = b.move_id
+            AND move_b.journal_id = journal_b.id
+            AND (move_b.state = 'posted' OR (move_b.state = 'draft' AND journal_b.post_at = 'bank_rec'))
             AND a.amount_residual = -b.amount_residual
             AND NOT a.reconciled
             AND a.account_id = %s

@@ -222,23 +222,29 @@ def is_multilang_url(local_url, lang_url_codes=None):
     if spath[1] in lang_url_codes:
         spath.pop(1)
         local_url = '/'.join(spath)
-    try:
-        # Try to match an endpoint in werkzeug's routing table
-        url = local_url.partition('#')[0].split('?')
-        path = url[0]
-        query_string = url[1] if len(url) > 1 else None
-        router = request.httprequest.app.get_db_router(request.db).bind('')
-        # Force to check method to POST. Odoo uses methods : ['POST'] and ['GET', 'POST']
-        func = router.match(path, method='POST', query_args=query_string)[0]
-        return (func.routing.get('website', False) and
+
+    url = local_url.partition('#')[0].split('?')
+    path = url[0]
+    query_string = url[1] if len(url) > 1 else None
+    router = request.httprequest.app.get_db_router(request.db).bind('')
+
+    def is_multilang_func(func):
+        return (func and func.routing.get('website', False) and
                 func.routing.get('multilang', func.routing['type'] == 'http'))
+    # Try to match an endpoint in werkzeug's routing table
+    try:
+        func = router.match(path, method='POST', query_args=query_string)[0]
+        return is_multilang_func(func)
+    except werkzeug.exceptions.MethodNotAllowed:
+        func = router.match(path, method='GET', query_args=query_string)[0]
+        return is_multilang_func(func)
     except werkzeug.exceptions.NotFound:
         # Consider /static/ files as non-multilang
         static_index = path.find('/static/', 1)
         if static_index != -1 and static_index == path.find('/', 1):
             return False
         return True
-    except Exception as e:
+    except Exception:
         return False
 
 
@@ -323,7 +329,7 @@ class IrHttp(models.AbstractModel):
         """ Return a domain to list the domain adding web-translations and
             dynamic resources that may be used frontend views
         """
-        return []
+        return [('name', '=', 'web')]
 
     bots = "bot|crawl|slurp|spider|curl|wget|facebookexternalhit".split("|")
 
@@ -338,6 +344,10 @@ class IrHttp(models.AbstractModel):
             return any(bot in user_agent.encode('ascii', 'ignore') for bot in cls.bots)
 
     @classmethod
+    def _get_frontend_langs(cls):
+        return [code for code, _ in request.env['res.lang'].get_installed()]
+
+    @classmethod
     def get_nearest_lang(cls, lang_code):
         """ Try to find a similar lang. Eg: fr_BE and fr_FR
             :param lang_code: the lang `code` (en_US)
@@ -346,7 +356,7 @@ class IrHttp(models.AbstractModel):
             return False
         short_match = False
         short = lang_code.partition('_')[0]
-        for (code, _) in request.env['res.lang'].get_installed():
+        for code in cls._get_frontend_langs():
             if code == lang_code:
                 return code
             if not short_match and code.startswith(short):
@@ -391,8 +401,9 @@ class IrHttp(models.AbstractModel):
                 lang = Lang._lang_get(nearest_lang)
             else:
                 nearest_ctx_lg = not is_a_bot and cls.get_nearest_lang(request.env.context['lang'])
-                preferred_lang = Lang._lang_get(cook_lang or nearest_ctx_lg) or cls._get_default_lang()
-                lang = preferred_lang
+                nearest_ctx_lg = nearest_ctx_lg in lang_codes and nearest_ctx_lg
+                preferred_lang = Lang._lang_get(cook_lang or nearest_ctx_lg)
+                lang = preferred_lang or cls._get_default_lang()
 
             request.lang = lang
             context['lang'] = lang.code

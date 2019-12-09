@@ -161,7 +161,8 @@ class Company(models.Model):
 
     @api.onchange('state_id')
     def _onchange_state(self):
-        self.country_id = self.state_id.country_id
+        if self.state_id.country_id:
+            self.country_id = self.state_id.country_id
 
     def on_change_country(self, country_id):
         # This function is called from account/models/chart_template.py, hence decorated with `multi`.

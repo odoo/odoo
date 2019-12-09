@@ -78,11 +78,16 @@ class TestSMSPost(test_mail_full_common.BaseFunctionalTest, sms_common.MockSMS, 
         link = self.env['link.tracker'].search([('url', '=', link)])
         self.assertIn(link.short_url, new_body)
 
-        link = 'https://test.odoo.com/my/super_page'
+        link = 'https://test.odoo.com/my/super_page?test[0]=42&toto=áâà#title3'
         self.env['link.tracker'].search([('url', '=', link)]).unlink()
         new_body = self.env['link.tracker']._convert_links_text('Welcome to %s !' % link, self.tracker_values)
         self.assertNotIn(link, new_body)
-        self.assertLinkTracker(link, {'utm_campaign': self.utm_c.name, 'utm_medium': self.utm_m.name})
+        self.assertLinkTracker(link, {
+            'utm_campaign': self.utm_c.name,
+            'utm_medium': self.utm_m.name,
+            'test[0]': '42',
+            'toto': 'áâà',
+        })
         link = self.env['link.tracker'].search([('url', '=', link)])
         self.assertIn(link.short_url, new_body)
 

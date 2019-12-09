@@ -403,7 +403,7 @@ class Lead(models.Model):
 
         result = super(Lead, self.with_context(context)).create(vals)
         # Compute new probability for each lead separately
-        result._write_probability(vals)
+        result._update_probability()
         return result
 
     def write(self, vals):
@@ -426,20 +426,12 @@ class Lead(models.Model):
 
         write_result = super(Lead, self).write(vals)
         # Compute new automated_probability (and, eventually, probability) for each lead separately
-        self._write_probability(vals)
+        if self._should_update_probability(vals):
+            self._update_probability()
 
         return write_result
 
-    def _write_probability(self, vals):
-        compute = False
-        fields_to_check = ['tag_ids', 'stage_id', 'team_id'] + self._pls_get_safe_fields()
-        for field, value in vals.items():
-            if field in fields_to_check:
-                compute = True
-                break
-
-        if not compute:
-            return
+    def _update_probability(self):
         lead_probabilities = self._pls_get_naive_bayes_probabilities()
         for lead in self:
             if lead.id in lead_probabilities:
@@ -449,6 +441,13 @@ class Lead(models.Model):
                     proba_vals['probability'] = lead_proba
                 super(Lead, lead).write(proba_vals)
         return
+
+    def _should_update_probability(self, vals):
+        fields_to_check = ['tag_ids', 'stage_id', 'team_id'] + self._pls_get_safe_fields()
+        for field, value in vals.items():
+            if field in fields_to_check:
+                return True
+        return False
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
@@ -953,6 +952,8 @@ class Lead(models.Model):
         """
         partner_ids = {}
         for lead in self:
+            if partner_id:
+                lead.partner_id = partner_id
             if lead.partner_id:
                 partner_ids[lead.id] = lead.partner_id.id
                 continue
@@ -960,8 +961,6 @@ class Lead(models.Model):
                 partner = lead._create_lead_partner()
                 partner_id = partner.id
                 partner.team_id = lead.team_id
-            if partner_id:
-                lead.partner_id = partner_id
             partner_ids[lead.id] = partner_id
         return partner_ids
 

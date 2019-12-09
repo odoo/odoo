@@ -5,7 +5,6 @@
 # Translators:
 # Martin Trigaux, 2019
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
-# Jeanphy <hzh0292@qq.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -13,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-12 11:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:08+0000\n"
-"Last-Translator: Jeanphy <hzh0292@qq.com>, 2019\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,12 +23,12 @@ msgstr ""
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid "&amp;times;"
-msgstr "&amp;次數;"
+msgstr "&amp;times;"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_success
 msgid "<b>Communication: </b>"
-msgstr "<b>交流： </b>"
+msgstr "<b>資料傳輸中： </b>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -38,7 +37,7 @@ msgid ""
 "Pay Now</span>"
 msgstr ""
 "<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\"> "
-"立即支付</span>"
+"立即付款</span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
@@ -53,14 +52,14 @@ msgstr "<i class=\"fa fa-fw fa-check-circle\"/> 已完成支付"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
 msgid "<i class=\"fa fa-fw fa-check-circle\"/> Pending"
-msgstr "<i class=\"fa fa-fw fa-check-circle\"/>等待狀態"
+msgstr "<i class=\"fa fa-fw fa-check-circle\"/>等待確認"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
 msgid ""
 "<i class=\"fa fa-info\"/> You have credits card registered, you can log-in "
 "to be able to use them."
-msgstr "登記您的信用卡之後您就可以登錄後並使用"
+msgstr "<i class=\"fa fa-info\"/>您已儲存信用卡資訊為預設，爾後您可以登錄系統後進行使用"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -106,14 +105,14 @@ msgid ""
 "inline\"> Pending</span></span>"
 msgstr ""
 "<span class=\"badge badge-pill badge-warning\"><span class=\"d-none d-md-"
-"inline\">等待狀態</span></span>"
+"inline\">等待確認</span></span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_success
 msgid ""
 "Done, your online payment has been successfully processed. Thank you for "
 "your order."
-msgstr "已完成，您的線上付款已成功處理完畢。 謝謝您的訂單。"
+msgstr "交易完成，您的線上付款已成功處理完畢。 感謝您的訂購。"
 
 #. module: account_payment
 #: code:addons/account_payment/controllers/payment.py:53
@@ -121,7 +120,7 @@ msgstr "已完成，您的線上付款已成功處理完畢。 謝謝您的訂�
 msgid ""
 "If we store your payment information on our server, subscription payments "
 "will be made automatically."
-msgstr "如果我們在伺服器存儲您的支付信息，將自動支付訂閱。"
+msgstr "若將支付方式儲存於系統中，可執行自動付款訂閱。"
 
 #. module: account_payment
 #: code:addons/account_payment/controllers/payment.py:50
@@ -134,7 +133,7 @@ msgstr "支付和確認"
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 #, python-format
 msgid "Pay Now"
-msgstr "立即支付"
+msgstr "立即付款"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -159,21 +158,21 @@ msgstr "狀態"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: invalid invoice."
-msgstr "處理您的付款時出現一處錯誤：無效發票。"
+msgstr "處理您的付款過程中有發現錯誤：無效發票。"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid ""
 "There was an error processing your payment: issue with credit card ID "
 "validation."
-msgstr "處理您的付款時有一個錯誤：信用卡身份驗證問題。"
+msgstr "處理您的付款過程中有發現錯誤：信用卡身份驗證。"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: transaction failed.<br/>"
-msgstr "處理您的付款時有一個錯誤：交易失敗。<br/>"
+msgstr "處理您的付款過程中有發現錯誤：交易失敗。<br/>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was en error processing your payment: invalid credit card ID."
-msgstr "您有一個付款的錯誤：無效的信用卡號。"
+msgstr "處理您的付款過程中有發現錯誤：無效的信用卡號。"

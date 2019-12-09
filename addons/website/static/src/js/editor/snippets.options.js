@@ -1788,12 +1788,12 @@ options.registry.CoverProperties = options.Class.extend({
         this.$filterColorOpts.removeClass('active');
 
         var activeFilterValue = this.$filterValueOpts
-            .filter(el => {
+            .filter((i, el) => {
                 return (parseFloat($(el).data('filterValue')).toFixed(1) === parseFloat(this.$filter.css('opacity')).toFixed(1));
             }).addClass('active').data('filterValue');
 
         var activeFilterColor = this.$filterColorOpts
-            .filter(el => {
+            .filter((i, el) => {
                 return this.$filter.hasClass($(el).data('filterColor'));
             }).addClass('active').data('filterColor');
 

@@ -59,7 +59,7 @@ PaymentForm.include({
             return stripe.handleCardSetup(intent_secret, card);
         }).then(function(result) {
             if (result.error) {
-                return Promise.reject({"message": {"data": { "message": result.error.message}}});
+                return Promise.reject({"message": {"data": { "arguments": [result.error.message]}}});
             } else {
                 _.extend(formData, {"payment_method": result.setupIntent.payment_method});
                 return self._rpc({
@@ -79,6 +79,9 @@ PaymentForm.include({
                 self.el.submit();
             }
         }).guardedCatch(function (error) {
+            // We don't want to open the Error dialog since
+            // we already have a container displaying the error
+            error.event.preventDefault();
             // if the rpc fails, pretty obvious
             self.enableButton(button);
             self.displayError(

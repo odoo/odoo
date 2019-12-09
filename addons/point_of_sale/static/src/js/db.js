@@ -214,7 +214,7 @@ var PosDB = core.Class.extend({
         }
     },
     _partner_search_string: function(partner){
-        var str =  partner.name;
+        var str =  partner.name || '';
         if(partner.barcode){
             str += '|' + partner.barcode;
         }

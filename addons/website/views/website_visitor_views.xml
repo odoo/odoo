@@ -172,7 +172,7 @@
         <field name="name">website.visitor.view.form</field>
         <field name="model">website.visitor</field>
         <field name="arch" type="xml">
-            <form string="Website Visitor" create="0">
+            <form string="Website Visitor">
                 <header>
                     <button name="action_send_mail" type="object" class="btn btn-primary"
                             attrs="{'invisible': [('email', '=', False)]}" string="Send Email"/>
@@ -224,7 +224,7 @@
         <field name="name">website.visitor.view.tree</field>
         <field name="model">website.visitor</field>
         <field name="arch" type="xml">
-            <tree string="Web Visitors" create="0" decoration-success="is_connected" decoration-danger="not is_connected">
+            <tree string="Web Visitors" decoration-success="is_connected" decoration-danger="not is_connected">
                 <!--TODO DBE : Handle no_label in treeview-->
                 <field name="country_flag" widget="image" options='{"size": [20, 20]}' string=" "/>
                 <field name="display_name"/>

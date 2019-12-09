@@ -273,12 +273,6 @@ just about any SSL termination proxy, but requires the following setup:
 * Your SSL termination proxy should also automatically redirect non-secure
   connections to the secure port
 
-.. warning::
-
-  In case you are using the Point of Sale module in combination with a `POSBox`_,
-  you must disable the HTTPS configuration for the route ``/pos/web`` to avoid
-  mixed-content errors.
-
 Configuration sample
 --------------------
 
@@ -598,14 +592,17 @@ Supported Browsers
 
 Odoo is supported by multiple browsers for each of its versions. No
 distinction is made according to the browser version in order to be
-up-to-date. Odoo is supported on the current browser version. The list
-of the supported browsers is the following:
+up-to-date. Odoo is supported on the current browser version. We support
+the following browsers:
 
-- IE11,
-- Mozilla Firefox,
-- Google Chrome,
-- Safari,
+- Mozilla Firefox
+- Google Chrome
+- Safari
 - Microsoft Edge
+
+.. note::
+
+    Since Odoo 13.0, ES6 is supported.  Therefore, IE support is dropped.
 
 
 .. [#different-machines]

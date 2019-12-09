@@ -62,6 +62,7 @@ class PaypalForm(PaypalCommon):
             'first_name': 'Norbert',
             'last_name': 'Buyer',
             'amount': '0.01',
+            'bn': 'OdooInc_SP',
             'currency_code': 'EUR',
             'address1': 'Huge Street 2/543',
             'city': 'Sin City',

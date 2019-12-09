@@ -16,9 +16,8 @@ import threading
 import odoo
 from .. import SUPERUSER_ID
 from odoo.sql_db import TestCursor
-from odoo.tools import (assertion_report, config, existing_tables,
-                        lazy_classproperty, lazy_property, table_exists,
-                        topological_sort, OrderedSet)
+from odoo.tools import (assertion_report, config, existing_tables, ignore,
+                        lazy_classproperty, lazy_property, OrderedSet)
 from odoo.tools.lru import LRU
 
 _logger = logging.getLogger(__name__)
@@ -248,13 +247,15 @@ class Registry(Mapping):
             model._setup_fields()
 
         # determine field dependencies
-        Model = odoo.models.Model
-        dependencies = {
-            field: set(field.resolve_depends(model))
-            for model in models
-            if isinstance(model, Model)
-            for field in model._fields.values()
-        }
+        dependencies = {}
+        for model in models:
+            if model._abstract:
+                continue
+            for field in model._fields.values():
+                # dependencies of custom fields may not exist; ignore that case
+                exceptions = (Exception,) if field.manual else ()
+                with ignore(*exceptions):
+                    dependencies[field] = set(field.resolve_depends(model))
 
         # determine transitive dependencies
         def transitive_dependencies(field, seen=[]):
@@ -310,6 +311,9 @@ class Registry(Mapping):
 
         env = odoo.api.Environment(cr, SUPERUSER_ID, context)
         models = [env[model_name] for model_name in model_names]
+
+        # make sure the queue does not contain some leftover from a former call
+        self._post_init_queue.clear()
 
         for model in models:
             model._auto_init()

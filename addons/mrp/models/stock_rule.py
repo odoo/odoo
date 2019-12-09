@@ -74,6 +74,7 @@ class StockRule(models.Model):
         )._bom_find(product=product_id, picking_type=self.picking_type_id, bom_type='normal')  # TDE FIXME: context bullshit
 
     def _prepare_mo_vals(self, product_id, product_qty, product_uom, location_id, name, origin, company_id, values, bom):
+        date_deadline = fields.Datetime.to_string(self._get_date_planned(product_id, company_id, values))
         return {
             'origin': origin,
             'product_id': product_id.id,
@@ -82,9 +83,9 @@ class StockRule(models.Model):
             'location_src_id': self.location_src_id.id or self.picking_type_id.default_location_src_id.id or location_id.id,
             'location_dest_id': location_id.id,
             'bom_id': bom.id,
-            'date_deadline': fields.Datetime.to_string(self._get_date_planned(product_id, company_id, values)),
-            'date_planned_finished': values['date_planned'],
-            'date_planned_start': fields.Datetime.from_string(values['date_planned']) - relativedelta(hours=1),
+            'date_deadline': date_deadline,
+            'date_planned_finished': date_deadline,
+            'date_planned_start': fields.Datetime.from_string(date_deadline) - relativedelta(hours=1),
             'procurement_group_id': False,
             'propagate_cancel': self.propagate_cancel,
             'propagate_date': self.propagate_date,

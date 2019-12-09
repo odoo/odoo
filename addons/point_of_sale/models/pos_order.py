@@ -112,7 +112,6 @@ class PosOrder(models.Model):
         :type existing_order: pos.order.
         :returns number pos_order id
         """
-        to_invoice = order['to_invoice'] if not draft else False
         order = order['data']
         pos_session = self.env['pos.session'].browse(order['pos_session_id'])
         if pos_session.state == 'closing_control' or pos_session.state == 'closed':
@@ -138,7 +137,7 @@ class PosOrder(models.Model):
             except Exception as e:
                 _logger.error('Could not fully process the POS Order: %s', tools.ustr(e))
 
-        if to_invoice:
+        if pos_order.to_invoice and pos_order.state == 'paid':
             pos_order.action_pos_order_invoice()
             pos_order.account_move.sudo().with_context(force_company=self.env.user.company_id.id).post()
 
@@ -190,6 +189,7 @@ class PosOrder(models.Model):
             'price_unit': order_line.price_unit,
             'name': order_line.product_id.display_name,
             'tax_ids': [(6, 0, order_line.tax_ids.ids)],
+            'product_uom_id': order_line.product_uom_id.id,
         }
 
     def _get_pos_anglo_saxon_price_unit(self, product, partner_id, quantity):
@@ -374,7 +374,7 @@ class PosOrder(models.Model):
                 # considering partner's sale pricelist's currency
                 'currency_id': order.pricelist_id.currency_id.id,
                 'invoice_user_id': order.user_id.id,
-                'invoice_date': fields.Date.today(),
+                'invoice_date': order.date_order.date(),
                 'fiscal_position_id': order.fiscal_position_id.id,
                 'invoice_line_ids': [(0, None, order._prepare_invoice_line(line)) for line in order.lines],
             }
@@ -423,8 +423,9 @@ class PosOrder(models.Model):
         for order in orders:
             existing_order = False
             if 'server_id' in order['data']:
-                existing_order = self.env['pos.order'].search([('id', '=', order['data']['server_id'])], limit=1)
-            order_ids.append(self._process_order(order, draft, existing_order))
+                existing_order = self.env['pos.order'].search(['|', ('id', '=', order['data']['server_id']), ('pos_reference', '=', order['data']['name'])], limit=1)
+            if (existing_order and existing_order.state == 'draft') or not existing_order:
+                order_ids.append(self._process_order(order, draft, existing_order))
 
         return self.env['pos.order'].search_read(domain = [('id', 'in', order_ids)], fields = ['id', 'pos_reference'])
 
@@ -650,7 +651,6 @@ class PosOrder(models.Model):
                 'name': filename,
                 'type': 'binary',
                 'datas': base64.b64encode(report[0]),
-                'datas_fname': filename,
                 'store_fname': filename,
                 'res_model': 'account.move',
                 'res_id': order_ids[0],
@@ -693,6 +693,10 @@ class PosOrderLine(models.Model):
         if line and 'tax_ids' not in line[2]:
             product = self.env['product.product'].browse(line[2]['product_id'])
             line[2]['tax_ids'] = [(6, 0, [x.id for x in product.taxes_id])]
+        # Clean up fields sent by the JS
+        line = [
+            line[0], line[1], {k: v for k, v in line[2].items() if k in self.env['pos.order.line']._fields}
+        ]
         return line
 
     company_id = fields.Many2one('res.company', string='Company', related="order_id.company_id", store=True)
