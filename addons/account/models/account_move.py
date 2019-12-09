@@ -949,7 +949,7 @@ class AccountMoveLine(models.Model):
                 if writeoff_currency != company_currency:
                     mv_line_dict['debit'] = writeoff_currency.compute(mv_line_dict['debit'], company_currency)
                     mv_line_dict['credit'] = writeoff_currency.compute(mv_line_dict['credit'], company_currency)
-                writeoff_lines += self._create_writeoff(mv_line_dict)
+                writeoff_lines += self._create_writeoff([mv_line_dict])
 
             (self + writeoff_lines).reconcile()
         else:
@@ -1176,7 +1176,7 @@ class AccountMoveLine(models.Model):
             }
             if not all_aml_share_same_currency:
                 writeoff_vals['amount_currency'] = False
-            writeoff_to_reconcile = remaining_moves._create_writeoff(writeoff_vals)
+            writeoff_to_reconcile = remaining_moves._create_writeoff([writeoff_vals])
             #add writeoff line to reconcile algo and finish the reconciliation
             remaining_moves = (remaining_moves + writeoff_to_reconcile).auto_reconcile_lines()
         # Check if reconciliation is total or needs an exchange rate entry to be created
