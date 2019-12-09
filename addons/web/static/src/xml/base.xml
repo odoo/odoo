@@ -1551,6 +1551,15 @@
     </div>
 </t>
 
+<t t-name="HtmlPopover">
+    <div>
+        <a t-if="widget.value" t-att-class="widget.icon + ' ' + widget.color"
+            data-toggle="popover"
+            tabindex="0"
+            t-att-content="widget.value || ''"/>
+    </div>
+</t>
+
 <t t-name="SignButton">
     <button t-attf-class="btn o_sign_button #{widget.node.attrs.highlight?'btn-primary':'btn-secondary'}">
         <span class="o_sign_label"><t t-esc="widget.node.attrs.string"/></span>
