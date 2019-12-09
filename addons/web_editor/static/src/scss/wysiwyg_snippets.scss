@@ -301,12 +301,19 @@ body.editor_enable.editor_has_snippets {
             > div {
                 display: flex;
                 align-items: baseline;
+                justify-content: flex-end;
             }
         }
 
         // Buttons
-        we-button.o_we_user_value_widget.active {
-            @include we-icon-button('\f00c', $o-we-color-success);
+        we-button.o_we_user_value_widget {
+            &.active {
+                @include we-icon-button('\f00c', $o-we-color-success);
+            }
+
+            > div {
+                justify-content: flex-start;
+            }
         }
 
         // Checkboxes
