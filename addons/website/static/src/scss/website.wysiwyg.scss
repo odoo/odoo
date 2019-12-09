@@ -159,3 +159,11 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
         opacity: 0;
     }
 }
+
+.editor_has_snippets {
+    .s_popup_main {
+        z-index: 1000 !important;
+        left: $o-we-sidebar-width !important;
+        top: var(--o-we-toolbar-height) !important;
+    }
+}

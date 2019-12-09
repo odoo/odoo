@@ -1546,6 +1546,7 @@ const SnippetOptionWidget = Widget.extend({
                 if (params.applyTo) {
                     const $firstSubTarget = this.$(params.applyTo).eq(0);
                     if (!$firstSubTarget.length) {
+                        console.error('ApplyTo ' + params.applyTo + ' not found');
                         return;
                     }
                     obj = createPropertyProxy(this, '$target', $firstSubTarget);

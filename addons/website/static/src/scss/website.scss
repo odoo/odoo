@@ -1247,3 +1247,94 @@ table.table_desc tr td {
         background-repeat: no-repeat;
     }
 }
+
+
+// s_popup
+.s_popup_main {
+    .s_popup_content {
+        min-height: 46px;
+        box-shadow: rgba(0,0,0,0.8) 0 0 10px;
+        .container {
+            @include make-container();
+        }
+    }
+
+    &.modal:not(.d-none) {
+        display: block !important;
+    }
+
+    .s_popup_close {
+        background: white;
+        border-radius: 12px;
+        box-shadow: rgba(0,0,0,0.8) 0 0 5px;
+        cursor: pointer;
+        font-size: 22px;
+        height: 25px;
+        line-height: 25px;
+        margin-top: -12px;
+        margin-right: -12px;
+        position: absolute;
+        right: 0px;
+        text-align: center;
+        width: 25px;
+        z-index: 1;
+    }
+
+    &.s_popup_center {
+        .s_popup_full {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+            &.modal-dialog {
+                max-width: 100%;
+                padding: 0 !important;
+                margin: 0 !important;
+
+                .modal-content {
+                    height: 100%;
+                    width: 100%;
+                }
+            }
+            .s_popup_close {
+                font-size: 60px;
+                margin: 10px;
+                background: none;
+                box-shadow: none;
+            }
+        }
+    }
+
+    &.s_popup_fixed {
+        .s_popup_content {
+            z-index: 1;
+            position: fixed;
+            right: 20px;
+            bottom: 0;
+        }
+        .modal-sm .s_popup_content {
+            width: $modal-sm;
+        }
+        .modal-md .s_popup_content {
+            width: $o-modal-md;
+        }
+        .modal-lg .s_popup_content {
+            width: $o-modal-lg;
+        }
+        .modal-xl .s_popup_content {
+            width: $modal-xl;
+        }
+        .s_popup_full .s_popup_content {
+            right: 0;
+            left: 0;
+            .s_popup_close {
+                box-shadow: none;
+                font-size: 60px;
+                margin: 10px;
+                background: none;
+            }
+
+        }
+    }
+}

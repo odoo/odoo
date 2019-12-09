@@ -1690,6 +1690,64 @@ registry.chart = publicWidget.Widget.extend({
     },
 });
 
+registry.popup = publicWidget.Widget.extend({
+    selector: '.s_popup',
+    disabledInEditableMode: true,
+
+    /**
+     * @override
+     */
+    start: function () {
+        const def = this._super.apply(this, arguments);
+        this._bindPopup();
+        return def;
+    },
+    /**
+     * @override
+     */
+    destroy: function () {
+        this._super.apply(this, arguments);
+        $(document).off('mouseleave.open_popup');
+        this.timeout && clearTimeout(this.timeout);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _bindPopup: function () {
+        const $main = this.$target.find('.s_popup_main');
+
+        let display = $main.data('display');
+        let delay = $main.data('show_after') * 1000;
+
+        if (config.device.isMobile) {
+            if (display === 'onExit') {
+                display = 'afterDelay';
+                delay = 5000;
+            }
+            $('.s_popup_main').removeClass('s_popup_center').addClass('s_popup_bottom');
+        }
+
+        if (display === 'afterDelay') {
+            this.timeout = setTimeout(() => this._showPopup(), delay);
+        } else {
+            $(document).on('mouseleave.open_popup', this._showPopup.bind(this));
+        }
+    },
+    /**
+     * @private
+     */
+    _showPopup: function () {
+        const $main = this.$target.find('.s_popup_main');
+        $main.removeClass('d-none');
+        $main.find('.s_popup_close').on('click', () => $main.addClass('d-none'));
+    },
+});
+
 return {
     Widget: publicWidget.Widget,
     Animation: Animation,

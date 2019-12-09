@@ -2491,6 +2491,151 @@ options.registry.InnerChart = options.Class.extend({
     },
 });
 
+/**
+ * Snippets to open a popup (modal mode or sticky bottom)
+ */
+options.registry.SnippetPopup = options.Class.extend({
+    /**
+     * @override
+     */
+    start: function () {
+        this.$target.find('.s_popup_close').on('click', () => {
+            //this.hidePopup();
+            this.$target.closest('.s_popup').addClass('d-none');
+            this.trigger_up('deactivate_snippet');
+        });
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    cleanForSave: function () {
+        this.$target.closest('.s_popup').removeClass('d-none');
+        this.hidePopup();
+    },
+    // /**
+    //  * @override
+    //  */
+    // onFocus: function () {
+    //     console.log('focus');
+    //     this.showPopup()
+    // },
+    // /**
+    //  * @override
+    //  */
+    // onBlur: function () {
+    //     console.log('blur');
+    //     this.hidePopup();
+    // },
+
+    /**
+     * @override
+     */
+    onBuilt: function () {
+        this.showPopup();
+    },
+
+    /**
+     * @override
+     */
+    onTargetShow: function () {
+        this.showPopup();
+    },
+    /**
+     * @override
+     */
+    onTargetHide: function () {
+        this.hidePopup();
+    },
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Moves the snippet in footer to be common to all page
+     * or inside wrap to be on one page only
+     *
+     * @see this.selectClass for parameters
+     */
+    moveBlock: function (previewMode, widgetValue, params) {
+        switch (widgetValue) {
+            case 'moveToFooter':
+                this.$target.closest('.s_popup').appendTo($('footer div.o_editable').first());
+                break;
+            case 'moveToBody':
+                this.$target.closest('.s_popup').prependTo($('main .o_editable').first());
+                break;
+        }
+    },
+    /**
+     * Switch layout from modal <--> a sticky div
+     *
+     * @see this.selectClass for parameters
+     */
+    setLayout: function (previewMode, widgetValue, params) {
+        const isModal = widgetValue === 'modal';
+        this.$target.toggleClass('s_popup_fixed', !isModal);
+        this.$target.toggleClass('s_popup_center modal', isModal);
+        this.$target.find('.s_popup_frame').toggleClass('modal-dialog modal-dialog-centered', isModal);
+        this.$target.find('.s_popup_content').toggleClass('modal-content', isModal);
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    hidePopup: function () {
+        console.log('hide_popup', this.$target);
+        this.$target.addClass('d-none');
+    },
+    /**
+     * @override
+     */
+    showPopup: function () {
+        this.$target.closest('.s_popup').removeClass('d-none')
+        this.$target.removeClass('d-none');
+    },
+
+    // /**
+    //  * @override
+    //  */
+    // updateUI: function () {
+    //     this._super(...arguments);
+
+    //     this.$el.find('[data-attribute-name="show_after"]')
+    //         .toggleClass('d-none', this.$target[0].dataset.display !== 'afterDelay');
+
+    //     this.$el.find('[data-bg-backdrop], [data-bg-content]')
+    //         .toggleClass('d-none', !this.$target.hasClass('s_popup_center'));
+
+    // },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _computeWidgetState: function (methodName, params) {
+        switch (methodName) {
+            case 'moveBlock':
+                return this.$target.closest('footer') ? 'moveToFooter': 'moveToBody';
+            case 'setLayout':
+                return this.$target.hasClass('s_popup_center') ? 'modal': 'fixed';
+        }
+        return this._super(...arguments);
+    },
+});
+
 const InputUserValueWidget = options.userValueWidgetsRegistry['we-input'];
 const UrlPickerUserValueWidget = InputUserValueWidget.extend({
     custom_events: _.extend({}, InputUserValueWidget.prototype.custom_events || {}, {
