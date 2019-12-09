@@ -1680,16 +1680,6 @@ class AccountPartialReconcile(models.Model):
             )
 
     @api.model
-    def _prepare_exchange_diff_partial_reconcile_fix(self, aml, line_to_reconcile, currency):
-        return {
-            'debit_move_id': aml.credit and line_to_reconcile.id or aml.id,
-            'credit_move_id': aml.debit and line_to_reconcile.id or aml.id,
-            'amount': abs(aml.amount_residual),
-            'amount_currency': abs(aml.amount_residual_currency),
-            'currency_id': currency and currency.id or False,
-        }
-
-    @api.model
     def _prepare_exchange_diff_partial_reconcile(self, aml, line_to_reconcile, currency):
         """
         Prepares the values for the partial reconciliation between an account.move.line
