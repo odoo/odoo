@@ -349,6 +349,10 @@ const UserValueWidget = Widget.extend({
      * @param {boolean} [previewMode=false]
      */
     _notifyValueChange: function (previewMode) {
+        if (!this._methodsNames.length) {
+            return;
+        }
+
         const data = {
             widget: this,
         };
