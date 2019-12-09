@@ -24,20 +24,8 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         var self = this;
         return this._super.apply(this, arguments).then(function () {
             self.options = self.$target.find('form').data();
-            var $timer = $('.o_survey_timer');
-            if ($timer.length) {
-                var timeLimitMinutes = self.options.timeLimitMinutes;
-                var timer = self.options.timer;
-                self.surveyTimerWidget = new publicWidget.registry.SurveyTimerWidget(self, {
-                    'timer': timer,
-                    'timeLimitMinutes': timeLimitMinutes
-                });
-                self.surveyTimerWidget.attachTo($timer);
-                self.surveyTimerWidget.on('time_up', self, function (ev) {
-                    self.$el.find('button[type="submit"]').click();
-                });
-            }
             if (!self.options.isStartScreen) {
+                self._initTimer();
                 self.$('.breadcrumb').toggleClass('d-none', false);
             }
             self.$('div.o_survey_form_date').each(function () {
@@ -125,6 +113,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         Promise.all([fadeOutPromise, submitPromise]).then(function (results) {
             if (self.options.isStartScreen) {
                 self.options.isStartScreen = false;
+                self._initTimer();
                 self.$('.breadcrumb').toggleClass('d-none', false);
             }
             return self._onSubmitDone(results[1]);
@@ -307,6 +296,24 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
 
     // INIT FIELDS TOOLS
     // -------------------------------------------------------------------------
+
+    _initTimer: function () {
+        var self = this;
+        var $timer = $('.o_survey_timer');
+        if ($timer.length) {
+            var timeLimitMinutes = this.options.timeLimitMinutes;
+            var timer = this.options.timer;
+            this.surveyTimerWidget = new publicWidget.registry.SurveyTimerWidget(this, {
+                'timer': timer,
+                'timeLimitMinutes': timeLimitMinutes
+            });
+            this.surveyTimerWidget.attachTo($timer);
+            this.surveyTimerWidget.on('time_up', this, function (ev) {
+                self.$el.find('button[type="submit"]').click();
+            });
+            $timer.toggleClass('d-none', false);
+        }
+    },
 
     /**
     * Initialize datetimepicker in correct format and with constraints
