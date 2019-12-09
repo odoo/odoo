@@ -65,3 +65,12 @@ class TimerMixin(models.AbstractModel):
     def action_timer_resume(self) -> None:
         new_start = self.timer_start + (fields.Datetime.now() - self.timer_pause)
         self.write({'timer_start': new_start, 'timer_pause': False})
+
+    def get_server_time(self):
+        """ Get the time of the server
+
+            The problem with the timer, it's the time can be different between server side and client side.
+            We need to have the time of the server and don't use the local time. Then, we have a timer beginning at 0:00
+            and not 23:59 or something else.
+        """
+        return fields.Datetime.now()

@@ -86,14 +86,19 @@ const FieldTimesheetTime = basicFields.FieldFloatTime.extend({
             this.parseOptions.factor = session.timesheet_uom_factor;
         }
     },
-    _render: function () {
+    _render: async function () {
         this._super.apply(this, arguments);
 
         // Check if the timer_start exists and it's not false
         // In other word, when user clicks on play button, this button
         // launches the "action_timer_start".
         if (this.recordData.timer_start) {
-            this.time = this._createTimer(this.recordData.unit_amount, this.recordData.timer_start);
+            const time = await this._rpc({
+                model: this.model,
+                method: 'get_server_time',
+                args: [false]
+            });
+            this.time = Timer.createTimer(this.recordData.unit_amount, this.recordData.timer_start, time);
             return this._startTimeCounter();
         } else if (this.mode === "edit") {
             return this._renderEdit();
@@ -107,18 +112,6 @@ const FieldTimesheetTime = basicFields.FieldFloatTime.extend({
     destroy: function () {
         this._super.apply(this, arguments);
         clearTimeout(this.timer);
-    },
-    _createTimer: function (unit_amount, timer_start) {
-        const timer = Timer.convertFloatToTime(unit_amount);
-
-        timer.addTime(
-            moment.utc(
-                moment()
-                    .diff(moment(timer_start))
-                ).format("HH:mm:ss")
-        );
-
-        return timer;
     },
     _startTimeCounter: function () {
         if (this.time) {

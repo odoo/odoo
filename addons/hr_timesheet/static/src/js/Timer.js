@@ -12,6 +12,10 @@ odoo.define('hr_timesheet.Timer', function (require) {
             this.seconds = seconds;
         }
 
+        /**
+         * Convert float to time
+         * @param {number} float
+         */
         static convertFloatToTime(float) {
             if (float === 0) {
                 return new Timer(0, 0, 0);
@@ -22,6 +26,25 @@ odoo.define('hr_timesheet.Timer', function (require) {
             minutes *= 60;
 
             return new Timer(hours, Math.round(minutes), 0);
+        }
+
+        /**
+         * Create timer
+         * @param {number} unit_amount
+         * @param {String} timer_start
+         * @param {String} serverTime
+         */
+        static createTimer(unit_amount, timer_start, serverTime) {
+            const timer = this.convertFloatToTime(unit_amount);
+
+            timer.addTime(
+                moment.utc(
+                    moment.utc(serverTime)
+                        .diff(moment.utc(timer_start))
+                    ).format("HH:mm:ss")
+            );
+
+            return timer;
         }
 
         addHours(hours) {
