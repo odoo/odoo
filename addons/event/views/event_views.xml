@@ -402,6 +402,7 @@
                     <field name="seats_reserved"/>
                     <field name="seats_used"/>
                     <field name="seats_unconfirmed"/>
+                    <field name="event_type_id" filters="1" invisible="1"/>
                 </calendar>
             </field>
         </record>
@@ -589,7 +590,7 @@
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <calendar date_start="event_begin_date" date_stop="event_end_date" string="Event Registration" color="event_id" event_limit="5">
-                    <field name="event_id"/>
+                    <field name="event_id" filters="1"/>
                     <field name="name"/>
                 </calendar>
             </field>

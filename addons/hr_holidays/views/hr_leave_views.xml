@@ -358,6 +358,7 @@
         <field name="arch" type="xml">
             <calendar js_class="time_off_calendar" string="Time Off Request" form_view_id="%(hr_holidays.hr_leave_view_form_dashboard)d" event_open_popup="true" date_start="date_from" date_stop="date_to" mode="month" quick_add="False" show_unusual_days="True" color="employee_id" hide_time="True">
                 <field name="display_name"/>
+                <field name="employee_id" filters="1" invisible="1"/>
             </calendar>
         </field>
     </record>
@@ -418,6 +419,7 @@
         <field name="arch" type="xml">
             <calendar string="Time Off Request" event_open_popup="true" date_start="date_from" date_stop="date_to" mode="month" quick_add="False" color="employee_id">
                 <field name="display_name"/>
+                <field name="employee_id" filters="1" invisible="1"/>
             </calendar>
         </field>
     </record>
