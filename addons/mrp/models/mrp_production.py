@@ -723,16 +723,25 @@ class MrpProduction(models.Model):
     def _get_start_date(self):
         return self.date_start_wo or datetime.datetime.now()
 
-    def _plan_workorders(self):
+    def _plan_workorders(self, replan=False):
         """ Plan all the production's workorders depending on the workcenters
-        work schedule"""
+        work schedule.
+
+        :param replan: If it is a replan, only ready and pending workorder will be take in account
+        :type replan: bool.
+        """
         self.ensure_one()
 
         # Schedule all work orders (new ones and those already created)
         qty_to_produce = max(self.product_qty - self.qty_produced, 0)
         qty_to_produce = self.product_uom_id._compute_quantity(qty_to_produce, self.product_id.uom_id)
         start_date = self._get_start_date()
-        for workorder in self.workorder_ids:
+        if replan:
+            workorder_ids = self.workorder_ids.filtered(lambda wo: wo.state in ['ready', 'pending'])
+            workorder_ids.leave_id.unlink()
+        else:
+            workorder_ids = self.workorder_ids
+        for workorder in workorder_ids:
             workcenters = workorder.workcenter_id | workorder.workcenter_id.alternative_workcenter_ids
 
             best_finished_date = datetime.datetime.max
