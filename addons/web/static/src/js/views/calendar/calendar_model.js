@@ -579,6 +579,8 @@ return AbstractModel.extend({
         var self = this;
         var new_filters = {};
         var to_read = {};
+        var defs = [];
+        var color_filter = {};
 
         _.each(this.data.filters, function (filter, fieldName) {
             var field = self.fields[fieldName];
@@ -620,7 +622,7 @@ return AbstractModel.extend({
                 });
             });
             _.each(_.union(fs, undefined_fs), function (f) {
-                var f1 = _.findWhere(filter.filters, f);
+                var f1 = _.findWhere(filter.filters, _.omit(f, 'color_index'));
                 if (f1) {
                     f1.display = true;
                 } else {
@@ -628,9 +630,32 @@ return AbstractModel.extend({
                     filter.filters.push(f);
                 }
             });
+
+            if (filter.color_model && filter.field_color) {
+                var ids = filter.filters.reduce((acc, f) => {
+                    if (!f.color_index && f.value) {
+                        acc.push(f.value);
+                    }
+                    return acc;
+                }, []);
+                if (!color_filter[filter.color_model]) {
+                    color_filter[filter.color_model] = {};
+                }
+                if (ids.length) {
+                    defs.push(self._rpc({
+                        model: filter.color_model,
+                        method: 'read',
+                        args: [_.uniq(ids), [filter.field_color]],
+                    })
+                    .then(function (res) {
+                        _.each(res, function (c) {
+                            color_filter[filter.color_model][c.id] = c[filter.field_color];
+                        });
+                    }));
+                }
+            }
         });
 
-        var defs = [];
         _.each(to_read, function (ids, model) {
             defs.push(self._rpc({
                     model: model,
@@ -649,6 +674,13 @@ return AbstractModel.extend({
                 if (filter.filters.length && (filter.filters[0].avatar_model in to_read)) {
                     _.each(filter.filters, function (f) {
                         f.label = to_read[f.avatar_model][f.value];
+                    });
+                }
+                if (filter.color_model && filter.field_color) {
+                    _.each(filter.filters, function (f) {
+                        if (!f.color_index) {
+                            f.color_index = color_filter[filter.color_model] && color_filter[filter.color_model][f.value];
+                        }
                     });
                 }
             });
