@@ -473,6 +473,60 @@ QUnit.test('composer: paste attachments', async function (assert) {
     );
 });
 
+QUnit.test('composer text input cleared on message post', async function (assert) {
+    assert.expect(4);
+
+    Object.assign(this.data.initMessaging, {
+        channel_slots: {
+            channel_channel: [{
+                channel_type: 'channel',
+                id: 20,
+                name: "General",
+            }],
+        },
+    });
+    await this.start({
+        discuss: {
+            params: {
+                default_active_id: 'mail.channel_20',
+            },
+        },
+        async mockRPC(route, args) {
+            if (args.method === 'message_post') {
+                assert.step('message_post');
+                return;
+            }
+            return this._super(...arguments);
+        },
+        session: {
+            partner_id: 3,
+        },
+    });
+    const thread = this.env.store.getters.thread({
+        _model: 'mail.channel',
+        id: 20,
+    });
+    await this.createComposerComponent(thread.composerLocalId);
+    // Type message
+    document.querySelector(`.o_ComposerTextInput_editable`).focus();
+    document.execCommand('insertText', false, "test message");
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_editable`).textContent,
+        "test message",
+        "should have inserted text content in editable"
+    );
+
+    // Send message
+    document.querySelector(`.o_ComposerTextInput_editable`)
+        .dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Enter' }));
+    assert.verifySteps(['message_post']);
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_editable`).textContent,
+        "",
+        "should have no content in composer input after posting message"
+    );
+});
+
 });
 });
 });

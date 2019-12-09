@@ -161,19 +161,15 @@ class Composer extends Component {
      */
     async _postMessage() {
         // TODO: take suggested recipients into account
-        try {
-            await this.storeDispatch('postMessage', this.props.composerLocalId, {
-                htmlContent: this._textInputRef.comp.getHtmlContent(),
-                isLog: this.props.isLog,
-            });
-            this._textInputRef.comp.reset();
-            this.storeDispatch('unlinkAttachmentsFromComposer', this.props.composerLocalId);
-            // TODO: we might need to remove trigger and use the store to wait for
-            // the post rpc to be done
-            this.trigger('o-message-posted');
-        } catch (err) {
-            // ignore error
-        }
+        this.storeDispatch('postMessage', this.props.composerLocalId, {
+            htmlContent: this._textInputRef.comp.getHtmlContent(),
+            isLog: this.props.isLog,
+        });
+        this._textInputRef.comp.reset();
+        this.storeDispatch('unlinkAttachmentsFromComposer', this.props.composerLocalId);
+        // TODO: we might need to remove trigger and use the store to wait for
+        // the post rpc to be done
+        this.trigger('o-message-posted');
     }
 
     //--------------------------------------------------------------------------
