@@ -1069,6 +1069,104 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
     },
 });
 
+const ImagepickerUserValueWidget = UserValueWidget.extend({
+    tagName: 'we-imagepicker',
+    events: {
+        'click .o_we_edit_image': '_onEditImage',
+        'click .o_we_remove_image': '_onRemoveImage',
+    },
+
+    /**
+     * @override
+     */
+    start: async function () {
+        await this._super(...arguments);
+        const allowedSelector = this.el.dataset.allowVideos;
+        this.firstFilters = (this.el.dataset.firstFilters || '').split(',').filter(s => s !== '');
+        this.allowVideos = allowedSelector ? this.$target.is(allowedSelector) : false;
+
+        this.editImageButton = document.createElement('we-button');
+        this.editImageButton.classList.add('o_we_edit_image', 'fa', 'fa-fw', 'fa-edit');
+
+        this.removeImageButton = document.createElement('we-button');
+        this.removeImageButton.classList.add('o_we_remove_image', 'fa', 'fa-fw', 'fa-times');
+        this.removeImageButton.title = _t("Remove");
+
+        this.containerEl.appendChild(this.editImageButton);
+        this.containerEl.appendChild(this.removeImageButton);
+    },
+    /**
+     * @override
+     */
+    getMethodsParams: function (methodName) {
+        return _.extend({isVideo: this.isVideo}, this._super(...arguments));
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _updateUI: async function () {
+        await this._super(...arguments);
+        this.removeImageButton.classList.toggle('d-none', !this.isActive());
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Called when the edit background button is clicked.
+     *
+     * @private
+     */
+    _onEditImage: function (ev) {
+        // Need a dummy element for the media dialog to modify.
+        const dummyEl = document.createElement(this.isVideo ? 'iframe' : 'img');
+        dummyEl.src = this._value;
+        if (this.isVideo) {
+            // Allows the mediaDialog to select the video tab immediately.
+            dummyEl.classList.add('media_iframe_video');
+        }
+        const $editable = this.$target.closest('.o_editable');
+        const mediaDialog = new weWidgets.MediaDialog(this, {
+            noIcons: true,
+            noDocuments: true,
+            noVideos: !this.allowVideos,
+            isForBgVideo: true,
+            res_model: $editable.data('oe-model'),
+            res_id: $editable.data('oe-id'),
+            firstFilters: this.firstFilters,
+        }, dummyEl).open();
+        mediaDialog.on('save', this, data => {
+            if (data.bgVideoSrc) {
+                this._value = data.bgVideoSrc;
+                this.isVideo = true;
+            } else {
+                // Accessing the value directly through dummyEl.src converts the url to absolute
+                // using getAttribute allows us to keep the url as it was inserted in the DOM
+                // which can be useful to compare it to values stored in db.
+                this._value = dummyEl.getAttribute('src');
+                this.isVideo = false;
+            }
+            this._notifyValueChange(false);
+        });
+    },
+    /**
+     * Called when the remove background button is clicked.
+     *
+     * @private
+     */
+    _onRemoveImage: function (ev) {
+        this._value = '';
+        this.isVideo = false;
+        this._notifyValueChange(false);
+    },
+});
+
 const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
     events: { // Explicitely not consider all InputUserValueWidget events
         'blur input': '_onInputBlur',
@@ -1200,6 +1298,7 @@ const userValueWidgetsRegistry = {
     'we-multi': MultiUserValueWidget,
     'we-colorpicker': ColorpickerUserValueWidget,
     'we-datetimepicker': DatetimePickerUserValueWidget,
+    'we-imagepicker': ImagepickerUserValueWidget,
 };
 
 /**
