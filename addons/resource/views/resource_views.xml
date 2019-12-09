@@ -107,7 +107,7 @@
         <field name="model">resource.calendar.leaves</field>
         <field name="arch" type="xml">
             <calendar date_start="date_from" date_stop="date_to" mode="month" string="Resource" color="resource_id" event_limit="5">
-                <field name="resource_id" avatar_field="image_128"/>
+                <field name="resource_id" avatar_field="image_128" filters="1"/>
                 <field name="company_id"/>
                 <field name="name"/>
             </calendar>
