@@ -427,7 +427,7 @@ class SurveyQuestion(models.Model):
         return {
             'numerical_max': max(all_values, default=0),
             'numerical_min': min(all_values, default=0),
-            'numerical_average': round(lines_sum / len(all_values) or 1, 2),
+            'numerical_average': round(lines_sum / (len(all_values) or 1), 2),
             'numerical_common_lines': collections.Counter(all_values).most_common(5),
         }
 
