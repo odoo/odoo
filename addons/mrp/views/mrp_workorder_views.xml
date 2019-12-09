@@ -349,7 +349,9 @@
                 decoration-danger="date_planned_start &lt; current_date and state in ['pending', 'ready']"
                 decoration-success="state == 'done'"
                 decoration-warning="state == 'cancel'"
-                color="workcenter_id">
+                color="workcenter_id"
+                display_unavailability="1">
+
                 <field name="date_planned_start"/>
                 <field name="state"/>
                 <field name="workcenter_id"/>
@@ -380,7 +382,8 @@
                 decoration-danger="date_planned_start &lt; current_date and state in ['pending', 'ready']"
                 decoration-success="state == 'done'"
                 decoration-warning="state == 'cancel'"
-                color="production_id">
+                color="production_id"
+                display_unavailability="1">
 
                 <field name="date_planned_start"/>
                 <field name="state"/>
