@@ -12,3 +12,9 @@ class StockMove(models.Model):
         if self.purchase_line_id:
             vals['purchase_line_id'] = self.purchase_line_id.id
         return vals
+
+    def _get_document_iterate_key(self):
+        iterate_key = super()._get_document_iterate_key()
+        if not iterate_key and self.created_purchase_line_id:
+            iterate_key = 'created_purchase_line_id'
+        return iterate_key

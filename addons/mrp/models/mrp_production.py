@@ -5,11 +5,11 @@ import json
 import datetime
 from collections import defaultdict
 from dateutil.relativedelta import relativedelta
-from itertools import groupby
+from math import log10
 
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, UserError
-from odoo.tools import date_utils, float_round, float_is_zero, format_datetime
+from odoo.tools import format_datetime, float_round, float_repr, float_compare
 
 
 class MrpProduction(models.Model):
@@ -649,6 +649,10 @@ class MrpProduction(models.Model):
 
     def _get_move_raw_values(self, product_id, product_uom_qty, product_uom, operation_id=False, bom_line=False):
         source_location = self.location_src_id
+        if operation_id:
+            workorder_id = self.workorder_ids.filtered(lambda wo: wo.operation_id.id == operation_id).id
+        else:
+            workorder_id = self.workorder_ids[-1:].id
         data = {
             'sequence': bom_line.sequence if bom_line else 10,
             'name': self.name,
@@ -674,9 +678,65 @@ class MrpProduction(models.Model):
             'propagate_cancel': self.propagate_cancel,
             'propagate_date': self.propagate_date,
             'propagate_date_minimum_delta': self.propagate_date_minimum_delta,
-            'delay_alert': self.delay_alert
+            'delay_alert': self.delay_alert,
+            'workorder_id': workorder_id,
         }
         return data
+
+    def _update_quantity(self, new_qty):
+        for production in self:
+            move_finished_ids = production.move_finished_ids.filtered(lambda m: m.product_id == production.product_id)
+            ongoing_move_raw_ids = production.move_raw_ids.filtered(lambda m: m.state not in ('done', 'cancel'))
+            produced = sum(move_finished_ids.mapped('quantity_done'))
+            if float_compare(produced, new_qty, precision_rounding=self.product_uom_id.rounding) > 1:
+                precision_digits = - int(log10(move_finished_ids.product_uom.rounding))
+                produced = float_repr(produced, precision_digits=precision_digits)
+                new_qty = float_repr(new_qty, precision_digits=precision_digits)
+                raise UserError(_("You have already processed %s. Please input a quantity higher than %s ") % (produced, new_qty))
+
+            previous_qty = production.product_qty
+            production.product_qty = new_qty
+
+            posted_move_finished_ids = move_finished_ids.filtered(lambda m: m.state == 'done')
+            posted_qty = sum(posted_move_finished_ids.mapped('product_qty'))
+            ongoing_qty = production.product_qty - posted_qty
+
+            ongoing_qty_bom_uom = production.product_uom_id._compute_quantity(ongoing_qty, production.bom_id.product_uom_id)
+            factor = ongoing_qty_bom_uom / production.bom_id.product_qty
+            boms, lines = production.bom_id.explode(production.product_id, factor, picking_type=production.bom_id.picking_type_id)
+
+            documents = defaultdict(list)
+            for line, line_values in lines:
+                if line.child_bom_id and line.child_bom_id.type == 'phantom' or\
+                        line.product_id.type not in ['product', 'consu']:
+                    continue
+                move = production.move_raw_ids.filtered(lambda x: x.bom_line_id.id == line.id and x.state not in ('done', 'cancel'))
+                if move:
+                    move = move[0]
+                    old_qty = move.product_uom_qty
+                    iterate_key = move._get_document_iterate_key()
+                    if iterate_key:
+                        document = self.env['stock.picking']._log_activity_get_documents({move: (line_values['qty'], old_qty)}, iterate_key, 'UP')
+                        for key, value in document.items():
+                            documents[key] += [value]
+                production._update_raw_move(line, line_values)
+            if documents:
+                production._log_manufacture_exception(documents)
+            ongoing_move_raw_ids = production.move_raw_ids.filtered(lambda m: m.state not in ('done', 'cancel'))
+
+            finished_moves_modification = production._update_finished_moves(ongoing_qty, previous_qty)
+            production._log_downside_manufactured_quantity(finished_moves_modification)
+            ongoing_move_raw_ids._action_assign()
+
+            qty_per_operation = {}
+            for bom, bom_data in boms:
+                for operation in bom.routing_id.operation_ids:
+                    qty_per_operation[operation.id] = bom_data['qty']
+            if production.state == 'planned':
+                production.button_unplan()
+                production.button_plan()
+            production.workorder_ids._update_quantity(qty_per_operation)
+        return True
 
     def _update_raw_move(self, bom_line, line_data):
         """ :returns update_move, old_quantity, new_quantity """
@@ -706,6 +766,21 @@ class MrpProduction(models.Model):
             )
             move = self.env['stock.move'].create(move_values)
             return move, 0, quantity
+
+    def _update_finished_moves(self, new_qty, old_qty):
+        """ Update finished product and its byproducts. This method only update
+        the finished moves not done or cancel and just increase or decrease
+        their quantity according the unit_ratio. It does not use the BoM, BoM
+        modification during production would not be taken into consideration.
+        """
+        modification = {}
+        for move in self.move_finished_ids:
+            if move.state in ('done', 'cancel'):
+                continue
+            qty = (new_qty - old_qty) * move.unit_factor
+            modification[move] = (move.product_uom_qty + qty, move.product_uom_qty)
+            move.write({'product_uom_qty': move.product_uom_qty + qty})
+        return modification
 
     def _get_ready_to_produce_state(self):
         """ returns 'assigned' if enough components are reserved in order to complete
@@ -1020,7 +1095,7 @@ class MrpProduction(models.Model):
         for production in self:
             documents = defaultdict(list)
             for move_raw_id in self.move_raw_ids.filtered(lambda m: m.state not in ('done', 'cancel')):
-                iterate_key = self._get_document_iterate_key(move_raw_id)
+                iterate_key = move_raw_id._get_document_iterate_key()
                 if iterate_key:
                     document = self.env['stock.picking']._log_activity_get_documents({move_raw_id: (move_raw_id.product_uom_qty, 0)}, iterate_key, 'UP')
                     for key, value in document.items():
@@ -1048,9 +1123,6 @@ class MrpProduction(models.Model):
                 filtered_documents[(parent, responsible)] = rendering_context
             production._log_manufacture_exception(filtered_documents, cancel=True)
         return True
-
-    def _get_document_iterate_key(self, move_raw_id):
-        return move_raw_id.move_orig_ids and 'move_orig_ids' or False
 
     def _cal_price(self, consumed_moves):
         self.ensure_one()

@@ -243,6 +243,9 @@ class StockMove(models.Model):
             else:
                 return super(StockMove, self)._get_upstream_documents_and_responsibles(visited)
 
+    def _get_document_iterate_key(self):
+        return self.move_orig_ids and 'move_orig_ids' or False
+
     def _delay_alert_get_documents(self):
         res = super(StockMove, self)._delay_alert_get_documents()
         productions = self.raw_material_production_id | self.production_id
