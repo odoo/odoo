@@ -5,10 +5,11 @@ from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from collections import defaultdict
 from math import floor
+import json
 
 from odoo import api, fields, models, _, SUPERUSER_ID
 from odoo.exceptions import UserError
-from odoo.tools import float_compare, float_round
+from odoo.tools import float_compare, float_round, format_datetime
 
 
 class MrpWorkorder(models.Model):
@@ -144,6 +145,55 @@ class MrpWorkorder(models.Model):
         'finished_workorder_id', string='By-products')
     allowed_lots_domain = fields.One2many(comodel_name='stock.production.lot', compute="_compute_allowed_lots_domain")
     is_finished_lines_editable = fields.Boolean(compute='_compute_is_finished_lines_editable')
+    json_popover = fields.Char('Popover Data JSON', compute='_compute_json_popover')
+
+    def _compute_json_popover(self):
+        previous_wo_data = self.env['mrp.workorder'].read_group(
+            [('next_work_order_id', 'in', self.ids)],
+            ['ids:array_agg(id)', 'date_planned_start:max', 'date_planned_finished:max'],
+            ['next_work_order_id'])
+        previous_wo_dict = dict([(x['next_work_order_id'][0], {
+            'id': x['ids'][0],
+            'date_planned_start': x['date_planned_start'],
+            'date_planned_finished': x['date_planned_finished']})
+            for x in previous_wo_data])
+        conflicted_dict = self._get_conflicted_workorder_ids()
+        for wo in self:
+            infos = []
+            if wo.state in ['pending', 'ready']:
+                previous_wo = previous_wo_dict.get(wo.id)
+                prev_start = previous_wo and previous_wo['date_planned_start'] or False
+                prev_finished = previous_wo and previous_wo['date_planned_finished'] or False
+                if wo.state == 'pending' and prev_start and not (prev_start > wo.date_planned_finished):
+                    infos.append({
+                        'color': 'text-primary',
+                        'msg': _("Waiting the previous work order, planned from %s to %s") % (
+                            format_datetime(self.env, prev_start, dt_format=False),
+                            format_datetime(self.env, prev_finished, dt_format=False))
+                    })
+                if wo.date_planned_finished < fields.Datetime.now():
+                    infos.append({
+                        'color': 'text-warning',
+                        'msg': _("The work order should have already been processed.")
+                    })
+                if prev_start and prev_start > wo.date_planned_finished:
+                    infos.append({
+                        'color': 'text-danger',
+                        'msg': _("Scheduled before the previous work order, planned from %s to %s") % (
+                            format_datetime(self.env, prev_start, dt_format=False),
+                            format_datetime(self.env, prev_finished, dt_format=False))
+                    })
+                if conflicted_dict.get(wo.id):
+                    infos.append({
+                        'color': 'text-danger',
+                        'msg': _("Planned at the same time than other workorder(s) at %s" % wo.workcenter_id.display_name)
+                    })
+            color_icon = infos and infos[-1]['color'] or 'd-none'
+            wo.json_popover = json.dumps({
+                'infos': infos,
+                'color': color_icon,
+                'replan': color_icon not in ['d-none', 'text-primary']
+            })
 
     # Both `date_planned_start` and `date_planned_finished` are related fields on `leave_id`. Let's say
     # we slide a workorder on a gantt view, a single call to write is made with both
@@ -662,6 +712,16 @@ class MrpWorkorder(models.Model):
         self.leave_id.unlink()
         return self.write({'state': 'cancel'})
 
+    def action_replan(self):
+        """Replan a work order.
+
+        It actually replans every  "ready" or "pending"
+        work orders of the linked manufacturing orders.
+        """
+        for production in self.production_id:
+            production._plan_workorders(replan=True)
+        return True
+
     def button_done(self):
         if any([x.state in ('done', 'cancel') for x in self]):
             raise UserError(_('A Manufacturing Order is already done or cancelled.'))
@@ -698,6 +758,31 @@ class MrpWorkorder(models.Model):
     def _compute_qty_remaining(self):
         for wo in self:
             wo.qty_remaining = float_round(wo.qty_production - wo.qty_produced, precision_rounding=wo.production_id.product_uom_id.rounding)
+
+    def _get_conflicted_workorder_ids(self):
+        """Get conlicted workorder(s) with self.
+
+        Conflict means having two workorders in the same time in the same workcenter.
+
+        :return: defaultdict with key as workorder id of self and value as related conflicted workorder
+        """
+        self.flush(['state', 'date_planned_start', 'date_planned_finished', 'workcenter_id'])
+        sql = """
+            SELECT wo1.id, wo2.id
+            FROM mrp_workorder wo1, mrp_workorder wo2
+            WHERE
+                wo1.id IN %s
+                AND wo1.state IN ('pending','ready')
+                AND wo2.state IN ('pending','ready')
+                AND wo1.id != wo2.id
+                AND wo1.workcenter_id = wo2.workcenter_id
+                AND (wo2.date_planned_start, wo2.date_planned_finished) OVERLAPS (wo1.date_planned_start, wo1.date_planned_finished)
+        """
+        self.env.cr.execute(sql, [tuple(self.ids)])
+        res = defaultdict(list)
+        for wo1, wo2 in self.env.cr.fetchall():
+            res[wo1].append(wo2)
+        return res
 
 
 class MrpWorkorderLine(models.Model):

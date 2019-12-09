@@ -92,6 +92,7 @@
                 <field name="state"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
                 <field name="company_id" groups="base.group_multi_company"/>
+                <field name="json_popover" widget="mrp_workorder_popover" string=" "/>
             </tree>
         </field>
     </record>
@@ -156,6 +157,7 @@
                                     <strong class="oe_edit_only mr8" attrs="{'invisible': [('date_planned_finished', '!=', False)]}">to</strong>
                                     <field name="date_planned_finished"/>
                                 </div>
+                                <field name="json_popover" widget="mrp_workorder_popover"/>
                             </div>
                             <label for="date_start" string="Effective Date"/>
                             <div class="o_row">
@@ -346,15 +348,16 @@
         <field name="arch" type="xml">
             <gantt class="o_mrp_workorder_gantt" date_stop="date_planned_finished" date_start="date_planned_start" string="Operations" default_group_by="production_id" create="0"
                 progress="progress" plan="0"
-                decoration-danger="date_planned_start &lt; current_date and state in ['pending', 'ready']"
+                decoration-danger="'text-danger' in json_popover"
                 decoration-success="state == 'done'"
-                decoration-warning="state == 'cancel'"
+                decoration-warning="state == 'cancel' or 'text-warning' in json_popover"
                 color="workcenter_id"
                 display_unavailability="1">
 
                 <field name="date_planned_start"/>
                 <field name="state"/>
                 <field name="workcenter_id"/>
+                <field name="json_popover"/>
 
                 <templates>
                     <div t-name="gantt-popover" class="container-fluid">
@@ -379,15 +382,16 @@
         <field name="arch" type="xml">
             <gantt class="o_mrp_workorder_gantt" date_stop="date_planned_finished" date_start="date_planned_start" string="Operations" default_group_by="workcenter_id" create="0"
                 progress="progress" plan="0"
-                decoration-danger="date_planned_start &lt; current_date and state in ['pending', 'ready']"
+                decoration-danger="'text-danger' in json_popover"
                 decoration-success="state == 'done'"
-                decoration-warning="state == 'cancel'"
+                decoration-warning="state == 'cancel' or 'text-warning' in json_popover"
                 color="production_id"
                 display_unavailability="1">
 
                 <field name="date_planned_start"/>
                 <field name="state"/>
                 <field name="workcenter_id"/>
+                <field name="json_popover"/>
 
                 <templates>
                     <div t-name="gantt-popover" class="container-fluid">
