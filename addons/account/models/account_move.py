@@ -13,10 +13,6 @@ from json import dumps
 
 import json
 import re
-import logging
-import psycopg2
-
-_logger = logging.getLogger(__name__)
 
 #forbidden fields
 INTEGRITY_HASH_MOVE_FIELDS = ('date', 'journal_id', 'company_id')
@@ -2121,22 +2117,11 @@ class AccountMove(models.Model):
         for move in self:
             if not move.partner_id: continue
             if move.type.startswith('out_'):
-                field='customer_rank'
+                move.partner_id._increase_rank('customer_rank')
             elif move.type.startswith('in_'):
-                field='supplier_rank'
+                move.partner_id._increase_rank('supplier_rank')
             else:
                 continue
-            try:
-                with self.env.cr.savepoint():
-                    self.env.cr.execute("SELECT "+field+" FROM res_partner WHERE ID=%s FOR UPDATE NOWAIT", (move.partner_id.id,))
-                    self.env.cr.execute("UPDATE res_partner SET "+field+"="+field+"+1 WHERE ID=%s", (move.partner_id.id,))
-                    self.env.cache.remove(move.partner_id, move.partner_id._fields[field])
-            except psycopg2.DatabaseError as e:
-                if e.pgcode == '55P03':
-                    _logger.debug('Another transaction already locked partner rows. Cannot update partner ranks.')
-                    continue
-                else:
-                    raise e
 
     def action_reverse(self):
         action = self.env.ref('account.action_view_account_move_reversal').read()[0]
