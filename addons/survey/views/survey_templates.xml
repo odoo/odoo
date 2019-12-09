@@ -104,7 +104,8 @@
         <form role="form" method="post" t-att-name="survey.id"
                 t-att-data-answer-token="answer.access_token"
                 t-att-data-survey-token="survey.access_token"
-                t-att-data-timer="answer.start_datetime.isoformat() if survey.is_time_limited and answer.start_datetime else False"
+                t-att-data-timer="answer.start_datetime.isoformat() if survey.is_time_limited
+                    and answer.start_datetime and not finished else False"
                 t-att-data-time-limit-minutes="survey.time_limit"
                 t-att-data-is-start-screen="page == 0">
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
@@ -140,7 +141,7 @@
             <div class="container m-0 p-0">
                 <div class="row">
                     <div class="col-lg-8"><h1 t-esc="survey.title"></h1></div>
-                    <div t-if="survey.is_time_limited" class="o_survey_timer col-lg-4">
+                    <div t-if="survey.is_time_limited and not finished" class="o_survey_timer col-lg-4 d-none">
                         <h1 class="timer text-right">00:00</h1>
                     </div>
                 </div>
