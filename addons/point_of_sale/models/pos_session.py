@@ -455,6 +455,9 @@ class PosSession(models.Model):
                     diff = order.amount_paid - order.amount_total
                     rounding_difference = self._update_amounts(rounding_difference, {'amount': diff}, order.date_order)
 
+                # Increasing current partner's customer_rank
+                order.partner_id._increase_rank('customer_rank')
+
         if self.company_id.anglo_saxon_accounting:
             global_session_pickings = self.picking_ids.filtered(lambda p: not p.pos_order_id)
             if global_session_pickings:
