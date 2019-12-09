@@ -249,7 +249,7 @@ const UserValueWidget = Widget.extend({
         this._methodsParams.optionsPossibleValues = {};
 
         for (const key in this.el.dataset) {
-            const dataValue = this.el.dataset[key];
+            const dataValue = this.el.dataset[key].trim();
 
             if (validMethodNames.includes(key)) {
                 this._methodsNames.push(key);
