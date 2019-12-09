@@ -194,18 +194,17 @@ class account_journal(models.Model):
         the bar graph's data as its first element, and the arguments dictionary
         for it as its second.
         """
+        sign = '' if self.type == 'sale' else '-'
         return ('''
             SELECT
-                SUM((CASE WHEN move.type IN %(purchase_types)s THEN -1 else 1 END) * line.amount_residual) AS total,
+                ''' + sign + ''' + SUM(move.amount_residual_signed) AS total,
                 MIN(invoice_date_due) AS aggr_date
-            FROM account_move_line line
-            JOIN account_move move ON move.id = line.move_id
+            FROM account_move move
             WHERE move.journal_id = %(journal_id)s
             AND move.state = 'posted'
             AND move.invoice_payment_state = 'not_paid'
             AND move.type IN %(invoice_types)s
         ''', {
-            'purchase_types': tuple(self.env['account.move'].get_purchase_types(True)),
             'invoice_types': tuple(self.env['account.move'].get_invoice_types(True)),
             'journal_id': self.id
         })
@@ -538,7 +537,7 @@ class account_journal(models.Model):
         [action] = self.env[model].browse(action_id).read()
         action['context'] = ctx
         if ctx.get('use_domain', False):
-            action['domain'] = ['|', ('journal_id', '=', self.id), ('journal_id', '=', False)]
+            action['domain'] = isinstance(ctx['use_domain'], list) and ctx['use_domain'] or ['|', ('journal_id', '=', self.id), ('journal_id', '=', False)]
             action['name'] += ' for journal ' + self.name
         return action
 

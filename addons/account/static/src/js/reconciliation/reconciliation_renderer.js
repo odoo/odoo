@@ -376,7 +376,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
         for (let i = 0; i < matching_modes.length; i++) {
             var stateMvLines = state['mv_lines_'+matching_modes[i]] || [];
             var recs_count = stateMvLines.length > 0 ? stateMvLines[0].recs_count : 0;
-            var remaining = recs_count - stateMvLines.length;
+            var remaining = state['remaining_' + matching_modes[i]];
             var $mv_lines = this.$('div[id*="notebook_page_' + matching_modes[i] + '"] .match table tbody').empty();
             this.$('.o_notebook li a[href*="notebook_page_' + matching_modes[i] + '"]').parent().toggleClass('d-none', stateMvLines.length === 0 && !state['filter_'+matching_modes[i]]);
 
@@ -773,7 +773,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
      */
     _onLoadMore: function (ev) {
         ev.preventDefault();
-        this.trigger_up('change_offset', {'data': 1});
+        this.trigger_up('change_offset');
     },
     /**
      * @private

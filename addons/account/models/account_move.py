@@ -2885,6 +2885,7 @@ class AccountMoveLine(models.Model):
             if not line.currency_id:
                 continue
             if not line.move_id.is_invoice(include_receipts=True):
+                line._recompute_debit_credit_from_amount_currency()
                 continue
             line.update(line._get_fields_onchange_balance(
                 balance=line.amount_currency,
@@ -2905,7 +2906,19 @@ class AccountMoveLine(models.Model):
         for line in self:
             if line.move_id.is_invoice(include_receipts=True):
                 line._onchange_price_subtotal()
+            else:
+                line._recompute_debit_credit_from_amount_currency()
 
+    def _recompute_debit_credit_from_amount_currency(self):
+        for line in self:
+            # Recompute the debit/credit based on amount_currency/currency_id and date.
+
+            company_currency = line.account_id.company_id.currency_id
+            balance = line.amount_currency
+            if line.currency_id and company_currency and line.currency_id != company_currency:
+                balance = line.currency_id._convert(balance, company_currency, line.account_id.company_id, line.move_id.date or fields.Date.today())
+                line.debit = balance > 0 and balance or 0.0
+                line.credit = balance < 0 and -balance or 0.0
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------

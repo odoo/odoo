@@ -231,8 +231,8 @@ var ControlPanelView = Factory.extend({
             const setParam = _.extend({}, y.setParam, o ? o.setParam : {});
             const granularity = o ? o.granularity : y.granularity;
             const date = this.referenceMoment.clone().set(setParam).add(addParam);
-            let leftBound = date.clone().startOf(granularity);
-            let rightBound = date.clone().endOf(granularity);
+            let leftBound = date.clone().startOf(granularity).locale('en');
+            let rightBound = date.clone().endOf(granularity).locale('en');
 
             if (filter.fieldType === 'date') {
                 leftBound = leftBound.format("YYYY-MM-DD");
