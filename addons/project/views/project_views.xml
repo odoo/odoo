@@ -719,7 +719,7 @@
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <calendar date_start="date_deadline" string="Tasks" mode="month" color="user_id" event_limit="5" hide_time="true">
-                    <field name="user_id" avatar_field="image_128"/>
+                    <field name="user_id" avatar_field="image_128" filters="1"/>
                     <field name="date_deadline"/>
                     <field name="project_id"/>
                     <field name="priority" widget="priority"/>

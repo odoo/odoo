@@ -66,9 +66,11 @@ var CalendarView = AbstractView.extend({
             if (child.tag !== 'field') return;
             var fieldName = child.attrs.name;
             fieldNames.push(fieldName);
-            if (!child.attrs.invisible) {
+            if (!child.attrs.invisible || child.attrs.filters) {
                 child.attrs.options = child.attrs.options ? pyUtils.py_eval(child.attrs.options) : {};
-                displayFields[fieldName] = {attrs: child.attrs};
+                if (!child.attrs.invisible) {
+                    displayFields[fieldName] = {attrs: child.attrs};
+                }
 
                 if (params.sidebar === false) return; // if we have not sidebar, (eg: Dashboard), we don't use the filter "coworkers"
 
@@ -92,7 +94,7 @@ var CalendarView = AbstractView.extend({
 
                     modelFilters.push(fields[fieldName].relation);
                 }
-                if (child.attrs.filter) {
+                if (child.attrs.filters) {
                     filters[fieldName] = filters[fieldName] || {
                         'title': fields[fieldName].string,
                         'fieldName': fieldName,
