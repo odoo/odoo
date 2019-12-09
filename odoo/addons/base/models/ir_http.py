@@ -344,12 +344,14 @@ class IrHttp(models.AbstractModel):
             content = obj[field] or ''
 
         # filename
+        default_filename = False
         if not filename:
             if filename_field in obj:
                 filename = obj[filename_field]
             if not filename and module_resource_path:
                 filename = os.path.basename(module_resource_path)
             if not filename:
+                default_filename = True
                 filename = "%s-%s-%s" % (obj._name, obj.id, field)
 
         # mimetype
@@ -370,7 +372,7 @@ class IrHttp(models.AbstractModel):
 
         # extension
         _, existing_extension = os.path.splitext(filename)
-        if not existing_extension:
+        if not existing_extension or default_filename:
             extension = mimetypes.guess_extension(mimetype)
             if extension:
                 filename = "%s%s" % (filename, extension)
