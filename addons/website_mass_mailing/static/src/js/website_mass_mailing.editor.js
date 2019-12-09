@@ -70,11 +70,7 @@ options.registry.newsletter_popup = options.registry.mailing_list_subscribe.exte
             // So that the snippet is not enabled again by the editor
             ev.stopPropagation();
             self.$target.data('quick-open', true);
-            options.onSuccess(new Promise(resolve => {
-                self._refreshPublicWidgets(self.$target, {
-                    onSuccess: () => resolve(),
-                });
-            }));
+            options.onSuccess(self._refreshPublicWidgets());
         });
         this.$target.on('shown.bs.modal.newsletter_popup_option hide.bs.modal.newsletter_popup_option', function () {
             self.$target.closest('.o_editable').trigger('content_changed');
@@ -118,7 +114,7 @@ options.registry.newsletter_popup = options.registry.mailing_list_subscribe.exte
         return this._super.apply(this, arguments).then(function () {
             self.$target.data('quick-open', true);
             self.$target.removeData('content');
-            self._refreshPublicWidgets();
+            return self._refreshPublicWidgets();
         });
     },
 });

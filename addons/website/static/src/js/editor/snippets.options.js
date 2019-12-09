@@ -11,20 +11,7 @@ var options = require('web_editor.snippets.options');
 var _t = core._t;
 var qweb = core.qweb;
 
-// TODO should we refresh public widgets for all option changes by default ?
 options.Class.include({
-
-    //--------------------------------------------------------------------------
-    // Options
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    selectDataAttribute: async function (previewMode, widgetValue, params) {
-        await this._super(...arguments);
-        this._refreshPublicWidgets();
-    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -35,13 +22,28 @@ options.Class.include({
      *
      * @private
      * @param {jQuery} [$el=this.$target]
-     * @param {Object} [options]
+     * @returns {Promise}
      */
-    _refreshPublicWidgets: function ($el, options) {
-        this.trigger_up('widgets_start_request', _.extend({
-            editableMode: true,
-            $target: $el || this.$target,
-        }, options || {}));
+    _refreshPublicWidgets: function ($el) {
+        return new Promise((resolve, reject) => {
+            this.trigger_up('widgets_start_request', {
+                editableMode: true,
+                $target: $el || this.$target,
+                onSuccess: resolve,
+                onFailure: reject,
+            });
+        });
+    },
+    /**
+     * @override
+     */
+    _select: async function (previewMode, widget) {
+        await this._super(...arguments);
+
+        if (!widget.$el.closest('[data-no-widget-refresh="true"]').length) {
+            // TODO the flag should be retrieved through widget params somehow
+            await this._refreshPublicWidgets();
+        }
     },
 });
 
@@ -109,7 +111,7 @@ options.registry.background.include({
         } else {
             delete target.dataset.bgVideoSrc;
         }
-        this._refreshPublicWidgets();
+        await this._refreshPublicWidgets();
         await this.updateUI();
     },
     /**
@@ -688,16 +690,6 @@ options.registry.parallax = options.Class.extend({
     /**
      * @override
      */
-    start: function () {
-        var self = this;
-        this.$target.on('snippet-option-change snippet-option-preview', function () {
-            self._refreshPublicWidgets();
-        });
-        return this._super.apply(this, arguments);
-    },
-    /**
-     * @override
-     */
     onFocus: function () {
         this.trigger_up('option_update', {
             optionNames: ['background', 'BackgroundPosition'],
@@ -965,7 +957,6 @@ options.registry.ul = options.Class.extend({
             .prepend('<a href="#" class="o_ul_toggle_next fa" />');
         $li.removeClass('o_open').next().addClass('o_close');
         this.$target.find('li').removeClass('o_open');
-        this._refreshPublicWidgets();
     },
 });
 
@@ -1310,7 +1301,6 @@ options.registry.gallery = options.Class.extend({
         // Apply layout animation
         this.$target.off('slide.bs.carousel').off('slid.bs.carousel');
         this.$('li.fa').off('click');
-        this._refreshPublicWidgets();
     },
     /**
      * Allows to change the style of the individual images.
@@ -1497,7 +1487,6 @@ options.registry.countdown = options.Class.extend({
                 this.endMessage = $message[0].outerHTML;
             }
         }
-        this._refreshPublicWidgets();
     },
     /**
     * Changes the countdown style.
@@ -1525,7 +1514,6 @@ options.registry.countdown = options.Class.extend({
                 break;
         }
         this.$target[0].dataset.layout = widgetValue;
-        this._refreshPublicWidgets();
     },
 
     //--------------------------------------------------------------------------
@@ -2162,15 +2150,19 @@ options.registry.InnerChart = options.Class.extend({
     /**
      * Set the color on the selected input.
      */
-    colorChange: function (previewMode, widgetValue, params) {
+    colorChange: async function (previewMode, widgetValue, params) {
         if (widgetValue) {
             this.colorPaletteSelectedInput.dataset[params.attributeName] = widgetValue;
         } else {
             delete this.colorPaletteSelectedInput.dataset[params.attributeName];
         }
-        this._reloadGraph();
-        // To focus back the input that is edited we have to wait for the color picker to be fully reloaded.
-        setTimeout(() => this.lastEditableSelectedInput.focus());
+        await this._reloadGraph();
+        // To focus back the input that is edited we have to wait for the color
+        // picker to be fully reloaded.
+        await new Promise(resolve => setTimeout(() => {
+            this.lastEditableSelectedInput.focus();
+            resolve();
+        }));
     },
     /**
      * @override
@@ -2180,7 +2172,7 @@ options.registry.InnerChart = options.Class.extend({
         // Data might change if going from or to a pieChart.
         if (params.attributeName === 'type') {
             this._setDefaultSelectedInput();
-            this._reloadGraph();
+            await this._reloadGraph();
         }
     },
 
@@ -2203,11 +2195,11 @@ options.registry.InnerChart = options.Class.extend({
      *
      * @private
      */
-    _reloadGraph: function () {
+    _reloadGraph: async function () {
         const jsonValue = this._matrixToChartData();
         if (this.$target[0].dataset.data !== jsonValue) {
             this.$target[0].dataset.data = jsonValue;
-            this._refreshPublicWidgets();
+            await this._refreshPublicWidgets();
         }
     },
     /**
@@ -2439,9 +2431,10 @@ options.registry.InnerChart = options.Class.extend({
         const usedColor = Array.from(this.tableEl.querySelectorAll('tr:first-child input')).map(el => el.dataset.backgroundColor);
         const color = this.themeArray.filter(el => !usedColor.includes(el))[0] || this._randomColor();
         this._addColumn(null, null, color, color);
-        this._reloadGraph();
-        this._displayRemoveColButton();
-        this.updateUI();
+        this._reloadGraph().then(() => {
+            this._displayRemoveColButton();
+            this.updateUI();
+        });
     },
     /**
      * Add a column at the end of the matrix and display it's remove button
@@ -2450,9 +2443,10 @@ options.registry.InnerChart = options.Class.extend({
      */
     _onAddRowClick: function () {
         this._addRow();
-        this._reloadGraph();
-        this._displayRemoveRowButton();
-        this.updateUI();
+        this._reloadGraph().then(() => {
+            this._displayRemoveRowButton();
+            this.updateUI();
+        });
     },
     /**
      * Remove the column and show the remove button of the next column or the last if no next.
@@ -2467,8 +2461,9 @@ options.registry.InnerChart = options.Class.extend({
             el.children[cellIndex].remove();
         });
         this._displayRemoveColButton(cellIndex - 1);
-        this._reloadGraph();
-        this.updateUI();
+        this._reloadGraph().then(() => {
+            this.updateUI();
+        });
     },
     /**
      * Remove the row and show the remove button of the next row or the last if no next.
@@ -2481,8 +2476,9 @@ options.registry.InnerChart = options.Class.extend({
         const rowIndex = row.rowIndex;
         row.remove();
         this._displayRemoveRowButton(rowIndex - 1);
-        this._reloadGraph();
-        this.updateUI();
+        this._reloadGraph().then(() => {
+            this.updateUI();
+        });
     },
     /**
      * @private
