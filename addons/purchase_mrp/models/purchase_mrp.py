@@ -9,7 +9,10 @@ class MrpProduction(models.Model):
     _inherit = 'mrp.production'
 
     def _get_document_iterate_key(self, move_raw_id):
-        return super(MrpProduction, self)._get_document_iterate_key(move_raw_id) or 'created_purchase_line_id'
+        iterate_key = super(MrpProduction, self)._get_document_iterate_key(move_raw_id)
+        if not iterate_key:
+            iterate_key = move_raw_id.created_purchase_line_id and 'created_purchase_line_id'
+        return iterate_key
 
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
