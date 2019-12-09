@@ -192,7 +192,7 @@ var SearchBar = Widget.extend({
         if (filter.type === 'field') {
             var values = filter.autoCompleteValues;
             const facetValue = facet.values[0];
-            facetValue.operator = e.shiftKey ? 'AND' : 'OR';
+            facetValue.operator = e.shiftKey ? 'OR' : 'AND';
             values.push(facetValue);
             this.trigger_up('autocompletion_filter', {
                 filterId: filter.id,

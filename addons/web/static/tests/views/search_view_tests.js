@@ -1418,7 +1418,7 @@ QUnit.module('Search View', {
                         assert.deepEqual(args.domain, [["bar", "=", 1]]);
                         assert.deepEqual(args.context.bar, [1]);
                     } else if (searchRead === 2) {
-                        assert.deepEqual(args.domain, ["|", ["bar", "=", 1], ["bar", "=", 2]]);
+                        assert.deepEqual(args.domain, ["&", ["bar", "=", 1], ["bar", "=", 2]]);
                         assert.deepEqual(args.context.bar, [1, 2]);
                     }
                     searchRead++;
@@ -1463,14 +1463,14 @@ QUnit.module('Search View', {
         $('.o_searchview_input').trigger($.Event('keydown', { which: $.ui.keyCode.ENTER, keyCode: $.ui.keyCode.ENTER }));
         await testUtils.nextTick();
 
-        assert.strictEqual($('.o_searchview_input_container .o_facet_values').eq(0).text().trim(), "First record or Second record",
+        assert.strictEqual($('.o_searchview_input_container .o_facet_values').eq(0).text().trim(), "First record and Second record",
             "the autocompletion facet should be correct");
         assert.strictEqual(searchRead, 3, "there should be 3 search_read");
 
         actionManager.destroy();
     });
 
-    QUnit.test('should do "OR" operation on Enter key and "AND" operation on Shift + Enter key', async function (assert) {
+    QUnit.test('should do "AND" operation on Enter key and "OR" operation on Shift + Enter key', async function (assert) {
         assert.expect(5);
 
         let searchRead = 0;
@@ -1483,9 +1483,9 @@ QUnit.module('Search View', {
                     if (searchRead === 1) {
                         assert.deepEqual(args.domain, [["foo", "ilike", "a"]]);
                     } else if (searchRead === 2) {
-                        assert.deepEqual(args.domain, ["|", ["foo", "ilike", "a"], ["foo", "ilike", "p"]]);
+                        assert.deepEqual(args.domain, ["&", ["foo", "ilike", "a"], ["foo", "ilike", "p"]]);
                     } else if (searchRead === 3) {
-                        assert.deepEqual(args.domain, ["&", "|", ["foo", "ilike", "a"], ["foo", "ilike", "p"], ["foo", "ilike", "y"]]);
+                        assert.deepEqual(args.domain, ["|", "&", ["foo", "ilike", "a"], ["foo", "ilike", "p"], ["foo", "ilike", "y"]]);
                     }
                     searchRead++;
                 }
@@ -1502,21 +1502,21 @@ QUnit.module('Search View', {
         $('.o_searchview_input').trigger($.Event('keyup', { which: $.ui.keyCode.ENTER, keyCode: $.ui.keyCode.ENTER }));
         await testUtils.nextTick();
 
-        // enter 'p' key on searchbar and press Enter key, should do OR operation
+        // enter 'p' key on searchbar and press Enter key, should do AND operation
         $('.o_searchview_input').val('p');
         $('.o_searchview_input').trigger($.Event('keypress', { which: 112, keyCode: 112 }));
         await testUtils.nextTick();
         $('.o_searchview_input').trigger($.Event('keydown', { which: $.ui.keyCode.ENTER, keyCode: $.ui.keyCode.ENTER }));
         await testUtils.nextTick();
 
-        // enter 'y' key on searchbar and press Shift + Enter key, should do AND operation with previous domain
+        // enter 'y' key on searchbar and press Shift + Enter key, should do OR operation with previous domain
         $('.o_searchview_input').val('y');
         $('.o_searchview_input').trigger($.Event('keypress', { which: 121, keyCode: 121 }));
         await testUtils.nextTick();
         $('.o_searchview_input').trigger($.Event('keydown', { keyCode: $.ui.keyCode.ENTER, which: $.ui.keyCode.ENTER, shiftKey: true }));
         await testUtils.nextTick();
 
-        assert.strictEqual($('tr.o_data_row').length, 1, "should display 1 record");
+        assert.strictEqual($('tr.o_data_row').length, 2, "should display 2 records");
         assert.strictEqual(searchRead, 4, "there should be 3 search_read");
 
         actionManager.destroy();
