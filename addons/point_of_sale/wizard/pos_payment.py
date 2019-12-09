@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.tools import float_is_zero
+from odoo.tools import float_is_zero, float_round
 
 
 class PosMakePayment(models.TransientModel):
@@ -19,7 +19,7 @@ class PosMakePayment(models.TransientModel):
         active_id = self.env.context.get('active_id')
         if active_id:
             order = self.env['pos.order'].browse(active_id)
-            return order.amount_total - order.amount_paid
+            return self._get_total_rounded(order) - order.amount_paid
         return False
 
     def _default_payment_method(self):
@@ -46,7 +46,7 @@ class PosMakePayment(models.TransientModel):
         currency = order.currency_id
 
         init_data = self.read()[0]
-        if not float_is_zero(init_data['amount'], precision_rounding=currency.rounding):
+        if not float_is_zero(init_data['amount'], precision_rounding=self._get_rounding(order)):
             order.add_payment({
                 'pos_order_id': order.id,
                 'amount': currency.round(init_data['amount']) if currency else init_data['amount'],
@@ -54,7 +54,7 @@ class PosMakePayment(models.TransientModel):
                 'payment_method_id': init_data['payment_method_id'][0],
             })
 
-        if float_is_zero(order.amount_total - order.amount_paid, precision_rounding=currency.rounding):
+        if float_is_zero(self._get_total_rounded(order) - order.amount_paid, precision_rounding=self._get_rounding(order)):
             order.action_pos_order_paid()
             order._create_order_picking()
             return {'type': 'ir.actions.act_window_close'}
@@ -72,3 +72,15 @@ class PosMakePayment(models.TransientModel):
             'type': 'ir.actions.act_window',
             'context': self.env.context,
         }
+
+    def _get_rounding(self, order):
+        return order.config_id.rounding_method.rounding if order.config_id.cash_rounding else order.currency_id.rounding
+
+    def _get_total_rounded(self, order):
+        total = float_round(order.amount_total, precision_rounding=self._get_rounding(order))
+        rounding_applied = total - float_round(order.amount_total, precision_rounding=order.currency_id.rounding)
+        if order.config_id.rounding_method.rounding_method == "DOWN" and rounding_applied < 0:
+            total += order.config_id.rounding_method.rounding
+        if order.config_id.rounding_method.rounding_method == "UP" and rounding_applied > 0:
+            total -= order.config_id.rounding_method.rounding
+        return total
