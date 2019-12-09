@@ -541,7 +541,14 @@ def decode_smtp_header(smtp_header):
         smtp_header = ustr(smtp_header)
     if smtp_header:
         text = decode_header(smtp_header.replace('\r', ''))
+<<<<<<< HEAD
         return ''.join([ustr(x[0], x[1]) for x in text])
+=======
+        # The joining space will not be needed as of Python 3.3
+        # See https://github.com/python/cpython/commit/07ea53cb218812404cdbde820647ce6e4b2d0f8e
+        sep = ' ' if pycompat.PY2 else ''
+        return sep.join([ustr(x[0], x[1]) for x in text])
+>>>>>>> 23b5f3e51dd... temp
     return u''
 
 # was mail_thread.decode_header()
