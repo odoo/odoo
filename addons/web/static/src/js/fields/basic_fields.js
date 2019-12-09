@@ -3348,6 +3348,70 @@ var FieldColor = AbstractField.extend({
     },
 });
 
+
+/**
+ * HTML Popover
+ */
+var HtmlPopover = AbstractField.extend({
+    template: 'HtmlPopover',
+    supportedFieldTypes: ['html'],
+
+    events: _.extend({}, AbstractField.prototype.events, {
+        'click': '_onClick',
+    }),
+
+    init : function() {
+        var ret = this._super.apply(this, arguments);
+
+        this.title = this.nodeOptions && this.nodeOptions.title || '';
+        this.icon = this.nodeOptions && this.nodeOptions.icon || 'fa fa-info-circle';
+        this.trigger = this.nodeOptions && this.nodeOptions.trigger || 'focus';
+        this.placement = this.nodeOptions && this.nodeOptions.placement || 'bottom';
+
+        if (this.nodeOptions && this.nodeOptions.color_field) {
+            this.color = this.recordData[this.nodeOptions.color_field];
+        } else {
+            this.color = this.nodeOptions && this.nodeOptions.color || 'text-primary';
+        }
+
+        return ret;
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+    * @private
+    */
+    _onClick: function (event) {
+        event.stopPropagation();
+    },
+
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+    /**
+    * @override
+    * @private
+    */
+    _render: function () {
+        var ret = this._super.apply(this, arguments);
+        if (this.value) {
+            this.$el.find('a').popover({
+                html: true,
+                placement: this.placement,
+                trigger: this.trigger,
+                title: this.title,
+                content: this.value,
+            });
+        }
+        return ret;
+    },
+});
+
+
 return {
     TranslatableFieldMixin: TranslatableFieldMixin,
     DebouncedField: DebouncedField,
@@ -3393,6 +3457,7 @@ return {
     JournalDashboardGraph: JournalDashboardGraph,
     AceEditor: AceEditor,
     FieldColor: FieldColor,
+    HtmlPopover: HtmlPopover,
 };
 
 });
