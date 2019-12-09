@@ -20,13 +20,12 @@ except ImportError:
 
 from collections import namedtuple
 from email.message import Message
-from email.utils import formataddr
 from lxml import etree
 from werkzeug import url_encode
 from werkzeug import urls
 
 from odoo import _, api, exceptions, fields, models, tools
-from odoo.tools import pycompat, ustr
+from odoo.tools import pycompat, ustr, formataddr
 from odoo.tools.misc import clean_context
 from odoo.tools.safe_eval import safe_eval
 
@@ -1655,10 +1654,10 @@ class MailThread(models.AbstractModel):
             msg_dict['subject'] = tools.decode_smtp_header(message.get('Subject'))
 
         # Envelope fields not stored in mail.message but made available for message_new()
-        msg_dict['from'] = tools.decode_smtp_header(message.get('from'), escape_names=True)
-        msg_dict['to'] = tools.decode_smtp_header(message.get('to'), escape_names=True)
-        msg_dict['cc'] = tools.decode_smtp_header(message.get('cc'), escape_names=True)
-        msg_dict['email_from'] = tools.decode_smtp_header(message.get('from'), escape_names=True)
+        msg_dict['from'] = tools.decode_smtp_header(message.get('from'))
+        msg_dict['to'] = tools.decode_smtp_header(message.get('to'))
+        msg_dict['cc'] = tools.decode_smtp_header(message.get('cc'))
+        msg_dict['email_from'] = tools.decode_smtp_header(message.get('from'))
         partner_ids = self._message_find_partners(message, ['To', 'Cc'])
         msg_dict['partner_ids'] = [(4, partner_id) for partner_id in partner_ids]
 

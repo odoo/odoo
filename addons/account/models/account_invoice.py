@@ -904,7 +904,7 @@ class AccountInvoice(models.Model):
         elif self.date_due and (date_invoice > self.date_due):
             self.date_due = date_invoice
 
-    @api.onchange('cash_rounding_id', 'invoice_line_ids', 'tax_line_ids')
+    @api.onchange('cash_rounding_id', 'invoice_line_ids', 'tax_line_ids', 'amount_total')
     def _onchange_cash_rounding(self):
         # Drop previous cash rounding lines
         lines_to_remove = self.invoice_line_ids.filtered(lambda l: l.is_rounding_line)
@@ -1209,7 +1209,7 @@ class AccountInvoice(models.Model):
                     'account_analytic_id': tax_line.account_analytic_id.id,
                     'analytic_tag_ids': analytic_tag_ids,
                     'invoice_id': self.id,
-                    'tax_ids': [(6, 0, list(done_taxes))] if tax_line.tax_id.include_base_amount else []
+                    'tax_ids': [(6, 0, list(done_taxes))] if done_taxes and tax_line.tax_id.include_base_amount else []
                 })
             done_taxes.append(tax.id)
         return res

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 import collections
 import logging
 from lxml.html import clean
@@ -11,7 +12,7 @@ import threading
 import time
 
 from email.header import decode_header, Header
-from email.utils import getaddresses, formataddr, quote
+from email.utils import getaddresses, formataddr
 from lxml import etree
 
 import odoo
@@ -425,6 +426,7 @@ discussion_re = re.compile("<.*-open(?:object|erp)-private[^>]*@([^>]*)>", re.UN
 
 mail_header_msgid_re = re.compile('<[^<>]+>')
 
+email_addr_escapes_re = re.compile(r'[\\"]')
 
 def generate_tracking_message_id(res_id):
     """Returns a string that can be used in the Message-ID RFC822 header field
@@ -521,18 +523,11 @@ def email_references(references):
     return (ref_match, model, thread_id, hostname, is_private)
 
 # was mail_message.decode()
-def decode_smtp_header(smtp_header, escape_names=False):
+def decode_smtp_header(smtp_header):
     """Returns unicode() string conversion of the given encoded smtp header
     text. email.header decode_header method return a decoded string and its
     charset for each decoded par of the header. This method unicodes the
-    decoded header and join them in a complete string.
-
-    escape_names: we need to escape the name for commas, quotes and backslash.
-    The email_from is used afterwards and given to getadresses, which might fail otherwise.
-    E.g. '\u1f980, crab <crab@snip.com>' is parsed as ('', '\u1f980') and ('crab', '<crab@snip.com>').
-    The name is incorrect in the second, and '\u1f980' is not a valid address.
-    Since the return value squash the tokens, we lose the info on significant commas
-    """
+    decoded header and join them in a complete string. """
     if isinstance(smtp_header, Header):
         smtp_header = ustr(smtp_header)
     if smtp_header:
@@ -540,14 +535,40 @@ def decode_smtp_header(smtp_header, escape_names=False):
         # The joining space will not be needed as of Python 3.3
         # See https://github.com/python/cpython/commit/07ea53cb218812404cdbde820647ce6e4b2d0f8e
         sep = ' ' if pycompat.PY2 else ''
-        if not escape_names:
-            return sep.join([ustr(x[0], x[1]) for x in text])
-        else:
-            # getaddresses is "-aware, but we need quote to take care of pesky \ and "
-            f = lambda s: '"' + quote(s) + '"' if any(ss in s for ss in [',', '"', '\\']) else s
-            return sep.join([ustr(f(ustr(x[0])), x[1]) for x in text])
+        return sep.join([ustr(x[0], x[1]) for x in text])
     return u''
 
 # was mail_thread.decode_header()
 def decode_message_header(message, header, separator=' '):
     return separator.join(decode_smtp_header(h) for h in message.get_all(header, []) if h)
+
+def formataddr(pair, charset='utf-8'):
+    """Pretty format a 2-tuple of the form (realname, email_address).
+    Set the charset to ascii to get a RFC-2822 compliant email.
+    The email address is considered valid and is left unmodified.
+    If the first element of pair is falsy then only the email address
+    is returned.
+    >>> formataddr(('John Doe', 'johndoe@example.com'))
+    '"John Doe" <johndoe@example.com>'
+    >>> formataddr(('', 'johndoe@example.com'))
+    'johndoe@example.com'
+    """
+    name, address = pair
+    address.encode('ascii')
+    if name:
+        try:
+            name.encode(charset)
+        except UnicodeEncodeError:
+            # charset mismatch, encode as utf-8/base64
+            # rfc2047 - MIME Message Header Extensions for Non-ASCII Text
+            return "=?utf-8?b?{name}?= <{addr}>".format(
+                name=base64.b64encode(name.encode('utf-8')).decode('ascii'),
+                addr=address)
+        else:
+            # ascii name, escape it if needed
+            # rfc2822 - Internet Message Format
+            #   #section-3.4 - Address Specification
+            return '"{name}" <{addr}>'.format(
+                name=email_addr_escapes_re.sub(r'\\\g<0>', name),
+                addr=address)
+    return address
