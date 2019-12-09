@@ -284,6 +284,9 @@ return AbstractRenderer.extend({
         if (typeof key === 'string' && key.match(/^((#[A-F0-9]{3})|(#[A-F0-9]{6})|((hsl|rgb)a?\(\s*(?:(\s*\d{1,3}%?\s*),?){3}(\s*,[0-9.]{1,4})?\))|)$/i)) {
             return this.color_map[key] = key;
         }
+        if (typeof key === 'number' && !(key in this.color_map)) {
+            return this.color_map[key] = key;
+        }
         var index = (((_.keys(this.color_map).length + 1) * 5) % 24) + 1;
         this.color_map[key] = index;
         return index;

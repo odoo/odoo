@@ -588,7 +588,7 @@ $o-cw-filter-avatar-size: 20px;
     $color: nth($o-colors-complete, $i);
 
     .o_calendar_view .fc-view {
-        .fc-event.o_calendar_color_#{$i} {
+        .fc-event.o_calendar_color_#{$i - 1} {
             border-color: $color;
             color: darken($color, 35%);
             opacity: 0.8;
@@ -616,7 +616,7 @@ $o-cw-filter-avatar-size: 20px;
         }
     }
 
-    .o_cw_filter_color_#{$i} {
+    .o_cw_filter_color_#{$i - 1} {
         .o_cw_filter_input_bg {
             border-color: $color;
             background: $color;
@@ -624,7 +624,7 @@ $o-cw-filter-avatar-size: 20px;
         }
     }
 
-    .o_cw_popover.o_calendar_color_#{$i} {
+    .o_cw_popover.o_calendar_color_#{$i - 1} {
         $color-subdle: mix(white, $color, 90%);
 
         .card-header, .card-header .popover-header {

@@ -54,6 +54,8 @@ QUnit.module('Views', {
                     allday: {string: "allday", type: "boolean"},
                     partner_ids: {string: "attendees", type: "one2many", relation: 'partner', default: [[6, 0, [1]]]},
                     type: {string: "type", type: "integer"},
+                    event_type_id: {string: "Event_Type", type: "many2one", relation: 'event_type'},
+                    color:  {string: "Color", type: "integer", related: 'event_type_id.color'},
                 },
                 records: [
                     {id: 1, user_id: session.uid, partner_id: 1, name: "event 1", start: "2016-12-11 00:00:00", stop: "2016-12-11 00:00:00", allday: false, partner_ids: [1,2,3], type: 1},
@@ -90,6 +92,18 @@ QUnit.module('Views', {
                     {id: 2, display_name: "partner 2", image: 'BBB'},
                     {id: 3, display_name: "partner 3", image: 'CCC'},
                     {id: 4, display_name: "partner 4", image: 'DDD'}
+                ]
+            },
+            event_type: {
+                fields: {
+                    id: {string: "ID", type: "integer"},
+                    display_name: {string: "Displayed name", type: "char"},
+                    color: {string: "Color", type: "integer"},
+                },
+                records: [
+                    {id: 1, display_name: "Event Type 1", color: 1},
+                    {id: 2, display_name: "Event Type 2", color: 2},
+                    {id: 3, display_name: "Event Type 3 (color 4)", color: 4},
                 ]
             },
             filter_partner: {
@@ -1969,6 +1983,47 @@ QUnit.module('Views', {
         await testUtils.dom.click(calendar.$('.o_calendar_filter_item[data-value=all] input'));
         assert.containsN(calendar, '.fc-event', 9,
             "should display 9 events on the week");
+
+        calendar.destroy();
+    });
+
+    QUnit.test('Add filters and specific color', async function (assert) {
+        assert.expect(5);
+
+        this.data.event.records.push(
+            {id: 7, user_id: 4, partner_id: 1, name: "event 7", start: "2016-12-11 09:00:00", stop: "2016-12-11 10:00:00", allday: false, partner_ids: [1,2,3], event_type_id: 3, color: 4},
+            {id: 8, user_id: 4, partner_id: 1, name: "event 8", start: "2016-12-11 19:00:00", stop: "2016-12-11 20:00:00", allday: false, partner_ids: [1,2,3], event_type_id: 1, color: 1},
+        );
+
+        var calendar = await createCalendarView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar class="o_calendar_test" '+
+                'event_open_popup="true" '+
+                'date_start="start" '+
+                'date_stop="stop" '+
+                'all_day="allday" '+
+                'mode="week" '+
+                'color="color">'+
+                    '<field name="partner_ids" write_model="filter_partner" write_field="partner_id"/>'+
+                    '<field name="event_type_id" filters="1" color="color"/>'+
+            '</calendar>',
+            viewOptions: {
+                initialDate: initialDate,
+            },
+        });
+
+        assert.containsN(calendar, '.o_calendar_filter', 2, "should display 2 filters");
+
+        var $typeFilter =  calendar.$('.o_calendar_filter:has(h5:contains(Event_Type))');
+        assert.ok($typeFilter.length, "should display 'Event Type' filter");
+        assert.containsN($typeFilter, '.o_calendar_filter_item', 3, "should display 3 filter items for 'Event Type'");
+
+        assert.containsOnce($typeFilter, '.o_calendar_filter_item[data-value=3].o_cw_filter_color_4', "Filter for event type 3 must have the color 4");
+
+        assert.containsOnce(calendar, '.fc-event[data-event-id=7].o_calendar_color_4', "Event of event type 3 must have the color 4");
 
         calendar.destroy();
     });
