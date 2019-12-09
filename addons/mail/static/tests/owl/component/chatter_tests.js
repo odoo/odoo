@@ -4,8 +4,8 @@ odoo.define('mail.component.ChatterTests', function (require) {
 const Chatter = require('mail.component.Chatter');
 const {
     afterEach: utilsAfterEach,
+    afterNextRender,
     beforeEach: utilsBeforeEach,
-    nextRender,
     pause,
     start: utilsStart,
 } = require('mail.owl.testUtils');
@@ -19,7 +19,7 @@ QUnit.module('Chatter', {
             Chatter.env = this.env;
             this.chatter = new Chatter(null, Object.assign({ model, id }, otherProps));
             await this.chatter.mount(this.widget.el);
-            await nextRender();
+            await afterNextRender();
         };
         this.start = async params => {
             if (this.widget) {
@@ -211,7 +211,7 @@ QUnit.test('show attachment box', async function (assert) {
     );
 
     document.querySelector(`.o_ChatterTopbar_buttonAttachments`).click();
-    await nextRender();
+    await afterNextRender();
     assert.strictEqual(
         document.querySelectorAll(`.o_Chatter_attachmentBox`).length,
         1,

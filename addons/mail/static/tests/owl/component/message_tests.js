@@ -4,8 +4,8 @@ odoo.define('mail.component.MessageTests', function (require) {
 const Message = require('mail.component.Message');
 const {
     afterEach: utilsAfterEach,
+    afterNextRender,
     beforeEach: utilsBeforeEach,
-    nextRender,
     pause,
     start: utilsStart,
 } = require('mail.owl.testUtils');
@@ -19,7 +19,7 @@ QUnit.module('Message', {
             Message.env = this.env;
             this.message = new Message(null, Object.assign({ messageLocalId }, otherProps));
             await this.message.mount(this.widget.$el[0]);
-            await nextRender();
+            await afterNextRender();
         };
         this.start = async params => {
             if (this.widget) {
@@ -133,7 +133,7 @@ QUnit.test('deleteAttachment', async function (assert) {
     });
     await this.createMessage(messageLocalId);
     document.querySelector('.o_Attachment_asideItemUnlink').click();
-    await nextRender();
+    await afterNextRender();
     assert.ok(!this.env.store.state.attachments['ir.attachment_10']);
     assert.ok(!this.env.store.state.messages[messageLocalId].attachmentLocalIds['ir.attachment_10']);
 });

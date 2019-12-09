@@ -137,6 +137,7 @@ class Discuss extends Component {
     }
 
     mounted() {
+        // TODO SEB clean up this
         this.storeDispatch('updateDiscuss', {
             activeThreadLocalId: this.props.initActiveThreadLocalId,
             isOpen: true,
@@ -485,7 +486,6 @@ class Discuss extends Component {
      */
     _onRedirect(ev) {
         this.storeDispatch('redirect', {
-            ev,
             id: ev.detail.id,
             model: ev.detail.model,
         });

@@ -87,7 +87,6 @@ const Discuss = AbstractAction.extend(OwlMixin, {
         this.component = new DiscussOwl(null, {
             initActiveThreadLocalId: this._initActiveThreadLocalId,
         });
-        this.component.mount(this.$el[0]);
         this._pushStateActionManagerEventListener = ev => {
             ev.stopPropagation();
             if (this._lastPushStateActiveThreadLocalId === ev.detail.activeThreadLocalId) {
@@ -117,6 +116,7 @@ const Discuss = AbstractAction.extend(OwlMixin, {
             'o-update-control-panel',
             this._updateControlPanelEventListener
         );
+        return this.component.mount(this.$el[0]);
     },
     /**
      * @override {web.AbstractAction}

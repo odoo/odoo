@@ -4,26 +4,13 @@ odoo.define('mail.component.ThreadTests', function (require) {
 const Thread = require('mail.component.Thread');
 const {
     afterEach: utilsAfterEach,
+    afterNextRender,
     beforeEach: utilsBeforeEach,
     dragenterFiles,
-    nextRender,
+    nextAnimationFrame,
     pause,
     start: utilsStart,
 } = require('mail.owl.testUtils');
-
-const { makeTestPromise } = require('web.test_utils');
-
-async function scroll({ scrollableElement, scrollTop }) {
-    const scrollProm = makeTestPromise();
-    scrollableElement.addEventListener(
-        'scroll',
-        () => scrollProm.resolve(),
-        false,
-        { once: true });
-    scrollableElement.scrollTop = scrollTop;
-    await scrollProm; // scroll time
-    await nextRender();
-}
 
 QUnit.module('mail.owl', {}, function () {
 QUnit.module('component', {}, function () {
@@ -43,7 +30,7 @@ QUnit.module('Thread', {
                 // needed to allow scrolling in some tests
                 this.thread.el.style.height = '300px';
             }
-            await nextRender();
+            await afterNextRender();
         };
 
         this.start = async params => {
@@ -93,7 +80,8 @@ QUnit.test('dragover files on thread with composer', async function (assert) {
         public: 'public',
     });
     await this.createThread(threadLocalId, { hasComposer: true });
-    await dragenterFiles(document.querySelector('.o_Thread'));
+    dragenterFiles(document.querySelector('.o_Thread'));
+    await afterNextRender();
     assert.ok(
         document.querySelector('.o_Composer_dropZone'),
         "should have dropzone when dragging file over the thread"
@@ -165,21 +153,24 @@ QUnit.test('message list desc order', async function (assert) {
     );
 
     // scroll to bottom
-    await scroll({
-        scrollableElement: document.querySelector(`.o_Thread_messageList`),
-        scrollTop: document.querySelector(`.o_Thread_messageList`).scrollHeight,
-    });
+    document.querySelector(`.o_Thread_messageList`).scrollTop =
+        document.querySelector(`.o_Thread_messageList`).scrollHeight;
+    // The following awaits should be afterNextRender but use multiple nextAnimationFrame
+    // instead to know exactly how much time has to be waited for new messages
+    // to appear (used below).
+    await nextAnimationFrame();
+    await nextAnimationFrame();
     assert.strictEqual(
         document.querySelectorAll(`.o_Message`).length,
         60,
         "should have 60 messages after scrolled to bottom"
     );
 
-    // scroll to top
-    await scroll({
-        scrollableElement: document.querySelector(`.o_Thread_messageList`),
-        scrollTop: 0,
-    });
+    document.querySelector(`.o_Thread_messageList`).scrollTop = 0;
+    // This amount of time should be enough before assuming no messages will
+    // appear (see above).
+    await nextAnimationFrame();
+    await nextAnimationFrame();
     assert.strictEqual(
         document.querySelectorAll(`.o_Message`).length,
         60,
@@ -253,10 +244,12 @@ QUnit.test('message list asc order', async function (assert) {
     );
 
     // scroll to top
-    await scroll({
-        scrollableElement: document.querySelector(`.o_Thread_messageList`),
-        scrollTop: 0,
-    });
+    document.querySelector(`.o_Thread_messageList`).scrollTop = 0;
+    // The following awaits should be afterNextRender but use multiple nextAnimationFrame
+    // instead to know exactly how much time has to be waited for new messages
+    // to appear (used below).
+    await nextAnimationFrame();
+    await nextAnimationFrame();
     assert.strictEqual(
         document.querySelectorAll(`.o_Message`).length,
         60,
@@ -264,10 +257,12 @@ QUnit.test('message list asc order', async function (assert) {
     );
 
     // scroll to bottom
-    await scroll({
-        scrollableElement: document.querySelector(`.o_Thread_messageList`),
-        scrollTop: document.querySelector(`.o_Thread_messageList`).scrollHeight,
-    });
+    document.querySelector(`.o_Thread_messageList`).scrollTop =
+        document.querySelector(`.o_Thread_messageList`).scrollHeight;
+    // This amount of time should be enough before assuming no messages will
+    // appear (see above).
+    await nextAnimationFrame();
+    await nextAnimationFrame();
     assert.strictEqual(
         document.querySelectorAll(`.o_Message`).length,
         60,

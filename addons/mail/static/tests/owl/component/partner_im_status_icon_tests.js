@@ -4,8 +4,8 @@ odoo.define('mail.component.PartnerImStatusIconTests', function (require) {
 const PartnerImStatusIcon = require('mail.component.PartnerImStatusIcon');
 const {
     afterEach: utilsAfterEach,
+    afterNextRender,
     beforeEach: utilsBeforeEach,
-    nextRender,
     pause,
     start: utilsStart,
 } = require('mail.owl.testUtils');
@@ -19,7 +19,6 @@ QUnit.module('PartnerImStatusIcon', {
             PartnerImStatusIcon.env = this.env;
             this.partnerImStatusIcon = new PartnerImStatusIcon(null, { partnerLocalId });
             await this.partnerImStatusIcon.mount(this.widget.$el[0]);
-            await nextRender();
         };
         this.start = async params => {
             if (this.wiget) {
@@ -124,7 +123,7 @@ QUnit.test('change icon on change partner im_status', async function (assert) {
     );
 
     this.env.store.dispatch('_updatePartner', 'res.partner_7', { im_status: 'offline' });
-    await nextRender();
+    await afterNextRender();
     assert.strictEqual(
         document.querySelectorAll(`.o_PartnerImStatusIcon.o-offline`).length,
         1,
@@ -132,7 +131,7 @@ QUnit.test('change icon on change partner im_status', async function (assert) {
     );
 
     this.env.store.dispatch('_updatePartner', 'res.partner_7', { im_status: 'away' });
-    await nextRender();
+    await afterNextRender();
     assert.strictEqual(
         document.querySelectorAll(`.o_PartnerImStatusIcon.o-away`).length,
         1,
@@ -140,7 +139,7 @@ QUnit.test('change icon on change partner im_status', async function (assert) {
     );
 
     this.env.store.dispatch('_updatePartner', 'res.partner_7', { im_status: 'online' });
-    await nextRender();
+    await afterNextRender();
     assert.strictEqual(
         document.querySelectorAll(`.o_PartnerImStatusIcon.o-online`).length,
         1,

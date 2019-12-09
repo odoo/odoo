@@ -3,28 +3,16 @@ odoo.define('mail.component.DiscussTests', function (require) {
 
 const {
     afterEach: utilsAfterEach,
+    afterNextRender,
     beforeEach: utilsBeforeEach,
     getMailServices,
     inputFiles,
-    nextRender,
+    nextAnimationFrame,
     pause,
     start: utilsStart,
 } = require('mail.owl.testUtils');
 
 const { makeTestPromise, file: { createFile } } = require('web.test_utils');
-
-async function scroll({ scrollableElement, scrollTop }) {
-    const scrollProm = makeTestPromise();
-    scrollableElement.addEventListener(
-        'scroll',
-        () => scrollProm.resolve(),
-        false,
-        { once: true }
-    );
-    scrollableElement.scrollTop = scrollTop;
-    await scrollProm; // scroll time
-    await nextRender();
-}
 
 QUnit.module('mail.owl', {}, function () {
 QUnit.module('component', {}, function () {
@@ -93,7 +81,7 @@ QUnit.test('messaging becomes ready', async function (assert) {
 
     // simulate messaging becomes ready
     messagingReadyProm.resolve();
-    await nextRender();
+    await afterNextRender();
     assert.strictEqual(
         document.querySelectorAll('.o_Discuss_messagingNotReady').length,
         0,
@@ -331,7 +319,7 @@ QUnit.test('sidebar: change item', async function (assert) {
     document.querySelector(
         `.o_DiscussSidebar_item[data-thread-local-id="mail.box_starred"]`
     ).click();
-    await nextRender();
+    await afterNextRender();
     assert.notOk(
         document.querySelector(`
             .o_DiscussSidebar_item[data-thread-local-id="mail.box_inbox"]
@@ -394,7 +382,7 @@ QUnit.test('sidebar: add channel', async function (assert) {
     document.querySelector(
         `.o_DiscussSidebar_groupChannel .o_DiscussSidebar_groupHeaderItemAdd`
     ).click();
-    await nextRender();
+    await afterNextRender();
     assert.strictEqual(
         document.querySelectorAll(`.o_DiscussSidebar_groupChannel .o_DiscussSidebar_itemNew`).length,
         1,
@@ -480,7 +468,7 @@ QUnit.test('sidebar: basic channel rendering', async function (assert) {
     );
 
     document.querySelector(`.o_DiscussSidebar_groupChannel .o_DiscussSidebar_item`).click();
-    await nextRender();
+    await afterNextRender();
     channel = document.querySelector(`.o_DiscussSidebar_groupChannel .o_DiscussSidebar_item`);
     assert.strictEqual(
         channel.querySelectorAll(`:scope .o_DiscussSidebarItem_activeIndicator.o-item-active`).length,
@@ -868,7 +856,7 @@ QUnit.test('sidebar: rename chat', async function (assert) {
     );
 
     chat.querySelector(`:scope .o_DiscussSidebarItem_commandRename`).click();
-    await nextRender();
+    await afterNextRender();
     assert.ok(
         chat.querySelector(`:scope .o_DiscussSidebarItem_name`).classList.contains('o-editable'),
         "chat should have editable name"
@@ -892,7 +880,7 @@ QUnit.test('sidebar: rename chat', async function (assert) {
     chat.querySelector(`:scope .o_DiscussSidebarItem_nameInput`).value = "Demo";
     const kevt = new window.KeyboardEvent('keydown', { key: "Enter" });
     chat.querySelector(`:scope .o_DiscussSidebarItem_nameInput`).dispatchEvent(kevt);
-    await nextRender();
+    await afterNextRender();
     assert.notOk(
         chat.querySelector(`:scope .o_DiscussSidebarItem_name`).classList.contains('o-editable'),
         "chat should no longer show editable name"
@@ -967,7 +955,7 @@ QUnit.test('default thread rendering', async function (assert) {
     document.querySelector(
         '.o_DiscussSidebar_item[data-thread-local-id="mail.box_starred"]'
     ).click();
-    await nextRender();
+    await afterNextRender();
     assert.ok(
         document.querySelector(
             '.o_DiscussSidebar_item[data-thread-local-id="mail.box_starred"]'
@@ -991,7 +979,7 @@ QUnit.test('default thread rendering', async function (assert) {
     document.querySelector(
         '.o_DiscussSidebar_item[data-thread-local-id="mail.box_history"]'
     ).click();
-    await nextRender();
+    await afterNextRender();
     assert.ok(
         document.querySelector(
             '.o_DiscussSidebar_item[data-thread-local-id="mail.box_history"]'
@@ -1013,7 +1001,7 @@ QUnit.test('default thread rendering', async function (assert) {
     document.querySelector(
         '.o_DiscussSidebar_item[data-thread-local-id="mail.channel_20"]'
     ).click();
-    await nextRender();
+    await afterNextRender();
     assert.ok(
         document.querySelector(
             '.o_DiscussSidebar_item[data-thread-local-id="mail.channel_20"]'
@@ -1654,7 +1642,7 @@ QUnit.test('load more messages from channel', async function (assert) {
     document.querySelector(
         `.o_Discuss_thread .o_Thread_messageList .o_MessageList_loadMore`
     ).click();
-    await nextRender();
+    await afterNextRender();
     assert.strictEqual(
         document.querySelectorAll(
             `.o_Discuss_thread .o_Thread_messageList .o_MessageList_message`
@@ -1800,10 +1788,8 @@ QUnit.test('load more messages from channel (auto-load on scroll)', async functi
         "should have 30 messages"
     );
 
-    await scroll({
-        scrollableElement: document.querySelector(`.o_Discuss_thread .o_Thread_messageList`),
-        scrollTop: 0,
-    });
+    document.querySelector(`.o_Discuss_thread .o_Thread_messageList`).scrollTop = 0;
+    await afterNextRender();
     assert.strictEqual(
         document.querySelectorAll(
             `.o_Discuss_thread .o_Thread_messageList .o_MessageList_message`
@@ -1889,10 +1875,7 @@ QUnit.test('new messages separator', async function (assert) {
         "should not display 'new messages' separator"
     );
 
-    await scroll({
-        scrollableElement: document.querySelector(`.o_Discuss_thread .o_Thread_messageList`),
-        scrollTop: 0,
-    });
+    document.querySelector(`.o_Discuss_thread .o_Thread_messageList`).scrollTop = 0;
     // simulate receiving a new message
     const data = {
         author_id: [36, "User26"],
@@ -1907,7 +1890,7 @@ QUnit.test('new messages separator', async function (assert) {
     };
     const notifications = [[['my-db', 'mail.channel', 20], data]];
     this.widget.call('bus_service', 'trigger', 'notification', notifications);
-    await nextRender();
+    await afterNextRender();
     assert.strictEqual(
         document.querySelectorAll(
             `.o_Discuss_thread .o_Thread_messageList .o_MessageList_message`
@@ -1924,11 +1907,14 @@ QUnit.test('new messages separator', async function (assert) {
     );
 
     // scroll to bottom
-    await scroll({
-        scrollableElement: document.querySelector(`.o_Discuss_thread .o_Thread_messageList`),
-        scrollTop: document.querySelector(`.o_Discuss_thread .o_Thread_messageList`).scrollHeight,
-    });
-    await nextRender();
+    document.querySelector(`.o_Discuss_thread .o_Thread_messageList`).scrollTop =
+        document.querySelector(`.o_Discuss_thread .o_Thread_messageList`).scrollHeight;
+    await afterNextRender();
+    // Because of t-transition animation not being synchronous. We disable the
+    // animation in CSS, but Owl still keeps the DOM longer than we would like.
+    // See https://github.com/odoo/owl/issues/561
+    await nextAnimationFrame();
+    await nextAnimationFrame();
     assert.strictEqual(
         document.querySelectorAll(
             `.o_Discuss_thread .o_Thread_messageList .o_MessageList_separatorNewMessages`
@@ -2015,10 +2001,10 @@ QUnit.test('restore thread scroll position', async function (assert) {
     );
 
     // scroll to top of channel1
-    await scroll({
-        scrollableElement: document.querySelector(`.o_Discuss_thread .o_Thread_messageList`),
-        scrollTop: 0,
-    });
+    document.querySelector(`.o_Discuss_thread .o_Thread_messageList`).scrollTop = 0;
+    // This amount of time should be enough before assuming no messages will appear.
+    await nextAnimationFrame();
+    await nextAnimationFrame();
     assert.strictEqual(
         document.querySelector(`.o_Discuss_thread .o_Thread_messageList`).scrollTop,
         0,
@@ -2030,13 +2016,13 @@ QUnit.test('restore thread scroll position', async function (assert) {
         .o_DiscussSidebar_groupChannel
         .o_DiscussSidebar_item[data-thread-local-id="mail.channel_2"]`
     ).click();
-    await nextRender();
+    await afterNextRender();
     // select channel1
     document.querySelector(`
         .o_DiscussSidebar_groupChannel
         .o_DiscussSidebar_item[data-thread-local-id="mail.channel_1"]`
     ).click();
-    await nextRender();
+    await afterNextRender();
     assert.strictEqual(
         document.querySelector(`.o_Discuss_thread .o_Thread_messageList`).scrollTop,
         0,
@@ -2048,7 +2034,7 @@ QUnit.test('restore thread scroll position', async function (assert) {
         .o_DiscussSidebar_groupChannel
         .o_DiscussSidebar_item[data-thread-local-id="mail.channel_2"]`
     ).click();
-    await nextRender();
+    await afterNextRender();
     const messageList = document.querySelector(`
         .o_Discuss_thread
         .o_Thread_messageList`
@@ -2185,7 +2171,7 @@ QUnit.test('message origin redirect to channel', async function (assert) {
         .o_Message[data-message-local-id="mail.message_101"]
         .o_Message_originThreadLink`
     ).click();
-    await nextRender();
+    await afterNextRender();
     assert.ok(
         document.querySelector(`
             .o_DiscussSidebar_groupChannel
@@ -2370,7 +2356,7 @@ QUnit.test('redirect to author (open chat)', async function (assert) {
     );
 
     msg1.querySelector(`:scope .o_Message_authorAvatar`).click();
-    await nextRender();
+    await afterNextRender();
     assert.notOk(
         document.querySelector(`
             .o_DiscussSidebar_groupChannel
@@ -2424,7 +2410,7 @@ QUnit.test('sidebar quick search', async function (assert) {
     quickSearch.value = "1";
     const kevt1 = new window.KeyboardEvent('input');
     quickSearch.dispatchEvent(kevt1);
-    await nextRender();
+    await afterNextRender();
     assert.strictEqual(
         document.querySelectorAll(`.o_DiscussSidebar_groupChannel .o_DiscussSidebar_item`).length,
         11,
@@ -2434,7 +2420,7 @@ QUnit.test('sidebar quick search', async function (assert) {
     quickSearch.value = "12";
     const kevt2 = new window.KeyboardEvent('input');
     quickSearch.dispatchEvent(kevt2);
-    await nextRender();
+    await afterNextRender();
     assert.strictEqual(
         document.querySelectorAll(`.o_DiscussSidebar_groupChannel .o_DiscussSidebar_item`).length,
         1,
@@ -2451,7 +2437,7 @@ QUnit.test('sidebar quick search', async function (assert) {
     quickSearch.value = "123";
     const kevt3 = new window.KeyboardEvent('input');
     quickSearch.dispatchEvent(kevt3);
-    await nextRender();
+    await afterNextRender();
     assert.strictEqual(
         document.querySelectorAll(`.o_DiscussSidebar_groupChannel .o_DiscussSidebar_item`).length,
         0,
@@ -2490,7 +2476,7 @@ QUnit.test('basic control panel rendering', async function (assert) {
     );
 
     document.querySelector(`.o_DiscussSidebar_item[data-thread-local-id="mail.box_starred"]`).click();
-    await nextRender();
+    await afterNextRender();
     assert.strictEqual(
         document.querySelector(
             `.o_widget_Discuss > .o_cp_controller > .o_control_panel .breadcrumb`
@@ -2509,7 +2495,7 @@ QUnit.test('basic control panel rendering', async function (assert) {
     );
 
     document.querySelector(`.o_DiscussSidebar_item[data-thread-local-id="mail.channel_20"]`).click();
-    await nextRender();
+    await afterNextRender();
     assert.strictEqual(
         document.querySelector(
             `.o_widget_Discuss > .o_cp_controller > .o_control_panel .breadcrumb`
@@ -2613,7 +2599,7 @@ QUnit.test('inbox: mark all messages as read', async function (assert) {
     );
 
     markAllReadButton.click();
-    await nextRender();
+    await afterNextRender();
     assert.strictEqual(
         document.querySelectorAll(`
             .o_DiscussSidebar_item[data-thread-local-id="mail.box_inbox"]
@@ -2719,7 +2705,7 @@ QUnit.test('starred: unstar all', async function (assert) {
     );
 
     unstarAllButton.click();
-    await nextRender();
+    await afterNextRender();
     assert.strictEqual(
         document.querySelectorAll(`
             .o_DiscussSidebar_item[data-thread-local-id="mail.box_starred"]
@@ -2823,7 +2809,7 @@ QUnit.test('toggle_star message', async function (assert) {
     );
 
     message.querySelector(`:scope .o_Message_commandStar`).click();
-    await nextRender();
+    await afterNextRender();
     assert.verifySteps(['rpc:toggle_message_starred']);
     assert.strictEqual(
         document.querySelector(`
@@ -2845,7 +2831,7 @@ QUnit.test('toggle_star message', async function (assert) {
     );
 
     message.querySelector(`:scope .o_Message_commandStar`).click();
-    await nextRender();
+    await afterNextRender();
     assert.verifySteps(['rpc:toggle_message_starred']);
     assert.strictEqual(
         document.querySelectorAll(`
@@ -2906,17 +2892,17 @@ QUnit.skip('composer state: text save and restore', async function (assert) {
     document.execCommand('insertText', false, "XDU for the win");
     document.querySelector(`.o_ComposerTextInput_editable`)
         .dispatchEvent(new window.KeyboardEvent('input'));
-    await nextRender();
+    await afterNextRender();
     document.querySelector(`.o_DiscussSidebarItem[data-thread-name="Special"]`).click();
-    await nextRender();
+    await afterNextRender();
     document.querySelector(`.o_ComposerTextInput_editable`).focus();
     document.execCommand('insertText', false, "They see me rollin'");
     document.querySelector(`.o_ComposerTextInput_editable`)
         .dispatchEvent(new window.KeyboardEvent('input'));
-    await nextRender();
+    await afterNextRender();
     // Switch back to #general
     document.querySelector(`.o_DiscussSidebarItem[data-thread-name="General"]`).click();
-    await nextRender();
+    await afterNextRender();
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_editable`).textContent,
         "XDU for the win",
@@ -2924,7 +2910,7 @@ QUnit.skip('composer state: text save and restore', async function (assert) {
     );
 
     document.querySelector(`.o_DiscussSidebarItem[data-thread-name="Special"]`).click();
-    await nextRender();
+    await afterNextRender();
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_editable`).textContent,
         "They see me rollin'",
@@ -2965,7 +2951,7 @@ QUnit.test('composer state: attachments save and restore', async function (asser
         `.o_DiscussSidebar_groupChannel .o_DiscussSidebar_item`
     );
     // Add attachment in a message for #general
-    await inputFiles(
+    inputFiles(
         document.querySelector('.o_FileUploader_input'),
         [
             await createFile({
@@ -2975,11 +2961,12 @@ QUnit.test('composer state: attachments save and restore', async function (asser
             }),
         ]
     );
+    await afterNextRender();
     // Switch to #special
     channels[1].click();
-    await nextRender();
+    await afterNextRender();
     // Add attachments in a message for #special
-    await inputFiles(
+    inputFiles(
         document.querySelector('.o_FileUploader_input'),
         [
             await createFile({
@@ -2999,9 +2986,10 @@ QUnit.test('composer state: attachments save and restore', async function (asser
             }),
         ]
     );
+    await afterNextRender();
     // Switch back to #general
     channels[0].click();
-    await nextRender();
+    await afterNextRender();
     // Check attachment is reloaded
     assert.strictEqual(document.querySelectorAll(`.o_Composer .o_Attachment`).length,
         1,
@@ -3014,7 +3002,7 @@ QUnit.test('composer state: attachments save and restore', async function (asser
 
     // Switch back to #special
     channels[1].click();
-    await nextRender();
+    await afterNextRender();
     // Check attachments are reloaded
     assert.strictEqual(
         document.querySelectorAll(`.o_Composer .o_Attachment`).length,
@@ -3137,7 +3125,7 @@ QUnit.test('post a simple message', async function (assert) {
 
     document.querySelector(`.o_ComposerTextInput_editable`)
         .dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Enter' }));
-    await nextRender();
+    await afterNextRender();
     assert.verifySteps(['message_post']);
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_editable`).textContent,
@@ -3211,7 +3199,7 @@ QUnit.test('input cleared only after message_post rpc is resolved', async functi
     // Send message
     document.querySelector(`.o_ComposerTextInput_editable`)
         .dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Enter' }));
-    await nextRender();
+    await afterNextRender();
     assert.verifySteps(['message_post:in-progress']);
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_editable`).textContent,
@@ -3221,7 +3209,7 @@ QUnit.test('input cleared only after message_post rpc is resolved', async functi
 
     // Simulate server response
     messagePostPromise.resolve();
-    await nextRender();
+    await afterNextRender();
     assert.verifySteps(['message_post:done']);
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_editable`).textContent,
@@ -3271,7 +3259,7 @@ QUnit.test('input not cleared if message_post rpc is not resolved', async functi
     // Send message
     document.querySelector(`.o_ComposerTextInput_editable`)
         .dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Enter' }));
-    await nextRender();
+    await afterNextRender();
     assert.verifySteps(['message_post']);
     // Check input is not cleared as message_post is rejected
     assert.strictEqual(
@@ -3397,7 +3385,7 @@ QUnit.test('mark channel as seen on last message visible', async function (asser
     );
 
     document.querySelector(`.o_DiscussSidebar_item[data-thread-local-id="mail.channel_10"]`).click();
-    await nextRender();
+    await afterNextRender();
     assert.notOk(
         document.querySelector(
             `.o_DiscussSidebar_item[data-thread-local-id="mail.channel_10"]`
@@ -3457,7 +3445,7 @@ QUnit.test('receive new needaction messages', async function (assert) {
     };
     const notifications = [[['my-db', 'ir.needaction', 3], data]];
     this.widget.call('bus_service', 'trigger', 'notification', notifications);
-    await nextRender();
+    await afterNextRender();
     assert.ok(
         document.querySelector(`
             .o_DiscussSidebar_item[data-thread-local-id="mail.box_inbox"]
@@ -3498,7 +3486,7 @@ QUnit.test('receive new needaction messages', async function (assert) {
     };
     const notifications2 = [[['my-db', 'ir.needaction', 3], data2]];
     this.widget.call('bus_service', 'trigger', 'notification', notifications2);
-    await nextRender();
+    await afterNextRender();
     assert.strictEqual(
         document.querySelector(`
             .o_DiscussSidebar_item[data-thread-local-id="mail.box_inbox"]
@@ -3615,7 +3603,7 @@ QUnit.test('reply to message from inbox (message linked to document)', async fun
     );
 
     document.querySelector('.o_Message_commandReply').click();
-    await nextRender();
+    await afterNextRender();
     assert.ok(
         document.querySelector('.o_Message').classList.contains('o-selected'),
         "message should be selected after clicking on reply icon"
@@ -3639,7 +3627,7 @@ QUnit.test('reply to message from inbox (message linked to document)', async fun
     document.querySelector(`.o_ComposerTextInput_editable`)
         .dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Enter' }));
     assert.verifySteps(['message_post']);
-    await nextRender();
+    await afterNextRender();
     assert.notOk(
         document.querySelector('.o_Composer'),
         "should no longer have composer after posting reply to message"
@@ -3780,7 +3768,7 @@ QUnit.test('load recent messages from thread (already loaded some old messages)'
     );
 
     document.querySelector(`.o_DiscussSidebar_item[data-thread-local-id="mail.channel_20"]`).click();
-    await nextRender();
+    await afterNextRender();
     assert.verifySteps(
         ['message_fetch:load_channel_20'],
         "should initially have fetched messages from channel 'General' (channel 20)"
@@ -3796,10 +3784,8 @@ QUnit.test('load recent messages from thread (already loaded some old messages)'
         "should not display 1st message of 'General' as needaction from inbox"
     );
 
-    await scroll({
-        scrollableElement: document.querySelector(`.o_Discuss_thread .o_Thread_messageList`),
-        scrollTop: 0,
-    });
+    document.querySelector(`.o_Discuss_thread .o_Thread_messageList`).scrollTop = 0;
+    await afterNextRender();
     assert.verifySteps(
         ['message_fetch:load_more_channel_20'],
         "should have fetched more messages from channel 'General' (channel 20)"
@@ -3886,7 +3872,7 @@ QUnit.test('messages marked as read move to "History" mailbox', async function (
     );
 
     document.querySelector('.o_DiscussSidebar_item[data-thread-local-id="mail.box_inbox"]').click();
-    await nextRender();
+    await afterNextRender();
     assert.ok(
         document.querySelector(
             '.o_DiscussSidebar_item[data-thread-local-id="mail.box_inbox"]'
@@ -3905,7 +3891,7 @@ QUnit.test('messages marked as read move to "History" mailbox', async function (
     );
 
     document.querySelector('.o_widget_Discuss_controlPanelButtonMarkAllRead').click();
-    await nextRender();
+    await afterNextRender();
     assert.ok(
         document.querySelector(
             '.o_DiscussSidebar_item[data-thread-local-id="mail.box_inbox"]'
@@ -3921,7 +3907,7 @@ QUnit.test('messages marked as read move to "History" mailbox', async function (
     document.querySelector(
         '.o_DiscussSidebar_item[data-thread-local-id="mail.box_history"]'
     ).click();
-    await nextRender();
+    await afterNextRender();
     assert.ok(
         document.querySelector(
             '.o_DiscussSidebar_item[data-thread-local-id="mail.box_history"]'
@@ -3988,7 +3974,7 @@ QUnit.test('receive new channel message: out of odoo focus (notification, channe
     };
     const notifications = [[['my-db', 'mail.channel', 20], messageData]];
     this.widget.call('bus_service', 'trigger', 'notification', notifications);
-    await nextRender();
+    await afterNextRender();
     assert.verifySteps(['set_title_part']);
     assert.strictEqual(
         document.querySelectorAll('.o_notification').length,
@@ -4058,7 +4044,7 @@ QUnit.test('receive new channel message: out of odoo focus (notification, chat)'
     };
     const notifications = [[['my-db', 'mail.channel', 10], messageData]];
     this.widget.call('bus_service', 'trigger', 'notification', notifications);
-    await nextRender();
+    await afterNextRender();
     assert.verifySteps(['set_title_part']);
     assert.strictEqual(
         document.querySelectorAll('.o_notification').length,
@@ -4144,7 +4130,7 @@ QUnit.test('receive new channel messages: out of odoo focus (tab title)', async 
     };
     const notifications1 = [[['my-db', 'mail.channel', 20], messageData1]];
     this.widget.call('bus_service', 'trigger', 'notification', notifications1);
-    await nextRender();
+    await afterNextRender();
     assert.verifySteps(['set_title_part']);
 
     // simulate receiving a new message in chat with odoo focused
@@ -4161,7 +4147,7 @@ QUnit.test('receive new channel messages: out of odoo focus (tab title)', async 
     };
     const notifications2 = [[['my-db', 'mail.channel', 10], messageData2]];
     this.widget.call('bus_service', 'trigger', 'notification', notifications2);
-    await nextRender();
+    await afterNextRender();
     assert.verifySteps(['set_title_part']);
 
     // simulate receiving another new message in chat with odoo focused
@@ -4178,7 +4164,7 @@ QUnit.test('receive new channel messages: out of odoo focus (tab title)', async 
     };
     const notifications3 = [[['my-db', 'mail.channel', 20], messageData3]];
     this.widget.call('bus_service', 'trigger', 'notification', notifications3);
-    await nextRender();
+    await afterNextRender();
     assert.verifySteps(['set_title_part']);
 });
 

@@ -5,7 +5,6 @@ const ChatterTopBar = require('mail.component.ChatterTopbar');
 const {
     afterEach: utilsAfterEach,
     beforeEach: utilsBeforeEach,
-    nextRender,
     pause,
     start: utilsStart,
 } = require('mail.owl.testUtils');
@@ -26,7 +25,6 @@ QUnit.module('ChatterTopbar', {
             ChatterTopBar.env = this.env;
             this.chatterTopbar = new ChatterTopBar(null, Object.assign({ threadLocalId }, otherProps));
             await this.chatterTopbar.mount(this.widget.el);
-            await nextRender();
         };
         this.start = async params => {
             if (this.widget) {

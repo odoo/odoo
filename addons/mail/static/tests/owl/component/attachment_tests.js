@@ -5,7 +5,6 @@ const Attachment = require('mail.component.Attachment');
 const {
     afterEach: utilsAfterEach,
     beforeEach: utilsBeforeEach,
-    nextRender,
     pause,
     start: utilsStart,
 } = require('mail.owl.testUtils');
@@ -19,7 +18,6 @@ QUnit.module('Attachment', {
             Attachment.env = this.env;
             this.attachment = new Attachment(null, Object.assign({ attachmentLocalId }, otherProps));
             await this.attachment.mount(this.widget.el);
-            await nextRender();
         };
         this.start = async params => {
             if (this.widget) {

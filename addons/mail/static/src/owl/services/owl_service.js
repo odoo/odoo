@@ -35,7 +35,7 @@ const OwlService = AbstractService.extend({
         this._super(...arguments);
         this._env = {
             _t,
-            isTest: this.IS_TEST,
+            disableAnimation: this.IS_TEST,
             qweb: qwebOwl,
             session,
             call: (...args) => this.call(...args),
@@ -57,13 +57,9 @@ const OwlService = AbstractService.extend({
         }
 
         this._store.dispatch('initMessaging');
-        if (!this.IS_TEST) {
-            window.addEventListener('resize', _.debounce(() => {
-                this._resizeGlobalWindow();
-            }), 100);
-        } else {
-            this['test:resize'] = this._resize;
-        }
+        window.addEventListener('resize', _.debounce(() => {
+            this._resizeGlobalWindow();
+        }), 100);
     },
 
     //--------------------------------------------------------------------------
@@ -82,39 +78,12 @@ const OwlService = AbstractService.extend({
     // Private
     //--------------------------------------------------------------------------
 
-    /**
-     * Called when browser size changes. Updates the store with new screen sizes
-     * and update `isMobile` value accordingly. Useful for components that
-     * are dependent on browser size.
-     *
-     * @private
-     * @param {Object} [param0={}] passed data only in test environment
-     * @param {integer} [param0.globalWindowInnerHeight]
-     * @param {integer} [param0.globalWindowInnerWidth]
-     * @param {boolean} [param0.isMobile]
-     */
-    _resizeGlobalWindow({
-        globalWindowInnerHeight,
-        globalWindowInnerWidth,
-        isMobile,
-    }={}) {
-        if (this.IS_TEST) {
-            // in test environment, use mocked values
-            this._store.dispatch('handleGlobalWindowResize', {
-                globalWindowInnerHeight: globalWindowInnerHeight ||
-                    this._store.state.globalWindow.innerHeight,
-                globalWindowInnerWidth: globalWindowInnerWidth ||
-                    this._store.state.globalWindow.innerWidth,
-                isMobile: isMobile ||
-                    this._store.state.isMobile,
-            });
-        } else {
-            this._store.dispatch('handleGlobalWindowResize', {
-                globalWindowInnerHeight: window.innerHeight,
-                globalWindowInnerWidth: window.innerWidth,
-                isMobile: config.device.isMobile,
-            });
-        }
+    _resizeGlobalWindow() {
+        this._store.dispatch('handleGlobalWindowResize', {
+            globalWindowInnerHeight: window.innerHeight,
+            globalWindowInnerWidth: window.innerWidth,
+            isMobile: config.device.isMobile,
+        });
     },
 });
 

@@ -240,7 +240,6 @@ class ChatWindowManager extends Component {
      */
     _onRedirect(ev) {
         this.storeDispatch('redirect', {
-            ev,
             id: ev.detail.id,
             model: ev.detail.model,
         });

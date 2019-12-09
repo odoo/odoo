@@ -3,8 +3,8 @@ odoo.define('mail.component.MessagingMenuTests', function (require) {
 
 const {
     afterEach: utilsAfterEach,
+    afterNextRender,
     beforeEach: utilsBeforeEach,
-    nextRender,
     pause,
     start: utilsStart,
 } = require('mail.owl.testUtils');
@@ -20,7 +20,9 @@ QUnit.module('MessagingMenu', {
             if (this.widget) {
                 this.widget.destroy();
             }
-            let { widget } = await utilsStart({ ...params, data: this.data });
+            let { widget } = await utilsStart(Object.assign({}, params, {
+                data: this.data,
+            }));
             this.widget = widget;
         };
     },
@@ -51,7 +53,7 @@ QUnit.test('messaging not ready', async function (assert) {
     );
 
     document.querySelector(`.o_MessagingMenu_toggler`).click();
-    await nextRender();
+    await afterNextRender();
     assert.strictEqual(
         document.querySelector('.o_MessagingMenu_dropdownMenu').textContent,
         "Please wait...",
@@ -74,11 +76,11 @@ QUnit.test('messaging becomes ready', async function (assert) {
         }
     });
     document.querySelector(`.o_MessagingMenu_toggler`).click();
-    await nextRender();
+    await afterNextRender();
 
     // simulate messaging becomes ready
     messagingReadyProm.resolve();
-    await nextRender();
+    await afterNextRender();
     assert.strictEqual(
         document.querySelectorAll('.o_MessagingMenu_loading').length,
         0,
@@ -135,7 +137,7 @@ QUnit.test('basic rendering', async function (assert) {
     );
 
     document.querySelector(`.o_MessagingMenu_toggler`).click();
-    await nextRender();
+    await afterNextRender();
     assert.ok(
         document.querySelector('.o_MessagingMenu').classList.contains('show'),
         "should mark messaging menu item as shown"
@@ -231,7 +233,7 @@ QUnit.test('switch tab', async function (assert) {
     });
 
     document.querySelector(`.o_MessagingMenu_toggler`).click();
-    await nextRender();
+    await afterNextRender();
     assert.strictEqual(
         document.querySelectorAll(`.o_MessagingMenu_tabButton[data-tab-id="all"]`).length,
         1,
@@ -267,7 +269,7 @@ QUnit.test('switch tab', async function (assert) {
     );
 
     document.querySelector(`.o_MessagingMenu_tabButton[data-tab-id="chat"]`).click();
-    await nextRender();
+    await afterNextRender();
     assert.notOk(
         document.querySelector(
             `.o_MessagingMenu_tabButton[data-tab-id="all"]`
@@ -288,7 +290,7 @@ QUnit.test('switch tab', async function (assert) {
     );
 
     document.querySelector(`.o_MessagingMenu_tabButton[data-tab-id="channel"]`).click();
-    await nextRender();
+    await afterNextRender();
     assert.notOk(
         document.querySelector(
             `.o_MessagingMenu_tabButton[data-tab-id="all"]`
@@ -309,7 +311,7 @@ QUnit.test('switch tab', async function (assert) {
     );
 
     document.querySelector(`.o_MessagingMenu_tabButton[data-tab-id="all"]`).click();
-    await nextRender();
+    await afterNextRender();
     assert.ok(
         document.querySelector(
             `.o_MessagingMenu_tabButton[data-tab-id="all"]`
@@ -343,9 +345,9 @@ QUnit.test('new message', async function (assert) {
     });
 
     document.querySelector(`.o_MessagingMenu_toggler`).click();
-    await nextRender();
+    await afterNextRender();
     document.querySelector(`.o_MessagingMenu_newMessageButton`).click();
-    await nextRender();
+    await afterNextRender();
 
     assert.strictEqual(
         document.querySelectorAll(`.o_ChatWindow`).length,
@@ -376,7 +378,7 @@ QUnit.test('no new message when discuss is open', async function (assert) {
     });
 
     document.querySelector(`.o_MessagingMenu_toggler`).click();
-    await nextRender();
+    await afterNextRender();
     assert.strictEqual(
         document.querySelectorAll(`.o_MessagingMenu_newMessageButton`).length,
         0,
@@ -384,7 +386,7 @@ QUnit.test('no new message when discuss is open', async function (assert) {
     );
 
     this.widget.closeDiscuss();
-    await nextRender();
+    await afterNextRender();
     assert.strictEqual(
         document.querySelectorAll(`.o_MessagingMenu_newMessageButton`).length,
         1,
@@ -392,7 +394,7 @@ QUnit.test('no new message when discuss is open', async function (assert) {
     );
 
     this.widget.openDiscuss();
-    await nextRender();
+    await afterNextRender();
     assert.strictEqual(
         document.querySelectorAll(`.o_MessagingMenu_newMessageButton`).length,
         0,
@@ -434,7 +436,7 @@ QUnit.test('channel preview: basic rendering', async function (assert) {
     });
 
     document.querySelector(`.o_MessagingMenu_toggler`).click();
-    await nextRender();
+    await afterNextRender();
     assert.strictEqual(
         document.querySelectorAll(
             `.o_MessagingMenu_dropdownMenu .o_ThreadPreview`
@@ -563,7 +565,7 @@ QUnit.test('filtered previews', async function (assert) {
     });
 
     document.querySelector(`.o_MessagingMenu_toggler`).click();
-    await nextRender();
+    await afterNextRender();
     assert.strictEqual(
         document.querySelectorAll(`.o_MessagingMenu_dropdownMenu .o_ThreadPreview`).length,
         2,
@@ -587,7 +589,7 @@ QUnit.test('filtered previews', async function (assert) {
     );
 
     document.querySelector(`.o_MessagingMenu_tabButton[data-tab-id="chat"]`).click();
-    await nextRender();
+    await afterNextRender();
     assert.strictEqual(
         document.querySelectorAll(`.o_MessagingMenu_dropdownMenu .o_ThreadPreview`).length,
         1,
@@ -611,7 +613,7 @@ QUnit.test('filtered previews', async function (assert) {
     );
 
     document.querySelector(`.o_MessagingMenu_tabButton[data-tab-id="channel"]`).click();
-    await nextRender();
+    await afterNextRender();
     assert.strictEqual(
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
@@ -638,7 +640,7 @@ QUnit.test('filtered previews', async function (assert) {
     );
 
     document.querySelector(`.o_MessagingMenu_tabButton[data-tab-id="all"]`).click();
-    await nextRender();
+    await afterNextRender();
     assert.strictEqual(
         document.querySelectorAll(`.o_MessagingMenu_dropdownMenu .o_ThreadPreview`).length,
         2,
@@ -684,9 +686,9 @@ QUnit.test('open chat window from preview', async function (assert) {
     });
 
     document.querySelector(`.o_MessagingMenu_toggler`).click();
-    await nextRender();
+    await afterNextRender();
     document.querySelector(`.o_MessagingMenu_dropdownMenu .o_ThreadPreview`).click();
-    await nextRender();
+    await afterNextRender();
     assert.strictEqual(
         document.querySelectorAll(`.o_ChatWindow`).length,
         1,
