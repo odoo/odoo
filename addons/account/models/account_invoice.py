@@ -994,7 +994,7 @@ class AccountInvoice(models.Model):
         elif self.date_due and (date_invoice > self.date_due):
             self.date_due = date_invoice
 
-    @api.onchange('cash_rounding_id', 'invoice_line_ids', 'tax_line_ids')
+    @api.onchange('cash_rounding_id', 'invoice_line_ids', 'tax_line_ids', 'amount_total')
     def _onchange_cash_rounding(self):
         # Drop previous cash rounding lines
         lines_to_remove = self.invoice_line_ids.filtered(lambda l: l.is_rounding_line)
