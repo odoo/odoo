@@ -140,7 +140,6 @@ class PosOrder(models.Model):
         pos_order._create_order_picking()
         if pos_order.to_invoice and pos_order.state == 'paid':
             pos_order.action_pos_order_invoice()
-            pos_order.account_move.sudo().post()
 
         return pos_order.id
 
@@ -404,6 +403,7 @@ class PosOrder(models.Model):
             message = _("This invoice has been created from the point of sale session: <a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>") % (order.id, order.name)
             new_move.message_post(body=message)
             order.write({'account_move': new_move.id, 'state': 'invoiced'})
+            new_move.sudo().with_company(order.company_id).post()
             moves += new_move
 
         if not moves:
