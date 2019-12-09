@@ -46,13 +46,14 @@ class EmojisButton extends Component {
                 content() {
                     const $this = $(this);
                     self._popoverId = $this.attr('aria-describedby');
+                    self._popover.__owl__.isMounted = true;
                     return self._popover.el;
                 },
                 html: true,
                 offset: '0, 1',
                 placement: 'top',
                 trigger: 'click',
-                animation: !this.env.isTest,
+                animation: !this.env.disableAnimation,
             });
         });
         this._popover.el.addEventListener('o-emoji-selection', ev => this._onEmojiSelection(ev));
@@ -61,6 +62,7 @@ class EmojisButton extends Component {
 
     willUnmount() {
         this._hidePopover();
+        this._popover.__owl__.isMounted = false;
         this._popover.destroy();
         document.removeEventListener('click', this._onClickCaptureGlobal, true);
     }

@@ -142,6 +142,7 @@ class Thread extends Component {
      * @private
      */
     _update() {
+        // TODO SEB move this outside mounted (in constructor + will update props)
         if (!this.storeProps.threadCache || (!this.storeProps.threadCache.isLoaded && !this.storeProps.threadCache.isLoading)) {
             this._loadThreadCache();
         }

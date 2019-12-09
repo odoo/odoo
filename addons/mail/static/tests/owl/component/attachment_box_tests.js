@@ -4,10 +4,10 @@ odoo.define('mail.component.AttachmentBoxTests', function (require) {
 const AttachmentBox = require('mail.component.AttachmentBox');
 const {
     afterEach: utilsAfterEach,
+    afterNextRender,
     beforeEach: utilsBeforeEach,
     dragenterFiles,
     dropFiles,
-    nextRender,
     pause,
     start: utilsStart,
 } = require('mail.owl.testUtils');
@@ -30,7 +30,6 @@ QUnit.module('AttachmentBox', {
             AttachmentBox.env = this.env;
             this.attachmentBox = new AttachmentBox(null, Object.assign({ threadLocalId }, otherProps));
             await this.attachmentBox.mount(this.widget.el);
-            await nextRender();
         };
         this.start = async params => {
             if (this.widget) {
@@ -165,7 +164,8 @@ QUnit.test('attachment box: drop attachments', async function (assert) {
         "should have an attachment box"
     );
 
-    await dragenterFiles(document.querySelector('.o_AttachmentBox'));
+    dragenterFiles(document.querySelector('.o_AttachmentBox'));
+    await afterNextRender();
     assert.ok(
         document.querySelector('.o_AttachmentBox_dropZone'),
         "should have a drop zone"
@@ -176,19 +176,20 @@ QUnit.test('attachment box: drop attachments', async function (assert) {
         "should have no attachment before files are dropped"
     );
 
-    await dropFiles(
+    dropFiles(
         document.querySelector('.o_AttachmentBox_dropZone'),
         files
     );
-    await nextRender();
+    await afterNextRender();
     assert.strictEqual(
         document.querySelectorAll(`.o_AttachmentBox .o_Attachment`).length,
         1,
         "should have 1 attachment in the box after files dropped"
     );
 
-    await dragenterFiles(document.querySelector('.o_AttachmentBox'));
-    await dropFiles(
+    dragenterFiles(document.querySelector('.o_AttachmentBox'));
+    await afterNextRender();
+    dropFiles(
         document.querySelector('.o_AttachmentBox_dropZone'),
         [
             await createFile({
@@ -203,7 +204,7 @@ QUnit.test('attachment box: drop attachments', async function (assert) {
             })
         ]
     );
-    await nextRender();
+    await afterNextRender();
     assert.strictEqual(
         document.querySelectorAll(`.o_AttachmentBox .o_Attachment`).length,
         3,

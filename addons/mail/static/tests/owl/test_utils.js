@@ -15,6 +15,10 @@ const RamStorage = require('web.RamStorage');
 const { mock: { addMockEnvironment } } = require('web.test_utils');
 const Widget = require('web.Widget');
 
+const ComposerTextInput = require('mail.component.ComposerTextInput');
+
+const { makeTestPromise } = require('web.test_utils');
+
 //------------------------------------------------------------------------------
 // Private
 //------------------------------------------------------------------------------
@@ -74,15 +78,83 @@ function _createFakeDataTransfer(files) {
 // Public
 //------------------------------------------------------------------------------
 
-/**
- * @param {Object} self qunit test environment
- */
-function afterEach(self) {
-    // unpatch _.debounce and _.throttle
-    _.debounce = self.underscoreDebounce;
-    _.throttle = self.underscoreThrottle;
-    window.fetch = self.ORIGINAL_WINDOW_FETCH;
+function getMailServices() {
+    return new MockMailService().getServices();
 }
+
+//------------------------------------------------------------------------------
+// Public: rendering timers
+//------------------------------------------------------------------------------
+
+/**
+ * Returns a promise resolved at the next animation frame.
+ *
+ * @returns {Promise}
+ */
+function nextAnimationFrame() {
+    let requestAnimationFrame = owl.Component.scheduler.requestAnimationFrame;
+    return new Promise(function (resolve) {
+        setTimeout(() => requestAnimationFrame(() => resolve()));
+    });
+}
+
+/**
+ * Returns a promise resolved the next time OWL stops rendering.
+ *
+ * @param {number} [timeoutDelay=5000] in ms
+ * @returns {Promise}
+ */
+const afterNextRender = (function () {
+    const stop = owl.Component.scheduler.stop;
+    const stopPromises = [];
+
+    owl.Component.scheduler.stop = function () {
+        const wasRunning = this.isRunning;
+        stop.call(this);
+        if (wasRunning) {
+            while (stopPromises.length) {
+                stopPromises.pop().resolve();
+            }
+        }
+    };
+
+    async function afterNextRender(timeoutDelay = 5000) {
+        // Define the potential errors outside of the promise to get a proper
+        // trace if they happen.
+        const startError = new Error("Timeout: the render didn't start.");
+        const stopError = new Error("Timeout: the render didn't stop.");
+        // Set up the timeout to reject if no render happens.
+        let timeoutNoRender;
+        const timeoutProm = new Promise((resolve, reject) => {
+            timeoutNoRender = setTimeout(() => {
+                let error = startError;
+                if (owl.Component.scheduler.isRunning) {
+                    error = stopError;
+                }
+                console.error(error);
+                reject(error);
+            }, timeoutDelay);
+        });
+        // Set up the promise to resolve if a render happens.
+        const prom = makeTestPromise();
+        stopPromises.push(prom);
+        // Make them race (first to resolve/reject wins).
+        await Promise.race([prom, timeoutProm]);
+        clearTimeout(timeoutNoRender);
+        // Wait one more frame to make sure no new render has been queued.
+        await nextAnimationFrame();
+        if (owl.Component.scheduler.isRunning) {
+            await afterNextRender(timeoutDelay);
+        }
+    }
+
+    return afterNextRender;
+})();
+
+
+//------------------------------------------------------------------------------
+// Public: test lifecycle
+//------------------------------------------------------------------------------
 
 function beforeEach(self) {
     // patch _.debounce and _.throttle to be fast and synchronous
@@ -183,6 +255,13 @@ function beforeEach(self) {
             },
         },
     };
+
+    self.ORIGINAL_OwlService__resizeGlobalWindow = OwlService.prototype._resizeGlobalWindow;
+    OwlService.prototype._resizeGlobalWindow = () => {};
+
+    self.ORIGINAL_ComposerTextInput__loadSummernote = ComposerTextInput.prototype._loadSummernote;
+    ComposerTextInput.prototype._loadSummernote = () => {};
+
     self.ORIGINAL_WINDOW_FETCH = window.fetch;
     let uploadedAttachmentsCount = 1;
     window.fetch = async function (route, form) {
@@ -206,109 +285,6 @@ function beforeEach(self) {
             }
         };
     };
-}
-
-/**
- * Drag some files over a DOM element
- *
- * @param {DOM.Element} el
- * @param {Object[]} file must have been create beforehand
- *   @see testUtils.file.createFile
- */
-async function dragenterFiles(el, files) {
-    const ev = new Event('dragenter', { bubbles: true });
-    Object.defineProperty(ev, 'dataTransfer', {
-        value: _createFakeDataTransfer(files),
-    });
-    el.dispatchEvent(ev);
-    await nextRender();
-}
-
-/**
- * Drop some files on a DOM element
- *
- * @param {DOM.Element} el
- * @param {Object[]} files must have been created beforehand
- *   @see testUtils.file.createFile
- */
-async function dropFiles(el, files) {
-    const ev = new Event('drop', { bubbles: true });
-    Object.defineProperty(ev, 'dataTransfer', {
-        value: _createFakeDataTransfer(files),
-    });
-    el.dispatchEvent(ev);
-    await nextRender();
-}
-
-function getMailServices() {
-    return new MockMailService().getServices();
-}
-
-/**
- * Set files in a file input
- *
- * @param {DOM.Element} el
- * @param {Object[]} files must have been created beforehand
- *   @see testUtils.file.createFile
- */
-async function inputFiles(el, files) {
-    const dataTransfer = new window.DataTransfer();
-    for (const file of files) {
-        dataTransfer.items.add(file);
-    }
-    el.files = dataTransfer.files;
-    /**
-     * Changing files programatically is not supposed to trigger the event but
-     * it does in Chrome versions before 73 (which is on runbot), so in that
-     * case there is no need to make a manual dispatch, because it would lead to
-     * the files being added twice.
-     */
-    const versionRaw = navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./);
-    const chromeVersion = versionRaw ? parseInt(versionRaw[2], 10) : false;
-    if (!chromeVersion || chromeVersion >= 73) {
-        el.dispatchEvent(new Event('change'));
-    }
-    await nextRender();
-}
-
-/**
- * Wait for when OWL completely rendered UI.
- *
- * It uses request next animation frame internally.
- *
- * Note that there may be multiple rendering at the same time (e.g. thread
- * mounted loads messages, which also triggers a re-render for spinner/loaded
- * messages). Each re-render also takes a new request animation frame, so
- * waiting for next animation frame is not enough.
- *
- * In our case, 3 successive request animation frames is enough, but it may
- * be necessary to increase that amount in the future, until OWL provides
- * necessary means to detect end of rendering.
- */
-async function nextRender() {
-    await new Promise(resolve => setTimeout(() => window.requestAnimationFrame(() => resolve())));
-    await new Promise(resolve => setTimeout(() => window.requestAnimationFrame(() => resolve())));
-    await new Promise(resolve => setTimeout(() => window.requestAnimationFrame(() => resolve())));
-}
-
-/**
- * Paste some files on a DOM element
- *
- * @param {DOM.Element} el
- * @param {Object[]} files must have been created beforehand
- *   @see testUtils.file.createFile
- */
-async function pasteFiles(el, files) {
-    const ev = new Event('paste', { bubbles: true });
-    Object.defineProperty(ev, 'clipboardData', {
-        value: _createFakeDataTransfer(files),
-    });
-    el.dispatchEvent(ev);
-    await nextRender();
-}
-
-async function pause() {
-    await new Promise(resolve => {});
 }
 
 /**
@@ -402,7 +378,7 @@ async function start(param0) {
             parent.destroy();
         },
         openDiscuss() {
-            discuss.on_attach_callback();
+            return discuss.on_attach_callback();
         },
     });
 
@@ -412,14 +388,111 @@ async function start(param0) {
         window.o_test_env = env;
     }
     widget.call('chat_window', 'test:web_client_ready'); // trigger mounting of chat window manager
+    await afterNextRender();
+
     await menu.appendTo($(selector));
     menu.on_attach_callback(); // trigger mounting of menu component
+    await afterNextRender();
+
     await discuss.appendTo($(selector));
+
     if (autoOpenDiscuss) {
-        widget.openDiscuss();
+        await widget.openDiscuss();
+        await afterNextRender();
     }
-    await nextRender();
+
     return { discuss, env, widget };
+}
+
+/**
+ * @param {Object} self qunit test environment
+ */
+function afterEach(self) {
+    // unpatch _.debounce and _.throttle
+    _.debounce = self.underscoreDebounce;
+    _.throttle = self.underscoreThrottle;
+    window.fetch = self.ORIGINAL_WINDOW_FETCH;
+    ComposerTextInput.prototype._loadSummernote = self.ORIGINAL_ComposerTextInput__loadSummernote;
+    OwlService.prototype._resizeGlobalWindow = self.ORIGINAL_OwlService__resizeGlobalWindow;
+}
+
+async function pause() {
+    await new Promise(() => {});
+}
+
+//------------------------------------------------------------------------------
+// Public: file utilities
+//------------------------------------------------------------------------------
+
+/**
+ * Drag some files over a DOM element
+ *
+ * @param {DOM.Element} el
+ * @param {Object[]} file must have been create beforehand
+ *   @see testUtils.file.createFile
+ */
+function dragenterFiles(el, files) {
+    const ev = new Event('dragenter', { bubbles: true });
+    Object.defineProperty(ev, 'dataTransfer', {
+        value: _createFakeDataTransfer(files),
+    });
+    el.dispatchEvent(ev);
+}
+
+/**
+ * Drop some files on a DOM element
+ *
+ * @param {DOM.Element} el
+ * @param {Object[]} files must have been created beforehand
+ *   @see testUtils.file.createFile
+ */
+function dropFiles(el, files) {
+    const ev = new Event('drop', { bubbles: true });
+    Object.defineProperty(ev, 'dataTransfer', {
+        value: _createFakeDataTransfer(files),
+    });
+    el.dispatchEvent(ev);
+}
+
+/**
+ * Set files in a file input
+ *
+ * @param {DOM.Element} el
+ * @param {Object[]} files must have been created beforehand
+ *   @see testUtils.file.createFile
+ */
+function inputFiles(el, files) {
+    const dataTransfer = new window.DataTransfer();
+    for (const file of files) {
+        dataTransfer.items.add(file);
+    }
+    el.files = dataTransfer.files;
+    /**
+     * Changing files programatically is not supposed to trigger the event but
+     * it does in Chrome versions before 73 (which is on runbot), so in that
+     * case there is no need to make a manual dispatch, because it would lead to
+     * the files being added twice.
+     */
+    const versionRaw = navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./);
+    const chromeVersion = versionRaw ? parseInt(versionRaw[2], 10) : false;
+    if (!chromeVersion || chromeVersion >= 73) {
+        el.dispatchEvent(new Event('change'));
+    }
+}
+
+/**
+ * Paste some files on a DOM element
+ *
+ * @param {DOM.Element} el
+ * @param {Object[]} files must have been created beforehand
+ *   @see testUtils.file.createFile
+ */
+function pasteFiles(el, files) {
+    const ev = new Event('paste', { bubbles: true });
+    Object.defineProperty(ev, 'clipboardData', {
+        value: _createFakeDataTransfer(files),
+    });
+    el.dispatchEvent(ev);
 }
 
 //------------------------------------------------------------------------------
@@ -428,12 +501,13 @@ async function start(param0) {
 
 return {
     afterEach,
+    afterNextRender,
     beforeEach,
     dragenterFiles,
     dropFiles,
     getMailServices,
     inputFiles,
-    nextRender,
+    nextAnimationFrame,
     pasteFiles,
     pause,
     start,

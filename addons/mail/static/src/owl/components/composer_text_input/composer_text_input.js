@@ -80,12 +80,7 @@ class ComposerTextInput extends Component {
      * Load summernote, since this is not in the assets bundle.
      */
     willStart() {
-        if (this.env.isTest) {
-            return;
-        }
-        return ajax.loadLibs({
-            assetLibs: ['web_editor.compiled_assets_wysiwyg'],
-        });
+        return this._loadSummernote();
     }
 
     /**
@@ -381,6 +376,16 @@ class ComposerTextInput extends Component {
             },
         };
         return collectionItem;
+    }
+
+    /**
+     * @private
+     * @returns {Promise}
+     */
+    _loadSummernote() {
+        return ajax.loadLibs({
+            assetLibs: ['web_editor.compiled_assets_wysiwyg'],
+        });
     }
 
     /**

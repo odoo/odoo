@@ -876,16 +876,14 @@ const actions = {
      * @param {Object} param0.getters
      * @param {Object} param0.state
      * @param {Object} param1
-     * @param {Event} param1.ev
      * @param {integer} param1.id
      * @param {string} param1.model
      */
     async redirect(
         { dispatch, env, getters, state },
-        { ev, id, model }
+        { id, model }
     ) {
         if (model === 'mail.channel') {
-            ev.stopPropagation();
             const channel = getters.thread({
                 _model: 'mail.channel',
                 id,
@@ -923,7 +921,6 @@ const actions = {
                 });
                 return;
             }
-            ev.stopPropagation();
             const chat = getters.chatFromPartner(`res.partner_${id}`);
             if (!chat) {
                 dispatch('createChannel', {
