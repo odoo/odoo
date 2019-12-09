@@ -3,6 +3,7 @@ odoo.define('hr_timesheet.timer', function (require) {
 
 var fieldRegistry = require('web.field_registry');
 var AbstractField = require('web.AbstractField');
+var Timer = require('hr_timesheet.Timer');
 
 var TimerFieldWidget = AbstractField.extend({
 
@@ -14,47 +15,46 @@ var TimerFieldWidget = AbstractField.extend({
         return true;
     },
     /**
-     * @private
-     */
-    _getDuration: function (dateStart, datePause) {
-        if (datePause && dateStart) {
-            return moment(datePause).diff(moment(dateStart));
-        }
-        if (dateStart) {
-            return moment().diff(moment(dateStart));
-        }
-        else return 0;
-    },
-    /**
      * @override
      * @private
      */
     _render: function () {
         this._startTimeCounter();
-
     },
     /**
      * @override
      */
     destroy: function () {
         this._super.apply(this, arguments);
-        clearTimeout(this.timer);
+        clearInterval(this.timer);
     },
     /**
      * @private
      */
-    _startTimeCounter: function () {
-        var self = this;
-        clearTimeout(this.timer);
-        if (self.record.data.timer_start) {
-            this.timer = setTimeout(function () {
-                self._startTimeCounter();
+    _startTimeCounter: async function () {
+        if (this.record.data.timer_start) {
+            const serverTime = this.record.data.timer_pause || await this._getServerTime();
+            this.time = Timer.createTimer(0, this.record.data.timer_start, serverTime);
+            this.$el.text(this.time.toString());
+            this.timer = setInterval(() => {
+                if (this.record.data.timer_pause) {
+                    clearInterval(this.timer);
+                } else {
+                    this.time.addSecond();
+                    this.$el.text(this.time.toString());
+                }
             }, 1000);
-            this.$el.text(moment.utc(self._getDuration(self.record.data.timer_start, self.record.data.timer_pause)).format("HH:mm:ss"));
-        } else if (!self.record.data.timer_pause){
-            clearTimeout(this.timer);
+        } else if (!this.record.data.timer_pause){
+            clearInterval(this.timer);
         }
     },
+    _getServerTime: function () {
+        return this._rpc({
+            model: 'account.analytic.line',
+            method: 'get_server_time',
+            args: [false]
+        });
+    }
 });
 
 fieldRegistry.add('timesheet_timer', TimerFieldWidget);
